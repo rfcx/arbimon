@@ -1,5 +1,5 @@
 <template>
-  <project-navbar />
+  <landing-navbar />
   <section class="pt-16 bg-white dark:bg-echo">
     <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-24">
       <h1 class="tracking-tight font-medium text-gray-900 dark:text-white">
@@ -55,7 +55,7 @@ import { useRouter } from 'vue-router'
 
 import { apiBioPostProjectCreate } from '@rfcx-bio/common/api-bio/project/project-create'
 
-import ProjectNavbar from '@/_layout/components/project-navbar/project-navbar.vue'
+import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'

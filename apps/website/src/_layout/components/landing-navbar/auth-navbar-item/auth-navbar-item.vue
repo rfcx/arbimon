@@ -18,11 +18,12 @@
   </div>
   <div
     v-else
-    class="flex items-center"
+    class="flex items-center space-x-4 font-medium"
   >
     <router-link
       :to="{ name: ROUTE_NAMES.myProjects }"
-      class="px-4 font-medium"
+      exact-active-class="tab-active"
+      class="block tab"
     >
       My Projects
     </router-link>

@@ -1,5 +1,5 @@
 <template>
-  <project-navbar />
+  <landing-navbar />
   <section class="w-full pt-20 px-8 pb-6 bg-white dark:bg-echo">
     <div
       v-if="showcaseProjects.length > 0"
@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import ProjectNavbar from '@/_layout/components/project-navbar/project-navbar.vue'
+import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { useStore } from '~/store'
 import ProjectCard from './components/project-card.vue'
 

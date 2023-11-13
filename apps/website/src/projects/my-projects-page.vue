@@ -1,5 +1,5 @@
 <template>
-  <project-navbar />
+  <landing-navbar />
   <section class="pt-16 bg-white dark:bg-echo">
     <div class="py-8 mx-auto max-w-screen-md <lg:mx-8 lg:py-24">
       <h2 class="text-gray-900 dark:text-insight">
@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import ProjectNavbar from '@/_layout/components/project-navbar/project-navbar.vue'
+import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import ProjectCard from './components/project-card.vue'
