@@ -28,7 +28,7 @@
     >
       <StackDistribution
         :dataset="richnessByRisk"
-        :known-total-count="dashboardStore.speciesCount"
+        :known-total-count="knownTotalCount"
         :selected-id="selectedRisk ?? -1"
         :view-only="false"
         class="my-6"
@@ -45,14 +45,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 
-import { useDashboardStore } from '~/store'
 import StackDistribution from './components/stack-distribution.vue'
 import { type HorizontalStack } from './components/stack-distribution.vue'
 import SpeciesList from './dashboard-species-list.vue'
 
-const props = defineProps<{ isLoading: boolean, isError: boolean, richnessByRisk: HorizontalStack[] }>()
-
-const dashboardStore = useDashboardStore()
+const props = defineProps<{ isLoading: boolean, isError: boolean, richnessByRisk: HorizontalStack[], knownTotalCount: string }>()
 
 const defaultSelectedRisk = computed(() => {
   const risks = props.richnessByRisk.map(({ id }) => id)

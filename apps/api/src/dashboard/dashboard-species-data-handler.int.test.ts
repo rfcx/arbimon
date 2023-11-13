@@ -11,6 +11,7 @@ const ROUTE = '/projects/:projectId/dashboard-species-data'
 const url = `/projects/${PROJECT_ID_BASIC}/dashboard-species-data`
 
 const EXPECTED_PROPS = [
+  'speciesHighlighted',
   'richnessByRisk',
   'richnessByTaxon',
   'totalSpeciesCount'
