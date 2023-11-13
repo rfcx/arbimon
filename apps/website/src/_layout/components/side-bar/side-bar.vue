@@ -177,9 +177,9 @@
             </li>
           </ul>
           <div class="my-2 border-t-1 border-color-util-gray-01" />
-          <ul class="px-1 pt-2">
+          <ul class="px-2">
             <li
-              class="my-2 flex items-center cursor-pointer text-base font-normal h-10 hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
+              class="my-2 flex items-center text-base font-normal h-10 hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
             >
               <img
                 class="h-8 w-8 rounded-full"
