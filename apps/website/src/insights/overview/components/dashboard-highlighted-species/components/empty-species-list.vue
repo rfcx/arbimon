@@ -6,7 +6,7 @@
       class="flex items-center"
     >
       <div
-        class="min-h-14 h-14 min-w-14 w-14 object-cover rounded bg-util-gray-02"
+        class="min-h-16 h-16 min-w-16 w-16 object-cover rounded bg-util-gray-02"
       />
       <div
         class="ml-4 self-center hover:(text-subtle)"
