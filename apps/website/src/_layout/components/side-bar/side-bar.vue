@@ -326,8 +326,6 @@ const allItems: Item[] = [
   }
 ]
 
-const supportLink = ref('https://support.rfcx.org/')
-
 const logout = async (): Promise<void> => {
   // Auth0 logout forces a full refresh (redirect to auth.rfcx.org for SSO purposes)
   await auth.logout({ returnTo: `${ARBIMON_BASE_URL}/logout` })
