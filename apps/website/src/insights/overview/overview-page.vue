@@ -11,13 +11,9 @@
       <dashboard-project-summary />
     </div>
     <div class="lg:col-span-4 flex flex-col">
-      <div>
-        <h2>Highlighted species</h2>
-        // TODO: convert to component
-        <p v-if="species?.speciesHighlighted">
-          {{ species.speciesHighlighted.map(s => s.scientificName) }}
-        </p>
-      </div>
+      <dashboard-highlighted-species
+        :species="species?.speciesHighlighted"
+      />
       <div class="mt-6">
         <dashboard-species-by-taxon
           :dataset="speciesRichnessByTaxon"
@@ -44,6 +40,7 @@ import { apiClientBioKey } from '@/globals'
 import { RISKS_BY_ID } from '~/risk-ratings'
 import { useDashboardStore, useStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
+import DashboardHighlightedSpecies from './components/dashboard-highlighted-species/dashboard-highlighted-species.vue'
 import DashbordMap from './components/dashboard-map/dashboard-map.vue'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
 import DashboardProjectSummary from './components/dashboard-project-summary/dashboard-project-summary.vue'
