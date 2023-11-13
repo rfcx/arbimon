@@ -24,6 +24,18 @@
     @mouseleave="isHoveringOnList = false"
   >
     <div
+      v-if="selectedRiskUI"
+      class="flex flex-row gap-x-6 my-6"
+    >
+      <h3 class="font-medium">
+        {{ riskTitle }}
+      </h3>
+      <span
+        class="rounded-sm px-2 py-0.5 self-center"
+        :style="{ backgroundColor: selectedRiskUI.color }"
+      >{{ selectedRiskUI?.code }}</span>
+    </div>
+    <div
       class="grid gap-4 relative grid-cols-4 md:grid-cols-6"
       :class="`lg:grid-cols-${NUMBER_OF_ITEMS_PER_PAGE}`"
     >
@@ -141,6 +153,16 @@ const species: ComputedRef<ThreatenedSpeciesRow[]> = computed(() => {
       riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
     }
   })
+})
+
+const selectedRiskUI = computed(() => {
+  if (props.selectedRisk === null) { return undefined }
+  return RISKS_BY_ID[props.selectedRisk]
+})
+
+const riskTitle = computed(() => {
+  if (selectedRiskUI.value === undefined) { return '' }
+  return `${selectedRiskUI.value.label} (${species.value.length})`
 })
 
 // Data for rendering in the UI
