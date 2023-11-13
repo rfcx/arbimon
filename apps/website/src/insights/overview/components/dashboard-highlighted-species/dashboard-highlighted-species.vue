@@ -19,7 +19,7 @@
   </div>
   <div
     v-if="isProjectMember"
-    class="mt-4"
+    class="mt-6"
   >
     <router-link
       :to="{ name: ROUTE_NAMES.myProjects }"
