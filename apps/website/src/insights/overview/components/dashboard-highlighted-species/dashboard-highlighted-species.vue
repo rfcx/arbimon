@@ -18,7 +18,6 @@
     <EmptySpeciesList />
   </div>
   <div
-    v-if="isProjectMember"
     class="mt-6"
   >
     <router-link
@@ -39,15 +38,11 @@ import { type DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common
 
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { ROUTE_NAMES } from '~/router'
-import { useStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../types/highlighted-species'
 import EmptySpeciesList from './components/empty-species-list.vue'
 import HightlightedSpeciesList from './components/highlighted-species-list.vue'
 
-const store = useStore()
-
 const props = defineProps<{ species: DashboardSpecies[] | undefined }>()
-const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
 const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   if (props.species === undefined) {
     return []
