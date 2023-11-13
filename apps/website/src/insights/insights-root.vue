@@ -9,9 +9,9 @@
         'md:px-10': !isProjectMember
       }"
     >
-      <div class="max-w-screen-xl mx-auto pt-20 pb-10 text-gray-900 dark:text-insight">
+      <div class="max-w-screen-xl mx-auto pt-6 pb-10 text-gray-900 dark:text-insight">
         <div class="flex flex-col">
-          <h1 class="text-frequency font-header pt-8 pb-6">
+          <h1 class="text-frequency font-header pt-4 pb-4">
             {{ profile?.name ?? selectedProject?.name }}
           </h1>
           <hero-project-info
@@ -26,7 +26,7 @@
           />
           <div
             v-if="isProjectMember"
-            class="flex gap-4 md:justify-between order-first"
+            class="flex gap-4 py-4 md:justify-between order-first"
           >
             <router-link
               :to="{ name: ROUTE_NAMES.projectSettings }"
