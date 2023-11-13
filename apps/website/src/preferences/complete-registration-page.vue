@@ -1,5 +1,5 @@
 <template>
-  <project-navbar />
+  <landing-navbar />
   <section class="bg-white dark:bg-mirage-gray">
     <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-24">
       <div class="text-gray-500 sm:text-lg dark:text-gray-400">
@@ -132,7 +132,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import ProjectNavbar from '@/_layout/components/project-navbar/project-navbar.vue'
+import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { ROUTE_NAMES } from '~/router'
 
 const router = useRouter()
