@@ -109,6 +109,7 @@
                 <li
                   v-for="childItem in item.children"
                   :key="childItem.title"
+                  class="mt-4"
                 >
                   <router-link
                     v-if="childItem.route"
