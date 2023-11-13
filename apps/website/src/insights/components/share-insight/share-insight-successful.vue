@@ -4,7 +4,7 @@
     data-modal-backdrop="static"
     tabindex="-1"
     aria-hidden="true"
-    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+    class="fixed top-0 left-0 right-0 z-50 hidden w-full mx-auto max-w-screen-2xl pt-24 pr-12 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
   >
     <div class="relative w-full max-w-1xl max-h-full rounded-lg shadow">
       <!-- Modal content -->
@@ -87,17 +87,17 @@
 import { useClipboard } from '@vueuse/core'
 import { Modal } from 'flowbite'
 import { computed, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 import { ROUTE_NAMES } from '~/router'
-import { useStore } from '~/store'
 
 const props = defineProps<{ isOpen: boolean }>()
 const emit = defineEmits<{(event: 'emit-close-modal'): void, (event: 'emit-hide-insight'): void}>()
 
-const store = useStore()
+const route = useRoute()
 
 const arbimonLink = computed((): string => {
-  return `${import.meta.env.VITE_ARBIMON_BASE_URL}/p/${store.selectedProject?.slug ?? ''}`
+  return route.fullPath
 })
 
 const { copy, copied } = useClipboard({ source: arbimonLink })
