@@ -11,9 +11,13 @@
       <dashboard-project-summary />
     </div>
     <div class="lg:col-span-4 flex flex-col">
-      <dashboard-highlighted-species
-        :species="species?.speciesHighlighted"
-      />
+      <div
+        v-if="isProjectMember"
+      >
+        <dashboard-highlighted-species
+          :species="species?.speciesHighlighted"
+        />
+      </div>
       <div class="mt-6">
         <dashboard-species-by-taxon
           :dataset="speciesRichnessByTaxon"
@@ -54,7 +58,7 @@ import { useGetDashboardMetrics } from './composables/use-get-dashboard-metrics'
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const store = useStore()
 const dashboardStore = useDashboardStore()
-
+const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 const { isLoading: isLoadingSpecies, isError: isErrorSpecies, data: species } = useSpeciesRichnessByRisk(apiClientBio)
