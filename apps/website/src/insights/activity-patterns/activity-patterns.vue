@@ -11,8 +11,8 @@
       :topic="infoTopic"
     >
       <export-button
-        :disabled="!hasExportData || !isProjectMember"
-        :title="isProjectMember ? (hasExportData ? '' : 'No data selected') : 'Only available to project members'"
+        :disabled="!hasExportData || !isProjectMember || isViewingAsGuest"
+        :title="isProjectMember && !isViewingAsGuest ? (hasExportData ? '' : 'No data selected') : 'Only available to project members'"
         @click="exportDetectionsData()"
       >
         <template #label>
@@ -149,6 +149,8 @@ const isLocationRedacted: Ref<boolean> = ref(false)
 const isProjectMember = computed(() => {
   return store.selectedProject?.isMyProject ?? false
 })
+
+const isViewingAsGuest = computed(() => route.query.guest === '1')
 
 const hasExportData = computed(() => {
   return timeDatasets.value.length > 0
