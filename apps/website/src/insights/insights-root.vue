@@ -25,7 +25,7 @@
             :default-text="dashboardStore.projectSummary ?? ''"
           />
           <div
-            v-if="isProjectMember"
+            v-if="isProjectMember && !isViewingAsGuest"
             class="flex gap-4 py-4 md:justify-between order-first"
           >
             <router-link
@@ -125,6 +125,7 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
@@ -167,6 +168,7 @@ const items = [
 ]
 
 const store = useStore()
+const route = useRoute()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const selectedProject = computed(() => store.selectedProject)
@@ -179,6 +181,10 @@ const { isLoading: isLoadingProjectLocation, data: projectLocation } = useGetPro
 // Project settings & metrics
 const { data: profile } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
+
+const isViewingAsGuest = computed(() => {
+  return route.query.guest === '1'
+})
 
 watch(() => profile.value, () => {
   if (!profile.value) return

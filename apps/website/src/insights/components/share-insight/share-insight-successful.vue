@@ -66,7 +66,7 @@
             type="button"
             target="_blank"
             class="btn btn-secondary w-full"
-            :to="{ name: ROUTE_NAMES.overview }"
+            :to="{ name: ROUTE_NAMES.overview, query: { guest: 1 } }"
           >
             View as guest (opens new tab)
           </router-link>
