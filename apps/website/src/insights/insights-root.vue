@@ -71,7 +71,7 @@
             v-else
             class="order-first"
           >
-            Home > Projects > {{ selectedProject?.name }}
+            <ProjectNav />
           </div>
         </div>
       </div>
@@ -133,6 +133,7 @@ import { useGetProjectSettings } from '../projects/_composables/use-project-prof
 import { useGetInsightsPublishStatus } from './_composables/use-get-insights-publish-status'
 import { useGetProjectLocation } from './_composables/use-project-location'
 import InsightNotReadyCard from './components/insight-not-ready-card.vue'
+import ProjectNav from './components/project-nav.vue'
 import ShareInsight from './components/share-insight/share-insight.vue'
 import HeroBriefOverview from './insights-hero/hero-brief-overview.vue'
 import HeroProjectInfo from './insights-hero/hero-project-info.vue'
