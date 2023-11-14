@@ -18,31 +18,35 @@
     <EmptySpeciesList />
   </div>
   <div
-    class="mt-6"
+    class="mt-6 flex flex-row baseline"
   >
-    <router-link
-      :to="{ name: ROUTE_NAMES.myProjects }"
-      class="flex flex-row baseline"
+    <button
+      class="btn btn-secondary group w-full"
+      data-modal-target="species-hightlighted-modal"
+      data-modal-toggle="species-hightlighted-modal"
+      type="button"
+      @click="openModalToSelectSpecies"
     >
-      <button class="btn btn-secondary group w-full">
-        Select Species <icon-custom-ic-edit class="ml-2 group-hover:stroke-pitch" />
-      </button>
-    </router-link>
+      Select Species <icon-custom-ic-edit class="ml-2 group-hover:stroke-pitch" />
+    </button>
   </div>
+  <HighlightedSpeciesSelector />
 </template>
 
 <script setup lang="ts">
-import { type ComputedRef, computed } from 'vue'
+import { Modal } from 'flowbite'
+import { type ComputedRef, type Ref, computed, onMounted, ref } from 'vue'
 
 import { type DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
-import { ROUTE_NAMES } from '~/router'
 import { type HighlightedSpeciesRow } from '../../types/highlighted-species'
 import EmptySpeciesList from './components/empty-species-list.vue'
 import HightlightedSpeciesList from './components/highlighted-species-list.vue'
+import HighlightedSpeciesSelector from './components/highlighted-species-selector.vue'
 
 const props = defineProps<{ species: DashboardSpecies[] | undefined }>()
+const modal = ref() as Ref<Modal>
 const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   if (props.species === undefined) {
     return []
@@ -59,4 +63,17 @@ const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
     }
   })
 })
+
+onMounted(() => {
+  modal.value = new Modal(document.getElementById('species-hightlighted-modal'), {
+    placement: 'center',
+    backdrop: 'dynamic',
+    backdropClasses: 'bg-pitch bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
+    closable: true
+  })
+})
+
+const openModalToSelectSpecies = (): void => {
+  modal.value.show()
+}
 </script>
