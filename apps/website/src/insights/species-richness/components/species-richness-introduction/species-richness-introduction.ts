@@ -30,6 +30,10 @@ export default class SpeciesRichnessIntroduction extends Vue {
     return this.store?.selectedProject?.isMyProject ?? false
   }
 
+  get isViewingAsGuest (): boolean {
+    return this.$route.query.guest === '1'
+  }
+
   // TODO ??? - I think Vue 3 composition API would let us simply import the function (instead of proxying it)
   async exportCsvReports (): Promise<void> {
     const projectId = this.store.selectedProject?.id

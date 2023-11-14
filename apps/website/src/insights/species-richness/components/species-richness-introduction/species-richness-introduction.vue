@@ -5,9 +5,9 @@
     :topic="infoTopic"
   >
     <export-button
-      :disabled="loading || !hasData || !isProjectMember"
+      :disabled="loading || !hasData || !isProjectMember || isViewingAsGuest"
       :loading="loading"
-      :title="isProjectMember ? (hasData ? '' : 'No data selected') : 'Only available to project members'"
+      :title="isProjectMember && !isViewingAsGuest ? (hasData ? '' : 'No data selected') : 'Only available to project members'"
       @click="exportCsvReports()"
     >
       <template #label>
