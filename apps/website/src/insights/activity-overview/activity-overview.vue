@@ -10,8 +10,8 @@
     :topic="infoTopic"
   >
     <export-button
-      :disabled="!hasData || !isProjectMember"
-      :title="isProjectMember ? (hasData ? '' : 'No data selected') : 'Only available to project members'"
+      :disabled="!hasData || !isProjectMember || isViewingAsGuest"
+      :title="isProjectMember && !isViewingAsGuest ? (hasData ? '' : 'No data selected') : 'Only available to project members'"
       @click="exportSpeciesData()"
     >
       <template #label>
@@ -48,6 +48,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { computed, inject, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 import type { ActivityOverviewDataBySpecies } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { apiBioGetActivityDataset } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
@@ -71,6 +72,8 @@ const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
 const store = useStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
+const route = useRoute()
+
 const filters = ref<ColoredFilter[]>([])
 
 const mapDatasets = ref<MapDataSet[]>([])
@@ -81,6 +84,7 @@ const isLocationRedacted = ref<boolean>(true)
 const loading = ref<boolean>(true)
 
 const isProjectMember = computed(() => store?.selectedProject?.isMyProject)
+const isViewingAsGuest = computed(() => route.query.guest === '1')
 const hasData = computed(() => exportDatasets.value.length > 0)
 const infoTopic = ref(INFO_TOPICS.activity)
 
