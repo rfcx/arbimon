@@ -138,7 +138,7 @@
             id="about"
             v-model:is-view-mored="isAboutTabViewMored"
             v-model:is-editing="isAboutTabEditing"
-            :editable="store.selectedProject?.isMyProject ?? false"
+            :editable="!viewOnly"
             :raw-markdown-text="dashboardContent?.readme"
             :default-markdown-text="readmeDefault"
             @on-editor-close="updateReadme"
@@ -157,7 +157,7 @@
             id="methods"
             v-model:is-view-mored="isMethodsTabViewMored"
             v-model:is-editing="isMethodsTabEditing"
-            :editable="store.selectedProject?.isMyProject ?? false"
+            :editable="!viewOnly"
             :raw-markdown-text="dashboardContent?.methods"
             :default-markdown-text="methodsDefault"
             @on-editor-close="updateMethods"
@@ -176,7 +176,7 @@
             id="key-result"
             v-model:is-view-mored="isKeyResultTabViewMored"
             v-model:is-editing="isKeyResultTabEditing"
-            :editable="store.selectedProject?.isMyProject ?? false"
+            :editable="!viewOnly"
             :raw-markdown-text="dashboardContent?.keyResult"
             :default-markdown-text="keyResultDefault"
             @on-editor-close="updateKeyResult"
@@ -254,7 +254,7 @@
             id="resources"
             v-model:is-view-mored="isResourcesTabViewMored"
             v-model:is-editing="isResourcesTabEditing"
-            :editable="store.selectedProject?.isMyProject ?? false"
+            :editable="!viewOnly"
             :raw-markdown-text="dashboardContent?.resources"
             :default-markdown-text="resourcesDefault"
             @on-editor-close="updateResources"
@@ -281,6 +281,8 @@ import { useUpdateDashboardReadme } from '../../composables/use-update-dashboard
 import { useUpdateDashboardResources } from '../../composables/use-update-dashboard-resources'
 import DashboardMarkdownViewerEditor from './components/dashboard-markdown-viewer-editor.vue'
 import StakeholderCard from './components/stakeholder-card.vue'
+
+defineProps<{ viewOnly: boolean }>()
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const { readme: readmeDefault, keyResult: keyResultDefault, resources: resourcesDefault, methods: methodsDefault } = useMarkdownEditorDefaults()

@@ -8,7 +8,7 @@
   </div>
   <div class="grid grid-col-1 lg:grid-cols-12 gap-20 mt-10 lg:mt-20">
     <div class="lg:col-span-8">
-      <dashboard-project-summary />
+      <dashboard-project-summary :view-only="isViewingAsGuest || !isProjectMember" />
     </div>
     <div class="lg:col-span-4 flex flex-col">
       <div
@@ -40,6 +40,7 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import { type ComputedRef, computed, inject, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 import { apiClientBioKey } from '@/globals'
 import { RISKS_BY_ID } from '~/risk-ratings'
@@ -56,9 +57,16 @@ import DashboardSpeciesByTaxon from './components/dashboard-species/dashboard-sp
 import { useGetDashboardMetrics } from './composables/use-get-dashboard-metrics'
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+
+const route = useRoute()
 const store = useStore()
 const dashboardStore = useDashboardStore()
+
+// view type
 const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
+const isViewingAsGuest = computed(() => {
+  return route.query.guest === '1'
+})
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 const { isLoading: isLoadingSpecies, isError: isErrorSpecies, data: species } = useSpeciesRichnessByRisk(apiClientBio)
