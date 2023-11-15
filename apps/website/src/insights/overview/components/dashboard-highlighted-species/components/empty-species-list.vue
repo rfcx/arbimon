@@ -9,7 +9,7 @@
         class="min-h-16 h-16 min-w-16 w-16 object-cover rounded bg-util-gray-02"
       />
       <div
-        class="ml-4 self-center hover:(text-subtle)"
+        class="ml-4 self-center"
       >
         <p class="italic">
           {{ item.title }}
