@@ -8,7 +8,7 @@
   </div>
   <div class="grid grid-col-1 lg:grid-cols-12 gap-20 mt-10 lg:mt-20">
     <div class="lg:col-span-8">
-      <dashboard-project-summary :view-only="isViewingAsGuest || !isProjectMember" />
+      <dashboard-project-summary :can-edit="isProjectMember && !isViewingAsGuest" />
     </div>
     <div class="lg:col-span-4 flex flex-col">
       <div
@@ -16,6 +16,7 @@
       >
         <dashboard-highlighted-species
           :species="species?.speciesHighlighted"
+          :can-edit="isProjectMember && !isViewingAsGuest"
         />
       </div>
       <div class="mt-6">

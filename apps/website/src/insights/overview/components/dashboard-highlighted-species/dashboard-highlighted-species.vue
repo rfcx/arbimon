@@ -18,6 +18,7 @@
     <EmptySpeciesList />
   </div>
   <div
+    v-if="canEdit"
     class="mt-6 flex flex-row baseline"
   >
     <button
@@ -45,8 +46,9 @@ import EmptySpeciesList from './components/empty-species-list.vue'
 import HightlightedSpeciesList from './components/highlighted-species-list.vue'
 import HighlightedSpeciesSelector from './components/highlighted-species-selector.vue'
 
-const props = defineProps<{ species: DashboardSpecies[] | undefined }>()
+const props = defineProps<{ species: DashboardSpecies[] | undefined, canEdit: boolean }>()
 const modal = ref() as Ref<Modal>
+
 const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   if (props.species === undefined) {
     return []

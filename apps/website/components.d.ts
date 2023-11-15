@@ -74,6 +74,7 @@ declare module '@vue/runtime-core' {
     IconFaCalendar: typeof import('~icons/fa/calendar')['default']
     IconFaCheck: typeof import('~icons/fa/check')['default']
     IconFaChevronDown: typeof import('~icons/fa/chevron-down')['default']
+    IconFaChevronLeft: typeof import('~icons/fa/chevron-left')['default']
     IconFaChevronRight: typeof import('~icons/fa/chevron-right')['default']
     IconFaChevronUp: typeof import('~icons/fa/chevron-up')['default']
     IconFaCircle: typeof import('~icons/fa/circle')['default']
