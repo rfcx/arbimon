@@ -34,17 +34,17 @@
               <li
                 v-for="item in speciesForCurrentPage"
                 :key="'dashboard-highlighted-' + item.slug"
-                class="flex flex-row justify-between items-center gap-x-3"
+                class="flex flex-row justify-between items-center gap-x-3 p-4 h-26 bg-echo"
               >
                 <img
                   :src="item.photoUrl"
                   class="min-h-16 h-16 min-w-16 w-16 object-cover rounded bg-util-gray-02"
                 >
                 <div class="self-center w-36">
-                  <p class="italic">
+                  <p class="text-s italic tracking-tight line-clamp-2">
                     {{ item.scientificName }}
                   </p>
-                  <p class="text-s">
+                  <p class="mt-1 text-xs tracking-tight line-clamp-2">
                     {{ item.commonName || 'unknown' }}
                   </p>
                 </div>
