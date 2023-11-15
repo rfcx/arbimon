@@ -31,7 +31,7 @@
       Select Species <icon-custom-ic-edit class="ml-2 group-hover:stroke-pitch" />
     </button>
   </div>
-  <HighlightedSpeciesSelector />
+  <HighlightedSpeciesModal />
 </template>
 
 <script setup lang="ts">
@@ -44,7 +44,7 @@ import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { type HighlightedSpeciesRow } from '../../types/highlighted-species'
 import EmptySpeciesList from './components/empty-species-list.vue'
 import HightlightedSpeciesList from './components/highlighted-species-list.vue'
-import HighlightedSpeciesSelector from './components/highlighted-species-selector.vue'
+import HighlightedSpeciesModal from './components/highlighted-species-modal.vue'
 
 const props = defineProps<{ species: DashboardSpecies[] | undefined, canEdit: boolean }>()
 const modal = ref() as Ref<Modal>
