@@ -9,6 +9,7 @@
         aria-label="Loading"
       />
       <span
+        :style="showTooltip"
         class="text-insight text-sm mr-2"
         data-tooltip-target="tooltip-project-country"
       >
@@ -95,12 +96,20 @@ const projectCountry = computed(() => {
 })
 
 const projectCountryText = computed(() => {
-  if (props.projectLocation === undefined) return ''
-  if (props.projectLocation.country === null) return ''
+  if (props.projectLocation?.country == null) return ''
   if (props.projectLocation.country.length > 3) {
     return 'Multiple countries'
   } else {
     return props.projectLocation.country.join(', ')
+  }
+})
+
+const showTooltip = computed(() => {
+  if (props.projectLocation?.country == null) return ''
+  if (props.projectLocation.country.length > 3) {
+    return ''
+  } else {
+    return 'pointer-events: none'
   }
 })
 
