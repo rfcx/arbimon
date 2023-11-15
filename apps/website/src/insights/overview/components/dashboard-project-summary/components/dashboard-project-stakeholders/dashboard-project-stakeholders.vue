@@ -68,10 +68,10 @@ import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common
 import ProjectSummaryEmpty from '../project-summary-empty.vue'
 import StakeholderCard from './stakeholder-card.vue'
 
-const props = defineProps<{
+defineProps<{
   isEditing: boolean,
   editable: boolean,
   organizations: Array<OrganizationTypes['light']>
 }>()
-const emit = defineEmits<{(event: 'update:isEditing', value: boolean): void}>()
+defineEmits<{(event: 'update:isEditing', value: boolean): void}>()
 </script>
