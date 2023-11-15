@@ -81,7 +81,9 @@
               />
             </div>
             <div class="flex justify-end">
-              <HighlightedSpeciesSelector />
+              <HighlightedSpeciesSelector
+                :species="preSelectedSpecies"
+              />
             </div>
           </div>
           <!-- Modal footer -->
@@ -116,11 +118,13 @@ defineEmits<{(e: 'emitClose'): void}>()
 const store = useStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const selectedProjectId = computed(() => store.selectedProject?.id)
-const selectedSpeciesSlug = ref([''])
+const selectedSpeciesSlug = ref<string[]>([])
 const PAGE_SIZE = 8
 const currentPage = ref(1)
 
 const { isLoading: isLoadingSpecies, data: speciesResp } = useSpeciesInProject(apiClientBio, selectedProjectId)
+
+const speciesForCurrentPage = computed(() => speciesList.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE))
 
 const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   if (speciesResp.value === undefined || !speciesResp.value.species.length) {
@@ -139,12 +143,18 @@ const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   })
 })
 
+const preSelectedSpecies = computed(() => {
+  return speciesList.value.length ? speciesList.value.filter(specie => selectedSpeciesSlug.value.includes(specie.slug)) : []
+})
+
 const selectSpecie = (specie: HighlightedSpeciesRow): void => {
   if (isSpecieSelected(specie)) {
     const index = selectedSpeciesSlug.value.findIndex(slug => slug === specie.slug)
-    selectedSpeciesSlug.value.splice(1, index)
+    selectedSpeciesSlug.value.splice(index, 1)
   } else {
-    selectedSpeciesSlug.value.push(specie.slug)
+    if (selectedSpeciesSlug.value.length < 5) {
+      selectedSpeciesSlug.value.push(specie.slug)
+    }
   }
 }
 
@@ -153,5 +163,4 @@ const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
   return slugs.length > 0
 }
 
-const speciesForCurrentPage = computed(() => speciesList.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE))
 </script>
