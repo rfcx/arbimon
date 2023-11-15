@@ -25,27 +25,14 @@
         for="start"
         class="block mb-2 font-medium text-gray-900 dark:text-insight"
       >Project start date</label>
-      <div class="relative">
-        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <svg
-            class="w-4 h-4 text-gray-500 dark:text-gray-400"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-          </svg>
-        </div>
-        <input
-          id="datepickerId"
-          datepicker
-          name="start"
-          type="text"
-          class="pl-10 w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+      <div class="relative flex-1">
+        <el-date-picker
+          v-model="startDate"
+          class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+          type="date"
           placeholder="Choose date"
-          datepicker-format="mm/dd/yyyy"
-        >
+          format="MM/DD/YYYY"
+        />
       </div>
     </div>
     <span class="mx-4">-</span>
@@ -55,25 +42,13 @@
         class="block mb-2 font-medium text-gray-900 dark:text-insight"
       >Project end date</label>
       <div class="relative flex-1">
-        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <svg
-            class="w-4 h-4 text-gray-500 dark:text-gray-400"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-          </svg>
-        </div>
-        <input
-          datepicker
-          name="end"
-          type="text"
-          class="pl-10 w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+        <el-date-picker
+          v-model="endDate"
+          class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+          type="date"
           placeholder="Choose date"
-          datepicker-format="mm/dd/yyyy"
-        >
+          format="MM/DD/YYYY"
+        />
       </div>
     </div>
   </div>
@@ -133,3 +108,34 @@ watch(endDate, () => {
 })
 
 </script>
+
+<style lang="scss">
+
+.el-date-editor.el-input{
+  height: var(--el-component-size-large);
+  width: 100%;
+
+  ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #6B7280;
+    opacity: 1; /* Firefox */
+  }
+  :-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #6B7280;
+  }
+  ::-ms-input-placeholder { /* Microsoft Edge */
+    color: #6B7280;
+  }
+}
+
+.el-input {
+  .el-input__wrapper {
+    background-color: transparent;
+    height: var(--el-component-size-large);
+  }
+}
+
+.el-icon {
+  color: #6B7280;
+}
+
+</style>
