@@ -94,7 +94,12 @@
                 class="mr-3"
               >
                 <router-link
-                  :to="item.route"
+                  :to="{
+                    ...item.route,
+                    query: {
+                      guest: isViewingAsGuest ? 1 : 0
+                    }
+                  }"
                   :active-class="index > 0 ? 'text-insight border-frequency dark:text-frequency dark:border-frequency hover:text-insight hover:border-frequency dark:hover:text-insight' : ''"
                   :exact-active-class="index === 0 ? 'text-insight border-frequency dark:text-frequency dark:border-frequency hover:text-insight hover:border-frequency dark:hover:text-insight' : ''"
                   class="inline-block pt-3 px-3 pb-1.5 border-b-3 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-200 dark:hover:text-gray-200"
