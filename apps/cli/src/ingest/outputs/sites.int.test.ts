@@ -109,9 +109,13 @@ describe('ingest > outputs > sites', () => {
       taxonClassId: 300,
       scientificName: 'Falco amurensis'
     }
-    const specie = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies
+    let specie = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies
       .findOne({ where: { idArbimon: SPECIES_INPUT.idArbimon } })
-    if (!specie) await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.bulkCreate([SPECIES_INPUT])
+    if (!specie) {
+      await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies.bulkCreate([SPECIES_INPUT])
+      specie = await ModelRepository.getInstance(biodiversitySequelize).TaxonSpecies
+      .findOne({ where: { idArbimon: SPECIES_INPUT.idArbimon } })
+    }
     // Insert recordings
     const RECORDING_INPUT = [
       {
