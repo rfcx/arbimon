@@ -18,7 +18,7 @@
   <div
     id="dateRangePicker"
     date-rangepicker
-    class="flex mt-4 items-center gap-4 hidden"
+    class="flex mt-7 items-center gap-4"
   >
     <div class="flex-1">
       <label
@@ -76,6 +76,13 @@
         >
       </div>
     </div>
+  </div>
+  <div class="items-center mt-4">
+    <input
+      type="checkbox"
+      class="w-5 h-5 border mb-1 border-gray-300 rounded dark:bg-echo focus:ring-3 focus:ring-primary-300 dark:border-white-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+    >
+    <label class="font-light text-gray-500 dark:text-gray-300 ml-2">This is an on-going project</label>
   </div>
 </template>
 
