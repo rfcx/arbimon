@@ -10,7 +10,7 @@
     <div class="h-full pb-4 overflow-y-auto">
       <div class="flex flex-col h-full justify-between">
         <div>
-          <div class="pl-3 pr-2 my-4 h-8 flex flex-row">
+          <div class="pl-3 pr-2 my-4 h-8 flex flex-row items-center">
             <router-link
               :to="{ name: ROUTE_NAMES.landingHome }"
               class="flex items-center"
@@ -20,11 +20,11 @@
                 class="h-7 max-h-7"
                 alt="Arbimon Logo"
               >
+              <span
+                v-if="showSidebar"
+                class="ml-4 uppercase whitespace-nowrap text-lg font-display dark:text-insight"
+              >Arbimon</span>
             </router-link>
-            <span
-              v-if="showSidebar"
-              class="ml-4 self-center uppercase text-xl whitespace-nowrap font-display dark:text-insight"
-            >Arbimon</span>
           </div>
           <div class="my-4 border-t-1 border-util-gray-02" />
           <ul class="px-3 flex flex-col gap-y-4 border-gray-200 dark:border-gray-700">
