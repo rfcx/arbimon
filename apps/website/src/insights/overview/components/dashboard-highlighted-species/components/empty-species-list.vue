@@ -3,13 +3,13 @@
     <li
       v-for="item in emptySpecies"
       :key="item.title"
-      class="flex items-center"
+      class="flex flex-row justify-start items-center gap-x-4"
     >
       <div
         class="min-h-16 h-16 min-w-16 w-16 object-cover rounded bg-util-gray-02"
       />
       <div
-        class="ml-4 self-center"
+        class="self-center"
       >
         <p class="italic">
           {{ item.title }}
