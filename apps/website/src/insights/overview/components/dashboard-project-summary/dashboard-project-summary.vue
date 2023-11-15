@@ -190,57 +190,11 @@
         role="tabpanel"
         aria-labelledby="stakeholders-tab-content"
       >
-        <div class="mx-auto p-4 lg:max-w-4xl">
-          <!-- <h3 class="text-xl mt-12 font-medium"> -->
-          <!--   Project members -->
-          <!-- </h3> -->
-          <!-- <div -->
-          <!--   class="grid" -->
-          <!--   style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))" -->
-          <!-- > -->
-          <!--   <StakeholderCard -->
-          <!--     name="Lori Tan" -->
-          <!--     description="Project admin" -->
-          <!--     :ranking="0" -->
-          <!--     email="loritan@rfcx.org" -->
-          <!--   /> -->
-          <!--   <StakeholderCard name="Lori Tan" /> -->
-          <!--   <StakeholderCard name="Lori Tan" /> -->
-          <!--   <StakeholderCard name="Lori Tan" /> -->
-          <!--   <StakeholderCard name="Lori Tan" /> -->
-          <!--   <StakeholderCard name="Lori Tan" /> -->
-          <!-- </div> -->
-
-          <h3 class="text-xl mt-2 font-medium">
-            Organizations
-          </h3>
-          <div
-            class="grid mb-6"
-            style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))"
-          >
-            <StakeholderCard
-              name="Charles Darwin Foundation"
-              description="Non-profit"
-              profile-url="https://www.darwinfoundation.org/images/fcd/logo_145WHITE.png"
-            />
-            <StakeholderCard
-              name="Ching Hua University"
-              description="Research Institution"
-              profile-url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/NTHU_Round_Seal.svg/283px-NTHU_Round_Seal.svg.png"
-            />
-            <StakeholderCard
-              name="Naresuan University"
-              description="Research Institution"
-              profile-url="https://upload.wikimedia.org/wikipedia/en/c/c1/Naresuanlogo.jpg"
-            />
-          </div>
-          <router-link
-            :to="{ name: ROUTE_NAMES.projectSettings }"
-            class="rounded-3xl px-3 py-1.5 border border-frequency text-sm text-frequency leading-none font-medium"
-          >
-            Manage Stakeholders
-          </router-link>
-        </div>
+        <DashboardProjectStakeholders
+          v-model:is-editing="isStakeholdersTabEditing"
+          :organizations="organizations"
+          :editable="true"
+        />
       </div>
 
       <div
@@ -270,8 +224,9 @@ import { type AxiosInstance } from 'axios'
 import { type TabItem, type TabsOptions, Tabs } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
+import type { OrganizationTypes } from '@rfcx-bio/common/dao/types/organization'
+
 import { apiClientBioKey } from '@/globals'
-import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useGetDashboardContent } from '../../composables/use-get-dashboard-content'
 import { useMarkdownEditorDefaults } from '../../composables/use-markdown-editor-defaults'
@@ -280,7 +235,7 @@ import { useUpdateDashboardMethods } from '../../composables/use-update-dashboar
 import { useUpdateDashboardReadme } from '../../composables/use-update-dashboard-readme'
 import { useUpdateDashboardResources } from '../../composables/use-update-dashboard-resources'
 import DashboardMarkdownViewerEditor from './components/dashboard-markdown-viewer-editor.vue'
-import StakeholderCard from './components/stakeholder-card.vue'
+import DashboardProjectStakeholders from './components/dashboard-project-stakeholders/dashboard-project-stakeholders.vue'
 
 defineProps<{ viewOnly: boolean }>()
 
@@ -295,6 +250,31 @@ const isMethodsTabEditing = ref(false)
 
 const isKeyResultTabViewMored = ref(false)
 const isKeyResultTabEditing = ref(false)
+
+const organizations = ref<Array<OrganizationTypes['light']>>([
+  {
+    id: 1,
+    name: 'Charles Darwin Foundation',
+    type: 'non-profit-organization',
+    url: 'https://google.com',
+    image: 'https://www.darwinfoundation.org/images/fcd/logo_145WHITE.png'
+  },
+  {
+    id: 2,
+    name: 'Ching Hua University',
+    type: 'research-institution',
+    url: 'https://google.com',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/NTHU_Round_Seal.svg/283px-NTHU_Round_Seal.svg.png'
+  },
+  {
+    id: 3,
+    name: 'Naresuan University',
+    type: 'research-institution',
+    url: 'https://google.com',
+    image: 'https://upload.wikimedia.org/wikipedia/en/c/c1/Naresuanlogo.jpg'
+  }
+])
+const isStakeholdersTabEditing = ref(false)
 
 const isResourcesTabViewMored = ref(false)
 const isResourcesTabEditing = ref(false)
