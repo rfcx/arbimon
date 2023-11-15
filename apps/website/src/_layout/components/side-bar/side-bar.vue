@@ -142,6 +142,17 @@
           <div class="my-4 border-t-1 border-util-gray-02" />
           <ul class="px-3 flex flex-col gap-y-4">
             <li>
+              <a
+                :title="'Arbimon Support'"
+                :href="supportLink"
+                exact-active-class="bg-insight rounded text-moss"
+                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+              >
+                <icon-custom-fi-help />
+                <span class="ml-2 hidden group-hover:block">Help</span>
+              </a>
+            </li>
+            <li>
               <router-link
                 :to="{ name: ROUTE_NAMES.myProjects }"
                 exact-active-class="bg-insight rounded text-moss"
@@ -152,7 +163,21 @@
                 >
                   <icon-custom-fi-clipboard />
                 </span>
-                <span class="ml-2 hidden group-hover:block">My Projects</span>
+                <span class="ml-2 hidden group-hover:block">My projects</span>
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                :to="{ name: ROUTE_NAMES.explore }"
+                exact-active-class="bg-insight rounded text-moss"
+                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+              >
+                <span
+                  class="p-0.5"
+                >
+                  <icon-custom-fi-book-open />
+                </span>
+                <span class="ml-2 hidden group-hover:block">Projects</span>
               </router-link>
             </li>
           </ul>
@@ -162,12 +187,16 @@
           <ul class="px-3 flex flex-col gap-y-4">
             <li>
               <a
-                :title="'Account Setting'"
-                :href="arbimonLink + '/settings/users'"
+                :title="'Account Settings'"
+                :href="ARBIMON_BASE_URL + '/user-settings'"
+                target="_blank"
                 class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
               >
                 <icon-custom-fi-user />
-                <span class="ml-2 hidden group-hover:block">Account Setting</span>
+                <span class="ml-2 hidden group-hover:block">Account settings</span>
+                <icon-custom-linkout
+                  class="text-xs ml-1 hidden group-hover:block"
+                />
               </a>
             </li>
             <li
@@ -215,6 +244,7 @@ import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 
 const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+const supportLink = ref('https://support.rfcx.org/')
 
 const auth = inject(authClientKey) as Auth0Client
 const store = useStore()
@@ -287,11 +317,11 @@ const allItems: Item[] = [
     ]
   },
   {
-    title: 'Audio Analyses',
+    title: 'Audio analyses',
     iconRaw: 'fi-aed',
     children: [
       {
-        title: 'Active Jobs',
+        title: 'Active jobs',
         legacyPath: '/jobs'
       },
       {
@@ -315,14 +345,14 @@ const allItems: Item[] = [
     ]
   },
   {
-    title: 'Ecological Insights',
+    title: 'Ecological insights',
     iconRaw: 'pres-chart-bar',
     route: {
       name: ROUTE_NAMES.overview
     }
   },
   {
-    title: 'Project Settings',
+    title: 'Project settings',
     iconRaw: 'fi-settings',
     route: {
       name: ROUTE_NAMES.projectSettings
