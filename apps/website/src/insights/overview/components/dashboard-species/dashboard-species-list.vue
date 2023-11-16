@@ -2,7 +2,7 @@
   <!-- eslint-disable vue/no-unused-vars -->
   <!-- eslint-disable vue/require-v-for-key -->
   <div
-    v-if="isLoading || !species || selectedRisk === null"
+    v-if="isLoading"
     class="flex gap-4 columns-6"
   >
     <div
@@ -97,7 +97,10 @@
       </button>
     </div>
     <!-- Page indicators -->
-    <div class="flex space-x-3 p-10 m-auto justify-center">
+    <div
+      v-if="numberOfpages > 0"
+      class="flex space-x-3 p-10 m-auto justify-center"
+    >
       <button
         v-for="index in numberOfpages"
         :key="index"
