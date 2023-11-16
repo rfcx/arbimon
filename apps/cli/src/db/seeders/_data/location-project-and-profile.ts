@@ -47,7 +47,9 @@ const dataPr = {
   keyResult: '',
   resources: '',
   methods: '',
-  objectives: ['monitor-species', 'impact-human', 'blagh']
+  objectives: ['monitor-species', 'impact-human', 'blagh'],
+  dateStart: '2021-01-01',
+  dateEnd: null
 }
 
 const dataBci = {
@@ -60,7 +62,9 @@ const dataBci = {
   keyResult: '',
   resources: '',
   methods: '',
-  objectives: []
+  objectives: [],
+  dateStart: null,
+  dateEnd: null
 }
 
 const dataMadre = {
@@ -73,7 +77,9 @@ const dataMadre = {
   keyResult: '',
   resources: '',
   methods: '',
-  objectives: []
+  objectives: [],
+  dateStart: null,
+  dateEnd: null
 }
 
 const dataFakeProject = {
@@ -86,7 +92,9 @@ const dataFakeProject = {
   keyResult: '',
   resources: '',
   methods: '',
-  objectives: ['Test objective 1', 'Test objective 2']
+  objectives: ['Test objective 1', 'Test objective 2'],
+  dateStart: null,
+  dateEnd: null
 }
 
 type ProjectAndProfile = Omit<Project, 'id'> & Omit<LocationProjectProfile, 'locationProjectId' >
