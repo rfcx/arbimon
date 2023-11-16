@@ -4,7 +4,7 @@ import { type Project } from '@rfcx-bio/common/dao/types'
 import { getSequelize } from '~/db'
 import { uniqueSlug } from './project-create-util-slug-finder'
 
-export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 'idCore' | 'name'> & { objectives: string[] }): Promise<string> => {
+export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 'idCore' | 'name'> & { objectives: string[], dateStart: Date | null, dateEnd: Date | null }): Promise<string> => {
   const sequelize = getSequelize()
   const { LocationProject, LocationProjectProfile } = ModelRepository.getInstance(sequelize)
 
@@ -14,8 +14,7 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
   const project = { ...projectDefaults, ...projectPartial, slug }
   const createRes = await LocationProject.create(project)
 
-  // TODO: add project objective to location_project_profile
-  console.info(projectPartial.objectives)
+  // add project objective to location_project_profile
   const profile = {
     locationProjectId: createRes.id,
     summary: '',
@@ -24,8 +23,8 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
     keyResult: '',
     resources: '',
     objectives: projectPartial.objectives,
-    dateStart: null,
-    dateEnd: null
+    dateStart: projectPartial.dateStart,
+    dateEnd: projectPartial.dateEnd
   }
   await LocationProjectProfile.create(profile)
 
