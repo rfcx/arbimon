@@ -90,6 +90,10 @@ const verifyFields = () => {
     errorMessage.value = 'Please enter at least one objective'
     return false
   }
+  // TODO: verify dateStart & dateEnd
+  // - start date can't be null
+  // - end date can be null (if select on going)
+  // - end date should be after start date
   return true
 }
 
@@ -102,7 +106,11 @@ async function create () {
   if (!verifyFields()) return
   resetErrorState()
   isCreating.value = true
-  const project = { name: name.value, objectives: objectives.value }
+  // TODO: add dateStart and dateEnd
+  // - should be in string format
+  // - default value: dateStart = Date()
+  // - default value: dateEnd = null (ongoing)
+  const project = { name: name.value, objectives: objectives.value, dateStart: Date(), dateEnd: null }
   try {
     const response = await apiBioPostProjectCreate(apiClientBio, project)
     await store.refreshProjects()
