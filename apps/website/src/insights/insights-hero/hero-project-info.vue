@@ -9,10 +9,20 @@
         aria-label="Loading"
       />
       <span
-        class="text-insight text-sm mr-2"
+        :style="showTooltip"
+        class="text-insight text-sm mr-2 cursor-pointer"
+        data-tooltip-target="tooltip-project-country"
+      >
+        {{ projectCountryText }}
+      </span>
+      <div
+        id="tooltip-project-country"
+        role="tooltip"
+        class="tooltip_ml absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
       >
         {{ projectCountry }}
-      </span>
+        <div class="absolute tooltip-arrow" data-popper-arrow></div>
+      </div>
       <div
         v-if="projectFlag"
         class="align-baseline"
@@ -85,6 +95,24 @@ const projectCountry = computed(() => {
   return props.projectLocation.country.join(', ')
 })
 
+const projectCountryText = computed(() => {
+  if (props.projectLocation?.country == null) return ''
+  if (props.projectLocation.country.length > 3) {
+    return 'Multiple countries'
+  } else {
+    return props.projectLocation.country.join(', ')
+  }
+})
+
+const showTooltip = computed(() => {
+  if (props.projectLocation?.country == null) return ''
+  if (props.projectLocation.country.length > 3) {
+    return ''
+  } else {
+    return 'pointer-events: none'
+  }
+})
+
 const projectObjectivesText = computed(() => {
   const objectives = props.projectObjectives
   if (objectives.length === 0) return ''
@@ -96,3 +124,9 @@ const projectObjectivesText = computed(() => {
 })
 
 </script>
+
+<style lang="scss">
+.tooltip_ml {
+  margin-left: 3.4rem !important;
+}
+</style>
