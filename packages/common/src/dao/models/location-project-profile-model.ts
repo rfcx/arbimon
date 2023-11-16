@@ -37,6 +37,18 @@ export const LocationProjectProfileModel = defineWithDefaults<LocationProjectPro
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false,
       defaultValue: []
+    },
+    // if null, then there is no date provided for this project
+    dateStart: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null
+    },
+    // if null, then the project is ongoing
+    dateEnd: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null
     }
   },
   {

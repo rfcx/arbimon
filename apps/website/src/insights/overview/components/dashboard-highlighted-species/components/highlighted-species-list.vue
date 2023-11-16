@@ -17,7 +17,7 @@
             {{ item.scientificName }}
           </p>
           <p class="text-xs text-subtle">
-            {{ item.commonName || 'unknown' }}
+            {{ item.commonName || 'Unknown' }}
           </p>
         </div>
       </div>

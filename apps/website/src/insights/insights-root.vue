@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-gray-50 dark:bg-hero-cta-frog-bg bg-cover border-b-1 border-fog"
+    class="bg-gray-50 dark:bg-pitch border-b-1 border-fog"
   >
     <div
       class="px-4"
@@ -94,7 +94,7 @@
                 class="mr-3"
               >
                 <router-link
-                  :to="item.route"
+                  :to="getRouterLink(item.route.name)"
                   :active-class="index > 0 ? 'text-insight border-frequency dark:text-frequency dark:border-frequency hover:text-insight hover:border-frequency dark:hover:text-insight' : ''"
                   :exact-active-class="index === 0 ? 'text-insight border-frequency dark:text-frequency dark:border-frequency hover:text-insight hover:border-frequency dark:hover:text-insight' : ''"
                   class="inline-block pt-3 px-3 pb-1.5 border-b-3 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-200 dark:hover:text-gray-200"
@@ -121,12 +121,14 @@
       <router-view />
     </div>
   </div>
+  <footer-bar v-if="!isProjectMember || isViewingAsGuest" />
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import FooterBar from '@/_layout/components/landing-footer.vue'
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
@@ -186,6 +188,11 @@ const isViewingAsGuest = computed(() => {
   return route.query.guest === '1'
 })
 
+const getRouterLink = (routeName: string): {name: string, query?: Record<string, number>} => {
+  const r = { name: routeName }
+  return isViewingAsGuest.value ? { ...r, query: { guest: 1 } } : r
+}
+
 watch(() => profile.value, () => {
   if (!profile.value) return
   dashboardStore.updateProjectSummary(profile.value.summary)
@@ -198,14 +205,14 @@ const refetchInsightPublishStatus = (): void => {
   insightsPublishStatusRefetch.value()
 }
 
-const startShareInsightNavigation = ref<'start-show' | 'start-hide' | 'idle'>('idle')
+const startShareInsightNavigation = ref<'start-show' | 'start-hide' | 'default-show' | 'idle'>('idle')
 
 const shareInsight = (): void => {
   startShareInsightNavigation.value = 'start-show'
 }
 
 const hideInsight = (): void => {
-  startShareInsightNavigation.value = 'start-hide'
+  startShareInsightNavigation.value = 'default-show'
 }
 
 </script>

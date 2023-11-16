@@ -1,7 +1,7 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed z-50 top-0 left-0 w-13 border-r-1 border-util-gray-02 hover:border-insight h-screen transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch group transition duration-300 ease-in-out delay-500 hover:(w-66 delay-300)"
+    class="fixed z-50 top-0 left-0 w-13 border-r-1 border-util-gray-02 hover:border-insight h-screen transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-echo group transition duration-300 ease-in-out delay-500 hover:(w-66 delay-300)"
     aria-label="Sidebar"
     data-drawer-backdrop="false"
     @mouseenter="showSidebar = true"
@@ -10,7 +10,7 @@
     <div class="h-full pb-4 overflow-y-auto">
       <div class="flex flex-col h-full justify-between">
         <div>
-          <div class="pl-3 pr-2 my-4 h-8 flex flex-row">
+          <div class="pl-3 pr-2 my-4 h-8 flex flex-row items-center">
             <router-link
               :to="{ name: ROUTE_NAMES.landingHome }"
               class="flex items-center"
@@ -20,11 +20,11 @@
                 class="h-7 max-h-7"
                 alt="Arbimon Logo"
               >
+              <span
+                v-if="showSidebar"
+                class="ml-4 uppercase whitespace-nowrap text-lg font-display dark:text-insight"
+              >Arbimon</span>
             </router-link>
-            <span
-              v-if="showSidebar"
-              class="ml-4 self-center uppercase text-xl whitespace-nowrap font-display dark:text-insight"
-            >Arbimon</span>
           </div>
           <div class="my-4 border-t-1 border-util-gray-02" />
           <ul class="px-3 flex flex-col gap-y-4 border-gray-200 dark:border-gray-700">
@@ -127,11 +127,12 @@
                   <a
                     v-else-if="childItem.legacyPath"
                     :href="arbimonLink + childItem.legacyPath"
+                    :target="childItem.legacyPath ? '_blank' : undefined"
                     class="flex items-center pl-12 w-full text-base font-normal hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
                   >
                     {{ childItem.title }}
                     <icon-custom-linkout
-                      v-if="item.legacyPath"
+                      v-if="childItem.legacyPath"
                       class="text-xs ml-1"
                     />
                   </a>
@@ -141,6 +142,21 @@
           </ul>
           <div class="my-4 border-t-1 border-util-gray-02" />
           <ul class="px-3 flex flex-col gap-y-4">
+            <li>
+              <a
+                :title="'Arbimon Support'"
+                :href="supportLink"
+                target="_blank"
+                exact-active-class="bg-insight rounded text-moss"
+                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+              >
+                <icon-custom-fi-help />
+                <span class="ml-2 hidden group-hover:block">Help</span>
+                <icon-custom-linkout
+                  class="text-xs ml-1 hidden group-hover:block"
+                />
+              </a>
+            </li>
             <li>
               <router-link
                 :to="{ name: ROUTE_NAMES.myProjects }"
@@ -152,7 +168,7 @@
                 >
                   <icon-custom-fi-clipboard />
                 </span>
-                <span class="ml-2 hidden group-hover:block">My Projects</span>
+                <span class="ml-2 hidden group-hover:block">My projects</span>
               </router-link>
             </li>
           </ul>
@@ -162,12 +178,16 @@
           <ul class="px-3 flex flex-col gap-y-4">
             <li>
               <a
-                :title="'Account Setting'"
-                :href="arbimonLink + '/settings/users'"
+                :title="'Account Settings'"
+                :href="ARBIMON_BASE_URL + '/user-settings'"
+                target="_blank"
                 class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
               >
                 <icon-custom-fi-user />
-                <span class="ml-2 hidden group-hover:block">Account Setting</span>
+                <span class="ml-2 hidden group-hover:block">Account settings</span>
+                <icon-custom-linkout
+                  class="text-xs ml-1 hidden group-hover:block"
+                />
               </a>
             </li>
             <li
@@ -215,6 +235,7 @@ import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 
 const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+const supportLink = ref('https://support.rfcx.org/')
 
 const auth = inject(authClientKey) as Auth0Client
 const store = useStore()
@@ -287,11 +308,11 @@ const allItems: Item[] = [
     ]
   },
   {
-    title: 'Audio Analyses',
+    title: 'Audio analyses',
     iconRaw: 'fi-aed',
     children: [
       {
-        title: 'Active Jobs',
+        title: 'Active jobs',
         legacyPath: '/jobs'
       },
       {
@@ -315,14 +336,14 @@ const allItems: Item[] = [
     ]
   },
   {
-    title: 'Ecological Insights',
+    title: 'Ecological insights',
     iconRaw: 'pres-chart-bar',
     route: {
       name: ROUTE_NAMES.overview
     }
   },
   {
-    title: 'Project Settings',
+    title: 'Project settings',
     iconRaw: 'fi-settings',
     route: {
       name: ROUTE_NAMES.projectSettings

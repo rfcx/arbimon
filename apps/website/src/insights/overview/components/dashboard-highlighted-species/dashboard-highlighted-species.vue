@@ -4,10 +4,16 @@
     Focal species of this project.
   </h6>
   <div
+    v-if="!canEdit && speciesList.length"
+    class="w-full mt-6 rounded-lg p-6 shadow bg-util-gray-02"
+  >
+    <h6>The project owner has not selected highlighted species for this project.</h6>
+  </div>
+  <div
     v-if="speciesList && speciesList.length > 0"
     class="mt-6"
   >
-    <HightlightedSpeciesList
+    <HighlightedSpeciesList
       :species="speciesList"
     />
   </div>
@@ -18,19 +24,23 @@
     <EmptySpeciesList />
   </div>
   <div
+    v-if="canEdit"
     class="mt-6 flex flex-row baseline"
   >
     <button
       class="btn btn-secondary group w-full"
-      data-modal-target="species-hightlighted-modal"
-      data-modal-toggle="species-hightlighted-modal"
+      data-modal-target="species-highlighted-modal"
+      data-modal-toggle="species-highlighted-modal"
       type="button"
       @click="openModalToSelectSpecies"
     >
       Select Species <icon-custom-ic-edit class="ml-2 group-hover:stroke-pitch" />
     </button>
   </div>
-  <HighlightedSpeciesSelector />
+  <HighlightedSpeciesModal
+    :highlighted-species="speciesList"
+    @emit-close="closeModal"
+  />
 </template>
 
 <script setup lang="ts">
@@ -42,11 +52,12 @@ import { type DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { type HighlightedSpeciesRow } from '../../types/highlighted-species'
 import EmptySpeciesList from './components/empty-species-list.vue'
-import HightlightedSpeciesList from './components/highlighted-species-list.vue'
-import HighlightedSpeciesSelector from './components/highlighted-species-selector.vue'
+import HighlightedSpeciesList from './components/highlighted-species-list.vue'
+import HighlightedSpeciesModal from './components/highlighted-species-modal.vue'
 
-const props = defineProps<{ species: DashboardSpecies[] | undefined }>()
+const props = defineProps<{ species: DashboardSpecies[] | undefined, canEdit: boolean }>()
 const modal = ref() as Ref<Modal>
+
 const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   if (props.species === undefined) {
     return []
@@ -65,7 +76,7 @@ const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
 })
 
 onMounted(() => {
-  modal.value = new Modal(document.getElementById('species-hightlighted-modal'), {
+  modal.value = new Modal(document.getElementById('species-highlighted-modal'), {
     placement: 'center',
     backdrop: 'dynamic',
     backdropClasses: 'bg-pitch bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
@@ -75,5 +86,9 @@ onMounted(() => {
 
 const openModalToSelectSpecies = (): void => {
   modal.value.show()
+}
+
+const closeModal = (): void => {
+  modal.value.hide()
 }
 </script>

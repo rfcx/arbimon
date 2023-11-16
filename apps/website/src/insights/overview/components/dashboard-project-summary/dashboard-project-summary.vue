@@ -138,7 +138,7 @@
             id="about"
             v-model:is-view-mored="isAboutTabViewMored"
             v-model:is-editing="isAboutTabEditing"
-            :editable="!viewOnly"
+            :editable="canEdit"
             :raw-markdown-text="dashboardContent?.readme"
             :default-markdown-text="readmeDefault"
             @on-editor-close="updateReadme"
@@ -157,7 +157,7 @@
             id="methods"
             v-model:is-view-mored="isMethodsTabViewMored"
             v-model:is-editing="isMethodsTabEditing"
-            :editable="!viewOnly"
+            :editable="canEdit"
             :raw-markdown-text="dashboardContent?.methods"
             :default-markdown-text="methodsDefault"
             @on-editor-close="updateMethods"
@@ -176,7 +176,7 @@
             id="key-result"
             v-model:is-view-mored="isKeyResultTabViewMored"
             v-model:is-editing="isKeyResultTabEditing"
-            :editable="!viewOnly"
+            :editable="canEdit"
             :raw-markdown-text="dashboardContent?.keyResult"
             :default-markdown-text="keyResultDefault"
             @on-editor-close="updateKeyResult"
@@ -208,7 +208,7 @@
             id="resources"
             v-model:is-view-mored="isResourcesTabViewMored"
             v-model:is-editing="isResourcesTabEditing"
-            :editable="!viewOnly"
+            :editable="canEdit"
             :raw-markdown-text="dashboardContent?.resources"
             :default-markdown-text="resourcesDefault"
             @on-editor-close="updateResources"
@@ -237,7 +237,7 @@ import { useUpdateDashboardResources } from '../../composables/use-update-dashbo
 import DashboardMarkdownViewerEditor from './components/dashboard-markdown-viewer-editor.vue'
 import DashboardProjectStakeholders from './components/dashboard-project-stakeholders/dashboard-project-stakeholders.vue'
 
-defineProps<{ viewOnly: boolean }>()
+defineProps<{ canEdit: boolean }>()
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const { readme: readmeDefault, keyResult: keyResultDefault, resources: resourcesDefault, methods: methodsDefault } = useMarkdownEditorDefaults()

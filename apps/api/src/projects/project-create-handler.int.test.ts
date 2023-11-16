@@ -30,10 +30,12 @@ const getMockedApp = async (): Promise<FastifyInstance> => {
 }
 
 const biodiversitySequelize = getSequelize()
-const { LocationProject } = ModelRepository.getInstance(biodiversitySequelize)
+const { LocationProject, LocationProjectProfile } = ModelRepository.getInstance(biodiversitySequelize)
 
 afterEach(async () => {
-  await LocationProject.destroy({ where: { slug: { [Op.like]: 'red-squirrels%' } } })
+  const locationProjects = await LocationProject.findAll({ where: { slug: { [Op.like]: 'red-squirrels%' } } }).then(projects => projects.map(project => project.id))
+  await LocationProjectProfile.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
+  await LocationProject.destroy({ where: { id: { [Op.in]: locationProjects } } })
 })
 
 test('POST /projects creates local project', async () => {

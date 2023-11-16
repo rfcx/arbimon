@@ -37,7 +37,6 @@
     </div>
     <SpeciesList
       :selected-risk="selectedRisk"
-      class="mt-6"
     />
   </div>
 </template>
