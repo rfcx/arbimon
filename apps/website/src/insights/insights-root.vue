@@ -94,12 +94,7 @@
                 class="mr-3"
               >
                 <router-link
-                  :to="{
-                    ...item.route,
-                    query: {
-                      guest: isViewingAsGuest ? 1 : 0
-                    }
-                  }"
+                  :to="getRouterLink(item.route.name)"
                   :active-class="index > 0 ? 'text-insight border-frequency dark:text-frequency dark:border-frequency hover:text-insight hover:border-frequency dark:hover:text-insight' : ''"
                   :exact-active-class="index === 0 ? 'text-insight border-frequency dark:text-frequency dark:border-frequency hover:text-insight hover:border-frequency dark:hover:text-insight' : ''"
                   class="inline-block pt-3 px-3 pb-1.5 border-b-3 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-200 dark:hover:text-gray-200"
@@ -192,6 +187,11 @@ const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, select
 const isViewingAsGuest = computed(() => {
   return route.query.guest === '1'
 })
+
+const getRouterLink = (routeName: string): {name: string, query?: Record<string, number>} => {
+  const r = { name: routeName }
+  return isViewingAsGuest.value ? { ...r, query: { guest: 1 } } : r
+}
 
 watch(() => profile.value, () => {
   if (!profile.value) return
