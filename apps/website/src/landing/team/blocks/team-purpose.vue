@@ -16,15 +16,33 @@
           </div>
         </div>
         <div class="basis-7/12">
-          <img
-            :src="image"
-            class="rounded-2xl"
+          <video
+            :key="arbimonWebsiteCut"
+            :poster="image"
+            autoplay
+            muted
+            loop
+            preload="auto"
+            playsinline
+            class="rounded-2xl w-full h-full h-90 bg-moss object-cover object-center"
+            alt="Video"
+            aria-label="Video"
           >
+            <source
+              :src="arbimonWebsiteCut"
+              type="video/mp4"
+            >
+            <image-card
+              :src="image"
+            />
+          </video>
         </div>
       </div>
     </div>
   </section>
 </template>
 <script setup lang="ts">
+import arbimonWebsiteCut from '@/_assets/landing/team/arbimonWebsiteCut.mp4'
 import image from '@/_assets/landing/team/Landscape_45.webp'
+import imageCard from '../components/image-card.vue'
 </script>
