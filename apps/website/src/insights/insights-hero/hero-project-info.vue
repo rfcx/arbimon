@@ -10,7 +10,7 @@
       />
       <span
         :style="showTooltip"
-        class="text-insight text-sm mr-2"
+        class="text-insight text-sm mr-2 cursor-pointer"
         data-tooltip-target="tooltip-project-country"
       >
         {{ projectCountryText }}
