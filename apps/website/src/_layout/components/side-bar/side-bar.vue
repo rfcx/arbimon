@@ -1,7 +1,7 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed z-50 top-0 left-0 w-13 border-r-1 border-util-gray-02 hover:border-insight h-screen transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-pitch group transition duration-300 ease-in-out delay-500 hover:(w-66 delay-300)"
+    class="fixed z-50 top-0 left-0 w-13 border-r-1 border-util-gray-02 hover:border-insight h-screen transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-echo group transition duration-300 ease-in-out delay-500 hover:(w-66 delay-300)"
     aria-label="Sidebar"
     data-drawer-backdrop="false"
     @mouseenter="showSidebar = true"
@@ -131,7 +131,7 @@
                   >
                     {{ childItem.title }}
                     <icon-custom-linkout
-                      v-if="item.legacyPath"
+                      v-if="childItem.legacyPath"
                       class="text-xs ml-1"
                     />
                   </a>
@@ -150,6 +150,9 @@
               >
                 <icon-custom-fi-help />
                 <span class="ml-2 hidden group-hover:block">Help</span>
+                <icon-custom-linkout
+                  class="text-xs ml-1 hidden group-hover:block"
+                />
               </a>
             </li>
             <li>
@@ -164,20 +167,6 @@
                   <icon-custom-fi-clipboard />
                 </span>
                 <span class="ml-2 hidden group-hover:block">My projects</span>
-              </router-link>
-            </li>
-            <li>
-              <router-link
-                :to="{ name: ROUTE_NAMES.explore }"
-                exact-active-class="bg-insight rounded text-moss"
-                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
-              >
-                <span
-                  class="p-0.5"
-                >
-                  <icon-custom-fi-book-open />
-                </span>
-                <span class="ml-2 hidden group-hover:block">Projects</span>
               </router-link>
             </li>
           </ul>
