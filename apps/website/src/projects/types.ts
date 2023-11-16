@@ -43,7 +43,7 @@ export interface ProjectObjective {
 }
 
 export const masterOjectiveTypes = {
-  BioBaseline: { id: 100, slug: 'bio-baseline', description: 'Create baseline biodiversity' },
+  BioBaseline: { id: 100, slug: 'bio-baseline', description: 'Establish baseline biodiversity' },
   MonitorSpecies: { id: 200, slug: 'monitor-species', description: 'Detect / monitor endangered species' },
   MonitorIllegalAct: { id: 300, slug: 'monitor-illegal-act', description: 'Detect and monitor illegal activity' },
   ImpactHuman: { id: 400, slug: 'impact-human', description: 'Evaluate impact of human activities on biodiversity' },
