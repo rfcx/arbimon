@@ -176,11 +176,13 @@ const routes: RouteRecordRaw[] = [
 
 const routerOptions: Omit<RouterOptions, 'history'> = {
   routes,
-  scrollBehavior (to, _from, _savedPosition) {
-    if (!to.hash) return { top: 0 }
-    return {
-      el: to.hash,
-      behavior: 'smooth'
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else if (to.hash) {
+      return { el: to.hash, behavior: 'smooth' }
+    } else {
+      return { el: '#default-scroll-start', behavior: 'smooth' }
     }
   }
 }
