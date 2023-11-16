@@ -205,14 +205,14 @@ const refetchInsightPublishStatus = (): void => {
   insightsPublishStatusRefetch.value()
 }
 
-const startShareInsightNavigation = ref<'start-show' | 'start-hide' | 'idle'>('idle')
+const startShareInsightNavigation = ref<'start-show' | 'start-hide' | 'default-show' | 'idle'>('idle')
 
 const shareInsight = (): void => {
   startShareInsightNavigation.value = 'start-show'
 }
 
 const hideInsight = (): void => {
-  startShareInsightNavigation.value = 'start-hide'
+  startShareInsightNavigation.value = 'default-show'
 }
 
 </script>
