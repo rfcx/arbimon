@@ -30,10 +30,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       return {
         locationProjectId: puertoRicoProjectId,
         taxonSpeciesId,
-        highlightedOrder,
-        riskRatingLocalCode,
-        riskRatingLocalLevel,
-        riskRatingLocalSource
+        highlightedOrder: highlightedOrder ?? 0,
+        description: '',
+        riskRatingLocalCode: riskRatingLocalCode ?? '',
+        riskRatingLocalLevel: riskRatingLocalLevel ?? -1,
+        riskRatingLocalSource: riskRatingLocalSource ?? ''
       }
     })
     .filter(isDefined)
