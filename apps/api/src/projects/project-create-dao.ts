@@ -23,7 +23,9 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
     methods: '',
     keyResult: '',
     resources: '',
-    objectives: projectPartial.objectives
+    objectives: projectPartial.objectives,
+    dateStart: null,
+    dateEnd: null
   }
   await LocationProjectProfile.create(profile)
 
