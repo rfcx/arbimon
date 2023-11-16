@@ -48,7 +48,7 @@ const dataPr = {
   resources: '',
   methods: '',
   objectives: ['monitor-species', 'impact-human', 'blagh'],
-  dateStart: '2021-01-01',
+  dateStart: new Date(),
   dateEnd: null
 }
 
