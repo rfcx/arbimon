@@ -1,6 +1,9 @@
+import { Op } from 'sequelize'
+
 import { type ApiStack } from '@rfcx-bio/common/api-bio/_helpers'
-import { type DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
+import { type DashboardSpecies, type LocationProjectSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { type TaxonSpecies } from '@rfcx-bio/common/dao/types'
 import { type DashboardSpeciesHighlighted } from '@rfcx-bio/common/dao/types/dashboard-species-highlighted'
 
 import { getSequelize } from '~/db'
@@ -23,6 +26,30 @@ export const getHighlightedSpecies = async (projectId: number): Promise<Dashboar
       order: [['highlightedOrder', 'ASC']],
       raw: true
     })
+
+export const postHighlightedSpecies = async (species: LocationProjectSpecies[]): Promise<void> => {
+  await ModelRepository.getInstance(getSequelize())
+    .LocationProjectSpecies
+    .bulkCreate(species)
+}
+
+export const deleteHighlightedSpecies = async (species: LocationProjectSpecies[]): Promise<void> => {
+  await ModelRepository.getInstance(getSequelize())
+    .LocationProjectSpecies
+    .destroy({
+      where: { locationProjectId: species[0].locationProjectId, taxonSpeciesId: { [Op.in]: species.map(sp => sp.taxonSpeciesId) } }
+    })
+}
+
+export const getSpeciesBySlug = async (speciesIds: string[]): Promise<TaxonSpecies[]> => {
+  return await ModelRepository.getInstance(getSequelize())
+    .TaxonSpecies
+    .findAll({
+      where: { slug: { [Op.in]: speciesIds } },
+      attributes: ['id', 'slug'],
+      raw: true
+    })
+}
 
 export const getRichnessByTaxon = async (locationProjectId: number): Promise<ApiStack> => {
   const result = await ModelRepository.getInstance(getSequelize())
