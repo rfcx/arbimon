@@ -4,6 +4,12 @@
     Focal species of this project.
   </h6>
   <div
+    v-if="!canEdit && speciesList.length"
+    class="w-full mt-6 rounded-lg p-6 shadow bg-util-gray-02"
+  >
+    <h6>The project owner has not selected highlighted species for this project.</h6>
+  </div>
+  <div
     v-if="speciesList && speciesList.length > 0"
     class="mt-6"
   >
