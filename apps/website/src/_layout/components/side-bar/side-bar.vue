@@ -127,6 +127,7 @@
                   <a
                     v-else-if="childItem.legacyPath"
                     :href="arbimonLink + childItem.legacyPath"
+                    :target="childItem.legacyPath ? '_blank' : undefined"
                     class="flex items-center pl-12 w-full text-base font-normal hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
                   >
                     {{ childItem.title }}
@@ -145,6 +146,7 @@
               <a
                 :title="'Arbimon Support'"
                 :href="supportLink"
+                target="_blank"
                 exact-active-class="bg-insight rounded text-moss"
                 class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
