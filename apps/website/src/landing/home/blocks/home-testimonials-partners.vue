@@ -31,7 +31,7 @@
         >
         <div class="max-w-screen-sm">
           <h1 class="mb-4 tracking-tight text-gray-900 dark:text-frequency">
-            What our users & partners are saying...
+            What Arbimon users are saying...
           </h1>
           <h4 class="text-base text-lg lg:text-2xl min-h-24 lg:min-h-40">
             “{{ feedbacks[currentFeedbackIndex].text }}”
