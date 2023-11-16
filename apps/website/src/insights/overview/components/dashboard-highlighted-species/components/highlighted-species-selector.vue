@@ -15,11 +15,17 @@
           v-else
           class="min-h-14 h-14 min-w-14 w-14 object-cover rounded bg-util-gray-02"
         />
-        <div class="self-center tracking-tight line-clamp-2 min-w-40">
-          <p class="italic">
+        <div class="self-center">
+          <p
+            class="italic overflow-hidden tracking-tight line-clamp-2 inline-block"
+            :title="item.scientificName"
+          >
             {{ item.scientificName }}
           </p>
-          <p class="text-xs text-subtle tracking-tight line-clamp-2">
+          <p
+            class="text-xs text-subtle tracking-tight overflow-hidden line-clamp-2 inline-block"
+            :title="item.commonName"
+          >
             {{ item.commonName }}
           </p>
         </div>
