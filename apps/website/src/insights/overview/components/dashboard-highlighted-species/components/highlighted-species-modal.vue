@@ -83,6 +83,7 @@
             <div class="flex justify-end">
               <HighlightedSpeciesSelector
                 :species="preSelectedSpecies"
+                @emit-remove-specie="removeSpecieFromList"
               />
             </div>
           </div>
@@ -111,7 +112,7 @@ import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { useStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
 import { useSpeciesInProject } from '../composables/use-species-in-project'
-import HighlightedSpeciesSelector from './highlighted-species-selector.vue'
+import HighlightedSpeciesSelector, { type SpecieRow } from './highlighted-species-selector.vue'
 
 defineEmits<{(e: 'emitClose'): void}>()
 
@@ -147,10 +148,14 @@ const preSelectedSpecies = computed(() => {
   return speciesList.value.length ? speciesList.value.filter(specie => selectedSpeciesSlug.value.includes(specie.slug)) : []
 })
 
+const findIndexToRemove = (slug: string): void => {
+  const index = selectedSpeciesSlug.value.findIndex(sl => sl === slug)
+  selectedSpeciesSlug.value.splice(index, 1)
+}
+
 const selectSpecie = (specie: HighlightedSpeciesRow): void => {
   if (isSpecieSelected(specie)) {
-    const index = selectedSpeciesSlug.value.findIndex(slug => slug === specie.slug)
-    selectedSpeciesSlug.value.splice(index, 1)
+    findIndexToRemove(specie.slug)
   } else {
     if (selectedSpeciesSlug.value.length < 5) {
       selectedSpeciesSlug.value.push(specie.slug)
@@ -161,6 +166,10 @@ const selectSpecie = (specie: HighlightedSpeciesRow): void => {
 const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
   const slugs = selectedSpeciesSlug.value.filter(slug => slug === specie.slug)
   return slugs.length > 0
+}
+
+const removeSpecieFromList = (specie: SpecieRow): void => {
+  findIndexToRemove(specie.slug)
 }
 
 </script>
