@@ -126,12 +126,14 @@
       <router-view />
     </div>
   </div>
+  <footer-bar v-if="!isProjectMember || isViewingAsGuest" />
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import FooterBar from '@/_layout/components/landing-footer.vue'
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
