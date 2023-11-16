@@ -5,6 +5,8 @@ export interface ProjectCreateRequest {
   name: string
   objectives: string[]
   associatedOrganizations?: string
+  startDate?: string
+  endDate?: string
 }
 
 // Response type
