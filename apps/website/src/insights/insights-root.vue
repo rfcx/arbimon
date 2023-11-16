@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-gray-50 dark:bg-hero-cta-frog-bg bg-cover border-b-1 border-fog"
+    class="bg-gray-50 dark:bg-pitch border-b-1 border-fog"
   >
     <div
       class="px-4"
