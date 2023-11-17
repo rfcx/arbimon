@@ -25,6 +25,18 @@
               <icon-custom-fi-close-thin class="cursor-pointer" />
             </button>
           </div>
+          <el-input
+            v-model="searchKeyword"
+            placeholder="Search species"
+            size="large"
+            class="w-1/3 bg-mock"
+          >
+            <template #prefix>
+              <div class="inline-flex items-center">
+                <icon-fas-search class="text-base text-insight" />
+              </div>
+            </template>
+          </el-input>
           <!-- Modal body -->
           <div class="grid grid-cols-3 gap-x-4 w-full">
             <div class="grid grid-cols-1 gap-y-4 col-span-2">
@@ -36,7 +48,7 @@
                   v-for="item in speciesForCurrentPage"
                   :key="'specie-highlighted-' + item.slug"
                   :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-between border-1 items-center rounded gap-x-3 p-4 h-26 bg-echo hover:(border-frequency cursor-pointer)"
+                  class="flex flex-row justify-between border-1 items-center rounded-lg gap-x-3 p-4 h-26 bg-echo hover:(border-frequency cursor-pointer)"
                   @click="selectSpecie(item)"
                 >
                   <img
@@ -134,6 +146,8 @@ const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const selectedProjectId = computed(() => store.selectedProject?.id)
 
+const searchKeyword = ref('')
+
 const selectedSpeciesSlug = ref<string[]>([])
 
 const PAGE_SIZE = 8
@@ -172,7 +186,15 @@ const newSpeciesToAdd = computed(() => {
   return preSelectedSpecies.value.filter(sp => !existingSlugInDB.value.includes(sp.slug))
 })
 
-const speciesForCurrentPage = computed(() => speciesList.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE))
+const speciesForCurrentPage = computed(() => searchKeyword.value
+  ? speciesList.value
+    .filter(({ scientificName, commonName }) => {
+      return scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
+        commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))
+    })
+    .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
+  : speciesList.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
+)
 
 const findIndexToRemove = (slug: string): void => {
   const index = selectedSpeciesSlug.value.findIndex(sl => sl === slug)
@@ -224,5 +246,14 @@ const saveHighlightedSpecies = async (): Promise<void> => {
 const deleteHighlightedSpecies = async (specie: HighlightedSpeciesRow): Promise<void> => {
   mutateDeleteSpecie({ species: [specie] })
 }
-
 </script>
+<style lang="scss">
+.el-input__wrapper {
+  border-radius: 8px;
+  border: 1px solid #F9F6F2;
+  background: #060508;
+}
+.el-input__inner {
+  padding-left: 2px !important;
+}
+</style>
