@@ -11,6 +11,7 @@ export const updateProjectAndProfile = async (request: ProjectSettingsUpdateBody
   // TODO: save change on Arbimon legacy
 
   // update in Core
+  // name is required as part of checking for permission in Core
   const updateInCoreSuccess = await editProject(coreProjectId, { name: request.name }, token)
   if (!updateInCoreSuccess) throw new Error('Failed to update project in Core')
 
