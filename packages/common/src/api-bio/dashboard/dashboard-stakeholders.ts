@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
-import { type OrganizationTypes } from '@/dao/types'
+import { type OrganizationTypes } from '../../dao/types'
 import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 
 // The `GET` Service
