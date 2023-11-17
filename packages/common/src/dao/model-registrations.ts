@@ -11,9 +11,11 @@ import { DataSourceModel, MODEL_DATA_SOURCE } from './models/data-source-model'
 import { DetectionBySiteSpeciesHourModel, MODEL_DETECTION_BY_SITE_SPECIES_HOUR } from './models/detection-by-site-species-hour-model'
 import { LocationProjectMetricModel, MODEL_LOCATION_PROJECT_METRIC } from './models/location-project-metric-model'
 import { LocationProjectModel, MODEL_LOCATION_PROJECT } from './models/location-project-model'
+import { LocationProjectOrganizationModel, MODEL_LOCATION_PROJECT_ORGANIZATION } from './models/location-project-organization-model'
 import { LocationProjectProfileModel, MODEL_LOCATION_PROJECT_PROFILE } from './models/location-project-profile-model'
 import { LocationProjectSpeciesModel, MODEL_LOCATION_PROJECT_SPECIES } from './models/location-project-species-model'
 import { LocationSiteModel, MODEL_LOCATION_SITE } from './models/location-site-model'
+import { MODEL_ORGANIZATION, OrganizationModel } from './models/organization-model'
 import { MODEL_PROJECT_VERSION, ProjectVersionModel } from './models/project-version-model'
 import { MODEL_RECORDING_BY_SITE_HOUR, RecordingBySiteHourModel } from './models/recording-by-site-hour-model'
 import { MODEL_RISK_RATING_IUCN, RiskRatingIucnModel } from './models/risk-rating-iucn-model'
@@ -36,7 +38,7 @@ export const modelRegistrations = {
   [MODEL_CACHE_USER_PROJECT]: [CacheUserProjectModel, {}],
   [MODEL_DATA_SOURCE]: [DataSourceModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_DETECTION_BY_SITE_SPECIES_HOUR]: [DetectionBySiteSpeciesHourModel, { manyToOne: [MODEL_LOCATION_SITE, MODEL_TAXON_SPECIES] }],
-  [MODEL_LOCATION_PROJECT]: [LocationProjectModel, {}],
+  [MODEL_LOCATION_PROJECT]: [LocationProjectModel, { manyToMany: [{ model: MODEL_ORGANIZATION, through: MODEL_LOCATION_PROJECT_ORGANIZATION }] }],
   [MODEL_LOCATION_PROJECT_PROFILE]: [LocationProjectProfileModel, { oneToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_LOCATION_PROJECT_SPECIES]: [LocationProjectSpeciesModel, { manyToOne: [MODEL_LOCATION_PROJECT, MODEL_TAXON_SPECIES] }],
   [MODEL_LOCATION_SITE]: [LocationSiteModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
@@ -55,6 +57,8 @@ export const modelRegistrations = {
   [MODEL_SYNC_ERROR]: [SyncErrorModel, { manyToOne: [MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
   [MODEL_SYNC_LOG_BY_PROJECT]: [SyncLogByProjectModel, { manyToOne: [MODEL_LOCATION_PROJECT, MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
   [MODEL_SYNC_STATUS]: [SyncStatusModel, { manyToOne: [MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
+  [MODEL_ORGANIZATION]: [OrganizationModel, { manyToMany: [{ model: MODEL_LOCATION_PROJECT, through: MODEL_LOCATION_PROJECT_ORGANIZATION }] }],
+  [MODEL_LOCATION_PROJECT_ORGANIZATION]: [LocationProjectOrganizationModel, {}],
 
   // Views
   [MODEL_DASHBOARD_DETECTION_BY_HOUR]: [DashboardDetectionByHourModel],
