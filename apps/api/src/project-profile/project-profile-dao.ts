@@ -51,7 +51,7 @@ export const getProjectSettings = async (locationProjectId: number): Promise<Pro
   })
   const resProfile = await locationProjectProfile.findOne({
     where: { locationProjectId },
-    attributes: ['summary', 'objectives'],
+    attributes: ['summary', 'objectives', 'dateStart', 'dateEnd'],
     raw: true
   })
   if (!resProject) throw new Error(`Failed to get project settings for locationProjectId: ${locationProjectId}`)
