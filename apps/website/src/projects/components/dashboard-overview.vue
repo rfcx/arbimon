@@ -35,7 +35,7 @@
       <icon-custom-fi-list
         v-if="stat.value === 'playlist'"
       />
-      <icon-custom-ft-bird-lg
+      <icon-custom-ft-actual-bird
         v-if="stat.value === 'species'"
       />
       <icon-fas-spinner
