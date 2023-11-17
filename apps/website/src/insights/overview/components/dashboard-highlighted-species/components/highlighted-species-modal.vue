@@ -179,8 +179,9 @@ const findIndexToRemove = (slug: string): void => {
   selectedSpeciesSlug.value.splice(index, 1)
 }
 
-const selectSpecie = (specie: HighlightedSpeciesRow): void => {
+const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
   if (isSpecieSelected(specie)) {
+    await removeSpecieFromDB(specie.slug)
     findIndexToRemove(specie.slug)
   } else {
     if (selectedSpeciesSlug.value.length < 5) {
@@ -195,11 +196,15 @@ const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
 }
 
 const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
-  const specieToDeleteFromDB = props.highlightedSpecies.find(sp => sp.slug === specie.slug)
-  if (existingSlugInDB.value.includes(specie.slug) && specieToDeleteFromDB) {
+  await removeSpecieFromDB(specie.slug)
+  findIndexToRemove(specie.slug)
+}
+
+const removeSpecieFromDB = async (slug: string): Promise<void> => {
+  const specieToDeleteFromDB = props.highlightedSpecies.find(sp => sp.slug === slug)
+  if (existingSlugInDB.value.includes(slug) && specieToDeleteFromDB) {
     await deleteHighlightedSpecies(specieToDeleteFromDB)
   }
-  findIndexToRemove(specie.slug)
 }
 
 const fillExistedSpeciesSlug = (): void => {
