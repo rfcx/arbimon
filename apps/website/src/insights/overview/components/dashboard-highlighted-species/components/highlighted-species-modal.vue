@@ -37,6 +37,21 @@
               </div>
             </template>
           </el-input>
+          <div class="flex flex-row items-center gap-x-2">
+            <el-tag
+              v-for="riskRating in existingRiskCode"
+              :key="riskRating.code"
+              class="species-highlights border-none cursor-pointer text-md h-6"
+              effect="dark"
+              size="large"
+              :color="riskRating.color"
+              :title="riskRating.code"
+              round
+              @click="filterByCode(riskRating.code)"
+            >
+              {{ riskRating.code }}
+            </el-tag>
+          </div>
           <!-- Modal body -->
           <div class="grid grid-cols-3 gap-x-4 w-full">
             <div class="grid grid-cols-1 gap-y-4 col-span-2">
@@ -147,6 +162,7 @@ const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const selectedProjectId = computed(() => store.selectedProject?.id)
 
 const searchKeyword = ref('')
+const searchRisk = ref('')
 
 const selectedSpeciesSlug = ref<string[]>([])
 
@@ -178,6 +194,10 @@ const preSelectedSpecies = computed(() => {
   return speciesList.value.length ? speciesList.value.filter(specie => selectedSpeciesSlug.value.includes(specie.slug)) : []
 })
 
+const existingRiskCode = computed(() => {
+  return speciesList.value.length ? speciesList.value.map(specie => specie.riskRating).filter((value, index, self) => self.findIndex(({ code }) => code === value.code) === index) : []
+})
+
 const existingSlugInDB = computed(() => {
   return props.highlightedSpecies.map(sp => sp.slug)
 })
@@ -188,11 +208,13 @@ const newSpeciesToAdd = computed(() => {
 
 const speciesForCurrentPage = computed(() => searchKeyword.value
   ? speciesList.value
-    .filter(({ scientificName, commonName }) => {
+    .filter(({ scientificName, commonName, riskRating }) => {
       return scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
-        commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))
+        ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false) ||
+        riskRating.code === searchRisk.value
     })
     .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
+    .slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
   : speciesList.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
 )
 
@@ -233,6 +255,10 @@ const fillExistedSpeciesSlug = (): void => {
   if (props.highlightedSpecies.length) {
     selectedSpeciesSlug.value = existingSlugInDB.value
   } else selectedSpeciesSlug.value = []
+}
+
+const filterByCode = (code: string): void => {
+  searchRisk.value = code
 }
 
 const saveHighlightedSpecies = async (): Promise<void> => {
