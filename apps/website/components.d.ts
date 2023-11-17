@@ -100,6 +100,7 @@ declare module '@vue/runtime-core' {
     IconFasEllipsisV: typeof import('~icons/fa-solid/ellipsis-v')['default']
     IconFasFilter: typeof import('~icons/fa-solid/filter')['default']
     IconFasInfoCircle: typeof import('~icons/fa-solid/info-circle')['default']
+    IconFasSearch: typeof import('~icons/fa-solid/search')['default']
     IconFasSpinner: typeof import('~icons/fa-solid/spinner')['default']
     IconFasTag: typeof import('~icons/fa-solid/tag')['default']
     IconFaTrash: typeof import('~icons/fa/trash')['default']
