@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
-import { type OrganizationTypes } from '@/dao/types'
+import { type OrganizationTypes } from '../../dao/types'
 
 // Request types
 export interface SearchOrganizationsQuerystring {
