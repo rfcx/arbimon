@@ -22,6 +22,6 @@ export const projectProfileUpdateHandler: Handler<ProjectProfileResponse, Projec
 
   // TODO: validate user permissions with Core API
 
-  const projectContent = await updateProjectProfile(projectIdInteger, summary, objectives ?? [])
+  const projectContent = await updateProjectProfile(projectIdInteger, { summary, objectives: objectives ?? [] })
   return { summary: projectContent?.summary ?? '', objectives: projectContent?.objectives ?? [] }
 }
