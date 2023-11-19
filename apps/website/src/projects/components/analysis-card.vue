@@ -29,18 +29,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 
 import { type AnalysisCard } from '../types'
 
 const props = defineProps<{analysis: AnalysisCard}>()
 const emit = defineEmits<{(event: 'emitSelectedAnalysis', url: string, value: string): void}>()
 const isSelected = ref(false)
-
-watch(() => props.analysis.isSelected, (newValue) => {
-  console.info('watch props', newValue)
-  isSelected.value = newValue
-}, { deep: true })
 
 function selectedAnalysis (): void {
   isSelected.value = !isSelected.value
