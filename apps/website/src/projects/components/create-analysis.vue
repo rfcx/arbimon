@@ -29,7 +29,6 @@
             class="btn btn-primary w-60 disabled:(bg-util-gray-03 cursor-not-allowed text-util-gray-01) disabled:hover:(bg-util-gray-03 cursor-not-allowed text-util-gray-01)"
             type="button"
             :disabled="!isAnalysisSelected"
-            :title="isAnalysisSelected ? 'Create analysis' : 'Select analysis'"
           >
             <a
               :href="analysisUrl"
