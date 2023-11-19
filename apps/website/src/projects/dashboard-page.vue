@@ -1,6 +1,6 @@
 <template>
   <section
-    class="max-w-screen-xl mx-auto pt-28 mx-auto"
+    class="max-w-screen-xl mx-auto grid gap-20 mx-auto py-20"
     :class="{'overflow-y-hidden h-screen': hasOpenedAnalysisSelector === true}"
   >
     <div class="text-gray-900 dark:text-white">
@@ -8,8 +8,8 @@
         {{ store.selectedProject?.name }}
       </h1>
     </div>
-    <div class="text-gray-900 dark:text-white pt-20">
-      <h2 class="font-header text-4xl font-medium <sm:text-xl">
+    <div class="text-gray-900 dark:text-white">
+      <h2>
         Overview
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-6 pt-6">
@@ -20,9 +20,32 @@
         />
       </div>
     </div>
-    <div class="text-gray-900 dark:text-white pt-20">
+    <div class="text-gray-900 dark:text-white">
+      <h2>
+        Sites
+      </h2>
+      <div class="w-full text-black mapboxgl-map pt-6">
+        <map-base-component
+          :dataset="mapDataset()"
+          data-key="refactorThis"
+          :loading="false"
+          :get-popup-html="getPopupHtml"
+          map-export-name="dashboard-sites"
+          :map-id="'dashboard-sites'"
+          :map-initial-bounds="mapInitialBounds()"
+          :map-base-formatter="circleFormatter()"
+          :map-ground-style="mapGroundStyle"
+          :map-statistics-style="mapStatisticsStyle"
+          :is-show-labels="isShowLabels"
+          :map-height="tabHeight"
+          :style-non-zero="circleStyle()"
+          class="map-bubble w-full"
+        />
+      </div>
+    </div>
+    <div class="text-gray-900 dark:text-white">
       <div class="flex items-center space-x-8">
-        <h2 class="font-header text-4xl font-medium <sm:text-xl">
+        <h2>
           Analyses
         </h2>
         <button
@@ -45,29 +68,6 @@
           :key="analysis.value"
           :analysis="analysis"
         />
-      </div>
-      <div class="text-gray-900 dark:text-white pt-20">
-        <h2 class="font-display text-4xl font-medium sm:text-xl">
-          Sites
-        </h2>
-        <div class="w-full text-black mapboxgl-map pt-6 pb-20">
-          <map-base-component
-            :dataset="mapDataset()"
-            data-key="refactorThis"
-            :loading="false"
-            :get-popup-html="getPopupHtml"
-            map-export-name="dashboard-sites"
-            :map-id="'dashboard-sites'"
-            :map-initial-bounds="mapInitialBounds()"
-            :map-base-formatter="circleFormatter()"
-            :map-ground-style="mapGroundStyle"
-            :map-statistics-style="mapStatisticsStyle"
-            :is-show-labels="isShowLabels"
-            :map-height="tabHeight"
-            :style-non-zero="circleStyle()"
-            class="map-bubble w-full"
-          />
-        </div>
       </div>
     </div>
   </section>
