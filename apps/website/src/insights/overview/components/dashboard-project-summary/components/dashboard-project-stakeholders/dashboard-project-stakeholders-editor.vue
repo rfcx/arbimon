@@ -91,7 +91,7 @@
           type="text"
           autofocus
           placeholder="Type to search organizations"
-          @input="refetchOrganizationsSearchResult()"
+          @input="refetchOrganizationsSearch"
         >
       </div>
     </div>
@@ -124,7 +124,7 @@
     <div class="flex w-full justify-end">
       <button
         class="btn btn-secondary"
-        @click="$emit('emit-finished-editing', selectedOrganizations)"
+        @click="onFinishedEditing"
       >
         Save displayed stakeholders
       </button>
@@ -145,7 +145,7 @@ import OrganizationSearchResultCard from './organization-search-result-card.vue'
 import SelectedOrganizationCard from './selected-organization-card.vue'
 
 const props = defineProps<{ organizations: Array<OrganizationTypes['light']>}>()
-defineEmits<{(event: 'emit-finished-editing', orgIds: number[]): void}>()
+const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[]): void}>()
 
 const selectedUsers = ref([1])
 
@@ -178,9 +178,7 @@ const onAddNewOrganizationFromSearch = (id: number): void => {
   }
 
   selectedOrganizations.value.push(id)
-  console.info(selectedOrganizations.value)
   editableOrganizations.value.push(newOrg)
-  console.info(editableOrganizations.value)
 }
 
 const orgsSearchResult = computed(() => {
@@ -223,6 +221,17 @@ const users = ref([
     image: 'https://picsum.photos/id/448/200/200'
   }
 ])
+
+const onFinishedEditing = (): void => {
+  searchOrganizationValue.value = ''
+  emit('emit-finished-editing', selectedOrganizations.value)
+}
+
+const refetchOrganizationsSearch = (): void => {
+  if (searchOrganizationValue.value !== '') {
+    refetchOrganizationsSearchResult.value()
+  }
+}
 
 const selectAllUsers = (): void => {
   selectedUsers.value = users.value.map(u => u.id)
