@@ -4,7 +4,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 
-export const getInsightsPublisStatus = async (projectId: number): Promise<GetInsightsPublishStatusResponseBody> => {
+export const getInsightsPublishStatus = async (projectId: number): Promise<GetInsightsPublishStatusResponseBody> => {
   const sequelize = getSequelize()
 
   const { ProjectVersion } = ModelRepository.getInstance(sequelize)
