@@ -182,7 +182,7 @@ const routerOptions: Omit<RouterOptions, 'history'> = {
     } else if (to.hash) {
       return { el: to.hash, behavior: 'smooth' }
     } else {
-      return { el: '#default-scroll-start', behavior: 'smooth' }
+      return { el: '.default-scroll-start', behavior: 'smooth' }
     }
   }
 }

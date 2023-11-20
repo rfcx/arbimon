@@ -13,8 +13,9 @@
 
     <div
       v-else
-      class="flex items-center justify-between border border-frequency bg-pitch rounded-lg px-6 py-4 max-w-sm"
+      class="relative flex items-center justify-between border border-frequency bg-pitch rounded-lg px-6 py-4 max-w-sm -z-10"
     >
+      <icon-custom-fi-check-circle class="text-frequency bg-pitch w-6 h-6 absolute -translate-y-1/2 translate-x-1/2 left-auto -top-3 -right-3" />
       <div class="flex items-center justify-start">
         <img
           class="w-12 h-12 rounded-full shadow"
@@ -35,10 +36,6 @@
             {{ primaryContact?.email }}
           </a>
         </div>
-      </div>
-
-      <div class="ml-3 flex justify-center items-center">
-        <icon-custom-fi-check-circle class="w-6 h-6 text-frequency" />
       </div>
     </div>
     <div class="flex justify-start items-center mt-10 mb-3">
@@ -68,7 +65,7 @@
       class="grid gap-3 mt-3 mb-11"
       style="grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr))"
     >
-      <MemberCheckbox
+      <SelectedOrganizationCard
         v-for="u in users"
         :id="u.id"
         :key="`${u.id}${u.name}`"
@@ -94,6 +91,7 @@
           type="text"
           autofocus
           placeholder="Type to search organizations"
+          @input="refetchOrganizationsSearch"
         >
       </div>
     </div>
@@ -102,21 +100,31 @@
       class="grid gap-3 mt-3 mb-10"
       style="grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr))"
     >
-      <MemberCheckbox
+      <SelectedOrganizationCard
         v-for="o in orgsList"
         :id="o.id"
-        :key="`${o.id}${o.name}`"
+        :key="`${o.id}-${o.name}-current`"
         v-model="selectedOrganizations"
         :name="o.name"
         :description="o.description"
         :image="o.image"
+      />
+
+      <OrganizationSearchResultCard
+        v-for="s in orgsSearchResult"
+        :id="s.id"
+        :key="`${s.id}-${s.name}-search`"
+        :name="s.name"
+        :description="s.description"
+        :image="s.image"
+        @emit-add-to-selected-organization="onAddNewOrganizationFromSearch"
       />
     </div>
 
     <div class="flex w-full justify-end">
       <button
         class="btn btn-secondary"
-        @click="$emit('emit-finished-editing')"
+        @click="onFinishedEditing"
       >
         Save displayed stakeholders
       </button>
@@ -125,23 +133,64 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef } from 'vue'
+import { type AxiosInstance } from 'axios'
+import { computed, inject, ref } from 'vue'
 
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
+import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import MemberCheckbox from './member-checkbox.vue'
+import { useGetSearchOrganizationsResult } from '../../../../composables/use-get-search-organizations-result'
+import OrganizationSearchResultCard from './organization-search-result-card.vue'
+import SelectedOrganizationCard from './selected-organization-card.vue'
 
 const props = defineProps<{ organizations: Array<OrganizationTypes['light']>}>()
-defineEmits<{(event: 'emit-finished-editing'): void}>()
+const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[]): void}>()
 
 const selectedUsers = ref([1])
 
-const editableOrganizations = toRef(() => props.organizations)
-const selectedOrganizations = toRef(() => props.organizations.map(o => o.id))
+const editableOrganizations = ref([...props.organizations])
+const selectedOrganizations = ref(props.organizations.map(o => o.id))
 const searchOrganizationValue = ref('')
 
-const orgsList = computed<Array<OrganizationTypes['light'] & { description: string }>>(() => {
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+
+const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
+
+const onAddNewOrganizationFromSearch = (id: number): void => {
+  // Return when the org already exists
+  if (selectedOrganizations.value.findIndex(o => o === id) > -1) {
+    return
+  }
+
+  // if the ID already existed, check whether there is an element in there already so we don't add it twice.
+  // in this case we just add the ID to the selected list again and remove it from the search list.
+  // TODO: Looks like mutating the data attribute of useQuery is invalid, seems to be read-only.
+  if (editableOrganizations.value.findIndex(o => o.id === id) > -1) {
+    selectedOrganizations.value.push(id)
+    return
+  }
+
+  // Add to the list when it's new org
+  const newOrg = organizationsSearchResult.value?.find((o) => o.id === id)
+  if (newOrg == null) {
+    return
+  }
+
+  selectedOrganizations.value.push(id)
+  editableOrganizations.value.push(newOrg)
+}
+
+const orgsSearchResult = computed(() => {
+  return organizationsSearchResult.value?.map(o => {
+    return {
+      ...o,
+      description: ORGANIZATION_TYPE_NAME[o.type]
+    }
+  }) ?? []
+})
+
+const orgsList = computed(() => {
   return editableOrganizations.value.map(o => {
     return {
       ...o,
@@ -172,6 +221,17 @@ const users = ref([
     image: 'https://picsum.photos/id/448/200/200'
   }
 ])
+
+const onFinishedEditing = (): void => {
+  searchOrganizationValue.value = ''
+  emit('emit-finished-editing', selectedOrganizations.value)
+}
+
+const refetchOrganizationsSearch = (): void => {
+  if (searchOrganizationValue.value !== '') {
+    refetchOrganizationsSearchResult.value()
+  }
+}
 
 const selectAllUsers = (): void => {
   selectedUsers.value = users.value.map(u => u.id)

@@ -53,7 +53,6 @@ declare module '@vue/runtime-core' {
     IconCustomFiLogOut: typeof import('~icons/custom-icons/fi-log-out')['default']
     IconCustomFiPm: typeof import('~icons/custom-icons/fi-pm')['default']
     IconCustomFiRfm: typeof import('~icons/custom-icons/fi-rfm')['default']
-    IconCustomFiSearchLg: typeof import('~icons/custom-icons/fi-search-lg')['default']
     IconCustomFiSettings: typeof import('~icons/custom-icons/fi-settings')['default']
     IconCustomFiSoundscape: typeof import('~icons/custom-icons/fi-soundscape')['default']
     IconCustomFiUser: typeof import('~icons/custom-icons/fi-user')['default']
