@@ -39,10 +39,10 @@
       >Project end date</label>
       <div
         class="relative flex-1"
-        :class="{'not-allowed': isSelected}"
+        :class="{'not-allowed': onGoing}"
       >
         <ChooseDatePicker
-          :disabled="isSelected"
+          :disabled="onGoing"
           @emit-select-date="onSelectEndDate"
         />
       </div>
@@ -52,7 +52,7 @@
     <input
       type="checkbox"
       class="w-5 h-5 border mb-1 border-gray-300 rounded dark:bg-echo focus:border-white-600 focus:ring-frequency dark:border-white-600 dark:focus:ring-frequency dark:ring-offset-gray-800"
-      :checked="isSelected"
+      :checked="onGoing"
       @click="toggleDetection()"
     >
     <label class="font-light text-gray-500 dark:text-gray-300 ml-2">This is an on-going project</label>
@@ -79,13 +79,14 @@ const emit = defineEmits<{(e: 'emitUpdateValue', value: ProjectDefault): void}>(
 const name = ref('')
 const startDate = ref('')
 const endDate = ref<string | null>('')
-const isSelected = ref<boolean>(false)
+const onGoing = ref<boolean>(false)
 
 const value: ComputedRef<ProjectDefault> = computed(() => {
   return {
     name: name.value,
     startDate: startDate.value,
-    endDate: endDate.value
+    endDate: endDate.value,
+    onGoing: onGoing.value
   }
 })
 
@@ -94,7 +95,7 @@ const onSelectStartDate = (dateStartLocalIso: string) => {
   emit('emitUpdateValue', value.value)
 }
 
-const onSelectEndDate = (dateEndLocalIso: string) => {
+const onSelectEndDate = (dateEndLocalIso: string | null) => {
   endDate.value = dateEndLocalIso
   emit('emitUpdateValue', value.value)
 }
@@ -110,8 +111,7 @@ watch(name, () => {
 })
 
 const toggleDetection = () => {
-  isSelected.value = !isSelected.value
-  endDate.value = null
+  onGoing.value = !onGoing.value
   emit('emitUpdateValue', value.value)
 }
 </script>

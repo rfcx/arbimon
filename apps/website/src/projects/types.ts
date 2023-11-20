@@ -34,6 +34,7 @@ export interface ProjectDefault {
   name: string
   startDate: string
   endDate: string | null
+  onGoing: boolean
 }
 
 export interface ProjectObjective {
