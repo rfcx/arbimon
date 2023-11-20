@@ -26,12 +26,8 @@
         class="block mb-2 font-medium text-gray-900 dark:text-insight"
       >Project start date</label>
       <div class="relative flex-1">
-        <el-date-picker
-          v-model="startDate"
-          class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
-          type="date"
-          placeholder="Choose date"
-          format="MM/DD/YYYY"
+        <ChooseDatePicker
+          @emit-select-date="onSelectStartDate"
         />
       </div>
     </div>
@@ -45,13 +41,9 @@
         class="relative flex-1"
         :class="{'not-allowed': isSelected}"
       >
-        <el-date-picker
-          v-model="endDate"
-          class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
-          type="date"
-          placeholder="Choose date"
-          format="MM/DD/YYYY"
+        <ChooseDatePicker
           :disabled="isSelected"
+          @emit-select-date="onSelectEndDate"
         />
       </div>
     </div>
@@ -72,6 +64,7 @@ import type { ComputedRef } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
 
 import type { ProjectDefault } from '../../types'
+import ChooseDatePicker from './choose-date-picker.vue'
 
 const props = withDefaults(defineProps<{
   existingName?: string
@@ -95,6 +88,16 @@ const value: ComputedRef<ProjectDefault> = computed(() => {
     endDate: endDate.value
   }
 })
+
+const onSelectStartDate = (dateStartLocalIso: string) => {
+  startDate.value = dateStartLocalIso
+  emit('emitUpdateValue', value.value)
+}
+
+const onSelectEndDate = (dateEndLocalIso: string) => {
+  endDate.value = dateEndLocalIso
+  emit('emitUpdateValue', value.value)
+}
 
 onMounted(() => {
   if (props.existingName) {

@@ -1,0 +1,38 @@
+<template>
+  <el-date-picker
+    v-model="dateValue"
+    class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+    type="date"
+    placeholder="Choose date"
+    format="MM/DD/YYYY"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
+const dateValue = ref<Date | null>()
+const emit = defineEmits<{(e: 'emitSelectDate', value: string): void}>()
+const props = defineProps<{ initialDate?: Date}>()
+
+watchEffect(() => {
+  dateValue.value = props.initialDate ? dayjs(props.initialDate).startOf('day').toDate() : null
+})
+
+// Emit on change
+const emitSelectDate = (date: Date): void => {
+  const dateLocalIso = dayjs(date).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+  emit('emitSelectDate', dateLocalIso)
+}
+
+watchEffect(() => {
+  if (dateValue.value) {
+    emitSelectDate(dateValue.value)
+  }
+})
+
+// const disablePicker = (): boolean => false
+
+</script>
