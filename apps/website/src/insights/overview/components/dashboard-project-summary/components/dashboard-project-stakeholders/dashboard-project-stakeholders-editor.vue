@@ -134,7 +134,7 @@
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { type Ref, computed, inject, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
