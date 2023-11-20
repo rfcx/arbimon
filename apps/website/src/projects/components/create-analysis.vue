@@ -1,6 +1,6 @@
 <template>
   <OnClickOutside
-    class="fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full justify-center items-center flex mx-auto bg-pitch bg-opacity-70 dark:bg-opacity-80 fixed inset-0 z-40"
+    class="fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full justify-center items-center flex mx-auto bg-echo bg-opacity-70 fixed inset-0 z-40"
     @trigger="$emit('emitClose')"
   >
     <div class="relative w-full max-w-md max-h-full">
