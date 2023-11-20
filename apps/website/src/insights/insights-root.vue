@@ -18,7 +18,6 @@
           :metrics="metrics"
         />
         <hero-brief-overview
-          :can-edit="false"
           :default-text="dashboardStore.projectSummary ?? ''"
         />
         <div
