@@ -78,7 +78,7 @@ const emit = defineEmits<{(e: 'emitUpdateValue', value: ProjectDefault): void}>(
 
 const name = ref('')
 const startDate = ref('')
-const endDate = ref('')
+const endDate = ref<string | null>('')
 const isSelected = ref<boolean>(false)
 
 const value: ComputedRef<ProjectDefault> = computed(() => {
@@ -109,16 +109,10 @@ watch(name, () => {
   emit('emitUpdateValue', value.value)
 })
 
-watch(startDate, () => {
-  emit('emitUpdateValue', value.value)
-})
-
-watch(endDate, () => {
-  emit('emitUpdateValue', value.value)
-})
-
 const toggleDetection = () => {
   isSelected.value = !isSelected.value
+  endDate.value = null
+  emit('emitUpdateValue', value.value)
 }
 </script>
 
