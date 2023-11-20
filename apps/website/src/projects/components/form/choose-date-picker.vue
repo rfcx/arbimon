@@ -32,7 +32,4 @@ watchEffect(() => {
     emitSelectDate(dateValue.value)
   }
 })
-
-// const disablePicker = (): boolean => false
-
 </script>
