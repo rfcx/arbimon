@@ -1,6 +1,6 @@
 <template>
   <div
-    class="px-4 bg-gray-50 dark:bg-pitch "
+    class="px-4 bg-gray-50 dark:bg-pitch"
     :class="{
       'pl-18': isProjectMember,
       'md:px-10': !isProjectMember
@@ -84,7 +84,7 @@
   </div>
   <nav
     id="default-scroll-start"
-    class="sticky top-0 px-4 bg-gray-50 dark:bg-pitch border-b-1 border-fog z-50"
+    class="sticky top-0 px-4 bg-gray-50 dark:bg-pitch border-b-1 border-fog z-40"
     :class="{
       'pl-18': isProjectMember,
       'md:px-10': !isProjectMember
