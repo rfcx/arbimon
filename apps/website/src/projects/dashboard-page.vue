@@ -1,76 +1,78 @@
 <template>
-  <section
-    class="max-w-screen-xl mx-auto grid gap-20 mx-auto py-20"
-    :class="{'overflow-y-hidden h-screen': hasOpenedAnalysisSelector === true}"
-  >
-    <div class="text-gray-900 dark:text-white">
-      <h1 class="text-5xl font-header font-normal <sm:text-2xl">
-        {{ store.selectedProject?.name }}
-      </h1>
-    </div>
-    <div class="text-gray-900 dark:text-white">
-      <h2>
-        Overview
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-6 pt-6">
-        <DashboardOverview
-          v-for="stat in stats"
-          :key="stat.value"
-          :stat="stat"
-        />
+  <div class="bg-gray-50 dark:bg-pitch grid px-4 pl-18">
+    <section
+      class="grid gap-y-20 mx-auto py-20 w-full max-w-screen-xl"
+      :class="{'overflow-y-hidden h-screen': hasOpenedAnalysisSelector === true}"
+    >
+      <div class="text-gray-900 dark:text-white">
+        <h1 class="text-5xl font-header font-normal <sm:text-2xl">
+          {{ store.selectedProject?.name }}
+        </h1>
       </div>
-    </div>
-    <div class="text-gray-900 dark:text-white">
-      <h2>
-        Sites
-      </h2>
-      <div class="w-full text-black mapboxgl-map pt-6">
-        <map-base-component
-          :dataset="mapDataset()"
-          data-key="refactorThis"
-          :loading="false"
-          :get-popup-html="getPopupHtml"
-          map-export-name="dashboard-sites"
-          :map-id="'dashboard-sites'"
-          :map-initial-bounds="mapInitialBounds()"
-          :map-base-formatter="circleFormatter()"
-          :map-ground-style="mapGroundStyle"
-          :map-statistics-style="mapStatisticsStyle"
-          :is-show-labels="isShowLabels"
-          :map-height="tabHeight"
-          :style-non-zero="circleStyle()"
-          class="map-bubble w-full"
-        />
-      </div>
-    </div>
-    <div class="text-gray-900 dark:text-white">
-      <div class="flex items-center space-x-8">
+      <div class="text-gray-900 dark:text-white">
         <h2>
-          Analyses
+          Overview
         </h2>
-        <button
-          class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3"
-          type="button"
-          :title="'Create New Analysis Job'"
-          @click="toggleAnalysisSelector(true)"
-        >
-          <icon-fa-plus-circle class="h-3 w-3" />
-          <span class="font-display text-base">Create new analysis</span>
-        </button>
-        <CreateAnalysis
-          v-if="hasOpenedAnalysisSelector"
-          @emit-close="toggleAnalysisSelector(false)"
-        />
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-6 pt-6">
+          <DashboardOverview
+            v-for="stat in stats"
+            :key="stat.value"
+            :stat="stat"
+          />
+        </div>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10 pt-6">
-        <DashboardAnalyses
-          v-for="analysis in analyses"
-          :key="analysis.value"
-          :analysis="analysis"
-        />
+      <div class="text-gray-900 dark:text-white">
+        <h2>
+          Sites
+        </h2>
+        <div class="w-full text-black mapboxgl-map pt-6">
+          <map-base-component
+            :dataset="mapDataset()"
+            data-key="refactorThis"
+            :loading="false"
+            :get-popup-html="getPopupHtml"
+            map-export-name="dashboard-sites"
+            :map-id="'dashboard-sites'"
+            :map-initial-bounds="mapInitialBounds()"
+            :map-base-formatter="circleFormatter()"
+            :map-ground-style="mapGroundStyle"
+            :map-statistics-style="mapStatisticsStyle"
+            :is-show-labels="isShowLabels"
+            :map-height="tabHeight"
+            :style-non-zero="circleStyle()"
+            class="map-bubble w-full"
+          />
+        </div>
       </div>
-    </div>
-  </section>
+      <div class="text-gray-900 dark:text-white">
+        <div class="flex items-center space-x-8">
+          <h2>
+            Analyses
+          </h2>
+          <button
+            class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3"
+            type="button"
+            :title="'Create New Analysis Job'"
+            @click="toggleAnalysisSelector(true)"
+          >
+            <icon-fa-plus-circle class="h-3 w-3" />
+            <span class="font-display text-base">Create new analysis</span>
+          </button>
+          <CreateAnalysis
+            v-if="hasOpenedAnalysisSelector"
+            @emit-close="toggleAnalysisSelector(false)"
+          />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10 pt-6">
+          <DashboardAnalyses
+            v-for="analysis in analyses"
+            :key="analysis.value"
+            :analysis="analysis"
+          />
+        </div>
+      </div>
+    </section>
+  </div>
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
