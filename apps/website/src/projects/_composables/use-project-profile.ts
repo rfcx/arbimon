@@ -15,8 +15,7 @@ export const useUpdateProjectSettings = (apiClient: AxiosInstance, projectId: nu
   return useMutation({
     mutationKey: ['update-project-settings'],
     mutationFn: async (settings: ProjectSettingsUpdateBody) => {
-      const { name, summary, objectives } = settings
-      return await apiBioUpdateProjectSettingsData(apiClient, projectId, { name, summary, objectives })
+      return await apiBioUpdateProjectSettingsData(apiClient, projectId, settings)
     }
   })
 }
