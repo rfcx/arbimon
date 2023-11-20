@@ -190,10 +190,7 @@
         role="tabpanel"
         aria-labelledby="stakeholders-tab-content"
       >
-        <DashboardProjectStakeholders
-          :organizations="stakeholders?.organization ?? []"
-          :editable="true"
-        />
+        <DashboardProjectStakeholders :editable="true" />
       </div>
 
       <div
@@ -226,7 +223,6 @@ import { computed, inject, onMounted, ref } from 'vue'
 import { apiClientBioKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetDashboardContent } from '../../composables/use-get-dashboard-content'
-import { useGetDashboardStakeholders } from '../../composables/use-get-dashboard-stakeholders'
 import { useMarkdownEditorDefaults } from '../../composables/use-markdown-editor-defaults'
 import { useUpdateDashboardKeyResult } from '../../composables/use-update-dashboard-key-result'
 import { useUpdateDashboardMethods } from '../../composables/use-update-dashboard-methods'
@@ -257,8 +253,6 @@ const store = useStore()
 const isEnabled = computed(() => {
   return isAboutTabEditing.value !== true || isKeyResultTabEditing.value !== true || isResourcesTabEditing.value !== true
 })
-
-const { data: stakeholders } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 
 const { isLoading, data: dashboardContent } = useGetDashboardContent(
   apiClientBio,

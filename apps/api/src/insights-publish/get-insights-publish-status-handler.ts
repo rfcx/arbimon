@@ -3,7 +3,7 @@ import { type GetInsightsPublishStatusRequestParams, type GetInsightsPublishStat
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getInsightsPublisStatus } from './insights-publish-status-dao'
+import { getInsightsPublishStatus } from './insights-publish-status-dao'
 
 export const getInsightsPublishStatusHandler: Handler<GetInsightsPublishStatusResponseBody, GetInsightsPublishStatusRequestParams> = async (req) => {
   // Inputs and validations
@@ -13,6 +13,6 @@ export const getInsightsPublishStatusHandler: Handler<GetInsightsPublishStatusRe
   const projectIdInteger = parseInt(projectId)
   if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
-  const status = await getInsightsPublisStatus(projectIdInteger)
+  const status = await getInsightsPublishStatus(projectIdInteger)
   return status
 }

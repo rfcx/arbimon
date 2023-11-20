@@ -9,11 +9,11 @@
         <img
           v-if="item.photoUrl"
           :src="item.photoUrl"
-          class="min-h-14 h-14 min-w-14 w-14 object-cover rounded bg-util-gray-02"
+          class="h-14 w-14 object-cover rounded bg-util-gray-02"
         >
         <div
           v-else
-          class="min-h-14 h-14 min-w-14 w-14 object-cover rounded bg-util-gray-02"
+          class="h-14 w-14 object-cover rounded bg-util-gray-02"
         />
         <div class="self-center">
           <p
