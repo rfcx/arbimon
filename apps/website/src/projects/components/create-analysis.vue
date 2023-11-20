@@ -1,14 +1,14 @@
 <template>
   <OnClickOutside
-    class="fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full justify-center items-center flex mx-auto"
+    class="fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full justify-center items-center flex mx-auto bg-echo bg-opacity-70 fixed inset-0 z-40"
     @trigger="$emit('emitClose')"
   >
-    <div class="relative w-full max-w-6xl max-h-full">
-      <div class="relative rounded-lg shadow p-10 bg-pitch border-1 border-insight">
+    <div class="relative w-full max-w-md max-h-full">
+      <div class="grid grid-cols-1 gap-4 relative rounded-lg p-6 bg-pitch border-1 border-insight shadow-lg shadow-util-gray-02">
         <h2 class="text-3xl font-header text-insight text-left">
           Create new analysis
         </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10 pt-6">
+        <div class="grid grid-cols-1 gap-4">
           <AnalysisCardComponent
             v-for="analysis in analyses"
             :key="analysis.value"
@@ -16,11 +16,11 @@
             @emit-selected-analysis="onSelectAnalysis"
           />
         </div>
-        <div class="flex items-center pt-12 justify-between rounded-b">
+        <div class="flex items-center justify-between rounded-b">
           <button
             id="closeButton"
             type="button"
-            class="btn btn-secondary w-60"
+            class="btn btn-secondary"
             @click="$emit('emitClose')"
           >
             Cancel
