@@ -22,9 +22,9 @@ export const getProjectProfile = async (locationProjectId: number): Promise<Proj
     .LocationProjectProfile
     .findOne({
       where: { locationProjectId },
-      attributes: ['summary', 'objectives'],
+      attributes: ['summary', 'objectives', 'dateStart', 'dateEnd'],
       raw: true
-    }) ?? { summary: '', objectives: [] }
+    }) ?? { summary: '', objectives: [], dateStart: null, dateEnd: null }
 
 export const updateProjectProfile = async (locationProjectId: number, profile: ProjectProfileUpdateBody): Promise<ProjectProfileResponse> => {
   // remove undefined values -- only update what is provided
