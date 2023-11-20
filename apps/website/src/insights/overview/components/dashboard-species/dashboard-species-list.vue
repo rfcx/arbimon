@@ -20,8 +20,6 @@
   </div>
   <div
     v-else-if="data"
-    @mouseover="isHoveringOnList = true"
-    @mouseleave="isHoveringOnList = false"
   >
     <div
       v-if="selectedRiskUI"
@@ -37,7 +35,6 @@
     </div>
     <div
       class="grid gap-4 relative grid-cols-4 md:grid-cols-6"
-      :class="`lg:grid-cols-${NUMBER_OF_ITEMS_PER_PAGE}`"
     >
       <router-link
         v-for="item in currentSetOfData"
@@ -46,71 +43,32 @@
       >
         <species-card :item="item" />
       </router-link>
-      <!-- Page controls -->
-      <button
-        v-show="numberOfpages > 1 && isHoveringOnList"
-        class="absolute inset-y-0 left-2 flex items-center justify-center"
-      >
-        <span
-          class="inline-flex items-center w-10 h-10 bg-cloud text-pitch rounded-full"
-          @click="currentPageIndex = (currentPageIndex !== 0) ? currentPageIndex - 1 : numberOfpages - 1"
-        >
-          <svg
-            aria-hidden="true"
-            class="w-10 h-6 text-pitch items-center dark:text-pitch"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          ><path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 19l-7-7 7-7"
-          /></svg>
-          <span class="sr-only">Previous</span>
-        </span>
-      </button>
-      <button
-        v-show="numberOfpages > 1 && isHoveringOnList"
-        class="absolute inset-y-0 right-2 flex items-center justify-center"
-      >
-        <span
-          class="inline-flex items-center bg-cloud text-pitch rounded-full w-10 h-10"
-          @click="currentPageIndex = (currentPageIndex + 1 !== numberOfpages) ? currentPageIndex + 1 : 0"
-        >
-          <svg
-            aria-hidden="true"
-            class="w-10 h-6 text-pitch items-center dark:text-pitch"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          ><path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"
-          /></svg>
-          <span class="sr-only">Next</span>
-        </span>
-      </button>
     </div>
-    <!-- Page indicators -->
     <div
-      v-if="numberOfpages > 0"
-      class="flex space-x-3 p-10 m-auto justify-center"
+      v-if="shouldShowViewOrHideAllButton"
+      class="flex lg:justify-center mt-6"
     >
       <button
-        v-for="index in numberOfpages"
-        :key="index"
-        type="button"
-        class="w-2 h-2 rounded-full border-insight border-1"
-        :aria-label="'Page ' + (index) + ' of ' + numberOfpages"
-        :data-carousel-slide-to="index"
-        :class="{ 'bg-insight': currentPageIndex + 1 === index }"
-        @click="currentPageIndex = index - 1"
-      />
+        v-if="currentSetOfData.length < species.length"
+        class="flex flex-row text-frequency gap-x-2 items-center"
+        @click="isViewAll = true"
+      >
+        View all {{ selectedRiskUI?.label }} species <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
+        >
+          <path
+            d="M3.5 5.25L7 8.75L10.5 5.25"
+            stroke="#ADFF2C"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
     </div>
   </div>
 </template>
@@ -169,22 +127,19 @@ const riskTitle = computed(() => {
 })
 
 // Data for rendering in the UI
-const NUMBER_OF_ITEMS_PER_PAGE = 6
-const numberOfpages = computed(() => {
-  return Math.ceil(species.value.length / NUMBER_OF_ITEMS_PER_PAGE)
+const NUMBER_OF_ITEMS_PER_ROW = 2
+const isViewAll = ref(false)
+
+const shouldShowViewOrHideAllButton = computed(() => {
+  return species.value.length > NUMBER_OF_ITEMS_PER_ROW
 })
 
-const currentPageIndex = ref(0)
 const currentSetOfData = computed(() => {
-  const startIndex = (currentPageIndex.value) * NUMBER_OF_ITEMS_PER_PAGE
-  const endIndex = startIndex + NUMBER_OF_ITEMS_PER_PAGE
-  return species.value.slice(startIndex, endIndex)
+  return isViewAll.value ? species.value : species.value.slice(0, NUMBER_OF_ITEMS_PER_ROW)
 })
-
-const isHoveringOnList = ref(false)
 
 watch(() => props.selectedRisk, () => {
-  currentPageIndex.value = 0
+  isViewAll.value = false
 })
 
 </script>
