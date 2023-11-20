@@ -65,7 +65,7 @@
                   v-for="item in speciesForCurrentPage"
                   :key="'specie-highlighted-' + item.slug"
                   :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-between border-1 items-center rounded-lg space-x-3 p-4 h-26 bg-echo hover:(border-frequency cursor-pointer)"
+                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 flex-wrap h-full lg:(h-26 flex-nowrap justify-between) bg-echo hover:(border-frequency cursor-pointer)"
                   @click="selectSpecie(item)"
                 >
                   <img
