@@ -34,7 +34,7 @@
       >{{ selectedRiskUI?.code }}</span>
     </div>
     <div
-      class="grid gap-4 relative grid-cols-4 md:grid-cols-6"
+      class="grid gap-4 relative grid-cols-1 md:grid-cols-8"
     >
       <router-link
         v-for="item in currentSetOfData"
@@ -127,7 +127,7 @@ const riskTitle = computed(() => {
 })
 
 // Data for rendering in the UI
-const NUMBER_OF_ITEMS_PER_ROW = 2
+const NUMBER_OF_ITEMS_PER_ROW = 8
 const isViewAll = ref(false)
 
 const shouldShowViewOrHideAllButton = computed(() => {

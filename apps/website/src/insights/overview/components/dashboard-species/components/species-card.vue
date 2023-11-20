@@ -1,9 +1,9 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-row md:flex-col">
     <img
       :src="item.photoUrl"
       :alt="item.scientificName"
-      class="w-full bg-util-gray-03 rounded-sm object-cover aspect-square"
+      class="bg-util-gray-03 rounded object-cover aspect-square min-h-16 h-16 md:h-full"
     >
     <div class="flex flex-col gap-y-4 p-4 items-center">
       <div class="italic text-sm text-center">
