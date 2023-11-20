@@ -20,7 +20,7 @@
             <button
               type="button"
               data-modal-toggle="species-highlighted-modal"
-              @click="$emit('emitClose')"
+              @click="resetSearch();resetPagination();$emit('emitClose')"
             >
               <icon-custom-fi-close-thin class="cursor-pointer" />
             </button>
@@ -39,15 +39,17 @@
           </el-input>
           <div class="flex flex-row items-center gap-x-2">
             <el-tag
-              v-for="riskRating in existingRiskCode"
+              v-for="(riskRating, index) in existingRiskCode"
               :key="riskRating.code"
+              v-modal="searchRisk"
               class="species-highlights border-none cursor-pointer text-md h-6"
+              :class="searchRisk === existingRiskCode[index].code ? 'tag-selected' : ''"
               effect="dark"
               size="large"
               :color="riskRating.color"
               :title="riskRating.code"
               round
-              @click="filterByCode(riskRating.code)"
+              @click="filterByCode(existingRiskCode[index].code)"
             >
               {{ riskRating.code }}
             </el-tag>
@@ -57,18 +59,18 @@
             <div class="grid grid-cols-1 gap-y-4 col-span-2">
               <ul
                 v-if="speciesList && speciesList.length"
-                class="grid grid-cols-2 gap-3"
+                class="grid gap-2 grid-cols-1 lg:(grid-cols-2 gap-3)"
               >
                 <li
                   v-for="item in speciesForCurrentPage"
                   :key="'specie-highlighted-' + item.slug"
                   :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-between border-1 items-center rounded-lg gap-x-3 p-4 h-26 bg-echo hover:(border-frequency cursor-pointer)"
+                  class="flex flex-row justify-between border-1 items-center rounded-lg space-x-3 p-4 h-26 bg-echo hover:(border-frequency cursor-pointer)"
                   @click="selectSpecie(item)"
                 >
                   <img
                     :src="item.photoUrl"
-                    class="min-h-16 h-16 min-w-16 w-16 object-cover rounded bg-util-gray-02"
+                    class="h-16 w-16 object-cover rounded bg-util-gray-02"
                   >
                   <div class="self-center w-36">
                     <p class="text-s italic tracking-tight line-clamp-2">
@@ -78,7 +80,7 @@
                       {{ item.commonName || 'unknown' }}
                     </p>
                   </div>
-                  <div class="flex items-center">
+                  <div class="self-center">
                     <el-tag
                       class="species-highlights border-none text-md h-6"
                       effect="dark"
@@ -103,7 +105,7 @@
                 v-model:currentPage="currentPage"
                 class="flex items-center justify-center"
                 :page-size="PAGE_SIZE"
-                :total="speciesList.length"
+                :total="speciesLength"
                 layout="prev, pager, next"
               />
             </div>
@@ -206,17 +208,51 @@ const newSpeciesToAdd = computed(() => {
   return preSelectedSpecies.value.filter(sp => !existingSlugInDB.value.includes(sp.slug))
 })
 
-const speciesForCurrentPage = computed(() => searchKeyword.value
-  ? speciesList.value
-    .filter(({ scientificName, commonName, riskRating }) => {
-      return scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
-        ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false) ||
-        riskRating.code === searchRisk.value
-    })
-    .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
-    .slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
-  : speciesList.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
-)
+const speciesLength = computed(() => {
+  return speciesListFiltered.value.length
+})
+
+const speciesListFiltered = computed(() => {
+  if (!searchKeyword.value && searchRisk.value) {
+    resetPagination()
+    return speciesList.value
+      .filter(({ riskRating }) => {
+        return riskRating.code === searchRisk.value
+      })
+      .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
+  } else if (searchKeyword.value && !searchRisk.value) {
+    resetPagination()
+    return speciesList.value
+      .filter(({ scientificName, commonName }) => {
+        return scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
+          ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false)
+      })
+      .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
+    } else if (searchKeyword.value && searchRisk.value) {
+      resetPagination()
+      return speciesList.value
+        .filter(({ scientificName, commonName, riskRating }) => {
+          console.info(riskRating.code === searchRisk.value)
+          return (scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
+            ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false)) &&
+            riskRating.code === searchRisk.value
+        })
+        .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
+    } else return speciesList.value
+})
+
+const speciesForCurrentPage = computed(() => {
+  return speciesListFiltered.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
+})
+
+const resetPagination = (): void => {
+  currentPage.value = 1
+}
+
+const resetSearch = (): void => {
+  searchKeyword.value = ''
+  searchRisk.value = ''
+}
 
 const findIndexToRemove = (slug: string): void => {
   const index = selectedSpeciesSlug.value.findIndex(sl => sl === slug)
@@ -258,7 +294,9 @@ const fillExistedSpeciesSlug = (): void => {
 }
 
 const filterByCode = (code: string): void => {
-  searchRisk.value = code
+  if (searchRisk.value === code) {
+    searchRisk.value = ''
+  } else searchRisk.value = code
 }
 
 const saveHighlightedSpecies = async (): Promise<void> => {
@@ -281,5 +319,9 @@ const deleteHighlightedSpecies = async (specie: HighlightedSpeciesRow): Promise<
 }
 .el-input__inner {
   padding-left: 2px !important;
+}
+.tag-selected {
+  border: 2px solid #ADFF2C;
+  border-style: solid !important;
 }
 </style>
