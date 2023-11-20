@@ -70,7 +70,7 @@ const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const name = ref<string>('')
 const startDate = ref<string>('')
-const endDate = ref<string>('')
+const endDate = ref<string | null>('')
 const objectives = ref<string[]>([])
 const isCreating = ref<boolean>(false)
 
@@ -99,8 +99,15 @@ const verifyFields = () => {
     errorMessage.value = 'Please enter at least one objective'
     return false
   }
-  // TODO: verify dateStart & dateEnd
-  // - end date should be after start date
+  if (endDate.value !== null) {
+    const dateS = new Date(startDate.value)
+    const dateE = new Date(endDate.value)
+    if (dateS >= dateE) {
+      hasFailed.value = true
+      errorMessage.value = 'Project end date is not less than project start date'
+      return false
+    }
+  }
   return true
 }
 
