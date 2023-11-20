@@ -69,6 +69,8 @@ const store = useStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const name = ref<string>('')
+const startDate = ref<string>('')
+const endDate = ref<string>('')
 const objectives = ref<string[]>([])
 const isCreating = ref<boolean>(false)
 
@@ -78,11 +80,18 @@ const hasFailed = ref<boolean>(false)
 const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 
 watch(name, () => { hasFailed.value = false })
+watch(startDate, () => { hasFailed.value = false })
+watch(endDate, () => { hasFailed.value = false })
 
 const verifyFields = () => {
   if (name.value.length === 0) {
     hasFailed.value = true
     errorMessage.value = 'Please enter a project name'
+    return false
+  }
+  if (startDate.value.length === 0) {
+    hasFailed.value = true
+    errorMessage.value = 'Please enter a project start date'
     return false
   }
   if (objectives.value.length === 0) {
@@ -91,8 +100,6 @@ const verifyFields = () => {
     return false
   }
   // TODO: verify dateStart & dateEnd
-  // - start date can't be null
-  // - end date can be null (if select on going)
   // - end date should be after start date
   return true
 }
@@ -110,7 +117,7 @@ async function create () {
   // - should be in string format
   // - default value: dateStart = Date()
   // - default value: dateEnd = null (ongoing)
-  const project = { name: name.value, objectives: objectives.value, dateStart: Date(), dateEnd: null }
+  const project = { name: name.value, objectives: objectives.value, dateStart: startDate.value, dateEnd: endDate.value }
   try {
     const response = await apiBioPostProjectCreate(apiClientBio, project)
     await store.refreshProjects()
@@ -125,6 +132,8 @@ async function create () {
 
 const emitUpdateValue = (project: ProjectDefault) => {
   name.value = project.name
+  startDate.value = project.startDate
+  endDate.value = project.endDate
 }
 
 const emitUpdateProjectObjectives = (projectObjectiveSlugs: string[]) => {
