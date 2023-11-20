@@ -13,12 +13,12 @@ import { ref, watchEffect } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-const dateValue = ref<Date | null>()
+const dateValue = ref<Date>()
 const emit = defineEmits<{(e: 'emitSelectDate', value: string): void}>()
 const props = defineProps<{ initialDate?: Date}>()
 
 watchEffect(() => {
-  dateValue.value = props.initialDate ? dayjs(props.initialDate).startOf('day').toDate() : null
+  dateValue.value = props.initialDate ? dayjs(props.initialDate).startOf('day').toDate() : undefined
 })
 
 // Emit on change
