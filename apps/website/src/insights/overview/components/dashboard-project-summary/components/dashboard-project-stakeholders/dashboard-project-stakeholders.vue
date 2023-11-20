@@ -1,35 +1,56 @@
 <template>
-  <template v-if="organizations.length === 0">
+  <template v-if="stakeholders?.organization.length === 0">
     <ProjectSummaryEmpty @emit-add-content="isEditing = true" />
   </template>
   <template v-else>
     <DashboardProjectStakeholdersViewer
       v-show="isEditing === false"
       :editable="true"
-      :organizations="organizations"
+      :organizations="stakeholders?.organization ?? []"
       @emit-is-updating="isEditing = true"
     />
     <DashboardProjectStakeholdersEditor
       v-show="isEditing === true"
-      :organizations="organizations"
-      @emit-finished-editing="isEditing = false"
+      :organizations="stakeholders?.organization ?? []"
+      @emit-finished-editing="onFinishedEditing"
     />
   </template>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { type AxiosInstance } from 'axios'
+import { inject, ref } from 'vue'
 
-import { type OrganizationTypes } from '@rfcx-bio/common/dao/types/organization'
-
+import { apiClientBioKey } from '@/globals'
+import { useStore } from '~/store'
+import { useGetDashboardStakeholders } from '../../../../composables/use-get-dashboard-stakeholders'
+import { useUpdateStakeholdersOrganizationsList } from '../../../../composables/use-update-stakeholders-organizations'
 import ProjectSummaryEmpty from '../project-summary-empty.vue'
 import DashboardProjectStakeholdersEditor from './dashboard-project-stakeholders-editor.vue'
 import DashboardProjectStakeholdersViewer from './dashboard-project-stakeholders-viewer.vue'
 
 const isEditing = ref(false)
+const store = useStore()
 
-defineProps<{
-  editable: boolean,
-  organizations: Array<OrganizationTypes['light']>
-}>()
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+
+const { data: stakeholders, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutateStakeholdersOrganizations } = useUpdateStakeholdersOrganizationsList(apiClientBio, store.selectedProject?.id ?? -1)
+
+const onFinishedEditing = (ids: number[]): void => {
+  mutateStakeholdersOrganizations(ids, {
+    onSuccess: () => {
+      refetchStakeholdersData.value()
+      isEditing.value = false
+    },
+    onError: () => {
+      // TODO: Show user some respect
+      isEditing.value = false
+    }
+  })
+
+  isEditing.value = false
+}
+
+defineProps<{ editable: boolean }>()
 </script>

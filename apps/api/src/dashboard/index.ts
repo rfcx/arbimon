@@ -5,7 +5,7 @@ import { dashboardMetricsRoute } from '@rfcx-bio/common/api-bio/dashboard/dashbo
 import { dashboardProfileRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { dashboardSpeciesByRiskDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-by-risk'
 import { dashboardSpeciesDataRoute, speciesHighlightedDeleteRoute, speciesHighlightedPostRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
-import { dashboardStakeholdersRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
+import { dashboardStakeholdersRoute, updateDashboardStakeholderOrganizationsRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 
 import { type RouteRegistration, DELETE, GET, PATCH, POST } from '../_services/api-helpers/types'
 import { dashboardContentHandler, updateDashboardContentHandler } from './dashboard-content-handler'
@@ -15,6 +15,7 @@ import { dashboardMetricsHandler } from './dashboard-metrics-handler'
 import { dashboardSpeciesByRiskDataHandler } from './dashboard-species-by-risk-handler'
 import { dashboardSpeciesDataHandler, dashboardSpeciesHighlightedDeleteHandler, dashboardSpeciesHighlightedPostHandler } from './dashboard-species-data-handler'
 import { dashboardStakeholdersHandler } from './dashboard-stakeholders-handler'
+import { updateDashboardStakeholderOrganizationsHandler } from './update-dashboard-stakeholder-organizations-handler'
 
 export const routesDashboard: RouteRegistration[] = [
   {
@@ -71,5 +72,10 @@ export const routesDashboard: RouteRegistration[] = [
     method: GET,
     url: dashboardStakeholdersRoute,
     handler: dashboardStakeholdersHandler
+  },
+  {
+    method: PATCH,
+    url: updateDashboardStakeholderOrganizationsRoute,
+    handler: updateDashboardStakeholderOrganizationsHandler
   }
 ]
