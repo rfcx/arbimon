@@ -1,28 +1,40 @@
 <template>
   <div
-    class="flex flex-col justify-between bg-moss border-1 rounded-lg shadow p-4 hover:bg-util-gray-02 cursor-pointer"
+    class="flex flex-col gap-y-2.5 justify-between bg-moss border-1 rounded-lg shadow p-4 hover:bg-util-gray-02 cursor-pointer"
     :class="isSelected ? 'border-frequency' : 'border-transparent'"
     @click="selectedAnalysis()"
   >
-    <div class="flex flex-col gap-y-2">
-      <p
-        class="text-2xl text-left font-medium text-insight cursor-pointer"
-        :title="analysis.title"
+    <h5
+      :title="analysis.title"
+    >
+      {{ analysis.title }}
+    </h5>
+    <div
+      class="text-left text-base text-insight overflow-y-auto"
+      :class="{'h-18': !isReadMore}"
+    >
+      <span :class="{'line-clamp-2': !isReadMore}">{{ analysis.description }}</span>
+      <button
+        :id="`${analysis.title}-read-more`"
+        class="bg-transparent"
+        :class="isReadMore === true ? 'block' : 'inline'"
+        @click="expandDescription"
       >
-        {{ analysis.title }}
-      </p>
-      <div class="text-left text-base text-insight pb-4 h-18 overflow-y-auto">
-        {{ analysis.description }}
-      </div>
+        <span class="text-frequency">
+          {{ isReadMore ? 'Read less' : 'read more' }}
+        </span>
+      </button>
     </div>
     <div
+      v-if="isReadMore"
       class="text-left"
     >
       <a
-        class="text-base text-frequency cursor-pointer border-b-1 border-frequency"
+        class="text-base cursor-pointer text-gray-300"
         :href="analysis.link"
         :title="analysis.label"
       >
+        <icon-custom-fi-external-link class="w-4 h-4 inline-flex" />
         {{ analysis.label }}
       </a>
     </div>
@@ -36,6 +48,7 @@ import { type AnalysisCard } from '../types'
 const props = defineProps<{analysis: AnalysisCard}>()
 const emit = defineEmits<{(event: 'emitSelectedAnalysis', url: string, value: string): void}>()
 const isSelected = ref(false)
+const isReadMore = ref(false)
 
 watch(() => props.analysis.isSelected, (newValue) => {
   isSelected.value = newValue
@@ -44,5 +57,9 @@ watch(() => props.analysis.isSelected, (newValue) => {
 function selectedAnalysis (): void {
   isSelected.value = !isSelected.value
   emit('emitSelectedAnalysis', props.analysis.url, props.analysis.value)
+}
+
+function expandDescription (): void {
+  isReadMore.value = !isReadMore.value
 }
 </script>
