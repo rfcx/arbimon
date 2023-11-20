@@ -1,7 +1,7 @@
 <template>
   <div class="bg-gray-50 dark:bg-pitch grid px-4 pl-18">
     <section
-      class="grid gap-x-20 mx-auto py-20 w-full max-w-screen-xl"
+      class="grid gap-y-20 mx-auto py-20 w-full max-w-screen-xl"
       :class="{'overflow-y-hidden h-screen': hasOpenedAnalysisSelector === true}"
     >
       <div class="text-gray-900 dark:text-white">
