@@ -19,7 +19,7 @@
       <icon-fas-spinner class="animate-spin w-8 h-8 lg:mx-24" />
     </div>
     <HighlightedSpeciesList
-      v-if="canEdit && speciesList && speciesList.length > 0 && !isLoading"
+      v-if="speciesList && speciesList.length > 0 && !isLoading"
       :species="speciesList"
     />
     <EmptySpeciesList
