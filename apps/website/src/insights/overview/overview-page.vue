@@ -11,16 +11,12 @@
       <dashboard-project-summary :can-edit="isProjectMember && !isViewingAsGuest" />
     </div>
     <div class="lg:col-span-4 flex flex-col">
-      <div
-        v-if="isProjectMember"
-      >
-        <dashboard-highlighted-species
-          :species="species?.speciesHighlighted"
-          :can-edit="isProjectMember && !isViewingAsGuest"
-          :is-loading="isLoadingSpecies"
-          @emit-refetch="refetchSpeciesRichnessByRisk"
-        />
-      </div>
+      <dashboard-highlighted-species
+        :species="species?.speciesHighlighted"
+        :can-edit="isProjectMember && !isViewingAsGuest"
+        :is-loading="isLoadingSpecies"
+        @emit-refetch="refetchSpeciesRichnessByRisk"
+      />
       <div class="mt-6">
         <dashboard-species-by-taxon
           :dataset="speciesRichnessByTaxon"

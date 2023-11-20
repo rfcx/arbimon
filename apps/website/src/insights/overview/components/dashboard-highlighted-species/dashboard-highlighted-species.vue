@@ -7,7 +7,7 @@
       </h6>
     </div>
     <div
-      v-if="!canEdit && speciesList.length && !isLoading"
+      v-if="!canEdit && !speciesList.length && !isLoading"
       class="w-full rounded-lg p-6 shadow bg-util-gray-02"
     >
       <h6>The project owner has not selected highlighted species for this project.</h6>
@@ -19,11 +19,11 @@
       <icon-fas-spinner class="animate-spin w-8 h-8 lg:mx-24" />
     </div>
     <HighlightedSpeciesList
-      v-if="speciesList && speciesList.length > 0 && !isLoading"
+      v-if="canEdit && speciesList && speciesList.length > 0 && !isLoading"
       :species="speciesList"
     />
     <EmptySpeciesList
-      v-if="!speciesList.length && !isLoading"
+      v-if="canEdit && !speciesList.length && !isLoading"
     />
     <div
       v-if="canEdit"
