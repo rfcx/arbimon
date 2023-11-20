@@ -3,7 +3,7 @@
     <li
       v-for="item in speciesList"
       :key="item.scientificName"
-      class="flex flex-row justify-between items-center rounded gap-x-3 p-4 h-21 max-w-80 bg-util-gray-01"
+      class="flex flex-row justify-between items-center rounded-lg gap-x-3 p-4 h-21 max-w-80 bg-util-gray-01"
     >
       <div class="flex flex-row justify-between items-center gap-x-4">
         <img

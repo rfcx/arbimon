@@ -38,7 +38,6 @@ const emit = defineEmits<{(event: 'emitSelectedAnalysis', url: string, value: st
 const isSelected = ref(false)
 
 watch(() => props.analysis.isSelected, (newValue) => {
-  console.info('watch props', newValue)
   isSelected.value = newValue
 }, { deep: true })
 

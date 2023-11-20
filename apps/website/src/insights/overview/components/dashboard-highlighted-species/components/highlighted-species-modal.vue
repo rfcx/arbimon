@@ -25,6 +25,33 @@
               <icon-custom-fi-close-thin class="cursor-pointer" />
             </button>
           </div>
+          <el-input
+            v-model="searchKeyword"
+            placeholder="Search species"
+            size="large"
+            class="w-1/3 bg-mock"
+          >
+            <template #prefix>
+              <div class="inline-flex items-center">
+                <icon-fas-search class="text-base text-insight" />
+              </div>
+            </template>
+          </el-input>
+          <div class="flex flex-row items-center gap-x-2">
+            <el-tag
+              v-for="riskRating in existingRiskCode"
+              :key="riskRating.code"
+              class="species-highlights border-none cursor-pointer text-md h-6"
+              effect="dark"
+              size="large"
+              :color="riskRating.color"
+              :title="riskRating.code"
+              round
+              @click="filterByCode(riskRating.code)"
+            >
+              {{ riskRating.code }}
+            </el-tag>
+          </div>
           <!-- Modal body -->
           <div class="grid grid-cols-3 gap-x-4 w-full">
             <div class="grid grid-cols-1 gap-y-4 col-span-2">
@@ -36,7 +63,7 @@
                   v-for="item in speciesForCurrentPage"
                   :key="'specie-highlighted-' + item.slug"
                   :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-between border-1 items-center rounded gap-x-3 p-4 h-26 bg-echo hover:(border-frequency cursor-pointer)"
+                  class="flex flex-row justify-between border-1 items-center rounded-lg gap-x-3 p-4 h-26 bg-echo hover:(border-frequency cursor-pointer)"
                   @click="selectSpecie(item)"
                 >
                   <img
@@ -134,6 +161,9 @@ const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const selectedProjectId = computed(() => store.selectedProject?.id)
 
+const searchKeyword = ref('')
+const searchRisk = ref('')
+
 const selectedSpeciesSlug = ref<string[]>([])
 
 const PAGE_SIZE = 8
@@ -164,6 +194,10 @@ const preSelectedSpecies = computed(() => {
   return speciesList.value.length ? speciesList.value.filter(specie => selectedSpeciesSlug.value.includes(specie.slug)) : []
 })
 
+const existingRiskCode = computed(() => {
+  return speciesList.value.length ? speciesList.value.map(specie => specie.riskRating).filter((value, index, self) => self.findIndex(({ code }) => code === value.code) === index) : []
+})
+
 const existingSlugInDB = computed(() => {
   return props.highlightedSpecies.map(sp => sp.slug)
 })
@@ -172,15 +206,26 @@ const newSpeciesToAdd = computed(() => {
   return preSelectedSpecies.value.filter(sp => !existingSlugInDB.value.includes(sp.slug))
 })
 
-const speciesForCurrentPage = computed(() => speciesList.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE))
+const speciesForCurrentPage = computed(() => searchKeyword.value
+  ? speciesList.value
+    .filter(({ scientificName, commonName, riskRating }) => {
+      return scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
+        ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false) ||
+        riskRating.code === searchRisk.value
+    })
+    .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
+    .slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
+  : speciesList.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
+)
 
 const findIndexToRemove = (slug: string): void => {
   const index = selectedSpeciesSlug.value.findIndex(sl => sl === slug)
   selectedSpeciesSlug.value.splice(index, 1)
 }
 
-const selectSpecie = (specie: HighlightedSpeciesRow): void => {
+const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
   if (isSpecieSelected(specie)) {
+    await removeSpecieFromDB(specie.slug)
     findIndexToRemove(specie.slug)
   } else {
     if (selectedSpeciesSlug.value.length < 5) {
@@ -195,17 +240,25 @@ const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
 }
 
 const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
-  const specieToDeleteFromDB = props.highlightedSpecies.find(sp => sp.slug === specie.slug)
-  if (existingSlugInDB.value.includes(specie.slug) && specieToDeleteFromDB) {
+  await removeSpecieFromDB(specie.slug)
+  findIndexToRemove(specie.slug)
+}
+
+const removeSpecieFromDB = async (slug: string): Promise<void> => {
+  const specieToDeleteFromDB = props.highlightedSpecies.find(sp => sp.slug === slug)
+  if (existingSlugInDB.value.includes(slug) && specieToDeleteFromDB) {
     await deleteHighlightedSpecies(specieToDeleteFromDB)
   }
-  findIndexToRemove(specie.slug)
 }
 
 const fillExistedSpeciesSlug = (): void => {
   if (props.highlightedSpecies.length) {
     selectedSpeciesSlug.value = existingSlugInDB.value
   } else selectedSpeciesSlug.value = []
+}
+
+const filterByCode = (code: string): void => {
+  searchRisk.value = code
 }
 
 const saveHighlightedSpecies = async (): Promise<void> => {
@@ -219,5 +272,14 @@ const saveHighlightedSpecies = async (): Promise<void> => {
 const deleteHighlightedSpecies = async (specie: HighlightedSpeciesRow): Promise<void> => {
   mutateDeleteSpecie({ species: [specie] })
 }
-
 </script>
+<style lang="scss">
+.el-input__wrapper {
+  border-radius: 8px;
+  border: 1px solid #F9F6F2;
+  background: #060508;
+}
+.el-input__inner {
+  padding-left: 2px !important;
+}
+</style>
