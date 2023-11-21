@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-4 flex flex-row justify-between items-center">
+  <div class="mt-6 flex flex-row justify-between items-center">
     <label
       for="summary"
       class="block mb-2 font-medium text-gray-900 dark:text-insight"

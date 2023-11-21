@@ -1,7 +1,7 @@
 <template>
   <label
     for="name"
-    class="block font-medium text-gray-900 dark:text-insight"
+    class="block font-medium mt-6 text-gray-900 dark:text-insight"
   >Project objectives*</label>
   <ul class="w-full">
     <li

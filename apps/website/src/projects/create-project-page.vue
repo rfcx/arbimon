@@ -59,6 +59,7 @@ import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vu
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
+import { verifyDateFormError } from './components/form/functions'
 import ProjectForm from './components/form/project-form.vue'
 import ProjectObjectiveForm from './components/form/project-objective-form.vue'
 import type { ProjectDefault } from './types'
@@ -69,6 +70,9 @@ const store = useStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const name = ref<string>('')
+const startDate = ref<string | null>('')
+const endDate = ref<string | null>('')
+const onGoing = ref<boolean>(false)
 const objectives = ref<string[]>([])
 const isCreating = ref<boolean>(false)
 
@@ -78,6 +82,9 @@ const hasFailed = ref<boolean>(false)
 const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 
 watch(name, () => { hasFailed.value = false })
+watch(startDate, () => { hasFailed.value = false })
+watch(endDate, () => { hasFailed.value = false })
+watch(onGoing, () => { hasFailed.value = false })
 
 const verifyFields = () => {
   if (name.value.length === 0) {
@@ -88,6 +95,12 @@ const verifyFields = () => {
   if (objectives.value.length === 0) {
     hasFailed.value = true
     errorMessage.value = 'Please enter at least one objective'
+    return false
+  }
+  const dateError = verifyDateFormError(startDate.value ? startDate.value : undefined, endDate.value ? endDate.value : undefined, onGoing.value)
+  if (dateError.length > 0) {
+    hasFailed.value = true
+    errorMessage.value = dateError
     return false
   }
   return true
@@ -102,7 +115,7 @@ async function create () {
   if (!verifyFields()) return
   resetErrorState()
   isCreating.value = true
-  const project = { name: name.value, objectives: objectives.value }
+  const project = { name: name.value, objectives: objectives.value, dateStart: startDate.value, dateEnd: onGoing.value ? null : endDate.value }
   try {
     const response = await apiBioPostProjectCreate(apiClientBio, project)
     await store.refreshProjects()
@@ -117,6 +130,9 @@ async function create () {
 
 const emitUpdateValue = (project: ProjectDefault) => {
   name.value = project.name
+  startDate.value = project.startDate
+  endDate.value = project.endDate
+  onGoing.value = project.onGoing
 }
 
 const emitUpdateProjectObjectives = (projectObjectiveSlugs: string[]) => {

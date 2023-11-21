@@ -39,18 +39,21 @@
         v-else
       />
     </div>
-    <div class="flex flex-row border-l-2 border-gray-300 px-2 space-x-4 items-center">
+    <div
+      class="flex flex-row border-l-2 border-gray-300 px-2 space-x-4 items-center"
+      :class="profile?.dateStart === null && profile?.dateEnd === null ? 'hidden': ''"
+    >
       <span>
         Project dates:
       </span>
       <span class="uppercase">
-        {{ formatDateRange(metrics?.minDate) }}
+        {{ formatDateRange(profile?.dateStart) }}
       </span>
       <icon-custom-arrow-right-white class="self-start" />
       <span
         class="uppercase"
       >
-        {{ formatDateRange(metrics?.maxDate) }}
+        {{ formatDateRange(profile?.dateEnd) }}
       </span>
     </div>
     <div
@@ -69,8 +72,8 @@ import dayjs from 'dayjs'
 import { computed } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
-import { type DashboardMetricsResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-metrics'
 import { type ProjectLocationResponse } from '@rfcx-bio/common/api-bio/project/project-location'
+import { type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
 import { objectiveTypes } from '../../projects/types'
 
@@ -78,12 +81,11 @@ const props = defineProps<{
   projectLocation: ProjectLocationResponse | undefined,
   isLoadingProjectLocation: boolean,
   projectObjectives: string[],
-  metrics: DashboardMetricsResponse | undefined
+  profile: ProjectSettingsResponse | undefined
 }>()
-
 const formatDateRange = (date: Date | null | undefined): string => {
-  if (!dayjs(date).isValid()) return 'no data'
-  else return dayjs(date).format('MMM YYYY')
+  if (!dayjs(date).isValid()) return 'present'
+  else return dayjs(date).format('MMM DD YYYY')
 }
 
 const projectFlag = computed(() => {
