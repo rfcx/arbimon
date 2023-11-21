@@ -1,77 +1,56 @@
 <template>
-  <template v-if="organizations.length === 0">
-    <ProjectSummaryEmpty @emit-add-content="$emit('update:isEditing', true)" />
+  <template v-if="stakeholders?.organization.length === 0">
+    <ProjectSummaryEmpty @emit-add-content="isEditing = true" />
   </template>
   <template v-else>
-    <h3 class="text-white text-xl font-medium font-sans mt-10">
-      Project members
-    </h3>
-    <div
-      class="grid"
-      style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
-    >
-      <StakeholderCard
-        name="Lori Tan"
-        :ranking="0"
-        email="loritan@tmu.com"
-      />
-      <StakeholderCard
-        name="Lori Tan"
-        :ranking="1"
-      />
-      <StakeholderCard
-        name="Lori Tan"
-        :ranking="1"
-      />
-      <StakeholderCard
-        name="Lori Tan"
-        :ranking="1"
-      />
-      <StakeholderCard
-        name="Lori Tan"
-        :ranking="1"
-      />
-      <StakeholderCard
-        name="Lori Tan"
-        :ranking="1"
-      />
-    </div>
-    <h3 class="text-white text-xl font-medium font-sans mt-6">
-      Organizations
-    </h3>
-    <div
-      class="grid"
-      style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
-    >
-      <StakeholderCard
-        v-for="org of organizations"
-        :key="org.id"
-        :name="org.name"
-        :description="ORGANIZATION_TYPE_NAME[org.type]"
-        :ranking="1"
-      />
-    </div>
-    <div class="flex w-full justify-end mt-6">
-      <button
-        v-show="editable"
-        class="btn btn-secondary"
-      >
-        Manage stakeholders
-      </button>
-    </div>
+    <DashboardProjectStakeholdersViewer
+      v-show="isEditing === false"
+      :editable="true"
+      :organizations="stakeholders?.organization ?? []"
+      @emit-is-updating="isEditing = true"
+    />
+    <DashboardProjectStakeholdersEditor
+      v-show="isEditing === true"
+      :organizations="stakeholders?.organization ?? []"
+      @emit-finished-editing="onFinishedEditing"
+    />
   </template>
 </template>
 
 <script setup lang="ts">
-import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
+import { type AxiosInstance } from 'axios'
+import { inject, ref } from 'vue'
 
+import { apiClientBioKey } from '@/globals'
+import { useStore } from '~/store'
+import { useGetDashboardStakeholders } from '../../../../composables/use-get-dashboard-stakeholders'
+import { useUpdateStakeholdersOrganizationsList } from '../../../../composables/use-update-stakeholders-organizations'
 import ProjectSummaryEmpty from '../project-summary-empty.vue'
-import StakeholderCard from './stakeholder-card.vue'
+import DashboardProjectStakeholdersEditor from './dashboard-project-stakeholders-editor.vue'
+import DashboardProjectStakeholdersViewer from './dashboard-project-stakeholders-viewer.vue'
 
-defineProps<{
-  isEditing: boolean,
-  editable: boolean,
-  organizations: Array<OrganizationTypes['light']>
-}>()
-defineEmits<{(event: 'update:isEditing', value: boolean): void}>()
+const isEditing = ref(false)
+const store = useStore()
+
+const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+
+const { data: stakeholders, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutateStakeholdersOrganizations } = useUpdateStakeholdersOrganizationsList(apiClientBio, store.selectedProject?.id ?? -1)
+
+const onFinishedEditing = (ids: number[]): void => {
+  mutateStakeholdersOrganizations(ids, {
+    onSuccess: () => {
+      refetchStakeholdersData.value()
+      isEditing.value = false
+    },
+    onError: () => {
+      // TODO: Show user some respect
+      isEditing.value = false
+    }
+  })
+
+  isEditing.value = false
+}
+
+defineProps<{ editable: boolean }>()
 </script>

@@ -11,14 +11,12 @@
       <dashboard-project-summary :can-edit="isProjectMember && !isViewingAsGuest" />
     </div>
     <div class="lg:col-span-4 flex flex-col">
-      <div
-        v-if="isProjectMember"
-      >
-        <dashboard-highlighted-species
-          :species="species?.speciesHighlighted"
-          :can-edit="isProjectMember && !isViewingAsGuest"
-        />
-      </div>
+      <dashboard-highlighted-species
+        :species="species?.speciesHighlighted"
+        :can-edit="isProjectMember && !isViewingAsGuest"
+        :is-loading="isLoadingSpecies"
+        @emit-refetch="refetchSpeciesRichnessByRisk"
+      />
       <div class="mt-6">
         <dashboard-species-by-taxon
           :dataset="speciesRichnessByTaxon"
@@ -70,7 +68,7 @@ const isViewingAsGuest = computed(() => {
 })
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
-const { isLoading: isLoadingSpecies, isError: isErrorSpecies, data: species } = useSpeciesRichnessByRisk(apiClientBio)
+const { isLoading: isLoadingSpecies, isError: isErrorSpecies, refetch: refetchData, data: species } = useSpeciesRichnessByRisk(apiClientBio)
 
 const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
   return (species.value?.richnessByTaxon ?? []).map(([taxonId, count]) => {
@@ -99,6 +97,10 @@ const speciesRichnessByRisk: ComputedRef<HorizontalStack[]> = computed(() => {
 const totalSpecies = computed(() => {
   return dashboardStore.speciesCount ?? `${species?.value?.totalSpeciesCount}` ?? '0'
 })
+
+const refetchSpeciesRichnessByRisk = () => {
+  refetchData.value()
+}
 
 watch(() => species.value?.totalSpeciesCount, () => {
   if (!species.value) return

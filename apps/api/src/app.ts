@@ -13,6 +13,7 @@ import { routesDashboard } from './dashboard'
 import { routesDetect } from './detect'
 import { routesInsightsPublish } from './insights-publish'
 import { routesLanding } from './landing'
+import { routesOrganizations } from './organizations'
 import { routesProjectProfile } from './project-profile'
 import { routesProject } from './projects'
 import { routesRichness } from './richness'
@@ -51,7 +52,8 @@ export const createApp = async (): Promise<FastifyInstance> => {
     routesSync,
     routesClassifiers,
     routesLanding,
-    routesInsightsPublish
+    routesInsightsPublish,
+    routesOrganizations
   ]
 
   routesRegistrations

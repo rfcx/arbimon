@@ -4,15 +4,18 @@ import { dashboardDataBySiteRoute } from '@rfcx-bio/common/api-bio/dashboard/das
 import { dashboardMetricsRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-metrics'
 import { dashboardProfileRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { dashboardSpeciesByRiskDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-by-risk'
-import { dashboardSpeciesDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
+import { dashboardSpeciesDataRoute, speciesHighlightedDeleteRoute, speciesHighlightedPostRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
+import { dashboardStakeholdersRoute, updateDashboardStakeholderOrganizationsRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 
-import { type RouteRegistration, GET, PATCH } from '../_services/api-helpers/types'
+import { type RouteRegistration, DELETE, GET, PATCH, POST } from '../_services/api-helpers/types'
 import { dashboardContentHandler, updateDashboardContentHandler } from './dashboard-content-handler'
 import { dashboardDataByHourHandler } from './dashboard-data-by-hour-handler'
 import { dashboardDataBySiteHandler } from './dashboard-data-by-site-handler'
 import { dashboardMetricsHandler } from './dashboard-metrics-handler'
 import { dashboardSpeciesByRiskDataHandler } from './dashboard-species-by-risk-handler'
-import { dashboardSpeciesDataHandler } from './dashboard-species-data-handler'
+import { dashboardSpeciesDataHandler, dashboardSpeciesHighlightedDeleteHandler, dashboardSpeciesHighlightedPostHandler } from './dashboard-species-data-handler'
+import { dashboardStakeholdersHandler } from './dashboard-stakeholders-handler'
+import { updateDashboardStakeholderOrganizationsHandler } from './update-dashboard-stakeholder-organizations-handler'
 
 export const routesDashboard: RouteRegistration[] = [
   {
@@ -54,5 +57,25 @@ export const routesDashboard: RouteRegistration[] = [
     method: GET,
     url: dashboardSpeciesByRiskDataRoute,
     handler: dashboardSpeciesByRiskDataHandler
+  },
+  {
+    method: POST,
+    url: speciesHighlightedPostRoute,
+    handler: dashboardSpeciesHighlightedPostHandler
+  },
+  {
+    method: DELETE,
+    url: speciesHighlightedDeleteRoute,
+    handler: dashboardSpeciesHighlightedDeleteHandler
+  },
+  {
+    method: GET,
+    url: dashboardStakeholdersRoute,
+    handler: dashboardStakeholdersHandler
+  },
+  {
+    method: PATCH,
+    url: updateDashboardStakeholderOrganizationsRoute,
+    handler: updateDashboardStakeholderOrganizationsHandler
   }
 ]

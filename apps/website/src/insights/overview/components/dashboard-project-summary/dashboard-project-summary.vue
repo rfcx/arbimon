@@ -190,11 +190,7 @@
         role="tabpanel"
         aria-labelledby="stakeholders-tab-content"
       >
-        <DashboardProjectStakeholders
-          v-model:is-editing="isStakeholdersTabEditing"
-          :organizations="organizations"
-          :editable="true"
-        />
+        <DashboardProjectStakeholders :editable="true" />
       </div>
 
       <div
@@ -224,8 +220,6 @@ import { type AxiosInstance } from 'axios'
 import { type TabItem, type TabsOptions, Tabs } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
-import type { OrganizationTypes } from '@rfcx-bio/common/dao/types/organization'
-
 import { apiClientBioKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetDashboardContent } from '../../composables/use-get-dashboard-content'
@@ -250,31 +244,6 @@ const isMethodsTabEditing = ref(false)
 
 const isKeyResultTabViewMored = ref(false)
 const isKeyResultTabEditing = ref(false)
-
-const organizations = ref<Array<OrganizationTypes['light']>>([
-  {
-    id: 1,
-    name: 'Charles Darwin Foundation',
-    type: 'non-profit-organization',
-    url: 'https://google.com',
-    image: 'https://www.darwinfoundation.org/images/fcd/logo_145WHITE.png'
-  },
-  {
-    id: 2,
-    name: 'Ching Hua University',
-    type: 'research-institution',
-    url: 'https://google.com',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/NTHU_Round_Seal.svg/283px-NTHU_Round_Seal.svg.png'
-  },
-  {
-    id: 3,
-    name: 'Naresuan University',
-    type: 'research-institution',
-    url: 'https://google.com',
-    image: 'https://upload.wikimedia.org/wikipedia/en/c/c1/Naresuanlogo.jpg'
-  }
-])
-const isStakeholdersTabEditing = ref(false)
 
 const isResourcesTabViewMored = ref(false)
 const isResourcesTabEditing = ref(false)

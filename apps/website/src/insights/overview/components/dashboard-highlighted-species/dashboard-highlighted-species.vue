@@ -1,37 +1,49 @@
 <template>
-  <h2>Highlighted species</h2>
-  <h6 class="mt-3">
-    Focal species of this project.
-  </h6>
-  <div
-    v-if="speciesList && speciesList.length > 0"
-    class="mt-6"
-  >
-    <HightlightedSpeciesList
+  <div class="flex flex-col gap-y-6">
+    <div>
+      <h2>Highlighted species</h2>
+      <h6 class="mt-3">
+        Focal species of this project.
+      </h6>
+    </div>
+    <div
+      v-if="!canEdit && !speciesList.length && !isLoading"
+      class="w-full rounded-lg p-6 shadow bg-util-gray-02"
+    >
+      <h6>The project owner has not selected highlighted species for this project.</h6>
+    </div>
+    <div
+      v-if="isLoading"
+      class="flex justify-center"
+    >
+      <icon-fas-spinner class="animate-spin w-8 h-8 lg:mx-24" />
+    </div>
+    <HighlightedSpeciesList
+      v-if="speciesList && speciesList.length > 0 && !isLoading"
       :species="speciesList"
     />
-  </div>
-  <div
-    v-else
-    class="mt-6"
-  >
-    <EmptySpeciesList />
-  </div>
-  <div
-    v-if="canEdit"
-    class="mt-6 flex flex-row baseline"
-  >
-    <button
-      class="btn btn-secondary group w-full"
-      data-modal-target="species-hightlighted-modal"
-      data-modal-toggle="species-hightlighted-modal"
-      type="button"
-      @click="openModalToSelectSpecies"
+    <EmptySpeciesList
+      v-if="canEdit && !speciesList.length && !isLoading"
+    />
+    <div
+      v-if="canEdit"
+      class="flex flex-row baseline"
     >
-      Select Species <icon-custom-ic-edit class="ml-2 group-hover:stroke-pitch" />
-    </button>
+      <button
+        class="btn btn-secondary group w-full"
+        data-modal-target="species-highlighted-modal"
+        data-modal-toggle="species-highlighted-modal"
+        type="button"
+        @click="openModalToSelectSpecies"
+      >
+        Select Species <icon-custom-ic-edit class="ml-2 group-hover:stroke-pitch" />
+      </button>
+    </div>
+    <HighlightedSpeciesModal
+      :highlighted-species="speciesList"
+      @emit-close="closeModal"
+    />
   </div>
-  <HighlightedSpeciesModal />
 </template>
 
 <script setup lang="ts">
@@ -43,10 +55,11 @@ import { type DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { type HighlightedSpeciesRow } from '../../types/highlighted-species'
 import EmptySpeciesList from './components/empty-species-list.vue'
-import HightlightedSpeciesList from './components/highlighted-species-list.vue'
+import HighlightedSpeciesList from './components/highlighted-species-list.vue'
 import HighlightedSpeciesModal from './components/highlighted-species-modal.vue'
 
-const props = defineProps<{ species: DashboardSpecies[] | undefined, canEdit: boolean }>()
+const props = defineProps<{ species: DashboardSpecies[] | undefined, canEdit: boolean, isLoading: boolean }>()
+const emit = defineEmits<{(e: 'emitRefetch'): void }>()
 const modal = ref() as Ref<Modal>
 
 const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
@@ -67,7 +80,7 @@ const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
 })
 
 onMounted(() => {
-  modal.value = new Modal(document.getElementById('species-hightlighted-modal'), {
+  modal.value = new Modal(document.getElementById('species-highlighted-modal'), {
     placement: 'center',
     backdrop: 'dynamic',
     backdropClasses: 'bg-pitch bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
@@ -77,5 +90,10 @@ onMounted(() => {
 
 const openModalToSelectSpecies = (): void => {
   modal.value.show()
+}
+
+const closeModal = (): void => {
+  modal.value.hide()
+  emit('emitRefetch')
 }
 </script>

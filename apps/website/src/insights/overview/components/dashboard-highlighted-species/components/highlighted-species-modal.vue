@@ -1,6 +1,6 @@
 <template>
   <div
-    id="species-hightlighted-modal"
+    id="species-highlighted-modal"
     data-modal-backdrop="static"
     tabindex="-1"
     aria-hidden="true"
@@ -19,29 +19,58 @@
             </div>
             <button
               type="button"
-              data-modal-toggle="species-hightlighted-modal"
-              @click="$emit('emitClose')"
+              data-modal-toggle="species-highlighted-modal"
+              @click="resetSearch();resetPagination();$emit('emitClose')"
             >
               <icon-custom-fi-close-thin class="cursor-pointer" />
             </button>
+          </div>
+          <el-input
+            v-model="searchKeyword"
+            placeholder="Search species"
+            size="large"
+            class="w-1/3 bg-mock"
+          >
+            <template #prefix>
+              <div class="inline-flex items-center">
+                <icon-fas-search class="text-base text-insight" />
+              </div>
+            </template>
+          </el-input>
+          <div class="flex flex-row items-center gap-x-2">
+            <el-tag
+              v-for="(riskRating, index) in existingRiskCode"
+              :key="riskRating.code"
+              v-modal="searchRisk"
+              class="species-highlights border-none cursor-pointer text-md h-6"
+              :class="searchRisk === existingRiskCode[index].code ? 'tag-selected' : ''"
+              effect="dark"
+              size="large"
+              :color="riskRating.color"
+              :title="riskRating.code"
+              round
+              @click="filterByCode(existingRiskCode[index].code)"
+            >
+              {{ riskRating.code }}
+            </el-tag>
           </div>
           <!-- Modal body -->
           <div class="grid grid-cols-3 gap-x-4 w-full">
             <div class="grid grid-cols-1 gap-y-4 col-span-2">
               <ul
                 v-if="speciesList && speciesList.length"
-                class="grid grid-cols-2 gap-3"
+                class="grid gap-2 grid-cols-1 lg:(grid-cols-2 gap-3)"
               >
                 <li
                   v-for="item in speciesForCurrentPage"
                   :key="'specie-highlighted-' + item.slug"
                   :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-between border-1 items-center rounded gap-x-3 p-4 h-26 bg-echo hover:(border-frequency cursor-pointer)"
+                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 flex-wrap h-full lg:(h-26 flex-nowrap justify-between) bg-echo hover:(border-frequency cursor-pointer)"
                   @click="selectSpecie(item)"
                 >
                   <img
                     :src="item.photoUrl"
-                    class="min-h-16 h-16 min-w-16 w-16 object-cover rounded bg-util-gray-02"
+                    class="h-16 w-16 object-cover rounded bg-util-gray-02"
                   >
                   <div class="self-center w-36">
                     <p class="text-s italic tracking-tight line-clamp-2">
@@ -51,7 +80,7 @@
                       {{ item.commonName || 'unknown' }}
                     </p>
                   </div>
-                  <div class="flex items-center">
+                  <div class="self-center">
                     <el-tag
                       class="species-highlights border-none text-md h-6"
                       effect="dark"
@@ -76,25 +105,35 @@
                 v-model:currentPage="currentPage"
                 class="flex items-center justify-center"
                 :page-size="PAGE_SIZE"
-                :total="speciesList.length"
+                :total="speciesLength"
                 layout="prev, pager, next"
               />
             </div>
-            <div class="flex justify-end">
+            <div class="grid grid-cols-1">
               <HighlightedSpeciesSelector
                 :species="preSelectedSpecies"
+                @emit-remove-specie="removeSpecieFromList"
               />
             </div>
           </div>
           <!-- Modal footer -->
           <div class="flex flex-row justify-end baseline">
             <button
-              data-modal-hide="species-hightlighted-modal"
+              data-modal-hide="species-highlighted-modal"
               type="button"
               class="btn btn-primary group"
+              @click="saveHighlightedSpecies"
             >
-              <!-- @click="emitData" -->
-              Continue <icon-custom-arrow-right class="ml-2 h-4 w-4 inline text-pitch group-hover:stroke-pitch" />
+              Continue
+              <icon-custom-arrow-right
+                v-if="!isLoadingPostSpecies"
+                class="ml-2 h-4 w-4 inline text-pitch group-hover:stroke-pitch"
+              />
+              <icon-fas-spinner
+                v-if="isLoadingPostSpecies || isLoadingDeleteSpecies"
+                class="ml-2 h-4 w-4 inline text-pitch group-hover:stroke-pitch"
+                :disabled="isLoadingPostSpecies || isLoadingDeleteSpecies"
+              />
             </button>
           </div>
         </div>
@@ -104,27 +143,37 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { type ComputedRef, computed, inject, ref } from 'vue'
+import { type ComputedRef, computed, inject, ref, watch } from 'vue'
 
 import { apiClientBioKey } from '@/globals'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { useStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
+import { useDeleteSpecieHighlighted, usePostSpeciesHighlighted } from '../composables/use-post-highlighted-species'
 import { useSpeciesInProject } from '../composables/use-species-in-project'
-import HighlightedSpeciesSelector from './highlighted-species-selector.vue'
+import HighlightedSpeciesSelector, { type SpecieRow } from './highlighted-species-selector.vue'
 
-defineEmits<{(e: 'emitClose'): void}>()
+const props = defineProps<{ highlightedSpecies: HighlightedSpeciesRow[] }>()
+const emit = defineEmits<{(e: 'emitClose'): void}>()
+
+watch(() => props.highlightedSpecies, () => { fillExistedSpeciesSlug() })
 
 const store = useStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+
 const selectedProjectId = computed(() => store.selectedProject?.id)
+
+const searchKeyword = ref('')
+const searchRisk = ref('')
+
 const selectedSpeciesSlug = ref<string[]>([])
+
 const PAGE_SIZE = 8
 const currentPage = ref(1)
 
 const { isLoading: isLoadingSpecies, data: speciesResp } = useSpeciesInProject(apiClientBio, selectedProjectId)
-
-const speciesForCurrentPage = computed(() => speciesList.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE))
+const { isLoading: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
+const { isLoading: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
 
 const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   if (speciesResp.value === undefined || !speciesResp.value.species.length) {
@@ -147,10 +196,73 @@ const preSelectedSpecies = computed(() => {
   return speciesList.value.length ? speciesList.value.filter(specie => selectedSpeciesSlug.value.includes(specie.slug)) : []
 })
 
-const selectSpecie = (specie: HighlightedSpeciesRow): void => {
+const existingRiskCode = computed(() => {
+  return speciesList.value.length ? speciesList.value.map(specie => specie.riskRating).filter((value, index, self) => self.findIndex(({ code }) => code === value.code) === index) : []
+})
+
+const existingSlugInDB = computed(() => {
+  return props.highlightedSpecies.map(sp => sp.slug)
+})
+
+const newSpeciesToAdd = computed(() => {
+  return preSelectedSpecies.value.filter(sp => !existingSlugInDB.value.includes(sp.slug))
+})
+
+const speciesLength = computed(() => {
+  return speciesListFiltered.value.length
+})
+
+const speciesListFiltered = computed(() => {
+  if (!searchKeyword.value && searchRisk.value) {
+    resetPagination()
+    return speciesList.value
+      .filter(({ riskRating }) => {
+        return riskRating.code === searchRisk.value
+      })
+      .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
+  } else if (searchKeyword.value && !searchRisk.value) {
+    resetPagination()
+    return speciesList.value
+      .filter(({ scientificName, commonName }) => {
+        return scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
+          ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false)
+      })
+      .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
+    } else if (searchKeyword.value && searchRisk.value) {
+      resetPagination()
+      return speciesList.value
+        .filter(({ scientificName, commonName, riskRating }) => {
+          console.info(riskRating.code === searchRisk.value)
+          return (scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
+            ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false)) &&
+            riskRating.code === searchRisk.value
+        })
+        .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
+    } else return speciesList.value
+})
+
+const speciesForCurrentPage = computed(() => {
+  return speciesListFiltered.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
+})
+
+const resetPagination = (): void => {
+  currentPage.value = 1
+}
+
+const resetSearch = (): void => {
+  searchKeyword.value = ''
+  searchRisk.value = ''
+}
+
+const findIndexToRemove = (slug: string): void => {
+  const index = selectedSpeciesSlug.value.findIndex(sl => sl === slug)
+  selectedSpeciesSlug.value.splice(index, 1)
+}
+
+const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
   if (isSpecieSelected(specie)) {
-    const index = selectedSpeciesSlug.value.findIndex(slug => slug === specie.slug)
-    selectedSpeciesSlug.value.splice(index, 1)
+    await removeSpecieFromDB(specie.slug)
+    findIndexToRemove(specie.slug)
   } else {
     if (selectedSpeciesSlug.value.length < 5) {
       selectedSpeciesSlug.value.push(specie.slug)
@@ -163,4 +275,53 @@ const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
   return slugs.length > 0
 }
 
+const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
+  await removeSpecieFromDB(specie.slug)
+  findIndexToRemove(specie.slug)
+}
+
+const removeSpecieFromDB = async (slug: string): Promise<void> => {
+  const specieToDeleteFromDB = props.highlightedSpecies.find(sp => sp.slug === slug)
+  if (existingSlugInDB.value.includes(slug) && specieToDeleteFromDB) {
+    await deleteHighlightedSpecies(specieToDeleteFromDB)
+  }
+}
+
+const fillExistedSpeciesSlug = (): void => {
+  if (props.highlightedSpecies.length) {
+    selectedSpeciesSlug.value = existingSlugInDB.value
+  } else selectedSpeciesSlug.value = []
+}
+
+const filterByCode = (code: string): void => {
+  if (searchRisk.value === code) {
+    searchRisk.value = ''
+  } else searchRisk.value = code
+}
+
+const saveHighlightedSpecies = async (): Promise<void> => {
+  mutatePostSpecies({ species: newSpeciesToAdd.value }, {
+    onSuccess: async () => {
+      emit('emitClose')
+    }
+  })
+}
+
+const deleteHighlightedSpecies = async (specie: HighlightedSpeciesRow): Promise<void> => {
+  mutateDeleteSpecie({ species: [specie] })
+}
 </script>
+<style lang="scss">
+.el-input__wrapper {
+  border-radius: 8px;
+  border: 1px solid #F9F6F2;
+  background: #060508;
+}
+.el-input__inner {
+  padding-left: 2px !important;
+}
+.tag-selected {
+  border: 2px solid #ADFF2C;
+  border-style: solid !important;
+}
+</style>

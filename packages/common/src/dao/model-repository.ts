@@ -47,6 +47,18 @@ export class ModelRepository {
             target.hasMany(source, { foreignKey })
           })
         }
+
+        if ('manyToMany' in associations) {
+          associations.manyToMany?.forEach(targetName => {
+            const target = repo[targetName.model] as UnknownModel
+            const junctionModel = repo[targetName.through] as UnknownModel
+
+            if (!target) return
+            if (!junctionModel) return
+
+            source.belongsToMany(target, { through: junctionModel })
+          })
+        }
       })
 
     this.repo = repo

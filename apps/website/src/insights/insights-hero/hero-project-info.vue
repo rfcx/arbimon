@@ -21,7 +21,10 @@
         class="tooltip_ml absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
       >
         {{ projectCountry }}
-        <div class="absolute tooltip-arrow" data-popper-arrow></div>
+        <div
+          class="absolute tooltip-arrow"
+          data-popper-arrow
+        />
       </div>
       <div
         v-if="projectFlag"
