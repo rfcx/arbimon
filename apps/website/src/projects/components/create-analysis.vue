@@ -72,7 +72,7 @@ const onSelectAnalysis = (url: string, value: string) => {
       analysis.isSelected = false
     } else analysis.isSelected = true
   })
-  isAnalysisSelected.value = true
+  isAnalysisSelected.value = !!url
   analysisUrl.value = url
 }
 
