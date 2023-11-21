@@ -69,7 +69,7 @@ const store = useStore()
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const name = ref<string>('')
-const startDate = ref<string>('')
+const startDate = ref<string | null>('')
 const endDate = ref<string | null>('')
 const onGoing = ref<boolean>(false)
 const objectives = ref<string[]>([])
@@ -98,7 +98,7 @@ const verifyFields = () => {
   }
   if (!onGoing.value) {
     if (endDate.value?.length !== 0) {
-      if (endDate.value !== null) {
+      if (startDate.value !== null && endDate.value !== null) {
         const dateS = new Date(startDate.value)
         const dateE = new Date(endDate.value)
         if (dateS >= dateE) {

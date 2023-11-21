@@ -5,7 +5,7 @@ export interface ProjectCreateRequest {
   name: string
   objectives: string[]
   associatedOrganizations?: string
-  dateStart: string | null // allow null = no input
+  dateStart: string | null
   dateEnd: string | null // allow null = ongoing
 }
 
