@@ -126,13 +126,15 @@ watch(() => settings.value, () => {
   newSummary.value = settings.value.summary
   newObjectives.value = settings.value.objectives
 
-  const start = dayjs(settings.value.dateStart).format('YYYY-MM-DD') + 'T00:00:00.000Z'
-  dateStart.value = start
-  if (settings.value.dateEnd !== null) {
-    const end = dayjs(settings.value.dateEnd).format('YYYY-MM-DD') + 'T00:00:00.000Z'
-    dateEnd.value = end
+  if (settings.value.dateStart !== null) {
+    dateStart.value = dayjs(settings.value.dateStart).format('YYYY-MM-DD') + 'T00:00:00.000Z'
   }
-  onGoing.value = dateStart.value.length !== 0 && dateEnd.value?.length === 0
+
+  if (settings.value.dateEnd !== null) {
+    dateEnd.value = dayjs(settings.value.dateEnd).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+  }
+
+  onGoing.value = dateStart.value?.length !== 0 && dateEnd.value?.length === 0
 })
 
 const save = () => {
