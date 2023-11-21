@@ -85,7 +85,7 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{(e: 'emitUpdateValue', value: ProjectDefault): void}>()
 
 const name = ref('')
-const startDate = ref('')
+const startDate = ref<string | null>('')
 const endDate = ref<string | null>('')
 const onGoing = ref<boolean>(false)
 
@@ -98,7 +98,7 @@ const value: ComputedRef<ProjectDefault> = computed(() => {
   }
 })
 
-const onSelectStartDate = (dateStartLocalIso: string) => {
+const onSelectStartDate = (dateStartLocalIso: string | null) => {
   startDate.value = dateStartLocalIso
   emit('emitUpdateValue', value.value)
 }
