@@ -65,18 +65,20 @@
 import type { ComputedRef } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
 
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
 import type { ProjectDefault } from '../../types'
 import ChooseDatePicker from './choose-date-picker.vue'
 
 const props = withDefaults(defineProps<{
   existingName?: string
   allowNameChanges?: boolean
-  dateStart?: string
-  dateEnd?: string
+  dateStart?: Date
+  dateEnd?: Date
 }>(), {
   existingName: '',
   allowNameChanges: true,
-  dateStart: '',
+  dateStart: undefined,
   dateEnd: undefined
 })
 
@@ -111,10 +113,12 @@ onMounted(() => {
     name.value = props.existingName
   }
   if (props.dateStart) {
-    startDate.value = props.dateStart
+    const start = dayjs(props.dateStart).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+    startDate.value = start
   }
   if (props.dateEnd) {
-    endDate.value = props.dateEnd
+    const end = dayjs(props.dateEnd).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+    endDate.value = end
   }
   if (endDate.value?.length === 0 && startDate.value?.length !== 0) {
     onGoing.value = true
