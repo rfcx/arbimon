@@ -10,8 +10,8 @@ import { type ProjectProfileUpdateBody } from './project-profile'
 export type ProjectSettingsParams = ProjectRouteParamsSerialized
 
 // Response types
-export type ProjectSettingsUpdateBody = ProjectProfileUpdateBody & { name: string }
-export type ProjectSettingsResponse = Pick<Project, 'name'> & Pick<LocationProjectProfile, 'summary' | 'objectives'>
+export type ProjectSettingsUpdateBody = ProjectProfileUpdateBody & { name: string } // name is required as part of checking for permission in Core
+export type ProjectSettingsResponse = Pick<Project, 'name'> & Pick<LocationProjectProfile, 'summary' | 'objectives' | 'dateStart' | 'dateEnd'>
 
 // Route
 export const projectSettingsRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/settings`
