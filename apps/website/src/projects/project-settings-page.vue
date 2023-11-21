@@ -12,8 +12,8 @@
           <project-form
             :existing-name="selectedProject?.name"
             :allow-name-changes="false"
-            :date-start="settings ? settings.dateStart : undefined"
-            :date-end="settings ? settings.dateEnd : undefined"
+            :date-start="settings?.dateStart"
+            :date-end="settings?.dateEnd"
             @emit-update-value="onEmitDefaultValue"
           />
           <project-summary-form

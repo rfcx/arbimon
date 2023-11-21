@@ -27,7 +27,7 @@
       >Project start date</label>
       <div class="relative flex-1">
         <ChooseDatePicker
-          :initial-date="startDate"
+          :initial-date="startDate ? new Date(startDate) : undefined"
           @emit-select-date="onSelectStartDate"
         />
       </div>
@@ -43,7 +43,7 @@
         :class="{'not-allowed': onGoing}"
       >
         <ChooseDatePicker
-          :initial-date="endDate"
+          :initial-date="endDate ? new Date(endDate) : undefined"
           :disabled="onGoing"
           @emit-select-date="onSelectEndDate"
         />
@@ -73,13 +73,13 @@ import ChooseDatePicker from './choose-date-picker.vue'
 const props = withDefaults(defineProps<{
   existingName?: string
   allowNameChanges?: boolean
-  dateStart?: Date
-  dateEnd?: Date
+  dateStart?: Date | null
+  dateEnd?: Date | null
 }>(), {
   existingName: '',
   allowNameChanges: true,
-  dateStart: undefined,
-  dateEnd: undefined
+  dateStart: null,
+  dateEnd: null
 })
 
 const emit = defineEmits<{(e: 'emitUpdateValue', value: ProjectDefault): void}>()
