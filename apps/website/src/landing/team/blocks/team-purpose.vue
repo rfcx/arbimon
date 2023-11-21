@@ -16,33 +16,30 @@
           </div>
         </div>
         <div class="basis-7/12">
-          <video
-            :key="arbimonWebsiteCut"
-            :poster="image"
-            autoplay
-            muted
-            loop
-            preload="auto"
-            playsinline
-            class="rounded-2xl w-full h-full h-90 bg-moss object-cover object-center"
-            alt="Video"
-            aria-label="Video"
-          >
-            <source
-              :src="arbimonWebsiteCut"
-              type="video/mp4"
-            >
-            <image-card
-              :src="image"
-            />
-          </video>
+          <div class="youtube-container rounded-2xl">
+            <iframe src="https://www.youtube.com/embed/2-ZQes55LCo?autoplay=1&mute=1&loop=1&color=white&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&playlist=2-ZQes55LCo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
         </div>
       </div>
     </div>
   </section>
 </template>
-<script setup lang="ts">
-import arbimonWebsiteCut from '@/_assets/landing/team/arbimonWebsiteCut.mp4'
-import image from '@/_assets/landing/team/Landscape_45.webp'
-import imageCard from '../components/image-card.vue'
-</script>
+
+<style lang="scss">
+.youtube-container {
+    overflow: hidden;
+    width: 100%;
+    /* Keep it the right aspect-ratio */
+    aspect-ratio: 16/9;
+    /* No clicking/hover effects */
+    pointer-events: none;
+
+    iframe {
+      /* Extend it beyond the viewport... */
+      width: 300%;
+      height: 100%;
+      /* ...and bring it back again */
+      margin-left: -100%;
+    }
+}
+</style>
