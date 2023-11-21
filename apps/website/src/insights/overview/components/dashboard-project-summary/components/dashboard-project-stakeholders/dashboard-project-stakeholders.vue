@@ -1,11 +1,15 @@
 <template>
-  <template v-if="stakeholders?.organization.length === 0">
-    <ProjectSummaryEmpty @emit-add-content="isEditing = true" />
+  <template v-if="stakeholders?.organization.length === 0 && stakeholders?.user.length === 0 && !isEditing">
+    <ProjectSummaryEmpty
+      v-if="editable"
+      @emit-add-content="isEditing = true"
+    />
+    <ProjectSummaryEmptyGuestView v-else />
   </template>
   <template v-else>
     <DashboardProjectStakeholdersViewer
       v-show="isEditing === false"
-      :editable="true"
+      :editable="editable"
       :organizations="stakeholders?.organization ?? []"
       @emit-is-updating="isEditing = true"
     />
@@ -26,8 +30,11 @@ import { useStore } from '~/store'
 import { useGetDashboardStakeholders } from '../../../../composables/use-get-dashboard-stakeholders'
 import { useUpdateStakeholdersOrganizationsList } from '../../../../composables/use-update-stakeholders-organizations'
 import ProjectSummaryEmpty from '../project-summary-empty.vue'
+import ProjectSummaryEmptyGuestView from '../project-summary-empty-guest-view.vue'
 import DashboardProjectStakeholdersEditor from './dashboard-project-stakeholders-editor.vue'
 import DashboardProjectStakeholdersViewer from './dashboard-project-stakeholders-viewer.vue'
+
+defineProps<{ editable: boolean, isProjectMember: boolean, isViewingAsGuest: boolean }>()
 
 const isEditing = ref(false)
 const store = useStore()
@@ -51,6 +58,4 @@ const onFinishedEditing = (ids: number[]): void => {
 
   isEditing.value = false
 }
-
-defineProps<{ editable: boolean }>()
 </script>
