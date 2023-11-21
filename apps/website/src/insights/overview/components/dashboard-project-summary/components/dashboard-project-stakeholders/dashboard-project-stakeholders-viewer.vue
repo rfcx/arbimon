@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="text-white text-xl font-medium font-sans mt-10">
+    <h3 class="text-white text-xl font-medium font-sans mt-2">
       Project members
     </h3>
     <div

@@ -141,6 +141,8 @@
             :editable="canEdit"
             :raw-markdown-text="dashboardContent?.readme"
             :default-markdown-text="readmeDefault"
+            :is-project-member="isProjectMember"
+            :is-viewing-as-guest="isViewingAsGuest"
             @on-editor-close="updateReadme"
           />
         </div>
@@ -160,6 +162,8 @@
             :editable="canEdit"
             :raw-markdown-text="dashboardContent?.methods"
             :default-markdown-text="methodsDefault"
+            :is-project-member="isProjectMember"
+            :is-viewing-as-guest="isViewingAsGuest"
             @on-editor-close="updateMethods"
           />
         </div>
@@ -179,6 +183,8 @@
             :editable="canEdit"
             :raw-markdown-text="dashboardContent?.keyResult"
             :default-markdown-text="keyResultDefault"
+            :is-project-member="isProjectMember"
+            :is-viewing-as-guest="isViewingAsGuest"
             @on-editor-close="updateKeyResult"
           />
         </div>
@@ -190,7 +196,13 @@
         role="tabpanel"
         aria-labelledby="stakeholders-tab-content"
       >
-        <DashboardProjectStakeholders :editable="true" />
+        <div class="mx-auto p-4 lg:max-w-4xl relative">
+          <DashboardProjectStakeholders
+            :editable="canEdit"
+            :is-project-member="isProjectMember"
+            :is-viewing-as-guest="isViewingAsGuest"
+          />
+        </div>
       </div>
 
       <div
@@ -207,6 +219,8 @@
             :editable="canEdit"
             :raw-markdown-text="dashboardContent?.resources"
             :default-markdown-text="resourcesDefault"
+            :is-project-member="isProjectMember"
+            :is-viewing-as-guest="isViewingAsGuest"
             @on-editor-close="updateResources"
           />
         </div>
@@ -231,7 +245,7 @@ import { useUpdateDashboardResources } from '../../composables/use-update-dashbo
 import DashboardMarkdownViewerEditor from './components/dashboard-markdown-viewer-editor.vue'
 import DashboardProjectStakeholders from './components/dashboard-project-stakeholders/dashboard-project-stakeholders.vue'
 
-defineProps<{ canEdit: boolean }>()
+defineProps<{ canEdit: boolean, isProjectMember: boolean, isViewingAsGuest: boolean }>()
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 const { readme: readmeDefault, keyResult: keyResultDefault, resources: resourcesDefault, methods: methodsDefault } = useMarkdownEditorDefaults()
