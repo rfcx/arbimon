@@ -127,6 +127,11 @@ const toggleDetection = () => {
   opacity: 0.4;
 }
 
+.el-input__wrapper {
+  border-radius: 5px;
+  border: 0px;
+}
+
 .el-date-editor.el-input {
   height: var(--el-component-size-large);
   width: 100%;
