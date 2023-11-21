@@ -1,4 +1,5 @@
-import { type AxiosInstance } from '@/../../utils/node_modules/axios'
+import { type AxiosInstance } from 'axios'
+
 import { type OrganizationType, type OrganizationTypes } from '../../dao/types'
 
 // Request types
