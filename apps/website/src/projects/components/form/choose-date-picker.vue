@@ -5,6 +5,7 @@
     type="date"
     placeholder="Choose date"
     format="MM/DD/YYYY"
+    @change="dateChange"
   />
 </template>
 
@@ -14,7 +15,7 @@ import { ref, watchEffect } from 'vue'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 const dateValue = ref<Date>()
-const emit = defineEmits<{(e: 'emitSelectDate', value: string): void}>()
+const emit = defineEmits<{(e: 'emitSelectDate', value: string | null): void}>()
 const props = defineProps<{ initialDate?: Date}>()
 
 watchEffect(() => {
@@ -25,6 +26,12 @@ watchEffect(() => {
 const emitSelectDate = (date: Date): void => {
   const dateLocalIso = dayjs(date).format('YYYY-MM-DD') + 'T00:00:00.000Z'
   emit('emitSelectDate', dateLocalIso)
+}
+
+const dateChange = () => {
+  if (dateValue.value === null) {
+    emit('emitSelectDate', null)
+  }
 }
 
 watchEffect(() => {

@@ -88,8 +88,8 @@ const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
 
 const newName = ref('')
-const dateStart = ref<string | null>('')
-const dateEnd = ref<string | null>('')
+const dateStart = ref<string | null>(null)
+const dateEnd = ref<string | null>(null)
 const onGoing = ref(false)
 const newSummary = ref('')
 const newObjectives = ref([''])
@@ -135,18 +135,45 @@ watch(() => settings.value, () => {
 })
 
 const save = () => {
-  if (dateStart.value !== null && dateEnd.value !== null) {
-    const dateS = new Date(dateStart.value)
-    const dateE = new Date(dateEnd.value)
-    if (dateS >= dateE) {
+  hasFailed.value = false
+  console.info('dateStart', dateStart.value)
+  console.info('dateEnd', dateEnd.value)
+  if ((dateStart.value?.length !== 0 && dateStart.value !== null) && !onGoing.value) {
+    if (dateEnd.value === null || dateEnd.value?.length === 0) {
       hasFailed.value = true
-      errorMessage.value = 'Failed! Project start date should be before end date'
-    } else {
+      errorMessage.value = 'Failed! Please select project end date'
+    }
+  }
+
+  if (dateEnd.value?.length !== 0 && dateEnd.value !== null) {
+    if (dateStart.value === null || dateStart.value?.length === 0) {
+      hasFailed.value = true
+      errorMessage.value = 'Failed! Please select project strat date'
+    }
+  }
+
+  if (dateStart.value?.length !== 0 && dateEnd.value?.length !== 0) {
+    if ((dateStart.value !== null) && dateEnd.value !== null) {
+      const dateS = new Date(dateStart.value)
+      const dateE = new Date(dateEnd.value)
+      if (dateS >= dateE) {
+        hasFailed.value = true
+        errorMessage.value = 'Failed! Project start date should be before end date'
+      } else {
+        isSaving.value = true
+        hasFailed.value = false
+        updateSettings()
+      }
+    }
+  } else {
+    if (!hasFailed.value) {
       isSaving.value = true
       hasFailed.value = false
       updateSettings()
     }
-  } else {
+  }
+
+  if ((dateEnd.value === null || dateEnd.value?.length === 0) && (dateStart.value === null || dateStart.value?.length === 0)) {
     isSaving.value = true
     hasFailed.value = false
     updateSettings()
