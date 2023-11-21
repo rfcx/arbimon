@@ -59,6 +59,7 @@ import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vu
 import { apiClientBioKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
+import { verifyDateFormError } from './components/form/functions'
 import ProjectForm from './components/form/project-form.vue'
 import ProjectObjectiveForm from './components/form/project-objective-form.vue'
 import type { ProjectDefault } from './types'
@@ -96,22 +97,11 @@ const verifyFields = () => {
     errorMessage.value = 'Please enter at least one objective'
     return false
   }
-  if (!onGoing.value) {
-    if (endDate.value?.length !== 0) {
-      if (startDate.value !== null && endDate.value !== null) {
-        const dateS = new Date(startDate.value)
-        const dateE = new Date(endDate.value)
-        if (dateS >= dateE) {
-          hasFailed.value = true
-          errorMessage.value = 'Project start date should be before end date'
-          return false
-        }
-      }
-    } else {
-      hasFailed.value = true
-      errorMessage.value = 'Please enter a project end date'
-      return false
-    }
+  const dateError = verifyDateFormError(startDate.value ? startDate.value : undefined, endDate.value ? endDate.value : undefined, onGoing.value)
+  if (dateError.length > 0) {
+    hasFailed.value = true
+    errorMessage.value = dateError
+    return false
   }
   return true
 }
