@@ -57,7 +57,10 @@
       :checked="onGoing"
       @click="onGoingClick()"
     >
-    <label class="font-light text-gray-500 dark:text-gray-300 ml-2">This is an on-going project</label>
+    <label
+      class="font-light text-gray-500 dark:text-gray-300 ml-2 cursor-pointer"
+      @click="onGoingClick()"
+    >This is an on-going project</label>
   </div>
 </template>
 
