@@ -65,18 +65,24 @@
                   v-for="item in speciesForCurrentPage"
                   :key="'specie-highlighted-' + item.slug"
                   :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 flex-wrap h-full lg:(h-26 flex-nowrap justify-between) bg-echo hover:(border-frequency cursor-pointer)"
+                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 flex-wrap h-full md:(h-26 flex-wrap justify-center) lg:(h-26 flex-nowrap justify-between) bg-echo hover:(border-frequency cursor-pointer)"
                   @click="selectSpecie(item)"
                 >
                   <img
                     :src="item.photoUrl"
                     class="h-16 w-16 object-cover rounded bg-util-gray-02"
                   >
-                  <div class="self-center w-36">
-                    <p class="text-s italic tracking-tight line-clamp-2">
+                  <div class="self-center w-36 md:overflow-hidden">
+                    <p
+                      class="text-s italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
+                      :title="item.scientificName"
+                    >
                       {{ item.scientificName }}
                     </p>
-                    <p class="mt-1 text-xs tracking-tight line-clamp-2">
+                    <p
+                      class="mt-1 text-xs tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
+                      :title="item.commonName || 'unknown'"
+                    >
                       {{ item.commonName || 'unknown' }}
                     </p>
                   </div>
@@ -206,6 +212,8 @@ const existingSlugInDB = computed(() => {
 
 const newSpeciesToAdd = computed(() => {
   const existingSlugsInDB = props.highlightedSpecies.map(sp => sp.slug)
+  console.info('newSpeciesToAdd', preSelectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug)))
+  console.info('preSelectedSpecies', preSelectedSpecies.value)
   return preSelectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
 })
 

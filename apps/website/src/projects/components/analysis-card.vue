@@ -56,7 +56,7 @@ watch(() => props.analysis.isSelected, (newValue) => {
 
 function selectedAnalysis (): void {
   isSelected.value = !isSelected.value
-  emit('emitSelectedAnalysis', props.analysis.url, props.analysis.value)
+  emit('emitSelectedAnalysis', isSelected.value ? props.analysis.url : '', isSelected.value ? props.analysis.value : '')
 }
 
 function expandDescription (): void {
