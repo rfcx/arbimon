@@ -212,6 +212,8 @@ const existingSlugInDB = computed(() => {
 
 const newSpeciesToAdd = computed(() => {
   const existingSlugsInDB = props.highlightedSpecies.map(sp => sp.slug)
+  console.info('newSpeciesToAdd', preSelectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug)))
+  console.info('preSelectedSpecies', preSelectedSpecies.value)
   return preSelectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
 })
 
