@@ -1,8 +1,10 @@
 <template>
   <template v-if="(rawMarkdownText == null || rawMarkdownText === '') && !isViewMored">
-    <ProjectSummaryEmpty
+    <project-summary-empty
+      v-if="editable"
       @emit-add-content="editMarkdownContent"
     />
+    <ProjectSummaryEmptyGuestView v-else />
   </template>
   <template v-else>
     <div
@@ -50,10 +52,11 @@ import { toRef } from 'vue'
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
 import ProjectSummaryEmpty from './project-summary-empty.vue'
+import ProjectSummaryEmptyGuestView from './project-summary-empty-guest-view.vue'
 
 const DEFAULT_CHARACTER_LIMIT = 10000
 
-const props = withDefaults(defineProps<{ id: string, editable: boolean, rawMarkdownText: string | undefined, defaultMarkdownText: string, isViewMored: boolean, isEditing: boolean, characterLimit?: number }>(), { characterLimit: DEFAULT_CHARACTER_LIMIT })
+const props = withDefaults(defineProps<{ id: string, editable: boolean, rawMarkdownText: string | undefined, defaultMarkdownText: string, isViewMored: boolean, isEditing: boolean, characterLimit?: number, isProjectMember: boolean, isViewingAsGuest: boolean }>(), { characterLimit: DEFAULT_CHARACTER_LIMIT })
 const emit = defineEmits<{(e: 'on-editor-close', value: string): void, (e: 'update:isViewMored', value: boolean): void, (e: 'update:isEditing', value: boolean): void}>()
 
 const editableMarkdownText = toRef(props.rawMarkdownText == null || props.rawMarkdownText === '' ? props.defaultMarkdownText : props.rawMarkdownText)
