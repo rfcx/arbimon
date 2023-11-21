@@ -205,7 +205,8 @@ const existingSlugInDB = computed(() => {
 })
 
 const newSpeciesToAdd = computed(() => {
-  return preSelectedSpecies.value.filter(sp => !existingSlugInDB.value.includes(sp.slug))
+  const existingSlugsInDB = props.highlightedSpecies.map(sp => sp.slug)
+  return preSelectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
 })
 
 const speciesLength = computed(() => {
@@ -264,6 +265,7 @@ const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
     await removeSpecieFromDB(specie.slug)
     findIndexToRemove(specie.slug)
   } else {
+    // only 5 species might be highlighted
     if (selectedSpeciesSlug.value.length < 5) {
       selectedSpeciesSlug.value.push(specie.slug)
     }
@@ -282,7 +284,8 @@ const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
 
 const removeSpecieFromDB = async (slug: string): Promise<void> => {
   const specieToDeleteFromDB = props.highlightedSpecies.find(sp => sp.slug === slug)
-  if (existingSlugInDB.value.includes(slug) && specieToDeleteFromDB) {
+  const existingSlugsInDB = props.highlightedSpecies.map(sp => sp.slug)
+  if (existingSlugsInDB.includes(slug) && specieToDeleteFromDB) {
     await deleteHighlightedSpecies(specieToDeleteFromDB)
   }
 }
