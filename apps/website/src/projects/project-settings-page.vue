@@ -151,8 +151,8 @@ const updateSettings = () => {
     name: newName.value,
     summary: newSummary.value,
     objectives: newObjectives.value,
-    dateStart: dateStart.value,
-    dateEnd: onGoing.value ? null : dateEnd.value
+    dateStart: dateStart.value ? dateStart.value : null,
+    dateEnd: onGoing.value ? null : dateEnd.value ? dateEnd.value : null
   }, {
     onSuccess: () => {
       isSaving.value = false
