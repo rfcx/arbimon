@@ -8,7 +8,7 @@
   >
     <div class="flex flex-col items-start">
       <h2 class="mb-8">
-        Work with us
+        Work with Arbimon
       </h2>
       <p>
         <router-link
@@ -16,7 +16,7 @@
         >
           <span class="text-frequency underline">Contact us</span>
         </router-link>
-        to find out how the Arbimon science team can help.
+        to find out what Arbimon can do for you.
       </p>
     </div>
   </contact-card>
