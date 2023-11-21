@@ -31,7 +31,7 @@ export const updateProjectProfile = async (locationProjectId: number, profile: P
   const updatedParams = pickBy({
     summary: profile.summary,
     objectives: profile.objectives,
-    dateStart: profile.dateStart === undefined ? undefined : profile.dateStart ? new Date(profile.dateStart) : null,
+    dateStart: profile.dateStart,
     dateEnd: profile.dateEnd
   }, (v) => v !== undefined)
   const locationProjectProfile = ModelRepository.getInstance(getSequelize()).LocationProjectProfile
