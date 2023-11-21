@@ -40,7 +40,7 @@
     </div>
     <div class="flex justify-start items-center mt-10 mb-3">
       <h3 class="text-white text-xl font-medium font-sans leading-7 mr-8">
-        Select to show project members
+        Project members
       </h3>
       <label
         for="dashboard-project-stakeholders-editor-select-all-users-checkbox"
@@ -77,22 +77,50 @@
 
     <div class="flex justify-start items-center">
       <h3 class="text-white text-xl font-medium font-sans">
-        Select to show affiliated organizations
+        Affiliated organizations
       </h3>
       <div class="flex items-center ml-4">
-        <icon-custom-ft-search-lg
-          id="dashboard-project-stakeholders-search-organizations-search-icon"
-          class="text-white w-4 h-4"
-        />
-        <input
-          id="dashboard-project-stakeholders-search-organizations-input"
-          v-model="searchOrganizationValue"
-          class="px-4 py-2 text-insight bg-echo outline-none focus:outline-none border-cloud rounded-lg font-sans"
-          type="text"
-          autofocus
-          placeholder="Type to search organizations"
-          @input="refetchOrganizationsSearch"
+        <button
+          v-if="!isOrganizationSearchInputOpen"
+          @click="openOrganizationSearch()"
         >
+          <icon-custom-ft-search-lg
+            class="text-white w-4 h-4"
+          />
+        </button>
+        <div
+          v-else
+        >
+          <input
+            ref="organizationSearchInput"
+            v-model="searchOrganizationValue"
+            class="px-3 py-2 w-[20.0rem] text-sm text-insight bg-echo outline-none focus:outline-none rounded-t-lg font-sans"
+            type="text"
+            placeholder="Type to search organizations"
+            data-dropdown-toggle="dropdown"
+            @input="refetchOrganizationsSearch"
+            @blur="isOrganizationSearchInputOpen = false"
+          >
+          <div
+            ref="organizationSearchResultContainer"
+            class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg divide-y divide-gray-100 shadow"
+          >
+            <ul
+              class="py-2 text-sm text-gray-700 dark:text-gray-200"
+              aria-labelledby="dropdownDefaultButton"
+            >
+              <li
+                v-for="o in organizationSearchResults"
+                :key="o.id"
+              >
+                <a
+                  href="#"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                >{{ o.name }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -134,7 +162,9 @@
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { computed, inject, ref } from 'vue'
+import type { DropdownOptions } from 'flowbite'
+import { Dropdown } from 'flowbite'
+import { computed, inject, nextTick, ref } from 'vue'
 
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
@@ -149,6 +179,9 @@ const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[]): vo
 
 const selectedUsers = ref([1])
 
+const isOrganizationSearchInputOpen = ref(false)
+const organizationSearchInput = ref<HTMLDivElement | null>(null)
+const organizationSearchResultContainer = ref<HTMLDivElement | null>(null)
 const editableOrganizations = ref([...props.organizations])
 const selectedOrganizations = ref(props.organizations.map(o => o.id))
 const searchOrganizationValue = ref('')
@@ -156,6 +189,20 @@ const searchOrganizationValue = ref('')
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
+
+const openOrganizationSearch = async () => {
+  isOrganizationSearchInputOpen.value = true
+  await nextTick()
+  organizationSearchInput.value?.focus()
+  const dropdownOptions: DropdownOptions = { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }
+  new Dropdown(organizationSearchResultContainer.value, organizationSearchInput.value, dropdownOptions).show()
+}
+
+const organizationSearchResults = [
+  { id: 1, name: 'Company X' },
+  { id: 2, name: 'Company Y' },
+  { id: 3, name: 'Non-profit Z' }
+]
 
 const onAddNewOrganizationFromSearch = (id: number): void => {
   // Return when the org already exists
