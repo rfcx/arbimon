@@ -6,7 +6,7 @@
           See our scientists at work
         </h1>
         <h4 class="text-gray-500 dark:text-insight max-w-[793px] mx-auto">
-          We're a full-service solution to biodiversity monitoring projects with exceptional support covering everything from site selection to data insight analysis.
+          The Arbimon team consists of dedicated experts in biodiversity conservation who are at the forefront of our industry. Our unique perspective enables us to continually drive innovation within the Arbimon platform. We actively employ our platform in our daily research endeavors, allowing us to stay at the cutting edge of technology and features. This commitment empowers us to provide the most effective solutions for individuals seeking to enhance their understanding of biodiversity health and make informed decisions for conservation efforts through the use of ecoacoustics.
         </h4>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-6">

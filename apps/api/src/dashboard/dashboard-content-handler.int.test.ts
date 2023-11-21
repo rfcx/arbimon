@@ -258,7 +258,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
   describe('can edit data without changing other rows', async () => {
     beforeEach(async () => {
-      await ModelRepository.getInstance(sequelize).LocationProjectProfile.upsert({ locationProjectId: Number(PROJECT_ID_BASIC), summary: '0', readme: '0', keyResult: '0', resources: '0', methods: '0', objectives: [] })
+      await ModelRepository.getInstance(sequelize).LocationProjectProfile.upsert({ locationProjectId: Number(PROJECT_ID_BASIC), summary: '0', readme: '0', keyResult: '0', resources: '0', methods: '0', objectives: [], dateStart: null, dateEnd: null })
     })
 
     test('try editing summary', async () => {

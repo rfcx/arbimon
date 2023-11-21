@@ -13,21 +13,36 @@
             <p class="pb-3 last:pb-0">
               With cutting-edge AI technology and acoustic innovation, Arbimon empowers individuals and organizations to transform sound into actionable insights.
             </p>
-            <p class="pb-3 last:pb-0">
-              Collaboration is at the heart of our approach. We actively engage with ecologists, foundations, governments, corporations, and local communities to extend the reach and impact of our initiatives.
-            </p>
           </div>
         </div>
         <div class="basis-7/12">
-          <img
-            :src="image"
-            class="rounded-2xl"
-          >
+          <div class="youtube-container rounded-2xl">
+            <iframe
+              src="https://www.youtube.com/embed/2-ZQes55LCo?start=12&end=99&autoplay=1&mute=1&loop=1&color=white&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&playlist=2-ZQes55LCo"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            />
+          </div>
         </div>
       </div>
     </div>
   </section>
 </template>
-<script setup lang="ts">
-import image from '@/_assets/landing/team/Landscape_45.webp'
-</script>
+
+<style lang="scss">
+.youtube-container {
+    overflow: hidden;
+    width: 100%;
+    /* Keep it the right aspect-ratio */
+    aspect-ratio: 16/9;
+
+    iframe {
+      /* Extend it beyond the viewport... */
+      width: 100%;
+      height: 100%;
+      /* ...and bring it back again */
+    }
+}
+</style>
