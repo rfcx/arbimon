@@ -102,13 +102,15 @@ const verifyFields = () => {
     return false
   }
   if (!onGoing.value) {
-    if (endDate.value !== null) {
-      const dateS = new Date(startDate.value)
-      const dateE = new Date(endDate.value)
-      if (dateS >= dateE) {
-        hasFailed.value = true
-        errorMessage.value = 'Project end date is not less than project start date'
-        return false
+    if (endDate.value?.length !== 0) {
+      if (endDate.value !== null) {
+        const dateS = new Date(startDate.value)
+        const dateE = new Date(endDate.value)
+        if (dateS >= dateE) {
+          hasFailed.value = true
+          errorMessage.value = 'Project start date should be before end date'
+          return false
+        }
       }
     } else {
       hasFailed.value = true
