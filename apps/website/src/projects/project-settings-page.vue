@@ -73,6 +73,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { apiClientBioKey } from '@/globals'
 import { useDashboardStore, useStore } from '~/store'
 import { useGetProjectSettings, useUpdateProjectSettings } from './_composables/use-project-profile'
+import { verifyDateFormError } from './components/form/functions'
 import ProjectForm from './components/form/project-form.vue'
 import ProjectObjectiveForm from './components/form/project-objective-form.vue'
 import ProjectSummaryForm from './components/form/project-summary-form.vue'
@@ -135,49 +136,14 @@ watch(() => settings.value, () => {
 })
 
 const save = () => {
+  const dateError = verifyDateFormError(dateStart.value ? dateStart.value : undefined, dateEnd.value ? dateEnd.value : undefined, onGoing.value)
+  if (dateError.length > 0) {
+    hasFailed.value = true
+    errorMessage.value = dateError
+    return
+  }
   hasFailed.value = false
-  console.info('dateStart', dateStart.value)
-  console.info('dateEnd', dateEnd.value)
-  if ((dateStart.value?.length !== 0 && dateStart.value !== null) && !onGoing.value) {
-    if (dateEnd.value === null || dateEnd.value?.length === 0) {
-      hasFailed.value = true
-      errorMessage.value = 'Failed! Please select project end date'
-    }
-  }
-
-  if (dateEnd.value?.length !== 0 && dateEnd.value !== null) {
-    if (dateStart.value === null || dateStart.value?.length === 0) {
-      hasFailed.value = true
-      errorMessage.value = 'Failed! Please select project strat date'
-    }
-  }
-
-  if (dateStart.value?.length !== 0 && dateEnd.value?.length !== 0) {
-    if ((dateStart.value !== null) && dateEnd.value !== null) {
-      const dateS = new Date(dateStart.value)
-      const dateE = new Date(dateEnd.value)
-      if (dateS >= dateE) {
-        hasFailed.value = true
-        errorMessage.value = 'Failed! Project start date should be before end date'
-      } else {
-        isSaving.value = true
-        hasFailed.value = false
-        updateSettings()
-      }
-    }
-  } else {
-    if (!hasFailed.value) {
-      isSaving.value = true
-      hasFailed.value = false
-      updateSettings()
-    }
-  }
-
-  if ((dateEnd.value === null || dateEnd.value?.length === 0) && (dateStart.value === null || dateStart.value?.length === 0)) {
-    isSaving.value = true
-    hasFailed.value = false
-    updateSettings()
-  }
+  updateSettings()
 }
 
 const updateSettings = () => {
