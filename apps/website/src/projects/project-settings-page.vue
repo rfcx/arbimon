@@ -68,6 +68,8 @@
 import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+
 import { apiClientBioKey } from '@/globals'
 import { useDashboardStore, useStore } from '~/store'
 import { useGetProjectSettings, useUpdateProjectSettings } from './_composables/use-project-profile'
@@ -86,6 +88,9 @@ const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
 
 const newName = ref('')
+const dateStart = ref('')
+const dateEnd = ref<string | null>('')
+const onGoing = ref(false)
 const newSummary = ref('')
 const newObjectives = ref([''])
 const isSaving = ref(false)
@@ -94,7 +99,9 @@ const hasFailed = ref(false)
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
   newName.value = value.name
-  // TODO: add start-end date
+  dateStart.value = value.startDate
+  dateEnd.value = value.endDate
+  onGoing.value = value.onGoing
 }
 
 const onEmitSummary = (value: string) => {
@@ -115,6 +122,14 @@ watch(() => settings.value, () => {
   newName.value = settings.value.name
   newSummary.value = settings.value.summary
   newObjectives.value = settings.value.objectives
+
+  const start = dayjs(settings.value.dateStart).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+  dateStart.value = start
+  if (settings.value.dateEnd !== null) {
+    const end = dayjs(settings.value.dateEnd).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+    dateEnd.value = end
+  }
+  onGoing.value = dateStart.value.length !== 0 && dateEnd.value?.length === 0
 })
 
 const save = () => {
@@ -123,7 +138,9 @@ const save = () => {
   mutateProjectSettings({
     name: newName.value,
     summary: newSummary.value,
-    objectives: newObjectives.value
+    objectives: newObjectives.value,
+    dateStart: dateStart.value,
+    dateEnd: onGoing.value ? null : dateEnd.value
   }, {
     onSuccess: () => {
       isSaving.value = false
