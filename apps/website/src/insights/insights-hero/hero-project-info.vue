@@ -72,7 +72,6 @@ import dayjs from 'dayjs'
 import { computed } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
-import { type DashboardMetricsResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-metrics'
 import { type ProjectLocationResponse } from '@rfcx-bio/common/api-bio/project/project-location'
 import { type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
@@ -82,7 +81,6 @@ const props = defineProps<{
   projectLocation: ProjectLocationResponse | undefined,
   isLoadingProjectLocation: boolean,
   projectObjectives: string[],
-  metrics: DashboardMetricsResponse | undefined
   profile: ProjectSettingsResponse | undefined
 }>()
 const formatDateRange = (date: Date | null | undefined): string => {

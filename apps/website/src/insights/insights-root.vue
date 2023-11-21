@@ -15,7 +15,6 @@
           :project-location="projectLocation"
           :is-loading-project-location="isLoadingProjectLocation"
           :project-objectives="dashboardStore.projectObjectives ?? profile?.objectives ?? []"
-          :metrics="metrics"
           :profile="profile"
         />
         <hero-brief-overview
