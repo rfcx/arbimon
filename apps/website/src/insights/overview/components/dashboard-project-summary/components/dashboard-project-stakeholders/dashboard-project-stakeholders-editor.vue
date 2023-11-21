@@ -105,6 +105,7 @@
             <div
               ref="organizationSearchLoading"
               role="status"
+              class="absolute z-index-10 absolute top-1 right-3"
               :class="{ hidden: !isOrganizationSearchLoading }"
             >
               <svg
@@ -227,7 +228,9 @@ const openOrganizationSearch = async () => {
 const organizationSearchInputChanged = async () => {
   isOrganizationSearchLoading.value = true
   await refetchOrganizationsSearch()
-  isOrganizationSearchLoading.value = false
+  setTimeout(() => {
+    isOrganizationSearchLoading.value = false
+  }, 1000)
 }
 
 // TODO
