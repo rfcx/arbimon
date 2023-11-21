@@ -3,9 +3,9 @@
     <li
       v-for="item in speciesList"
       :key="item.scientificName"
-      class="flex flex-row justify-between items-center rounded-lg gap-x-3 p-4 h-21 max-w-80 bg-util-gray-01"
+      class="flex flex-col justify-center items-center rounded-lg gap-x-3 p-4 max-w-80 bg-util-gray-01 md:(flex-row h-21) lg:(flex-row h-21 justify-between)"
     >
-      <div class="flex flex-row justify-between items-center gap-x-4">
+      <div class="flex flex-col justify-center items-center gap-x-4 md:flex-row lg:(flex-row justify-between)">
         <img
           v-if="item.photoUrl"
           :src="item.photoUrl"
@@ -15,15 +15,15 @@
           v-else
           class="h-14 w-14 object-cover rounded bg-util-gray-02"
         />
-        <div class="self-center">
+        <div class="self-center md:overflow-hidden">
           <p
-            class="italic overflow-hidden tracking-tight line-clamp-2 inline-block"
+            class="italic overflow-hidden tracking-tight line-clamp-2 inline-block md:(overflow-hidden text-ellipsis)"
             :title="item.scientificName"
           >
             {{ item.scientificName }}
           </p>
           <p
-            class="text-xs text-subtle tracking-tight overflow-hidden line-clamp-2 inline-block"
+            class="text-xs text-subtle tracking-tight overflow-hidden line-clamp-2 inline-block md:(overflow-hidden text-ellipsis)"
             :title="item.commonName"
           >
             {{ item.commonName }}
