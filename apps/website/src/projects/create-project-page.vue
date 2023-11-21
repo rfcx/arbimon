@@ -91,11 +91,6 @@ const verifyFields = () => {
     errorMessage.value = 'Please enter a project name'
     return false
   }
-  if (startDate.value.length === 0) {
-    hasFailed.value = true
-    errorMessage.value = 'Please enter a project start date'
-    return false
-  }
   if (objectives.value.length === 0) {
     hasFailed.value = true
     errorMessage.value = 'Please enter at least one objective'
