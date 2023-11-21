@@ -8,19 +8,19 @@
   </div>
   <div class="grid grid-col-1 lg:grid-cols-12 gap-20 mt-10 lg:mt-20">
     <div class="lg:col-span-8">
-      <dashboard-project-summary :can-edit="isProjectMember && !isViewingAsGuest" />
+      <dashboard-project-summary
+        :can-edit="isProjectMember && !isViewingAsGuest"
+        :is-project-member="isProjectMember"
+        :is-viewing-as-guest="isViewingAsGuest"
+      />
     </div>
     <div class="lg:col-span-4 flex flex-col">
-      <div
-        v-if="isProjectMember"
-      >
-        <dashboard-highlighted-species
-          :species="species?.speciesHighlighted"
-          :can-edit="isProjectMember && !isViewingAsGuest"
-          :is-loading="isLoadingSpecies"
-          @emit-refetch="refetchSpeciesRichnessByRisk"
-        />
-      </div>
+      <dashboard-highlighted-species
+        :species="species?.speciesHighlighted"
+        :can-edit="isProjectMember && !isViewingAsGuest"
+        :is-loading="isLoadingSpecies"
+        @emit-refetch="refetchSpeciesRichnessByRisk"
+      />
       <div class="mt-6">
         <dashboard-species-by-taxon
           :dataset="speciesRichnessByTaxon"

@@ -18,7 +18,7 @@
   <div
     id="dateRangePicker"
     date-rangepicker
-    class="flex mt-7 items-center gap-4"
+    class="flex mt-6 items-center gap-4"
   >
     <div class="flex-1">
       <label
@@ -55,7 +55,7 @@
       type="checkbox"
       class="w-5 h-5 border mb-1 border-gray-300 rounded dark:bg-echo focus:border-white-600 focus:ring-frequency dark:border-white-600 dark:focus:ring-frequency dark:ring-offset-gray-800"
       :checked="onGoing"
-      @click="toggleDetection()"
+      @click="onGoingClick()"
     >
     <label class="font-light text-gray-500 dark:text-gray-300 ml-2">This is an on-going project</label>
   </div>
@@ -129,7 +129,7 @@ watch(name, () => {
   emit('emitUpdateValue', value.value)
 })
 
-const toggleDetection = () => {
+const onGoingClick = () => {
   onGoing.value = !onGoing.value
   emit('emitUpdateValue', value.value)
 }
