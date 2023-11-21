@@ -58,7 +58,7 @@
           class="p-4 text-sm text-red-800 dark:text-flamingo"
           role="alert"
         >
-          <span class="font-medium">Failed!</span>
+          <span class="font-medium">{{ errorMessage }}</span>
         </span>
       </div>
     </div>
@@ -88,13 +88,15 @@ const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
 
 const newName = ref('')
-const dateStart = ref('')
+const dateStart = ref<string | null>('')
 const dateEnd = ref<string | null>('')
 const onGoing = ref(false)
 const newSummary = ref('')
 const newObjectives = ref([''])
 const isSaving = ref(false)
+const DEFAULT_ERROR_MSG = 'Failed!'
 const hasFailed = ref(false)
+const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
@@ -133,8 +135,25 @@ watch(() => settings.value, () => {
 })
 
 const save = () => {
-  isSaving.value = true
-  hasFailed.value = false
+  if (dateStart.value !== null && dateEnd.value !== null) {
+    const dateS = new Date(dateStart.value)
+    const dateE = new Date(dateEnd.value)
+    if (dateS >= dateE) {
+      hasFailed.value = true
+      errorMessage.value = 'Failed! Project start date should be before end date'
+    } else {
+      isSaving.value = true
+      hasFailed.value = false
+      updateSettings()
+    }
+  } else {
+    isSaving.value = true
+    hasFailed.value = false
+    updateSettings()
+  }
+}
+
+const updateSettings = () => {
   mutateProjectSettings({
     name: newName.value,
     summary: newSummary.value,
@@ -151,6 +170,7 @@ const save = () => {
     onError: (e) => {
       isSaving.value = false
       hasFailed.value = true
+      errorMessage.value = DEFAULT_ERROR_MSG
       console.info(e)
     }
   })

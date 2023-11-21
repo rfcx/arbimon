@@ -7,7 +7,7 @@ export type ProjectProfileParams = ProjectRouteParamsSerialized
 export interface ProjectProfileUpdateBody {
   summary?: string
   objectives?: string[]
-  dateStart?: string
+  dateStart?: string | null
   dateEnd?: string | null
 }
 

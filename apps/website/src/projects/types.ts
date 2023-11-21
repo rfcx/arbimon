@@ -32,7 +32,7 @@ export interface Stat {
 
 export interface ProjectDefault {
   name: string
-  startDate: string
+  startDate: string | null
   endDate: string | null
   onGoing: boolean
 }
