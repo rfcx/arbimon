@@ -11,7 +11,6 @@
       type="text"
       class="w-full border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
       placeholder="Brown bears in Eastern Finland"
-      :disabled="!allowNameChanges"
       required
     >
   </div>
@@ -75,12 +74,10 @@ import ChooseDatePicker from './choose-date-picker.vue'
 
 const props = withDefaults(defineProps<{
   existingName?: string
-  allowNameChanges?: boolean
   dateStart?: Date | null
   dateEnd?: Date | null
 }>(), {
   existingName: '',
-  allowNameChanges: true,
   dateStart: null,
   dateEnd: null
 })
