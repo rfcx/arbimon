@@ -218,10 +218,10 @@
       style="grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr))"
     >
       <SelectedOrganizationCard
-        v-for="o in orgsList"
+        v-for="o in displayedOrganizations"
         :id="o.id"
         :key="`${o.id}-${o.name}-current`"
-        v-model="selectedOrganizations"
+        v-model="selectedOrganizationIds"
         :name="o.name"
         :description="o.description"
         :image="o.image"
@@ -243,7 +243,7 @@
 import { type AxiosInstance } from 'axios'
 import type { DropdownOptions } from 'flowbite'
 import { Dropdown } from 'flowbite'
-import { computed, inject, nextTick, ref } from 'vue'
+import { computed, inject, nextTick, ref, watch } from 'vue'
 
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
@@ -263,9 +263,9 @@ const createNewOrganizationFormContainer = ref<HTMLDivElement | null>(null)
 const organizationSearchInput = ref<HTMLDivElement | null>(null)
 const organizationSearchResultContainer = ref<HTMLDivElement | null>(null)
 const organizationSearchResultNotFoundContainer = ref<HTMLDivElement | null>(null)
-const editableOrganizations = ref([...props.organizations])
-const selectedOrganizations = ref(props.organizations.map(o => o.id))
 const searchOrganizationValue = ref('')
+const addedOrganizations = ref<Array<OrganizationTypes['light']>>([])
+const selectedOrganizationIds = ref(props.organizations.map(o => o.id))
 
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
 const newOrganizationUrl = ref<string>('')
@@ -312,15 +312,7 @@ const openCreateNewOrganizationForm = async (): Promise<void> => {
 
 const onAddNewOrganizationFromSearch = (id: number): void => {
   // Return when the org already exists
-  if (selectedOrganizations.value.findIndex(o => o === id) > -1) {
-    dropdownStatus.value = 'idle'
-    return
-  }
-
-  // if the ID already existed (pressing the same org for the second time), check whether there is an element in there already so we don't add it twice.
-  // in this case we just add the ID to the selected list.
-  if (editableOrganizations.value.findIndex(o => o.id === id) > -1) {
-    selectedOrganizations.value.push(id)
+  if (displayedOrganizations.value.findIndex(o => o.id === id) > -1) {
     dropdownStatus.value = 'idle'
     return
   }
@@ -332,8 +324,8 @@ const onAddNewOrganizationFromSearch = (id: number): void => {
     return
   }
 
-  selectedOrganizations.value.push(id)
-  editableOrganizations.value.push(newOrg)
+  selectedOrganizationIds.value.push(newOrg.id)
+  addedOrganizations.value.push(newOrg)
   dropdownStatus.value = 'idle'
 }
 
@@ -346,8 +338,9 @@ const orgsSearchResult = computed(() => {
   }) ?? []
 })
 
-const orgsList = computed(() => {
-  return editableOrganizations.value.map(o => {
+const displayedOrganizations = computed(() => {
+  const organizations = props.organizations.concat(addedOrganizations.value)
+  return organizations.map(o => {
     return {
       ...o,
       description: ORGANIZATION_TYPE_NAME[o.type]
@@ -355,14 +348,19 @@ const orgsList = computed(() => {
   })
 })
 
-const createNewOrganization = (): void => {
-  console.info(newOrganizationType.value)
-  console.info(newOrganizationUrl.value)
+watch(() => props.organizations, (value) => {
+  const newIds = value.map(o => o.id)
+  // Remove from added orgs
+  addedOrganizations.value = addedOrganizations.value.filter(o => !newIds.includes(o.id))
+  // Add to selected orgs
+  selectedOrganizationIds.value = Array.from(new Set([...selectedOrganizationIds.value, ...newIds]))
+})
 
+const createNewOrganization = (): void => {
   mutateNewOrganization({ name: searchOrganizationValue.value, type: newOrganizationType.value, url: newOrganizationUrl.value }, {
     onSuccess: (newOrganization) => {
-      editableOrganizations.value.push(newOrganization)
-      selectedOrganizations.value.push(newOrganization.id)
+      addedOrganizations.value.push(newOrganization)
+      selectedOrganizationIds.value.push(newOrganization.id)
       dropdownStatus.value = 'idle'
     },
     onError: () => {
@@ -397,7 +395,7 @@ const createNewOrganization = (): void => {
 
 const onFinishedEditing = (): void => {
   searchOrganizationValue.value = ''
-  emit('emit-finished-editing', selectedOrganizations.value)
+  emit('emit-finished-editing', selectedOrganizationIds.value)
 }
 
 const refetchOrganizationsSearch = (): void => {
