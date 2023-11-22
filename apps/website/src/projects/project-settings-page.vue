@@ -11,7 +11,6 @@
         <div>
           <project-form
             :existing-name="selectedProject?.name"
-            :allow-name-changes="false"
             :date-start="settings?.dateStart"
             :date-end="settings?.dateEnd"
             @emit-update-value="onEmitDefaultValue"
