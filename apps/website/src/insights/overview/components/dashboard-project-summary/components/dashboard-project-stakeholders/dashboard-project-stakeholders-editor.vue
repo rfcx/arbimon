@@ -100,13 +100,13 @@
               placeholder="Type to search organizations"
               data-dropdown-toggle="dropdown"
               @input="organizationSearchInputChanged"
-              @blur="isOrganizationSearchInputOpen = false"
+              @blur="onBlur"
             >
             <div
               ref="organizationSearchLoading"
               role="status"
               class="absolute z-index-10 absolute top-1 right-3"
-              :class="{ hidden: !isOrganizationSearchLoading }"
+              :class="{ hidden: !isSearchOrganizationFetching }"
             >
               <svg
                 aria-hidden="true"
@@ -200,7 +200,6 @@ const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[]): vo
 const selectedUsers = ref([1])
 
 const isOrganizationSearchInputOpen = ref(false)
-const isOrganizationSearchLoading = ref(false)
 const organizationSearchInput = ref<HTMLDivElement | null>(null)
 const organizationSearchResultContainer = ref<HTMLDivElement | null>(null)
 const editableOrganizations = ref([...props.organizations])
@@ -209,7 +208,7 @@ const searchOrganizationValue = ref('')
 
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
-const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
+const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult, isFetching: isSearchOrganizationFetching } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
 
 const openOrganizationSearch = async () => {
   isOrganizationSearchInputOpen.value = true
@@ -220,19 +219,16 @@ const openOrganizationSearch = async () => {
 }
 
 const organizationSearchInputChanged = async () => {
-  isOrganizationSearchLoading.value = true
   refetchOrganizationsSearch()
-  setTimeout(() => {
-    isOrganizationSearchLoading.value = false
-  }, 1000)
 }
 
-// TODO
-const organizationSearchResults = [
-  { id: 1, name: 'Company X' },
-  { id: 2, name: 'Company Y' },
-  { id: 3, name: 'Non-profit Z' }
-]
+const onBlur = () => {
+  // INFO: I don't know why the timeout works, guess it's a race condition between the onBlur and the emit from the search component.
+  // If you remove this timeout. The dropdown will close and turn to button before the `onAddNewOrganizationFromSearch` function gets called.
+  setTimeout(() => {
+    isOrganizationSearchInputOpen.value = false
+  }, 100)
+}
 
 const onAddNewOrganizationFromSearch = (id: number): void => {
   // Return when the org already exists
@@ -240,9 +236,8 @@ const onAddNewOrganizationFromSearch = (id: number): void => {
     return
   }
 
-  // if the ID already existed, check whether there is an element in there already so we don't add it twice.
-  // in this case we just add the ID to the selected list again and remove it from the search list.
-  // TODO: Looks like mutating the data attribute of useQuery is invalid, seems to be read-only.
+  // if the ID already existed (pressing the same org for the second time), check whether there is an element in there already so we don't add it twice.
+  // in this case we just add the ID to the selected list.
   if (editableOrganizations.value.findIndex(o => o.id === id) > -1) {
     selectedOrganizations.value.push(id)
     return
