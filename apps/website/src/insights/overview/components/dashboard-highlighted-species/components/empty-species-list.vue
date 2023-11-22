@@ -26,7 +26,7 @@
 import { ref } from 'vue'
 
 const emptyRow = ref({
-  title: 'Highlight speices',
+  title: 'Highlighted species',
   subtitle: 'Not selected'
 })
 
