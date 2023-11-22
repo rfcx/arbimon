@@ -96,6 +96,7 @@
               ref="organizationSearchInput"
               v-model="searchOrganizationValue"
               class="px-3 py-2 w-[20.0rem] text-sm text-insight bg-echo outline-none focus:outline-none rounded-t-lg font-sans"
+              :class="{ 'rounded-b-lg': orgsSearchResult.length === 0 || dropdownStatus !== 'search' }"
               type="text"
               placeholder="Type to search organizations"
               data-dropdown-toggle="dropdown"
@@ -170,13 +171,15 @@
                   required
                 >
               </div>
-              <button
-                type="submit"
-                class="btn btn-primary"
-                @click="createNewOrganization"
-              >
-                Create organization
-              </button>
+              <div class="flex w-full flex-row justify-end">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  @click="createNewOrganization"
+                >
+                  Create organization
+                </button>
+              </div>
             </div>
           </div>
 
