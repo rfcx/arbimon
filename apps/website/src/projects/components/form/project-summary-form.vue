@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-6 flex flex-row justify-between items-center">
+  <div class="mt-6 flex flex-row">
     <label
       for="summary"
       class="block mb-2 font-medium text-gray-900 dark:text-insight"
@@ -37,7 +37,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{(e: 'emitProjectSummary', summary: string): void}>()
 
-const PLACEHOLDER_TEXT = 'One line summary about the project. Some context such as timeline, goals. Some context such as timeline, goals.'
+const PLACEHOLDER_TEXT = 'Write a brief, catchy description of your project.'
 
 const summary = ref('')
 

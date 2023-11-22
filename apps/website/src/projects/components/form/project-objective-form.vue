@@ -1,8 +1,14 @@
 <template>
-  <label
-    for="name"
-    class="block font-medium mt-6 text-gray-900 dark:text-insight"
-  >Project objectives*</label>
+  <div class="mt-6 flex flex-row">
+    <label
+      for="name"
+      class="block font-medium text-gray-900 dark:text-insight"
+    >Project objectives*</label>
+    <icon-i-info
+      tooltip-id="project-objectives"
+      :tooltip-text="PLACEHOLDER_TEXT"
+    />
+  </div>
   <ul class="w-full">
     <li
       v-for="obj in objectiveTypes"
@@ -35,11 +41,14 @@
 import { computed, onMounted, ref, watch } from 'vue'
 
 import { type ProjectObjective, masterOjectiveTypes, objectiveTypes } from '../../types'
+import IconIInfo from '../icon-i-info.vue'
 
 const props = defineProps<{
   existingObjectives?: string[]
 }>()
 const emit = defineEmits<{(e: 'emitProjectObjectives', objectives: string[]): void}>()
+
+const PLACEHOLDER_TEXT = 'State the primary goal of your project.'
 
 const selectedObjectives = ref<ProjectObjective[]>([])
 const otherReason = ref<string>('')

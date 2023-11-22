@@ -1,9 +1,15 @@
 <template>
   <div>
-    <label
-      for="name"
-      class="block mb-2 font-medium text-gray-900 dark:text-insight"
-    >Project Name*</label>
+    <div class="mt-6 flex flex-row">
+      <label
+        for="name"
+        class="block mb-2 font-medium text-gray-900 dark:text-insight"
+      >Project Name*</label>
+      <icon-i-info
+        tooltip-id="project-name"
+        :tooltip-text="PLACEHOLDER_TEXT"
+      />
+    </div>
     <input
       id="name"
       v-model="name"
@@ -71,6 +77,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import type { ProjectDefault } from '../../types'
+import IconIInfo from '../icon-i-info.vue'
 import ChooseDatePicker from './choose-date-picker.vue'
 
 const props = withDefaults(defineProps<{
@@ -86,6 +93,7 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{(e: 'emitUpdateValue', value: ProjectDefault): void}>()
+const PLACEHOLDER_TEXT = 'Enter a unique name for your project.'
 
 const name = ref('')
 const startDate = ref<string | null>('')
