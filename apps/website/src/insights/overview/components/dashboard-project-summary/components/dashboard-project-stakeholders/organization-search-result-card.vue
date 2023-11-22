@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center border border-insight hover:bg-moss rounded-lg space-x-3 justify-between py-4 px-[18px] cursor-pointer"
+    class="flex items-center hover:bg-moss rounded-lg space-x-3 justify-between py-4 px-[18px] cursor-pointer"
     @click="$emit('emit-add-to-selected-organization', id)"
   >
     <div class="flex items-center justify-start space-x-2">
