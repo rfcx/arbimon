@@ -57,7 +57,7 @@ const emit = defineEmits<{(e: 'emitRemoveSpecie', specie: SpecieRow): void }>()
 
 const emptyRow = {
   slug: 'not-selected',
-  scientificName: 'Specie',
+  scientificName: 'Species',
   commonName: 'Not selected',
   photoUrl: undefined
 }
