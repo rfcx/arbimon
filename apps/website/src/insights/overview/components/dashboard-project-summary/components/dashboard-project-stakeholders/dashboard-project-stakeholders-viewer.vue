@@ -1,39 +1,39 @@
 <template>
   <div>
-    <h3 class="text-white text-xl font-medium font-sans mt-2">
-      Project members
-    </h3>
-    <div
-      class="grid"
-      style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
-    >
-      <StakeholderCard
-        name="Lori Tan"
-        :ranking="0"
-        email="loritan@tmu.com"
-      />
-      <StakeholderCard
-        name="Lori Tan"
-        :ranking="1"
-      />
-      <StakeholderCard
-        name="Lori Tan"
-        :ranking="1"
-      />
-      <StakeholderCard
-        name="Lori Tan"
-        :ranking="1"
-      />
-      <StakeholderCard
-        name="Lori Tan"
-        :ranking="1"
-      />
-      <StakeholderCard
-        name="Lori Tan"
-        :ranking="1"
-      />
-    </div>
-    <h3 class="text-white text-xl font-medium font-sans mt-6">
+    <!-- <h3 class="text-white text-xl font-medium font-sans mt-2"> -->
+    <!--   Project members -->
+    <!-- </h3> -->
+    <!-- <div -->
+    <!--   class="grid" -->
+    <!--   style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))" -->
+    <!-- > -->
+    <!--   <StakeholderCard -->
+    <!--     name="Lori Tan" -->
+    <!--     :ranking="0" -->
+    <!--     email="loritan@tmu.com" -->
+    <!--   /> -->
+    <!--   <StakeholderCard -->
+    <!--     name="Lori Tan" -->
+    <!--     :ranking="1" -->
+    <!--   /> -->
+    <!--   <StakeholderCard -->
+    <!--     name="Lori Tan" -->
+    <!--     :ranking="1" -->
+    <!--   /> -->
+    <!--   <StakeholderCard -->
+    <!--     name="Lori Tan" -->
+    <!--     :ranking="1" -->
+    <!--   /> -->
+    <!--   <StakeholderCard -->
+    <!--     name="Lori Tan" -->
+    <!--     :ranking="1" -->
+    <!--   /> -->
+    <!--   <StakeholderCard -->
+    <!--     name="Lori Tan" -->
+    <!--     :ranking="1" -->
+    <!--   /> -->
+    <!-- </div> -->
+    <h3 class="text-white text-xl font-medium font-sans mt-8">
       Organizations
     </h3>
     <div
