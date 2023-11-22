@@ -158,16 +158,6 @@
         :description="o.description"
         :image="o.image"
       />
-
-      <!-- <OrganizationSearchResultCard -->
-      <!--   v-for="s in orgsSearchResult" -->
-      <!--   :id="s.id" -->
-      <!--   :key="`${s.id}-${s.name}-search`" -->
-      <!--   :name="s.name" -->
-      <!--   :description="s.description" -->
-      <!--   :image="s.image" -->
-      <!--   @emit-add-to-selected-organization="onAddNewOrganizationFromSearch" -->
-      <!-- /> -->
     </div>
 
     <div class="flex w-full justify-end">
@@ -175,7 +165,7 @@
         class="btn btn-secondary"
         @click="onFinishedEditing"
       >
-        Save and view insights
+        Save
       </button>
     </div>
   </div>
