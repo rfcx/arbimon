@@ -63,6 +63,7 @@ const deleteSites = async (sites: SiteArbimon[], sequelize: Sequelize, transacti
     try {
       await ModelRepository.getInstance(sequelize).DetectionBySiteSpeciesHour.destroy({ where: { locationSiteId: bioSite?.id }, transaction })
       await ModelRepository.getInstance(sequelize).RecordingBySiteHour.destroy({ where: { locationSiteId: bioSite?.id }, transaction })
+      await ModelRepository.getInstance(sequelize).TaxonSpeciesCall.destroy({ where: { callSiteId: bioSite?.id }, transaction })
       await ModelRepository.getInstance(sequelize).LocationSite.destroy({ where: { id: bioSite?.id }, transaction })
       succeeded.push(bioSite)
     } catch (e: any) {
