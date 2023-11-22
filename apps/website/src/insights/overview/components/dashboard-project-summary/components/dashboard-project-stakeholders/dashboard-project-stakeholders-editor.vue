@@ -248,10 +248,10 @@ import { computed, inject, nextTick, ref } from 'vue'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import { apiClientBioKey } from '@/globals'
+import { useCreateOrganization } from '../../../../composables/use-create-organization'
 import { useGetSearchOrganizationsResult } from '../../../../composables/use-get-search-organizations-result'
 import OrganizationSearchResultCard from './organization-search-result-card.vue'
 import SelectedOrganizationCard from './selected-organization-card.vue'
-import { useCreateOrganization } from '../../../../composables/use-create-organization'
 
 const props = defineProps<{ organizations: Array<OrganizationTypes['light']>}>()
 const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[]): void}>()
