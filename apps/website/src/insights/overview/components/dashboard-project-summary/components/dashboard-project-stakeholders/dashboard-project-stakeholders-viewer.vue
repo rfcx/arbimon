@@ -33,8 +33,8 @@
     <!--     :ranking="1" -->
     <!--   /> -->
     <!-- </div> -->
-    <h3 class="text-white text-xl font-medium font-sans mt-8">
-      Organizations
+    <h3 class="text-white text-xl font-medium font-sans mt-6">
+      Affiliated organizations
     </h3>
     <div
       class="grid"

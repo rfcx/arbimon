@@ -81,7 +81,7 @@
       </h3>
       <div class="flex items-center ml-4">
         <button
-          v-if="!isOrganizationSearchInputOpen"
+          v-if="dropdownStatus === 'idle'"
           @click="openOrganizationSearch()"
         >
           <icon-custom-ft-search-lg
@@ -127,6 +127,74 @@
               <span class="sr-only">Loading...</span>
             </div>
           </div>
+
+          <div
+            ref="createNewOrganizationFormContainer"
+            class="z-10 hidden w-[20.0rem] text-insight bg-moss border-cloud border-b border-l border-r rounded-b-lg shadow"
+          >
+            <div class="max-w-sm mx-auto p-3">
+              <div class="mb-5">
+                <label
+                  for="dashboard-project-summary-stakeholders-select-partner-type"
+                  class="block mb-2 text-insight text-sm font-normal font-sans leading-normal"
+                >
+                  Select partner type
+                </label>
+                <select
+                  id="dashboard-project-summary-stakeholders-select-partner-type"
+                  v-model="newOrganizationType"
+                  class="bg-echo border border-cloud text-insight text-sm rounded-lg block w-full py-2 px-3 font-sans"
+                >
+                  <option
+                    v-for="orgType in ORGANIZATION_TYPE"
+                    :key="orgType"
+                    :value="orgType"
+                  >
+                    {{ ORGANIZATION_TYPE_NAME[orgType] }}
+                  </option>
+                </select>
+              </div>
+              <div class="mb-5">
+                <label
+                  for="dashboard-project-summary-stakeholders-input-organization-url"
+                  class="block mb-2 text-insight text-sm font-normal font-sans leading-normal"
+                >
+                  Website
+                </label>
+                <input
+                  id="dashboard-project-summary-stakeholders-input-organization-url"
+                  v-model="newOrganizationUrl"
+                  type="text"
+                  placeholder="www.darwinfoundation.org"
+                  class="bg-echo border-cloud py-2 px-3 text-insight placeholder:italic placeholder:opacity-75 placeholder:text-stone-300 text-sm rounded-lg block w-full font-sans"
+                  required
+                >
+              </div>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                @click="createNewOrganization"
+              >
+                Create organization
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref="organizationSearchResultNotFoundContainer"
+            class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg shadow flex flex-row justify-between p-3"
+          >
+            <p class="text-sm font-normal font-sans text-insight leading-tight">
+              We are unable to find this organization.
+            </p>
+            <button
+              type="button"
+              class="text-frequency text-sm font-medium font-display leading-none"
+              @click="openCreateNewOrganizationForm"
+            >
+              Create
+            </button>
+          </div>
           <div
             ref="organizationSearchResultContainer"
             class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg divide-y divide-gray-100 shadow"
@@ -158,16 +226,6 @@
         :description="o.description"
         :image="o.image"
       />
-
-      <!-- <OrganizationSearchResultCard -->
-      <!--   v-for="s in orgsSearchResult" -->
-      <!--   :id="s.id" -->
-      <!--   :key="`${s.id}-${s.name}-search`" -->
-      <!--   :name="s.name" -->
-      <!--   :description="s.description" -->
-      <!--   :image="s.image" -->
-      <!--   @emit-add-to-selected-organization="onAddNewOrganizationFromSearch" -->
-      <!-- /> -->
     </div>
 
     <div class="flex w-full justify-end">
@@ -175,7 +233,7 @@
         class="btn btn-secondary"
         @click="onFinishedEditing"
       >
-        Save and view insights
+        Save
       </button>
     </div>
   </div>
@@ -187,52 +245,75 @@ import type { DropdownOptions } from 'flowbite'
 import { Dropdown } from 'flowbite'
 import { computed, inject, nextTick, ref } from 'vue'
 
-import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
+import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import { apiClientBioKey } from '@/globals'
 import { useGetSearchOrganizationsResult } from '../../../../composables/use-get-search-organizations-result'
 import OrganizationSearchResultCard from './organization-search-result-card.vue'
 import SelectedOrganizationCard from './selected-organization-card.vue'
+import { useCreateOrganization } from '../../../../composables/use-create-organization'
 
 const props = defineProps<{ organizations: Array<OrganizationTypes['light']>}>()
 const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[]): void}>()
 
-const selectedUsers = ref([1])
+// const selectedUsers = ref([1])
 
-const isOrganizationSearchInputOpen = ref(false)
+const dropdownStatus = ref<'idle' | 'search' | 'create-org'>('idle')
+const createNewOrganizationFormContainer = ref<HTMLDivElement | null>(null)
 const organizationSearchInput = ref<HTMLDivElement | null>(null)
 const organizationSearchResultContainer = ref<HTMLDivElement | null>(null)
+const organizationSearchResultNotFoundContainer = ref<HTMLDivElement | null>(null)
 const editableOrganizations = ref([...props.organizations])
 const selectedOrganizations = ref(props.organizations.map(o => o.id))
 const searchOrganizationValue = ref('')
 
+const newOrganizationType = ref<OrganizationType>('non-profit-organization')
+const newOrganizationUrl = ref<string>('')
+
 const apiClientBio = inject(apiClientBioKey) as AxiosInstance
 
 const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult, isFetching: isSearchOrganizationFetching } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
+const { mutate: mutateNewOrganization } = useCreateOrganization(apiClientBio)
 
 const openOrganizationSearch = async () => {
-  isOrganizationSearchInputOpen.value = true
+  dropdownStatus.value = 'search'
   await nextTick()
   organizationSearchInput.value?.focus()
   const dropdownOptions: DropdownOptions = { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }
   new Dropdown(organizationSearchResultContainer.value, organizationSearchInput.value, dropdownOptions).show()
 }
 
-const organizationSearchInputChanged = async () => {
+const organizationSearchInputChanged = () => {
+  dropdownStatus.value = 'search'
   refetchOrganizationsSearch()
+  if (organizationsSearchResult.value == null || organizationsSearchResult.value.length === 0) {
+    new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).show()
+  }
 }
 
 const onBlur = () => {
   // INFO: I don't know why the timeout works, guess it's a race condition between the onBlur and the emit from the search component.
   // If you remove this timeout. The dropdown will close and turn to button before the `onAddNewOrganizationFromSearch` function gets called.
   setTimeout(() => {
-    isOrganizationSearchInputOpen.value = false
+    if (dropdownStatus.value === 'create-org') {
+      new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).show()
+      new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).hide()
+      return
+    }
+
+    dropdownStatus.value = 'idle'
   }, 100)
+}
+
+const openCreateNewOrganizationForm = async (): Promise<void> => {
+  dropdownStatus.value = 'create-org'
+  new Dropdown(createNewOrganizationFormContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).show()
 }
 
 const onAddNewOrganizationFromSearch = (id: number): void => {
   // Return when the org already exists
   if (selectedOrganizations.value.findIndex(o => o === id) > -1) {
+    dropdownStatus.value = 'idle'
     return
   }
 
@@ -240,17 +321,20 @@ const onAddNewOrganizationFromSearch = (id: number): void => {
   // in this case we just add the ID to the selected list.
   if (editableOrganizations.value.findIndex(o => o.id === id) > -1) {
     selectedOrganizations.value.push(id)
+    dropdownStatus.value = 'idle'
     return
   }
 
   // Add to the list when it's new org
   const newOrg = organizationsSearchResult.value?.find((o) => o.id === id)
   if (newOrg == null) {
+    dropdownStatus.value = 'idle'
     return
   }
 
   selectedOrganizations.value.push(id)
   editableOrganizations.value.push(newOrg)
+  dropdownStatus.value = 'idle'
 }
 
 const orgsSearchResult = computed(() => {
@@ -271,28 +355,45 @@ const orgsList = computed(() => {
   })
 })
 
-const users = ref([
-  {
-    id: 1,
-    name: 'Oscar Piastri',
-    image: 'https://picsum.photos/id/339/200/200'
-  },
-  {
-    id: 2,
-    name: 'Lando Norris',
-    image: 'https://picsum.photos/id/350/200/200'
-  },
-  {
-    id: 3,
-    name: 'Max Verstappen',
-    image: 'https://picsum.photos/id/324/200/200'
-  },
-  {
-    id: 4,
-    name: 'Lewis Hamilton',
-    image: 'https://picsum.photos/id/448/200/200'
-  }
-])
+const createNewOrganization = (): void => {
+  console.info(newOrganizationType.value)
+  console.info(newOrganizationUrl.value)
+
+  mutateNewOrganization({ name: searchOrganizationValue.value, type: newOrganizationType.value, url: newOrganizationUrl.value }, {
+    onSuccess: (newOrganization) => {
+      editableOrganizations.value.push(newOrganization)
+      selectedOrganizations.value.push(newOrganization.id)
+      dropdownStatus.value = 'idle'
+    },
+    onError: () => {
+      // TODO: Show user some respect and show them error
+      dropdownStatus.value = 'idle'
+    }
+  })
+}
+
+// const users = ref([
+//   {
+//     id: 1,
+//     name: 'Oscar Piastri',
+//     image: 'https://picsum.photos/id/339/200/200'
+//   },
+//   {
+//     id: 2,
+//     name: 'Lando Norris',
+//     image: 'https://picsum.photos/id/350/200/200'
+//   },
+//   {
+//     id: 3,
+//     name: 'Max Verstappen',
+//     image: 'https://picsum.photos/id/324/200/200'
+//   },
+//   {
+//     id: 4,
+//     name: 'Lewis Hamilton',
+//     image: 'https://picsum.photos/id/448/200/200'
+//   }
+// ])
 
 const onFinishedEditing = (): void => {
   searchOrganizationValue.value = ''
@@ -305,9 +406,9 @@ const refetchOrganizationsSearch = (): void => {
   }
 }
 
-const selectAllUsers = (): void => {
-  selectedUsers.value = users.value.map(u => u.id)
-}
-
-const primaryContact = ref<{ id: number, name: string, email: string, image: string } | null>({ id: 122, name: 'Logan Sargeant', email: 'kingsargeant1122@gmail.com', image: 'https://picsum.photos/id/233/200/200' })
+// const selectAllUsers = (): void => {
+//   selectedUsers.value = users.value.map(u => u.id)
+// }
+//
+// const primaryContact = ref<{ id: number, name: string, email: string, image: string } | null>({ id: 122, name: 'Logan Sargeant', email: 'kingsargeant1122@gmail.com', image: 'https://picsum.photos/id/233/200/200' })
 </script>

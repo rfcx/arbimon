@@ -29,7 +29,7 @@
             class="flex flex-row items-center justify-start"
           >
             <button class="btn btn-secondary group">
-              Edit <icon-custom-ic-edit class="inline-flex ml-2 group-hover:stroke-pitch" />
+              Edit project settings <icon-custom-ic-edit class="inline-flex ml-2 group-hover:stroke-pitch" />
             </button>
           </router-link>
           <div class="justify-self-end flex flex-row gap-x-6 items-center">

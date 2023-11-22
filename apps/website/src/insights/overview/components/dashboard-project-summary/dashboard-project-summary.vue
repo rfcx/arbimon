@@ -196,13 +196,11 @@
         role="tabpanel"
         aria-labelledby="stakeholders-tab-content"
       >
-        <div class="mx-auto p-4 lg:max-w-4xl relative">
-          <DashboardProjectStakeholders
-            :editable="canEdit"
-            :is-project-member="isProjectMember"
-            :is-viewing-as-guest="isViewingAsGuest"
-          />
-        </div>
+        <DashboardProjectStakeholders
+          :editable="canEdit"
+          :is-project-member="isProjectMember"
+          :is-viewing-as-guest="isViewingAsGuest"
+        />
       </div>
 
       <div
