@@ -197,7 +197,7 @@ import SelectedOrganizationCard from './selected-organization-card.vue'
 const props = defineProps<{ organizations: Array<OrganizationTypes['light']>}>()
 const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[]): void}>()
 
-const selectedUsers = ref([1])
+// const selectedUsers = ref([1])
 
 const isOrganizationSearchInputOpen = ref(false)
 const organizationSearchInput = ref<HTMLDivElement | null>(null)
@@ -271,28 +271,28 @@ const orgsList = computed(() => {
   })
 })
 
-const users = ref([
-  {
-    id: 1,
-    name: 'Oscar Piastri',
-    image: 'https://picsum.photos/id/339/200/200'
-  },
-  {
-    id: 2,
-    name: 'Lando Norris',
-    image: 'https://picsum.photos/id/350/200/200'
-  },
-  {
-    id: 3,
-    name: 'Max Verstappen',
-    image: 'https://picsum.photos/id/324/200/200'
-  },
-  {
-    id: 4,
-    name: 'Lewis Hamilton',
-    image: 'https://picsum.photos/id/448/200/200'
-  }
-])
+// const users = ref([
+//   {
+//     id: 1,
+//     name: 'Oscar Piastri',
+//     image: 'https://picsum.photos/id/339/200/200'
+//   },
+//   {
+//     id: 2,
+//     name: 'Lando Norris',
+//     image: 'https://picsum.photos/id/350/200/200'
+//   },
+//   {
+//     id: 3,
+//     name: 'Max Verstappen',
+//     image: 'https://picsum.photos/id/324/200/200'
+//   },
+//   {
+//     id: 4,
+//     name: 'Lewis Hamilton',
+//     image: 'https://picsum.photos/id/448/200/200'
+//   }
+// ])
 
 const onFinishedEditing = (): void => {
   searchOrganizationValue.value = ''
@@ -305,9 +305,9 @@ const refetchOrganizationsSearch = (): void => {
   }
 }
 
-const selectAllUsers = (): void => {
-  selectedUsers.value = users.value.map(u => u.id)
-}
+// const selectAllUsers = (): void => {
+//   selectedUsers.value = users.value.map(u => u.id)
+// }
 
-const primaryContact = ref<{ id: number, name: string, email: string, image: string } | null>({ id: 122, name: 'Logan Sargeant', email: 'kingsargeant1122@gmail.com', image: 'https://picsum.photos/id/233/200/200' })
+// const primaryContact = ref<{ id: number, name: string, email: string, image: string } | null>({ id: 122, name: 'Logan Sargeant', email: 'kingsargeant1122@gmail.com', image: 'https://picsum.photos/id/233/200/200' })
 </script>
