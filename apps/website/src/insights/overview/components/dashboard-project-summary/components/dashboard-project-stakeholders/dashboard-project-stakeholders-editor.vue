@@ -1,82 +1,82 @@
 <template>
   <div>
-    <h3 class="text-white text-xl font-medium font-sans leading-7 mb-3">
-      Project's primary contact
-    </h3>
-
-    <div
-      v-if="primaryContact == null"
-      class="flex items-center justify-center-max-w-sm"
-    >
-      <h3>No user selected</h3>
-    </div>
-
-    <div
-      v-else
-      class="relative flex items-center justify-between border border-frequency bg-pitch rounded-lg px-6 py-4 max-w-sm -z-10"
-    >
-      <icon-custom-fi-check-circle class="text-frequency bg-pitch w-6 h-6 absolute -translate-y-1/2 translate-x-1/2 left-auto -top-3 -right-3" />
-      <div class="flex items-center justify-start">
-        <img
-          class="w-12 h-12 rounded-full shadow"
-          :src="primaryContact?.image"
-          alt="user profile image"
-        >
-        <div class="ml-3">
-          <h3 class="text-danger text-xs font-medium font-eyebrow uppercase">
-            Primary contact
-          </h3>
-          <h3 class="text-base font-normal font-sans">
-            {{ primaryContact?.name }}
-          </h3>
-          <a
-            :href="`mailto:${primaryContact?.email}`"
-            class="text-util-gray-01 text-sm font-normal leading-tight hover:underline hover:cursor-pointer"
-          >
-            {{ primaryContact?.email }}
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="flex justify-start items-center mt-10 mb-3">
-      <h3 class="text-white text-xl font-medium font-sans leading-7 mr-8">
-        Project members
-      </h3>
-      <label
-        for="dashboard-project-stakeholders-editor-select-all-users-checkbox"
-        class="text-white text-sm font-normal font-sans leading-tight mr-2"
-      >
-        Select all
-      </label>
-      <input
-        id="dashboard-project-stakeholders-editor-select-all-users-checkbox"
-        type="checkbox"
-        class="w-4 h-4 rounded checked:text-frequency border-0 outline-none"
-        @click="selectAllUsers"
-      >
-    </div>
-    <router-link
-      class="text-frequency text-sm font-medium font-display leading-none"
-      :to="{ name: ROUTE_NAMES.projectSettings }"
-    >
-      <icon-custom-fi-external-link class="w-4 h-4 inline-flex" /> Manage project members
-    </router-link>
-    <div
-      class="grid gap-3 mt-3 mb-11"
-      style="grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr))"
-    >
-      <SelectedOrganizationCard
-        v-for="u in users"
-        :id="u.id"
-        :key="`${u.id}${u.name}`"
-        v-model="selectedUsers"
-        :name="u.name"
-        :image="u.image"
-      />
-    </div>
+    <!-- <h3 class="text-white text-xl font-medium font-sans leading-7 mb-3"> -->
+    <!--   Project's primary contact -->
+    <!-- </h3> -->
+    <!---->
+    <!-- <div -->
+    <!--   v-if="primaryContact == null" -->
+    <!--   class="flex items-center justify-center-max-w-sm" -->
+    <!-- > -->
+    <!--   <h3>No user selected</h3> -->
+    <!-- </div> -->
+    <!---->
+    <!-- <div -->
+    <!--   v-else -->
+    <!--   class="relative flex items-center justify-between border border-frequency bg-pitch rounded-lg px-6 py-4 max-w-sm -z-10" -->
+    <!-- > -->
+    <!--   <icon-custom-fi-check-circle class="text-frequency bg-pitch w-6 h-6 absolute -translate-y-1/2 translate-x-1/2 left-auto -top-3 -right-3" /> -->
+    <!--   <div class="flex items-center justify-start"> -->
+    <!--     <img -->
+    <!--       class="w-12 h-12 rounded-full shadow" -->
+    <!--       :src="primaryContact?.image" -->
+    <!--       alt="user profile image" -->
+    <!--     > -->
+    <!--     <div class="ml-3"> -->
+    <!--       <h3 class="text-danger text-xs font-medium font-eyebrow uppercase"> -->
+    <!--         Primary contact -->
+    <!--       </h3> -->
+    <!--       <h3 class="text-base font-normal font-sans"> -->
+    <!--         {{ primaryContact?.name }} -->
+    <!--       </h3> -->
+    <!--       <a -->
+    <!--         :href="`mailto:${primaryContact?.email}`" -->
+    <!--         class="text-util-gray-01 text-sm font-normal leading-tight hover:underline hover:cursor-pointer" -->
+    <!--       > -->
+    <!--         {{ primaryContact?.email }} -->
+    <!--       </a> -->
+    <!--     </div> -->
+    <!--   </div> -->
+    <!-- </div> -->
+    <!-- <div class="flex justify-start items-center mt-10 mb-3"> -->
+    <!--   <h3 class="text-white text-xl font-medium font-sans leading-7 mr-8"> -->
+    <!--     Project members -->
+    <!--   </h3> -->
+    <!--   <label -->
+    <!--     for="dashboard-project-stakeholders-editor-select-all-users-checkbox" -->
+    <!--     class="text-white text-sm font-normal font-sans leading-tight mr-2" -->
+    <!--   > -->
+    <!--     Select all -->
+    <!--   </label> -->
+    <!--   <input -->
+    <!--     id="dashboard-project-stakeholders-editor-select-all-users-checkbox" -->
+    <!--     type="checkbox" -->
+    <!--     class="w-4 h-4 rounded checked:text-frequency border-0 outline-none" -->
+    <!--     @click="selectAllUsers" -->
+    <!--   > -->
+    <!-- </div> -->
+    <!-- <router-link -->
+    <!--   class="text-frequency text-sm font-medium font-display leading-none" -->
+    <!--   :to="{ name: ROUTE_NAMES.projectSettings }" -->
+    <!-- > -->
+    <!--   <icon-custom-fi-external-link class="w-4 h-4 inline-flex" /> Manage project members -->
+    <!-- </router-link> -->
+    <!-- <div -->
+    <!--   class="grid gap-3 mt-3 mb-11" -->
+    <!--   style="grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr))" -->
+    <!-- > -->
+    <!--   <SelectedOrganizationCard -->
+    <!--     v-for="u in users" -->
+    <!--     :id="u.id" -->
+    <!--     :key="`${u.id}${u.name}`" -->
+    <!--     v-model="selectedUsers" -->
+    <!--     :name="u.name" -->
+    <!--     :image="u.image" -->
+    <!--   /> -->
+    <!-- </div> -->
 
     <div class="flex justify-start items-center">
-      <h3 class="text-white text-xl font-medium font-sans">
+      <h3 class="text-white text-xl font-medium font-sans my-2">
         Affiliated organizations
       </h3>
       <div class="flex items-center ml-4">
@@ -131,20 +131,15 @@
             ref="organizationSearchResultContainer"
             class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg divide-y divide-gray-100 shadow"
           >
-            <ul
-              class="py-2 text-sm text-gray-700 dark:text-gray-200"
-              aria-labelledby="dropdownDefaultButton"
-            >
-              <li
-                v-for="o in organizationSearchResults"
-                :key="o.id"
-              >
-                <a
-                  href="#"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                >{{ o.name }}</a>
-              </li>
-            </ul>
+            <OrganizationSearchResultCard
+              v-for="s in orgsSearchResult"
+              :id="s.id"
+              :key="`${s.id}-${s.name}-search`"
+              :name="s.name"
+              :description="s.description"
+              :image="s.image"
+              @emit-add-to-selected-organization="onAddNewOrganizationFromSearch"
+            />
           </div>
         </div>
       </div>
@@ -164,15 +159,15 @@
         :image="o.image"
       />
 
-      <OrganizationSearchResultCard
-        v-for="s in orgsSearchResult"
-        :id="s.id"
-        :key="`${s.id}-${s.name}-search`"
-        :name="s.name"
-        :description="s.description"
-        :image="s.image"
-        @emit-add-to-selected-organization="onAddNewOrganizationFromSearch"
-      />
+      <!-- <OrganizationSearchResultCard -->
+      <!--   v-for="s in orgsSearchResult" -->
+      <!--   :id="s.id" -->
+      <!--   :key="`${s.id}-${s.name}-search`" -->
+      <!--   :name="s.name" -->
+      <!--   :description="s.description" -->
+      <!--   :image="s.image" -->
+      <!--   @emit-add-to-selected-organization="onAddNewOrganizationFromSearch" -->
+      <!-- /> -->
     </div>
 
     <div class="flex w-full justify-end">
@@ -195,7 +190,6 @@ import { computed, inject, nextTick, ref } from 'vue'
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import { apiClientBioKey } from '@/globals'
-import { ROUTE_NAMES } from '~/router'
 import { useGetSearchOrganizationsResult } from '../../../../composables/use-get-search-organizations-result'
 import OrganizationSearchResultCard from './organization-search-result-card.vue'
 import SelectedOrganizationCard from './selected-organization-card.vue'
@@ -227,7 +221,7 @@ const openOrganizationSearch = async () => {
 
 const organizationSearchInputChanged = async () => {
   isOrganizationSearchLoading.value = true
-  await refetchOrganizationsSearch()
+  refetchOrganizationsSearch()
   setTimeout(() => {
     isOrganizationSearchLoading.value = false
   }, 1000)
