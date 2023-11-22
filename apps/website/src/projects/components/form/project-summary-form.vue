@@ -24,6 +24,8 @@
   <textarea
     v-model.lazy.trim="summary"
     class="input-field w-full h-28"
+    :placeholder="PLACEHOLDER_SUMMARY_TEXT"
+    maxlength="140"
   />
 </template>
 
@@ -38,6 +40,7 @@ const props = defineProps<{
 const emit = defineEmits<{(e: 'emitProjectSummary', summary: string): void}>()
 
 const PLACEHOLDER_TEXT = 'Write a brief, catchy description of your project.'
+const PLACEHOLDER_SUMMARY_TEXT = 'e.g. This project aims to set up the bioacoustic archive for the State of Santa Catarina, at Brazil.'
 
 const summary = ref('')
 
