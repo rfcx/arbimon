@@ -57,7 +57,7 @@
       </span>
     </div>
     <div
-      v-if="projectObjectives"
+      v-if="projectObjectives.length > 0"
       class="border-l-2 border-gray-300 px-2"
     >
       <span>Objectives: </span>
