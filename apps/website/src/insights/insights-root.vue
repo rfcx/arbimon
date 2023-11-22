@@ -26,16 +26,16 @@
         >
           <router-link
             :to="{ name: ROUTE_NAMES.projectSettings }"
-            class="flex flex-row items-center justify-start"
+            class="flex flex-row items-center justify-start order-last md:order-first"
           >
             <button class="btn btn-secondary group">
-              Edit project settings <icon-custom-ic-edit class="inline-flex ml-2 group-hover:stroke-pitch" />
+              <span>Edit</span> <span class="hidden lg:inline-flex">project settings</span> <icon-custom-ic-edit class="inline-flex ml-2 group-hover:stroke-pitch" />
             </button>
           </router-link>
-          <div class="justify-self-end flex flex-row gap-x-6 items-center">
+          <div class="justify-self-end flex flex-row gap-x-4 items-center">
             <span
               v-show="!isGetInsightsPublishStatusLoading"
-              class="text-insight text-sm font-medium font-display leading-none mx-2"
+              class="text-insight text-sm font-medium font-display leading-none"
             >
               <template v-if="insightsPublishStatus != null && insightsPublishStatus.status === true">
                 <icon-custom-fi-eye class="inline-flex text-frequency mr-2" /> This page is now live on Arbimon's Directory
@@ -58,7 +58,7 @@
                 class="btn btn-primary"
                 @click="shareInsight"
               >
-                Share Insight on Arbimon
+                Share Insight <span class="hidden lg:inline-flex">on Arbimon</span>
               </button>
             </template>
           </div>
