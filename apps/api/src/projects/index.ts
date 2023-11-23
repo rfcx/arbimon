@@ -9,7 +9,7 @@ import { type RouteRegistration, GET, POST } from '../_services/api-helpers/type
 import { projectCreateHandler } from './project-create-handler'
 import { projectFiltersHandler, projectRecordingCountBySiteHandler, projectRecordingCountHandler } from './project-filters-handler'
 import { projectLocationHandler } from './project-location-handler'
-import { projectsAllHandler } from './projects-handler'
+import { myProjectsHandler, projectsAllHandler } from './projects-handler'
 
 export const routesProject: RouteRegistration[] = [
   {
@@ -17,6 +17,12 @@ export const routesProject: RouteRegistration[] = [
     url: projectsRoute,
     preHandler: [setMemberProjectCoreIds],
     handler: projectsAllHandler
+  },
+  {
+    method: GET,
+    url: projectsRoute + '/mine',
+    preHandler: [setMemberProjectCoreIds],
+    handler: myProjectsHandler
   },
   {
     method: GET,

@@ -15,7 +15,7 @@
     <MarkdownViewer
       v-show="!isEditing"
       :id="`${id}-markdown-viewer-component`"
-      :class="isViewMored === true ? 'z-0' : 'max-h-52 overflow-y-hidden z-0'"
+      :class="isViewMored === true ? 'z-0' : 'max-h-72 overflow-y-hidden z-0'"
       :markdown="editableMarkdownText"
     />
     <button

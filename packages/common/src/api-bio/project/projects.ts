@@ -15,7 +15,17 @@ export type LocationProjectForUser =
     isShowcaseProject: boolean
   }
 
+  export type LocationProjectWithInfo = LocationProjectTypes['light'] &
+  {
+    summary: string
+    objectives: string[]
+    countries: string[]
+    image: string
+    isPublished: boolean
+  }
+
 export type ProjectsResponse = LocationProjectForUser[]
+export type MyProjectsResponse = LocationProjectWithInfo[]
 
 // Route
 export const projectsRoute = '/projects'
