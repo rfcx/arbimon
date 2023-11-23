@@ -2,7 +2,6 @@ import { type GetInsightsPublishStatusResponseBody } from '@rfcx-bio/common/api-
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '~/db'
-import { BioNotFoundError } from '~/errors'
 
 export const getInsightsPublishStatus = async (projectId: number): Promise<GetInsightsPublishStatusResponseBody> => {
   const sequelize = getSequelize()
@@ -12,7 +11,7 @@ export const getInsightsPublishStatus = async (projectId: number): Promise<GetIn
   const version = await ProjectVersion.findOne({ where: { locationProjectId: projectId } })
 
   if (version == null) {
-    throw BioNotFoundError()
+    return { status: false }
   }
 
   return {
