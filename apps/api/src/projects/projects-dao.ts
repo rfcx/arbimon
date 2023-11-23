@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 
-import { type LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
+import { type LocationProjectForUser, type LocationProjectWithInfo } from '@rfcx-bio/common/api-bio/project/projects'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
@@ -45,4 +45,30 @@ export const getViewableProjects = async (memberProjectCoreIds: string[]): Promi
       isMyProject: memberProjectCoreIds.includes(p.idCore),
       isShowcaseProject: showcaseSlugs.includes(p.slug)
     }))
+}
+
+export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[]): Promise<LocationProjectWithInfo[]> => {
+  const sequelize = getSequelize()
+  const models = ModelRepository.getInstance(sequelize)
+
+  const myProjects = await models.LocationProject
+    .findAll({
+      where: { idCore: memberProjectCoreIds },
+      attributes: ATTRIBUTES_LOCATION_PROJECT.light,
+      order: ['name'],
+      raw: true
+    })
+
+  const myProjectIds = myProjects.map(p => p.id)
+  const publishedInfo = await models.ProjectVersion.findAll({ where: { locationProjectId: myProjectIds }, raw: true })
+  const profileInfo = await models.LocationProjectProfile.findAll({ where: { locationProjectId: myProjectIds }, raw: true })
+
+  return myProjects.map(p => ({
+    ...p,
+    summary: profileInfo.find(pi => pi.locationProjectId === p.id)?.summary ?? '',
+    objectives: profileInfo.find(pi => pi.locationProjectId === p.id)?.objectives ?? [],
+    countries: [], // TODO: create view to get project countries?
+    image: '', // TODO: fix this once we add image to LocationProjectProfile
+    isPublished: publishedInfo.find(pi => pi.locationProjectId === p.id)?.isPublished ?? false
+  }))
 }
