@@ -1,22 +1,23 @@
 <template>
   <landing-navbar />
   <section class="pt-16 bg-white dark:bg-echo">
-    <div class="py-8 mx-auto max-w-screen-md <lg:mx-8 lg:py-24">
-      <h2 class="text-gray-900 dark:text-insight">
-        My Projects
-      </h2>
+    <div class="py-8 mx-auto max-w-screen-xl <lg:mx-8 lg:py-24">
+      <div class="mt-6 flex flex-row">
+        <h2 class="text-gray-900 dark:text-insight">
+          My Projects
+        </h2>
+        <router-link
+          :to="{ name: ROUTE_NAMES.createProject }"
+          class=" flex-row ml-6"
+        >
+          <a class="btn btn-primary">
+            Create a new project +
+          </a>
+        </router-link>
+      </div>
       <div
         class="grid grid-cols-2 gap-4 py-8 lg:gap-6 lg:py-16 lg:grid-cols-3"
       >
-        <router-link
-          :to="{ name: ROUTE_NAMES.createProject }"
-          class="flex flex-col place-content-center p-6 bg-insight border border-dashed rounded-lg hover:bg-gray-100 dark:bg-moss dark:border-util-gray-02 dark:hover:bg-util-gray-02"
-        >
-          <icon-fa-plus class="my-1 mx-auto text-lg text-gray-700 dark:text-insight" />
-          <div class="text-center text-xl tracking-tight font-medium text-gray-700 dark:text-insight">
-            Create a new project
-          </div>
-        </router-link>
         <ProjectCard
           v-for="project in myProjects"
           :key="project.id"
