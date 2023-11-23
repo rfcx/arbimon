@@ -10,5 +10,5 @@
   </button>
 </template>
 <script setup lang="ts">
-defineProps<{ disabled: boolean, loading: boolean, title: string }>()
+defineProps<{ disabled?: boolean, loading?: boolean, title?: string }>()
 </script>
