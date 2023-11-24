@@ -14,7 +14,6 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
   const project = { ...projectDefaults, ...projectPartial, slug }
   const createRes = await LocationProject.create(project)
 
-  // add project objective to location_project_profile
   const profile = {
     locationProjectId: createRes.id,
     summary: '',
@@ -22,6 +21,7 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
     methods: '',
     keyResult: '',
     resources: '',
+    image: '', // TODO: #1319 randomly pick default image by objective
     objectives: projectPartial.objectives,
     dateStart: projectPartial.dateStart,
     dateEnd: projectPartial.dateEnd
