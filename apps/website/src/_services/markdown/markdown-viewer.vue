@@ -1,5 +1,8 @@
 <template>
-  <div id="$attrs.id">
+  <div
+    id="$attrs.id"
+    ref="markdownViewerWrapperComponent"
+  >
     <div id="markdown-viewer-content">
       <Markdown :source="markdown" />
     </div>
@@ -7,9 +10,13 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import Markdown from 'vue3-markdown-it'
 
+const markdownViewerWrapperComponent = ref<HTMLDivElement | null>(null)
+
 defineProps<{ markdown: string }>()
+defineExpose({ markdownViewerWrapperComponent })
 </script>
 
 <style>
