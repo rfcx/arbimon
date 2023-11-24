@@ -69,6 +69,7 @@ export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[], offs
   return {
     offset,
     limit,
+    total: myProjects.length,
     data: myProjects.map(p => ({
       ...p,
       summary: profileInfo.find(pi => pi.locationProjectId === p.id)?.summary ?? '',

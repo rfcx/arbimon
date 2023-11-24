@@ -33,6 +33,7 @@ export interface MyProjectsResponse {
   data: LocationProjectWithInfo[]
   offset: number
   limit: number
+  total: number
 }
 
 // Route
