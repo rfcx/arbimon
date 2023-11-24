@@ -3,9 +3,10 @@
     id="$attrs.id"
     ref="markdownViewerWrapperComponent"
   >
-    <div id="markdown-viewer-content">
-      <Markdown :source="markdown" />
-    </div>
+    <Markdown
+      id="markdown-viewer-content"
+      :source="markdown"
+    />
   </div>
 </template>
 

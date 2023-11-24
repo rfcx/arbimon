@@ -7,35 +7,51 @@
     <ProjectSummaryEmptyGuestView v-else />
   </template>
   <template v-else>
-    <div
-      v-show="!isViewMored"
-      :id="`${id}-markdown-viewer-mask`"
-      class="absolute top-0 right-0 bottom-0 left-0 h-full w-full overflow-hidden bg-gradient-to-b from-transparent to-echo z-10"
-    />
     <MarkdownViewer
       v-show="!isEditing"
       :id="`${id}-markdown-viewer-component`"
       ref="markdownViewerRef"
       :class="isViewMored === true ? 'z-0' : 'max-h-128 overflow-y-hidden z-0'"
+      :expanded="isViewMored"
       :markdown="editableMarkdownText"
     />
     <button
-      v-if="editable"
-      :id="`${id}-markdown-viewer-edit-button`"
-      class="absolute lg:right-4 top-0 z-20 hover:block hidden"
-      @click="editMarkdownContent"
-    >
-      <icon-custom-fi-edit />
-    </button>
-    <button
+      v-show="!isEditing"
       :id="`${id}-markdown-viewer-read-more`"
-      :class="isViewMored === true ? 'bg-transparent absolute left-12 bottom-4 text-frequency text-base font-normal leading-normal z-20 hidden' : 'bg-transparent absolute left-12 bottom-4 text-frequency text-base font-normal leading-normal z-20'"
-      @click="expandMarkdownContent"
+      :class="isViewMored === true ? 'bg-transparent absolute left-1/2 right-1/2 bottom-6 text-frequency text-base font-normal leading-normal z-20' : 'bg-transparent absolute left-1/2 right-1/2 bottom-6 text-frequency text-base font-normal leading-normal z-20'"
+      @click="toggleExpandMarkdownContent"
     >
-      <span>
-        View More <icon-custom-arrow-right class="text-frequency inline-block" />
-      </span>
+      <icon-custom-fi-arrow-up :class="isViewMored === true ? 'text-frequency inline-block' : 'text-frequency inline-block transform rotate-180'" />
     </button>
+    <div
+      v-show="!isEditing"
+      class="flex flex-row justify-end mt-4"
+    >
+      <button
+        :class="editable ? 'btn btn-secondary py-1.5 px-3' : 'invisible'"
+        @click="editMarkdownContent"
+      >
+        <span class="text-sm font-display font-medium">
+          Edit text
+        </span>
+        <icon-custom-fi-edit class="w-4 h-4 ml-3 inline-flex text-frequency" />
+      </button>
+    </div>
+    <div
+      v-show="isEditing"
+      id="markdown-editor-apply-template"
+      class="flex flex-row justify-start items-center gap-x-3 mb-4"
+    >
+      <p class="text-white text-base font-normal font-sans leading-normal">
+        Provide some context about the project.
+      </p>
+      <button
+        class="btn btn-secondary px-3 py-2 text-sm font-medium leading-none"
+        @click="applyTemplateText"
+      >
+        Use a template
+      </button>
+    </div>
     <MarkdownEditor
       v-show="isEditing"
       :id="id"
@@ -48,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref, unref, watch } from 'vue'
 
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
@@ -61,12 +77,33 @@ const props = withDefaults(defineProps<{ id: string, editable: boolean, rawMarkd
 const emit = defineEmits<{(e: 'on-editor-close', value: string): void, (e: 'update:isViewMored', value: boolean): void, (e: 'update:isEditing', value: boolean): void}>()
 
 const markdownViewerRef = ref<{ markdownViewerWrapperComponent: HTMLDivElement | null } | null>(null)
-const editableMarkdownText = ref(props.rawMarkdownText == null || props.rawMarkdownText === '' ? props.defaultMarkdownText : props.rawMarkdownText)
+const editableMarkdownText = ref(props.rawMarkdownText == null || props.rawMarkdownText === '' ? '' : unref(props.rawMarkdownText))
+
+watch(() => props.rawMarkdownText, value => {
+  if (value != null && value !== '') {
+    // Do not allow overriding new value from the api while user's editing.
+    if (props.isEditing) {
+      return
+    }
+
+    editableMarkdownText.value = value
+  }
+})
 
 onMounted(async () => {
   await nextTick(() => {
     const scrollHeight = markdownViewerRef.value?.markdownViewerWrapperComponent?.scrollHeight ?? 0
     const clientHeight = markdownViewerRef.value?.markdownViewerWrapperComponent?.clientHeight ?? 0
+
+    // Invisible divs will return those as 0
+    if (scrollHeight === 0 && clientHeight === 0) {
+      return
+    }
+
+    // If statement below could result in weird expanded div without any content inside so this is needed.
+    if (props.rawMarkdownText === '') {
+      emit('update:isViewMored', false)
+    }
 
     if (scrollHeight > clientHeight) {
       emit('update:isViewMored', false)
@@ -76,36 +113,21 @@ onMounted(async () => {
   })
 })
 
-const expandMarkdownContent = (): void => {
-  emit('update:isViewMored', true)
+const toggleExpandMarkdownContent = (): void => {
+  emit('update:isViewMored', !props.isViewMored)
   emit('update:isEditing', false)
 }
 
 const editMarkdownContent = (): void => {
   emit('update:isEditing', true)
   emit('update:isViewMored', true)
-  editableMarkdownText.value = props.rawMarkdownText == null || props.rawMarkdownText === '' ? props.defaultMarkdownText : props.rawMarkdownText
 }
 
 const closeEditor = (): void => {
   emit('on-editor-close', editableMarkdownText.value)
 }
+
+const applyTemplateText = (): void => {
+  editableMarkdownText.value = props.defaultMarkdownText
+}
 </script>
-
-<style>
-div[id$="markdown-viewer-mask"]:hover ~ button[id$="markdown-viewer-edit-button"] {
-  display: block;
-}
-
-div[id$="markdown-viewer-component"]:hover + button[id$="markdown-viewer-edit-button"] {
-  display: block;
-}
-
-div[id$="markdown-viewer-mask"] + button[id$="markdown-viewer-edit-button"] {
-  display: none;
-}
-
-button[id$="markdown-viewer-edit-button"]:hover {
-  display: block !important;
-}
-</style>
