@@ -88,7 +88,7 @@ defineProps<{
 const userImage = computed<string>(() => store.user?.picture ?? '') // TODO 156 - Add a default picture
 
 const signup = async (): Promise<void> => {
-  await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.userCompleteRegistration } }, screen_hint: 'signup' })
+  await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.userCompleteProfile } }, screen_hint: 'signup' })
 }
 
 const login = async (): Promise<void> => {

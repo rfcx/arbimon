@@ -157,9 +157,9 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/complete-registration',
-    name: ROUTE_NAMES.userCompleteRegistration,
-    component: PAGES.UserCompleteRegistration,
+    path: '/complete-profile',
+    name: ROUTE_NAMES.userCompleteProfile,
+    component: PAGES.UserCompleteProfile,
     beforeEnter: [authRequiredGuard]
   },
   {

@@ -2,6 +2,7 @@ import { ViteSSG } from 'vite-ssg'
 import VueGtag from 'vue-gtag'
 import { VueQueryPlugin } from 'vue-query'
 
+import { apiGetUserProfile } from '@rfcx-bio/common/api-bio/users/profile'
 import { getApiClient } from '@rfcx-bio/utils/api'
 
 import appComponent from '@/_layout'
@@ -66,6 +67,9 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
       .provide(storeKey, store) // TODO: Delete this & use useStore() directly in components
 
     // Handle redirects
-    if (targetAfterAuth !== undefined) await router.replace(targetAfterAuth)
+    if (targetAfterAuth !== undefined) {
+      const userHasNoProfile = await apiGetUserProfile(apiClient) === undefined
+      await router.replace(userHasNoProfile ? { name: ROUTE_NAMES.userCompleteProfile } : targetAfterAuth)
+    }
   }
 })
