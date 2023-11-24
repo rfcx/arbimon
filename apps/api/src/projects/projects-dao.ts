@@ -64,6 +64,7 @@ export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[], offs
   const myProjectIds = myProjects.map(p => p.id)
   const publishedInfo = await models.ProjectVersion.findAll({ where: { locationProjectId: myProjectIds }, raw: true })
   const profileInfo = await models.LocationProjectProfile.findAll({ where: { locationProjectId: myProjectIds }, raw: true })
+  const countryInfo = await models.LocationProjectCountry.findAll({ where: { locationProjectId: myProjectIds }, raw: true })
 
   return {
     offset,
@@ -72,7 +73,7 @@ export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[], offs
       ...p,
       summary: profileInfo.find(pi => pi.locationProjectId === p.id)?.summary ?? '',
       objectives: profileInfo.find(pi => pi.locationProjectId === p.id)?.objectives ?? [],
-      countries: [], // TODO: create view to get project countries?
+      countries: countryInfo.find(ci => ci.locationProjectId === p.id)?.countryCodes ?? [],
       image: '', // TODO: fix this once we add image to LocationProjectProfile
       isPublished: publishedInfo.find(pi => pi.locationProjectId === p.id)?.isPublished ?? false
     }))
