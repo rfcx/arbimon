@@ -94,17 +94,12 @@
                 <span class="flex-1 ml-2 text-left whitespace-nowrap hidden group-hover:block">
                   {{ item.title }}
                 </span>
-                <span class="p-0.5 fa-chevron-down">
-                  <icon-fa-chevron-down
-                    v-if="showSidebar"
-                    class="w-3 h-3"
-                  />
-                </span>
-                <span class="p-0.5 fa-chevron-up">
-                  <icon-fa-chevron-up
-                    v-if="showSidebar"
-                    class="w-3 h-3"
-                  />
+                <span
+                  v-if="showSidebar"
+                  class="p-0.5"
+                >
+                  <icon-fa-chevron-down class="w-3 h-3 fa-chevron-down" />
+                  <icon-fa-chevron-up class="w-3 h-3 fa-chevron-up hidden" />
                 </span>
               </button>
               <ul
@@ -378,9 +373,15 @@ onMounted(() => {
 </script>
 <style lang="scss">
 button[aria-expanded=true] .fa-chevron-up {
-   display: none;
+  display: inline-block;
+}
+button[aria-expanded=true] .fa-chevron-down {
+  display: none;
+}
+button[aria-expanded=flase] .fa-chevron-up {
+  display: none;
 }
 button[aria-expanded=false] .fa-chevron-down {
-   display: none;
+  display: inline-block;
 }
 </style>
