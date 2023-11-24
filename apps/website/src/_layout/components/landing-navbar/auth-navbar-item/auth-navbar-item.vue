@@ -76,7 +76,7 @@ import { authClientKey, storeKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { type BiodiversityStore } from '~/store'
 
-const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 
 const auth = inject(authClientKey) as Auth0Client
 const store = inject(storeKey) as BiodiversityStore
@@ -88,7 +88,7 @@ defineProps<{
 const userImage = computed<string>(() => store.user?.picture ?? '') // TODO 156 - Add a default picture
 
 const signup = async (): Promise<void> => {
-  await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.userCompleteRegistration } }, screen_hint: 'signup' })
+  await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.userCompleteProfile } }, screen_hint: 'signup' })
 }
 
 const login = async (): Promise<void> => {

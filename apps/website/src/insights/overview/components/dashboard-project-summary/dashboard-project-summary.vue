@@ -232,7 +232,7 @@ import { type AxiosInstance } from 'axios'
 import { type TabItem, type TabsOptions, Tabs } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetDashboardContent } from '../../composables/use-get-dashboard-content'
 import { useMarkdownEditorDefaults } from '../../composables/use-markdown-editor-defaults'
@@ -245,7 +245,7 @@ import DashboardProjectStakeholders from './components/dashboard-project-stakeho
 
 defineProps<{ canEdit: boolean, isProjectMember: boolean, isViewingAsGuest: boolean }>()
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { readme: readmeDefault, keyResult: keyResultDefault, resources: resourcesDefault, methods: methodsDefault } = useMarkdownEditorDefaults()
 
 const isAboutTabViewMored = ref(false)

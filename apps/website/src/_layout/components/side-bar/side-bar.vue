@@ -65,10 +65,6 @@
                 class="flex items-center text-base ease-in-out active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
-                <icon-custom-linkout
-                  v-if="item.legacyPath"
-                  class="text-xs ml-1"
-                />
               </a>
               <button
                 v-else
@@ -98,11 +94,12 @@
                 <span class="flex-1 ml-2 text-left whitespace-nowrap hidden group-hover:block">
                   {{ item.title }}
                 </span>
-                <span class="p-0.5">
-                  <icon-fa-chevron-down
-                    v-if="showSidebar"
-                    class="w-3 h-3"
-                  />
+                <span
+                  v-if="showSidebar"
+                  class="p-0.5"
+                >
+                  <icon-fa-chevron-down class="w-3 h-3 fa-chevron-down" />
+                  <icon-fa-chevron-up class="w-3 h-3 fa-chevron-up hidden" />
                 </span>
               </button>
               <ul
@@ -127,14 +124,9 @@
                   <a
                     v-else-if="childItem.legacyPath"
                     :href="arbimonLink + childItem.legacyPath"
-                    :target="childItem.legacyPath ? '_blank' : undefined"
                     class="flex items-center pl-12 w-full text-base font-normal hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
                   >
                     {{ childItem.title }}
-                    <icon-custom-linkout
-                      v-if="childItem.legacyPath"
-                      class="text-xs ml-1"
-                    />
                   </a>
                 </li>
               </ul>
@@ -146,15 +138,11 @@
               <a
                 :title="'Arbimon Support'"
                 :href="supportLink"
-                target="_blank"
                 exact-active-class="bg-insight rounded text-moss"
                 class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <icon-custom-fi-help />
                 <span class="ml-2 hidden group-hover:block">Help</span>
-                <icon-custom-linkout
-                  class="text-xs ml-1 hidden group-hover:block"
-                />
               </a>
             </li>
             <li>
@@ -180,14 +168,10 @@
               <a
                 :title="'Account Settings'"
                 :href="ARBIMON_BASE_URL + '/user-settings'"
-                target="_blank"
                 class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
               >
                 <icon-custom-fi-user />
                 <span class="ml-2 hidden group-hover:block">Account settings</span>
-                <icon-custom-linkout
-                  class="text-xs ml-1 hidden group-hover:block"
-                />
               </a>
             </li>
             <li
@@ -234,7 +218,7 @@ import { authClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 
-const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 const supportLink = ref('https://support.rfcx.org/')
 
 const auth = inject(authClientKey) as Auth0Client
@@ -244,7 +228,7 @@ const store = useStore()
 const arbimonLink = computed(() => {
   const selectedProjectSlug = store.selectedProject?.slug
   if (selectedProjectSlug === undefined) return ''
-  else return `${import.meta.env.VITE_ARBIMON_BASE_URL}/project/${selectedProjectSlug}`
+  else return `${import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL}/project/${selectedProjectSlug}`
 })
 
 const userImage = computed<string>(() => store.user?.picture ?? '')
@@ -387,3 +371,17 @@ onMounted(() => {
   initCollapses()
 })
 </script>
+<style lang="scss">
+button[aria-expanded=true] .fa-chevron-up {
+  display: inline-block;
+}
+button[aria-expanded=true] .fa-chevron-down {
+  display: none;
+}
+button[aria-expanded=flase] .fa-chevron-up {
+  display: none;
+}
+button[aria-expanded=false] .fa-chevron-down {
+  display: inline-block;
+}
+</style>

@@ -151,7 +151,7 @@
 import { type AxiosInstance } from 'axios'
 import { type ComputedRef, computed, inject, ref, watch } from 'vue'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { useStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
@@ -165,7 +165,7 @@ const emit = defineEmits<{(e: 'emitClose'): void}>()
 watch(() => props.highlightedSpecies, () => { fillExistedSpeciesSlug() })
 
 const store = useStore()
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const selectedProjectId = computed(() => store.selectedProject?.id)
 

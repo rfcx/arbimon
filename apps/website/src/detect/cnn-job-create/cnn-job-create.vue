@@ -131,7 +131,7 @@ import DatePicker from '@/_services/picker/date-picker.vue'
 import type { DateRange } from '@/_services/picker/date-range-picker-interface'
 import SitePicker from '@/_services/picker/site-picker.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
-import { apiClientBioKey, apiClientCoreKey } from '@/globals'
+import { apiClientCoreKey, apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useClassifiers } from '../_composables/use-classifiers'
@@ -177,7 +177,7 @@ watch(() => store.selectedProject, () => {
 })
 
 // Internal data
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { isLoading: isLoadingDetectRecording, isError: isErrorDetectRecording, data: recordingData } = useDetectRecording(apiClientBio, project, recordingQuery)
 
 // External data

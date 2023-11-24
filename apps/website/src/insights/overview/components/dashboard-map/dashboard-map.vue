@@ -61,7 +61,7 @@ import { type ComputedRef, type Ref, computed, inject, ref } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { type MapboxStatisticsStyle, type MapboxStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_HEATMAP } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
@@ -74,7 +74,7 @@ import { useStore } from '~/store'
 import { useGetDashboardDataBySite } from './_composables/use-get-visaulizer'
 import TaxonFilter from './components/taxon-filter.vue'
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const store = useStore()
 
 const MAP_KEY = 'speciesRichness'

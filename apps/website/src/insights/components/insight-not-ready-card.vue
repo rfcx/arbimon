@@ -43,7 +43,7 @@ const store = useStore()
 
 const selectedProject = computed(() => store.selectedProject)
 
-const BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+const BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 const analysisUrl = `${BASE_URL}/project/${selectedProject.value?.slug}/analysis`
 
 </script>

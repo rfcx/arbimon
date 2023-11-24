@@ -7,9 +7,6 @@
           Get started
         </h2>
         <p class="mb-4 font-light">
-          As well as providing the Arbimon platform for free, we have additional opportunities for partnering on projects and providing support.
-        </p>
-        <p class="font-medium">
           Please tell us a bit more about your Arbimon needs
         </p>
       </div>

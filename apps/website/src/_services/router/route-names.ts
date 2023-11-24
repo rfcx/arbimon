@@ -26,7 +26,7 @@ export const ROUTE_NAMES = {
   cnnJobDetail: 'cnn_job_detail',
   cnnJobDetailBySpecies: 'cnn_job_detail_by_species',
   // User
-  userCompleteRegistration: 'user_complete_registration',
+  userCompleteProfile: 'user_complete_profile',
   userPreferences: 'user_preferences',
   // Other
   callback: 'callback',

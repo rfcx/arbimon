@@ -56,7 +56,7 @@ import { useRouter } from 'vue-router'
 import { apiBioPostProjectCreate } from '@rfcx-bio/common/api-bio/project/project-create'
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { verifyDateFormError } from './components/form/functions'
@@ -67,7 +67,7 @@ import type { ProjectDefault } from './types'
 const router = useRouter()
 const store = useStore()
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const name = ref<string>('')
 const startDate = ref<string | null>('')

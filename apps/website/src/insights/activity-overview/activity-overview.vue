@@ -54,7 +54,7 @@ import type { ActivityOverviewDataBySpecies } from '@rfcx-bio/common/api-bio/act
 import { apiBioGetActivityDataset } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import ActivityOverviewByLocation from '@/insights/activity-overview/components/activity-overview-by-location/activity-overview-by-location.vue'
 import ActivityOverviewBySpecies from '@/insights/activity-overview/components/activity-overview-by-species/activity-overview-by-species.vue'
 import type { ActivityOverviewTimeDataset } from '@/insights/activity-overview/components/activity-overview-by-time/activity-overview-by-time.vue'
@@ -70,7 +70,7 @@ import type { SpeciesDataset } from './components/activity-overview-by-species/a
 const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
 
 const store = useStore()
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const route = useRoute()
 

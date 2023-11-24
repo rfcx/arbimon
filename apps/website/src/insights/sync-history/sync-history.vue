@@ -55,10 +55,10 @@ import type { AxiosInstance } from 'axios'
 import { computed, inject } from 'vue'
 
 import useDateFormat from '@/_services/hooks/use-date-format'
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { useSyncHistory } from '@/insights/sync-history/use-sync-history'
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 // Data
 const { isLoading, isError, data } = useSyncHistory(apiClientBio)

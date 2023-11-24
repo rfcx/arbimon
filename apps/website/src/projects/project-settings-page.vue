@@ -69,7 +69,7 @@ import { computed, inject, ref, watch } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { useDashboardStore, useStore } from '~/store'
 import { useGetProjectSettings, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
@@ -80,7 +80,7 @@ import type { ProjectDefault } from './types'
 
 const store = useStore()
 const dashboardStore = useDashboardStore()
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 

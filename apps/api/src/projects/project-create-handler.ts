@@ -1,6 +1,6 @@
 import { type ProjectCreateRequest, type ProjectCreateResponse } from '@rfcx-bio/common/api-bio/project/project-create'
 
-import { type Auth0UserInfo } from '~/auth0'
+import { type Auth0UserInfo } from '~/auth0/types'
 import { type Handler } from '../_services/api-helpers/types'
 import { createProject } from './project-create-bll'
 

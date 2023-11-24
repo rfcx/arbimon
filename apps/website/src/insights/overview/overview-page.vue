@@ -45,7 +45,7 @@ import { type AxiosInstance } from 'axios'
 import { type ComputedRef, computed, inject, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { RISKS_BY_ID } from '~/risk-ratings'
 import { useDashboardStore, useStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
@@ -59,7 +59,7 @@ import DashboardSpeciesByRisk from './components/dashboard-species/dashboard-spe
 import DashboardSpeciesByTaxon from './components/dashboard-species/dashboard-species-by-taxon.vue'
 import { useGetDashboardMetrics } from './composables/use-get-dashboard-metrics'
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const route = useRoute()
 const store = useStore()

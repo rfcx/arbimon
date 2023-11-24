@@ -21,6 +21,7 @@ import { routesSpecies } from './species'
 import { routesSpotlight } from './spotlight'
 import { routesStatus } from './status'
 import { routesSync } from './sync'
+import { routesUserProfile } from './users'
 
 export const createApp = async (): Promise<FastifyInstance> => {
   // Create app
@@ -39,21 +40,22 @@ export const createApp = async (): Promise<FastifyInstance> => {
 
   // Register routes
   const routesRegistrations = [
-    routesDashboard,
-    routesCoreProxy,
-    routesProject,
-    routesProjectProfile,
-    routesSpecies,
-    routesRichness,
-    routesSpotlight,
     routesActivity,
+    routesClassifiers,
+    routesCoreProxy,
+    routesDashboard,
     routesDetect,
+    routesInsightsPublish,
+    routesLanding,
+    routesOrganizations,
+    routesProjectProfile,
+    routesProject,
+    routesRichness,
+    routesSpecies,
+    routesSpotlight,
     routesStatus,
     routesSync,
-    routesClassifiers,
-    routesLanding,
-    routesInsightsPublish,
-    routesOrganizations
+    routesUserProfile
   ]
 
   routesRegistrations

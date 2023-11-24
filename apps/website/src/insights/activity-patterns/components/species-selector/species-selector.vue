@@ -33,10 +33,10 @@ import { useRoute, useRouter } from 'vue-router'
 import { apiBioGetProjectSpeciesLight } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import type { SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const store = useStore()
 const route = useRoute()
 const router = useRouter()

@@ -12,6 +12,6 @@ dotenv.config()
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-  config.env.api = process.env.VITE_BIO_API_BASE_URL
+  config.env.api = process.env.VITE_API_BASE_URL
   return config
 }
