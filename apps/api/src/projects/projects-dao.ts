@@ -72,9 +72,9 @@ export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[], offs
     data: myProjects.map(p => ({
       ...p,
       summary: profileInfo.find(pi => pi.locationProjectId === p.id)?.summary ?? '',
+      image: profileInfo.find(pi => pi.locationProjectId === p.id)?.image ?? '',
       objectives: profileInfo.find(pi => pi.locationProjectId === p.id)?.objectives ?? [],
       countries: countryInfo.find(ci => ci.locationProjectId === p.id)?.countryCodes ?? [],
-      image: '', // TODO: fix this once we add image to LocationProjectProfile
       isPublished: publishedInfo.find(pi => pi.locationProjectId === p.id)?.isPublished ?? false
     }))
   }
