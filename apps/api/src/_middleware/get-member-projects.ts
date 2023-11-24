@@ -3,7 +3,7 @@ import { type FastifyRequest } from 'fastify'
 import { getMemberProjectCoreIdsFromApi } from '~/api-core/api-core'
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Middleware } from '~/api-helpers/types'
-import { type Auth0UserInfo } from '~/auth0'
+import { extractUserId } from '~/auth0/extract-user'
 import { getMemberProjectCoreIdsFromCache, updateMemberProjectCoreIds } from '~/cache/user-project-cache'
 
 const MEMBER_PROJECT_CORE_IDS = 'MEMBER_PROJECT_CORE_IDS'
@@ -20,9 +20,7 @@ export const setMemberProjectCoreIds: Middleware = async (req, res): Promise<voi
     return
   }
 
-  // Get userId
-  const auth0UserInfo = await req.jwtDecode<Auth0UserInfo>()
-  const auth0UserId = auth0UserInfo.auth0_user_id
+  const auth0UserId = await extractUserId(req)
 
   // If in cache => return
   const projectCoreIdsFromCache = await getMemberProjectCoreIdsFromCache(auth0UserId)
