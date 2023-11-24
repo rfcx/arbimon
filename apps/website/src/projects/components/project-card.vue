@@ -14,12 +14,12 @@
       {{ project.name }}
     </h6>
     <div
-      class="flex flex-row items-center font-display text-sm mr-2 h-5 overflow-hidden"
+      class="mt-3 flex flex-row items-center font-display text-sm mr-2 h-5 overflow-hidden"
       style="{ overflow: hidden; white-space: nowrap; text-overflow: ellipsis }"
     >
-      <p class="text-spoonbill">
+      <span class="text-spoonbill">
         {{ project?.countries?.length !== 0 ? project?.countries : 'Multiple countries' }}
-      </p>
+      </span>
       <div
         class="ml-1 border-l-2"
         style="overflow: hidden; text-overflow: ellipsis;"
@@ -30,10 +30,10 @@
       </div>
     </div>
     <p
-      class="font-normal line-clamp-2 text-gray-700 dark:text-insight"
+      class="mt-3 font-normal line-clamp-3 text-gray-700 dark:text-insight"
       :title="project?.name"
     >
-      {{ project?.name }}
+      {{ project?.summary }}
     </p>
   </router-link>
 </template>
