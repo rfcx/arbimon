@@ -15,7 +15,8 @@
     <MarkdownViewer
       v-show="!isEditing"
       :id="`${id}-markdown-viewer-component`"
-      :class="isViewMored === true ? 'z-0' : 'max-h-72 overflow-y-hidden z-0'"
+      ref="markdownViewerRef"
+      :class="isViewMored === true ? 'z-0' : 'max-h-128 overflow-y-hidden z-0'"
       :markdown="editableMarkdownText"
     />
     <button
@@ -47,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRef } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
@@ -59,7 +60,21 @@ const DEFAULT_CHARACTER_LIMIT = 10000
 const props = withDefaults(defineProps<{ id: string, editable: boolean, rawMarkdownText: string | undefined, defaultMarkdownText: string, isViewMored: boolean, isEditing: boolean, characterLimit?: number, isProjectMember: boolean, isViewingAsGuest: boolean }>(), { characterLimit: DEFAULT_CHARACTER_LIMIT })
 const emit = defineEmits<{(e: 'on-editor-close', value: string): void, (e: 'update:isViewMored', value: boolean): void, (e: 'update:isEditing', value: boolean): void}>()
 
-const editableMarkdownText = toRef(props.rawMarkdownText == null || props.rawMarkdownText === '' ? props.defaultMarkdownText : props.rawMarkdownText)
+const markdownViewerRef = ref<{ markdownViewerWrapperComponent: HTMLDivElement | null } | null>(null)
+const editableMarkdownText = ref(props.rawMarkdownText == null || props.rawMarkdownText === '' ? props.defaultMarkdownText : props.rawMarkdownText)
+
+onMounted(async () => {
+  await nextTick(() => {
+    const scrollHeight = markdownViewerRef.value?.markdownViewerWrapperComponent?.scrollHeight ?? 0
+    const clientHeight = markdownViewerRef.value?.markdownViewerWrapperComponent?.clientHeight ?? 0
+
+    if (scrollHeight > clientHeight) {
+      emit('update:isViewMored', false)
+    } else {
+      emit('update:isViewMored', true)
+    }
+  })
+})
 
 const expandMarkdownContent = (): void => {
   emit('update:isViewMored', true)
