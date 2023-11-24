@@ -38,4 +38,5 @@ import ProjectCard from './components/project-card.vue'
 const store = useStore()
 
 const myProjects = computed(() => store.projects.filter(p => p.isMyProject))
+// const myProjectsInfo = computed(() => store.myProjects)
 </script>
