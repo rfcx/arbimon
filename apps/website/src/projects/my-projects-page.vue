@@ -19,7 +19,7 @@
         class="grid grid-cols-2 gap-4 py-8 lg:gap-6 lg:py-16 lg:grid-cols-3"
       >
         <ProjectCard
-          v-for="project in myProjects"
+          v-for="project in myProjectsInfo"
           :key="project.id"
           :project="project"
         />
@@ -37,6 +37,5 @@ import ProjectCard from './components/project-card.vue'
 
 const store = useStore()
 
-const myProjects = computed(() => store.projects.filter(p => p.isMyProject))
-// const myProjectsInfo = computed(() => store.myProjects)
+const myProjectsInfo = computed(() => store.myProjects)
 </script>

@@ -9,36 +9,68 @@
     />
     <h6
       class="mb-2 mt-6 font-bold tracking-tight line-clamp-2 text-gray-900 dark:text-insight"
-      :title="project.name"
+      :title="project?.name"
     >
       {{ project.name }}
     </h6>
-    <div class="flex flex-row items-center font-display text-sm mr-2 h-5 overflow-hidden text-ellipsis">
-      <span class="text-spoonbill">
-        PuertoRico
-      </span>
-      <div class="ml-1 border-l-2">
-        <span class="ml-1 whitespace-nowrap">
-          List of project cards that each of them includes
+    <div
+      class="flex flex-row items-center font-display text-sm mr-2 h-5 overflow-hidden"
+      style="{ overflow: hidden; white-space: nowrap; text-overflow: ellipsis }"
+    >
+      <p class="text-spoonbill">
+        {{ project?.countries?.length !== 0 ? project?.countries : 'Multiple countries' }}
+      </p>
+      <div
+        class="ml-1 border-l-2"
+        style="overflow: hidden; text-overflow: ellipsis;"
+      >
+        <span class="ml-1">
+          {{ objective }}
         </span>
       </div>
     </div>
     <p
       class="font-normal line-clamp-2 text-gray-700 dark:text-insight"
-      :title="project.name"
+      :title="project?.name"
     >
-      {{ project.name }}
+      {{ project?.name }}
     </p>
   </router-link>
 </template>
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import type { Project } from '@rfcx-bio/common/dao/types'
 
 import image from '@/_assets/cta/frog-hero.webp'
 import imageCard from '@/landing/team/components/image-card.vue'
 import { ROUTE_NAMES } from '~/router'
 
-defineProps<{project: Omit<Project, 'idArbimon'>}>()
+const props = defineProps<{project: Omit<Project, 'idArbimon'>}>()
+
+const objective = computed(() => {
+  let text = ''
+  props.project.objectives?.forEach(obj => {
+    if (obj === 'bio-baseline') {
+      text = text + 'Establish baseline'
+    } else if (obj === 'monitor-species') {
+      text = text + 'Detect rare species'
+    } else if (obj === 'monitor-illegal-act') {
+      text = text + 'Detect illegal activity'
+    } else if (obj === 'impact-human') {
+      text = text + 'Evaluate human impact'
+    } else if (obj === 'impact-conservation') {
+      text = text + 'Evaluate conservation impact'
+    } else {
+      text = text + 'Others'
+    }
+
+    if (props.project.objectives?.length !== 1 && obj !== props.project.objectives?.slice(-1)[0]) {
+      text = text + ', '
+    }
+  })
+  return text
+})
 </script>
 
 <style lang="scss">

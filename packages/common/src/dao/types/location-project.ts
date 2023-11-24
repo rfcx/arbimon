@@ -12,6 +12,10 @@ export interface Project {
   longitudeWest: number
   createdAt?: Date
   updatedAt?: Date
+  summary?: string
+  objectives?: string[]
+  countries?: string[]
+  image?: string
 }
 
 export const ATTRIBUTES_LOCATION_PROJECT = attributes<Project>()({
