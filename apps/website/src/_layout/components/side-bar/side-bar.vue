@@ -217,7 +217,7 @@ import { authClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 
-const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 const supportLink = ref('https://support.rfcx.org/')
 
 const auth = inject(authClientKey) as Auth0Client
@@ -227,7 +227,7 @@ const store = useStore()
 const arbimonLink = computed(() => {
   const selectedProjectSlug = store.selectedProject?.slug
   if (selectedProjectSlug === undefined) return ''
-  else return `${import.meta.env.VITE_ARBIMON_BASE_URL}/project/${selectedProjectSlug}`
+  else return `${import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL}/project/${selectedProjectSlug}`
 })
 
 const userImage = computed<string>(() => store.user?.picture ?? '')

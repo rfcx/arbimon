@@ -69,7 +69,7 @@ import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 import { apiCoreGetMedia } from '@rfcx-bio/common/api-core/media/core-media'
 
-import { apiMediaKey } from '@/globals'
+import { apiClientMediaKey } from '@/globals'
 import type { DetectionEvent } from './types'
 import ValidationStatus from './validation-status.vue'
 
@@ -91,7 +91,7 @@ const audioLoading = ref(false)
 const showCheck = ref(false)
 const isSelected = ref<boolean>(false)
 
-const apiMedia = inject(apiMediaKey) as AxiosInstance
+const apiMedia = inject(apiClientMediaKey) as AxiosInstance
 
 const audio = ref<Howl | null>(null)
 const spectrogram = ref<string | null>(null)

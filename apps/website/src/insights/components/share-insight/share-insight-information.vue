@@ -84,12 +84,12 @@ import { type AxiosInstance } from 'axios'
 import { Modal } from 'flowbite'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { useUpdateInsightsPublishStatus } from '@/insights/_composables/use-update-insights-publish-status'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const store = useStore()
 const selectedProjectId = computed(() => store.selectedProject?.id)
 

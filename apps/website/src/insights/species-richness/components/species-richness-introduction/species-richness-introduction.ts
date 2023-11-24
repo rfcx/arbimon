@@ -5,7 +5,7 @@ import { Inject, Prop } from 'vue-property-decorator'
 import { apiBioGetRichnessExport } from '@rfcx-bio/common/api-bio/richness/richness-export'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { apiClientBioKey, storeKey } from '@/globals'
+import { apiClientKey, storeKey } from '@/globals'
 import { downloadCsvReports } from '@/insights/species-richness/csv'
 import { type ColoredFilter, filterToQuery } from '~/filters'
 import { INFO_TOPICS } from '~/info/info-page'
@@ -15,7 +15,7 @@ const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'
 
 export default class SpeciesRichnessIntroduction extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
-  @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
+  @Inject({ from: apiClientKey }) readonly apiClientBio!: AxiosInstance
 
   @Prop() filters!: ColoredFilter[]
   @Prop() hasData!: boolean

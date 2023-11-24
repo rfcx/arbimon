@@ -17,13 +17,13 @@ import type { AxiosInstance } from 'axios'
 import { sumBy } from 'lodash-es'
 import { computed, inject } from 'vue'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import publicationStat from './blocks/publications-data-stat.vue'
 import publicationHero from './blocks/publications-hero.vue'
 import publicationList from './blocks/publications-list.vue'
 import { usePublications } from './composables/use-publications'
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { data: publications, isLoading } = usePublications(apiClientBio)
 

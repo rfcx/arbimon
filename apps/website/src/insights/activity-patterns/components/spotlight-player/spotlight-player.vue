@@ -95,13 +95,13 @@ import { type TaxonSpeciesCallTypes } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 
 type ScrollDirection = 'left' | 'right'
 
 const SCROLL_STEP = 150
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const audio: Ref<Howl | null> = ref(null)
 const audioList: Ref<Howl[]> = ref([])

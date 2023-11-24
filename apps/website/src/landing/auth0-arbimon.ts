@@ -1,4 +1,4 @@
-const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 const arbimonClientId = 'eh2NHbG6hOVjHMGxkmCHGe307sLmKGKb'
 const audience = 'https://rfcx.org'
 const redirectUri = `${ARBIMON_BASE_URL}/auth0-login`
