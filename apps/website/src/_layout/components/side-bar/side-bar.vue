@@ -1,7 +1,7 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed z-50 top-0 left-0 w-13 border-r-1 border-util-gray-02 hover:border-insight h-screen transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-echo group transition duration-300 ease-in-out delay-500 hover:(w-66 delay-300)"
+    class="fixed z-50 top-0 left-0 border-r-1 border-util-gray-02 hover:border-insight h-screen transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-echo group transition duration-300 ease-in-out delay-500 hover:(w-66 delay-300)"
     aria-label="Sidebar"
     data-drawer-backdrop="false"
     @mouseenter="showSidebar = true"
@@ -65,10 +65,6 @@
                 class="flex items-center text-base ease-in-out active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
-                <icon-custom-linkout
-                  v-if="item.legacyPath"
-                  class="text-xs ml-1"
-                />
               </a>
               <button
                 v-else
@@ -127,14 +123,9 @@
                   <a
                     v-else-if="childItem.legacyPath"
                     :href="arbimonLink + childItem.legacyPath"
-                    :target="childItem.legacyPath ? '_blank' : undefined"
                     class="flex items-center pl-12 w-full text-base font-normal hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
                   >
                     {{ childItem.title }}
-                    <icon-custom-linkout
-                      v-if="childItem.legacyPath"
-                      class="text-xs ml-1"
-                    />
                   </a>
                 </li>
               </ul>
@@ -146,15 +137,11 @@
               <a
                 :title="'Arbimon Support'"
                 :href="supportLink"
-                target="_blank"
                 exact-active-class="bg-insight rounded text-moss"
                 class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <icon-custom-fi-help />
                 <span class="ml-2 hidden group-hover:block">Help</span>
-                <icon-custom-linkout
-                  class="text-xs ml-1 hidden group-hover:block"
-                />
               </a>
             </li>
             <li>
@@ -180,14 +167,10 @@
               <a
                 :title="'Account Settings'"
                 :href="ARBIMON_BASE_URL + '/user-settings'"
-                target="_blank"
                 class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
               >
                 <icon-custom-fi-user />
                 <span class="ml-2 hidden group-hover:block">Account settings</span>
-                <icon-custom-linkout
-                  class="text-xs ml-1 hidden group-hover:block"
-                />
               </a>
             </li>
             <li
