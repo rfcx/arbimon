@@ -250,7 +250,7 @@ import { computed, inject, nextTick, ref, watch } from 'vue'
 
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { useCreateOrganization } from '../../../../composables/use-create-organization'
 import { useGetSearchOrganizationsResult } from '../../../../composables/use-get-search-organizations-result'
 import OrganizationSearchResultCard from './organization-search-result-card.vue'
@@ -273,7 +273,7 @@ const selectedOrganizationIds = ref(props.organizations.map(o => o.id))
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
 const newOrganizationUrl = ref<string>('')
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult, isFetching: isSearchOrganizationFetching } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
 const { mutate: mutateNewOrganization } = useCreateOrganization(apiClientBio)

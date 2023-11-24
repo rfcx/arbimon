@@ -20,7 +20,7 @@
 import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { useUpdateInsightsPublishStatus } from '@/insights/_composables/use-update-insights-publish-status'
 import { useStore } from '~/store'
 import HideInsightToNonProjectMembersConfirmation from './hide-insight-to-non-project-members-confirmation.vue'
@@ -34,7 +34,7 @@ const emit = defineEmits<{(event: 'update:modelValue', value: 'start-show' | 'st
 
 const steps = ref<0 | 1 | 2 | 3>(0)
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const { mutate: mutateInsightsPublishStatus } = useUpdateInsightsPublishStatus(apiClientBio, selectedProjectId)
 

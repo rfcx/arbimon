@@ -57,7 +57,7 @@ const selectedProject = computed(() => store.selectedProject)
 const isAnalysisSelected = ref(false)
 const analysisUrl = ref('')
 
-const BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+const BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 
 const analyses = ref([
   { value: 'pm', title: 'Pattern Matching', description: "An automated sound detection tool that employs a single example of the target sound (template) to search for similar signals in a larger set of recordings, based on the user's correlation score (i.e., similarity). Valuable for swiftly identifying target species sounds within soundscape recordings.", url: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching?newJob`, link: 'https://support.rfcx.org/article/99-what-is-pattern-matching-pm-in-arbimon', label: 'Learn more about Pattern Matching', isSelected: false },

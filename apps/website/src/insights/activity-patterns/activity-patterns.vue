@@ -101,7 +101,7 @@ import { type TaxonSpeciesCallTypes, type TaxonSpeciesPhotoTypes } from '@rfcx-b
 import type { SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import type { ColoredFilter } from '~/filters'
 import { filterToQuery } from '~/filters'
 import ComparisonListComponent from '~/filters/comparison-list/comparison-list.vue'
@@ -122,7 +122,7 @@ import SpotlightPlayer from './components/spotlight-player/spotlight-player.vue'
 import { exportDetectionCSV, transformToBySiteDataset, transformToMetricsDatasets } from './functions'
 import type { Metrics } from './types'
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const store = useStore()
 const route = useRoute()
 const router = useRouter()

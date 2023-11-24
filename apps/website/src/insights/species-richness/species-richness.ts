@@ -5,7 +5,7 @@ import { Inject } from 'vue-property-decorator'
 import { apiBioGetRichnessDataset } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { apiClientBioKey, storeKey } from '@/globals'
+import { apiClientKey, storeKey } from '@/globals'
 import type { GroupedBarChartItem } from '~/charts/horizontal-bar-chart'
 import type { ColoredFilter } from '~/filters'
 import { ComparisonListComponent, filterToQuery } from '~/filters'
@@ -32,7 +32,7 @@ import { getBarChartDataset, getMapDataset, getTableData } from './functions'
 })
 export default class SpeciesRichnessPage extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
-  @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
+  @Inject({ from: apiClientKey }) readonly apiClientBio!: AxiosInstance
 
   colors: string[] = [] // TODO 150 - Replace this with Pinia colors
   filters: ColoredFilter[] = []

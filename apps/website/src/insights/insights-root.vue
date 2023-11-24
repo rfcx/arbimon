@@ -131,7 +131,7 @@ import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import FooterBar from '@/_layout/components/landing-footer.vue'
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
 import { useGetProjectSettings } from '../projects/_composables/use-project-profile'
@@ -174,7 +174,7 @@ const items = [
 const store = useStore()
 const route = useRoute()
 const dashboardStore = useDashboardStore()
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)

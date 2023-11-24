@@ -83,7 +83,7 @@ import { computed, inject, onMounted, ref, watch } from 'vue'
 import { getApiClient } from '@rfcx-bio/utils/api'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { apiClientArbimonKey } from '@/globals'
+import { apiClientArbimonLegacyKey } from '@/globals'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 // import { useAuth0Client, getIdToken } from '~/auth-client'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
@@ -113,11 +113,11 @@ const selectedProjectSlug = computed(() => store.selectedProject?.slug)
 // const user = await authClient.getUser()
 // console.info('user', user)
 // const getToken = user ? async () => await getIdToken(authClient) : undefined
-const apiClientBio = getApiClient(import.meta.env.VITE_BIO_API_BASE_URL)
+const apiClientBio = getApiClient(import.meta.env.VITE_API_BASE_URL)
 const { isLoading: isLoadingRecCountBio, data: projectRecCount } = useBioRecordingCount(apiClientBio, selectedProjectId)
 const { isLoading: isLoadingSitesRecCountBio, data: projectSitesRecCount } = useBioProjectSitesRecordingCount(apiClientBio, selectedProjectId)
 
-const BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+const BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 
 const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
 const isShowLabels = true
@@ -126,7 +126,7 @@ const mapStatisticsStyle: MapboxStatisticsStyle = MAPBOX_STYLE_CIRCLE
 const tabHeight = 360
 
 // External data
-const apiClientArbimon = inject(apiClientArbimonKey) as AxiosInstance
+const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 const { isLoading: isLoadingSiteCount, isError: isErrorSiteCount, data: siteCount } = useSiteCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingSpeciesCount, data: speciesCount } = useSpeciesCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingPlaylistCount, data: playlistCount } = usePlaylistCount(apiClientArbimon, selectedProjectSlug)

@@ -77,7 +77,7 @@
 import type { AxiosInstance } from 'axios'
 import { type ComputedRef, computed, inject, ref, watch } from 'vue'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
@@ -95,7 +95,7 @@ const params = computed(() => {
   return props.selectedRisk
 })
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { isLoading, isError, data } = useSpeciesByRisk(apiClientBio, params)
 
 // raw data

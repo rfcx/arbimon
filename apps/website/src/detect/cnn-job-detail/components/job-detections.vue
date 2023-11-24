@@ -51,7 +51,7 @@ import { type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/comm
 import { apiBioDetectReviewDetection } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
 import { useDetectionsReview } from '@/detect/_composables/use-detections-review'
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { getMediaLink } from '~/media'
 import { ROUTE_NAMES } from '~/router'
 import { useDetectionsResultFilterStore } from '~/store'
@@ -62,7 +62,7 @@ import type { DetectionMedia, DetectionValidationStatus } from './types'
 const MAX_DISPLAY_PER_EACH_SPECIES = 20
 
 const detectionsResultFilterStore = useDetectionsResultFilterStore()
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const route = useRoute()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 

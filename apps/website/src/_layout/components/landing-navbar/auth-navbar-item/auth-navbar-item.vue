@@ -76,7 +76,7 @@ import { authClientKey, storeKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { type BiodiversityStore } from '~/store'
 
-const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_BASE_URL
+const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 
 const auth = inject(authClientKey) as Auth0Client
 const store = inject(storeKey) as BiodiversityStore

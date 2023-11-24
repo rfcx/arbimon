@@ -8,7 +8,7 @@ import { type TaxonSpeciesCallTypes } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
-import { apiClientBioKey, storeKey } from '@/globals'
+import { apiClientKey, storeKey } from '@/globals'
 import { type BiodiversityStore } from '~/store'
 
 type ScrollDirection = 'left' | 'right'
@@ -16,7 +16,7 @@ type ScrollDirection = 'left' | 'right'
 const SCROLL_STEP = 150
 
 export default class SpotlightPlayer extends Vue {
-  @Inject({ from: apiClientBioKey }) readonly apiClientBio!: AxiosInstance
+  @Inject({ from: apiClientKey }) readonly apiClientBio!: AxiosInstance
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
 
   @Prop() speciesCalls!: Array<TaxonSpeciesCallTypes['light']>

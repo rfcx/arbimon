@@ -60,7 +60,7 @@ import { apiBioDetectReviewDetection } from '@rfcx-bio/common/api-bio/detect/rev
 import { useDetectionsReview } from '@/detect/_composables/use-detections-review'
 import DetectionValidator from '@/detect/cnn-job-detail/components/detection-validator.vue'
 import type { DetectionMedia, DetectionValidationStatus } from '@/detect/cnn-job-detail/components/types'
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { getMediaLink } from '~/media'
 import { validationStatus } from '~/store/detections-constants'
 import DetectionItem from '../../cnn-job-detail/components/detection-item.vue'
@@ -75,7 +75,7 @@ const emit = defineEmits<{(e: 'update:page', value: number): void}>()
 
 const route = useRoute()
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
 const nextPage = (): void => {

@@ -45,11 +45,11 @@ import type { PredictedOccupancyMap } from '@rfcx-bio/common/api-bio/species/pro
 import { apiBioGetProjectSpeciesPredictedOccupancy } from '@rfcx-bio/common/api-bio/species/project-species-predicted-occupancy'
 import { downloadPng } from '@rfcx-bio/utils/file'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 
 const props = defineProps<{ predictedOccupancyMaps: PredictedOccupancyMap[], speciesSlug: string }>()
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const blobUrls = ref<string[]>([])
 

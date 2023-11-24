@@ -29,7 +29,7 @@ import { useRoute } from 'vue-router'
 import type { DetectDetectionsQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
-import { apiClientBioKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import { useGetJobDetections } from '../_composables/use-get-detections'
 import { useGetJobDetectionSummary } from '../_composables/use-get-job-detection-summary'
@@ -42,7 +42,7 @@ import JobValidationStatus from './components/job-validation-status.vue'
 const route = useRoute()
 const PAGE_SIZE_LIMIT = 100
 
-const apiClientBio = inject(apiClientBioKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 const speciesSlug = computed(() => typeof route.params.speciesSlug === 'string' ? route.params.speciesSlug : '')
