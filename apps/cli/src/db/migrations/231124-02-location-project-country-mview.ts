@@ -17,7 +17,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       FROM location_site 
       WHERE country_code IS NOT NULL 
       ORDER BY country_code) a
-    GROUP BY 1;
+    GROUP BY 1
     ;
     `
   )
