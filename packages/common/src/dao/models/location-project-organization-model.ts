@@ -12,7 +12,6 @@ export const LocationProjectOrganizationModel = defineWithDefaults<LocationProje
     locationProjectId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      allowNull: false,
       references: {
         model: 'location_project',
         key: 'id'
@@ -21,7 +20,6 @@ export const LocationProjectOrganizationModel = defineWithDefaults<LocationProje
     organizationId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      allowNull: false,
       references: {
         model: 'organization',
         key: 'id'

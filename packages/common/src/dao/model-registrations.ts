@@ -32,6 +32,7 @@ import { MODEL_TAXON_SPECIES, TaxonSpeciesModel } from './models/taxon-species-m
 import { MODEL_TAXON_SPECIES_PHOTO, TaxonSpeciesPhotoModel } from './models/taxon-species-photo-model'
 import { MODEL_TAXON_SPECIES_RFCX, TaxonSpeciesRfcxModel } from './models/taxon-species-rfcx-model'
 import { MODEL_TAXON_SPECIES_WIKI, TaxonSpeciesWikiModel } from './models/taxon-species-wiki-model'
+import { MODEL_USER_PROFILE, UserProfileModel } from './models/user-profile-model'
 
 export const modelRegistrations = {
   // Tables
@@ -39,9 +40,11 @@ export const modelRegistrations = {
   [MODEL_DATA_SOURCE]: [DataSourceModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_DETECTION_BY_SITE_SPECIES_HOUR]: [DetectionBySiteSpeciesHourModel, { manyToOne: [MODEL_LOCATION_SITE, MODEL_TAXON_SPECIES] }],
   [MODEL_LOCATION_PROJECT]: [LocationProjectModel, { manyToMany: [{ model: MODEL_ORGANIZATION, through: MODEL_LOCATION_PROJECT_ORGANIZATION }] }],
+  [MODEL_LOCATION_PROJECT_ORGANIZATION]: [LocationProjectOrganizationModel, {}],
   [MODEL_LOCATION_PROJECT_PROFILE]: [LocationProjectProfileModel, { oneToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_LOCATION_PROJECT_SPECIES]: [LocationProjectSpeciesModel, { manyToOne: [MODEL_LOCATION_PROJECT, MODEL_TAXON_SPECIES] }],
   [MODEL_LOCATION_SITE]: [LocationSiteModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
+  [MODEL_ORGANIZATION]: [OrganizationModel, { manyToMany: [{ model: MODEL_LOCATION_PROJECT, through: MODEL_LOCATION_PROJECT_ORGANIZATION }] }],
   [MODEL_PROJECT_VERSION]: [ProjectVersionModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_RECORDING_BY_SITE_HOUR]: [RecordingBySiteHourModel, { manyToOne: [MODEL_LOCATION_SITE] }],
   [MODEL_RISK_RATING_IUCN]: [RiskRatingIucnModel, {}],
@@ -57,8 +60,7 @@ export const modelRegistrations = {
   [MODEL_SYNC_ERROR]: [SyncErrorModel, { manyToOne: [MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
   [MODEL_SYNC_LOG_BY_PROJECT]: [SyncLogByProjectModel, { manyToOne: [MODEL_LOCATION_PROJECT, MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
   [MODEL_SYNC_STATUS]: [SyncStatusModel, { manyToOne: [MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
-  [MODEL_ORGANIZATION]: [OrganizationModel, { manyToMany: [{ model: MODEL_LOCATION_PROJECT, through: MODEL_LOCATION_PROJECT_ORGANIZATION }] }],
-  [MODEL_LOCATION_PROJECT_ORGANIZATION]: [LocationProjectOrganizationModel, {}],
+  [MODEL_USER_PROFILE]: [UserProfileModel],
 
   // Views
   [MODEL_DASHBOARD_DETECTION_BY_HOUR]: [DashboardDetectionByHourModel],
