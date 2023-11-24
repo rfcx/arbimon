@@ -132,7 +132,7 @@
 
         <div
           v-else
-          class="mx-auto p-4 lg:max-w-4xl relative"
+          :class="isAboutTabEditing ? 'mx-auto pl-4 pb-4 pr-4 lg:max-w-4xl relative' : 'mx-auto p-4 lg:max-w-4xl relative'"
         >
           <DashboardMarkdownViewerEditor
             id="about"
@@ -154,7 +154,7 @@
         role="tabpanel"
         aria-labelledby="methods-tab-content"
       >
-        <div class="mx-auto p-4 lg:max-w-4xl relative">
+        <div :class="isMethodsTabEditing ? 'mx-auto pl-4 pb-4 pr-4 lg:max-w-4xl relative' : 'mx-auto p-4 lg:max-w-4xl relative'">
           <DashboardMarkdownViewerEditor
             id="methods"
             v-model:is-view-mored="isMethodsTabViewMored"
@@ -175,7 +175,7 @@
         role="tabpanel"
         aria-labelledby="key-results-tab-content"
       >
-        <div class="mx-auto p-4 lg:max-w-4xl relative">
+        <div :class="isKeyResultTabEditing ? 'mx-auto pl-4 pb-4 pr-4 lg:max-w-4xl relative' : 'mx-auto p-4 lg:max-w-4xl relative'">
           <DashboardMarkdownViewerEditor
             id="key-result"
             v-model:is-view-mored="isKeyResultTabViewMored"
@@ -209,7 +209,7 @@
         role="tabpanel"
         aria-labelledby="resources-tab-content"
       >
-        <div class="mx-auto p-4 lg:max-w-4xl relative">
+        <div :class="isResourcesTabEditing ? 'mx-auto pl-4 pb-4 pr-4 lg:max-w-4xl relative' : 'mx-auto p-4 lg:max-w-4xl relative'">
           <DashboardMarkdownViewerEditor
             id="resources"
             v-model:is-view-mored="isResourcesTabViewMored"
@@ -263,10 +263,10 @@ const isResourcesTabEditing = ref(false)
 const store = useStore()
 
 const isEnabled = computed(() => {
-  return isAboutTabEditing.value !== true || isKeyResultTabEditing.value !== true || isResourcesTabEditing.value !== true
+  return isAboutTabEditing.value !== true || isMethodsTabEditing.value !== true || isKeyResultTabEditing.value !== true || isResourcesTabEditing.value !== true
 })
 
-const { isLoading, data: dashboardContent } = useGetDashboardContent(
+const { isLoading, data: dashboardContent, refetch: refetchDashboardContent } = useGetDashboardContent(
   apiClientBio,
   store.selectedProject?.id ?? -1,
   isEnabled
@@ -282,10 +282,12 @@ const updateReadme = (value: string): void => {
     onSuccess: () => {
       isAboutTabViewMored.value = true
       isAboutTabEditing.value = false
+      refetchDashboardContent.value()
     },
     onError: () => {
       isAboutTabViewMored.value = true
       isAboutTabEditing.value = true
+      refetchDashboardContent.value()
     }
   })
 }
@@ -295,10 +297,12 @@ const updateKeyResult = (value: string): void => {
     onSuccess: () => {
       isKeyResultTabViewMored.value = true
       isKeyResultTabEditing.value = false
+      refetchDashboardContent.value()
     },
     onError: () => {
       isKeyResultTabViewMored.value = true
       isKeyResultTabEditing.value = true
+      refetchDashboardContent.value()
     }
   })
 }
@@ -308,10 +312,12 @@ const updateResources = (value: string): void => {
     onSuccess: () => {
       isResourcesTabViewMored.value = true
       isResourcesTabEditing.value = false
+      refetchDashboardContent.value()
     },
     onError: () => {
       isResourcesTabViewMored.value = true
       isResourcesTabEditing.value = true
+      refetchDashboardContent.value()
     }
   })
 }
@@ -321,10 +327,12 @@ const updateMethods = (value: string): void => {
     onSuccess: () => {
       isMethodsTabViewMored.value = true
       isMethodsTabEditing.value = false
+      refetchDashboardContent.value()
     },
     onError: () => {
       isMethodsTabViewMored.value = true
       isResourcesTabEditing.value = true
+      refetchDashboardContent.value()
     }
   })
 }
