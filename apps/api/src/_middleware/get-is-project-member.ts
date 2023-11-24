@@ -6,7 +6,7 @@ import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-proje
 import { getIsProjectMemberFromApi } from '~/api-core/api-core'
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Middleware } from '~/api-helpers/types'
-import { type Auth0UserInfo } from '~/auth0'
+import { extractUserId } from '~/auth0/extract-user'
 import { getMemberProjectCoreIdsFromCache } from '~/cache/user-project-cache'
 import { getSequelize } from '~/db'
 import { BioPublicError, ERROR_STATUS_CODE } from '~/errors'
@@ -37,9 +37,7 @@ export const setIsProjectMember: Middleware<ProjectRouteParamsSerialized> = asyn
     return
   }
 
-  // Get userId
-  const auth0UserInfo = await req.jwtDecode<Auth0UserInfo>()
-  const auth0UserId = auth0UserInfo.auth0_user_id
+  const auth0UserId = await extractUserId(req)
 
   // If in cache => return
   const projectCoreIdsFromCache = await getMemberProjectCoreIdsFromCache(auth0UserId)
