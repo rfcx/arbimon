@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineExpose, ref } from 'vue'
+import { ref } from 'vue'
 import Markdown from 'vue3-markdown-it'
 
 const markdownViewerWrapperComponent = ref<HTMLDivElement | null>(null)
