@@ -3,5 +3,8 @@ export interface UserProfile {
   userIdAuth0: string
   firstName: string
   lastName: string
-  imageUrl: string
+  image?: string
+  organizationIdAffiliated?: number
+  createdAt?: Date
+  updatedAt?: Date
 }
