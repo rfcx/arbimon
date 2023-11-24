@@ -1,4 +1,4 @@
-import { type MyProjectsResponse, type ProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
+import { type LocationProjectQuery, type MyProjectsResponse, type ProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { getMemberProjectCoreIds } from '@/_middleware/get-member-projects'
 import { getProjects } from '@/projects/projects-bll'
@@ -19,13 +19,13 @@ export const projectsAllHandler: Handler<ProjectsResponse> = async (req) => {
   }
 }
 
-export const myProjectsHandler: Handler<MyProjectsResponse> = async (req) => {
+export const myProjectsHandler: Handler<MyProjectsResponse, unknown, LocationProjectQuery> = async (req) => {
   try {
     // Inputs & validation
     const memberProjectCoreIds = getMemberProjectCoreIds(req)
 
     // Response
-    return await getMyProjectsWithInfo(memberProjectCoreIds)
+    return await getMyProjectsWithInfo(memberProjectCoreIds, req.query.limit, req.query.offset)
   } catch (err) {
     req.log.error(err)
     throw ApiServerError()

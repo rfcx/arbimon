@@ -1,6 +1,6 @@
 import { Op } from 'sequelize'
 
-import { type LocationProjectForUser, type LocationProjectWithInfo } from '@rfcx-bio/common/api-bio/project/projects'
+import { type LocationProjectForUser, type MyProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
@@ -47,7 +47,7 @@ export const getViewableProjects = async (memberProjectCoreIds: string[]): Promi
     }))
 }
 
-export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[]): Promise<LocationProjectWithInfo[]> => {
+export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[], offset: number = 0, limit: number = 10): Promise<MyProjectsResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
@@ -56,6 +56,8 @@ export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[]): Pro
       where: { idCore: memberProjectCoreIds },
       attributes: ATTRIBUTES_LOCATION_PROJECT.light,
       order: ['name'],
+      offset,
+      limit,
       raw: true
     })
 
@@ -63,12 +65,16 @@ export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[]): Pro
   const publishedInfo = await models.ProjectVersion.findAll({ where: { locationProjectId: myProjectIds }, raw: true })
   const profileInfo = await models.LocationProjectProfile.findAll({ where: { locationProjectId: myProjectIds }, raw: true })
 
-  return myProjects.map(p => ({
-    ...p,
-    summary: profileInfo.find(pi => pi.locationProjectId === p.id)?.summary ?? '',
-    objectives: profileInfo.find(pi => pi.locationProjectId === p.id)?.objectives ?? [],
-    countries: [], // TODO: create view to get project countries?
-    image: '', // TODO: fix this once we add image to LocationProjectProfile
-    isPublished: publishedInfo.find(pi => pi.locationProjectId === p.id)?.isPublished ?? false
-  }))
+  return {
+    offset,
+    limit,
+    data: myProjects.map(p => ({
+      ...p,
+      summary: profileInfo.find(pi => pi.locationProjectId === p.id)?.summary ?? '',
+      objectives: profileInfo.find(pi => pi.locationProjectId === p.id)?.objectives ?? [],
+      countries: [], // TODO: create view to get project countries?
+      image: '', // TODO: fix this once we add image to LocationProjectProfile
+      isPublished: publishedInfo.find(pi => pi.locationProjectId === p.id)?.isPublished ?? false
+    }))
+  }
 }

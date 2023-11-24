@@ -5,7 +5,10 @@ import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 import { type LocationProjectTypes } from '../../dao/types'
 
 // Request types
-// nothing specific...
+export interface LocationProjectQuery {
+  limit?: number
+  offset?: number
+}
 
 // Response types
 export type LocationProjectForUser =
@@ -25,7 +28,12 @@ export type LocationProjectForUser =
   }
 
 export type ProjectsResponse = LocationProjectForUser[]
-export type MyProjectsResponse = LocationProjectWithInfo[]
+
+export interface MyProjectsResponse {
+  data: LocationProjectWithInfo[]
+  offset: number
+  limit: number
+}
 
 // Route
 export const projectsRoute = '/projects'
