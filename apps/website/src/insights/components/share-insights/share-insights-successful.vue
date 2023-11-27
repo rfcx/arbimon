@@ -1,6 +1,6 @@
 <template>
   <div
-    id="share-insight-successfully"
+    :id="MODAL_ID"
     data-modal-backdrop="static"
     tabindex="-1"
     aria-hidden="true"
@@ -73,7 +73,7 @@
           <button
             type="button"
             class="btn btn-secondary w-full"
-            @click="$emit('emit-hide-insight')"
+            @click="$emit('emit-hide-insights')"
           >
             Hide Insight to non-project members
           </button>
@@ -87,11 +87,12 @@
 import { useClipboard } from '@vueuse/core'
 import { Modal } from 'flowbite'
 import { computed, onMounted, ref, watch } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 
 import { ROUTE_NAMES } from '~/router'
 
 const props = defineProps<{ isOpen: boolean }>()
-const emit = defineEmits<{(event: 'emit-close-modal'): void, (event: 'emit-hide-insight'): void}>()
+const emit = defineEmits<{(event: 'emit-close-modal'): void, (event: 'emit-hide-insights'): void}>()
 
 const arbimonLink = computed((): string => {
   return window.location.href
@@ -100,6 +101,7 @@ const arbimonLink = computed((): string => {
 const { copy, copied } = useClipboard({ source: arbimonLink })
 
 const modal = ref<Modal | null>(null)
+const MODAL_ID = 'share-insights-successfully'
 
 watch(() => props.isOpen, (newValue) => {
   if (newValue) {
@@ -114,8 +116,13 @@ const closeModal = (): void => {
   emit('emit-close-modal')
 }
 
+onBeforeRouteLeave(() => {
+  modal.value?.hide()
+  closeModal()
+})
+
 onMounted(() => {
-  modal.value = new Modal(document.getElementById('share-insight-successfully'), {
+  modal.value = new Modal(document.getElementById(MODAL_ID), {
     placement: 'top-right',
     backdrop: 'static',
     backdropClasses: 'bg-box-gray bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
