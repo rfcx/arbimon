@@ -1,6 +1,6 @@
+import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQuery } from '@tanstack/vue-query'
 import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
-import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQuery } from 'vue-query'
 
 import { type ProjectSettingsResponse, type ProjectSettingsUpdateBody, apiBioGetProjectSettingsData, apiBioUpdateProjectSettingsData } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 

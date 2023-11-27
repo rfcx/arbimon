@@ -1,6 +1,6 @@
+import { type UseQueryReturnType, useQuery } from '@tanstack/vue-query'
 import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
-import { type UseQueryReturnType, useQuery } from 'vue-query'
 
 import { type GetInsightsPublishStatusResponseBody, apiBioGetInsightsPublishStatus } from '@rfcx-bio/common/api-bio/insights-publish-status/insights-publish-status'
 

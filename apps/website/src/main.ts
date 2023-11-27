@@ -1,6 +1,6 @@
+import { VueQueryPlugin } from '@tanstack/vue-query'
 import { ViteSSG } from 'vite-ssg'
 import VueGtag from 'vue-gtag'
-import { VueQueryPlugin } from 'vue-query'
 
 import { apiGetUserProfile } from '@rfcx-bio/common/api-bio/users/profile'
 import { getApiClient } from '@rfcx-bio/utils/api'

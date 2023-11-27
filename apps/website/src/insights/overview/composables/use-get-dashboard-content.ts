@@ -1,6 +1,6 @@
+import { type UseQueryReturnType, useQuery } from '@tanstack/vue-query'
 import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
-import { type UseQueryReturnType, useQuery } from 'vue-query'
 
 import { type DashboardContentResponse, apiBioGetDashboardContent } from '@rfcx-bio/common/api-bio/dashboard/dashboard-content'
 
