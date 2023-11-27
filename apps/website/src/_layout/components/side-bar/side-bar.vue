@@ -33,6 +33,7 @@
               :key="item.title"
             >
               <router-link
+                v-show="item?.visibleCondition == null || item.visibleCondition() === true"
                 v-if="item.route"
                 :to="item.route"
                 :title="item.title"
@@ -114,6 +115,7 @@
                   class="mt-4"
                 >
                   <router-link
+                    v-show="childItem.visibleCondition == null || childItem.visibleCondition() === true"
                     v-if="childItem.route"
                     :to="childItem.route"
                     exact-active-class="bg-insight rounded text-moss"
@@ -235,7 +237,7 @@ const userImage = computed<string>(() => store.user?.picture ?? '')
 const userEmail = computed<string>(() => store.user?.email ?? '')
 const userName = computed<string>(() => store.user?.given_name + ' ' + store.user?.family_name ?? '')
 
-type Item = { title: string, iconRaw?: string, public?: boolean, route?: RouteLocationRaw, legacyPath?: string, children?: Item[] }
+type Item = { title: string, iconRaw?: string, public?: boolean, visibleCondition?: () => boolean, route?: RouteLocationRaw, legacyPath?: string, children?: Item[] }
 
 const items = computed(() => {
   // TODO Correctly identify my projects
@@ -313,6 +315,9 @@ const allItems: Item[] = [
       },
       {
         title: 'CNN',
+        visibleCondition: () => {
+          return userEmail.value.includes('rfcx.org')
+        },
         route: {
           name: ROUTE_NAMES.cnnJobList
         }
