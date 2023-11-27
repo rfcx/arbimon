@@ -68,7 +68,7 @@ const props = defineProps<{
 const { formatDateLocal } = useDateFormat()
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-const { isLoading: isLoadingPostStatus, mutate: mutatePostStatus } = usePostClassifierJobStatus(apiClientCore, props.job.id)
+const { isPending: isLoadingPostStatus, mutate: mutatePostStatus } = usePostClassifierJobStatus(apiClientCore, props.job.id)
 
 const canCancelJob = computed(() => props.job.progress.status === CLASSIFIER_JOB_STATUS.WAITING)
 
@@ -83,7 +83,7 @@ const queryClient = useQueryClient()
 
 const cancelJob = async (): Promise<void> => {
   mutatePostStatus({ status: CLASSIFIER_JOB_STATUS.CANCELLED }, {
-    onSuccess: () => queryClient.invalidateQueries(FETCH_CLASSIFIER_JOBS_KEY),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [FETCH_CLASSIFIER_JOBS_KEY] }),
     onError: () => openErrorMessage()
   })
 }

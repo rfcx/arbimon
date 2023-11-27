@@ -279,60 +279,60 @@ const { mutate: mutateMethods } = useUpdateDashboardMethods(apiClientBio, store.
 
 const updateReadme = (value: string): void => {
   mutateReadme(value, {
-    onSuccess: () => {
+    onSuccess: async () => {
       isAboutTabViewMored.value = true
       isAboutTabEditing.value = false
-      refetchDashboardContent.value()
+      await refetchDashboardContent()
     },
-    onError: () => {
+    onError: async () => {
       isAboutTabViewMored.value = true
       isAboutTabEditing.value = true
-      refetchDashboardContent.value()
+      await refetchDashboardContent()
     }
   })
 }
 
 const updateKeyResult = (value: string): void => {
   mutateKeyResult(value, {
-    onSuccess: () => {
+    onSuccess: async () => {
       isKeyResultTabViewMored.value = true
       isKeyResultTabEditing.value = false
-      refetchDashboardContent.value()
+      await refetchDashboardContent()
     },
-    onError: () => {
+    onError: async () => {
       isKeyResultTabViewMored.value = true
       isKeyResultTabEditing.value = true
-      refetchDashboardContent.value()
+      await refetchDashboardContent()
     }
   })
 }
 
 const updateResources = (value: string): void => {
   mutateResources(value, {
-    onSuccess: () => {
+    onSuccess: async () => {
       isResourcesTabViewMored.value = true
       isResourcesTabEditing.value = false
-      refetchDashboardContent.value()
+      await refetchDashboardContent()
     },
-    onError: () => {
+    onError: async () => {
       isResourcesTabViewMored.value = true
       isResourcesTabEditing.value = true
-      refetchDashboardContent.value()
+      await refetchDashboardContent()
     }
   })
 }
 
 const updateMethods = (value: string): void => {
   mutateMethods(value, {
-    onSuccess: () => {
+    onSuccess: async () => {
       isMethodsTabViewMored.value = true
       isMethodsTabEditing.value = false
-      refetchDashboardContent.value()
+      await refetchDashboardContent()
     },
-    onError: () => {
+    onError: async () => {
       isMethodsTabViewMored.value = true
       isResourcesTabEditing.value = true
-      refetchDashboardContent.value()
+      await refetchDashboardContent()
     }
   })
 }

@@ -204,8 +204,8 @@ watch(() => profile.value, () => {
 // Insights publish status
 const { isLoading: isGetInsightsPublishStatusLoading, data: insightsPublishStatus, refetch: insightsPublishStatusRefetch } = useGetInsightsPublishStatus(apiClientBio, selectedProjectId)
 
-const refetchInsightsPublishStatus = (): void => {
-  insightsPublishStatusRefetch.value()
+const refetchInsightsPublishStatus = async (): Promise<void> => {
+  await insightsPublishStatusRefetch()
 }
 
 const startShareInsightsNavigation = ref<InsightsPublishStatus>('idle')
