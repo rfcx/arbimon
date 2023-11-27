@@ -83,7 +83,7 @@
 import { type AxiosInstance } from 'axios'
 import { Modal } from 'flowbite'
 import { computed, inject, onMounted, ref, watch } from 'vue'
-import { onBeforeRouteLeave, useRoute } from 'vue-router'
+import { onBeforeRouteLeave } from 'vue-router'
 
 import { apiClientKey } from '@/globals'
 import { useUpdateInsightsPublishStatus } from '@/insights/_composables/use-update-insights-publish-status'
@@ -100,7 +100,6 @@ const emit = defineEmits<{(event: 'emit-close-modal'): void, (event: 'emit-share
 const modal = ref<Modal | null>(null)
 const { mutate: mutateInsightsPublishStatus } = useUpdateInsightsPublishStatus(apiClientBio, selectedProjectId)
 
-const route = useRoute()
 const MODAL_ID = 'share-insights-information-modal'
 
 onBeforeRouteLeave(() => {
