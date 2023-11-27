@@ -1,6 +1,7 @@
 import { type RouteRecordRaw, type RouterOptions, RouterView } from 'vue-router'
 
 import { authRequiredGuard } from './guard-auth-required'
+import { rfcxEmailRequired } from './guard-rfcx-email'
 import { storeProjectGuard } from './guard-store-project'
 import * as PAGES from './pages'
 import { ROUTE_NAMES } from './route-names'
@@ -122,7 +123,7 @@ const routes: RouteRecordRaw[] = [
         path: 'analyse',
         component: RouterView,
         redirect: { name: ROUTE_NAMES.cnnJobList },
-        beforeEnter: [authRequiredGuard],
+        beforeEnter: [authRequiredGuard, rfcxEmailRequired],
         children: [
           {
             path: 'cnn',
