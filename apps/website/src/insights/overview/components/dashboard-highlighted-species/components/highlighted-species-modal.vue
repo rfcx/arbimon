@@ -178,8 +178,8 @@ const PAGE_SIZE = 8
 const currentPage = ref(1)
 
 const { isLoading: isLoadingSpecies, data: speciesResp } = useSpeciesInProject(apiClientBio, selectedProjectId)
-const { isLoading: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
-const { isLoading: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
+const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
+const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
 
 const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   if (speciesResp.value === undefined || !speciesResp.value.species.length) {

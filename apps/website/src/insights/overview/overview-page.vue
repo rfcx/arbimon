@@ -102,8 +102,8 @@ const totalSpecies = computed(() => {
   return dashboardStore.speciesCount ?? `${species?.value?.totalSpeciesCount}` ?? '0'
 })
 
-const refetchSpeciesRichnessByRisk = () => {
-  refetchData.value()
+const refetchSpeciesRichnessByRisk = async (): Promise<void> => {
+  await refetchData()
 }
 
 watch(() => species.value?.totalSpeciesCount, () => {

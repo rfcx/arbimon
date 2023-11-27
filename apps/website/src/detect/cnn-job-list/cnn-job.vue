@@ -152,7 +152,7 @@ const onFilterChange = (filter: string): void => {
 
 const queryClient = useQueryClient()
 const pollingJob = setInterval(() => {
-  queryClient.invalidateQueries(FETCH_CLASSIFIER_JOBS_KEY)
+  queryClient.invalidateQueries({ queryKey: [FETCH_CLASSIFIER_JOBS_KEY] })
 }, 1 * 60 * 1000) // 1 minute
 const pollJob = () => pollingJob
 
