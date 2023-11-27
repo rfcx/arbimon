@@ -1,6 +1,6 @@
 <template>
   <div
-    id="share-insight-information-modal"
+    :id="MODAL_ID"
     data-modal-backdrop="static"
     tabindex="-1"
     aria-hidden="true"
@@ -10,15 +10,15 @@
       <!-- Modal content -->
       <div class="relative bg-moss rounded-lg shadow">
         <!-- Modal header -->
-        <div class="flex items-center justify-between p-3 border-b rounded-t border-insight">
+        <div class="flex items-center justify-between p-3 border-b rounded-t border-fog">
           <h3 class="text-base font-medium text-frequency">
             Share Insight
           </h3>
           <button
             type="button"
             class="bg-transparent rounded-lg text-sm w-6 h-6 ml-auto inline-flex justify-center items-center"
-            data-modal-hide="share-insight-information-modal"
-            @click="$emit('emit-close-modal')"
+            data-modal-hide="hide-insight-for-non-project-members"
+            @click="closeModal"
           >
             <svg
               class="w-4 h-4"
@@ -40,19 +40,17 @@
         </div>
         <!-- Modal body -->
         <div class="px-4 py-6">
-          <h3 class="text-white text-xl font-medium font-sans leading-7 mb-4">
-            Share Insight to the Arbimon community
-          </h3>
-          <p class="text-base text-white font-normal font-sans leading-normal mb-0.5">
-            Showcase your project on Arbimon's <router-link
-              class="text-frequency hover:underline"
-              :to="{ name: ROUTE_NAMES.myProjects }"
-            >
-              Projects
-            </router-link>. You will have a unique sharable link.
-          </p>
-          <p class="text-base text-white font-normal font-sans leading-normal mb-0.5">
+          <div class="flex flex-row justify-between mb-3 items-center">
+            <h3 class="text-white text-xl font-medium font-sans leading-normal">
+              Are you sure you want to hide insight?
+            </h3>
+            <icon-custom-fi-frown class="w-6 h-6" />
+          </div>
+          <p class="text-base text-white font-normal font-sans leading-normal mb-1">
             Public projects enable open collaboration, improve ecological knowledge, and facilitate break through discoveries around the world.
+          </p>
+          <p class="text-base text-white font-normal font-sans leading-normal mb-1">
+            You can always share Insight again when you are ready
           </p>
           <a
             href="https://rfcx.org/privacy-policy"
@@ -66,12 +64,11 @@
         <!-- Modal footer -->
         <div class="flex items-center px-4 pb-6 rounded-b">
           <button
-            data-modal-hide="share-insight-information-modal"
             type="button"
-            class="btn btn-primary w-full text-black"
-            @click="showInsightConfirm"
+            class="btn btn-secondary w-full"
+            @click="$emit('emit-hide-insights-confirm')"
           >
-            Share Insight <icon-custom-ft-globe class="inline-flex w-5 h-5" />
+            Hide Insight to non-project members
           </button>
         </div>
       </div>
@@ -80,24 +77,15 @@
 </template>
 
 <script setup lang="ts">
-import { type AxiosInstance } from 'axios'
 import { Modal } from 'flowbite'
-import { computed, inject, onMounted, ref, watch } from 'vue'
-
-import { apiClientKey } from '@/globals'
-import { useUpdateInsightsPublishStatus } from '@/insights/_composables/use-update-insights-publish-status'
-import { ROUTE_NAMES } from '~/router'
-import { useStore } from '~/store'
-
-const apiClientBio = inject(apiClientKey) as AxiosInstance
-const store = useStore()
-const selectedProjectId = computed(() => store.selectedProject?.id)
+import { onMounted, ref, watch } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 
 const props = defineProps<{ isOpen: boolean }>()
-const emit = defineEmits<{(event: 'emit-close-modal'): void, (event: 'emit-share-insight-successful'): void}>()
+const emit = defineEmits<{(event: 'emit-close-modal'): void, (event: 'emit-hide-insights-confirm'): void}>()
 
 const modal = ref<Modal | null>(null)
-const { mutate: mutateInsightsPublishStatus } = useUpdateInsightsPublishStatus(apiClientBio, selectedProjectId)
+const MODAL_ID = 'hide-insights-for-non-project-members'
 
 watch(() => props.isOpen, (newValue) => {
   if (newValue) {
@@ -108,23 +96,21 @@ watch(() => props.isOpen, (newValue) => {
   modal.value?.hide()
 })
 
+const closeModal = (): void => {
+  emit('emit-close-modal')
+}
+
+onBeforeRouteLeave(() => {
+  modal.value?.hide()
+  closeModal()
+})
+
 onMounted(() => {
-  modal.value = new Modal(document.getElementById('share-insight-information-modal'), {
+  modal.value = new Modal(document.getElementById(MODAL_ID), {
     placement: 'top-right',
     backdrop: 'static',
     backdropClasses: 'bg-box-gray bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
     closable: true
   })
 })
-
-const showInsightConfirm = (): void => {
-  mutateInsightsPublishStatus(true, {
-    onSuccess: () => {
-      emit('emit-share-insight-successful')
-    },
-    onError: () => {
-      // TODO: do nothing and show some error.
-    }
-  })
-}
 </script>

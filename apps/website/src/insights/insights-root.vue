@@ -72,9 +72,9 @@
       </div>
     </div>
     <ShareInsight
-      v-model="startShareInsightNavigation"
-      @emit-share-insight-successful="refetchInsightPublishStatus"
-      @emit-hide-insight-successful="refetchInsightPublishStatus"
+      v-model="startShareInsightsNavigation"
+      @emit-share-insights-successful="refetchInsightsPublishStatus"
+      @emit-hide-insights-successful="refetchInsightsPublishStatus"
     />
     <insight-not-ready-card
       v-show="false"
@@ -139,7 +139,8 @@ import { useGetInsightsPublishStatus } from './_composables/use-get-insights-pub
 import { useGetProjectLocation } from './_composables/use-project-location'
 import InsightNotReadyCard from './components/insight-not-ready-card.vue'
 import ProjectNav from './components/project-nav.vue'
-import ShareInsight from './components/share-insight/share-insight.vue'
+import ShareInsight from './components/share-insights/share-insights.vue'
+import type { InsightsPublishStatus } from './components/share-insights/types'
 import HeroBriefOverview from './insights-hero/hero-brief-overview.vue'
 import HeroProjectInfo from './insights-hero/hero-project-info.vue'
 import { useGetDashboardMetrics } from './overview/composables/use-get-dashboard-metrics'
@@ -203,18 +204,18 @@ watch(() => profile.value, () => {
 // Insights publish status
 const { isLoading: isGetInsightsPublishStatusLoading, data: insightsPublishStatus, refetch: insightsPublishStatusRefetch } = useGetInsightsPublishStatus(apiClientBio, selectedProjectId)
 
-const refetchInsightPublishStatus = (): void => {
+const refetchInsightsPublishStatus = (): void => {
   insightsPublishStatusRefetch.value()
 }
 
-const startShareInsightNavigation = ref<'start-show' | 'start-hide' | 'default-show' | 'idle'>('idle')
+const startShareInsightsNavigation = ref<InsightsPublishStatus>('idle')
 
 const shareInsight = (): void => {
-  startShareInsightNavigation.value = 'start-show'
+  startShareInsightsNavigation.value = 'share-insights-information'
 }
 
 const hideInsight = (): void => {
-  startShareInsightNavigation.value = 'default-show'
+  startShareInsightsNavigation.value = 'hide-insights-confirmation'
 }
 
 </script>
