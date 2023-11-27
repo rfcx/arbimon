@@ -45,10 +45,10 @@
 </template>
 
 <script setup lang="ts">
+import { useQueryClient } from '@tanstack/vue-query'
 import type { AxiosInstance } from 'axios'
 import { ElMessage } from 'element-plus'
 import { computed, inject } from 'vue'
-import { useQueryClient } from 'vue-query'
 
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 

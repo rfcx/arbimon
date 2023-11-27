@@ -43,6 +43,7 @@
     "@leeoniya/ufuzzy": "^1.0.8",
     "@rfcx-bio/common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
+    "@tanstack/vue-query": "^5.8.7",
     "@tiptap/extension-character-count": "^2.1.12",
     "@tiptap/extension-link": "^2.1.11",
     "@tiptap/pm": "^2.1.11",
@@ -70,7 +71,6 @@
     "vue-country-flag-next": "^2.3.2",
     "vue-gtag": "^2.0.1",
     "vue-property-decorator": "^10.0.0-rc.3",
-    "vue-query": "^1.26.0",
     "vue-router": "^4.1.6",
     "vue3-markdown-it": "^1.0.10",
     "xlsx": "^0.17.3"

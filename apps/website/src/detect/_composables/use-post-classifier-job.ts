@@ -1,5 +1,5 @@
+import { type UseMutationReturnType, useMutation } from '@tanstack/vue-query'
 import { type AxiosInstance } from 'axios'
-import { type UseMutationReturnType, useMutation } from 'vue-query'
 
 import { type ClassifierJobCreateConfiguration, type ClassifierJobCreateConfigurationParams, type ClassifierJobCreateResponse, apiCorePostClassifierJobCreate } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-create'
 
@@ -17,8 +17,8 @@ export const convertClassifierCreateJobPayload = (jobConfiguration: ClassifierJo
 }
 
 export const usePostClassifierJob = (apiClient: AxiosInstance): UseMutationReturnType<ClassifierJobCreateResponse, unknown, ClassifierJobCreateConfiguration, unknown> => {
-  return useMutation(
-    ['post-classifier-job'],
-    async (payload: ClassifierJobCreateConfiguration) => await apiCorePostClassifierJobCreate(apiClient, convertClassifierCreateJobPayload(payload))
-  )
+  return useMutation({
+    mutationKey: ['post-classifier-job'],
+    mutationFn: async (payload: ClassifierJobCreateConfiguration) => await apiCorePostClassifierJobCreate(apiClient, convertClassifierCreateJobPayload(payload))
+  })
 }

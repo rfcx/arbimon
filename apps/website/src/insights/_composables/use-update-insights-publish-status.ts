@@ -1,6 +1,6 @@
+import { type UseMutationReturnType, useMutation } from '@tanstack/vue-query'
 import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
-import { type UseMutationReturnType, useMutation } from 'vue-query'
 
 import { apiBioUpdateInsightsPublishStatus } from '@rfcx-bio/common/api-bio/insights-publish-status/insights-publish-status'
 

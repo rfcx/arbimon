@@ -1,5 +1,5 @@
+import { type UseMutationReturnType, useMutation } from '@tanstack/vue-query'
 import { type AxiosInstance } from 'axios'
-import { type UseMutationReturnType, useMutation } from 'vue-query'
 
 import { type CreateOrganizationRequestBody, type CreateOrganizationResponseBody, apiBioCreateOrganization } from '@rfcx-bio/common/api-bio/organizations/create-organization'
 
