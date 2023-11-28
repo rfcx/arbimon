@@ -4,8 +4,7 @@ import { ORGANIZATION_TYPE } from '@rfcx-bio/common/dao/types'
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'
 import { BioPublicError, BioUnauthorizedError } from '~/errors'
-import { getOrganizationLogoLink } from './create-organization-bll'
-import { createNewOrganization } from './create-organization-dao'
+import { createOrganization } from './create-organization-bll'
 
 export const createOrganizationHandler: Handler<CreateOrganizationResponseBody, unknown, unknown, CreateOrganizationRequestBody> = async (req) => {
   const token = req.headers.authorization
@@ -28,8 +27,7 @@ export const createOrganizationHandler: Handler<CreateOrganizationResponseBody, 
     throw new BioPublicError('error: invalid `url` of organization', 400)
   }
 
-  const image = await getOrganizationLogoLink(req.body.url)
-  const org = await createNewOrganization(req.body, image)
+  const organization = await createOrganization(req.body)
 
-  return org
+  return organization
 }

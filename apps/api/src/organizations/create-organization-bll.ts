@@ -1,7 +1,10 @@
 import axios from 'axios'
 import { maxBy } from 'lodash-es'
 
+import { type OrganizationTypes } from '@rfcx-bio/common/dao/types'
+
 import { unpackAxiosError } from '~/api-helpers/axios-errors'
+import { create } from './create-organization-dao'
 
 export interface Logo {
   url: string
@@ -18,7 +21,12 @@ export interface GetOrganizationLogoResponse {
   icons: Logo[]
 }
 
-export const getOrganizationLogoLink = async (url: string): Promise<string | null> => {
+export const createOrganization = async (organization: Omit<OrganizationTypes['light'], 'id'>): Promise<OrganizationTypes['light']> => {
+  const image = await getOrganizationLogoLink(organization.url)
+  return await create({ ...organization, image: image ?? undefined })
+}
+
+const getOrganizationLogoLink = async (url: string): Promise<string | null> => {
   try {
     const response = await axios.get<GetOrganizationLogoResponse>('https://besticon-demo.herokuapp.com/allicons.json', {
       params: {

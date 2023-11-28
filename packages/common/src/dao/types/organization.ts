@@ -17,7 +17,7 @@ export interface Organization {
   name: string
   type: OrganizationType
   url: string
-  image: string | null
+  image?: string
   createdAt?: Date
   updatedAt?: Date
 }
