@@ -1,29 +1,8 @@
 <template>
   <landing-navbar />
-  <section class="w-full pt-20 px-8 pb-6 bg-white dark:bg-echo">
-    <div
-      v-if="showcaseProjects.length > 0"
-      class="grid grid-cols-2 gap-4 max-w-screen-xl px-4 py-8 mx-auto lg:gap-6 lg:py-16 lg:grid-cols-4"
-    >
-      <ProjectCard
-        v-for="project in showcaseProjects"
-        :key="project.id"
-        :project="project"
-      />
-    </div>
-    <div v-else>
-      None
-    </div>
-  </section>
+  <project-list />
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
-
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
-import { useStore } from '~/store'
-import ProjectCard from './components/project-card.vue'
-
-const store = useStore()
-
-const showcaseProjects = computed(() => store.projects.filter(p => p.isShowcaseProject))
+import ProjectList from './project-directory/blocks/projects-list.vue'
 </script>

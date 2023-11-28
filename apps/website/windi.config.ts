@@ -91,6 +91,7 @@ export default defineConfig({
         'util-gray-01': '#7F7D78',
         'util-gray-02': '#4B4B4B',
         'util-gray-03': '#242424',
+        'gray-300': '#D3D2CF',
         // Olds
         placeholder: '#999',
         faded: '#333',
