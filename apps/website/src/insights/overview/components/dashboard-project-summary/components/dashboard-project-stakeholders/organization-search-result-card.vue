@@ -25,6 +25,6 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ id: number, name: string, description?: string, image: string | null }>()
+defineProps<{ id: number, name: string, description?: string, image?: string }>()
 defineEmits<{(event: 'emit-add-to-selected-organization', value: number): void}>()
 </script>

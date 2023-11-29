@@ -1,5 +1,5 @@
+import { type UseQueryReturnType, useQuery } from '@tanstack/vue-query'
 import { type AxiosInstance } from 'axios'
-import { type UseQueryReturnType, useQuery } from 'vue-query'
 
 import { type DashboardStakeholdersResponse, apiBioGetDashboardStakeholders } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 

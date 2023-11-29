@@ -46,8 +46,8 @@ const { mutate: mutateStakeholdersOrganizations } = useUpdateStakeholdersOrganiz
 
 const onFinishedEditing = (ids: number[]): void => {
   mutateStakeholdersOrganizations(ids, {
-    onSuccess: () => {
-      refetchStakeholdersData.value()
+    onSuccess: async () => {
+      await refetchStakeholdersData()
       isEditing.value = false
     },
     onError: () => {

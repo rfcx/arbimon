@@ -12,10 +12,10 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
 
   const projectDefaults = { latitudeNorth: 0, latitudeSouth: 0, longitudeEast: 0, longitudeWest: 0 }
   const project = { ...projectDefaults, ...projectPartial, slug }
-  const createRes = await LocationProject.create(project)
+  const { id } = await LocationProject.create(project)
 
   const profile = {
-    locationProjectId: createRes.id,
+    locationProjectId: id,
     summary: '',
     readme: '',
     methods: '',

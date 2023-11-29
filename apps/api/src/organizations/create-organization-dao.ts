@@ -1,19 +1,14 @@
-import { type CreateOrganizationRequestBody, type CreateOrganizationResponseBody } from '@rfcx-bio/common/api-bio/organizations/create-organization'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { type Organization } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
 
-export const createNewOrganization = async (body: CreateOrganizationRequestBody, image: string | null): Promise<CreateOrganizationResponseBody> => {
+export const create = async (organization: Omit<Organization, 'id'>): Promise<Organization> => {
   const sequelize = getSequelize()
 
   const { Organization } = ModelRepository.getInstance(sequelize)
 
-  const returning = await Organization.create({
-    name: body.name,
-    type: body.type,
-    url: body.url,
-    image
-  }, { returning: true })
+  const returning = await Organization.create(organization, { returning: true })
 
   return {
     id: returning.get('id'),

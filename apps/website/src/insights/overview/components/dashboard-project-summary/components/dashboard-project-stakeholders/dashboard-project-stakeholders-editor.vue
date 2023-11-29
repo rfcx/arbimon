@@ -401,9 +401,9 @@ const onFinishedEditing = (): void => {
   emit('emit-finished-editing', selectedOrganizationIds.value)
 }
 
-const refetchOrganizationsSearch = (): void => {
+const refetchOrganizationsSearch = async (): Promise<void> => {
   if (searchOrganizationValue.value !== '') {
-    refetchOrganizationsSearchResult.value()
+    await refetchOrganizationsSearchResult()
   }
 }
 

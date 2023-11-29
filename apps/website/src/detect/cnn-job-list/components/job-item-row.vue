@@ -45,10 +45,10 @@
 </template>
 
 <script setup lang="ts">
+import { useQueryClient } from '@tanstack/vue-query'
 import type { AxiosInstance } from 'axios'
 import { ElMessage } from 'element-plus'
 import { computed, inject } from 'vue'
-import { useQueryClient } from 'vue-query'
 
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
@@ -68,7 +68,7 @@ const props = defineProps<{
 const { formatDateLocal } = useDateFormat()
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-const { isLoading: isLoadingPostStatus, mutate: mutatePostStatus } = usePostClassifierJobStatus(apiClientCore, props.job.id)
+const { isPending: isLoadingPostStatus, mutate: mutatePostStatus } = usePostClassifierJobStatus(apiClientCore, props.job.id)
 
 const canCancelJob = computed(() => props.job.progress.status === CLASSIFIER_JOB_STATUS.WAITING)
 
@@ -83,7 +83,7 @@ const queryClient = useQueryClient()
 
 const cancelJob = async (): Promise<void> => {
   mutatePostStatus({ status: CLASSIFIER_JOB_STATUS.CANCELLED }, {
-    onSuccess: () => queryClient.invalidateQueries(FETCH_CLASSIFIER_JOBS_KEY),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [FETCH_CLASSIFIER_JOBS_KEY] }),
     onError: () => openErrorMessage()
   })
 }

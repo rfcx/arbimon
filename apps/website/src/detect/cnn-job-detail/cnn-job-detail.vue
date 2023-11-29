@@ -74,9 +74,9 @@ const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSum
   }
 )
 
-watch(jobSummary, (newValue) => {
+watch(jobSummary, async (newValue) => {
   if (newValue == null) {
-    refetch.value()
+    await refetch()
     return
   }
 

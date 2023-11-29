@@ -1,5 +1,5 @@
+import { type UseMutationReturnType, useMutation } from '@tanstack/vue-query'
 import { type AxiosInstance } from 'axios'
-import { type UseMutationReturnType, useMutation } from 'vue-query'
 
 import { type UpdateDashboardContentResponse, apiBioUpdateDashboardContent } from '@rfcx-bio/common/api-bio/dashboard/dashboard-content'
 

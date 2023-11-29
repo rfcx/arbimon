@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const props = defineProps<{ id: number, name: string, description?: string, image: string | null, modelValue: number[] }>()
+const props = defineProps<{ id: number, name: string, description?: string, image?: string, modelValue: number[] }>()
 const emit = defineEmits<{(event: 'update:modelValue', value: number[]): void}>()
 
 const checked = computed<boolean>(() => {
