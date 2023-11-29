@@ -35,6 +35,16 @@
     >
       {{ project?.summary }}
     </p>
+    <template v-if="project.isPublished">
+      <div class="mt-4">
+        <icon-custom-fi-eye class="inline-flex text-insight mr-2" /> Live on Arbimon’s Project
+      </div>
+    </template>
+    <template v-else>
+      <div class="mt-4">
+        <icon-custom-fi-eye-off class="inline-flex text-insight mr-2" /> Hidden to non-project members
+      </div>
+    </template>
   </router-link>
 </template>
 <script setup lang="ts">
