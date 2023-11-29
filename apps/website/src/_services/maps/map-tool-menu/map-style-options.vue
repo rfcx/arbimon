@@ -25,6 +25,9 @@
         <div>
           <img
             class="2xl:hidden <2xl:visible"
+            :class="{
+              'icon-pitch': props.mapStyle === item.style
+            }"
             :src="item.icon"
             width="16"
             height="16"
@@ -46,3 +49,8 @@ const props = defineProps<{
 defineEmits<{(e: 'emitMapStyle', style: MapboxStyle): void}>()
 
 </script>
+<style lang="scss">
+.icon-pitch {
+  filter: brightness(0) saturate(100%) invert(1%) sepia(6%) saturate(7021%) hue-rotate(222deg) brightness(85%) contrast(97%);
+  }
+</style>
