@@ -18,7 +18,7 @@
       style="{ overflow: hidden; white-space: nowrap; text-overflow: ellipsis }"
     >
       <span class="text-spoonbill">
-        {{ project?.countries?.length !== 0 ? project?.countries : 'Multiple countries' }}
+        {{ project?.countries?.length !== 0 ? countrie : 'Multiple countries' }}
       </span>
       <div
         class="ml-1 border-l-2"
@@ -48,6 +48,8 @@ import { ROUTE_NAMES } from '~/router'
 import { masterObjectiveShorten } from '../types'
 
 const props = defineProps<{project: Omit<Project, 'idArbimon'>}>()
+
+const countrie = props.project?.countries !== undefined ? props.project.countries[0] : ''
 
 const objective = computed(() => {
   let text = ''
