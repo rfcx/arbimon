@@ -16,11 +16,11 @@ export interface Project {
   objectives?: string[]
   countries?: string[]
   image?: string
-  isPublished: boolean
+  isPublished?: boolean
 }
 
 export const ATTRIBUTES_LOCATION_PROJECT = attributes<Project>()({
-  light: ['id', 'idCore', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest', 'isPublished']
+  light: ['id', 'idCore', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
 })
 
 export type LocationProjectTypes = AttributeTypes<Project, typeof ATTRIBUTES_LOCATION_PROJECT>
