@@ -44,7 +44,7 @@ const shouldShowCountryAndObjective = computed(() => {
 
 const objectiveAll = computed(() => {
   const objectives = props.project.objectives.map((objective) => {
-    return objectiveTypes.find((type) => type.slug === objective)?.description ?? masterOjectiveTypes.Others.description
+    return objectiveTypes.find((type) => type.slug === objective)?.shorten ?? masterOjectiveTypes.Others.shorten
   })
 
   return [...new Set(objectives)].join(', ')
