@@ -45,24 +45,25 @@ import type { Project } from '@rfcx-bio/common/dao/types'
 import image from '@/_assets/cta/frog-hero.webp'
 import imageCard from '@/landing/team/components/image-card.vue'
 import { ROUTE_NAMES } from '~/router'
+import { masterObjectiveShorten } from '../types'
 
 const props = defineProps<{project: Omit<Project, 'idArbimon'>}>()
 
 const objective = computed(() => {
   let text = ''
   props.project.objectives?.forEach(obj => {
-    if (obj === 'bio-baseline') {
-      text = text + 'Establish baseline'
-    } else if (obj === 'monitor-species') {
-      text = text + 'Detect rare species'
-    } else if (obj === 'monitor-illegal-act') {
-      text = text + 'Detect illegal activity'
-    } else if (obj === 'impact-human') {
-      text = text + 'Evaluate human impact'
-    } else if (obj === 'impact-conservation') {
-      text = text + 'Evaluate conservation impact'
+    if (obj === masterObjectiveShorten.BioBaseline.slug) {
+      text = text + masterObjectiveShorten.BioBaseline.description
+    } else if (obj === masterObjectiveShorten.MonitorSpecies.slug) {
+      text = text + masterObjectiveShorten.MonitorSpecies.description
+    } else if (obj === masterObjectiveShorten.MonitorIllegalAct.slug) {
+      text = text + masterObjectiveShorten.MonitorIllegalAct.description
+    } else if (obj === masterObjectiveShorten.ImpactHuman.slug) {
+      text = text + masterObjectiveShorten.ImpactHuman.description
+    } else if (obj === masterObjectiveShorten.ImpactConservation.slug) {
+      text = text + masterObjectiveShorten.ImpactConservation.description
     } else {
-      text = text + 'Others'
+      text = text + masterObjectiveShorten.Others.description
     }
 
     if (props.project.objectives?.length !== 1 && obj !== props.project.objectives?.slice(-1)[0]) {

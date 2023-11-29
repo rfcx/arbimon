@@ -52,4 +52,13 @@ export const masterOjectiveTypes = {
   Others: { id: 999, slug: 'others', description: 'Others' }
 } as const
 
+export const masterObjectiveShorten = {
+  BioBaseline: { id: 100, slug: 'bio-baseline', description: 'Establish baseline' },
+  MonitorSpecies: { id: 200, slug: 'monitor-species', description: 'Detect rare species' },
+  MonitorIllegalAct: { id: 300, slug: 'monitor-illegal-act', description: 'Detect illegal activity' },
+  ImpactHuman: { id: 400, slug: 'impact-human', description: 'Evaluate human impact' },
+  ImpactConservation: { id: 500, slug: 'impact-conservation', description: 'Evaluate conservation impact' },
+  Others: { id: 999, slug: 'others', description: 'Others' }
+}
+
 export const objectiveTypes: readonly ProjectObjective[] = Object.values(masterOjectiveTypes)
