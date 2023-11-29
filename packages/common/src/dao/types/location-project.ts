@@ -20,7 +20,7 @@ export interface Project {
 }
 
 export const ATTRIBUTES_LOCATION_PROJECT = attributes<Project>()({
-  light: ['id', 'idCore', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
+  light: ['id', 'idCore', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest', 'isPublished']
 })
 
 export type LocationProjectTypes = AttributeTypes<Project, typeof ATTRIBUTES_LOCATION_PROJECT>
