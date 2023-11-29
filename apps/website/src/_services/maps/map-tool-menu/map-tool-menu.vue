@@ -18,7 +18,7 @@
     <button
       v-if="canToggleLabels"
       class="btn btn-secondary ml-2 p-2"
-      :class="{ '<2xl:(bg-brand-primary btn-icon)': isShowLabel }"
+      :class="{ '<2xl:(bg-brand-primary btn-icon bg-frequency)': isShowLabel }"
       @click="emitShowLabelsToggle"
     >
       <div class="flex items-center <2xl:hidden">
@@ -30,7 +30,10 @@
         Labels
       </div>
       <div class="2xl:hidden">
-        <icon-fas-tag class="text-xs text-pitch" />
+        <icon-fas-tag
+          class="text-xs text-white"
+          :class="{ '<2xl:(text-pitch)': isShowLabel }"
+        />
       </div>
     </button>
   </div>
