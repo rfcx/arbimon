@@ -12,9 +12,13 @@ import { routesOrganizations } from './index'
 const ROUTE = '/organizations'
 const url = '/organizations'
 
-vi.mock('./create-organization-bll', () => {
+vi.mock('./create-organization-bll', async () => {
+  const mod = await vi.importActual('./create-organization-bll')
+
   return {
-    getOrganizationLogoLink: vi.fn(async (url: string) => {
+    // @ts-expect-error type mismatch but just ignore it.
+    ...mod,
+    getOrganizationLogoLink: vi.fn(async () => {
       return await Promise.resolve('https://www.bu.ac.th/favicon.ico')
     })
   }
@@ -78,6 +82,8 @@ describe(`POST ${ROUTE} (create organization)`, () => {
       })
 
       const json = response.json<CreateOrganizationResponseBody>()
+
+      console.info(response)
 
       expect(response.statusCode).toBe(200)
       EXPECTED_PROPS.forEach(expectedProp => { expect(json).toHaveProperty(expectedProp) })

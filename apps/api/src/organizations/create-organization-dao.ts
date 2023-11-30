@@ -7,7 +7,6 @@ export const create = async (organization: Omit<Organization, 'id'>): Promise<Or
   const sequelize = getSequelize()
 
   const { Organization } = ModelRepository.getInstance(sequelize)
-
   const returning = await Organization.create(organization, { returning: true })
 
   return {
