@@ -6,8 +6,8 @@
   />
 </template>
 <script setup lang="ts">
-import type { FeatureCollection } from 'geojson'
-import type { Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
+import type { FeatureCollection, Point } from 'geojson'
+import type { GeoJSONSource, Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
 import { computed, onMounted, ref } from 'vue'
 
 import { createMap } from '~/maps'
@@ -125,6 +125,25 @@ onMounted(() => {
         'circle-stroke-color': '#fff'
       }
     })
+  })
+
+  map.on('click', 'clusters', (e) => {
+    const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
+    const clusterId = features[0]?.properties?.cluster_id ?? ''
+    if (clusterId === undefined || clusterId === '') return
+    (map.getSource('projects') as GeoJSONSource).getClusterExpansionZoom(clusterId, (err, zoom) => {
+      const coordinates = (features[0]?.geometry as Point).coordinates.slice() as [number, number]
+      if (err === null) {
+        map.easeTo({
+          center: coordinates,
+          zoom
+        })
+      }
+    })
+  })
+
+  map.on('click', 'unclustered-point', () => {
+    // TODO: show popup
   })
 })
 </script>
