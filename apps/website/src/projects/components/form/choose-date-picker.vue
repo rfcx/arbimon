@@ -19,7 +19,7 @@ const dateValue = ref<Date>()
 const emit = defineEmits<{(e: 'emitSelectDate', value: string | null): void}>()
 const props = defineProps<{
   initialDate?: Date,
-  disabledDate?:Date
+  disabledDate?: boolean
 }>()
 
 watchEffect(() => {
