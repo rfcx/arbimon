@@ -44,5 +44,18 @@ export const myProjectsRoute = '/projects/mine'
 export const apiBioGetProjects = async (apiClient: AxiosInstance): Promise<ProjectsResponse | undefined> =>
   await apiGetOrUndefined(apiClient, projectsRoute)
 
-export const apiBioGetMyProjects = async (apiClient: AxiosInstance): Promise<MyProjectsResponse | undefined> =>
-  await apiGetOrUndefined(apiClient, myProjectsRoute)
+export const apiBioGetMyProjects = async (apiClient: AxiosInstance, limit?: number, offset?: number): Promise<MyProjectsResponse | undefined> => {
+  let url = myProjectsRoute
+  if (limit !== undefined && offset !== undefined) {
+    url = url + '?limit=' + limit.toString() + '&offset=' + offset.toString()
+  } else {
+    if (limit !== undefined) {
+      url = url + '?limit=' + limit.toString()
+    }
+    if (offset !== undefined) {
+      url = url + '?offset=' + offset.toString()
+    }
+  }
+
+  return await apiGetOrUndefined(apiClient, url)
+}

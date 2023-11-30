@@ -30,9 +30,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
+import { type AxiosInstance } from 'axios'
+import { type Ref, computed, inject, ref } from 'vue'
+
+import { apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
+import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import ProjectCard from './components/project-card.vue'
@@ -40,8 +44,22 @@ import ProjectCard from './components/project-card.vue'
 const store = useStore()
 
 const loadMore = () => {
-  console.info('hello')
+  getSpeciesInformation()
+}
+const loading: Ref<boolean> = ref(true)
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+const myProjectsInfo = computed(() => store.myProjects)
+const OFFSET = 10
+
+const getSpeciesInformation = async (): Promise<void> => {
+  // Should show loading?
+  try {
+    loading.value = true
+    const data = await apiBioGetMyProjects(apiClientBio, OFFSET, myProjectsInfo.value.length)
+    store.updateMyProject(data)
+  } catch (e) {
+    loading.value = false
+  }
 }
 
-const myProjectsInfo = computed(() => store.myProjects)
 </script>
