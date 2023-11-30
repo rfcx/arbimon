@@ -4,7 +4,7 @@
       Summary
     </h2>
 
-    <div class="mb-4 border-b border-fog dark:border-fog">
+    <div class="mb-10 border-b border-fog dark:border-fog">
       <ul
         id="project-summary-tab"
         class="flex -mb-px text-sm font-medium text-center"
@@ -132,7 +132,7 @@
 
         <div
           v-else
-          :class="isAboutTabEditing ? 'mx-auto pl-4 pb-4 pr-4 lg:max-w-4xl relative' : 'mx-auto p-4 lg:max-w-4xl relative'"
+          class="lg:max-w-4xl relative"
         >
           <DashboardMarkdownViewerEditor
             id="about"

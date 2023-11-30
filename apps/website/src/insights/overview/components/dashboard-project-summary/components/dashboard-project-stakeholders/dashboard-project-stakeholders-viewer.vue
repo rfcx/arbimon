@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="px-6 pb-6">
     <!-- <h3 class="text-white text-xl font-medium font-sans mt-2"> -->
     <!--   Project members -->
     <!-- </h3> -->
