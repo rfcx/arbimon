@@ -83,8 +83,6 @@ describe(`POST ${ROUTE} (create organization)`, () => {
 
       const json = response.json<CreateOrganizationResponseBody>()
 
-      console.info(response)
-
       expect(response.statusCode).toBe(200)
       EXPECTED_PROPS.forEach(expectedProp => { expect(json).toHaveProperty(expectedProp) })
 
