@@ -28,7 +28,10 @@
             :to="{ name: ROUTE_NAMES.projectSettings }"
             class="flex flex-row items-center justify-start order-last md:order-first"
           >
-            <button class="btn btn-secondary group">
+            <button
+              class="btn btn-secondary group disabled:cursor-not-allowed"
+              :disabled="projectUserPermissionsStore.isGuest"
+            >
               <span>Edit</span> <span class="hidden lg:inline-flex">project settings</span> <icon-custom-ic-edit class="inline-flex ml-2 group-hover:stroke-pitch" />
             </button>
           </router-link>
@@ -47,7 +50,8 @@
 
             <template v-if="insightsPublishStatus != null && insightsPublishStatus.status === true">
               <button
-                class="btn btn-secondary"
+                class="btn btn-secondary disabled:cursor-not-allowed"
+                :disabled="projectUserPermissionsStore.isGuest"
                 @click="hideInsight"
               >
                 Hide Insight
@@ -55,7 +59,8 @@
             </template>
             <template v-else>
               <button
-                class="btn btn-primary"
+                class="btn btn-primary disabled:cursor-not-allowed"
+                :disabled="projectUserPermissionsStore.currentUserRoleOfCurrentProject === 'Guest'"
                 @click="shareInsight"
               >
                 Share Insight <span class="hidden lg:inline-flex">on Arbimon</span>
@@ -133,7 +138,7 @@ import { useRoute } from 'vue-router'
 import FooterBar from '@/_layout/components/landing-footer.vue'
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { useDashboardStore, useStore } from '~/store'
+import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
 import { useGetProjectSettings } from '../projects/_composables/use-project-profile'
 import { useGetInsightsPublishStatus } from './_composables/use-get-insights-publish-status'
 import { useGetProjectLocation } from './_composables/use-project-location'
@@ -174,6 +179,7 @@ const items = [
 
 const store = useStore()
 const route = useRoute()
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProject = computed(() => store.selectedProject)
