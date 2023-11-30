@@ -5,6 +5,7 @@
     type="date"
     placeholder="Choose date"
     format="MM/DD/YYYY"
+    :disabled-date="disabledDate"
     @change="dateChange"
   />
 </template>
@@ -16,7 +17,10 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 const dateValue = ref<Date>()
 const emit = defineEmits<{(e: 'emitSelectDate', value: string | null): void}>()
-const props = defineProps<{ initialDate?: Date}>()
+const props = defineProps<{
+  initialDate?: Date,
+  disabledDate?:Date
+}>()
 
 watchEffect(() => {
   dateValue.value = props.initialDate ? dayjs(props.initialDate).startOf('day').toDate() : undefined

@@ -33,6 +33,7 @@
       <div class="relative flex-1">
         <ChooseDatePicker
           :initial-date="startDate ? new Date(startDate) : undefined"
+          :disabled-date="disabledForStartDate"
           @emit-select-date="onSelectStartDate"
         />
       </div>
@@ -50,6 +51,7 @@
         <ChooseDatePicker
           :initial-date="endDate ? new Date(endDate) : undefined"
           :disabled="onGoing"
+          :disabled-date="disabledForEndDate"
           @emit-select-date="onSelectEndDate"
         />
       </div>
@@ -105,6 +107,20 @@ const value: ComputedRef<ProjectDefault> = computed(() => {
     onGoing: onGoing.value
   }
 })
+
+const disabledForStartDate = (time: Date) => {
+  return time.getTime() > Date.now()
+}
+
+const disabledForEndDate = (time: Date) => {
+  if (startDate.value === undefined) return
+
+  let lastDate = Date.now()
+  if (startDate.value !== null) {
+    lastDate = new Date(startDate.value).getTime()
+  }
+  return time.getTime() < lastDate
+}
 
 const onSelectStartDate = (dateStartLocalIso: string | null) => {
   startDate.value = dateStartLocalIso
