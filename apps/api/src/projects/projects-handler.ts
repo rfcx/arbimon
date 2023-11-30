@@ -25,7 +25,7 @@ export const myProjectsHandler: Handler<MyProjectsResponse, unknown, LocationPro
     const memberProjectCoreIds = getMemberProjectCoreIds(req)
 
     // Response
-    return await getMyProjectsWithInfo(memberProjectCoreIds, req.query.limit, req.query.offset)
+    return await getMyProjectsWithInfo(memberProjectCoreIds, req.query.offset, req.query.limit)
   } catch (err) {
     req.log.error(err)
     throw ApiServerError()
