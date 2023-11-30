@@ -34,6 +34,7 @@
         data-modal-target="species-highlighted-modal"
         data-modal-toggle="species-highlighted-modal"
         type="button"
+        :disabled="projectUserPermissionsStore.isGuest"
         @click="openModalToSelectSpecies"
       >
         Select Species <icon-custom-ic-edit class="ml-2 group-hover:stroke-pitch" />
@@ -53,6 +54,7 @@ import { type ComputedRef, type Ref, computed, onMounted, ref } from 'vue'
 import { type DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
+import { useProjectUserPermissionsStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../types/highlighted-species'
 import EmptySpeciesList from './components/empty-species-list.vue'
 import HighlightedSpeciesList from './components/highlighted-species-list.vue'
@@ -61,6 +63,7 @@ import HighlightedSpeciesModal from './components/highlighted-species-modal.vue'
 const props = defineProps<{ species: DashboardSpecies[] | undefined, canEdit: boolean, isLoading: boolean }>()
 const emit = defineEmits<{(e: 'emitRefetch'): void }>()
 const modal = ref() as Ref<Modal>
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   if (props.species === undefined) {

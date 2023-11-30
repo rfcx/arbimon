@@ -6,6 +6,7 @@ import { type DetectSummaryQueryParams, type DetectSummaryResponse } from '@rfcx
 import { type DetectValidationResultsQueryParams, type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 import { type DetectReviewDetectionBody, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
 import { type CoreProject, type CoreProjectLight } from '@rfcx-bio/common/api-core/project/permission'
+import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
 
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { ApiClient } from '../api-helpers/api-client'
@@ -215,5 +216,21 @@ export async function checkUserPermissionForEditingDashboardContent (token: stri
     return false
   } catch (e) {
     return false
+  }
+}
+
+export async function getProjectMembersFromApi (token: string, coreProjectId: string): Promise<CoreUser[]> {
+  try {
+    const response = await axios.request({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/projects/${coreProjectId}/users`,
+      headers: {
+        authorization: token
+      }
+    })
+
+    return response.data
+  } catch (e) {
+    return unpackAxiosError(e)
   }
 }

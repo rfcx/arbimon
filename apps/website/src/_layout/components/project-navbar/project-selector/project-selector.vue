@@ -85,12 +85,13 @@ import { useRoute, useRouter } from 'vue-router'
 import type { LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { ROUTE_NAMES } from '~/router'
-import { useStore } from '~/store'
+import { useProjectUserPermissionsStore, useStore } from '~/store'
 import projectList from './project-list.vue'
 
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const emit = defineEmits<{(e: 'emitClose'): void}>()
 
@@ -149,6 +150,7 @@ const confirmSelectedProject = async () => {
   // The project filter update is nneded because guard hooks will not trigger
   // on same route component (like from one project to another).
   await store.updateProjectFilters()
+  await projectUserPermissionsStore.getProjectMembers(store.selectedProject?.id ?? -1)
 
   // If current route uses projectSlug, update it (guard will update store)
   if (route.params.projectSlug !== undefined) {
