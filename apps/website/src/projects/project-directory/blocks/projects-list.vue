@@ -11,7 +11,7 @@
       </p>
       <ul>
         <project-list-item
-          v-for="p in mockProjects"
+          v-for="p in props.data"
           :key="p.id"
           :project="p"
         />
@@ -22,8 +22,7 @@
 
 <script setup lang="ts">
 import ProjectListItem from '../components/project-list-item.vue'
-import { rawDirectoryProjectsData } from '../data/rawDirectoryProjectsData'
+import type { ProjectProfileWithMetrics } from '../data/types'
 
-const mockProjects = rawDirectoryProjectsData
-
+const props = defineProps<{ data: ProjectProfileWithMetrics[] }>()
 </script>
