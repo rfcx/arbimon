@@ -28,6 +28,5 @@ export const createOrganizationHandler: Handler<CreateOrganizationResponseBody, 
   }
 
   const organization = await createOrganization(req.body)
-
   return organization
 }
