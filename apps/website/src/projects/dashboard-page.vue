@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-50 dark:bg-pitch grid px-4 pl-18">
+  <div class="bg-gray-50 dark:bg-pitch grid px-4 pl-18 default-scroll-start smooth">
     <section
       class="grid gap-y-20 mx-auto py-20 w-full max-w-screen-xl"
       :class="{'overflow-y-hidden h-screen': hasOpenedAnalysisSelector === true}"
