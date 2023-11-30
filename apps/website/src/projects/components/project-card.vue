@@ -55,7 +55,7 @@ import type { Project } from '@rfcx-bio/common/dao/types'
 import image from '@/_assets/cta/frog-hero.webp'
 import imageCard from '@/landing/team/components/image-card.vue'
 import { ROUTE_NAMES } from '~/router'
-import { masterObjectiveShorten } from '../types'
+import { masterOjectiveTypes } from '../types'
 
 const props = defineProps<{project: Omit<Project, 'idArbimon'>}>()
 
@@ -64,18 +64,18 @@ const countrie = props.project?.countries !== undefined ? props.project.countrie
 const objective = computed(() => {
   let text = ''
   props.project.objectives?.forEach(obj => {
-    if (obj === masterObjectiveShorten.BioBaseline.slug) {
-      text = text + masterObjectiveShorten.BioBaseline.description
-    } else if (obj === masterObjectiveShorten.MonitorSpecies.slug) {
-      text = text + masterObjectiveShorten.MonitorSpecies.description
-    } else if (obj === masterObjectiveShorten.MonitorIllegalAct.slug) {
-      text = text + masterObjectiveShorten.MonitorIllegalAct.description
-    } else if (obj === masterObjectiveShorten.ImpactHuman.slug) {
-      text = text + masterObjectiveShorten.ImpactHuman.description
-    } else if (obj === masterObjectiveShorten.ImpactConservation.slug) {
-      text = text + masterObjectiveShorten.ImpactConservation.description
+    if (obj === masterOjectiveTypes.BioBaseline.slug) {
+      text = text + masterOjectiveTypes.BioBaseline.shorten
+    } else if (obj === masterOjectiveTypes.MonitorSpecies.slug) {
+      text = text + masterOjectiveTypes.MonitorSpecies.shorten
+    } else if (obj === masterOjectiveTypes.MonitorIllegalAct.slug) {
+      text = text + masterOjectiveTypes.MonitorIllegalAct.shorten
+    } else if (obj === masterOjectiveTypes.ImpactHuman.slug) {
+      text = text + masterOjectiveTypes.ImpactHuman.shorten
+    } else if (obj === masterOjectiveTypes.ImpactConservation.slug) {
+      text = text + masterOjectiveTypes.ImpactConservation.shorten
     } else {
-      text = text + masterObjectiveShorten.Others.description
+      text = text + masterOjectiveTypes.Others.shorten
     }
 
     if (props.project.objectives?.length !== 1 && obj !== props.project.objectives?.slice(-1)[0]) {
