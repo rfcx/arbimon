@@ -5,7 +5,7 @@
     type="date"
     placeholder="Choose date"
     format="MM/DD/YYYY"
-    :disabled-date="disabledDate"
+    :disabled-date="dateDisabled"
     @change="dateChange"
   />
 </template>
@@ -19,7 +19,7 @@ const dateValue = ref<Date>()
 const emit = defineEmits<{(e: 'emitSelectDate', value: string | null): void}>()
 const props = defineProps<{
   initialDate?: Date,
-  disabledDate?: boolean
+  dateDisabled?: boolean
 }>()
 
 watchEffect(() => {
