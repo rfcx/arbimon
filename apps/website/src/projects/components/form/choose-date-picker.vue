@@ -5,7 +5,7 @@
     type="date"
     placeholder="Choose date"
     format="MM/DD/YYYY"
-    :disabled-date="dateDisabled"
+    :disabled-date="props.dateDisabled === undefined ? disabledForStartDate : disabledForEndDate"
     @change="dateChange"
   />
 </template>
@@ -19,8 +19,22 @@ const dateValue = ref<Date>()
 const emit = defineEmits<{(e: 'emitSelectDate', value: string | null): void}>()
 const props = defineProps<{
   initialDate?: Date,
-  dateDisabled?: boolean
+  dateDisabled: Date
 }>()
+
+const disabledForStartDate = (time: Date) => {
+  return time.getTime() > Date.now()
+}
+
+const disabledForEndDate = (time: Date) => {
+  if (props.dateDisabled === undefined) return
+
+  let lastDate = Date.now()
+  if (props.dateDisabled !== null) {
+    lastDate = new Date(props.dateDisabled).getTime()
+  }
+  return time.getTime() < lastDate
+}
 
 watchEffect(() => {
   dateValue.value = props.initialDate ? dayjs(props.initialDate).startOf('day').toDate() : undefined
