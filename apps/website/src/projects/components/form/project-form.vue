@@ -33,6 +33,7 @@
       <div class="relative flex-1">
         <ChooseDatePicker
           :initial-date="startDate ? new Date(startDate) : undefined"
+          :date-disabled="undefined"
           @emit-select-date="onSelectStartDate"
         />
       </div>
