@@ -22,10 +22,18 @@
       <div
         class="ml-1 border-l-2 text-ellipsis overflow-hidden"
       >
-        <span class="ml-1">
+        <text-tooltip
+          :tooltip-id="project?.name"
+          :tooltip-text="objectivesLable"
+        />
+        <!-- <span class="ml-1">
           {{ objectivesLable }}
-        </span>
+        </span> -->
       </div>
+      <!-- <icon-i-info
+        :tooltip-id="project?.name"
+        :tooltip-text="objectivesLable"
+      /> -->
     </div>
     <p
       class="mt-3 font-normal line-clamp-3 text-gray-700 dark:text-insight"
@@ -50,6 +58,7 @@ import type { Project } from '@rfcx-bio/common/dao/types'
 
 import image from '@/_assets/cta/frog-hero.webp'
 import { ROUTE_NAMES } from '~/router'
+import TextTooltip from '../components/text-tooltip.vue'
 import { masterOjectiveTypes, objectiveTypes } from '../types'
 
 const props = defineProps<{project: Omit<Project, 'idArbimon'>}>()
