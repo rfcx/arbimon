@@ -26,14 +26,7 @@
           :tooltip-id="project?.name"
           :tooltip-text="objectivesLable"
         />
-        <!-- <span class="ml-1">
-          {{ objectivesLable }}
-        </span> -->
       </div>
-      <!-- <icon-i-info
-        :tooltip-id="project?.name"
-        :tooltip-text="objectivesLable"
-      /> -->
     </div>
     <p
       class="mt-3 font-normal line-clamp-3 text-gray-700 dark:text-insight"
