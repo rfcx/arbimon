@@ -4,5 +4,5 @@ export type ProjectProfileWithMetrics = Omit<Project, 'createdAt' | 'updatedAt' 
   noOfRecordings: number
   noOfSpecies: number
   countries: string[]
-  // TODO: add if highlighted project
+  isHighlighted: boolean
 }

@@ -50,9 +50,10 @@
             Analyses
           </h2>
           <button
-            class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3"
+            class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3 disabled:cursor-not-allowed"
             type="button"
             :title="'Create New Analysis Job'"
+            :disabled="projectUserPermissionsStore.isGuest"
             @click="toggleAnalysisSelector(true)"
           >
             <icon-fa-plus-circle class="h-3 w-3" />
@@ -91,7 +92,7 @@ import { MapBaseComponent } from '~/maps/map-base'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { type CircleStyle } from '~/maps/utils/circle-style/types'
-import { useStore } from '~/store'
+import { useProjectUserPermissionsStore, useStore } from '~/store'
 import { useAedJobCount, useClusteringJobCount, useClusteringSpeciesDetected } from './_composables/use-aed-count'
 import { usePlaylistCount } from './_composables/use-playlist-count'
 import { usePmSpeciesDetected, usePmTemplateCount } from './_composables/use-pm-count'
@@ -105,6 +106,7 @@ import DashboardAnalyses from './components/dashboard-analyses.vue'
 import DashboardOverview from './components/dashboard-overview.vue'
 
 const store = useStore()
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const selectedProjectSlug = computed(() => store.selectedProject?.slug)

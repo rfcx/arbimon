@@ -20,6 +20,8 @@ export interface MapSiteData {
   values: Record<string, number | boolean | string>
 }
 
+export type MapSiteDataLight = Pick<MapSiteData, 'siteName' | 'latitude' | 'longitude'>
+
 export interface MapMoveEvent {
   sourceMapId: string
   center: LngLatLike

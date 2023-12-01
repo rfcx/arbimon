@@ -10,6 +10,7 @@ import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 import { useDashboardStore } from './use-dashboard-store'
 import { useDetectionsResultFilterBySpeciesStore } from './use-detections-result-filter-by-species-store'
 import { useDetectionsResultFilterStore } from './use-detections-result-filter-store'
+import { useProjectUserPermissionsStore } from './use-project-user-permissions-store'
 
 export const useStore = defineStore('root', {
   state: () => ({
@@ -85,5 +86,6 @@ export const useStoreOutsideSetup = (): BiodiversityStore => useStore(pinia)
 export {
   useDashboardStore,
   useDetectionsResultFilterBySpeciesStore,
-  useDetectionsResultFilterStore
+  useDetectionsResultFilterStore,
+  useProjectUserPermissionsStore
 }

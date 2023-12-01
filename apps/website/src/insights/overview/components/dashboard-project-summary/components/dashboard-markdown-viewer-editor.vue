@@ -28,7 +28,8 @@
       class="flex flex-row justify-end mt-4"
     >
       <button
-        :class="editable ? 'btn btn-secondary py-1.5 px-3' : 'invisible'"
+        :class="editable ? 'btn btn-secondary py-1.5 px-3 disabled:cursor-not-allowed' : 'invisible disabled:cursor-not-allowed'"
+        :disabled="projectUserPermissionsStore.isGuest"
         @click="editMarkdownContent"
       >
         <span class="text-sm font-display font-medium">
@@ -68,6 +69,7 @@ import { nextTick, onMounted, ref, unref, watch } from 'vue'
 
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
+import { useProjectUserPermissionsStore } from '~/store'
 import ProjectSummaryEmpty from './project-summary-empty.vue'
 import ProjectSummaryEmptyGuestView from './project-summary-empty-guest-view.vue'
 
@@ -76,6 +78,7 @@ const DEFAULT_CHARACTER_LIMIT = 10000
 const props = withDefaults(defineProps<{ id: string, editable: boolean, rawMarkdownText: string | undefined, defaultMarkdownText: string, isViewMored: boolean, isEditing: boolean, characterLimit?: number, isProjectMember: boolean, isViewingAsGuest: boolean }>(), { characterLimit: DEFAULT_CHARACTER_LIMIT })
 const emit = defineEmits<{(e: 'on-editor-close', value: string): void, (e: 'update:isViewMored', value: boolean): void, (e: 'update:isEditing', value: boolean): void}>()
 
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const markdownViewerRef = ref<{ markdownViewerWrapperComponent: HTMLDivElement | null } | null>(null)
 const editableMarkdownText = ref(props.rawMarkdownText == null || props.rawMarkdownText === '' ? '' : unref(props.rawMarkdownText))
 

@@ -7,23 +7,34 @@
   >
     <div class="h-full overflow-y">
       <p class="p-6 border-b border-frequency text-frequency">
-        All projects
+        All projects ({{ props.data.length }})
       </p>
-      <ul>
-        <project-list-item
-          v-for="p in mockProjects"
-          :key="p.id"
-          :project="p"
-        />
-      </ul>
+      <div v-infinite-scroll="loadMore">
+        <ul>
+          <project-list-item
+            v-for="p in partialData"
+            :key="p.id"
+            :project="p"
+          />
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+
 import ProjectListItem from '../components/project-list-item.vue'
-import { rawDirectoryProjectsData } from '../data/rawDirectoryProjectsData'
+import type { ProjectProfileWithMetrics } from '../data/types'
 
-const mockProjects = rawDirectoryProjectsData
+const LIMIT = 20
+const props = defineProps<{ data: ProjectProfileWithMetrics[] }>()
+const partialData = ref(props.data.slice(0, LIMIT))
 
+const loadMore = () => {
+  const nextLength = partialData.value.length + LIMIT
+  if (nextLength > props.data.length) return
+  partialData.value = props.data.slice(0, nextLength)
+}
 </script>
