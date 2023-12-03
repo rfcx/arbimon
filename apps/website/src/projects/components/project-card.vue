@@ -4,7 +4,7 @@
     class="block p-6 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-moss dark:border-util-gray-02 dark:hover:bg-util-gray-02 h-auto"
   >
     <img
-      :src="image"
+      :src="project.image?.length === 0 ? image : project.image"
       class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-moss"
     >
     <h6
