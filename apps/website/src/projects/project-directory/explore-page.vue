@@ -4,6 +4,7 @@
     <project-list
       :data="mockProjects.sort((a, b) => a ? -1 : 1)"
       class="absolute z-40 h-100vh"
+      @emit-selected-project="onEmitSelectedProject"
     />
     <project-info
       v-if="selectedProject != null"
@@ -13,6 +14,7 @@
     <map-view
       :data="mockMapData"
       class="relative left-0 fixed z-30 w-full"
+      :selected-project-id="selectedProject?.id"
       @emit-selected-project="onEmitSelectedProject"
     />
   </section>

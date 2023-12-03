@@ -8,12 +8,17 @@
 <script setup lang="ts">
 import type { FeatureCollection, Point } from 'geojson'
 import type { GeoJSONSource, Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import { createMap } from '~/maps'
 import type { MapProjectData } from '~/maps/types'
 
-const props = defineProps<{ data: MapProjectData[] }>()
+const props = withDefaults(defineProps<{
+  data: MapProjectData[],
+  selectedProjectId?: number
+}>(), {
+  selectedProjectId: undefined
+})
 const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void}>()
 
 const mapCenter = computed((): [number, number] => {
@@ -36,8 +41,7 @@ const mapConfig: MapboxOptions = {
   attributionControl: false,
   container: 'mapRoot',
   bounds: mapBounds.value,
-  preserveDrawingBuffer: true,
-  zoom: 3
+  preserveDrawingBuffer: true
 }
 
 const mapRoot = ref<InstanceType<typeof HTMLElement> | null>(null)
@@ -151,4 +155,24 @@ onMounted(() => {
     emit('emitSelectedProject', id)
   })
 })
+
+watch(() => props.selectedProjectId, (id) => {
+  if (id === undefined) return
+  flyToProject(id)
+})
+
+const flyToProject = (id: number) => {
+  const project = props.data.find(datum => datum.projectId === id)
+  const coordinates = [project?.longitude ?? 0, project?.latitude ?? 0] as [number, number]
+
+  // check if already at coordinates
+  const currentCenter = map.getCenter()
+  if (currentCenter.lng === coordinates[0] && currentCenter.lat === coordinates[1]) return
+
+  map.flyTo({
+    center: coordinates,
+    zoom: 12.5,
+    essential: true
+  })
+}
 </script>

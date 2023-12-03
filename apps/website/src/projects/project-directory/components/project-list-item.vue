@@ -1,37 +1,32 @@
 <template>
-  <router-link
-    :to="{ name: ROUTE_NAMES.overview, params: { projectSlug: project.slug }}"
-  >
-    <li class="px-6 py-4 flex flex-col md:flex-row gap-4 border-b border-util-gray-01 hover:bg-util-gray-03">
-      <div class="">
-        <img
-          src="#"
-          class="w-18 aspect-square rounded bg-util-gray-02"
-        >
+  <li class="px-6 py-4 flex flex-col md:flex-row gap-4 border-b border-util-gray-01 hover:bg-util-gray-03">
+    <div class="">
+      <img
+        src="#"
+        class="w-18 aspect-square rounded bg-util-gray-02"
+      >
+    </div>
+    <div class="flex flex-col gap-2 flex-grow overflow-hidden">
+      <span class="font-medium">{{ project.name }}</span>
+      <div
+        v-if="shouldShowCountryAndObjective"
+        class="text-xs whitespace-nowrap min-w-0 flex-grow flex-1"
+      >
+        <span class="text-spoonbill inline-flex">{{ countryCode }}</span>
+        <span class="text-gray-300 inline-flex mx-1"> | </span>
+        <span class="text-gray-300 text-ellipsis inline-flex truncate whitespace-nowrap text-ellipsis overflow-hidden">{{ objectiveAll }}</span>
       </div>
-      <div class="flex flex-col gap-2 flex-grow overflow-hidden">
-        <span class="font-medium">{{ project.name }}</span>
-        <div
-          v-if="shouldShowCountryAndObjective"
-          class="text-xs whitespace-nowrap min-w-0 flex-grow flex-1"
-        >
-          <span class="text-spoonbill inline-flex">{{ countryCode }}</span>
-          <span class="text-gray-300 inline-flex mx-1"> | </span>
-          <span class="text-gray-300 text-ellipsis inline-flex truncate whitespace-nowrap text-ellipsis overflow-hidden">{{ objectiveAll }}</span>
-        </div>
-        <span class="text-xs text-clip md:text-sm">{{ project.summary }}</span>
-        <div class="flex flex-row gap-2">
-          <span class="bg-util-gray-02 px-1 rounded font-medium text-xs">{{ project.noOfRecordings }} recordings</span>
-          <span class="bg-util-gray-02 px-1 rounded font-medium text-xs">{{ project.noOfSpecies }} species</span>
-        </div>
+      <span class="text-xs text-clip md:text-sm">{{ project.summary }}</span>
+      <div class="flex flex-row gap-2">
+        <span class="bg-util-gray-02 px-1 rounded font-medium text-xs">{{ project.noOfRecordings }} recordings</span>
+        <span class="bg-util-gray-02 px-1 rounded font-medium text-xs">{{ project.noOfSpecies }} species</span>
       </div>
-    </li>
-  </router-link>
+    </div>
+  </li>
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { ROUTE_NAMES } from '~/router'
 import { masterOjectiveTypes, objectiveTypes } from '../../types'
 import type { ProjectProfileWithMetrics } from '../data/types'
 
