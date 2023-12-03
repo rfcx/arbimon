@@ -14,3 +14,17 @@ export const getUserProfile = async (userIdAuth0: string): Promise<Omit<UserProf
     }
   }) ?? undefined
 }
+
+export const patchUserProfile = async (userIdAuth0: string, data: Partial<Omit<UserProfile, 'id' | 'userIdAuth0' | 'image' | 'createdAt' | 'updatedAt'>>): Promise<void> => {
+  const sequelize = getSequelize()
+  const { UserProfile } = ModelRepository.getInstance(sequelize)
+
+  await UserProfile.update(data, { where: { userIdAuth0 } })
+}
+
+export const patchUserProfileImage = async (userIdAuth0: string, path: string): Promise<void> => {
+  const sequelize = getSequelize()
+  const { UserProfile } = ModelRepository.getInstance(sequelize)
+
+  await UserProfile.update({ image: path }, { where: { userIdAuth0 } })
+}
