@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
-import { type CoreUser } from '@/api-core/project/users'
+import { type CoreUser } from '../../api-core/project/users'
 
 // Request type
 export interface GetProjectMembersParams {
