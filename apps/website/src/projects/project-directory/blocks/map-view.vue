@@ -11,9 +11,10 @@ import type { GeoJSONSource, Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
 import { computed, onMounted, ref } from 'vue'
 
 import { createMap } from '~/maps'
-import type { MapSiteDataLight } from '~/maps/types'
+import type { MapProjectData } from '~/maps/types'
 
-const props = defineProps<{ data: MapSiteDataLight[] }>()
+const props = defineProps<{ data: MapProjectData[] }>()
+const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void}>()
 
 const mapCenter = computed((): [number, number] => {
   const lat = props.data.reduce((acc, datum) => acc + datum.latitude, 0) / props.data.length
@@ -43,7 +44,7 @@ const mapRoot = ref<InstanceType<typeof HTMLElement> | null>(null)
 
 let map!: MapboxMap
 
-const toGeoJson = (mapData: MapSiteDataLight[]): FeatureCollection => {
+const toGeoJson = (mapData: MapProjectData[]): FeatureCollection => {
   // Define map data
   const data: FeatureCollection = {
     type: 'FeatureCollection',
@@ -51,7 +52,9 @@ const toGeoJson = (mapData: MapSiteDataLight[]): FeatureCollection => {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [datum.longitude, datum.latitude] },
       properties: {
-        title: datum.siteName
+        title: datum.projectName,
+        id: datum.projectId,
+        slug: datum.projectSlug
         // radius: props.mapBaseFormatter.getRadius(Number(datum.values[props.dataKey])), // TODO Remove this once boolean is removed from type
         // popup: getPopup(datum)
       }
@@ -142,8 +145,10 @@ onMounted(() => {
     })
   })
 
-  map.on('click', 'unclustered-point', () => {
-    // TODO: show popup
+  map.on('click', 'unclustered-point', (e) => {
+    const features = map.queryRenderedFeatures(e.point, { layers: ['unclustered-point'] })
+    const { id } = features[0]?.properties ?? {}
+    emit('emitSelectedProject', id)
   })
 })
 </script>
