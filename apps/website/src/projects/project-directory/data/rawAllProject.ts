@@ -35549,10 +35549,10 @@ export const rawAllProjects = [
     id_arbimon: 1136,
     slug: 'learningarbimon',
     name: 'learningarbimon',
-    latitude_north: 36.742514792102206,
-    latitude_south: 36.742514792102206,
-    longitude_east: -118.97207641601562,
-    longitude_west: -118.97207641601562
+    latitude_north: 36.742,
+    latitude_south: 36.742,
+    longitude_east: -118.97,
+    longitude_west: -118.97
   },
   {
     id: 25,
@@ -43817,10 +43817,10 @@ export const rawAllProjects = [
     id_arbimon: 4547,
     slug: 'testhytton',
     name: 'testhytton',
-    latitude_north: 60.501201633348224,
-    latitude_south: 60.501201633348224,
-    longitude_east: 17.304153442382812,
-    longitude_west: 17.304153442382812
+    latitude_north: 60.50,
+    latitude_south: 60.50,
+    longitude_east: 17.30,
+    longitude_west: 17.30
   },
   {
     id: 1870,
