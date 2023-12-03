@@ -1,7 +1,7 @@
 <template>
   <div
     id="drawer-navigation"
-    class="fixed left-0 w-98 overflow-y-auto transition-transform -translate-x-full bg-moss"
+    class="inset-y-auto left-0 fixed w-98 overflow-y-auto transition-transform -translate-x-full bg-moss"
     tabindex="-1"
     aria-labelledby="drawer-navigation-label"
   >
