@@ -34224,8 +34224,8 @@ export const rawAllProjects = [
     slug: 'a2test',
     name: 'Arbimon2 Official Testing Project',
     latitude_north: 0,
-    latitude_south: 18.718022978261786,
-    longitude_east: -66.10586547851562,
+    latitude_south: 18.71,
+    longitude_east: -66.10,
     longitude_west: 1
   },
   {
@@ -34238,8 +34238,8 @@ export const rawAllProjects = [
     name: 'un proyecto',
     latitude_north: 18.237404508046943,
     latitude_south: 18.404418067885874,
-    longitude_east: -66.3406982421875,
-    longitude_west: -66.02072143554688
+    longitude_east: -66.340,
+    longitude_west: -66.020
   },
   {
     id: 3,
@@ -34667,8 +34667,8 @@ export const rawAllProjects = [
     name: 'Coquies enjaulados',
     latitude_north: 18.40474382994584,
     latitude_south: 18.40474382994584,
-    longitude_east: -66.04544067382812,
-    longitude_west: -66.04544067382812
+    longitude_east: -66.0,
+    longitude_west: -66.0
   },
   {
     id: 2220,
@@ -34758,8 +34758,8 @@ export const rawAllProjects = [
     name: 'ARU monitoring of HUGOs',
     latitude_north: 61.12460092786056,
     latitude_south: 61.12460092786056,
-    longitude_east: -151.1050477027893,
-    longitude_west: -151.1050477027893
+    longitude_east: -151.1,
+    longitude_west: -151.1
   },
   {
     id: 2229,
@@ -35263,10 +35263,10 @@ export const rawAllProjects = [
     id_arbimon: 1091,
     slug: 'estudio-del-paisaje-sonoro-en-salento-quindio',
     name: 'Estudio del Paisaje Sonoro en Salento Quindio',
-    latitude_north: 4.605118246618559,
-    latitude_south: 4.637884159834726,
-    longitude_east: -75.61307469010352,
-    longitude_west: -75.54773832269214
+    latitude_north: 4.60,
+    latitude_south: 4.63,
+    longitude_east: -75.61,
+    longitude_west: -75.54
   },
   {
     id: 2283,
@@ -35276,10 +35276,10 @@ export const rawAllProjects = [
     id_arbimon: 1092,
     slug: 'testes',
     name: 'Testes',
-    latitude_north: -22.59635800517633,
-    latitude_south: -22.530095879413377,
-    longitude_east: -52.468055725097656,
-    longitude_west: -52.404541015625
+    latitude_north: -22.59,
+    latitude_south: -22.53,
+    longitude_east: -52.46,
+    longitude_west: -52.40
   },
   {
     id: 2285,
@@ -35304,8 +35304,8 @@ export const rawAllProjects = [
     name: 'Estudio del Paisaje Sonoro en Salento Quindio2',
     latitude_north: 4.637833962145599,
     latitude_south: 4.637833962145599,
-    longitude_east: -75.57007217407227,
-    longitude_west: -75.57007217407227
+    longitude_east: -75.5,
+    longitude_west: -75.5
   },
   {
     id: 2287,
@@ -35317,8 +35317,8 @@ export const rawAllProjects = [
     name: 'Estudio del Paisaje Sonoro en Salento Quindio3',
     latitude_north: 4.637577313138907,
     latitude_south: 4.637577313138907,
-    longitude_east: -75.5703296661377,
-    longitude_west: -75.5703296661377
+    longitude_east: -75.570,
+    longitude_west: -75.570
   },
   {
     id: 2288,
@@ -35330,8 +35330,8 @@ export const rawAllProjects = [
     name: 'BA_800_Jul8_hasta_2350_Jul8',
     latitude_north: 4.63595186726426,
     latitude_south: 4.63595186726426,
-    longitude_east: -75.56758308410645,
-    longitude_west: -75.56758308410645
+    longitude_east: -75.56,
+    longitude_west: -75.56
   },
   {
     id: 2290,
@@ -35343,8 +35343,8 @@ export const rawAllProjects = [
     name: 'USVI Community Bat Study',
     latitude_north: 18.343021290245847,
     latitude_south: 18.343021290245847,
-    longitude_east: -64.92483520507812,
-    longitude_west: -64.92483520507812
+    longitude_east: -64.92,
+    longitude_west: -64.92
   },
   {
     id: 2291,
@@ -35393,10 +35393,10 @@ export const rawAllProjects = [
     id_arbimon: 1106,
     slug: 'espadarana-prosoblepon',
     name: 'espadarana prosoblepon',
-    latitude_north: 5.889498447311954,
-    latitude_south: 6.303933974273789,
-    longitude_east: -76.22427368164062,
-    longitude_west: -74.99380493164062
+    latitude_north: 5.88,
+    latitude_south: 6.30,
+    longitude_east: -76.22,
+    longitude_west: -74.99
   },
   {
     id: 2299,
@@ -35952,10 +35952,10 @@ export const rawAllProjects = [
     id_arbimon: 1199,
     slug: 'amazonia-exhibit-smithsonian-pilot',
     name: 'Amazonia Exhibit - Smithsonian pilot',
-    latitude_north: 38.9278194143882,
+    latitude_north: 38.92,
     latitude_south: 38.928,
-    longitude_east: -77.04807662963867,
-    longitude_west: -77.04777085781097
+    longitude_east: -77.04,
+    longitude_west: -77.04
   },
   {
     id: 35,
@@ -36043,10 +36043,10 @@ export const rawAllProjects = [
     id_arbimon: 1233,
     slug: 'stewart-groote-test',
     name: 'Stewart Groote test',
-    latitude_north: -19.492260483370245,
-    latitude_south: -19.492260483370245,
-    longitude_east: 146.36937713623047,
-    longitude_west: 146.36937713623047
+    latitude_north: -19.49,
+    latitude_south: -19.49,
+    longitude_east: 146.36,
+    longitude_west: 146.36
   },
   {
     id: 2400,
@@ -36758,10 +36758,10 @@ export const rawAllProjects = [
     id_arbimon: 1333,
     slug: 'gotyou',
     name: 'Gotyou',
-    latitude_north: 18.255663858009697,
-    latitude_south: 18.255663858009697,
-    longitude_east: -66.72109985351562,
-    longitude_west: -66.72109985351562
+    latitude_north: 18.2556,
+    latitude_south: 18.2556,
+    longitude_east: -66.721,
+    longitude_west: -66.721
   },
   {
     id: 2480,
@@ -36771,10 +36771,10 @@ export const rawAllProjects = [
     id_arbimon: 1341,
     slug: 'aves-ikiam',
     name: 'Aves IKIAM',
-    latitude_north: -0.9481466809573698,
-    latitude_south: -0.9481466809573698,
-    longitude_east: -77.86351108551025,
-    longitude_west: -77.86351108551025
+    latitude_north: -0.9481,
+    latitude_south: -0.948,
+    longitude_east: -77.863,
+    longitude_west: -77.863
   },
   {
     id: 2481,
@@ -47249,10 +47249,10 @@ export const rawAllProjects = [
     id_arbimon: 4254,
     slug: 'autoid',
     name: 'autoid',
-    latitude_north: 31.80386862224887,
-    latitude_south: 31.80386862224887,
-    longitude_east: 34.89218820688785,
-    longitude_west: 34.89218820688785
+    latitude_north: 31.803,
+    latitude_south: 31.803,
+    longitude_east: 34.892,
+    longitude_west: 34.892
   },
   {
     id: 1128906,
@@ -47366,10 +47366,10 @@ export const rawAllProjects = [
     id_arbimon: 4278,
     slug: 'tori-tore',
     name: 'TORI-TORE',
-    latitude_north: 36.05845622946778,
-    latitude_south: 36.05845622946778,
-    longitude_east: 140.14265384082398,
-    longitude_west: 140.14265384082398
+    latitude_north: 36.058,
+    latitude_south: 36.0584,
+    longitude_east: 140.142,
+    longitude_west: 140.142
   },
   {
     id: 1134210,
@@ -47574,10 +47574,10 @@ export const rawAllProjects = [
     id_arbimon: 4311,
     slug: 'red-winged-blackbirds-project-1',
     name: 'Red-winged Blackbirds Project 1',
-    latitude_north: 40.44170246739642,
-    latitude_south: 40.44170246739642,
-    longitude_east: -104.81214852224593,
-    longitude_west: -104.81214852224593
+    latitude_north: 40.441,
+    latitude_south: 40.441,
+    longitude_east: -104.81,
+    longitude_west: -104.81
   },
   {
     id: 1134460,
@@ -47587,10 +47587,10 @@ export const rawAllProjects = [
     id_arbimon: 4313,
     slug: 'missy-unknow',
     name: 'Missy_unknow',
-    latitude_north: -23.331559341817663,
-    latitude_south: -23.331559341817663,
-    longitude_east: -46.7008443718065,
-    longitude_west: -46.7008443718065
+    latitude_north: -23.33,
+    latitude_south: -23.33,
+    longitude_east: -46.70,
+    longitude_west: -46.70
   },
   {
     id: 1134463,
@@ -47652,10 +47652,10 @@ export const rawAllProjects = [
     id_arbimon: 4326,
     slug: 'gib-test',
     name: 'Gib test',
-    latitude_north: 4.746633041650057,
-    latitude_south: 4.746633041650057,
-    longitude_east: 116.9704080093652,
-    longitude_west: 116.9704080093652
+    latitude_north: 4.74,
+    latitude_south: 4.74,
+    longitude_east: 116.97,
+    longitude_west: 116.97
   },
   {
     id: 1134518,
@@ -47691,8 +47691,8 @@ export const rawAllProjects = [
     id_arbimon: 4331,
     slug: 'essai1',
     name: 'Essai1',
-    latitude_north: 48.4410198,
-    latitude_south: 48.4410198,
+    latitude_north: 48.441,
+    latitude_south: 48.441,
     longitude_east: 2.3235834,
     longitude_west: 2.3235834
   },
@@ -47717,10 +47717,10 @@ export const rawAllProjects = [
     id_arbimon: 4337,
     slug: 'cctest',
     name: 'cctest',
-    latitude_north: 60.18198662140175,
+    latitude_north: 60.18,
     latitude_south: 60.2024201,
     longitude_east: 24.6804813,
-    longitude_west: 24.829986155886306
+    longitude_west: 24.829
   },
   {
     id: 1134551,
@@ -47730,10 +47730,10 @@ export const rawAllProjects = [
     id_arbimon: 4344,
     slug: 'amazonas',
     name: 'AMAZONAS',
-    latitude_north: -2.628548366388955,
-    latitude_south: -2.628548366388955,
-    longitude_east: -65.10773522151761,
-    longitude_west: -65.10773522151761
+    latitude_north: -2.6285,
+    latitude_south: -2.6285,
+    longitude_east: -65.107,
+    longitude_west: -65.107
   },
   {
     id: 1134558,
@@ -48679,10 +48679,10 @@ export const rawAllProjects = [
     id_arbimon: 4570,
     slug: 'pikkuvarpunen',
     name: 'Pikkuvarpunen',
-    latitude_north: 61.50582927833813,
-    latitude_south: 61.50582927833813,
-    longitude_east: 23.868484497070312,
-    longitude_west: 23.868484497070312
+    latitude_north: 61.505,
+    latitude_south: 61.505,
+    longitude_east: 23.868,
+    longitude_west: 23.868
   },
   {
     id: 1135264,
