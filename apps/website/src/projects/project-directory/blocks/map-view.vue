@@ -162,6 +162,11 @@ watch(() => props.selectedProjectId, (id) => {
 })
 
 const flyToProject = (id: number) => {
+  const setCoordinateToRight = (coordinates: [number, number]) => {
+    const [lng, lat] = coordinates
+    const newLng = lng - 0.03
+    return [newLng, lat] as [number, number]
+  }
   const project = props.data.find(datum => datum.projectId === id)
   const coordinates = [project?.longitude ?? 0, project?.latitude ?? 0] as [number, number]
 
@@ -170,7 +175,7 @@ const flyToProject = (id: number) => {
   if (currentCenter.lng === coordinates[0] && currentCenter.lat === coordinates[1]) return
 
   map.flyTo({
-    center: coordinates,
+    center: setCoordinateToRight(coordinates), // to avoid overlapping with sidebar
     zoom: 12.5,
     essential: true
   })
