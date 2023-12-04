@@ -1,6 +1,7 @@
 export interface LocationProjectProfile {
   locationProjectId: number
   summary: string
+  image: string
   readme: string
   methods: string
   keyResult: string

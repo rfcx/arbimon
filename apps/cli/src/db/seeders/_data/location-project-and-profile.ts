@@ -49,7 +49,8 @@ const dataPr = {
   methods: '',
   objectives: ['monitor-species', 'impact-human', 'blagh'],
   dateStart: new Date(),
-  dateEnd: null
+  dateEnd: null,
+  image: 'https://spectrumsurfschool.com/wp-content/uploads/2014/09/DRNA-logo.png'
 }
 
 const dataBci = {
@@ -64,7 +65,8 @@ const dataBci = {
   methods: '',
   objectives: [],
   dateStart: null,
-  dateEnd: null
+  dateEnd: null,
+  image: ''
 }
 
 const dataMadre = {
@@ -79,7 +81,8 @@ const dataMadre = {
   methods: '',
   objectives: [],
   dateStart: null,
-  dateEnd: null
+  dateEnd: null,
+  image: ''
 }
 
 const dataFakeProject = {
@@ -94,7 +97,8 @@ const dataFakeProject = {
   methods: '',
   objectives: ['Test objective 1', 'Test objective 2'],
   dateStart: null,
-  dateEnd: null
+  dateEnd: null,
+  image: ''
 }
 
 type ProjectAndProfile = Omit<Project, 'id'> & Omit<LocationProjectProfile, 'locationProjectId' >
