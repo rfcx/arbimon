@@ -27,7 +27,7 @@ export const useProjectUserPermissionsStore = defineStore('project-user-permissi
   const store = useStore()
 
   const getProjectMembers = async (id: number): Promise<void> => {
-    if (id == null) {
+    if (id == null || id === -1) {
       projectMembers.value = []
       return
     }
