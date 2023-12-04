@@ -9,7 +9,7 @@
     <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-10 border-b-1 border-white/80">
       <div class="flex items-start gap-4 flex-col md:flex-row">
         <img
-          :src="image"
+          :src="store.user?.picture ?? image"
           alt="Profile picture"
           class="w-32 h-32 aspect-square object-cover rounded-full mr-4"
         >
@@ -36,6 +36,7 @@
       </p>
       <input
         id="firstName"
+        v-model="firstName"
         name="firstName"
         type="text"
         class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
@@ -46,6 +47,7 @@
       </p>
       <input
         id="lastName"
+        v-model="lastName"
         name="lastName"
         type="text"
         class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
@@ -56,6 +58,7 @@
       </p>
       <input
         id="email"
+        v-model="email"
         name="email"
         type="text"
         class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
@@ -65,7 +68,6 @@
       </p>
       <button
         id="dropdownDefaultButton"
-        data-dropdown-toggle="dropdown"
         class="w-full mt-2 h-10 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
         type="button"
       >
@@ -99,8 +101,23 @@
 
 <script setup lang="ts">
 // TODO :: Change to real image
+import { onMounted, ref } from 'vue'
+
 import image from '@/_assets/cta/frog-hero.webp'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
+import { useStore } from '~/store'
+
+const firstName = ref('')
+const lastName = ref('')
+const email = ref('')
+
+const store = useStore()
+
+onMounted(() => {
+  firstName.value = store.user?.given_name ?? ''
+  lastName.value = store.user?.family_name ?? ''
+  email.value = store.user?.email ?? ''
+})
 
 const uploadPhoto = async (): Promise<void> => {
   // TODO :: uploadPhoto
