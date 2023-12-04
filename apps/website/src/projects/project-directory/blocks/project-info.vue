@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-4 inset-1/4 left-100 w-98 bg-moss transition-transform -translate-x-full p-6 lg:p-10">
+  <div class="flex flex-col gap-4 inset-1/4 left-100 w-98 bg-moss transition-transform -translate-x-full p-6 lg:p-10 rounded-lg">
     <span class="text-flamingo"> ⚠️ work in progress ⚠️ </span>
     {{ project.name }}
     <router-link
