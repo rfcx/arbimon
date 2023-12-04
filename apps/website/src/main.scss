@@ -178,15 +178,15 @@
   backdrop-filter: blur(7.5px);
 }
 
-.tab:hover:after,
-.tab-active:after {
+.tab:hover::after,
+.tab-active::after {
   @media (min-width: 1024px) {
     content: " ";
-    background: #ADFF2C;
-    width: 100%;
-    height: 3px;
     position: absolute;
     bottom: -13px;
     left: 0;
+    width: 100%;
+    height: 3px;
+    background: #adff2c;
   }
 }
