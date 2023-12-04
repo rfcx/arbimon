@@ -2,7 +2,7 @@ import { type User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
 
 import { type ProjectFiltersResponse, apiBioGetProjectFilters } from '@rfcx-bio/common/api-bio/project/project-filters'
-import { type LocationProjectForUser, type LocationProjectWithInfo, type MyProjectsResponse, apiBioGetMyProjects, apiBioGetProjects } from '@rfcx-bio/common/api-bio/project/projects'
+import { type LocationProjectForUser, type LocationProjectWithInfo, apiBioGetMyProjects, apiBioGetProjects } from '@rfcx-bio/common/api-bio/project/projects'
 import { getApiClient } from '@rfcx-bio/utils/api'
 
 import { getIdToken, useAuth0Client } from '~/auth-client'
@@ -42,11 +42,10 @@ export const useStore = defineStore('root', {
       const authClient = await useAuth0Client()
       const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, this.user ? async () => await getIdToken(authClient) : undefined)
       this.myProjects = []
-      this.updateMyProject(await apiBioGetMyProjects(apiClient))
+      this.updateMyProject((await apiBioGetMyProjects(apiClient))?.data)
     },
-    updateMyProject (response?: MyProjectsResponse) {
-      if (response === undefined) return
-      response.data.forEach(p => {
+    updateMyProject (projects?: LocationProjectWithInfo[]) {
+      projects?.forEach(p => {
         this.myProjects.push(p)
       })
     },

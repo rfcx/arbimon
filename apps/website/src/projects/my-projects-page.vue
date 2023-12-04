@@ -44,19 +44,19 @@ import ProjectCard from './components/project-card.vue'
 const store = useStore()
 
 const loadMore = () => {
-  getSpeciesInformation()
+  loadMoreProject()
 }
 const loading: Ref<boolean> = ref(true)
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const myProjectsInfo = computed(() => store.myProjects)
 const LIMIT = 10
 
-const getSpeciesInformation = async (): Promise<void> => {
+const loadMoreProject = async (): Promise<void> => {
   // Should show loading?
   try {
     loading.value = true
-    const data = await apiBioGetMyProjects(apiClientBio, LIMIT, myProjectsInfo.value.length)
-    store.updateMyProject(data)
+    const projects = await apiBioGetMyProjects(apiClientBio, LIMIT, myProjectsInfo.value.length)
+    store.updateMyProject(projects?.data)
   } catch (e) {
     loading.value = false
   }
