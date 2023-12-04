@@ -1,5 +1,5 @@
 <template>
-  <nav class="w-full bg-white dark:bg-echo border-frequency border-b-4 fixed top-0 left-0 z-50">
+  <nav class="w-full bg-white dark:bg-echo border-frequency border-b-1 fixed top-0 left-0 z-50">
     <div class="px-4 lg:px-6 py-2.5">
       <div class="flex items-center justify-between">
         <div class="flex items-center justify-start">

@@ -23,7 +23,7 @@
     <router-link
       :to="{ name: ROUTE_NAMES.myProjects }"
       exact-active-class="tab-active"
-      class="block tab"
+      class="block tab relative"
     >
       My Projects
     </router-link>
