@@ -17,12 +17,6 @@ export const envKeysRequired = [
   'BIO_DB_SSL_ENABLED',
   'BIO_DB_USER',
 
-  // Secrets: S3
-  'AWS_S3_BUCKET_REGION',
-  'AWS_S3_ACCESS_KEY_ID',
-  'AWS_S3_SECRET_ACCESS_KEY',
-  'AWS_S3_BUCKET_NAME',
-
   'AUTHO_ANONYMOUS_CLIENT_SECRET',
 
   // Config
@@ -32,6 +26,10 @@ export const envKeysRequired = [
 // CAN be undefined or empty string
 export const envKeysOptional = [
   'AWS_S3_ENDPOINT',
+  'AWS_S3_BUCKET_REGION',
+  'AWS_S3_ACCESS_KEY_ID',
+  'AWS_S3_SECRET_ACCESS_KEY',
+  'AWS_S3_BUCKET_NAME',
   'NODE_ENV',
   'FASTIFY_PORT',
   'FASTIFY_ADDRESS',
