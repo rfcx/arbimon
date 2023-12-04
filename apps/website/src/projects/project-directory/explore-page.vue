@@ -55,12 +55,7 @@ const projects = computed(() => {
       isMock: false
      }
   })
-  const mockWithoutDuplicateProjectIds = mockProjects.filter(mockProject => {
-    const a = !realProjects.find(realProject => realProject.id === mockProject.id)
-    console.log('lll', a)
-    return a
-  })
-  console.log('mockWithoutDuplicateProjectIds', mockWithoutDuplicateProjectIds.length)
+  const mockWithoutDuplicateProjectIds = mockProjects.filter(mockProject => !realProjects.find(realProject => realProject.id === mockProject.id))
   return [...realWithProfileMetrics, ...mockWithoutDuplicateProjectIds].sort((a) => a.isHighlighted ? 1 : -1)
 })
 
