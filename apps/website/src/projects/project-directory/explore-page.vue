@@ -64,16 +64,13 @@ const onEmitLoadMore = () => {
   const LIMIT = 20
   const offset = pdStore.allProjectsWithMetrics.length
   const total = pdStore.allProjects.length
-  console.info('explorePage: load more', offset)
   if (offset === total) return
   const ids = pdStore.allProjects.slice(offset, offset + LIMIT).map(p => p.id)
-  console.info('explorePage: load more', ids)
   const newSetOfData = getProjectWithMetricsByIds(ids)
   pdStore.updateAllProjectsWithMetrics(pdStore.allProjectsWithMetrics.concat(newSetOfData))
 }
 
 onMounted(() => {
-  console.log('explorePage: mounted')
   // TODO: change this to call real api once it's ready
   const allProjects = toLightProjects(allMockProjects)
   pdStore.updateAllProjects(allProjects)

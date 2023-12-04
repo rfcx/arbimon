@@ -72,11 +72,9 @@ const toGeoJson = (mapData: ProjectLight[]): FeatureCollection => {
 }
 
 onMounted(() => {
-  console.log('mapview: mounted')
   map = createMap({ ...mapConfig.value, container: mapRoot.value as HTMLElement })
 
   map.on('load', () => {
-    console.log('mapview: map loaded')
     map.addSource('projects', {
       type: 'geojson',
       // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
@@ -169,14 +167,10 @@ watch(() => props.selectedProjectId, (id) => {
 
 // TODO: if the props.data updated, the data source of the map should be updated as well
 watch(() => props.data, (newData) => {
-  console.log('mapview: props.data', newData.length)
-  if (map.loaded() === false || newData === props.data) {
-    console.log('mapview: skip updating map data')
-  } else if (map.getSource('projects') === undefined) {
-    console.log('mapview: add new source')
+  if (map.loaded() === false || newData === props.data) return
+  if (map.getSource('projects') === undefined) {
     map.addSource('projects', { type: 'geojson', data: toGeoJson(newData) })
   } else {
-    console.log('mapview: update source')
     (map.getSource('projects') as GeoJSONSource).setData(toGeoJson(newData))
   }
 })
