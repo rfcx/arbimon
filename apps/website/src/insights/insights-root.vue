@@ -54,7 +54,7 @@
                 :disabled="projectUserPermissionsStore.isGuest"
                 @click="hideInsight"
               >
-                Hide Insight
+                Hide Insights
               </button>
             </template>
             <template v-else>
@@ -63,7 +63,7 @@
                 :disabled="projectUserPermissionsStore.currentUserRoleOfCurrentProject === 'Guest'"
                 @click="shareInsight"
               >
-                Share Insight <span class="hidden lg:inline-flex">on Arbimon</span>
+                Share Insights <span class="hidden lg:inline-flex">on Arbimon</span>
               </button>
             </template>
           </div>
