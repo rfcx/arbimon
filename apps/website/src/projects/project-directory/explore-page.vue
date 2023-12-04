@@ -2,75 +2,84 @@
   <landing-navbar />
   <section class="static overflow-hidden">
     <project-list
-      :data="projects.sort((a, b) => a ? -1 : 1)"
+      :data="projectResults"
+      :selected-project-id="selectedProjectId ?? undefined"
       class="absolute z-40 h-100vh"
       @emit-selected-project="onEmitSelectedProject"
+      @emit-search="onEmitSearch"
+      @emit-load-more="onEmitLoadMore"
     />
     <project-info
-      v-if="selectedProject != null"
+      v-if="selectedProjectId !== null"
       class="absolute z-40 h-50vh my-auto"
-      :project="selectedProject"
+      :project-id="selectedProjectId"
     />
     <map-view
-      :data="mapData"
-      class="relative left-0 fixed z-30 w-full"
-      :selected-project-id="selectedProject?.id"
+      :data="projectResults"
+      class="relative left-0 z-30 w-full"
+      :selected-project-id="selectedProjectId ?? undefined"
       @emit-selected-project="onEmitSelectedProject"
     />
   </section>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
-import type { MapProjectData } from '~/maps/types'
-import { useStore } from '~/store'
+import { useProjectDirectoryStore, useStore } from '~/store'
 import MapView from './blocks/map-view.vue'
 import ProjectInfo from './blocks/project-info.vue'
 import ProjectList from './blocks/projects-list.vue'
-import { avgCoordinate, rawDirectoryProjectsData } from './data/rawDirectoryProjectsData'
-import { type ProjectProfileWithMetrics } from './data/types'
-
-const selectedProject = ref<ProjectProfileWithMetrics | null>(null)
+import { getRawDirectoryProjects, toLightProjects } from './data/rawDirectoryProjectsData'
+import type { ProjectLight } from './data/types'
 
 const store = useStore()
-const projects = computed(() => {
-  const realProjects = store.projects
-  const mockProjects = rawDirectoryProjectsData
-  const realWithProfileMetrics: ProjectProfileWithMetrics[] = realProjects.map(project => {
-    return {
-      id: project.id,
-      name: project.name,
-      slug: project.slug,
-      avgLatitude: avgCoordinate(project.latitudeNorth, project.latitudeSouth),
-      avgLongitude: avgCoordinate(project.longitudeEast, project.longitudeWest),
-      summary: 'Real project summary',
-      objectives: ['bio-baseline'],
-      noOfSpecies: 0,
-      noOfRecordings: 0,
-      countries: [],
-      isHighlighted: true,
-      isMock: false
-     }
-  })
-  const mockWithoutDuplicateProjectIds = mockProjects.filter(mockProject => !realProjects.find(realProject => realProject.id === mockProject.id))
-  return [...realWithProfileMetrics, ...mockWithoutDuplicateProjectIds].sort((a) => a.isHighlighted ? 1 : -1)
-})
+const pdStore = useProjectDirectoryStore()
+const selectedProjectId = ref<number | null>(null)
 
-const mapData = computed((): MapProjectData[] => {
-  return projects.value.map(project => {
-    return {
-      projectId: project.id,
-      projectSlug: project.slug,
-      projectName: project.name,
-      latitude: project.avgLatitude,
-      longitude: project.avgLongitude
-    }
-  })
-})
+/** mock db/api service, do not use in ui */
+const allMockProjects = getRawDirectoryProjects(store.projects.map(p => ({ ...p, idArbimon: -1 })))
+const getProjectWithMetricsByIds = (ids: number[]) => {
+  return allMockProjects.filter(p => ids.includes(p.id))
+}
+/** end mock */
+
+/** List of projects (with profile) you got from search results, initial is the first 20 in the list -- to show in the list */
+const projectResults = ref<ProjectLight[]>(pdStore.allProjects)
 
 const onEmitSelectedProject = (locationProjectId: number) => {
-  selectedProject.value = projects.value.find(project => project.id === locationProjectId) ?? null
+  selectedProjectId.value = locationProjectId
 }
+
+// TODO: search with keyword
+// TODO: scroll down to load more
+
+const onEmitSearch = (keyword: string) => {
+  // TODO: search with keyword
+  console.info('search with keyword', keyword)
+}
+
+const onEmitLoadMore = () => {
+  // TODO: load more ProjectsWithMetrics
+  const LIMIT = 20
+  const offset = pdStore.allProjectsWithMetrics.length
+  const total = pdStore.allProjects.length
+  console.info('explorePage: load more', offset)
+  if (offset === total) return
+  const ids = pdStore.allProjects.slice(offset, offset + LIMIT).map(p => p.id)
+  console.info('explorePage: load more', ids)
+  const newSetOfData = getProjectWithMetricsByIds(ids)
+  pdStore.updateAllProjectsWithMetrics(pdStore.allProjectsWithMetrics.concat(newSetOfData))
+}
+
+onMounted(() => {
+  console.log('explorePage: mounted')
+  // TODO: change this to call real api once it's ready
+  const allProjects = toLightProjects(allMockProjects)
+  pdStore.updateAllProjects(allProjects)
+  // TODO: load metrics (from api once it's ready)
+  pdStore.updateAllProjectsWithMetrics(getProjectWithMetricsByIds(allProjects.slice(0, 20).map(p => p.id)))
+  projectResults.value = pdStore.allProjects
+})
 
 </script>

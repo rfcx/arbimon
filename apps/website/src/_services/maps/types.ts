@@ -20,12 +20,6 @@ export interface MapSiteData {
   values: Record<string, number | boolean | string>
 }
 
-export type MapProjectData = Pick<MapSiteData, 'latitude' | 'longitude'> & {
-  projectId: number
-  projectName: string
-  projectSlug: string
-}
-
 export interface MapMoveEvent {
   sourceMapId: string
   center: LngLatLike

@@ -10,6 +10,7 @@ import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 import { useDashboardStore } from './use-dashboard-store'
 import { useDetectionsResultFilterBySpeciesStore } from './use-detections-result-filter-by-species-store'
 import { useDetectionsResultFilterStore } from './use-detections-result-filter-store'
+import { useProjectDirectoryStore } from './use-project-directory-store'
 import { useProjectUserPermissionsStore } from './use-project-user-permissions-store'
 
 export const useStore = defineStore('root', {
@@ -86,5 +87,6 @@ export {
   useDashboardStore,
   useDetectionsResultFilterBySpeciesStore,
   useDetectionsResultFilterStore,
+  useProjectDirectoryStore,
   useProjectUserPermissionsStore
 }
