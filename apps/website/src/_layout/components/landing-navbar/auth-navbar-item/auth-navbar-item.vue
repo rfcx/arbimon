@@ -57,6 +57,12 @@
         >
           <li
             class="px-4 py-2 rounded-lg hover:(bg-moss cursor-pointer text-frequency)"
+            @click="openProfile"
+          >
+            Profile
+          </li>
+          <li
+            class="px-4 py-2 rounded-lg hover:(bg-moss cursor-pointer text-frequency)"
             @click="logout"
           >
             Sign out
@@ -71,6 +77,7 @@
 import { type Auth0Client } from '@auth0/auth0-spa-js'
 import { initDropdowns } from 'flowbite'
 import { computed, inject, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { authClientKey, storeKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
@@ -80,6 +87,7 @@ const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 
 const auth = inject(authClientKey) as Auth0Client
 const store = inject(storeKey) as BiodiversityStore
+const router = useRouter()
 
 defineProps<{
   domId: string
@@ -98,6 +106,10 @@ const login = async (): Promise<void> => {
 const logout = async (): Promise<void> => {
   // Auth0 logout forces a full refresh (redirect to auth.rfcx.org for SSO purposes)
   await auth.logout({ returnTo: `${ARBIMON_BASE_URL}/logout` })
+}
+
+const openProfile = async (): Promise<void> => {
+  void router.replace({ name: ROUTE_NAMES.accountSetting })
 }
 
 onMounted(() => {
