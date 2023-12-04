@@ -1,5 +1,10 @@
 import { rawAllProjects } from './rawAllProject'
-import type { ProjectProfileWithMetrics } from './types'
+import type { ProjectLight, ProjectProfileWithMetrics } from './types'
+
+export const avgCoordinate = (x: number, y: number): number => {
+  if (x === y) return x
+  return (x + y) / 2
+}
 
 export const rawDirectoryProjectsData: ProjectProfileWithMetrics[] = [
   ...rawAllProjects.filter((p) => {
@@ -9,10 +14,8 @@ export const rawDirectoryProjectsData: ProjectProfileWithMetrics[] = [
     id: project.id,
     name: project.name,
     slug: project.slug,
-    latitudeNorth: project.latitude_north,
-    latitudeSouth: project.latitude_south,
-    longitudeEast: project.longitude_east,
-    longitudeWest: project.longitude_west,
+    avgLatitude: avgCoordinate(project.latitude_north, project.latitude_south),
+    avgLongitude: avgCoordinate(project.longitude_west, project.longitude_east),
     summary: 'This is a test project!',
     objectives: ['Test objective 1'],
     noOfSpecies: 0,
@@ -22,3 +25,11 @@ export const rawDirectoryProjectsData: ProjectProfileWithMetrics[] = [
     isMock: true
   }))
 ]
+
+export const rawLightDirectoryProjectsData: ProjectLight[] = rawDirectoryProjectsData.map((project) => ({
+  id: project.id,
+  name: project.name,
+  slug: project.slug,
+  avgLatitude: project.avgLatitude,
+  avgLongitude: project.avgLongitude
+}))
