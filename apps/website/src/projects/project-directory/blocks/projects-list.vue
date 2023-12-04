@@ -1,7 +1,7 @@
 <template>
   <div
     id="drawer-navigation"
-    class="fixed left-0 w-98 overflow-y-auto transition-transform -translate-x-full bg-moss"
+    class="inset-y-auto left-0 fixed w-98 overflow-y-auto transition-transform -translate-x-full bg-moss"
     tabindex="-1"
     aria-labelledby="drawer-navigation-label"
   >
@@ -15,6 +15,7 @@
             v-for="p in partialData"
             :key="p.id"
             :project="p"
+            @click="emitSelectedProject(p.id)"
           />
         </ul>
       </div>
@@ -30,11 +31,17 @@ import type { ProjectProfileWithMetrics } from '../data/types'
 
 const LIMIT = 20
 const props = defineProps<{ data: ProjectProfileWithMetrics[] }>()
-const partialData = ref(props.data.slice(0, LIMIT))
+const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void}>()
 
+const partialData = ref(props.data.slice(0, LIMIT))
 const loadMore = () => {
   const nextLength = partialData.value.length + LIMIT
   if (nextLength > props.data.length) return
   partialData.value = props.data.slice(0, nextLength)
 }
+
+const emitSelectedProject = (projectId: number) => {
+  emit('emitSelectedProject', projectId)
+}
+
 </script>

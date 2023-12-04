@@ -20,7 +20,11 @@ export interface MapSiteData {
   values: Record<string, number | boolean | string>
 }
 
-export type MapSiteDataLight = Pick<MapSiteData, 'siteName' | 'latitude' | 'longitude'>
+export type MapProjectData = Pick<MapSiteData, 'latitude' | 'longitude'> & {
+  projectId: number
+  projectName: string
+  projectSlug: string
+}
 
 export interface MapMoveEvent {
   sourceMapId: string

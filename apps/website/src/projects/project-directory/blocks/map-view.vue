@@ -8,12 +8,18 @@
 <script setup lang="ts">
 import type { FeatureCollection, Point } from 'geojson'
 import type { GeoJSONSource, Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import { createMap } from '~/maps'
-import type { MapSiteDataLight } from '~/maps/types'
+import type { MapProjectData } from '~/maps/types'
 
-const props = defineProps<{ data: MapSiteDataLight[] }>()
+const props = withDefaults(defineProps<{
+  data: MapProjectData[],
+  selectedProjectId?: number
+}>(), {
+  selectedProjectId: undefined
+})
+const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void}>()
 
 const mapCenter = computed((): [number, number] => {
   const lat = props.data.reduce((acc, datum) => acc + datum.latitude, 0) / props.data.length
@@ -35,15 +41,14 @@ const mapConfig: MapboxOptions = {
   attributionControl: false,
   container: 'mapRoot',
   bounds: mapBounds.value,
-  preserveDrawingBuffer: true,
-  zoom: 3
+  preserveDrawingBuffer: true
 }
 
 const mapRoot = ref<InstanceType<typeof HTMLElement> | null>(null)
 
 let map!: MapboxMap
 
-const toGeoJson = (mapData: MapSiteDataLight[]): FeatureCollection => {
+const toGeoJson = (mapData: MapProjectData[]): FeatureCollection => {
   // Define map data
   const data: FeatureCollection = {
     type: 'FeatureCollection',
@@ -51,7 +56,9 @@ const toGeoJson = (mapData: MapSiteDataLight[]): FeatureCollection => {
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [datum.longitude, datum.latitude] },
       properties: {
-        title: datum.siteName
+        title: datum.projectName,
+        id: datum.projectId,
+        slug: datum.projectSlug
         // radius: props.mapBaseFormatter.getRadius(Number(datum.values[props.dataKey])), // TODO Remove this once boolean is removed from type
         // popup: getPopup(datum)
       }
@@ -142,8 +149,35 @@ onMounted(() => {
     })
   })
 
-  map.on('click', 'unclustered-point', () => {
-    // TODO: show popup
+  map.on('click', 'unclustered-point', (e) => {
+    const features = map.queryRenderedFeatures(e.point, { layers: ['unclustered-point'] })
+    const { id } = features[0]?.properties ?? {}
+    emit('emitSelectedProject', id)
   })
 })
+
+watch(() => props.selectedProjectId, (id) => {
+  if (id === undefined) return
+  flyToProject(id)
+})
+
+const flyToProject = (id: number) => {
+  const setCoordinateToRight = (coordinates: [number, number]) => {
+    const [lng, lat] = coordinates
+    const newLng = lng - 0.03
+    return [newLng, lat] as [number, number]
+  }
+  const project = props.data.find(datum => datum.projectId === id)
+  const coordinates = [project?.longitude ?? 0, project?.latitude ?? 0] as [number, number]
+
+  // check if already at coordinates
+  const currentCenter = map.getCenter()
+  if (currentCenter.lng === coordinates[0] && currentCenter.lat === coordinates[1]) return
+
+  map.flyTo({
+    center: setCoordinateToRight(coordinates), // to avoid overlapping with sidebar
+    zoom: 12.5,
+    essential: true
+  })
+}
 </script>
