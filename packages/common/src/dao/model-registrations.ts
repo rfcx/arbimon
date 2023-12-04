@@ -9,6 +9,7 @@ import { DashboardSpeciesHighlightedModel, MODEL_DASHBOARD_SPECIES_HIGHLIGHTED }
 import { DashboardSpeciesThreatenedModel, MODEL_DASHBOARD_SPECIES_THREATENED } from './models/dashboard-species-threatened-model'
 import { DataSourceModel, MODEL_DATA_SOURCE } from './models/data-source-model'
 import { DetectionBySiteSpeciesHourModel, MODEL_DETECTION_BY_SITE_SPECIES_HOUR } from './models/detection-by-site-species-hour-model'
+import { LocationProjectCountryModel, MODEL_LOCATION_PROJECT_COUNTRY } from './models/location-project-country-model'
 import { LocationProjectMetricModel, MODEL_LOCATION_PROJECT_METRIC } from './models/location-project-metric-model'
 import { LocationProjectModel, MODEL_LOCATION_PROJECT } from './models/location-project-model'
 import { LocationProjectOrganizationModel, MODEL_LOCATION_PROJECT_ORGANIZATION } from './models/location-project-organization-model'
@@ -72,6 +73,7 @@ export const modelRegistrations = {
   [MODEL_DASHBOARD_SPECIES_HIGHLIGHTED]: [DashboardSpeciesHighlightedModel],
   [MODEL_DASHBOARD_SPECIES_THREATENED]: [DashboardSpeciesThreatenedModel],
   [MODEL_LOCATION_PROJECT_METRIC]: [LocationProjectMetricModel],
+  [MODEL_LOCATION_PROJECT_COUNTRY]: [LocationProjectCountryModel],
   [MODEL_SPECIES_IN_PROJECT]: [SpeciesInProjectModel]
 } as const
 

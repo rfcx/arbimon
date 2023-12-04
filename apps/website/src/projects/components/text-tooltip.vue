@@ -1,10 +1,12 @@
 <template>
-  <icon-custom-ic-info
+  <span
     v-if="tooltipText"
     :data-tooltip-target="tooltipId"
     data-tooltip-style="light"
-    class="inline-block basis-8 h-4 w-4 cursor-pointer text-insight mt-icon-i mt-3.5px"
-  />
+    class="ml-1 w-6"
+  >
+    {{ tooltipText }}
+  </span>
   <div
     :id="tooltipId"
     role="tooltip"

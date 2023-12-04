@@ -17,6 +17,7 @@ export const LocationProjectProfileModel = defineWithDefaults<LocationProjectPro
 
     // Facts
     summary: DataTypes.STRING(1023),
+    image: DataTypes.STRING(1023),
     readme: DataTypes.TEXT,
     methods: {
       type: DataTypes.TEXT,
