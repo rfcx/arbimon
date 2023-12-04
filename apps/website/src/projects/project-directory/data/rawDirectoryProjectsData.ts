@@ -46,7 +46,7 @@ const getMockDataWithRealProjects = (realProjects: Project[]): ProjectProfileWit
      }
   })
   const mockWithoutDuplicateProjectIds = mockDataProjects.filter(mockProject => !realProjects.find(realProject => realProject.id === mockProject.id))
-  return [...realLightProjects, ...mockWithoutDuplicateProjectIds].sort((a) => a.isHighlighted ? 1 : -1)
+  return [...realLightProjects, ...mockWithoutDuplicateProjectIds].sort((a) => a.isHighlighted ? -1 : 1)
 }
 
 export const toLightProjects = (projects: ProjectProfileWithMetrics[]): ProjectLight[] => {
