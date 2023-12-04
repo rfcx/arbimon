@@ -53,7 +53,7 @@
         class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
         required
       >
-      <p class="mt-5 text-insight text-base font-medium font-sans">
+      <p class="mt-5 opacity-70 text-insight text-base font-medium font-sans">
         Email address
       </p>
       <input
@@ -62,6 +62,7 @@
         name="email"
         type="text"
         class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
+        disabled
       >
       <p class="mt-5 text-insight text-base font-medium font-sans">
         Affiliated organization
