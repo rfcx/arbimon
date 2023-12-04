@@ -12,7 +12,7 @@
         <!-- Modal header -->
         <div class="flex items-center justify-between p-3 border-b rounded-t border-fog">
           <h3 class="text-base font-medium text-frequency">
-            Share Insight
+            Share Insights
           </h3>
           <button
             type="button"
@@ -35,14 +35,14 @@
                 d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
               />
             </svg>
-            <span class="sr-only">Close share insight information modal</span>
+            <span class="sr-only">Close share insights information modal</span>
           </button>
         </div>
         <!-- Modal body -->
         <div class="px-4 py-6">
           <div class="flex flex-row justify-between mb-3 items-center">
             <h3 class="text-white text-xl font-medium font-sans leading-normal">
-              Are you sure you want to hide insight?
+              Are you sure you want to hide Insights?
             </h3>
             <icon-custom-fi-frown class="w-6 h-6" />
           </div>
@@ -50,7 +50,7 @@
             Public projects enable open collaboration, improve ecological knowledge, and facilitate break through discoveries around the world.
           </p>
           <p class="text-base text-white font-normal font-sans leading-normal mb-1">
-            You can always share Insight again when you are ready
+            You can always share Insights again when you are ready
           </p>
           <a
             href="https://rfcx.org/privacy-policy"
@@ -68,7 +68,7 @@
             class="btn btn-secondary w-full"
             @click="$emit('emit-hide-insights-confirm')"
           >
-            Hide Insight to non-project members
+            Hide Insights to non-project members
           </button>
         </div>
       </div>

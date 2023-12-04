@@ -12,7 +12,7 @@
         <!-- Modal header -->
         <div class="flex items-center justify-between p-3 border-b rounded-t border-fog">
           <h3 class="text-base font-medium text-frequency">
-            Share Insight
+            Share Insights
           </h3>
           <button
             type="button"
@@ -35,7 +35,7 @@
                 d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
               />
             </svg>
-            <span class="sr-only">Close share insight information modal</span>
+            <span class="sr-only">Close share insights information modal</span>
           </button>
         </div>
         <!-- Modal body -->
@@ -75,7 +75,7 @@
             class="btn btn-secondary w-full"
             @click="$emit('emit-hide-insights')"
           >
-            Hide Insight to non-project members
+            Hide Insights to non-project members
           </button>
         </div>
       </div>

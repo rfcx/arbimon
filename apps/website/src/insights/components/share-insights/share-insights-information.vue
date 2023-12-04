@@ -12,7 +12,7 @@
         <!-- Modal header -->
         <div class="flex items-center justify-between p-3 border-b rounded-t border-insight">
           <h3 class="text-base font-medium text-frequency">
-            Share Insight
+            Share Insights
           </h3>
           <button
             type="button"
@@ -41,7 +41,7 @@
         <!-- Modal body -->
         <div class="px-4 py-6">
           <h3 class="text-white text-xl font-medium font-sans leading-7 mb-4">
-            Share Insight to the Arbimon community
+            Share Insights to the Arbimon community
           </h3>
           <p class="text-base text-white font-normal font-sans leading-normal mb-0.5">
             Showcase your project on Arbimon's <router-link
@@ -71,7 +71,7 @@
             class="btn btn-primary w-full text-black"
             @click="showInsightsConfirm"
           >
-            Share Insight <icon-custom-ft-globe class="inline-flex w-5 h-5" />
+            Share Insights <icon-custom-ft-globe class="inline-flex w-5 h-5" />
           </button>
         </div>
       </div>
