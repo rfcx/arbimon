@@ -29,7 +29,8 @@
       </div>
       <div class="mt-4 sm:mt-6 flex flex-row-reverse items-center gap-4">
         <button
-          class="self-end inline-flex items-center btn btn-primary"
+          :disabled="projectUserPermissionsStore.isGuest"
+          class="self-end inline-flex items-center btn btn-primary disabled:opacity-75 disabled:cursor-not-allowed"
           @click.prevent="save"
         >
           Save edit
@@ -70,7 +71,7 @@ import { computed, inject, ref, watch } from 'vue'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientKey } from '@/globals'
-import { useDashboardStore, useStore } from '~/store'
+import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
 import { useGetProjectSettings, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectForm from './components/form/project-form.vue'
@@ -79,6 +80,7 @@ import ProjectSummaryForm from './components/form/project-summary-form.vue'
 import type { ProjectDefault } from './types'
 
 const store = useStore()
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProject = computed(() => store.selectedProject)

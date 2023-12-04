@@ -11,7 +11,8 @@
   </div>
   <textarea
     v-model.trim="summary"
-    class="input-field w-full h-28"
+    :disabled="projectUserPermissionsStore.isGuest"
+    class="input-field w-full h-28 disabled:opacity-75 disabled:cursor-not-allowed"
     :placeholder="PLACEHOLDER_SUMMARY_TEXT"
     :maxlength="MAX"
   />
@@ -22,6 +23,7 @@
 import { initTooltips } from 'flowbite'
 import { onMounted, ref, watch } from 'vue'
 
+import { useProjectUserPermissionsStore } from '~/store'
 import IconIInfo from '../icon-i-info.vue'
 
 const props = defineProps<{
@@ -35,6 +37,7 @@ const PLACEHOLDER_SUMMARY_TEXT = 'e.g. This project aims to set up the bioacoust
 const MAX = 140
 
 const summary = ref('')
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 onMounted(() => {
   initTooltips()
