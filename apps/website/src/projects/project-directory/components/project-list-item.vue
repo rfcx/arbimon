@@ -1,5 +1,8 @@
 <template>
-  <li class="px-6 py-4 flex flex-col md:flex-row gap-4 border-b border-util-gray-01 hover:bg-util-gray-03">
+  <li
+    class="px-6 py-4 flex flex-col md:flex-row gap-4 border-b border-util-gray-01 hover:bg-echo selected:bg-pitch"
+    :class="{'bg-pitch': isSelected}"
+  >
     <div class="">
       <img
         src="#"
@@ -30,7 +33,7 @@ import { computed } from 'vue'
 import { masterOjectiveTypes, objectiveTypes } from '../../types'
 import type { ProjectProfileWithMetrics } from '../data/types'
 
-const props = defineProps<{ project: ProjectProfileWithMetrics }>()
+const props = defineProps<{ project: ProjectProfileWithMetrics, isSelected: boolean }>()
 
 // countries and objectives
 const shouldShowCountryAndObjective = computed(() => {
