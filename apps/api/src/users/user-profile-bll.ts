@@ -35,6 +35,16 @@ export const getUserProfileImage = async (userId: string): Promise<ArrayBuffer> 
     throw BioNotFoundError()
   }
 
+  if (
+    env.AWS_S3_BUCKET_REGION === undefined || env.AWS_S3_BUCKET_REGION === '' ||
+    env.AWS_S3_ENDPOINT === undefined || env.AWS_S3_ENDPOINT === '' ||
+    env.AWS_S3_ACCESS_KEY_ID === undefined || env.AWS_S3_ACCESS_KEY_ID === '' ||
+    env.AWS_S3_SECRET_ACCESS_KEY === undefined || env.AWS_S3_SECRET_ACCESS_KEY === ''
+  ) {
+    throw new BioPublicError('AWS S3 bucket region is not defined', 500)
+  }
+
+  // TODO: fix default bucket
   const s3 = new S3Client({
     region: env.AWS_S3_BUCKET_REGION,
     endpoint: env.AWS_S3_ENDPOINT,
@@ -62,6 +72,16 @@ export const getUserProfileImage = async (userId: string): Promise<ArrayBuffer> 
 }
 
 export const patchUserProfileImage = async (userId: string, file: MultipartFile): Promise<void> => {
+  if (
+    env.AWS_S3_BUCKET_NAME === undefined || env.AWS_S3_BUCKET_NAME === '' ||
+    env.AWS_S3_BUCKET_REGION === undefined || env.AWS_S3_BUCKET_REGION === '' ||
+    env.AWS_S3_ENDPOINT === undefined || env.AWS_S3_ENDPOINT === '' ||
+    env.AWS_S3_ACCESS_KEY_ID === undefined || env.AWS_S3_ACCESS_KEY_ID === '' ||
+    env.AWS_S3_SECRET_ACCESS_KEY === undefined || env.AWS_S3_SECRET_ACCESS_KEY === ''
+  ) {
+    throw new BioPublicError('AWS S3 bucket region is not defined', 500)
+  }
+
   const s3 = new S3Client({
     region: env.AWS_S3_BUCKET_REGION,
     endpoint: env.AWS_S3_ENDPOINT,
