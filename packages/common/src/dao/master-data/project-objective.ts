@@ -1,4 +1,4 @@
-import { type ProjectObjective } from '@/dao/types'
+import { type ProjectObjective } from '../types'
 
 export const masterOjectiveTypes = {
   BioBaseline: { id: 100, slug: 'bio-baseline', description: 'Establish biodiversity baseline', shorten: 'Establish baseline', imageUrl: 'https://github.com/rfcx/arbimon/assets/9149523/37e29356-c09c-40d3-aa70-e2200c251e71' },

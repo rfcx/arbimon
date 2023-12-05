@@ -1,6 +1,6 @@
 import { type ValueOf } from '@rfcx-bio/utils/utility-types'
 
-import { type SyncSource } from '@/dao/types'
+import { type SyncSource } from '../types'
 
 export const masterSources = {
   Arbimon: { id: 100, name: 'Arbimon' },
