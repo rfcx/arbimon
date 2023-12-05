@@ -36,21 +36,3 @@ export interface ProjectDefault {
   endDate: string | null
   onGoing: boolean
 }
-
-export interface ProjectObjective {
-  id: number
-  slug: string
-  description: string
-  shorten: string
-}
-
-export const masterOjectiveTypes = {
-  BioBaseline: { id: 100, slug: 'bio-baseline', description: 'Establish biodiversity baseline', shorten: 'Establish baseline' },
-  MonitorSpecies: { id: 200, slug: 'monitor-species', description: 'Detect / monitor endangered species', shorten: 'Detect rare species' },
-  MonitorIllegalAct: { id: 300, slug: 'monitor-illegal-act', description: 'Detect and monitor illegal activity', shorten: 'Detect illegal activity' },
-  ImpactHuman: { id: 400, slug: 'impact-human', description: 'Evaluate impact of human activities on biodiversity', shorten: 'Evaluate human impact' },
-  ImpactConservation: { id: 500, slug: 'impact-conservation', description: 'Evaluate impact of conservation initiatives on biodiversity', shorten: 'Evaluate conservation impact' },
-  Others: { id: 999, slug: 'others', description: 'Others', shorten: 'Others' }
-} as const
-
-export const objectiveTypes: readonly ProjectObjective[] = Object.values(masterOjectiveTypes)
