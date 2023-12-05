@@ -1,12 +1,13 @@
 import { type ProjectObjective } from '../types'
 
+// TODO: update the image urls
 export const masterOjectiveTypes = {
-  BioBaseline: { id: 100, slug: 'bio-baseline', description: 'Establish biodiversity baseline', shorten: 'Establish baseline', imageUrl: 'https://github.com/rfcx/arbimon/assets/9149523/37e29356-c09c-40d3-aa70-e2200c251e71' },
-  MonitorSpecies: { id: 200, slug: 'monitor-species', description: 'Detect / monitor endangered species', shorten: 'Detect rare species', imageUrl: 'https://github.com/rfcx/arbimon/assets/9149523/1ae1f266-c609-4b7a-bf88-669997cb29c4' },
-  MonitorIllegalAct: { id: 300, slug: 'monitor-illegal-act', description: 'Detect and monitor illegal activity', shorten: 'Detect illegal activity', imageUrl: 'https://github.com/rfcx/arbimon/assets/9149523/6804ddd5-df4f-484a-821a-46d62252128f' },
-  ImpactHuman: { id: 400, slug: 'impact-human', description: 'Evaluate impact of human activities on biodiversity', shorten: 'Evaluate human impact', imageUrl: 'https://github.com/rfcx/arbimon/assets/9149523/d2be14de-d4f9-40cb-8022-6f02ef6b81c5' },
-  ImpactConservation: { id: 500, slug: 'impact-conservation', description: 'Evaluate impact of conservation initiatives on biodiversity', shorten: 'Evaluate conservation impact', imageUrl: 'https://github.com/rfcx/arbimon/assets/9149523/5e5ac395-6272-4499-9ae8-ea1021147ba7' },
-  Others: { id: 999, slug: 'others', description: 'Others', shorten: 'Others', imageUrl: 'https://github.com/rfcx/arbimon/assets/9149523/14812747-f5a7-4b2f-95c9-257658e139a9' }
+  BioBaseline: { id: 100, slug: 'bio-baseline', description: 'Establish biodiversity baseline', shorten: 'Establish baseline', imageUrl: 'https://drive.google.com/uc?export=view&id=1GOsKAR7ZxUtGK3u5Gwiea-jIOP399Lj1' },
+  MonitorSpecies: { id: 200, slug: 'monitor-species', description: 'Detect / monitor endangered species', shorten: 'Detect rare species', imageUrl: 'https://drive.google.com/uc?export=view&id=1bMAR_Na_Y2EYEywEMAHKIAiQyrr7Ej38' },
+  MonitorIllegalAct: { id: 300, slug: 'monitor-illegal-act', description: 'Detect and monitor illegal activity', shorten: 'Detect illegal activity', imageUrl: 'https://drive.google.com/uc?export=view&id=1cVoSp54pb49ijl9xBSB8O6n6xLHUuKTz' },
+  ImpactHuman: { id: 400, slug: 'impact-human', description: 'Evaluate impact of human activities on biodiversity', shorten: 'Evaluate human impact', imageUrl: 'https://drive.google.com/uc?export=view&id=1l4gjdtf35QWGWiYWhxV6UcyVf9_ZbxxF' },
+  ImpactConservation: { id: 500, slug: 'impact-conservation', description: 'Evaluate impact of conservation initiatives on biodiversity', shorten: 'Evaluate conservation impact', imageUrl: 'https://drive.google.com/uc?export=view&id=1SmEMmfAfo99u7BudhqblrUNCHIEaJUDm' },
+  Others: { id: 999, slug: 'others', description: 'Others', shorten: 'Others', imageUrl: 'https://drive.google.com/uc?export=view&id=1l4gjdtf35QWGWiYWhxV6UcyVf9_ZbxxF' }
 } as const
 
 export const objectiveTypes: readonly ProjectObjective[] = Object.values(masterOjectiveTypes)
