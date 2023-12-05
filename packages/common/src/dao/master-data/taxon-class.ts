@@ -1,6 +1,6 @@
 import { type ValueOf } from '@rfcx-bio/utils/utility-types'
 
-import { type TaxonClass } from '@/dao/types'
+import { type TaxonClass } from '../types'
 
 export const masterTaxonClasses = {
   Amphibians: { id: 100, idArbimon: 2, slug: 'amphibians', commonName: 'Amphibians' },
