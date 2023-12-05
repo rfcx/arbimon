@@ -47,12 +47,12 @@
   </router-link>
 </template>
 <script setup lang="ts">
-import { masterOjectiveTypes, objectiveTypes } from '@rfcx-bio/common/dao/master-data'
 import type { Project } from '@rfcx-bio/common/dao/types'
 
 import image from '@/_assets/cta/frog-hero.webp'
 import { ROUTE_NAMES } from '~/router'
 import TextTooltip from '../components/text-tooltip.vue'
+import { masterOjectiveTypes, objectiveTypes } from '../types'
 
 const props = defineProps<{project: Omit<Project, 'idArbimon'>}>()
 
