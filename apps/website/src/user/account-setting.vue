@@ -97,29 +97,44 @@
         </svg>
       </button>
       <button
-        class="w-full btn btn-primary group mt-7"
+        class="w-full btn btn-primary inline items-center group mt-7"
         type="button"
         @click="saveAccountSetting"
       >
         Save
+        <icon-fas-spinner
+          v-if="isUpdatingProfilePhoto"
+          class="animate-spin w-4 h-4 ml-2 inline"
+        />
       </button>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { type AxiosInstance } from 'axios'
+import { type Ref, computed, inject, onMounted, ref } from 'vue'
 
 import image from '@/_assets/cta/frog-hero.webp'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
+import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
+import { usePatchProfileImage } from './composables/use-patch-profile-photo'
 
 const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
-const uploadedPhoto = ref('')
+const uploadedPhotoUrl = ref('')
+const uploadedFile = ref()
+const uploadedPhotoData: Ref<Record<string, string>> = ref({
+  name: '',
+  type: ''
+})
 
 const store = useStore()
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+
+const { isPending: isUpdatingProfilePhoto, mutate: mutatePatchProfilePhoto } = usePatchProfileImage(apiClientBio)
 
 onMounted(() => {
   firstName.value = store.user?.given_name ?? ''
@@ -128,7 +143,7 @@ onMounted(() => {
 })
 
 const profilePhoto = computed(() => {
-  return uploadedPhoto.value ? uploadedPhoto.value : store.user?.picture ? store.user?.picture : image
+  return uploadedPhotoUrl.value ? uploadedPhotoUrl.value : store.user?.picture ? store.user?.picture : image
 })
 
 const selectPhoto = async (): Promise<void> => {
@@ -138,16 +153,36 @@ const selectPhoto = async (): Promise<void> => {
 const uploadPhoto = async (e: Event): Promise<void> => {
   const target = e.target as HTMLInputElement
   const file: File = (target.files as FileList)[0]
+  uploadedPhotoData.value.name = file.name
+  uploadedPhotoData.value.type = file.type
   // the browser has NO ACCESS to the file path for security reasons
-  const reader = new FileReader()
-  reader.addEventListener('load', e => {
-    uploadedPhoto.value = e.target?.result as string
+  const readerUrl = new FileReader()
+  const readerBuffer = new FileReader()
+  readerUrl.addEventListener('load', e => {
+    uploadedPhotoUrl.value = e.target?.result as string
   })
-  reader.readAsDataURL(file)
+  readerBuffer.addEventListener('load', e => {
+    uploadedFile.value = e.target?.result
+  })
+  readerUrl.readAsDataURL(file)
+  readerBuffer.readAsArrayBuffer(file)
 }
 
 const saveAccountSetting = async (): Promise<void> => {
   // TODO :: saveAccountSetting
+  if (uploadedPhotoUrl.value) await saveProfilePhoto()
+}
+
+const saveProfilePhoto = async (): Promise<void> => {
+  const imageFileAsBlobType = new File([new Blob([uploadedFile.value as BlobPart])], uploadedPhotoData.value.name, {
+    type: uploadedPhotoData.value.type
+  })
+  const form = new FormData()
+  form.append('image', imageFileAsBlobType, uploadedPhotoData.value.name)
+  console.info(form.getAll('image'))
+  mutatePatchProfilePhoto(form, {
+    onSuccess: async () => { }
+  })
 }
 
 </script>
