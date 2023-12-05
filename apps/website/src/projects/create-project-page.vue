@@ -125,7 +125,7 @@ async function create () {
   try {
     const response = await apiBioPostProjectCreate(apiClientBio, project)
     await store.refreshProjects()
-    await router.push({ name: ROUTE_NAMES.overview, params: { projectSlug: response?.slug } })
+    await router.push({ name: ROUTE_NAMES.dashboard, params: { projectSlug: response?.slug } })
   } catch (e) {
     if (e instanceof Error) console.error(e.message)
     hasFailed.value = true
