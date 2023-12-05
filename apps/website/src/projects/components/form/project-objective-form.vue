@@ -41,7 +41,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 
-import { type ProjectObjective, masterOjectiveTypes, objectiveTypes } from '@rfcx-bio/common/dao/master-data'
+import { masterOjectiveTypes, objectiveTypes } from '@rfcx-bio/common/dao/master-data'
+import { type ProjectObjective } from '@rfcx-bio/common/dao/types'
 
 import { useProjectUserPermissionsStore } from '~/store'
 import IconIInfo from '../icon-i-info.vue'

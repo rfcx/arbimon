@@ -74,8 +74,7 @@ import CountryFlag from 'vue-country-flag-next'
 
 import { type ProjectLocationResponse } from '@rfcx-bio/common/api-bio/project/project-location'
 import { type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
-
-import { objectiveTypes } from '../../projects/types'
+import { objectiveTypes } from '@rfcx-bio/common/dao/master-data'
 
 const props = defineProps<{
   projectLocation: ProjectLocationResponse | undefined,
