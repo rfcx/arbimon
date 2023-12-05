@@ -9,23 +9,30 @@
     <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-10 border-b-1 border-white/80">
       <div class="flex items-start gap-4 flex-col md:flex-row">
         <img
-          :src="store.user?.picture ?? image"
-          alt="Profile picture"
+          :src="profilePhoto"
+          alt="Profile"
           class="w-32 h-32 aspect-square object-cover rounded-full mr-4"
         >
         <div>
           <h2>
-            Change profile profile
+            Change profile photo
           </h2>
           <h4 class="mt-3">
             JPG and PNG files less than 5 MB are supported.
           </h4>
+          <input
+            id="fileUpload"
+            type="file"
+            accept="image/jpeg, image/png"
+            hidden
+            @change="uploadPhoto"
+          >
           <button
             class="btn btn-secondary group mt-5"
             type="button"
-            @click="uploadPhoto"
+            @click="selectPhoto"
           >
-            UploadPhoto <icon-custom-cloud-upload class="ml-2 group-hover:stroke-pitch inline-flex" />
+            Upload photo <icon-custom-cloud-upload class="ml-2 group-hover:stroke-pitch inline-flex" />
           </button>
         </div>
       </div>
@@ -101,8 +108,7 @@
 </template>
 
 <script setup lang="ts">
-// TODO :: Change to real image
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import image from '@/_assets/cta/frog-hero.webp'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
@@ -111,6 +117,7 @@ import { useStore } from '~/store'
 const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
+const uploadedPhoto = ref('')
 
 const store = useStore()
 
@@ -120,8 +127,21 @@ onMounted(() => {
   email.value = store.user?.email ?? ''
 })
 
-const uploadPhoto = async (): Promise<void> => {
-  // TODO :: uploadPhoto
+const profilePhoto = computed(() => {
+  return uploadedPhoto.value ? uploadedPhoto.value : store.user?.picture ? store.user?.picture : image
+})
+
+const selectPhoto = async (): Promise<void> => {
+  document.getElementById('fileUpload').click()
+}
+
+const uploadPhoto = async (e): Promise<void> => {
+  const file = e.target.files[0] // the browser has NO ACCESS to the file path for security reasons
+  const reader = new FileReader()
+  reader.addEventListener('load', e => {
+    uploadedPhoto.value = e.target.result
+  })
+  reader.readAsDataURL(file)
 }
 
 const saveAccountSetting = async (): Promise<void> => {
