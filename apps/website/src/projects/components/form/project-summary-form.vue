@@ -11,7 +11,7 @@
   </div>
   <textarea
     v-model.trim="summary"
-    :disabled="projectUserPermissionsStore.isGuest"
+    :disabled="isDisabled"
     class="input-field w-full h-28 disabled:opacity-75 disabled:cursor-not-allowed"
     :placeholder="PLACEHOLDER_SUMMARY_TEXT"
     :maxlength="MAX"
@@ -23,11 +23,11 @@
 import { initTooltips } from 'flowbite'
 import { onMounted, ref, watch } from 'vue'
 
-import { useProjectUserPermissionsStore } from '~/store'
 import IconIInfo from '../icon-i-info.vue'
 
 const props = defineProps<{
   existingSummary?: string
+  isDisabled?: boolean
 }>()
 
 const emit = defineEmits<{(e: 'emitProjectSummary', summary: string): void}>()
@@ -37,8 +37,6 @@ const PLACEHOLDER_SUMMARY_TEXT = 'e.g. This project aims to set up the bioacoust
 const MAX = 140
 
 const summary = ref('')
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
-
 onMounted(() => {
   initTooltips()
   if (props.existingSummary) {
