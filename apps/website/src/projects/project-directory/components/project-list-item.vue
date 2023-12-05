@@ -30,8 +30,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { masterOjectiveTypes, objectiveTypes } from '@rfcx-bio/common/dao/master-data'
-
+import { masterOjectiveTypes, objectiveTypes } from '../../types'
 import type { ProjectProfileWithMetrics } from '../data/types'
 
 const props = defineProps<{ project: ProjectProfileWithMetrics, isSelected: boolean }>()
