@@ -162,7 +162,7 @@ import HighlightedSpeciesSelector, { type SpecieRow } from './highlighted-specie
 const props = defineProps<{ highlightedSpecies: HighlightedSpeciesRow[] }>()
 const emit = defineEmits<{(e: 'emitClose'): void}>()
 
-watch(() => props.highlightedSpecies, () => { fillExistedSpeciesSlug() })
+watch(() => props.highlightedSpecies, () => { fillExistingSpeciesSlug() })
 
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
@@ -181,6 +181,7 @@ const { isLoading: isLoadingSpecies, data: speciesResp } = useSpeciesInProject(a
 const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
 const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
 
+// Full list of species for selected project
 const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   if (speciesResp.value === undefined || !speciesResp.value.species.length) {
     return []
@@ -198,29 +199,7 @@ const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   })
 })
 
-const preSelectedSpecies = computed(() => {
-  return speciesList.value.length ? speciesList.value.filter(specie => selectedSpeciesSlug.value.includes(specie.slug)) : []
-})
-
-const existingRiskCode = computed(() => {
-  return speciesList.value.length ? speciesList.value.map(specie => specie.riskRating).filter((value, index, self) => self.findIndex(({ code }) => code === value.code) === index) : []
-})
-
-const existingSlugInDB = computed(() => {
-  return props.highlightedSpecies.map(sp => sp.slug)
-})
-
-const newSpeciesToAdd = computed(() => {
-  const existingSlugsInDB = props.highlightedSpecies.map(sp => sp.slug)
-  console.info('newSpeciesToAdd', preSelectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug)))
-  console.info('preSelectedSpecies', preSelectedSpecies.value)
-  return preSelectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
-})
-
-const speciesLength = computed(() => {
-  return speciesListFiltered.value.length
-})
-
+// Filtered list of species by search, risk or both
 const speciesListFiltered = computed(() => {
   if (!searchKeyword.value && searchRisk.value) {
     resetPagination()
@@ -250,8 +229,34 @@ const speciesListFiltered = computed(() => {
     } else return speciesList.value
 })
 
+const speciesLength = computed(() => {
+  return speciesListFiltered.value.length
+})
+
 const speciesForCurrentPage = computed(() => {
   return speciesListFiltered.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
+})
+
+const preSelectedSpecies = computed(() => {
+  return speciesList.value.length ? speciesList.value.filter(specie => selectedSpeciesSlug.value.includes(specie.slug)) : []
+})
+
+const existingRiskCode = computed(() => {
+  return speciesList.value.length ? speciesList.value.map(specie => specie.riskRating).filter((value, index, self) => self.findIndex(({ code }) => code === value.code) === index) : []
+})
+
+const existingSlugInDB = computed(() => {
+  return props.highlightedSpecies.map(sp => sp.slug)
+})
+
+const newSpeciesToAdd = computed(() => {
+  const existingSlugsInDB = props.highlightedSpecies.map(sp => sp.slug)
+  return preSelectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
+})
+
+const speciesToRemove = computed(() => {
+  const preSelectedSpeciesSlug = preSelectedSpecies.value.map(sp => sp.slug)
+  return props.highlightedSpecies.filter(sp => !preSelectedSpeciesSlug.includes(sp.slug))
 })
 
 const resetPagination = (): void => {
@@ -270,7 +275,6 @@ const findIndexToRemove = (slug: string): void => {
 
 const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
   if (isSpecieSelected(specie)) {
-    await removeSpecieFromDB(specie.slug)
     findIndexToRemove(specie.slug)
   } else {
     // only 5 species might be highlighted
@@ -286,19 +290,10 @@ const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
 }
 
 const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
-  await removeSpecieFromDB(specie.slug)
   findIndexToRemove(specie.slug)
 }
 
-const removeSpecieFromDB = async (slug: string): Promise<void> => {
-  const specieToDeleteFromDB = props.highlightedSpecies.find(sp => sp.slug === slug)
-  const existingSlugsInDB = props.highlightedSpecies.map(sp => sp.slug)
-  if (existingSlugsInDB.includes(slug) && specieToDeleteFromDB) {
-    await deleteHighlightedSpecies(specieToDeleteFromDB)
-  }
-}
-
-const fillExistedSpeciesSlug = (): void => {
+const fillExistingSpeciesSlug = (): void => {
   if (props.highlightedSpecies.length) {
     selectedSpeciesSlug.value = existingSlugInDB.value
   } else selectedSpeciesSlug.value = []
@@ -311,15 +306,20 @@ const filterByCode = (code: string): void => {
 }
 
 const saveHighlightedSpecies = async (): Promise<void> => {
+  if (speciesToRemove.value.length) await deleteHighlightedSpecies()
+  if (newSpeciesToAdd.value.length) await addHighlightedSpecies()
+}
+
+const deleteHighlightedSpecies = async (): Promise<void> => {
+  mutateDeleteSpecie({ species: speciesToRemove.value })
+}
+
+const addHighlightedSpecies = async (): Promise<void> => {
   mutatePostSpecies({ species: newSpeciesToAdd.value }, {
     onSuccess: async () => {
       emit('emitClose')
     }
   })
-}
-
-const deleteHighlightedSpecies = async (specie: HighlightedSpeciesRow): Promise<void> => {
-  mutateDeleteSpecie({ species: [specie] })
 }
 </script>
 <style lang="scss">
