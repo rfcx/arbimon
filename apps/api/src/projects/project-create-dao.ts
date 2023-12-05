@@ -1,7 +1,7 @@
-import { objectiveTypes } from '@rfcx-bio/common/dao/master-data/project-objective'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project, type ProjectObjective } from '@rfcx-bio/common/dao/types'
+import { type Project } from '@rfcx-bio/common/dao/types'
 
+import { getImageByObjectives } from '@/project-profile/utils/image-by-objective'
 import { getSequelize } from '~/db'
 import { uniqueSlug } from './project-create-util-slug-finder'
 
@@ -15,8 +15,6 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
   const project = { ...projectDefaults, ...projectPartial, slug }
   const { id } = await LocationProject.create(project)
 
-  const image = objectiveTypes.find((objective: ProjectObjective) => objective.slug === projectPartial.objectives[0])?.imageUrl ?? ''
-
   const profile = {
     locationProjectId: id,
     summary: '',
@@ -24,7 +22,7 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
     methods: '',
     keyResult: '',
     resources: '',
-    image, // TODO: #1319 randomly pick default image by objective
+    image: getImageByObjectives(projectPartial.objectives),
     objectives: projectPartial.objectives,
     dateStart: projectPartial.dateStart,
     dateEnd: projectPartial.dateEnd
