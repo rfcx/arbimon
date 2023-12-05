@@ -3,6 +3,7 @@
     v-model="dateValue"
     class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
     type="date"
+    :disabled="projectUserPermissionsStore.isGuest"
     placeholder="Choose date"
     format="MM/DD/YYYY"
     :disabled-date="props.dateDisabled === undefined ? disabledForStartDate : disabledForEndDate"
@@ -15,12 +16,15 @@ import { ref, watchEffect } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { useProjectUserPermissionsStore } from '~/store'
+
 const dateValue = ref<Date>()
 const emit = defineEmits<{(e: 'emitSelectDate', value: string | null): void}>()
 const props = defineProps<{
   initialDate?: Date,
   dateDisabled?: Date
 }>()
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const disabledForStartDate = (time: Date) => {
   return time.getTime() > Date.now()

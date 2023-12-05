@@ -1,6 +1,6 @@
 import { type ValueOf } from '@rfcx-bio/utils/utility-types'
 
-import { type SyncDataType } from '@/dao/types'
+import { type SyncDataType } from '../types'
 
 export const masterSyncDataTypes = {
   Project: { id: 100, name: 'Project' },

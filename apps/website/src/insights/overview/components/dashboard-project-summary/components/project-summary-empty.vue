@@ -4,7 +4,8 @@
       Don't leave this space empty - make it meaningful by adding your content.
       <span
         class="text-frequency cursor-pointer font-display"
-        @click="$emit('emit-add-content')"
+        :class="{ 'disabled:cursor-not-allowed': projectUserPermissionsStore.isGuest }"
+        @click="onAddContentClicked"
       >
         Add content
       </span>
@@ -13,5 +14,14 @@
 </template>
 
 <script setup lang="ts">
-defineEmits<{(event: 'emit-add-content'): void}>()
+import { useProjectUserPermissionsStore } from '~/store'
+
+const emit = defineEmits<{(event: 'emit-add-content'): void}>()
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
+
+const onAddContentClicked = () => {
+  if (projectUserPermissionsStore.isGuest) {
+    emit('emit-add-content')
+  }
+}
 </script>

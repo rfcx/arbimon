@@ -1,116 +1,66 @@
-import type { ProjectProfileWithMetrics } from './types'
+import type { Project } from '@rfcx-bio/common/dao/types'
 
-export const rawDirectoryProjectsData: ProjectProfileWithMetrics[] = [
-{
-  id: 1,
-  name: 'Puerto Rico',
-  slug: 'puerto-rico',
-  latitudeNorth: 18.51375,
-  latitudeSouth: 17.93168,
-  longitudeEast: -65.24505,
-  longitudeWest: -67.94469784,
-  summary: 'Acoustic monitoring and occupancy maps for bird and anuran species across Puerto Rico: A baseline for SWAP and other agencies’ conservation and planning activities',
-  objectives: ['monitor-species', 'impact-human', 'blagh'],
-  noOfSpecies: 12,
-  noOfRecordings: 167,
-  countries: ['US']
-},
-{
-  id: 2,
-  name: 'BCI-Panama_2018',
-  slug: 'bci-panama-2018',
-  latitudeNorth: 9.17229,
-  latitudeSouth: 9.14041,
-  longitudeEast: -79.81971,
-  longitudeWest: -79.86858,
-  summary: 'This is a project of Marconi Campos-Cerqueira. The objective is to record anurans, birds, and bats during the transition between the dry and wet seasons.',
-  objectives: [],
-  noOfSpecies: 0,
-  noOfRecordings: 0,
-  countries: []
-},
-{
-  id: 3,
-  name: 'Fake Project',
-  slug: 'fake-arbimon-project-for-bio',
-  latitudeNorth: 12.0,
-  latitudeSouth: 11.9,
-  longitudeEast: -55.0,
-  longitudeWest: -55.14,
-  summary: 'This is a test project!',
-  objectives: ['Test objective 1', 'Test objective 2'],
-  noOfSpecies: 0,
-  noOfRecordings: 0,
-  countries: []
-},
-{
-    id: 1141830,
-    slug: 'mimal-acoustic',
-    name: 'Mimal Acoustic',
-    latitudeNorth: -13.84839,
-    latitudeSouth: -13.15648,
-    longitudeEast: 134.05847,
-    longitudeWest: 134.86421,
+import { rawAllProjects } from './rawAllProject'
+import type { ProjectLight, ProjectProfileWithMetrics } from './types'
+
+export const avgCoordinate = (x: number, y: number): number => {
+  if (x === y) return x
+  return (x + y) / 2
+}
+
+const mockDataProjects: ProjectProfileWithMetrics[] = [
+  ...rawAllProjects.filter((p) => {
+    const hasNosite = p.longitude_east === 0 && p.longitude_west === 0 && p.latitude_north === 0 && p.latitude_south === 0
+    return !hasNosite
+  }).map((project) => ({
+    id: project.id,
+    name: project.name,
+    slug: project.slug,
+    avgLatitude: avgCoordinate(project.latitude_north, project.latitude_south),
+    avgLongitude: avgCoordinate(project.longitude_west, project.longitude_east),
     summary: 'This is a test project!',
-    objectives: ['Test objective 1', 'Test objective 2'],
+    objectives: ['Test objective 1'],
     noOfSpecies: 0,
     noOfRecordings: 0,
-    countries: []
-  },
-  {
-    id: 1141710,
-    slug: 'secret-spot-isabela-p-r-audio-records',
-    name: 'Secret Spot, Isabela P.R. Audio Records',
-    latitudeNorth: 0,
-    latitudeSouth: 0,
-    longitudeEast: 0,
-    longitudeWest: 0,
-    summary: 'This is a test project!',
-    objectives: ['Test objective 1', 'Test objective 2'],
-    noOfSpecies: 0,
-    noOfRecordings: 0,
-    countries: []
-  },
-  {
-    id: 1273,
-    slug: 'cws-india-elephants',
-    name: 'CWS, India - Elephants',
-    latitudeNorth: 0,
-    latitudeSouth: 29.7750434,
-    longitudeEast: -95.7831319,
-    longitudeWest: 76.62252,
-    summary: 'This is a test project!',
-    objectives: ['Test objective 1', 'Test objective 2'],
-    noOfSpecies: 0,
-    noOfRecordings: 0,
-    countries: []
-  },
-  {
-    id: 1141838,
-    slug: 'alytes',
-    name: 'Alytes',
-    latitudeNorth: 1,
-    latitudeSouth: 1,
-    longitudeEast: 1,
-    longitudeWest: 1,
-    summary: 'This is a test project!',
-    objectives: ['Test objective 1', 'Test objective 2'],
-    noOfSpecies: 0,
-    noOfRecordings: 0,
-    countries: []
-  },
-  {
-    id: 1141818,
-    slug: 'animal-nuit-querrien',
-    name: 'Animal nuit Querrien',
-    latitudeNorth: 47.92910187487714,
-    latitudeSouth: 47.92910187487714,
-    longitudeEast: -3.5356583595275914,
-    longitudeWest: -3.5356583595275914,
-    summary: 'This is a test project!',
-    objectives: ['Test objective 1', 'Test objective 2'],
-    noOfSpecies: 0,
-    noOfRecordings: 0,
-    countries: []
-  }
+    countries: [],
+    isHighlighted: false,
+    isMock: true
+  }))
 ]
+
+const getMockDataWithRealProjects = (realProjects: Project[]): ProjectProfileWithMetrics[] => {
+  const realLightProjects: ProjectProfileWithMetrics[] = realProjects.map(project => {
+    return {
+      id: project.id,
+      name: project.name,
+      slug: project.slug,
+      avgLatitude: avgCoordinate(project.latitudeNorth, project.latitudeSouth),
+      avgLongitude: avgCoordinate(project.longitudeEast, project.longitudeWest),
+      summary: 'This is a real project!',
+      objectives: ['bio-baseline'],
+      noOfSpecies: 0,
+      noOfRecordings: 0,
+      countries: [],
+      isHighlighted: true,
+      isMock: false
+     }
+  })
+  const mockWithoutDuplicateProjectIds = mockDataProjects.filter(mockProject => !realProjects.find(realProject => realProject.id === mockProject.id))
+  return [...realLightProjects, ...mockWithoutDuplicateProjectIds].sort((a) => a.isHighlighted ? -1 : 1)
+}
+
+export const toLightProjects = (projects: ProjectProfileWithMetrics[]): ProjectLight[] => {
+  return projects.map((project) => ({
+    id: project.id,
+    name: project.name,
+    slug: project.slug,
+    avgLatitude: project.avgLatitude,
+    avgLongitude: project.avgLongitude,
+    isHighlighted: project.isHighlighted,
+    isMock: project.isMock
+  }))
+}
+
+export const getRawDirectoryProjects = (projects: Project[]): ProjectProfileWithMetrics[] => {
+  return getMockDataWithRealProjects(projects)
+}

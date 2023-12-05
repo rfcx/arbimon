@@ -4,7 +4,7 @@
       <router-link
         :to="{ name: ROUTE_NAMES.explore }"
         exact-active-class="tab-active"
-        class="block tab"
+        class="block tab relative"
       >
         Projects
       </router-link>
@@ -13,7 +13,7 @@
       <router-link
         :to="{ name: ROUTE_NAMES.landingHowItWorks }"
         exact-active-class="tab-active"
-        class="block tab"
+        class="block tab relative"
       >
         How it works
       </router-link>

@@ -10,5 +10,13 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=test
+
+  s3mock:
+    image: adobe/s3mock
+    environment:
+      - initialBuckets=arbimon-development
+    ports:
+      - "9090:9090"
+
 volumes:
   data-timescaledb:
