@@ -132,14 +132,16 @@ const profilePhoto = computed(() => {
 })
 
 const selectPhoto = async (): Promise<void> => {
-  document.getElementById('fileUpload').click()
+  document.getElementById('fileUpload')?.click()
 }
 
-const uploadPhoto = async (e): Promise<void> => {
-  const file = e.target.files[0] // the browser has NO ACCESS to the file path for security reasons
+const uploadPhoto = async (e: Event): Promise<void> => {
+  const target = e.target as HTMLInputElement
+  const file: File = (target.files as FileList)[0]
+  // the browser has NO ACCESS to the file path for security reasons
   const reader = new FileReader()
   reader.addEventListener('load', e => {
-    uploadedPhoto.value = e.target.result
+    uploadedPhoto.value = e.target?.result as string
   })
   reader.readAsDataURL(file)
 }
