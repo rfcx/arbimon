@@ -13,16 +13,19 @@
             :existing-name="selectedProject?.name"
             :date-start="settings?.dateStart"
             :date-end="settings?.dateEnd"
+            :is-disabled="projectUserPermissionsStore.isGuest"
             @emit-update-value="onEmitDefaultValue"
           />
           <project-summary-form
             :existing-summary="settings?.summary"
+            :is-disabled="projectUserPermissionsStore.isGuest"
             @emit-project-summary="onEmitSummary"
           />
         </div>
         <div>
           <project-objective-form
             :existing-objectives="settings?.objectives"
+            :is-disabled="projectUserPermissionsStore.isGuest"
             @emit-project-objectives="onEmitObjectives"
           />
         </div>
