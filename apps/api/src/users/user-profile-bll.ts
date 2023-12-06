@@ -4,11 +4,11 @@ import { extname } from 'node:path'
 import { type Readable } from 'node:stream'
 
 import { type UserProfileResponse } from '@rfcx-bio/common/api-bio/users/profile'
-import { type UserProfile } from '@rfcx-bio/common/dao/types'
+import { type OrganizationTypes, type UserProfile } from '@rfcx-bio/common/dao/types'
 
 import { BioNotFoundError, BioPublicError } from '~/errors'
 import { env } from '../_services/env'
-import { getUserProfile as daoGetUserProfile, patchUserProfile as daoPatchUserProfile, patchUserProfileImage as daoPatchUserProfileImage } from './user-profile-dao'
+import { getAllOrganizations as daoGetAllOrganizations, getUserProfile as daoGetUserProfile, patchUserProfile as daoPatchUserProfile, patchUserProfileImage as daoPatchUserProfileImage } from './user-profile-dao'
 
 export const getUserProfile = async (userId: string): Promise<UserProfileResponse> => {
   const profile = await daoGetUserProfile(userId)
@@ -101,4 +101,12 @@ export const patchUserProfileImage = async (userId: string, file: MultipartFile)
 
   await s3.send(command)
   await daoPatchUserProfileImage(userId, env.AWS_S3_ENDPOINT == null || env.AWS_S3_ENDPOINT === '' ? `https://${env.AWS_S3_BUCKET_NAME}.s3.${env.AWS_S3_BUCKET_REGION}.amazonaws.com/${imagePath}` : `${env.AWS_S3_ENDPOINT}/${imagePath}`)
+}
+
+export const getAllOrganizations = async (): Promise<Array<OrganizationTypes['light']>> => {
+  const organizations = await daoGetAllOrganizations()
+  if (organizations === undefined) {
+    throw BioNotFoundError()
+  }
+  return organizations
 }
