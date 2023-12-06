@@ -35,8 +35,13 @@ export const useProjectUserPermissionsStore = defineStore('project-user-permissi
     const authClient = await useAuth0Client()
     const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, async () => await getIdToken(authClient))
 
-    const members = await apiClient.get<GetProjectMembersResponse>(`/projects/${id}/users`)
-    projectMembers.value = members.data
+    try {
+      const members = await apiClient.get<GetProjectMembersResponse>(`/projects/${id}/users`)
+      projectMembers.value = members.data
+    } catch (_e) {
+      // guaranteed Guest
+      projectMembers.value = []
+    }
   }
 
   const currentUserRoleOfCurrentProject = computed<CoreUser['role']>(() => {
