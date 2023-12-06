@@ -164,7 +164,7 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: [authRequiredGuard]
   },
   {
-    path: '/account-setting',
+    path: '/account-settings',
     name: ROUTE_NAMES.accountSettings,
     component: PAGES.AccountSettings
   },

@@ -210,28 +210,6 @@
           </div>
         </div>
       </div>
-      <!-- <button
-        id="dropdownDefaultButton"
-        class="w-full mt-2 h-10 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
-        type="button"
-      >
-        Dropdown button
-        <svg
-          class="w-2.5 h-2.5 ms-3 inline-flex"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 10 6"
-        >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="m1 1 4 4 4-4"
-          />
-        </svg>
-      </button> -->
       <button
         class="w-full btn btn-primary inline items-center group mt-7"
         type="button"
@@ -364,6 +342,7 @@ const refetchOrganizationsSearch = async (): Promise<void> => {
 }
 
 const onAddNewOrganizationFromSearch = (id: number): void => {
+  console.info('onAddNewOrganizationFromSearch', id)
   // Return when the org already exists
   if (displayedOrganizations.value.findIndex(o => o.id === id) > -1) {
     dropdownStatus.value = 'idle'
@@ -372,6 +351,7 @@ const onAddNewOrganizationFromSearch = (id: number): void => {
 
   // Add to the list when it's new org
   const newOrg = organizationsSearchResult.value?.find((o) => o.id === id)
+  console.info('newOrg', newOrg)
   if (newOrg == null) {
     dropdownStatus.value = 'idle'
     return
@@ -380,6 +360,7 @@ const onAddNewOrganizationFromSearch = (id: number): void => {
   selectedOrganizationIds.value.push(newOrg.id)
   addedOrganizations.value.push(newOrg)
   dropdownStatus.value = 'idle'
+  console.info('selectedOrganizationIds, addedOrganizations', selectedOrganizationIds, addedOrganizations)
 }
 
 const openCreateNewOrganizationForm = async (): Promise<void> => {
