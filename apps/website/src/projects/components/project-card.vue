@@ -17,7 +17,7 @@
       class="mt-3 flex flex-row items-center font-display text-sm mr-2 h-5 whitespace-nowrap text-ellipsis overflow-hidden"
     >
       <span class="text-spoonbill">
-        {{ project?.countries?.length !== 0 ? countrie : 'Multiple countries' }}
+        {{ project?.countries?.length !== 0 ? countrie : 'No sites' }}
       </span>
       <div
         class="ml-1 border-l-2 text-ellipsis overflow-hidden"
@@ -47,6 +47,8 @@
   </router-link>
 </template>
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import type { Project } from '@rfcx-bio/common/dao/types'
 
 import image from '@/_assets/cta/frog-hero.webp'
@@ -56,7 +58,10 @@ import { masterOjectiveTypes, objectiveTypes } from '../types'
 
 const props = defineProps<{project: Omit<Project, 'idArbimon'>}>()
 
-const countrie = props.project?.countries !== undefined ? props.project.countries[0] : ''
+const countrie = computed(() => {
+  if (props.project?.countries === undefined) return 'No sites'
+  return props.project?.countries?.length === 1 ? props.project.countries[0] : 'Multiple countries'
+})
 
 const objectives = props.project.objectives?.map((objective) => {
     return objectiveTypes.find((type) => type.slug === objective)?.shorten ?? masterOjectiveTypes.Others.shorten
