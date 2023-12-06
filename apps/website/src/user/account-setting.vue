@@ -75,13 +75,13 @@
       <p class="mt-5 text-insight text-base font-medium font-sans">
         Affiliated organization
       </p>
-      <div class="flex items-center ml-4">
+      <div class="flex items-center mt-2">
         <button
           v-if="dropdownStatus === 'idle'"
           @click="openOrganizationSearch()"
         >
           <icon-custom-ft-search-lg
-            class="text-white w-4 h-4"
+            class="text-white w-5 h-5"
           />
         </button>
         <div
@@ -259,6 +259,7 @@ import image from '@/_assets/cta/frog-hero.webp'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
+import OrganizationSearchResultCard from '../insights/overview/components/dashboard-project-summary/components/dashboard-project-stakeholders/organization-search-result-card.vue'
 import { useGetSearchOrganizationsResult } from '../insights/overview/composables/use-get-search-organizations-result'
 import { useGetOrganizationsList } from './composables/use-get-organizations'
 import { usePatchProfileImage } from './composables/use-patch-profile-photo'
