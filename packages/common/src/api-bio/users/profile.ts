@@ -10,9 +10,7 @@ export type UpdateUserProfileRequestBody = Partial<Omit<UserProfile, 'id' | 'use
 // Response types
 export type UserProfileResponse = Omit<UserProfile, 'id' | 'userIdAuth0'>
 
-export interface OrganizationsResponse {
-  organizations: Array<OrganizationTypes['light']>
-}
+export type OrganizationsResponse = Array<OrganizationTypes['light']>
 
 // Route
 export const userProfileRoute = '/profile'
@@ -26,5 +24,7 @@ export const apiUpdateUserProfile = async (apiClient: AxiosInstance, data: Updat
   await apiClient.patch(userProfileRoute, data)
 }
 
-export const apiGetOrganizationsList = async (apiClient: AxiosInstance): Promise<OrganizationsResponse> =>
-  await apiClient.get(organizationsListRoute)
+export const apiGetOrganizationsList = async (apiClient: AxiosInstance): Promise<OrganizationsResponse> => {
+  const response = await apiClient.get(organizationsListRoute)
+  return response.data
+}
