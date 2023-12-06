@@ -13,3 +13,5 @@ export type ProjectProfileWithMetrics = ProjectLight & Pick<LocationProjectProfi
   countries: string[]
   imageUrl: string
 }
+
+export type Tab = 'All' | 'My projects'
