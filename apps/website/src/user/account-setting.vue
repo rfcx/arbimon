@@ -5,6 +5,7 @@
       <h1 class="tracking-tight font-medium text-gray-900 dark:text-white">
         Account settings
       </h1>
+      <span v-if="isLoadingProfileData">Loading</span>
     </div>
     <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-10 border-b-1 border-white/80">
       <div class="flex items-start gap-4 flex-col md:flex-row">
@@ -113,16 +114,14 @@
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { type Ref, computed, inject, onMounted, ref } from 'vue'
-
-import { apiGetUserProfile } from '@rfcx-bio/common/api-bio/users/profile'
+import { type Ref, computed, inject, onMounted, ref, watch } from 'vue'
 
 import image from '@/_assets/cta/frog-hero.webp'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 import { usePatchProfileImage } from './composables/use-patch-profile-photo'
-import { usePatchUserProfile } from './composables/use-patch-user-profile'
+import { useGetProfileData, usePatchUserProfile } from './composables/use-patch-user-profile'
 
 const firstName = ref('')
 const lastName = ref('')
@@ -139,10 +138,15 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { isPending: isUpdatingProfilePhoto, mutate: mutatePatchProfilePhoto } = usePatchProfileImage(apiClientBio)
 const { isPending: isUpdatingUserProfile, mutate: mutatePatchUserProfile } = usePatchUserProfile(apiClientBio)
+const { isLoading: isLoadingProfileData, data: profileData } = useGetProfileData(apiClientBio)
 
 onMounted(() => {
-  getUser()
   email.value = store.user?.email ?? ''
+})
+
+watch(profileData, () => {
+  firstName.value = profileData.value?.firstName ?? store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
+  lastName.value = profileData.value?.lastName ?? store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
 })
 
 const profilePhoto = computed(() => {
@@ -169,17 +173,6 @@ const uploadPhoto = async (e: Event): Promise<void> => {
   })
   readerUrl.readAsDataURL(file)
   readerBuffer.readAsArrayBuffer(file)
-}
-
-const getUser = async (): Promise<void> => {
-  try {
-    const userProfile = await apiGetUserProfile(apiClientBio)
-    firstName.value = userProfile?.firstName ?? store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
-    lastName.value = userProfile?.lastName ?? store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
-  } catch (e) {
-    firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
-    lastName.value = store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
-  }
 }
 
 const saveAccountSetting = async (): Promise<void> => {
