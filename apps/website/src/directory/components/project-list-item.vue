@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { masterOjectiveTypes, objectiveTypes } from '../../types'
+import { masterOjectiveTypes, objectiveTypes } from '../../projects/types'
 import type { ProjectProfileWithMetrics } from '../data/types'
 
 const props = defineProps<{ project: ProjectProfileWithMetrics, isSelected: boolean }>()

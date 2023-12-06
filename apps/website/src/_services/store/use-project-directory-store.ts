@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-import type { ProjectLight, ProjectProfileWithMetrics } from '@/projects/project-directory/data/types'
+import type { ProjectLight, ProjectProfileWithMetrics } from '@/directory/data/types'
 
 export const useProjectDirectoryStore = defineStore('project-directory-store', () => {
   const allProjects = ref<ProjectLight[]>([])
