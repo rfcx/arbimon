@@ -31,7 +31,7 @@ import { useProjectDirectoryStore, useStore } from '~/store'
 import MapView from './blocks/map-view.vue'
 import ProjectInfo from './blocks/project-info.vue'
 import ProjectList from './blocks/projects-list.vue'
-import { getRawDirectoryProjects, toLightProjects } from './data/rawDirectoryProjectsData'
+import { avgCoordinate, getRawDirectoryProjects, toLightProjects } from './data/rawDirectoryProjectsData'
 import type { ProjectLight, ProjectProfileWithMetrics } from './data/types'
 
 const store = useStore()
@@ -42,7 +42,23 @@ const selectedTab = ref<'all' | 'me'>('all')
 
 /** mock db/api service, do not use in ui */
 const allMockProjects = getRawDirectoryProjects(store.projects.map(p => ({ ...p, idArbimon: -1 })))
-const myProjects: ProjectProfileWithMetrics[] = store.myProjects.map(p => ({ ...p, noOfRecordings: 0, noOfSpecies: 0, isHighlighted: true }))
+const myProjects: ProjectProfileWithMetrics[] = store.myProjects.map(project => {
+  return {
+    id: project.id,
+    name: project.name,
+    slug: project.slug,
+    avgLatitude: avgCoordinate(project.latitudeNorth, project.latitudeSouth),
+    avgLongitude: avgCoordinate(project.longitudeEast, project.longitudeWest),
+    summary: 'This is a real project!',
+    objectives: ['bio-baseline'],
+    noOfSpecies: 0,
+    noOfRecordings: 0,
+    countries: [],
+    isHighlighted: true,
+    isMock: false,
+    imageUrl: project.image ?? ''
+   }
+})
 const getProjectWithMetricsByIds = (ids: number[]) => {
   return allMockProjects.filter(p => ids.includes(p.id))
 }
