@@ -6,9 +6,22 @@
     aria-labelledby="drawer-navigation-label"
   >
     <div class="h-full overflow-y">
-      <p class="p-6 border-b border-frequency text-frequency">
-        All projects ({{ props.data.length }})
-      </p>
+      <ul class="p-6 border-b border-frequency text-frequency flex flex-row gap-4">
+        <li
+          class="cursor-pointer"
+          :class="{'border-frequency border-b-2': selectedTab === 'all'}"
+          @click="emitSearch('all')"
+        >
+          All projects
+        </li>
+        <li
+          class="cursor-pointer"
+          :class="{'border-frequency border-b-2': selectedTab === 'me'}"
+          @click="emitSearch('me')"
+        >
+          My projects
+        </li>
+      </ul>
       <div
         v-infinite-scroll="loadMore"
         :infinite-scroll-distance="40"
@@ -38,15 +51,21 @@ import { computed, ref } from 'vue'
 
 import { useProjectDirectoryStore } from '~/store'
 import ProjectListItem from '../components/project-list-item.vue'
-import type { ProjectLight } from '../data/types'
+import type { ProjectLight, ProjectProfileWithMetrics } from '../data/types'
 
-const props = defineProps<{ data: ProjectLight[], selectedProjectId: number | undefined }>()
-const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void, (e: 'emitLoadMore'): void
+const props = defineProps<{ data: ProjectLight[], selectedProjectId: number | undefined, selectedTab: string }>()
+const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void, (e: 'emitLoadMore'): void, (e: 'emitSearch', keyword: string): void
 }>()
 
 const pdStore = useProjectDirectoryStore()
 
-const dataWithMetrics = computed(() => pdStore.allProjectsWithMetrics)
+const dataWithMetrics = computed((): ProjectProfileWithMetrics[] => {
+  if (props.selectedTab === 'all') {
+    return pdStore.allProjectsWithMetrics
+  } else {
+    return pdStore.getProjectWithMetricsByIds(props.data.map(p => p.id))
+  }
+})
 const isFetching = ref(false)
 
 const loadMore = () => {
@@ -55,6 +74,10 @@ const loadMore = () => {
 
 const emitSelectedProject = (projectId: number) => {
   emit('emitSelectedProject', projectId)
+}
+
+const emitSearch = (keyword: string) => {
+  emit('emitSearch', keyword)
 }
 
 </script>

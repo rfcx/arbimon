@@ -11,4 +11,5 @@ export type ProjectProfileWithMetrics = ProjectLight & Pick<LocationProjectProfi
   noOfRecordings: number
   noOfSpecies: number
   countries: string[]
+  imageUrl: string
 }
