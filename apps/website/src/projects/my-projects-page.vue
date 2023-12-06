@@ -49,7 +49,7 @@ const loadMore = () => {
 const loading: Ref<boolean> = ref(true)
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const myProjectsInfo = computed(() => store.myProjects)
-const LIMIT = 10
+const LIMIT = 20
 
 const loadMoreProject = async (): Promise<void> => {
   // Should show loading?
