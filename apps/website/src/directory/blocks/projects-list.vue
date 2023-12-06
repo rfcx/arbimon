@@ -101,8 +101,4 @@ const emitSearch = (keyword: string) => {
   emit('emitSearch', keyword)
 }
 
-const emitCloseProjectInfo = () => {
-  emit('emitCloseProjectInfo')
-}
-
 </script>
