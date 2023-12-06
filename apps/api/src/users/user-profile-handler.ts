@@ -20,5 +20,7 @@ export const patchUserProfileHandler: Handler<string, unknown, unknown, UpdateUs
 export const organizationsListHandler: Handler<OrganizationsResponse> = async (req) => {
   const organizations = await getAllOrganizations()
 
-  return organizations
+  return {
+    organizations
+  }
 }
