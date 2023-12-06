@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex items-center hover:bg-moss rounded-lg space-x-3 justify-between py-4 px-[18px] cursor-pointer"
-    @click="$emit('emit-add-to-selected-organization', id)"
+    @click="$emit('emitAddToSelectedOrganization', id)"
   >
     <div class="flex items-center justify-start space-x-2">
       <img
@@ -26,5 +26,5 @@
 
 <script setup lang="ts">
 defineProps<{ id: number, name: string, description?: string, image?: string }>()
-defineEmits<{(event: 'emit-add-to-selected-organization', value: number): void}>()
+defineEmits<{(event: 'emitAddToSelectedOrganization', value: number): void}>()
 </script>
