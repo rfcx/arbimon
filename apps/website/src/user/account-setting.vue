@@ -103,7 +103,7 @@
       >
         Save
         <icon-fas-spinner
-          v-if="isUpdatingProfilePhoto"
+          v-if="isUpdatingProfilePhoto || isUpdatingUserProfile"
           class="animate-spin w-4 h-4 ml-2 inline"
         />
       </button>
@@ -120,6 +120,7 @@ import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vu
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 import { usePatchProfileImage } from './composables/use-patch-profile-photo'
+import { usePatchUserProfile } from './composables/use-patch-user-profile'
 
 const firstName = ref('')
 const lastName = ref('')
@@ -135,6 +136,7 @@ const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { isPending: isUpdatingProfilePhoto, mutate: mutatePatchProfilePhoto } = usePatchProfileImage(apiClientBio)
+const { isPending: isUpdatingUserProfile, mutate: mutatePatchUserProfile } = usePatchUserProfile(apiClientBio)
 
 onMounted(() => {
   firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
@@ -168,9 +170,18 @@ const uploadPhoto = async (e: Event): Promise<void> => {
   readerBuffer.readAsArrayBuffer(file)
 }
 
+const apiIsAlready = false // TODO :: Remove when the data is Already
+
 const saveAccountSetting = async (): Promise<void> => {
-  // TODO :: saveAccountSetting
+  if (apiIsAlready) await saveUserProfile()
   if (uploadedPhotoUrl.value) await saveProfilePhoto()
+}
+
+const saveUserProfile = async (): Promise<void> => {
+  // TODO :: Change the organizationIdAffiliated value
+  mutatePatchUserProfile({ firstName: firstName.value, lastName: lastName.value, organizationIdAffiliated: undefined }, {
+    onSuccess: async () => { }
+  })
 }
 
 const saveProfilePhoto = async (): Promise<void> => {
