@@ -115,6 +115,8 @@
 import { type AxiosInstance } from 'axios'
 import { type Ref, computed, inject, onMounted, ref } from 'vue'
 
+import { apiGetUserProfile } from '@rfcx-bio/common/api-bio/users/profile'
+
 import image from '@/_assets/cta/frog-hero.webp'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
@@ -139,8 +141,7 @@ const { isPending: isUpdatingProfilePhoto, mutate: mutatePatchProfilePhoto } = u
 const { isPending: isUpdatingUserProfile, mutate: mutatePatchUserProfile } = usePatchUserProfile(apiClientBio)
 
 onMounted(() => {
-  firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
-  lastName.value = store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
+  getUser()
   email.value = store.user?.email ?? ''
 })
 
@@ -170,10 +171,19 @@ const uploadPhoto = async (e: Event): Promise<void> => {
   readerBuffer.readAsArrayBuffer(file)
 }
 
-const apiIsAlready = false // TODO :: Remove when the data is Already
+const getUser = async (): Promise<void> => {
+  try {
+    const userProfile = await apiGetUserProfile(apiClientBio)
+    firstName.value = userProfile?.firstName ?? store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
+    lastName.value = userProfile?.lastName ?? store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
+  } catch (e) {
+    firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
+    lastName.value = store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
+  }
+}
 
 const saveAccountSetting = async (): Promise<void> => {
-  if (apiIsAlready) await saveUserProfile()
+  await saveUserProfile()
   if (uploadedPhotoUrl.value) await saveProfilePhoto()
 }
 
