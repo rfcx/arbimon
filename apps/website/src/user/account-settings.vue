@@ -93,7 +93,7 @@
                 ref="organizationSearchInput"
                 v-model="searchOrganizationValue"
                 class="px-3 py-2 w-[20.0rem] text-sm text-insight bg-echo outline-none focus:outline-none rounded-t-lg font-sans"
-                :class="{ 'rounded-b-lg': orgsSearchResult.length === 0 || dropdownStatus !== 'search' }"
+                :class="{ 'rounded-b-lg': orgsSearchResult?.length === 0 || dropdownStatus !== 'search' }"
                 type="text"
                 placeholder="Type to search organizations"
                 data-dropdown-toggle="dropdown"
@@ -258,7 +258,7 @@ const dropdownStatus = ref<'idle' | 'search' | 'create-org'>('idle')
 const organizationSearchInput = ref<HTMLDivElement | null>(null)
 const organizationSearchResultContainer = ref<HTMLDivElement | null>(null)
 const organizationSearchResultNotFoundContainer = ref<HTMLDivElement | null>(null)
-const addedOrganizations = ref<Array<OrganizationTypes['light']>>([])
+const addedOrganization = ref<OrganizationTypes['light']>()
 const searchOrganizationValue = ref('')
 const createNewOrganizationFormContainer = ref<HTMLDivElement | null>(null)
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
@@ -273,7 +273,7 @@ const { isLoading: isLoadingProfileData, data: profileData } = useGetProfileData
 const { data: organizationsList } = useGetOrganizationsList(apiClientBio)
 const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult, isFetching: isSearchOrganizationFetching } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
 
-const selectedOrganizationIds = ref(organizationsList.value?.organizations.map(o => o.id) ?? [])
+const selectedOrganizationId = ref(profileData.value?.organizationIdAffiliated)
 
 onMounted(() => {
   firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
@@ -291,22 +291,25 @@ const profilePhoto = computed(() => {
 })
 
 const orgsSearchResult = computed(() => {
-  return organizationsSearchResult.value?.map(o => {
-    return {
-      ...o,
-      description: ORGANIZATION_TYPE_NAME[o.type]
-    }
-  }) ?? []
+  return searchOrganizationValue.value
+  ? organizationsSearchResult.value?.map(o => {
+      return {
+        ...o,
+        description: ORGANIZATION_TYPE_NAME[o.type]
+      }
+    })
+  : organizationsList.value?.map(o => {
+      return {
+        ...o,
+        description: ORGANIZATION_TYPE_NAME[o.type]
+      }
+    })
 })
 
-const displayedOrganizations = computed(() => {
-  const organizations = organizationsList.value?.organizations.concat(addedOrganizations.value) ?? []
-  return organizations.map(o => {
-    return {
-      ...o,
-      description: ORGANIZATION_TYPE_NAME[o.type]
-    }
-  })
+const displayedOrganization = computed(() => {
+  if (addedOrganization.value) return { ...addedOrganization.value, description: ORGANIZATION_TYPE_NAME[addedOrganization.value.type] }
+  else if (profileData.value?.organizationIdAffiliated !== null) return organizationsList.value?.find(o => o.id === profileData.value?.organizationIdAffiliated)
+  else return undefined
 })
 
 const openOrganizationSearch = async () => {
@@ -346,25 +349,24 @@ const refetchOrganizationsSearch = async (): Promise<void> => {
 }
 
 const onAddNewOrganizationFromSearch = (id: number): void => {
-  console.info('onAddNewOrganizationFromSearch', id)
+  console.info('emitid', id)
   // Return when the org already exists
-  if (displayedOrganizations.value.findIndex(o => o.id === id) > -1) {
+  if (displayedOrganization.value?.id === id) {
     dropdownStatus.value = 'idle'
     return
   }
 
   // Add to the list when it's new org
-  const newOrg = organizationsSearchResult.value?.find((o) => o.id === id)
-  console.info('newOrg', newOrg)
+  const newOrg = searchOrganizationValue.value ? organizationsSearchResult.value?.find((o) => o.id === id) : organizationsList.value?.find((o) => o.id === id)
   if (newOrg == null) {
     dropdownStatus.value = 'idle'
     return
   }
-
-  selectedOrganizationIds.value.push(newOrg.id)
-  addedOrganizations.value.push(newOrg)
+  console.info('newOrg', newOrg)
+  selectedOrganizationId.value = newOrg.id
+  addedOrganization.value = newOrg
+  searchOrganizationValue.value = newOrg.name
   dropdownStatus.value = 'idle'
-  console.info('selectedOrganizationIds, addedOrganizations', selectedOrganizationIds, addedOrganizations)
 }
 
 const openCreateNewOrganizationForm = async (): Promise<void> => {
@@ -375,7 +377,7 @@ const openCreateNewOrganizationForm = async (): Promise<void> => {
 const createNewOrganization = (): void => {
 //   mutateNewOrganization({ name: searchOrganizationValue.value, type: newOrganizationType.value, url: newOrganizationUrl.value }, {
 //     onSuccess: (newOrganization) => {
-//       addedOrganizations.value.push(newOrganization)
+//       addedOrganization.value.push(newOrganization)
 //       selectedOrganizationIds.value.push(newOrganization.id)
 //       dropdownStatus.value = 'idle'
 //     },
@@ -414,8 +416,7 @@ const saveAccountSetting = async (): Promise<void> => {
 }
 
 const saveUserProfile = async (): Promise<void> => {
-  // TODO :: Change the organizationIdAffiliated value
-  mutatePatchUserProfile({ firstName: firstName.value, lastName: lastName.value, organizationIdAffiliated: undefined }, {
+  mutatePatchUserProfile({ firstName: firstName.value, lastName: lastName.value, organizationIdAffiliated: selectedOrganizationId.value }, {
     onSuccess: async () => { }
   })
 }
