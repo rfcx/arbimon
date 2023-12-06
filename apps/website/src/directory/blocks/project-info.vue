@@ -1,6 +1,14 @@
 <template>
   <div class="flex flex-col gap-4 inset-1/4 left-100 w-98 bg-moss transition-transform -translate-x-full p-6 lg:p-10 rounded-lg">
-    <span class="text-flamingo"> ⚠️ work in progress ⚠️ </span>
+    <div class="flex flex-row justify-between items-center">
+      <span class="text-flamingo flex-1">
+        work in progress
+      </span>
+      <icon-fa-close
+        class="text-fog m-auto self-end w-4"
+        @click="emit('emitCloseProjectInfo')"
+      />
+    </div>
     <span
       v-if="project?.countries.length !== 0"
       class="text-xxs text-spoonbill"
@@ -32,6 +40,7 @@ import { useProjectDirectoryStore } from '~/store'
 import { type ProjectProfileWithMetrics } from '../data/types'
 
 const props = defineProps<{ projectId: number }>()
+const emit = defineEmits<{(e: 'emitCloseProjectInfo'): void }>()
 
 const pdStore = useProjectDirectoryStore()
 const project = computed<ProjectProfileWithMetrics | undefined>(() => {

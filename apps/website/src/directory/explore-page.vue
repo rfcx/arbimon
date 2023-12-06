@@ -14,6 +14,7 @@
       v-if="selectedProjectId !== null"
       class="absolute z-40 h-50vh my-auto"
       :project-id="selectedProjectId"
+      @emit-close-project-info="selectedProjectId = null"
     />
     <map-view
       :data="projectResults"
@@ -75,19 +76,21 @@ const onEmitSelectedProject = (locationProjectId: number) => {
 // TODO: scroll down to load more
 
 const onEmitSearch = (keyword: string) => {
-  console.info('search with keyword', keyword)
   switch (keyword) {
-    case 'All':
+    case 'All': {
       selectedTab.value = 'All'
       projectResults.value = pdStore.allProjects
       break
-    case 'My projects':
+    } case 'My projects': {
       selectedTab.value = 'My projects'
       projectResults.value = myProjects
       break
-    default:
-      projectResults.value = pdStore.allProjects.filter(p => p.name.toLowerCase().includes(keyword.toLowerCase()))
+    } default: {
+      const projectsInCriteria: ProjectLight[] = pdStore.allProjects.filter((p: { name: string }) => p.name.toLowerCase().includes(keyword.toLowerCase()))
+      fetchProjectsWithMetricsByIds(projectsInCriteria.map(p => p.id))
+      projectResults.value = projectsInCriteria
       break
+    }
   }
 }
 
@@ -97,9 +100,8 @@ const onEmitLoadMore = () => {
   const offset = pdStore.allProjectsWithMetrics.length
   const total = pdStore.allProjects.length
   if (offset === total) return
-  const ids = pdStore.allProjects.slice(offset, offset + LIMIT).map(p => p.id)
-  const newSetOfData = getProjectWithMetricsByIds(ids)
-  pdStore.updateAllProjectsWithMetrics(pdStore.allProjectsWithMetrics.concat(newSetOfData))
+  const ids = pdStore.allProjects.slice(offset, offset + LIMIT).map((p: { id: any }) => p.id)
+  fetchProjectsWithMetricsByIds(ids)
 }
 
 onMounted(() => {
@@ -110,6 +112,11 @@ onMounted(() => {
   pdStore.updateAllProjectsWithMetrics(getProjectWithMetricsByIds(allProjects.slice(0, 20).map(p => p.id)))
   projectResults.value = pdStore.allProjects
 })
+
+const fetchProjectsWithMetricsByIds = (ids: number[]) => {
+  const newSetOfData = getProjectWithMetricsByIds(ids)
+  pdStore.updateAllProjectsWithMetrics(pdStore.allProjectsWithMetrics.concat(newSetOfData))
+}
 
 watch(() => selectedTab.value, (newVal) => {
   if (newVal === 'All') {

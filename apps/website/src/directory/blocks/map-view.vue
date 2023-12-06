@@ -146,7 +146,7 @@ onMounted(() => {
       const coordinates = (features[0]?.geometry as Point).coordinates.slice() as [number, number]
       if (err === null) {
         map.easeTo({
-          center: coordinates,
+          center: setCoordinateToRight(coordinates),
           zoom
         })
       }
@@ -161,7 +161,14 @@ onMounted(() => {
 })
 
 watch(() => props.selectedProjectId, (id) => {
-  if (id === undefined) return
+  if (id === undefined) {
+    map.flyTo({
+      center: mapCenter.value,
+      zoom: 1.8,
+      essential: true
+    })
+    return
+  }
   flyToProject(id)
 })
 
@@ -175,12 +182,13 @@ watch(() => props.data, (newData) => {
   }
 })
 
-const flyToProject = (id: number) => {
-  const setCoordinateToRight = (coordinates: [number, number]) => {
+const setCoordinateToRight = (coordinates: [number, number]) => {
     const [lng, lat] = coordinates
     const newLng = lng - 0.03
     return [newLng, lat] as [number, number]
   }
+
+const flyToProject = (id: number) => {
   const project = props.data.find(datum => datum.id === id)
   const coordinates = [project?.avgLongitude ?? 0, project?.avgLatitude ?? 0] as [number, number]
 
