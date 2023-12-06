@@ -62,6 +62,8 @@ export const getObject = async (key: string): Promise<ArrayBuffer> => {
 export const putObject = async (key: string, body: Buffer, mimetype: string): Promise<void> => {
   const client = getS3Client()
 
+  console.info('can get client succesfully')
+
   const command = new PutObjectCommand({
     Bucket: bucketName,
     Key: key,

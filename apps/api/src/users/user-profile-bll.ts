@@ -38,13 +38,13 @@ export const getUserProfileImage = async (userId: string): Promise<ArrayBuffer> 
 }
 
 export const patchUserProfileImage = async (userId: string, file: MultipartFile): Promise<void> => {
-    const {
-      AWS_S3_ENDPOINT: endpoint,
-      AWS_S3_BUCKET_REGION: region,
-      AWS_S3_BUCKET_NAME: bucketName,
-      AWS_S3_ACCESS_KEY_ID: accessKeyId,
-      AWS_S3_SECRET_ACCESS_KEY: secretAccessKey
-    } = env
+  const {
+    AWS_S3_ENDPOINT: endpoint,
+    AWS_S3_BUCKET_REGION: region,
+    AWS_S3_BUCKET_NAME: bucketName,
+    AWS_S3_ACCESS_KEY_ID: accessKeyId,
+    AWS_S3_SECRET_ACCESS_KEY: secretAccessKey
+  } = env
 
   if (
     bucketName === undefined || bucketName === '' ||
@@ -56,7 +56,7 @@ export const patchUserProfileImage = async (userId: string, file: MultipartFile)
   }
 
   const imagePath = `users/${userId}/profile-image${extname(file.filename)}`
-  await putObject(`/${imagePath}`, await file.toBuffer(), file.mimetype)
+  await putObject(`${bucketName}/${imagePath}`, await file.toBuffer(), file.mimetype)
 
   await daoPatchUserProfileImage(userId, endpoint == null || endpoint === '' ? `https://${bucketName}.s3.${region}.amazonaws.com/${imagePath}` : `${endpoint}/${bucketName}/${imagePath}`)
 }
