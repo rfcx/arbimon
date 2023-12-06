@@ -32,13 +32,13 @@ import MapView from './blocks/map-view.vue'
 import ProjectInfo from './blocks/project-info.vue'
 import ProjectList from './blocks/projects-list.vue'
 import { avgCoordinate, getRawDirectoryProjects, toLightProjects } from './data/rawDirectoryProjectsData'
-import type { ProjectLight, ProjectProfileWithMetrics } from './data/types'
+import type { ProjectLight, ProjectProfileWithMetrics, Tab } from './data/types'
 
 const store = useStore()
 const pdStore = useProjectDirectoryStore()
 const selectedProjectId = ref<number | null>(null)
 
-const selectedTab = ref<'all' | 'me'>('all')
+const selectedTab = ref<Tab>('All')
 
 /** mock db/api service, do not use in ui */
 const allMockProjects = getRawDirectoryProjects(store.projects.map(p => ({ ...p, idArbimon: -1 })))
@@ -77,12 +77,12 @@ const onEmitSelectedProject = (locationProjectId: number) => {
 const onEmitSearch = (keyword: string) => {
   console.info('search with keyword', keyword)
   switch (keyword) {
-    case 'all':
-      selectedTab.value = 'all'
+    case 'All':
+      selectedTab.value = 'All'
       projectResults.value = pdStore.allProjects
       break
-    case 'me':
-      selectedTab.value = 'me'
+    case 'My projects':
+      selectedTab.value = 'My projects'
       projectResults.value = myProjects
       break
     default:

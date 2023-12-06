@@ -44,7 +44,7 @@ const getMockDataWithRealProjects = (realProjects: Project[]): ProjectProfileWit
       countries: [],
       isHighlighted: true,
       isMock: false,
-      imageUrl: ''
+      imageUrl: project.image ?? ''
      }
   })
   const mockWithoutDuplicateProjectIds = mockDataProjects.filter(mockProject => !realProjects.find(realProject => realProject.id === mockProject.id))
