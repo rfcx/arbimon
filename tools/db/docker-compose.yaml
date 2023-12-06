@@ -14,7 +14,7 @@ services:
   s3mock:
     image: adobe/s3mock
     environment:
-      - initialBuckets=arbimon-development
+      - initialBuckets=bucket
     ports:
       - "9090:9090"
 
