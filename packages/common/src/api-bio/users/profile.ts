@@ -2,7 +2,7 @@ import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { type UserProfile } from '../../dao/types'
+import { type OrganizationTypes, type UserProfile } from '../../dao/types'
 
 // Request types
 export type UpdateUserProfileRequestBody = Partial<Omit<UserProfile, 'id' | 'userIdAuth0' | 'image' | 'createdAt' | 'updatedAt'>>
@@ -10,8 +10,13 @@ export type UpdateUserProfileRequestBody = Partial<Omit<UserProfile, 'id' | 'use
 // Response types
 export type UserProfileResponse = Omit<UserProfile, 'id' | 'userIdAuth0'>
 
+export interface OrganizationsResponse {
+  organizations: Array<OrganizationTypes['light']>
+}
+
 // Route
 export const userProfileRoute = '/profile'
+export const organizationsListRoute = '/organizations'
 
 // Service
 export const apiGetUserProfile = async (apiClient: AxiosInstance): Promise<UserProfileResponse | undefined> =>
@@ -20,3 +25,6 @@ export const apiGetUserProfile = async (apiClient: AxiosInstance): Promise<UserP
 export const apiUpdateUserProfile = async (apiClient: AxiosInstance, data: UpdateUserProfileRequestBody): Promise<void> => {
   await apiClient.patch(userProfileRoute, data)
 }
+
+export const apiGetOrganizationsList = async (apiClient: AxiosInstance): Promise<OrganizationsResponse> =>
+  await apiClient.get(organizationsListRoute)

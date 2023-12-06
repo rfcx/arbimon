@@ -1,7 +1,8 @@
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type UserProfile } from '@rfcx-bio/common/dao/types'
+import { type OrganizationTypes, type UserProfile } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
+import { BioNotFoundError } from '~/errors'
 
 export const getUserProfile = async (userIdAuth0: string): Promise<Omit<UserProfile, 'id' | 'userIdAuth0'> | undefined> => {
   const sequelize = getSequelize()
@@ -27,4 +28,25 @@ export const patchUserProfileImage = async (userIdAuth0: string, path: string): 
   const { UserProfile } = ModelRepository.getInstance(sequelize)
 
   await UserProfile.update({ image: path }, { where: { userIdAuth0 } })
+}
+
+export const getAllOrganizations = async (): Promise<Array<OrganizationTypes['light']>> => {
+  const sequelize = getSequelize()
+  const { Organization } = ModelRepository.getInstance(sequelize)
+
+  const organizations = await Organization.findAll() as Array<OrganizationTypes['light']>
+
+  if (organizations == null) {
+    throw BioNotFoundError()
+  }
+
+  return organizations.map(o => {
+    return {
+      id: o.id,
+      name: o.name,
+      type: o.type,
+      url: o.url,
+      image: o.image
+    }
+  })
 }
