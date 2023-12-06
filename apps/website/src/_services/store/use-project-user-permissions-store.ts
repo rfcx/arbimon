@@ -40,6 +40,9 @@ export const useProjectUserPermissionsStore = defineStore('project-user-permissi
   }
 
   const currentUserRoleOfCurrentProject = computed<CoreUser['role']>(() => {
+    if (projectMembers.value.length === 0 && (store.selectedProject?.isMyProject ?? false)) {
+      return 'Admin'
+    }
     if (projectMembers.value.length === 0) {
       return 'Guest'
     }
