@@ -112,7 +112,7 @@ onMounted(() => {
 })
 
 watch(() => selectedTab.value, (newVal) => {
-  if (newVal === 'all') {
+  if (newVal === 'All') {
     projectResults.value = pdStore.allProjects
   } else {
     projectResults.value = myProjects
