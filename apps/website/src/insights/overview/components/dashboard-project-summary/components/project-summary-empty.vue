@@ -5,6 +5,7 @@
       <span
         class="text-frequency cursor-pointer font-display"
         :class="{ 'disabled:cursor-not-allowed': projectUserPermissionsStore.isGuest }"
+        :disabled="projectUserPermissionsStore.isGuest"
         @click="onAddContentClicked"
       >
         Add content
@@ -20,7 +21,7 @@ const emit = defineEmits<{(event: 'emit-add-content'): void}>()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const onAddContentClicked = () => {
-  if (projectUserPermissionsStore.isGuest) {
+  if (!projectUserPermissionsStore.isGuest) {
     emit('emit-add-content')
   }
 }
