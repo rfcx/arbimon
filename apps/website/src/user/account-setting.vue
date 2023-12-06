@@ -137,8 +137,8 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { isPending: isUpdatingProfilePhoto, mutate: mutatePatchProfilePhoto } = usePatchProfileImage(apiClientBio)
 
 onMounted(() => {
-  firstName.value = store.user?.given_name ?? ''
-  lastName.value = store.user?.family_name ?? ''
+  firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
+  lastName.value = store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
   email.value = store.user?.email ?? ''
 })
 
