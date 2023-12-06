@@ -165,8 +165,8 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/account-setting',
-    name: ROUTE_NAMES.accountSetting,
-    component: PAGES.AccountSetting
+    name: ROUTE_NAMES.accountSettings,
+    component: PAGES.AccountSettings
   },
   {
     path: '/callback',

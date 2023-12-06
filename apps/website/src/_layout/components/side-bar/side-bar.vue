@@ -168,7 +168,7 @@
           <ul class="px-3 flex flex-col gap-y-4">
             <li>
               <router-link
-                :to="{ name: ROUTE_NAMES.accountSetting }"
+                :to="{ name: ROUTE_NAMES.accountSettings }"
                 exact-active-class="bg-insight rounded text-moss"
                 class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >

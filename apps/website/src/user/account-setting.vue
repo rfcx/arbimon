@@ -3,7 +3,7 @@
   <section class="pt-16 bg-white dark:bg-echo">
     <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-10 border-b-1 border-white/80">
       <h1 class="tracking-tight font-medium text-gray-900 dark:text-white">
-        Account Setting
+        Account settings
       </h1>
     </div>
     <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-10 border-b-1 border-white/80">

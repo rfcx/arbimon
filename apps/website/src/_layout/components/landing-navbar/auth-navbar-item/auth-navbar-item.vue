@@ -109,7 +109,7 @@ const logout = async (): Promise<void> => {
 }
 
 const openProfile = async (): Promise<void> => {
-  void router.replace({ name: ROUTE_NAMES.accountSetting })
+  void router.replace({ name: ROUTE_NAMES.accountSettings })
 }
 
 onMounted(() => {

@@ -28,7 +28,7 @@ export const ROUTE_NAMES = {
   // User
   userCompleteProfile: 'user_complete_profile',
   userPreferences: 'user_preferences',
-  accountSetting: 'account_setting',
+  accountSettings: 'account_settings',
   // Other
   callback: 'callback',
   info: 'info',
