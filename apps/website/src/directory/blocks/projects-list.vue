@@ -10,7 +10,7 @@
         <input
           v-model="searchKeyword"
           class="input-field w-full p-4 rounded"
-          placeholder="Search by project name"
+          placeholder="Search by project name, objectives, countries, etc."
           @keyup.enter="emitSearch(searchKeyword)"
         >
       </div>
@@ -67,16 +67,17 @@ const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void, (
 
 const pdStore = useProjectDirectoryStore()
 
-const dataWithMetrics = computed((): ProjectProfileWithMetrics[] => {
-  if (searchKeyword.value === 'All' || (props.selectedTab === 'All' && searchKeyword.value === 'All')) {
-    return pdStore.allProjectsWithMetrics
-  } else {
-    return pdStore.getProjectWithMetricsByIds(props.data.map(p => p.id))
-  }
-})
-
 const isFetching = ref(false)
 const searchKeyword = ref('')
+
+const dataWithMetrics = computed((): ProjectProfileWithMetrics[] => {
+  if (['All', ''].includes(searchKeyword.value) || (props.selectedTab === 'All' && searchKeyword.value === 'All')) {
+    return pdStore.allProjectsWithMetrics
+  } else {
+    const id = props.data.map(p => p.id)
+    return pdStore.getProjectWithMetricsByIds(id)
+  }
+})
 
 const onSelectTab = (name: string) => {
   if (name === 'My projects') {
@@ -98,6 +99,10 @@ const emitSelectedProject = (projectId: number) => {
 
 const emitSearch = (keyword: string) => {
   emit('emitSearch', keyword)
+}
+
+const emitCloseProjectInfo = () => {
+  emit('emitCloseProjectInfo')
 }
 
 </script>
