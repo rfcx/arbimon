@@ -5,7 +5,7 @@
   >
     <div class="">
       <img
-        src="#"
+        :src="project.imageUrl"
         class="w-18 aspect-square rounded bg-util-gray-02"
       >
     </div>

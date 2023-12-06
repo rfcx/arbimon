@@ -4,6 +4,7 @@
     <project-list
       :data="projectResults"
       :selected-project-id="selectedProjectId ?? undefined"
+      :selected-tab="selectedTab"
       class="absolute z-40 h-100vh"
       @emit-selected-project="onEmitSelectedProject"
       @emit-search="onEmitSearch"
@@ -23,7 +24,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { useProjectDirectoryStore, useStore } from '~/store'
@@ -31,14 +32,17 @@ import MapView from './blocks/map-view.vue'
 import ProjectInfo from './blocks/project-info.vue'
 import ProjectList from './blocks/projects-list.vue'
 import { getRawDirectoryProjects, toLightProjects } from './data/rawDirectoryProjectsData'
-import type { ProjectLight } from './data/types'
+import type { ProjectLight, ProjectProfileWithMetrics } from './data/types'
 
 const store = useStore()
 const pdStore = useProjectDirectoryStore()
 const selectedProjectId = ref<number | null>(null)
 
+const selectedTab = ref<'all' | 'me'>('all')
+
 /** mock db/api service, do not use in ui */
 const allMockProjects = getRawDirectoryProjects(store.projects.map(p => ({ ...p, idArbimon: -1 })))
+const myProjects: ProjectProfileWithMetrics[] = store.myProjects.map(p => ({ ...p, noOfRecordings: 0, noOfSpecies: 0, isHighlighted: true }))
 const getProjectWithMetricsByIds = (ids: number[]) => {
   return allMockProjects.filter(p => ids.includes(p.id))
 }
@@ -55,8 +59,20 @@ const onEmitSelectedProject = (locationProjectId: number) => {
 // TODO: scroll down to load more
 
 const onEmitSearch = (keyword: string) => {
-  // TODO: search with keyword
   console.info('search with keyword', keyword)
+  switch (keyword) {
+    case 'all':
+      selectedTab.value = 'all'
+      projectResults.value = pdStore.allProjects
+      break
+    case 'me':
+      selectedTab.value = 'me'
+      projectResults.value = myProjects
+      break
+    default:
+      projectResults.value = pdStore.allProjects.filter(p => p.name.toLowerCase().includes(keyword.toLowerCase()))
+      break
+  }
 }
 
 const onEmitLoadMore = () => {
@@ -77,6 +93,14 @@ onMounted(() => {
   // TODO: load metrics (from api once it's ready)
   pdStore.updateAllProjectsWithMetrics(getProjectWithMetricsByIds(allProjects.slice(0, 20).map(p => p.id)))
   projectResults.value = pdStore.allProjects
+})
+
+watch(() => selectedTab.value, (newVal) => {
+  if (newVal === 'all') {
+    projectResults.value = pdStore.allProjects
+  } else {
+    projectResults.value = myProjects
+  }
 })
 
 </script>
