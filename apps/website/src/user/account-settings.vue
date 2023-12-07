@@ -1,6 +1,6 @@
 <template>
   <landing-navbar />
-  <section class="pt-16 mb-16 bg-white dark:bg-echo">
+  <section class="pt-16 mb-16 bg-white dark:bg-pitch">
     <div class="block rounded-lg bg-moss py-3 px-4 mx-auto max-w-screen-md dark:bg-moss h-auto">
       <div class="py-2 px-4 mx-auto max-w-screen-md border-b-1 border-white/80">
         <h2 class="tracking-tight font-medium text-gray-900 dark:text-white">
