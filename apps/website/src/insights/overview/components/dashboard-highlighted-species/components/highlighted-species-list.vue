@@ -6,20 +6,12 @@
       class="flex flex-row justify-between"
     >
       <div class="flex flex-row gap-x-4">
-        <img
-          :src="item.photoUrl"
-          class="min-h-16 h-16 min-w-16 w-16 object-cover rounded bg-util-gray-02"
-        >
-        <div
-          class="self-center hover:(text-subtle)"
-        >
-          <p class="italic">
-            {{ item.scientificName }}
-          </p>
-          <p class="text-xs text-subtle">
-            {{ item.commonName || 'Unknown' }}
-          </p>
-        </div>
+        <SpecieCard
+          :slug="item.slug"
+          :scientific-name="item.scientificName"
+          :common-name="item.commonName"
+          :photo-url="item.photoUrl"
+        />
       </div>
       <div class="flex items-center">
         <el-tag
@@ -38,6 +30,7 @@
 
 <script setup lang="ts">
 import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
+import SpecieCard from './species-card.vue'
 
 defineProps<{ species: HighlightedSpeciesRow[] }>()
 

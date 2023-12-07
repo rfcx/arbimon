@@ -1,34 +1,17 @@
 <template>
-  <ul class="flex flex-col gap-y-2">
+  <ul class="flex flex-col gap-y-3">
     <li
       v-for="item in speciesList"
       :key="item.scientificName"
       class="flex flex-col justify-center items-center rounded-lg gap-x-3 p-4 max-w-80 bg-util-gray-01 md:(flex-row h-21) lg:(flex-row h-21 justify-between)"
     >
       <div class="flex flex-col justify-center items-center gap-x-4 md:flex-row lg:(flex-row justify-between)">
-        <img
-          v-if="item.photoUrl"
-          :src="item.photoUrl"
-          class="h-14 w-14 object-cover rounded bg-util-gray-02"
-        >
-        <div
-          v-else
-          class="h-14 w-14 object-cover rounded bg-util-gray-02"
+        <SpecieCard
+          :slug="item.slug"
+          :scientific-name="item.scientificName"
+          :common-name="item.commonName"
+          :photo-url="item.photoUrl"
         />
-        <div class="self-center md:overflow-hidden">
-          <p
-            class="italic overflow-hidden tracking-tight line-clamp-2 inline-block md:(overflow-hidden text-ellipsis)"
-            :title="item.scientificName"
-          >
-            {{ item.scientificName }}
-          </p>
-          <p
-            class="text-xs text-subtle tracking-tight overflow-hidden line-clamp-2 inline-block md:(overflow-hidden text-ellipsis)"
-            :title="item.commonName"
-          >
-            {{ item.commonName }}
-          </p>
-        </div>
       </div>
       <icon-custom-fi-close-thin
         v-if="item.slug !== 'not-selected'"
@@ -44,6 +27,7 @@
 import { computed } from 'vue'
 
 import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
+import SpecieCard from './species-card.vue'
 
 export type SpecieRow = {
   slug: string
