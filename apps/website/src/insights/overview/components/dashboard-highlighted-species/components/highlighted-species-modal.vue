@@ -38,21 +38,45 @@
             </template>
           </el-input>
           <div class="flex flex-row items-center gap-x-2">
-            <el-tag
-              v-for="(riskRating, index) in existingRiskCode"
-              :key="riskRating.code"
-              v-modal="searchRisk"
-              class="species-highlights border-none cursor-pointer text-md h-6"
-              :class="searchRisk === existingRiskCode[index].code ? 'tag-selected' : ''"
-              effect="dark"
-              size="large"
-              :color="riskRating.color"
-              :title="riskRating.code"
-              round
-              @click="filterByCode(existingRiskCode[index].code)"
+            <button
+              id="dropdownButton"
+              data-dropdown-toggle="dropdown"
+              class="bg-echo text-frequency text-xs rounded-full flex flex-row items-center py-1 px-2"
+              type="button"
             >
-              {{ riskRating.code }}
-            </el-tag>
+              IUCN status
+              <span class="pl-3">
+                <icon-fa-chevron-down class="w-3 h-3 fa-chevron-down" />
+                <icon-fa-chevron-up class="w-3 h-3 fa-chevron-up hidden" />
+              </span>
+            </button>
+            <div
+              id="dropdown"
+              class="z-10 hidden bg-echo divide-y divide-util-gray-01 rounded-lg shadow w-15"
+            >
+              <ul
+                aria-labelledby="dropdownButton"
+                class="p-2 space-y-3"
+              >
+                <li
+                  v-for="(riskRating, index) in existingRiskCode"
+                  :key="riskRating.code"
+                  v-modal="searchRisk"
+                  @click="filterByCode(existingRiskCode[index].code)"
+                >
+                  <el-tag
+                    class="species-highlights border-none cursor-pointer text-md select-none h-6"
+                    :class="searchRisk === existingRiskCode[index].code ? 'tag-selected' : ''"
+                    effect="dark"
+                    size="large"
+                    :color="riskRating.color"
+                    :title="riskRating.label"
+                  >
+                    {{ riskRating.code }}
+                  </el-tag>
+                </li>
+              </ul>
+            </div>
           </div>
           <!-- Modal body -->
           <div class="grid grid-cols-3 gap-x-4 w-full">
