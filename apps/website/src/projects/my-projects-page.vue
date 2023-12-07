@@ -1,6 +1,9 @@
 <template>
   <landing-navbar />
-  <div v-infinite-scroll="loadMore">
+  <div
+    v-infinite-scroll="loadMore"
+    :infinite-scroll-distance="40"
+  >
     <section class="pt-8 bg-white dark:bg-pitch">
       <div class="py-8 mx-auto max-w-screen-xl <lg:mx-8">
         <div class="mt-6 flex flex-row">

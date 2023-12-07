@@ -47,7 +47,7 @@ export const getViewableProjects = async (memberProjectCoreIds: string[]): Promi
     }))
 }
 
-export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[], offset: number = 0, limit: number = 10): Promise<MyProjectsResponse> => {
+export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[], offset: number = 0, limit: number = 20): Promise<MyProjectsResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
