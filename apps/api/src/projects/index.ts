@@ -3,7 +3,7 @@ import { projectCreateRoute } from '@rfcx-bio/common/api-bio/project/project-cre
 import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { projectLocationRoute } from '@rfcx-bio/common/api-bio/project/project-location'
 import { projectRecordingCountRoute, projectSitesRecordingCountRoute } from '@rfcx-bio/common/api-bio/project/project-recordings'
-import { projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
+import { myProjectsRoute, projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { setMemberProjectCoreIds } from '@/_middleware/get-member-projects'
 import { type RouteRegistration, GET, PATCH, POST } from '../_services/api-helpers/types'
@@ -24,7 +24,7 @@ export const routesProject: RouteRegistration[] = [
   },
   {
     method: GET,
-    url: projectsRoute + '/mine',
+    url: myProjectsRoute,
     preHandler: [setMemberProjectCoreIds],
     handler: myProjectsHandler
   },

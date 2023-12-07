@@ -38,7 +38,7 @@ export interface MyProjectsResponse {
 
 // Route
 export const projectsRoute = '/projects'
-export const myProjectsRoute = '/projects/mine'
+export const myProjectsRoute = '/me/projects'
 
 // Service
 export const apiBioGetProjects = async (apiClient: AxiosInstance): Promise<ProjectsResponse | undefined> =>
