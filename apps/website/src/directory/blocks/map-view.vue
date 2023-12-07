@@ -10,6 +10,8 @@ import type { FeatureCollection, Point } from 'geojson'
 import type { GeoJSONSource, Map as MapboxMap, MapboxOptions } from 'mapbox-gl'
 import { computed, onMounted, ref, watch } from 'vue'
 
+import defaultMarkerIcon from '@/_assets/explore/map-marker.png'
+import selectedMarkerIcon from '@/_assets/explore/map-marker-selected.png'
 import { createMap } from '~/maps'
 import type { ProjectLight } from '../data/types'
 
@@ -73,8 +75,19 @@ const toGeoJson = (mapData: ProjectLight[]): FeatureCollection => {
 
 onMounted(() => {
   map = createMap({ ...mapConfig.value, container: mapRoot.value as HTMLElement })
+  const markers: Record<string, string> = {
+    'selected-marker': selectedMarkerIcon,
+    'default-marker': defaultMarkerIcon
+  }
 
   map.on('load', () => {
+    // load image for markers
+    Object.entries(markers).forEach(([name, imagePath]) => {
+      map.loadImage(imagePath, (error, image) => {
+        if (error) throw error
+        map.addImage(name, image)
+      })
+    })
     map.addSource('projects', {
       type: 'geojson',
       // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
@@ -82,7 +95,17 @@ onMounted(() => {
       data: toGeoJson(props.data),
       cluster: true,
       clusterMaxZoom: 14, // Max zoom to cluster points on
-      clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+      clusterRadius: 100 // Radius of each cluster when clustering points (defaults to 50)
+    })
+
+    map.addLayer({
+      id: 'unclustered-point',
+      type: 'symbol',
+      source: 'projects',
+      layout: {
+        'icon-image': 'default-marker',
+        'icon-size': 0.65
+      }
     })
 
     // Add cluser layers
@@ -92,24 +115,16 @@ onMounted(() => {
       source: 'projects',
       filter: ['has', 'point_count'],
       paint: {
-        'circle-color': [
-          'step',
-          ['get', 'point_count'],
-          '#51bbd6',
-          100,
-          '#f1f075',
-          750,
-          '#f28cb1'
-        ],
+        'circle-color': '#050608',
         'circle-radius': [
           'step',
           ['get', 'point_count'],
           20,
           100,
-          30,
+          25,
           750,
-          40
-        ]
+          35
+       ]
       }
     })
 
@@ -119,21 +134,17 @@ onMounted(() => {
       source: 'projects',
       filter: ['has', 'point_count'],
       layout: {
-        'text-field': ['get', 'point_count_abbreviated'],
+        'text-field': [
+          'case',
+          ['<', ['get', 'point_count'], 10],
+          ['get', 'point_count'],
+          '10+'
+        ],
+        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
         'text-size': 12
-      }
-    })
-
-    map.addLayer({
-      id: 'unclustered-point',
-      type: 'circle',
-      source: 'projects',
-      filter: ['!', ['has', 'point_count']],
+      },
       paint: {
-        'circle-color': '#11b4da',
-        'circle-radius': 10,
-        'circle-stroke-width': 1,
-        'circle-stroke-color': '#fff'
+        'text-color': '#FFFEFC'
       }
     })
   })
