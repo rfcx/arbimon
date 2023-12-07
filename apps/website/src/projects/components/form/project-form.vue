@@ -34,8 +34,9 @@
       <div class="relative flex-1">
         <ChooseDatePicker
           :initial-date="startDate ? new Date(startDate) : undefined"
-          :date-disabled="undefined"
           :disabled="isDisabled"
+          :date-min="undefined"
+          :date-max="new Date()"
           @emit-select-date="onSelectStartDate"
         />
       </div>
@@ -53,7 +54,8 @@
         <ChooseDatePicker
           :initial-date="endDate ? new Date(endDate) : undefined"
           :disabled="isDisabled || onGoing"
-          :date-disabled="startDate ? new Date(startDate) : new Date()"
+          :date-min="startDate ? new Date(startDate) : new Date()"
+          :date-max="undefined"
           @emit-select-date="onSelectEndDate"
         />
       </div>
