@@ -1,6 +1,6 @@
-# recync-project
+# resync-project
 
-The recync-project job:
+The resync-project job:
 
 - Resync project sites
 - Resync project species
@@ -21,10 +21,10 @@ specific project from the Arbimon DB.
 Run script via Kubernetes
 
 ```sh
-sed -e 's|set-project-id|{ARBIMON_PROJECT_ID}|g' build/production/recync-project/deployment.yaml.sample | kubectl apply -f -
+sed -e 's|set-project-id|{ARBIMON_PROJECT_ID}|g' build/production/resync-project/deployment.yaml.sample | kubectl apply -f -
 ```
 
-Add `ARBIMON_PROJECT_ID` to the command above. After running a script you will see the log with a job name, like: `job.batch/recync-project-job-{PROJECT_ID} created`
+Add `ARBIMON_PROJECT_ID` to the command above. After running a script you will see the log with a job name, like: `job.batch/resync-project-job-{PROJECT_ID} created`
 
 Run script locally
 

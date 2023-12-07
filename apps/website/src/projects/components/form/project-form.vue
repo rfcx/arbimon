@@ -15,7 +15,7 @@
       v-model="name"
       name="name"
       type="text"
-      :disabled="projectUserPermissionsStore.isGuest"
+      :disabled="isDisabled"
       class="w-full border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
       placeholder="Brown bears in Eastern Finland"
       required
@@ -35,6 +35,7 @@
         <ChooseDatePicker
           :initial-date="startDate ? new Date(startDate) : undefined"
           :date-disabled="undefined"
+          :disabled="isDisabled"
           @emit-select-date="onSelectStartDate"
         />
       </div>
@@ -51,7 +52,7 @@
       >
         <ChooseDatePicker
           :initial-date="endDate ? new Date(endDate) : undefined"
-          :disabled="projectUserPermissionsStore.isGuest || onGoing"
+          :disabled="isDisabled || onGoing"
           :date-disabled="startDate ? new Date(startDate) : new Date()"
           @emit-select-date="onSelectEndDate"
         />
@@ -63,7 +64,7 @@
       id="project-settings-on-going-project-checkbox"
       type="checkbox"
       class="w-5 h-5 border mb-1 border-gray-300 rounded dark:bg-echo focus:border-white-600 focus:ring-frequency dark:border-white-600 dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
-      :disabled="projectUserPermissionsStore.isGuest"
+      :disabled="isDisabled"
       :checked="onGoing"
       @click="onGoingClick()"
     >
@@ -80,7 +81,6 @@ import { computed, onMounted, ref, watch } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { useProjectUserPermissionsStore } from '~/store'
 import type { ProjectDefault } from '../../types'
 import IconIInfo from '../icon-i-info.vue'
 import ChooseDatePicker from './choose-date-picker.vue'
@@ -89,10 +89,12 @@ const props = withDefaults(defineProps<{
   existingName?: string
   dateStart?: Date | null
   dateEnd?: Date | null
+  isDisabled?: boolean
 }>(), {
   existingName: '',
   dateStart: null,
-  dateEnd: null
+  dateEnd: null,
+  isDisabled: false
 })
 
 const emit = defineEmits<{(e: 'emitUpdateValue', value: ProjectDefault): void}>()
@@ -102,8 +104,6 @@ const name = ref('')
 const startDate = ref<string | null>('')
 const endDate = ref<string | null>('')
 const onGoing = ref<boolean>(false)
-
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const value: ComputedRef<ProjectDefault> = computed(() => {
   return {

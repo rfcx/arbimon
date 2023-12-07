@@ -167,14 +167,18 @@
           <div class="my-4 border-t-1 border-util-gray-02" />
           <ul class="px-3 flex flex-col gap-y-4">
             <li>
-              <a
-                :title="'Account Settings'"
-                :href="ARBIMON_BASE_URL + '/user-settings'"
-                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-gray-100 rounded text-moss)"
+              <router-link
+                :to="{ name: ROUTE_NAMES.accountSettings }"
+                exact-active-class="bg-insight rounded text-moss"
+                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
-                <icon-custom-fi-user />
+                <span
+                  class="p-0.5"
+                >
+                  <icon-custom-fi-user />
+                </span>
                 <span class="ml-2 hidden group-hover:block">Account settings</span>
-              </a>
+              </router-link>
             </li>
             <li
               class="my-2 flex items-center cursor-pointer text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"

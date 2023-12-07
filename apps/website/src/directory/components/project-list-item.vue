@@ -5,7 +5,7 @@
   >
     <div class="">
       <img
-        src="#"
+        :src="project.imageUrl"
         class="w-18 aspect-square rounded bg-util-gray-02"
       >
     </div>
@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { masterOjectiveTypes, objectiveTypes } from '../../types'
+import { masterOjectiveTypes, objectiveTypes } from '../../projects/types'
 import type { ProjectProfileWithMetrics } from '../data/types'
 
 const props = defineProps<{ project: ProjectProfileWithMetrics, isSelected: boolean }>()

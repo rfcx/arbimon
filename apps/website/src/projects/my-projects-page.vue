@@ -1,8 +1,8 @@
 <template>
   <landing-navbar />
   <div v-infinite-scroll="loadMore">
-    <section class="pt-16 bg-white dark:bg-echo">
-      <div class="py-8 mx-auto max-w-screen-xl <lg:mx-8 lg:py-24">
+    <section class="pt-8 bg-white dark:bg-pitch">
+      <div class="py-8 mx-auto max-w-screen-xl <lg:mx-8">
         <div class="mt-6 flex flex-row">
           <h2 class="text-gray-900 dark:text-insight">
             My Projects
@@ -49,7 +49,7 @@ const loadMore = () => {
 const loading: Ref<boolean> = ref(true)
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const myProjectsInfo = computed(() => store.myProjects)
-const LIMIT = 10
+const LIMIT = 20
 
 const loadMoreProject = async (): Promise<void> => {
   // Should show loading?

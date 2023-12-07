@@ -4,6 +4,7 @@
     <project-list
       :data="projectResults"
       :selected-project-id="selectedProjectId ?? undefined"
+      :selected-tab="selectedTab"
       class="absolute z-40 h-100vh"
       @emit-selected-project="onEmitSelectedProject"
       @emit-search="onEmitSearch"
@@ -13,6 +14,7 @@
       v-if="selectedProjectId !== null"
       class="absolute z-40 h-50vh my-auto"
       :project-id="selectedProjectId"
+      @emit-close-project-info="selectedProjectId = null"
     />
     <map-view
       :data="projectResults"
@@ -23,22 +25,41 @@
   </section>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { useProjectDirectoryStore, useStore } from '~/store'
 import MapView from './blocks/map-view.vue'
 import ProjectInfo from './blocks/project-info.vue'
 import ProjectList from './blocks/projects-list.vue'
-import { getRawDirectoryProjects, toLightProjects } from './data/rawDirectoryProjectsData'
-import type { ProjectLight } from './data/types'
+import { avgCoordinate, getRawDirectoryProjects, toLightProjects } from './data/rawDirectoryProjectsData'
+import type { ProjectLight, ProjectProfileWithMetrics, Tab } from './data/types'
 
 const store = useStore()
 const pdStore = useProjectDirectoryStore()
 const selectedProjectId = ref<number | null>(null)
 
+const selectedTab = ref<Tab>('All')
+
 /** mock db/api service, do not use in ui */
 const allMockProjects = getRawDirectoryProjects(store.projects.map(p => ({ ...p, idArbimon: -1 })))
+const myProjects: ProjectProfileWithMetrics[] = store.myProjects.map(project => {
+  return {
+    id: project.id,
+    name: project.name,
+    slug: project.slug,
+    avgLatitude: avgCoordinate(project.latitudeNorth, project.latitudeSouth),
+    avgLongitude: avgCoordinate(project.longitudeEast, project.longitudeWest),
+    summary: 'This is a real project!',
+    objectives: ['bio-baseline'],
+    noOfSpecies: 0,
+    noOfRecordings: 0,
+    countries: [],
+    isHighlighted: true,
+    isMock: false,
+    imageUrl: project.image ?? ''
+   }
+})
 const getProjectWithMetricsByIds = (ids: number[]) => {
   return allMockProjects.filter(p => ids.includes(p.id))
 }
@@ -55,8 +76,22 @@ const onEmitSelectedProject = (locationProjectId: number) => {
 // TODO: scroll down to load more
 
 const onEmitSearch = (keyword: string) => {
-  // TODO: search with keyword
-  console.info('search with keyword', keyword)
+  switch (keyword) {
+    case 'All': {
+      selectedTab.value = 'All'
+      projectResults.value = pdStore.allProjects
+      break
+    } case 'My projects': {
+      selectedTab.value = 'My projects'
+      projectResults.value = myProjects
+      break
+    } default: {
+      const projectsInCriteria: ProjectLight[] = pdStore.allProjects.filter((p: { name: string }) => p.name.toLowerCase().includes(keyword.toLowerCase()))
+      fetchProjectsWithMetricsByIds(projectsInCriteria.map(p => p.id))
+      projectResults.value = projectsInCriteria
+      break
+    }
+  }
 }
 
 const onEmitLoadMore = () => {
@@ -65,9 +100,8 @@ const onEmitLoadMore = () => {
   const offset = pdStore.allProjectsWithMetrics.length
   const total = pdStore.allProjects.length
   if (offset === total) return
-  const ids = pdStore.allProjects.slice(offset, offset + LIMIT).map(p => p.id)
-  const newSetOfData = getProjectWithMetricsByIds(ids)
-  pdStore.updateAllProjectsWithMetrics(pdStore.allProjectsWithMetrics.concat(newSetOfData))
+  const ids = pdStore.allProjects.slice(offset, offset + LIMIT).map((p: { id: any }) => p.id)
+  fetchProjectsWithMetricsByIds(ids)
 }
 
 onMounted(() => {
@@ -77,6 +111,19 @@ onMounted(() => {
   // TODO: load metrics (from api once it's ready)
   pdStore.updateAllProjectsWithMetrics(getProjectWithMetricsByIds(allProjects.slice(0, 20).map(p => p.id)))
   projectResults.value = pdStore.allProjects
+})
+
+const fetchProjectsWithMetricsByIds = (ids: number[]) => {
+  const newSetOfData = getProjectWithMetricsByIds(ids)
+  pdStore.updateAllProjectsWithMetrics(pdStore.allProjectsWithMetrics.concat(newSetOfData))
+}
+
+watch(() => selectedTab.value, (newVal) => {
+  if (newVal === 'All') {
+    projectResults.value = pdStore.allProjects
+  } else {
+    projectResults.value = myProjects
+  }
 })
 
 </script>

@@ -18,7 +18,7 @@
       <div
         :class="{
           'border-1 border-frequency': isSelected(obj.id),
-          'pointer-events-none opacity-75 cursor-not-allowed': projectUserPermissionsStore.isGuest
+          'pointer-events-none opacity-75 cursor-not-allowed': isDisabled
         }"
         class="font-medium font-display flex-1 cursor-pointer w-full px-6 py-3 bg-moss rounded-lg hover:bg-util-gray-02/60"
         @click="onSelectObjective(obj)"
@@ -30,7 +30,7 @@
         v-model="otherReason"
         type="text"
         class="input-field ml-4 w-full disabled:cursor-not-allowed disabled:opacity-75"
-        :disabled="projectUserPermissionsStore.isGuest"
+        :disabled="isDisabled"
         :class="{'border-1 border-frequency': isSelected(obj.id)}"
         @click="forceSelectOther"
       >
@@ -41,12 +41,12 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 
-import { useProjectUserPermissionsStore } from '~/store'
 import { type ProjectObjective, masterOjectiveTypes, objectiveTypes } from '../../types'
 import IconIInfo from '../icon-i-info.vue'
 
 const props = defineProps<{
   existingObjectives?: string[]
+  isDisabled?: boolean
 }>()
 const emit = defineEmits<{(e: 'emitProjectObjectives', objectives: string[]): void}>()
 
@@ -54,8 +54,6 @@ const PLACEHOLDER_TEXT = 'State the primary goal of your project.'
 
 const selectedObjectives = ref<ProjectObjective[]>([])
 const otherReason = ref<string>('')
-
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const selectedSlugs = computed(() => {
   return selectedObjectives.value.map((obj) => {

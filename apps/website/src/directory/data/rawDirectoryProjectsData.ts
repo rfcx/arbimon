@@ -24,7 +24,8 @@ const mockDataProjects: ProjectProfileWithMetrics[] = [
     noOfRecordings: 0,
     countries: [],
     isHighlighted: false,
-    isMock: true
+    isMock: true,
+    imageUrl: ''
   }))
 ]
 
@@ -42,7 +43,8 @@ const getMockDataWithRealProjects = (realProjects: Project[]): ProjectProfileWit
       noOfRecordings: 0,
       countries: [],
       isHighlighted: true,
-      isMock: false
+      isMock: false,
+      imageUrl: project.image ?? ''
      }
   })
   const mockWithoutDuplicateProjectIds = mockDataProjects.filter(mockProject => !realProjects.find(realProject => realProject.id === mockProject.id))

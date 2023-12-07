@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-white dark:bg-echo pl-18">
+  <section class="bg-white dark:bg-pitch pl-18">
     <div class="px-8 md:px-10 pt-20 pb-10 mx-auto max-w-screen-xl lg:py-24">
       <h1 class="text-gray-900 dark:text-insight">
         Project settings
@@ -13,16 +13,19 @@
             :existing-name="selectedProject?.name"
             :date-start="settings?.dateStart"
             :date-end="settings?.dateEnd"
+            :is-disabled="projectUserPermissionsStore.isGuest"
             @emit-update-value="onEmitDefaultValue"
           />
           <project-summary-form
             :existing-summary="settings?.summary"
+            :is-disabled="projectUserPermissionsStore.isGuest"
             @emit-project-summary="onEmitSummary"
           />
         </div>
         <div>
           <project-objective-form
             :existing-objectives="settings?.objectives"
+            :is-disabled="projectUserPermissionsStore.isGuest"
             @emit-project-objectives="onEmitObjectives"
           />
         </div>

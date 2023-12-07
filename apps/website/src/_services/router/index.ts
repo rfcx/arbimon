@@ -164,6 +164,11 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: [authRequiredGuard]
   },
   {
+    path: '/account-settings',
+    name: ROUTE_NAMES.accountSettings,
+    component: PAGES.AccountSettings
+  },
+  {
     path: '/callback',
     name: ROUTE_NAMES.callback,
     component: PAGES.Callback

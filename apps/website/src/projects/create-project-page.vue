@@ -6,10 +6,16 @@
         Create a new project
       </h1>
       <div class="mt-4">
-        <project-form @emit-update-value="emitUpdateValue" />
+        <project-form
+          :is-disabled="false"
+          @emit-update-value="emitUpdateValue"
+        />
       </div>
       <div class="mt-4">
-        <project-objective-form @emit-project-objectives="emitUpdateProjectObjectives" />
+        <project-objective-form
+          :is-disabled="false"
+          @emit-project-objectives="emitUpdateProjectObjectives"
+        />
       </div>
       <div class="mt-4 sm:mt-6">
         <button
@@ -119,7 +125,7 @@ async function create () {
   try {
     const response = await apiBioPostProjectCreate(apiClientBio, project)
     await store.refreshProjects()
-    await router.push({ name: ROUTE_NAMES.overview, params: { projectSlug: response?.slug } })
+    await router.push({ name: ROUTE_NAMES.dashboard, params: { projectSlug: response?.slug } })
   } catch (e) {
     if (e instanceof Error) console.error(e.message)
     hasFailed.value = true
