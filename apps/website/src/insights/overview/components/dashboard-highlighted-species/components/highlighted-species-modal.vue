@@ -65,27 +65,15 @@
                   v-for="item in speciesForCurrentPage"
                   :key="'specie-highlighted-' + item.slug"
                   :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 flex-wrap h-full md:(h-26 flex-wrap justify-center) lg:(h-26 flex-nowrap justify-between) bg-echo hover:(border-frequency cursor-pointer)"
+                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 flex-wrap h-full md:(h-21 flex-wrap justify-center) lg:(h-21 flex-nowrap justify-between) bg-echo hover:(border-frequency cursor-pointer)"
                   @click="selectSpecie(item)"
                 >
-                  <img
-                    :src="item.photoUrl"
-                    class="h-16 w-16 object-cover rounded bg-util-gray-02"
-                  >
-                  <div class="self-center w-36 md:overflow-hidden">
-                    <p
-                      class="text-s italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
-                      :title="item.scientificName"
-                    >
-                      {{ item.scientificName }}
-                    </p>
-                    <p
-                      class="mt-1 text-xs tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
-                      :title="item.commonName || 'unknown'"
-                    >
-                      {{ item.commonName || 'unknown' }}
-                    </p>
-                  </div>
+                  <SpecieCard
+                    :slug="item.slug"
+                    :scientific-name="item.scientificName"
+                    :common-name="item.commonName"
+                    :photo-url="item.photoUrl"
+                  />
                   <div class="self-center">
                     <el-tag
                       class="species-highlights border-none text-md h-6"
@@ -158,6 +146,7 @@ import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
 import { useDeleteSpecieHighlighted, usePostSpeciesHighlighted } from '../composables/use-post-highlighted-species'
 import { useSpeciesInProject } from '../composables/use-species-in-project'
 import HighlightedSpeciesSelector, { type SpecieRow } from './highlighted-species-selector.vue'
+import SpecieCard from './species-card.vue'
 
 const props = defineProps<{ highlightedSpecies: HighlightedSpeciesRow[] }>()
 const emit = defineEmits<{(e: 'emitClose'): void}>()
@@ -174,7 +163,7 @@ const searchRisk = ref('')
 
 const selectedSpeciesSlug = ref<string[]>([])
 
-const PAGE_SIZE = 8
+const PAGE_SIZE = 10
 const currentPage = ref(1)
 
 const { isLoading: isLoadingSpecies, data: speciesResp } = useSpeciesInProject(apiClientBio, selectedProjectId)
