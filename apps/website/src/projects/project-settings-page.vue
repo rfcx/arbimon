@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-white dark:bg-echo pl-18">
+  <section class="bg-white dark:bg-pitch pl-18">
     <div class="px-8 md:px-10 pt-20 pb-10 mx-auto max-w-screen-xl lg:py-24">
       <h1 class="text-gray-900 dark:text-insight">
         Project settings
