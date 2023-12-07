@@ -85,6 +85,7 @@ onMounted(() => {
     Object.entries(markers).forEach(([name, imagePath]) => {
       map.loadImage(imagePath, (error, image) => {
         if (error) throw error
+        if (map.hasImage(name) || image === undefined) return
         map.addImage(name, image)
       })
     })
