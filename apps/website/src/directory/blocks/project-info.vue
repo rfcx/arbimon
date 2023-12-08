@@ -1,13 +1,22 @@
 <template>
-  <div class="flex flex-col gap-4 inset-1/4 left-100 w-98 bg-moss transition-transform -translate-x-full p-6 lg:p-10 rounded-lg">
-    <div class="flex flex-row justify-between items-center">
-      <span class="text-flamingo flex-1">
-        work in progress
-      </span>
-      <icon-fa-close
-        class="text-fog m-auto self-end w-4"
-        @click="emit('emitCloseProjectInfo')"
-      />
+  <div class="flex flex-col gap-4 inset-1/4 left-100 w-98 bg-pitch transition-transform -translate-x-full rounded-lg">
+    <div class="rounded-t-lg bg-moss p-4 text-spoonbill">
+      <div class="flex flex-row justify-between items-center">
+        <span
+          v-if="project?.countries.length === 0"
+          class="text-xs text-spoonbill flex-1"
+        >
+          No site
+        </span>
+        <span
+          v-if="project?.countries.length !== 0"
+          class="text-spoonbill"
+        >{{ project?.countries }}</span>
+        <icon-fa-close
+          class="text-fog m-auto self-end w-4 h-3.5"
+          @click="emit('emitCloseProjectInfo')"
+        />
+      </div>
     </div>
     <span
       v-if="project?.countries.length !== 0"
@@ -47,7 +56,7 @@ const project = computed<ProjectProfileWithMetrics | undefined>(() => {
   const project = pdStore.getProjectWithMetricsById(props.projectId)
   if (!project) { // TODO: fetch from api if there is no metrics in store
     const projectLight = pdStore.getProjectLightById(props.projectId)
-    if (!projectLight) { return undefined }
+    if (projectLight === undefined) return undefined
     return {
       ...projectLight,
       summary: 'This is a test project!',
@@ -62,4 +71,7 @@ const project = computed<ProjectProfileWithMetrics | undefined>(() => {
   }
   return project
 })
+console.info(project)
+console.info(project.value?.countries)
+
 </script>
