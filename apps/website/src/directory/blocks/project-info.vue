@@ -23,7 +23,7 @@
         :src="project?.imageUrl"
         class="w-full h-full object-cover bg-pitch object-center h-52"
       >
-      <div class=" p-4">
+      <div class="p-4 border-b border-util-gray-01">
         <span class="text-lg font-medium">{{ project?.name }}</span>
         <div
           class="flex font-medium text-sm flex-row border-gray-300 mt-3 space-x-4 items-center"
@@ -41,7 +41,8 @@
             {{ formatDateRange(null) }}
           </span>
         </div>
-
+      </div>
+      <div class=" p-4">
         <div class="mt-16"></div>
         <router-link
           :to="`/p/${project?.slug}`"
