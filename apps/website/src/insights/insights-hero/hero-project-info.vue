@@ -68,6 +68,7 @@
 
 <script setup lang="ts">
 
+import { type TCountryCode, getCountryData } from 'countries-list'
 import dayjs from 'dayjs'
 import { computed } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
@@ -97,7 +98,9 @@ const projectFlag = computed(() => {
 const projectCountry = computed(() => {
   if (props.projectLocation === undefined) return ''
   if (props.projectLocation.country === null) return ''
-  return props.projectLocation.country.join(', ')
+  const country = props.projectLocation.code?.map(code => getCountryData(code as TCountryCode).name)
+  console.info(country)
+  return country?.join(', ')
 })
 
 const projectCountryText = computed(() => {
