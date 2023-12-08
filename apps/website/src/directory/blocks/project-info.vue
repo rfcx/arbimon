@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col inset-1/4 left-100 w-98 bg-pitch transition-transform -translate-x-full rounded-lg">
+  <div class="flex flex-col inset-1/4 left-100 w-98 bg-moss transition-transform -translate-x-full rounded-lg">
     <div class="rounded-t-lg bg-moss p-4">
       <div class="flex flex-row justify-between items-center">
         <span
           v-if="project?.countries.length === 0"
-          class="text-xs text-spoonbill font-medium flex-1"
+          class="text-sm text-spoonbill font-medium flex-1"
         >
           No site
         </span>
@@ -20,11 +20,29 @@
     </div>
     <div class="overflow-scroll">
       <img
-        src="project?.imageUrl"
-        class="w-full h-full object-cover object-center h-52"
+        :src="project?.imageUrl"
+        class="w-full h-full object-cover bg-pitch object-center h-52"
       >
       <div class=" p-4">
-        <span class="text-lg">{{ project?.name }}</span>
+        <span class="text-lg font-medium">{{ project?.name }}</span>
+        <div
+          class="flex font-medium text-sm flex-row border-gray-300 mt-3 space-x-4 items-center"
+        >
+          <span>
+            Project dates:
+          </span>
+          <span class="uppercase">
+            {{ formatDateRange(new Date()) }}
+          </span>
+          <icon-custom-arrow-right-white class="self-start" />
+          <span
+            class="uppercase"
+          >
+            {{ formatDateRange(null) }}
+          </span>
+        </div>
+
+        <div class="mt-16"></div>
         <router-link
           :to="`/p/${project?.slug}`"
           class="text-frequency"
@@ -46,7 +64,7 @@
   </div>
 </template>
 <script setup lang="ts">
-
+import dayjs from 'dayjs'
 import { computed } from 'vue'
 
 import { useProjectDirectoryStore } from '~/store'
@@ -75,4 +93,10 @@ const project = computed<ProjectProfileWithMetrics | undefined>(() => {
   }
   return project
 })
+
+const formatDateRange = (date: Date | null | undefined): string => {
+  if (!dayjs(date).isValid()) return 'present'
+  else return dayjs(date).format('MM/DD/YYYY')
+}
+
 </script>
