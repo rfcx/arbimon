@@ -59,7 +59,7 @@
           tooltip-id="deployment-sites"
           tooltip-text="Number of sites with recorders deployed."
           title="Project sites:"
-          value="120"
+          :value="120"
           icon-name="ft-map-pin-lg"
           class="flex-1"
         />
@@ -68,8 +68,8 @@
           tooltip-id="threatened-species-over-all-species"
           title="Threatened/total species:"
           tooltip-text="Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
-          value="64"
-          total-value="120"
+          :value="64"
+          :total-value="project?.noOfSpecies"
           icon-name="ft-actual-bird"
           class="flex-1"
         />
@@ -79,16 +79,16 @@
           tooltip-id="total-detections"
           title="Total detections:"
           tooltip-text="Total number of species calls detected."
-          value="1000"
+          :value="1000"
           icon-name="ft-search-lg"
           class="flex-1"
         />
         <!-- :value="metrics?.totalDetections ?? 0" -->
         <numeric-metric
           tooltip-id="total-recordings"
-          :tooltip-text="`Total 1,000,234 of recordings captured`"
+          :tooltip-text="`Total ${project?.noOfRecordings} of recordings captured`"
           title="Total recordings"
-          value="1,000,234"
+          :value="project?.noOfRecordings"
           icon-name="ft-mic-lg"
           class="flex-1"
         />
