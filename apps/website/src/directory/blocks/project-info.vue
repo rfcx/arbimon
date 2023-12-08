@@ -41,21 +41,59 @@
             {{ formatDateRange(null) }}
           </span>
         </div>
-      </div>
-      <div class=" p-4">
-        <div class="mt-16"></div>
         <router-link
           :to="`/p/${project?.slug}`"
           class="text-frequency"
         >
           <button
-            class="btn btn-primary w-full"
+            class="btn btn-primary w-full mt-10"
             :disabled="project?.isMock"
             :class="{'opacity-50 cursor-not-allowed': project?.isMock}"
           >
             View Insights
           </button>
         </router-link>
+      </div>
+      <div class="p-4">
+        <numeric-metric
+          tooltip-id="deployment-sites"
+          tooltip-text="Number of sites with recorders deployed."
+          title="Project sites:"
+          value="120"
+          icon-name="ft-map-pin-lg"
+          class="flex-1"
+        />
+        <!-- value="10" -->
+        <numeric-metric
+          tooltip-id="threatened-species-over-all-species"
+          title="Threatened/total species:"
+          tooltip-text="Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
+          value="64"
+          total-value="120"
+          icon-name="ft-actual-bird"
+          class="flex-1"
+        />
+        <!-- :value="metrics?.threatenedSpecies ?? 0"
+          :total-value="metrics?.totalSpecies ?? 0" -->
+        <numeric-metric
+          tooltip-id="total-detections"
+          title="Total detections:"
+          tooltip-text="Total number of species calls detected."
+          value="1000"
+          icon-name="ft-search-lg"
+          class="flex-1"
+        />
+        <!-- :value="metrics?.totalDetections ?? 0" -->
+        <numeric-metric
+          tooltip-id="total-recordings"
+          :tooltip-text="`Total 1,000,234 of recordings captured`"
+          title="Total recordings"
+          value="1,000,234"
+          icon-name="ft-mic-lg"
+          class="flex-1"
+        />
+        <!-- :tooltip-text="`Total ${totalRecordingsUnit} of recordings captured`"
+        :value="totalRecordingsValue" -->
         <span
           v-if="project?.isMock"
           class="text-sm text-gray-300 px-2"
@@ -69,6 +107,7 @@ import dayjs from 'dayjs'
 import { computed } from 'vue'
 
 import { useProjectDirectoryStore } from '~/store'
+import NumericMetric from '../components/numeric-metric.vue'
 import { type ProjectProfileWithMetrics } from '../data/types'
 
 const props = defineProps<{ projectId: number }>()
