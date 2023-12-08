@@ -11,7 +11,7 @@
         <span
           v-if="project?.countries.length !== 0"
           class="text-spoonbill font-medium text-xs flex-1"
-        >{{ project?.countries }}</span>
+        >{{ countrie }}</span>
         <icon-fa-close
           class="text-fog m-auto self-end w-4 h-3.5"
           @click="emit('emitCloseProjectInfo')"
@@ -132,6 +132,15 @@ const project = computed<ProjectProfileWithMetrics | undefined>(() => {
     }
   }
   return project
+})
+
+const countrie = computed(() => {
+  if (project.value?.countries == null) return ''
+  if (project.value?.countries.length > 1) {
+    return 'Multiple countries'
+  } else {
+    return project.value?.countries[0]
+  }
 })
 
 const formatDateRange = (date: Date | null | undefined): string => {
