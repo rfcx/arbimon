@@ -1,4 +1,4 @@
-import { projectSettingsRoute } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import { projectDataRoute } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
 import { type RouteRegistration, GET, PATCH } from '../_services/api-helpers/types'
 import { projectSettingsHandler, projectSettingsUpdateHandler } from './project-settings-handler'
@@ -6,12 +6,12 @@ import { projectSettingsHandler, projectSettingsUpdateHandler } from './project-
 export const routesProjectProfile: RouteRegistration[] = [
   {
     method: GET,
-    url: projectSettingsRoute,
+    url: projectDataRoute,
     handler: projectSettingsHandler
   },
   {
     method: PATCH,
-    url: projectSettingsRoute,
+    url: projectDataRoute,
     handler: projectSettingsUpdateHandler
   }
 ]
