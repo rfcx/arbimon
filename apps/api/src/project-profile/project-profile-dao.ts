@@ -17,15 +17,6 @@ export const getProjectCoreId = async (locationProjectId: number): Promise<strin
   return project?.idCore ?? undefined
 }
 
-export const getProjectProfile = async (locationProjectId: number): Promise<ProjectProfileResponse> =>
-  await ModelRepository.getInstance(getSequelize())
-    .LocationProjectProfile
-    .findOne({
-      where: { locationProjectId },
-      attributes: ['summary', 'objectives', 'dateStart', 'dateEnd'],
-      raw: true
-    }) ?? { summary: '', objectives: [], dateStart: null, dateEnd: null }
-
 export const updateProjectProfile = async (locationProjectId: number, profile: ProjectProfileUpdateBody): Promise<ProjectProfileResponse> => {
   // remove undefined values -- only update what is provided
   const updatedParams = pickBy({
@@ -42,16 +33,25 @@ export const updateProjectProfile = async (locationProjectId: number, profile: P
 }
 
 export const getProjectSettings = async (locationProjectId: number): Promise<ProjectSettingsResponse> => {
-  const locationProject = ModelRepository.getInstance(getSequelize()).LocationProject
-  const locationProjectProfile = ModelRepository.getInstance(getSequelize()).LocationProjectProfile
-  const resProject = await locationProject.findOne({
+  const sequelize = getSequelize()
+  const { LocationProject, LocationProjectProfile, LocationProjectCountry, ProjectVersion } = ModelRepository.getInstance(sequelize)
+  const resProject = await LocationProject.findOne({
     where: { id: locationProjectId },
     attributes: ['name'],
     raw: true
   })
-  const resProfile = await locationProjectProfile.findOne({
+  const resProfile = await LocationProjectProfile.findOne({
     where: { locationProjectId },
     attributes: ['summary', 'objectives', 'dateStart', 'dateEnd'],
+    raw: true
+  })
+  const resCountry = await LocationProjectCountry.findOne({
+    where: { locationProjectId },
+    raw: true
+  })
+  const version = await ProjectVersion.findOne({
+    where: { locationProjectId },
+    attributes: ['isPublished'],
     raw: true
   })
   if (!resProject) throw new Error(`Failed to get project settings for locationProjectId: ${locationProjectId}`)
@@ -60,7 +60,9 @@ export const getProjectSettings = async (locationProjectId: number): Promise<Pro
     summary: resProfile?.summary ?? '',
     objectives: resProfile?.objectives ?? [],
     dateStart: resProfile?.dateStart ?? null,
-    dateEnd: resProfile?.dateEnd ?? null
+    dateEnd: resProfile?.dateEnd ?? null,
+    countryCodes: resCountry?.countryCodes ?? [],
+    isPublished: version?.isPublished ?? false
   }
 }
 

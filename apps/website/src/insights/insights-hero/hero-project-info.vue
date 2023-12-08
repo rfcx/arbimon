@@ -4,7 +4,7 @@
       class="flex flex-row items-center font-display text-sm mr-2 h-5"
     >
       <icon-fas-spinner
-        v-if="isLoadingProjectLocation"
+        v-if="isLoadingProfile"
         class="animate-spin"
         aria-label="Loading"
       />
@@ -73,14 +73,12 @@ import dayjs from 'dayjs'
 import { computed } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
-import { type ProjectLocationResponse } from '@rfcx-bio/common/api-bio/project/project-location'
 import { type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
 import { objectiveTypes } from '../../projects/types'
 
 const props = defineProps<{
-  projectLocation: ProjectLocationResponse | undefined,
-  isLoadingProjectLocation: boolean,
+  isLoadingProfile: boolean,
   projectObjectives: string[],
   profile: ProjectSettingsResponse | undefined
 }>()
@@ -90,31 +88,33 @@ const formatDateRange = (date: Date | null | undefined): string => {
 }
 
 const projectFlag = computed(() => {
-  if (props.projectLocation === undefined) return ''
-  if (props.projectLocation.code === null) return ''
-  return props.projectLocation.code.length > 1 ? '' : props.projectLocation.code[0]
+  if (props.profile?.countryCodes === undefined) return ''
+  if (!props.profile?.countryCodes.length) return ''
+  return props.profile.countryCodes.length > 1 ? '' : props.profile.countryCodes[0]
 })
 
 const projectCountry = computed(() => {
-  if (props.projectLocation === undefined) return ''
-  if (props.projectLocation.country === null) return ''
-  const country = props.projectLocation.code?.map(code => getCountryData(code as TCountryCode).name)
-  console.info(country)
+  if (props.profile?.countryCodes === undefined) return ''
+  if (!props.profile?.countryCodes.length) return ''
+  const country = props.profile.countryCodes?.map(code => getCountryData(code as TCountryCode).name)
   return country?.join(', ')
 })
 
 const projectCountryText = computed(() => {
-  if (props.projectLocation?.country == null) return ''
-  if (props.projectLocation.country.length > 3) {
+  if (props.profile?.countryCodes === undefined) return ''
+  if (!props.profile?.countryCodes.length) return ''
+  if (props.profile.countryCodes.length > 3) {
     return 'Multiple countries'
   } else {
-    return props.projectLocation.country.join(', ')
+    const country = props.profile.countryCodes?.map(code => getCountryData(code as TCountryCode).name)
+    return country.join(', ')
   }
 })
 
 const showTooltip = computed(() => {
-  if (props.projectLocation?.country == null) return ''
-  if (props.projectLocation.country.length > 3) {
+  if (props.profile?.countryCodes === undefined) return ''
+  if (!props.profile?.countryCodes.length) return ''
+  if (props.profile.countryCodes.length > 3) {
     return ''
   } else {
     return 'pointer-events: none'
