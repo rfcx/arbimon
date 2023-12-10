@@ -4,5 +4,5 @@ import { type Handler } from '../_services/api-helpers/types'
 import { getDirectoryProjects } from './get-directory-projects-bll'
 
 export const projectsDirectoryHandler: Handler<DirectoryProjectsResponse, unknown, DirectoryProjectsQuery> = async (req) => {
-  return getDirectoryProjects(req.query)
+  return await getDirectoryProjects(req.query)
 }

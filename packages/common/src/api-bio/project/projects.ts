@@ -2,7 +2,7 @@ import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { type LocationProjectProfile, type LocationProjectTypes, type Project } from '../../dao/types'
+import { LocationProjectProfile, type LocationProjectTypes, type Project } from '../../dao/types'
 
 // Request types
 export interface LocationProjectQuery {
@@ -60,7 +60,7 @@ export interface MyProjectsResponse {
   total: number
 }
 
-export type DirectoryProjectsResponse = ProjectProfileWithMetrics[]
+export type DirectoryProjectsResponse = ProjectLight[] | ProjectProfileWithMetrics[]
 
 // Route
 export const projectsRoute = '/projects'
