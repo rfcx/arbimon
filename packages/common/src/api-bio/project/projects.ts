@@ -2,12 +2,18 @@ import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { type LocationProjectTypes } from '../../dao/types'
+import { type LocationProjectProfile, type LocationProjectTypes, type Project } from '../../dao/types'
 
 // Request types
 export interface LocationProjectQuery {
   limit?: number
   offset?: number
+}
+
+export interface DirectoryProjectsQuery {
+  light?: boolean
+  ids?: string
+  keywords?: string
 }
 
 // Response types
@@ -18,14 +24,32 @@ export type LocationProjectForUser =
     isShowcaseProject: boolean
   }
 
-  export type LocationProjectWithInfo = LocationProjectTypes['light'] &
-  {
-    summary: string
-    objectives: string[]
-    countries: string[]
-    image: string
-    isPublished: boolean
-  }
+export type LocationProjectWithInfo = LocationProjectTypes['light'] &
+{
+  summary: string
+  objectives: string[]
+  countries: string[]
+  image: string
+  isPublished: boolean
+}
+
+export type ProjectLight = Pick<Project, 'id' | 'slug' | 'name'> & {
+  avgLatitude: number
+  avgLongitude: number
+  isHighlighted: boolean
+  isMock: boolean // TODO: remove this
+}
+
+export type ProjectProfileWithMetrics = ProjectLight & Pick<LocationProjectProfile, 'summary' | 'objectives' > & {
+  avgLatitude: number
+  avgLongitude: number
+  isHighlighted: boolean
+  isMock: boolean // TODO: remove this
+  noOfRecordings: number
+  noOfSpecies: number
+  countries: string[]
+  imageUrl: string
+}
 
 export type ProjectsResponse = LocationProjectForUser[]
 
@@ -36,8 +60,11 @@ export interface MyProjectsResponse {
   total: number
 }
 
+export type DirectoryProjectsResponse = ProjectProfileWithMetrics[]
+
 // Route
 export const projectsRoute = '/projects'
+export const projectDirectoryRoute = '/directory/projects'
 export const myProjectsRoute = '/me/projects'
 
 // Service
@@ -59,3 +86,5 @@ export const apiBioGetMyProjects = async (apiClient: AxiosInstance, limit?: numb
 
   return await apiGetOrUndefined(apiClient, url)
 }
+
+// export const apiBioGetDirectoryProjects = async (apiClient: AxiosInstance): Promise<ProjectsResponse | undefined> => {}

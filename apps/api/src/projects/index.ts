@@ -2,10 +2,11 @@ import { updateInsightsPublishStatusRoute } from '@rfcx-bio/common/api-bio/insig
 import { projectCreateRoute } from '@rfcx-bio/common/api-bio/project/project-create'
 import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { projectRecordingCountRoute, projectSitesRecordingCountRoute } from '@rfcx-bio/common/api-bio/project/project-recordings'
-import { myProjectsRoute, projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
+import { myProjectsRoute, projectDirectoryRoute, projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { setMemberProjectCoreIds } from '@/_middleware/get-member-projects'
 import { type RouteRegistration, GET, PATCH, POST } from '../_services/api-helpers/types'
+import { projectsDirectoryHandler } from './get-directory-projects-handler'
 import { getProjectMembersHandler } from './get-project-members'
 import { patchInsightsPublishStatusHandler } from './patch-insights-publish-status-handler'
 import { projectCreateHandler } from './project-create-handler'
@@ -54,5 +55,10 @@ export const routesProject: RouteRegistration[] = [
     method: GET,
     url: '/projects/:projectId/users',
     handler: getProjectMembersHandler
+  },
+  {
+    method: GET,
+    url: projectDirectoryRoute,
+    handler: projectsDirectoryHandler
   }
 ]
