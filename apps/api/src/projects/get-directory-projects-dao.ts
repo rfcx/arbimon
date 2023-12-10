@@ -2,13 +2,19 @@ import { readFileSync } from 'fs'
 import { resolve } from 'path'
 
 import { type DirectoryProjectsResponse, type ProjectLight, type ProjectProfileWithMetrics } from '@rfcx-bio/common/api-bio/project/projects'
+import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { type Project } from '@rfcx-bio/common/dao/types'
+
+import { getSequelize } from '~/db'
+import { Op } from 'sequelize'
+import { pickBy } from 'lodash-es'
 
 const avgCoordinate = (x: number, y: number): number => {
   if (x === y) return x
   return (x + y) / 2
 }
 
-interface Project {
+interface ProjectRaw {
   id: string
   name: string
   slug: string
@@ -36,11 +42,23 @@ export const toLightProjects = (projects: ProjectProfileWithMetrics[]): ProjectL
   }))
 }
 
+export const toLightProjectsFromProjects = (projects: Project[]): ProjectLight[] => {
+  return projects.map((project) => ({
+    id: Number(project.id),
+    name: project.name,
+    slug: project.slug,
+    avgLatitude: avgCoordinate(project.latitudeNorth, project.latitudeSouth),
+    avgLongitude: avgCoordinate(project.longitudeEast, project.longitudeWest),
+    isHighlighted: true,
+    isMock: false
+  }))
+}
+
 export const getDirectoryProjects = (isLight: boolean = false, ids: number[] = [], keywords: string[]): DirectoryProjectsResponse => {
   console.info('getDirectoryProjects', { isLight, ids, keywords })
   const path = resolve('./public/directory/data-local.json')
   const jsonData = JSON.parse(readFileSync(path, 'utf8'))
-  const projects = jsonData.data.map((p: Project): ProjectProfileWithMetrics => ({
+  const projects = jsonData.data.map((p: ProjectRaw): ProjectProfileWithMetrics => ({
     id: Number(p.id),
     name: p.name,
     slug: p.slug,
@@ -65,4 +83,52 @@ export const getDirectoryProjects = (isLight: boolean = false, ids: number[] = [
     return true
   })
   return isLight ? toLightProjects(filteredProjects) : filteredProjects
+}
+
+export const queryDirectoryProjects = async (isLight: boolean = false, ids: number[] = [], keywords: string[]): Promise<DirectoryProjectsResponse> => {
+  const sequelize = getSequelize()
+  const { LocationProject, LocationProjectMetric, LocationProjectCountry, LocationProjectProfile } = ModelRepository.getInstance(sequelize)
+
+  // form where clauses
+  const whereKeywords = keywords.length === 0 ? {} : {
+    name: {
+      [Op.iLike]: {
+        [Op.any]: keywords.map((keyword) => `%${keyword}%`)
+      }
+    }
+  }
+
+  const whereIds = ids.length === 0 ? {} : { id: { [Op.in]: ids } }
+
+  // query
+  const projects = await LocationProject.findAll({
+    where: {
+      ...whereKeywords,
+      ...whereIds
+    }, raw: true
+  })
+  if (isLight) {
+    return toLightProjectsFromProjects(projects)
+  } else {
+    // TODO: add where clauses for metrics, countries, profiles
+    const whereLocationProjectIds = ids.length === 0 ? {} : { locationProjectId: { [Op.in]: ids } }
+    const profiles = await LocationProjectProfile.findAll({ where: { ...whereLocationProjectIds }, raw: true })
+    const metrics = await LocationProjectMetric.findAll({ where: { ...whereLocationProjectIds }, raw: true })
+    const countries = await LocationProjectCountry.findAll({ where: { ...whereLocationProjectIds }, raw: true })
+    return projects.map((project) => ({
+      id: Number(project.id),
+      name: project.name,
+      slug: project.slug,
+      avgLatitude: avgCoordinate(project.latitudeNorth, project.latitudeSouth),
+      avgLongitude: avgCoordinate(project.longitudeEast, project.longitudeWest),
+      summary: profiles.find(p=>p.locationProjectId === project.id)?.summary ?? '',
+      objectives: profiles.find(p=>p.locationProjectId === project.id)?.objectives ?? [],
+      noOfSpecies: metrics.find(p=>p.locationProjectId === project.id)?.speciesCount ?? 0,
+      noOfRecordings: metrics.find(p=>p.locationProjectId === project.id)?.recordingMinutesCount ?? 0,
+      countries: countries.find(p=>p.locationProjectId === project.id)?.countryCodes ?? [],
+      isHighlighted: true,
+      isMock: false,
+      imageUrl: profiles.find(p=>p.locationProjectId === project.id)?.image
+    }))
+  }
 }
