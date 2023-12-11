@@ -1,13 +1,12 @@
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
+import { Op } from 'sequelize'
 
 import { type DirectoryProjectsResponse, type ProjectLight, type ProjectProfileWithMetrics } from '@rfcx-bio/common/api-bio/project/projects'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type Project } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
-import { Op } from 'sequelize'
-import { pickBy } from 'lodash-es'
 
 const avgCoordinate = (x: number, y: number): number => {
   if (x === y) return x
@@ -90,7 +89,9 @@ export const queryDirectoryProjects = async (isLight: boolean = false, ids: numb
   const { LocationProject, LocationProjectMetric, LocationProjectCountry, LocationProjectProfile } = ModelRepository.getInstance(sequelize)
 
   // form where clauses
-  const whereKeywords = keywords.length === 0 ? {} : {
+  const whereKeywords = keywords.length === 0
+? {}
+: {
     name: {
       [Op.iLike]: {
         [Op.any]: keywords.map((keyword) => `%${keyword}%`)
@@ -105,7 +106,8 @@ export const queryDirectoryProjects = async (isLight: boolean = false, ids: numb
     where: {
       ...whereKeywords,
       ...whereIds
-    }, raw: true
+    },
+raw: true
   })
   if (isLight) {
     return toLightProjectsFromProjects(projects)
@@ -121,14 +123,14 @@ export const queryDirectoryProjects = async (isLight: boolean = false, ids: numb
       slug: project.slug,
       avgLatitude: avgCoordinate(project.latitudeNorth, project.latitudeSouth),
       avgLongitude: avgCoordinate(project.longitudeEast, project.longitudeWest),
-      summary: profiles.find(p=>p.locationProjectId === project.id)?.summary ?? '',
-      objectives: profiles.find(p=>p.locationProjectId === project.id)?.objectives ?? [],
-      noOfSpecies: metrics.find(p=>p.locationProjectId === project.id)?.speciesCount ?? 0,
-      noOfRecordings: metrics.find(p=>p.locationProjectId === project.id)?.recordingMinutesCount ?? 0,
-      countries: countries.find(p=>p.locationProjectId === project.id)?.countryCodes ?? [],
+      summary: profiles.find(p => p.locationProjectId === project.id)?.summary ?? '',
+      objectives: profiles.find(p => p.locationProjectId === project.id)?.objectives ?? [],
+      noOfSpecies: metrics.find(p => p.locationProjectId === project.id)?.speciesCount ?? 0,
+      noOfRecordings: metrics.find(p => p.locationProjectId === project.id)?.recordingMinutesCount ?? 0,
+      countries: countries.find(p => p.locationProjectId === project.id)?.countryCodes ?? [],
       isHighlighted: true,
       isMock: false,
-      imageUrl: profiles.find(p=>p.locationProjectId === project.id)?.image
+      imageUrl: profiles.find(p => p.locationProjectId === project.id)?.image
     }))
   }
 }
