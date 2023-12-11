@@ -11,6 +11,7 @@
       v-show="isEditing === false"
       :editable="editable"
       :organizations="stakeholders?.organization ?? []"
+      :project-members="projectUserPermissionsStore.projectMembers"
       @emit-is-updating="isEditing = true"
     />
     <DashboardProjectStakeholdersEditor
@@ -26,7 +27,7 @@ import { type AxiosInstance } from 'axios'
 import { inject, ref } from 'vue'
 
 import { apiClientKey } from '@/globals'
-import { useStore } from '~/store'
+import { useProjectUserPermissionsStore, useStore } from '~/store'
 import { useGetDashboardStakeholders } from '../../../../composables/use-get-dashboard-stakeholders'
 import { useUpdateStakeholdersOrganizationsList } from '../../../../composables/use-update-stakeholders-organizations'
 import ProjectSummaryEmpty from '../project-summary-empty.vue'
@@ -43,6 +44,7 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { data: stakeholders, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateStakeholdersOrganizations } = useUpdateStakeholdersOrganizationsList(apiClientBio, store.selectedProject?.id ?? -1)
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const onFinishedEditing = (ids: number[]): void => {
   mutateStakeholdersOrganizations(ids, {
