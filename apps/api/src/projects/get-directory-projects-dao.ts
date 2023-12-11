@@ -111,7 +111,7 @@ export const queryDirectoryProjects = async (fullVersion: boolean = false, ids: 
       ...whereIds,
       [Op.or]: {
         id: { [Op.in]: sequelize.literal('(SELECT location_project_id FROM project_version WHERE is_public = true OR is_published = true)') }
-      },
+      }
     },
     raw: true
   })
