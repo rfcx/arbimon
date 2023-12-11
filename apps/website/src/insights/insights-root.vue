@@ -80,10 +80,6 @@
       @emit-share-insights-successful="refetchInsightsPublishStatus"
       @emit-hide-insights-successful="refetchInsightsPublishStatus"
     />
-    <insight-not-ready-card
-      v-show="false"
-      v-if="!metrics?.totalDetections && !isLoading"
-    />
   </div>
   <nav
     class="sticky top-0 px-4 bg-gray-50 dark:bg-pitch border-b-1 border-fog z-40"
@@ -139,7 +135,6 @@ import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
 import { useGetProjectSettings } from '../projects/_composables/use-project-profile'
-import InsightNotReadyCard from './components/insight-not-ready-card.vue'
 import ProjectNav from './components/project-nav.vue'
 import ShareInsight from './components/share-insights/share-insights.vue'
 import type { InsightsPublishStatus } from './components/share-insights/types'

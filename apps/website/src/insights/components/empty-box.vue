@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-util-gray-03 p-4 border border-util-gray-01 rounded-md w-fit flex flex-col gap-4 md:(flex-row items-center min-h-12)">
-    <div class="font-medium flex flex-col gap-4 md:(flex-row items-center)">
+  <div class="bg-util-gray-03 p-4 border border-util-gray-01 rounded-md w-full flex flex-col gap-4 md:(flex-row items-center min-h-12) justify-between">
+    <div class="font-medium flex flex-col gap-4 md:(flex-row items-center) justify-between">
       <div class="flex flex-row gap-2 flex-shrink-0">
         <icon-custom-ic-warning class="h-5 w-5" />
         No detections
