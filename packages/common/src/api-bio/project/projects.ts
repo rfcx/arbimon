@@ -11,7 +11,7 @@ export interface LocationProjectQuery {
 }
 
 export interface DirectoryProjectsQuery {
-  light?: boolean
+  full?: boolean
   ids?: string
   keywords?: string
 }
@@ -87,4 +87,17 @@ export const apiBioGetMyProjects = async (apiClient: AxiosInstance, limit?: numb
   return await apiGetOrUndefined(apiClient, url)
 }
 
-// export const apiBioGetDirectoryProjects = async (apiClient: AxiosInstance): Promise<ProjectsResponse | undefined> => {}
+export const apiBioGetDirectoryProjects = async (apiClient: AxiosInstance, query: DirectoryProjectsQuery): Promise<DirectoryProjectsResponse | undefined> => {
+  let url = projectDirectoryRoute
+  if (query.full !== undefined) {
+    url = url + '?full=' + (query.full ? '1' : '0')
+  }
+  if (query.ids !== undefined) {
+    url = url + '&ids=' + query.ids.toString()
+  }
+  if (query.keywords !== undefined) {
+    url = url + '&keywords=' + query.keywords.toString()
+  }
+  console.info('apiBioGetDirectoryProjects', { url })
+  return await apiGetOrUndefined(apiClient, url)
+}

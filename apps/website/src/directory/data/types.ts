@@ -1,17 +1,7 @@
-import type { LocationProjectProfile, Project } from '@rfcx-bio/common/dao/types'
+ import type { ProjectLight as ProjectLightShared, ProjectProfileWithMetrics as ProjectProfileWithMetricsShared } from '@rfcx-bio/common/api-bio/project/projects'
 
-export type ProjectLight = Pick<Project, 'id' | 'slug' | 'name'> & {
-  avgLatitude: number
-  avgLongitude: number
-  isHighlighted: boolean
-  isMock: boolean // TODO: remove this
-}
+export type ProjectLight = ProjectLightShared
 
-export type ProjectProfileWithMetrics = ProjectLight & Pick<LocationProjectProfile, 'summary' | 'objectives' > & {
-  noOfRecordings: number
-  noOfSpecies: number
-  countries: string[]
-  imageUrl: string
-}
+export type ProjectProfileWithMetrics = ProjectProfileWithMetricsShared
 
 export type Tab = 'All' | 'My projects'
