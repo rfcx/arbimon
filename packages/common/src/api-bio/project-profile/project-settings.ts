@@ -24,4 +24,4 @@ export const apiBioGetProjectSettingsData = async (apiClient: AxiosInstance, pro
   await apiGetOrUndefined(apiClient, `/projects/${projectId}`)
 
 export const apiBioUpdateProjectSettingsData = async (apiClient: AxiosInstance, projectId: number, settings: ProjectSettingsUpdateBody): Promise<ProjectSettingsResponse> =>
-  await apiClient.patch(`/projects/${projectId}/settings`, settings)
+  await apiClient.patch(`/projects/${projectId}`, settings)
