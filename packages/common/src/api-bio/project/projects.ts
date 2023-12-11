@@ -2,7 +2,7 @@ import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { LocationProjectProfile, type LocationProjectTypes, type Project } from '../../dao/types'
+import { type LocationProjectProfile, type LocationProjectTypes, type Project } from '../../dao/types'
 
 // Request types
 export interface LocationProjectQuery {
