@@ -26,7 +26,7 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 
 import { type ProjectLight, type ProjectProfileWithMetrics, apiBioGetDirectoryProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
@@ -36,7 +36,6 @@ import { useProjectDirectoryStore, useStore } from '~/store'
 import MapView from './blocks/map-view.vue'
 import ProjectInfo from './blocks/project-info.vue'
 import ProjectList from './blocks/projects-list.vue'
-import { avgCoordinate, getRawDirectoryProjects } from './data/rawDirectoryProjectsData'
 import type { Tab } from './data/types'
 
 const store = useStore()
@@ -49,32 +48,12 @@ const selectedTab = ref<Tab>('All')
 
 const isLoading = ref(false)
 
-/** mock db/api service, do not use in ui */
-const allMockProjects = getRawDirectoryProjects(store.projects.map(p => ({ ...p, idArbimon: -1 })))
-const myProjects: ProjectProfileWithMetrics[] = store.myProjects.map(project => {
-  return {
-    id: project.id,
-    name: project.name,
-    slug: project.slug,
-    avgLatitude: avgCoordinate(project.latitudeNorth, project.latitudeSouth),
-    avgLongitude: avgCoordinate(project.longitudeEast, project.longitudeWest),
-    summary: 'This is a real project!',
-    objectives: ['bio-baseline'],
-    noOfSpecies: 0,
-    noOfRecordings: 0,
-    countries: [],
-    isHighlighted: true,
-    isMock: false,
-    imageUrl: project.image ?? ''
-   }
-})
-const getProjectWithMetricsByIds = (ids: number[]) => {
-  return allMockProjects.filter(p => ids.includes(p.id))
-}
-/** end mock */
-
 /** List of projects (with profile) you got from search results, initial is the first 20 in the list -- to show in the list */
 const projectResults = ref<ProjectLight[]>(pdStore.allProjects)
+const myProjects = computed(() => {
+  const myProjectIds = store.myProjects.map(p => p.id)
+  return pdStore.allProjects.filter(p => myProjectIds.includes(p.id))
+})
 
 const onEmitSelectedProject = (locationProjectId: number) => {
   selectedProjectId.value = locationProjectId
@@ -88,7 +67,7 @@ const onEmitSearch = async (keyword: string) => {
       break
     } case 'My projects': {
       selectedTab.value = 'My projects'
-      projectResults.value = myProjects
+      projectResults.value = myProjects.value
       break
     } default: {
       const projectsInCriteria = pdStore.allProjects.filter(p => p.name.toLowerCase().includes(keyword.toLowerCase()))
@@ -139,7 +118,7 @@ watch(() => selectedTab.value, (newVal) => {
   if (newVal === 'All') {
     projectResults.value = pdStore.allProjects
   } else {
-    projectResults.value = myProjects
+    projectResults.value = myProjects.value
   }
 })
 
