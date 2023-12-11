@@ -8,7 +8,7 @@
     </div>
     <div
       v-if="!canEdit && !speciesList.length && !isLoading"
-      class="w-full rounded-lg p-6 shadow bg-util-gray-02"
+      class="w-full rounded-lg p-6 shadow bg-util-gray-03"
     >
       <h6>The project owner has not selected highlighted species for this project.</h6>
     </div>

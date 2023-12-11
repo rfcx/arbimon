@@ -1,16 +1,22 @@
 <template>
-  <div class="bg-util-gray-02 border border-insight rounded-md w-fit px-4 py-2 mx-auto">
-    <span class="text-insight text-base font-medium font-sans">
-      Don't leave this space empty - make it meaningful by adding your content.
+  <div class="bg-util-gray-03 p-4 border border-util-gray-01 rounded-md w-fit flex flex-col gap-4 md:(flex-row items-center min-h-12)">
+    <div class="font-medium flex flex-row gap-2 flex-shrink-0">
+      <icon-custom-ic-info class="h-5 w-5" />
+      No content
+    </div>
+    <div class="flex flex-col md:(flex-row items-center) gap-4">
+      <span class="text-insight text-base font-medium font-sans flex-1">
+        Don't leave this space empty - make it meaningful by adding your content.
+      </span>
       <span
-        class="text-frequency cursor-pointer font-display"
+        class="text-frequency cursor-pointer font-display flex-shrink-0"
         :class="{ 'disabled:cursor-not-allowed': projectUserPermissionsStore.isGuest }"
         :disabled="projectUserPermissionsStore.isGuest"
         @click="onAddContentClicked"
       >
         Add content
       </span>
-    </span>
+    </div>
   </div>
 </template>
 
