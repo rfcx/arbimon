@@ -1,14 +1,15 @@
 <template>
   <div class="my-4 flex gap-2 font-display text-insight text-sm flex-wrap">
     <div
-      class="flex flex-row items-center font-display text-sm mr-2 h-5"
+      class="flex flex-row items-center font-display text-sm"
     >
       <icon-fas-spinner
         v-if="isLoadingProfile"
         class="animate-spin"
         aria-label="Loading"
       />
-      <span
+      <div v-if="profile?.countryCodes !== undefined && profile.countryCodes.length > 0" class="flex flex-row items-center">
+        <span
         :style="showTooltip"
         class="text-insight text-sm mr-2 cursor-pointer"
         data-tooltip-target="tooltip-project-country"
@@ -28,7 +29,7 @@
       </div>
       <div
         v-if="projectFlag"
-        class="align-baseline"
+        class="align-baseline flex"
       >
         <country-flag
           :country="projectFlag"
@@ -38,27 +39,26 @@
       <icon-custom-fi-globe
         v-else
       />
-    </div>
-    <div
-      class="flex flex-row border-l-2 border-gray-300 px-2 space-x-4 items-center"
-      :class="profile?.dateStart === null && profile?.dateEnd === null ? 'hidden': ''"
-    >
-      <span>
-        Project dates:
-      </span>
-      <span class="uppercase">
-        {{ formatDateRange(profile?.dateStart) }}
-      </span>
-      <icon-custom-arrow-right-white class="self-start" />
+      </div>
       <span
-        class="uppercase"
-      >
-        {{ formatDateRange(profile?.dateEnd) }}
+        v-else
+        class="text-insight text-sm">
+        Site: No data
       </span>
     </div>
+    <div v-if="profile?.dateStart === null && profile?.dateEnd === null" class="flex flex-row border-l-2 border-gray-300 pl-2 space-x-4 items-center">
+      <span>Project dates: No data</span>
+    </div>
+    <div v-else
+      class="flex flex-row border-l-2 border-gray-300 pl-2 space-x-2 items-center"
+    >
+      <span>Project dates:</span>
+      <span>{{ formatDateRange(profile?.dateStart) }}</span>
+      <icon-custom-arrow-right-white />
+      <span>{{ formatDateRange(profile?.dateEnd) }}</span>
+    </div>
     <div
-      v-if="projectObjectives.length > 0"
-      class="border-l-2 border-gray-300 px-2"
+      class="border-l-2 border-gray-300 pl-2"
     >
       <span>Objectives: </span>
       {{ projectObjectivesText }}
@@ -83,8 +83,8 @@ const props = defineProps<{
   profile: ProjectSettingsResponse | undefined
 }>()
 const formatDateRange = (date: Date | null | undefined): string => {
-  if (!dayjs(date).isValid()) return 'present'
-  else return dayjs(date).format('MMM DD YYYY')
+  if (!dayjs(date).isValid()) return 'Present'
+  else return dayjs(date).format('D/M/YYYY')
 }
 
 const projectFlag = computed(() => {
@@ -122,8 +122,8 @@ const showTooltip = computed(() => {
 })
 
 const projectObjectivesText = computed(() => {
-  const objectives = props.projectObjectives
-  if (objectives.length === 0) return ''
+  const objectives = props.profile?.objectives ?? []
+  if (objectives.length === 0) return 'No data'
   const objectiveDescs = objectives?.map((obj) => {
     const objectiveType = objectiveTypes.find((o) => o.slug === obj)
     return objectiveType?.description ?? obj
