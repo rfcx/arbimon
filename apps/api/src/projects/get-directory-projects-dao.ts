@@ -103,10 +103,17 @@ export const queryDirectoryProjects = async (fullVersion: boolean = false, ids: 
   // query
   const projects = await LocationProject.findAll({
     where: {
+      latitudeNorth: { [Op.ne]: 0 },
+      latitudeSouth: { [Op.ne]: 0 },
+      longitudeEast: { [Op.ne]: 0 },
+      longitudeWest: { [Op.ne]: 0 },
       ...whereKeywords,
-      ...whereIds
+      ...whereIds,
+      [Op.or]: {
+        id: { [Op.in]: sequelize.literal('(SELECT location_project_id FROM project_version WHERE is_public = true OR is_published = true)') }
+      },
     },
-raw: true
+    raw: true
   })
   if (!fullVersion) {
     return toLightProjectsFromProjects(projects)
