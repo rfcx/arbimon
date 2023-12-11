@@ -76,140 +76,127 @@
         <p class="mt-5 text-insight text-base font-medium font-sans">
           Affiliated organization
         </p>
-        <div class="flex items-center mt-2">
-          <button
-            v-if="dropdownStatus === 'idle'"
+        <div class="relative w-full">
+          <input
+            ref="organizationSearchInput"
+            v-model="searchOrganizationValue"
+            class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
+            :class="{ 'rounded-b-lg': orgsSearchResult?.length === 0 || dropdownStatus !== 'search' }"
+            type="text"
+            placeholder="Type to search organizations"
+            data-dropdown-toggle="dropdown"
+            @input="organizationSearchInputChanged"
+            @blur="onBlur"
             @click="openOrganizationSearch()"
           >
-            <icon-custom-ft-search-lg
-              class="text-white w-5 h-5"
-            />
-          </button>
           <div
-            v-else
+            ref="organizationSearchLoading"
+            role="status"
+            class="absolute z-index-10 absolute top-1 right-3"
+            :class="{ hidden: !isSearchOrganizationFetching }"
           >
-            <div class="relative">
-              <input
-                ref="organizationSearchInput"
-                v-model="searchOrganizationValue"
-                class="px-3 py-2 w-[20.0rem] text-sm text-insight bg-echo outline-none focus:outline-none rounded-t-lg font-sans"
-                :class="{ 'rounded-b-lg': orgsSearchResult?.length === 0 || dropdownStatus !== 'search' }"
-                type="text"
-                placeholder="Type to search organizations"
-                data-dropdown-toggle="dropdown"
-                @input="organizationSearchInputChanged"
-                @blur="onBlur"
+            <svg
+              aria-hidden="true"
+              class="inline w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+              viewBox="0 0 100 101"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="currentColor"
+              />
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentFill"
+              />
+            </svg>
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+
+        <div
+          ref="createNewOrganizationFormContainer"
+          class="z-10 hidden w-[20.0rem] text-insight bg-moss border-cloud border-1 rounded-lg shadow"
+        >
+          <div class="max-w-sm mx-auto p-3">
+            <div class="mb-5">
+              <label
+                for="dashboard-project-summary-stakeholders-select-partner-type"
+                class="block mb-2 text-insight text-sm font-normal font-sans leading-normal"
               >
-              <div
-                ref="organizationSearchLoading"
-                role="status"
-                class="absolute z-index-10 absolute top-1 right-3"
-                :class="{ hidden: !isSearchOrganizationFetching }"
+                Select partner type
+              </label>
+              <select
+                id="dashboard-project-summary-stakeholders-select-partner-type"
+                v-model="newOrganizationType"
+                class="bg-echo border border-cloud text-insight text-sm rounded-lg block w-full py-2 px-3 font-sans"
               >
-                <svg
-                  aria-hidden="true"
-                  class="inline w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-                  viewBox="0 0 100 101"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+                <option
+                  v-for="orgType in ORGANIZATION_TYPE"
+                  :key="orgType"
+                  :value="orgType"
                 >
-                  <path
-                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                    fill="currentFill"
-                  />
-                </svg>
-                <span class="sr-only">Loading...</span>
-              </div>
+                  {{ ORGANIZATION_TYPE_NAME[orgType] }}
+                </option>
+              </select>
             </div>
-
-            <div
-              ref="createNewOrganizationFormContainer"
-              class="z-10 hidden w-[20.0rem] text-insight bg-moss border-cloud border-b border-l border-r rounded-b-lg shadow"
-            >
-              <div class="max-w-sm mx-auto p-3">
-                <div class="mb-5">
-                  <label
-                    for="dashboard-project-summary-stakeholders-select-partner-type"
-                    class="block mb-2 text-insight text-sm font-normal font-sans leading-normal"
-                  >
-                    Select partner type
-                  </label>
-                  <select
-                    id="dashboard-project-summary-stakeholders-select-partner-type"
-                    v-model="newOrganizationType"
-                    class="bg-echo border border-cloud text-insight text-sm rounded-lg block w-full py-2 px-3 font-sans"
-                  >
-                    <option
-                      v-for="orgType in ORGANIZATION_TYPE"
-                      :key="orgType"
-                      :value="orgType"
-                    >
-                      {{ ORGANIZATION_TYPE_NAME[orgType] }}
-                    </option>
-                  </select>
-                </div>
-                <div class="mb-5">
-                  <label
-                    for="dashboard-project-summary-stakeholders-input-organization-url"
-                    class="block mb-2 text-insight text-sm font-normal font-sans leading-normal"
-                  >
-                    Website
-                  </label>
-                  <input
-                    id="dashboard-project-summary-stakeholders-input-organization-url"
-                    v-model="newOrganizationUrl"
-                    type="text"
-                    placeholder="www.darwinfoundation.org"
-                    class="bg-echo border-cloud py-2 px-3 text-insight placeholder:italic placeholder:opacity-75 placeholder:text-stone-300 text-sm rounded-lg block w-full font-sans"
-                    required
-                  >
-                </div>
-                <div class="flex w-full flex-row justify-end">
-                  <button
-                    type="submit"
-                    class="btn btn-primary"
-                    @click="createNewOrganization"
-                  >
-                    Create organization
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div
-              ref="organizationSearchResultNotFoundContainer"
-              class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg shadow flex flex-row justify-between p-3"
-            >
-              <p class="text-sm font-normal font-sans text-insight leading-tight">
-                We are unable to find this organization.
-              </p>
-              <button
-                type="button"
-                class="text-frequency text-sm font-medium font-display leading-none"
-                @click="openCreateNewOrganizationForm"
+            <div class="mb-5">
+              <label
+                for="dashboard-project-summary-stakeholders-input-organization-url"
+                class="block mb-2 text-insight text-sm font-normal font-sans leading-normal"
               >
-                Create
+                Website
+              </label>
+              <input
+                id="dashboard-project-summary-stakeholders-input-organization-url"
+                v-model="newOrganizationUrl"
+                type="text"
+                placeholder="www.darwinfoundation.org"
+                class="bg-echo border-cloud py-2 px-3 text-insight placeholder:italic placeholder:opacity-75 placeholder:text-stone-300 text-sm rounded-lg block w-full font-sans"
+                required
+              >
+            </div>
+            <div class="flex w-full flex-row justify-end">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                @click="createNewOrganization"
+              >
+                Create organization
               </button>
             </div>
-            <div
-              ref="organizationSearchResultContainer"
-              class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg divide-y divide-gray-100 shadow"
-            >
-              <OrganizationSearchResultCard
-                v-for="s in orgsSearchResult"
-                :id="s.id"
-                :key="`${s.id}-${s.name}-search`"
-                :name="s.name"
-                :description="s.description"
-                :image="s.image"
-                @emit-add-to-selected-organization="onAddNewOrganizationFromSearch"
-              />
-            </div>
           </div>
+        </div>
+
+        <div
+          ref="organizationSearchResultNotFoundContainer"
+          class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg shadow flex flex-row justify-between p-3"
+        >
+          <p class="text-sm font-normal font-sans text-insight leading-tight">
+            We are unable to find this organization.
+          </p>
+          <button
+            type="button"
+            class="text-frequency text-sm font-medium font-display leading-none"
+            @click="openCreateNewOrganizationForm"
+          >
+            Create
+          </button>
+        </div>
+        <div
+          ref="organizationSearchResultContainer"
+          class="z-10 hidden px-4 mx-auto max-w-screen-md text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg divide-y divide-gray-100 shadow"
+        >
+          <OrganizationSearchResultCard
+            v-for="s in orgsSearchResult"
+            :id="s.id"
+            :key="`${s.id}-${s.name}-search`"
+            :name="s.name"
+            :description="s.description"
+            :image="s.image"
+            @emit-add-to-selected-organization="onAddNewOrganizationFromSearch"
+          />
         </div>
         <button
           class="w-full btn btn-primary inline items-center group mt-7"
@@ -240,6 +227,7 @@ import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vu
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 import OrganizationSearchResultCard from '../insights/overview/components/dashboard-project-summary/components/dashboard-project-stakeholders/organization-search-result-card.vue'
+import { useCreateOrganization } from '../insights/overview/composables/use-create-organization'
 import { useGetSearchOrganizationsResult } from '../insights/overview/composables/use-get-search-organizations-result'
 import { useGetOrganizationsList } from './composables/use-get-organizations'
 import { usePatchProfileImage } from './composables/use-patch-profile-photo'
@@ -254,6 +242,8 @@ const uploadedPhotoData: Ref<Record<string, string>> = ref({
   name: '',
   type: ''
 })
+const searchDropdown = ref() as Ref<Dropdown>
+const notFoundDropdown = ref() as Ref<Dropdown>
 const dropdownStatus = ref<'idle' | 'search' | 'create-org'>('idle')
 const organizationSearchInput = ref<HTMLDivElement | null>(null)
 const organizationSearchResultContainer = ref<HTMLDivElement | null>(null)
@@ -263,6 +253,7 @@ const searchOrganizationValue = ref('')
 const createNewOrganizationFormContainer = ref<HTMLDivElement | null>(null)
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
 const newOrganizationUrl = ref<string>('')
+const dropdownOptions: DropdownOptions = { placement: 'bottom-start', triggerType: 'none', offsetDistance: 1 }
 
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
@@ -272,6 +263,7 @@ const { isPending: isUpdatingUserProfile, mutate: mutatePatchUserProfile } = use
 const { isLoading: isLoadingProfileData, data: profileData } = useGetProfileData(apiClientBio)
 const { data: organizationsList } = useGetOrganizationsList(apiClientBio)
 const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult, isFetching: isSearchOrganizationFetching } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
+const { mutate: mutateNewOrganization } = useCreateOrganization(apiClientBio)
 
 const selectedOrganizationId = ref(profileData.value?.organizationIdAffiliated)
 
@@ -279,6 +271,8 @@ onMounted(() => {
   firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
   lastName.value = store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
   email.value = store.user?.email ?? ''
+  searchDropdown.value = new Dropdown(organizationSearchResultContainer.value, organizationSearchInput.value, dropdownOptions)
+  notFoundDropdown.value = new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, dropdownOptions)
 })
 
 watch(profileData, () => {
@@ -316,25 +310,33 @@ const openOrganizationSearch = async () => {
   dropdownStatus.value = 'search'
   await nextTick()
   organizationSearchInput.value?.focus()
-  const dropdownOptions: DropdownOptions = { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }
-  new Dropdown(organizationSearchResultContainer.value, organizationSearchInput.value, dropdownOptions).show()
+  searchDropdown.value.show()
 }
 
-const organizationSearchInputChanged = () => {
+const showNotFoundContainer = async (): Promise<void> => {
+  notFoundDropdown.value.show()
+}
+
+const hideNotFoundContainer = async (): Promise<void> => {
+  notFoundDropdown.value.hide()
+}
+
+const organizationSearchInputChanged = async () => {
   dropdownStatus.value = 'search'
-  refetchOrganizationsSearch()
-  if (organizationsSearchResult.value == null || organizationsSearchResult.value.length === 0) {
-    new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).show()
+  await refetchOrganizationsSearch()
+  if (orgsSearchResult.value && orgsSearchResult.value.length === 0) {
+    showNotFoundContainer()
+  } else {
+    showNotFoundContainer()
+    hideNotFoundContainer()
   }
 }
 
 const onBlur = () => {
-  // INFO: I don't know why the timeout works, guess it's a race condition between the onBlur and the emit from the search component.
-  // If you remove this timeout. The dropdown will close and turn to button before the `onAddNewOrganizationFromSearch` function gets called.
   setTimeout(() => {
     if (dropdownStatus.value === 'create-org') {
-      new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).show()
-      new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).hide()
+      showNotFoundContainer()
+      hideNotFoundContainer()
       return
     }
 
@@ -349,7 +351,7 @@ const refetchOrganizationsSearch = async (): Promise<void> => {
 }
 
 const onAddNewOrganizationFromSearch = (id: number): void => {
-  console.info('emitid', id)
+  console.info(id)
   // Return when the org already exists
   if (displayedOrganization.value?.id === id) {
     dropdownStatus.value = 'idle'
@@ -362,7 +364,7 @@ const onAddNewOrganizationFromSearch = (id: number): void => {
     dropdownStatus.value = 'idle'
     return
   }
-  console.info('newOrg', newOrg)
+  console.info(newOrg)
   selectedOrganizationId.value = newOrg.id
   addedOrganization.value = newOrg
   searchOrganizationValue.value = newOrg.name
@@ -371,21 +373,20 @@ const onAddNewOrganizationFromSearch = (id: number): void => {
 
 const openCreateNewOrganizationForm = async (): Promise<void> => {
   dropdownStatus.value = 'create-org'
-  new Dropdown(createNewOrganizationFormContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).show()
+  new Dropdown(createNewOrganizationFormContainer.value, organizationSearchInput.value, dropdownOptions).show()
 }
 
 const createNewOrganization = (): void => {
-//   mutateNewOrganization({ name: searchOrganizationValue.value, type: newOrganizationType.value, url: newOrganizationUrl.value }, {
-//     onSuccess: (newOrganization) => {
-//       addedOrganization.value.push(newOrganization)
-//       selectedOrganizationIds.value.push(newOrganization.id)
-//       dropdownStatus.value = 'idle'
-//     },
-//     onError: () => {
-//       // TODO: Show user some respect and show them error
-//       dropdownStatus.value = 'idle'
-//     }
-//   })
+  mutateNewOrganization({ name: searchOrganizationValue.value, type: newOrganizationType.value, url: newOrganizationUrl.value }, {
+    onSuccess: (newOrganization) => {
+      addedOrganization.value = newOrganization
+      selectedOrganizationId.value = newOrganization.id
+      dropdownStatus.value = 'idle'
+    },
+    onError: () => {
+      dropdownStatus.value = 'idle'
+    }
+  })
 }
 
 const selectPhoto = async (): Promise<void> => {
