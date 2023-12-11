@@ -12,7 +12,7 @@
         v-if="tooltipText"
         :data-tooltip-target="tooltipId"
         data-tooltip-style="light"
-        class="inline-block basis-8 h-4 w-4 cursor-pointer text-spoonbill"
+        class="basis-8 h-5 w-5 cursor-pointer text-spoonbill pt-1.25"
       />
       <div
         :id="tooltipId"
