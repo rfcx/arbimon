@@ -53,9 +53,8 @@ export const toLightProjectsFromProjects = (projects: Project[]): ProjectLight[]
   }))
 }
 
-export const getDirectoryProjects = (isLight: boolean = false, ids: number[] = [], keywords: string[]): DirectoryProjectsResponse => {
-  console.info('getDirectoryProjects', { isLight, ids, keywords })
-  const path = resolve('./public/directory/data-local.json')
+export const getDirectoryProjects = (fullVersion: boolean = false, ids: number[] = [], keywords: string[]): DirectoryProjectsResponse => {
+  const path = resolve('./public/directory/data-testing.json')
   const jsonData = JSON.parse(readFileSync(path, 'utf8'))
   const projects = jsonData.data.map((p: ProjectRaw): ProjectProfileWithMetrics => ({
     id: Number(p.id),
@@ -64,27 +63,27 @@ export const getDirectoryProjects = (isLight: boolean = false, ids: number[] = [
     avgLatitude: avgCoordinate(p.latitude_north, p.latitude_south),
     avgLongitude: avgCoordinate(p.longitude_east, p.longitude_west),
     summary: p.summary,
-    objectives: p.objectives,
+    objectives: [],
     noOfSpecies: p.species_count ?? 0,
     noOfRecordings: p.recording_minutes_count ?? 0,
-    countries: p.countries,
+    countries: [],
     isHighlighted: true,
-    isMock: false,
+    isMock: true,
     imageUrl: p.image
   }))
   const filteredProjects = projects.filter((p: ProjectProfileWithMetrics) => {
     if (ids.length > 0) {
-      return ids.map(id => Number(id)).includes(p.id)
+      return ids.includes(p.id)
     }
     if (keywords.length > 0) {
       return keywords.some((keyword) => p.name.toLowerCase().includes(keyword.toLowerCase()))
     }
     return true
   })
-  return isLight ? toLightProjects(filteredProjects) : filteredProjects
+  return !fullVersion ? toLightProjects(filteredProjects) : filteredProjects
 }
 
-export const queryDirectoryProjects = async (isLight: boolean = false, ids: number[] = [], keywords: string[]): Promise<DirectoryProjectsResponse> => {
+export const queryDirectoryProjects = async (fullVersion: boolean = false, ids: number[] = [], keywords: string[]): Promise<DirectoryProjectsResponse> => {
   const sequelize = getSequelize()
   const { LocationProject, LocationProjectMetric, LocationProjectCountry, LocationProjectProfile } = ModelRepository.getInstance(sequelize)
 
@@ -109,7 +108,7 @@ export const queryDirectoryProjects = async (isLight: boolean = false, ids: numb
     },
 raw: true
   })
-  if (isLight) {
+  if (!fullVersion) {
     return toLightProjectsFromProjects(projects)
   } else {
     // TODO: add where clauses for metrics, countries, profiles
