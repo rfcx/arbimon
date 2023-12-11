@@ -11,7 +11,7 @@ export const routesProjectProfile: RouteRegistration[] = [
   },
   {
     method: PATCH,
-    url: projectDataRoute,
+    url: projectDataRoute + '/settings',
     handler: projectSettingsUpdateHandler
   }
 ]
