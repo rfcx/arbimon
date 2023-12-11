@@ -1,5 +1,6 @@
 <template>
   <div>
+    <empty-box v-if="isProjectMember && !isViewingAsGuest && (!isLoadingMetrics && ((metrics?.totalRecordings ?? 0) === 0))" class="mb-6" />
     <dashboard-metrics
       :error="isErrorMetrics"
       :loading="isLoadingMetrics"
@@ -58,6 +59,7 @@ import { useSpeciesRichnessByRisk } from './components/dashboard-species/composa
 import DashboardSpeciesByRisk from './components/dashboard-species/dashboard-species-by-risk.vue'
 import DashboardSpeciesByTaxon from './components/dashboard-species/dashboard-species-by-taxon.vue'
 import { useGetDashboardMetrics } from './composables/use-get-dashboard-metrics'
+import EmptyBox from '../components/empty-box.vue'
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
