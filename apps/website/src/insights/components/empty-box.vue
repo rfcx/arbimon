@@ -9,7 +9,11 @@
         The Insight page will automatically update with results once the analysis and validation are complete.
       </span>
     </div>
-    <a :href="analysisUrl" target="_blank" class="text-frequency cursor-pointer font-display flex-shrink-0">
+    <a
+      :href="analysisUrl"
+      target="_blank"
+      class="text-frequency cursor-pointer font-display flex-shrink-0"
+    >
       Run analysis
     </a>
   </div>

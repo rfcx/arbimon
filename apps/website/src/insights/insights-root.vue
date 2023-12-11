@@ -140,7 +140,6 @@ import ShareInsight from './components/share-insights/share-insights.vue'
 import type { InsightsPublishStatus } from './components/share-insights/types'
 import HeroBriefOverview from './insights-hero/hero-brief-overview.vue'
 import HeroProjectInfo from './insights-hero/hero-project-info.vue'
-import { useGetDashboardMetrics } from './overview/composables/use-get-dashboard-metrics'
 
 const items = [
   {
@@ -185,7 +184,6 @@ const isViewingAsGuest = computed(() => {
 const startShareInsightsNavigation = ref<InsightsPublishStatus>('idle')
 
 const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch } = useGetProjectSettings(apiClientBio, selectedProjectId)
-const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 
 watch(() => profile.value, () => {
   if (!profile.value) return

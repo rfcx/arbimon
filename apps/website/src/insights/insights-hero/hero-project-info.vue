@@ -8,48 +8,56 @@
         class="animate-spin"
         aria-label="Loading"
       />
-      <div v-if="profile?.countryCodes !== undefined && profile.countryCodes.length > 0" class="flex flex-row items-center">
+      <div
+        v-if="profile?.countryCodes !== undefined && profile.countryCodes.length > 0"
+        class="flex flex-row items-center"
+      >
         <span
-        :style="showTooltip"
-        class="text-insight text-sm mr-2 cursor-pointer"
-        data-tooltip-target="tooltip-project-country"
-      >
-        {{ projectCountryText }}
-      </span>
-      <div
-        id="tooltip-project-country"
-        role="tooltip"
-        class="tooltip_ml absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
-      >
-        {{ projectCountry }}
+          :style="showTooltip"
+          class="text-insight text-sm mr-2 cursor-pointer"
+          data-tooltip-target="tooltip-project-country"
+        >
+          {{ projectCountryText }}
+        </span>
         <div
-          class="absolute tooltip-arrow"
-          data-popper-arrow
+          id="tooltip-project-country"
+          role="tooltip"
+          class="tooltip_ml absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+        >
+          {{ projectCountry }}
+          <div
+            class="absolute tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
+        <div
+          v-if="projectFlag"
+          class="align-baseline flex"
+        >
+          <country-flag
+            :country="projectFlag"
+            size="small"
+          />
+        </div>
+        <icon-custom-fi-globe
+          v-else
         />
-      </div>
-      <div
-        v-if="projectFlag"
-        class="align-baseline flex"
-      >
-        <country-flag
-          :country="projectFlag"
-          size="small"
-        />
-      </div>
-      <icon-custom-fi-globe
-        v-else
-      />
       </div>
       <span
         v-else
-        class="text-insight text-sm">
+        class="text-insight text-sm"
+      >
         Site: No data
       </span>
     </div>
-    <div v-if="profile?.dateStart === null && profile?.dateEnd === null" class="flex flex-row border-l-2 border-gray-300 pl-2 space-x-4 items-center">
+    <div
+      v-if="profile?.dateStart === null && profile?.dateEnd === null"
+      class="flex flex-row border-l-2 border-gray-300 pl-2 space-x-4 items-center"
+    >
       <span>Project dates: No data</span>
     </div>
-    <div v-else
+    <div
+      v-else
       class="flex flex-row border-l-2 border-gray-300 pl-2 space-x-2 items-center"
     >
       <span>Project dates:</span>
