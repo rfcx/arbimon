@@ -10,7 +10,7 @@ export const useProjectDirectoryStore = defineStore('project-directory-store', (
   }
   const allProjectsWithMetrics = ref<ProjectProfileWithMetrics[]>([])
   const addProjectsWithMetrics = (projects: ProjectProfileWithMetrics[]): void => {
-    if (allProjectsWithMetrics.value.length === 0) {  // if empty, just add
+    if (allProjectsWithMetrics.value.length === 0) { // if empty, just add
       allProjectsWithMetrics.value = projects
       return
     }
