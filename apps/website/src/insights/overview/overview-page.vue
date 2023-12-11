@@ -1,6 +1,9 @@
 <template>
   <div>
-    <empty-box v-if="isProjectMember && !isViewingAsGuest && (!isLoadingMetrics && ((metrics?.totalRecordings ?? 0) === 0))" class="mb-6" />
+    <empty-box
+      v-if="isProjectMember && !isViewingAsGuest && (!isLoadingMetrics && ((metrics?.totalRecordings ?? 0) === 0))"
+      class="mb-6"
+    />
     <dashboard-metrics
       :error="isErrorMetrics"
       :loading="isLoadingMetrics"
@@ -50,6 +53,7 @@ import { apiClientKey } from '@/globals'
 import { RISKS_BY_ID } from '~/risk-ratings'
 import { useDashboardStore, useStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
+import EmptyBox from '../components/empty-box.vue'
 import DashboardHighlightedSpecies from './components/dashboard-highlighted-species/dashboard-highlighted-species.vue'
 import DashbordMap from './components/dashboard-map/dashboard-map.vue'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
@@ -59,7 +63,6 @@ import { useSpeciesRichnessByRisk } from './components/dashboard-species/composa
 import DashboardSpeciesByRisk from './components/dashboard-species/dashboard-species-by-risk.vue'
 import DashboardSpeciesByTaxon from './components/dashboard-species/dashboard-species-by-taxon.vue'
 import { useGetDashboardMetrics } from './composables/use-get-dashboard-metrics'
-import EmptyBox from '../components/empty-box.vue'
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
