@@ -59,11 +59,8 @@
     >
       <icon-custom-fi-external-link class="w-4 h-4 inline-flex" /> Manage project members
     </router-link>
-    <div
-      class="grid gap-3 mt-3 mb-11"
-      style="grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr))"
-    >
-      <StakeholdercardEdit
+    <div class="grid grid-cols-2 gap-3 mt-3 mb-11 lg:grid-cols-3">
+      <StakeholderCardEdit
         v-for="(member, idx) of projectMembers"
         :key="idx"
         :name="member.firstname + ' ' + member.lastname"
@@ -254,7 +251,7 @@ import { useCreateOrganization } from '../../../../composables/use-create-organi
 import { useGetSearchOrganizationsResult } from '../../../../composables/use-get-search-organizations-result'
 import OrganizationSearchResultCard from './organization-search-result-card.vue'
 import SelectedOrganizationCard from './selected-organization-card.vue'
-import StakeholdercardEdit from './stakeholder-card-edit.vue'
+import StakeholderCardEdit from './stakeholder-card-edit.vue'
 
 const props = defineProps<{
   projectMembers: Array<CoreUser>,
