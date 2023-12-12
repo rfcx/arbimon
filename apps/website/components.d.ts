@@ -69,6 +69,7 @@ declare module '@vue/runtime-core' {
     IconCustomFtRedo: typeof import('~icons/custom-icons/ft-redo')['default']
     IconCustomFtSearchLg: typeof import('~icons/custom-icons/ft-search-lg')['default']
     IconCustomFtUndo: typeof import('~icons/custom-icons/ft-undo')['default']
+    IconCustomIcArrowViewMore: typeof import('~icons/custom-icons/ic-arrow-view-more')['default']
     IconCustomIcEdit: typeof import('~icons/custom-icons/ic-edit')['default']
     IconCustomIcInfo: typeof import('~icons/custom-icons/ic-info')['default']
     IconCustomIcWarning: typeof import('~icons/custom-icons/ic-warning')['default']
