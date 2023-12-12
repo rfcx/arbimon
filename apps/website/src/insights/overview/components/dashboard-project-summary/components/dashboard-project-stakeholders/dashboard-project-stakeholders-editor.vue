@@ -67,6 +67,7 @@
         :image="member.picture ?? undefined"
         :email="member.email ?? ''"
         :ranking="1"
+        @emit-hide-email="hideUserEmail"
       />
     </div>
     <div class="flex justify-start items-center">
@@ -387,5 +388,9 @@ const refetchOrganizationsSearch = async (): Promise<void> => {
 
 const selectAllUsers = (): void => {
   selectedUsers.value = props.projectMembers.map(u => u.email)
+}
+
+const hideUserEmail = (): void => {
+  // TODO: create endpoint
 }
 </script>
