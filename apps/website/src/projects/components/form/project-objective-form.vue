@@ -108,6 +108,8 @@ watch(() => props.existingObjectives, () => {
 watch(otherReason, () => {
   if (otherReason.value.length === 0) {
     unselectOther()
+  } else {
+    forceSelectOther()
   }
 })
 
