@@ -32,7 +32,7 @@
       </div>
       <div class="mt-4 sm:mt-6 flex flex-row-reverse items-center gap-4">
         <button
-          :disabled="projectUserPermissionsStore.isGuest"
+          :disabled="projectUserPermissionsStore.isGuest || isSaving"
           class="self-end inline-flex items-center btn btn-primary disabled:opacity-75 disabled:cursor-not-allowed"
           @click.prevent="save"
         >
@@ -165,6 +165,7 @@ const updateSettings = () => {
       store.updateProjectName(newName.value)
       dashboardStore.updateProjectObjectives(newObjectives.value)
       dashboardStore.updateProjectSummary(newSummary.value)
+      refreshProjects()
     },
     onError: (e) => {
       isSaving.value = false
@@ -174,4 +175,13 @@ const updateSettings = () => {
     }
   })
 }
+
+async function refreshProjects () {
+  try {
+    await store.refreshProjects()
+  } catch (e) {
+    if (e instanceof Error) console.error(e.message)
+  }
+}
+
 </script>
