@@ -32,7 +32,7 @@
       </div>
       <div class="mt-4 sm:mt-6 flex flex-row-reverse items-center gap-4">
         <button
-          :disabled="projectUserPermissionsStore.isGuest || isSaving"
+          :disabled="projectUserPermissionsStore.isGuest"
           class="self-end inline-flex items-center btn btn-primary disabled:opacity-75 disabled:cursor-not-allowed"
           @click.prevent="save"
         >
