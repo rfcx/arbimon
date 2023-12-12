@@ -34,7 +34,7 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { type Ref, computed, inject, ref } from 'vue'
+import { type Ref, computed, inject, onMounted, ref } from 'vue'
 
 import { apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
@@ -43,6 +43,10 @@ import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import ProjectCard from './components/project-card.vue'
+
+onMounted(() => {
+  refreshProjects()
+})
 
 const store = useStore()
 
@@ -65,4 +69,11 @@ const loadMoreProject = async (): Promise<void> => {
   }
 }
 
+async function refreshProjects () {
+  try {
+    await store.refreshProjects()
+  } catch (e) {
+    if (e instanceof Error) console.error(e.message)
+  }
+}
 </script>

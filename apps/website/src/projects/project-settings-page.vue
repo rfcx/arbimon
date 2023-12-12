@@ -169,7 +169,6 @@ const updateSettings = () => {
       store.updateProjectName(newName.value)
       dashboardStore.updateProjectObjectives(newObjectives.value)
       dashboardStore.updateProjectSummary(newSummary.value)
-      refreshProjects()
     },
     onError: (e) => {
       isSaving.value = false
@@ -179,14 +178,6 @@ const updateSettings = () => {
       console.info(e)
     }
   })
-}
-
-async function refreshProjects () {
-  try {
-    await store.refreshProjects()
-  } catch (e) {
-    if (e instanceof Error) console.error(e.message)
-  }
 }
 
 </script>
