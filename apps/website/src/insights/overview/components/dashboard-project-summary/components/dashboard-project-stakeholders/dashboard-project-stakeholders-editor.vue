@@ -63,6 +63,7 @@
       <StakeholderCardEdit
         v-for="(member, idx) of projectMembers"
         :key="idx"
+        v-model="selectedProjectMembers"
         :name="member.firstname + ' ' + member.lastname"
         :image="member.picture ?? undefined"
         :email="member.email ?? ''"
@@ -270,6 +271,7 @@ const organizationSearchResultNotFoundContainer = ref<HTMLDivElement | null>(nul
 const searchOrganizationValue = ref('')
 const addedOrganizations = ref<Array<OrganizationTypes['light']>>([])
 const selectedOrganizationIds = ref(props.organizations.map(o => o.id))
+const selectedProjectMembers = ref(props.projectMembers.filter(o => o.role === 'Admin').map(o => o.email))
 
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
 const newOrganizationUrl = ref<string>('')
