@@ -17,7 +17,8 @@ const EXPECTED_PROPS = [
   'totalDetections',
   'totalRecordings',
   'maxDate',
-  'minDate'
+  'minDate',
+  'siteCount'
 ]
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
