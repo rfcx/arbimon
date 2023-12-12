@@ -33,9 +33,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import TextTooltip from '../../projects/components/text-tooltip.vue'
 import { masterOjectiveTypes, objectiveTypes } from '../../projects/types'
 import type { ProjectProfileWithMetrics } from '../data/types'
-import TextTooltip from '../../projects/components/text-tooltip.vue'
 
 const props = defineProps<{ project: ProjectProfileWithMetrics, isSelected: boolean }>()
 

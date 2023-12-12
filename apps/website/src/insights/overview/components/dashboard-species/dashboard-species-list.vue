@@ -53,14 +53,14 @@
         class="flex flex-row text-frequency gap-x-2 items-center"
         @click="isViewAll = true"
       >
-        View all {{ selectedRiskUI?.label }} species <icon-custom-ic-arrow-view-more/>
+        View all {{ selectedRiskUI?.label }} species <icon-custom-ic-arrow-view-more />
       </button>
       <button
         v-else
         class="flex flex-row text-frequency gap-x-2 items-center"
         @click="isViewAll = false"
       >
-        View less <icon-custom-ic-arrow-view-more class="transform rotate-180"/>
+        View less <icon-custom-ic-arrow-view-more class="transform rotate-180" />
       </button>
     </div>
   </div>
