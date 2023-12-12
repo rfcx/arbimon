@@ -13,12 +13,12 @@
         Primary contact
       </h3>
       <h3 class="text-base font-normal font-sans">
-        {{ firstName }} {{ lastName }}
+        {{ name }}
       </h3>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{ firstName: string, lastName: string, email: string, image?: string, ranking?: number }>()
+defineProps<{ name: string, email: string, image?: string, ranking?: number }>()
 </script>

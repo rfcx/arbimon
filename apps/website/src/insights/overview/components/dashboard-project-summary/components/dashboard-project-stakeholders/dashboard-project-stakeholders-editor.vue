@@ -1,80 +1,77 @@
 <template>
   <div>
-    <!-- <h3 class="text-white text-xl font-medium font-sans leading-7 mb-3"> -->
-    <!--   Project's primary contact -->
-    <!-- </h3> -->
-    <!---->
-    <!-- <div -->
-    <!--   v-if="primaryContact == null" -->
-    <!--   class="flex items-center justify-center-max-w-sm" -->
-    <!-- > -->
-    <!--   <h3>No user selected</h3> -->
-    <!-- </div> -->
-    <!---->
-    <!-- <div -->
-    <!--   v-else -->
-    <!--   class="relative flex items-center justify-between border border-frequency bg-pitch rounded-lg px-6 py-4 max-w-sm -z-10" -->
-    <!-- > -->
-    <!--   <icon-custom-fi-check-circle class="text-frequency bg-pitch w-6 h-6 absolute -translate-y-1/2 translate-x-1/2 left-auto -top-3 -right-3" /> -->
-    <!--   <div class="flex items-center justify-start"> -->
-    <!--     <img -->
-    <!--       class="w-12 h-12 rounded-full shadow" -->
-    <!--       :src="primaryContact?.image" -->
-    <!--       alt="user profile image" -->
-    <!--     > -->
-    <!--     <div class="ml-3"> -->
-    <!--       <h3 class="text-danger text-xs font-medium font-eyebrow uppercase"> -->
-    <!--         Primary contact -->
-    <!--       </h3> -->
-    <!--       <h3 class="text-base font-normal font-sans"> -->
-    <!--         {{ primaryContact?.name }} -->
-    <!--       </h3> -->
-    <!--       <a -->
-    <!--         :href="`mailto:${primaryContact?.email}`" -->
-    <!--         class="text-util-gray-01 text-sm font-normal leading-tight hover:underline hover:cursor-pointer" -->
-    <!--       > -->
-    <!--         {{ primaryContact?.email }} -->
-    <!--       </a> -->
-    <!--     </div> -->
-    <!--   </div> -->
-    <!-- </div> -->
-    <!-- <div class="flex justify-start items-center mt-10 mb-3"> -->
-    <!--   <h3 class="text-white text-xl font-medium font-sans leading-7 mr-8"> -->
-    <!--     Project members -->
-    <!--   </h3> -->
-    <!--   <label -->
-    <!--     for="dashboard-project-stakeholders-editor-select-all-users-checkbox" -->
-    <!--     class="text-white text-sm font-normal font-sans leading-tight mr-2" -->
-    <!--   > -->
-    <!--     Select all -->
-    <!--   </label> -->
-    <!--   <input -->
-    <!--     id="dashboard-project-stakeholders-editor-select-all-users-checkbox" -->
-    <!--     type="checkbox" -->
-    <!--     class="w-4 h-4 rounded checked:text-frequency border-0 outline-none" -->
-    <!--     @click="selectAllUsers" -->
-    <!--   > -->
-    <!-- </div> -->
-    <!-- <router-link -->
-    <!--   class="text-frequency text-sm font-medium font-display leading-none" -->
-    <!--   :to="{ name: ROUTE_NAMES.projectSettings }" -->
-    <!-- > -->
-    <!--   <icon-custom-fi-external-link class="w-4 h-4 inline-flex" /> Manage project members -->
-    <!-- </router-link> -->
-    <!-- <div -->
-    <!--   class="grid gap-3 mt-3 mb-11" -->
-    <!--   style="grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr))" -->
-    <!-- > -->
-    <!--   <SelectedOrganizationCard -->
-    <!--     v-for="u in users" -->
-    <!--     :id="u.id" -->
-    <!--     :key="`${u.id}${u.name}`" -->
-    <!--     v-model="selectedUsers" -->
-    <!--     :name="u.name" -->
-    <!--     :image="u.image" -->
-    <!--   /> -->
-    <!-- </div> -->
-
+    <h3 class="text-white text-xl font-medium font-sans leading-7 mb-3">
+      Project's primary contact
+    </h3>
+    <div
+      v-if="primaryContact == null"
+      class="flex items-center justify-center-max-w-sm"
+    >
+      <h3>No user selected</h3>
+    </div>
+    <div
+      v-else
+      class="relative flex items-center justify-between border border-frequency bg-pitch rounded-lg px-6 py-4 max-w-sm -z-10"
+    >
+      <icon-custom-fi-check-circle class="text-frequency bg-pitch w-6 h-6 absolute -translate-y-1/2 translate-x-1/2 left-auto -top-3 -right-3" />
+      <div class="flex items-center justify-start">
+        <img
+          class="w-12 h-12 rounded-full shadow"
+          :src="primaryContact?.image"
+          alt="user profile image"
+        >
+        <div class="ml-3">
+          <h3 class="text-danger text-xs font-medium font-eyebrow uppercase">
+            Primary contact
+          </h3>
+          <h3 class="text-base font-normal font-sans">
+            {{ primaryContact?.name }}
+          </h3>
+          <a
+            :href="`mailto:${primaryContact?.email}`"
+            class="text-util-gray-01 text-sm font-normal leading-tight hover:underline hover:cursor-pointer"
+          >
+            {{ primaryContact?.email }}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-start items-center mt-10 mb-3">
+      <h3 class="text-white text-xl font-medium font-sans leading-7 mr-8">
+        Project members
+      </h3>
+      <label
+        for="dashboard-project-stakeholders-editor-select-all-users-checkbox"
+        class="text-white text-sm font-normal font-sans leading-tight mr-2"
+      >
+        Select all
+      </label>
+      <input
+        id="dashboard-project-stakeholders-editor-select-all-users-checkbox"
+        type="checkbox"
+        class="w-4 h-4 rounded checked:text-frequency border-0 outline-none"
+        @click="selectAllUsers"
+      >
+    </div>
+    <router-link
+      :to="{ name: ROUTE_NAMES.projectSettings }"
+      class="text-frequency text-sm font-medium font-display leading-none"
+    >
+      <icon-custom-fi-external-link class="w-4 h-4 inline-flex" /> Manage project members
+    </router-link>
+    <div
+      class="grid gap-3 mt-3 mb-11"
+      style="grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr))"
+    >
+      <StakeholdercardEdit
+        v-for="(member, idx) of projectMembers"
+        :key="idx"
+        :name="member.firstname + ' ' + member.lastname"
+        :image="member.picture ?? undefined"
+        :email="member.email ?? ''"
+        :ranking="1"
+      />
+    </div>
     <div class="flex justify-start items-center">
       <h3 class="text-white text-xl font-medium font-sans my-2">
         Affiliated organizations
@@ -248,18 +245,24 @@ import type { DropdownOptions } from 'flowbite'
 import { Dropdown } from 'flowbite'
 import { computed, inject, nextTick, ref, watch } from 'vue'
 
+import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import { apiClientKey } from '@/globals'
+import { ROUTE_NAMES } from '~/router'
 import { useCreateOrganization } from '../../../../composables/use-create-organization'
 import { useGetSearchOrganizationsResult } from '../../../../composables/use-get-search-organizations-result'
 import OrganizationSearchResultCard from './organization-search-result-card.vue'
 import SelectedOrganizationCard from './selected-organization-card.vue'
+import StakeholdercardEdit from './stakeholder-card-edit.vue'
 
-const props = defineProps<{ organizations: Array<OrganizationTypes['light']>}>()
+const props = defineProps<{
+  projectMembers: Array<CoreUser>,
+  organizations: Array<OrganizationTypes['light']>
+}>()
 const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[]): void}>()
 
-// const selectedUsers = ref([1])
+const selectedUsers = ref()
 
 const dropdownStatus = ref<'idle' | 'search' | 'create-org'>('idle')
 const createNewOrganizationFormContainer = ref<HTMLDivElement | null>(null)
@@ -273,6 +276,7 @@ const selectedOrganizationIds = ref(props.organizations.map(o => o.id))
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
 const newOrganizationUrl = ref<string>('')
 
+const primaryContact = ref<{ id: number, name: string, email: string, image: string } | null>({ id: 122, name: 'Logan Sargeant', email: 'kingsargeant1122@gmail.com', image: 'https://picsum.photos/id/233/200/200' })
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult, isFetching: isSearchOrganizationFetching } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
@@ -373,29 +377,6 @@ const createNewOrganization = (): void => {
   })
 }
 
-// const users = ref([
-//   {
-//     id: 1,
-//     name: 'Oscar Piastri',
-//     image: 'https://picsum.photos/id/339/200/200'
-//   },
-//   {
-//     id: 2,
-//     name: 'Lando Norris',
-//     image: 'https://picsum.photos/id/350/200/200'
-//   },
-//   {
-//     id: 3,
-//     name: 'Max Verstappen',
-//     image: 'https://picsum.photos/id/324/200/200'
-//   },
-//   {
-//     id: 4,
-//     name: 'Lewis Hamilton',
-//     image: 'https://picsum.photos/id/448/200/200'
-//   }
-// ])
-
 const onFinishedEditing = (): void => {
   searchOrganizationValue.value = ''
   emit('emit-finished-editing', selectedOrganizationIds.value)
@@ -407,9 +388,7 @@ const refetchOrganizationsSearch = async (): Promise<void> => {
   }
 }
 
-// const selectAllUsers = (): void => {
-//   selectedUsers.value = users.value.map(u => u.id)
-// }
-//
-// const primaryContact = ref<{ id: number, name: string, email: string, image: string } | null>({ id: 122, name: 'Logan Sargeant', email: 'kingsargeant1122@gmail.com', image: 'https://picsum.photos/id/233/200/200' })
+const selectAllUsers = (): void => {
+  selectedUsers.value = props.projectMembers.map(u => u.email)
+}
 </script>
