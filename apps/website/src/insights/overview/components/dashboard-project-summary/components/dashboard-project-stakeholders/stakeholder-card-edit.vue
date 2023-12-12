@@ -1,8 +1,13 @@
 <template>
   <div
     class="flex flex-row items-center justify-start space-x-3 border-1 border-insight rounded-lg py-4 px-[18px] row-span-3 group hover:(row-span-4 py-8 bg-moss)"
-    :class="{'row-span-4 py-8 bg-moss': isHovered}"
+    :class="{'row-span-4 py-8 bg-moss': isHovered, 'border-frequency relative': checked}"
+    @click="toggleSelectMemberCard"
   >
+    <icon-custom-fi-check-circle
+      v-if="checked"
+      class="text-frequency bg-pitch w-6 h-6 absolute -translate-y-1/2 translate-x-1/2 left-auto -top-3 -right-3"
+    />
     <img
       class="w-12 h-12 rounded-full shadow"
       :src="image || 'https://inaturalist-open-data.s3.amazonaws.com/photos/332643265/small.jpeg'"
@@ -47,7 +52,10 @@
           :aria-labelledby="`${email}EditStakeholderDropdownButton`"
           class="flex flex-col gap-y-3"
         >
-          <li class="flex flex-row items-center justify-start space-x-2">
+          <li
+            class="flex flex-row items-center justify-start space-x-2"
+            @click="makePrimaryContact()"
+          >
             <icon-fa-plus class="h-3 w-3 text-insight mr-2" />
             <span class="text-left">Make primary contact</span>
           </li>
@@ -66,21 +74,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
-const props = defineProps<{ name: string, email: string, image?: string, ranking?: number }>()
-const emit = defineEmits<{(event: 'emitHideEmail', value: string): void}>()
+const props = defineProps<{ name: string, email: string, image?: string, ranking?: number, modelValue: string[] }>()
+const emit = defineEmits<{(event: 'emitHideEmail', value: string): void, (event: 'update:modelValue', value: string[]): void}>()
 
 const isHovered = ref<boolean>(false)
 const isHidden = ref<boolean>(false)
+const checked = computed<boolean>(() => {
+  return props.modelValue.includes(props.email)
+})
 
 const toggleCard = (): void => {
   isHovered.value = !isHovered.value
+}
+
+const toggleSelectMemberCard = (): void => {
+  if (checked.value) {
+    const index = props.modelValue.findIndex(checkedId => checkedId === props.email)
+    const copy = props.modelValue.slice(0)
+    copy.splice(index, 1)
+
+    emit('update:modelValue', [...copy])
+  } else {
+    emit('update:modelValue', [...props.modelValue, props.email])
+  }
 }
 
 const hideEmail = (): void => {
   isHidden.value = true
   toggleCard()
   emit('emitHideEmail', props.email)
+}
+
+const makePrimaryContact = (): void => {
+  toggleSelectMemberCard()
+  // TODO: emit primary contact
 }
 </script>
