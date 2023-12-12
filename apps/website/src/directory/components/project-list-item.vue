@@ -3,10 +3,10 @@
     class="px-6 py-4 flex flex-col md:flex-row gap-4 border-b border-util-gray-01 hover:bg-echo selected:bg-pitch"
     :class="{'bg-pitch': isSelected}"
   >
-    <div class="">
+    <div class="w-18 aspect-square h-18">
       <img
         :src="project.imageUrl"
-        class="w-18 aspect-square rounded bg-util-gray-02"
+        class="w-full h-full rounded bg-util-gray-02"
       >
     </div>
     <div class="flex flex-col gap-2 flex-grow overflow-hidden">

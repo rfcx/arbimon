@@ -373,6 +373,9 @@ importers:
       axios:
         specifier: ^0.27.2
         version: 0.27.2
+      countries-list:
+        specifier: ^3.0.6
+        version: 3.0.6
       d3:
         specifier: ^7.1.1
         version: 7.4.4
@@ -402,7 +405,7 @@ importers:
         version: 2.0.6
       pinia:
         specifier: ^2.0.33
-        version: 2.1.3(typescript@4.5.5)(vue@3.3.4)
+        version: 2.1.3(vue@3.3.4)
       siriwave:
         specifier: ^2.3.0
         version: 2.3.0
@@ -487,13 +490,13 @@ importers:
         version: 0.15.3(@vueuse/core@6.9.2)
       unplugin-icons:
         specifier: ^0.15.3
-        version: 0.15.3(@vue/compiler-sfc@3.2.37)
+        version: 0.15.3
       unplugin-vue-components:
         specifier: ^0.24.1
         version: 0.24.1(vue@3.3.4)
       vite:
         specifier: ^4.1.4
-        version: 4.3.9(@types/node@16.11.41)(sass@1.52.3)
+        version: 4.3.9
       vite-ssg:
         specifier: ^0.23.1
         version: 0.23.1(vite@4.3.9)(vue-router@4.2.2)(vue@3.3.4)
@@ -2883,7 +2886,7 @@ packages:
       '@antfu/install-pkg': 0.1.1
       '@antfu/utils': 0.7.4
       '@iconify/types': 2.0.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       kolorist: 1.8.0
       local-pkg: 0.4.3
     transitivePeerDependencies:
@@ -3181,7 +3184,7 @@ packages:
     peerDependencies:
       pinia: '>=2.0.31'
     dependencies:
-      pinia: 2.1.3(typescript@4.5.5)(vue@3.3.4)
+      pinia: 2.1.3(vue@3.3.4)
       vue-demi: 0.13.1(vue@3.3.4)
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -5231,7 +5234,7 @@ packages:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
 
@@ -6271,6 +6274,10 @@ packages:
       yaml: 1.10.2
     dev: true
 
+  /countries-list@3.0.6:
+    resolution: {integrity: sha512-BCJODHTSRMIxS0W80NZw8bC7x6/WS8Tf4FdtFrEbW0FONBbqTAzOrKNG06UEMgLGxOZpOJddiVEdCztKLpmPxA==}
+    dev: false
+
   /crc-32@1.2.2:
     resolution: {integrity: sha512-ROmzCKrTnOwybPcJApAA6WBWij23HVfGVNKqqrZpuyZOHqK2CwHSvpGuyt/UNNvaIjEd8X5IFGp4Mh+Ie1IHJQ==}
     engines: {node: '>=0.8'}
@@ -6735,6 +6742,17 @@ packages:
       ms: 2.1.3
       supports-color: 8.1.1
     dev: true
+
+  /debug@4.3.4:
+    resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    dependencies:
+      ms: 2.1.2
 
   /debug@4.3.4(supports-color@8.1.1):
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
@@ -8964,7 +8982,7 @@ packages:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8989,7 +9007,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
 
@@ -10997,7 +11015,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /pinia@2.1.3(typescript@4.5.5)(vue@3.3.4):
+  /pinia@2.1.3(vue@3.3.4):
     resolution: {integrity: sha512-XNA/z/ye4P5rU1pieVmh0g/hSuDO98/a5UC8oSP0DNdvt6YtetJNHTrXwpwsQuflkGT34qKxAEcp7lSxXNjf/A==}
     peerDependencies:
       '@vue/composition-api': ^1.4.0
@@ -11010,7 +11028,6 @@ packages:
         optional: true
     dependencies:
       '@vue/devtools-api': 6.5.0
-      typescript: 4.5.5
       vue: 3.3.4
       vue-demi: 0.14.5(vue@3.3.4)
 
@@ -13237,6 +13254,7 @@ packages:
     resolution: {integrity: sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA==}
     engines: {node: '>=4.2.0'}
     hasBin: true
+    dev: true
 
   /uc.micro@1.0.6:
     resolution: {integrity: sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==}
@@ -13416,7 +13434,7 @@ packages:
       - rollup
     dev: true
 
-  /unplugin-icons@0.15.3(@vue/compiler-sfc@3.2.37):
+  /unplugin-icons@0.15.3:
     resolution: {integrity: sha512-YWgJqv5AahrokeOnta8uX/m1damZA6Rf6zPClgHg2Fa/45iyOe3Lj+Wn/Ba+CSsq9yBffn17YfKfJNyWCNZPvw==}
     peerDependencies:
       '@svgr/core': '>=5.5.0'
@@ -13436,8 +13454,7 @@ packages:
       '@antfu/install-pkg': 0.1.1
       '@antfu/utils': 0.7.4
       '@iconify/utils': 2.1.7
-      '@vue/compiler-sfc': 3.2.37
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       kolorist: 1.8.0
       local-pkg: 0.4.3
       unplugin: 1.3.2
@@ -13461,7 +13478,7 @@ packages:
       '@antfu/utils': 0.7.4
       '@rollup/pluginutils': 5.0.2
       chokidar: 3.5.3
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.4
       fast-glob: 3.2.12
       local-pkg: 0.4.3
       magic-string: 0.30.0
@@ -13653,7 +13670,7 @@ packages:
       jsdom: 22.1.0
       kolorist: 1.8.0
       prettier: 3.0.1
-      vite: 4.3.9(@types/node@16.11.41)(sass@1.52.3)
+      vite: 4.3.9
       vue: 3.3.4
       vue-router: 4.2.2(vue@3.3.4)
       yargs: 17.7.2
@@ -13699,6 +13716,38 @@ packages:
       resolve: 1.22.2
       rollup: 2.75.6
       sass: 1.52.3
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
+  /vite@4.3.9:
+    resolution: {integrity: sha512-qsTNZjO9NoJNW7KnOrgYwczm0WctJ8m/yqYAMAK9Lxt4SoySUfS5S8ia9K7JHpa3KEeMfyF8LoJ3c5NeBJy6pg==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      esbuild: 0.17.19
+      postcss: 8.4.24
+      rollup: 3.25.1
     optionalDependencies:
       fsevents: 2.3.2
     dev: true

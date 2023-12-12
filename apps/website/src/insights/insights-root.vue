@@ -12,8 +12,7 @@
           {{ profile?.name ?? selectedProject?.name }}
         </h1>
         <hero-project-info
-          :project-location="projectLocation"
-          :is-loading-project-location="isLoadingProjectLocation"
+          :is-loading-profile="isLoadingProfile"
           :project-objectives="dashboardStore.projectObjectives ?? profile?.objectives ?? []"
           :profile="profile"
         />
@@ -37,10 +36,10 @@
           </router-link>
           <div class="justify-self-end flex flex-row gap-x-4 items-center">
             <span
-              v-show="!isGetInsightsPublishStatusLoading"
+              v-show="!isLoadingProfile"
               class="text-insight text-sm font-medium font-display leading-none"
             >
-              <template v-if="insightsPublishStatus != null && insightsPublishStatus.status === true">
+              <template v-if="profile?.isPublished != null && profile?.isPublished === true">
                 <icon-custom-fi-eye class="inline-flex text-frequency mr-2" /> This page is now live on Arbimon's Directory
               </template>
               <template v-else>
@@ -48,7 +47,7 @@
               </template>
             </span>
 
-            <template v-if="insightsPublishStatus != null && insightsPublishStatus.status === true">
+            <template v-if="profile?.isPublished != null && profile?.isPublished === true">
               <button
                 class="btn btn-secondary disabled:cursor-not-allowed"
                 :disabled="projectUserPermissionsStore.isGuest"
@@ -80,10 +79,6 @@
       v-model="startShareInsightsNavigation"
       @emit-share-insights-successful="refetchInsightsPublishStatus"
       @emit-hide-insights-successful="refetchInsightsPublishStatus"
-    />
-    <insight-not-ready-card
-      v-show="false"
-      v-if="!metrics?.totalDetections && !isLoading"
     />
   </div>
   <nav
@@ -140,15 +135,11 @@ import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
 import { useGetProjectSettings } from '../projects/_composables/use-project-profile'
-import { useGetInsightsPublishStatus } from './_composables/use-get-insights-publish-status'
-import { useGetProjectLocation } from './_composables/use-project-location'
-import InsightNotReadyCard from './components/insight-not-ready-card.vue'
 import ProjectNav from './components/project-nav.vue'
 import ShareInsight from './components/share-insights/share-insights.vue'
 import type { InsightsPublishStatus } from './components/share-insights/types'
 import HeroBriefOverview from './insights-hero/hero-brief-overview.vue'
 import HeroProjectInfo from './insights-hero/hero-project-info.vue'
-import { useGetDashboardMetrics } from './overview/composables/use-get-dashboard-metrics'
 
 const items = [
   {
@@ -182,19 +173,21 @@ const route = useRoute()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
+
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
-
-// Flag and country
-const { isLoading: isLoadingProjectLocation, data: projectLocation } = useGetProjectLocation(apiClientBio, selectedProjectId)
-
-// Project settings & metrics
-const { data: profile } = useGetProjectSettings(apiClientBio, selectedProjectId)
-const { isLoading, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
-
 const isViewingAsGuest = computed(() => {
   return route.query.guest === '1'
+})
+
+const startShareInsightsNavigation = ref<InsightsPublishStatus>('idle')
+
+const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch } = useGetProjectSettings(apiClientBio, selectedProjectId)
+
+watch(() => profile.value, () => {
+  if (!profile.value) return
+  dashboardStore.updateProjectSummary(profile.value.summary)
 })
 
 const getRouterLink = (routeName: string): {name: string, query?: Record<string, number>} => {
@@ -202,19 +195,9 @@ const getRouterLink = (routeName: string): {name: string, query?: Record<string,
   return isViewingAsGuest.value ? { ...r, query: { guest: 1 } } : r
 }
 
-watch(() => profile.value, () => {
-  if (!profile.value) return
-  dashboardStore.updateProjectSummary(profile.value.summary)
-})
-
-// Insights publish status
-const { isLoading: isGetInsightsPublishStatusLoading, data: insightsPublishStatus, refetch: insightsPublishStatusRefetch } = useGetInsightsPublishStatus(apiClientBio, selectedProjectId)
-
 const refetchInsightsPublishStatus = async (): Promise<void> => {
-  await insightsPublishStatusRefetch()
+  await profileRefetch()
 }
-
-const startShareInsightsNavigation = ref<InsightsPublishStatus>('idle')
 
 const shareInsight = (): void => {
   startShareInsightsNavigation.value = 'share-insights-information'

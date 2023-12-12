@@ -1,0 +1,50 @@
+{
+  "updated_at": "2023-12-07T19:30:00.000Z",
+  "data": [
+    {
+      "id": 1,
+      "name": "Puerto Rico",
+      "slug": "puerto-rico",
+      "latitude_north": 18.51375,
+      "latitude_south": 17.93168,
+      "longitude_east": -65.24505,
+      "longitude_west": -67.94469784,
+      "summary": "Acoustic monitoring and occupancy maps for bird and anuran species across Puerto Rico: A baseline for SWAP and other agencies’ conservation and planning activities",
+      "objectives": "{monitor-species,impact-human,blagh}",
+      "image": "https://spectrumsurfschool.com/wp-content/uploads/2014/09/DRNA-logo.png",
+      "countries": "{US}",
+      "recording_minutes_count": 167,
+      "species_count": 12
+    },
+    {
+      "id": 2,
+      "name": "BCI-Panama_2018",
+      "slug": "bci-panama-2018",
+      "latitude_north": 9.17229,
+      "latitude_south": 9.14041,
+      "longitude_east": -79.81971,
+      "longitude_west": -79.86858,
+      "summary": "This is a project of Marconi Campos-Cerqueira. The objective is to record anurans, birds, and bats during the transition between the dry and wet seasons.",
+      "objectives": "{}",
+      "image": "",
+      "countries": null,
+      "recording_minutes_count": null,
+      "species_count": null
+    },
+    {
+      "id": 3,
+      "name": "Fake Project",
+      "slug": "fake-arbimon-project-for-bio",
+      "latitude_north": 12.0,
+      "latitude_south": 11.9,
+      "longitude_east": -55.0,
+      "longitude_west": -55.1,
+      "summary": "This is a test project!",
+      "objectives": "{\"Test objective 1\",\"Test objective 2\"}",
+      "image": "",
+      "countries": null,
+      "recording_minutes_count": null,
+      "species_count": null
+    }
+  ]
+}

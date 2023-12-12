@@ -25,57 +25,41 @@
   </section>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { type AxiosInstance } from 'axios'
+import { computed, inject, onMounted, ref, watch } from 'vue'
+
+import { type ProjectLight, type ProjectProfileWithMetrics, apiBioGetDirectoryProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
+import { apiClientKey } from '@/globals'
 import { useProjectDirectoryStore, useStore } from '~/store'
 import MapView from './blocks/map-view.vue'
 import ProjectInfo from './blocks/project-info.vue'
 import ProjectList from './blocks/projects-list.vue'
-import { avgCoordinate, getRawDirectoryProjects, toLightProjects } from './data/rawDirectoryProjectsData'
-import type { ProjectLight, ProjectProfileWithMetrics, Tab } from './data/types'
+import type { Tab } from './data/types'
 
 const store = useStore()
 const pdStore = useProjectDirectoryStore()
 const selectedProjectId = ref<number | null>(null)
 
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+
 const selectedTab = ref<Tab>('All')
 
-/** mock db/api service, do not use in ui */
-const allMockProjects = getRawDirectoryProjects(store.projects.map(p => ({ ...p, idArbimon: -1 })))
-const myProjects: ProjectProfileWithMetrics[] = store.myProjects.map(project => {
-  return {
-    id: project.id,
-    name: project.name,
-    slug: project.slug,
-    avgLatitude: avgCoordinate(project.latitudeNorth, project.latitudeSouth),
-    avgLongitude: avgCoordinate(project.longitudeEast, project.longitudeWest),
-    summary: 'This is a real project!',
-    objectives: ['bio-baseline'],
-    noOfSpecies: 0,
-    noOfRecordings: 0,
-    countries: [],
-    isHighlighted: true,
-    isMock: false,
-    imageUrl: project.image ?? ''
-   }
-})
-const getProjectWithMetricsByIds = (ids: number[]) => {
-  return allMockProjects.filter(p => ids.includes(p.id))
-}
-/** end mock */
+const isLoading = ref(false)
 
 /** List of projects (with profile) you got from search results, initial is the first 20 in the list -- to show in the list */
 const projectResults = ref<ProjectLight[]>(pdStore.allProjects)
+const myProjects = computed(() => {
+  const myProjectIds = store.myProjects.map(p => p.id)
+  return pdStore.allProjects.filter(p => myProjectIds.includes(p.id))
+})
 
 const onEmitSelectedProject = (locationProjectId: number) => {
   selectedProjectId.value = locationProjectId
 }
 
-// TODO: search with keyword
-// TODO: scroll down to load more
-
-const onEmitSearch = (keyword: string) => {
+const onEmitSearch = async (keyword: string) => {
   switch (keyword) {
     case 'All': {
       selectedTab.value = 'All'
@@ -83,46 +67,58 @@ const onEmitSearch = (keyword: string) => {
       break
     } case 'My projects': {
       selectedTab.value = 'My projects'
-      projectResults.value = myProjects
+      projectResults.value = myProjects.value
       break
     } default: {
-      const projectsInCriteria: ProjectLight[] = pdStore.allProjects.filter((p: { name: string }) => p.name.toLowerCase().includes(keyword.toLowerCase()))
-      fetchProjectsWithMetricsByIds(projectsInCriteria.map(p => p.id))
+      const projectsInCriteria = pdStore.allProjects.filter(p => p.name.toLowerCase().includes(keyword.toLowerCase()))
       projectResults.value = projectsInCriteria
+      const ids = projectsInCriteria.map(p => p.id)
+      const projectsWithMetrics = pdStore.getProjectWithMetricsByIds(ids)
+      if (projectsWithMetrics.length === ids.length) return
+      await fetchProjectsWithMetricsByIds(ids)
       break
     }
   }
 }
 
-const onEmitLoadMore = () => {
-  // TODO: load more ProjectsWithMetrics
+const onEmitLoadMore = async () => {
   const LIMIT = 20
   const offset = pdStore.allProjectsWithMetrics.length
   const total = pdStore.allProjects.length
   if (offset === total) return
-  const ids = pdStore.allProjects.slice(offset, offset + LIMIT).map((p: { id: any }) => p.id)
-  fetchProjectsWithMetricsByIds(ids)
+  if (isLoading.value) return
+  const ids: number[] = pdStore.allProjects.slice(offset, offset + LIMIT).map((p: { id: any }) => p.id)
+  await fetchProjectsWithMetricsByIds(ids)
 }
 
-onMounted(() => {
-  // TODO: change this to call real api once it's ready
-  const allProjects = toLightProjects(allMockProjects)
-  pdStore.updateAllProjects(allProjects)
-  // TODO: load metrics (from api once it's ready)
-  pdStore.updateAllProjectsWithMetrics(getProjectWithMetricsByIds(allProjects.slice(0, 20).map(p => p.id)))
+onMounted(async () => {
+  // fetch all projects
+  await fetchAllProjects()
   projectResults.value = pdStore.allProjects
+  // fetch first 20 projects with metrics (to show in list) will be in load more
 })
 
-const fetchProjectsWithMetricsByIds = (ids: number[]) => {
-  const newSetOfData = getProjectWithMetricsByIds(ids)
-  pdStore.updateAllProjectsWithMetrics(pdStore.allProjectsWithMetrics.concat(newSetOfData))
+const fetchAllProjects = async () => {
+  const dataLight = await apiBioGetDirectoryProjects(apiClientBio, { full: false })
+  if (dataLight !== undefined) {
+    const p = dataLight as ProjectLight[]
+    pdStore.updateAllProjects(p)
+  }
+}
+
+const fetchProjectsWithMetricsByIds = async (ids: number[]) => {
+  isLoading.value = true
+  const dataFull = await apiBioGetDirectoryProjects(apiClientBio, { full: true, ids: ids.join(',') })
+  if (dataFull === undefined) return
+  pdStore.addProjectsWithMetrics(dataFull as ProjectProfileWithMetrics[])
+  isLoading.value = false
 }
 
 watch(() => selectedTab.value, (newVal) => {
   if (newVal === 'All') {
     projectResults.value = pdStore.allProjects
   } else {
-    projectResults.value = myProjects
+    projectResults.value = myProjects.value
   }
 })
 

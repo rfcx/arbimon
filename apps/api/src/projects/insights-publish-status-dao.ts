@@ -1,23 +1,6 @@
-import { type GetInsightsPublishStatusResponseBody } from '@rfcx-bio/common/api-bio/insights-publish-status/insights-publish-status'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '~/db'
-
-export const getInsightsPublishStatus = async (projectId: number): Promise<GetInsightsPublishStatusResponseBody> => {
-  const sequelize = getSequelize()
-
-  const { ProjectVersion } = ModelRepository.getInstance(sequelize)
-
-  const version = await ProjectVersion.findOne({ where: { locationProjectId: projectId } })
-
-  if (version == null) {
-    return { status: false }
-  }
-
-  return {
-    status: version.get('isPublished')
-  }
-}
 
 export const updateInsightsPublishStatus = async (projectId: number, status: boolean): Promise<void> => {
   const sequelize = getSequelize()
