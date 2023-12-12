@@ -4,10 +4,10 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { getSequelize } from '~/db'
 
 export const getProjectMetrics = async (locationProjectId: number): Promise<DashboardMetricsResponse> => {
-  const { LocationProjectMetric, LocationSite } = ModelRepository.getInstance(getSequelize())
+  const { RecordingBySiteHour, LocationProjectMetric } = ModelRepository.getInstance(getSequelize())
 
   const [siteCount, metric] = await Promise.all([
-    LocationSite.count({ where: { locationProjectId } }),
+    RecordingBySiteHour.count({ distinct: true, col: 'location_site_id', where: { locationProjectId } }),
     LocationProjectMetric.findOne({
       attributes: {
         exclude: ['locationProjectId']
