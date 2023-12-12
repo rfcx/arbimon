@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col inset-1/4 left-100 w-98 bg-moss transition-transform -translate-x-full rounded-lg">
-    <div class="rounded-t-lg bg-moss p-4">
+    <div class="rounded-t-lg bg-moss p-2">
       <div class="flex flex-row justify-between items-center">
         <span
           v-if="project?.countries.length === 0"
@@ -8,10 +8,26 @@
         >
           No site
         </span>
-        <span
-          v-if="project?.countries.length !== 0"
-          class="text-spoonbill font-medium text-xs flex-1"
-        >{{ countrie }}</span>
+        <div class="flex flex-1 flex-row items-center">
+          <span
+            v-if="project?.countries.length !== 0"
+            class="text-spoonbill font-medium text-xs ml-2"
+          >{{ countrie }}</span>
+          <div
+            v-if="countrieFlag"
+            class="align-baseline flex"
+          >
+            <country-flag
+              :country="countrieFlag"
+              size="normal"
+              class="flex ml-2"
+            />
+          </div>
+          <icon-custom-fi-globe
+            v-else
+            class="flex m-2"
+          />
+        </div>
         <icon-fa-close
           class="text-fog m-auto self-end w-4 h-3.5"
           @click="emit('emitCloseProjectInfo')"
@@ -63,7 +79,6 @@
           icon-name="ft-map-pin-lg"
           class="flex-1"
         />
-        <!-- value="10" -->
         <numeric-metric
           tooltip-id="threatened-species-over-all-species"
           title="Threatened/total species:"
@@ -73,8 +88,6 @@
           icon-name="ft-actual-bird"
           class="flex-1"
         />
-        <!-- :value="metrics?.threatenedSpecies ?? 0"
-          :total-value="metrics?.totalSpecies ?? 0" -->
         <numeric-metric
           tooltip-id="total-detections"
           title="Total detections:"
@@ -83,7 +96,6 @@
           icon-name="ft-search-lg"
           class="flex-1"
         />
-        <!-- :value="metrics?.totalDetections ?? 0" -->
         <numeric-metric
           tooltip-id="total-recordings"
           :tooltip-text="`Total ${project?.noOfRecordings} of recordings captured`"
@@ -92,8 +104,6 @@
           icon-name="ft-mic-lg"
           class="flex-1"
         />
-        <!-- :tooltip-text="`Total ${totalRecordingsUnit} of recordings captured`"
-        :value="totalRecordingsValue" -->
         <span
           v-if="project?.isMock"
           class="text-sm text-gray-300 px-2"
@@ -105,6 +115,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import { computed } from 'vue'
+import CountryFlag from 'vue-country-flag-next'
 
 import { useProjectDirectoryStore } from '~/store'
 import NumericMetric from '../components/numeric-metric.vue'
@@ -143,9 +154,23 @@ const countrie = computed(() => {
   }
 })
 
+const countrieFlag = computed(() => {
+  if (project.value?.countries == null) return ''
+  if (project.value?.countries.length > 1) {
+    return ''
+  } else {
+    return project.value?.countries[0]
+  }
+})
+
 const formatDateRange = (date: Date | null | undefined): string => {
   if (!dayjs(date).isValid()) return 'present'
   else return dayjs(date).format('MM/DD/YYYY')
 }
 
 </script>
+<style lang="scss">
+.normal-flag {
+  margin: 1px !important
+}
+</style>
