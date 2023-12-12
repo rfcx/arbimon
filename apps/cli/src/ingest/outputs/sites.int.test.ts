@@ -21,7 +21,7 @@ const SQL_INSERT_PROJECT = `
 `
 
 const DEFAULT_PROJECT = { id: 1, idCore: '807cuoi3cvwx', idArbimon: 1920, name: 'My Project', slug: 'my-project-1', latitudeNorth: 1, latitudeSouth: 1, longitudeEast: 1, longitudeWest: 1, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z' }
-const DEFAULT_ARB_SITE = { idCore: '807cuoi3uopi', idArbimon: 9999, projectIdArbimon: DEFAULT_PROJECT.idArbimon, name: 'RFCx 99', latitude: 1, longitude: 1, altitude: 1, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z', country: null, countryCode: null, deletedAt: null }
+const DEFAULT_ARB_SITE = { idCore: '807cuoi3uopi', idArbimon: 9999, projectIdArbimon: DEFAULT_PROJECT.idArbimon, name: 'RFCx 99', latitude: 1, longitude: 1, altitude: 1, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z', countryCode: null, deletedAt: null }
 
 describe('ingest > outputs > sites', () => {
   beforeEach(async () => {
