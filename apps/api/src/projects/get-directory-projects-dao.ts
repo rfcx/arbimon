@@ -62,7 +62,7 @@ export const getDirectoryProjects = (fullVersion: boolean = false, ids: number[]
     slug: p.slug,
     avgLatitude: avgCoordinate(p.latitude_north, p.latitude_south),
     avgLongitude: avgCoordinate(p.longitude_east, p.longitude_west),
-    summary: p.summary,
+    summary: p.summary ?? '',
     objectives: [],
     noOfSpecies: p.species_count ?? 0,
     noOfRecordings: p.recording_minutes_count ?? 0,
@@ -76,7 +76,7 @@ export const getDirectoryProjects = (fullVersion: boolean = false, ids: number[]
       return ids.includes(p.id)
     }
     if (keywords.length > 0) {
-      return keywords.some((keyword) => p.name.toLowerCase().includes(keyword.toLowerCase()))
+      return keywords.some((keyword) => p.name.toLowerCase().includes(keyword.toLowerCase())) || keywords.some((keyword) => p.summary.toLowerCase().includes(keyword.toLowerCase())) || keywords.some((keyword) => p.objectives.some((objective) => objective.toLowerCase().includes(keyword.toLowerCase())))
     }
     return true
   })
