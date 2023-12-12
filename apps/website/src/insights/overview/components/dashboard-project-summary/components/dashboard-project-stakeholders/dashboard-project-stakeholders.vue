@@ -17,6 +17,7 @@
     <DashboardProjectStakeholdersEditor
       v-show="isEditing === true"
       :organizations="stakeholders?.organization ?? []"
+      :project-members="projectUserPermissionsStore.projectMembers"
       @emit-finished-editing="onFinishedEditing"
     />
   </template>

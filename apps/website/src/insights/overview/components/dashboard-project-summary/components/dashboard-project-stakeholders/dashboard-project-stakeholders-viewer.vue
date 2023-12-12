@@ -7,11 +7,10 @@
       class="grid"
       style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
     >
-      <ProjectMemberCard
+      <StakeholderCard
         v-for="(member, idx) of projectMembers"
         :key="idx"
-        :first-name="member.firstname"
-        :last-name="member.lastname"
+        :name="member.firstname + ' ' + member.lastname"
         :image="member.picture ?? undefined"
         :email="member.email ?? ''"
         :ranking="1"
@@ -49,7 +48,6 @@
 import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
-import ProjectMemberCard from './project-member-card.vue'
 import StakeholderCard from './stakeholder-card.vue'
 
 defineProps<{
