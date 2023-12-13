@@ -45,6 +45,7 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { data: stakeholders, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateStakeholdersOrganizations } = useUpdateStakeholdersOrganizationsList(apiClientBio, store.selectedProject?.id ?? -1)
+// TODO: only selected project stakeholders are shown in the DashboardProjectStakeholdersViewer
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const onFinishedEditing = (ids: number[]): void => {
