@@ -52,7 +52,7 @@ WORKDIR /app/apps/api
 ENV FASTIFY_PORT=8080
 ENV FASTIFY_ADDRESS=0.0.0.0
 EXPOSE 8080
-CMD ["node", "--experimental-specifier-resolution=node", "lib/index.js"]
+CMD ["node", "--experimental-specifier-resolution=node", "--no-warnings", "lib/index.js"]
 
 # CLI
 FROM build as biodiversity-cli
