@@ -117,3 +117,9 @@ watch(() => selectedSlugs.value, () => {
   emit('emitProjectObjectives', selectedSlugs.value)
 })
 </script>
+
+<style lang="scss">
+.input-field:focus {
+  --tw-border-opacity: 0 !important
+}
+</style>
