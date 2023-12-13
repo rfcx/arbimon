@@ -45,15 +45,12 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     raw: true
   })
 
-  // TODO: support stakeholder
-
   const version = await ProjectVersion.findOne({
     where: { locationProjectId },
-    attributes: ['isPublished'],
+    attributes: ['isPublished', 'isPublic'],
     raw: true
   })
 
-  // TODO: make country optional
   let resCountry
   if (fields.includes('countryCodes')) {
     resCountry = await LocationProjectCountry.findOne({
@@ -70,6 +67,8 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     })
   }
 
+  // TODO: support stakeholder
+
   if (!resProject) throw new Error(`Failed to get project settings for locationProjectId: ${locationProjectId}`)
   const baseProject = {
     name: resProject.name,
@@ -83,21 +82,20 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
   return {
     ...baseProject,
     ...(fields.includes('readme') ? { readme: resProfile?.readme ?? '' } : {}),
-    ...(fields.includes('keyResults') ? { keyResults: resProfile?.keyResult ?? '' } : {}),
+    ...(fields.includes('keyResult') ? { keyResults: resProfile?.keyResult ?? '' } : {}),
     ...(fields.includes('image') ? { image: '' } : {}),
     ...(fields.includes('countryCodes') ? { countryCodes: resCountry?.countryCodes ?? [] } : {}),
     ...(fields.includes('metrics')
-? {
- metrics: metrics
-? {
-      recordingMinutesCount: metrics.recordingMinutesCount,
-      speciesCount: metrics.speciesCount,
-      siteCount: metrics.siteCount,
-      detectionMinutesCount: metrics.detectionMinutesCount
-    }
-: undefined
-}
-: {})
+        ? {
+        metrics: {
+          recordingMinutesCount: metrics?.recordingMinutesCount ?? 0,
+          speciesCount: metrics?.speciesCount ?? 0,
+          siteCount: metrics?.siteCount ?? 0,
+          detectionMinutesCount: metrics?.detectionMinutesCount ?? 0
+        }
+        }
+        : {}
+    )
   }
 }
 
