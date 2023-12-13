@@ -1,10 +1,12 @@
 import { type ProjectProfileParams, type ProjectProfileQuery, type ProjectProfileUpdateBody, type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
 import { type Handler } from '~/api-helpers/types'
-import { BioInvalidPathParamError } from '~/errors'
+import { BioForbiddenError, BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
 import { updateProjectAndProfile } from './project-profile-bll'
 import { getProjectInfo } from './project-profile-dao'
+import { getMemberProjectCoreIds } from '@/_middleware/get-member-projects'
+import { getProjects } from '@/projects/projects-bll'
 
 export const projectProfileHandler: Handler<ProjectSettingsResponse, ProjectProfileParams, ProjectProfileQuery> = async (req) => {
   // Inputs & validation
@@ -16,6 +18,13 @@ export const projectProfileHandler: Handler<ProjectSettingsResponse, ProjectProf
   const projectIdInteger = Number(projectId)
   if (Number.isNaN(projectIdInteger)) {
     throw BioInvalidPathParamError({ projectId })
+  }
+
+  // TODO: change the logic to check for permission
+  const memberProjectCoreIds = getMemberProjectCoreIds(req)
+  const viewableProjectIds = await (await getProjects(memberProjectCoreIds)).map(p => p.id)
+  if (!viewableProjectIds.includes(projectIdInteger)) {
+    throw BioForbiddenError() // no permission to this project
   }
 
   const projectContent = await getProjectInfo(projectIdInteger, fields ?? [])
