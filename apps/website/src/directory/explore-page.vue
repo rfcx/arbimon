@@ -21,7 +21,16 @@
       class="flex flex-col inset-1/2 w-3vh absolute z-40 h-7vh bg-moss transition-transform -translate-x-full rounded-r-lg "
       :class="leftMargin"
       @click="toggleProjectList"
-    />
+    >
+      <icon-fas-chevron-right
+        v-if="hideProjectList"
+        class="w-3 h-3 m-auto"
+      />
+      <icon-fas-chevron-left
+        v-else
+        class="w-3 h-3 m-auto"
+      />
+    </div>
     <map-view
       :data="projectResults"
       class="relative left-0 z-30 w-full"
