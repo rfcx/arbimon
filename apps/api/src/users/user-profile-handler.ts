@@ -1,8 +1,8 @@
-import { type OrganizationsResponse, type UpdateUserProfileRequestBody, type UserProfileResponse } from '@rfcx-bio/common/api-bio/users/profile'
+import { type UpdateUserProfileRequestBody, type UserProfileResponse } from '@rfcx-bio/common/api-bio/users/profile'
 
 import { type Handler } from '~/api-helpers/types'
 import { extractUserId } from '~/auth0/extract-user'
-import { getAllOrganizations, getUserProfile, patchUserProfile } from './user-profile-bll'
+import { getUserProfile, patchUserProfile } from './user-profile-bll'
 
 export const userProfileHandler: Handler<UserProfileResponse> = async (req) => {
   const userIdAuth0 = await extractUserId(req)
@@ -15,10 +15,4 @@ export const patchUserProfileHandler: Handler<string, unknown, unknown, UpdateUs
 
   rep.statusCode = 204
   return ''
-}
-
-export const organizationsListHandler: Handler<OrganizationsResponse> = async (req) => {
-  const organizations = await getAllOrganizations()
-
-  return organizations
 }
