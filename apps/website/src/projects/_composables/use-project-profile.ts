@@ -11,7 +11,7 @@ export const useGetProjectSettings = (apiClient: AxiosInstance, projectId: Compu
   })
 }
 
-export const useUpdateProjectSettings = (apiClient: AxiosInstance, projectId: number): UseMutationReturnType<ProjectSettingsResponse | undefined, unknown, ProjectSettingsUpdateBody, unknown, unknown> => {
+export const useUpdateProjectSettings = (apiClient: AxiosInstance, projectId: number): UseMutationReturnType<ProjectSettingsResponse | undefined, unknown, ProjectProfileUpdateBody, unknown, unknown> => {
   return useMutation({
     mutationKey: ['update-project-settings'],
     mutationFn: async (settings: ProjectProfileUpdateBody) => {
