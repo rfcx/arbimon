@@ -22,7 +22,7 @@ export const projectProfileHandler: Handler<ProjectSettingsResponse, ProjectProf
 
   // TODO: change the logic to check for permission
   const memberProjectCoreIds = getMemberProjectCoreIds(req)
-  const viewableProjectIds = await (await getProjects(memberProjectCoreIds)).map(p => p.id)
+  const viewableProjectIds = (await getProjects(memberProjectCoreIds)).map(p => p.id)
   if (!viewableProjectIds.includes(projectIdInteger)) {
     throw BioForbiddenError() // no permission to this project
   }
