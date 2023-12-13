@@ -110,7 +110,7 @@ onMounted(() => {
         'icon-size': 0.65
       }
     })
-    
+
     map.addLayer({
       id: 'selected-project',
       type: 'symbol',
@@ -188,11 +188,10 @@ onMounted(() => {
     const { id } = features[0]?.properties ?? {}
     emit('emitSelectedProject', id)
   })
-  
 })
 
 watch(() => props.selectedProjectId, (id) => {
-  setSelectedProject(id)
+  setSelectedProject(id ?? -1)
   if (id === undefined) {
     map.flyTo({
       center: mapCenter.value,
@@ -223,10 +222,8 @@ const setCoordinateToRight = (coordinates: [number, number]) => {
   return [newLng, lat] as [number, number]
 }
 
-const setSelectedProject = (id: number | undefined) => {
-  if (id === undefined) { map.removeSource('selected-project') }
+const setSelectedProject = (id: number) => {
   const selectedProjectGeoJson = toGeoJson(props.data.filter(datum => datum.id === id))
-  console.log('setSelectedProject', id, selectedProjectGeoJson)
   if (map.getSource('selected-project') === undefined) {
     map.addSource('selected-project', {
     type: 'geojson',
