@@ -12,15 +12,15 @@
       @emit-load-more="onEmitLoadMore"
     />
     <project-info
-      v-if="selectedProjectId !== null"
+      v-if="selectedProjectId !== null && !hideProjectList"
       class="absolute z-40 h-50vh my-auto"
       :project-id="selectedProjectId"
       @emit-close-project-info="selectedProjectId = null"
     />
-    <sidebar-view
-      class="absolute z-40 h-10vh"
-      :side-bar-status="sideBarStatus"
-      @emit-click-sidebar="onEmitClickSidebar"
+    <div
+      class="flex flex-col inset-1/2 w-3vh absolute z-40 h-7vh bg-moss transition-transform -translate-x-full rounded-r-lg "
+      :class="leftMargin"
+      @click="toggleProjectList"
     />
     <map-view
       :data="projectResults"
@@ -42,14 +42,12 @@ import { useProjectDirectoryStore, useStore } from '~/store'
 import MapView from './blocks/map-view.vue'
 import ProjectInfo from './blocks/project-info.vue'
 import ProjectList from './blocks/projects-list.vue'
-import SidebarView from './blocks/sidebar-view.vue'
 import type { Tab } from './data/types'
 
 const store = useStore()
 const pdStore = useProjectDirectoryStore()
 const selectedProjectId = ref<number | null>(null)
 const hideProjectList = ref<boolean>(false)
-const sideBarStatus = ref<string>('projects-show')
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
@@ -66,23 +64,21 @@ const myProjects = computed(() => {
 
 const onEmitSelectedProject = (locationProjectId: number) => {
   selectedProjectId.value = locationProjectId
-  sideBarStatus.value = 'project-show'
 }
 
-const onEmitClickSidebar = () => {
-  if (selectedProjectId.value !== null) {
-    selectedProjectId.value = null
-    sideBarStatus.value = 'projects-show'
-  } else {
-    if (hideProjectList.value) {
-      hideProjectList.value = false
-      sideBarStatus.value = 'projects-show'
-    } else {
-      hideProjectList.value = true
-      sideBarStatus.value = 'all-hide'
-    }
-  }
+const toggleProjectList = () => {
+  hideProjectList.value = !hideProjectList.value
 }
+
+const leftMargin = computed(() => {
+  if (hideProjectList.value) {
+    return 'left-0'
+  } else if (selectedProjectId.value === null) {
+    return 'left-98'
+  } else {
+    return 'left-198'
+  }
+})
 
 const onEmitSearch = async (keyword: string) => {
   switch (keyword) {
