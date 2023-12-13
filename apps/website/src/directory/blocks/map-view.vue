@@ -99,6 +99,8 @@ onMounted(() => {
       clusterRadius: 100 // Radius of each cluster when clustering points (defaults to 50)
     })
 
+    setSelectedProject(props.selectedProjectId ?? -1)
+
     map.addLayer({
       id: 'unclustered-point',
       type: 'symbol',
@@ -106,6 +108,16 @@ onMounted(() => {
       layout: {
         'icon-image': 'default-marker',
         'icon-size': 0.65
+      }
+    })
+    
+    map.addLayer({
+      id: 'selected-project',
+      type: 'symbol',
+      source: 'selected-project',
+      layout: {
+        'icon-image': 'selected-marker',
+        'icon-size': 0.95
       }
     })
 
@@ -170,9 +182,17 @@ onMounted(() => {
     const { id } = features[0]?.properties ?? {}
     emit('emitSelectedProject', id)
   })
+
+  map.on('click', 'selected-project', (e) => {
+    const features = map.queryRenderedFeatures(e.point, { layers: ['selected-project'] })
+    const { id } = features[0]?.properties ?? {}
+    emit('emitSelectedProject', id)
+  })
+  
 })
 
 watch(() => props.selectedProjectId, (id) => {
+  setSelectedProject(id)
   if (id === undefined) {
     map.flyTo({
       center: mapCenter.value,
@@ -198,10 +218,24 @@ watch(() => props.data, (newData) => {
 })
 
 const setCoordinateToRight = (coordinates: [number, number]) => {
-    const [lng, lat] = coordinates
-    const newLng = lng - 0.03
-    return [newLng, lat] as [number, number]
+  const [lng, lat] = coordinates
+  const newLng = lng - 0.03
+  return [newLng, lat] as [number, number]
+}
+
+const setSelectedProject = (id: number | undefined) => {
+  if (id === undefined) { map.removeSource('selected-project') }
+  const selectedProjectGeoJson = toGeoJson(props.data.filter(datum => datum.id === id))
+  console.log('setSelectedProject', id, selectedProjectGeoJson)
+  if (map.getSource('selected-project') === undefined) {
+    map.addSource('selected-project', {
+    type: 'geojson',
+    data: selectedProjectGeoJson
+  })
+  } else {
+    (map.getSource('selected-project') as GeoJSONSource).setData(selectedProjectGeoJson)
   }
+}
 
 const flyToProject = (id: number) => {
   const project = props.data.find(datum => datum.id === id)
