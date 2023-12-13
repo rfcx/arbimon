@@ -134,7 +134,7 @@ const currentSetOfData = computed(() => {
 
 watch(() => props.selectedRisk, () => {
   isViewAll.value = false
-})  
+})
 
 const scrollToTop = () => {
   const container = document.getElementById('dashboard-species-list')
