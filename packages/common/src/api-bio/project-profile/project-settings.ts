@@ -47,16 +47,16 @@ export type ProjectInfoFieldType = AttributeTypes< ProjectInfoResponse, typeof A
 export const projectDataRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}`
 
 // Service
-export const apiBioGetProjectInfoData = async (apiClient: AxiosInstance, projectId: number, query: ProjectProfileQuery): Promise<ProjectInfoResponse | undefined> => {
+export const apiBioGetProjectInfoData = async (apiClient: AxiosInstance, projectId: number, fields: ProjectInfoFieldType[]): Promise<ProjectInfoResponse | undefined> => {
   const url = `/projects/${projectId}/profile`
   const params = {
-    fields: query.fields?.join('&')
+    fields: fields.join(',')
   }
   return await apiGetOrUndefined(apiClient, url, { params })
 }
 
 export const apiBioGetProjectSettingsData = async (apiClient: AxiosInstance, projectId: number): Promise<ProjectSettingsResponse | undefined> =>
-  await apiBioGetProjectInfoData(apiClient, projectId, { fields: ['countryCodes'] })
+  await apiBioGetProjectInfoData(apiClient, projectId, ['countryCodes'])
 
 export const apiBioUpdateProjectSettingsData = async (apiClient: AxiosInstance, projectId: number, settings: ProjectProfileUpdateBody): Promise<ProjectSettingsResponse> =>
   await apiClient.patch(`/projects/${projectId}/profile`, settings)
