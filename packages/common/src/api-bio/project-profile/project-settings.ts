@@ -1,14 +1,14 @@
 import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
-import { type AttributeTypes, attributes } from '../../dao/type-helpers'
 
-import { type LocationProjectCountry, type LocationProjectProfile, type Project, type ProjectVersion, type LocationProjectMetric } from '../../dao/types'
+import { type AttributeTypes, attributes } from '../../dao/type-helpers'
+import { type LocationProjectMetric, type LocationProjectProfile, type Project, type ProjectVersion } from '../../dao/types'
 import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 
 // Request types
 export type ProjectProfileParams = ProjectRouteParamsSerialized
-export type ProjectProfileQuery = {
+export interface ProjectProfileQuery {
   fields?: ProjectInfoFieldType[]
 }
 
@@ -26,7 +26,7 @@ export type ProjectProfileUpdateResponse = Pick<LocationProjectProfile, 'summary
 
 export type ProjectInfoResponse = Pick<Project, 'name'>
   & Pick<LocationProjectProfile, 'summary' | 'objectives' | 'dateStart' | 'dateEnd'>
-  & Pick<ProjectVersion, 'isPublished'> 
+  & Pick<ProjectVersion, 'isPublished'>
   & {
   // TODO: add - stakeholder: string
   countryCodes?: string[]
@@ -43,7 +43,6 @@ export const ATTRIBUTES_PROJECT_INFO_RESPONSE = attributes<ProjectInfoResponse>(
 
 export type ProjectInfoFieldType = AttributeTypes< ProjectInfoResponse, typeof ATTRIBUTES_PROJECT_INFO_RESPONSE>
 
-
 // Route
 export const projectDataRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}`
 
@@ -56,7 +55,7 @@ export const apiBioGetProjectInfoData = async (apiClient: AxiosInstance, project
   return await apiGetOrUndefined(apiClient, url, { params })
 }
 
-export const apiBioGetProjectSettingsData = async (apiClient: AxiosInstance, projectId: number): Promise<ProjectSettingsResponse | undefined> => 
+export const apiBioGetProjectSettingsData = async (apiClient: AxiosInstance, projectId: number): Promise<ProjectSettingsResponse | undefined> =>
   await apiBioGetProjectInfoData(apiClient, projectId, { fields: ['countryCodes'] })
 
 export const apiBioUpdateProjectSettingsData = async (apiClient: AxiosInstance, projectId: number, settings: ProjectProfileUpdateBody): Promise<ProjectSettingsResponse> =>

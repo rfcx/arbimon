@@ -1,4 +1,4 @@
-import { type ProjectSettingsResponse, type ProjectProfileUpdateBody } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import { type ProjectProfileUpdateBody, type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
 import { editProject } from '~/api-core/api-core'
 import { getProjectCoreId, updateProjectSettings as updateProjectSettingsLocal } from './project-profile-dao'
