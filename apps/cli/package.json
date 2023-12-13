@@ -10,13 +10,13 @@
     "rainforest",
     "connection"
   ],
-  "homepage": "https://github.com/rfcx/biodiversity-analytics#readme",
+  "homepage": "https://github.com/rfcx/arbimon#readme",
   "bugs": {
-    "url": "https://github.com/rfcx/biodiversity-analytics/issues"
+    "url": "https://github.com/rfcx/arbimon/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rfcx/biodiversity-analytics.git"
+    "url": "git+https://github.com/rfcx/arbimon.git"
   },
   "license": "UNLICENSED",
   "type": "module",
