@@ -31,7 +31,7 @@ export type ProjectInfoResponse = Pick<Project, 'name'>
   // TODO: add - stakeholder: string
   countryCodes?: string[]
   readme?: string
-  keyResults?: string
+  keyResult?: string
   metrics?: ProjectMetrics
   image?: string
 }
