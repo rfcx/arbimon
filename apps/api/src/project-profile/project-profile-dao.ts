@@ -32,7 +32,6 @@ export const updateProjectProfile = async (locationProjectId: number, profile: P
 }
 
 export const getProjectInfo = async (locationProjectId: number, fields: ProjectInfoFieldType[]): Promise<ProjectInfoResponse> => {
-  console.log('getProjectInfo', locationProjectId, fields)
   const sequelize = getSequelize()
   const { LocationProject, LocationProjectProfile, LocationProjectCountry, ProjectVersion, LocationProjectMetric } = ModelRepository.getInstance(sequelize)
   const resProject = await LocationProject.findOne({

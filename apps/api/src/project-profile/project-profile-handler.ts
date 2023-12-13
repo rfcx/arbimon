@@ -12,7 +12,6 @@ export const projectProfileHandler: Handler<ProjectSettingsResponse, ProjectProf
   assertPathParamsExist({ projectId })
 
   const { fields } = req.query
-  console.log('params', fields)
 
   const projectIdInteger = Number(projectId)
   if (Number.isNaN(projectIdInteger)) {
