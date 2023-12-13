@@ -1,10 +1,10 @@
-import { ProjectProfileQuery, type ProjectProfileParams, type ProjectSettingsResponse, type ProjectProfileUpdateBody } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import { type ProjectProfileParams, type ProjectProfileQuery, type ProjectProfileUpdateBody, type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getProjectInfo } from './project-profile-dao'
 import { updateProjectAndProfile } from './project-profile-bll'
+import { getProjectInfo } from './project-profile-dao'
 
 export const projectProfileHandler: Handler<ProjectSettingsResponse, ProjectProfileParams, ProjectProfileQuery> = async (req) => {
   // Inputs & validation

@@ -1,6 +1,6 @@
 import { pickBy } from 'lodash-es'
 
-import type { ProjectSettingsResponse, ProjectInfoResponse, ProjectInfoFieldType, ProjectProfileUpdateBody, ProjectProfileUpdateResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import type { ProjectInfoFieldType, ProjectInfoResponse, ProjectProfileUpdateBody, ProjectProfileUpdateResponse, ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '~/db'
@@ -47,7 +47,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
   })
 
   // TODO: support stakeholder
-  
+
   const version = await ProjectVersion.findOne({
     where: { locationProjectId },
     attributes: ['isPublished'],
@@ -87,12 +87,18 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     ...(fields.includes('keyResults') ? { keyResults: resProfile?.keyResult ?? '' } : {}),
     ...(fields.includes('image') ? { image: '' } : {}),
     ...(fields.includes('countryCodes') ? { countryCodes: resCountry?.countryCodes ?? [] } : {}),
-    ...(fields.includes('metrics') ? { metrics: metrics ? {
+    ...(fields.includes('metrics')
+? {
+ metrics: metrics
+? {
       recordingMinutesCount: metrics.recordingMinutesCount,
       speciesCount: metrics.speciesCount,
       siteCount: metrics.siteCount,
       detectionMinutesCount: metrics.detectionMinutesCount
-    } : undefined } : {})
+    }
+: undefined
+}
+: {})
   }
 }
 

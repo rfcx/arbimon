@@ -4,7 +4,7 @@
       Summary
     </h2>
 
-    <div class="mb-10 border-b border-fog dark:border-fog">
+    <div class="mb-6 border-b border-fog dark:border-fog">
       <ul
         id="project-summary-tab"
         class="flex -mb-px text-sm font-medium text-center"

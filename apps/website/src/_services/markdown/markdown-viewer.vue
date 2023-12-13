@@ -43,5 +43,9 @@ defineExpose({ markdownViewerWrapperComponent })
   li > p {
     @apply mb-0;
   }
+
+  h4 {
+    @apply mb-2;
+  }
 }
 </style>
