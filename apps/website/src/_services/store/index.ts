@@ -47,7 +47,10 @@ export const useStore = defineStore('root', {
     },
     updateMyProject (projects?: LocationProjectWithInfo[]) {
       projects?.forEach(p => {
-        this.myProjects.push(p)
+        const isExists = this.myProjects.find(mp => mp.idCore === p.idCore)
+        if (!isExists) {
+          this.myProjects.push(p)
+        }
       })
     },
     updateSelectedProject (project?: LocationProjectForUser) {
