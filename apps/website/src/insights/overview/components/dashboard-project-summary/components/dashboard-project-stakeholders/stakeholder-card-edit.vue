@@ -43,7 +43,7 @@
         type="button"
         @click="toggleCard()"
       >
-        <icon-custom-dots-vertical class="hidden relative group-hover:block !ml-auto"/>
+        <icon-custom-dots-vertical class="hidden relative group-hover:block !ml-auto" />
         <div
           :id="`${email}dropdownBottom`"
           class="z-10 hidden list-none bg-moss divide-y divide-gray-100 rounded-lg shadow p-3 w-56"

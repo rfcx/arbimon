@@ -261,8 +261,6 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[]): void}>()
 
-const selectedUsers = ref()
-
 const dropdownStatus = ref<'idle' | 'search' | 'create-org'>('idle')
 const createNewOrganizationFormContainer = ref<HTMLDivElement | null>(null)
 const organizationSearchInput = ref<HTMLDivElement | null>(null)
@@ -377,11 +375,6 @@ const createNewOrganization = (): void => {
   })
 }
 
-const onFinishedEditing = (): void => {
-  searchOrganizationValue.value = ''
-  emit('emit-finished-editing', selectedOrganizationIds.value)
-}
-
 const refetchOrganizationsSearch = async (): Promise<void> => {
   if (searchOrganizationValue.value !== '') {
     await refetchOrganizationsSearchResult()
@@ -389,10 +382,16 @@ const refetchOrganizationsSearch = async (): Promise<void> => {
 }
 
 const selectAllUsers = (): void => {
-  selectedUsers.value = props.projectMembers.map(u => u.email)
+  selectedProjectMembers.value = props.projectMembers.map(u => u.email)
 }
 
 const hideUserEmail = (): void => {
   // TODO: create endpoint
 }
+
+const onFinishedEditing = (): void => {
+  searchOrganizationValue.value = ''
+  emit('emit-finished-editing', selectedOrganizationIds.value)
+}
+
 </script>
