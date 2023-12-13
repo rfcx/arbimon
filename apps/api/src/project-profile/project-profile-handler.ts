@@ -1,26 +1,29 @@
-import { type ProjectSettingsParams, type ProjectSettingsResponse, type ProjectSettingsUpdateBody } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import { ProjectProfileQuery, type ProjectProfileParams, type ProjectSettingsResponse, type ProjectProfileUpdateBody } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getProjectSettings } from './project-profile-dao'
-import { updateProjectAndProfile } from './project-settings-bll'
+import { getProjectInfo } from './project-profile-dao'
+import { updateProjectAndProfile } from './project-profile-bll'
 
-export const projectSettingsHandler: Handler<ProjectSettingsResponse, ProjectSettingsParams> = async (req) => {
+export const projectProfileHandler: Handler<ProjectSettingsResponse, ProjectProfileParams, ProjectProfileQuery> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
   assertPathParamsExist({ projectId })
+
+  const { fields } = req.query
+  console.log('params', fields)
 
   const projectIdInteger = Number(projectId)
   if (Number.isNaN(projectIdInteger)) {
     throw BioInvalidPathParamError({ projectId })
   }
 
-  const projectContent = await getProjectSettings(projectIdInteger)
+  const projectContent = await getProjectInfo(projectIdInteger, fields ?? [])
   return projectContent
 }
 
-export const projectSettingsUpdateHandler: Handler<ProjectSettingsResponse, ProjectSettingsParams, unknown, ProjectSettingsUpdateBody> = async (req) => {
+export const projectProfileUpdateHandler: Handler<ProjectSettingsResponse, ProjectProfileParams, unknown, ProjectProfileUpdateBody> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
   assertPathParamsExist({ projectId })

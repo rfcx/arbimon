@@ -51,7 +51,7 @@ const isLoading = ref(false)
 /** List of projects (with profile) you got from search results, initial is the first 20 in the list -- to show in the list */
 const projectResults = ref<ProjectLight[]>(pdStore.allProjects)
 const myProjects = computed(() => {
-  const myProjectIds = store.myProjects.map(p => p.id)
+  const myProjectIds = store.projects.filter(p => p.isMyProject).map(p => p.id)
   return pdStore.allProjects.filter(p => myProjectIds.includes(p.id))
 })
 
