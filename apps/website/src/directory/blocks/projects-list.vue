@@ -8,7 +8,7 @@
     <div class="h-full overflow-y">
       <div class="px-6 pt-6">
         <input
-          v-model="searchKeyword"
+          v-model.lazy="searchKeyword"
           class="input-field w-full p-4 rounded"
           placeholder="Search by project name, objectives, countries, etc."
           @keyup.enter="emitSearch(searchKeyword)"
@@ -18,14 +18,14 @@
         <li
           class="cursor-pointer font-medium"
           :class="{'border-frequency border-b-4': selectedTab === 'All'}"
-          @click="onSelectTab('All')"
+          @click="emitSwapTab('All')"
         >
           All
         </li>
         <li
           class="cursor-pointer font-medium"
           :class="{'border-frequency border-b-4': selectedTab === 'My projects'}"
-          @click="onSelectTab('My projects')"
+          @click="emitSwapTab('My projects')"
         >
           My projects
         </li>
@@ -62,7 +62,7 @@ import ProjectListItem from '../components/project-list-item.vue'
 import type { ProjectLight, ProjectProfileWithMetrics, Tab } from '../data/types'
 
 const props = defineProps<{ data: ProjectLight[], selectedProjectId: number | undefined, selectedTab: Tab }>()
-const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void, (e: 'emitLoadMore'): void, (e: 'emitSearch', keyword: string): void
+const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void, (e: 'emitLoadMore'): void, (e: 'emitSearch', keyword: string): void, (e: 'emitSwapTab', tab: Tab): void
 }>()
 
 const pdStore = useProjectDirectoryStore()
@@ -71,7 +71,7 @@ const isFetching = ref(false)
 const searchKeyword = ref('')
 
 const dataWithMetrics = computed((): ProjectProfileWithMetrics[] => {
-  if (['All', ''].includes(searchKeyword.value) || (props.selectedTab === 'All' && searchKeyword.value === 'All')) {
+  if (props.selectedTab === 'All' && searchKeyword.value === '') {
     return pdStore.allProjectsWithMetrics
   } else {
     const id = props.data.map(p => p.id)
@@ -79,14 +79,8 @@ const dataWithMetrics = computed((): ProjectProfileWithMetrics[] => {
   }
 })
 
-const onSelectTab = (name: string) => {
-  if (name === 'My projects') {
-    searchKeyword.value = 'My projects'
-    emit('emitSearch', 'My projects')
-  } else {
-    searchKeyword.value = 'All'
-    emit('emitSearch', 'All')
-  }
+const emitSwapTab = (tab: Tab) => {
+  emit('emitSwapTab', tab)
 }
 
 const loadMore = () => {
