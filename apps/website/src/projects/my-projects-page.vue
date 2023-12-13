@@ -59,7 +59,7 @@ const myProjectsInfo = computed(() => store.myProjects)
 const LIMIT = 20
 
 const loadMoreProject = async (): Promise<void> => {
-  // Should show loading?
+  if (myProjectsInfo.value.length === 0) return
   try {
     loading.value = true
     const projects = await apiBioGetMyProjects(apiClientBio, LIMIT, myProjectsInfo.value.length)
