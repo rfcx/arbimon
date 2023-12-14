@@ -39,7 +39,7 @@
       tooltip-id="deployment-sites"
       tooltip-text="Number of sites with recorders deployed."
       title="Deployment sites"
-      :value="metrics?.deploymentSites ?? 0"
+      :value="metrics?.totalSites ?? 0"
       icon-name="ft-map-pin-lg"
       class="flex-1"
     />
