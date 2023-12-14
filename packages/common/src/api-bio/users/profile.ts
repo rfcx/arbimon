@@ -5,10 +5,10 @@ import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 import { type OrganizationTypes, type UserProfile } from '../../dao/types'
 
 // Request types
-export type UpdateUserProfileRequestBody = Partial<Omit<UserProfile, 'id' | 'userIdAuth0' | 'image' | 'createdAt' | 'updatedAt'>>
+export type UpdateUserProfileRequestBody = Partial<Omit<UserProfile, 'id' | 'idAuth0' | 'image' | 'createdAt' | 'updatedAt'>>
 
 // Response types
-export type UserProfileResponse = Omit<UserProfile, 'id' | 'userIdAuth0'>
+export type UserProfileResponse = Omit<UserProfile, 'id' | 'idAuth0'>
 
 export type OrganizationsResponse = Array<OrganizationTypes['light']>
 
