@@ -83,7 +83,7 @@ import CountryFlag from 'vue-country-flag-next'
 
 import { type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
-import { objectiveTypes } from '../../projects/types'
+import { masterObjectiveTypes } from '../../projects/types'
 
 const props = defineProps<{
   isLoadingProfile: boolean,
@@ -133,7 +133,7 @@ const projectObjectivesText = computed(() => {
   const objectives = props.profile?.objectives ?? []
   if (objectives.length === 0) return 'No data'
   const objectiveDescs = objectives?.map((obj) => {
-    const objectiveType = objectiveTypes.find((o) => o.slug === obj)
+    const objectiveType = Object.values(masterObjectiveTypes).find((o) => o.slug === obj)
     return objectiveType?.description ?? obj
   })
   return objectiveDescs?.join(', ')

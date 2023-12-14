@@ -4,6 +4,7 @@ import fastifyAuth0Verify from 'fastify-auth0-verify'
 import { Op } from 'sequelize'
 import { afterEach, expect, test, vi } from 'vitest'
 
+import { type ProjectCreateRequest } from '@rfcx-bio/common/api-bio/project/project-create'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import * as coreApi from '~/api-core/api-core'
@@ -41,7 +42,7 @@ afterEach(async () => {
 test('POST /projects creates local project', async () => {
   // Arrange
   const app = await getMockedApp()
-  const project = { name: 'Red Squirrels are back' }
+  const project: ProjectCreateRequest = { name: 'Red Squirrels are back' }
 
   // Act
   const response = await app.inject({

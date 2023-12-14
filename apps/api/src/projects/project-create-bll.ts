@@ -13,8 +13,8 @@ export const createProject = async (request: ProjectCreateRequest, auth0UserId: 
   await clearMemberProjectCoreIds(auth0UserId)
 
   // Pre-populate insights table with the same data (will get updated again after sync)
-  const dateStart = request.dateStart ? new Date(request.dateStart) : null
-  const dateEnd = request.dateEnd ? new Date(request.dateEnd) : null
+  const dateStart = request.dateStart ? new Date(request.dateStart) : undefined
+  const dateEnd = request.dateEnd ? new Date(request.dateEnd) : undefined
   if (dateStart && dateEnd && dateStart > dateEnd) {
     throw new Error('Date start must be before date end')
   }

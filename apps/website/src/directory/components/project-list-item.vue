@@ -42,7 +42,7 @@ import { computed } from 'vue'
 
 import { getCountryLabel } from '@/_services/country'
 import TextTooltip from '../../projects/components/text-tooltip.vue'
-import { masterOjectiveTypes, objectiveTypes } from '../../projects/types'
+import { masterObjectiveTypes } from '../../projects/types'
 import type { ProjectProfileWithMetrics } from '../data/types'
 
 const props = defineProps<{ project: ProjectProfileWithMetrics, isSelected: boolean }>()
@@ -54,7 +54,7 @@ const shouldShowCountryAndObjective = computed(() => {
 
 const objectiveAll = computed(() => {
   const objectives = props.project.objectives.map((objective) => {
-    return objectiveTypes.find((type) => type.slug === objective)?.shorten ?? masterOjectiveTypes.Others.shorten
+    return Object.values(masterObjectiveTypes).find((type) => type.slug === objective)?.shorten ?? masterObjectiveTypes.Others.shorten
   })
 
   return [...new Set(objectives)].join(', ')

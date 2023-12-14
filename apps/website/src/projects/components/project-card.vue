@@ -64,7 +64,7 @@ import image from '@/_assets/cta/frog-hero.webp'
 import { getCountryLabel } from '@/_services/country'
 import { ROUTE_NAMES } from '~/router'
 import TextTooltip from '../components/text-tooltip.vue'
-import { masterOjectiveTypes, objectiveTypes } from '../types'
+import { masterObjectiveTypes } from '../types'
 
 const props = defineProps<{project: Omit<Project, 'idArbimon'>}>()
 
@@ -73,7 +73,7 @@ const countries = computed(() => {
 })
 
 const objectives = props.project.objectives?.map((objective) => {
-    return objectiveTypes.find((type) => type.slug === objective)?.shorten ?? masterOjectiveTypes.Others.shorten
+    return Object.values(masterObjectiveTypes).find((type) => type.slug === objective)?.shorten ?? masterObjectiveTypes.Others.shorten
 })
 const objectivesLabel = objectives?.join(', ')
 </script>
