@@ -15,11 +15,18 @@
         v-if="shouldShowCountryAndObjective"
         class="text-xs whitespace-nowrap min-w-0 flex-grow flex-1"
       >
-        <span class="text-spoonbill inline-flex">{{ countryCode }}</span>
+        <span class="text-spoonbill">
+          <text-tooltip
+            :tooltip-id="`${props.project.id}-country`"
+            :text-shorten="getCountryLabel(props.project.countries, 1)"
+            :text-full="getCountryLabel(props.project.countries, props.project.countries.length)"
+          />
+        </span>
         <span class="text-gray-300 inline-flex mx-1"> | </span>
         <text-tooltip
-          :tooltip-id="project.name"
-          :tooltip-text="objectiveAll"
+          :tooltip-id="`${props.project.id}-objective`"
+          :text-shorten="objectiveAll"
+          :text-full="objectiveAll"
         />
       </div>
       <span class="text-xs text-clip md:text-sm">{{ project.summary }}</span>
@@ -33,6 +40,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import { getCountryLabel } from '@/_services/country'
 import TextTooltip from '../../projects/components/text-tooltip.vue'
 import { masterOjectiveTypes, objectiveTypes } from '../../projects/types'
 import type { ProjectProfileWithMetrics } from '../data/types'
@@ -50,11 +58,6 @@ const objectiveAll = computed(() => {
   })
 
   return [...new Set(objectives)].join(', ')
-})
-
-const countryCode = computed(() => {
-  if (props.project.countries.length === 0) { return 'No site' }
-  return props.project.countries.join(',')
 })
 
 </script>
