@@ -100,7 +100,7 @@
           tooltip-id="total-recordings"
           :tooltip-text="`Total ${project?.noOfRecordings} of recordings captured`"
           title="Total recordings"
-          :value="project?.noOfRecordings"
+          :value="project?.noOfRecordings ?? 0"
           icon-name="ft-mic-lg"
           class="flex-1"
         />
