@@ -28,6 +28,7 @@ declare module '@vue/runtime-core' {
     ElSelect: typeof import('element-plus/lib')['ElSelect']
     ElSlider: typeof import('element-plus/lib')['ElSlider']
     ElTag: typeof import('element-plus/lib')['ElTag']
+    IconCustomAlertCircle: typeof import('~icons/custom-icons/alert-circle')['default']
     IconCustomArrowRight: typeof import('~icons/custom-icons/arrow-right')['default']
     IconCustomArrowRightWhite: typeof import('~icons/custom-icons/arrow-right-white')['default']
     IconCustomChevronLeft: typeof import('~icons/custom-icons/chevron-left')['default']
