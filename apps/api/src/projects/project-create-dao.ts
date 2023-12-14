@@ -1,5 +1,5 @@
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectProfile, type Project } from '@rfcx-bio/common/dao/types'
 
 import { getImageByObjectives } from '@/project-profile/utils/image-by-objective'
 import { getSequelize } from '~/db'
@@ -15,7 +15,8 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
   const project = { ...projectDefaults, ...projectPartial, slug }
   const { id } = await LocationProject.create(project)
 
-  const profile = {
+  // TODO: This should be in a project-profile-dao and called from the bll
+  const profile: LocationProjectProfile = {
     locationProjectId: id,
     summary: '',
     readme: '',
@@ -23,9 +24,9 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
     keyResult: '',
     resources: '',
     image: getImageByObjectives(projectPartial.objectives),
-    objectives: projectPartial.objectives,
-    dateStart: projectPartial.dateStart,
-    dateEnd: projectPartial.dateEnd
+    objectives: projectPartial.objectives ?? [],
+    dateStart: projectPartial.dateStart ?? null,
+    dateEnd: projectPartial.dateEnd ?? null
   }
   await LocationProjectProfile.create(profile)
 
