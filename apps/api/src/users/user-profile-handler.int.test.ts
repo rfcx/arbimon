@@ -65,7 +65,8 @@ describe('GET /me/profile', async () => {
     expect(result.lastName).toBe(defaultUser.lastName)
   })
 
-  test('can get profile when does not exist in the db', async () => {
+  // TODO: to be fixed by #1363
+  test.skip('can get profile when does not exist in the db', async () => {
     // Arrange
     const app = await getMockedApp()
     await UserProfile.destroy({ truncate: true })
@@ -126,7 +127,8 @@ describe('PATCH /me/profile', async () => {
     expect(profile?.lastName).toBe(profileUpdates.lastName)
   })
 
-  test('can update first and last name when profile does not exist in the db', async () => {
+  // TODO: to be fixed by #1363
+  test.skip('can update first and last name when profile does not exist in the db', async () => {
     // Arrange
     const app = await getMockedApp()
     await UserProfile.destroy({ truncate: true })

@@ -1,5 +1,3 @@
-import { type ProjectObjective } from '../types'
-
 // TODO: update the image urls
 export const masterObjectiveTypes = {
   BioBaseline: { id: 100, slug: 'bio-baseline', description: 'Establish biodiversity baseline', shorten: 'Establish baseline', imageUrl: 'https://drive.google.com/uc?export=view&id=1GOsKAR7ZxUtGK3u5Gwiea-jIOP399Lj1' },
