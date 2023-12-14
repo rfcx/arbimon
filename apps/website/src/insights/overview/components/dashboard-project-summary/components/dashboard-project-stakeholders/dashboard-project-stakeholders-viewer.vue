@@ -13,7 +13,7 @@
         :name="member.firstname + ' ' + member.lastname"
         :image="member.picture ?? undefined"
         :email="member.email ?? ''"
-        :ranking="1"
+        :ranking="idx === 0 ? 0 : 1"
       />
     </div>
     <h3 class="text-white text-xl font-medium font-sans mt-6">

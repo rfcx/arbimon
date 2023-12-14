@@ -8,7 +8,7 @@
     <div>
       <h3
         v-if="ranking === 0"
-        class="text-danger text-xs font-medium font-eyebrow uppercase"
+        class="text-xs text-pitch bg-frequency font-normal font-eyebrow leading-5 uppercase px-2 rounded-sm inline-block"
       >
         Primary contact
       </h3>
@@ -23,15 +23,35 @@
       </h3>
       <a
         v-if="email && ranking === 0"
-        class="text-steel-gray-light text-sm font-normal leading-tight hover:underline hover:cursor-pointer"
+        class="text-steel-gray-light text-sm font-normal leading-tight inline hover:underline hover:cursor-pointer"
         :href="`mailto:${email}`"
       >
         {{ email }}
       </a>
+      <button
+        v-if="email && ranking === 0"
+        type="button"
+        class="transparent text-frequency text-sm ml-3 inline"
+        @click="copyEmail(email)"
+      >
+        {{ isCopied ? 'Copied' : 'Copy' }}
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+
 defineProps<{ name: string, description?: string, email?: string, image?: string, ranking?: number }>()
+
+const isCopied = ref<boolean>(false)
+
+const copyEmail = async (email: string):Promise<void> => {
+  isCopied.value = true
+  await navigator.clipboard.writeText(email)
+  setTimeout(() => {
+    isCopied.value = false
+  }, 1000)
+}
 </script>
