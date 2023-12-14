@@ -11,9 +11,8 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     latitude: 0,
     longitude: 0,
     altitude: 0,
-    country: null,
-    countryCode: 'Thailand',
-    deletedAt: 'TH'
+    countryCode: 'TH',
+    deletedAt: null
   }
 
   test('succeeds for valid data', async () => {
@@ -58,7 +57,6 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     const nullLatitude = { ...VALID_SITE, latitude: null }
     const nullLongitude = { ...VALID_SITE, longitude: null }
     const nullAltitude = { ...VALID_SITE, altitude: null }
-    const nullCountry = { ...VALID_SITE, country: null }
     const nullCountryCode = { ...VALID_SITE, countryCode: null }
 
     const undefinedIdArbimon = { ...VALID_SITE, idArbimon: undefined }
@@ -68,7 +66,6 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     const undefinedLatitude = { ...VALID_SITE, latitude: undefined }
     const undefinedLongitude = { ...VALID_SITE, longitude: undefined }
     const undefinedAltitude = { ...VALID_SITE, altitude: undefined }
-    const undefinedCountry = { ...VALID_SITE, country: undefined }
     const undefinedCountryCode = { ...VALID_SITE, countryCode: undefined }
 
     // Act
@@ -87,12 +84,10 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
       parseSiteArbimon(undefinedLatitude),
       parseSiteArbimon(undefinedLongitude),
       parseSiteArbimon(undefinedAltitude),
-      parseSiteArbimon(undefinedCountry),
       parseSiteArbimon(undefinedCountryCode)
     ]
 
     const actualNullishProps = [
-      parseSiteArbimon(nullCountry),
       parseSiteArbimon(nullCountryCode)
     ]
 

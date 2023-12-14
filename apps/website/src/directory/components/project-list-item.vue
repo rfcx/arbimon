@@ -1,6 +1,6 @@
 <template>
   <li
-    class="px-6 py-4 flex flex-col md:flex-row gap-4 border-b border-util-gray-01 hover:bg-echo selected:bg-pitch"
+    class="px-6 py-4 flex flex-col md:flex-row gap-4 border-b cursor-pointer border-util-gray-01 hover:bg-echo selected:bg-pitch"
     :class="{'bg-pitch': isSelected}"
   >
     <div class="w-18 aspect-square h-18">
@@ -17,7 +17,10 @@
       >
         <span class="text-spoonbill inline-flex">{{ countryCode }}</span>
         <span class="text-gray-300 inline-flex mx-1"> | </span>
-        <span class="text-gray-300 text-ellipsis inline-flex truncate whitespace-nowrap text-ellipsis overflow-hidden">{{ objectiveAll }}</span>
+        <text-tooltip
+          :tooltip-id="project.name"
+          :tooltip-text="objectiveAll"
+        />
       </div>
       <span class="text-xs text-clip md:text-sm">{{ project.summary }}</span>
       <div class="flex flex-row gap-2">
@@ -30,6 +33,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import TextTooltip from '../../projects/components/text-tooltip.vue'
 import { masterOjectiveTypes, objectiveTypes } from '../../projects/types'
 import type { ProjectProfileWithMetrics } from '../data/types'
 

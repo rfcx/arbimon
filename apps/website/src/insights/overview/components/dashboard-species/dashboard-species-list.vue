@@ -20,6 +20,7 @@
   </div>
   <div
     v-else-if="data"
+    id="dashboard-species-list"
   >
     <div
       v-if="selectedRiskUI"
@@ -53,21 +54,14 @@
         class="flex flex-row text-frequency gap-x-2 items-center"
         @click="isViewAll = true"
       >
-        View all {{ selectedRiskUI?.label }} species <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          fill="none"
-        >
-          <path
-            d="M3.5 5.25L7 8.75L10.5 5.25"
-            stroke="#ADFF2C"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
+        View all {{ selectedRiskUI?.label }} species <icon-custom-ic-arrow-view-more />
+      </button>
+      <button
+        v-else
+        class="flex flex-row text-frequency gap-x-2 items-center"
+        @click="viewLess()"
+      >
+        View less <icon-custom-ic-arrow-view-more class="transform rotate-180" />
       </button>
     </div>
   </div>
@@ -141,5 +135,17 @@ const currentSetOfData = computed(() => {
 watch(() => props.selectedRisk, () => {
   isViewAll.value = false
 })
+
+const scrollToTop = () => {
+  const container = document.getElementById('dashboard-species-list')
+  if (container) {
+    container.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
+
+const viewLess = () => {
+  isViewAll.value = false
+  scrollToTop()
+}
 
 </script>

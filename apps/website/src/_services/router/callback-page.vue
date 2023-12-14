@@ -22,7 +22,7 @@
       </svg>
     </div>
   </div>
-  <nav class="fixed top-0 z-50 w-full bg-white border-gray-200 dark:bg-echo dark:border-frequency border-b-4">
+  <nav class="fixed top-0 z-50 w-full bg-white border-gray-200 dark:bg-echo dark:border-frequency border-b-1">
     <a
       class="flex items-center px-3 py-3 lg:px-5 lg:pl-3"
       href="/"

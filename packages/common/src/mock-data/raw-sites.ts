@@ -10,7 +10,6 @@ export const rawSites: Site[] = [
     latitude: 18.31307,
     longitude: -65.24878,
     altitude: 30.85246588,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -22,7 +21,6 @@ export const rawSites: Site[] = [
     latitude: 18.30692,
     longitude: -65.25233,
     altitude: 2.322431157,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -34,7 +32,6 @@ export const rawSites: Site[] = [
     latitude: 18.31777,
     longitude: -65.28566,
     altitude: 55.51248239,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -46,7 +43,6 @@ export const rawSites: Site[] = [
     latitude: 18.28134,
     longitude: -65.28621,
     altitude: 12.54075629,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -58,7 +54,6 @@ export const rawSites: Site[] = [
     latitude: 18.31895,
     longitude: -65.2651,
     altitude: 91.45384084,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -70,7 +65,6 @@ export const rawSites: Site[] = [
     latitude: 18.30477,
     longitude: -65.27052,
     altitude: 16.6075801,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -82,7 +76,6 @@ export const rawSites: Site[] = [
     latitude: 18.31875,
     longitude: -65.31032,
     altitude: 42.59826567,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -94,7 +87,6 @@ export const rawSites: Site[] = [
     latitude: 18.32541,
     longitude: -65.30534,
     altitude: 120.3510295,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -106,7 +98,6 @@ export const rawSites: Site[] = [
     latitude: 18.30257,
     longitude: -65.30611,
     altitude: 13.17727713,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -118,7 +109,6 @@ export const rawSites: Site[] = [
     latitude: 18.33011,
     longitude: -65.28724,
     altitude: 0.662746495,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -130,7 +120,6 @@ export const rawSites: Site[] = [
     latitude: 18.48484,
     longitude: -66.5473,
     altitude: 6.163519308,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -142,7 +131,6 @@ export const rawSites: Site[] = [
     latitude: 18.3869053,
     longitude: -67.4818577,
     altitude: 83.1326178831163,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -154,7 +142,6 @@ export const rawSites: Site[] = [
     latitude: 18.2994,
     longitude: -65.30118,
     altitude: 9.329055888,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -166,7 +153,6 @@ export const rawSites: Site[] = [
     latitude: 18.38358032,
     longitude: -67.48601453,
     altitude: 32.1213126835405,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -178,7 +164,6 @@ export const rawSites: Site[] = [
     latitude: 18.38560835,
     longitude: -67.47947049,
     altitude: 181.6597772,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -190,7 +175,6 @@ export const rawSites: Site[] = [
     latitude: 18.38495933,
     longitude: -67.48740814,
     altitude: 18.66551963,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -202,7 +186,6 @@ export const rawSites: Site[] = [
     latitude: 18.30201,
     longitude: -65.31075,
     altitude: 1.078350509,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -214,7 +197,6 @@ export const rawSites: Site[] = [
     latitude: 18.3344,
     longitude: -65.32376,
     altitude: 0.747749173,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -226,7 +208,6 @@ export const rawSites: Site[] = [
     latitude: 18.30676,
     longitude: -65.24698,
     altitude: 21.15983092,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -238,7 +219,6 @@ export const rawSites: Site[] = [
     latitude: 18.31485,
     longitude: -65.29033,
     altitude: 6.199728789,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -250,7 +230,6 @@ export const rawSites: Site[] = [
     latitude: 18.3154,
     longitude: -65.27583,
     altitude: 44.63465726,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -262,7 +241,6 @@ export const rawSites: Site[] = [
     latitude: 18.47772,
     longitude: -66.69449,
     altitude: 0.568832348,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -274,7 +252,6 @@ export const rawSites: Site[] = [
     latitude: 18.31077,
     longitude: -65.2903,
     altitude: 0.094544537,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -286,7 +263,6 @@ export const rawSites: Site[] = [
     latitude: 18.31278,
     longitude: -65.26463,
     altitude: 45.73896047,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -298,7 +274,6 @@ export const rawSites: Site[] = [
     latitude: 18.385825,
     longitude: -67.4829303,
     altitude: 125.142246106741,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -310,7 +285,6 @@ export const rawSites: Site[] = [
     latitude: 18.32973,
     longitude: -65.2985,
     altitude: 0.94781782,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -322,7 +296,6 @@ export const rawSites: Site[] = [
     latitude: 18.30212,
     longitude: -65.276,
     altitude: 1.053571012,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -334,7 +307,6 @@ export const rawSites: Site[] = [
     latitude: 18.32013,
     longitude: -65.31974,
     altitude: 0.131358426,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -346,7 +318,6 @@ export const rawSites: Site[] = [
     latitude: 18.49117,
     longitude: -66.63046,
     altitude: 1.705465467,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -358,7 +329,6 @@ export const rawSites: Site[] = [
     latitude: 18.50406,
     longitude: -67.14215,
     altitude: 7.668706344,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -370,7 +340,6 @@ export const rawSites: Site[] = [
     latitude: 18.4383,
     longitude: -66.67711,
     altitude: 51.38620601,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -382,7 +351,6 @@ export const rawSites: Site[] = [
     latitude: 18.30731,
     longitude: -65.25958,
     altitude: 0.628604202,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -394,7 +362,6 @@ export const rawSites: Site[] = [
     latitude: 18.43542,
     longitude: -66.6472,
     altitude: 77.49799378,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -406,7 +373,6 @@ export const rawSites: Site[] = [
     latitude: 18.29718,
     longitude: -65.26279,
     altitude: 0.689452994,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -418,7 +384,6 @@ export const rawSites: Site[] = [
     latitude: 18.32055,
     longitude: -65.27482,
     altitude: 82.00442027,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -430,7 +395,6 @@ export const rawSites: Site[] = [
     latitude: 18.29524,
     longitude: -65.29975,
     altitude: 0.495761659,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -442,7 +406,6 @@ export const rawSites: Site[] = [
     latitude: 18.30802,
     longitude: -65.27898,
     altitude: 3.478778615,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -454,7 +417,6 @@ export const rawSites: Site[] = [
     latitude: 18.44633,
     longitude: -66.59209,
     altitude: 56.26049128,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -466,7 +428,6 @@ export const rawSites: Site[] = [
     latitude: 18.47121,
     longitude: -66.70962,
     altitude: 1.196438782,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -478,7 +439,6 @@ export const rawSites: Site[] = [
     latitude: 18.32337,
     longitude: -65.26208,
     altitude: 1.832448883,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -490,7 +450,6 @@ export const rawSites: Site[] = [
     latitude: 18.28771,
     longitude: -65.28473,
     altitude: 0.362105093,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -502,7 +461,6 @@ export const rawSites: Site[] = [
     latitude: 18.50755,
     longitude: -67.1361,
     altitude: 28.93638177,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -514,7 +472,6 @@ export const rawSites: Site[] = [
     latitude: 17.9741,
     longitude: -66.9961,
     altitude: 0.741917667,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -526,7 +483,6 @@ export const rawSites: Site[] = [
     latitude: 18.50986,
     longitude: -67.12339,
     altitude: 1.525182398,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -538,7 +494,6 @@ export const rawSites: Site[] = [
     latitude: 18.48318,
     longitude: -66.91791,
     altitude: 46.62683072,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -550,7 +505,6 @@ export const rawSites: Site[] = [
     latitude: 18.29331,
     longitude: -65.25619,
     altitude: -0.315333968,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -562,7 +516,6 @@ export const rawSites: Site[] = [
     latitude: 18.29569,
     longitude: -65.28879,
     altitude: 14.38726413,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -574,7 +527,6 @@ export const rawSites: Site[] = [
     latitude: 18.45156,
     longitude: -66.59629,
     altitude: 30.13074832,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -586,7 +538,6 @@ export const rawSites: Site[] = [
     latitude: 18.43966,
     longitude: -66.66098,
     altitude: 61.31111113,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -598,7 +549,6 @@ export const rawSites: Site[] = [
     latitude: 18.43774,
     longitude: -66.62695,
     altitude: 62.5940744,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -610,7 +560,6 @@ export const rawSites: Site[] = [
     latitude: 18.31961,
     longitude: -65.25567,
     altitude: 7.802670276,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -622,7 +571,6 @@ export const rawSites: Site[] = [
     latitude: 18.44117,
     longitude: -66.59506,
     altitude: 86.51118017,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -634,7 +582,6 @@ export const rawSites: Site[] = [
     latitude: 18.47359,
     longitude: -66.69979,
     altitude: 1.087141608,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -646,7 +593,6 @@ export const rawSites: Site[] = [
     latitude: 18.44702,
     longitude: -66.60644,
     altitude: 50.32577062,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -658,7 +604,6 @@ export const rawSites: Site[] = [
     latitude: 18.47734,
     longitude: -66.66513,
     altitude: 0.512042181,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -670,7 +615,6 @@ export const rawSites: Site[] = [
     latitude: 17.976,
     longitude: -67.0124,
     altitude: 0.26206393,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -682,7 +626,6 @@ export const rawSites: Site[] = [
     latitude: 18.51156,
     longitude: -67.0435,
     altitude: 1.351557963,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -694,7 +637,6 @@ export const rawSites: Site[] = [
     latitude: 18.50989,
     longitude: -67.07203,
     altitude: 7.644030336,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -706,7 +648,6 @@ export const rawSites: Site[] = [
     latitude: 18.48195591,
     longitude: -66.69793246,
     altitude: 17.26077327,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -718,7 +659,6 @@ export const rawSites: Site[] = [
     latitude: 17.9728,
     longitude: -67.0336,
     altitude: 0.765227879,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -730,7 +670,6 @@ export const rawSites: Site[] = [
     latitude: 18.49009,
     longitude: -66.85536,
     altitude: 1.553553388,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -742,7 +681,6 @@ export const rawSites: Site[] = [
     latitude: 18.47827,
     longitude: -66.68643,
     altitude: 0.335999562,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -754,7 +692,6 @@ export const rawSites: Site[] = [
     latitude: 18.51187,
     longitude: -67.06243,
     altitude: 0.820823808,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -766,7 +703,6 @@ export const rawSites: Site[] = [
     latitude: 18.5104,
     longitude: -67.08706,
     altitude: 12.85748974,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -778,7 +714,6 @@ export const rawSites: Site[] = [
     latitude: 18.47894,
     longitude: -66.68159,
     altitude: 0.692866824,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -790,7 +725,6 @@ export const rawSites: Site[] = [
     latitude: 18.29031,
     longitude: -65.29062,
     altitude: 27.00448183,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -802,7 +736,6 @@ export const rawSites: Site[] = [
     latitude: 18.48995,
     longitude: -66.60698,
     altitude: 7.214914835,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -814,7 +747,6 @@ export const rawSites: Site[] = [
     latitude: 18.31494,
     longitude: -65.30296,
     altitude: 20.05852022,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -826,7 +758,6 @@ export const rawSites: Site[] = [
     latitude: 18.48729,
     longitude: -67.16261,
     altitude: 3.494169434,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -838,7 +769,6 @@ export const rawSites: Site[] = [
     latitude: 18.3850366,
     longitude: -67.4849125,
     altitude: 76.6442593273856,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -850,7 +780,6 @@ export const rawSites: Site[] = [
     latitude: 18.48758,
     longitude: -66.6728,
     altitude: 1.270876527,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -862,7 +791,6 @@ export const rawSites: Site[] = [
     latitude: 18.14962,
     longitude: -66.99385,
     altitude: 774.9948051,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -874,7 +802,6 @@ export const rawSites: Site[] = [
     latitude: 18.48373,
     longitude: -67.16559,
     altitude: 3.816157771,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -886,7 +813,6 @@ export const rawSites: Site[] = [
     latitude: 18.48442,
     longitude: -66.96245,
     altitude: 45.57694824,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -898,7 +824,6 @@ export const rawSites: Site[] = [
     latitude: 18.4871,
     longitude: -66.66491,
     altitude: 4.617686239,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -910,7 +835,6 @@ export const rawSites: Site[] = [
     latitude: 18.4718,
     longitude: -66.64424,
     altitude: 0.403024479,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -922,7 +846,6 @@ export const rawSites: Site[] = [
     latitude: 17.9799,
     longitude: -67.0353,
     altitude: 20.03297109,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -934,7 +857,6 @@ export const rawSites: Site[] = [
     latitude: 18.48314,
     longitude: -66.61498,
     altitude: 7.049169998,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -946,7 +868,6 @@ export const rawSites: Site[] = [
     latitude: 18.50955197,
     longitude: -67.09582671,
     altitude: 4.377288146,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -958,7 +879,6 @@ export const rawSites: Site[] = [
     latitude: 17.95499,
     longitude: -67.11124,
     altitude: 0.835345134,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -970,7 +890,6 @@ export const rawSites: Site[] = [
     latitude: 18.48293,
     longitude: -66.90195,
     altitude: 13.96966853,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -982,7 +901,6 @@ export const rawSites: Site[] = [
     latitude: 17.95926,
     longitude: -67.09965,
     altitude: 0.987499615,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -994,7 +912,6 @@ export const rawSites: Site[] = [
     latitude: 18.51375,
     longitude: -67.05238,
     altitude: 0.730373115,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1006,7 +923,6 @@ export const rawSites: Site[] = [
     latitude: 18.49081,
     longitude: -66.79826,
     altitude: 1.210204403,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1018,7 +934,6 @@ export const rawSites: Site[] = [
     latitude: 17.95625,
     longitude: -67.10577,
     altitude: 1.038406649,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1030,7 +945,6 @@ export const rawSites: Site[] = [
     latitude: 17.9457,
     longitude: -67.1927,
     altitude: 0.247303178,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1042,7 +956,6 @@ export const rawSites: Site[] = [
     latitude: 18.50811,
     longitude: -67.0293,
     altitude: 6.232355701,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1054,7 +967,6 @@ export const rawSites: Site[] = [
     latitude: 18.47999,
     longitude: -66.63948,
     altitude: 1.522272023,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1066,7 +978,6 @@ export const rawSites: Site[] = [
     latitude: 17.9529,
     longitude: -67.1377,
     altitude: 1.081886773,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1078,7 +989,6 @@ export const rawSites: Site[] = [
     latitude: 18.51042,
     longitude: -67.11677,
     altitude: 1.638111326,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1090,7 +1000,6 @@ export const rawSites: Site[] = [
     latitude: 18.48877,
     longitude: -67.15482,
     altitude: 23.7836002,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1102,7 +1011,6 @@ export const rawSites: Site[] = [
     latitude: 18.48336,
     longitude: -66.60343,
     altitude: 0.760250195,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1114,7 +1022,6 @@ export const rawSites: Site[] = [
     latitude: 18.49212,
     longitude: -66.64071,
     altitude: 4.142061912,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1126,7 +1033,6 @@ export const rawSites: Site[] = [
     latitude: 18.50902,
     longitude: -67.07708,
     altitude: 52.35834244,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1138,7 +1044,6 @@ export const rawSites: Site[] = [
     latitude: 17.9525,
     longitude: -67.1343,
     altitude: 1.386911246,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1150,7 +1055,6 @@ export const rawSites: Site[] = [
     latitude: 18.48734,
     longitude: -66.95672,
     altitude: 1.41548629,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1162,7 +1066,6 @@ export const rawSites: Site[] = [
     latitude: 18.0104,
     longitude: -67.0992,
     altitude: 13.32941503,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1174,7 +1077,6 @@ export const rawSites: Site[] = [
     latitude: 17.935381,
     longitude: -67.194171,
     altitude: 7.720218828,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1186,7 +1088,6 @@ export const rawSites: Site[] = [
     latitude: 17.95552,
     longitude: -67.11623,
     altitude: 1.46745887,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1198,7 +1099,6 @@ export const rawSites: Site[] = [
     latitude: 17.9525,
     longitude: -67.1932,
     altitude: 0.705058127,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1210,7 +1110,6 @@ export const rawSites: Site[] = [
     latitude: 17.9399,
     longitude: -67.1927,
     altitude: 0.50124856,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1222,7 +1121,6 @@ export const rawSites: Site[] = [
     latitude: 17.9837,
     longitude: -67.0559,
     altitude: 51.66734546,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1234,7 +1132,6 @@ export const rawSites: Site[] = [
     latitude: 17.935472,
     longitude: -67.187075,
     altitude: 0.701028819,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1246,7 +1143,6 @@ export const rawSites: Site[] = [
     latitude: 17.984066,
     longitude: -67.107012,
     altitude: 69.12388003,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1258,7 +1154,6 @@ export const rawSites: Site[] = [
     latitude: 17.9723,
     longitude: -67.1768,
     altitude: 1.827999675,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1270,7 +1165,6 @@ export const rawSites: Site[] = [
     latitude: 18.03513,
     longitude: -67.186383,
     altitude: 5.291281623,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1282,7 +1176,6 @@ export const rawSites: Site[] = [
     latitude: 17.9533,
     longitude: -67.12209,
     altitude: 1.778988448,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1294,7 +1187,6 @@ export const rawSites: Site[] = [
     latitude: 17.95994,
     longitude: -67.09502,
     altitude: 0.173979393,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1306,7 +1198,6 @@ export const rawSites: Site[] = [
     latitude: 18.011421,
     longitude: -67.103784,
     altitude: 11.76758439,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1318,7 +1209,6 @@ export const rawSites: Site[] = [
     latitude: 17.98893605,
     longitude: -67.17928752,
     altitude: 32.26511688,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1330,7 +1220,6 @@ export const rawSites: Site[] = [
     latitude: 17.9796,
     longitude: -67.0442,
     altitude: 12.89777544,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1342,7 +1231,6 @@ export const rawSites: Site[] = [
     latitude: 18.46986,
     longitude: -66.24525,
     altitude: 5.032821369,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1354,7 +1242,6 @@ export const rawSites: Site[] = [
     latitude: 18.44135,
     longitude: -66.48155,
     altitude: 77.01375217,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1366,7 +1253,6 @@ export const rawSites: Site[] = [
     latitude: 18.43913,
     longitude: -66.29572,
     altitude: 60.33415221,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1378,7 +1264,6 @@ export const rawSites: Site[] = [
     latitude: 18.46444,
     longitude: -66.3952,
     altitude: 2.145931889,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1390,7 +1275,6 @@ export const rawSites: Site[] = [
     latitude: 17.96407,
     longitude: -67.08788,
     altitude: 0.984483396,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1402,7 +1286,6 @@ export const rawSites: Site[] = [
     latitude: 18.46775,
     longitude: -66.42719,
     altitude: 4.16468623,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1414,7 +1297,6 @@ export const rawSites: Site[] = [
     latitude: 18.44994,
     longitude: -66.31126,
     altitude: 13.2972916,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1426,7 +1308,6 @@ export const rawSites: Site[] = [
     latitude: 17.94723,
     longitude: -66.9591,
     altitude: 34.06594371,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1438,7 +1319,6 @@ export const rawSites: Site[] = [
     latitude: 18.48064,
     longitude: -66.33738,
     altitude: 2.912320354,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1450,7 +1330,6 @@ export const rawSites: Site[] = [
     latitude: 18.48565,
     longitude: -66.39941,
     altitude: 9.050608974,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1462,7 +1341,6 @@ export const rawSites: Site[] = [
     latitude: 18.47284,
     longitude: -66.38921,
     altitude: 0.780304632,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1474,7 +1352,6 @@ export const rawSites: Site[] = [
     latitude: 17.96097,
     longitude: -67.10678,
     altitude: 6.527499411,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1486,7 +1363,6 @@ export const rawSites: Site[] = [
     latitude: 17.96225,
     longitude: -67.09259,
     altitude: 0.354955711,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1498,7 +1374,6 @@ export const rawSites: Site[] = [
     latitude: 18.0102,
     longitude: -67.0944,
     altitude: 12.47322001,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1510,7 +1385,6 @@ export const rawSites: Site[] = [
     latitude: 17.94217,
     longitude: -66.94938,
     altitude: 18.42877231,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1522,7 +1396,6 @@ export const rawSites: Site[] = [
     latitude: 18.36299,
     longitude: -66.2765,
     altitude: 119.9735401,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1534,7 +1407,6 @@ export const rawSites: Site[] = [
     latitude: 18.46518,
     longitude: -66.18746,
     altitude: 1.549246771,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1546,7 +1418,6 @@ export const rawSites: Site[] = [
     latitude: 18.47897,
     longitude: -66.39978,
     altitude: 5.029836541,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1558,7 +1429,6 @@ export const rawSites: Site[] = [
     latitude: 18.46956,
     longitude: -66.42129,
     altitude: 3.185062304,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1570,7 +1440,6 @@ export const rawSites: Site[] = [
     latitude: 18.48913,
     longitude: -66.39509,
     altitude: 3.015772144,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1582,7 +1451,6 @@ export const rawSites: Site[] = [
     latitude: 17.93708,
     longitude: -66.95231,
     altitude: 1.713054508,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1594,7 +1462,6 @@ export const rawSites: Site[] = [
     latitude: 18.45735,
     longitude: -66.34838,
     altitude: 5.182329563,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1606,7 +1473,6 @@ export const rawSites: Site[] = [
     latitude: 18.4218,
     longitude: -66.28196,
     altitude: 25.9282073,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1618,7 +1484,6 @@ export const rawSites: Site[] = [
     latitude: 18.42995,
     longitude: -66.2086,
     altitude: 1.948008536,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1630,7 +1495,6 @@ export const rawSites: Site[] = [
     latitude: 18.43423,
     longitude: -66.20154,
     altitude: 2.028874652,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1642,7 +1506,6 @@ export const rawSites: Site[] = [
     latitude: 17.94456,
     longitude: -66.96203,
     altitude: 13.09705263,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1654,7 +1517,6 @@ export const rawSites: Site[] = [
     latitude: 17.9404,
     longitude: -66.95514,
     altitude: 0.483845956,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1666,7 +1528,6 @@ export const rawSites: Site[] = [
     latitude: 18.4119,
     longitude: -66.4907,
     altitude: 130.0165401,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1678,7 +1539,6 @@ export const rawSites: Site[] = [
     latitude: 17.94194439,
     longitude: -66.96095971,
     altitude: 3.464300732,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1690,7 +1550,6 @@ export const rawSites: Site[] = [
     latitude: 18.47162,
     longitude: -66.28358,
     altitude: 1.375442089,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1702,7 +1561,6 @@ export const rawSites: Site[] = [
     latitude: 18.4667,
     longitude: -66.2289,
     altitude: 2.822185546,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1714,7 +1572,6 @@ export const rawSites: Site[] = [
     latitude: 18.47164,
     longitude: -66.39681,
     altitude: 1.791109594,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1726,7 +1583,6 @@ export const rawSites: Site[] = [
     latitude: 17.9482,
     longitude: -66.96902,
     altitude: 0.966620207,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1738,7 +1594,6 @@ export const rawSites: Site[] = [
     latitude: 17.93207,
     longitude: -66.95521,
     altitude: 18.84718903,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1750,7 +1605,6 @@ export const rawSites: Site[] = [
     latitude: 18.48362,
     longitude: -66.3779,
     altitude: 0.485146221,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1762,7 +1616,6 @@ export const rawSites: Site[] = [
     latitude: 18.38134759,
     longitude: -67.48527883,
     altitude: 8.251969719,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1774,7 +1627,6 @@ export const rawSites: Site[] = [
     latitude: 18.46862,
     longitude: -66.45456,
     altitude: 1.416736189,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1786,7 +1638,6 @@ export const rawSites: Site[] = [
     latitude: 18.4721,
     longitude: -66.25419,
     altitude: 0.765337517,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1798,7 +1649,6 @@ export const rawSites: Site[] = [
     latitude: 18.46865,
     longitude: -66.46195,
     altitude: 1.208658683,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1810,7 +1660,6 @@ export const rawSites: Site[] = [
     latitude: 18.47815,
     longitude: -66.43372,
     altitude: 12.2183855,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1822,7 +1671,6 @@ export const rawSites: Site[] = [
     latitude: 18.39191,
     longitude: -66.26597,
     altitude: 99.30194084,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1834,7 +1682,6 @@ export const rawSites: Site[] = [
     latitude: 18.47474,
     longitude: -66.44089,
     altitude: 1.767279798,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1846,7 +1693,6 @@ export const rawSites: Site[] = [
     latitude: 18.46635,
     longitude: -66.46835,
     altitude: 18.01655021,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1858,7 +1704,6 @@ export const rawSites: Site[] = [
     latitude: 18.47294,
     longitude: -66.34686,
     altitude: 2.259131969,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1870,7 +1715,6 @@ export const rawSites: Site[] = [
     latitude: 18.46101,
     longitude: -66.36286,
     altitude: 4.021442392,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1882,7 +1726,6 @@ export const rawSites: Site[] = [
     latitude: 18.40814,
     longitude: -66.26702,
     altitude: 40.01706922,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1894,7 +1737,6 @@ export const rawSites: Site[] = [
     latitude: 18.48435,
     longitude: -66.35253,
     altitude: 3.459361335,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1906,7 +1748,6 @@ export const rawSites: Site[] = [
     latitude: 18.46206,
     longitude: -66.47108,
     altitude: 2.076370872,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1918,7 +1759,6 @@ export const rawSites: Site[] = [
     latitude: 18.4602,
     longitude: -66.4252,
     altitude: 3.265135741,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1930,7 +1770,6 @@ export const rawSites: Site[] = [
     latitude: 18.47136,
     longitude: -66.44476,
     altitude: 1.326060733,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1942,7 +1781,6 @@ export const rawSites: Site[] = [
     latitude: 18.46842,
     longitude: -66.34455,
     altitude: 2.961931845,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1954,7 +1792,6 @@ export const rawSites: Site[] = [
     latitude: 18.3778,
     longitude: -66.26254,
     altitude: 130.6340346,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1966,7 +1803,6 @@ export const rawSites: Site[] = [
     latitude: 18.46599,
     longitude: -66.21181,
     altitude: 0.926998652,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1978,7 +1814,6 @@ export const rawSites: Site[] = [
     latitude: 18.46878,
     longitude: -66.32448,
     altitude: 10.13958166,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -1990,7 +1825,6 @@ export const rawSites: Site[] = [
     latitude: 18.44983,
     longitude: -66.46652,
     altitude: 36.39137598,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2002,7 +1836,6 @@ export const rawSites: Site[] = [
     latitude: 18.45936,
     longitude: -66.46658,
     altitude: 3.134049558,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2014,7 +1847,6 @@ export const rawSites: Site[] = [
     latitude: 18.4055,
     longitude: -66.49212,
     altitude: 94.21070914,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2026,7 +1858,6 @@ export const rawSites: Site[] = [
     latitude: 18.40742,
     longitude: -66.44935,
     altitude: 117.3943931,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2038,7 +1869,6 @@ export const rawSites: Site[] = [
     latitude: 17.96359,
     longitude: -66.97154,
     altitude: 36.55442344,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2050,7 +1880,6 @@ export const rawSites: Site[] = [
     latitude: 18.48421,
     longitude: -66.38482,
     altitude: 0.374033717,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2062,7 +1891,6 @@ export const rawSites: Site[] = [
     latitude: 17.94315,
     longitude: -66.96319,
     altitude: 1.49993801,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2074,7 +1902,6 @@ export const rawSites: Site[] = [
     latitude: 18.45717,
     longitude: -66.44448,
     altitude: 9.656788507,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2086,7 +1913,6 @@ export const rawSites: Site[] = [
     latitude: 17.98315,
     longitude: -66.84846,
     altitude: 49.50991924,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2098,7 +1924,6 @@ export const rawSites: Site[] = [
     latitude: 17.9561,
     longitude: -66.85277,
     altitude: 18.24856817,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2110,7 +1935,6 @@ export const rawSites: Site[] = [
     latitude: 17.95396,
     longitude: -66.88247,
     altitude: 5.454701854,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2122,7 +1946,6 @@ export const rawSites: Site[] = [
     latitude: 17.94604,
     longitude: -66.96474,
     altitude: 0.323008947,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2134,7 +1957,6 @@ export const rawSites: Site[] = [
     latitude: 17.94381,
     longitude: -66.93417,
     altitude: 1.14083374,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2146,7 +1968,6 @@ export const rawSites: Site[] = [
     latitude: 17.96516,
     longitude: -66.89994,
     altitude: 18.67372145,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2158,7 +1979,6 @@ export const rawSites: Site[] = [
     latitude: 17.96048,
     longitude: -66.92029,
     altitude: 4.333448823,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2170,7 +1990,6 @@ export const rawSites: Site[] = [
     latitude: 17.96976,
     longitude: -66.87455,
     altitude: 150.6396615,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2182,7 +2001,6 @@ export const rawSites: Site[] = [
     latitude: 17.95075,
     longitude: -66.86569,
     altitude: 0.170034084,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2194,7 +2012,6 @@ export const rawSites: Site[] = [
     latitude: 17.94636,
     longitude: -66.86483,
     altitude: 0.858830913,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2206,7 +2023,6 @@ export const rawSites: Site[] = [
     latitude: 17.94991,
     longitude: -66.90078,
     altitude: 7.459550907,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2218,7 +2034,6 @@ export const rawSites: Site[] = [
     latitude: 17.95183,
     longitude: -66.83523,
     altitude: 8.750884594,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2230,7 +2045,6 @@ export const rawSites: Site[] = [
     latitude: 17.95249,
     longitude: -66.89279,
     altitude: 9.255739906,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2242,7 +2056,6 @@ export const rawSites: Site[] = [
     latitude: 17.95938,
     longitude: -66.85873,
     altitude: 24.87935861,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2254,7 +2067,6 @@ export const rawSites: Site[] = [
     latitude: 17.9443,
     longitude: -66.9294,
     altitude: 5.791532802,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2266,7 +2078,6 @@ export const rawSites: Site[] = [
     latitude: 17.9519,
     longitude: -66.84449,
     altitude: 1.44505827,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2278,7 +2089,6 @@ export const rawSites: Site[] = [
     latitude: 17.95365655,
     longitude: -66.87188095,
     altitude: 0.172921533,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2290,7 +2100,6 @@ export const rawSites: Site[] = [
     latitude: 18.00351,
     longitude: -66.86873,
     altitude: 70.18318268,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2302,7 +2111,6 @@ export const rawSites: Site[] = [
     latitude: 17.95102,
     longitude: -66.84021,
     altitude: 13.46093164,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2314,7 +2122,6 @@ export const rawSites: Site[] = [
     latitude: 17.946,
     longitude: -66.93823,
     altitude: 4.44178101,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2326,7 +2133,6 @@ export const rawSites: Site[] = [
     latitude: 17.98182,
     longitude: -66.88039,
     altitude: 140.0139876,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2338,7 +2144,6 @@ export const rawSites: Site[] = [
     latitude: 17.96739,
     longitude: -66.87879,
     altitude: 147.3513167,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2350,7 +2155,6 @@ export const rawSites: Site[] = [
     latitude: 17.97119,
     longitude: -66.86947,
     altitude: 156.0873216,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2362,7 +2166,6 @@ export const rawSites: Site[] = [
     latitude: 17.98739,
     longitude: -66.82289,
     altitude: 3.97922903,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2374,7 +2177,6 @@ export const rawSites: Site[] = [
     latitude: 17.95451,
     longitude: -66.8662,
     altitude: 0.145370288,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2386,7 +2188,6 @@ export const rawSites: Site[] = [
     latitude: 17.94447,
     longitude: -66.94614,
     altitude: 15.14655274,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2398,7 +2199,6 @@ export const rawSites: Site[] = [
     latitude: 18.14387,
     longitude: -66.80996,
     altitude: 953.7554677,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2410,7 +2210,6 @@ export const rawSites: Site[] = [
     latitude: 18.15818,
     longitude: -66.81617,
     altitude: 966.9607872,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2422,7 +2221,6 @@ export const rawSites: Site[] = [
     latitude: 18.13293,
     longitude: -66.75202,
     altitude: 816.1653771,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2434,7 +2232,6 @@ export const rawSites: Site[] = [
     latitude: 18.13881,
     longitude: -66.80988,
     altitude: 935.5185898,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2446,7 +2243,6 @@ export const rawSites: Site[] = [
     latitude: 18.1321,
     longitude: -66.7657,
     altitude: 973.1651776,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2458,7 +2254,6 @@ export const rawSites: Site[] = [
     latitude: 18.14297,
     longitude: -66.76644,
     altitude: 1005.921982,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2470,7 +2265,6 @@ export const rawSites: Site[] = [
     latitude: 18.09735,
     longitude: -66.73686,
     altitude: 460.029782,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2482,7 +2276,6 @@ export const rawSites: Site[] = [
     latitude: 18.148,
     longitude: -66.80991,
     altitude: 1014.321696,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2494,7 +2287,6 @@ export const rawSites: Site[] = [
     latitude: 18.13311,
     longitude: -66.75959,
     altitude: 933.4710318,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2506,7 +2298,6 @@ export const rawSites: Site[] = [
     latitude: 18.1311,
     longitude: -66.74111,
     altitude: 754.2444907,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2518,7 +2309,6 @@ export const rawSites: Site[] = [
     latitude: 18.38614,
     longitude: -65.75641,
     altitude: 0.585594703,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2530,7 +2320,6 @@ export const rawSites: Site[] = [
     latitude: 18.41171,
     longitude: -65.77073,
     altitude: 0.388277538,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2542,7 +2331,6 @@ export const rawSites: Site[] = [
     latitude: 18.11122,
     longitude: -66.7682,
     altitude: 755.8268561,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2554,7 +2342,6 @@ export const rawSites: Site[] = [
     latitude: 18.38796,
     longitude: -65.72138,
     altitude: 0.813982677,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2566,7 +2353,6 @@ export const rawSites: Site[] = [
     latitude: 18.39894,
     longitude: -65.77243,
     altitude: 0.36088153,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2578,7 +2364,6 @@ export const rawSites: Site[] = [
     latitude: 18.37755,
     longitude: -65.73979,
     altitude: 1.585914089,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2590,7 +2375,6 @@ export const rawSites: Site[] = [
     latitude: 18.12506,
     longitude: -66.95084,
     altitude: 557.8995567,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2602,7 +2386,6 @@ export const rawSites: Site[] = [
     latitude: 18.1875,
     longitude: -67.06414,
     altitude: 285.133502,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2614,7 +2397,6 @@ export const rawSites: Site[] = [
     latitude: 18.14953,
     longitude: -66.98848,
     altitude: 869.7292306,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2626,7 +2408,6 @@ export const rawSites: Site[] = [
     latitude: 18.13389,
     longitude: -66.95502,
     altitude: 693.6755274,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2638,7 +2419,6 @@ export const rawSites: Site[] = [
     latitude: 18.14123,
     longitude: -66.97157,
     altitude: 811.798905,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2650,7 +2430,6 @@ export const rawSites: Site[] = [
     latitude: 18.1423,
     longitude: -66.97551,
     altitude: 866.9942318,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2662,7 +2441,6 @@ export const rawSites: Site[] = [
     latitude: 18.1416,
     longitude: -66.98088,
     altitude: 844.5568081,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2674,7 +2452,6 @@ export const rawSites: Site[] = [
     latitude: 18.14394,
     longitude: -66.97788,
     altitude: 880.8801358,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2686,7 +2463,6 @@ export const rawSites: Site[] = [
     latitude: 18.14884,
     longitude: -66.98999,
     altitude: 837.2066463,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2698,7 +2474,6 @@ export const rawSites: Site[] = [
     latitude: 18.14923,
     longitude: -66.99126,
     altitude: 802.5056959,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2710,7 +2485,6 @@ export const rawSites: Site[] = [
     latitude: 18.14193,
     longitude: -66.97936,
     altitude: 854.241515,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2722,7 +2496,6 @@ export const rawSites: Site[] = [
     latitude: 18.14726,
     longitude: -66.98189,
     altitude: 885.5881039,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2734,7 +2507,6 @@ export const rawSites: Site[] = [
     latitude: 18.14845,
     longitude: -66.99157,
     altitude: 803.1821825,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2746,7 +2518,6 @@ export const rawSites: Site[] = [
     latitude: 18.15705,
     longitude: -67.00082,
     altitude: 726.3515581,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2758,7 +2529,6 @@ export const rawSites: Site[] = [
     latitude: 18.16449,
     longitude: -66.99351,
     altitude: 678.3731492,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2770,7 +2540,6 @@ export const rawSites: Site[] = [
     latitude: 18.18397,
     longitude: -67.05301,
     altitude: 275.7496099,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2782,7 +2551,6 @@ export const rawSites: Site[] = [
     latitude: 17.97988,
     longitude: -65.91355,
     altitude: 62.55274461,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2794,7 +2562,6 @@ export const rawSites: Site[] = [
     latitude: 18.01923,
     longitude: -65.95324,
     altitude: 283.533821,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2806,7 +2573,6 @@ export const rawSites: Site[] = [
     latitude: 17.99205,
     longitude: -65.88351,
     altitude: 1.491111252,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2818,7 +2584,6 @@ export const rawSites: Site[] = [
     latitude: 18.06069,
     longitude: -65.82623,
     altitude: 3.197972652,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2830,7 +2595,6 @@ export const rawSites: Site[] = [
     latitude: 18.17309,
     longitude: -65.74309,
     altitude: 0.79642748,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2842,7 +2606,6 @@ export const rawSites: Site[] = [
     latitude: 18.20186,
     longitude: -65.75925,
     altitude: 21.27486007,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2854,7 +2617,6 @@ export const rawSites: Site[] = [
     latitude: 18.26157,
     longitude: -65.80002,
     altitude: 485.550108,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2866,7 +2628,6 @@ export const rawSites: Site[] = [
     latitude: 18.21953,
     longitude: -65.80384,
     altitude: 141.7318602,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2878,7 +2639,6 @@ export const rawSites: Site[] = [
     latitude: 18.25353,
     longitude: -65.79758,
     altitude: 316.1334625,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2890,7 +2650,6 @@ export const rawSites: Site[] = [
     latitude: 18.16091,
     longitude: -66.99783,
     altitude: 662.5396381,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2902,7 +2661,6 @@ export const rawSites: Site[] = [
     latitude: 18.16862,
     longitude: -66.99258,
     altitude: 614.0774799,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2914,7 +2672,6 @@ export const rawSites: Site[] = [
     latitude: 18.18856,
     longitude: -67.05633,
     altitude: 239.8284318,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2926,7 +2683,6 @@ export const rawSites: Site[] = [
     latitude: 18.18098,
     longitude: -66.96509,
     altitude: 415.4112711,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2938,7 +2694,6 @@ export const rawSites: Site[] = [
     latitude: 17.97667,
     longitude: -65.92436,
     altitude: 5.121680238,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2950,7 +2705,6 @@ export const rawSites: Site[] = [
     latitude: 18.03898,
     longitude: -65.9642,
     altitude: 159.4323776,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2962,7 +2716,6 @@ export const rawSites: Site[] = [
     latitude: 18.01073,
     longitude: -66.77739,
     altitude: 3.372101758,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2974,7 +2727,6 @@ export const rawSites: Site[] = [
     latitude: 18.0435,
     longitude: -65.99614,
     altitude: 329.3973775,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2986,7 +2738,6 @@ export const rawSites: Site[] = [
     latitude: 18.00215,
     longitude: -65.97283,
     altitude: 73.25778585,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -2998,7 +2749,6 @@ export const rawSites: Site[] = [
     latitude: 17.99415,
     longitude: -65.88968,
     altitude: 49.83654278,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3010,7 +2760,6 @@ export const rawSites: Site[] = [
     latitude: 18.011146,
     longitude: -65.879109,
     altitude: 107.2270057,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3022,7 +2771,6 @@ export const rawSites: Site[] = [
     latitude: 18.06328,
     longitude: -65.81363,
     altitude: 5.888490663,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3034,7 +2782,6 @@ export const rawSites: Site[] = [
     latitude: 18.17451,
     longitude: -65.82832,
     altitude: 206.1277346,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3046,7 +2793,6 @@ export const rawSites: Site[] = [
     latitude: 18.14659,
     longitude: -65.77055,
     altitude: 5.188452736,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3058,7 +2804,6 @@ export const rawSites: Site[] = [
     latitude: 18.06023,
     longitude: -65.91685,
     altitude: 101.1475548,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3070,7 +2815,6 @@ export const rawSites: Site[] = [
     latitude: 18.0941,
     longitude: -65.79489,
     altitude: 1.381850958,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3082,7 +2826,6 @@ export const rawSites: Site[] = [
     latitude: 18.26413,
     longitude: -65.79012,
     altitude: 532.5755951,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3094,7 +2837,6 @@ export const rawSites: Site[] = [
     latitude: 18.24376,
     longitude: -65.79721,
     altitude: 136.5458266,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3106,7 +2848,6 @@ export const rawSites: Site[] = [
     latitude: 18.01611277,
     longitude: -66.80449849,
     altitude: 36.44877869,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3118,7 +2859,6 @@ export const rawSites: Site[] = [
     latitude: 18.0313,
     longitude: -66.78977,
     altitude: 49.58494582,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3130,7 +2870,6 @@ export const rawSites: Site[] = [
     latitude: 18.05403,
     longitude: -66.72836,
     altitude: 68.6779623,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3142,7 +2881,6 @@ export const rawSites: Site[] = [
     latitude: 18.04712722,
     longitude: -66.72222409,
     altitude: 34.98215354,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3154,7 +2892,6 @@ export const rawSites: Site[] = [
     latitude: 18.03815,
     longitude: -66.71904,
     altitude: 39.31063696,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3166,7 +2903,6 @@ export const rawSites: Site[] = [
     latitude: 18.04101,
     longitude: -66.71699,
     altitude: 35.42016511,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3178,7 +2914,6 @@ export const rawSites: Site[] = [
     latitude: 18.16615,
     longitude: -65.75566,
     altitude: 0.278063336,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3190,7 +2925,6 @@ export const rawSites: Site[] = [
     latitude: 18.00316,
     longitude: -66.75983,
     altitude: 23.6815586,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3202,7 +2936,6 @@ export const rawSites: Site[] = [
     latitude: 18.03509,
     longitude: -66.67179,
     altitude: 137.6141953,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3214,7 +2947,6 @@ export const rawSites: Site[] = [
     latitude: 18.02174,
     longitude: -66.68227,
     altitude: 91.76951804,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3226,7 +2958,6 @@ export const rawSites: Site[] = [
     latitude: 18.00008,
     longitude: -66.67342,
     altitude: 162.5830832,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3238,7 +2969,6 @@ export const rawSites: Site[] = [
     latitude: 17.98484,
     longitude: -66.64075,
     altitude: 0.704998697,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3250,7 +2980,6 @@ export const rawSites: Site[] = [
     latitude: 18.32986,
     longitude: -66.70594,
     altitude: 377.8942816,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3262,7 +2991,6 @@ export const rawSites: Site[] = [
     latitude: 18.04866,
     longitude: -66.64115,
     altitude: 93.62875778,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3274,7 +3002,6 @@ export const rawSites: Site[] = [
     latitude: 18.02644,
     longitude: -66.68633,
     altitude: 94.13194628,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3286,7 +3013,6 @@ export const rawSites: Site[] = [
     latitude: 18.32224,
     longitude: -66.68984,
     altitude: 330.1468537,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3298,7 +3024,6 @@ export const rawSites: Site[] = [
     latitude: 18.32089,
     longitude: -66.68654,
     altitude: 317.0508501,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3310,7 +3035,6 @@ export const rawSites: Site[] = [
     latitude: 17.98699,
     longitude: -66.71252,
     altitude: 0.332825443,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3322,7 +3046,6 @@ export const rawSites: Site[] = [
     latitude: 18.02378,
     longitude: -66.65877,
     altitude: 42.88450995,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3334,7 +3057,6 @@ export const rawSites: Site[] = [
     latitude: 18.06357917,
     longitude: -66.64656583,
     altitude: 142.1621599,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3346,7 +3068,6 @@ export const rawSites: Site[] = [
     latitude: 17.97933,
     longitude: -66.65846,
     altitude: 0.597674554,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3358,7 +3079,6 @@ export const rawSites: Site[] = [
     latitude: 18.07189,
     longitude: -66.57532,
     altitude: 91.62848254,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3370,7 +3090,6 @@ export const rawSites: Site[] = [
     latitude: 18.32685,
     longitude: -66.70038,
     altitude: 342.9797059,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3382,7 +3101,6 @@ export const rawSites: Site[] = [
     latitude: 18.33958,
     longitude: -66.67672,
     altitude: 300.9380306,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3394,7 +3112,6 @@ export const rawSites: Site[] = [
     latitude: 18.37564,
     longitude: -66.69997,
     altitude: 264.8815848,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3406,7 +3123,6 @@ export const rawSites: Site[] = [
     latitude: 18.35837,
     longitude: -66.69043,
     altitude: 255.9199572,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3418,7 +3134,6 @@ export const rawSites: Site[] = [
     latitude: 18.32742,
     longitude: -66.71495,
     altitude: 431.7764329,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3430,7 +3145,6 @@ export const rawSites: Site[] = [
     latitude: 18.31712,
     longitude: -66.68359,
     altitude: 344.4371091,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3442,7 +3156,6 @@ export const rawSites: Site[] = [
     latitude: 18.37029,
     longitude: -66.71407,
     altitude: 234.9487396,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3454,7 +3167,6 @@ export const rawSites: Site[] = [
     latitude: 18.30936,
     longitude: -66.71868,
     altitude: 340.8605979,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3466,7 +3178,6 @@ export const rawSites: Site[] = [
     latitude: 18.33516,
     longitude: -66.71676,
     altitude: 368.0770014,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3478,7 +3189,6 @@ export const rawSites: Site[] = [
     latitude: 18.33718,
     longitude: -66.71986,
     altitude: 347.8321465,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3490,7 +3200,6 @@ export const rawSites: Site[] = [
     latitude: 18.3242,
     longitude: -66.69411,
     altitude: 342.9478504,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3502,7 +3211,6 @@ export const rawSites: Site[] = [
     latitude: 18.3306,
     longitude: -66.6782,
     altitude: 305.8854132,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3514,7 +3222,6 @@ export const rawSites: Site[] = [
     latitude: 18.091034,
     longitude: -66.03396,
     altitude: 599.5801661,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3526,7 +3233,6 @@ export const rawSites: Site[] = [
     latitude: 18.36586,
     longitude: -66.69477,
     altitude: 254.3138764,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3538,7 +3244,6 @@ export const rawSites: Site[] = [
     latitude: 18.36739,
     longitude: -66.72063,
     altitude: 231.5216624,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3550,7 +3255,6 @@ export const rawSites: Site[] = [
     latitude: 18.30941,
     longitude: -66.70405,
     altitude: 333.519129,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3562,7 +3266,6 @@ export const rawSites: Site[] = [
     latitude: 18.33424,
     longitude: -66.71467,
     altitude: 316.2143414,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3574,7 +3277,6 @@ export const rawSites: Site[] = [
     latitude: 18.33467,
     longitude: -66.71907,
     altitude: 407.4802202,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3586,7 +3288,6 @@ export const rawSites: Site[] = [
     latitude: 18.10391,
     longitude: -66.92106,
     altitude: 505.0971694,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3598,7 +3299,6 @@ export const rawSites: Site[] = [
     latitude: 18.11064,
     longitude: -66.055346,
     altitude: 816.9495431,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3610,7 +3310,6 @@ export const rawSites: Site[] = [
     latitude: 18.095186,
     longitude: -66.040382,
     altitude: 640.1027562,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3622,7 +3321,6 @@ export const rawSites: Site[] = [
     latitude: 18.16694,
     longitude: -66.59726,
     altitude: 1057.658516,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3634,7 +3332,6 @@ export const rawSites: Site[] = [
     latitude: 18.16802,
     longitude: -66.58554,
     altitude: 1188.864714,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3646,7 +3343,6 @@ export const rawSites: Site[] = [
     latitude: 18.16558,
     longitude: -66.5735,
     altitude: 1265.693434,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3658,7 +3354,6 @@ export const rawSites: Site[] = [
     latitude: 18.15542,
     longitude: -66.56056,
     altitude: 1194.392347,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3670,7 +3365,6 @@ export const rawSites: Site[] = [
     latitude: 18.14961,
     longitude: -66.54724,
     altitude: 1071.967512,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3682,7 +3376,6 @@ export const rawSites: Site[] = [
     latitude: 18.15133,
     longitude: -66.53952,
     altitude: 962.2953276,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3694,7 +3387,6 @@ export const rawSites: Site[] = [
     latitude: 18.101198,
     longitude: -66.042909,
     altitude: 723.2173745,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3706,7 +3398,6 @@ export const rawSites: Site[] = [
     latitude: 18.093612,
     longitude: -66.030803,
     altitude: 620.7404401,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3718,7 +3409,6 @@ export const rawSites: Site[] = [
     latitude: 18.116963,
     longitude: -66.070967,
     altitude: 749.6097785,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3730,7 +3420,6 @@ export const rawSites: Site[] = [
     latitude: 18.16958,
     longitude: -66.59143,
     altitude: 1126.369201,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3742,7 +3431,6 @@ export const rawSites: Site[] = [
     latitude: 18.0878,
     longitude: -66.90108,
     altitude: 350.9140893,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3754,7 +3442,6 @@ export const rawSites: Site[] = [
     latitude: 18.17167,
     longitude: -66.51136,
     altitude: 698.3183145,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3766,7 +3453,6 @@ export const rawSites: Site[] = [
     latitude: 18.17208,
     longitude: -66.59241,
     altitude: 1325.059332,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3778,7 +3464,6 @@ export const rawSites: Site[] = [
     latitude: 18.16552,
     longitude: -66.50877,
     altitude: 765.2189554,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3790,7 +3475,6 @@ export const rawSites: Site[] = [
     latitude: 18.16682082,
     longitude: -66.57970942,
     altitude: 1251.084651,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3802,7 +3486,6 @@ export const rawSites: Site[] = [
     latitude: 18.15697,
     longitude: -66.52776,
     altitude: 902.9410248,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3814,7 +3497,6 @@ export const rawSites: Site[] = [
     latitude: 18.09568,
     longitude: -65.45288,
     altitude: 1.654147253,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3826,7 +3508,6 @@ export const rawSites: Site[] = [
     latitude: 18.16253,
     longitude: -66.56958,
     altitude: 1230.836871,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3838,7 +3519,6 @@ export const rawSites: Site[] = [
     latitude: 18.15248,
     longitude: -66.55612,
     altitude: 1180.430479,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3850,7 +3530,6 @@ export const rawSites: Site[] = [
     latitude: 18.14765,
     longitude: -66.54273,
     altitude: 1015.196336,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3862,7 +3541,6 @@ export const rawSites: Site[] = [
     latitude: 18.15243,
     longitude: -66.53207,
     altitude: 957.8658946,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3874,7 +3552,6 @@ export const rawSites: Site[] = [
     latitude: 18.10645,
     longitude: -65.43838,
     altitude: 0.319635816,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3886,7 +3563,6 @@ export const rawSites: Site[] = [
     latitude: 18.12438,
     longitude: -65.42527,
     altitude: 42.7838141,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3898,7 +3574,6 @@ export const rawSites: Site[] = [
     latitude: 18.15967,
     longitude: -66.52194,
     altitude: 931.4992333,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3910,7 +3585,6 @@ export const rawSites: Site[] = [
     latitude: 18.16953,
     longitude: -66.49606,
     altitude: 927.2178162,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3922,7 +3596,6 @@ export const rawSites: Site[] = [
     latitude: 18.15927,
     longitude: -66.51217,
     altitude: 840.6276208,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3934,7 +3607,6 @@ export const rawSites: Site[] = [
     latitude: 18.10544,
     longitude: -65.46803,
     altitude: 10.05236964,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3946,7 +3618,6 @@ export const rawSites: Site[] = [
     latitude: 18.10157,
     longitude: -65.45189,
     altitude: 0.715439215,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3958,7 +3629,6 @@ export const rawSites: Site[] = [
     latitude: 18.13664,
     longitude: -65.27959,
     altitude: 1.325444075,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3970,7 +3640,6 @@ export const rawSites: Site[] = [
     latitude: 18.15294,
     longitude: -65.38752,
     altitude: 12.8831272,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3982,7 +3651,6 @@ export const rawSites: Site[] = [
     latitude: 18.11743,
     longitude: -65.57465,
     altitude: 0.681823958,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -3994,7 +3662,6 @@ export const rawSites: Site[] = [
     latitude: 18.09807,
     longitude: -65.57066,
     altitude: 5.465674011,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4006,7 +3673,6 @@ export const rawSites: Site[] = [
     latitude: 18.10745,
     longitude: -65.51918,
     altitude: 72.6314173,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4018,7 +3684,6 @@ export const rawSites: Site[] = [
     latitude: 18.20524,
     longitude: -65.99448,
     altitude: 492.1542822,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4030,7 +3695,6 @@ export const rawSites: Site[] = [
     latitude: 18.22036,
     longitude: -66.20164,
     altitude: 243.5070058,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4042,7 +3706,6 @@ export const rawSites: Site[] = [
     latitude: 18.21655,
     longitude: -66.23382,
     altitude: 266.1167443,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4054,7 +3717,6 @@ export const rawSites: Site[] = [
     latitude: 18.10087,
     longitude: -65.4305,
     altitude: 20.93978508,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4066,7 +3728,6 @@ export const rawSites: Site[] = [
     latitude: 18.12054,
     longitude: -65.40835,
     altitude: 8.511339538,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4078,7 +3739,6 @@ export const rawSites: Site[] = [
     latitude: 18.14186,
     longitude: -65.29611,
     altitude: 2.904444078,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4090,7 +3750,6 @@ export const rawSites: Site[] = [
     latitude: 18.15316,
     longitude: -65.36064,
     altitude: 2.141698316,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4102,7 +3761,6 @@ export const rawSites: Site[] = [
     latitude: 18.14166,
     longitude: -65.40422,
     altitude: 51.25109507,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4114,7 +3772,6 @@ export const rawSites: Site[] = [
     latitude: 18.1052,
     longitude: -65.57588,
     altitude: 0.247160612,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4126,7 +3783,6 @@ export const rawSites: Site[] = [
     latitude: 18.10809,
     longitude: -66.21599,
     altitude: 742.8613051,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4138,7 +3794,6 @@ export const rawSites: Site[] = [
     latitude: 18.22621,
     longitude: -66.24042,
     altitude: 427.2576015,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4150,7 +3805,6 @@ export const rawSites: Site[] = [
     latitude: 18.09994,
     longitude: -66.20778,
     altitude: 656.4168319,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4162,7 +3816,6 @@ export const rawSites: Site[] = [
     latitude: 18.08215,
     longitude: -65.53421,
     altitude: 6.940464259,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4174,7 +3827,6 @@ export const rawSites: Site[] = [
     latitude: 18.19181,
     longitude: -66.19419,
     altitude: 331.5720307,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4186,7 +3838,6 @@ export const rawSites: Site[] = [
     latitude: 18.2146,
     longitude: -66.20129,
     altitude: 259.8557099,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4198,7 +3849,6 @@ export const rawSites: Site[] = [
     latitude: 18.18495,
     longitude: -66.24845,
     altitude: 450.5119347,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4210,7 +3860,6 @@ export const rawSites: Site[] = [
     latitude: 18.21116,
     longitude: -66.24249,
     altitude: 257.6910274,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4222,7 +3871,6 @@ export const rawSites: Site[] = [
     latitude: 18.1646,
     longitude: -66.2129,
     altitude: 467.2891308,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4234,7 +3882,6 @@ export const rawSites: Site[] = [
     latitude: 18.10844,
     longitude: -66.20939,
     altitude: 676.7205089,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4246,7 +3893,6 @@ export const rawSites: Site[] = [
     latitude: 18.11153,
     longitude: -66.22736,
     altitude: 770.634107,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4258,7 +3904,6 @@ export const rawSites: Site[] = [
     latitude: 18.08118,
     longitude: -66.26833,
     altitude: 368.0639711,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4270,7 +3915,6 @@ export const rawSites: Site[] = [
     latitude: 18.10336,
     longitude: -66.27602,
     altitude: 440.6888533,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4282,7 +3926,6 @@ export const rawSites: Site[] = [
     latitude: 18.08465,
     longitude: -66.15852,
     altitude: 746.5625959,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4294,7 +3937,6 @@ export const rawSites: Site[] = [
     latitude: 18.08889,
     longitude: -66.17817,
     altitude: 662.4961812,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4306,7 +3948,6 @@ export const rawSites: Site[] = [
     latitude: 18.24811973,
     longitude: -66.1914,
     altitude: 418.2756055,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4318,7 +3959,6 @@ export const rawSites: Site[] = [
     latitude: 18.12024,
     longitude: -66.1557,
     altitude: 405.2525589,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4330,7 +3970,6 @@ export const rawSites: Site[] = [
     latitude: 18.07092,
     longitude: -66.26051,
     altitude: 415.9920959,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4342,7 +3981,6 @@ export const rawSites: Site[] = [
     latitude: 18.24014,
     longitude: -66.20537,
     altitude: 209.566849,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4354,7 +3992,6 @@ export const rawSites: Site[] = [
     latitude: 18.14182,
     longitude: -66.0403,
     altitude: 342.9183676,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4366,7 +4003,6 @@ export const rawSites: Site[] = [
     latitude: 18.13296,
     longitude: -66.09371,
     altitude: 399.7260096,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4378,7 +4014,6 @@ export const rawSites: Site[] = [
     latitude: 18.08814,
     longitude: -66.27145,
     altitude: 288.4515422,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4390,7 +4025,6 @@ export const rawSites: Site[] = [
     latitude: 18.16273,
     longitude: -66.04004,
     altitude: 145.2067113,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4402,7 +4036,6 @@ export const rawSites: Site[] = [
     latitude: 17.95291,
     longitude: -67.12581,
     altitude: 1.231390703,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4414,7 +4047,6 @@ export const rawSites: Site[] = [
     latitude: 18.1235,
     longitude: -66.25208,
     altitude: 729.5002266,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4426,7 +4058,6 @@ export const rawSites: Site[] = [
     latitude: 17.95334,
     longitude: -67.11448,
     altitude: 1.460497537,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4438,7 +4069,6 @@ export const rawSites: Site[] = [
     latitude: 17.987,
     longitude: -67.0944,
     altitude: 47.79583654,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4450,7 +4080,6 @@ export const rawSites: Site[] = [
     latitude: 18.08394,
     longitude: -66.16592,
     altitude: 720.5872758,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4462,7 +4091,6 @@ export const rawSites: Site[] = [
     latitude: 18.001,
     longitude: -67.1665,
     altitude: 10.18457089,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4474,7 +4102,6 @@ export const rawSites: Site[] = [
     latitude: 18.09398,
     longitude: -66.15466,
     altitude: 613.4740225,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4486,7 +4113,6 @@ export const rawSites: Site[] = [
     latitude: 18.07486,
     longitude: -66.19319,
     altitude: 759.6992467,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4498,7 +4124,6 @@ export const rawSites: Site[] = [
     latitude: 18.24568205,
     longitude: -66.1996332,
     altitude: 296.8410666,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4510,7 +4135,6 @@ export const rawSites: Site[] = [
     latitude: 18.0466,
     longitude: -67.1792,
     altitude: 30.2203352,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4522,7 +4146,6 @@ export const rawSites: Site[] = [
     latitude: 17.95383,
     longitude: -66.93812,
     altitude: 15.78848743,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4534,7 +4157,6 @@ export const rawSites: Site[] = [
     latitude: 17.95605,
     longitude: -66.84912,
     altitude: 5.647890364,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4546,7 +4168,6 @@ export const rawSites: Site[] = [
     latitude: 18.14041,
     longitude: -66.08858,
     altitude: 487.4972719,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4558,7 +4179,6 @@ export const rawSites: Site[] = [
     latitude: 17.9518,
     longitude: -67.131,
     altitude: 0.713311956,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4570,7 +4190,6 @@ export const rawSites: Site[] = [
     latitude: 17.984241,
     longitude: -67.135152,
     altitude: 58.6284455,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4582,7 +4201,6 @@ export const rawSites: Site[] = [
     latitude: 18.12074,
     longitude: -66.74104,
     altitude: 874.097031,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4594,7 +4212,6 @@ export const rawSites: Site[] = [
     latitude: 17.9578,
     longitude: -67.2074,
     altitude: 0.744565217,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4606,7 +4223,6 @@ export const rawSites: Site[] = [
     latitude: 18.44696,
     longitude: -65.96688,
     altitude: 0.157047421,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4618,7 +4234,6 @@ export const rawSites: Site[] = [
     latitude: 18.40994,
     longitude: -66.47981,
     altitude: 113.1115314,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4630,7 +4245,6 @@ export const rawSites: Site[] = [
     latitude: 17.9542,
     longitude: -67.2008,
     altitude: 0.708765457,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4642,7 +4256,6 @@ export const rawSites: Site[] = [
     latitude: 18.0439,
     longitude: -67.2021,
     altitude: 10.19417442,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4654,7 +4267,6 @@ export const rawSites: Site[] = [
     latitude: 18.44918,
     longitude: -65.96793,
     altitude: 0.113881338,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4666,7 +4278,6 @@ export const rawSites: Site[] = [
     latitude: 18.44934,
     longitude: -65.95267,
     altitude: 0.547402678,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4678,7 +4289,6 @@ export const rawSites: Site[] = [
     latitude: 18.4485,
     longitude: -65.95814,
     altitude: 0.430439984,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4690,7 +4300,6 @@ export const rawSites: Site[] = [
     latitude: 18.45552,
     longitude: -65.97502,
     altitude: 0.075006823,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4702,7 +4311,6 @@ export const rawSites: Site[] = [
     latitude: 18.00534,
     longitude: -66.85271,
     altitude: 45.69241137,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4714,7 +4322,6 @@ export const rawSites: Site[] = [
     latitude: 17.94236,
     longitude: -66.94348,
     altitude: 12.6020204,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4726,7 +4333,6 @@ export const rawSites: Site[] = [
     latitude: 18.14481,
     longitude: -66.95975,
     altitude: 768.8095788,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4738,7 +4344,6 @@ export const rawSites: Site[] = [
     latitude: 17.9551,
     longitude: -66.90227,
     altitude: 36.44364566,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4750,7 +4355,6 @@ export const rawSites: Site[] = [
     latitude: 18.45174,
     longitude: -65.9625,
     altitude: 0.28382128,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4762,7 +4366,6 @@ export const rawSites: Site[] = [
     latitude: 18.35596,
     longitude: -65.70162,
     altitude: 5.538338953,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4774,7 +4377,6 @@ export const rawSites: Site[] = [
     latitude: 18.36487,
     longitude: -65.69479,
     altitude: 2.258129888,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4786,7 +4388,6 @@ export const rawSites: Site[] = [
     latitude: 18.36338,
     longitude: -65.7705,
     altitude: 24.02286791,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4798,7 +4399,6 @@ export const rawSites: Site[] = [
     latitude: 18.36677,
     longitude: -65.68023,
     altitude: 1.659140791,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4810,7 +4410,6 @@ export const rawSites: Site[] = [
     latitude: 18.15742,
     longitude: -66.99934,
     altitude: 750.8237409,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4822,7 +4421,6 @@ export const rawSites: Site[] = [
     latitude: 18.15311,
     longitude: -66.99385,
     altitude: 776.7228868,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4834,7 +4432,6 @@ export const rawSites: Site[] = [
     latitude: 18.16212,
     longitude: -67.026676,
     altitude: 481.2742234,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4846,7 +4443,6 @@ export const rawSites: Site[] = [
     latitude: 18.16335538,
     longitude: -67.06611774,
     altitude: 247.4622536,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4858,7 +4454,6 @@ export const rawSites: Site[] = [
     latitude: 18.06629,
     longitude: -65.7982,
     altitude: 1.974655485,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4870,7 +4465,6 @@ export const rawSites: Site[] = [
     latitude: 18.14458,
     longitude: -66.96519,
     altitude: 766.5085334,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4882,7 +4476,6 @@ export const rawSites: Site[] = [
     latitude: 18.12364,
     longitude: -66.94931,
     altitude: 564.1622051,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4894,7 +4487,6 @@ export const rawSites: Site[] = [
     latitude: 18.35128,
     longitude: -66.7541,
     altitude: 305.003941,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4906,7 +4498,6 @@ export const rawSites: Site[] = [
     latitude: 18.336,
     longitude: -66.66985,
     altitude: 118.7260265,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4918,7 +4509,6 @@ export const rawSites: Site[] = [
     latitude: 18.18486,
     longitude: -66.96517,
     altitude: 466.3471746,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4930,7 +4520,6 @@ export const rawSites: Site[] = [
     latitude: 18.14853,
     longitude: -67.05393,
     altitude: 90.81248025,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4942,7 +4531,6 @@ export const rawSites: Site[] = [
     latitude: 18.0271,
     longitude: -65.83387,
     altitude: 4.66525021,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4954,7 +4542,6 @@ export const rawSites: Site[] = [
     latitude: 18.015787,
     longitude: -65.847769,
     altitude: 10.16276552,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4966,7 +4553,6 @@ export const rawSites: Site[] = [
     latitude: 18.45778,
     longitude: -67.16123,
     altitude: 63.28438953,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4978,7 +4564,6 @@ export const rawSites: Site[] = [
     latitude: 18.17179,
     longitude: -67.02811,
     altitude: 431.2197643,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -4990,7 +4575,6 @@ export const rawSites: Site[] = [
     latitude: 18.16236,
     longitude: -67.03729,
     altitude: 383.1209853,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5002,7 +4586,6 @@ export const rawSites: Site[] = [
     latitude: 18.17795,
     longitude: -67.01357,
     altitude: 371.447967,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5014,7 +4597,6 @@ export const rawSites: Site[] = [
     latitude: 18.007138,
     longitude: -65.869976,
     altitude: 1.945635851,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5026,7 +4608,6 @@ export const rawSites: Site[] = [
     latitude: 18.11435,
     longitude: -65.78369,
     altitude: 9.462540713,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5038,7 +4619,6 @@ export const rawSites: Site[] = [
     latitude: 18.35746,
     longitude: -66.74823,
     altitude: 284.7144331,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5050,7 +4630,6 @@ export const rawSites: Site[] = [
     latitude: 18.29979,
     longitude: -66.71074,
     altitude: 208.8212584,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5062,7 +4641,6 @@ export const rawSites: Site[] = [
     latitude: 18.41242,
     longitude: -67.16115,
     altitude: 0.886093227,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5074,7 +4652,6 @@ export const rawSites: Site[] = [
     latitude: 18.40145,
     longitude: -67.18484,
     altitude: 3.33883198,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5086,7 +4663,6 @@ export const rawSites: Site[] = [
     latitude: 18.42572,
     longitude: -67.14216,
     altitude: 133.2275427,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5098,7 +4674,6 @@ export const rawSites: Site[] = [
     latitude: 18.38213,
     longitude: -67.20159,
     altitude: 2.726553198,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5110,7 +4685,6 @@ export const rawSites: Site[] = [
     latitude: 18.36398,
     longitude: -67.23674,
     altitude: 23.3160586,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5122,7 +4696,6 @@ export const rawSites: Site[] = [
     latitude: 18.36315,
     longitude: -67.26984,
     altitude: 4.239026115,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5134,7 +4707,6 @@ export const rawSites: Site[] = [
     latitude: 18.35858,
     longitude: -67.26964,
     altitude: 3.364334999,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5146,7 +4718,6 @@ export const rawSites: Site[] = [
     latitude: 18.35456,
     longitude: -67.25449,
     altitude: 65.29486913,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5158,7 +4729,6 @@ export const rawSites: Site[] = [
     latitude: 18.34484,
     longitude: -67.24191,
     altitude: 64.60244397,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5170,7 +4740,6 @@ export const rawSites: Site[] = [
     latitude: 18.32721,
     longitude: -67.22495,
     altitude: 114.2078883,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5182,7 +4751,6 @@ export const rawSites: Site[] = [
     latitude: 18.31544,
     longitude: -67.22952,
     altitude: 9.940005508,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5194,7 +4762,6 @@ export const rawSites: Site[] = [
     latitude: 18.3173,
     longitude: -67.21782,
     altitude: 40.1262723,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5206,7 +4773,6 @@ export const rawSites: Site[] = [
     latitude: 18.30324,
     longitude: -67.21973,
     altitude: 45.42201367,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5218,7 +4784,6 @@ export const rawSites: Site[] = [
     latitude: 18.29766,
     longitude: -67.22551,
     altitude: 5.273359228,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5230,7 +4795,6 @@ export const rawSites: Site[] = [
     latitude: 18.43152,
     longitude: -67.14616,
     altitude: 85.90025483,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5242,7 +4806,6 @@ export const rawSites: Site[] = [
     latitude: 18.2959,
     longitude: -67.19391,
     altitude: 1.968633137,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5254,7 +4817,6 @@ export const rawSites: Site[] = [
     latitude: 18.41543466,
     longitude: -67.14941054,
     altitude: 86.3506518,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5266,7 +4828,6 @@ export const rawSites: Site[] = [
     latitude: 18.40925,
     longitude: -67.16792,
     altitude: 1.114209456,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5278,7 +4839,6 @@ export const rawSites: Site[] = [
     latitude: 18.38956,
     longitude: -67.17379,
     altitude: 40.57989186,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5290,7 +4850,6 @@ export const rawSites: Site[] = [
     latitude: 18.3865,
     longitude: -67.20723,
     altitude: 22.20744366,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5302,7 +4861,6 @@ export const rawSites: Site[] = [
     latitude: 18.37201,
     longitude: -67.22824,
     altitude: 29.50552062,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5314,7 +4872,6 @@ export const rawSites: Site[] = [
     latitude: 18.35723,
     longitude: -67.24011,
     altitude: 41.77080348,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5326,7 +4883,6 @@ export const rawSites: Site[] = [
     latitude: 18.33706,
     longitude: -67.23929,
     altitude: 36.85901138,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5338,7 +4894,6 @@ export const rawSites: Site[] = [
     latitude: 18.35611,
     longitude: -67.26217,
     altitude: 64.4075707,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5350,7 +4905,6 @@ export const rawSites: Site[] = [
     latitude: 18.3484,
     longitude: -67.24958,
     altitude: 40.30979311,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5362,7 +4916,6 @@ export const rawSites: Site[] = [
     latitude: 18.31252,
     longitude: -67.23971,
     altitude: 2.998622403,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5374,7 +4927,6 @@ export const rawSites: Site[] = [
     latitude: 18.27318,
     longitude: -67.1892,
     altitude: 1.979301995,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5386,7 +4938,6 @@ export const rawSites: Site[] = [
     latitude: 18.25161,
     longitude: -67.17704,
     altitude: 1.097033655,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5398,7 +4949,6 @@ export const rawSites: Site[] = [
     latitude: 18.22433,
     longitude: -67.14438,
     altitude: 46.30110527,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5410,7 +4960,6 @@ export const rawSites: Site[] = [
     latitude: 18.23177,
     longitude: -67.17088,
     altitude: 2.277312617,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5422,7 +4971,6 @@ export const rawSites: Site[] = [
     latitude: 18.18478,
     longitude: -65.73062,
     altitude: 0.598707747,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5434,7 +4982,6 @@ export const rawSites: Site[] = [
     latitude: 18.25834,
     longitude: -65.62773,
     altitude: 0.410162617,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5446,7 +4993,6 @@ export const rawSites: Site[] = [
     latitude: 18.28549,
     longitude: -65.65542,
     altitude: 69.77311382,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5458,7 +5004,6 @@ export const rawSites: Site[] = [
     latitude: 18.30819,
     longitude: -67.22024,
     altitude: 35.20910462,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5470,7 +5015,6 @@ export const rawSites: Site[] = [
     latitude: 18.31518,
     longitude: -67.19409,
     altitude: 246.2543729,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5482,7 +5026,6 @@ export const rawSites: Site[] = [
     latitude: 18.31852,
     longitude: -67.2365,
     altitude: 3.906850356,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5494,7 +5037,6 @@ export const rawSites: Site[] = [
     latitude: 18.29598,
     longitude: -67.21269,
     altitude: 12.61131218,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5506,7 +5048,6 @@ export const rawSites: Site[] = [
     latitude: 18.28156,
     longitude: -67.18808,
     altitude: 1.43168389,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5518,7 +5059,6 @@ export const rawSites: Site[] = [
     latitude: 18.2038,
     longitude: -65.6692,
     altitude: 0.302473332,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5530,7 +5070,6 @@ export const rawSites: Site[] = [
     latitude: 18.21414,
     longitude: -65.64658,
     altitude: 0.488990478,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5542,7 +5081,6 @@ export const rawSites: Site[] = [
     latitude: 18.20632,
     longitude: -65.64478,
     altitude: 2.919083266,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5554,7 +5092,6 @@ export const rawSites: Site[] = [
     latitude: 18.206584,
     longitude: -65.650438,
     altitude: 28.40443651,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5566,7 +5103,6 @@ export const rawSites: Site[] = [
     latitude: 18.26174,
     longitude: -67.16116,
     altitude: 2.705197133,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5578,7 +5114,6 @@ export const rawSites: Site[] = [
     latitude: 18.2236,
     longitude: -67.16124,
     altitude: 79.17527575,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5590,7 +5125,6 @@ export const rawSites: Site[] = [
     latitude: 18.25264,
     longitude: -67.17343,
     altitude: 1.324928578,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5602,7 +5136,6 @@ export const rawSites: Site[] = [
     latitude: 18.16311,
     longitude: -67.18381,
     altitude: 2.76837425,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5614,7 +5147,6 @@ export const rawSites: Site[] = [
     latitude: 18.21613,
     longitude: -65.6527,
     altitude: 17.92512471,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5626,7 +5158,6 @@ export const rawSites: Site[] = [
     latitude: 18.20573,
     longitude: -65.63634,
     altitude: 1.840783994,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5638,7 +5169,6 @@ export const rawSites: Site[] = [
     latitude: 18.29022,
     longitude: -65.66896,
     altitude: 103.5628536,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5650,7 +5180,6 @@ export const rawSites: Site[] = [
     latitude: 18.18998,
     longitude: -65.72488,
     altitude: 0.242744652,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5662,7 +5191,6 @@ export const rawSites: Site[] = [
     latitude: 18.37765,
     longitude: -65.61981,
     altitude: 0.374345534,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5674,7 +5202,6 @@ export const rawSites: Site[] = [
     latitude: 18.23549,
     longitude: -65.63139,
     altitude: 2.176536027,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5686,7 +5213,6 @@ export const rawSites: Site[] = [
     latitude: 18.23426,
     longitude: -65.60387,
     altitude: 7.564291854,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5698,7 +5224,6 @@ export const rawSites: Site[] = [
     latitude: 17.942394,
     longitude: -66.197856,
     altitude: 0.26140697,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5710,7 +5235,6 @@ export const rawSites: Site[] = [
     latitude: 18.19754,
     longitude: -65.71168,
     altitude: 38.0806767,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5722,7 +5246,6 @@ export const rawSites: Site[] = [
     latitude: 18.21778,
     longitude: -65.71127,
     altitude: 17.71423398,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5734,7 +5257,6 @@ export const rawSites: Site[] = [
     latitude: 18.20878,
     longitude: -65.6823,
     altitude: 9.571862006,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5746,7 +5268,6 @@ export const rawSites: Site[] = [
     latitude: 17.942672,
     longitude: -66.163477,
     altitude: 1.344309333,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5758,7 +5279,6 @@ export const rawSites: Site[] = [
     latitude: 17.962779,
     longitude: -66.201552,
     altitude: 0.483537053,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5770,7 +5290,6 @@ export const rawSites: Site[] = [
     latitude: 17.952709,
     longitude: -66.262039,
     altitude: 1.775500934,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5782,7 +5301,6 @@ export const rawSites: Site[] = [
     latitude: 17.957132,
     longitude: -66.218895,
     altitude: 0.448751455,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5794,7 +5312,6 @@ export const rawSites: Site[] = [
     latitude: 17.945689,
     longitude: -66.267091,
     altitude: 0.365223634,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5806,7 +5323,6 @@ export const rawSites: Site[] = [
     latitude: 17.978731,
     longitude: -66.316685,
     altitude: 0.416024658,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5818,7 +5334,6 @@ export const rawSites: Site[] = [
     latitude: 18.374567,
     longitude: -65.62784,
     altitude: 1.504366771,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5830,7 +5345,6 @@ export const rawSites: Site[] = [
     latitude: 17.952852,
     longitude: -66.381986,
     altitude: 0.133896366,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5842,7 +5356,6 @@ export const rawSites: Site[] = [
     latitude: 17.971529,
     longitude: -65.98446,
     altitude: 0.433046168,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5854,7 +5367,6 @@ export const rawSites: Site[] = [
     latitude: 18.36068,
     longitude: -65.64129,
     altitude: 35.64995522,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5866,7 +5378,6 @@ export const rawSites: Site[] = [
     latitude: 17.969554,
     longitude: -66.293786,
     altitude: 2.975446203,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5878,7 +5389,6 @@ export const rawSites: Site[] = [
     latitude: 17.93366,
     longitude: -66.252304,
     altitude: 0.224645158,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5890,7 +5400,6 @@ export const rawSites: Site[] = [
     latitude: 18.22545,
     longitude: -65.64121,
     altitude: 4.129204108,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5902,7 +5411,6 @@ export const rawSites: Site[] = [
     latitude: 18.0814762115479,
     longitude: -66.8877487182617,
     altitude: 291.301849625768,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5914,7 +5422,6 @@ export const rawSites: Site[] = [
     latitude: 18.23681,
     longitude: -65.61611,
     altitude: 6.582499685,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5926,7 +5433,6 @@ export const rawSites: Site[] = [
     latitude: 17.942034,
     longitude: -66.172593,
     altitude: 2.368526083,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5938,7 +5444,6 @@ export const rawSites: Site[] = [
     latitude: 18.06758,
     longitude: -66.91163,
     altitude: 220.7882239,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5950,7 +5455,6 @@ export const rawSites: Site[] = [
     latitude: 18.07299,
     longitude: -66.8978,
     altitude: 252.136664,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5962,7 +5466,6 @@ export const rawSites: Site[] = [
     latitude: 17.960516,
     longitude: -66.198783,
     altitude: 0.181623598,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5974,7 +5477,6 @@ export const rawSites: Site[] = [
     latitude: 17.954228,
     longitude: -66.253188,
     altitude: 2.037368013,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5986,7 +5488,6 @@ export const rawSites: Site[] = [
     latitude: 17.948528,
     longitude: -66.267929,
     altitude: 0.242693614,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -5998,7 +5499,6 @@ export const rawSites: Site[] = [
     latitude: 17.936859,
     longitude: -66.256142,
     altitude: 0.337767491,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6010,7 +5510,6 @@ export const rawSites: Site[] = [
     latitude: 17.970694,
     longitude: -66.30944,
     altitude: 2.032030622,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6022,7 +5521,6 @@ export const rawSites: Site[] = [
     latitude: 18.06177,
     longitude: -66.89798,
     altitude: 165.9068057,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6034,7 +5532,6 @@ export const rawSites: Site[] = [
     latitude: 18.06689,
     longitude: -66.90599,
     altitude: 203.7720194,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6046,7 +5543,6 @@ export const rawSites: Site[] = [
     latitude: 17.945042,
     longitude: -66.289157,
     altitude: 0.238035322,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6058,7 +5554,6 @@ export const rawSites: Site[] = [
     latitude: 18.05658,
     longitude: -66.8867,
     altitude: 79.10194997,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6070,7 +5565,6 @@ export const rawSites: Site[] = [
     latitude: 18.09022,
     longitude: -66.91874,
     altitude: 380.4973477,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6082,7 +5576,6 @@ export const rawSites: Site[] = [
     latitude: 18.10331,
     longitude: -66.90204,
     altitude: 439.468927,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6094,7 +5587,6 @@ export const rawSites: Site[] = [
     latitude: 18.09523,
     longitude: -66.91219,
     altitude: 357.9750208,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6106,7 +5598,6 @@ export const rawSites: Site[] = [
     latitude: 18.16938,
     longitude: -66.48341,
     altitude: 960.2257566,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6118,7 +5609,6 @@ export const rawSites: Site[] = [
     latitude: 18.14984,
     longitude: -66.55467,
     altitude: 1173.260646,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6130,7 +5620,6 @@ export const rawSites: Site[] = [
     latitude: 18.17249,
     longitude: -66.49456,
     altitude: 877.9447881,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6142,7 +5631,6 @@ export const rawSites: Site[] = [
     latitude: 17.982831,
     longitude: -66.135299,
     altitude: 65.90071168,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6154,7 +5642,6 @@ export const rawSites: Site[] = [
     latitude: 17.956116,
     longitude: -66.050028,
     altitude: 0.728799587,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6166,7 +5653,6 @@ export const rawSites: Site[] = [
     latitude: 18.17266,
     longitude: -66.48568,
     altitude: 932.277882,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6178,7 +5664,6 @@ export const rawSites: Site[] = [
     latitude: 18.16675,
     longitude: -66.49241,
     altitude: 985.0956926,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6190,7 +5675,6 @@ export const rawSites: Site[] = [
     latitude: 17.961172,
     longitude: -66.360484,
     altitude: 0.138279677,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6202,7 +5686,6 @@ export const rawSites: Site[] = [
     latitude: 18.049962,
     longitude: -66.047659,
     altitude: 137.5995877,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6214,7 +5697,6 @@ export const rawSites: Site[] = [
     latitude: 18.07246,
     longitude: -66.91948,
     altitude: 251.3993676,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6226,7 +5708,6 @@ export const rawSites: Site[] = [
     latitude: 17.978904,
     longitude: -66.341863,
     altitude: 4.197882833,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6238,7 +5719,6 @@ export const rawSites: Site[] = [
     latitude: 18.0943,
     longitude: -66.90094,
     altitude: 421.0698229,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6250,7 +5730,6 @@ export const rawSites: Site[] = [
     latitude: 18.18359,
     longitude: -66.48934,
     altitude: 962.6728385,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6262,7 +5741,6 @@ export const rawSites: Site[] = [
     latitude: 18.07208,
     longitude: -66.9019,
     altitude: 262.9485638,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6274,7 +5752,6 @@ export const rawSites: Site[] = [
     latitude: 18.07551449,
     longitude: -66.90228682,
     altitude: 326.0132253,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6286,7 +5763,6 @@ export const rawSites: Site[] = [
     latitude: 18.06456,
     longitude: -66.90251,
     altitude: 207.4885561,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6298,7 +5774,6 @@ export const rawSites: Site[] = [
     latitude: 18.14057,
     longitude: -65.47602,
     altitude: 10.57478636,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6310,7 +5785,6 @@ export const rawSites: Site[] = [
     latitude: 18.05872,
     longitude: -66.893,
     altitude: 140.539492,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6322,7 +5796,6 @@ export const rawSites: Site[] = [
     latitude: 18.08566,
     longitude: -66.91724,
     altitude: 364.7818134,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6334,7 +5807,6 @@ export const rawSites: Site[] = [
     latitude: 18.1367,
     longitude: -65.48396,
     altitude: 11.96623036,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6346,7 +5818,6 @@ export const rawSites: Site[] = [
     latitude: 18.0953,
     longitude: -66.91762,
     altitude: 396.5329001,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6358,7 +5829,6 @@ export const rawSites: Site[] = [
     latitude: 18.08942,
     longitude: -66.90774,
     altitude: 217.8843889,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6370,7 +5840,6 @@ export const rawSites: Site[] = [
     latitude: 18.15875,
     longitude: -66.56499,
     altitude: 1209.298607,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6382,7 +5851,6 @@ export const rawSites: Site[] = [
     latitude: 18.17099,
     longitude: -66.49105,
     altitude: 947.80787,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6394,7 +5862,6 @@ export const rawSites: Site[] = [
     latitude: 18.17624,
     longitude: -66.49316,
     altitude: 830.879403,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6406,7 +5873,6 @@ export const rawSites: Site[] = [
     latitude: 18.12632,
     longitude: -65.49542,
     altitude: 59.20722502,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6418,7 +5884,6 @@ export const rawSites: Site[] = [
     latitude: 18.12823,
     longitude: -65.51389,
     altitude: 12.02614725,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6430,7 +5895,6 @@ export const rawSites: Site[] = [
     latitude: 18.13651,
     longitude: -65.36216,
     altitude: 4.062575107,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6442,7 +5906,6 @@ export const rawSites: Site[] = [
     latitude: 18.12444,
     longitude: -65.33533,
     altitude: 1.828496695,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6454,7 +5917,6 @@ export const rawSites: Site[] = [
     latitude: 18.12707,
     longitude: -65.32731,
     altitude: 1.365874039,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6466,7 +5928,6 @@ export const rawSites: Site[] = [
     latitude: 18.17196,
     longitude: -66.48081,
     altitude: 1069.481232,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6478,7 +5939,6 @@ export const rawSites: Site[] = [
     latitude: 18.18873,
     longitude: -66.49001,
     altitude: 965.3951374,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6490,7 +5950,6 @@ export const rawSites: Site[] = [
     latitude: 18.14509,
     longitude: -65.33329,
     altitude: 5.042794652,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6502,7 +5961,6 @@ export const rawSites: Site[] = [
     latitude: 18.08797,
     longitude: -65.51755,
     altitude: 0.440518459,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6514,7 +5972,6 @@ export const rawSites: Site[] = [
     latitude: 18.23042807,
     longitude: -66.23366888,
     altitude: 517.1948751,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6526,7 +5983,6 @@ export const rawSites: Site[] = [
     latitude: 18.13935,
     longitude: -65.47869,
     altitude: 13.53511689,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6538,7 +5994,6 @@ export const rawSites: Site[] = [
     latitude: 18.17936,
     longitude: -66.27188,
     altitude: 608.9386085,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6550,7 +6005,6 @@ export const rawSites: Site[] = [
     latitude: 18.18967,
     longitude: -66.02644,
     altitude: 286.1728251,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6562,7 +6016,6 @@ export const rawSites: Site[] = [
     latitude: 18.1284,
     longitude: -65.48927,
     altitude: 41.00131368,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6574,7 +6027,6 @@ export const rawSites: Site[] = [
     latitude: 18.011711,
     longitude: -67.168789,
     altitude: 0.528816291,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6586,7 +6038,6 @@ export const rawSites: Site[] = [
     latitude: 18.12194,
     longitude: -65.50229,
     altitude: 87.08390824,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6598,7 +6049,6 @@ export const rawSites: Site[] = [
     latitude: 18.12391,
     longitude: -65.53093,
     altitude: 6.416337224,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6610,7 +6060,6 @@ export const rawSites: Site[] = [
     latitude: 18.13484,
     longitude: -65.34781,
     altitude: 41.14320934,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6622,7 +6071,6 @@ export const rawSites: Site[] = [
     latitude: 18.11731,
     longitude: -65.34147,
     altitude: 4.651759721,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6634,7 +6082,6 @@ export const rawSites: Site[] = [
     latitude: 18.09704,
     longitude: -66.77145,
     altitude: 790.2868543,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6646,7 +6093,6 @@ export const rawSites: Site[] = [
     latitude: 18.45038,
     longitude: -65.90299,
     altitude: 0.333491477,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6658,7 +6104,6 @@ export const rawSites: Site[] = [
     latitude: 18.44488,
     longitude: -65.9337,
     altitude: 0.49028552,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6670,7 +6115,6 @@ export const rawSites: Site[] = [
     latitude: 18.11767,
     longitude: -65.56116,
     altitude: 0.523051772,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6682,7 +6126,6 @@ export const rawSites: Site[] = [
     latitude: 18.42623,
     longitude: -65.85996,
     altitude: 2.466233475,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6694,7 +6137,6 @@ export const rawSites: Site[] = [
     latitude: 18.10316,
     longitude: -65.54092,
     altitude: 34.99273911,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6706,7 +6148,6 @@ export const rawSites: Site[] = [
     latitude: 18.20444,
     longitude: -66.13671,
     altitude: 387.2439871,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6718,7 +6159,6 @@ export const rawSites: Site[] = [
     latitude: 18.17916,
     longitude: -66.25937,
     altitude: 506.6974211,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6730,7 +6170,6 @@ export const rawSites: Site[] = [
     latitude: 18.40802,
     longitude: -65.82722,
     altitude: 0.819325509,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6742,7 +6181,6 @@ export const rawSites: Site[] = [
     latitude: 18.14421,
     longitude: -66.97979,
     altitude: 898.0757451,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6754,7 +6192,6 @@ export const rawSites: Site[] = [
     latitude: 18.20017,
     longitude: -66.27664,
     altitude: 579.0577809,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6766,7 +6203,6 @@ export const rawSites: Site[] = [
     latitude: 18.17145,
     longitude: -66.17293,
     altitude: 450.2026092,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6778,7 +6214,6 @@ export const rawSites: Site[] = [
     latitude: 17.95393,
     longitude: -67.11861,
     altitude: 0.446437323,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6790,7 +6225,6 @@ export const rawSites: Site[] = [
     latitude: 17.93346,
     longitude: -66.95018,
     altitude: 13.49127832,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6802,7 +6236,6 @@ export const rawSites: Site[] = [
     latitude: 18.45149,
     longitude: -65.96989,
     altitude: 0.111899556,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6814,7 +6247,6 @@ export const rawSites: Site[] = [
     latitude: 18.08834,
     longitude: -66.97008,
     altitude: 118.9649821,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6826,7 +6258,6 @@ export const rawSites: Site[] = [
     latitude: 18.44395,
     longitude: -65.92124,
     altitude: 2.543892344,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6838,7 +6269,6 @@ export const rawSites: Site[] = [
     latitude: 18.44458,
     longitude: -65.89431,
     altitude: 2.860735157,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6850,7 +6280,6 @@ export const rawSites: Site[] = [
     latitude: 18.33737,
     longitude: -66.72264,
     altitude: 352.7672873,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6862,7 +6291,6 @@ export const rawSites: Site[] = [
     latitude: 18.33179,
     longitude: -66.72415,
     altitude: 297.7470225,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6874,7 +6302,6 @@ export const rawSites: Site[] = [
     latitude: 18.42228,
     longitude: -65.8311,
     altitude: 0.997945354,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6886,7 +6313,6 @@ export const rawSites: Site[] = [
     latitude: 18.36706,
     longitude: -67.24597,
     altitude: 57.34099986,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6898,7 +6324,6 @@ export const rawSites: Site[] = [
     latitude: 18.27712118,
     longitude: -65.76375266,
     altitude: 972.8844856,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6910,7 +6335,6 @@ export const rawSites: Site[] = [
     latitude: 18.32454,
     longitude: -67.2105,
     altitude: 179.124329,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6922,7 +6346,6 @@ export const rawSites: Site[] = [
     latitude: 18.40287,
     longitude: -65.8055,
     altitude: 0.39451408,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6934,7 +6357,6 @@ export const rawSites: Site[] = [
     latitude: 18.2911972,
     longitude: -65.7909668,
     altitude: 687.2994475,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6946,7 +6368,6 @@ export const rawSites: Site[] = [
     latitude: 18.1434,
     longitude: -66.96767,
     altitude: 737.637707,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6958,7 +6379,6 @@ export const rawSites: Site[] = [
     latitude: 18.18063,
     longitude: -67.17012,
     altitude: 1.093594473,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6970,7 +6390,6 @@ export const rawSites: Site[] = [
     latitude: 18.38268,
     longitude: -65.6199,
     altitude: 39.81805294,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6982,7 +6401,6 @@ export const rawSites: Site[] = [
     latitude: 18.14697,
     longitude: -66.99161,
     altitude: 784.5444805,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -6994,7 +6412,6 @@ export const rawSites: Site[] = [
     latitude: 18.14859,
     longitude: -66.9444,
     altitude: 746.00829,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7006,7 +6423,6 @@ export const rawSites: Site[] = [
     latitude: 18.27138044,
     longitude: -65.63091345,
     altitude: 0.325504577,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7018,7 +6434,6 @@ export const rawSites: Site[] = [
     latitude: 18.25731,
     longitude: -65.70772,
     altitude: 122.6981922,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7030,7 +6445,6 @@ export const rawSites: Site[] = [
     latitude: 18.27404,
     longitude: -65.67791,
     altitude: 109.4426695,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7042,7 +6456,6 @@ export const rawSites: Site[] = [
     latitude: 18.01568,
     longitude: -65.85779,
     altitude: 177.7184122,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7054,7 +6467,6 @@ export const rawSites: Site[] = [
     latitude: 18.33654,
     longitude: -66.72178,
     altitude: 346.600013,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7066,7 +6478,6 @@ export const rawSites: Site[] = [
     latitude: 18.20724,
     longitude: -65.67552,
     altitude: 29.72078301,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7078,7 +6489,6 @@ export const rawSites: Site[] = [
     latitude: 18.20115,
     longitude: -65.64859,
     altitude: 0.46893134,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7090,7 +6500,6 @@ export const rawSites: Site[] = [
     latitude: 18.33213,
     longitude: -66.72167,
     altitude: 304.030704,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7102,7 +6511,6 @@ export const rawSites: Site[] = [
     latitude: 18.35904,
     longitude: -66.73633,
     altitude: 309.7504146,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7114,7 +6522,6 @@ export const rawSites: Site[] = [
     latitude: 18.35171,
     longitude: -67.26125,
     altitude: 27.90086702,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7126,7 +6533,6 @@ export const rawSites: Site[] = [
     latitude: 18.21458,
     longitude: -67.13503,
     altitude: 29.61539075,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7138,7 +6544,6 @@ export const rawSites: Site[] = [
     latitude: 18.1373,
     longitude: -67.17172,
     altitude: 21.47249571,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7150,7 +6555,6 @@ export const rawSites: Site[] = [
     latitude: 17.939383,
     longitude: -66.189265,
     altitude: 0.286744108,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7162,7 +6566,6 @@ export const rawSites: Site[] = [
     latitude: 18.26325,
     longitude: -65.72594,
     altitude: 143.0966607,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7174,7 +6577,6 @@ export const rawSites: Site[] = [
     latitude: 17.952686,
     longitude: -66.287968,
     altitude: 0.109702634,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7186,7 +6588,6 @@ export const rawSites: Site[] = [
     latitude: 18.37593,
     longitude: -65.64424,
     altitude: 0.786427492,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7198,7 +6599,6 @@ export const rawSites: Site[] = [
     latitude: 18.26773,
     longitude: -65.65712,
     altitude: 107.6605443,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7210,7 +6610,6 @@ export const rawSites: Site[] = [
     latitude: 18.026967,
     longitude: -66.032145,
     altitude: 66.66644108,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7222,7 +6621,6 @@ export const rawSites: Site[] = [
     latitude: 18.09858,
     longitude: -66.90123,
     altitude: 469.0641222,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7234,7 +6632,6 @@ export const rawSites: Site[] = [
     latitude: 18.11182,
     longitude: -65.46849,
     altitude: 26.23603475,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7246,7 +6643,6 @@ export const rawSites: Site[] = [
     latitude: 18.22542,
     longitude: -65.6557,
     altitude: 2.99249694,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7258,7 +6654,6 @@ export const rawSites: Site[] = [
     latitude: 18.22575,
     longitude: -65.69166,
     altitude: 29.78260632,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7270,7 +6665,6 @@ export const rawSites: Site[] = [
     latitude: 18.11434,
     longitude: -65.40255,
     altitude: 1.535549434,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7282,7 +6676,6 @@ export const rawSites: Site[] = [
     latitude: 18.11824,
     longitude: -65.37649,
     altitude: 1.798975232,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7294,7 +6687,6 @@ export const rawSites: Site[] = [
     latitude: 18.12616,
     longitude: -65.31656,
     altitude: 7.042163082,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7306,7 +6698,6 @@ export const rawSites: Site[] = [
     latitude: 17.93813165,
     longitude: -66.18125225,
     altitude: 0.232725503,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7318,7 +6709,6 @@ export const rawSites: Site[] = [
     latitude: 18.16065,
     longitude: -66.21358,
     altitude: 449.3102122,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7330,7 +6720,6 @@ export const rawSites: Site[] = [
     latitude: 17.950722,
     longitude: -66.239632,
     altitude: 2.018937278,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7342,7 +6731,6 @@ export const rawSites: Site[] = [
     latitude: 18.1752,
     longitude: -66.12655,
     altitude: 422.0938084,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7354,7 +6742,6 @@ export const rawSites: Site[] = [
     latitude: 17.980512,
     longitude: -66.541574,
     altitude: 2.141677865,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7366,7 +6753,6 @@ export const rawSites: Site[] = [
     latitude: 18.44509,
     longitude: -65.91252,
     altitude: 0.575172421,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7378,7 +6764,6 @@ export const rawSites: Site[] = [
     latitude: 18.36519,
     longitude: -65.68767,
     altitude: 1.735390391,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7390,7 +6775,6 @@ export const rawSites: Site[] = [
     latitude: 18.11874,
     longitude: -65.80907,
     altitude: 97.65556085,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7402,7 +6786,6 @@ export const rawSites: Site[] = [
     latitude: 18.32257,
     longitude: -65.63545,
     altitude: 1.386402912,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7414,7 +6797,6 @@ export const rawSites: Site[] = [
     latitude: 18.044938,
     longitude: -66.037642,
     altitude: 103.0763184,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7426,7 +6808,6 @@ export const rawSites: Site[] = [
     latitude: 18.11709,
     longitude: -65.54218,
     altitude: 34.82728582,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7438,7 +6819,6 @@ export const rawSites: Site[] = [
     latitude: 18.11405,
     longitude: -65.38159,
     altitude: 1.049174005,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7450,7 +6830,6 @@ export const rawSites: Site[] = [
     latitude: 18.11372,
     longitude: -65.39173,
     altitude: 0.983811218,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7462,7 +6841,6 @@ export const rawSites: Site[] = [
     latitude: 18.12101,
     longitude: -65.39208,
     altitude: 5.531707636,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7474,7 +6852,6 @@ export const rawSites: Site[] = [
     latitude: 18.44659,
     longitude: -65.9427,
     altitude: 0.609342222,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7486,7 +6863,6 @@ export const rawSites: Site[] = [
     latitude: 18.12948,
     longitude: -65.37133,
     altitude: 3.071751453,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7498,7 +6874,6 @@ export const rawSites: Site[] = [
     latitude: 18.162,
     longitude: -66.2202,
     altitude: 370.2751242,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7510,7 +6885,6 @@ export const rawSites: Site[] = [
     latitude: 18.41629,
     longitude: -65.8282,
     altitude: 0.855140209,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7522,7 +6896,6 @@ export const rawSites: Site[] = [
     latitude: 17.9568,
     longitude: -67.1903,
     altitude: 0.473747917,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7534,7 +6907,6 @@ export const rawSites: Site[] = [
     latitude: 18.10906,
     longitude: -66.27565,
     altitude: 533.3565636,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7546,7 +6918,6 @@ export const rawSites: Site[] = [
     latitude: 18.10866,
     longitude: -66.98288,
     altitude: 230.0104902,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7558,7 +6929,6 @@ export const rawSites: Site[] = [
     latitude: 18.1328,
     longitude: -66.80743,
     altitude: 985.1363312,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7570,7 +6940,6 @@ export const rawSites: Site[] = [
     latitude: 18.3014,
     longitude: -67.23559,
     altitude: 4.186887445,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7582,7 +6951,6 @@ export const rawSites: Site[] = [
     latitude: 18.36003,
     longitude: -66.74184,
     altitude: 303.0959238,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7594,7 +6962,6 @@ export const rawSites: Site[] = [
     latitude: 18.25376,
     longitude: -65.61037,
     altitude: 1.517411295,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7606,7 +6973,6 @@ export const rawSites: Site[] = [
     latitude: 18.24891,
     longitude: -65.60732,
     altitude: 0.341921922,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7618,7 +6984,6 @@ export const rawSites: Site[] = [
     latitude: 18.24487,
     longitude: -65.60494,
     altitude: 0.713820832,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7630,7 +6995,6 @@ export const rawSites: Site[] = [
     latitude: 18.23126,
     longitude: -65.59878,
     altitude: 2.038711755,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7642,7 +7006,6 @@ export const rawSites: Site[] = [
     latitude: 18.23995,
     longitude: -65.60323,
     altitude: 1.309355182,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7654,7 +7017,6 @@ export const rawSites: Site[] = [
     latitude: 18.226,
     longitude: -65.65814,
     altitude: 2.805502054,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7666,7 +7028,6 @@ export const rawSites: Site[] = [
     latitude: 18.26193,
     longitude: -65.62948,
     altitude: 0.714770969,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7678,7 +7039,6 @@ export const rawSites: Site[] = [
     latitude: 18.22064,
     longitude: -65.65325,
     altitude: 23.74668522,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7690,7 +7050,6 @@ export const rawSites: Site[] = [
     latitude: 18.38455,
     longitude: -65.62284,
     altitude: 0.615318464,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7702,7 +7061,6 @@ export const rawSites: Site[] = [
     latitude: 18.30683,
     longitude: -65.63721,
     altitude: 32.18038077,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7714,7 +7072,6 @@ export const rawSites: Site[] = [
     latitude: 18.2634,
     longitude: -65.6364,
     altitude: 8.128924437,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7726,7 +7083,6 @@ export const rawSites: Site[] = [
     latitude: 18.0645,
     longitude: -66.63198,
     altitude: 138.5985941,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7738,7 +7094,6 @@ export const rawSites: Site[] = [
     latitude: 18.21501,
     longitude: -65.66925,
     altitude: 3.643135879,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7750,7 +7105,6 @@ export const rawSites: Site[] = [
     latitude: 18.20595,
     longitude: -65.64039,
     altitude: 1.429359382,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7762,7 +7116,6 @@ export const rawSites: Site[] = [
     latitude: 18.01653,
     longitude: -66.72467,
     altitude: 14.5892126,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7774,7 +7127,6 @@ export const rawSites: Site[] = [
     latitude: 17.99916,
     longitude: -66.78208,
     altitude: 0.751610704,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7786,7 +7138,6 @@ export const rawSites: Site[] = [
     latitude: 18.01743617,
     longitude: -66.57088171,
     altitude: 18.94568591,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7798,7 +7149,6 @@ export const rawSites: Site[] = [
     latitude: 18.04266448,
     longitude: -66.62053183,
     altitude: 53.74429301,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7810,7 +7160,6 @@ export const rawSites: Site[] = [
     latitude: 17.97092,
     longitude: -66.67432,
     altitude: 0.598116426,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7822,7 +7171,6 @@ export const rawSites: Site[] = [
     latitude: 17.97894,
     longitude: -66.66762,
     altitude: 17.52943379,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7834,7 +7182,6 @@ export const rawSites: Site[] = [
     latitude: 17.98662,
     longitude: -66.5415,
     altitude: 3.955807239,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7846,7 +7193,6 @@ export const rawSites: Site[] = [
     latitude: 17.99588,
     longitude: -66.55524,
     altitude: 4.581012939,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7858,7 +7204,6 @@ export const rawSites: Site[] = [
     latitude: 17.99518337,
     longitude: -66.57369841,
     altitude: 3.424572127,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7870,7 +7215,6 @@ export const rawSites: Site[] = [
     latitude: 18.06157,
     longitude: -66.56317,
     altitude: 95.80516063,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7882,7 +7226,6 @@ export const rawSites: Site[] = [
     latitude: 18.05653,
     longitude: -66.68453,
     altitude: 209.0539935,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7894,7 +7237,6 @@ export const rawSites: Site[] = [
     latitude: 18.04256,
     longitude: -66.56277,
     altitude: 83.04038364,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7906,7 +7248,6 @@ export const rawSites: Site[] = [
     latitude: 17.99779,
     longitude: -66.59689,
     altitude: 10.48154074,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7918,7 +7259,6 @@ export const rawSites: Site[] = [
     latitude: 17.96544,
     longitude: -66.61035,
     altitude: 0.975776746,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7930,7 +7270,6 @@ export const rawSites: Site[] = [
     latitude: 17.97406,
     longitude: -66.61423,
     altitude: 1.722857054,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7942,7 +7281,6 @@ export const rawSites: Site[] = [
     latitude: 17.98865,
     longitude: -66.60893,
     altitude: 4.331289612,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7954,7 +7292,6 @@ export const rawSites: Site[] = [
     latitude: 18.25708,
     longitude: -65.679946,
     altitude: 142.7885013,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7966,7 +7303,6 @@ export const rawSites: Site[] = [
     latitude: 18.25801,
     longitude: -65.66174,
     altitude: 61.4218463,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7978,7 +7314,6 @@ export const rawSites: Site[] = [
     latitude: 18.07284,
     longitude: -66.90815,
     altitude: 195.1648406,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -7990,7 +7325,6 @@ export const rawSites: Site[] = [
     latitude: 18.41471,
     longitude: -66.33628,
     altitude: 26.7682431,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8002,7 +7336,6 @@ export const rawSites: Site[] = [
     latitude: 18.23025,
     longitude: -65.67932,
     altitude: 92.54068932,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8014,7 +7347,6 @@ export const rawSites: Site[] = [
     latitude: 18.25499,
     longitude: -65.73401,
     altitude: 223.3331693,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8026,7 +7358,6 @@ export const rawSites: Site[] = [
     latitude: 17.95666,
     longitude: -66.87442,
     altitude: 20.34566915,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8038,7 +7369,6 @@ export const rawSites: Site[] = [
     latitude: 18.17974,
     longitude: -66.51189,
     altitude: 625.9418515,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8050,7 +7380,6 @@ export const rawSites: Site[] = [
     latitude: 17.97319,
     longitude: -66.86553,
     altitude: 157.0816885,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8062,7 +7391,6 @@ export const rawSites: Site[] = [
     latitude: 17.9938,
     longitude: -66.92847,
     altitude: 1.957358854,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8074,7 +7402,6 @@ export const rawSites: Site[] = [
     latitude: 17.96031,
     longitude: -66.84751,
     altitude: 17.72375923,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8086,7 +7413,6 @@ export const rawSites: Site[] = [
     latitude: 18.30507,
     longitude: -65.24505,
     altitude: 0.614827475,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8098,7 +7424,6 @@ export const rawSites: Site[] = [
     latitude: 18.31416,
     longitude: -65.25938,
     altitude: 30.58408527,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8110,7 +7435,6 @@ export const rawSites: Site[] = [
     latitude: 18.00172,
     longitude: -66.86693,
     altitude: 74.52055968,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8122,7 +7446,6 @@ export const rawSites: Site[] = [
     latitude: 17.99502,
     longitude: -66.91232,
     altitude: 4.18000752,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8134,7 +7457,6 @@ export const rawSites: Site[] = [
     latitude: 17.99085,
     longitude: -66.92435,
     altitude: 1.507974553,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8146,7 +7468,6 @@ export const rawSites: Site[] = [
     latitude: 17.97556,
     longitude: -66.89232,
     altitude: 42.64601307,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8158,7 +7479,6 @@ export const rawSites: Site[] = [
     latitude: 18.32537,
     longitude: -65.31249,
     altitude: -0.183982798,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8170,7 +7490,6 @@ export const rawSites: Site[] = [
     latitude: 18.32376,
     longitude: -65.27007,
     altitude: 102.0373557,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8182,7 +7501,6 @@ export const rawSites: Site[] = [
     latitude: 18.32881,
     longitude: -65.27543,
     altitude: 44.14737446,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8194,7 +7512,6 @@ export const rawSites: Site[] = [
     latitude: 18.30251,
     longitude: -65.26091,
     altitude: 19.14642891,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8206,7 +7523,6 @@ export const rawSites: Site[] = [
     latitude: 18.32766,
     longitude: -65.29507,
     altitude: 88.20208256,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8218,7 +7534,6 @@ export const rawSites: Site[] = [
     latitude: 18.31965,
     longitude: -65.30178,
     altitude: 50.85488507,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8230,7 +7545,6 @@ export const rawSites: Site[] = [
     latitude: 18.31294,
     longitude: -65.3103,
     altitude: 97.75230544,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8242,7 +7556,6 @@ export const rawSites: Site[] = [
     latitude: 18.32745,
     longitude: -65.29079,
     altitude: 135.6144187,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8254,7 +7567,6 @@ export const rawSites: Site[] = [
     latitude: 18.3,
     longitude: -65.27141,
     altitude: 67.31797157,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8266,7 +7578,6 @@ export const rawSites: Site[] = [
     latitude: 18.30924,
     longitude: -65.31077,
     altitude: 77.49168808,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8278,7 +7589,6 @@ export const rawSites: Site[] = [
     latitude: 18.33739,
     longitude: -65.32894,
     altitude: 2.099054655,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8290,7 +7600,6 @@ export const rawSites: Site[] = [
     latitude: 18.32582,
     longitude: -65.27932,
     altitude: 21.84629037,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8302,7 +7611,6 @@ export const rawSites: Site[] = [
     latitude: 17.962631,
     longitude: -66.223035,
     altitude: 3.63910448,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8314,7 +7622,6 @@ export const rawSites: Site[] = [
     latitude: 17.956569,
     longitude: -66.22153,
     altitude: 3.919161872,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8326,7 +7633,6 @@ export const rawSites: Site[] = [
     latitude: 18.44322,
     longitude: -65.96344,
     altitude: 0.400844528,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8338,7 +7644,6 @@ export const rawSites: Site[] = [
     latitude: 18.44122,
     longitude: -65.95703,
     altitude: 0.414890114,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8350,7 +7655,6 @@ export const rawSites: Site[] = [
     latitude: 17.948899,
     longitude: -66.243804,
     altitude: 0.217763221,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8362,7 +7666,6 @@ export const rawSites: Site[] = [
     latitude: 18.44193,
     longitude: -65.88676,
     altitude: 4.276644919,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8374,7 +7677,6 @@ export const rawSites: Site[] = [
     latitude: 18.43588,
     longitude: -65.88357,
     altitude: 1.686566192,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8386,7 +7688,6 @@ export const rawSites: Site[] = [
     latitude: 17.93168,
     longitude: -66.198616,
     altitude: 0.186060324,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8398,7 +7699,6 @@ export const rawSites: Site[] = [
     latitude: 18.42593,
     longitude: -65.88288,
     altitude: 8.21144583,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8410,7 +7710,6 @@ export const rawSites: Site[] = [
     latitude: 17.954041,
     longitude: -66.173591,
     altitude: 1.186129485,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8422,7 +7721,6 @@ export const rawSites: Site[] = [
     latitude: 18.39151,
     longitude: -65.80779,
     altitude: 10.98064333,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8434,7 +7732,6 @@ export const rawSites: Site[] = [
     latitude: 18.28568,
     longitude: -65.79027,
     altitude: 649.0284374,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8446,7 +7743,6 @@ export const rawSites: Site[] = [
     latitude: 18.28285,
     longitude: -65.78815,
     altitude: 649.7387729,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8458,7 +7754,6 @@ export const rawSites: Site[] = [
     latitude: 18.29211,
     longitude: -65.79461,
     altitude: 775.0796114,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8470,7 +7765,6 @@ export const rawSites: Site[] = [
     latitude: 18.28937,
     longitude: -65.79881,
     altitude: 788.1845781,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8482,7 +7776,6 @@ export const rawSites: Site[] = [
     latitude: 18.074495,
     longitude: -66.053708,
     altitude: 287.858572,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8494,7 +7787,6 @@ export const rawSites: Site[] = [
     latitude: 17.974183,
     longitude: -65.954096,
     altitude: 18.20781858,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8506,7 +7798,6 @@ export const rawSites: Site[] = [
     latitude: 17.974115,
     longitude: -65.945392,
     altitude: 3.930872346,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8518,7 +7809,6 @@ export const rawSites: Site[] = [
     latitude: 18.297,
     longitude: -65.7942,
     altitude: 844.2499143,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8530,7 +7820,6 @@ export const rawSites: Site[] = [
     latitude: 18.28159,
     longitude: -65.77294,
     altitude: 789.2507943,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8542,7 +7831,6 @@ export const rawSites: Site[] = [
     latitude: 18.2708,
     longitude: -65.76138,
     altitude: 996.970731,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8554,7 +7842,6 @@ export const rawSites: Site[] = [
     latitude: 17.99064,
     longitude: -66.088547,
     altitude: 46.5661213,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8566,7 +7853,6 @@ export const rawSites: Site[] = [
     latitude: 17.962904,
     longitude: -66.364655,
     altitude: 0.239683925,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8578,7 +7864,6 @@ export const rawSites: Site[] = [
     latitude: 18.39049,
     longitude: -65.78104,
     altitude: 73.32787825,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8590,7 +7875,6 @@ export const rawSites: Site[] = [
     latitude: 18.40076,
     longitude: -65.79502,
     altitude: 1.525785916,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8602,7 +7886,6 @@ export const rawSites: Site[] = [
     latitude: 18.05100279,
     longitude: -66.45379838,
     altitude: 119.9155628,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8614,7 +7897,6 @@ export const rawSites: Site[] = [
     latitude: 17.994992,
     longitude: -66.541226,
     altitude: 6.423408353,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8626,7 +7908,6 @@ export const rawSites: Site[] = [
     latitude: 18.14022,
     longitude: -65.77477,
     altitude: 0.301387673,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8638,7 +7919,6 @@ export const rawSites: Site[] = [
     latitude: 18.37176,
     longitude: -65.70911,
     altitude: 1.298711018,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8650,7 +7930,6 @@ export const rawSites: Site[] = [
     latitude: 17.949534,
     longitude: -66.395687,
     altitude: 0.75103859,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8662,7 +7941,6 @@ export const rawSites: Site[] = [
     latitude: 18.36789,
     longitude: -65.70074,
     altitude: 2.362597591,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8674,7 +7952,6 @@ export const rawSites: Site[] = [
     latitude: 18.35469,
     longitude: -65.69308,
     altitude: 28.52571528,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8686,7 +7963,6 @@ export const rawSites: Site[] = [
     latitude: 18.35989,
     longitude: -65.6943,
     altitude: 5.995104129,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8698,7 +7974,6 @@ export const rawSites: Site[] = [
     latitude: 17.971662,
     longitude: -66.356374,
     altitude: 0.683272337,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8710,7 +7985,6 @@ export const rawSites: Site[] = [
     latitude: 18.3593,
     longitude: -65.68777,
     altitude: 60.17079203,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8722,7 +7996,6 @@ export const rawSites: Site[] = [
     latitude: 17.958873,
     longitude: -66.372696,
     altitude: -0.073171867,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8734,7 +8007,6 @@ export const rawSites: Site[] = [
     latitude: 18.01637,
     longitude: -65.94647,
     altitude: 144.8227729,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8746,7 +8018,6 @@ export const rawSites: Site[] = [
     latitude: 18.00162,
     longitude: -65.92452,
     altitude: 43.76383802,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8758,7 +8029,6 @@ export const rawSites: Site[] = [
     latitude: 18.02168,
     longitude: -65.83616,
     altitude: 50.80560958,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8770,7 +8040,6 @@ export const rawSites: Site[] = [
     latitude: 18.0131,
     longitude: -65.83528,
     altitude: 25.17516417,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8782,7 +8051,6 @@ export const rawSites: Site[] = [
     latitude: 18.03758,
     longitude: -65.88508,
     altitude: 109.6408659,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8794,7 +8062,6 @@ export const rawSites: Site[] = [
     latitude: 18.16527,
     longitude: -65.79721,
     altitude: 45.01784887,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8806,7 +8073,6 @@ export const rawSites: Site[] = [
     latitude: 18.19507,
     longitude: -65.80039,
     altitude: 152.0613562,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8818,7 +8084,6 @@ export const rawSites: Site[] = [
     latitude: 18.26616,
     longitude: -65.79991,
     altitude: 491.8652153,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8830,7 +8095,6 @@ export const rawSites: Site[] = [
     latitude: 17.950038,
     longitude: -66.389635,
     altitude: 0.638607018,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8842,7 +8106,6 @@ export const rawSites: Site[] = [
     latitude: 18.27466,
     longitude: -65.80007,
     altitude: 630.7035305,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8854,7 +8117,6 @@ export const rawSites: Site[] = [
     latitude: 18.27329,
     longitude: -65.7987,
     altitude: 604.256643,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8866,7 +8128,6 @@ export const rawSites: Site[] = [
     latitude: 18.27267,
     longitude: -65.79654,
     altitude: 591.5604819,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8878,7 +8139,6 @@ export const rawSites: Site[] = [
     latitude: 18.11992,
     longitude: -65.83489,
     altitude: 95.48029257,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8890,7 +8150,6 @@ export const rawSites: Site[] = [
     latitude: 18.09217,
     longitude: -65.80079,
     altitude: 1.394915235,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8902,7 +8161,6 @@ export const rawSites: Site[] = [
     latitude: 18.09461,
     longitude: -65.80144,
     altitude: 2.051953365,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8914,7 +8172,6 @@ export const rawSites: Site[] = [
     latitude: 18.07654,
     longitude: -65.80367,
     altitude: 11.2620215,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8926,7 +8183,6 @@ export const rawSites: Site[] = [
     latitude: 18.07296,
     longitude: -65.83433,
     altitude: 13.8223983,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8938,7 +8194,6 @@ export const rawSites: Site[] = [
     latitude: 18.04742,
     longitude: -65.92587,
     altitude: 58.51857765,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8950,7 +8205,6 @@ export const rawSites: Site[] = [
     latitude: 18.08981,
     longitude: -65.94457,
     altitude: 359.5986486,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8962,7 +8216,6 @@ export const rawSites: Site[] = [
     latitude: 18.14221,
     longitude: -66.97288,
     altitude: 839.3098322,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8974,7 +8227,6 @@ export const rawSites: Site[] = [
     latitude: 18.01703,
     longitude: -65.83496,
     altitude: 29.90239346,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8986,7 +8238,6 @@ export const rawSites: Site[] = [
     latitude: 18.166057,
     longitude: -67.019937,
     altitude: 438.1287607,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -8998,7 +8249,6 @@ export const rawSites: Site[] = [
     latitude: 18.158678,
     longitude: -67.036337,
     altitude: 386.9726554,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9010,7 +8260,6 @@ export const rawSites: Site[] = [
     latitude: 18.102347,
     longitude: -67.038464,
     altitude: 37.91304996,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9022,7 +8271,6 @@ export const rawSites: Site[] = [
     latitude: 18.33373,
     longitude: -66.6572,
     altitude: 289.8320276,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9034,7 +8282,6 @@ export const rawSites: Site[] = [
     latitude: 18.32445,
     longitude: -66.65569,
     altitude: 102.2392094,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9046,7 +8293,6 @@ export const rawSites: Site[] = [
     latitude: 18.30148,
     longitude: -66.72718,
     altitude: 435.0985425,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9058,7 +8304,6 @@ export const rawSites: Site[] = [
     latitude: 18.174977,
     longitude: -66.986561,
     altitude: 515.7935011,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9070,7 +8315,6 @@ export const rawSites: Site[] = [
     latitude: 18.171232,
     longitude: -66.985521,
     altitude: 453.0418411,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9082,7 +8326,6 @@ export const rawSites: Site[] = [
     latitude: 18.11208,
     longitude: -65.55012,
     altitude: 9.17550528,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9094,7 +8337,6 @@ export const rawSites: Site[] = [
     latitude: 18.39242,
     longitude: -66.71061,
     altitude: 171.1696378,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9106,7 +8348,6 @@ export const rawSites: Site[] = [
     latitude: 18.11614,
     longitude: -65.42783,
     altitude: 5.31856415,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9118,7 +8359,6 @@ export const rawSites: Site[] = [
     latitude: 18.11743,
     longitude: -65.45023,
     altitude: 28.49257543,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9130,7 +8370,6 @@ export const rawSites: Site[] = [
     latitude: 18.15802,
     longitude: -65.41986,
     altitude: 15.21767055,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9142,7 +8381,6 @@ export const rawSites: Site[] = [
     latitude: 18.14325,
     longitude: -65.46152,
     altitude: 8.258187269,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9154,7 +8392,6 @@ export const rawSites: Site[] = [
     latitude: 18.13865,
     longitude: -65.31264,
     altitude: 54.84102283,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9166,7 +8403,6 @@ export const rawSites: Site[] = [
     latitude: 18.080224,
     longitude: -66.037751,
     altitude: 573.7107519,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9178,7 +8414,6 @@ export const rawSites: Site[] = [
     latitude: 18.150537,
     longitude: -66.951287,
     altitude: 685.3397375,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9190,7 +8425,6 @@ export const rawSites: Site[] = [
     latitude: 18.144157,
     longitude: -67.023876,
     altitude: 313.8591205,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9202,7 +8436,6 @@ export const rawSites: Site[] = [
     latitude: 18.155489,
     longitude: -66.949664,
     altitude: 695.2542945,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9214,7 +8447,6 @@ export const rawSites: Site[] = [
     latitude: 18.128992,
     longitude: -66.955454,
     altitude: 601.2383713,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9226,7 +8458,6 @@ export const rawSites: Site[] = [
     latitude: 18.173266,
     longitude: -66.992336,
     altitude: 559.7349282,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9238,7 +8469,6 @@ export const rawSites: Site[] = [
     latitude: 18.48782,
     longitude: -66.84615,
     altitude: 1.787365484,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9250,7 +8480,6 @@ export const rawSites: Site[] = [
     latitude: 18.11714,
     longitude: -66.12458,
     altitude: 392.0304753,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9262,7 +8491,6 @@ export const rawSites: Site[] = [
     latitude: 18.47834,
     longitude: -66.57605,
     altitude: 0.725358398,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9274,7 +8502,6 @@ export const rawSites: Site[] = [
     latitude: 18.46974,
     longitude: -66.53537,
     altitude: 0.750588179,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9286,7 +8513,6 @@ export const rawSites: Site[] = [
     latitude: 18.18167483,
     longitude: -66.1446287,
     altitude: 419.7798248,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9298,7 +8524,6 @@ export const rawSites: Site[] = [
     latitude: 17.960609,
     longitude: -67.200844,
     altitude: 3.071345116,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9310,7 +8535,6 @@ export const rawSites: Site[] = [
     latitude: 18.46752,
     longitude: -66.639,
     altitude: 0.344225127,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9322,7 +8546,6 @@ export const rawSites: Site[] = [
     latitude: 18.48027,
     longitude: -66.53205,
     altitude: 27.18738524,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9334,7 +8557,6 @@ export const rawSites: Site[] = [
     latitude: 18.16798,
     longitude: -66.18008,
     altitude: 510.478424,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9346,7 +8568,6 @@ export const rawSites: Site[] = [
     latitude: 18.1042786,
     longitude: -66.1592171,
     altitude: 492.1542822,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9358,7 +8579,6 @@ export const rawSites: Site[] = [
     latitude: 18.1905,
     longitude: -65.72475,
     altitude: 0.695895134,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9370,7 +8590,6 @@ export const rawSites: Site[] = [
     latitude: 18.215179,
     longitude: -65.705774,
     altitude: 60.47878383,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9382,7 +8601,6 @@ export const rawSites: Site[] = [
     latitude: 18.225208,
     longitude: -65.69085,
     altitude: 32.76898726,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9394,7 +8612,6 @@ export const rawSites: Site[] = [
     latitude: 18.203826,
     longitude: -65.66923,
     altitude: 0.289537392,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9406,7 +8623,6 @@ export const rawSites: Site[] = [
     latitude: 18.208896,
     longitude: -65.682293,
     altitude: 10.24411325,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9418,7 +8634,6 @@ export const rawSites: Site[] = [
     latitude: 18.2550272,
     longitude: -65.733965,
     altitude: 224.5001819,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9430,7 +8645,6 @@ export const rawSites: Site[] = [
     latitude: 18.2632,
     longitude: -65.725915,
     altitude: 142.0993439,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9442,7 +8656,6 @@ export const rawSites: Site[] = [
     latitude: 18.2573017,
     longitude: -65.7076883,
     altitude: 123.4541176,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9454,7 +8667,6 @@ export const rawSites: Site[] = [
     latitude: 18.2487,
     longitude: -65.607258,
     altitude: 0.182169367,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9466,7 +8678,6 @@ export const rawSites: Site[] = [
     latitude: 18.23983,
     longitude: -65.60322,
     altitude: 0.849653721,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9478,7 +8689,6 @@ export const rawSites: Site[] = [
     latitude: 18.23116,
     longitude: -65.599174,
     altitude: 0.519278896,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9490,7 +8700,6 @@ export const rawSites: Site[] = [
     latitude: 18.37765,
     longitude: -65.61981,
     altitude: 0.374345534,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9502,7 +8711,6 @@ export const rawSites: Site[] = [
     latitude: 18.375658,
     longitude: -65.644084,
     altitude: 0.547581411,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9514,7 +8722,6 @@ export const rawSites: Site[] = [
     latitude: 18.360672,
     longitude: -65.6412992,
     altitude: 35.66648385,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9526,7 +8733,6 @@ export const rawSites: Site[] = [
     latitude: 18.290234,
     longitude: -65.6690991,
     altitude: 106.113042,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9538,7 +8744,6 @@ export const rawSites: Site[] = [
     latitude: 18.2737933,
     longitude: -65.6779083,
     altitude: 110.1570993,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9550,7 +8755,6 @@ export const rawSites: Site[] = [
     latitude: 18.2578466,
     longitude: -65.6616617,
     altitude: 59.71068798,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9562,7 +8766,6 @@ export const rawSites: Site[] = [
     latitude: 18.262028,
     longitude: -65.629701,
     altitude: 1.029828748,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9574,7 +8777,6 @@ export const rawSites: Site[] = [
     latitude: 18.2583454,
     longitude: -65.62762254,
     altitude: 0.401053252,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9586,7 +8788,6 @@ export const rawSites: Site[] = [
     latitude: 18.225138,
     longitude: -65.639869,
     altitude: 0.466703491,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9598,7 +8799,6 @@ export const rawSites: Site[] = [
     latitude: 18.2204725,
     longitude: -65.6533855,
     altitude: 23.86744419,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9610,7 +8810,6 @@ export const rawSites: Site[] = [
     latitude: 18.22541,
     longitude: -65.655351,
     altitude: 2.418167191,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9622,7 +8821,6 @@ export const rawSites: Site[] = [
     latitude: 18.2150819,
     longitude: -65.6692387,
     altitude: 3.230681551,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9634,7 +8832,6 @@ export const rawSites: Site[] = [
     latitude: 17.95731,
     longitude: -67.11371,
     altitude: 0.873079674,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9646,7 +8843,6 @@ export const rawSites: Site[] = [
     latitude: 18.20859,
     longitude: -66.27572,
     altitude: 590.1348112,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9658,7 +8854,6 @@ export const rawSites: Site[] = [
     latitude: 18.11006,
     longitude: -65.56591,
     altitude: 0.165005875,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9670,7 +8865,6 @@ export const rawSites: Site[] = [
     latitude: 18.08641,
     longitude: -67.84658,
     altitude: 53.77841758,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9682,7 +8876,6 @@ export const rawSites: Site[] = [
     latitude: 18.08017,
     longitude: -67.85513,
     altitude: 39.5537646,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9694,7 +8887,6 @@ export const rawSites: Site[] = [
     latitude: 18.07618,
     longitude: -67.86348,
     altitude: 25.45828423,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9706,7 +8898,6 @@ export const rawSites: Site[] = [
     latitude: 18.08146,
     longitude: -67.86573,
     altitude: 40.53777523,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9718,7 +8909,6 @@ export const rawSites: Site[] = [
     latitude: 18.09015901,
     longitude: -67.86703446,
     altitude: 32.64609448,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9730,7 +8920,6 @@ export const rawSites: Site[] = [
     latitude: 18.09608,
     longitude: -67.86082,
     altitude: 47.89167215,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9742,7 +8931,6 @@ export const rawSites: Site[] = [
     latitude: 18.06856,
     longitude: -67.86512,
     altitude: 33.48872465,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9754,7 +8942,6 @@ export const rawSites: Site[] = [
     latitude: 18.09863,
     longitude: -67.84811,
     altitude: 61.88901138,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9766,7 +8953,6 @@ export const rawSites: Site[] = [
     latitude: 18.06445,
     longitude: -67.87732,
     altitude: 45.40705831,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9778,7 +8964,6 @@ export const rawSites: Site[] = [
     latitude: 18.05997845,
     longitude: -67.87100207,
     altitude: 27.91857779,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9790,7 +8975,6 @@ export const rawSites: Site[] = [
     latitude: 18.06630277,
     longitude: -67.86669882,
     altitude: 18.61587816,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9802,7 +8986,6 @@ export const rawSites: Site[] = [
     latitude: 18.06368,
     longitude: -67.88876,
     altitude: 40.43590355,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9814,7 +8997,6 @@ export const rawSites: Site[] = [
     latitude: 18.06328,
     longitude: -67.8963,
     altitude: 37.22343628,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9826,7 +9008,6 @@ export const rawSites: Site[] = [
     latitude: 18.06602,
     longitude: -67.91306,
     altitude: 3.775365058,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9838,7 +9019,6 @@ export const rawSites: Site[] = [
     latitude: 18.10040278,
     longitude: -67.92889884,
     altitude: 65.30059766,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9850,7 +9030,6 @@ export const rawSites: Site[] = [
     latitude: 18.07145,
     longitude: -67.92012,
     altitude: 5.60345919,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9862,7 +9041,6 @@ export const rawSites: Site[] = [
     latitude: 18.10908,
     longitude: -67.87424,
     altitude: 53.84810716,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9874,7 +9052,6 @@ export const rawSites: Site[] = [
     latitude: 18.07675,
     longitude: -67.93223,
     altitude: 1.401216932,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9886,7 +9063,6 @@ export const rawSites: Site[] = [
     latitude: 18.0692,
     longitude: -67.92601,
     altitude: 5.319010498,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9898,7 +9074,6 @@ export const rawSites: Site[] = [
     latitude: 18.07223,
     longitude: -67.92745,
     altitude: 4.930311168,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9910,7 +9085,6 @@ export const rawSites: Site[] = [
     latitude: 18.08002472,
     longitude: -67.9361633,
     altitude: 3.684027911,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9922,7 +9096,6 @@ export const rawSites: Site[] = [
     latitude: 18.08701776,
     longitude: -67.93897561,
     altitude: 2.259426655,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9934,7 +9107,6 @@ export const rawSites: Site[] = [
     latitude: 18.08276377,
     longitude: -67.94469784,
     altitude: 1.635841085,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9946,7 +9118,6 @@ export const rawSites: Site[] = [
     latitude: 18.0957,
     longitude: -67.93542,
     altitude: 51.82027411,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9958,7 +9129,6 @@ export const rawSites: Site[] = [
     latitude: 18.10481,
     longitude: -67.93386,
     altitude: 62.70673755,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9970,7 +9140,6 @@ export const rawSites: Site[] = [
     latitude: 18.08198,
     longitude: -67.84669,
     altitude: 36.5122137,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9982,7 +9151,6 @@ export const rawSites: Site[] = [
     latitude: 18.0886,
     longitude: -67.90012,
     altitude: 46.83698524,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -9994,7 +9162,6 @@ export const rawSites: Site[] = [
     latitude: 18.11234,
     longitude: -67.93109,
     altitude: 67.34916284,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10006,7 +9173,6 @@ export const rawSites: Site[] = [
     latitude: 18.08905,
     longitude: -67.87554,
     altitude: 46.68708783,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10018,7 +9184,6 @@ export const rawSites: Site[] = [
     latitude: 18.11471978,
     longitude: -67.92348383,
     altitude: 58.50226965,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10030,7 +9195,6 @@ export const rawSites: Site[] = [
     latitude: 18.11763,
     longitude: -67.91684,
     altitude: 65.45495739,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10042,7 +9206,6 @@ export const rawSites: Site[] = [
     latitude: 18.10142,
     longitude: -67.91092,
     altitude: 77.12572738,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10054,7 +9217,6 @@ export const rawSites: Site[] = [
     latitude: 18.07231,
     longitude: -67.90645,
     altitude: 48.55608574,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10066,7 +9228,6 @@ export const rawSites: Site[] = [
     latitude: 18.11525,
     longitude: -67.87248,
     altitude: 67.4319284,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10078,7 +9239,6 @@ export const rawSites: Site[] = [
     latitude: 18.07795277,
     longitude: -67.90996883,
     altitude: 61.03312444,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10090,7 +9250,6 @@ export const rawSites: Site[] = [
     latitude: 18.08526,
     longitude: -67.91416,
     altitude: 70.74656775,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10102,7 +9261,6 @@ export const rawSites: Site[] = [
     latitude: 18.08974,
     longitude: -67.91665,
     altitude: 69.94119505,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10114,7 +9272,6 @@ export const rawSites: Site[] = [
     latitude: 18.11840278,
     longitude: -67.91219883,
     altitude: 71.71212409,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10126,7 +9283,6 @@ export const rawSites: Site[] = [
     latitude: 18.1002,
     longitude: -67.91725,
     altitude: 76.55796435,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10138,7 +9294,6 @@ export const rawSites: Site[] = [
     latitude: 17.992877,
     longitude: -66.99653,
     altitude: 34.20521609,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10150,7 +9305,6 @@ export const rawSites: Site[] = [
     latitude: 17.977006,
     longitude: -67.015366,
     altitude: 0.284226758,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10162,7 +9316,6 @@ export const rawSites: Site[] = [
     latitude: 18.017526,
     longitude: -67.106144,
     altitude: 11.30101533,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10174,7 +9327,6 @@ export const rawSites: Site[] = [
     latitude: 17.98925,
     longitude: -67.132596,
     altitude: 76.36162494,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10186,7 +9338,6 @@ export const rawSites: Site[] = [
     latitude: 17.990035,
     longitude: -67.131584,
     altitude: 93.50647289,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10198,7 +9349,6 @@ export const rawSites: Site[] = [
     latitude: 18.32255888,
     longitude: -65.6352529,
     altitude: 0.983479872,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10210,7 +9360,6 @@ export const rawSites: Site[] = [
     latitude: 18.08575,
     longitude: -67.92757,
     altitude: 52.64405104,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10222,7 +9371,6 @@ export const rawSites: Site[] = [
     latitude: 18.0862,
     longitude: -67.939,
     altitude: 4.026504742,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10234,7 +9382,6 @@ export const rawSites: Site[] = [
     latitude: 18.06756,
     longitude: -67.90518,
     altitude: 41.22345674,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10246,7 +9393,6 @@ export const rawSites: Site[] = [
     latitude: 18.09151572,
     longitude: -67.93465617,
     altitude: 41.07286349,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10258,7 +9404,6 @@ export const rawSites: Site[] = [
     latitude: 18.0843,
     longitude: -67.93986,
     altitude: 1.130504093,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10270,7 +9415,6 @@ export const rawSites: Site[] = [
     latitude: 18.08115,
     longitude: -67.93943,
     altitude: 0.935133071,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10282,7 +9426,6 @@ export const rawSites: Site[] = [
     latitude: 18.08198582,
     longitude: -67.93851346,
     altitude: 24.88632409,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10294,7 +9437,6 @@ export const rawSites: Site[] = [
     latitude: 18.05563,
     longitude: -67.88673,
     altitude: 29.09078398,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10306,7 +9448,6 @@ export const rawSites: Site[] = [
     latitude: 18.06014,
     longitude: -67.88717,
     altitude: 34.29737703,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10318,7 +9459,6 @@ export const rawSites: Site[] = [
     latitude: 18.0956,
     longitude: -67.8559,
     altitude: 42.99243132,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10330,7 +9470,6 @@ export const rawSites: Site[] = [
     latitude: 18.10038,
     longitude: -67.92366,
     altitude: 70.61433896,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10342,7 +9481,6 @@ export const rawSites: Site[] = [
     latitude: 18.08551,
     longitude: -67.93224,
     altitude: 45.37752862,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10354,7 +9492,6 @@ export const rawSites: Site[] = [
     latitude: 18.08711,
     longitude: -67.92334,
     altitude: 62.60542399,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10366,7 +9503,6 @@ export const rawSites: Site[] = [
     latitude: 18.3622,
     longitude: -65.67378,
     altitude: 3.051628138,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10378,7 +9514,6 @@ export const rawSites: Site[] = [
     latitude: 18.36382,
     longitude: -65.65597,
     altitude: 1.481960194,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10390,7 +9525,6 @@ export const rawSites: Site[] = [
     latitude: 18.3836909,
     longitude: -67.4855444,
     altitude: 30.93644563577592,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10402,7 +9536,6 @@ export const rawSites: Site[] = [
     latitude: 18.3850366,
     longitude: -67.4849125,
     altitude: 76.64425933,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10414,7 +9547,6 @@ export const rawSites: Site[] = [
     latitude: 18.38495933,
     longitude: -67.48740814,
     altitude: 18.66551963,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10426,7 +9558,6 @@ export const rawSites: Site[] = [
     latitude: 18.385825,
     longitude: -67.4829303,
     altitude: 125.1422461,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10438,7 +9569,6 @@ export const rawSites: Site[] = [
     latitude: 18.3869053,
     longitude: -67.4818577,
     altitude: 83.13261788,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10450,7 +9580,6 @@ export const rawSites: Site[] = [
     latitude: 18.38560835,
     longitude: -67.47947049,
     altitude: 181.6597772,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10462,7 +9591,6 @@ export const rawSites: Site[] = [
     latitude: 18.38134759,
     longitude: -67.48527883,
     altitude: 8.251969719,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10474,7 +9602,6 @@ export const rawSites: Site[] = [
     latitude: 18.11234,
     longitude: -67.93109,
     altitude: 67.34916284,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10486,7 +9613,6 @@ export const rawSites: Site[] = [
     latitude: 18.3465099,
     longitude: -66.7307358,
     altitude: 305.253105001078,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10498,7 +9624,6 @@ export const rawSites: Site[] = [
     latitude: 18.1571667,
     longitude: -67.0033667,
     altitude: 693.484698655829,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10510,7 +9635,6 @@ export const rawSites: Site[] = [
     latitude: 18.1631745,
     longitude: -66.9954944,
     altitude: 573.824968544572,
-    country: 'United States of America',
     countryCode: 'US'
   },
   {
@@ -10522,7 +9646,6 @@ export const rawSites: Site[] = [
     latitude: 18.32984,
     longitude: -66.6877667,
     altitude: 302.8,
-    country: 'United States of America',
     countryCode: 'US'
   }
 ]

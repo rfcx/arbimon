@@ -1,7 +1,6 @@
 import { pickBy } from 'lodash-es'
 
-import { type ProjectProfileResponse, type ProjectProfileUpdateBody } from '@rfcx-bio/common/api-bio/project-profile/project-profile'
-import { type ProjectSettingsResponse, type ProjectSettingsUpdateBody } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import type { ProjectInfoFieldType, ProjectInfoResponse, ProjectProfileUpdateBody, ProjectProfileUpdateResponse, ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '~/db'
@@ -17,7 +16,7 @@ export const getProjectCoreId = async (locationProjectId: number): Promise<strin
   return project?.idCore ?? undefined
 }
 
-export const updateProjectProfile = async (locationProjectId: number, profile: ProjectProfileUpdateBody): Promise<ProjectProfileResponse> => {
+export const updateProjectProfile = async (locationProjectId: number, profile: ProjectProfileUpdateBody): Promise<ProjectProfileUpdateResponse> => {
   // remove undefined values -- only update what is provided
   const updatedParams = pickBy({
     summary: profile.summary,
@@ -32,9 +31,9 @@ export const updateProjectProfile = async (locationProjectId: number, profile: P
   return updated
 }
 
-export const getProjectSettings = async (locationProjectId: number): Promise<ProjectSettingsResponse> => {
+export const getProjectInfo = async (locationProjectId: number, fields: ProjectInfoFieldType[]): Promise<ProjectInfoResponse> => {
   const sequelize = getSequelize()
-  const { LocationProject, LocationProjectProfile, LocationProjectCountry, ProjectVersion } = ModelRepository.getInstance(sequelize)
+  const { LocationProject, LocationProjectProfile, LocationProjectCountry, ProjectVersion, LocationProjectMetric } = ModelRepository.getInstance(sequelize)
   const resProject = await LocationProject.findOne({
     where: { id: locationProjectId },
     attributes: ['name'],
@@ -42,31 +41,69 @@ export const getProjectSettings = async (locationProjectId: number): Promise<Pro
   })
   const resProfile = await LocationProjectProfile.findOne({
     where: { locationProjectId },
-    attributes: ['summary', 'objectives', 'dateStart', 'dateEnd'],
+    attributes: ['summary', 'objectives', 'dateStart', 'dateEnd', 'readme', 'keyResult'],
     raw: true
   })
-  const resCountry = await LocationProjectCountry.findOne({
-    where: { locationProjectId },
-    raw: true
-  })
+
   const version = await ProjectVersion.findOne({
     where: { locationProjectId },
-    attributes: ['isPublished'],
+    attributes: ['isPublished', 'isPublic'],
     raw: true
   })
+
+  let resCountry
+  if (fields.includes('countryCodes')) {
+    resCountry = await LocationProjectCountry.findOne({
+      where: { locationProjectId },
+      raw: true
+    })
+  }
+
+  let metrics
+  if (fields.includes('metrics')) {
+    metrics = await LocationProjectMetric.findOne({
+      where: { locationProjectId },
+      raw: true
+    })
+  }
+
+  // TODO: support stakeholder
+
   if (!resProject) throw new Error(`Failed to get project settings for locationProjectId: ${locationProjectId}`)
-  return {
+  const baseProject = {
     name: resProject.name,
     summary: resProfile?.summary ?? '',
     objectives: resProfile?.objectives ?? [],
     dateStart: resProfile?.dateStart ?? null,
     dateEnd: resProfile?.dateEnd ?? null,
-    countryCodes: resCountry?.countryCodes ?? [],
     isPublished: version?.isPublished ?? false
+  }
+
+  return {
+    ...baseProject,
+    ...(fields.includes('readme') ? { readme: resProfile?.readme ?? '' } : {}),
+    ...(fields.includes('keyResult') ? { keyResults: resProfile?.keyResult ?? '' } : {}),
+    ...(fields.includes('image') ? { image: '' } : {}),
+    ...(fields.includes('countryCodes') ? { countryCodes: resCountry?.countryCodes ?? [] } : {}),
+    ...(fields.includes('metrics')
+        ? {
+        metrics: {
+          recordingMinutesCount: metrics?.recordingMinutesCount ?? 0,
+          speciesCount: metrics?.speciesCount ?? 0,
+          siteCount: metrics?.siteCount ?? 0,
+          detectionMinutesCount: metrics?.detectionMinutesCount ?? 0
+        }
+        }
+        : {}
+    )
   }
 }
 
-export const updateProjectSettings = async (locationProjectId: number, settings: ProjectSettingsUpdateBody): Promise<ProjectSettingsResponse> => {
+export const getProjectSettings = async (locationProjectId: number): Promise<ProjectSettingsResponse> => {
+  return await getProjectInfo(locationProjectId, ['name', 'summary', 'objectives', 'dateStart', 'dateEnd', 'countryCodes', 'isPublished'])
+}
+
+export const updateProjectSettings = async (locationProjectId: number, settings: ProjectProfileUpdateBody): Promise<ProjectSettingsResponse> => {
   if (settings.name) {
     const locationProject = ModelRepository.getInstance(getSequelize()).LocationProject
     await locationProject.update({ name: settings.name }, { where: { id: locationProjectId } })
