@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-row items-center justify-between border-1 border-insight rounded-lg py-4 px-[18px] group hover:(bg-moss)"
+    class="flex flex-row items-center justify-between h-31 border-1 border-insight rounded-lg py-3 px-[18px] group hover:(bg-moss)"
     :class="{'bg-moss': isHovered, 'border-frequency relative bg-moss': checked}"
     @click="toggleSelectMemberCard"
   >
@@ -13,20 +13,24 @@
       :src="image || 'https://inaturalist-open-data.s3.amazonaws.com/photos/332643265/small.jpeg'"
       alt="user profile image"
     >
-    <div class="w-2/4">
-      <h3
-        v-if="ranking === 0"
-        class="text-danger text-xs font-medium font-eyebrow uppercase"
-      >
-        Primary contact
-      </h3>
-      <h3 class="text-base font-normal font-sans">
-        {{ name }}
-      </h3>
-      <div class="text-ellipsis overflow-hidden">
+    <div class="flex flex-col gap-y-1 w-3/5">
+      <div class="h-4 flex items-center">
+        <h3
+          v-if="ranking === 0"
+          class="text-xs text-pitch bg-frequency font-normal font-eyebrow leading-5 uppercase px-2 rounded-sm"
+        >
+          Primary contact
+        </h3>
+      </div>
+      <div class="h-12 flex items-center">
+        <h3 class="text-base font-normal font-sans line-clamp-2">
+          {{ name }}
+        </h3>
+      </div>
+      <div class="h-5 text-ellipsis overflow-hidden">
         <a
-          v-if="email"
-          class="text-sm font-normal leading-tight hover:underline hover:cursor-pointer"
+          v-if="ranking === 0"
+          class="text-sm font-normal leading-tight underline hover:cursor-pointer"
           :title="email"
           :href="`mailto:${email}`"
         >
@@ -34,7 +38,7 @@
         </a>
       </div>
     </div>
-    <div class="w-1/4">
+    <div class="w-1/5">
       <button
         :id="`${email}EditStakeholderDropdownButton`"
         :data-dropdown-toggle="`${email}dropdownBottom`"

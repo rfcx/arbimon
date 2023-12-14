@@ -1,41 +1,5 @@
 <template>
   <div>
-    <h3 class="text-white text-xl font-medium font-sans leading-7 mb-3">
-      Project's primary contact
-    </h3>
-    <div
-      v-if="primaryContact == null"
-      class="flex items-center justify-center-max-w-sm"
-    >
-      <h3>No user selected</h3>
-    </div>
-    <div
-      v-else
-      class="relative flex items-center justify-between border border-frequency bg-pitch rounded-lg px-6 py-4 max-w-sm -z-10"
-    >
-      <icon-custom-fi-check-circle class="text-frequency bg-pitch w-6 h-6 absolute -translate-y-1/2 translate-x-1/2 left-auto -top-3 -right-3" />
-      <div class="flex items-center justify-start">
-        <img
-          class="w-12 h-12 rounded-full shadow"
-          :src="primaryContact?.image"
-          alt="user profile image"
-        >
-        <div class="ml-3">
-          <h3 class="text-danger text-xs font-medium font-eyebrow uppercase">
-            Primary contact
-          </h3>
-          <h3 class="text-base font-normal font-sans">
-            {{ primaryContact?.name }}
-          </h3>
-          <a
-            :href="`mailto:${primaryContact?.email}`"
-            class="text-util-gray-01 text-sm font-normal leading-tight hover:underline hover:cursor-pointer"
-          >
-            {{ primaryContact?.email }}
-          </a>
-        </div>
-      </div>
-    </div>
     <div class="flex justify-start items-center mt-10 mb-3">
       <h3 class="text-white text-xl font-medium font-sans leading-7 mr-8">
         Project members
@@ -50,7 +14,8 @@
         id="dashboard-project-stakeholders-editor-select-all-users-checkbox"
         type="checkbox"
         class="w-4 h-4 rounded checked:text-frequency border-0 outline-none"
-        @click="selectAllUsers"
+        :value="isAllUsersSelected"
+        @click="toggleAllUsersSelect"
       >
     </div>
     <router-link
@@ -67,7 +32,7 @@
         :name="member.firstname + ' ' + member.lastname"
         :image="member.picture ?? undefined"
         :email="member.email ?? ''"
-        :ranking="1"
+        :ranking="idx === 0 ? 0 : 1"
         @emit-hide-email="hideUserEmail"
       />
     </div>
@@ -270,11 +235,11 @@ const searchOrganizationValue = ref('')
 const addedOrganizations = ref<Array<OrganizationTypes['light']>>([])
 const selectedOrganizationIds = ref(props.organizations.map(o => o.id))
 const selectedProjectMembers = ref(props.projectMembers.filter(o => o.role === 'Admin').map(o => o.email))
+const isAllUsersSelected = ref<boolean>(false)
 
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
 const newOrganizationUrl = ref<string>('')
 
-const primaryContact = ref<{ id: number, name: string, email: string, image: string } | null>({ id: 122, name: 'Logan Sargeant', email: 'kingsargeant1122@gmail.com', image: 'https://picsum.photos/id/233/200/200' })
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult, isFetching: isSearchOrganizationFetching } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
@@ -381,8 +346,9 @@ const refetchOrganizationsSearch = async (): Promise<void> => {
   }
 }
 
-const selectAllUsers = (): void => {
-  selectedProjectMembers.value = props.projectMembers.map(u => u.email)
+const toggleAllUsersSelect = (): void => {
+  isAllUsersSelected.value = !isAllUsersSelected.value
+  selectedProjectMembers.value = isAllUsersSelected.value ? props.projectMembers.map(u => u.email) : []
 }
 
 const hideUserEmail = (): void => {
