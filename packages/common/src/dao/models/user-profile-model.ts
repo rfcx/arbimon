@@ -17,9 +17,13 @@ export const UserProfileModel = defineWithDefaults<UserProfile>(
     },
 
     // SKs
-    userIdAuth0: {
+    email: {
       type: DataTypes.STRING(255),
       unique: true
+    },
+    idAuth0: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     },
 
     // Facts

@@ -8,24 +8,18 @@ import { BioNotFoundError } from '~/errors'
 import { getObject, putObject } from '~/storage'
 import { get, getAllOrganizations as daoGetAllOrganizations, update } from './user-profile-dao'
 
-const defaultProfile = {
-  firstName: '',
-  lastName: ''
-}
-
 export const getUserProfile = async (userId: string): Promise<UserProfileResponse> => {
   const profile = await get(userId)
 
   // First time, create it
   if (profile === undefined) {
-    // TODO: Call Core to get the profile
-    return defaultProfile
+    throw BioNotFoundError()
   }
 
   return profile
 }
 
-export const patchUserProfile = async (userId: string, data: Partial<Omit<UserProfile, 'id' | 'userIdAuth0' | 'image' | 'createdAt' | 'updatedAt'>>): Promise<void> => {
+export const patchUserProfile = async (userId: string, data: Partial<Omit<UserProfile, 'id' | 'idAuth0' | 'image' | 'createdAt' | 'updatedAt'>>): Promise<void> => {
   const originalProfile = await getUserProfile(userId)
   const newProfile = { ...originalProfile, ...data }
 

@@ -32,7 +32,8 @@ const { UserProfile } = ModelRepository.getInstance(biodiversitySequelize)
 
 const defaultUser = {
   id: 1,
-  userIdAuth0: fakeTokenUserIdAuth0,
+  email: 'jake@rake.com',
+  idAuth0: fakeTokenUserIdAuth0,
   firstName: 'Jake',
   lastName: 'Rake'
 }

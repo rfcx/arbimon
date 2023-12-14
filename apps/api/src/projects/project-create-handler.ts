@@ -7,9 +7,9 @@ import { createProject } from './project-create-bll'
 export const projectCreateHandler: Handler<ProjectCreateResponse, unknown, unknown, ProjectCreateRequest> = async (req, res) => {
   // Inputs & validation
   const project = req.body
-  const userIdAuth0 = await extractUserId(req)
+  const idAuth0 = await extractUserId(req)
 
-  const slug = await createProject(project, userIdAuth0, req.headers.authorization ?? '')
+  const slug = await createProject(project, idAuth0, req.headers.authorization ?? '')
   res.statusCode = 201
   return { slug }
 }
