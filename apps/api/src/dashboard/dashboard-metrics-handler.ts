@@ -15,9 +15,5 @@ export const dashboardMetricsHandler: Handler<DashboardMetricsResponse, Dashboar
     throw BioInvalidPathParamError({ projectId })
   }
 
-  const projectMetrics = await getProjectMetrics(projectIdInteger)
-
-  return {
-    ...projectMetrics
-  }
+  return await getProjectMetrics(projectIdInteger)
 }
