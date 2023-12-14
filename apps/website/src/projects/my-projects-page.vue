@@ -23,7 +23,7 @@
           class="grid grid-cols-2 gap-4 py-8 lg:gap-6 lg:py-16 lg:grid-cols-3"
         >
           <ProjectCard
-            v-for="project in myProjectsInfo"
+            v-for="project in projects"
             :key="project.id"
             :project="project"
           />
@@ -45,7 +45,7 @@ import { useStore } from '~/store'
 import ProjectCard from './components/project-card.vue'
 
 onMounted(() => {
-  refreshProjects()
+  fetchProjects(0, LIMIT)
 })
 
 const store = useStore()
@@ -53,31 +53,24 @@ const store = useStore()
 const loadMore = () => {
   loadMoreProject()
 }
-const isLoading = ref(false)
+
 const apiClientBio = inject(apiClientKey) as AxiosInstance
-const myProjectsInfo = computed(() => store.myProjects)
+const projects = computed(() => store.myProjects)
+const hasFetchedAll = ref(false)
 const LIMIT = 20
+const isLoading = ref(false)
 
 const loadMoreProject = async (): Promise<void> => {
-  if (isLoading.value) return
-  try {
-    isLoading.value = true
-    const projects = await apiBioGetMyProjects(apiClientBio, LIMIT, myProjectsInfo.value.length)
-    store.updateMyProject(projects?.data)
-    isLoading.value = false
-  } catch (e) {
-    isLoading.value = false
-  }
+  if (hasFetchedAll.value || isLoading.value) return
+  fetchProjects(projects.value.length, LIMIT)
 }
 
-async function refreshProjects () {
-  if (isLoading.value) return
-  try {
-    isLoading.value = true
-    await store.refreshProjects()
-    isLoading.value = false
-  } catch (e) {
-    if (e instanceof Error) console.error(e.message)
-  }
+const fetchProjects = async (offset:number, limit: number): Promise<void> => {
+  isLoading.value = true
+  const myProjectResponse = await apiBioGetMyProjects(apiClientBio, limit, offset)
+  isLoading.value = false
+  if (myProjectResponse === undefined) return
+  hasFetchedAll.value = myProjectResponse.total < myProjectResponse.limit // check if reaching the end
+  store.updateMyProject(myProjectResponse?.data)
 }
 </script>
