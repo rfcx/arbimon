@@ -18,12 +18,12 @@
         @click="toggleAllUsersSelect"
       >
     </div>
-    <router-link
-      :to="{ name: ROUTE_NAMES.projectSettings }"
+    <a
+      :href="arbimonLink"
       class="text-frequency text-sm font-medium font-display leading-none"
     >
       <icon-custom-fi-external-link class="w-4 h-4 inline-flex" /> Manage project members
-    </router-link>
+    </a>
     <div class="grid grid-cols-2 gap-3 mt-3 mb-11 lg:grid-cols-3">
       <StakeholderCardEdit
         v-for="(member, idx) of projectMembers"
@@ -213,7 +213,7 @@ import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import { apiClientKey } from '@/globals'
-import { ROUTE_NAMES } from '~/router'
+import { useStore } from '~/store'
 import { useCreateOrganization } from '../../../../composables/use-create-organization'
 import { useGetSearchOrganizationsResult } from '../../../../composables/use-get-search-organizations-result'
 import OrganizationSearchResultCard from './organization-search-result-card.vue'
@@ -240,10 +240,17 @@ const isAllUsersSelected = ref<boolean>(false)
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
 const newOrganizationUrl = ref<string>('')
 
+const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult, isFetching: isSearchOrganizationFetching } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
 const { mutate: mutateNewOrganization } = useCreateOrganization(apiClientBio)
+
+const arbimonLink = computed(() => {
+  const selectedProjectSlug = store.selectedProject?.slug
+  if (selectedProjectSlug === undefined) return ''
+  else return `${import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL}/project/${selectedProjectSlug}/settings/users`
+})
 
 const openOrganizationSearch = async () => {
   dropdownStatus.value = 'search'
