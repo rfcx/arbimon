@@ -12,8 +12,8 @@
       class="flex flex-row justify-end pr-6"
     >
       <button
-        class="flex flex-row items-center"
-        :class="editable ? 'btn btn-secondary py-2 px-3 disabled:cursor-not-allowed' : 'invisible disabled:cursor-not-allowed'"
+        class="flex flex-row items-center disabled:hover:btn-disabled disabled:btn-disabled"
+        :class="editable ? 'btn btn-secondary py-2 px-3' : 'invisible'"
         :disabled="projectUserPermissionsStore.isGuest"
         @click="editMarkdownContent"
       >
@@ -28,14 +28,18 @@
       :expanded="isViewMored"
       :markdown="editableMarkdownText"
     />
-    <div class="relative">
+    <div>
       <button
         v-show="!isEditing && isMarkdownTextLong"
         :id="`${id}-markdown-viewer-read-more`"
-        :class="isViewMored === true ? 'bg-transparent absolute left-1/2 right-1/2 text-frequency text-base font-normal leading-normal z-20' : 'bg-transparent absolute left-1/2 right-1/2 text-frequency text-base font-normal leading-normal z-20'"
+        class="flex flex-row justify-start items-center px-6 py-5 bg-transparent text-frequency text-base font-normal leading-normal"
         @click="toggleExpandMarkdownContent"
       >
-        <icon-custom-fi-arrow-up :class="isViewMored === true ? 'text-frequency inline-block' : 'text-frequency inline-block transform rotate-180'" />
+        {{ isViewMored === true ? 'View less' : 'View more' }}
+        <icon-fa-chevron-up
+          class="ml-2 text-frequency w-4 h-4"
+          :class="isViewMored === true ? '' : 'transform rotate-180'"
+        />
       </button>
     </div>
     <div
@@ -61,6 +65,7 @@
       class="mx-auto"
       @on-editor-close="closeEditor"
     />
+    <GuestBanner v-if="projectUserPermissionsStore.isGuest" />
   </template>
 </template>
 
@@ -70,6 +75,7 @@ import { computed, nextTick, onMounted, ref, unref, watch } from 'vue'
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
 import { useProjectUserPermissionsStore } from '~/store'
+import GuestBanner from '../../../../../_layout/components/guest-banner/guest-banner.vue'
 import ProjectSummaryEmpty from './project-summary-empty.vue'
 import ProjectSummaryEmptyGuestView from './project-summary-empty-guest-view.vue'
 

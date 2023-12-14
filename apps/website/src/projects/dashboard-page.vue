@@ -9,11 +9,11 @@
           {{ store.selectedProject?.name }}
         </h1>
       </div>
-      <div class="text-gray-900 dark:text-white">
+      <div class="text-gray-900 dark:text-white flex flex-col gap-y-6">
         <h2>
           Overview
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-6 pt-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
           <DashboardOverview
             v-for="stat in stats"
             :key="stat.value"
@@ -21,11 +21,11 @@
           />
         </div>
       </div>
-      <div class="text-gray-900 dark:text-white">
+      <div class="text-gray-900 dark:text-white flex flex-col gap-y-6">
         <h2>
           Sites
         </h2>
-        <div class="w-full text-black mapboxgl-map pt-6">
+        <div class="w-full text-black mapboxgl-map">
           <map-base-component
             :dataset="mapDataset()"
             data-key="refactorThis"
@@ -44,13 +44,13 @@
           />
         </div>
       </div>
-      <div class="text-gray-900 dark:text-white">
+      <div class="text-gray-900 dark:text-white flex flex-col gap-y-6">
         <div class="flex items-center space-x-8">
           <h2>
             Analyses
           </h2>
           <button
-            class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3 disabled:cursor-not-allowed"
+            class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3 disabled:hover:btn-disabled disabled:btn-disabled"
             type="button"
             :title="'Create New Analysis Job'"
             :disabled="projectUserPermissionsStore.isGuest"
@@ -64,7 +64,8 @@
             @emit-close="toggleAnalysisSelector(false)"
           />
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10 pt-6">
+        <GuestBanner v-if="projectUserPermissionsStore.isGuest" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10">
           <DashboardAnalyses
             v-for="analysis in analyses"
             :key="analysis.value"
@@ -93,6 +94,7 @@ import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { type CircleStyle } from '~/maps/utils/circle-style/types'
 import { useProjectUserPermissionsStore, useStore } from '~/store'
+import GuestBanner from '../_layout/components//guest-banner/guest-banner.vue'
 import { useAedJobCount, useClusteringJobCount, useClusteringSpeciesDetected } from './_composables/use-aed-count'
 import { usePlaylistCount } from './_composables/use-playlist-count'
 import { usePmSpeciesDetected, usePmTemplateCount } from './_composables/use-pm-count'

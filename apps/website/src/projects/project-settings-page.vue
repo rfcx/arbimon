@@ -30,10 +30,14 @@
           />
         </div>
       </div>
+      <GuestBanner
+        v-if="projectUserPermissionsStore.isGuest"
+        class="mt-4"
+      />
       <div class="mt-4 sm:mt-6 flex flex-row-reverse items-center gap-4">
         <button
           :disabled="projectUserPermissionsStore.isGuest || isSaving"
-          class="self-end inline-flex items-center btn btn-primary disabled:opacity-75 disabled:cursor-not-allowed"
+          class="self-end inline-flex items-center btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
           @click.prevent="save"
         >
           Save edit
@@ -74,6 +78,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientKey } from '@/globals'
 import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
+import GuestBanner from '../_layout/components//guest-banner/guest-banner.vue'
 import { useGetProjectSettings, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectForm from './components/form/project-form.vue'

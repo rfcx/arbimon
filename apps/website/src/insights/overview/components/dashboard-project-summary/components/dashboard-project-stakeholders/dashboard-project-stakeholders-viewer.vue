@@ -32,8 +32,9 @@
         :ranking="1"
       />
     </div>
+    <GuestBanner v-if="projectUserPermissionsStore.isGuest" />
     <div
-      v-if="editable"
+      v-if="editable && !projectUserPermissionsStore.isGuest"
       class="flex w-full justify-end mt-6"
     >
       <button
@@ -59,7 +60,7 @@
 import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
-import { useStore } from '~/store'
+import { useProjectUserPermissionsStore, useStore } from '~/store'
 import StakeholderCard from './stakeholder-card.vue'
 import StakeholdersReadonlyBanner from './stakeholders-readonly-banner.vue'
 import StakeholdersTosBanner from './stakeholders-tos-banner.vue'
@@ -72,4 +73,6 @@ defineProps<{
 defineEmits<{(event: 'emit-is-updating'): void}>()
 
 const store = useStore()
+
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 </script>
