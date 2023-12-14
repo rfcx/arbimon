@@ -1,12 +1,10 @@
-import { masterOjectiveTypes, objectiveTypes } from '@rfcx-bio/common/dao/master-data/project-objective'
-import { type ProjectObjective } from '@rfcx-bio/common/dao/types'
+import { masterObjectiveTypes } from '@rfcx-bio/common/dao/master-data/project-objective'
 
-export const getIndex = (length: number): number => {
-  return length > 1 ? Math.floor(Math.random() * length) : 0
-}
-
-export const getImageByObjectives = (inputObjectives: string[]): string => {
-  const index = getIndex(inputObjectives.length)
-  const image = objectiveTypes.find((objective: ProjectObjective) => objective.slug === inputObjectives[index])?.imageUrl ?? masterOjectiveTypes.Others.imageUrl
-  return image
+// Choose an image based on the first objective or take the default image
+export const getImageByObjectives = (objectives?: string[]): string => {
+  const defaultImage = masterObjectiveTypes.Others.imageUrl
+  if (objectives === undefined || objectives.length === 0) {
+    return defaultImage
+  }
+  return Object.values(masterObjectiveTypes).find((o) => o.slug === objectives[0])?.imageUrl ?? defaultImage
 }

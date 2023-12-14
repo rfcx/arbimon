@@ -6,9 +6,9 @@ export interface LocationProjectProfile {
   methods: string
   keyResult: string
   resources: string
-  objectives: string[]
-  dateStart: Date | null
-  dateEnd: Date | null
+  objectives?: string[]
+  dateStart?: Date
+  dateEnd?: Date
 }
 
 /**

@@ -1,4 +1,4 @@
-import { masterOjectiveTypes as masterOjectiveTypesShared, objectiveTypes as objectiveTypesShared } from '@rfcx-bio/common/dao/master-data'
+import { masterObjectiveTypes as masterObjectiveTypesShared } from '@rfcx-bio/common/dao/master-data'
 import { type ProjectObjective as ProjectObjectiveShared } from '@rfcx-bio/common/dao/types'
 
 export interface Analysis {
@@ -40,6 +40,6 @@ export interface ProjectDefault {
   onGoing: boolean
 }
 
+// TODO: Investigate why this is needed
 export type ProjectObjective = ProjectObjectiveShared
-export const masterOjectiveTypes = masterOjectiveTypesShared
-export const objectiveTypes: readonly ProjectObjective[] = objectiveTypesShared
+export const masterObjectiveTypes = masterObjectiveTypesShared
