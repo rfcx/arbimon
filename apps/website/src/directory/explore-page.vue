@@ -89,7 +89,7 @@ const onEmitLoadMore = async () => {
   const total = pdStore.allProjects.length
   if (offset === total) return
   if (isLoading.value) return
-  const ids: number[] = pdStore.allProjects.slice(offset, offset + LIMIT).map((p: { id: any }) => p.id)
+  const ids: number[] = pdStore.allProjects.slice(offset, offset + LIMIT).map(p => p.id)
   await fetchProjectsWithMetricsByIds(ids)
 }
 
