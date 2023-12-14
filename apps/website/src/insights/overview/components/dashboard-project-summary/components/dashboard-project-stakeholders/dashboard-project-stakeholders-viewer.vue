@@ -32,7 +32,10 @@
         :ranking="1"
       />
     </div>
-    <div class="flex w-full justify-end mt-6">
+    <div
+      v-if="editable"
+      class="flex w-full justify-end mt-6"
+    >
       <button
         v-show="editable"
         class="btn btn-secondary"
@@ -41,6 +44,14 @@
         Manage stakeholders
       </button>
     </div>
+    <StakeholdersReadonlyBanner
+      v-else-if="store.user != null"
+      class="mt-6"
+    />
+    <StakeholdersTosBanner
+      v-else
+      class="mt-6"
+    />
   </div>
 </template>
 
@@ -48,7 +59,10 @@
 import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
+import { useStore } from '~/store'
 import StakeholderCard from './stakeholder-card.vue'
+import StakeholdersReadonlyBanner from './stakeholders-readonly-banner.vue'
+import StakeholdersTosBanner from './stakeholders-tos-banner.vue'
 
 defineProps<{
   editable: boolean,
@@ -56,4 +70,6 @@ defineProps<{
   projectMembers: Array<CoreUser>
 }>()
 defineEmits<{(event: 'emit-is-updating'): void}>()
+
+const store = useStore()
 </script>
