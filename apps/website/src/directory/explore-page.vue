@@ -62,7 +62,6 @@ const onEmitSelectedProject = (locationProjectId: number) => {
 }
 
 const onEmitSwapTab = (tab: Tab) => {
-  console.log('onEmitSwapTab', tab)
   selectedTab.value = tab
   switch (tab) {
     case 'All': {
