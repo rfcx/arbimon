@@ -34,7 +34,7 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { type Ref, computed, inject, onMounted, ref } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 
 import { apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
@@ -53,25 +53,29 @@ const store = useStore()
 const loadMore = () => {
   loadMoreProject()
 }
-const loading: Ref<boolean> = ref(true)
+const isLoading = ref(false)
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const myProjectsInfo = computed(() => store.myProjects)
 const LIMIT = 20
 
 const loadMoreProject = async (): Promise<void> => {
-  if (myProjectsInfo.value.length === 0) return
+  if (isLoading.value) return
   try {
-    loading.value = true
+    isLoading.value = true
     const projects = await apiBioGetMyProjects(apiClientBio, LIMIT, myProjectsInfo.value.length)
     store.updateMyProject(projects?.data)
+    isLoading.value = false
   } catch (e) {
-    loading.value = false
+    isLoading.value = false
   }
 }
 
 async function refreshProjects () {
+  if (isLoading.value) return
   try {
+    isLoading.value = true
     await store.refreshProjects()
+    isLoading.value = false
   } catch (e) {
     if (e instanceof Error) console.error(e.message)
   }
