@@ -97,6 +97,7 @@
                     :scientific-name="item.scientificName"
                     :common-name="item.commonName"
                     :photo-url="item.photoUrl"
+                    :redirect="false"
                   />
                   <div class="self-center">
                     <el-tag

@@ -1,7 +1,7 @@
 <template>
   <div
-    class="flex flex-row items-center justify-between border-1 border-insight rounded-lg py-4 px-[18px] row-span-3 group hover:(row-span-4 py-8 bg-moss)"
-    :class="{'row-span-4 bg-moss': isHovered, 'border-frequency relative row-span-4 bg-moss': checked}"
+    class="flex flex-row items-center justify-between border-1 border-insight rounded-lg py-4 px-[18px] group hover:(bg-moss)"
+    :class="{'bg-moss': isHovered, 'border-frequency relative bg-moss': checked}"
     @click="toggleSelectMemberCard"
   >
     <icon-custom-fi-check-circle

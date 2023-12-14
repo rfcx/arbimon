@@ -11,6 +11,7 @@
           :scientific-name="item.scientificName"
           :common-name="item.commonName"
           :photo-url="item.photoUrl"
+          :redirect="true"
         />
       </div>
       <div class="flex items-center">

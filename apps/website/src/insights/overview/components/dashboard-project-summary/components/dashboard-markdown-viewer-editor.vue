@@ -7,6 +7,19 @@
     <ProjectSummaryEmptyGuestView v-else />
   </template>
   <template v-else>
+    <div
+      v-show="!isEditing"
+      class="flex flex-row justify-end pr-6"
+    >
+      <button
+        class="flex flex-row items-center"
+        :class="editable ? 'btn btn-secondary py-2 px-3 disabled:cursor-not-allowed' : 'invisible disabled:cursor-not-allowed'"
+        :disabled="projectUserPermissionsStore.isGuest"
+        @click="editMarkdownContent"
+      >
+        <span>Edit text</span> <icon-custom-ic-edit class="ml-2 self-center" />
+      </button>
+    </div>
     <MarkdownViewer
       v-show="!isEditing"
       :id="`${id}-markdown-viewer-component`"
@@ -15,27 +28,14 @@
       :expanded="isViewMored"
       :markdown="editableMarkdownText"
     />
-    <button
-      v-show="!isEditing"
-      :id="`${id}-markdown-viewer-read-more`"
-      :class="isViewMored === true ? 'bg-transparent absolute left-1/2 right-1/2 bottom-6 text-frequency text-base font-normal leading-normal z-20' : 'bg-transparent absolute left-1/2 right-1/2 bottom-6 text-frequency text-base font-normal leading-normal z-20'"
-      @click="toggleExpandMarkdownContent"
-    >
-      <icon-custom-fi-arrow-up :class="isViewMored === true ? 'text-frequency inline-block' : 'text-frequency inline-block transform rotate-180'" />
-    </button>
-    <div
-      v-show="!isEditing"
-      class="flex flex-row justify-end mt-4"
-    >
+    <div class="relative">
       <button
-        :class="editable ? 'btn btn-secondary py-1.5 px-3 disabled:cursor-not-allowed' : 'invisible disabled:cursor-not-allowed'"
-        :disabled="projectUserPermissionsStore.isGuest"
-        @click="editMarkdownContent"
+        v-show="!isEditing && isMarkdownTextLong"
+        :id="`${id}-markdown-viewer-read-more`"
+        :class="isViewMored === true ? 'bg-transparent absolute left-1/2 right-1/2 text-frequency text-base font-normal leading-normal z-20' : 'bg-transparent absolute left-1/2 right-1/2 text-frequency text-base font-normal leading-normal z-20'"
+        @click="toggleExpandMarkdownContent"
       >
-        <span class="text-sm font-display font-medium">
-          Edit text
-        </span>
-        <icon-custom-fi-edit class="w-4 h-4 ml-3 inline-flex text-frequency" />
+        <icon-custom-fi-arrow-up :class="isViewMored === true ? 'text-frequency inline-block' : 'text-frequency inline-block transform rotate-180'" />
       </button>
     </div>
     <div
@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref, unref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, unref, watch } from 'vue'
 
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
@@ -114,6 +114,10 @@ onMounted(async () => {
       emit('update:isViewMored', true)
     }
   })
+})
+
+const isMarkdownTextLong = computed(() => {
+  return props.rawMarkdownText && props.rawMarkdownText.length > 1710
 })
 
 const toggleExpandMarkdownContent = (): void => {

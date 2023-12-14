@@ -267,7 +267,7 @@ const allItems: Item[] = [
       },
       {
         title: 'Recordings',
-        legacyPath: '/audiodata/recordings'
+        legacyPath: '/audiodata/uploads'
       }
     ]
   },

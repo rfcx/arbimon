@@ -20,6 +20,7 @@
   </div>
   <div
     v-else-if="data"
+    id="dashboard-species-list"
   >
     <div
       v-if="selectedRiskUI"
@@ -58,7 +59,7 @@
       <button
         v-else
         class="flex flex-row text-frequency gap-x-2 items-center"
-        @click="isViewAll = false"
+        @click="viewLess()"
       >
         View less <icon-custom-ic-arrow-view-more class="transform rotate-180" />
       </button>
@@ -134,5 +135,17 @@ const currentSetOfData = computed(() => {
 watch(() => props.selectedRisk, () => {
   isViewAll.value = false
 })
+
+const scrollToTop = () => {
+  const container = document.getElementById('dashboard-species-list')
+  if (container) {
+    container.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
+
+const viewLess = () => {
+  isViewAll.value = false
+  scrollToTop()
+}
 
 </script>

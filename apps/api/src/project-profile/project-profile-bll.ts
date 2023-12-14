@@ -1,9 +1,9 @@
-import { type ProjectSettingsResponse, type ProjectSettingsUpdateBody } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import { type ProjectProfileUpdateBody, type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
 import { editProject } from '~/api-core/api-core'
 import { getProjectCoreId, updateProjectSettings as updateProjectSettingsLocal } from './project-profile-dao'
 
-export const updateProjectAndProfile = async (request: ProjectSettingsUpdateBody, token: string, projectId: number): Promise<ProjectSettingsResponse> => {
+export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody, token: string, projectId: number): Promise<ProjectSettingsResponse> => {
   // Get core project id
   const coreProjectId = await getProjectCoreId(projectId)
   if (coreProjectId === undefined) throw new Error(`Failed to get core project id for locationProjectId: ${projectId}`)

@@ -10,6 +10,7 @@
       @emit-selected-project="onEmitSelectedProject"
       @emit-search="onEmitSearch"
       @emit-load-more="onEmitLoadMore"
+      @emit-swap-tab="onEmitSwapTab"
     />
     <project-info
       v-if="selectedProjectId !== null && !hideProjectList"
@@ -66,8 +67,9 @@ const isLoading = ref(false)
 
 /** List of projects (with profile) you got from search results, initial is the first 20 in the list -- to show in the list */
 const projectResults = ref<ProjectLight[]>(pdStore.allProjects)
+
 const myProjects = computed(() => {
-  const myProjectIds = store.myProjects.map(p => p.id)
+  const myProjectIds = store.projects.filter(p => p.isMyProject).map(p => p.id)
   return pdStore.allProjects.filter(p => myProjectIds.includes(p.id))
 })
 
@@ -89,26 +91,26 @@ const leftMargin = computed(() => {
   }
 })
 
-const onEmitSearch = async (keyword: string) => {
-  switch (keyword) {
+const onEmitSwapTab = (tab: Tab) => {
+  selectedTab.value = tab
+  switch (tab) {
     case 'All': {
-      selectedTab.value = 'All'
       projectResults.value = pdStore.allProjects
       break
     } case 'My projects': {
-      selectedTab.value = 'My projects'
       projectResults.value = myProjects.value
-      break
-    } default: {
-      const projectsInCriteria = pdStore.allProjects.filter(p => p.name.toLowerCase().includes(keyword.toLowerCase()))
-      projectResults.value = projectsInCriteria
-      const ids = projectsInCriteria.map(p => p.id)
-      const projectsWithMetrics = pdStore.getProjectWithMetricsByIds(ids)
-      if (projectsWithMetrics.length === ids.length) return
-      await fetchProjectsWithMetricsByIds(ids)
       break
     }
   }
+}
+
+const onEmitSearch = async (keyword: string) => {
+    const projectsInCriteria = pdStore.allProjects.filter(p => p.name.toLowerCase().includes(keyword.toLowerCase()))
+    projectResults.value = projectsInCriteria
+    const ids = projectsInCriteria.map(p => p.id)
+    const projectsWithMetrics = pdStore.getProjectWithMetricsByIds(ids)
+    if (projectsWithMetrics.length === ids.length) return
+    await fetchProjectsWithMetricsByIds(ids)
 }
 
 const onEmitLoadMore = async () => {
