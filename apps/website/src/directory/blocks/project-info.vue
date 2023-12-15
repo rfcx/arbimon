@@ -120,7 +120,7 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
-import { computed, inject } from 'vue'
+import { computed, inject, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
 import { apiClientKey } from '@/globals'
@@ -128,10 +128,6 @@ import { useGetProjectInfo } from '@/projects/_composables/use-project-profile'
 import { useProjectDirectoryStore } from '~/store'
 import NumericMetric from '../components/numeric-metric.vue'
 import { type ProjectProfileWithMetrics } from '../data/types'
-
-const apiClientBio = inject(apiClientKey) as AxiosInstance
-const selectedProjectId = computed(() => props.projectId)
-const { data: profile } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics'])
 
 const props = defineProps<{ projectId: number }>()
 const emit = defineEmits<{(e: 'emitCloseProjectInfo'): void }>()
@@ -155,6 +151,14 @@ const project = computed<ProjectProfileWithMetrics | undefined>(() => {
     }
   }
   return project
+})
+
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+const selectedProjectId = computed(() => props.projectId)
+const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics'])
+
+watch(() => props.projectId, () => {
+  profileRefetch()
 })
 
 const countrie = computed(() => {
