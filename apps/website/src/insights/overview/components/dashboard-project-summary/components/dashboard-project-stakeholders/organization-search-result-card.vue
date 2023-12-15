@@ -1,21 +1,25 @@
 <template>
   <div
-    class="flex items-center hover:bg-moss rounded-lg space-x-3 justify-between py-4 px-[18px] cursor-pointer"
+    class="flex items-center hover:bg-moss space-x-3 justify-between py-4 px-[18px] cursor-pointer h-22"
     @click="$emit('emitAddToSelectedOrganization', id)"
   >
-    <div class="flex items-center justify-start space-x-2">
+    <div class="flex items-center justify-start space-x-3">
       <img
         class="w-12 h-12 rounded-full shadow"
         :src="image ?? undefined"
         alt="user profile image"
       >
       <div>
-        <h3 class="text-base font-normal font-sans">
+        <h3
+          class="text-base font-normal font-sans line-clamp-2"
+          :title="name"
+        >
           {{ name }}
         </h3>
         <h4
           v-if="description"
-          class="text-insight text-sm font-normal font-sans leading-tight"
+          class="text-insight text-sm font-normal font-sans leading-tight line-clamp-2"
+          :title="description"
         >
           {{ description }}
         </h4>
