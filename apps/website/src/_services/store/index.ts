@@ -39,11 +39,10 @@ export const useStore = defineStore('root', {
     },
     updateMyProject (projects?: LocationProjectWithInfo[]) {
       projects?.forEach(p => {
-        const isExists = this.myProjects.find(mp => mp.idCore === p.idCore)
-        if (!isExists) {
+        const index = this.myProjects.findIndex(mp => mp.idCore === p.idCore)
+        if (index === -1) {
           this.myProjects.push(p)
         } else {
-          const index = this.myProjects.findIndex(mp => mp.idCore === p.idCore)
           this.myProjects[index] = p // update the changes to existing objects
         }
       })

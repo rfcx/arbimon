@@ -1,7 +1,7 @@
 <template>
   <landing-navbar />
   <div
-    v-infinite-scroll="loadMore"
+    v-infinite-scroll="loadMoreProject"
     :infinite-scroll-distance="40"
   >
     <section class="pt-8 bg-white dark:bg-pitch">
@@ -49,10 +49,6 @@ onMounted(() => {
 })
 
 const store = useStore()
-
-const loadMore = () => {
-  loadMoreProject()
-}
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const projects = computed(() => store.myProjects)
