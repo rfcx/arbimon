@@ -11,8 +11,8 @@ export type DashboardStakeholdersParams = ProjectRouteParamsSerialized
 // Response types
 export type DashboardStakeholdersUser = Pick<UserProfile, 'email' | 'firstName' | 'lastName' | 'id' | 'image'> & Pick<LocationProjectUserRole, 'roleId' | 'ranking'>
 export interface DashboardStakeholdersResponse {
-  user: DashboardStakeholdersUser[]
-  organization: Array<OrganizationTypes['light']>
+  users: DashboardStakeholdersUser[]
+  organizations: Array<OrganizationTypes['light']>
 }
 
 // Route
@@ -27,26 +27,21 @@ export const apiBioGetDashboardStakeholders = async (apiClient: AxiosInstance, p
 // The `PATCH` Organization Service
 
 // Request types
-export type UpdateDashboardStakeholderOrganizationsParams = ProjectRouteParamsSerialized
+export type UpdateDashboardStakeholdersParams = ProjectRouteParamsSerialized
 
-export interface UpdateDashboardStakeholderOrganizationsRequestBody {
-  // Array of organization ids
+export interface UpdateDashboardStakeholdersRequestBody {
+  /** Array of organization ids */
   organizations: number[]
+  /** Array of user id and their rank */
+  users: UpdateDashboardStakeholdersRequestBodyUser[]
 }
 
-// Response types
-export interface UpdateDashboardStakeholderOrganizationsResponseBody {
-  message: string
-}
+export type UpdateDashboardStakeholdersRequestBodyUser = Pick<LocationProjectUserRole, 'ranking' | 'userId'>
 
 // Route
-export const updateDashboardStakeholderOrganizationsRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/dashboard-stakeholders/organizations`
+export const updateDashboardStakeholdersRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/dashboard-stakeholders`
 
 // Service
-export const apiBioUpdateDashboardStakeholderOrganizations = async (apiClient: AxiosInstance, projectId: number, organizations: number[]): Promise<UpdateDashboardStakeholderOrganizationsResponseBody> => {
-  const response = await apiClient.patch(`/projects/${projectId}/dashboard-stakeholders/organizations`, {
-    organizations
-  })
-
-  return response.data
+export const apiBioUpdateDashboardStakeholders = async (apiClient: AxiosInstance, projectId: number, usersAndOrganizations: UpdateDashboardStakeholdersRequestBody): Promise<void> => {
+  await apiClient.patch(`/projects/${projectId}/dashboard-stakeholders`, usersAndOrganizations)
 }
