@@ -47,6 +47,7 @@
       <div class="p-4 border-b border-util-gray-01">
         <span class="text-lg font-medium">{{ project?.name }}</span>
         <div
+          v-if="profile?.dateStart"
           class="flex font-medium text-sm flex-row border-gray-300 mt-3 space-x-4 items-center"
         >
           <span>
