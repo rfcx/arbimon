@@ -5,7 +5,7 @@ import { dashboardMetricsRoute } from '@rfcx-bio/common/api-bio/dashboard/dashbo
 import { dashboardProfileRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-profile'
 import { dashboardSpeciesByRiskDataRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-by-risk'
 import { dashboardSpeciesDataRoute, speciesHighlightedDeleteRoute, speciesHighlightedPostRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
-import { dashboardStakeholdersRoute, updateDashboardStakeholderOrganizationsRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
+import { dashboardStakeholdersRoute, updateDashboardStakeholdersRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 
 import { type RouteRegistration, DELETE, GET, PATCH, POST } from '../_services/api-helpers/types'
 import { dashboardContentHandler, updateDashboardContentHandler } from './dashboard-content-handler'
@@ -14,8 +14,7 @@ import { dashboardDataBySiteHandler } from './dashboard-data-by-site-handler'
 import { dashboardMetricsHandler } from './dashboard-metrics-handler'
 import { dashboardSpeciesByRiskDataHandler } from './dashboard-species-by-risk-handler'
 import { dashboardSpeciesDataHandler, dashboardSpeciesHighlightedDeleteHandler, dashboardSpeciesHighlightedPostHandler } from './dashboard-species-data-handler'
-import { dashboardStakeholdersHandler } from './dashboard-stakeholders-handler'
-import { updateDashboardStakeholderOrganizationsHandler } from './update-dashboard-stakeholder-organizations-handler'
+import { dashboardStakeholdersHandler, updateDashboardStakeholdersHandler } from './dashboard-stakeholders-handler'
 
 export const routesDashboard: RouteRegistration[] = [
   {
@@ -75,7 +74,7 @@ export const routesDashboard: RouteRegistration[] = [
   },
   {
     method: PATCH,
-    url: updateDashboardStakeholderOrganizationsRoute,
-    handler: updateDashboardStakeholderOrganizationsHandler
+    url: updateDashboardStakeholdersRoute,
+    handler: updateDashboardStakeholdersHandler
   }
 ]

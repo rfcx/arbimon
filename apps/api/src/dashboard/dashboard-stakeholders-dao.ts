@@ -2,7 +2,7 @@ import { QueryTypes } from 'sequelize'
 
 import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type OrganizationTypes } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectUserRole, type OrganizationTypes } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
@@ -10,7 +10,6 @@ import { BioNotFoundError } from '~/errors'
 export const getProjectUsers = async (projectId: number): Promise<DashboardStakeholdersUser[]> => {
   const sequelize = getSequelize()
 
-  // INFO: raking higher than -1 for select everyone who's displayed on the stakeholders section.
   const sql = `
     select
       location_project_user_role.user_id as "id",
@@ -22,7 +21,7 @@ export const getProjectUsers = async (projectId: number): Promise<DashboardStake
       user_profile.email
     from location_project_user_role
     inner join user_profile on location_project_user_role.user_id = user_profile.id
-    where location_project_user_role.location_project_id = $1 and location_project_user_role.ranking < -1`
+    where location_project_user_role.location_project_id = $1`
 
   const projectUsers = await sequelize.query<DashboardStakeholdersUser>(sql, { bind: [projectId], type: QueryTypes.SELECT })
 
@@ -62,12 +61,19 @@ export const getProjectStakeholders = async (projectId: number): Promise<Array<O
   })
 }
 
-export const updateProjectStakeholdersOrganization = async (projectId: number, organizationIds: number[]): Promise<void> => {
+export const updateProjectStakeholders = async (projectId: number, stakeholders: { organizations: number[], users: Array<Pick<LocationProjectUserRole, 'userId' | 'ranking'>> }): Promise<void> => {
   const sequelize = getSequelize()
   const { LocationProjectOrganization } = ModelRepository.getInstance(sequelize)
 
+  const updateUserSql = 'update location_project_user_role set ranking = $1 where location_project_id = $2 and user_id = $3'
+
   await sequelize.transaction(async t => {
     await LocationProjectOrganization.destroy({ where: { locationProjectId: projectId }, transaction: t })
-    await LocationProjectOrganization.bulkCreate(organizationIds.map(o => ({ locationProjectId: projectId, organizationId: o })), { transaction: t })
+    await LocationProjectOrganization.bulkCreate(stakeholders.organizations.map(o => ({ locationProjectId: projectId, organizationId: o })), { transaction: t })
+
+    // individually run an update on each user (we cannot simple delete them and recreate them)
+    for (const user of stakeholders.users) {
+      await sequelize.query(updateUserSql, { bind: [user.ranking, projectId, user.userId], transaction: t })
+    }
   })
 }

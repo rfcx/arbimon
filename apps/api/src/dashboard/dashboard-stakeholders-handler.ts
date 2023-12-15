@@ -1,10 +1,10 @@
-import { type DashboardStakeholdersParams, type DashboardStakeholdersResponse, type UpdateDashboardStakeholderOrganizationsParams, type UpdateDashboardStakeholderOrganizationsRequestBody, type UpdateDashboardStakeholderOrganizationsResponseBody } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
+import { type DashboardStakeholdersParams, type DashboardStakeholdersResponse, type UpdateDashboardStakeholdersParams, type UpdateDashboardStakeholdersRequestBody } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioUnauthorizedError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getProjectStakeholders, getProjectUsers, updateProjectStakeholdersOrganization } from './dashboard-stakeholders-dao'
+import { getProjectStakeholders, getProjectUsers, updateProjectStakeholders } from './dashboard-stakeholders-dao'
 
 export const dashboardStakeholdersHandler: Handler<DashboardStakeholdersResponse, DashboardStakeholdersParams> = async (req) => {
   // Inputs & validation
@@ -16,16 +16,16 @@ export const dashboardStakeholdersHandler: Handler<DashboardStakeholdersResponse
     throw BioInvalidPathParamError({ projectId })
   }
 
-  const organization = await getProjectStakeholders(projectIdInteger)
+  const organizations = await getProjectStakeholders(projectIdInteger)
   const users = await getProjectUsers(projectIdInteger)
 
   return {
-    user: users,
-    organization
+    users,
+    organizations
   }
 }
 
-export const updateDashboardStakeholdersHandler: Handler<UpdateDashboardStakeholderOrganizationsResponseBody, UpdateDashboardStakeholderOrganizationsParams, unknown, UpdateDashboardStakeholderOrganizationsRequestBody> = async (req) => {
+export const updateDashboardStakeholdersHandler: Handler<string, UpdateDashboardStakeholdersParams, unknown, UpdateDashboardStakeholdersRequestBody> = async (req, rep) => {
   const token = req.headers.authorization
 
   // no token no data
@@ -42,9 +42,8 @@ export const updateDashboardStakeholdersHandler: Handler<UpdateDashboardStakehol
     throw BioInvalidPathParamError({ projectId })
   }
 
-  await updateProjectStakeholdersOrganization(projectIdInteger, req.body.organizations)
+  await updateProjectStakeholders(projectIdInteger, req.body)
 
-  return {
-    message: 'OK'
-  }
+  void rep.code(204)
+  return ''
 }
