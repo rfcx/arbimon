@@ -13,8 +13,8 @@ vi.mock('~/api-core/api-core')
 
 const ROUTE = '/profile'
 
-const fakeToken = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6ImE0NTBhMzFkMjEwYTY5N2ZmMDI3NjU0YmZhMWZmMTFlIn0.eyJhdXRoMF91c2VyX2lkIjoidGVzdCJ9.571qutLhQm4Wc6hdhsVCxKm_rh4szTg9Wygz2JVxIItf3M_hNI5ats5W-HoJJjmFsBJ_oOwI1uU_6e4bfaFcrg'
-const fakeTokenUserIdAuth0 = 'test'
+const fakeToken = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUZXN0IiwiaWF0IjoxNzAyNTk0NDkyLCJleHAiOjE3MzQxMzA0OTIsImF1ZCI6InVua25vd24uY29tIiwic3ViIjoiYXV0aDB8eHl6IiwiZ2l2ZW5fbmFtZSI6Ikpha2UiLCJmYW1pbHlfbmFtZSI6IlJha2UiLCJlbWFpbCI6Impha2VAcmFrZS5jb20iLCJhdXRoMF91c2VyX2lkIjoiYXV0aDB8eHl6In0.e3V7vOoTEeet5i02PsQYpUtI2buJFv9s9DS1J82cWOk'
+const fakeTokenUserIdAuth0 = 'auth0|xyz'
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
   const app = await fastify()
