@@ -1,17 +1,17 @@
 <template>
   <div class="flex flex-col inset-1/4 left-100 w-98 bg-moss transition-transform -translate-x-full rounded-lg">
-    <div class="rounded-t-lg bg-moss p-2">
-      <div class="flex flex-row justify-between items-center ml-2 mr-2">
-        <span
-          v-if="project?.countries.length === 0"
-          class="text-sm text-spoonbill font-medium flex-1"
-        >
-          No site
-        </span>
+    <div class="rounded-t-lg bg-moss">
+      <div class="flex flex-row justify-between items-center">
         <div class="flex flex-1 flex-row items-center">
           <span
+            v-if="project?.countries.length === 0"
+            class="text-spoonbill font-medium text-xs ml-4"
+          >
+            No site
+          </span>
+          <span
             v-if="project?.countries.length !== 0"
-            class="text-spoonbill font-medium text-xs ml-2"
+            class="text-spoonbill font-medium text-xs ml-4"
           >{{ countrie }}</span>
           <div
             v-if="countrieFlag"
@@ -25,11 +25,11 @@
           </div>
           <icon-custom-fi-globe
             v-else
-            class="flex m-2"
+            class="flex m-2 my-3"
           />
         </div>
         <svg
-          class="w-4 h-3.5 m-auto self-end"
+          class="w-4 h-3.5 m-auto self-end mr-4"
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
