@@ -55,6 +55,7 @@
     "fastify-auth0-verify": "^0.7.0",
     "fastify-plugin": "^3.0.1",
     "lodash-es": "^4.17.21",
+    "quick-lru": "^7.0.0",
     "sequelize": "7.0.0-alpha.5"
   },
   "devDependencies": {

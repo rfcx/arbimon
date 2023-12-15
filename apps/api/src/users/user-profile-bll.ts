@@ -1,14 +1,13 @@
 import { type MultipartFile } from '@fastify/multipart'
 import { extname } from 'node:path'
 
-import { type UserProfileResponse } from '@rfcx-bio/common/api-bio/users/profile'
 import { type OrganizationTypes, type UserProfile } from '@rfcx-bio/common/dao/types'
 
 import { BioNotFoundError } from '~/errors'
 import { getObject, putObject } from '~/storage'
 import { get, getAllOrganizations as daoGetAllOrganizations, update } from './user-profile-dao'
 
-export const getUserProfile = async (userId: string): Promise<UserProfileResponse> => {
+export const getUserProfile = async (userId: string): Promise<Omit<UserProfile, 'id' | 'userIdAuth0'>> => {
   const profile = await get(userId)
 
   // First time, create it
