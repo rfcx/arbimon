@@ -48,13 +48,13 @@
             Project dates:
           </span>
           <span class="uppercase">
-            {{ formatDateRange(new Date()) }}
+            {{ formatDateRange(profile?.dateStart) }}
           </span>
           <icon-custom-arrow-right-white class="self-start" />
           <span
             class="uppercase"
           >
-            {{ formatDateRange(null) }}
+            {{ formatDateRange(profile?.dateEnd) }}
           </span>
         </div>
         <router-link
@@ -75,7 +75,7 @@
           tooltip-id="deployment-sites"
           tooltip-text="Number of sites with recorders deployed."
           title="Project sites:"
-          :value="120"
+          :value="profile?.metrics?.siteCount ?? 0"
           icon-name="ft-map-pin-lg"
           class="flex-1"
         />
@@ -83,8 +83,8 @@
           tooltip-id="threatened-species-over-all-species"
           title="Threatened/total species:"
           tooltip-text="Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
-          :value="64"
-          :total-value="project?.noOfSpecies"
+          :value="profile?.metrics?.speciesCount ?? 0"
+          :total-value="project?.noOfSpecies ?? 0"
           icon-name="ft-actual-bird"
           class="flex-1"
         />
@@ -92,7 +92,7 @@
           tooltip-id="total-detections"
           title="Total detections:"
           tooltip-text="Total number of species calls detected."
-          :value="1000"
+          :value="profile?.metrics?.detectionMinutesCount ?? 0"
           icon-name="ft-search-lg"
           class="flex-1"
         />
@@ -100,7 +100,7 @@
           tooltip-id="total-recordings"
           :tooltip-text="`Total ${project?.noOfRecordings} of recordings captured`"
           title="Total recordings"
-          :value="project?.noOfRecordings ?? 0"
+          :value="profile?.metrics?.recordingMinutesCount ?? 0"
           icon-name="ft-mic-lg"
           class="flex-1"
         />
@@ -113,13 +113,20 @@
   </div>
 </template>
 <script setup lang="ts">
+import { type AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
+import { apiClientKey } from '@/globals'
+import { useGetProjectInfo } from '@/projects/_composables/use-project-profile'
 import { useProjectDirectoryStore } from '~/store'
 import NumericMetric from '../components/numeric-metric.vue'
 import { type ProjectProfileWithMetrics } from '../data/types'
+
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+const selectedProjectId = computed(() => props.projectId)
+const { data: profile } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics'])
 
 const props = defineProps<{ projectId: number }>()
 const emit = defineEmits<{(e: 'emitCloseProjectInfo'): void }>()
