@@ -56,7 +56,11 @@ export class ModelRepository {
             if (!target) return
             if (!junctionModel) return
 
-            source.belongsToMany(target, { through: junctionModel })
+            if (targetName?.foreignKey != null) {
+              source.belongsToMany(target, { through: junctionModel, foreignKey: targetName.foreignKey })
+            } else {
+              source.belongsToMany(target, { through: junctionModel })
+            }
           })
         }
       })
