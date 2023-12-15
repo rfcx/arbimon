@@ -29,7 +29,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       },
       id_auth0: {
         type: DataTypes.STRING(255),
-        allowNull: false
+        allowNull: true
       },
 
       // Facts
