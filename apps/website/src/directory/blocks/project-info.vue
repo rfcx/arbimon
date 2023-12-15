@@ -37,7 +37,7 @@
     <div class="overflow-scroll">
       <img
         :src="project?.imageUrl"
-        class="w-full h-full object-cover bg-pitch object-center h-52"
+        class="w-full h-full object-contain bg-pitch h-52"
       >
       <div class="p-4 border-b border-util-gray-01">
         <span class="text-lg font-medium">{{ project?.name }}</span>
