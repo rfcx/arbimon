@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
-import { type OrganizationTypes } from '../../dao/types'
+import { type LocationProjectUserRole, type OrganizationTypes, type UserProfile } from '../../dao/types'
 import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 
 // The `GET` Service
@@ -9,9 +9,9 @@ import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from
 export type DashboardStakeholdersParams = ProjectRouteParamsSerialized
 
 // Response types
+export type DashboardStakeholdersUser = Pick<UserProfile, 'email' | 'firstName' | 'lastName' | 'id' | 'image'> & Pick<LocationProjectUserRole, 'roleId' | 'ranking'>
 export interface DashboardStakeholdersResponse {
-  // FIXME: User type has not been finalized yet.
-  user: Array<{ id: number, name: string, description: string }>
+  user: DashboardStakeholdersUser[]
   organization: Array<OrganizationTypes['light']>
 }
 

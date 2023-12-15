@@ -4,7 +4,7 @@ import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioUnauthorizedError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getProjectStakeholders, updateProjectStakeholdersOrganization } from './dashboard-stakeholders-dao'
+import { getProjectStakeholders, getProjectUsers, updateProjectStakeholdersOrganization } from './dashboard-stakeholders-dao'
 
 export const dashboardStakeholdersHandler: Handler<DashboardStakeholdersResponse, DashboardStakeholdersParams> = async (req) => {
   // Inputs & validation
@@ -17,10 +17,10 @@ export const dashboardStakeholdersHandler: Handler<DashboardStakeholdersResponse
   }
 
   const organization = await getProjectStakeholders(projectIdInteger)
+  const users = await getProjectUsers(projectIdInteger)
 
   return {
-    // TODO: Implement user fetching over here.
-    user: [],
+    user: users,
     organization
   }
 }
