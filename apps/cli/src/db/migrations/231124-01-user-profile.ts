@@ -19,7 +19,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       // PK
       id: {
         type: DataTypes.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
       },
 
       // SKs
