@@ -13,5 +13,6 @@ create table sites (
   timezone varchar(255) not null,
   country_code varchar(2) default null,
   updated_at datetime not null default current_timestamp,
-  deleted_at datetime default null
+  deleted_at datetime default null,
+  hidden tinyint(1) not null default '0'
 );

@@ -21,7 +21,9 @@ export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syn
       s.updated_at AS updatedAt,
       s.deleted_at AS deletedAt
     FROM sites s
-    WHERE s.updated_at > $syncUntilDate OR (s.updated_at = $syncUntilDate AND s.site_id > $syncUntilId)
+    WHERE s.updated_at > $syncUntilDate
+      OR (s.updated_at = $syncUntilDate AND s.site_id > $syncUntilId)
+      AND s.hidden = 0
     ORDER BY s.updated_at, s.site_id
     LIMIT $syncBatchLimit
     ;
@@ -56,7 +58,7 @@ export const getArbimonProjectSites = async (sequelize: Sequelize, projectId: nu
       s.updated_at AS updatedAt,
       s.deleted_at AS deletedAt
     FROM sites s
-    WHERE s.project_id = $projectId and s.deleted_at is null
+    WHERE s.project_id = $projectId and s.deleted_at is null AND s.hidden = 0
     ORDER BY s.updated_at, s.site_id;
     `
 
