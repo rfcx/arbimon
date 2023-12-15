@@ -50,27 +50,23 @@
         <icon-custom-dots-vertical class="hidden relative group-hover:block !ml-auto" />
         <div
           :id="`${email}dropdownBottom`"
-          class="z-10 hidden list-none bg-moss divide-y divide-gray-100 rounded-lg shadow p-3 w-56"
+          class="z-10 hidden list-none bg-moss divide-y divide-gray-100 rounded-lg shadow p-3 w-70"
           @mouseleave="toggleCard()"
         >
-          <ul
-            :aria-labelledby="`${email}EditStakeholderDropdownButton`"
-            class="flex flex-col gap-y-3"
-          >
+          <ul :aria-labelledby="`${email}EditStakeholderDropdownButton`">
             <li
               class="flex flex-row items-center justify-start space-x-2"
-              @click="makePrimaryContact()"
+              @click="togglePrimaryContact()"
             >
-              <icon-fa-plus class="h-3 w-3 text-insight mr-2" />
-              <span class="text-left">Make primary contact</span>
-            </li>
-            <li
-              class="flex flex-row items-center justify-start space-x-2"
-              :class="{'text-util-gray-02': isHidden}"
-              @click="hideEmail()"
-            >
-              <icon-custom-fi-eye-off class="h-6 w-6" />
-              <span class="text-left">Hide email (display email only)</span>
+              <icon-custom-fi-x-circle
+                v-if="isRemovedPrimaryContact"
+                class="h-4 w-4 text-insight"
+              />
+              <icon-fa-plus
+                v-else
+                class="h-3 w-3 text-insight"
+              />
+              <span class="text-left">{{ isRemovedPrimaryContact ? 'Remove as primary contact' : 'Make primary contact' }}</span>
             </li>
           </ul>
         </div>
@@ -86,7 +82,7 @@ const props = defineProps<{ name: string, email: string, image?: string, ranking
 const emit = defineEmits<{(event: 'emitHideEmail', value: string): void, (event: 'update:modelValue', value: string[]): void}>()
 
 const isHovered = ref<boolean>(false)
-const isHidden = ref<boolean>(false)
+const isRemovedPrimaryContact = ref<boolean>(false)
 const checked = computed<boolean>(() => {
   return props.modelValue.includes(props.email)
 })
@@ -107,13 +103,8 @@ const toggleSelectMemberCard = (): void => {
   }
 }
 
-const hideEmail = (): void => {
-  isHidden.value = true
-  toggleCard()
-  emit('emitHideEmail', props.email)
-}
-
-const makePrimaryContact = (): void => {
+const togglePrimaryContact = (): void => {
+  isRemovedPrimaryContact.value = !isRemovedPrimaryContact.value
   toggleSelectMemberCard()
   // TODO: emit primary contact
 }
