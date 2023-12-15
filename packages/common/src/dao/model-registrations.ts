@@ -15,6 +15,7 @@ import { LocationProjectModel, MODEL_LOCATION_PROJECT } from './models/location-
 import { LocationProjectOrganizationModel, MODEL_LOCATION_PROJECT_ORGANIZATION } from './models/location-project-organization-model'
 import { LocationProjectProfileModel, MODEL_LOCATION_PROJECT_PROFILE } from './models/location-project-profile-model'
 import { LocationProjectSpeciesModel, MODEL_LOCATION_PROJECT_SPECIES } from './models/location-project-species-model'
+import { LocationProjectUserRoleModel, MODEL_LOCATION_PROJECT_USER_ROLE } from './models/location-project-user-role-model'
 import { LocationSiteModel, MODEL_LOCATION_SITE } from './models/location-site-model'
 import { MODEL_ORGANIZATION, OrganizationModel } from './models/organization-model'
 import { MODEL_PROJECT_VERSION, ProjectVersionModel } from './models/project-version-model'
@@ -40,10 +41,11 @@ export const modelRegistrations = {
   [MODEL_CACHE_USER_PROJECT]: [CacheUserProjectModel, {}],
   [MODEL_DATA_SOURCE]: [DataSourceModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_DETECTION_BY_SITE_SPECIES_HOUR]: [DetectionBySiteSpeciesHourModel, { manyToOne: [MODEL_LOCATION_SITE, MODEL_TAXON_SPECIES] }],
-  [MODEL_LOCATION_PROJECT]: [LocationProjectModel, { manyToMany: [{ model: MODEL_ORGANIZATION, through: MODEL_LOCATION_PROJECT_ORGANIZATION }] }],
+  [MODEL_LOCATION_PROJECT]: [LocationProjectModel, { manyToMany: [{ model: MODEL_ORGANIZATION, through: MODEL_LOCATION_PROJECT_ORGANIZATION }, { model: MODEL_USER_PROFILE, through: MODEL_LOCATION_PROJECT_USER_ROLE }] }],
   [MODEL_LOCATION_PROJECT_ORGANIZATION]: [LocationProjectOrganizationModel, {}],
   [MODEL_LOCATION_PROJECT_PROFILE]: [LocationProjectProfileModel, { oneToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_LOCATION_PROJECT_SPECIES]: [LocationProjectSpeciesModel, { manyToOne: [MODEL_LOCATION_PROJECT, MODEL_TAXON_SPECIES] }],
+  [MODEL_LOCATION_PROJECT_USER_ROLE]: [LocationProjectUserRoleModel, {}],
   [MODEL_LOCATION_SITE]: [LocationSiteModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_ORGANIZATION]: [OrganizationModel, { manyToMany: [{ model: MODEL_LOCATION_PROJECT, through: MODEL_LOCATION_PROJECT_ORGANIZATION }] }],
   [MODEL_PROJECT_VERSION]: [ProjectVersionModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
@@ -61,7 +63,7 @@ export const modelRegistrations = {
   [MODEL_SYNC_ERROR]: [SyncErrorModel, { manyToOne: [MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
   [MODEL_SYNC_LOG_BY_PROJECT]: [SyncLogByProjectModel, { manyToOne: [MODEL_LOCATION_PROJECT, MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
   [MODEL_SYNC_STATUS]: [SyncStatusModel, { manyToOne: [MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
-  [MODEL_USER_PROFILE]: [UserProfileModel],
+  [MODEL_USER_PROFILE]: [UserProfileModel, { manyToMany: [{ model: MODEL_LOCATION_PROJECT, through: MODEL_LOCATION_PROJECT_USER_ROLE }] }],
 
   // Views
   [MODEL_DASHBOARD_DETECTION_BY_HOUR]: [DashboardDetectionByHourModel],
