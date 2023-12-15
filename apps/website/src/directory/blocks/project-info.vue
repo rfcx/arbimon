@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col inset-1/4 left-100 w-98 bg-moss transition-transform -translate-x-full rounded-lg">
     <div class="rounded-t-lg bg-moss p-2">
-      <div class="flex flex-row justify-between items-center">
+      <div class="flex flex-row justify-between items-center ml-2 mr-2">
         <span
           v-if="project?.countries.length === 0"
           class="text-sm text-spoonbill font-medium flex-1"
@@ -28,10 +28,15 @@
             class="flex m-2"
           />
         </div>
-        <icon-fa-close
-          class="text-fog m-auto self-end w-4 h-3.5"
+        <svg
+          class="w-4 h-3.5 m-auto self-end"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
           @click="emit('emitCloseProjectInfo')"
-        />
+        >
+          <path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z" />
+        </svg>
       </div>
     </div>
     <div class="overflow-scroll">
