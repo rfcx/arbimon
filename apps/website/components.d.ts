@@ -58,6 +58,7 @@ declare module '@vue/runtime-core' {
     IconCustomFiSettings: typeof import('~icons/custom-icons/fi-settings')['default']
     IconCustomFiSoundscape: typeof import('~icons/custom-icons/fi-soundscape')['default']
     IconCustomFiUser: typeof import('~icons/custom-icons/fi-user')['default']
+    IconCustomFiXCircle: typeof import('~icons/custom-icons/fi-x-circle')['default']
     IconCustomFtActualBird: typeof import('~icons/custom-icons/ft-actual-bird')['default']
     IconCustomFtBold: typeof import('~icons/custom-icons/ft-bold')['default']
     IconCustomFtBulletedList: typeof import('~icons/custom-icons/ft-bulleted-list')['default']

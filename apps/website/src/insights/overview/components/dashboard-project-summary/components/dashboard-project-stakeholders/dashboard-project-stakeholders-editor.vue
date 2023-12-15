@@ -33,7 +33,6 @@
         :image="member.picture ?? undefined"
         :email="member.email ?? ''"
         :ranking="idx === 0 ? 0 : 1"
-        @emit-hide-email="hideUserEmail"
       />
     </div>
     <div class="flex justify-start items-center">
@@ -356,10 +355,6 @@ const refetchOrganizationsSearch = async (): Promise<void> => {
 const toggleAllUsersSelect = (): void => {
   isAllUsersSelected.value = !isAllUsersSelected.value
   selectedProjectMembers.value = isAllUsersSelected.value ? props.projectMembers.map(u => u.email) : []
-}
-
-const hideUserEmail = (): void => {
-  // TODO: create endpoint
 }
 
 const onFinishedEditing = (): void => {
