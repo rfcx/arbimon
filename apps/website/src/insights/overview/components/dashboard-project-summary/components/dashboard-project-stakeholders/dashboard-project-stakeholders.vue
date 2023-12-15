@@ -11,13 +11,13 @@
       v-show="isEditing === false"
       :editable="editable"
       :organizations="stakeholders?.organization ?? []"
-      :project-members="projectUserPermissionsStore.projectMembers"
+      :project-members="stakeholders?.user ?? []"
       @emit-is-updating="isEditing = true"
     />
     <DashboardProjectStakeholdersEditor
       v-show="isEditing === true"
       :organizations="stakeholders?.organization ?? []"
-      :project-members="projectUserPermissionsStore.projectMembers"
+      :project-members="stakeholders?.user ?? []"
       @emit-finished-editing="onFinishedEditing"
     />
   </template>
@@ -28,7 +28,7 @@ import { type AxiosInstance } from 'axios'
 import { inject, ref } from 'vue'
 
 import { apiClientKey } from '@/globals'
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useStore } from '~/store'
 import { useGetDashboardStakeholders } from '../../../../composables/use-get-dashboard-stakeholders'
 import { useUpdateStakeholdersOrganizationsList } from '../../../../composables/use-update-stakeholders-organizations'
 import ProjectSummaryEmpty from '../project-summary-empty.vue'
@@ -46,7 +46,6 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { data: stakeholders, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateStakeholdersOrganizations } = useUpdateStakeholdersOrganizationsList(apiClientBio, store.selectedProject?.id ?? -1)
 // TODO: only selected project stakeholders are shown in the DashboardProjectStakeholdersViewer
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const onFinishedEditing = (ids: number[]): void => {
   mutateStakeholdersOrganizations(ids, {

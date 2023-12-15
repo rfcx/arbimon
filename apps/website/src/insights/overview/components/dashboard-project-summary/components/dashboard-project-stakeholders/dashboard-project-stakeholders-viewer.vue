@@ -10,8 +10,8 @@
       <StakeholderCard
         v-for="(member, idx) of projectMembers"
         :key="idx"
-        :name="member.firstname + ' ' + member.lastname"
-        :image="member.picture ?? undefined"
+        :name="member.firstName + ' ' + member.lastName"
+        :image="member.image ?? undefined"
         :email="member.email ?? ''"
         :ranking="idx === 0 ? 0 : 1"
       />
@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
+import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import { useProjectUserPermissionsStore, useStore } from '~/store'
@@ -68,7 +68,7 @@ import StakeholdersTosBanner from './stakeholders-tos-banner.vue'
 defineProps<{
   editable: boolean,
   organizations: Array<OrganizationTypes['light']>
-  projectMembers: Array<CoreUser>
+  projectMembers: Array<DashboardStakeholdersUser>
 }>()
 defineEmits<{(event: 'emit-is-updating'): void}>()
 
