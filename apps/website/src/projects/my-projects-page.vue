@@ -19,8 +19,11 @@
             </a>
           </router-link>
         </div>
-        <div class="py-10">
-          <h4 v-if="isLoading && projects.length === 0">
+        <div>
+          <h4
+            v-if="isLoading && projects.length === 0"
+            class="py-10"
+          >
             Loading...
           </h4>
         </div>
@@ -32,6 +35,45 @@
             :key="project.id"
             :project="project"
           />
+        </div>
+        <div class="mx-auto max-w-screen-md text-center">
+          <div
+            v-if="hasFailed && projects.length === 0"
+            class="mt-40 lg:mt-60"
+          >
+            <h3 class="mb-8 text-xl text-gray-900 dark:text-insight font-header">
+              Content not available. Try again.
+            </h3>
+            <a
+              class="btn btn-secondary"
+              @click="fetchProjects(0, LIMIT)"
+            >
+              Try again
+            </a>
+          </div>
+        </div>
+        <div class="mx-auto max-w-screen-md text-center mt-35">
+          <div v-if="projects.length === 0 && !isLoading && !hasFailed">
+            <h2 class="mb-8 text-gray-900 dark:text-insight font-header">
+              Welcome to My Projects
+            </h2>
+            <h5 class="text-lg">
+              This space keeps all your projects organized into one place.
+            </h5>
+            <h5 class="text-lg mb-8">
+              Create a project and it will show up here.
+            </h5>
+            <router-link
+              :to="{ name: ROUTE_NAMES.createProject }"
+            >
+              <a class="btn btn-primary">
+                Create a new project +
+              </a>
+            </router-link>
+            <h6 class="mt-8 text-base">
+              Not sure where to start? Check out our tutorial video.
+            </h6>
+          </div>
         </div>
       </div>
     </section>
@@ -60,6 +102,7 @@ const projects = computed(() => store.myProjects)
 const hasFetchedAll = ref(false)
 const LIMIT = 20
 const isLoading = ref(false)
+const hasFailed = ref(false)
 
 const loadMoreProject = async (): Promise<void> => {
   if (hasFetchedAll.value || isLoading.value) return
@@ -68,10 +111,18 @@ const loadMoreProject = async (): Promise<void> => {
 
 const fetchProjects = async (offset:number, limit: number): Promise<void> => {
   isLoading.value = true
-  const myProjectResponse = await apiBioGetMyProjects(apiClientBio, limit, offset)
-  isLoading.value = false
-  if (myProjectResponse === undefined) return
-  hasFetchedAll.value = myProjectResponse.total < myProjectResponse.limit // check if reaching the end
-  store.updateMyProject(myProjectResponse?.data)
+  hasFailed.value = false
+
+  try {
+    const myProjectResponse = await apiBioGetMyProjects(apiClientBio, limit, offset)
+    isLoading.value = false
+    if (myProjectResponse === undefined) return
+    hasFetchedAll.value = myProjectResponse.total < myProjectResponse.limit // check if reaching the end
+    store.updateMyProject(myProjectResponse?.data)
+  } catch (e) {
+    isLoading.value = false
+    hasFailed.value = true
+  }
 }
+
 </script>
