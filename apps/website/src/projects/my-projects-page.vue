@@ -19,6 +19,11 @@
             </a>
           </router-link>
         </div>
+        <div class="py-10">
+          <h4 v-if="isLoading && projects.length === 0">
+            Loading...
+          </h4>
+        </div>
         <div
           class="grid grid-cols-2 gap-4 py-8 lg:gap-6 lg:py-16 lg:grid-cols-3"
         >
