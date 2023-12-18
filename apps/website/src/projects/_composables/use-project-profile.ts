@@ -2,7 +2,7 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 
-import { type ProjectProfileUpdateBody, type ProjectSettingsResponse, apiBioGetProjectSettingsData, apiBioUpdateProjectSettingsData } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import { type ProjectInfoResponse, type ProjectProfileUpdateBody, type ProjectSettingsResponse, apiBioGetProjectInfoData, apiBioGetProjectSettingsData, apiBioUpdateProjectSettingsData } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
 export const useGetProjectSettings = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>): UseQueryReturnType<ProjectSettingsResponse, unknown> => {
   return useQuery({
@@ -17,5 +17,12 @@ export const useUpdateProjectSettings = (apiClient: AxiosInstance, projectId: nu
     mutationFn: async (settings: ProjectProfileUpdateBody) => {
       return await apiBioUpdateProjectSettingsData(apiClient, projectId, settings)
     }
+  })
+}
+
+export const useGetProjectInfo = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>, parems: string[]): UseQueryReturnType<ProjectInfoResponse, unknown> => {
+  return useQuery({
+    queryKey: ['get-project-settings'],
+    queryFn: async () => await apiBioGetProjectInfoData(apiClient, projectId.value ?? -1, parems)
   })
 }
