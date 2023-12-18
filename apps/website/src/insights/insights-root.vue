@@ -28,7 +28,7 @@
             class="flex flex-row items-center justify-start order-last md:order-first"
           >
             <button
-              class="btn btn-secondary group disabled:cursor-not-allowed"
+              class="btn btn-secondary group disabled:hover:btn-disabled disabled:btn-disabled"
               :disabled="projectUserPermissionsStore.isGuest"
             >
               <span>Edit</span> <span class="hidden lg:inline-flex">project settings</span> <icon-custom-ic-edit class="inline-flex ml-2 group-hover:stroke-pitch" />
