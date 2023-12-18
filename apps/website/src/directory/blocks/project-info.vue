@@ -5,7 +5,7 @@
         <div class="flex flex-1 flex-row items-center">
           <span
             v-if="project?.countries.length === 0"
-            class="text-spoonbill font-medium text-xs ml-4"
+            class="text-spoonbill font-medium text-xs ml-4 my-3.5"
           >
             No site
           </span>
@@ -24,7 +24,7 @@
             />
           </div>
           <icon-custom-fi-globe
-            v-else
+            v-if="project?.countries ? project?.countries.length > 1 : false"
             class="flex m-2 my-3"
           />
         </div>
