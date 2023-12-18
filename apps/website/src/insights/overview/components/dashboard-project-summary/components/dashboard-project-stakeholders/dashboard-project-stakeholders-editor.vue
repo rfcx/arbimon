@@ -357,8 +357,7 @@ const toggleAllUsersSelect = (): void => {
 }
 
 const togglePrimaryContact = (userId: number, email: string, isPrimaryContact: boolean): void => {
-  console.info('isPrimaryContact', isPrimaryContact, email)
-  if (isPrimaryContact) {
+  if (isPrimaryContact === true) {
     primaryContact.value.userId = userId
     primaryContact.value.email = email
   }
