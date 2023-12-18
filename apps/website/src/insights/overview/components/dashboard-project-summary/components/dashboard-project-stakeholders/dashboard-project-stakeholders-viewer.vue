@@ -3,7 +3,11 @@
     <h3 class="text-white text-xl font-medium font-sans mt-2">
       Project members
     </h3>
+    <div v-if="isLoading">
+      <icon-fas-spinner class="animate-spin inline mr-1" /> Loading...
+    </div>
     <div
+      v-else
       class="grid"
       style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
     >
@@ -68,6 +72,7 @@ import StakeholdersTosBanner from './stakeholders-tos-banner.vue'
 
 defineProps<{
   editable: boolean,
+  isLoading: boolean,
   organizations: Array<OrganizationTypes['light']>
   projectMembers: Array<DashboardStakeholdersUser>
 }>()

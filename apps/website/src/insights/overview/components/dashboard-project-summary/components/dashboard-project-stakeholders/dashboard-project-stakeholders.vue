@@ -10,8 +10,9 @@
     <DashboardProjectStakeholdersViewer
       v-show="isEditing === false"
       :editable="editable"
+      :is-loading="stakeholdersLoading"
       :organizations="stakeholders?.organizations ?? []"
-      :project-members="stakeholders?.users.filter(u => u.ranking !== -1) ?? []"
+      :project-members="stakeholders?.users.filter(u => u.ranking !== -1).sort((a, b) => a.ranking - b.ranking) ?? []"
       @emit-is-updating="isEditing = true"
     />
     <DashboardProjectStakeholdersEditor
@@ -43,7 +44,7 @@ const store = useStore()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
-const { data: stakeholders, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
+const { isLoading: stakeholdersLoading, data: stakeholders, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateStakeholders } = useUpdateDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 
 const onFinishedEditing = (ids: number[]): void => {
