@@ -13,7 +13,7 @@
     >
       <button
         class="flex flex-row items-center disabled:hover:btn-disabled disabled:btn-disabled"
-        :class="editable ? 'btn btn-secondary py-2 px-3' : 'invisible'"
+        :class="editable ? 'btn btn-primary py-2 px-3' : 'invisible'"
         :disabled="projectUserPermissionsStore.isGuest"
         @click="editMarkdownContent"
       >

@@ -39,10 +39,11 @@
     >
       <button
         v-show="editable"
-        class="btn btn-secondary"
+        class="btn btn-primary"
         @click="$emit('emit-is-updating')"
       >
-        Manage stakeholders
+        Edit displayed stakeholders
+        <icon-custom-ic-edit class="ml-2 self-center" />
       </button>
     </div>
     <StakeholdersReadonlyBanner
