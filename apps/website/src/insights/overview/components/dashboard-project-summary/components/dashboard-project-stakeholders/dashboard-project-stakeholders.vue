@@ -11,16 +11,15 @@
       v-show="isEditing === false"
       :editable="editable"
       :organizations="stakeholders?.organizations ?? []"
-      :project-members="stakeholders?.users ?? []"
+      :project-members="stakeholders?.users.filter(u => u.ranking !== -1) ?? []"
       @emit-is-updating="isEditing = true"
     />
     <DashboardProjectStakeholdersEditor
       v-show="isEditing === true"
       :organizations="stakeholders?.organizations ?? []"
-      :project-members="[projectUserPermissionsStore.projectMembers[0]]"
+      :project-members="stakeholders?.users ?? []"
       @emit-finished-editing="onFinishedEditing"
     />
-    <!-- TODO: switch to stakeholders?.users-->
   </template>
 </template>
 
@@ -29,7 +28,7 @@ import { type AxiosInstance } from 'axios'
 import { inject, ref } from 'vue'
 
 import { apiClientKey } from '@/globals'
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useStore } from '~/store'
 import { useGetDashboardStakeholders } from '../../../../composables/use-get-dashboard-stakeholders'
 import { useUpdateDashboardStakeholders } from '../../../../composables/use-update-stakeholders'
 import ProjectSummaryEmpty from '../project-summary-empty.vue'
@@ -46,7 +45,6 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { data: stakeholders, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateStakeholders } = useUpdateDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const onFinishedEditing = (ids: number[]): void => {
   mutateStakeholders({ users: [], organizations: ids }, {
