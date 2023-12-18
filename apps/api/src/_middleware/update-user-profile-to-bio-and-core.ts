@@ -75,13 +75,18 @@ export const updateUserProfileToBio = async (req: FastifyRequest): Promise<void>
   // non existent guys will get pushed into the db and the cache.
   const user = await UserProfile.findOne({ where: { email: auth0User.email } })
   if (user == null) {
-    const maxId: number = await UserProfile.max('id')
+    const firstName = auth0User.given_name ?? auth0User.user_metadata?.given_name ?? auth0User['https://rfcx.org/user_metadata']?.given_name
+    const lastName = auth0User.family_name ?? auth0User.user_metadata?.family_name ?? auth0User['https://rfcx.org/user_metadata']?.family_name
+
+    // FIXME: if both names are null we cannot add this person to the database. gotta let that person go (for now)
+    if (firstName === undefined || lastName === undefined) {
+      return
+    }
 
     const newUser = await UserProfile.create({
-      id: maxId ? maxId + 1 : 1,
       idAuth0: auth0User.auth0_user_id,
-      firstName: auth0User.given_name,
-      lastName: auth0User.family_name,
+      firstName,
+      lastName,
       email: auth0User.email,
       image: auth0User.picture ?? undefined,
       organizationIdAffiliated: undefined
@@ -90,8 +95,8 @@ export const updateUserProfileToBio = async (req: FastifyRequest): Promise<void>
     req.lru.set(auth0User.email, {
       id: newUser.get('id'),
       idAuth0: auth0User.auth0_user_id,
-      firstName: auth0User.given_name,
-      lastName: auth0User.family_name,
+      firstName,
+      lastName,
       email: auth0User.email,
       image: auth0User.picture ?? undefined,
       organizationIdAffiliated: undefined
