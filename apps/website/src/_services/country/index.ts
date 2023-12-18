@@ -6,7 +6,7 @@ export const getCountryNames = (codes: string[]): string[] => {
 
 export const getCountryLabel = (codes: string[], noOfItemsToShow: number = 3): string => {
   if (codes.length === 0) {
-    return 'No sites'
+    return 'No site'
   } else if (codes.length === 1) {
     return getCountryData(codes[0] as TCountryCode).name
   }

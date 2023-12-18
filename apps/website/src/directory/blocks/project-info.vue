@@ -4,34 +4,22 @@
       <div class="flex flex-row justify-between items-center">
         <div class="flex flex-1 flex-row items-center">
           <span
-            v-if="project?.countries.length === 0"
             class="text-spoonbill font-medium text-xs ml-4 my-3.5"
-          >
-            No site
-          </span>
+          >{{ getCountryLabel(project?.countries ?? [], 1) }}</span>
           <div
-            v-else
-            class="inline-flex"
+            v-if="countrieFlag"
+            class="align-baseline flex"
           >
-            <span
-              v-if="project?.countries.length !== 0"
-              class="text-spoonbill font-medium text-xs ml-4 mt-3.5"
-            >{{ getCountryLabel(project?.countries ?? [], 1) }}</span>
-            <div
-              v-if="countrieFlag"
-              class="align-baseline flex"
-            >
-              <country-flag
-                :country="countrieFlag"
-                size="normal"
-                class="flex ml-2"
-              />
-            </div>
-            <icon-custom-fi-globe
-              v-else
-              class="flex m-2 my-3"
+            <country-flag
+              :country="countrieFlag"
+              size="normal"
+              class="flex ml-2"
             />
           </div>
+          <icon-custom-fi-globe
+            v-if="project?.countries ? project?.countries.length > 1 : false"
+            class="flex m-2 my-3"
+          />
         </div>
         <svg
           class="w-4 h-3.5 m-auto self-end mr-4"
