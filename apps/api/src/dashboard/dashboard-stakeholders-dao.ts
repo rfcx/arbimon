@@ -1,4 +1,4 @@
-import { QueryTypes } from 'sequelize'
+import { Op, QueryTypes } from 'sequelize'
 
 import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
@@ -63,7 +63,7 @@ export const getProjectStakeholders = async (projectId: number): Promise<Array<O
 
 export const updateProjectStakeholders = async (projectId: number, stakeholders: { organizations: number[], users: Array<Pick<LocationProjectUserRole, 'userId' | 'ranking'>> }): Promise<void> => {
   const sequelize = getSequelize()
-  const { LocationProjectOrganization } = ModelRepository.getInstance(sequelize)
+  const { LocationProjectOrganization, LocationProjectUserRole } = ModelRepository.getInstance(sequelize)
 
   const updateUserSql = 'update location_project_user_role set ranking = $1 where location_project_id = $2 and user_id = $3'
 
@@ -74,6 +74,12 @@ export const updateProjectStakeholders = async (projectId: number, stakeholders:
     // individually run an update on each user (we cannot simple delete them and recreate them)
     for (const user of stakeholders.users) {
       await sequelize.query(updateUserSql, { bind: [user.ranking, projectId, user.userId], transaction: t })
+    }
+
+    // find other users that are not on the update list and turn their ranking to -1
+    const usersNotOnStakeholdersUpdateList = await LocationProjectUserRole.findAll({ where: { [Op.and]: { locationProjectId: projectId, [Op.notIn]: stakeholders.users.map(u => u.userId) } }, transaction: t })
+    for (const excludedUser of usersNotOnStakeholdersUpdateList) {
+      await sequelize.query(updateUserSql, { bind: [-1, projectId, excludedUser.get('userId')], transaction: t })
     }
   })
 }
