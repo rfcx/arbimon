@@ -133,6 +133,7 @@
         <div
           v-else
           class="lg:max-w-4xl relative"
+          :class="isAboutTabEditing ? 'mx-auto pl-4 pb-4 pr-4 lg:max-w-4xl relative' : 'mx-auto p-4 lg:max-w-4xl relative'"
         >
           <DashboardMarkdownViewerEditor
             id="about"
