@@ -2,11 +2,11 @@
   <img
     v-if="photoUrl"
     :src="photoUrl"
-    class="h-14 w-14 object-cover rounded bg-util-gray-02"
+    class="h-14 w-14 aspect-square object-cover rounded bg-util-gray-02"
   >
   <div
     v-else
-    class="h-14 w-14 object-cover rounded bg-util-gray-02"
+    class="h-14 w-14 aspect-square object-cover rounded bg-util-gray-02"
   />
   <div class="self-center md:overflow-hidden">
     <router-link
