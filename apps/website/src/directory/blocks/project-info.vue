@@ -9,24 +9,29 @@
           >
             No site
           </span>
-          <span
-            v-if="project?.countries.length !== 0"
-            class="text-spoonbill font-medium text-xs ml-4"
-          >{{ countrie }}</span>
           <div
-            v-if="countrieFlag"
-            class="align-baseline flex"
+            v-else
+            class="inline-flex"
           >
-            <country-flag
-              :country="countrieFlag"
-              size="normal"
-              class="flex ml-2"
+            <span
+              v-if="project?.countries.length !== 0"
+              class="text-spoonbill font-medium text-xs ml-4 mt-3.5"
+            >{{ countrie }}</span>
+            <div
+              v-if="countrieFlag"
+              class="align-baseline flex"
+            >
+              <country-flag
+                :country="countrieFlag"
+                size="normal"
+                class="flex ml-2"
+              />
+            </div>
+            <icon-custom-fi-globe
+              v-else
+              class="flex m-2 my-3"
             />
           </div>
-          <icon-custom-fi-globe
-            v-if="project?.countries ? project?.countries.length > 1 : false"
-            class="flex m-2 my-3"
-          />
         </div>
         <svg
           class="w-4 h-3.5 m-auto self-end mr-4"
