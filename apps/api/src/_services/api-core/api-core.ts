@@ -13,6 +13,7 @@ import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
 import { type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore } from './types'
+import { UserProfile } from '@rfcx-bio/common/dao/types'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 const DEFAULT_MEMBER_PROJECT_LIMIT = 1000
@@ -230,6 +231,21 @@ export async function getProjectMembersFromApi (token: string, coreProjectId: st
     })
 
     return response.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function patchUserProfileOnCore (token: string, email: string, data: Pick<CoreUser, 'firstname' | 'lastname' | 'picture'>): Promise<void> {
+  try {
+    await axios.request({
+      method: 'PATCH',
+      url: `${CORE_API_BASE_URL}/users/${email}`,
+      headers: {
+        authorization: token
+      },
+      data
+    })
   } catch (e) {
     return unpackAxiosError(e)
   }
