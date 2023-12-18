@@ -8,7 +8,7 @@
   </template>
   <template v-else>
     <DashboardProjectStakeholdersViewer
-      v-show="isEditing === false"
+      v-if="isEditing === false"
       :editable="editable"
       :is-loading="stakeholdersLoading"
       :organizations="stakeholders?.organizations ?? []"
@@ -16,7 +16,7 @@
       @emit-is-updating="isEditing = true"
     />
     <DashboardProjectStakeholdersEditor
-      v-show="isEditing === true"
+      v-if="isEditing === true"
       :organizations="stakeholders?.organizations ?? []"
       :project-members="stakeholders?.users ?? []"
       @emit-finished-editing="onFinishedEditing"
@@ -27,6 +27,8 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import { inject, ref } from 'vue'
+
+import { type UpdateDashboardStakeholdersRequestBodyUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
@@ -47,8 +49,8 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { isLoading: stakeholdersLoading, data: stakeholders, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateStakeholders } = useUpdateDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 
-const onFinishedEditing = (ids: number[]): void => {
-  mutateStakeholders({ users: [], organizations: ids }, {
+const onFinishedEditing = (ids: number[], selectedProjectMembers: UpdateDashboardStakeholdersRequestBodyUser[]): void => {
+  mutateStakeholders({ users: selectedProjectMembers, organizations: ids }, {
     onSuccess: async () => {
       await refetchStakeholdersData()
       isEditing.value = false
