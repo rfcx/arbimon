@@ -3,6 +3,7 @@
   <div
     v-infinite-scroll="loadMoreProject"
     :infinite-scroll-distance="40"
+    :infinite-scroll-disabled="isLoading || hasFetchedAll"
   >
     <section class="pt-8 bg-white dark:bg-pitch">
       <div class="py-8 mx-auto max-w-screen-xl <lg:mx-8">
