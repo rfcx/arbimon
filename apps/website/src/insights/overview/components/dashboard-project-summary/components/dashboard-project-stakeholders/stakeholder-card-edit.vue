@@ -48,14 +48,14 @@
         class="hidden group-hover:block !ml-auto"
         :data-dropdown-toggle="`${userId}Dropdown`"
         data-dropdown-placement="bottom"
-        @click="toggleCard"
+        @click="toggleCard()"
       >
         <icon-custom-dots-vertical class="hidden group-hover:block !ml-auto" />
       </button>
       <div
         :id="`${userId}Dropdown`"
         class="z-50 hidden list-none bg-moss divide-y divide-gray-100 rounded-lg shadow p-3 w-70"
-        @mouseleave="toggleCard"
+        @mouseleave="toggleCard()"
       >
         <ul
           :aria-labelledby="`${userId}EditStakeholdersButton`"
@@ -88,7 +88,7 @@ const props = defineProps<{ userId: number, name: string, email: string, image?:
 const emit = defineEmits<{(event: 'emitPrimaryContact', userId: number, email: string, isPrimaryContact: boolean): void, (event: 'update:modelValue', value: string[]): void}>()
 
 const isHovered = ref<boolean>(false)
-const isRemovedPrimaryContact = ref<boolean>(false)
+const isRemovedPrimaryContact = ref<boolean>(props.ranking === 0)
 const checked = computed<boolean>(() => {
   return props.modelValue.includes(props.email)
 })
