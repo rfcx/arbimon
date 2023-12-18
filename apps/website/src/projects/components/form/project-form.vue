@@ -41,7 +41,7 @@
         />
       </div>
     </div>
-    <span class="mx-4">-</span>
+    <span class="mt-7">-</span>
     <div class="flex-1">
       <label
         for="end-date"
