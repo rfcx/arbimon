@@ -1,16 +1,20 @@
 import { type MultipartFile } from '@fastify/multipart'
+import axios from 'axios'
+import { createHash } from 'node:crypto'
 import { extname } from 'node:path'
+import { URL } from 'node:url'
 
+import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
 import { type OrganizationTypes, type UserProfile } from '@rfcx-bio/common/dao/types'
 
+import { patchUserProfileOnCore } from '~/api-core/api-core'
 import { BioNotFoundError } from '~/errors'
 import { getObject, putObject } from '~/storage'
 import { get, getAllOrganizations as daoGetAllOrganizations, update } from './user-profile-dao'
 
-export const getUserProfile = async (userId: string): Promise<Omit<UserProfile, 'id' | 'userIdAuth0'>> => {
-  const profile = await get(userId)
+export const getUserProfile = async (email: string): Promise<Omit<UserProfile, 'id' | 'idAuth0'>> => {
+  const profile = await get(email)
 
-  // First time, create it
   if (profile === undefined) {
     throw BioNotFoundError()
   }
@@ -18,31 +22,56 @@ export const getUserProfile = async (userId: string): Promise<Omit<UserProfile, 
   return profile
 }
 
-export const patchUserProfile = async (userId: string, data: Partial<Omit<UserProfile, 'id' | 'idAuth0' | 'image' | 'createdAt' | 'updatedAt'>>): Promise<void> => {
-  const originalProfile = await getUserProfile(userId)
+export const patchUserProfile = async (token: string, email: string, data: Partial<Omit<UserProfile, 'id' | 'idAuth0' | 'image' | 'createdAt' | 'updatedAt'>>): Promise<void> => {
+  const originalProfile = await getUserProfile(email)
   const newProfile = { ...originalProfile, ...data }
 
-  // TODO: Call Core to change user's name if needed
-  await update(userId, newProfile)
+  const coreProfile: Pick<CoreUser, 'firstname' | 'lastname' | 'picture'> = {
+    firstname: newProfile.firstName,
+    lastname: newProfile.lastName,
+    picture: newProfile.image ?? null
+  }
+  await patchUserProfileOnCore(token, email, coreProfile)
+
+  await update(email, newProfile)
 }
 
-export const getUserProfileImage = async (userId: string): Promise<ArrayBuffer> => {
-  const userProfile = await get(userId)
+export const getUserProfileImage = async (email: string): Promise<ArrayBuffer> => {
+  const userProfile = await get(email)
   if (userProfile === undefined || userProfile.image === undefined) {
     throw BioNotFoundError()
   }
 
-  return await getObject(userProfile.image)
+  // Parse the image to url constructor to test if it's a s3 path or a url
+  try {
+    const imageUrl = new URL(userProfile.image)
+    const response = await axios.request({
+      method: 'GET',
+      url: imageUrl.toString(),
+      responseType: 'arraybuffer'
+    })
+
+    const imageBuffer = Buffer.from(response.data, 'binary')
+    return imageBuffer
+  } catch (e) {
+    // parse failed because it's an s3 image path
+    return await getObject(userProfile.image)
+  }
 }
 
-export const patchUserProfileImage = async (userId: string, file: MultipartFile): Promise<void> => {
-  const originalProfile = await getUserProfile(userId)
-  const imagePath = `users/${userId}/profile-image${extname(file.filename)}`
+export const patchUserProfileImage = async (email: string, file: MultipartFile): Promise<void> => {
+  const originalProfile = await getUserProfile(email)
+
+  // hash the email to sha256 and use that as the folder name for storing the profile-image
+  const hash = createHash('sha256')
+  hash.update(email)
+  const hexEmail = hash.digest('hex')
+
+  const imagePath = `users/${hexEmail}/profile-image${extname(file.filename)}`
   const newProfile = { ...originalProfile, image: imagePath }
 
   await putObject(imagePath, await file.toBuffer(), file.mimetype)
-
-  await update(userId, newProfile)
+  await update(email, newProfile)
 }
 
 // TODO: Move to new organizations-bll.ts
