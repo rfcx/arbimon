@@ -9,7 +9,7 @@
     <DashboardProjectStakeholdersViewer
       v-if="isEditing === false"
       :editable="editable"
-      :is-loading="stakeholdersLoading"
+      :loading="stakeholdersLoading || stakeholdersRefetching || isUpdating"
       :organizations="stakeholders?.organizations ?? []"
       :project-members="stakeholders?.users.filter(u => u.ranking !== -1).sort((a, b) => a.ranking - b.ranking) ?? []"
       @emit-is-updating="isEditing = true"
@@ -40,23 +40,27 @@ import DashboardProjectStakeholdersViewer from './dashboard-project-stakeholders
 defineProps<{ editable: boolean, isProjectMember: boolean, isViewingAsGuest: boolean }>()
 
 const isEditing = ref(false)
+const isUpdating = ref(false)
 const store = useStore()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
-const { isLoading: stakeholdersLoading, data: stakeholders, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
+const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateStakeholders } = useUpdateDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 
 const onFinishedEditing = (ids: number[], selectedProjectMembers: UpdateDashboardStakeholdersRequestBodyUser[]): void => {
+  isUpdating.value = true
   mutateStakeholders({ users: selectedProjectMembers, organizations: ids }, {
     onSuccess: async () => {
       await refetchStakeholdersData()
       isEditing.value = false
+      isUpdating.value = false
     },
     onError: () => {
       // TODO: Show user some respect
       isEditing.value = false
+      isUpdating.value = false
     }
   })
 

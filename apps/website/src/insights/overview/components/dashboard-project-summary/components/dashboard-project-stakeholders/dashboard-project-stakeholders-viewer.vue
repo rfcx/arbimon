@@ -4,7 +4,7 @@
       Project members
     </h3>
     <div
-      v-if="isLoading"
+      v-if="loading"
       class="py-2"
     >
       <icon-fas-spinner class="animate-spin inline w-4 h-4 mr-1" /> Loading...
@@ -44,7 +44,8 @@
       class="flex w-full justify-end mt-6"
     >
       <button
-        class="btn btn-primary"
+        class="btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
+        :disabled="loading"
         @click="$emit('emit-is-updating')"
       >
         Edit displayed stakeholders
@@ -74,7 +75,7 @@ import StakeholdersTosBanner from './stakeholders-tos-banner.vue'
 
 defineProps<{
   editable: boolean,
-  isLoading: boolean,
+  loading: boolean,
   organizations: Array<OrganizationTypes['light']>
   projectMembers: Array<DashboardStakeholdersUser>
 }>()
