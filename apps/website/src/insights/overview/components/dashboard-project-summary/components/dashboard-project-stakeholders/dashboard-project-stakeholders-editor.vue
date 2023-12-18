@@ -19,6 +19,7 @@
             type="checkbox"
             class="w-4 h-4 rounded checked:text-frequency border-0 outline-none"
             :value="isAllUsersSelected"
+            :checked="checkAllUsersSelection"
             @click="toggleAllUsersSelect"
           >
         </div>
@@ -228,7 +229,7 @@ const primaryContact = ref({
   userId: props.projectMembers.filter(u => u.ranking === 0).map(u => u.id)[0],
   email: props.projectMembers.filter(u => u.ranking === 0).map(u => u.email)[0]
 })
-const isAllUsersSelected = ref<boolean>(false)
+const isAllUsersSelected = ref<boolean>(selectedProjectMembers.value.length === props.projectMembers.length)
 
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
 const newOrganizationUrl = ref<string>('')
@@ -243,6 +244,10 @@ const arbimonLink = computed(() => {
   const selectedProjectSlug = store.selectedProject?.slug
   if (selectedProjectSlug === undefined) return ''
   else return `${import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL}/project/${selectedProjectSlug}/settings/users`
+})
+
+const checkAllUsersSelection = computed(() => {
+  return selectedProjectMembers.value.length === props.projectMembers.length
 })
 
 const openOrganizationSearch = async () => {

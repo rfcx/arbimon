@@ -40,11 +40,10 @@
       />
     </div>
     <div
-      v-if="editable && !projectUserPermissionsStore.isGuest"
+      v-if="projectUserPermissionsStore.currentUserRoleOfCurrentProject === 'Admin'"
       class="flex w-full justify-end mt-6"
     >
       <button
-        v-show="editable"
         class="btn btn-primary"
         @click="$emit('emit-is-updating')"
       >
@@ -52,8 +51,9 @@
         <icon-custom-ic-edit class="ml-2 self-center" />
       </button>
     </div>
-    <StakeholdersReadonlyBanner
-      v-else-if="store.user != null"
+
+    <GuestBanner
+      v-else-if="store.user != null || projectUserPermissionsStore.isGuest"
       class="mt-6"
     />
     <StakeholdersTosBanner
@@ -67,9 +67,9 @@
 import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
+import GuestBanner from '@/_layout/components/guest-banner/guest-banner.vue'
 import { useProjectUserPermissionsStore, useStore } from '~/store'
 import StakeholderCard from './stakeholder-card.vue'
-import StakeholdersReadonlyBanner from './stakeholders-readonly-banner.vue'
 import StakeholdersTosBanner from './stakeholders-tos-banner.vue'
 
 defineProps<{
