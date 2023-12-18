@@ -1,8 +1,7 @@
 <template>
   <div
-    class="flex flex-row items-center justify-between h-31 border-1 border-insight rounded-lg py-3 px-[18px] group hover:(bg-moss)"
+    class="flex flex-row items-center justify-between h-31 border-1 border-insight rounded-lg py-3 px-[18px] group cursor-pointer hover:(bg-moss)"
     :class="{'bg-moss': isHovered, 'border-frequency relative bg-moss': checked}"
-    @click="toggleSelectMemberCard"
   >
     <icon-custom-fi-check-circle
       v-if="checked"
@@ -12,8 +11,12 @@
       class="w-12 h-12 mr-3 rounded-full shadow"
       :src="image || 'https://inaturalist-open-data.s3.amazonaws.com/photos/332643265/small.jpeg'"
       alt="user profile image"
+      @click="toggleSelectMemberCard()"
     >
-    <div class="flex flex-col gap-y-1 w-3/5">
+    <div
+      class="flex flex-col gap-y-1 w-3/5"
+      @click="toggleSelectMemberCard()"
+    >
       <div class="h-4 flex items-center">
         <h3
           v-if="ranking === 0"
@@ -40,46 +43,49 @@
     </div>
     <div class="w-1/5">
       <button
-        :id="`${email}EditStakeholderDropdownButton`"
-        :data-dropdown-toggle="`${email}dropdownBottom`"
-        data-dropdown-placement="bottom"
-        class="hidden relative group-hover:block !ml-auto"
+        :id="`${userId}EditStakeholdersButton`"
         type="button"
-        @click="toggleCard()"
+        class="hidden group-hover:block !ml-auto"
+        :data-dropdown-toggle="`${userId}Dropdown`"
+        data-dropdown-placement="bottom"
+        @click="toggleCard"
       >
-        <icon-custom-dots-vertical class="hidden relative group-hover:block !ml-auto" />
-        <div
-          :id="`${email}dropdownBottom`"
-          class="z-10 hidden list-none bg-moss divide-y divide-gray-100 rounded-lg shadow p-3 w-70"
-          @mouseleave="toggleCard()"
-        >
-          <ul :aria-labelledby="`${email}EditStakeholderDropdownButton`">
-            <li
-              class="flex flex-row items-center justify-start space-x-2"
-              @click="togglePrimaryContact()"
-            >
-              <icon-custom-fi-x-circle
-                v-if="isRemovedPrimaryContact"
-                class="h-4 w-4 text-insight"
-              />
-              <icon-fa-plus
-                v-else
-                class="h-3 w-3 text-insight"
-              />
-              <span class="text-left">{{ isRemovedPrimaryContact ? 'Remove as primary contact' : 'Make primary contact' }}</span>
-            </li>
-          </ul>
-        </div>
+        <icon-custom-dots-vertical class="hidden group-hover:block !ml-auto" />
       </button>
+      <div
+        :id="`${userId}Dropdown`"
+        class="z-50 hidden list-none bg-moss divide-y divide-gray-100 rounded-lg shadow p-3 w-70"
+        @mouseleave="toggleCard"
+      >
+        <ul
+          :aria-labelledby="`${userId}EditStakeholdersButton`"
+        >
+          <li
+            class="flex flex-row items-center justify-start space-x-2 cursor-pointer"
+            @click="togglePrimaryContact"
+          >
+            <icon-custom-fi-x-circle
+              v-if="isRemovedPrimaryContact"
+              class="h-4 w-4 text-insight"
+            />
+            <icon-fa-plus
+              v-else
+              class="h-3 w-3 text-insight"
+            />
+            <span class="text-left">{{ isRemovedPrimaryContact ? 'Remove as primary contact' : 'Make primary contact' }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { initDropdowns } from 'flowbite'
+import { computed, onMounted, ref } from 'vue'
 
-const props = defineProps<{ name: string, email: string, image?: string, ranking?: number, modelValue: string[] }>()
-const emit = defineEmits<{(event: 'emitHideEmail', value: string): void, (event: 'update:modelValue', value: string[]): void}>()
+const props = defineProps<{ userId: number, name: string, email: string, image?: string, ranking?: number, modelValue: string[] }>()
+const emit = defineEmits<{(event: 'emitPrimaryContact', userId: number, email: string, isPrimaryContact: boolean): void, (event: 'update:modelValue', value: string[]): void}>()
 
 const isHovered = ref<boolean>(false)
 const isRemovedPrimaryContact = ref<boolean>(false)
@@ -105,7 +111,10 @@ const toggleSelectMemberCard = (): void => {
 
 const togglePrimaryContact = (): void => {
   isRemovedPrimaryContact.value = !isRemovedPrimaryContact.value
-  toggleSelectMemberCard()
-  // TODO: emit primary contact
+  emit('emitPrimaryContact', props.userId, props.email, isRemovedPrimaryContact.value)
 }
+
+onMounted(() => {
+  initDropdowns()
+})
 </script>

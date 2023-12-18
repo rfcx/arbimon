@@ -3,8 +3,11 @@
     <h3 class="text-white text-xl font-medium font-sans mt-2">
       Project members
     </h3>
-    <div v-if="isLoading">
-      <icon-fas-spinner class="animate-spin inline mr-1" /> Loading...
+    <div
+      v-if="isLoading"
+      class="py-2"
+    >
+      <icon-fas-spinner class="animate-spin inline w-4 h-4 mr-1" /> Loading...
     </div>
     <div
       v-else

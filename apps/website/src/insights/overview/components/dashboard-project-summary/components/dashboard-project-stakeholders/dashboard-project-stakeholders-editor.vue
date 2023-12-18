@@ -38,6 +38,8 @@
           :image="member.image ?? undefined"
           :email="member.email ?? ''"
           :ranking="member.ranking"
+          :user-id="member.id"
+          @emit-primary-contact="togglePrimaryContact"
         />
       </div>
     </div>
@@ -196,7 +198,7 @@ import type { DropdownOptions } from 'flowbite'
 import { Dropdown } from 'flowbite'
 import { computed, inject, nextTick, ref, watch } from 'vue'
 
-import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
+import { type DashboardStakeholdersUser, type UpdateDashboardStakeholdersRequestBodyUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import { apiClientKey } from '@/globals'
@@ -211,7 +213,7 @@ const props = defineProps<{
   projectMembers: Array<DashboardStakeholdersUser>,
   organizations: Array<OrganizationTypes['light']>
 }>()
-const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[]): void}>()
+const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[], selectedProjectMembers: UpdateDashboardStakeholdersRequestBodyUser[]): void}>()
 
 const dropdownStatus = ref<'idle' | 'search' | 'create-org'>('idle')
 const createNewOrganizationFormContainer = ref<HTMLDivElement | null>(null)
@@ -222,6 +224,10 @@ const searchOrganizationValue = ref('')
 const addedOrganizations = ref<Array<OrganizationTypes['light']>>([])
 const selectedOrganizationIds = ref(props.organizations.map(o => o.id))
 const selectedProjectMembers = ref(props.projectMembers.filter(u => u.ranking !== -1).map(u => u.email))
+const primaryContact = ref({
+  userId: props.projectMembers.filter(u => u.ranking === 0).map(u => u.id)[0],
+  email: props.projectMembers.filter(u => u.ranking === 0).map(u => u.email)[0]
+})
 const isAllUsersSelected = ref<boolean>(false)
 
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
@@ -345,9 +351,28 @@ const toggleAllUsersSelect = (): void => {
   selectedProjectMembers.value = isAllUsersSelected.value ? props.projectMembers.map(u => u.email) : []
 }
 
+const togglePrimaryContact = (userId: number, email: string, isPrimaryContact: boolean): void => {
+  console.info('isPrimaryContact', isPrimaryContact, email)
+  if (isPrimaryContact) {
+    primaryContact.value.userId = userId
+    primaryContact.value.email = email
+  }
+}
+
 const onFinishedEditing = (): void => {
   searchOrganizationValue.value = ''
-  emit('emit-finished-editing', selectedOrganizationIds.value)
+  const selectedUsers = props.projectMembers
+    .filter(u => selectedProjectMembers.value.includes(u.email) || primaryContact.value.email === u.email)
+    .map(user => {
+      return {
+        ranking: primaryContact.value.userId === user.id ? 0 : 1,
+        userId: user.id
+      }
+    })
+  emit('emit-finished-editing',
+    selectedOrganizationIds.value,
+    selectedUsers
+  )
 }
 
 </script>

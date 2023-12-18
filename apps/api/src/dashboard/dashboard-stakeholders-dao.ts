@@ -77,7 +77,8 @@ export const updateProjectStakeholders = async (projectId: number, stakeholders:
     }
 
     // find other users that are not on the update list and turn their ranking to -1
-    const usersNotOnStakeholdersUpdateList = await LocationProjectUserRole.findAll({ where: { [Op.and]: { locationProjectId: projectId, [Op.notIn]: stakeholders.users.map(u => u.userId) } }, transaction: t })
+    const selectedUsers = stakeholders.users.map(u => u.userId)
+    const usersNotOnStakeholdersUpdateList = await LocationProjectUserRole.findAll({ where: { locationProjectId: projectId, userId: { [Op.notIn]: selectedUsers } }, transaction: t })
     for (const excludedUser of usersNotOnStakeholdersUpdateList) {
       await sequelize.query(updateUserSql, { bind: [-1, projectId, excludedUser.get('userId')], transaction: t })
     }
