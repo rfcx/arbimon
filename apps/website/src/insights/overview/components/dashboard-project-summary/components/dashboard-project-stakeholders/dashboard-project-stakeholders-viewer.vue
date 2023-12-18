@@ -39,7 +39,6 @@
         :ranking="1"
       />
     </div>
-    <GuestBanner v-if="projectUserPermissionsStore.isGuest" />
     <div
       v-if="editable && !projectUserPermissionsStore.isGuest"
       class="flex w-full justify-end mt-6"

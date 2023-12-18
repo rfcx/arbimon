@@ -84,9 +84,9 @@ import { computed, inject, ref, watch } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
 import { apiClientKey } from '@/globals'
 import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
-import GuestBanner from '../_layout/components//guest-banner/guest-banner.vue'
 import { useGetProjectSettings, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectForm from './components/form/project-form.vue'

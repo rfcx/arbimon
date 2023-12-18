@@ -72,10 +72,10 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, unref, watch } from 'vue'
 
+import GuestBanner from '@/_layout/components/guest-banner/guest-banner.vue'
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
 import { useProjectUserPermissionsStore } from '~/store'
-import GuestBanner from '../../../../../_layout/components/guest-banner/guest-banner.vue'
 import ProjectSummaryEmpty from './project-summary-empty.vue'
 import ProjectSummaryEmptyGuestView from './project-summary-empty-guest-view.vue'
 
