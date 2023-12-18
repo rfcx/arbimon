@@ -42,7 +42,7 @@
     <div class="overflow-scroll">
       <img
         :src="project?.imageUrl"
-        class="w-full h-full object-contain bg-pitch h-52"
+        class="w-full h-full object-contain bg-util-gray-02 h-52"
       >
       <div class="p-4 border-b border-util-gray-01">
         <span class="text-lg font-medium">{{ project?.name }}</span>
@@ -53,13 +53,11 @@
           <span>
             Project dates:
           </span>
-          <span class="uppercase">
+          <span>
             {{ formatDateRange(profile?.dateStart) }}
           </span>
           <icon-custom-arrow-right-white class="self-start" />
-          <span
-            class="uppercase"
-          >
+          <span>
             {{ formatDateRange(profile?.dateEnd) }}
           </span>
         </div>

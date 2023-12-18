@@ -20,9 +20,9 @@ export const useUpdateProjectSettings = (apiClient: AxiosInstance, projectId: nu
   })
 }
 
-export const useGetProjectInfo = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>, parem: string[]): UseQueryReturnType<ProjectInfoResponse, unknown> => {
+export const useGetProjectInfo = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>, parems: string[]): UseQueryReturnType<ProjectInfoResponse, unknown> => {
   return useQuery({
     queryKey: ['get-project-settings'],
-    queryFn: async () => await apiBioGetProjectInfoData(apiClient, projectId.value ?? -1, parem)
+    queryFn: async () => await apiBioGetProjectInfoData(apiClient, projectId.value ?? -1, parems)
   })
 }
