@@ -16,7 +16,7 @@
             <span
               v-if="project?.countries.length !== 0"
               class="text-spoonbill font-medium text-xs ml-4 mt-3.5"
-            >{{ countrie }}</span>
+            >{{ getCountryLabel }}</span>
             <div
               v-if="countrieFlag"
               class="align-baseline flex"
@@ -123,6 +123,7 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
+import { getCountryData } from 'countries-list'
 import dayjs from 'dayjs'
 import { computed, inject, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
@@ -165,12 +166,12 @@ watch(() => props.projectId, () => {
   profileRefetch()
 })
 
-const countrie = computed(() => {
+const getCountryLabel = computed(() => {
   if (project.value?.countries == null) return ''
   if (project.value?.countries.length > 1) {
     return 'Multiple countries'
   } else {
-    return project.value?.countries[0]
+    return project.value?.countries.map(code => getCountryData(code as TCountryCode).name)[0]
   }
 })
 
