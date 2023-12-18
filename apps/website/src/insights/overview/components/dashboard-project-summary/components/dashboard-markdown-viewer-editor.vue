@@ -5,6 +5,7 @@
       @emit-add-content="editMarkdownContent"
     />
     <GuestBanner v-if="projectUserPermissionsStore.isGuest" />
+    <ProjectSummaryEmptyForNonProjectMember v-else />
   </template>
   <template v-else>
     <div
@@ -77,6 +78,7 @@ import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
 import { useProjectUserPermissionsStore } from '~/store'
 import ProjectSummaryEmpty from './project-summary-empty.vue'
+import ProjectSummaryEmptyForNonProjectMember from './project-summary-empty-for-non-project-member.vue'
 
 const DEFAULT_CHARACTER_LIMIT = 10000
 
