@@ -10,10 +10,10 @@
       <StakeholderCard
         v-for="(member, idx) of projectMembers"
         :key="idx"
-        :name="member.firstname + ' ' + member.lastname"
-        :image="member.picture ?? undefined"
+        :name="member.firstName + ' ' + member.lastName"
+        :image="member.image ?? undefined"
         :email="member.email ?? ''"
-        :ranking="1"
+        :ranking="member.ranking"
       />
     </div>
     <h3 class="text-white text-xl font-medium font-sans mt-6">
@@ -32,16 +32,18 @@
         :ranking="1"
       />
     </div>
+    <GuestBanner v-if="projectUserPermissionsStore.isGuest" />
     <div
-      v-if="editable"
+      v-if="editable && !projectUserPermissionsStore.isGuest"
       class="flex w-full justify-end mt-6"
     >
       <button
         v-show="editable"
-        class="btn btn-secondary"
+        class="btn btn-primary"
         @click="$emit('emit-is-updating')"
       >
-        Manage stakeholders
+        Edit displayed stakeholders
+        <icon-custom-ic-edit class="ml-2 self-center" />
       </button>
     </div>
     <StakeholdersReadonlyBanner
@@ -56,10 +58,10 @@
 </template>
 
 <script setup lang="ts">
-import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
+import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
-import { useStore } from '~/store'
+import { useProjectUserPermissionsStore, useStore } from '~/store'
 import StakeholderCard from './stakeholder-card.vue'
 import StakeholdersReadonlyBanner from './stakeholders-readonly-banner.vue'
 import StakeholdersTosBanner from './stakeholders-tos-banner.vue'
@@ -67,9 +69,11 @@ import StakeholdersTosBanner from './stakeholders-tos-banner.vue'
 defineProps<{
   editable: boolean,
   organizations: Array<OrganizationTypes['light']>
-  projectMembers: Array<CoreUser>
+  projectMembers: Array<DashboardStakeholdersUser>
 }>()
 defineEmits<{(event: 'emit-is-updating'): void}>()
 
 const store = useStore()
+
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 </script>

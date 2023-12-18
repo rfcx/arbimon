@@ -7,15 +7,15 @@ export type DashboardMetricsParams = ProjectRouteParamsSerialized
 
 // Response types
 export interface DashboardMetricsResponse {
-  /** Number of sites with recorders deployed */
-  deploymentSites: number
+  /** Number of sites with recordings */
+  totalSites: number
   /** Number of NT, VU, EN, and CR species */
   threatenedSpecies: number
   /** Number of all detected species */
   totalSpecies: number
   /** Total number of species calls detected */
   totalDetections: number
-  /** total recordings in minutes */
+  /** Total recordings in minutes */
   totalRecordings: number
   maxDate: Date | null
   minDate: Date | null

@@ -1,25 +1,30 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaults } from '../model-factory-helpers/defaults'
+import { defineWithDefaultsAutoPk } from '../model-factory-helpers/defaults'
 import { type UserProfile } from '../types'
 
 export const MODEL_USER_PROFILE = 'UserProfile'
 const TABLE_USER_PROFILE = 'user_profile'
 export const UPDATE_ON_DUPLICATE_USER_PROFILE: Array<(keyof UserProfile)> = ['firstName', 'lastName', 'image', 'organizationIdAffiliated']
 
-export const UserProfileModel = defineWithDefaults<UserProfile>(
+export const UserProfileModel = defineWithDefaultsAutoPk<UserProfile>(
   MODEL_USER_PROFILE,
   {
     // PK
     id: { // 1
       type: DataTypes.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
 
     // SKs
-    userIdAuth0: {
+    email: {
       type: DataTypes.STRING(255),
       unique: true
+    },
+    idAuth0: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     },
 
     // Facts

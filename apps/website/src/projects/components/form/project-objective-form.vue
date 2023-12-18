@@ -11,7 +11,7 @@
   </div>
   <ul class="w-full">
     <li
-      v-for="obj in objectiveTypes"
+      v-for="obj in Object.values(masterObjectiveTypes)"
       :key="obj.slug"
       class="flex flex-row flex-1 mt-2"
     >
@@ -29,7 +29,7 @@
         v-if="obj.slug === 'others'"
         v-model="otherReason"
         type="text"
-        class="input-field ml-4 w-full disabled:cursor-not-allowed disabled:opacity-75"
+        class="input-field ml-4 w-full disabled:cursor-not-allowed disabled:opacity-75 focus:ring-0"
         :disabled="isDisabled"
         :class="{'border-1 border-frequency': isSelected(obj.id)}"
         @click="forceSelectOther"
@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 
-import { type ProjectObjective, masterOjectiveTypes, objectiveTypes } from '../../types'
+import { type ProjectObjective, masterObjectiveTypes } from '../../types'
 import IconIInfo from '../icon-i-info.vue'
 
 const props = defineProps<{
@@ -57,7 +57,7 @@ const otherReason = ref<string>('')
 
 const selectedSlugs = computed(() => {
   return selectedObjectives.value.map((obj) => {
-    if (obj.id === masterOjectiveTypes.Others.id) return otherReason.value
+    if (obj.id === masterObjectiveTypes.Others.id) return otherReason.value
     return obj.slug
   })
 })
@@ -77,7 +77,7 @@ const onSelectObjective = (objective: ProjectObjective) => {
 
 // use when user types in other reason
 const forceSelectOther = () => {
-  const defaultOtherObj = masterOjectiveTypes.Others
+  const defaultOtherObj = masterObjectiveTypes.Others
   if (!isSelected(defaultOtherObj.id)) {
     selectedObjectives.value = [...selectedObjectives.value, defaultOtherObj]
   }
@@ -85,15 +85,15 @@ const forceSelectOther = () => {
 
 // use when user remove all text from other reason
 const unselectOther = () => {
-  selectedObjectives.value = selectedObjectives.value.filter((obj) => obj.id !== masterOjectiveTypes.Others.id)
+  selectedObjectives.value = selectedObjectives.value.filter((obj) => obj.id !== masterObjectiveTypes.Others.id)
 }
 
 const setupExistingObjectivesIfNeeded = () => {
   if (!props.existingObjectives || props.existingObjectives?.length === 0) return
   selectedObjectives.value = props.existingObjectives.map((obj) => {
-    const objectiveType = objectiveTypes.find((o) => o.slug === obj)
+    const objectiveType = Object.values(masterObjectiveTypes).find((o) => o.slug === obj)
     if (!objectiveType) otherReason.value = obj // no match, must be other reason
-    return objectiveType ?? masterOjectiveTypes.Others
+    return objectiveType ?? masterObjectiveTypes.Others
   })
 }
 

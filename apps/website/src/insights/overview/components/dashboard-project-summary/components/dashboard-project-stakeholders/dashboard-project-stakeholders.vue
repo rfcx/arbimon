@@ -1,5 +1,5 @@
 <template>
-  <template v-if="stakeholders?.organization.length === 0 && stakeholders?.user.length === 0 && !isEditing">
+  <template v-if="stakeholders?.organizations.length === 0 && stakeholders?.users.length === 0 && !isEditing">
     <ProjectSummaryEmpty
       v-if="editable"
       @emit-add-content="isEditing = true"
@@ -10,14 +10,14 @@
     <DashboardProjectStakeholdersViewer
       v-show="isEditing === false"
       :editable="editable"
-      :organizations="stakeholders?.organization ?? []"
-      :project-members="projectUserPermissionsStore.projectMembers"
+      :organizations="stakeholders?.organizations ?? []"
+      :project-members="stakeholders?.users.filter(u => u.ranking !== -1) ?? []"
       @emit-is-updating="isEditing = true"
     />
     <DashboardProjectStakeholdersEditor
       v-show="isEditing === true"
-      :organizations="stakeholders?.organization ?? []"
-      :project-members="projectUserPermissionsStore.projectMembers"
+      :organizations="stakeholders?.organizations ?? []"
+      :project-members="stakeholders?.users ?? []"
       @emit-finished-editing="onFinishedEditing"
     />
   </template>
@@ -28,9 +28,9 @@ import { type AxiosInstance } from 'axios'
 import { inject, ref } from 'vue'
 
 import { apiClientKey } from '@/globals'
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useStore } from '~/store'
 import { useGetDashboardStakeholders } from '../../../../composables/use-get-dashboard-stakeholders'
-import { useUpdateStakeholdersOrganizationsList } from '../../../../composables/use-update-stakeholders-organizations'
+import { useUpdateDashboardStakeholders } from '../../../../composables/use-update-stakeholders'
 import ProjectSummaryEmpty from '../project-summary-empty.vue'
 import ProjectSummaryEmptyGuestView from '../project-summary-empty-guest-view.vue'
 import DashboardProjectStakeholdersEditor from './dashboard-project-stakeholders-editor.vue'
@@ -44,12 +44,10 @@ const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { data: stakeholders, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
-const { mutate: mutateStakeholdersOrganizations } = useUpdateStakeholdersOrganizationsList(apiClientBio, store.selectedProject?.id ?? -1)
-// TODO: only selected project stakeholders are shown in the DashboardProjectStakeholdersViewer
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
+const { mutate: mutateStakeholders } = useUpdateDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 
 const onFinishedEditing = (ids: number[]): void => {
-  mutateStakeholdersOrganizations(ids, {
+  mutateStakeholders({ users: [], organizations: ids }, {
     onSuccess: async () => {
       await refetchStakeholdersData()
       isEditing.value = false

@@ -6,6 +6,8 @@ import fastify, { type FastifyInstance } from 'fastify'
 import fastifyAuth0Verify from 'fastify-auth0-verify'
 import { resolve } from 'path'
 
+import { updateUserProfileToBio } from './_middleware/update-user-profile-to-bio-and-core'
+import { fastifyLruCache } from './_plugins/global-user-cache'
 import { env } from './_services/env'
 import { routesActivity } from './activity'
 import { routesClassifiers } from './classifiers'
@@ -38,6 +40,15 @@ export const createApp = async (): Promise<FastifyInstance> => {
   })
   await app.register(fastifyStatic, { root: resolve('./public') })
   await app.register(fastifyRequestContextPlugin)
+  await app.register(fastifyLruCache, {
+    maxSize: 500,
+    maxAge: 15 * 1000 * 1000 // 15 minutes max age cache
+  })
+  app.addHook('preValidation', updateUserProfileToBio)
+  app.addHook('onRequest', (req, _rep, done) => {
+    req.extractedUser = null
+    done()
+  })
 
   // Register routes
   const routesRegistrations = [

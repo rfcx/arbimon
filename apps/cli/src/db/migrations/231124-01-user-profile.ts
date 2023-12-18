@@ -19,14 +19,19 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       // PK
       id: {
         type: DataTypes.INTEGER,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
       },
 
       // SKs
-      user_id_auth0: {
+      email: {
         type: DataTypes.STRING(255),
         unique: true,
         allowNull: false
+      },
+      id_auth0: {
+        type: DataTypes.STRING(255),
+        allowNull: true
       },
 
       // Facts

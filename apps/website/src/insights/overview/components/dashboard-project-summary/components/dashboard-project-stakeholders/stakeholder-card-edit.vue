@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-row items-center justify-between border-1 border-insight rounded-lg py-4 px-[18px] group hover:(bg-moss)"
+    class="flex flex-row items-center justify-between h-31 border-1 border-insight rounded-lg py-3 px-[18px] group hover:(bg-moss)"
     :class="{'bg-moss': isHovered, 'border-frequency relative bg-moss': checked}"
     @click="toggleSelectMemberCard"
   >
@@ -13,20 +13,24 @@
       :src="image || 'https://inaturalist-open-data.s3.amazonaws.com/photos/332643265/small.jpeg'"
       alt="user profile image"
     >
-    <div class="w-2/4">
-      <h3
-        v-if="ranking === 0"
-        class="text-danger text-xs font-medium font-eyebrow uppercase"
-      >
-        Primary contact
-      </h3>
-      <h3 class="text-base font-normal font-sans">
-        {{ name }}
-      </h3>
-      <div class="text-ellipsis overflow-hidden">
+    <div class="flex flex-col gap-y-1 w-3/5">
+      <div class="h-4 flex items-center">
+        <h3
+          v-if="ranking === 0"
+          class="text-xs text-pitch bg-frequency font-normal font-eyebrow leading-5 px-2 rounded-sm"
+        >
+          Primary contact
+        </h3>
+      </div>
+      <div class="h-12 flex items-center">
+        <h3 class="text-base font-normal font-sans line-clamp-2">
+          {{ name }}
+        </h3>
+      </div>
+      <div class="h-5 text-ellipsis overflow-hidden">
         <a
-          v-if="email"
-          class="text-sm font-normal leading-tight hover:underline hover:cursor-pointer"
+          v-if="ranking === 0"
+          class="text-sm font-normal leading-tight underline hover:cursor-pointer"
           :title="email"
           :href="`mailto:${email}`"
         >
@@ -34,7 +38,7 @@
         </a>
       </div>
     </div>
-    <div class="w-1/4">
+    <div class="w-1/5">
       <button
         :id="`${email}EditStakeholderDropdownButton`"
         :data-dropdown-toggle="`${email}dropdownBottom`"
@@ -46,27 +50,23 @@
         <icon-custom-dots-vertical class="hidden relative group-hover:block !ml-auto" />
         <div
           :id="`${email}dropdownBottom`"
-          class="z-10 hidden list-none bg-moss divide-y divide-gray-100 rounded-lg shadow p-3 w-56"
+          class="z-10 hidden list-none bg-moss divide-y divide-gray-100 rounded-lg shadow p-3 w-70"
           @mouseleave="toggleCard()"
         >
-          <ul
-            :aria-labelledby="`${email}EditStakeholderDropdownButton`"
-            class="flex flex-col gap-y-3"
-          >
+          <ul :aria-labelledby="`${email}EditStakeholderDropdownButton`">
             <li
               class="flex flex-row items-center justify-start space-x-2"
-              @click="makePrimaryContact()"
+              @click="togglePrimaryContact()"
             >
-              <icon-fa-plus class="h-3 w-3 text-insight mr-2" />
-              <span class="text-left">Make primary contact</span>
-            </li>
-            <li
-              class="flex flex-row items-center justify-start space-x-2"
-              :class="{'text-util-gray-02': isHidden}"
-              @click="hideEmail()"
-            >
-              <icon-custom-fi-eye-off class="h-6 w-6" />
-              <span class="text-left">Hide email (display email only)</span>
+              <icon-custom-fi-x-circle
+                v-if="isRemovedPrimaryContact"
+                class="h-4 w-4 text-insight"
+              />
+              <icon-fa-plus
+                v-else
+                class="h-3 w-3 text-insight"
+              />
+              <span class="text-left">{{ isRemovedPrimaryContact ? 'Remove as primary contact' : 'Make primary contact' }}</span>
             </li>
           </ul>
         </div>
@@ -82,7 +82,7 @@ const props = defineProps<{ name: string, email: string, image?: string, ranking
 const emit = defineEmits<{(event: 'emitHideEmail', value: string): void, (event: 'update:modelValue', value: string[]): void}>()
 
 const isHovered = ref<boolean>(false)
-const isHidden = ref<boolean>(false)
+const isRemovedPrimaryContact = ref<boolean>(false)
 const checked = computed<boolean>(() => {
   return props.modelValue.includes(props.email)
 })
@@ -103,13 +103,8 @@ const toggleSelectMemberCard = (): void => {
   }
 }
 
-const hideEmail = (): void => {
-  isHidden.value = true
-  toggleCard()
-  emit('emitHideEmail', props.email)
-}
-
-const makePrimaryContact = (): void => {
+const togglePrimaryContact = (): void => {
+  isRemovedPrimaryContact.value = !isRemovedPrimaryContact.value
   toggleSelectMemberCard()
   // TODO: emit primary contact
 }

@@ -36,10 +36,10 @@
     class="gap-4 <sm:text-center items-stretch grid grid-cols-2 lg:grid-cols-4"
   >
     <numeric-metric-with-icons
-      tooltip-id="deployment-sites"
-      tooltip-text="Number of sites with recorders deployed."
-      title="Deployment sites"
-      :value="metrics?.deploymentSites ?? 0"
+      tooltip-id="total-sites"
+      tooltip-text="Number of sites with recordings."
+      title="Total sites"
+      :value="metrics?.totalSites ?? 0"
       icon-name="ft-map-pin-lg"
       class="flex-1"
     />

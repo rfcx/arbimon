@@ -22,7 +22,7 @@ export const getProjectMetrics = async (locationProjectId: number): Promise<Dash
   ])
 
   return {
-    deploymentSites: metrics?.siteCount == null ? 0 : Number(metrics.siteCount),
+    totalSites: metrics?.siteCount == null ? 0 : Number(metrics.siteCount),
     threatenedSpecies: speciesThreatenedCount,
     totalSpecies: metrics?.speciesCount == null ? 0 : Number(metrics.speciesCount),
     totalDetections: metrics?.detectionMinutesCount == null ? 0 : Number(metrics.detectionMinutesCount),

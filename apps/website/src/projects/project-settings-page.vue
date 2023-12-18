@@ -30,10 +30,14 @@
           />
         </div>
       </div>
+      <GuestBanner
+        v-if="projectUserPermissionsStore.isGuest"
+        class="mt-4"
+      />
       <div class="mt-4 sm:mt-6 flex flex-row-reverse items-center gap-4">
         <button
           :disabled="projectUserPermissionsStore.isGuest || isSaving"
-          class="self-end inline-flex items-center btn btn-primary disabled:opacity-75 disabled:cursor-not-allowed"
+          class="self-end inline-flex items-center btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
           @click.prevent="save"
         >
           Save edit
@@ -52,8 +56,16 @@
           class="p-4 text-sm inline-flex"
           role="alert"
         >
-          <icon-fa-check />
-          <span class="font-medium ml-2">{{ lastUpdatedText }}</span>
+          <svg
+            class="w-4 h-4 ml-1"
+            aria-hidden="true"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M 20.292969 5.2929688 L 9 16.585938 L 4.7070312 12.292969 L 3.2929688 13.707031 L 9 19.414062 L 21.707031 6.7070312 L 20.292969 5.2929688 z" />
+          </svg>
+          <span class="font-medium ml-2 mt-0.15rem">{{ lastUpdatedText }}</span>
         </span>
         <span
           v-if="hasFailed"
@@ -74,6 +86,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientKey } from '@/globals'
 import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
+import GuestBanner from '../_layout/components//guest-banner/guest-banner.vue'
 import { useGetProjectSettings, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectForm from './components/form/project-form.vue'

@@ -2,6 +2,7 @@
   <landing-navbar />
   <section class="static overflow-hidden">
     <project-list
+      v-if="!hideProjectList"
       :data="projectResults"
       :selected-project-id="selectedProjectId ?? undefined"
       :selected-tab="selectedTab"
@@ -12,11 +13,25 @@
       @emit-swap-tab="onEmitSwapTab"
     />
     <project-info
-      v-if="selectedProjectId !== null"
+      v-if="selectedProjectId !== null && !hideProjectList"
       class="absolute z-40 h-88vh mt-10"
       :project-id="selectedProjectId"
       @emit-close-project-info="selectedProjectId = null"
     />
+    <div
+      class="flex flex-col inset-1/2 w-3vh absolute z-40 h-7vh bg-moss transition-transform -translate-x-full rounded-r-lg "
+      :class="leftMargin"
+      @click="toggleProjectList"
+    >
+      <icon-fas-chevron-right
+        v-if="hideProjectList"
+        class="w-3 h-3 m-auto"
+      />
+      <icon-fas-chevron-left
+        v-else
+        class="w-3 h-3 m-auto"
+      />
+    </div>
     <map-view
       :data="projectResults"
       class="relative left-0 z-30 w-full"
@@ -42,6 +57,7 @@ import type { Tab } from './data/types'
 const store = useStore()
 const pdStore = useProjectDirectoryStore()
 const selectedProjectId = ref<number | null>(null)
+const hideProjectList = ref<boolean>(false)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
@@ -60,6 +76,20 @@ const myProjects = computed(() => {
 const onEmitSelectedProject = (locationProjectId: number) => {
   selectedProjectId.value = locationProjectId
 }
+
+const toggleProjectList = () => {
+  hideProjectList.value = !hideProjectList.value
+}
+
+const leftMargin = computed(() => {
+  if (hideProjectList.value) {
+    return 'left-0'
+  } else if (selectedProjectId.value === null) {
+    return 'left-98'
+  } else {
+    return 'left-198'
+  }
+})
 
 const onEmitSwapTab = (tab: Tab) => {
   selectedTab.value = tab
@@ -89,7 +119,7 @@ const onEmitLoadMore = async () => {
   const total = pdStore.allProjects.length
   if (offset === total) return
   if (isLoading.value) return
-  const ids: number[] = pdStore.allProjects.slice(offset, offset + LIMIT).map((p: { id: any }) => p.id)
+  const ids: number[] = pdStore.allProjects.slice(offset, offset + LIMIT).map(p => p.id)
   await fetchProjectsWithMetricsByIds(ids)
 }
 

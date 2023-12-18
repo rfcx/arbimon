@@ -3,10 +3,10 @@ import { type AxiosInstance } from 'axios'
 // Request type
 export interface ProjectCreateRequest {
   name: string
-  objectives: string[]
+  objectives?: string[]
   associatedOrganizations?: string
-  dateStart: string | null
-  dateEnd: string | null // allow null = ongoing
+  dateStart?: string
+  dateEnd?: string // undefined => ongoing
 }
 
 // Response type

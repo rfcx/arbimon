@@ -81,6 +81,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
 
   return {
     ...baseProject,
+    dateStart: baseProject.dateStart, // TODO:
     ...(fields.includes('readme') ? { readme: resProfile?.readme ?? '' } : {}),
     ...(fields.includes('keyResult') ? { keyResults: resProfile?.keyResult ?? '' } : {}),
     ...(fields.includes('image') ? { image: '' } : {}),

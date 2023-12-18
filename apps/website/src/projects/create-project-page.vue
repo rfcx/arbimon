@@ -121,7 +121,7 @@ async function create () {
   if (!verifyFields()) return
   resetErrorState()
   isCreating.value = true
-  const project = { name: name.value, objectives: objectives.value, dateStart: startDate.value, dateEnd: onGoing.value ? null : endDate.value }
+  const project = { name: name.value, objectives: objectives.value, dateStart: startDate.value ?? undefined, dateEnd: onGoing.value ? undefined : (endDate.value ?? undefined) }
   try {
     const response = await apiBioPostProjectCreate(apiClientBio, project)
     await store.refreshProjects()
