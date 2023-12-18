@@ -34,10 +34,10 @@
           v-for="(member, idx) of projectMembers"
           :key="idx"
           v-model="selectedProjectMembers"
-          :name="member.firstname + ' ' + member.lastname"
-          :image="member.picture ?? undefined"
+          :name="member.firstName + ' ' + member.lastName"
+          :image="member.image ?? undefined"
           :email="member.email ?? ''"
-          :ranking="idx === 0 ? 0 : 1"
+          :ranking="member.ranking"
         />
       </div>
     </div>
@@ -196,8 +196,7 @@ import type { DropdownOptions } from 'flowbite'
 import { Dropdown } from 'flowbite'
 import { computed, inject, nextTick, ref, watch } from 'vue'
 
-// import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
-import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
+import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import { apiClientKey } from '@/globals'
@@ -209,7 +208,7 @@ import SelectedOrganizationCard from './selected-organization-card.vue'
 import StakeholderCardEdit from './stakeholder-card-edit.vue'
 
 const props = defineProps<{
-  projectMembers: Array<CoreUser>, // DashboardStakeholdersUser
+  projectMembers: Array<DashboardStakeholdersUser>,
   organizations: Array<OrganizationTypes['light']>
 }>()
 const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[]): void}>()
@@ -222,7 +221,7 @@ const organizationSearchResultNotFoundContainer = ref<HTMLDivElement | null>(nul
 const searchOrganizationValue = ref('')
 const addedOrganizations = ref<Array<OrganizationTypes['light']>>([])
 const selectedOrganizationIds = ref(props.organizations.map(o => o.id))
-const selectedProjectMembers = ref(props.projectMembers.map(u => u.email))
+const selectedProjectMembers = ref(props.projectMembers.filter(u => u.ranking !== -1).map(u => u.email))
 const isAllUsersSelected = ref<boolean>(false)
 
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
