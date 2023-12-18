@@ -123,7 +123,7 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { getCountryData } from 'countries-list'
+import { type TCountryCode, getCountryData } from 'countries-list'
 import dayjs from 'dayjs'
 import { computed, inject, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
