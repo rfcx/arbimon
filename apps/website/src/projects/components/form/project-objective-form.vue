@@ -29,7 +29,7 @@
         v-if="obj.slug === 'others'"
         v-model="otherReason"
         type="text"
-        class="input-field ml-4 w-full disabled:cursor-not-allowed disabled:opacity-75"
+        class="input-field ml-4 w-full disabled:cursor-not-allowed disabled:opacity-75 focus:ring-0"
         :disabled="isDisabled"
         :class="{'border-1 border-frequency': isSelected(obj.id)}"
         @click="forceSelectOther"
