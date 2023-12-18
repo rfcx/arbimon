@@ -13,7 +13,7 @@
     />
     <project-info
       v-if="selectedProjectId !== null"
-      class="absolute z-40 h-50vh my-auto"
+      class="absolute z-40 h-88vh mt-10"
       :project-id="selectedProjectId"
       @emit-close-project-info="selectedProjectId = null"
     />

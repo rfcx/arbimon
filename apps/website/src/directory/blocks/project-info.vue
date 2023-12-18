@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col inset-1/4 left-100 w-98 bg-moss transition-transform -translate-x-full rounded-lg">
+  <div class="flex flex-col left-100 w-98 bg-moss transition-transform -translate-x-full rounded-lg">
     <div class="rounded-t-lg bg-moss">
       <div class="flex flex-row justify-between items-center">
         <div class="flex flex-1 flex-row items-center">
