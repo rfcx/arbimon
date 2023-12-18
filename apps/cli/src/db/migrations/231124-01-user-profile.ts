@@ -26,7 +26,8 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       // SKs
       email: {
         type: DataTypes.STRING(255),
-        unique: true
+        unique: true,
+        allowNull: false
       },
       id_auth0: {
         type: DataTypes.STRING(255),
