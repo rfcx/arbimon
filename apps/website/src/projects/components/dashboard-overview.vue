@@ -47,7 +47,7 @@
         class="text-3xl text-white font-header font-medium"
       >{{ valueShortScale }}</span>
     </div>
-    <div>
+    <div v-if="!projectUserPermissionsStore.isGuest">
       <a
         class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-gray-300 border-b-1 border-frequency"
         :href="stat.link"
@@ -62,9 +62,12 @@ import { initTooltips } from 'flowbite'
 import numeral from 'numeral'
 import { computed, onMounted } from 'vue'
 
+import { useProjectUserPermissionsStore } from '~/store'
 import { type Stat } from '../types'
 
 const props = defineProps<{stat: Stat}>()
+
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 onMounted(() => {
   initTooltips()
