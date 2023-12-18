@@ -34,9 +34,12 @@
         v-if="projectUserPermissionsStore.isGuest"
         class="mt-4"
       />
-      <div class="mt-4 sm:mt-6 flex flex-row-reverse items-center gap-4">
+      <div
+        v-if="!projectUserPermissionsStore.isGuest"
+        class="mt-4 sm:mt-6 flex flex-row-reverse items-center gap-4"
+      >
         <button
-          :disabled="projectUserPermissionsStore.isGuest || isSaving"
+          :disabled="isSaving"
           class="self-end inline-flex items-center btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
           @click.prevent="save"
         >

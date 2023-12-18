@@ -24,13 +24,11 @@
           class="flex gap-4 py-4 md:justify-between order-first"
         >
           <router-link
+            v-if="!projectUserPermissionsStore.isGuest"
             :to="{ name: ROUTE_NAMES.projectSettings }"
             class="flex flex-row items-center justify-start order-last md:order-first"
           >
-            <button
-              class="btn btn-secondary group disabled:hover:btn-disabled disabled:btn-disabled"
-              :disabled="projectUserPermissionsStore.isGuest"
-            >
+            <button class="btn btn-secondary group">
               <span>Edit</span> <span class="hidden lg:inline-flex">project settings</span> <icon-custom-ic-edit class="inline-flex ml-2 group-hover:stroke-pitch" />
             </button>
           </router-link>
@@ -47,10 +45,9 @@
               </template>
             </span>
 
-            <template v-if="profile?.isPublished != null && profile?.isPublished === true">
+            <template v-if="profile?.isPublished != null && profile?.isPublished === true && !projectUserPermissionsStore.isGuest">
               <button
-                class="btn btn-secondary disabled:cursor-not-allowed"
-                :disabled="projectUserPermissionsStore.isGuest"
+                class="btn btn-secondary"
                 @click="hideInsight"
               >
                 Hide Insights
@@ -58,6 +55,7 @@
             </template>
             <template v-else>
               <button
+                v-if="!projectUserPermissionsStore.isGuest"
                 class="btn btn-primary disabled:cursor-not-allowed"
                 :disabled="projectUserPermissionsStore.currentUserRoleOfCurrentProject === 'Guest'"
                 @click="shareInsight"

@@ -1,10 +1,9 @@
 <template>
   <template v-if="stakeholders?.organizations.length === 0 && stakeholders?.users.length === 0 && !isEditing">
     <ProjectSummaryEmpty
-      v-if="editable"
+      v-if="editable && !projectUserPermissionsStore.isGuest"
       @emit-add-content="isEditing = true"
     />
-    <ProjectSummaryEmptyGuestView v-else />
   </template>
   <template v-else>
     <DashboardProjectStakeholdersViewer
@@ -31,11 +30,10 @@ import { inject, ref } from 'vue'
 import { type UpdateDashboardStakeholdersRequestBodyUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 
 import { apiClientKey } from '@/globals'
-import { useStore } from '~/store'
+import { useProjectUserPermissionsStore, useStore } from '~/store'
 import { useGetDashboardStakeholders } from '../../../../composables/use-get-dashboard-stakeholders'
 import { useUpdateDashboardStakeholders } from '../../../../composables/use-update-stakeholders'
 import ProjectSummaryEmpty from '../project-summary-empty.vue'
-import ProjectSummaryEmptyGuestView from '../project-summary-empty-guest-view.vue'
 import DashboardProjectStakeholdersEditor from './dashboard-project-stakeholders-editor.vue'
 import DashboardProjectStakeholdersViewer from './dashboard-project-stakeholders-viewer.vue'
 
@@ -46,6 +44,7 @@ const store = useStore()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const { isLoading: stakeholdersLoading, data: stakeholders, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateStakeholders } = useUpdateDashboardStakeholders(apiClientBio, store.selectedProject?.id ?? -1)
 

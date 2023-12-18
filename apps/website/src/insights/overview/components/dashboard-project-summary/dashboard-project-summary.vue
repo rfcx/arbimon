@@ -155,7 +155,7 @@
         role="tabpanel"
         aria-labelledby="methods-tab-content"
       >
-        <div :class="isMethodsTabEditing ? 'mx-auto pl-4 pb-4 pr-4 lg:max-w-4xl relative' : 'mx-auto p-4 lg:max-w-4xl relative'">
+        <div :class="isMethodsTabEditing ? 'mx-auto pl-4 pb-4 pr-4 lg:max-w-4xl relative' : 'mx-auto lg:max-w-4xl relative'">
           <DashboardMarkdownViewerEditor
             id="methods"
             v-model:is-view-mored="isMethodsTabViewMored"
@@ -176,7 +176,7 @@
         role="tabpanel"
         aria-labelledby="key-results-tab-content"
       >
-        <div :class="isKeyResultTabEditing ? 'mx-auto pl-4 pb-4 pr-4 lg:max-w-4xl relative' : 'mx-auto p-4 lg:max-w-4xl relative'">
+        <div :class="isKeyResultTabEditing ? 'mx-auto pl-4 pb-4 pr-4 lg:max-w-4xl relative' : 'mx-auto lg:max-w-4xl relative'">
           <DashboardMarkdownViewerEditor
             id="key-result"
             v-model:is-view-mored="isKeyResultTabViewMored"
@@ -210,7 +210,7 @@
         role="tabpanel"
         aria-labelledby="resources-tab-content"
       >
-        <div :class="isResourcesTabEditing ? 'mx-auto pl-4 pb-4 pr-4 lg:max-w-4xl relative' : 'mx-auto p-4 lg:max-w-4xl relative'">
+        <div :class="isResourcesTabEditing ? 'mx-auto pl-4 pb-4 pr-4 lg:max-w-4xl relative' : 'mx-auto lg:max-w-4xl relative'">
           <DashboardMarkdownViewerEditor
             id="resources"
             v-model:is-view-mored="isResourcesTabViewMored"

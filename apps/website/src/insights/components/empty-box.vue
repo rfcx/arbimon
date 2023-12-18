@@ -10,6 +10,7 @@
       </span>
     </div>
     <a
+      v-if="!projectUserPermissionsStore.isGuest"
       :href="analysisUrl"
       target="_blank"
       class="text-frequency cursor-pointer font-display flex-shrink-0"
@@ -22,9 +23,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { useStore } from '~/store'
+import { useProjectUserPermissionsStore, useStore } from '~/store'
 
 const store = useStore()
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const selectedProject = computed(() => store.selectedProject)
 

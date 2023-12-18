@@ -1,14 +1,14 @@
 <template>
   <template v-if="(rawMarkdownText == null || rawMarkdownText === '') && !isViewMored">
     <project-summary-empty
-      v-if="editable"
+      v-if="editable && !projectUserPermissionsStore.isGuest"
       @emit-add-content="editMarkdownContent"
     />
-    <ProjectSummaryEmptyGuestView v-else />
+    <GuestBanner v-if="projectUserPermissionsStore.isGuest" />
   </template>
   <template v-else>
     <div
-      v-show="!isEditing"
+      v-show="!isEditing && !projectUserPermissionsStore.isGuest"
       class="flex flex-row justify-end pr-6"
     >
       <button
@@ -43,7 +43,7 @@
       </button>
     </div>
     <div
-      v-show="isEditing"
+      v-show="isEditing && !projectUserPermissionsStore.isGuest"
       id="markdown-editor-apply-template"
       class="flex flex-row justify-start items-center gap-x-3 mb-4"
     >
@@ -58,7 +58,7 @@
       </button>
     </div>
     <MarkdownEditor
-      v-show="isEditing"
+      v-show="isEditing && !projectUserPermissionsStore.isGuest"
       :id="id"
       v-model="editableMarkdownText"
       :character-limit="props.characterLimit"
@@ -77,7 +77,6 @@ import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
 import { useProjectUserPermissionsStore } from '~/store'
 import ProjectSummaryEmpty from './project-summary-empty.vue'
-import ProjectSummaryEmptyGuestView from './project-summary-empty-guest-view.vue'
 
 const DEFAULT_CHARACTER_LIMIT = 10000
 

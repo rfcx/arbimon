@@ -27,15 +27,14 @@
     />
     <GuestBanner v-if="projectUserPermissionsStore.isGuest" />
     <div
-      v-if="canEdit"
+      v-if="canEdit && !projectUserPermissionsStore.isGuest"
       class="flex flex-row baseline"
     >
       <button
-        class="btn btn-secondary group w-full disabled:hover:btn-disabled disabled:btn-disabled"
+        class="btn btn-secondary group w-full"
         data-modal-target="species-highlighted-modal"
         data-modal-toggle="species-highlighted-modal"
         type="button"
-        :disabled="projectUserPermissionsStore.isGuest"
         @click="openModalToSelectSpecies"
       >
         Select Species <icon-custom-ic-edit class="ml-2 group-hover:!disabled:stroke-pitch disabled:hover:btn-disabled" />

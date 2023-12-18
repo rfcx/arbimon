@@ -50,10 +50,10 @@
             Analyses
           </h2>
           <button
-            class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3 disabled:hover:btn-disabled disabled:btn-disabled"
+            v-if="!projectUserPermissionsStore.isGuest"
+            class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3"
             type="button"
             :title="'Create New Analysis Job'"
-            :disabled="projectUserPermissionsStore.isGuest"
             @click="toggleAnalysisSelector(true)"
           >
             <icon-fa-plus-circle class="h-3 w-3" />
@@ -88,7 +88,6 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
-// import { useAuth0Client, getIdToken } from '~/auth-client'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
@@ -113,10 +112,6 @@ const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const selectedProjectSlug = computed(() => store.selectedProject?.slug)
 
-// const authClient = await useAuth0Client()
-// const user = await authClient.getUser()
-// console.info('user', user)
-// const getToken = user ? async () => await getIdToken(authClient) : undefined
 const apiClientBio = getApiClient(import.meta.env.VITE_API_BASE_URL)
 const { isLoading: isLoadingRecCountBio, data: projectRecCount } = useBioRecordingCount(apiClientBio, selectedProjectId)
 const { isLoading: isLoadingSitesRecCountBio, data: projectSitesRecCount } = useBioProjectSitesRecordingCount(apiClientBio, selectedProjectId)
