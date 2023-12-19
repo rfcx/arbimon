@@ -3,9 +3,9 @@
     <li
       v-for="item in speciesList"
       :key="item.scientificName"
-      class="flex flex-col justify-center items-center rounded-lg p-4 max-w-80 bg-util-gray-01 md:(flex-row h-21) lg:(flex-row h-21 justify-between)"
+      class="flex flex-col justify-center items-center rounded-lg gap-x-3 p-4 max-w-80 bg-util-gray-01 md:(flex-row h-21) lg:(flex-row h-21 justify-between)"
     >
-      <div class="flex flex-col items-center gap-x-4 md:flex-row lg:(flex-row justify-between)">
+      <div class="flex flex-col justify-center items-center gap-x-4 md:flex-row lg:(flex-row justify-between)">
         <SpecieCard
           :slug="item.slug"
           :scientific-name="item.scientificName"

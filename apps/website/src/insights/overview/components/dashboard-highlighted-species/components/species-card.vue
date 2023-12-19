@@ -14,19 +14,19 @@
       :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: slug }, query: $route.query }"
       :title="scientificName"
       exact-active-class="!text-gray-900 !dark:text-insight"
-      class="text-sm italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis) flex-initial"
+      class="text-s italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
     >
       {{ scientificName }}
     </router-link>
     <p
       v-else
-      class="text-s italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis) flex-initial "
+      class="text-s italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
       :title="scientificName"
     >
       {{ scientificName }}
     </p>
     <p
-      class="mt-1 text-xs tracking-tight line-clamp-1 md:(overflow-hidden text-ellipsis) flex-initial"
+      class="mt-1 text-xs tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
       :title="commonName || 'Unknown'"
     >
       {{ commonName || 'Unknown' }}
