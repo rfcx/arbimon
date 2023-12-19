@@ -154,7 +154,7 @@
           </div>
           <div
             ref="organizationSearchResultContainer"
-            class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow"
+            class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow overflow-y-scroll h-66"
             :class="{'border-b-1': searchOrganizationValue && !organizationsSearchResult}"
           >
             <OrganizationSearchResultCard
@@ -184,7 +184,7 @@
 
     <div class="flex w-full justify-end">
       <button
-        class="btn btn-secondary"
+        class="btn btn-primary"
         @click="onFinishedEditing"
       >
         Save
@@ -197,7 +197,7 @@
 import { type AxiosInstance } from 'axios'
 import type { DropdownOptions } from 'flowbite'
 import { Dropdown } from 'flowbite'
-import { computed, inject, nextTick, ref, watch } from 'vue'
+import { type Ref, computed, inject, nextTick, ref, watch } from 'vue'
 
 import { type DashboardStakeholdersUser, type UpdateDashboardStakeholdersRequestBodyUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
@@ -216,19 +216,21 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[], selectedProjectMembers: UpdateDashboardStakeholdersRequestBodyUser[]): void}>()
 
+const searchDropdown = ref() as Ref<Dropdown>
 const dropdownStatus = ref<'idle' | 'search' | 'create-org'>('idle')
 const createNewOrganizationFormContainer = ref<HTMLDivElement | null>(null)
 const organizationSearchInput = ref<HTMLDivElement | null>(null)
 const organizationSearchResultContainer = ref<HTMLDivElement | null>(null)
 const organizationSearchResultNotFoundContainer = ref<HTMLDivElement | null>(null)
-const searchOrganizationValue = ref('')
 const addedOrganizations = ref<Array<OrganizationTypes['light']>>([])
+const dropdownOptions: DropdownOptions = { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }
 const selectedOrganizationIds = ref(props.organizations.map(o => o.id))
 const selectedProjectMembers = ref(props.projectMembers.filter(u => u.ranking !== -1).map(u => u.email))
 const primaryContact = ref({
   userId: props.projectMembers.filter(u => u.ranking === 0).map(u => u.id)[0],
   email: props.projectMembers.filter(u => u.ranking === 0).map(u => u.email)[0]
 })
+const searchOrganizationValue = ref('')
 const isAllUsersSelected = ref<boolean>(selectedProjectMembers.value.length === props.projectMembers.length)
 
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
@@ -254,8 +256,8 @@ const openOrganizationSearch = async () => {
   dropdownStatus.value = 'search'
   await nextTick()
   organizationSearchInput.value?.focus()
-  const dropdownOptions: DropdownOptions = { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }
-  new Dropdown(organizationSearchResultContainer.value, organizationSearchInput.value, dropdownOptions).show()
+  searchDropdown.value = new Dropdown(organizationSearchResultContainer.value, organizationSearchInput.value, dropdownOptions)
+  searchDropdown.value.show()
 }
 
 const organizationSearchInputChanged = () => {
@@ -286,6 +288,7 @@ const openCreateNewOrganizationForm = async (): Promise<void> => {
 }
 
 const onAddNewOrganizationFromSearch = (id: number): void => {
+  searchDropdown.value.hide()
   // Return when the org already exists
   if (displayedOrganizations.value.findIndex(o => o.id === id) > -1) {
     dropdownStatus.value = 'idle'

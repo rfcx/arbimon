@@ -1,6 +1,7 @@
 <template>
   <div
-    :class="checked ? 'relative flex items-center border border-frequency bg-moss rounded-lg justify-between py-4 px-[18px] cursor-pointer' : 'relative flex items-center border border-insight hover:bg-moss rounded-lg justify-between py-4 px-[18px] cursor-pointer'"
+    class="h-31 relative flex items-center border cursor-pointer py-4 px-[18px] rounded-lg justify-between"
+    :class="checked ? 'border-frequency bg-moss' : 'border-insight hover:bg-moss'"
     @click="toggleCheckList"
   >
     <icon-custom-fi-check-circle
