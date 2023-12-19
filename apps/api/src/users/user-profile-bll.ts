@@ -93,7 +93,7 @@ export const patchUserProfileImage = async (token: string, email: string, file: 
   } catch (e) {
     console.error(e)
   }
-  await putObject(imagePath, await file.toBuffer(), file.mimetype)
+  await putObject(imagePath, await file.toBuffer(), file.mimetype, true)
   await update(email, newProfile)
 }
 
