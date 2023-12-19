@@ -33,18 +33,12 @@ export const patchUserProfile = async (token: string, email: string, data: Parti
   const originalProfile = await getUserProfile(email)
   const newProfile = { ...originalProfile, ...data }
 
-  // TODO: Core endpoint keeps returning 500 but the user data actually gets updated on Auth0 (not on core db).
-  try {
-    const coreProfile: Pick<CoreUser, 'firstname' | 'lastname' | 'picture'> = {
-      firstname: newProfile.firstName,
-      lastname: newProfile.lastName,
-      picture: getProfileImageURL(newProfile.image) ?? null
-    }
-    await patchUserProfileOnCore(token, email, coreProfile)
-  } catch (e) {
-    console.error(e)
+  const coreProfile: Pick<CoreUser, 'firstname' | 'lastname' | 'picture'> = {
+    firstname: newProfile.firstName,
+    lastname: newProfile.lastName,
+    picture: getProfileImageURL(newProfile.image) ?? null
   }
-
+  await patchUserProfileOnCore(token, email, coreProfile)
   await update(email, newProfile)
 }
 
@@ -82,17 +76,12 @@ export const patchUserProfileImage = async (token: string, email: string, file: 
   const imagePath = `users/${hexEmail}/profile-image${extname(file.filename)}`
   const newProfile = { ...originalProfile, image: imagePath }
 
-  // TODO: Update user profile image onto core.
-  try {
-    const coreProfile = {
-      firstname: newProfile.firstName,
-      lastname: newProfile.lastName,
-      picture: getProfileImageURL(newProfile.image) ?? null
-    }
-    await patchUserProfileOnCore(token, email, coreProfile)
-  } catch (e) {
-    console.error(e)
+  const coreProfile = {
+    firstname: newProfile.firstName,
+    lastname: newProfile.lastName,
+    picture: getProfileImageURL(newProfile.image) ?? null
   }
+  await patchUserProfileOnCore(token, email, coreProfile)
   await putObject(imagePath, await file.toBuffer(), file.mimetype, true)
   await update(email, newProfile)
 }
