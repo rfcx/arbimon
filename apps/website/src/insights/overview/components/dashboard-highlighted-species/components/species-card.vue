@@ -20,13 +20,13 @@
     </router-link>
     <p
       v-else
-      class="text-s italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
+      class="text-sm italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
       :title="scientificName"
     >
       {{ scientificName }}
     </p>
     <p
-      class="mt-1 text-xs tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
+      class="mt-1 text-xs tracking-tight line-clamp-1 md:(overflow-hidden text-ellipsis)"
       :title="commonName || 'Unknown'"
     >
       {{ commonName || 'Unknown' }}
