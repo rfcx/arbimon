@@ -41,7 +41,7 @@
         <span class="text-lg font-medium">{{ project?.name }}</span>
         <div
           v-if="profile?.dateStart"
-          class="flex font-medium text-sm flex-row border-gray-300 mt-3 space-x-4 items-center"
+          class="flex font-medium text-sm flex-row border-gray-300 mt-3 space-x-2 items-center"
         >
           <span>
             Project dates:
@@ -63,7 +63,7 @@
             :disabled="project?.isMock"
             :class="{'opacity-50 cursor-not-allowed': project?.isMock}"
           >
-            View Insights
+            View project insights
           </button>
         </router-link>
       </div>
@@ -78,7 +78,7 @@
         />
         <numeric-metric
           tooltip-id="threatened-species-over-all-species"
-          title="Threatened/total species:"
+          title="Threatened / total species:"
           tooltip-text="Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
           :value="profile?.metrics?.speciesCount ?? 0"
           :total-value="project?.noOfSpecies ?? 0"
@@ -96,8 +96,8 @@
         <numeric-metric
           tooltip-id="total-recordings"
           :tooltip-text="`Total ${project?.noOfRecordings} of recordings captured`"
-          title="Total recordings"
-          :value="profile?.metrics?.recordingMinutesCount ?? 0"
+          :title="totalRecordingsLable"
+          :value="totalRecordingsValue"
           icon-name="ft-mic-lg"
           class="flex-1"
         />
@@ -164,9 +164,17 @@ const countrieFlag = computed(() => {
 })
 
 const formatDateRange = (date: Date | null | undefined): string => {
-  if (!dayjs(date).isValid()) return 'present'
+  if (!dayjs(date).isValid()) return 'Present'
   else return dayjs(date).format('MM/DD/YYYY')
 }
+
+// form the total recordings value (minutes or hours)
+const totalRecordingsMin = computed(() => profile.value?.metrics?.recordingMinutesCount ?? 0)
+const MAXIMUM_MINUTE = 3 * 60 // 3 hours
+const totalRecordingsLable = computed(() => totalRecordingsMin.value < MAXIMUM_MINUTE ? 'Total recordings (minutes):' : 'Total recordings (hours):')
+const totalRecordingsValue = computed(() => {
+  return totalRecordingsMin.value < MAXIMUM_MINUTE ? totalRecordingsMin.value : totalRecordingsMin.value / 60
+})
 
 </script>
 <style lang="scss">

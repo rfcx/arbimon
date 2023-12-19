@@ -3,30 +3,30 @@
     <div class="flex flex-row items-center">
       <div class="flex items-center">
         <template v-if="iconName === 'ft-map-pin-lg'">
-          <icon-custom-ft-map-pin-lg class="w-5" />
+          <icon-custom-ft-map-pin-lg class="w-5 mr-1" />
         </template>
         <template v-else-if="iconName === 'ft-actual-bird'">
           <icon-custom-ft-actual-bird class="w-6" />
         </template>
         <template v-else-if="iconName === 'ft-search-lg'">
-          <icon-custom-ft-search-lg class="w-5" />
+          <icon-custom-ft-search-lg class="w-5 mr-1" />
         </template>
         <template v-else-if="iconName === 'ft-mic-lg'">
-          <icon-custom-ft-mic-lg class="w-5" />
+          <icon-custom-ft-mic-lg class="w-5 mr-1" />
         </template>
       </div>
       <p
         v-if="title"
-        class="text-sm ml-3 flex font-medium"
+        class="text-sm ml-3 flex"
       >
         {{ title }}
       </p>
-      <div class="flex-grow ml-1">
-        <span class="font-medium">{{ props.value }}</span>
+      <div class="flex-grow ml-2">
+        <span class="text-sm">{{ valueShortScale }}</span>
         <span
           v-if="props.totalValue"
-          class="ml-2 font-medium"
-        >/ {{ props.totalValue }}</span>
+          class="text-sm font-medium"
+        >/{{ totalShortScale }}</span>
       </div>
       <icon-custom-ic-info
         v-if="tooltipText"
@@ -51,7 +51,8 @@
 
 <script setup lang="ts">
 import { initTooltips } from 'flowbite'
-import { onMounted } from 'vue'
+import numeral from 'numeral'
+import { computed, onMounted } from 'vue'
 
 const props = defineProps<{
   tooltipId: string
@@ -65,4 +66,7 @@ const props = defineProps<{
 onMounted(() => {
   initTooltips()
 })
+
+const valueShortScale = computed(() => numeral(props.value).format('0a'))
+const totalShortScale = computed(() => props.totalValue === undefined ? undefined : numeral(props.totalValue).format('0a'))
 </script>
