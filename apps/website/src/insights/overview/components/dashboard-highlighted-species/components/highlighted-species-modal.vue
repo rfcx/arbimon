@@ -89,7 +89,7 @@
                   v-for="item in speciesForCurrentPage"
                   :key="'specie-highlighted-' + item.slug"
                   :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 flex-wrap h-full md:(h-21 flex-wrap justify-center) lg:(h-21 flex-nowrap justify-between) bg-echo hover:(border-frequency cursor-pointer)"
+                  class="flex flex-row border-1 items-center rounded-lg space-x-3 p-4 flex-wrap h-full md:(h-21 flex-wrap justify-center) lg:(h-21 flex-nowrap justify-between) bg-echo hover:(border-frequency cursor-pointer)"
                   @click="selectSpecie(item)"
                 >
                   <SpecieCard
