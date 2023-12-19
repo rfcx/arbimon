@@ -10,6 +10,7 @@ import { type OrganizationTypes, type UserProfile } from '@rfcx-bio/common/dao/t
 import { patchUserProfileOnCore } from '~/api-core/api-core'
 import { BioNotFoundError } from '~/errors'
 import { getObject, putObject } from '~/storage'
+import { getProfileImageURL } from './helpers'
 import { get, getAllOrganizations as daoGetAllOrganizations, update } from './user-profile-dao'
 
 export const getUserProfile = async (email: string): Promise<Omit<UserProfile, 'id' | 'idAuth0'>> => {
@@ -19,20 +20,26 @@ export const getUserProfile = async (email: string): Promise<Omit<UserProfile, '
     throw BioNotFoundError()
   }
 
-  return profile
+  return {
+    firstName: profile.firstName,
+    lastName: profile.lastName,
+    email: profile.email,
+    image: getProfileImageURL(profile.image),
+    organizationIdAffiliated: profile.organizationIdAffiliated
+  }
 }
 
 export const patchUserProfile = async (token: string, email: string, data: Partial<Omit<UserProfile, 'id' | 'idAuth0' | 'image' | 'createdAt' | 'updatedAt'>>): Promise<void> => {
   const originalProfile = await getUserProfile(email)
   const newProfile = { ...originalProfile, ...data }
 
+  // TODO: Core endpoint keeps returning 500 for some reason. Disabling this for now.
   const coreProfile: Pick<CoreUser, 'firstname' | 'lastname' | 'picture'> = {
     firstname: newProfile.firstName,
     lastname: newProfile.lastName,
-    picture: newProfile.image ?? null
+    picture: getProfileImageURL(newProfile.image) ?? null
   }
   await patchUserProfileOnCore(token, email, coreProfile)
-
   await update(email, newProfile)
 }
 
@@ -70,6 +77,7 @@ export const patchUserProfileImage = async (email: string, file: MultipartFile):
   const imagePath = `users/${hexEmail}/profile-image${extname(file.filename)}`
   const newProfile = { ...originalProfile, image: imagePath }
 
+  // TODO: Update user profile image onto core.
   await putObject(imagePath, await file.toBuffer(), file.mimetype)
   await update(email, newProfile)
 }
