@@ -33,13 +33,18 @@ export const patchUserProfile = async (token: string, email: string, data: Parti
   const originalProfile = await getUserProfile(email)
   const newProfile = { ...originalProfile, ...data }
 
-  // TODO: Core endpoint keeps returning 500 for some reason. Disabling this for now.
-  const coreProfile: Pick<CoreUser, 'firstname' | 'lastname' | 'picture'> = {
-    firstname: newProfile.firstName,
-    lastname: newProfile.lastName,
-    picture: getProfileImageURL(newProfile.image) ?? null
+  // TODO: Core endpoint keeps returning 500 but the user data actually gets updated on Auth0 (not on core db).
+  try {
+    const coreProfile: Pick<CoreUser, 'firstname' | 'lastname' | 'picture'> = {
+      firstname: newProfile.firstName,
+      lastname: newProfile.lastName,
+      picture: getProfileImageURL(newProfile.image) ?? null
+    }
+    await patchUserProfileOnCore(token, email, coreProfile)
+  } catch (e) {
+    console.error(e)
   }
-  await patchUserProfileOnCore(token, email, coreProfile)
+
   await update(email, newProfile)
 }
 
@@ -66,7 +71,7 @@ export const getUserProfileImage = async (email: string): Promise<ArrayBuffer> =
   }
 }
 
-export const patchUserProfileImage = async (email: string, file: MultipartFile): Promise<void> => {
+export const patchUserProfileImage = async (token: string, email: string, file: MultipartFile): Promise<void> => {
   const originalProfile = await getUserProfile(email)
 
   // hash the email to sha256 and use that as the folder name for storing the profile-image
@@ -78,6 +83,16 @@ export const patchUserProfileImage = async (email: string, file: MultipartFile):
   const newProfile = { ...originalProfile, image: imagePath }
 
   // TODO: Update user profile image onto core.
+  try {
+    const coreProfile = {
+      firstname: newProfile.firstName,
+      lastname: newProfile.lastName,
+      picture: getProfileImageURL(newProfile.image) ?? null
+    }
+    await patchUserProfileOnCore(token, email, coreProfile)
+  } catch (e) {
+    console.error(e)
+  }
   await putObject(imagePath, await file.toBuffer(), file.mimetype)
   await update(email, newProfile)
 }
