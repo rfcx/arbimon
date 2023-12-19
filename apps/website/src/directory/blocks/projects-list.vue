@@ -14,7 +14,10 @@
           @keyup.enter="emitSearch(searchKeyword)"
         >
       </div>
-      <ul class="p-6 border-b border-chirp text-frequency flex flex-row gap-10">
+      <ul
+        v-if="false"
+        class="p-6 border-b border-chirp text-frequency flex flex-row gap-10"
+      >
         <li
           class="cursor-pointer font-medium"
           :class="{'border-frequency border-b-4': selectedTab === 'All'}"
