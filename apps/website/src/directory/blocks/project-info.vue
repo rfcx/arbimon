@@ -95,8 +95,8 @@
         />
         <numeric-metric
           tooltip-id="total-recordings"
-          :tooltip-text="`Total ${project?.noOfRecordings} of recordings captured`"
-          :title="totalRecordingsLable"
+          :tooltip-text="`Total ${totalRecordingsUnit} of recordings captured`"
+          :title="`Total recordings (${totalRecordingsUnit}):`"
           :value="totalRecordingsValue"
           icon-name="ft-mic-lg"
           class="flex-1"
@@ -171,7 +171,7 @@ const formatDateRange = (date: Date | null | undefined): string => {
 // form the total recordings value (minutes or hours)
 const totalRecordingsMin = computed(() => profile.value?.metrics?.recordingMinutesCount ?? 0)
 const MAXIMUM_MINUTE = 3 * 60 // 3 hours
-const totalRecordingsLable = computed(() => totalRecordingsMin.value < MAXIMUM_MINUTE ? 'Total recordings (minutes):' : 'Total recordings (hours):')
+const totalRecordingsUnit = computed(() => totalRecordingsMin.value < MAXIMUM_MINUTE ? 'minutes' : 'hours')
 const totalRecordingsValue = computed(() => {
   return totalRecordingsMin.value < MAXIMUM_MINUTE ? totalRecordingsMin.value : totalRecordingsMin.value / 60
 })
