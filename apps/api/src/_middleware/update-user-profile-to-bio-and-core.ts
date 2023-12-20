@@ -63,7 +63,10 @@ export const updateUserProfileToBio = async (req: FastifyRequest): Promise<void>
   // req.extractedUser will have value.
   try {
     const decoded = await req.jwtDecode<Auth0UserInfo>()
-    req.extractedUser = decoded
+    req.extractedUser = {
+      auth0_user_id: decoded.auth0_user_id,
+      email: decoded.email
+    }
   } catch (e) {
     req.extractedUser = null
 
@@ -88,7 +91,10 @@ export const updateUserProfileToBio = async (req: FastifyRequest): Promise<void>
   // Cannot use `req.user` since it will be always null because we did not call `req.jwtVerify()`
   const auth0User = await extractUserInformation(req)
   const userCacheHit = req.lru.get(auth0User.email)
-  req.extractedUser = auth0User
+  req.extractedUser = {
+    auth0_user_id: auth0User.auth0_user_id,
+    email: auth0User.email
+  }
 
   // If user is found in cache. Passthrough the request since he should be also in the db already.
   if (userCacheHit != null) {
@@ -120,6 +126,11 @@ export const updateUserProfileToBio = async (req: FastifyRequest): Promise<void>
       organizationIdAffiliated: undefined
     })
 
+    req.extractedUser = {
+      auth0_user_id: auth0User.auth0_user_id,
+      email: auth0User.email
+    }
+
     return
   }
 
@@ -141,4 +152,9 @@ export const updateUserProfileToBio = async (req: FastifyRequest): Promise<void>
     image: user.image,
     organizationIdAffiliated: user.organizationIdAffiliated
   })
+
+  req.extractedUser = {
+    auth0_user_id: user.idAuth0 ?? '',
+    email: user.email
+  }
 }

@@ -5,11 +5,19 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
+import { updateUserProfileToBio } from '@/_middleware/update-user-profile-to-bio-and-core'
 import { GET, PATCH } from '~/api-helpers/types'
 import { getSequelize } from '~/db'
+import { fastifyLruCache } from '../_plugins/global-user-cache'
 import { routesUserProfile } from './index'
 
-vi.mock('~/api-core/api-core')
+vi.mock('../_services/api-core/api-core', () => {
+  return {
+    patchUserProfileOnCore: vi.fn(async () => {
+      await Promise.resolve()
+    })
+  }
+})
 
 const ROUTE = '/profile'
 
@@ -20,6 +28,15 @@ const getMockedApp = async (): Promise<FastifyInstance> => {
   const app = await fastify()
   await app.register(fastifyAuth0Verify, { domain: 'unknown.com' })
   await app.register(fastifyRoutes)
+  await app.register(fastifyLruCache, {
+    maxSize: 10,
+    maxAge: 10000
+  })
+  app.addHook('preValidation', updateUserProfileToBio)
+  app.addHook('onRequest', (req, _rep, done) => {
+    req.extractedUser = null
+    done()
+  })
 
   routesUserProfile
     .forEach(route => app.route(route))
@@ -43,13 +60,33 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-  await UserProfile.destroy({ truncate: true })
+  await biodiversitySequelize.query('truncate user_profile cascade')
 })
 
-describe('GET /me/profile', async () => {
+describe('GET /profile', async () => {
   test('can get profile when exists in the db', async () => {
     // Arrange
     const app = await getMockedApp()
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: ROUTE,
+      headers: { authorization: fakeToken }
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(200)
+    const result = JSON.parse(response.body)
+    expect(result.firstName).toBe(defaultUser.firstName)
+    expect(result.lastName).toBe(defaultUser.lastName)
+  })
+
+  test('can get profile when does not exist in the db', async () => {
+    // Arrange
+    const app = await getMockedApp()
+    await biodiversitySequelize.query('truncate user_profile cascade')
+    app.lru.clear()
 
     // Act
     const response = await app.inject({
@@ -64,29 +101,9 @@ describe('GET /me/profile', async () => {
     expect(result.firstName).toBe(defaultUser.firstName)
     expect(result.lastName).toBe(defaultUser.lastName)
   })
-
-  // TODO: to be fixed by #1363
-  test.skip('can get profile when does not exist in the db', async () => {
-    // Arrange
-    const app = await getMockedApp()
-    await UserProfile.destroy({ truncate: true })
-
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: ROUTE,
-      headers: { Authorization: fakeToken }
-    })
-
-    // Assert
-    expect(response.statusCode).toBe(200)
-    const result = JSON.parse(response.body)
-    expect(result.firstName).toBe('')
-    expect(result.lastName).toBe('')
-  })
 })
 
-describe('PATCH /me/profile', async () => {
+describe('PATCH /profile', async () => {
   test('can update first name when profile exists in the db', async () => {
     // Arrange
     const app = await getMockedApp()
@@ -102,7 +119,7 @@ describe('PATCH /me/profile', async () => {
 
     // Assert
     expect(response.statusCode).toBe(204)
-    const profile = await UserProfile.findByPk(defaultUser.id)
+    const profile = await UserProfile.findOne({ where: { email: defaultUser.email } })
     expect(profile?.firstName).toBe(profileUpdates.firstName)
     expect(profile?.lastName).toBe(defaultUser.lastName)
   })
@@ -122,17 +139,17 @@ describe('PATCH /me/profile', async () => {
 
     // Assert
     expect(response.statusCode).toBe(204)
-    const profile = await UserProfile.findByPk(defaultUser.id)
+    const profile = await UserProfile.findOne({ where: { email: defaultUser.email } })
     expect(profile?.firstName).toBe(profileUpdates.firstName)
     expect(profile?.lastName).toBe(profileUpdates.lastName)
   })
 
-  // TODO: to be fixed by #1363
-  test.skip('can update first and last name when profile does not exist in the db', async () => {
+  test('can update first and last name when profile does not exist in the db', async () => {
     // Arrange
     const app = await getMockedApp()
-    await UserProfile.destroy({ truncate: true })
+    await biodiversitySequelize.query('truncate user_profile cascade')
     const profileUpdates = { firstName: 'Grey', lastName: 'Squirrel' }
+    app.lru.clear()
 
     // Act
     const response = await app.inject({
@@ -144,7 +161,7 @@ describe('PATCH /me/profile', async () => {
 
     // Assert
     expect(response.statusCode).toBe(204)
-    const profile = await UserProfile.findByPk(defaultUser.id)
+    const profile = await UserProfile.findOne({ where: { email: defaultUser.email } })
     expect(profile?.firstName).toBe(profileUpdates.firstName)
     expect(profile?.lastName).toBe(profileUpdates.lastName)
   })
