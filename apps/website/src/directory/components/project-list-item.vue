@@ -37,7 +37,7 @@
       </div>
       <span class="text-xs text-clip md:text-sm">{{ project.summary }}</span>
       <div class="flex flex-row gap-2">
-        <span class="bg-util-gray-02 px-1 rounded font-medium text-xs">{{ numeral(totalRecordings.value).format('0a') }} {{ totalRecordings.unit.replace('s', '') }} recordings</span>
+        <span class="bg-util-gray-02 px-1 rounded font-medium text-xs">{{ numeral(totalRecordings.value).format('0a') }} {{ totalRecordings.value > 1 ? totalRecordings.unit : totalRecordings.unit.replace('s', '') }} recorded</span>
         <span class="bg-util-gray-02 px-1 rounded font-medium text-xs">{{ numeral(project.noOfSpecies).format('0a') }} species</span>
       </div>
     </div>
