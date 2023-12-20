@@ -34,9 +34,14 @@
     </div>
     <div class="overflow-scroll">
       <img
+        v-if="project?.imageUrl"
         :src="project?.imageUrl"
-        class="w-full h-full object-contain bg-util-gray-02 h-52"
+        class="w-full object-contain bg-util-gray-02 h-52"
       >
+      <div
+        v-else
+        class="w-full h-52 object-contain bg-util-gray-02 flex justify-center items-center"
+      />
       <div class="p-4 border-b border-util-gray-01">
         <span class="text-lg font-medium">{{ project?.name }}</span>
         <div
