@@ -15,17 +15,19 @@ export const enum DatabaseUser {
 }
 
 const CLI_DATABASE_USER_SUFFIX = 'cli'
-const { BIO_DB_USER: cliUser } = requireEnv('BIO_DB_USER')
+const { BIO_DB_USER: usernameCli } = requireEnv('BIO_DB_USER')
 
 export const grant = async (sequelize: Sequelize, tableName: string, permissions: GrantPermission[], user: DatabaseUser): Promise<void> => {
   // If the current user is not ???_cli then ignore grants (running locally)
-  if (!cliUser.endsWith(CLI_DATABASE_USER_SUFFIX)) {
+  if (!usernameCli.endsWith(CLI_DATABASE_USER_SUFFIX)) {
     return
   }
   const permissionRaw = permissions.join(', ')
-  const userRaw = cliUser.replace(`_${CLI_DATABASE_USER_SUFFIX}`, `_${user}`)
   await sequelize.query(
-    `GRANT ${permissionRaw} ON "${tableName}" TO ${userRaw};`,
+    `GRANT ${permissionRaw} ON "${tableName}" TO ${username(user)};`,
     { type: QueryTypes.RAW }
   )
 }
+
+export const username = (user: DatabaseUser): string =>
+  usernameCli.replace(`_${CLI_DATABASE_USER_SUFFIX}`, `_${user.toLowerCase()}`)

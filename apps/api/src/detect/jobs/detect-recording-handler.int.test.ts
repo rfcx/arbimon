@@ -61,7 +61,6 @@ describe('GET /project/:projectId/detect-recording', () => {
 
       // Assert
       expect(response.statusCode).toBe(200)
-
       const result = JSON.parse(response.body)
       expect(result).toBeDefined()
       expect(result).toBeTypeOf('object')

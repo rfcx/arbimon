@@ -3,10 +3,9 @@ import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test, vi } from 'vitest'
 
 import { type CreateOrganizationResponseBody } from '@rfcx-bio/common/api-bio/organizations/create-organization'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 
 import { POST } from '~/api-helpers/types'
-import { getSequelize } from '~/db'
 import { routesOrganizations } from './index'
 
 const ROUTE = '/organizations'
@@ -40,7 +39,7 @@ const EXPECTED_PROPS = [
   'image'
 ]
 
-const sequelize = getSequelize()
+const { Organization } = modelRepositoryWithElevatedPermissions
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
   const app = await fastify()
@@ -86,7 +85,7 @@ describe(`POST ${ROUTE} (create organization)`, () => {
       expect(response.statusCode).toBe(200)
       EXPECTED_PROPS.forEach(expectedProp => { expect(json).toHaveProperty(expectedProp) })
 
-      const data = await ModelRepository.getInstance(sequelize).Organization.findOne({ where: { id: json.id } })
+      const data = await Organization.findOne({ where: { id: json.id } })
       expect(data).toBeTruthy()
     })
   })

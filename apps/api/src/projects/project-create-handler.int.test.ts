@@ -5,11 +5,10 @@ import { Op } from 'sequelize'
 import { afterEach, expect, test, vi } from 'vitest'
 
 import { type ProjectCreateRequest } from '@rfcx-bio/common/api-bio/project/project-create'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 
 import * as coreApi from '~/api-core/api-core'
 import { POST } from '~/api-helpers/types'
-import { getSequelize } from '~/db'
 import { routesProject } from './index'
 
 vi.mock('~/api-core/api-core')
@@ -30,8 +29,7 @@ const getMockedApp = async (): Promise<FastifyInstance> => {
   return app
 }
 
-const biodiversitySequelize = getSequelize()
-const { LocationProject, LocationProjectProfile } = ModelRepository.getInstance(biodiversitySequelize)
+const { LocationProject, LocationProjectProfile } = modelRepositoryWithElevatedPermissions
 
 afterEach(async () => {
   const locationProjects = await LocationProject.findAll({ where: { slug: { [Op.like]: 'red-squirrels%' } } }).then(projects => projects.map(project => project.id))

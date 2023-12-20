@@ -2,10 +2,9 @@ import fastifyRoutes from '@fastify/routes'
 import fastify, { type FastifyInstance } from 'fastify'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 
 import { GET, PATCH } from '~/api-helpers/types'
-import { getSequelize } from '~/db'
 import { routesDashboard } from './index'
 
 const PROJECT_ID_BASIC = '40001001'
@@ -31,7 +30,7 @@ vi.mock('~/api-core/api-core', () => {
   }
 })
 
-const sequelize = getSequelize()
+const { LocationProjectProfile } = modelRepositoryWithElevatedPermissions
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
   const app = await fastify()
@@ -97,7 +96,7 @@ describe(`GET ${ROUTE} (dashboard content)`, () => {
 describe(`PATCH ${ROUTE} (dashboard content)`, () => {
   describe('insert when initial rows are empty', async () => {
     beforeEach(async () => {
-      await ModelRepository.getInstance(sequelize).LocationProjectProfile.destroy({ where: { locationProjectId: PROJECT_ID_BASIC } })
+      await LocationProjectProfile.destroy({ where: { locationProjectId: PROJECT_ID_BASIC } })
     })
 
     test('insert to summary', async () => {
@@ -122,7 +121,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
       const json = response.json<{ message: string }>()
       expect(json).toEqual({ message: 'OK' })
 
-      const data = await ModelRepository.getInstance(sequelize).LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
+      const data = await LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
       expect(data).toBeDefined()
       expect(data?.get('summary')).toEqual('new summary value')
       expect(data?.get('readme')).toEqual('')
@@ -153,7 +152,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
       const json = response.json<{ message: string }>()
       expect(json).toEqual({ message: 'OK' })
 
-      const data = await ModelRepository.getInstance(sequelize).LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
+      const data = await LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
       expect(data).toBeDefined()
       expect(data?.get('summary')).toEqual('')
       expect(data?.get('readme')).toEqual('new readme value')
@@ -184,7 +183,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
       const json = response.json<{ message: string }>()
       expect(json).toEqual({ message: 'OK' })
 
-      const data = await ModelRepository.getInstance(sequelize).LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
+      const data = await LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
       expect(data).toBeDefined()
       expect(data?.get('summary')).toEqual('')
       expect(data?.get('readme')).toEqual('')
@@ -215,7 +214,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
       const json = response.json<{ message: string }>()
       expect(json).toEqual({ message: 'OK' })
 
-      const data = await ModelRepository.getInstance(sequelize).LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
+      const data = await LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
       expect(data).toBeDefined()
       expect(data?.get('summary')).toEqual('')
       expect(data?.get('readme')).toEqual('')
@@ -246,7 +245,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
       const json = response.json<{ message: string }>()
       expect(json).toEqual({ message: 'OK' })
 
-      const data = await ModelRepository.getInstance(sequelize).LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
+      const data = await LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
       expect(data).toBeDefined()
       expect(data?.get('summary')).toEqual('')
       expect(data?.get('readme')).toEqual('')
@@ -258,7 +257,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
   describe('can edit data without changing other rows', async () => {
     beforeEach(async () => {
-      await ModelRepository.getInstance(sequelize).LocationProjectProfile.upsert({ locationProjectId: Number(PROJECT_ID_BASIC), summary: '0', readme: '0', keyResult: '0', resources: '0', methods: '0', objectives: [], dateStart: null, dateEnd: null })
+      await LocationProjectProfile.upsert({ locationProjectId: Number(PROJECT_ID_BASIC), summary: '0', readme: '0', keyResult: '0', resources: '0', methods: '0', objectives: [], dateStart: null, dateEnd: null })
     })
 
     test('try editing summary', async () => {
@@ -283,7 +282,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
       const json = response.json<{ message: string }>()
       expect(json).toEqual({ message: 'OK' })
 
-      const data = await ModelRepository.getInstance(sequelize).LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
+      const data = await LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
       expect(data).toBeDefined()
       expect(data?.get('summary')).toEqual('1')
       expect(data?.get('readme')).toEqual('0')
@@ -314,7 +313,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
       const json = response.json<{ message: string }>()
       expect(json).toEqual({ message: 'OK' })
 
-      const data = await ModelRepository.getInstance(sequelize).LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
+      const data = await LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
       expect(data).toBeDefined()
       expect(data?.get('summary')).toEqual('0')
       expect(data?.get('readme')).toEqual('1')
@@ -345,7 +344,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
       const json = response.json<{ message: string }>()
       expect(json).toEqual({ message: 'OK' })
 
-      const data = await ModelRepository.getInstance(sequelize).LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
+      const data = await LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
       expect(data).toBeDefined()
       expect(data?.get('summary')).toEqual('0')
       expect(data?.get('readme')).toEqual('0')
@@ -376,7 +375,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
       const json = response.json<{ message: string }>()
       expect(json).toEqual({ message: 'OK' })
 
-      const data = await ModelRepository.getInstance(sequelize).LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
+      const data = await LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
       expect(data).toBeDefined()
       expect(data?.get('summary')).toEqual('0')
       expect(data?.get('readme')).toEqual('0')
@@ -407,7 +406,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
       const json = response.json<{ message: string }>()
       expect(json).toEqual({ message: 'OK' })
 
-      const data = await ModelRepository.getInstance(sequelize).LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
+      const data = await LocationProjectProfile.findOne({ where: { locationProjectId: PROJECT_ID_BASIC } })
       expect(data).toBeDefined()
       expect(data?.get('summary')).toEqual('0')
       expect(data?.get('readme')).toEqual('0')
