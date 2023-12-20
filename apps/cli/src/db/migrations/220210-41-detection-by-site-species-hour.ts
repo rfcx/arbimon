@@ -7,7 +7,7 @@ import type { QueryInterface } from 'sequelize'
 import { DataTypes, QueryTypes } from 'sequelize'
 import type { MigrationFn } from 'umzug'
 
-import { TIMESTAMP_COLUMNS } from './_helpers/220331-timestamps'
+import { TIMESTAMP_COLUMNS } from './_helpers/timestamps'
 
 const TABLE_NAME = 'detection_by_site_species_hour'
 const COLUMN_TIME_HOUR_LOCAL = 'time_precision_hour_local'
