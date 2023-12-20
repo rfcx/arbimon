@@ -1,6 +1,6 @@
 import { type MultipartFile } from '@fastify/multipart'
 import axios from 'axios'
-import { createHash } from 'node:crypto'
+import { createHash, randomBytes } from 'node:crypto'
 import { extname } from 'node:path'
 import { URL } from 'node:url'
 
@@ -73,7 +73,7 @@ export const patchUserProfileImage = async (token: string, email: string, file: 
   hash.update(email)
   const hexEmail = hash.digest('hex')
 
-  const imagePath = `users/${hexEmail}/profile-image${extname(file.filename)}`
+  const imagePath = `users/${hexEmail}/profile-image-${randomBytes(4).toString('hex')}${extname(file.filename)}`
   const newProfile = { ...originalProfile, image: imagePath }
 
   const coreProfile = {
