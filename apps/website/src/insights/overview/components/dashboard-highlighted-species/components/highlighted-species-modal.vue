@@ -128,7 +128,7 @@
                 layout="prev, pager, next"
               />
             </div>
-            <div class="grid grid-cols-1">
+            <div class="hidden grid-cols-1 md:grid">
               <HighlightedSpeciesSelector
                 :species="preSelectedSpecies"
                 @emit-remove-specie="removeSpecieFromList"
