@@ -2,13 +2,13 @@
   <img
     v-if="photoUrl"
     :src="photoUrl"
-    class="h-14 w-14 object-cover rounded bg-util-gray-02"
+    class="h-14 w-14 aspect-square object-cover rounded bg-util-gray-02"
   >
   <div
     v-else
-    class="h-14 w-14 object-cover rounded bg-util-gray-02"
+    class="h-14 w-14 aspect-square object-cover rounded bg-util-gray-02"
   />
-  <div class="self-center md:overflow-hidden">
+  <div class="self-center md:overflow-hidden basis-3/4">
     <router-link
       v-if="redirect === true"
       :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: slug }, query: $route.query }"
@@ -20,13 +20,13 @@
     </router-link>
     <p
       v-else
-      class="text-s italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
+      class="text-sm italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
       :title="scientificName"
     >
       {{ scientificName }}
     </p>
     <p
-      class="mt-1 text-xs tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
+      class="mt-1 text-xs tracking-tight line-clamp-1 md:(overflow-hidden text-ellipsis)"
       :title="commonName || 'Unknown'"
     >
       {{ commonName || 'Unknown' }}

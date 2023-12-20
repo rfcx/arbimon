@@ -29,7 +29,7 @@
             v-model="searchKeyword"
             placeholder="Search species"
             size="large"
-            class="w-1/3 bg-mock"
+            class="bg-mock"
           >
             <template #prefix>
               <div class="inline-flex items-center">
@@ -79,17 +79,17 @@
             </div>
           </div>
           <!-- Modal body -->
-          <div class="grid grid-cols-3 gap-x-4 w-full">
-            <div class="grid grid-cols-1 gap-y-4 col-span-2">
+          <div class="grid gap-x-4 w-full sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+            <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2">
               <ul
                 v-if="speciesList && speciesList.length"
-                class="grid gap-2 grid-cols-1 lg:(grid-cols-2 gap-3)"
+                class="grid gap-3 grid-cols-1 md:grid-rows-5 md:(grid-cols-2 grid-rows-5)"
               >
                 <li
                   v-for="item in speciesForCurrentPage"
                   :key="'specie-highlighted-' + item.slug"
                   :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 flex-wrap h-full md:(h-21 flex-wrap justify-center) lg:(h-21 flex-nowrap justify-between) bg-echo hover:(border-frequency cursor-pointer)"
+                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 h-full md:(flex-row h-21) lg:(flex-row h-21 justify-between) bg-echo hover:(border-frequency cursor-pointer)"
                   @click="selectSpecie(item)"
                 >
                   <SpecieCard
@@ -122,13 +122,13 @@
               <el-pagination
                 v-if="speciesList.length"
                 v-model:currentPage="currentPage"
-                class="flex items-center justify-center"
+                class="flex items-center justify-center mb-2"
                 :page-size="PAGE_SIZE"
                 :total="speciesLength"
                 layout="prev, pager, next"
               />
             </div>
-            <div class="grid grid-cols-1">
+            <div class="hidden grid-cols-1 xl:grid">
               <HighlightedSpeciesSelector
                 :species="preSelectedSpecies"
                 @emit-remove-specie="removeSpecieFromList"
@@ -252,7 +252,7 @@ const speciesForCurrentPage = computed(() => {
 })
 
 const preSelectedSpecies = computed(() => {
-  return speciesList.value.length ? speciesList.value.filter(specie => selectedSpeciesSlug.value.includes(specie.slug)) : []
+  return speciesList.value.length ? selectedSpeciesSlug.value.map((slug) => speciesList.value.filter((specie) => specie.slug === slug)[0]) ?? [] : []
 })
 
 const existingRiskCode = computed(() => {
