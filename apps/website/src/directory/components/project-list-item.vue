@@ -5,9 +5,14 @@
   >
     <div class="w-18 aspect-square h-18">
       <img
+        v-if="project.imageUrl"
         :src="project.imageUrl"
         class="w-full h-full rounded bg-util-gray-02"
       >
+      <div
+        v-else
+        class="w-full h-full rounded bg-util-gray-02 flex justify-center items-center"
+      />
     </div>
     <div class="flex flex-col gap-2 flex-grow overflow-hidden">
       <span class="font-medium">{{ project.name }}</span>
