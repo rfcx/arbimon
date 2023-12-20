@@ -32,7 +32,7 @@
       </a>
       <div class="grid grid-cols-2 gap-3 lg:grid-cols-3">
         <StakeholderCardEdit
-          v-for="(member, idx) of projectMembers"
+          v-for="(member, idx) of sortedProjectMembers"
           :key="idx"
           v-model="selectedProjectMembers"
           :name="member.firstName + ' ' + member.lastName"
@@ -225,17 +225,17 @@ const organizationSearchResultContainer = ref<HTMLDivElement | null>(null)
 const organizationSearchResultNotFoundContainer = ref<HTMLDivElement | null>(null)
 const addedOrganizations = ref<Array<OrganizationTypes['light']>>([])
 const dropdownOptions: DropdownOptions = { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }
+const searchOrganizationValue = ref('')
 const selectedOrganizationIds = ref(props.organizations.map(o => o.id))
+const newOrganizationType = ref<OrganizationType>('non-profit-organization')
+const newOrganizationUrl = ref<string>('')
+
 const selectedProjectMembers = ref(props.projectMembers.filter(u => u.ranking !== -1).map(u => u.email))
 const primaryContact = ref({
   userId: props.projectMembers.filter(u => u.ranking === 0).map(u => u.id)[0],
   email: props.projectMembers.filter(u => u.ranking === 0).map(u => u.email)[0]
 })
-const searchOrganizationValue = ref('')
 const isAllUsersSelected = ref<boolean>(selectedProjectMembers.value.length === props.projectMembers.length)
-
-const newOrganizationType = ref<OrganizationType>('non-profit-organization')
-const newOrganizationUrl = ref<string>('')
 
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
@@ -247,6 +247,13 @@ const arbimonLink = computed(() => {
   const selectedProjectSlug = store.selectedProject?.slug
   if (selectedProjectSlug === undefined) return ''
   else return `${import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL}/project/${selectedProjectSlug}/settings/users`
+})
+
+const sortedProjectMembers = computed<DashboardStakeholdersUser[]>(() => {
+  const primary = props.projectMembers.filter(u => u.ranking === 0)
+  const selected = props.projectMembers.filter(u => u.ranking === 1)
+  const hidden = props.projectMembers.filter(u => u.ranking === -1)
+  return primary.concat(selected).concat(hidden)
 })
 
 const checkAllUsersSelection = computed(() => {

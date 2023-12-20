@@ -9,8 +9,8 @@
         :disabled="loading"
         @click="$emit('emit-is-updating')"
       >
-        Complete and view Insight
-        <icon-custom-arrow-right class="ml-2 w-4 h-4 self-center" />
+        Edit displayed stakeholders
+        <icon-custom-ic-edit class="ml-2 w-4 h-4 self-center" />
       </button>
     </div>
     <h3 class="text-white text-xl font-medium font-sans mt-2">
