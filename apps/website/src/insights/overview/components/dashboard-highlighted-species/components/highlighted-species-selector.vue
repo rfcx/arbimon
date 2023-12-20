@@ -3,17 +3,15 @@
     <li
       v-for="item in speciesList"
       :key="item.scientificName"
-      class="flex flex-col justify-center items-center rounded-lg gap-x-3 p-4 max-w-80 bg-util-gray-01 md:(flex-row h-21) lg:(flex-row h-21 justify-between)"
+      class="flex flex-col justify-center items-center rounded-lg space-x-3 p-4 max-w-80 bg-util-gray-01 md:(flex-row h-21) lg:(flex-row h-21 justify-between)"
     >
-      <div class="flex flex-col justify-center items-center basis-5/6 gap-x-2 md:flex-row lg:(flex-row justify-between)">
-        <SpecieCard
-          :slug="item.slug"
-          :scientific-name="item.scientificName"
-          :common-name="item.commonName"
-          :photo-url="item.photoUrl"
-          :redirect="false"
-        />
-      </div>
+      <SpecieCard
+        :slug="item.slug"
+        :scientific-name="item.scientificName"
+        :common-name="item.commonName"
+        :photo-url="item.photoUrl"
+        :redirect="false"
+      />
       <icon-custom-fi-close-thin
         v-if="item.slug !== 'not-selected'"
         type="btn"

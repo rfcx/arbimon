@@ -5,7 +5,7 @@
       :key="'dashboard-highlighted-' + item.slug"
       class="flex flex-row justify-between"
     >
-      <div class="flex flex-row gap-x-4">
+      <div class="flex flex-row items-center gap-x-2 h-21 basis-3/4">
         <SpecieCard
           :slug="item.slug"
           :scientific-name="item.scientificName"

@@ -79,8 +79,8 @@
             </div>
           </div>
           <!-- Modal body -->
-          <div class="grid gap-x-4 w-full sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-            <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-2">
+          <div class="grid gap-x-4 w-full sm:grid-cols-1 min-[900px]:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+            <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 min-[900px]:col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-2">
               <ul
                 v-if="speciesList && speciesList.length"
                 class="grid gap-3 grid-cols-1 md:grid-rows-5 xl:(grid-cols-2 grid-rows-5)"
@@ -89,7 +89,7 @@
                   v-for="item in speciesForCurrentPage"
                   :key="'specie-highlighted-' + item.slug"
                   :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 flex-wrap h-full md:(h-21 flex-wrap justify-center) lg:(h-21 flex-nowrap justify-between) bg-echo hover:(border-frequency cursor-pointer)"
+                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 h-full md:(flex-row h-21) lg:(flex-row h-21 justify-between) bg-echo hover:(border-frequency cursor-pointer)"
                   @click="selectSpecie(item)"
                 >
                   <SpecieCard
