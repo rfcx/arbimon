@@ -27,6 +27,21 @@ const fastifyJwtErrors = [
   [/(?:jwt malformed)|(?:invalid signature)|(?:jwt (?:audience|issuer) invalid)/, errorMessages.invalidToken]
 ]
 
+/**
+ * Attempts to find valid strings from the given parameters from the first one to last one.
+ * Ignores empty strings and `undefined`s. If the string cannot be found. Empty string is then returned
+ */
+const findValidString = (...strings: Array<string | undefined>): string => {
+  for (const parameter of strings) {
+    if (parameter === null || parameter === undefined || parameter === '') {
+      continue
+    }
+    return parameter
+  }
+
+  return ''
+}
+
 export const updateUserProfileToBio = async (req: FastifyRequest): Promise<void> => {
   const sequelize = getSequelize()
   const { UserProfile } = ModelRepository.getInstance(sequelize)
@@ -83,13 +98,8 @@ export const updateUserProfileToBio = async (req: FastifyRequest): Promise<void>
   // non existent guys will get pushed into the db and the cache.
   const user = await UserProfile.findOne({ where: { email: auth0User.email } })
   if (user == null) {
-    const firstName = auth0User.given_name ?? auth0User.user_metadata?.given_name ?? auth0User['https://rfcx.org/user_metadata']?.given_name
-    const lastName = auth0User.family_name ?? auth0User.user_metadata?.family_name ?? auth0User['https://rfcx.org/user_metadata']?.family_name
-
-    // FIXME: if both names are null we cannot add this person to the database. gotta let that person go (for now)
-    if (firstName === undefined || lastName === undefined) {
-      return
-    }
+    const firstName = findValidString(auth0User?.given_name, auth0User?.user_metadata?.given_name, auth0User?.['https://rfcx.org/user_metadata']?.given_name)
+    const lastName = findValidString(auth0User?.family_name, auth0User?.user_metadata?.family_name, auth0User?.['https://rfcx.org/user_metadata']?.family_name)
 
     const newUser = await UserProfile.create({
       idAuth0: auth0User.auth0_user_id,
