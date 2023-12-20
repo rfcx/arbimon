@@ -6,10 +6,10 @@
     aria-labelledby="drawer-navigation-label"
   >
     <div class="h-full overflow-y">
-      <div class="px-6 pt-6">
+      <div class="p-6">
         <input
           v-model.lazy="searchKeyword"
-          class="input-field w-full p-4 rounded"
+          class="input-field w-full p-3 rounded"
           placeholder="Search by project name, objectives, countries, etc."
           @keyup.enter="emitSearch(searchKeyword)"
         >
