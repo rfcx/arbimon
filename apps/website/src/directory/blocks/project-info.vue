@@ -72,7 +72,7 @@
           tooltip-id="deployment-sites"
           tooltip-text="Number of sites with recorders deployed."
           title="Project sites:"
-          :value="profile?.metrics?.siteCount ?? 0"
+          :value="profile?.metrics?.totalSites ?? 0"
           icon-name="ft-map-pin-lg"
           class="flex-1"
         />
@@ -80,8 +80,8 @@
           tooltip-id="threatened-species-over-all-species"
           title="Threatened / total species:"
           tooltip-text="Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
-          :value="profile?.metrics?.speciesCount ?? 0"
-          :total-value="project?.noOfSpecies ?? 0"
+          :value="profile?.metrics?.threatenedSpecies ?? 0"
+          :total-value="profile?.metrics?.totalSpecies ?? 0"
           icon-name="ft-actual-bird"
           class="flex-1"
         />
@@ -89,7 +89,7 @@
           tooltip-id="total-detections"
           title="Total detections:"
           tooltip-text="Total number of species calls detected."
-          :value="profile?.metrics?.detectionMinutesCount ?? 0"
+          :value="profile?.metrics?.totalDetections ?? 0"
           icon-name="ft-search-lg"
           class="flex-1"
         />
@@ -169,7 +169,7 @@ const formatDateRange = (date: Date | null | undefined): string => {
 }
 
 // form the total recordings value (minutes or hours)
-const totalRecordingsMin = computed(() => profile.value?.metrics?.recordingMinutesCount ?? 0)
+const totalRecordingsMin = computed(() => profile.value?.metrics?.totalRecordings ?? 0)
 const MAXIMUM_MINUTE = 3 * 60 // 3 hours
 const totalRecordingsUnit = computed(() => totalRecordingsMin.value < MAXIMUM_MINUTE ? 'minutes' : 'hours')
 const totalRecordingsValue = computed(() => {
