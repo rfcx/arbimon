@@ -198,7 +198,7 @@
 import { type AxiosInstance } from 'axios'
 import type { DropdownOptions } from 'flowbite'
 import { Dropdown } from 'flowbite'
-import { type Ref, computed, inject, nextTick, ref, watch } from 'vue'
+import { type Ref, computed, inject, nextTick, ref, unref, watch } from 'vue'
 
 import { type DashboardStakeholdersUser, type UpdateDashboardStakeholdersRequestBodyUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
@@ -249,16 +249,36 @@ const arbimonLink = computed(() => {
   else return `${import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL}/project/${selectedProjectSlug}/settings/users`
 })
 
-const sortedProjectMembers = computed<DashboardStakeholdersUser[]>(() => {
-  const primary = props.projectMembers.filter(u => u.ranking === 0)
-  const selected = props.projectMembers.filter(u => u.ranking === 1)
-  const hidden = props.projectMembers.filter(u => u.ranking === -1)
-  return primary.concat(selected).concat(hidden)
-})
-
 const checkAllUsersSelection = computed(() => {
   return selectedProjectMembers.value.length === props.projectMembers.length
 })
+
+const tempProjectMembers = ref(unref(props.projectMembers))
+
+const sortedProjectMembers = computed<DashboardStakeholdersUser[]>(() => {
+  const primary = tempProjectMembers.value.filter(u => u.ranking === 0)
+  const selected = tempProjectMembers.value.filter(u => u.ranking === 1)
+  const hidden = tempProjectMembers.value.filter(u => u.ranking === -1)
+  return primary.concat(selected).concat(hidden)
+})
+
+const togglePrimaryContact = (userId: number, email: string, isPrimaryContact: boolean): void => {
+  const prevPrimary = tempProjectMembers.value.find(user => user.ranking === 0)
+  const newRanking = isPrimaryContact === true ? 0 : 1
+  tempProjectMembers.value = tempProjectMembers.value.map(user => {
+    return {
+      ...user,
+      ranking: user.email === email ? newRanking : (prevPrimary && prevPrimary.email === user.email) ? 1 : user.ranking
+    }
+  })
+  primaryContact.value.userId = isPrimaryContact === true ? userId : -1
+  primaryContact.value.email = isPrimaryContact === true ? email : ''
+}
+
+const toggleAllUsersSelect = (): void => {
+  isAllUsersSelected.value = !isAllUsersSelected.value
+  selectedProjectMembers.value = isAllUsersSelected.value ? props.projectMembers.map(u => u.email) : []
+}
 
 const openOrganizationSearch = async () => {
   dropdownStatus.value = 'search'
@@ -358,18 +378,6 @@ const createNewOrganization = (): void => {
 const refetchOrganizationsSearch = async (): Promise<void> => {
   if (searchOrganizationValue.value !== '') {
     await refetchOrganizationsSearchResult()
-  }
-}
-
-const toggleAllUsersSelect = (): void => {
-  isAllUsersSelected.value = !isAllUsersSelected.value
-  selectedProjectMembers.value = isAllUsersSelected.value ? props.projectMembers.map(u => u.email) : []
-}
-
-const togglePrimaryContact = (userId: number, email: string, isPrimaryContact: boolean): void => {
-  if (isPrimaryContact === true) {
-    primaryContact.value.userId = userId
-    primaryContact.value.email = email
   }
 }
 
