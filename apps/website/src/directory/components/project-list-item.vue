@@ -18,7 +18,7 @@
       <span class="font-medium">{{ project.name }}</span>
       <div
         v-if="shouldShowCountryAndObjective"
-        class="text-xs whitespace-nowrap min-w-0 flex-grow flex-1"
+        class="text-xs min-w-0 flex-grow flex-1"
       >
         <span class="text-spoonbill">
           <text-tooltip
@@ -32,6 +32,7 @@
           :tooltip-id="`${props.project.id}-objective`"
           :text-shorten="objectiveAll"
           :text-full="objectiveAll"
+          :extra-class="`inline-flex whitespace-nowrap min-w-0`"
         />
       </div>
       <span class="text-xs text-clip md:text-sm">{{ project.summary }}</span>
