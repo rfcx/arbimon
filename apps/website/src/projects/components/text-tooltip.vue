@@ -4,6 +4,7 @@
     :data-tooltip-target="tooltipId"
     data-tooltip-style="light"
     class="ml-1 w-6"
+    :class="extraClass"
   >
     {{ textShorten }}
   </span>
@@ -28,6 +29,7 @@ defineProps<{
   tooltipId: string
   textShorten?: string
   textFull?: string
+  extraClass?: string
 }>()
 
 onMounted(() => {
