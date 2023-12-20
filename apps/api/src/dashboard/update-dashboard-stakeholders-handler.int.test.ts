@@ -2,11 +2,10 @@ import fastifyRoutes from '@fastify/routes'
 import fastify, { type FastifyInstance } from 'fastify'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type LocationProjectUserRole, type UserProfile } from '@rfcx-bio/common/dao/types'
+import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 
 import { GET, PATCH } from '~/api-helpers/types'
-import { getSequelize } from '~/db'
 import { routesDashboard } from './index'
 
 const PROJECT_ID_BASIC = '40001001'
@@ -69,7 +68,7 @@ const userRoles: LocationProjectUserRole[] = [
   }
 ]
 
-const sequelize = getSequelize()
+const { LocationProjectUserRole: LocationProjectUserRoleModel, UserProfile: UserProfileModel } = modelRepositoryWithElevatedPermissions
 
 const getMockedApp = async (): Promise<FastifyInstance> => {
   const app = await fastify()
@@ -134,13 +133,13 @@ describe(`GET ${ROUTE} (dashboard stakeholders)`, () => {
 
 describe(`PATCH ${ROUTE} (dashboard stakeholders)`, () => {
   afterEach(async () => {
-    await ModelRepository.getInstance(sequelize).UserProfile.destroy({ where: { id: users.map(u => u.id) } })
-    await ModelRepository.getInstance(sequelize).LocationProjectUserRole.destroy({ where: { locationProjectId: PROJECT_ID_BASIC } })
+    await UserProfileModel.destroy({ where: { id: users.map(u => u.id) } })
+    await LocationProjectUserRoleModel.destroy({ where: { locationProjectId: PROJECT_ID_BASIC } })
   })
 
   beforeEach(async () => {
-    await ModelRepository.getInstance(sequelize).UserProfile.bulkCreate(users)
-    await ModelRepository.getInstance(sequelize).LocationProjectUserRole.bulkCreate(userRoles)
+    await UserProfileModel.bulkCreate(users)
+    await LocationProjectUserRoleModel.bulkCreate(userRoles)
   })
 
   test('partial update to user role', async () => {
@@ -162,7 +161,7 @@ describe(`PATCH ${ROUTE} (dashboard stakeholders)`, () => {
 
     // Assert
     expect(response.statusCode).toBe(204)
-    const data = await ModelRepository.getInstance(sequelize).LocationProjectUserRole.findOne({ where: { locationProjectId: PROJECT_ID_BASIC, userId: 1001 }, plain: true })
+    const data = await LocationProjectUserRoleModel.findOne({ where: { locationProjectId: PROJECT_ID_BASIC, userId: 1001 }, plain: true })
     expect(data?.ranking).toBe(0)
   })
 })

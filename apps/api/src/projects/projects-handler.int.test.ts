@@ -3,11 +3,10 @@ import fastify, { type FastifyInstance } from 'fastify'
 import { expect, test } from 'vitest'
 
 import { projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type Project } from '@rfcx-bio/common/dao/types'
+import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 
 import { GET } from '~/api-helpers/types'
-import { getSequelize } from '~/db'
 import { routesProject } from './index'
 
 function makeProject (id: number, name: string): Project {
@@ -24,7 +23,7 @@ function makeProject (id: number, name: string): Project {
   }
 }
 
-const models = ModelRepository.getInstance(getSequelize())
+const { LocationProject, ProjectVersion } = modelRepositoryWithElevatedPermissions
 
 const getMockedApp = async (projectIds: string[] | undefined = undefined): Promise<FastifyInstance> => {
   const app = await fastify()
@@ -71,8 +70,8 @@ test('GET /projects contains public projects', async () => {
   // Arrange
   const app = await getMockedApp()
   const publicProject = makeProject(1234001, 'Public Project 1')
-  await models.LocationProject.bulkCreate([publicProject], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
-  await models.ProjectVersion.create({ locationProjectId: publicProject.id, isPublished: true, isPublic: true })
+  await LocationProject.bulkCreate([publicProject], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+  await ProjectVersion.create({ locationProjectId: publicProject.id, isPublished: true, isPublic: true })
 
   // Act
   const response = await app.inject({
@@ -92,8 +91,8 @@ test('GET /projects does not contain non-public projects', async () => {
   // Arrange
   const app = await getMockedApp()
   const project = makeProject(1234002, 'Private Project 1')
-  await models.LocationProject.bulkCreate([project], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
-  await models.ProjectVersion.create({ locationProjectId: project.id, isPublished: false, isPublic: false })
+  await LocationProject.bulkCreate([project], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+  await ProjectVersion.create({ locationProjectId: project.id, isPublished: false, isPublic: false })
 
   // Act
   const response = await app.inject({

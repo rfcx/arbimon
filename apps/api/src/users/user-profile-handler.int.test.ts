@@ -3,11 +3,10 @@ import fastify, { type FastifyInstance } from 'fastify'
 import fastifyAuth0Verify from 'fastify-auth0-verify'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 
 import { updateUserProfileToBio } from '@/_middleware/update-user-profile-to-bio-and-core'
 import { GET, PATCH } from '~/api-helpers/types'
-import { getSequelize } from '~/db'
 import { fastifyLruCache } from '../_plugins/global-user-cache'
 import { routesUserProfile } from './index'
 
@@ -44,8 +43,7 @@ const getMockedApp = async (): Promise<FastifyInstance> => {
   return app
 }
 
-const biodiversitySequelize = getSequelize()
-const { UserProfile } = ModelRepository.getInstance(biodiversitySequelize)
+const { UserProfile } = modelRepositoryWithElevatedPermissions
 
 const defaultUser = {
   id: 1,
@@ -60,7 +58,7 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-  await biodiversitySequelize.query('truncate user_profile cascade')
+  await UserProfile.destroy({ truncate: true, cascade: true })
 })
 
 describe('GET /profile', async () => {
@@ -85,7 +83,6 @@ describe('GET /profile', async () => {
   test('can get profile when does not exist in the db', async () => {
     // Arrange
     const app = await getMockedApp()
-    await biodiversitySequelize.query('truncate user_profile cascade')
     app.lru.clear()
 
     // Act
@@ -147,7 +144,6 @@ describe('PATCH /profile', async () => {
   test('can update first and last name when profile does not exist in the db', async () => {
     // Arrange
     const app = await getMockedApp()
-    await biodiversitySequelize.query('truncate user_profile cascade')
     const profileUpdates = { firstName: 'Grey', lastName: 'Squirrel' }
     app.lru.clear()
 

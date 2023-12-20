@@ -1,0 +1,26 @@
+{
+  "name": "@rfcx-bio/testing",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Biodiversity testing",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "files": [
+    "lib/**/*.js"
+  ],
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json",
+    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./.eslintcache\"",
+    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "lint-profile:eslint": "cross-env TIMING=1 eslint .",
+    "lint:eslint": "eslint . --cache",
+    "lint:prettier": "prettier . --check",
+    "test": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:test:* -- --run\""
+  },
+  "dependencies": {
+    "@rfcx-bio/common": "workspace:^0.0.1"
+  }
+}

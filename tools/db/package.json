@@ -23,8 +23,8 @@
   "scripts": {
     "logs": "docker compose logs timescaledb",
     "reset": "docker compose down && docker volume rm db_data-timescaledb",
-    "serve": "docker compose up -d",
-    "serve-int": "docker compose -f docker-compose.test.yaml up -d --quiet-pull && docker compose exec -T -e PGPASSWORD=test timescaledb-test pg_isready",
+    "serve": "docker compose up -d --wait",
+    "serve-int": "docker compose -f docker-compose.test.yaml up -d --quiet-pull --wait && docker compose exec -T -e PGPASSWORD=test timescaledb-test pg_isready",
     "stop": "docker compose down",
     "stop-int": "docker compose -f docker-compose.test.yaml down"
   }
