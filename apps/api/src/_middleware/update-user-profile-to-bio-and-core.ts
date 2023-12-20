@@ -2,6 +2,7 @@ import { type FastifyRequest } from 'fastify'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
+import { isValidToken } from '~/api-helpers/is-valid-token'
 import { extractUserInformation } from '~/auth0/extract-auth0-object'
 import { type Auth0UserInfo } from '~/auth0/types'
 import { getSequelize } from '~/db'
@@ -33,6 +34,13 @@ export const updateUserProfileToBio = async (req: FastifyRequest): Promise<void>
   // passthrough when authorization header is missing (not logged in user)
   // req.extractedUser will be null originally
   if (req.headers.authorization == null || req.headers.authorization === '') {
+    return
+  }
+
+  // Since we use Basic Auth in dev environment sometimes the headers sent is basic.
+  // We need to skip this.
+  // TODO: Take a look at this comment
+  if (!isValidToken(req.headers.authorization)) {
     return
   }
 
