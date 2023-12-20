@@ -86,6 +86,7 @@
             <div
               ref="createNewOrganizationFormContainer"
               class="z-10 hidden w-[20.0rem] text-insight bg-moss border-cloud border-b-0 border-l border-r rounded-b-lg shadow"
+              :class="{'border-b-1': !orgsSearchResult?.length}"
             >
               <div class="max-w-sm mx-auto p-3">
                 <div class="mb-5">
@@ -154,8 +155,8 @@
           </div>
           <div
             ref="organizationSearchResultContainer"
-            class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow overflow-y-scroll h-66"
-            :class="{'border-b-1': searchOrganizationValue && !organizationsSearchResult}"
+            class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow overflow-y-scroll"
+            :class="{'border-b-1': searchOrganizationValue && !organizationsSearchResult, 'border-b-1 h-66': orgsSearchResult?.length}"
           >
             <OrganizationSearchResultCard
               v-for="s in orgsSearchResult"
@@ -260,12 +261,11 @@ const openOrganizationSearch = async () => {
   searchDropdown.value.show()
 }
 
-const organizationSearchInputChanged = () => {
+const organizationSearchInputChanged = async (): Promise<void> => {
   dropdownStatus.value = 'search'
-  refetchOrganizationsSearch()
-  if (organizationsSearchResult.value == null || organizationsSearchResult.value.length === 0) {
-    new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).show()
-  }
+  await refetchOrganizationsSearch()
+  if (orgsSearchResult.value.length) searchDropdown.value.show()
+  else new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).show()
 }
 
 const onBlur = () => {
