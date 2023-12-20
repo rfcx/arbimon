@@ -79,11 +79,11 @@
             </div>
           </div>
           <!-- Modal body -->
-          <div class="grid grid-cols-3 gap-x-4 w-full">
-            <div class="grid grid-cols-1 gap-y-4 col-span-2">
+          <div class="grid gap-x-4 w-full sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+            <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-2">
               <ul
                 v-if="speciesList && speciesList.length"
-                class="grid gap-2 grid-cols-1 lg:(grid-cols-2 gap-3)"
+                class="grid gap-3 grid-cols-1 md:grid-rows-5 xl:(grid-cols-2 grid-rows-5)"
               >
                 <li
                   v-for="item in speciesForCurrentPage"
