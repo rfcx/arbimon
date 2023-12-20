@@ -4,6 +4,7 @@ import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboa
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type LocationProjectUserRole, type OrganizationTypes } from '@rfcx-bio/common/dao/types'
 
+import { getProfileImageURL } from '@/users/helpers'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 
@@ -29,7 +30,17 @@ export const getProjectUsers = async (projectId: number): Promise<DashboardStake
     throw BioNotFoundError()
   }
 
-  return projectUsers
+  return projectUsers.map(p => {
+    return {
+      id: p.id,
+      email: p.email,
+      firstName: p.firstName,
+      lastName: p.lastName,
+      image: getProfileImageURL(p.image),
+      roleId: p.roleId,
+      ranking: p.ranking
+    }
+  })
 }
 
 export const getProjectStakeholders = async (projectId: number): Promise<Array<OrganizationTypes['light']>> => {
