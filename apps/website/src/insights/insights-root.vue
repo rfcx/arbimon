@@ -57,7 +57,7 @@
               <button
                 v-if="!projectUserPermissionsStore.isGuest"
                 class="btn btn-primary disabled:cursor-not-allowed"
-                :disabled="projectUserPermissionsStore.currentUserRoleOfCurrentProject === 'Guest'"
+                :disabled="projectUserPermissionsStore.currentUserRoleOfCurrentProject === 3"
                 @click="shareInsight"
               >
                 Share Insights <span class="hidden lg:inline-flex">on Arbimon</span>

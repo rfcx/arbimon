@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
-import { type CoreUser } from '../../api-core/project/users'
+import { type LocationProjectUserRole } from '@/dao/types'
 
 // Request type
 export interface GetProjectMembersParams {
@@ -8,7 +8,7 @@ export interface GetProjectMembersParams {
 }
 
 // Response type
-export type GetProjectMembersResponse = CoreUser[]
+export type GetProjectMembersResponse = Array<Omit<LocationProjectUserRole, 'createdAt' | 'updatedAt' | 'ranking'> & { email: string }>
 
 // Route
 export const getProjectMembersRoute = '/projects/:projectId/users'

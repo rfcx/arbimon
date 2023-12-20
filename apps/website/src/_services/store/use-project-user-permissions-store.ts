@@ -1,11 +1,9 @@
+import axios from 'axios'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 import { type GetProjectMembersResponse } from '@rfcx-bio/common/api-bio/project/project-members'
-import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
-import { getApiClient } from '@rfcx-bio/utils/api'
 
-import { getIdToken, useAuth0Client } from '~/auth-client'
 import { useStore } from './index'
 
 /**
@@ -23,58 +21,42 @@ import { useStore } from './index'
  * - Refetch this API when user changes the project. If the project changes to null, only clear the data and don't query for new data.
  */
 export const useProjectUserPermissionsStore = defineStore('project-user-permissions-store', () => {
-  const projectMembers = ref<CoreUser[]>([])
-  const permissionOverride = ref<null | CoreUser['role']>(null)
+  const projectMembers = ref<GetProjectMembersResponse>([])
+  const permissionOverride = ref<number | undefined>(undefined)
   const store = useStore()
 
   const getProjectMembers = async (id: number): Promise<void> => {
     if (id == null || id === -1) {
       projectMembers.value = []
-      permissionOverride.value = null
+      permissionOverride.value = undefined
       return
     }
 
-    const authClient = await useAuth0Client()
-    const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, async () => await getIdToken(authClient))
-
-    try {
-      const members = await apiClient.get<GetProjectMembersResponse>(`/projects/${id}/users`)
-      permissionOverride.value = null
-      projectMembers.value = members.data
-    } catch (_e) {
-      // guaranteed Guest
-      permissionOverride.value = 'Guest'
-      projectMembers.value = []
-    }
+    const members = await axios.get<GetProjectMembersResponse>(`${import.meta.env.VITE_API_BASE_URL}/projects/${id}/users`, { timeout: 30 * 1000 })
+    projectMembers.value = members.data
+    permissionOverride.value = undefined
   }
 
-  const currentUserRoleOfCurrentProject = computed<CoreUser['role']>(() => {
-    if (permissionOverride.value != null) {
+  const currentUserRoleOfCurrentProject = computed<number>(() => {
+    if (permissionOverride.value !== undefined) {
       return permissionOverride.value
     }
 
-    if (projectMembers.value.length === 0 && (store.selectedProject?.isMyProject ?? false)) {
-      return 'Admin'
-    }
-
-    if (projectMembers.value.length === 0) {
-      return 'Guest'
-    }
-
+    // This means not logged in. So guest
     if (store.user == null || store.user?.email == null) {
-      return 'Guest'
+      return 3
     }
 
     const userIndex = projectMembers.value.findIndex(m => m.email === store.user?.email)
     if (userIndex === -1) {
-      return 'Guest'
+      return 3
     }
 
-    return projectMembers.value[userIndex]?.role ?? 'Guest'
+    return projectMembers.value[userIndex]?.roleId ?? 3
   })
 
   const isGuest = computed<boolean>(() => {
-    return currentUserRoleOfCurrentProject.value === 'Guest'
+    return currentUserRoleOfCurrentProject.value === 3 // legacy arbimon's guest role
   })
 
   return {
