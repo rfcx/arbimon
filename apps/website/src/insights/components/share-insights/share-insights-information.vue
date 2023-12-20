@@ -46,7 +46,7 @@
           <p class="text-base text-white font-normal font-sans leading-normal mb-0.5">
             Showcase your project on Arbimon's <router-link
               class="text-frequency hover:underline"
-              :to="{ name: ROUTE_NAMES.myProjects }"
+              :to="{ name: ROUTE_NAMES.explore }"
             >
               Projects
             </router-link>. You will have a unique sharable link.

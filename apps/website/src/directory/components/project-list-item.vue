@@ -5,15 +5,20 @@
   >
     <div class="w-18 aspect-square h-18">
       <img
+        v-if="project.imageUrl"
         :src="project.imageUrl"
         class="w-full h-full rounded bg-util-gray-02"
       >
+      <div
+        v-else
+        class="w-full h-full rounded bg-util-gray-02 flex justify-center items-center"
+      />
     </div>
     <div class="flex flex-col gap-2 flex-grow overflow-hidden">
       <span class="font-medium">{{ project.name }}</span>
       <div
         v-if="shouldShowCountryAndObjective"
-        class="text-xs whitespace-nowrap min-w-0 flex-grow flex-1"
+        class="text-xs min-w-0 flex-grow flex-1"
       >
         <span class="text-spoonbill">
           <text-tooltip
@@ -27,20 +32,23 @@
           :tooltip-id="`${props.project.id}-objective`"
           :text-shorten="objectiveAll"
           :text-full="objectiveAll"
+          :extra-class="`inline-flex whitespace-nowrap min-w-0`"
         />
       </div>
       <span class="text-xs text-clip md:text-sm">{{ project.summary }}</span>
       <div class="flex flex-row gap-2">
-        <span class="bg-util-gray-02 px-1 rounded font-medium text-xs">{{ project.noOfRecordings }} recordings</span>
-        <span class="bg-util-gray-02 px-1 rounded font-medium text-xs">{{ project.noOfSpecies }} species</span>
+        <span class="bg-util-gray-02 px-1 rounded font-medium text-xs">{{ numeral(totalRecordings.value).format('0a') }} {{ totalRecordings.unit.replace('s', '') }} recordings</span>
+        <span class="bg-util-gray-02 px-1 rounded font-medium text-xs">{{ numeral(project.noOfSpecies).format('0a') }} species</span>
       </div>
     </div>
   </li>
 </template>
 <script setup lang="ts">
+import numeral from 'numeral'
 import { computed } from 'vue'
 
 import { getCountryLabel } from '@/_services/country'
+import { totalRecordingsInHours } from '@/_services/utils/recording-time-unit'
 import TextTooltip from '../../projects/components/text-tooltip.vue'
 import { masterObjectiveTypes } from '../../projects/types'
 import type { ProjectProfileWithMetrics } from '../data/types'
@@ -58,6 +66,10 @@ const objectiveAll = computed(() => {
   })
 
   return [...new Set(objectives)].join(', ')
+})
+
+const totalRecordings = computed(() => {
+  return totalRecordingsInHours(props.project.noOfRecordings, 3)
 })
 
 </script>

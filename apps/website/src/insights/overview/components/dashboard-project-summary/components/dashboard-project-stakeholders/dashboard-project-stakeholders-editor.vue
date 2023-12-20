@@ -32,7 +32,7 @@
       </a>
       <div class="grid grid-cols-2 gap-3 lg:grid-cols-3">
         <StakeholderCardEdit
-          v-for="(member, idx) of projectMembers"
+          v-for="(member, idx) of sortedProjectMembers"
           :key="idx"
           v-model="selectedProjectMembers"
           :name="member.firstName + ' ' + member.lastName"
@@ -86,6 +86,7 @@
             <div
               ref="createNewOrganizationFormContainer"
               class="z-10 hidden w-[20.0rem] text-insight bg-moss border-cloud border-b-0 border-l border-r rounded-b-lg shadow"
+              :class="{'border-b-1': !orgsSearchResult?.length}"
             >
               <div class="max-w-sm mx-auto p-3">
                 <div class="mb-5">
@@ -154,8 +155,8 @@
           </div>
           <div
             ref="organizationSearchResultContainer"
-            class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow"
-            :class="{'border-b-1': searchOrganizationValue && !organizationsSearchResult}"
+            class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow overflow-y-scroll"
+            :class="{'border-b-1': searchOrganizationValue && !organizationsSearchResult, 'border-b-1 h-66': orgsSearchResult?.length}"
           >
             <OrganizationSearchResultCard
               v-for="s in orgsSearchResult"
@@ -184,7 +185,7 @@
 
     <div class="flex w-full justify-end">
       <button
-        class="btn btn-secondary"
+        class="btn btn-primary"
         @click="onFinishedEditing"
       >
         Save
@@ -197,7 +198,7 @@
 import { type AxiosInstance } from 'axios'
 import type { DropdownOptions } from 'flowbite'
 import { Dropdown } from 'flowbite'
-import { computed, inject, nextTick, ref, watch } from 'vue'
+import { type Ref, computed, inject, nextTick, ref, watch } from 'vue'
 
 import { type DashboardStakeholdersUser, type UpdateDashboardStakeholdersRequestBodyUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
@@ -216,23 +217,25 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[], selectedProjectMembers: UpdateDashboardStakeholdersRequestBodyUser[]): void}>()
 
+const searchDropdown = ref() as Ref<Dropdown>
 const dropdownStatus = ref<'idle' | 'search' | 'create-org'>('idle')
 const createNewOrganizationFormContainer = ref<HTMLDivElement | null>(null)
 const organizationSearchInput = ref<HTMLDivElement | null>(null)
 const organizationSearchResultContainer = ref<HTMLDivElement | null>(null)
 const organizationSearchResultNotFoundContainer = ref<HTMLDivElement | null>(null)
-const searchOrganizationValue = ref('')
 const addedOrganizations = ref<Array<OrganizationTypes['light']>>([])
+const dropdownOptions: DropdownOptions = { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }
+const searchOrganizationValue = ref('')
 const selectedOrganizationIds = ref(props.organizations.map(o => o.id))
+const newOrganizationType = ref<OrganizationType>('non-profit-organization')
+const newOrganizationUrl = ref<string>('')
+
 const selectedProjectMembers = ref(props.projectMembers.filter(u => u.ranking !== -1).map(u => u.email))
 const primaryContact = ref({
   userId: props.projectMembers.filter(u => u.ranking === 0).map(u => u.id)[0],
   email: props.projectMembers.filter(u => u.ranking === 0).map(u => u.email)[0]
 })
 const isAllUsersSelected = ref<boolean>(selectedProjectMembers.value.length === props.projectMembers.length)
-
-const newOrganizationType = ref<OrganizationType>('non-profit-organization')
-const newOrganizationUrl = ref<string>('')
 
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
@@ -246,6 +249,13 @@ const arbimonLink = computed(() => {
   else return `${import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL}/project/${selectedProjectSlug}/settings/users`
 })
 
+const sortedProjectMembers = computed<DashboardStakeholdersUser[]>(() => {
+  const primary = props.projectMembers.filter(u => u.ranking === 0)
+  const selected = props.projectMembers.filter(u => u.ranking === 1)
+  const hidden = props.projectMembers.filter(u => u.ranking === -1)
+  return primary.concat(selected).concat(hidden)
+})
+
 const checkAllUsersSelection = computed(() => {
   return selectedProjectMembers.value.length === props.projectMembers.length
 })
@@ -254,16 +264,15 @@ const openOrganizationSearch = async () => {
   dropdownStatus.value = 'search'
   await nextTick()
   organizationSearchInput.value?.focus()
-  const dropdownOptions: DropdownOptions = { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }
-  new Dropdown(organizationSearchResultContainer.value, organizationSearchInput.value, dropdownOptions).show()
+  searchDropdown.value = new Dropdown(organizationSearchResultContainer.value, organizationSearchInput.value, dropdownOptions)
+  searchDropdown.value.show()
 }
 
-const organizationSearchInputChanged = () => {
+const organizationSearchInputChanged = async (): Promise<void> => {
   dropdownStatus.value = 'search'
-  refetchOrganizationsSearch()
-  if (organizationsSearchResult.value == null || organizationsSearchResult.value.length === 0) {
-    new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).show()
-  }
+  await refetchOrganizationsSearch()
+  if (orgsSearchResult.value.length) searchDropdown.value.show()
+  else new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).show()
 }
 
 const onBlur = () => {
@@ -286,6 +295,7 @@ const openCreateNewOrganizationForm = async (): Promise<void> => {
 }
 
 const onAddNewOrganizationFromSearch = (id: number): void => {
+  searchDropdown.value.hide()
   // Return when the org already exists
   if (displayedOrganizations.value.findIndex(o => o.id === id) > -1) {
     dropdownStatus.value = 'idle'

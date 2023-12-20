@@ -10,6 +10,7 @@ import { type OrganizationTypes, type UserProfile } from '@rfcx-bio/common/dao/t
 import { patchUserProfileOnCore } from '~/api-core/api-core'
 import { BioNotFoundError } from '~/errors'
 import { getObject, putObject } from '~/storage'
+import { getProfileImageURL } from './helpers'
 import { get, getAllOrganizations as daoGetAllOrganizations, update } from './user-profile-dao'
 
 export const getUserProfile = async (email: string): Promise<Omit<UserProfile, 'id' | 'idAuth0'>> => {
@@ -19,7 +20,13 @@ export const getUserProfile = async (email: string): Promise<Omit<UserProfile, '
     throw BioNotFoundError()
   }
 
-  return profile
+  return {
+    firstName: profile.firstName,
+    lastName: profile.lastName,
+    email: profile.email,
+    image: getProfileImageURL(profile.image),
+    organizationIdAffiliated: profile.organizationIdAffiliated
+  }
 }
 
 export const patchUserProfile = async (token: string, email: string, data: Partial<Omit<UserProfile, 'id' | 'idAuth0' | 'image' | 'createdAt' | 'updatedAt'>>): Promise<void> => {
@@ -29,10 +36,9 @@ export const patchUserProfile = async (token: string, email: string, data: Parti
   const coreProfile: Pick<CoreUser, 'firstname' | 'lastname' | 'picture'> = {
     firstname: newProfile.firstName,
     lastname: newProfile.lastName,
-    picture: newProfile.image ?? null
+    picture: getProfileImageURL(newProfile.image) ?? null
   }
   await patchUserProfileOnCore(token, email, coreProfile)
-
   await update(email, newProfile)
 }
 
@@ -59,7 +65,7 @@ export const getUserProfileImage = async (email: string): Promise<ArrayBuffer> =
   }
 }
 
-export const patchUserProfileImage = async (email: string, file: MultipartFile): Promise<void> => {
+export const patchUserProfileImage = async (token: string, email: string, file: MultipartFile): Promise<void> => {
   const originalProfile = await getUserProfile(email)
 
   // hash the email to sha256 and use that as the folder name for storing the profile-image
@@ -70,7 +76,13 @@ export const patchUserProfileImage = async (email: string, file: MultipartFile):
   const imagePath = `users/${hexEmail}/profile-image${extname(file.filename)}`
   const newProfile = { ...originalProfile, image: imagePath }
 
-  await putObject(imagePath, await file.toBuffer(), file.mimetype)
+  const coreProfile = {
+    firstname: newProfile.firstName,
+    lastname: newProfile.lastName,
+    picture: getProfileImageURL(newProfile.image) ?? null
+  }
+  await patchUserProfileOnCore(token, email, coreProfile)
+  await putObject(imagePath, await file.toBuffer(), file.mimetype, true)
   await update(email, newProfile)
 }
 

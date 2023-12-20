@@ -34,14 +34,19 @@
     </div>
     <div class="overflow-scroll">
       <img
+        v-if="project?.imageUrl"
         :src="project?.imageUrl"
-        class="w-full h-full object-contain bg-util-gray-02 h-52"
+        class="w-full object-contain bg-util-gray-02 h-52"
       >
+      <div
+        v-else
+        class="w-full h-52 object-contain bg-util-gray-02 flex justify-center items-center"
+      />
       <div class="p-4 border-b border-util-gray-01">
         <span class="text-lg font-medium">{{ project?.name }}</span>
         <div
           v-if="profile?.dateStart"
-          class="flex font-medium text-sm flex-row border-gray-300 mt-3 space-x-4 items-center"
+          class="flex font-medium text-sm flex-row border-gray-300 mt-3 space-x-2 items-center"
         >
           <span>
             Project dates:
@@ -63,7 +68,7 @@
             :disabled="project?.isMock"
             :class="{'opacity-50 cursor-not-allowed': project?.isMock}"
           >
-            View Insights
+            View project insights
           </button>
         </router-link>
       </div>
@@ -72,16 +77,16 @@
           tooltip-id="deployment-sites"
           tooltip-text="Number of sites with recorders deployed."
           title="Project sites:"
-          :value="profile?.metrics?.siteCount ?? 0"
+          :value="profile?.metrics?.totalSites ?? 0"
           icon-name="ft-map-pin-lg"
           class="flex-1"
         />
         <numeric-metric
           tooltip-id="threatened-species-over-all-species"
-          title="Threatened/total species:"
+          title="Threatened / total species:"
           tooltip-text="Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
-          :value="profile?.metrics?.speciesCount ?? 0"
-          :total-value="project?.noOfSpecies ?? 0"
+          :value="profile?.metrics?.threatenedSpecies ?? 0"
+          :total-value="profile?.metrics?.totalSpecies ?? 0"
           icon-name="ft-actual-bird"
           class="flex-1"
         />
@@ -89,15 +94,15 @@
           tooltip-id="total-detections"
           title="Total detections:"
           tooltip-text="Total number of species calls detected."
-          :value="profile?.metrics?.detectionMinutesCount ?? 0"
+          :value="profile?.metrics?.totalDetections ?? 0"
           icon-name="ft-search-lg"
           class="flex-1"
         />
         <numeric-metric
           tooltip-id="total-recordings"
-          :tooltip-text="`Total ${project?.noOfRecordings} of recordings captured`"
-          title="Total recordings"
-          :value="profile?.metrics?.recordingMinutesCount ?? 0"
+          :tooltip-text="`Total ${totalRecordings.unit} of recordings captured`"
+          :title="`Total recordings (${totalRecordings.unit}):`"
+          :value="totalRecordings.value"
           icon-name="ft-mic-lg"
           class="flex-1"
         />
@@ -116,6 +121,7 @@ import { computed, inject, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
 import { getCountryLabel } from '@/_services/country'
+import { totalRecordingsInHours } from '@/_services/utils/recording-time-unit'
 import { apiClientKey } from '@/globals'
 import { useGetProjectInfo } from '@/projects/_composables/use-project-profile'
 import { useProjectDirectoryStore } from '~/store'
@@ -164,9 +170,13 @@ const countrieFlag = computed(() => {
 })
 
 const formatDateRange = (date: Date | null | undefined): string => {
-  if (!dayjs(date).isValid()) return 'present'
+  if (!dayjs(date).isValid()) return 'Present'
   else return dayjs(date).format('MM/DD/YYYY')
 }
+
+// form the total recordings value (minutes or hours)
+const totalRecordingsMin = computed(() => profile.value?.metrics?.totalRecordings ?? 0)
+const totalRecordings = computed(() => totalRecordingsInHours(totalRecordingsMin.value, 3))
 
 </script>
 <style lang="scss">

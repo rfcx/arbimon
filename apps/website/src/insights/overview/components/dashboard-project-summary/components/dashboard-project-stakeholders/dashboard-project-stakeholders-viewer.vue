@@ -1,5 +1,18 @@
 <template>
   <div class="px-6 pb-6">
+    <div
+      v-if="projectUserPermissionsStore.currentUserRoleOfCurrentProject === 1 || projectUserPermissionsStore.currentUserRoleOfCurrentProject === 4"
+      class="flex w-full justify-end mt-6"
+    >
+      <button
+        class="btn btn-primary font-medium flex flex-row py-2 px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+        :disabled="loading"
+        @click="$emit('emit-is-updating')"
+      >
+        Edit displayed stakeholders
+        <icon-custom-ic-edit class="ml-2 w-4 h-4 self-center" />
+      </button>
+    </div>
     <h3 class="text-white text-xl font-medium font-sans mt-2">
       Project members
     </h3>
@@ -39,26 +52,12 @@
         :ranking="1"
       />
     </div>
-    <div
-      v-if="projectUserPermissionsStore.currentUserRoleOfCurrentProject === 'Admin'"
-      class="flex w-full justify-end mt-6"
-    >
-      <button
-        class="btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
-        :disabled="loading"
-        @click="$emit('emit-is-updating')"
-      >
-        Edit displayed stakeholders
-        <icon-custom-ic-edit class="ml-2 self-center" />
-      </button>
-    </div>
-
     <GuestBanner
-      v-else-if="store.user != null || projectUserPermissionsStore.isGuest"
+      v-if="projectUserPermissionsStore.isGuest"
       class="mt-6"
     />
     <StakeholdersTosBanner
-      v-else
+      v-if="store.user === null"
       class="mt-6"
     />
   </div>

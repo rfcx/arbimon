@@ -2,7 +2,7 @@
   <div
     ref="mapRoot"
     class="w-full h-full"
-    :style="{ height: `95vh` }"
+    :style="{ height: `100vh` }"
   />
 </template>
 <script setup lang="ts">

@@ -8,7 +8,7 @@
     <div>
       <h3
         v-if="ranking === 0"
-        class="text-xs text-pitch bg-frequency font-normal font-eyebrow leading-5 px-2 rounded-sm inline-block"
+        class="text-xs text-pitch bg-frequency font-normal font-eyebrow font-sans leading-5 px-2 rounded-sm inline-block"
       >
         Primary contact
       </h3>

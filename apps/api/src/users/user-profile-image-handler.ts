@@ -18,12 +18,16 @@ export const getUserProfileImageHandler: Handler<FastifyReply> = async (req, rep
 }
 
 export const patchUserProfileImageHandler: Handler<string> = async (req, rep) => {
+  if (req.headers.authorization == null || req.headers.authorization === '') {
+    throw BioUnauthorizedError()
+  }
+
   if (req.extractedUser === null) {
     throw BioUnauthorizedError()
   }
 
   const file = await req.file()
-  await patchUserProfileImage(req.extractedUser.email, file)
+  await patchUserProfileImage(req.headers.authorization, req.extractedUser.email, file)
 
   rep.statusCode = 204
   return ''

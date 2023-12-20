@@ -3,6 +3,7 @@ import { pickBy } from 'lodash-es'
 import type { ProjectInfoFieldType, ProjectInfoResponse, ProjectProfileUpdateBody, ProjectProfileUpdateResponse, ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
+import { getProjectMetrics } from '@/dashboard/dashboard-metrics-dao'
 import { getSequelize } from '~/db'
 
 export const getProjectCoreId = async (locationProjectId: number): Promise<string | undefined> => {
@@ -33,7 +34,7 @@ export const updateProjectProfile = async (locationProjectId: number, profile: P
 
 export const getProjectInfo = async (locationProjectId: number, fields: ProjectInfoFieldType[]): Promise<ProjectInfoResponse> => {
   const sequelize = getSequelize()
-  const { LocationProject, LocationProjectProfile, LocationProjectCountry, ProjectVersion, LocationProjectMetric } = ModelRepository.getInstance(sequelize)
+  const { LocationProject, LocationProjectProfile, LocationProjectCountry, ProjectVersion } = ModelRepository.getInstance(sequelize)
   const resProject = await LocationProject.findOne({
     where: { id: locationProjectId },
     attributes: ['name'],
@@ -61,10 +62,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
 
   let metrics
   if (fields.includes('metrics')) {
-    metrics = await LocationProjectMetric.findOne({
-      where: { locationProjectId },
-      raw: true
-    })
+    metrics = await getProjectMetrics(locationProjectId)
   }
 
   // TODO: support stakeholder
@@ -89,10 +87,11 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     ...(fields.includes('metrics')
         ? {
         metrics: {
-          recordingMinutesCount: metrics?.recordingMinutesCount ?? 0,
-          speciesCount: metrics?.speciesCount ?? 0,
-          siteCount: metrics?.siteCount ?? 0,
-          detectionMinutesCount: metrics?.detectionMinutesCount ?? 0
+          totalRecordings: metrics?.totalRecordings ?? 0,
+          totalSpecies: metrics?.totalSpecies ?? 0,
+          threatenedSpecies: metrics?.threatenedSpecies ?? 0,
+          totalSites: metrics?.totalSites ?? 0,
+          totalDetections: metrics?.totalDetections ?? 0
         }
         }
         : {}

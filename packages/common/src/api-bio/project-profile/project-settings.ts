@@ -3,8 +3,9 @@ import { type AxiosInstance } from 'axios'
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
 import { type AttributeTypes, attributes } from '../../dao/type-helpers'
-import { type LocationProjectMetric, type LocationProjectProfile, type Project, type ProjectVersion } from '../../dao/types'
+import { type LocationProjectProfile, type Project, type ProjectVersion } from '../../dao/types'
 import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
+import { type DashboardMetricsResponse } from '../dashboard/dashboard-metrics'
 
 // Request types
 export type ProjectProfileParams = ProjectRouteParamsSerialized
@@ -20,7 +21,7 @@ export type ProjectProfileUpdateBody = {
   dateEnd?: string | null
 } & { name: string } // name is required as part of checking for permission in Core
 
-type ProjectMetrics = Pick<LocationProjectMetric, 'siteCount' | 'speciesCount' | 'recordingMinutesCount' | 'detectionMinutesCount'>
+type ProjectMetrics = Pick<DashboardMetricsResponse, 'totalSites' | 'totalSpecies' | 'threatenedSpecies' | 'totalDetections' | 'totalRecordings'>
 
 export type ProjectProfileUpdateResponse = Pick<LocationProjectProfile, 'summary' | 'objectives' | 'dateStart' | 'dateEnd'>
 

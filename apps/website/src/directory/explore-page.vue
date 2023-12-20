@@ -14,7 +14,7 @@
     />
     <project-info
       v-if="selectedProjectId !== null && !hideProjectList"
-      class="absolute z-40 h-88vh mt-10"
+      class="absolute z-50 h-86vh mt-10"
       :project-id="selectedProjectId"
       @emit-close-project-info="selectedProjectId = null"
     />
@@ -34,7 +34,7 @@
     </div>
     <map-view
       :data="projectResults"
-      class="relative left-0 z-30 w-full"
+      class="relative left-0 z-30 w-full h-100vh"
       :selected-project-id="selectedProjectId ?? undefined"
       @emit-selected-project="onEmitSelectedProject"
     />

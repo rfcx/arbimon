@@ -6,15 +6,18 @@
     aria-labelledby="drawer-navigation-label"
   >
     <div class="h-full overflow-y">
-      <div class="px-6 pt-6">
+      <div class="p-6">
         <input
           v-model.lazy="searchKeyword"
-          class="input-field w-full p-4 rounded"
+          class="input-field w-full p-3 rounded"
           placeholder="Search by project name, objectives, countries, etc."
           @keyup.enter="emitSearch(searchKeyword)"
         >
       </div>
-      <ul class="p-6 border-b border-chirp text-frequency flex flex-row gap-10">
+      <ul
+        v-if="false"
+        class="p-6 border-b border-chirp text-frequency flex flex-row gap-10"
+      >
         <li
           class="cursor-pointer font-medium"
           :class="{'border-frequency border-b-4': selectedTab === 'All'}"

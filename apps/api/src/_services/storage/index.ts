@@ -12,15 +12,10 @@ const {
   AWS_S3_SECRET_ACCESS_KEY: secretAccessKey
 } = env
 
-let s3: S3Client | null = null
-export const getS3Client = (): S3Client => {
-  if (s3 == null) {
-    if (
-      accessKeyId == null || accessKeyId === '' ||
-      secretAccessKey == null || secretAccessKey === '' ||
-      bucketName == null || bucketName === '' ||
-      region == null || region === ''
-    ) {
+let s3: S3Client | undefined
+const getS3Client = (): S3Client => {
+  if (s3 === undefined) {
+    if (accessKeyId === '' || secretAccessKey === '' || bucketName === '' || region === '') {
       throw new BioPublicError('AWS S3 bucket credentials are not defined', 500)
     }
 
@@ -32,8 +27,6 @@ export const getS3Client = (): S3Client => {
         secretAccessKey
       }
     })
-
-    return s3
   }
 
   return s3
@@ -59,14 +52,15 @@ export const getObject = async (key: string): Promise<ArrayBuffer> => {
   })
 }
 
-export const putObject = async (key: string, body: Buffer, mimetype: string): Promise<void> => {
+export const putObject = async (key: string, body: Buffer, mimetype: string, isPublic: boolean): Promise<void> => {
   const client = getS3Client()
 
   const command = new PutObjectCommand({
     Bucket: bucketName,
     Key: key,
     Body: body,
-    ContentType: mimetype
+    ContentType: mimetype,
+    ACL: isPublic ? 'public-read' : undefined
   })
 
   await client.send(command)
