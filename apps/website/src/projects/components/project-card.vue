@@ -1,7 +1,7 @@
 <template>
   <router-link
     :to="{ name: ROUTE_NAMES.dashboard, params: { projectSlug: project.slug }}"
-    class="block flex flex-col justify-between p-6 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-moss dark:border-util-gray-02 dark:hover:bg-util-gray-02 h-auto"
+    class="block flex flex-col justify-between p-6 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-moss dark:border-util-gray-02 dark:hover:bg-util-gray-03 h-auto"
   >
     <div>
       <img
