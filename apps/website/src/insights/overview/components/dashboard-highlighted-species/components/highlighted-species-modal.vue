@@ -29,7 +29,7 @@
             v-model="searchKeyword"
             placeholder="Search species"
             size="large"
-            class="w-1/3 bg-mock"
+            class="bg-mock"
           >
             <template #prefix>
               <div class="inline-flex items-center">
@@ -79,11 +79,11 @@
             </div>
           </div>
           <!-- Modal body -->
-          <div class="grid gap-x-4 w-full sm:grid-cols-1 min-[900px]:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-            <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 min-[900px]:col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-2">
+          <div class="grid gap-x-4 w-full sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+            <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2">
               <ul
                 v-if="speciesList && speciesList.length"
-                class="grid gap-3 grid-cols-1 md:grid-rows-5 xl:(grid-cols-2 grid-rows-5)"
+                class="grid gap-3 grid-cols-1 md:grid-rows-5 md:(grid-cols-2 grid-rows-5)"
               >
                 <li
                   v-for="item in speciesForCurrentPage"
@@ -128,7 +128,7 @@
                 layout="prev, pager, next"
               />
             </div>
-            <div class="hidden grid-cols-1 md:grid">
+            <div class="hidden grid-cols-1 xl:grid">
               <HighlightedSpeciesSelector
                 :species="preSelectedSpecies"
                 @emit-remove-specie="removeSpecieFromList"
