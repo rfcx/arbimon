@@ -252,7 +252,7 @@ const speciesForCurrentPage = computed(() => {
 })
 
 const preSelectedSpecies = computed(() => {
-  return speciesList.value.length ? speciesList.value.filter(specie => selectedSpeciesSlug.value.includes(specie.slug)) : []
+  return speciesList.value.length ? selectedSpeciesSlug.value.map((slug) => speciesList.value.filter((specie) => specie.slug === slug)[0]) ?? [] : []
 })
 
 const existingRiskCode = computed(() => {
