@@ -100,9 +100,9 @@
         />
         <numeric-metric
           tooltip-id="total-recordings"
-          :tooltip-text="`Total ${totalRecordingsUnit} of recordings captured`"
-          :title="`Total recordings (${totalRecordingsUnit}):`"
-          :value="totalRecordingsValue"
+          :tooltip-text="`Total ${totalRecordings.unit} of recordings captured`"
+          :title="`Total recordings (${totalRecordings.unit}):`"
+          :value="totalRecordings.value"
           icon-name="ft-mic-lg"
           class="flex-1"
         />
@@ -121,6 +121,7 @@ import { computed, inject, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
 import { getCountryLabel } from '@/_services/country'
+import { totalRecordingsInHours } from '@/_services/utils/recording-time-unit'
 import { apiClientKey } from '@/globals'
 import { useGetProjectInfo } from '@/projects/_composables/use-project-profile'
 import { useProjectDirectoryStore } from '~/store'
@@ -175,11 +176,7 @@ const formatDateRange = (date: Date | null | undefined): string => {
 
 // form the total recordings value (minutes or hours)
 const totalRecordingsMin = computed(() => profile.value?.metrics?.totalRecordings ?? 0)
-const MAXIMUM_MINUTE = 3 * 60 // 3 hours
-const totalRecordingsUnit = computed(() => totalRecordingsMin.value < MAXIMUM_MINUTE ? 'minutes' : 'hours')
-const totalRecordingsValue = computed(() => {
-  return totalRecordingsMin.value < MAXIMUM_MINUTE ? totalRecordingsMin.value : totalRecordingsMin.value / 60
-})
+const totalRecordings = computed(() => totalRecordingsInHours(totalRecordingsMin.value, 3))
 
 </script>
 <style lang="scss">
