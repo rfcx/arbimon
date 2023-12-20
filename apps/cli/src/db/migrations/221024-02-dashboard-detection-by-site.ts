@@ -6,6 +6,8 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
+import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
+
 const VIEW_NAME = 'dashboard_detection_by_site'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
@@ -21,6 +23,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     INNER JOIN location_site ls ON dbs.location_site_id = ls.id;
     `
   )
+  await grant(params.context.sequelize, VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params) =>

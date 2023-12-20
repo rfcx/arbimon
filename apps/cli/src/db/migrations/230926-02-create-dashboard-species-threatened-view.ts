@@ -6,6 +6,8 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
+import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
+
 const VIEW_NAME = 'dashboard_species_threatened'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
@@ -27,6 +29,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       ORDER BY sip.risk_rating_id DESC, sip.scientific_name;
     `
   )
+  await grant(params.context.sequelize, VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params) => {

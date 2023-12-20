@@ -1,0 +1,1 @@
+CREATE USER user_api WITH PASSWORD 'test';

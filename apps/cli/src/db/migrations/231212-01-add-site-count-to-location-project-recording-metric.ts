@@ -1,6 +1,8 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
+import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
+
 const MATERIALIZED_VIEW_NAME = 'location_project_recording_metric'
 const VIEW_NAME = 'location_project_metric'
 
@@ -21,9 +23,10 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       FROM recording_by_site_hour
       GROUP BY location_project_id;
   `)
+  await grant(params.context.sequelize, MATERIALIZED_VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 
   await params.context.sequelize.query(`
-    CREATE OR REPLACE VIEW ${VIEW_NAME} AS
+    CREATE VIEW ${VIEW_NAME} AS
       SELECT
         rm.location_project_id,
         dm.species_count,
@@ -36,12 +39,18 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
         rm.max_date as recording_max_date,
         dm.min_date as detection_min_date,
         dm.max_date as detection_max_date
-      FROM location_project_recording_metric rm
+      FROM ${MATERIALIZED_VIEW_NAME} rm
         INNER JOIN location_project_detection_metric dm ON rm.location_project_id = dm.location_project_id;
   `)
+  await grant(params.context.sequelize, VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params): Promise<void> => {
+  await params.context.sequelize.query(`
+    DROP VIEW IF EXISTS ${VIEW_NAME};
+    DROP MATERIALIZED VIEW IF EXISTS ${MATERIALIZED_VIEW_NAME};
+  `)
+
   await params.context.sequelize.query(`
     CREATE MATERIALIZED VIEW ${MATERIALIZED_VIEW_NAME} AS
       SELECT
@@ -54,9 +63,10 @@ export const down: MigrationFn<QueryInterface> = async (params): Promise<void> =
       GROUP BY
         location_project_id;
   `)
+  await grant(params.context.sequelize, MATERIALIZED_VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 
   await params.context.sequelize.query(`
-    CREATE OR REPLACE VIEW ${VIEW_NAME} AS
+    CREATE VIEW ${VIEW_NAME} AS
       SELECT 
         rm.location_project_id,
         dm.species_count,
@@ -68,7 +78,8 @@ export const down: MigrationFn<QueryInterface> = async (params): Promise<void> =
         rm.max_date as recording_max_date,
         dm.min_date as detection_min_date,
         dm.max_date as detection_max_date
-      FROM location_project_recording_metric rm
+      FROM ${MATERIALIZED_VIEW_NAME} rm
         INNER JOIN location_project_detection_metric dm ON rm.location_project_id = dm.location_project_id;
   `)
+  await grant(params.context.sequelize, VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }

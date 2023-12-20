@@ -7,6 +7,7 @@ import type { QueryInterface } from 'sequelize'
 import { DataTypes, QueryTypes } from 'sequelize'
 import type { MigrationFn } from 'umzug'
 
+import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
 import { TIMESTAMP_COLUMNS } from './_helpers/timestamps'
 
 const TABLE_NAME = 'detection_by_site_species_hour'
@@ -70,10 +71,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       }
     }
   )
-  .then(async () => await params.context.sequelize.query(
+  await params.context.sequelize.query(
     `SELECT create_hypertable('${TABLE_NAME}', '${COLUMN_TIME_HOUR_LOCAL}');`,
     { type: QueryTypes.RAW }
-  ))
+  )
+  await grant(params.context.sequelize, TABLE_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params) => {

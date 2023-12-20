@@ -6,6 +6,8 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
+import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
+
 const MATERIALIZED_VIEW_NAME = 'location_project_detection_metric'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
@@ -21,6 +23,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
         detection_by_site_species_hour
       GROUP BY
         location_project_id;`)
+  await grant(params.context.sequelize, MATERIALIZED_VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params): Promise<void> => {
