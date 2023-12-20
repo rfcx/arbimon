@@ -34,7 +34,7 @@
     </div>
     <map-view
       :data="projectResults"
-      class="relative left-0 z-30 w-full"
+      class="relative left-0 z-30 w-full h-100vh"
       :selected-project-id="selectedProjectId ?? undefined"
       @emit-selected-project="onEmitSelectedProject"
     />
