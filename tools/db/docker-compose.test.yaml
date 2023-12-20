@@ -11,6 +11,6 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=user_cli
       - POSTGRES_PASSWORD=test
-
+    command: '-c max_connections=200'
 volumes:
   data-timescaledb-test:
