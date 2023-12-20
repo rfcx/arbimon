@@ -7,6 +7,7 @@ import { type UserProfile } from '@rfcx-bio/common/dao/types'
 const plugin: FastifyPluginCallback<Options<string, UserProfile>> = (instance, options, done) => {
   const lru = new QuickLRU(options)
 
+  instance.decorate('lru', lru)
   instance.decorateRequest('lru', lru)
   instance.addHook('onClose', () => { lru.clear() })
 
