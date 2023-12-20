@@ -122,7 +122,7 @@
               <el-pagination
                 v-if="speciesList.length"
                 v-model:currentPage="currentPage"
-                class="flex items-center justify-center"
+                class="flex items-center justify-center mb-2"
                 :page-size="PAGE_SIZE"
                 :total="speciesLength"
                 layout="prev, pager, next"
