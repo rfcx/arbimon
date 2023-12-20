@@ -6,6 +6,8 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
+import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
+
 const VIEW_NAME = 'dashboard_richness_by_hour'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
@@ -18,9 +20,9 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     FROM detection_by_site_species_hour
     GROUP BY 1, 2
     ORDER BY 1, 2
-    ;
     `
   )
+  await grant(params.context.sequelize, VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params) =>

@@ -6,6 +6,8 @@
 import { type QueryInterface, DataTypes } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
+import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
+
 const TABLE_NAME = 'location_project_species_file'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
@@ -63,6 +65,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       }
     }
   )
+  await grant(params.context.sequelize, TABLE_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params) => { await params.context.dropTable(TABLE_NAME) }

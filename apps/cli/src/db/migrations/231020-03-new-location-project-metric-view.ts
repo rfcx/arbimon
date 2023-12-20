@@ -1,6 +1,8 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
+import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
+
 const VIEW_NAME = 'location_project_metric'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
@@ -20,6 +22,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
         dm.max_date as detection_max_date
       FROM location_project_recording_metric rm
         INNER JOIN location_project_detection_metric dm ON rm.location_project_id = dm.location_project_id;`)
+  await grant(params.context.sequelize, VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params): Promise<void> => {
@@ -50,4 +53,5 @@ export const down: MigrationFn<QueryInterface> = async (params): Promise<void> =
       GROUP BY location_project_id
     ) d 
     ON d.location_project_id = rbsh.location_project_id;`)
+  await grant(params.context.sequelize, VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }

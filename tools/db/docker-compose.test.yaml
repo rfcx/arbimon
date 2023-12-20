@@ -8,7 +8,9 @@ services:
       - data-timescaledb-test:/var/lib/postgresql/data
       - ./init.d:/docker-entrypoint-initdb.d
     environment:
-      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=user_cli
       - POSTGRES_PASSWORD=test
+
 volumes:
   data-timescaledb-test:

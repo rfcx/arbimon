@@ -1,12 +1,14 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-const MATERIALIZED_VIEW_NAME = 'location_project_country'
+import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
+
+const VIEW_NAME = 'location_project_country'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(
     `
-    CREATE MATERIALIZED VIEW ${MATERIALIZED_VIEW_NAME} AS
+    CREATE MATERIALIZED VIEW ${VIEW_NAME} AS
     SELECT 
       location_project_id, 
       array_agg(country_code) country_codes
@@ -21,8 +23,9 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     ;
     `
   )
+  await grant(params.context.sequelize, VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  await params.context.sequelize.query(`DROP MATERIALIZED VIEW IF EXISTS ${MATERIALIZED_VIEW_NAME}`)
+  await params.context.sequelize.query(`DROP MATERIALIZED VIEW IF EXISTS ${VIEW_NAME}`)
 }

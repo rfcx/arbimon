@@ -6,6 +6,8 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
+import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
+
 const VIEW_NAME = 'detection_by_site'
 const INDEX_COLS = ['location_project_id']
 
@@ -27,6 +29,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       `CREATE INDEX ${VIEW_NAME}_${indexCol}_idx ON ${VIEW_NAME} USING btree (${indexCol});`
     )
   }
+  await grant(params.context.sequelize, VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params) =>

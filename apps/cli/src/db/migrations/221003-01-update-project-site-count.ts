@@ -6,6 +6,8 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
+import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
+
 const VIEW_NAME = 'location_project_metric'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
@@ -23,6 +25,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       GROUP BY d.location_project_id
     `
   )
+  await grant(params.context.sequelize, VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }
 
 // Old migrate logic from `220210-91-location-project-metric-mview`
@@ -43,4 +46,5 @@ export const down: MigrationFn<QueryInterface> = async (params) => {
     ;
     `
   )
+  await grant(params.context.sequelize, VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }

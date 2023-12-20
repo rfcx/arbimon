@@ -1,6 +1,7 @@
 import { type QueryInterface, DataTypes } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
+import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
 import { setTimestampDefaults, TIMESTAMP_COLUMNS } from './_helpers/timestamps'
 
 const TABLE_NAME = 'location_project_user_role'
@@ -45,6 +46,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   })
 
   await setTimestampDefaults(params.context.sequelize, TABLE_NAME)
+  await grant(params.context.sequelize, TABLE_NAME, [GrantPermission.SELECT, GrantPermission.UPDATE, GrantPermission.INSERT, GrantPermission.DELETE], DatabaseUser.API)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params): Promise<void> => {

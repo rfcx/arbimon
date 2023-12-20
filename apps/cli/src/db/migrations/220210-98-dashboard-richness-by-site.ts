@@ -6,6 +6,8 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
+import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
+
 const VIEW_NAME = 'dashboard_richness_by_site'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
@@ -32,6 +34,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     ON ls.id = richness_by_site.location_site_id
     `
   )
+  await grant(params.context.sequelize, VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params) =>
