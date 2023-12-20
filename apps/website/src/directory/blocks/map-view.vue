@@ -24,6 +24,8 @@ const props = withDefaults(defineProps<{
 })
 const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void}>()
 
+const hoveredId = ref<number | null>(null)
+
 const mapCenter = computed((): [number, number] => {
   if (props.data.length === 0) return [0, 0]
   const lat = props.data.reduce((acc, datum) => acc + datum.avgLatitude, 0) / props.data.length
@@ -60,7 +62,7 @@ const toGeoJson = (mapData: ProjectLight[]): FeatureCollection => {
     type: 'FeatureCollection',
     features: mapData.map(datum => ({
       type: 'Feature',
-      geometry: { type: 'Point', coordinates: [datum.avgLongitude, datum.avgLatitude] },
+      geometry: { type: 'Point', coordinates: [datum.avgLongitude, datum.avgLatitude], id: datum.id },
       properties: {
         title: datum.name,
         id: datum.id,
@@ -95,6 +97,7 @@ onMounted(() => {
       // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
       data: toGeoJson(props.data),
       cluster: true,
+      generateId: true,
       clusterMaxZoom: 14, // Max zoom to cluster points on
       clusterRadius: 100 // Radius of each cluster when clustering points (defaults to 50)
     })
@@ -108,6 +111,14 @@ onMounted(() => {
       layout: {
         'icon-image': 'default-marker',
         'icon-size': 0.65
+      },
+      paint: {
+        'icon-opacity': [
+          'case',
+          ['boolean', ['feature-state', 'hover'], false],
+          0.85,
+          1
+        ]
       }
     })
 
@@ -160,6 +171,32 @@ onMounted(() => {
         'text-color': '#FFFEFC'
       }
     })
+  })
+
+  map.on('mousemove', 'unclustered-point', (e) => {
+    const features = map.queryRenderedFeatures(e.point, { layers: ['unclustered-point'] })
+    if (features.length > 0) {
+      const { id } = features[0]?.properties ?? {}
+      if (hoveredId.value !== null) {
+        map.removeFeatureState(
+          { source: 'projects', id: hoveredId.value }
+        )
+      }
+      hoveredId.value = id
+      map.setFeatureState(
+        { source: 'projects', id },
+        { hover: true }
+      )
+    }
+  })
+
+  map.on('mouseleave', 'unclustered-point', () => {
+    if (hoveredId.value !== null) {
+      map.removeFeatureState(
+        { source: 'projects', id: hoveredId.value }
+      )
+    }
+    hoveredId.value = null
   })
 
   map.on('click', 'clusters', (e) => {
