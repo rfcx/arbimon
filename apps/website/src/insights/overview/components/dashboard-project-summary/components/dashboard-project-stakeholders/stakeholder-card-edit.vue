@@ -43,36 +43,37 @@
     </div>
     <div class="w-1/5">
       <button
-        :id="`${userId}EditStakeholdersButton`"
+        :id="`${email}EditStakeholdersButton`"
         type="button"
         class="hidden group-hover:block !ml-auto"
-        :data-dropdown-toggle="`${userId}Dropdown`"
-        data-dropdown-placement="bottom"
+        data-dropdown-trigger="hover"
+        :data-dropdown-toggle="`${email}Dropdown`"
+        data-dropdown-placement="right"
         @click="toggleCard()"
       >
         <icon-custom-dots-vertical class="hidden group-hover:block !ml-auto" />
       </button>
       <div
-        :id="`${userId}Dropdown`"
+        :id="`${email}Dropdown`"
         class="z-50 hidden list-none bg-moss divide-y divide-gray-100 rounded-lg shadow p-3 w-70"
         @mouseleave="toggleCard()"
       >
         <ul
-          :aria-labelledby="`${userId}EditStakeholdersButton`"
+          :aria-labelledby="`${email}EditStakeholdersButton`"
         >
           <li
             class="flex flex-row items-center justify-start space-x-2 cursor-pointer"
             @click="togglePrimaryContact"
           >
             <icon-custom-fi-x-circle
-              v-if="isRemovedPrimaryContact"
+              v-if="ranking === 0"
               class="h-4 w-4 text-insight"
             />
             <icon-fa-plus
               v-else
               class="h-3 w-3 text-insight"
             />
-            <span class="text-left">{{ isRemovedPrimaryContact ? 'Remove as primary contact' : 'Make primary contact' }}</span>
+            <span class="text-left">{{ ranking === 0 ? 'Remove as primary contact' : 'Make primary contact' }}</span>
           </li>
         </ul>
       </div>
