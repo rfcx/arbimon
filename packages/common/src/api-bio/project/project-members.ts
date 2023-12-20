@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
-import { type LocationProjectUserRole } from '@/dao/types'
+import { type LocationProjectUserRole } from '../../dao/types'
 
 // Request type
 export interface GetProjectMembersParams {
