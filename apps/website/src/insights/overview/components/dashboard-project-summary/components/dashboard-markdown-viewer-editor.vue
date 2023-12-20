@@ -4,7 +4,6 @@
       v-if="editable && !projectUserPermissionsStore.isGuest"
       @emit-add-content="editMarkdownContent"
     />
-    <GuestBanner v-if="projectUserPermissionsStore.isGuest" />
     <ProjectSummaryEmptyForNonProjectMember v-else />
   </template>
   <template v-else>
