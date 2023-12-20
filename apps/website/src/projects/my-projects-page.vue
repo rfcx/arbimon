@@ -29,6 +29,7 @@
           </h4>
         </div>
         <div
+          v-if="projects.length !== 0"
           class="grid grid-cols-2 gap-4 py-8 lg:gap-6 lg:py-16 lg:grid-cols-3"
         >
           <ProjectCard
@@ -53,7 +54,7 @@
             </a>
           </div>
         </div>
-        <div class="mx-auto max-w-screen-md text-center mt-35">
+        <div class="mx-auto max-w-screen-md text-center mt-35 xl:mt-45">
           <div v-if="projects.length === 0 && !isLoading && !hasFailed">
             <h2 class="mb-8 text-gray-900 dark:text-insight font-header">
               Welcome to My Projects
