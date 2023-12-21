@@ -65,13 +65,13 @@
     <input
       id="project-settings-on-going-project-checkbox"
       type="checkbox"
-      class="w-5 h-5 border mb-1 border-gray-300 rounded dark:bg-echo focus:border-white-600 focus:ring-frequency dark:border-white-600 dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
+      class="w-5 h-5 border mb-1 border-util-gray-01 rounded dark:bg-echo focus:border-white-600 focus:ring-frequency dark:border-white-600 dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
       :disabled="isDisabled"
       :checked="onGoing"
       @click="onGoingClick()"
     >
     <label
-      class="font-light text-gray-500 dark:text-gray-300 ml-2 cursor-pointer"
+      class="font-light text-gray-500 dark:text-util-gray-01 ml-2 cursor-pointer"
       @click="onGoingClick()"
     >This is an on-going project</label>
   </div>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col gap-y-2.5 justify-between bg-moss border-1 rounded-lg shadow p-4 hover:bg-util-gray-02 cursor-pointer"
+    class="flex flex-col gap-y-2.5 justify-between bg-moss border-1 rounded-lg shadow p-4 hover:bg-util-gray-03 cursor-pointer"
     :class="isSelected ? 'border-frequency' : 'border-transparent'"
     @click="selectedAnalysis()"
   >
@@ -30,7 +30,7 @@
       class="text-left"
     >
       <a
-        class="text-base cursor-pointer text-gray-300"
+        class="text-base cursor-pointer text-util-gray-01"
         :href="analysis.link"
         :title="analysis.label"
       >

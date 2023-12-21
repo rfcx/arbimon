@@ -6,7 +6,7 @@
       class="flex flex-row justify-start items-center gap-x-4"
     >
       <div
-        class="min-h-16 h-16 min-w-16 w-16 object-cover rounded bg-util-gray-02"
+        class="min-h-16 h-16 min-w-16 w-16 object-cover rounded bg-util-gray-03"
       />
       <div
         class="self-center"

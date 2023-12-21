@@ -2,7 +2,7 @@
   <h2 :id="slugify(question)">
     <button
       type="button"
-      class="flex items-center justify-between w-full p-4 text-left text-insight border-b-1 border-util-gray-01 bg-transparent focus:bg-transparent dark:bg-transparent dark:hover:bg-transparent"
+      class="flex items-center justify-between w-full p-4 text-left text-insight border-b-1 border-util-gray-02 bg-transparent focus:bg-transparent dark:bg-transparent dark:hover:bg-transparent"
       :data-accordion-target="'#accordion-flush-body-' + itemId"
       aria-expanded="true"
       :aria-controls="'accordion-flush-body-' + itemId"

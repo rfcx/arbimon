@@ -4,7 +4,7 @@
     @trigger="$emit('emitClose')"
   >
     <div class="relative w-full max-w-md max-h-full">
-      <div class="grid grid-cols-1 gap-4 relative rounded-lg p-6 bg-pitch border-1 border-insight shadow-lg shadow-util-gray-02">
+      <div class="grid grid-cols-1 gap-4 relative rounded-lg p-6 bg-pitch border-1 border-insight shadow-lg shadow-util-gray-03">
         <h2 class="text-3xl font-header text-insight text-left">
           Create new analysis
         </h2>
@@ -26,7 +26,7 @@
             Cancel
           </button>
           <button
-            class="btn btn-primary w-60 disabled:(bg-util-gray-03 cursor-not-allowed text-util-gray-01) disabled:hover:(bg-util-gray-03 cursor-not-allowed text-util-gray-01)"
+            class="btn btn-primary w-60 disabled:(bg-util-gray-04 cursor-not-allowed text-util-gray-02) disabled:hover:(bg-util-gray-04 cursor-not-allowed text-util-gray-02)"
             type="button"
             :disabled="!isAnalysisSelected"
           >

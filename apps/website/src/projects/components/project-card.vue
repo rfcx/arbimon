@@ -1,17 +1,17 @@
 <template>
   <router-link
     :to="{ name: ROUTE_NAMES.dashboard, params: { projectSlug: project.slug }}"
-    class="block flex flex-col justify-between p-6 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-moss dark:border-util-gray-02 dark:hover:bg-util-gray-03 h-auto"
+    class="block flex flex-col justify-between p-6 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-moss dark:border-util-gray-03 dark:hover:bg-util-gray-04 h-auto"
   >
     <div>
       <img
         v-if="project.image"
         :src="project.image"
-        class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-02"
+        class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-03"
       >
       <div
         v-else
-        class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-02 flex justify-center items-center"
+        class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-03 flex justify-center items-center"
       />
       <h6
         class="mb-2 mt-6 font-bold tracking-tight line-clamp-2 text-gray-900 dark:text-insight"

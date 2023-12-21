@@ -35,7 +35,7 @@
         class="border-b border-fog/40"
         @click="onSelectAll"
       >
-        <div class="flex p-2 rounded items-center hover:bg-util-gray-03/60">
+        <div class="flex p-2 rounded items-center hover:bg-util-gray-04/60">
           <div class="flex">
             <input
               id="all"
@@ -62,7 +62,7 @@
         }"
         @click="onSelectTaxonClass(taxon.id)"
       >
-        <div class="flex p-2 rounded items-center hover:bg-util-gray-03/60">
+        <div class="flex p-2 rounded items-center hover:bg-util-gray-04/60">
           <div class="flex">
             <input
               :id="taxon.id"

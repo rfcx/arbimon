@@ -36,17 +36,17 @@
       <img
         v-if="project?.imageUrl"
         :src="project?.imageUrl"
-        class="w-full object-contain bg-util-gray-02 h-52"
+        class="w-full object-contain bg-util-gray-03 h-52"
       >
       <div
         v-else
-        class="w-full h-52 object-contain bg-util-gray-02 flex justify-center items-center"
+        class="w-full h-52 object-contain bg-util-gray-03 flex justify-center items-center"
       />
-      <div class="p-4 border-b border-util-gray-01">
+      <div class="p-4 border-b border-util-gray-02">
         <span class="text-lg font-medium">{{ project?.name }}</span>
         <div
           v-if="profile?.dateStart"
-          class="flex font-medium text-sm flex-row border-gray-300 mt-3 space-x-2 items-center"
+          class="flex font-medium text-sm flex-row border-util-gray-01 mt-3 space-x-2 items-center"
         >
           <span>
             Project dates:
@@ -108,7 +108,7 @@
         />
         <span
           v-if="project?.isMock"
-          class="text-sm text-gray-300 px-2"
+          class="text-sm text-util-gray-01 px-2"
         >Only fake data. This project is not on dev environment. </span>
       </div>
     </div>

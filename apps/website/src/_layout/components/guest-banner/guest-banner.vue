@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-row items-center justify-start gap-x-3 p-4 text-base text-insight rounded-lg bg-util-gray-03 border-util-gray-01 border-1 my-2"
+    class="flex flex-row items-center justify-start gap-x-3 p-4 text-base text-insight rounded-lg bg-util-gray-04 border-util-gray-02 border-1 my-2"
     role="alert"
   >
     <div class="w-5">

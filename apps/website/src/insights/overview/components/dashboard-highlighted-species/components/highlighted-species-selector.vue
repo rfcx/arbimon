@@ -3,7 +3,7 @@
     <li
       v-for="item in speciesList"
       :key="item.scientificName"
-      class="flex flex-row justify-center items-center rounded-lg space-x-3 p-4 bg-util-gray-01 md:(flex-row h-21) lg:(flex-row h-21 justify-between)"
+      class="flex flex-row justify-center items-center rounded-lg space-x-3 p-4 bg-util-gray-02 md:(flex-row h-21) lg:(flex-row h-21 justify-between)"
     >
       <SpecieCard
         :slug="item.slug"

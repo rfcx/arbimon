@@ -70,7 +70,7 @@
               <div>
                 <label
                   for="firstname"
-                  class="block mb-2 font-medium text-gray-300 dark:text-insight"
+                  class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
                 >First name <span class="text-sm font-normal">(required)</span></label>
                 <input
                   id="firstname"
@@ -86,7 +86,7 @@
               <div>
                 <label
                   for="lastname"
-                  class="block mb-2 font-medium text-gray-300 dark:text-insight"
+                  class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
                 >Last name</label>
                 <input
                   id="lastname"
@@ -103,7 +103,7 @@
               <div>
                 <label
                   for="phone"
-                  class="block mb-2 font-medium text-gray-300 dark:text-insight"
+                  class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
                 >Phone</label>
                 <input
                   id="phone"
@@ -117,7 +117,7 @@
               <div>
                 <label
                   for="email"
-                  class="block mb-2 font-medium text-gray-300 dark:text-insight"
+                  class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
                 >Email <span class="text-sm font-normal">(required)</span></label>
                 <input
                   id="email"
@@ -133,7 +133,7 @@
             <div class="col-span-2">
               <label
                 for="company"
-                class="block mb-2 font-medium text-gray-300 dark:text-insight"
+                class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
               >Organization</label>
               <input
                 id="company"
@@ -147,7 +147,7 @@
             <div>
               <label
                 for="inquiry_type"
-                class="block mb-2 font-medium text-gray-300 dark:text-insight"
+                class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
               >Type of inquiry <span class="text-sm font-normal">(required)</span></label>
               <select
                 id="inquiry_type"
@@ -172,7 +172,7 @@
             <div>
               <label
                 for="referral_source"
-                class="block mb-2 font-medium text-gray-300 dark:text-insight"
+                class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
               >How did you hear about us? <span class="text-sm font-normal">(required)</span></label>
               <select
                 id="referral_source"
@@ -221,7 +221,7 @@
             <div class="sm:col-span-2">
               <label
                 for="message"
-                class="block mb-2 font-medium text-gray-300 dark:text-insight"
+                class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
               >Message <span class="text-sm font-normal">(required)</span></label>
               <textarea
                 id="message"

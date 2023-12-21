@@ -7,7 +7,7 @@
     <!-- TODO: This component is removed for now since we're planning to move it to the side below the impact wording. -->
     <!-- <div -->
     <!--   id="species-legend" -->
-    <!--   class="absolute right-16 left-auto bottom-12 p-2 border-1 border-gray-600 rounded-lg text-xs text-gray-300 lg:right-64 xl:right-92 2xl:right-160 3xl:right-160 4xl:right-240" -->
+    <!--   class="absolute right-16 left-auto bottom-12 p-2 border-1 border-gray-600 rounded-lg text-xs text-util-gray-01 lg:right-64 xl:right-92 2xl:right-160 3xl:right-160 4xl:right-240" -->
     <!-- > -->
     <!--   <h4 class="font-bold text-xxs mb-1"> -->
     <!--     Species Identified -->

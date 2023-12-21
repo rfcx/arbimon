@@ -39,7 +39,7 @@
                   {{ item.title }}
                   <div
                     v-if="item.key"
-                    class="ml-2 text-util-gray-01"
+                    class="ml-2 text-util-gray-02"
                   >
                     <icon-fa-chevron-up
                       class="text-xxs"

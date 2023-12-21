@@ -88,10 +88,10 @@ export default defineConfig({
         insight: '#FFFEFC',
         cloud: '#F9F6F2',
         fog: '#E9E6E1',
-        'util-gray-01': '#7F7D78',
-        'util-gray-02': '#4B4B4B',
-        'util-gray-03': '#242424',
-        'gray-300': '#D3D2CF',
+        'util-gray-01': '#D3D2CF',
+        'util-gray-02': '#7F7D78',
+        'util-gray-03': '#4B4B4B',
+        'util-gray-04': '#242424',
         // Olds
         placeholder: '#999',
         faded: '#333',
@@ -169,7 +169,7 @@ export default defineConfig({
     btn: 'px-6 py-3 text-base text-center text-pitch rounded-full font-display',
     'btn-primary': 'bg-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:bg-frequency dark:hover:bg-chirp dark:focus:ring-chirp',
     'btn-secondary': 'rounded-full text-frequency border border-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:text-frequency dark:hover:bg-chirp dark:border-frequency dark:hover:text-pitch dark:hover:border-chirp dark:focus:ring-chirp',
-    'btn-disabled': 'cursor-not-allowed bg-util-gray-03 text-util-gray-01 border-transparent',
+    'btn-disabled': 'cursor-not-allowed bg-util-gray-04 text-util-gray-02 border-transparent',
     'btn-icon': 'py-2 px-3 rounded-full text-frequency border border-frequency hover:bg-chirp hover:text-pitch hover:border-chirp',
     // title
     'text-giant': 'text-3xl md:text-5xl lg:text-7xl leading-10 font-header tracking-tight',

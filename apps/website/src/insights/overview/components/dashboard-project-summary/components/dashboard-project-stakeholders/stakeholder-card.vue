@@ -23,7 +23,7 @@
       </h3>
       <a
         v-if="email && ranking === 0"
-        class="text-steel-gray-light text-sm font-normal leading-tight inline hover:underline hover:cursor-pointer"
+        class="text-util-gray-01 text-sm font-normal leading-tight inline hover:underline hover:cursor-pointer"
         :href="`mailto:${email}`"
       >
         {{ email }}

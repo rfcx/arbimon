@@ -14,7 +14,7 @@
     />
     <icon-fa-circle-thin
       v-if="(props.value === 'unreviewed' && props.hideUnvalidated === false)"
-      class="cursor-pointer text-gray-300 h-3 inline mr-2"
+      class="cursor-pointer text-util-gray-01 h-3 inline mr-2"
     />
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <aside
     id="sidebar"
-    class="fixed z-50 top-0 left-0 w-13 border-r-1 border-util-gray-02 hover:border-insight h-screen transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-echo group transition duration-300 ease-in-out delay-500 hover:(w-66 delay-300)"
+    class="fixed z-50 top-0 left-0 w-13 border-r-1 border-util-gray-03 hover:border-insight h-screen transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-echo group transition duration-300 ease-in-out delay-500 hover:(w-66 delay-300)"
     aria-label="Sidebar"
     data-drawer-backdrop="false"
     @mouseenter="showSidebar = true"
@@ -26,7 +26,7 @@
               >Arbimon</span>
             </router-link>
           </div>
-          <div class="my-4 border-t-1 border-util-gray-02" />
+          <div class="my-4 border-t-1 border-util-gray-03" />
           <ul class="px-3 flex flex-col gap-y-4 border-gray-200 dark:border-gray-700">
             <li
               v-for="item in items"
@@ -38,7 +38,7 @@
                 :to="item.route"
                 :title="item.title"
                 exact-active-class="bg-insight rounded text-moss"
-                class="flex items-center text-base hover:(bg-util-gray-02 rounded transition duration-300)"
+                class="flex items-center text-base hover:(bg-util-gray-03 rounded transition duration-300)"
               >
                 <span
                   v-if="item.iconRaw === 'fi-grid'"
@@ -63,14 +63,14 @@
               <a
                 v-else-if="item.legacyPath"
                 :href="arbimonLink + item.legacyPath"
-                class="flex items-center text-base ease-in-out active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+                class="flex items-center text-base ease-in-out active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
               </a>
               <button
                 v-else
                 type="button"
-                class="mainmenu flex items-center w-full text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300)"
+                class="mainmenu flex items-center w-full text-base font-normal active:text-moss hover:(bg-util-gray-03 rounded transition duration-300)"
                 :aria-controls="itemId(item.title)"
                 :data-collapse-toggle="itemId(item.title)"
               >
@@ -119,14 +119,14 @@
                     v-if="childItem.route"
                     :to="childItem.route"
                     exact-active-class="bg-insight rounded text-moss"
-                    class="flex items-center pl-12 w-full text-base font-normal hover:(bg-util-gray-02 rounded transition duration-300)"
+                    class="flex items-center pl-12 w-full text-base font-normal hover:(bg-util-gray-03 rounded transition duration-300)"
                   >
                     {{ childItem.title }}
                   </router-link>
                   <a
                     v-else-if="childItem.legacyPath"
                     :href="arbimonLink + childItem.legacyPath"
-                    class="flex items-center pl-12 w-full text-base font-normal hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+                    class="flex items-center pl-12 w-full text-base font-normal hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
                   >
                     {{ childItem.title }}
                   </a>
@@ -134,14 +134,14 @@
               </ul>
             </li>
           </ul>
-          <div class="my-4 border-t-1 border-util-gray-02" />
+          <div class="my-4 border-t-1 border-util-gray-03" />
           <ul class="px-3 flex flex-col gap-y-4">
             <li>
               <a
                 :title="'Arbimon Support'"
                 :href="supportLink"
                 exact-active-class="bg-insight rounded text-moss"
-                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <icon-custom-fi-help />
                 <span class="ml-2 hidden group-hover:block">Help</span>
@@ -151,7 +151,7 @@
               <router-link
                 :to="{ name: ROUTE_NAMES.myProjects }"
                 exact-active-class="bg-insight rounded text-moss"
-                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <span
                   class="p-0.5"
@@ -164,13 +164,13 @@
           </ul>
         </div>
         <div>
-          <div class="my-4 border-t-1 border-util-gray-02" />
+          <div class="my-4 border-t-1 border-util-gray-03" />
           <ul class="px-3 flex flex-col gap-y-4">
             <li>
               <router-link
                 :to="{ name: ROUTE_NAMES.accountSettings }"
                 exact-active-class="bg-insight rounded text-moss"
-                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <span
                   class="p-0.5"
@@ -181,7 +181,7 @@
               </router-link>
             </li>
             <li
-              class="my-2 flex items-center cursor-pointer text-base font-normal active:text-moss hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+              class="my-2 flex items-center cursor-pointer text-base font-normal active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               @click="logout"
             >
               <span class="p-0.5">
@@ -190,10 +190,10 @@
               <span class="ml-2 hidden group-hover:block">Sign Out</span>
             </li>
           </ul>
-          <div class="my-4 border-t-1 border-util-gray-02" />
+          <div class="my-4 border-t-1 border-util-gray-03" />
           <ul class="px-2.5 flex flex-col gap-y-4">
             <li
-              class="my-2 flex items-center text-base font-normal h-10 hover:(bg-util-gray-02 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+              class="my-2 flex items-center text-base font-normal h-10 hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
             >
               <img
                 class="h-8 w-8 self-center rounded-full"
@@ -201,7 +201,7 @@
               >
               <div class="ml-2 flex flex-row align-top hidden group-hover:block">
                 <span class="block">{{ userName }}</span>
-                <span class="text-sm text-util-gray-01">{{ userEmail }}</span>
+                <span class="text-sm text-util-gray-02">{{ userEmail }}</span>
               </div>
             </li>
           </ul>

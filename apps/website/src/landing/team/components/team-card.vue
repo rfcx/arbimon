@@ -64,7 +64,7 @@
             {{ name }}
           </span>
           <button
-            class="cursor-pointer text-util-gray-03"
+            class="cursor-pointer text-util-gray-04"
             @click="isShowingBio = false"
           >
             <span class="sr-only">Close</span>
@@ -93,7 +93,7 @@
           </button>
         </div>
         <p
-          class="text-util-gray-03"
+          class="text-util-gray-04"
           :aria-label="'Bio of ' + name"
         >
           {{ bio }}
@@ -101,7 +101,7 @@
       </div>
       <a
         :href="linkedinUrl"
-        class="text-util-gray-03 hover-underline font-display"
+        class="text-util-gray-04 hover-underline font-display"
         aria-label="LinkedIn"
       >
         <span class="inline-block mr-2">LinkedIn</span>

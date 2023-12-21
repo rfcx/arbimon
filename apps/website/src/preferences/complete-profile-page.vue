@@ -28,23 +28,23 @@
             >
               <input
                 type="checkbox"
-                class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                class="w-4 h-4 border border-util-gray-01 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
                 :checked="isSelectedPurpose(option.id)"
                 @click="updateSelectedPurpose(option.id)"
               >
-              <label class="font-light text-gray-500 dark:text-gray-300 ml-2">{{ option.label }}</label>
+              <label class="font-light text-gray-500 dark:text-util-gray-01 ml-2">{{ option.label }}</label>
             </div>
             <div class="items-center">
               <input
                 type="checkbox"
-                class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                class="w-4 h-4 border border-util-gray-01 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
               >
-              <label class="font-light text-gray-500 dark:text-gray-300 ml-2">Other</label>
+              <label class="font-light text-gray-500 dark:text-util-gray-01 ml-2">Other</label>
               <input
                 id="extra"
                 v-model="extraPurpose"
                 placeholder="(please specify)"
-                class="ml-2 w-1/2 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="ml-2 w-1/2 bg-gray-50 border border-util-gray-01 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
             </div>
           </div>
@@ -61,12 +61,12 @@
             >
               <input
                 type="checkbox"
-                class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                class="w-4 h-4 border border-util-gray-01 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
                 name="taxonomicgroups"
                 :checked="isSelectedTaxon(taxon.value)"
                 @click="updateSelectedTaxon(taxon.value)"
               >
-              <span class="font-light text-gray-500 dark:text-gray-300 ml-2">{{ taxon.label }}</span>
+              <span class="font-light text-gray-500 dark:text-util-gray-01 ml-2">{{ taxon.label }}</span>
             </label>
           </div>
         </div>
@@ -80,7 +80,7 @@
             id="organizations"
             type="text"
             name="organizations"
-            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            class="bg-gray-50 border border-util-gray-01 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
         </div>
 
@@ -92,7 +92,7 @@
           <select
             id="occupation"
             name="occupation"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            class="bg-gray-50 border border-util-gray-01 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             <option>Ecologist</option>
             <option>Conservationist</option>
