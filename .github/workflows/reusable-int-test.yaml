@@ -25,6 +25,8 @@ jobs:
       postgres:
         image: timescale/timescaledb:latest-pg12
         env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: user_cli
           POSTGRES_PASSWORD: test
         ports:
           - 5432:5432
@@ -47,7 +49,7 @@ jobs:
 
       - name: 'Setup: Database init scripts'
         run: |
-          find tools/db/init.d -type f | sort | PGPASSWORD=test xargs -n1 -I % psql -U postgres -h localhost -f %
+          find tools/db/init.d -type f | sort | PGPASSWORD=test xargs -n1 -I % psql -U user_cli -h localhost -f %
 
       - name: 'Cache: Dependencies'
         # v3 (3.3.2) @ 8 Sep 2023 https://github.com/actions/cache/tags
@@ -92,7 +94,7 @@ jobs:
           BIO_DB_PASSWORD: test
           BIO_DB_PORT: 5432
           BIO_DB_SSL_ENABLED: false
-          BIO_DB_USER: postgres
+          BIO_DB_USER: user_cli
           AUTHO_ANONYMOUS_CLIENT_SECRET: xyz
           CORE_API_BASE_URL: https://nowhere-api.rfcx.org
           NODE_OPTIONS: '--max_old_space_size=6656'
