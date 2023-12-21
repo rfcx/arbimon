@@ -49,7 +49,7 @@ jobs:
 
       - name: 'Setup: Database init scripts'
         run: |
-          find tools/db/init.d -type f | sort | PGPASSWORD=test xargs -n1 -I % psql -U user_cli -h localhost -f %
+          find tools/db/init.d -type f | sort | PGPASSWORD=test xargs -n1 -I % psql -U user_cli -d postgres -h localhost -f %
 
       - name: 'Cache: Dependencies'
         # v3 (3.3.2) @ 8 Sep 2023 https://github.com/actions/cache/tags
