@@ -52,13 +52,13 @@
     </div>
     <div
       v-if="profile?.dateStart === null && profile?.dateEnd === null"
-      class="flex flex-row border-l-2 border-gray-300 pl-2 space-x-4 items-center"
+      class="flex flex-row border-l-2 border-util-gray-01 pl-2 space-x-4 items-center"
     >
       <span>Project dates: No data</span>
     </div>
     <div
       v-else
-      class="flex flex-row border-l-2 border-gray-300 pl-2 space-x-2 items-center"
+      class="flex flex-row border-l-2 border-util-gray-01 pl-2 space-x-2 items-center"
     >
       <span>Project dates:</span>
       <span>{{ formatDateRange(profile?.dateStart) }}</span>
@@ -66,7 +66,7 @@
       <span>{{ formatDateRange(profile?.dateEnd) }}</span>
     </div>
     <div
-      class="border-l-2 border-gray-300 pl-2"
+      class="border-l-2 border-util-gray-01 pl-2"
     >
       <span>Objectives: </span>
       {{ projectObjectivesText }}

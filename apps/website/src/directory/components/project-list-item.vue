@@ -1,17 +1,17 @@
 <template>
   <li
-    class="px-6 py-4 flex flex-col md:flex-row gap-4 border-b cursor-pointer border-util-gray-01 hover:bg-echo selected:bg-pitch"
+    class="px-6 py-4 flex flex-col md:flex-row gap-4 border-b cursor-pointer border-util-gray-02 hover:bg-echo selected:bg-pitch"
     :class="{'bg-pitch': isSelected}"
   >
     <div class="w-18 aspect-square h-18">
       <img
         v-if="project.imageUrl"
         :src="project.imageUrl"
-        class="w-full h-full rounded bg-util-gray-02"
+        class="w-full h-full rounded bg-util-gray-03"
       >
       <div
         v-else
-        class="w-full h-full rounded bg-util-gray-02 flex justify-center items-center"
+        class="w-full h-full rounded bg-util-gray-03 flex justify-center items-center"
       />
     </div>
     <div class="flex flex-col gap-2 flex-grow overflow-hidden">
@@ -27,7 +27,7 @@
             :text-full="getCountryLabel(props.project.countries, props.project.countries.length)"
           />
         </span>
-        <span class="text-gray-300 inline-flex mx-1"> | </span>
+        <span class="text-util-gray-01 inline-flex mx-1"> | </span>
         <text-tooltip
           :tooltip-id="`${props.project.id}-objective`"
           :text-shorten="objectiveAll"
@@ -37,8 +37,8 @@
       </div>
       <span class="text-xs text-clip md:text-sm">{{ project.summary }}</span>
       <div class="flex flex-row gap-2">
-        <span class="bg-util-gray-02 px-1 rounded font-medium text-xs">{{ numeral(totalRecordings.value).format('0a') }} {{ totalRecordings.value > 1 ? totalRecordings.unit : totalRecordings.unit.replace('s', '') }} recorded</span>
-        <span class="bg-util-gray-02 px-1 rounded font-medium text-xs">{{ numeral(project.noOfSpecies).format('0a') }} species</span>
+        <span class="bg-util-gray-03 px-1 rounded font-medium text-xs">{{ numeral(totalRecordings.value).format('0a') }} {{ totalRecordings.value > 1 ? totalRecordings.unit : totalRecordings.unit.replace('s', '') }} recorded</span>
+        <span class="bg-util-gray-03 px-1 rounded font-medium text-xs">{{ numeral(project.noOfSpecies).format('0a') }} species</span>
       </div>
     </div>
   </li>

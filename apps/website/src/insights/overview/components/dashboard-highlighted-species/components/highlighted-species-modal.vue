@@ -52,7 +52,7 @@
             </button>
             <div
               id="dropdown"
-              class="z-10 hidden bg-echo divide-y divide-util-gray-01 rounded-lg shadow w-15"
+              class="z-10 hidden bg-echo divide-y divide-util-gray-02 rounded-lg shadow w-15"
             >
               <ul
                 aria-labelledby="dropdownButton"

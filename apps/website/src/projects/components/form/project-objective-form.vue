@@ -20,7 +20,7 @@
           'border-1 border-frequency': isSelected(obj.id),
           'pointer-events-none opacity-75 cursor-not-allowed': isDisabled
         }"
-        class="font-medium font-display flex-1 cursor-pointer w-full px-6 py-3 bg-moss rounded-lg hover:bg-util-gray-02/60"
+        class="font-medium font-display flex-1 cursor-pointer w-full px-6 py-3 bg-moss rounded-lg hover:bg-util-gray-03/60"
         @click="onSelectObjective(obj)"
       >
         {{ obj.description }}

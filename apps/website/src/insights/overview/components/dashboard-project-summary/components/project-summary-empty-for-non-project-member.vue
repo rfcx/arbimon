@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col space-y-3 bg-util-gray-03 p-4 border border-util-gray-01 rounded-md px-4 py-16 mx-auto">
+  <div class="flex flex-col space-y-3 bg-util-gray-04 p-4 border border-util-gray-02 rounded-md px-4 py-16 mx-auto">
     <span class="text-insight text-base font-sans">
       Unfortunately, the project owner has not added content for this section. <br> Contact project owner for more information about the project.
     </span>

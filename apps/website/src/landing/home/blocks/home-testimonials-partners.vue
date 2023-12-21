@@ -48,7 +48,7 @@
               class="mr-4 relative inline-flex items-center justify-center w-16 h-16 aspect-square bg-gray-100 rounded-full dark:bg-gray-600"
             >
               <span
-                class="font-medium text-gray-600 dark:text-gray-300"
+                class="font-medium text-gray-600 dark:text-util-gray-01"
               > {{ feedbacks[currentFeedbackIndex].user.name.charAt(0) }}</span>
             </div>
             <div class="flex flex-col">
@@ -56,7 +56,7 @@
                 <span class="text-gray-900 dark:text-insight">
                   {{ feedbacks[currentFeedbackIndex].user.name }}
                 </span>
-                <span class="px-2 py-1 rounded-full text-xs uppercase bg-util-gray-02 text-spoonbill font-eyebrow tracking-wide">
+                <span class="px-2 py-1 rounded-full text-xs uppercase bg-util-gray-03 text-spoonbill font-eyebrow tracking-wide">
                   {{ feedbacks[currentFeedbackIndex].user.role }}
                 </span>
               </div>

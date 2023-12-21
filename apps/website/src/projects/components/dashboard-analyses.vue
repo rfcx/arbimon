@@ -23,7 +23,7 @@
         {{ analysis.title }}
       </a>
     </div>
-    <div class="flex items-center font-body text-xl space-x-2 sm:space-x-3 text-gray-300">
+    <div class="flex items-center font-body text-xl space-x-2 sm:space-x-3 text-util-gray-01">
       <span>{{ analysis.label }}:</span>
       <icon-fas-spinner
         v-if="analysis.isLoading && analysis.count === undefined"
@@ -32,7 +32,7 @@
       <span v-if="analysis.count !== undefined">{{ analysis.count }}</span>
     </div>
     <div
-      class="flex items-center font-body text-xl space-x-2 sm:space-x-3 text-gray-300"
+      class="flex items-center font-body text-xl space-x-2 sm:space-x-3 text-util-gray-01"
     >
       <span>{{ analysis.speciesTitle }} {{ analysis.speciesTitle ? ':' : '-' }}</span>
       <span>{{ analysis.speciesDetected }}</span>

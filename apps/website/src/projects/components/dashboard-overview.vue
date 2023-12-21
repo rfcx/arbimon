@@ -49,7 +49,7 @@
     </div>
     <div v-if="!projectUserPermissionsStore.isGuest">
       <a
-        class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-gray-300 border-b-1 border-frequency"
+        class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-util-gray-01 border-b-1 border-frequency"
         :href="stat.link"
       >
         {{ stat.label }}

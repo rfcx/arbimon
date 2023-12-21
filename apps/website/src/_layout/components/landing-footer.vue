@@ -65,7 +65,7 @@
             <h6 class="mb-6 text-gray-900 dark:text-insight font-medium text-base">
               Resources
             </h6>
-            <ul class="text-gray-600 dark:text-gray-300">
+            <ul class="text-gray-600 dark:text-util-gray-01">
               <li class="mb-4">
                 <router-link
                   to="/faq"
@@ -94,7 +94,7 @@
             <h6 class="mb-6 text-gray-900 dark:text-insight font-medium text-base">
               Legal
             </h6>
-            <ul class="text-gray-600 dark:text-gray-300">
+            <ul class="text-gray-600 dark:text-util-gray-01">
               <li class="mb-4">
                 <a
                   href="https://rfcx.org/privacy-policy"
@@ -125,7 +125,7 @@
         </div>
       </div>
       <div class="sm:flex sm:items-center sm:justify-between mt-10 py-4">
-        <span class="text-util-gray-01 text-xs sm:text-center font-eyebrow">© 2023 <a
+        <span class="text-util-gray-02 text-xs sm:text-center font-eyebrow">© 2023 <a
           href="https://rfcx.org"
           class="hover:underline font-eyebrow"
         >Rainforest Connection™</a>

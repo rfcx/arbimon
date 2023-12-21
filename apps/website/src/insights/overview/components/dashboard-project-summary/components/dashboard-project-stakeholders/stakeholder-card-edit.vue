@@ -33,7 +33,7 @@
       <div class="h-5 text-ellipsis overflow-hidden">
         <a
           v-if="ranking === 0"
-          class="text-sm font-normal leading-tight underline hover:cursor-pointer"
+          class="text-sm font-normal leading-tight underline hover:cursor-pointer text-util-gray-01"
           :title="email"
           :href="`mailto:${email}`"
         >

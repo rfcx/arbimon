@@ -12,7 +12,7 @@
     v-else
     class="mt-2"
   >
-    <div class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-box-gray scrollbar-track-box-gray-300">
+    <div class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-box-gray scrollbar-track-box-util-gray-01">
       <table class="w-full table-fixed">
         <thead class="h-10">
           <tr>

@@ -130,7 +130,7 @@
     />
     <div
       id="markdown-editor-character-remaining"
-      class="text-right text-sm bg-white text-util-gray-01 rounded-b-lg pr-4 pb-2 mb-4"
+      class="text-right text-sm bg-white text-util-gray-02 rounded-b-lg pr-4 pb-2 mb-4"
     >
       <i>{{ editor?.storage.characterCount.characters() }}/{{ characterLimit }} Characters Remaining</i>
     </div>
