@@ -2,9 +2,11 @@ import { type FastifyPluginCallback } from 'fastify'
 import fp from 'fastify-plugin'
 import QuickLRU, { type Options } from 'quick-lru'
 
-import { type UserProfile } from '@rfcx-bio/common/dao/types'
+import { type Auth0UserInfo } from '~/auth0/types'
 
-const plugin: FastifyPluginCallback<Options<string, UserProfile>> = (instance, options, done) => {
+export type ExtractedUser = Pick<Auth0UserInfo, 'email' | 'auth0_user_id'> & { id: number }
+
+const plugin: FastifyPluginCallback<Options<string, ExtractedUser>> = (instance, options, done) => {
   const lru = new QuickLRU(options)
 
   instance.decorate('lru', lru)
