@@ -75,7 +75,7 @@
       <div class="p-4">
         <numeric-metric
           tooltip-id="deployment-sites"
-          tooltip-text="Number of sites with recorders deployed."
+          tooltip-text="Number of sites with recorders."
           title="Project sites:"
           :value="profile?.metrics?.totalSites ?? 0"
           icon-name="ft-map-pin-lg"

@@ -73,7 +73,10 @@
               </a>
             </router-link>
             <h6 class="mt-8 text-base">
-              Not sure where to start? Check out our tutorial video.
+              Not sure where to start? Check out our <a
+                href="https://support.rfcx.org/"
+                class="text-frequency"
+              >tutorial video.</a>
             </h6>
           </div>
         </div>
