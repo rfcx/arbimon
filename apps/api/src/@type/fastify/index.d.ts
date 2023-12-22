@@ -1,6 +1,6 @@
 import type QuickLRU from 'quick-lru'
 
-import { type ExtractedUser } from '@/_plugins/global-user-cache'
+import { type ExtractedUser } from '../../_plugins/global-user-cache'
 
 import 'fastify-request-context'
 
