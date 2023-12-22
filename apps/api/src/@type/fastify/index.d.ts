@@ -1,8 +1,6 @@
 import type QuickLRU from 'quick-lru'
 
-import { type UserProfile } from '@rfcx-bio/common/dao/types'
-
-import { type Auth0UserInfo } from '~/auth0/types'
+import { type ExtractedUser } from '@/_plugins/global-user-cache'
 
 import 'fastify-request-context'
 
@@ -15,11 +13,11 @@ declare module 'fastify-request-context' {
 
 declare module 'fastify' {
   interface FastifyRequest {
-    lru: QuickLRU<string, Pick<Auth0UserInfo, 'auth0_user_id' | 'email'> & { id: number }>
-    extractedUser: Pick<Auth0UserInfo, 'auth0_user_id' | 'email'> & { id: number } | null
+    lru: QuickLRU<string, ExtractedUser>
+    extractedUser: ExtractedUser | null
   }
 
   interface FastifyInstance {
-    lru: QuickLRU<string, Pick<Auth0UserInfo, 'auth0_user_id' | 'email'> & { id: number }>
+    lru: QuickLRU<string, ExtractedUser>
   }
 }
