@@ -96,7 +96,7 @@
               Not sure where to start? Check out our <a
                 href="https://support.rfcx.org/"
                 class="text-frequency"
-              >tutorial video.</a>
+              >help & support documents</a>.
             </h6>
           </div>
         </div>
