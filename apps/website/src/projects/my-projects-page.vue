@@ -44,14 +44,14 @@
             class="mt-40 lg:mt-60"
           >
             <h3 class="mb-8 text-xl text-gray-900 dark:text-insight font-header">
-              Content not available. Try again.
+              Content not available.
+              <span
+                class="text-frequency cursor-pointer"
+                @click="fetchProjects(0, LIMIT)"
+              >
+                Try again.
+              </span>
             </h3>
-            <a
-              class="btn btn-secondary"
-              @click="fetchProjects(0, LIMIT)"
-            >
-              Try again
-            </a>
           </div>
         </div>
         <div class="mx-auto max-w-screen-md text-center mt-35 xl:mt-45">
