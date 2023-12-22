@@ -4,6 +4,7 @@ import type { ProjectInfoFieldType, ProjectInfoResponse, ProjectProfileUpdateBod
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getProjectMetrics } from '@/dashboard/dashboard-metrics-dao'
+import { getRichnessByTaxon } from '@/dashboard/dashboard-species-data-dao'
 import { getSequelize } from '~/db'
 
 export const getProjectCoreId = async (locationProjectId: number): Promise<string | undefined> => {
@@ -65,6 +66,11 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     metrics = await getProjectMetrics(locationProjectId)
   }
 
+  let richnessByTaxon
+  if (fields.includes('richnessByTaxon')) {
+    richnessByTaxon = await getRichnessByTaxon(locationProjectId)
+  }
+
   // TODO: support stakeholder
 
   if (!resProject) throw new Error(`Failed to get project settings for locationProjectId: ${locationProjectId}`)
@@ -84,6 +90,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     ...(fields.includes('keyResult') ? { keyResults: resProfile?.keyResult ?? '' } : {}),
     ...(fields.includes('image') ? { image: '' } : {}),
     ...(fields.includes('countryCodes') ? { countryCodes: resCountry?.countryCodes ?? [] } : {}),
+    ...(fields.includes('richnessByTaxon') ? { richnessByTaxon } : {}),
     ...(fields.includes('metrics')
         ? {
         metrics: {
