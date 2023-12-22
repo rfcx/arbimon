@@ -19,7 +19,6 @@ const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
 
   const fakeRequestContext = {
     get: (key: string) => ({
-      IS_PROJECT_MEMBER: true,
       MEMBER_PROJECT_CORE_IDS: ['zy5jbxx4cs9f', 'bci392pan298', 'rbj7k70v4na7']
     })[key],
     set: (key: string, value: any) => {}

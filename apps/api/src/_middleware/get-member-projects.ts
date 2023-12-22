@@ -8,9 +8,15 @@ import { getMemberProjectCoreIdsFromCache, updateMemberProjectCoreIds } from '~/
 
 const MEMBER_PROJECT_CORE_IDS = 'MEMBER_PROJECT_CORE_IDS'
 
+/**
+ * @deprecated Use LocationProjectUserRole
+ */
 export const getMemberProjectCoreIds = (req: FastifyRequest): string[] =>
   req.requestContext.get(MEMBER_PROJECT_CORE_IDS) ?? []
 
+/**
+ * @deprecated Use LocationProjectUserRole
+ */
 export const setMemberProjectCoreIds: Middleware = async (req, res): Promise<void> => {
   const token = req.headers.authorization
 

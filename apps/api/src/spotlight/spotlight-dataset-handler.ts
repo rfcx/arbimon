@@ -1,6 +1,6 @@
 import { type SpotlightDatasetParams, type SpotlightDatasetQuery, type SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 
-import { getIsProjectMember } from '@/_middleware/get-is-project-member'
+import { hasPermission } from '~/roles'
 import { type Handler } from '../_services/api-helpers/types'
 import { type FilterDataset } from '../_services/datasets/dataset-types'
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '../_services/errors'
@@ -22,8 +22,6 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
   if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDate: startDateUtcInclusive })
   if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDate: endDateUtcInclusive })
 
-  const isProjectMember = getIsProjectMember(req)
-
   // Query
   const datasetFilter: FilterDataset = {
     locationProjectId: projectIdInteger,
@@ -34,5 +32,5 @@ export const spotlightDatasetHandler: Handler<SpotlightDatasetResponse, Spotligh
     taxons: Array.isArray(taxons) ? taxons.map(Number) : typeof taxons === 'string' ? [Number(taxons)] : []
   }
 
-  return await getSpotlightDatasetData(datasetFilter, speciesId, isProjectMember)
+  return await getSpotlightDatasetData(datasetFilter, speciesId, hasPermission(req.projectRole, 'read-insights-sensitive'))
 }

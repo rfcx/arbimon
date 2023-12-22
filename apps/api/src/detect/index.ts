@@ -5,7 +5,6 @@ import { detectValidationRoute } from '@rfcx-bio/common/api-bio/detect/detect-va
 import { detectValidationResultsRoute } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 import { detectReviewDetectionRoute } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
-import { setIsProjectMember } from '@/_middleware/get-is-project-member'
 import { type RouteRegistration, GET, POST } from '~/api-helpers/types'
 import { detectRecordingHandler } from './jobs/detect-recording-handler'
 import { detectDetectionsHandler } from './validations/detect-detections-handler'
@@ -18,7 +17,6 @@ export const routesDetect: RouteRegistration[] = [
   {
     method: GET,
     url: detectRecordingRoute,
-    preHandler: [setIsProjectMember],
     handler: detectRecordingHandler
   },
   {

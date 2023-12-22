@@ -31,7 +31,6 @@ const getMockedApp = async (projectIds: string[] | undefined = undefined): Promi
 
   const fakeRequestContext = {
     get: (key: string) => ({
-      IS_PROJECT_MEMBER: projectIds !== undefined,
       MEMBER_PROJECT_CORE_IDS: projectIds
     })[key],
     set: () => {}
