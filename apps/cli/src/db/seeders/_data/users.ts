@@ -20,9 +20,9 @@ export const rawUsers: UserProfile[] = [
   {
     id: 2,
     email: 'art@rfcx.org',
-    idAuth0: 'xyz',
-    firstName: 'Art',
-    lastName: ''
+    idAuth0: 'auth0|6451c69c9ea0d78b7346ea61',
+    firstName: 'Bhattarapong',
+    lastName: 'Somwong'
   }
 ]
 
