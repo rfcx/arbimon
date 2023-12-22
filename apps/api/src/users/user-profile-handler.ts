@@ -1,31 +1,15 @@
 import { type UpdateUserProfileRequestBody, type UserProfileResponse } from '@rfcx-bio/common/api-bio/users/profile'
 
 import { type Handler } from '~/api-helpers/types'
-import { BioUnauthorizedError } from '~/errors'
+import { type Auth0UserToken } from '~/auth0/types'
 import { getUserProfile, patchUserProfile } from './user-profile-bll'
 
 export const userProfileHandler: Handler<UserProfileResponse> = async (req) => {
-  if (req.headers.authorization === undefined || req.headers.authorization === '') {
-    throw BioUnauthorizedError()
-  }
-
-  if (req.extractedUser == null) {
-    throw BioUnauthorizedError()
-  }
-
-  return await getUserProfile(req.extractedUser.email)
+  return await getUserProfile(req.userId as number)
 }
 
 export const patchUserProfileHandler: Handler<string, unknown, unknown, UpdateUserProfileRequestBody> = async (req, rep) => {
-  if (req.headers.authorization === undefined || req.headers.authorization === '') {
-    throw BioUnauthorizedError()
-  }
-
-  if (req.extractedUser === null) {
-    throw BioUnauthorizedError()
-  }
-
-  await patchUserProfile(req.headers.authorization, req.extractedUser?.email, req.body)
+  await patchUserProfile(req.headers.authorization as string, (req.userToken as Auth0UserToken).email, req.userId as number, req.body)
 
   rep.statusCode = 204
   return ''

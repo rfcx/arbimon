@@ -32,7 +32,6 @@ const getMockedAppLoggedOut = async (): Promise<FastifyInstance> => {
 
   const fakeRequestContext = {
     get: (key: string) => ({
-      IS_PROJECT_MEMBER: false,
       MEMBER_PROJECT_CORE_IDS: []
     })[key],
     set: (key: string, value: any) => {}
@@ -40,10 +39,9 @@ const getMockedAppLoggedOut = async (): Promise<FastifyInstance> => {
 
   app.decorate('requestContext', fakeRequestContext)
   app.decorateRequest('requestContext', fakeRequestContext)
+  app.decorateRequest('projectRole', 'guest')
 
-  routesActivity
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
+  routesActivity.forEach(route => app.route(route))
 
   return app
 }
@@ -54,7 +52,6 @@ const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
 
   const fakeRequestContext = {
     get: (key: string) => ({
-      IS_PROJECT_MEMBER: true,
       MEMBER_PROJECT_CORE_IDS: ['integration2']
     })[key],
     set: (key: string, value: any) => {}
@@ -62,10 +59,9 @@ const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
 
   app.decorate('requestContext', fakeRequestContext)
   app.decorateRequest('requestContext', fakeRequestContext)
+  app.decorateRequest('projectRole', 'user')
 
-  routesActivity
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
+  routesActivity.forEach(route => app.route(route))
 
   return app
 }

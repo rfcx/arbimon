@@ -3,7 +3,7 @@ import { type SyncHistoryParams, type SyncHistoryResponse } from '@rfcx-bio/comm
 import { getSyncHistory } from '@/sync/sync-history-bll'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
-import { assertAuthorizedForProject, assertPathParamsExist } from '~/validation'
+import { assertPathParamsExist } from '~/validation'
 
 export const syncHistoryHandler: Handler<SyncHistoryResponse, SyncHistoryParams> = async (req) => {
   // Inputs & validation
@@ -12,8 +12,6 @@ export const syncHistoryHandler: Handler<SyncHistoryResponse, SyncHistoryParams>
 
   const projectIdInteger = parseInt(projectId)
   if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
-
-  assertAuthorizedForProject(req)
 
   // Response
   return await getSyncHistory(projectIdInteger)

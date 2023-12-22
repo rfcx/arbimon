@@ -1,7 +1,7 @@
 import { type RichnessDatasetParams, type RichnessDatasetQuery, type RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
 
-import { getIsProjectMember } from '@/_middleware/get-is-project-member'
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
+import { hasPermission } from '~/roles'
 import { type Handler } from '../_services/api-helpers/types'
 import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'
@@ -28,7 +28,5 @@ export const richnessDatasetHandler: Handler<RichnessDatasetResponse, RichnessDa
     taxons: Array.isArray(taxons) ? taxons.map(Number) : typeof taxons === 'string' ? [Number(taxons)] : []
   }
 
-  const isProjectMember = getIsProjectMember(req)
-
-  return await getRichnessDataset(datasetFilter, isProjectMember)
+  return await getRichnessDataset(datasetFilter, hasPermission(req.projectRole, 'read-insights-sensitive'))
 }

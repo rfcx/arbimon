@@ -2,14 +2,18 @@ import { Op } from 'sequelize'
 
 import { type LocationProjectForUser, type MyProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
+import { type Project, ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
 
-export const getViewableProjects = async (memberProjectCoreIds: string[]): Promise<LocationProjectForUser[]> => {
-  const sequelize = getSequelize()
-  const models = ModelRepository.getInstance(sequelize)
+const sequelize = getSequelize()
+const models = ModelRepository.getInstance(sequelize)
 
+export const getProjectById = async (id: number): Promise<Project | undefined> => {
+  return await models.LocationProject.findByPk(id) ?? undefined
+}
+
+export const getViewableProjects = async (memberProjectCoreIds: string[]): Promise<LocationProjectForUser[]> => {
   // Temporarily hard-code showcase projects
   const showcaseSlugs = [
     'bci-panama-2018',
@@ -48,9 +52,6 @@ export const getViewableProjects = async (memberProjectCoreIds: string[]): Promi
 }
 
 export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[], offset: number = 0, limit: number = 20): Promise<MyProjectsResponse> => {
-  const sequelize = getSequelize()
-  const models = ModelRepository.getInstance(sequelize)
-
   const myProjects = await models.LocationProject
     .findAll({
       where: { idCore: memberProjectCoreIds },

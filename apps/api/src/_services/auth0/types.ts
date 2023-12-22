@@ -1,4 +1,4 @@
-export interface Auth0UserInfo {
+export interface Auth0RawDecodedToken {
   auth0_user_id: string
   'https://rfcx.org/app_metadata': {
     authorization: {
@@ -43,4 +43,11 @@ export interface Auth0UserInfo {
   sub: string
   sid: string
   nonce: string
+}
+
+export interface Auth0UserToken {
+  idAuth0: string
+  email: string
+  firstName: string
+  lastName: string
 }

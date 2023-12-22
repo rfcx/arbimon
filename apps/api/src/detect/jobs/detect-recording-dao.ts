@@ -1,7 +1,6 @@
 import { type BindOrReplacements, type Sequelize, type WhereOperators, QueryTypes } from 'sequelize'
 
 import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
-import { type Project } from '@rfcx-bio/common/dao/types'
 
 import { type Condition } from '~/datasets/dataset-where'
 import { type DetectRecordingQuery } from './detect-recording-bll'
@@ -64,9 +63,4 @@ export const getSitesByNameQuery = async (models: AllModels, locationProjectId: 
   })
 
   return result.map(({ id }) => id)
-}
-
-// TODO: Move to somewhere related to project
-export const getProjectById = async (models: AllModels, locationProjectId: number): Promise<Project | undefined> => {
-  return await models.LocationProject.findByPk(locationProjectId) ?? undefined
 }

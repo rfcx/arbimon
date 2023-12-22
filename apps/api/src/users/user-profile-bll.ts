@@ -13,8 +13,8 @@ import { getObject, putObject } from '~/storage'
 import { getProfileImageURL } from './helpers'
 import { get, getAllOrganizations as daoGetAllOrganizations, update } from './user-profile-dao'
 
-export const getUserProfile = async (email: string): Promise<Omit<UserProfile, 'id' | 'idAuth0'>> => {
-  const profile = await get(email)
+export const getUserProfile = async (id: number): Promise<Omit<UserProfile, 'id' | 'idAuth0'>> => {
+  const profile = await get(id)
 
   if (profile === undefined) {
     throw BioNotFoundError()
@@ -29,8 +29,8 @@ export const getUserProfile = async (email: string): Promise<Omit<UserProfile, '
   }
 }
 
-export const patchUserProfile = async (token: string, email: string, data: Partial<Omit<UserProfile, 'id' | 'idAuth0' | 'image' | 'createdAt' | 'updatedAt'>>): Promise<void> => {
-  const originalProfile = await getUserProfile(email)
+export const patchUserProfile = async (token: string, email: string, id: number, data: Partial<Omit<UserProfile, 'id' | 'idAuth0' | 'image' | 'createdAt' | 'updatedAt'>>): Promise<void> => {
+  const originalProfile = await getUserProfile(id)
   const newProfile = { ...originalProfile, ...data }
 
   const coreProfile: Pick<CoreUser, 'firstname' | 'lastname' | 'picture'> = {
@@ -42,8 +42,8 @@ export const patchUserProfile = async (token: string, email: string, data: Parti
   await update(email, newProfile)
 }
 
-export const getUserProfileImage = async (email: string): Promise<ArrayBuffer> => {
-  const userProfile = await get(email)
+export const getUserProfileImage = async (id: number): Promise<ArrayBuffer> => {
+  const userProfile = await get(id)
   if (userProfile === undefined || userProfile.image === undefined) {
     throw BioNotFoundError()
   }
@@ -65,8 +65,8 @@ export const getUserProfileImage = async (email: string): Promise<ArrayBuffer> =
   }
 }
 
-export const patchUserProfileImage = async (token: string, email: string, file: MultipartFile): Promise<void> => {
-  const originalProfile = await getUserProfile(email)
+export const patchUserProfileImage = async (token: string, email: string, id: number, file: MultipartFile): Promise<void> => {
+  const originalProfile = await getUserProfile(id)
 
   // hash the email to sha256 and use that as the folder name for storing the profile-image
   const hash = createHash('sha256')

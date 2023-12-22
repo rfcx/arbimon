@@ -3,9 +3,12 @@ import { type BindOrReplacements, type Sequelize, QueryTypes } from 'sequelize'
 import { type ProjectRecordingCountResponse, type SitesRecCountAndDates } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { type Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
 import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
-import { type Project, type Site, type TaxonClass, ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS } from '@rfcx-bio/common/dao/types'
+import { type Site, type TaxonClass, ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS } from '@rfcx-bio/common/dao/types'
 
 import dayjs from '@/../../../packages/utils/node_modules/dayjs'
+import { getSequelize } from '~/db'
+
+const sequelize = getSequelize()
 
 export const getSites = async (models: AllModels, locationProjectId: number): Promise<Site[]> =>
   await models
@@ -58,11 +61,7 @@ export const getLatestSync = async (models: AllModels, sequelize: Sequelize, loc
     }) as unknown as Sync | undefined
 }
 
-export const getProjectById = async (models: AllModels, locationProjectId: number): Promise<Project | undefined> => {
-  return await models.LocationProject.findByPk(locationProjectId) ?? undefined
-}
-
-export const getRecordingCount = async (sequelize: Sequelize, locationProjectId: number): Promise<number> => {
+export const getRecordingCount = async (locationProjectId: number): Promise<number> => {
   const bind: BindOrReplacements = {
     locationProjectId
   }
@@ -75,7 +74,7 @@ export const getRecordingCount = async (sequelize: Sequelize, locationProjectId:
   return result[0].count
 }
 
-export const getSitesRecordingCountAndDates = async (sequelize: Sequelize, locationProjectId: number): Promise<SitesRecCountAndDates[]> => {
+export const getSitesRecordingCountAndDates = async (locationProjectId: number): Promise<SitesRecCountAndDates[]> => {
   const bind: BindOrReplacements = {
     locationProjectId
   }

@@ -18,8 +18,6 @@ export const projectProfileHandler: Handler<ProjectSettingsResponse, ProjectProf
     throw BioInvalidPathParamError({ projectId })
   }
 
-  // TODO: check permission
-
   const projectContent = await getProjectInfo(projectIdInteger, fields ?? [])
   return projectContent
 }

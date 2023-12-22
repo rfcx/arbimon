@@ -6,8 +6,9 @@ import fastify, { type FastifyInstance } from 'fastify'
 import fastifyAuth0Verify from 'fastify-auth0-verify'
 import { resolve } from 'path'
 
-import { validateAndUpdateUserProfile } from './_middleware/validate-and-update-user-profile'
-import { fastifyLruCache } from './_plugins/global-user-cache'
+import { authenticatePlugin } from './_plugins/authenticate'
+import { projectRolePlugin } from './_plugins/project-role'
+import { userPlugin } from './_plugins/user'
 import { env } from './_services/env'
 import { routesActivity } from './activity'
 import { routesClassifiers } from './classifiers'
@@ -34,22 +35,15 @@ export const createApp = async (): Promise<FastifyInstance> => {
   // Register plugins
   await app.register(fastifyCors)
   await app.register(fastifyMultipart)
-  await app.register(fastifyAuth0Verify, {
+  await app.register(fastifyAuth0Verify, { // TODO: remove?
     domain: 'https://auth.rfcx.org/',
-    audience: 'LiojdvNUserGnCaLj8ckcxeGPHOKitOc'
-    // audience: 'https://rfcx.org', // 'https://rfcx.eu.auth0.com/api/v2/'
+    audience: 'https://rfcx.org'
   })
   await app.register(fastifyStatic, { root: resolve('./public') })
   await app.register(fastifyRequestContextPlugin)
-  await app.register(fastifyLruCache, {
-    maxSize: 500,
-    maxAge: 15 * 1000 * 1000 // 15 minutes max age cache
-  })
-  app.addHook('preValidation', validateAndUpdateUserProfile)
-  app.addHook('onRequest', (req, _rep, done) => {
-    req.extractedUser = null
-    done()
-  })
+  await app.register(authenticatePlugin) // decorates `userToken`
+  await app.register(userPlugin) // decorates `userId`
+  await app.register(projectRolePlugin) // decorates `projectRole`
 
   // Register routes
   const routesRegistrations = [

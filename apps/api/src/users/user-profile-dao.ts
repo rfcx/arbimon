@@ -4,23 +4,33 @@ import { type OrganizationTypes, type UserProfile } from '@rfcx-bio/common/dao/t
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 
-export const get = async (email: string): Promise<Omit<UserProfile, 'id' | 'idAuth0'> | undefined> => {
-  const sequelize = getSequelize()
-  const models = ModelRepository.getInstance(sequelize)
+const sequelize = getSequelize()
+const { UserProfile: UserProfileModel } = ModelRepository.getInstance(sequelize)
 
-  return (await models.UserProfile.findOne({
+export const getIdByEmail = async (email: string): Promise<number | undefined> => {
+  const user = await UserProfileModel.findOne({
     where: { email },
+    attributes: ['id']
+  })
+  return user?.id
+}
+
+export const get = async (id: number): Promise<Omit<UserProfile, 'id' | 'idAuth0'> | undefined> => {
+  return (await UserProfileModel.findOne({
+    where: { id },
     attributes: {
       exclude: ['id', 'idAuth0', 'createdAt', 'updatedAt']
     }
   }))?.toJSON() ?? undefined
 }
 
-export const update = async (email: string, data: Omit<UserProfile, 'id' | 'idAuth0' | 'createdAt' | 'updatedAt'>): Promise<void> => {
-  const sequelize = getSequelize()
-  const { UserProfile } = ModelRepository.getInstance(sequelize)
+export const create = async (data: Omit<UserProfile, 'id' | 'createdAt' | 'updatedAt'>): Promise<number> => {
+  const userProfile = await UserProfileModel.create(data)
+  return userProfile.id
+}
 
-  await UserProfile.upsert({ ...data, email })
+export const update = async (email: string, data: Omit<UserProfile, 'id' | 'idAuth0' | 'createdAt' | 'updatedAt'>): Promise<void> => {
+  await UserProfileModel.upsert({ ...data, email })
 }
 
 // TODO: Move to organizations DAO

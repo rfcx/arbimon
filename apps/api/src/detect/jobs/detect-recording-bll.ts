@@ -4,10 +4,11 @@ import { Op } from 'sequelize'
 import { type DetectRecordingQueryParams, type DetectRecordingResponse } from '@rfcx-bio/common/api-bio/detect/detect-recording'
 import { type AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
+import { getProjectById } from '@/projects/projects-dao'
 import { dayjs } from '~/dayjs-initialized'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
-import { getDetectRecordingTotalDurationMinutes, getProjectById, getSitesByNameQuery } from './detect-recording-dao'
+import { getDetectRecordingTotalDurationMinutes, getSitesByNameQuery } from './detect-recording-dao'
 
 export interface DetectRecordingQuery {
   locationProjectId: number
@@ -25,8 +26,8 @@ export const getDetectRecording = async (locationProjectId: number, detectRecord
 
   const { dateStartLocal, dateEndLocal, querySites, queryHours } = detectRecordingQueryParams
 
-  const isProjectExist = await getProjectById(models, locationProjectId)
-  if (!isProjectExist) throw BioNotFoundError()
+  const project = await getProjectById(locationProjectId)
+  if (project === undefined) throw BioNotFoundError()
 
   const query: DetectRecordingQuery = {
     locationProjectId,

@@ -3,9 +3,9 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { LocationProjectSpeciesFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
 import { ATTRIBUTES_TAXON_SPECIES_CALL, ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/types'
 
-import { getIsProjectMember } from '@/_middleware/get-is-project-member'
 import { getSequelize } from '@/_services/db'
 import { BioNotFoundError } from '~/errors'
+import { hasPermission } from '~/roles'
 import { isProtectedSpecies } from '~/security/protected-species'
 import { type Handler } from '../_services/api-helpers/types'
 import { assertPathParamsExist } from '../_services/validation'
@@ -18,10 +18,8 @@ export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, Projec
   const { projectId, speciesSlug } = req.params
   assertPathParamsExist({ projectId, speciesSlug })
 
-  const isProjectMember = getIsProjectMember(req)
-
   // Respond
-  return await getProjectSpeciesOne(projectId, speciesSlug, isProjectMember)
+  return await getProjectSpeciesOne(projectId, speciesSlug, hasPermission(req.projectRole, 'read-insights-sensitive'))
 }
 
 const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug: string, isProjectMember: boolean): Promise<ProjectSpeciesOneResponse> => {
