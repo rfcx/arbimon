@@ -8,7 +8,11 @@ const plugin: FastifyPluginCallback<Options<string, UserProfile>> = (instance, o
   const lru = new QuickLRU(options)
 
   instance.decorate('lru', lru)
-  instance.decorateRequest('lru', lru)
+  instance.decorateRequest('lru', null)
+  instance.addHook('preValidation', (req, _rep, done) => {
+    req.lru = lru
+    done()
+  })
   instance.addHook('onClose', () => { lru.clear() })
 
   done()
