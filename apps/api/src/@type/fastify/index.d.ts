@@ -15,11 +15,11 @@ declare module 'fastify-request-context' {
 
 declare module 'fastify' {
   interface FastifyRequest {
-    lru: QuickLRU<string, UserProfile>
-    extractedUser: Pick<Auth0UserInfo, 'auth0_user_id' | 'email'> | null
+    lru: QuickLRU<string, Pick<Auth0UserInfo, 'auth0_user_id' | 'email'> & { id: number }>
+    extractedUser: Pick<Auth0UserInfo, 'auth0_user_id' | 'email'> & { id: number } | null
   }
 
   interface FastifyInstance {
-    lru: QuickLRU<string, UserProfile>
+    lru: QuickLRU<string, Pick<Auth0UserInfo, 'auth0_user_id' | 'email'> & { id: number }>
   }
 }
