@@ -1,6 +1,6 @@
 import { activityDatasetRoute } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 
-import { requireProjectPermission } from '@/_middleware/require-permission'
+import { requireProjectPermission } from '@/_hooks/require-permission'
 import { type RouteRegistration, GET } from '../_services/api-helpers/types'
 import { activityDatasetHandler } from './activity-dataset-handler'
 

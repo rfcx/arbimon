@@ -4,8 +4,8 @@ import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/project/project-fi
 import { projectRecordingCountRoute, projectSitesRecordingCountRoute } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { myProjectsRoute, projectDirectoryRoute, projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
 
-import { requireAuthorized } from '@/_middleware/require-authenticated'
-import { requireProjectPermission } from '@/_middleware/require-permission'
+import { requireAuthorized } from '@/_hooks/require-authenticated'
+import { requireProjectPermission } from '@/_hooks/require-permission'
 import { type RouteRegistration, GET, PATCH, POST } from '../_services/api-helpers/types'
 import { projectsDirectoryHandler } from './get-directory-projects-handler'
 import { getProjectMembersHandler } from './get-project-members'
