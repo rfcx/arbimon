@@ -1,9 +1,8 @@
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { type ApiMap } from '@rfcx-bio/common/api-bio/_helpers'
 import { type Site } from '@rfcx-bio/common/dao/types'
+import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET } from '~/api-helpers/types'
 import { routesDashboard } from './index'
@@ -18,22 +17,10 @@ const EXPECTED_PROPS = [
   'detectionBySite'
 ]
 
-const getMockedApp = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-
-  await app.register(fastifyRoutes)
-
-  routesDashboard
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
-
 describe('simple tests', () => {
   test('exists', async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await makeApp(routesDashboard)
 
     // Act
     const routes = [...app.routes.keys()]
@@ -44,7 +31,7 @@ describe('simple tests', () => {
 
   test('returns successfully', async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await makeApp(routesDashboard)
 
     // Act
     const response = await app.inject({
@@ -62,7 +49,7 @@ describe('simple tests', () => {
 
   test('contains all expected props & no more', async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await makeApp(routesDashboard)
 
     // Act
     const response = await app.inject({
@@ -78,7 +65,7 @@ describe('simple tests', () => {
 
   describe('known data tests', async () => {
     // Arrange & Act once
-    const app = await getMockedApp()
+    const app = await makeApp(routesDashboard)
 
     const response = await app.inject({
       method: GET,

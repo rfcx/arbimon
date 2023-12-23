@@ -1,13 +1,15 @@
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
-import { expect, test } from 'vitest'
+import { Op } from 'sequelize'
+import { afterEach, expect, test } from 'vitest'
 
 import { projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
 import { type Project } from '@rfcx-bio/common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
+import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET } from '~/api-helpers/types'
 import { routesProject } from './index'
+
+const userId = 1
 
 function makeProject (id: number, name: string): Project {
   return {
@@ -25,49 +27,15 @@ function makeProject (id: number, name: string): Project {
 
 const { LocationProject, ProjectVersion } = modelRepositoryWithElevatedPermissions
 
-const getMockedApp = async (projectIds: string[] | undefined = undefined): Promise<FastifyInstance> => {
-  const app = await fastify()
-  await app.register(fastifyRoutes)
-
-  const fakeRequestContext = {
-    get: (key: string) => ({
-      MEMBER_PROJECT_CORE_IDS: projectIds
-    })[key],
-    set: () => {}
-  }
-
-  app.decorate('requestContext', fakeRequestContext)
-  app.decorateRequest('requestContext', fakeRequestContext)
-
-  routesProject
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
-
-test('GET /projects contains valid project', async () => {
-  // Arrange
-  const app = await getMockedApp(['integration5'])
-
-  // Act
-  const response = await app.inject({
-    method: GET,
-    url: projectsRoute
-  })
-
-  // Assert
-  expect(response.statusCode).toBe(200)
-
-  const result = JSON.parse(response.body)
-  const expectedProject = result.find((p: any) => p.slug === 'integration-test-project-50001001')
-  expect(expectedProject).toBeDefined()
-  expect(expectedProject.name).toBe('Integration Test Project 5')
+afterEach(async () => {
+  const locationProjectIds = [1234001, 1234002]
+  await ProjectVersion.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
+  await LocationProject.destroy({ where: { id: { [Op.in]: locationProjectIds } } })
 })
 
 test('GET /projects contains public projects', async () => {
   // Arrange
-  const app = await getMockedApp()
+  const app = await makeApp(routesProject, { userId })
   const publicProject = makeProject(1234001, 'Public Project 1')
   await LocationProject.bulkCreate([publicProject], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
   await ProjectVersion.create({ locationProjectId: publicProject.id, isPublished: true, isPublic: true })
@@ -88,7 +56,7 @@ test('GET /projects contains public projects', async () => {
 
 test('GET /projects does not contain non-public projects', async () => {
   // Arrange
-  const app = await getMockedApp()
+  const app = await makeApp(routesProject, { userId })
   const project = makeProject(1234002, 'Private Project 1')
   await LocationProject.bulkCreate([project], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
   await ProjectVersion.create({ locationProjectId: project.id, isPublished: false, isPublic: false })

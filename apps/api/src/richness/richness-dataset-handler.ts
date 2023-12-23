@@ -1,7 +1,7 @@
 import { type RichnessDatasetParams, type RichnessDatasetQuery, type RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
+import { hasPermission } from '@rfcx-bio/common/roles'
 
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
-import { hasPermission } from '~/roles'
 import { type Handler } from '../_services/api-helpers/types'
 import { assertPathParamsExist } from '../_services/validation'
 import { isValidDate } from '../_services/validation/query-validation'

@@ -13,7 +13,10 @@ export const getProjectById = async (id: number): Promise<Project | undefined> =
   return await models.LocationProject.findByPk(id) ?? undefined
 }
 
-export const getViewableProjects = async (memberProjectCoreIds: string[]): Promise<LocationProjectForUser[]> => {
+/**
+ * @deprecated Do not use
+ */
+export const getViewableProjects = async (userId: number): Promise<LocationProjectForUser[]> => {
   // Temporarily hard-code showcase projects
   const showcaseSlugs = [
     'bci-panama-2018',
@@ -31,11 +34,13 @@ export const getViewableProjects = async (memberProjectCoreIds: string[]): Promi
     'similajau'
   ]
 
+  const memberProjectIds = await getProjectIdsByUser(userId)
+
   const projects = await models.LocationProject
     .findAll({
       where: {
         [Op.or]: [
-          { idCore: memberProjectCoreIds },
+          { id: memberProjectIds },
           { id: { [Op.in]: sequelize.literal('(SELECT location_project_id FROM project_version WHERE is_published = true)') } }
         ]
       },
@@ -46,15 +51,17 @@ export const getViewableProjects = async (memberProjectCoreIds: string[]): Promi
 
   return projects.map(p => ({
       ...p,
-      isMyProject: memberProjectCoreIds.includes(p.idCore),
+      isMyProject: memberProjectIds.includes(p.id),
       isShowcaseProject: showcaseSlugs.includes(p.slug)
     }))
 }
 
-export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[], offset: number = 0, limit: number = 20): Promise<MyProjectsResponse> => {
+export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, limit: number = 20): Promise<MyProjectsResponse> => {
+  const memberProjectIds = await getProjectIdsByUser(userId)
+
   const myProjects = await models.LocationProject
     .findAll({
-      where: { idCore: memberProjectCoreIds },
+      where: { id: memberProjectIds },
       attributes: ATTRIBUTES_LOCATION_PROJECT.light,
       order: ['name'],
       offset,
@@ -80,4 +87,9 @@ export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[], offs
       isPublished: publishedInfo.find(pi => pi.locationProjectId === p.id)?.isPublished ?? false
     }))
   }
+}
+
+const getProjectIdsByUser = async (userId: number): Promise<number[]> => {
+  const projects = await models.LocationProjectUserRole.findAll({ where: { userId }, attributes: ['locationProjectId'], raw: true })
+  return projects.map(p => p.locationProjectId)
 }

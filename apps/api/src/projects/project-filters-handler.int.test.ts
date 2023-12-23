@@ -1,6 +1,6 @@
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
+
+import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET } from '~/api-helpers/types'
 import { routesProject } from './index'
@@ -18,22 +18,11 @@ const EXPECTED_PROPS = [
   'latestSync'
 ]
 
-const getMockedApp = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-  await app.register(fastifyRoutes)
-
-  routesProject
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
-
 describe(`GET ${ROUTE} (project filters dataset)`, async () => {
   describe('simple tests', async () => {
     test('exists', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesProject, { projectRole: 'guest' })
 
       // Act
       const routes = [...app.routes.keys()]
@@ -44,7 +33,7 @@ describe(`GET ${ROUTE} (project filters dataset)`, async () => {
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesProject, { projectRole: 'guest' })
 
       // Act
       const response = await app.inject({
@@ -62,7 +51,7 @@ describe(`GET ${ROUTE} (project filters dataset)`, async () => {
 
     test('contains all expected props & no more', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesProject, { projectRole: 'guest' })
 
       // Act
       const response = await app.inject({
@@ -78,7 +67,7 @@ describe(`GET ${ROUTE} (project filters dataset)`, async () => {
   })
   describe('known data tests', async () => {
     // Arrange & Act once
-    const app = await getMockedApp()
+    const app = await makeApp(routesProject, { projectRole: 'guest' })
 
     const response = await app.inject({
       method: GET,

@@ -1,9 +1,8 @@
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 
 import { type LocationProjectUserRole, type UserProfile } from '@rfcx-bio/common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
+import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET, PATCH } from '~/api-helpers/types'
 import { routesDashboard } from './index'
@@ -70,23 +69,11 @@ const userRoles: LocationProjectUserRole[] = [
 
 const { LocationProjectUserRole: LocationProjectUserRoleModel, UserProfile: UserProfileModel } = modelRepositoryWithElevatedPermissions
 
-const getMockedApp = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-
-  await app.register(fastifyRoutes)
-
-  routesDashboard
-    .map(({ preHandler, preValidation, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
-
 describe(`GET ${ROUTE} (dashboard stakeholders)`, () => {
   describe('simple test', () => {
     test('exists', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const routes = [...app.routes.keys()]
@@ -97,7 +84,7 @@ describe(`GET ${ROUTE} (dashboard stakeholders)`, () => {
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
@@ -115,7 +102,7 @@ describe(`GET ${ROUTE} (dashboard stakeholders)`, () => {
 
     test('contains all expected props & no more', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
@@ -144,7 +131,7 @@ describe(`PATCH ${ROUTE} (dashboard stakeholders)`, () => {
 
   test('partial update to user role', async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await makeApp(routesDashboard)
 
     // Act
     const response = await app.inject({

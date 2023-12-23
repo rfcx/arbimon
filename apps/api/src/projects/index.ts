@@ -4,7 +4,8 @@ import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/project/project-fi
 import { projectRecordingCountRoute, projectSitesRecordingCountRoute } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { myProjectsRoute, projectDirectoryRoute, projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
 
-import { setMemberProjectCoreIds } from '@/_middleware/get-member-projects'
+import { requireAuthorized } from '@/_middleware/require-authenticated'
+import { requireProjectPermission } from '@/_middleware/require-permission'
 import { type RouteRegistration, GET, PATCH, POST } from '../_services/api-helpers/types'
 import { projectsDirectoryHandler } from './get-directory-projects-handler'
 import { getProjectMembersHandler } from './get-project-members'
@@ -17,48 +18,53 @@ export const routesProject: RouteRegistration[] = [
   {
     method: GET,
     url: projectsRoute,
-    preHandler: [setMemberProjectCoreIds],
     handler: projectsAllHandler
-  },
-  {
-    method: GET,
-    url: myProjectsRoute,
-    preHandler: [setMemberProjectCoreIds],
-    handler: myProjectsHandler
-  },
-  {
-    method: GET,
-    url: projectFiltersRoute,
-    handler: projectFiltersHandler
-  },
-  {
-    method: GET,
-    url: projectRecordingCountRoute,
-    handler: projectRecordingCountHandler
-  },
-  {
-    method: GET,
-    url: projectSitesRecordingCountRoute,
-    handler: projectRecordingCountBySiteHandler
-  },
-  {
-    method: POST,
-    url: projectCreateRoute,
-    handler: projectCreateHandler
-  },
-  {
-    method: PATCH,
-    url: updateInsightsPublishStatusRoute,
-    handler: patchInsightsPublishStatusHandler
-  },
-  {
-    method: GET,
-    url: '/projects/:projectId/users',
-    handler: getProjectMembersHandler
   },
   {
     method: GET,
     url: projectDirectoryRoute,
     handler: projectsDirectoryHandler
+  },
+  {
+    method: GET,
+    url: myProjectsRoute,
+    preHandler: [requireAuthorized],
+    handler: myProjectsHandler
+  },
+  {
+    method: GET,
+    url: projectFiltersRoute,
+    preHandler: [requireProjectPermission('read-insights')],
+    handler: projectFiltersHandler
+  },
+  {
+    method: GET,
+    url: projectRecordingCountRoute,
+    preHandler: [requireProjectPermission('read-insights')],
+    handler: projectRecordingCountHandler
+  },
+  {
+    method: GET,
+    url: projectSitesRecordingCountRoute,
+    preHandler: [requireProjectPermission('read-insights')],
+    handler: projectRecordingCountBySiteHandler
+  },
+  {
+    method: POST,
+    url: projectCreateRoute,
+    preHandler: [requireAuthorized],
+    handler: projectCreateHandler
+  },
+  {
+    method: PATCH,
+    url: updateInsightsPublishStatusRoute,
+    preHandler: [requireProjectPermission('update-publish-status')],
+    handler: patchInsightsPublishStatusHandler
+  },
+  {
+    method: GET,
+    url: '/projects/:projectId/users',
+    preHandler: [requireProjectPermission('read-users')],
+    handler: getProjectMembersHandler
   }
 ]

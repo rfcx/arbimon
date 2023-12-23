@@ -1,6 +1,6 @@
 import { type SpotlightDatasetParams, type SpotlightDatasetQuery, type SpotlightDatasetResponse } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { hasPermission } from '@rfcx-bio/common/roles'
 
-import { hasPermission } from '~/roles'
 import { type Handler } from '../_services/api-helpers/types'
 import { type FilterDataset } from '../_services/datasets/dataset-types'
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '../_services/errors'

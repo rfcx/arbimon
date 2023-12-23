@@ -1,8 +1,7 @@
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
+import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET, PATCH } from '~/api-helpers/types'
 import { routesDashboard } from './index'
@@ -32,23 +31,11 @@ vi.mock('~/api-core/api-core', () => {
 
 const { LocationProjectProfile } = modelRepositoryWithElevatedPermissions
 
-const getMockedApp = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-
-  await app.register(fastifyRoutes)
-
-  routesDashboard
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
-
 describe(`GET ${ROUTE} (dashboard content)`, () => {
   describe('simple tests', () => {
     test('exists', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const routes = [...app.routes.keys()]
@@ -59,7 +46,7 @@ describe(`GET ${ROUTE} (dashboard content)`, () => {
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
@@ -77,7 +64,7 @@ describe(`GET ${ROUTE} (dashboard content)`, () => {
 
     test('contains all expected props & no more', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
@@ -101,7 +88,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('insert to summary', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
@@ -132,7 +119,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('insert to readme', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
@@ -163,7 +150,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('insert to keyResult', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
@@ -194,7 +181,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('insert to resources', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
@@ -225,7 +212,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('insert to methods', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
@@ -262,7 +249,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('try editing summary', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
@@ -293,7 +280,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('try editing readme', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
@@ -324,7 +311,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('try editing keyResult', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
@@ -355,7 +342,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('try editing resources', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
@@ -386,7 +373,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('try editing methods', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesDashboard)
 
       // Act
       const response = await app.inject({
