@@ -1,6 +1,5 @@
 import fastifyCors from '@fastify/cors'
 import fastifyMultipart from '@fastify/multipart'
-import { fastifyRequestContextPlugin } from '@fastify/request-context'
 import fastifyStatic from '@fastify/static'
 import fastify, { type FastifyInstance } from 'fastify'
 import fastifyAuth0Verify from 'fastify-auth0-verify'
@@ -40,7 +39,6 @@ export const createApp = async (): Promise<FastifyInstance> => {
     audience: 'https://rfcx.org'
   })
   await app.register(fastifyStatic, { root: resolve('./public') })
-  await app.register(fastifyRequestContextPlugin)
   await app.register(authenticatePlugin) // decorates `userToken`
   await app.register(userPlugin) // decorates `userId`
   await app.register(projectRolePlugin) // decorates `projectRole`

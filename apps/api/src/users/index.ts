@@ -1,7 +1,7 @@
 import { organizationsListRoute, userProfileRoute } from '@rfcx-bio/common/api-bio/users/profile'
 import { userProfileImageRoute } from '@rfcx-bio/common/api-bio/users/profile-image'
 
-import { requireAuthorized } from '@/_middleware/require-authenticated'
+import { requireAuthorized } from '@/_hooks/require-authenticated'
 import { type RouteRegistration, GET, PATCH } from '../_services/api-helpers/types'
 import { organizationsListHandler } from './organizations-handler'
 import { patchUserProfileHandler, userProfileHandler } from './user-profile-handler'
