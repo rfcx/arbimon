@@ -3,9 +3,9 @@ import { resolve } from 'path'
 
 import { type ProjectSpeciesPredictedOccupancyParams } from '@rfcx-bio/common/api-bio/species/project-species-predicted-occupancy'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { hasPermission } from '@rfcx-bio/common/roles'
 
 import { getSequelize } from '~/db'
-import { hasPermission } from '~/roles'
 import { isProtectedSpecies } from '~/security/protected-species'
 import { type Handler } from '../_services/api-helpers/types'
 import { BioForbiddenError, BioInvalidPathParamError, BioNotFoundError } from '../_services/errors'

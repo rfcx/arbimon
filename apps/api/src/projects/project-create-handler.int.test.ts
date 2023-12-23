@@ -1,11 +1,9 @@
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
-import fastifyAuth0Verify from 'fastify-auth0-verify'
 import { Op } from 'sequelize'
 import { afterEach, expect, test, vi } from 'vitest'
 
 import { type ProjectCreateRequest } from '@rfcx-bio/common/api-bio/project/project-create'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
+import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import * as coreApi from '~/api-core/api-core'
 import { POST } from '~/api-helpers/types'
@@ -16,18 +14,8 @@ vi.mock('~/api-core/api-core')
 const ROUTE = '/projects'
 
 const fakeToken = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6ImE0NTBhMzFkMjEwYTY5N2ZmMDI3NjU0YmZhMWZmMTFlIn0.eyJhdXRoMF91c2VyX2lkIjoidGVzdCJ9.571qutLhQm4Wc6hdhsVCxKm_rh4szTg9Wygz2JVxIItf3M_hNI5ats5W-HoJJjmFsBJ_oOwI1uU_6e4bfaFcrg'
-
-const getMockedApp = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-  await app.register(fastifyAuth0Verify, { domain: 'unknown.com' })
-  await app.register(fastifyRoutes)
-
-  routesProject
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
+const userToken = { idAuth0: 'test' }
+const userId = 1
 
 const { LocationProject, LocationProjectProfile } = modelRepositoryWithElevatedPermissions
 
@@ -39,7 +27,7 @@ afterEach(async () => {
 
 test('POST /projects creates local project', async () => {
   // Arrange
-  const app = await getMockedApp()
+  const app = await makeApp(routesProject, { userId, userToken })
   const project: ProjectCreateRequest = { name: 'Red Squirrels are back' }
 
   // Act

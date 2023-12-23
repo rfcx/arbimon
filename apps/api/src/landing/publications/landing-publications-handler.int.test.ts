@@ -1,6 +1,6 @@
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test, vi } from 'vitest'
+
+import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET } from '~/api-helpers/types'
 import { BioForbiddenError } from '~/errors'
@@ -28,22 +28,11 @@ vi.mock('./landing-publications-bll', () => {
   }
 })
 
-const getMockedApp = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-  await app.register(fastifyRoutes)
-
-  routesLanding
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
-
 describe('GET /landing/publications', () => {
   describe('happy path test', () => {
     test('exists', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesLanding)
 
       // Act
       const routes = [...app.routes.keys()]
@@ -54,7 +43,7 @@ describe('GET /landing/publications', () => {
 
     test('returns 200', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesLanding)
 
       // Act
       const response = await app.inject({
@@ -81,7 +70,7 @@ describe('GET /landing/publications', () => {
 
   test('angry path', async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await makeApp(routesLanding)
     ;(getPublications as any).mockRejectedValue(BioForbiddenError())
 
     // Act

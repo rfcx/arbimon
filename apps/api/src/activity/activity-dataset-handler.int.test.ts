@@ -1,8 +1,7 @@
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { type ActivityOverviewDataBySpecies, type ActivityOverviewDetectionDataBySite, type ActivityOverviewDetectionDataByTime } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
+import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET } from '~/api-helpers/types'
 import { routesActivity } from './index'
@@ -26,51 +25,11 @@ const isObjectValueNumber = (obj: any): boolean => {
   return Object.values(obj).every(o => typeof o === 'number')
 }
 
-const getMockedAppLoggedOut = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-  await app.register(fastifyRoutes)
-
-  const fakeRequestContext = {
-    get: (key: string) => ({
-      MEMBER_PROJECT_CORE_IDS: []
-    })[key],
-    set: (key: string, value: any) => {}
-  }
-
-  app.decorate('requestContext', fakeRequestContext)
-  app.decorateRequest('requestContext', fakeRequestContext)
-  app.decorateRequest('projectRole', 'guest')
-
-  routesActivity.forEach(route => app.route(route))
-
-  return app
-}
-
-const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-  await app.register(fastifyRoutes)
-
-  const fakeRequestContext = {
-    get: (key: string) => ({
-      MEMBER_PROJECT_CORE_IDS: ['integration2']
-    })[key],
-    set: (key: string, value: any) => {}
-  }
-
-  app.decorate('requestContext', fakeRequestContext)
-  app.decorateRequest('requestContext', fakeRequestContext)
-  app.decorateRequest('projectRole', 'user')
-
-  routesActivity.forEach(route => app.route(route))
-
-  return app
-}
-
 describe(`GET ${ROUTE} (activity dataset)`, () => {
   describe('simple tests', () => {
     test('exists', async () => {
       // Arrange
-      const app = await getMockedAppLoggedOut()
+      const app = await makeApp(routesActivity)
 
       // Act
       const routes = [...app.routes.keys()]
@@ -81,7 +40,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await getMockedAppLoggedOut()
+      const app = await makeApp(routesActivity, { projectRole: 'guest' })
 
       // Act
       const response = await app.inject({
@@ -100,7 +59,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('contains all expected props', async () => {
       // Arrange
-      const app = await getMockedAppLoggedOut()
+      const app = await makeApp(routesActivity, { projectRole: 'guest' })
 
       // Act
       const response = await app.inject({
@@ -116,7 +75,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('does not contain any additional props', async () => {
       // Arrange
-      const app = await getMockedAppLoggedOut()
+      const app = await makeApp(routesActivity, { projectRole: 'guest' })
 
       // Act
       const response = await app.inject({
@@ -133,7 +92,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
   describe('known data tests', async () => {
     // Arrange & Act once
-    const app = await getMockedAppLoggedIn()
+    const app = await makeApp(routesActivity, { projectRole: 'user' })
 
     const response = await app.inject({
       method: GET,
@@ -143,8 +102,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('calculates isLocationRedacted correctly', async () => {
       const result = JSON.parse(response.body)?.isLocationRedacted
-      expect(result).toBeDefined()
-      expect(result).toEqual(false)
+      expect(result).toBe(false)
     })
 
     test('calculates activityBySite correctly', async () => {
@@ -176,7 +134,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
     test('calculates activityBySite by specific site correctly', async () => {
       // Arrange
       const expectedSiteId = [20001002]
-      const app = await getMockedAppLoggedIn()
+      const app = await makeApp(routesActivity, { projectRole: 'user' })
 
       const response = await app.inject({
         method: GET,
@@ -238,7 +196,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
         occupiedSites: 2,
         occupancyNaive: 1
       }
-      const app = await getMockedAppLoggedIn()
+      const app = await makeApp(routesActivity, { projectRole: 'user' })
 
       const response = await app.inject({
         method: GET,
@@ -280,7 +238,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
         occupancyNaive: 1
       }
 
-      const app = await getMockedAppLoggedIn()
+      const app = await makeApp(routesActivity, { projectRole: 'user' })
 
       const response = await app.inject({
         method: GET,
@@ -416,7 +374,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
   describe('known data tests with redacted data', async () => {
     // Arrange & Act once
-    const app = await getMockedAppLoggedOut()
+    const app = await makeApp(routesActivity, { projectRole: 'guest' })
 
     const response = await app.inject({
       method: GET,
@@ -436,7 +394,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
   describe('client errors', () => {
     test('rejects missing query', async () => {
       // Arrange
-      const app = await getMockedAppLoggedOut()
+      const app = await makeApp(routesActivity, { projectRole: 'guest' })
 
       // Act
       const response = await app.inject({
@@ -450,7 +408,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('rejects invalid project id', async () => {
       // Arrange
-      const app = await getMockedAppLoggedOut()
+      const app = await makeApp(routesActivity, { projectRole: 'guest' })
 
       // Act
       const response = await app.inject({
@@ -468,7 +426,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('rejects invalid date', async () => {
       // Arrange
-      const app = await getMockedAppLoggedOut()
+      const app = await makeApp(routesActivity, { projectRole: 'guest' })
 
       // Act
       const response1 = await app.inject({

@@ -1,9 +1,9 @@
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
+import { makeApp } from '@rfcx-bio/testing/handlers'
+
 import { GET } from '~/api-helpers/types'
-import { routesDetect } from '../index'
+import { routesDetect } from '..'
 
 const fakeProjectId = 201
 
@@ -13,32 +13,11 @@ const EXPECTED_PROPS = [
   'totalDurationInMinutes'
 ]
 
-const getMockedAppLoggedIn = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-  await app.register(fastifyRoutes)
-
-  const fakeRequestContext = {
-    get: (key: string) => ({
-      MEMBER_PROJECT_CORE_IDS: ['zy5jbxx4cs9f', 'bci392pan298', 'rbj7k70v4na7']
-    })[key],
-    set: (key: string, value: any) => {}
-  }
-
-  app.decorate('requestContext', fakeRequestContext)
-  app.decorateRequest('requestContext', fakeRequestContext)
-
-  routesDetect
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
-
 describe('GET /project/:projectId/detect-recording', () => {
   describe('simple tests', () => {
     test('exists', async () => {
       // Arrange
-      const app = await getMockedAppLoggedIn()
+      const app = await makeApp(routesDetect, 'user')
 
       // Act
       const routes = [...app.routes.keys()]
@@ -49,7 +28,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await getMockedAppLoggedIn()
+      const app = await makeApp(routesDetect, 'user')
 
       // Act
       const response = await app.inject({
@@ -67,7 +46,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
     test('contains all expected props', async () => {
       // Arrange
-      const app = await getMockedAppLoggedIn()
+      const app = await makeApp(routesDetect, 'user')
 
       // Act
       const response = await app.inject({
@@ -83,7 +62,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
     test('does not contain any additional props', async () => {
       // Arrange
-      const app = await getMockedAppLoggedIn()
+      const app = await makeApp(routesDetect, 'user')
 
       // Act
       const response = await app.inject({
@@ -100,7 +79,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
   describe('known data tests', async () => {
     // Arrange once
-    const app = await getMockedAppLoggedIn()
+    const app = await makeApp(routesDetect, 'user')
 
     test('return all exists data without queryHours (all day)', async () => {
       // Act
@@ -236,7 +215,7 @@ describe('GET /project/:projectId/detect-recording', () => {
   describe('client errros', () => {
     test('reject missing query', async () => {
       // Arrange
-      const app = await getMockedAppLoggedIn()
+      const app = await makeApp(routesDetect, 'user')
 
       // Act
       const response = await app.inject({
@@ -250,7 +229,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
     test('reject not exist project id', async () => {
       // Arrange
-      const app = await getMockedAppLoggedIn()
+      const app = await makeApp(routesDetect, 'user')
 
       // Act
       const response = await app.inject({
@@ -265,7 +244,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
     test('rejects invalid project id', async () => {
       // Arrange
-      const app = await getMockedAppLoggedIn()
+      const app = await makeApp(routesDetect, 'user')
 
       // Act
       const response = await app.inject({
@@ -283,7 +262,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
     test('rejects invalid date', async () => {
       // Arrange
-      const app = await getMockedAppLoggedIn()
+      const app = await makeApp(routesDetect, 'user')
 
       // Act
       const response1 = await app.inject({

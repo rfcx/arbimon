@@ -539,9 +539,18 @@ importers:
 
   packages/testing:
     dependencies:
+      '@fastify/routes':
+        specifier: ^4.0.0
+        version: 4.0.0
       '@rfcx-bio/common':
         specifier: workspace:^0.0.1
         version: link:../common
+      fastify:
+        specifier: ^3.23.1
+        version: 3.29.0
+      fastify-plugin:
+        specifier: ^3.0.1
+        version: 3.0.1
 
   packages/utils:
     dependencies:

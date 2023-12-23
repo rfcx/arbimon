@@ -1,7 +1,6 @@
-import { fastifyRequestContextPlugin } from '@fastify/request-context'
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
+
+import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET } from '~/api-helpers/types'
 import { routesRichness } from './index'
@@ -22,23 +21,11 @@ const EXPECTED_PROPS = [
   'richnessPresence'
 ]
 
-const getMockedApp = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-  await app.register(fastifyRoutes)
-  await app.register(fastifyRequestContextPlugin)
-
-  routesRichness
-    .map(({ preHandler, ...rest }) => ({ ...rest }))
-    .forEach(route => app.route(route))
-
-  return app
-}
-
 describe(`GET ${ROUTE} (richness dataset)`, () => {
   describe('simple tests', () => {
     test('exists', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesRichness, { projectRole: 'user' })
 
       // Act
       const routes = [...app.routes.keys()]
@@ -49,7 +36,7 @@ describe(`GET ${ROUTE} (richness dataset)`, () => {
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesRichness, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -68,7 +55,7 @@ describe(`GET ${ROUTE} (richness dataset)`, () => {
 
     test('contains all expected props', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesRichness, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -84,7 +71,7 @@ describe(`GET ${ROUTE} (richness dataset)`, () => {
 
     test('does not contain any additional props', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesRichness, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -102,7 +89,7 @@ describe(`GET ${ROUTE} (richness dataset)`, () => {
   describe('validate known data', () => {
     test('does not have any data on given date', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesRichness, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -126,7 +113,7 @@ describe(`GET ${ROUTE} (richness dataset)`, () => {
   describe('client errors', () => {
     test('rejects missing query', async () => {
         // Arrange
-        const app = await getMockedApp()
+        const app = await makeApp(routesRichness, { projectRole: 'user' })
 
         // Act
         const response = await app.inject({
@@ -140,7 +127,7 @@ describe(`GET ${ROUTE} (richness dataset)`, () => {
 
     test('rejects invalid project id', async () => {
         // Arrange
-        const app = await getMockedApp()
+        const app = await makeApp(routesRichness, { projectRole: 'user' })
 
         // Act
         const response = await app.inject({
@@ -158,7 +145,7 @@ describe(`GET ${ROUTE} (richness dataset)`, () => {
 
     test('rejects invalid date', async () => {
         // Arrange
-        const app = await getMockedApp()
+        const app = await makeApp(routesRichness, { projectRole: 'user' })
 
         // Act
         const response = await app.inject({

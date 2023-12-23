@@ -1,9 +1,7 @@
-import { fastifyRequestContextPlugin } from '@fastify/request-context'
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { type SpotlightDetectionDataBySite, type SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
+import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET } from '~/api-helpers/types'
 import { routesSpotlight } from './index'
@@ -41,23 +39,11 @@ const DETECTION_BY_SITE_DATA_EXPECTED_PROPS = [
   'siteOccupied'
 ]
 
-const getMockedApp = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-  await app.register(fastifyRoutes)
-  await app.register(fastifyRequestContextPlugin)
-
-  routesSpotlight
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
-
 describe(`GET ${ROUTE} (spotlight dataset)`, () => {
   describe('simple tests', () => {
     test('exists', async () => {
      // Arrange
-     const app = await getMockedApp()
+     const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
      // Act
      const routes = [...app.routes.keys()]
@@ -68,7 +54,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -88,7 +74,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('contains all expected props', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -104,7 +90,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('does not contain any additional props', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -120,7 +106,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('detectionByLocationSite contain all expected props', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -138,7 +124,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('detectionByLocationSite does not contain any additional props', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -156,7 +142,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate correct total site count, recording count, detection count, detection frequency, occupied site count, and occupied site frequency', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const expected = {
         totalSiteCount: 2,
         recordedMinutesCount: 20,
@@ -187,7 +173,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate correct detection count, detection frequency, and naive occupancy by site', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const expected = {
         totalSiteCount: 1,
         recordedMinutesCount: 7,
@@ -218,7 +204,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate correct detection count, detection frequency, and naive occupancy by taxon and correct species id', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const expected = {
         totalSiteCount: 2,
         recordedMinutesCount: 20,
@@ -249,7 +235,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate empty detection count, detection frequency, and naive occupancy by taxon and species id on empty date', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const expected = {
         totalSiteCount: 0,
         recordedMinutesCount: 0,
@@ -280,7 +266,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate empty detection count, detection frequency, and naive occupancy by taxon and not correct species id', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const expected = {
         totalSiteCount: 2,
         recordedMinutesCount: 20,
@@ -311,7 +297,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate correct detection count, detection frequency, and naive occupancy by taxon, site id and correct species id', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const expected = {
         totalSiteCount: 1,
         recordedMinutesCount: 7,
@@ -342,7 +328,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate empty detection count, detection frequency, and naive occupancy by taxon, site id and species id on empty date', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const expected = {
         totalSiteCount: 0,
         recordedMinutesCount: 0,
@@ -373,7 +359,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate empty detection count, detection frequency, and naive occupancy by taxon, site id and not correct species id', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const expected = {
         totalSiteCount: 1,
         recordedMinutesCount: 7,
@@ -404,7 +390,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculates isLocationRedacted correctly', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
        // Act
       const response = await app.inject({
@@ -422,7 +408,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate correct detection by location site', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const siteId = 30001001
       const expectedResult = {
         siteId: 30001001,
@@ -453,7 +439,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate correct detection count and detection frequency for hourly', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const detectionsByTimeHour: SpotlightDetectionDataByTime = {
         detection: { 10: 2, 12: 1, 15: 1 },
         detectionFrequency: { 10: 0.1, 12: 0.05, 15: 0.05 }
@@ -478,7 +464,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate correct detection count and detection frequency for day', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const detectionsByTimeDay: SpotlightDetectionDataByTime = {
         detection: { 1: 4 },
         detectionFrequency: { 1: 0.2 }
@@ -503,7 +489,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate correct detection count and detection frequency for month', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const detectionsByTimeMonth: SpotlightDetectionDataByTime = {
         detection: { 1: 4 },
         detectionFrequency: { 1: 0.2 }
@@ -528,7 +514,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate correct detection count and detection frequency for year', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const detectionsByTimeYear: SpotlightDetectionDataByTime = {
         detection: { 2022: 4 },
         detectionFrequency: { 2022: 0.2 }
@@ -553,7 +539,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate correct detection count and detection frequency for date', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
       const detectionsByTimeDate: SpotlightDetectionDataByTime = {
         detection: { 1644883200: 4 },
         detectionFrequency: { 1644883200: 0.2 }
@@ -578,7 +564,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('calculate correct detection count and detection frequency for month/year', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -603,7 +589,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
   describe('client errors', () => {
     test('rejects missing query', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -617,7 +603,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('rejects invalid project id', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -635,7 +621,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('missing species id', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -654,7 +640,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('invalid species id', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -673,7 +659,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('not found species with given id', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -692,7 +678,7 @@ describe(`GET ${ROUTE} (spotlight dataset)`, () => {
 
     test('rejects invalid date', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesSpotlight, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({

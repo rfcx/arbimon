@@ -1,35 +1,20 @@
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test } from 'vitest'
 
 import { type DataSource } from '@rfcx-bio/common/dao/types'
+import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET } from '~/api-helpers/types'
-import { type ProjectRole } from '~/roles'
 import { routesSync } from './index'
 
 const ROUTE = '/projects/:projectId/sync-history'
 
 const PROJECT_ID = '80001001'
 
-// TODO: Extract `getMockedApp...`
-const getMockedApp = async (role: ProjectRole): Promise<FastifyInstance> => {
-  const app = await fastify()
-  await app.register(fastifyRoutes)
-
-  app.decorateRequest('projectRole', role)
-
-  routesSync
-    .forEach(route => app.route(route))
-
-  return app
-}
-
 describe(`GET ${ROUTE} (activity dataset)`, () => {
   describe('simple tests', () => {
     test('exists', async () => {
       // Arrange
-      const app = await getMockedApp('user')
+      const app = await makeApp(routesSync, { projectRole: 'user' })
 
       // Act
       const routes = [...app.routes.keys()]
@@ -40,7 +25,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await getMockedApp('user')
+      const app = await makeApp(routesSync, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -62,7 +47,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
       const EXPECTED_PROPS = [
         'syncs'
       ]
-      const app = await getMockedApp('user')
+      const app = await makeApp(routesSync, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -80,7 +65,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
   describe('known data tests', async () => {
     // Arrange & Act once
-    const app = await getMockedApp('user')
+    const app = await makeApp(routesSync, { projectRole: 'user' })
 
     const response = await app.inject({
       method: GET,
@@ -117,7 +102,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
   describe('client errors', () => {
     test('rejects non-project member with 403', async () => {
       // Arrange
-      const app = await getMockedApp('none')
+      const app = await makeApp(routesSync)
 
       // Act
       const response = await app.inject({

@@ -1,8 +1,7 @@
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
+import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET, PATCH } from '~/api-helpers/types'
 import { routesUserProfile } from './index'
@@ -26,19 +25,6 @@ const defaultUserToken = {
 
 const defaultUserProfile = { id: 1, ...defaultUserToken }
 
-const getMockedApp = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-  await app.register(fastifyRoutes)
-
-  app.decorateRequest('userToken', defaultUserToken)
-  app.decorateRequest('userId', defaultUserProfile.id)
-
-  routesUserProfile
-    .forEach(route => app.route(route))
-
-  return app
-}
-
 const { UserProfile } = modelRepositoryWithElevatedPermissions
 
 beforeEach(async () => {
@@ -52,7 +38,7 @@ afterEach(async () => {
 describe('GET /profile', async () => {
   test('can get profile when exists in the db', async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await makeApp(routesUserProfile, { userId: defaultUserProfile.id })
 
     // Act
     const response = await app.inject({
@@ -71,7 +57,7 @@ describe('GET /profile', async () => {
 describe('PATCH /profile', async () => {
   test('can update first name when profile exists in the db', async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await makeApp(routesUserProfile, { userId: defaultUserProfile.id, userToken: defaultUserToken })
     const profileUpdates = { firstName: 'Brown' }
 
     // Act
@@ -90,7 +76,7 @@ describe('PATCH /profile', async () => {
 
   test('can update first and last name when profile exists in the db', async () => {
     // Arrange
-    const app = await getMockedApp()
+    const app = await makeApp(routesUserProfile, { userId: defaultUserProfile.id, userToken: defaultUserToken })
     const profileUpdates = { firstName: 'Red', lastName: 'Squirrel' }
 
     // Act

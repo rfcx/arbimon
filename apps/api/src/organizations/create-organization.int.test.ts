@@ -1,9 +1,8 @@
-import fastifyRoutes from '@fastify/routes'
-import fastify, { type FastifyInstance } from 'fastify'
 import { describe, expect, test, vi } from 'vitest'
 
 import { type CreateOrganizationResponseBody } from '@rfcx-bio/common/api-bio/organizations/create-organization'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
+import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { POST } from '~/api-helpers/types'
 import { routesOrganizations } from './index'
@@ -41,23 +40,11 @@ const EXPECTED_PROPS = [
 
 const { Organization } = modelRepositoryWithElevatedPermissions
 
-const getMockedApp = async (): Promise<FastifyInstance> => {
-  const app = await fastify()
-
-  await app.register(fastifyRoutes)
-
-  routesOrganizations
-    .map(({ preHandler, ...rest }) => ({ ...rest })) // Remove preHandlers that call external APIs
-    .forEach(route => app.route(route))
-
-  return app
-}
-
 describe(`POST ${ROUTE} (create organization)`, () => {
   describe('simple tests', async () => {
     test('exists', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesOrganizations)
 
       // Act
       const routes = [...app.routes.keys()]
@@ -68,7 +55,7 @@ describe(`POST ${ROUTE} (create organization)`, () => {
 
     test('insert successfully', async () => {
       // Arrange
-      const app = await getMockedApp()
+      const app = await makeApp(routesOrganizations)
 
       // Act
       const response = await app.inject({

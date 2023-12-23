@@ -2,10 +2,10 @@ import { type MyProjectsResponse, type ProjectsResponse } from '@rfcx-bio/common
 
 import { getMyProjectsWithInfo as getMyProjects, getViewableProjects } from '@/projects/projects-dao'
 
-export const getProjects = async (memberProjectCoreIds: string[]): Promise<ProjectsResponse> => {
-  return await getViewableProjects(memberProjectCoreIds)
+export const getProjects = async (userId: number): Promise<ProjectsResponse> => {
+  return await getViewableProjects(userId)
 }
 
-export const getMyProjectsWithInfo = async (memberProjectCoreIds: string[]): Promise<MyProjectsResponse> => {
-  return await getMyProjects(memberProjectCoreIds)
+export const getMyProjectsWithInfo = async (userId: number): Promise<MyProjectsResponse> => {
+  return await getMyProjects(userId)
 }
