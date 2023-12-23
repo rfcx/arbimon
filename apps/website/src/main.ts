@@ -43,6 +43,7 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
   if (isClient) {
     // Authenticate current user
     const authClient = await useAuth0Client()
+    const targetAfterAuth = await handleAuthCallback(authClient)
     const user = await authClient.getUser()
 
     // Save to store
@@ -64,5 +65,10 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
       .provide(apiClientMediaKey, apiClientMedia)
       .provide(apiClientArbimonLegacyKey, apiClientArbimonLegacy)
       .provide(storeKey, store) // TODO: Delete this & use useStore() directly in components
+
+    // Handle redirects
+    if (targetAfterAuth !== undefined) {
+      await router.replace(targetAfterAuth)
+    }
   }
 })
