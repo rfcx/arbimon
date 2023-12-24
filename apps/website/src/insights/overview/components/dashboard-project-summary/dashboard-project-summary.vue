@@ -395,6 +395,6 @@ onMounted(() => {
 
   /* eslint-disable no-unused-vars */
   /* eslint-disable @typescript-eslint/no-unused-vars */
-  const t = new Tabs(tabs, options)
+  const t = new Tabs(document.getElementById('project-summary-tab'), tabs, options)
 })
 </script>

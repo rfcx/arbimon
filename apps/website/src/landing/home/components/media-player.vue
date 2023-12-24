@@ -68,8 +68,7 @@ onBeforeUnmount(() => {
 
 const setupSoundBar = () => {
   siriWave.value = new SiriWave({
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    container: soundbar.value!,
+    container: soundbar.value as HTMLElement,
     width: 192,
     height: 54.5,
     autostart: true,
