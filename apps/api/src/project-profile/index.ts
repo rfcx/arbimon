@@ -8,7 +8,6 @@ export const routesProjectProfile: RouteRegistration[] = [
   {
     method: GET,
     url: projectDataRoute + '/profile',
-    preHandler: [requireProjectPermission('read-profile')],
     handler: projectProfileHandler
   },
   {

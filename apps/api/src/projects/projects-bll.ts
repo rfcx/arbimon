@@ -2,7 +2,7 @@ import { type MyProjectsResponse, type ProjectsResponse } from '@rfcx-bio/common
 
 import { getMyProjectsWithInfo as getMyProjects, getViewableProjects } from '@/projects/projects-dao'
 
-export const getProjects = async (userId: number): Promise<ProjectsResponse> => {
+export const getProjects = async (userId: number | undefined): Promise<ProjectsResponse> => {
   return await getViewableProjects(userId)
 }
 
