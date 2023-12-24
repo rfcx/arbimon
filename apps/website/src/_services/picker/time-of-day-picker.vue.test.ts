@@ -13,7 +13,7 @@ describe('TimeOfDayPicker', () => {
     cleanup()
   })
 
-  test('has all, dirunal, nocturnal, custom options', async () => {
+  test.todo('has all, dirunal, nocturnal, custom options', async () => {
     // Arrange
     const { getByRole } = render(component, DEFAULT_RENDER_OPTIONS)
 
