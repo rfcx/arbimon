@@ -17,7 +17,7 @@ describe('GET /project/:projectId/detect-recording', () => {
   describe('simple tests', () => {
     test('exists', async () => {
       // Arrange
-      const app = await makeApp(routesDetect, 'user')
+      const app = await makeApp(routesDetect, { projectRole: 'user' })
 
       // Act
       const routes = [...app.routes.keys()]
@@ -28,7 +28,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await makeApp(routesDetect, 'user')
+      const app = await makeApp(routesDetect, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -46,7 +46,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
     test('contains all expected props', async () => {
       // Arrange
-      const app = await makeApp(routesDetect, 'user')
+      const app = await makeApp(routesDetect, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -62,7 +62,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
     test('does not contain any additional props', async () => {
       // Arrange
-      const app = await makeApp(routesDetect, 'user')
+      const app = await makeApp(routesDetect, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -79,7 +79,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
   describe('known data tests', async () => {
     // Arrange once
-    const app = await makeApp(routesDetect, 'user')
+    const app = await makeApp(routesDetect, { projectRole: 'user' })
 
     test('return all exists data without queryHours (all day)', async () => {
       // Act
@@ -215,7 +215,7 @@ describe('GET /project/:projectId/detect-recording', () => {
   describe('client errros', () => {
     test('reject missing query', async () => {
       // Arrange
-      const app = await makeApp(routesDetect, 'user')
+      const app = await makeApp(routesDetect, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -229,7 +229,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
     test('reject not exist project id', async () => {
       // Arrange
-      const app = await makeApp(routesDetect, 'user')
+      const app = await makeApp(routesDetect, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -244,7 +244,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
     test('rejects invalid project id', async () => {
       // Arrange
-      const app = await makeApp(routesDetect, 'user')
+      const app = await makeApp(routesDetect, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -262,7 +262,7 @@ describe('GET /project/:projectId/detect-recording', () => {
 
     test('rejects invalid date', async () => {
       // Arrange
-      const app = await makeApp(routesDetect, 'user')
+      const app = await makeApp(routesDetect, { projectRole: 'user' })
 
       // Act
       const response1 = await app.inject({

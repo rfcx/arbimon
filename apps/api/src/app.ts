@@ -24,6 +24,7 @@ import { routesSpotlight } from './spotlight'
 import { routesStatus } from './status'
 import { routesSync } from './sync'
 import { routesUserProfile } from './users'
+import { findOrCreateUserId } from './users/user-profile-bll'
 
 export const createApp = async (): Promise<FastifyInstance> => {
   // Create app
@@ -40,7 +41,7 @@ export const createApp = async (): Promise<FastifyInstance> => {
   })
   await app.register(fastifyStatic, { root: resolve('./public') })
   await app.register(authenticatePlugin) // decorates `userToken`
-  await app.register(userPlugin) // decorates `userId`
+  await app.register(userPlugin, { getUserIdCallback: findOrCreateUserId }) // decorates `userId`
   await app.register(projectRolePlugin) // decorates `projectRole`
 
   // Register routes

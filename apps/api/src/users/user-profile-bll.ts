@@ -11,7 +11,7 @@ import { patchUserProfileOnCore } from '~/api-core/api-core'
 import { BioNotFoundError } from '~/errors'
 import { getObject, putObject } from '~/storage'
 import { getProfileImageURL } from './helpers'
-import { get, getAllOrganizations as daoGetAllOrganizations, update } from './user-profile-dao'
+import { create, get, getAllOrganizations as daoGetAllOrganizations, getIdByEmail, update } from './user-profile-dao'
 
 export const getUserProfile = async (id: number): Promise<Omit<UserProfile, 'id' | 'idAuth0'>> => {
   const profile = await get(id)
@@ -84,6 +84,10 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
   await patchUserProfileOnCore(token, email, coreProfile)
   await putObject(imagePath, await file.toBuffer(), file.mimetype, true)
   await update(email, newProfile)
+}
+
+export const findOrCreateUserId = async (email: string, userInfo: Omit<UserProfile, 'id' | 'email'>): Promise<number> => {
+  return await getIdByEmail(email).then(async (id) => id ?? await create({ email, ...userInfo }))
 }
 
 // TODO: Move to new organizations-bll.ts
