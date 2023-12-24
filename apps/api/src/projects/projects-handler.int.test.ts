@@ -9,7 +9,7 @@ import { makeApp } from '@rfcx-bio/testing/handlers'
 import { GET } from '~/api-helpers/types'
 import { routesProject } from './index'
 
-const userId = 1
+const userId = 9001
 
 function makeProject (id: number, name: string): Project {
   return {

@@ -15,7 +15,7 @@ const ROUTE = '/projects'
 
 const fakeToken = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6ImE0NTBhMzFkMjEwYTY5N2ZmMDI3NjU0YmZhMWZmMTFlIn0.eyJhdXRoMF91c2VyX2lkIjoidGVzdCJ9.571qutLhQm4Wc6hdhsVCxKm_rh4szTg9Wygz2JVxIItf3M_hNI5ats5W-HoJJjmFsBJ_oOwI1uU_6e4bfaFcrg'
 const userToken = { idAuth0: 'test' }
-const userId = 1
+const userId = 9001
 
 const { LocationProject, LocationProjectProfile } = modelRepositoryWithElevatedPermissions
 

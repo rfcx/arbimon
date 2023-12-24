@@ -2,9 +2,9 @@ import fastifyCors from '@fastify/cors'
 import fastifyMultipart from '@fastify/multipart'
 import fastifyStatic from '@fastify/static'
 import fastify, { type FastifyInstance } from 'fastify'
-import fastifyAuth0Verify from 'fastify-auth0-verify'
 import { resolve } from 'path'
 
+import { AUTH0_DEFAULT_CONFIG } from '~/auth0/config'
 import { authenticatePlugin } from './_plugins/authenticate'
 import { projectRolePlugin } from './_plugins/project-role'
 import { userPlugin } from './_plugins/user'
@@ -35,12 +35,8 @@ export const createApp = async (): Promise<FastifyInstance> => {
   // Register plugins
   await app.register(fastifyCors)
   await app.register(fastifyMultipart)
-  await app.register(fastifyAuth0Verify, { // TODO: remove?
-    domain: 'https://auth.rfcx.org/',
-    audience: 'https://rfcx.org'
-  })
   await app.register(fastifyStatic, { root: resolve('./public') })
-  await app.register(authenticatePlugin) // decorates `userToken`
+  await app.register(authenticatePlugin, AUTH0_DEFAULT_CONFIG) // decorates `userToken`
   await app.register(userPlugin, { getUserIdCallback: findOrCreateUserId }) // decorates `userId`
   await app.register(projectRolePlugin) // decorates `projectRole`
 
