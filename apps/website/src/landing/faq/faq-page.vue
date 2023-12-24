@@ -71,7 +71,7 @@ onMounted(() => {
       inactiveClasses: 'text-insight'
   }
 
-  accordions.value = new Accordion(items, options)
+  accordions.value = new Accordion(document.getElementById('accordion-flush'), items, options)
 
   // If there's hash on enter page. Navigate to it.
   if (route.hash !== '') {

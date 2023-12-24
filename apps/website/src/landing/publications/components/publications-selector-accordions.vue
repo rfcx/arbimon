@@ -233,7 +233,7 @@ onMounted(() => {
     }
   ]
 
-  accordions.value = new Accordion(items, { alwaysOpen: false, activeClasses: 'dark:bg-transparent text-white border-b-0 border-black dark:border-b-0', inactiveClasses: 'text-insight' })
+  accordions.value = new Accordion(document.getElementById('accordion-flush'), items, { alwaysOpen: false, activeClasses: 'dark:bg-transparent text-white border-b-0 border-black dark:border-b-0', inactiveClasses: 'text-insight' })
 })
 
 const onInputEnter = (ev: Event): void => {
