@@ -11,14 +11,14 @@ export interface LocationProjectAndRoles {
 
 export const rawUsers: UserProfile[] = [
   {
-    id: 1,
+    id: 9001,
     email: 'somjintana@rfcx.org',
     idAuth0: 'google-oauth2|106691636597425345169',
     firstName: 'Somjintana',
     lastName: 'K'
   },
   {
-    id: 2,
+    id: 9002,
     email: 'art@rfcx.org',
     idAuth0: 'auth0|6451c69c9ea0d78b7346ea61',
     firstName: 'Bhattarapong',
@@ -30,14 +30,14 @@ export const rawUsersWithRolesToProjects: LocationProjectAndRoles[] = [
   {
     slug: 'puerto-rico',
     users: [
-      { userId: 1, roleId: 1 }, // nui as owner
-      { userId: 2, roleId: 3 } // art as guest
+      { userId: 9001, roleId: 1 }, // nui as owner
+      { userId: 9002, roleId: 3 } // art as guest
     ]
   },
   {
     slug: 'bci-panama-2018',
     users: [
-      { userId: 1, roleId: 3 } // nui as guest
+      { userId: 9001, roleId: 3 } // nui as guest
     ]
   }
 ]
