@@ -16,7 +16,7 @@ export const getProjectById = async (id: number): Promise<Project | undefined> =
 /**
  * @deprecated Do not use
  */
-export const getViewableProjects = async (userId: number): Promise<LocationProjectForUser[]> => {
+export const getViewableProjects = async (userId: number | undefined): Promise<LocationProjectForUser[]> => {
   // Temporarily hard-code showcase projects
   const showcaseSlugs = [
     'bci-panama-2018',
@@ -89,7 +89,10 @@ export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, 
   }
 }
 
-const getProjectIdsByUser = async (userId: number): Promise<number[]> => {
+const getProjectIdsByUser = async (userId: number | undefined): Promise<number[]> => {
+  if (userId === undefined) {
+    return await Promise.resolve([])
+  }
   const projects = await models.LocationProjectUserRole.findAll({ where: { userId }, attributes: ['locationProjectId'], raw: true })
   return projects.map(p => p.locationProjectId)
 }
