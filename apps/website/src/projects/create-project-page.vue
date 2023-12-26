@@ -17,6 +17,12 @@
           @emit-project-objectives="emitUpdateProjectObjectives"
         />
       </div>
+      <div class="mt-4">
+        <project-listed-form
+          :is-listed="isListedProject"
+          @emit-project-listed="toggleListedProject"
+        />
+      </div>
       <div class="mt-4 sm:mt-6">
         <button
           class="inline-flex items-center btn btn-primary"
@@ -67,6 +73,7 @@ import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectForm from './components/form/project-form.vue'
+import ProjectListedForm from './components/form/project-listed-form.vue'
 import ProjectObjectiveForm from './components/form/project-objective-form.vue'
 import type { ProjectDefault } from './types'
 
@@ -81,6 +88,7 @@ const endDate = ref<string | null>('')
 const onGoing = ref<boolean>(false)
 const objectives = ref<string[]>([])
 const isCreating = ref<boolean>(false)
+const isListedProject = ref<boolean>(false)
 
 // error
 const DEFAULT_ERROR_MSG = 'Give us a moment to get things straight and try submitting again.'
@@ -143,5 +151,9 @@ const emitUpdateValue = (project: ProjectDefault) => {
 
 const emitUpdateProjectObjectives = (projectObjectiveSlugs: string[]) => {
   objectives.value = projectObjectiveSlugs
+}
+
+const toggleListedProject = (value: boolean) => {
+  isListedProject.value = value
 }
 </script>
