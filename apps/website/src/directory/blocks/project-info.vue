@@ -1,117 +1,128 @@
 <template>
-  <div class="flex flex-col left-100 w-98 bg-moss transition-transform -translate-x-full rounded-lg">
-    <div class="rounded-t-lg bg-moss">
-      <div class="flex flex-row justify-between items-center">
-        <div class="flex flex-1 flex-row items-center">
-          <span
-            class="text-spoonbill font-medium text-xs ml-4 my-3.5"
-          >{{ getCountryLabel(project?.countries ?? [], 1) }}</span>
-          <div
-            v-if="countrieFlag"
-            class="align-baseline flex"
-          >
-            <country-flag
-              :country="countrieFlag"
-              size="normal"
-              class="flex ml-2"
+  <div
+    class="flex flex-col justify-between left-100 w-98 bg-moss transition-transform -translate-x-full rounded-lg"
+    :class="project?.isPublished ? `h-86vh` : `h-75vh`"
+  >
+    <div class="flex flex-col">
+      <div class="rounded-t-lg bg-moss">
+        <div class="flex flex-row justify-between items-center">
+          <div class="flex flex-1 flex-row items-center">
+            <span
+              class="text-spoonbill font-medium text-xs ml-4 my-3.5"
+            >{{ getCountryLabel(project?.countries ?? [], 1) }}</span>
+            <div
+              v-if="countrieFlag"
+              class="align-baseline flex"
+            >
+              <country-flag
+                :country="countrieFlag"
+                size="normal"
+                class="flex ml-2"
+              />
+            </div>
+            <icon-custom-fi-globe
+              v-if="project?.countries ? project?.countries.length > 1 : false"
+              class="flex m-2 my-3"
             />
           </div>
-          <icon-custom-fi-globe
-            v-if="project?.countries ? project?.countries.length > 1 : false"
-            class="flex m-2 my-3"
-          />
-        </div>
-        <svg
-          class="w-4 h-3.5 m-auto self-end mr-4"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-          @click="emit('emitCloseProjectInfo')"
-        >
-          <path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z" />
-        </svg>
-      </div>
-    </div>
-    <div class="overflow-scroll">
-      <img
-        v-if="project?.imageUrl"
-        :src="project?.imageUrl"
-        class="w-full object-contain bg-util-gray-03 h-52"
-      >
-      <div
-        v-else
-        class="w-full h-52 object-contain bg-util-gray-03 flex justify-center items-center"
-      />
-      <div class="p-4 border-b border-util-gray-02">
-        <span class="text-lg font-medium">{{ project?.name }}</span>
-        <div
-          v-if="profile?.dateStart"
-          class="flex font-medium text-sm flex-row border-util-gray-01 mt-3 space-x-2 items-center"
-        >
-          <span>
-            Project dates:
-          </span>
-          <span>
-            {{ formatDateRange(profile?.dateStart) }}
-          </span>
-          <icon-custom-arrow-right-white class="self-start" />
-          <span>
-            {{ formatDateRange(profile?.dateEnd) }}
-          </span>
-        </div>
-        <router-link
-          :to="`/p/${project?.slug}`"
-          class="text-frequency"
-        >
-          <button
-            class="btn btn-primary w-full mt-10"
-            :disabled="project?.isMock"
-            :class="{'opacity-50 cursor-not-allowed': !project?.isPublished}"
+          <svg
+            class="w-4 h-3.5 m-auto self-end mr-4"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+            @click="emit('emitCloseProjectInfo')"
           >
-            View project insights
-          </button>
-        </router-link>
+            <path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z" />
+          </svg>
+        </div>
       </div>
-      <div class="p-4">
-        <numeric-metric
-          tooltip-id="deployment-sites"
-          tooltip-text="Number of sites with recorders."
-          title="Project sites:"
-          :value="profile?.metrics?.totalSites ?? 0"
-          icon-name="ft-map-pin-lg"
-          class="flex-1"
+      <div class="overflow-scroll">
+        <img
+          v-if="project?.imageUrl"
+          :src="project?.imageUrl"
+          class="w-full object-contain bg-util-gray-03 h-52"
+        >
+        <div
+          v-else
+          class="w-full h-52 object-contain bg-util-gray-03 flex justify-center items-center"
         />
-        <numeric-metric
-          tooltip-id="threatened-species-over-all-species"
-          title="Threatened / total species:"
-          tooltip-text="Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
-          :value="profile?.metrics?.threatenedSpecies ?? 0"
-          :total-value="profile?.metrics?.totalSpecies ?? 0"
-          icon-name="ft-actual-bird"
-          class="flex-1"
-        />
-        <numeric-metric
-          tooltip-id="total-detections"
-          title="Total detections:"
-          tooltip-text="Total number of species calls detected."
-          :value="profile?.metrics?.totalDetections ?? 0"
-          icon-name="ft-search-lg"
-          class="flex-1"
-        />
-        <numeric-metric
-          tooltip-id="total-recordings"
-          :tooltip-text="`Total ${totalRecordings.unit} of recordings captured`"
-          :title="`Total recordings (${totalRecordings.unit}):`"
-          :value="totalRecordings.value"
-          icon-name="ft-mic-lg"
-          class="flex-1"
-        />
-        <span
-          v-if="project?.isMock"
-          class="text-sm text-util-gray-01 px-2"
-        >Only fake data. This project is not on dev environment. </span>
+        <div class="p-4 border-b border-util-gray-03">
+          <span class="text-lg font-medium">{{ project?.name }}</span>
+          <div
+            v-if="profile?.dateStart"
+            class="flex font-medium text-sm flex-row border-util-gray-01 mt-3 space-x-2 items-center"
+          >
+            <span>
+              Project dates:
+            </span>
+            <span>
+              {{ formatDateRange(profile?.dateStart) }}
+            </span>
+            <icon-custom-arrow-right-white class="self-start" />
+            <span>
+              {{ formatDateRange(profile?.dateEnd) }}
+            </span>
+          </div>
+          <router-link
+            v-if="project?.isPublished"
+            :to="`/p/${project?.slug}`"
+            class="text-frequency"
+          >
+            <button
+              class="btn btn-primary w-full mt-10"
+              :disabled="project?.isMock"
+              :class="{'opacity-50 cursor-not-allowed': !project?.isPublished}"
+            >
+              View project insights
+            </button>
+          </router-link>
+        </div>
+        <div class="p-4">
+          <numeric-metric
+            tooltip-id="deployment-sites"
+            tooltip-text="Number of sites with recorders."
+            title="Project sites:"
+            :value="profile?.metrics?.totalSites ?? 0"
+            icon-name="ft-map-pin-lg"
+            class="flex-1"
+          />
+          <numeric-metric
+            tooltip-id="threatened-species-over-all-species"
+            title="Threatened / total species:"
+            tooltip-text="Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
+            :value="profile?.metrics?.threatenedSpecies ?? 0"
+            :total-value="profile?.metrics?.totalSpecies ?? 0"
+            icon-name="ft-actual-bird"
+            class="flex-1"
+          />
+          <numeric-metric
+            tooltip-id="total-detections"
+            title="Total detections:"
+            tooltip-text="Total number of species calls detected."
+            :value="profile?.metrics?.totalDetections ?? 0"
+            icon-name="ft-search-lg"
+            class="flex-1"
+          />
+          <numeric-metric
+            tooltip-id="total-recordings"
+            :tooltip-text="`Total ${totalRecordings.unit} of recordings captured`"
+            :title="`Total recordings (${totalRecordings.unit}):`"
+            :value="totalRecordings.value"
+            icon-name="ft-mic-lg"
+            class="flex-1"
+          />
+          <span
+            v-if="project?.isMock"
+            class="text-sm text-util-gray-01 px-2"
+          >Only fake data. This project is not on dev environment. </span>
+        </div>
       </div>
     </div>
+
+    <private-project-tag
+      v-if="!project?.isPublished"
+      class="justify-self-end "
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -126,6 +137,7 @@ import { apiClientKey } from '@/globals'
 import { useGetProjectInfo } from '@/projects/_composables/use-project-profile'
 import { useProjectDirectoryStore } from '~/store'
 import NumericMetric from '../components/numeric-metric.vue'
+import PrivateProjectTag from '../components/private-project-tag.vue'
 import { type ProjectProfileWithMetrics } from '../data/types'
 
 const props = defineProps<{ projectId: number }>()
