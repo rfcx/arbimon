@@ -1,12 +1,14 @@
+// TODO: combine with project-profile.ts
+
 import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
 import { type AttributeTypes, attributes } from '../../dao/type-helpers'
-import { type LocationProjectProfile, type OrganizationTypes, type Project, type ProjectVersion } from '../../dao/types'
+import { type LocationProjectProfile, type Project, type ProjectVersion } from '../../dao/types'
 import { type ApiStack, type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 import { type DashboardMetricsResponse } from '../dashboard/dashboard-metrics'
-import { type DashboardStakeholdersUser } from '../dashboard/dashboard-stakeholders'
+import { type DashboardStakeholdersResponse } from '../dashboard/dashboard-stakeholders'
 
 // Request types
 export type ProjectProfileParams = ProjectRouteParamsSerialized
@@ -36,8 +38,6 @@ export type ProjectInfoResponse = Pick<Project, 'name'>
   metrics?: ProjectMetrics
   image?: string
   richnessByTaxon?: ApiStack
-  users?: DashboardStakeholdersUser[]
-  organizations?: Array<OrganizationTypes['light']>
 }
 
 export type ProjectSettingsResponse = Omit<ProjectInfoResponse, 'readme' | 'keyResults' | 'metrics' | 'image'>
@@ -57,6 +57,11 @@ export const apiBioGetProjectInfoData = async (apiClient: AxiosInstance, project
     fields: fields.join(',')
   }
   return await apiGetOrUndefined(apiClient, url, { params })
+}
+
+export const apiBioGetProjectStakeHoldersData = async (apiClient: AxiosInstance, projectId: number): Promise<DashboardStakeholdersResponse | undefined> => {
+  const url = `/projects/${projectId}/profile/stakeholders`
+  return await apiGetOrUndefined(apiClient, url)
 }
 
 export const apiBioGetProjectSettingsData = async (apiClient: AxiosInstance, projectId: number): Promise<ProjectSettingsResponse | undefined> =>

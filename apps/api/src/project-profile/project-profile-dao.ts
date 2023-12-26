@@ -5,7 +5,6 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getProjectMetrics } from '@/dashboard/dashboard-metrics-dao'
 import { getRichnessByTaxon } from '@/dashboard/dashboard-species-data-dao'
-import { getProjectStakeholders, getProjectStakeholderUsers } from '@/dashboard/dashboard-stakeholders-dao'
 import { getSequelize } from '~/db'
 
 export const getProjectCoreId = async (locationProjectId: number): Promise<string | undefined> => {
@@ -72,16 +71,6 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     richnessByTaxon = await getRichnessByTaxon(locationProjectId)
   }
 
-  let users
-  if (fields.includes('users')) {
-    users = await getProjectStakeholderUsers(locationProjectId)
-  }
-
-  let organizations
-  if (fields.includes('organizations')) {
-    organizations = await getProjectStakeholders(locationProjectId)
-  }
-
   if (!resProject) throw new Error(`Failed to get project settings for locationProjectId: ${locationProjectId}`)
   const baseProject = {
     name: resProject.name,
@@ -100,8 +89,6 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     ...(fields.includes('image') ? { image: '' } : {}),
     ...(fields.includes('countryCodes') ? { countryCodes: resCountry?.countryCodes ?? [] } : {}),
     ...(fields.includes('richnessByTaxon') ? { richnessByTaxon } : {}),
-    ...(fields.includes('users') ? { users } : {}),
-    ...(fields.includes('organizations') ? { organizations } : {}),
     ...(fields.includes('metrics')
         ? {
         metrics: {
