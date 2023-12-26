@@ -1,9 +1,10 @@
-import axios from 'axios'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 import { type GetProjectMembersResponse } from '@rfcx-bio/common/api-bio/project/project-members'
+import { getApiClient } from '@rfcx-bio/utils/api'
 
+import { getIdToken, useAuth0Client } from '~/auth-client'
 import { useStore } from './index'
 
 /**
@@ -31,8 +32,9 @@ export const useProjectUserPermissionsStore = defineStore('project-user-permissi
       permissionOverride.value = undefined
       return
     }
-
-    const members = await axios.get<GetProjectMembersResponse>(`${import.meta.env.VITE_API_BASE_URL}/projects/${id}/users`, { timeout: 30 * 1000 })
+    const authClient = await useAuth0Client()
+    const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, store.user ? async () => await getIdToken(authClient) : undefined)
+    const members = await apiClient.get<GetProjectMembersResponse>(`/projects/${id}/users`)
     projectMembers.value = members.data
     permissionOverride.value = undefined
   }
