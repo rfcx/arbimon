@@ -114,7 +114,7 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       slug: 'puerto-rico',
       name: 'Puerto Rico',
       isPublic: true,
-      isPublished: false,
+      isPublished: true,
       ...dataPr
     },
     {

@@ -45,6 +45,7 @@ export type ProjectProfileWithMetrics = ProjectLight & Pick<LocationProjectProfi
   avgLongitude: number
   isHighlighted: boolean
   isMock: boolean // TODO: remove this
+  isPublished: boolean
   noOfRecordings: number
   noOfSpecies: number
   countries: string[]

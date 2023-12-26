@@ -1,8 +1,9 @@
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
-import { Op } from 'sequelize'
+import { type Optional, Op } from 'sequelize'
 
 import { type DirectoryProjectsResponse, type ProjectLight, type ProjectProfileWithMetrics } from '@rfcx-bio/common/api-bio/project/projects'
+import { type ModelForInterfaceWithPk } from '@rfcx-bio/common/dao/model-factory-helpers/defaults'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type Project } from '@rfcx-bio/common/dao/types'
 
@@ -69,6 +70,7 @@ export const getDirectoryProjects = (fullVersion: boolean = false, ids: number[]
     countries: [],
     isHighlighted: true,
     isMock: true,
+    isPublished: true,
     imageUrl: p.image
   }))
   const filteredProjects = projects.filter((p: ProjectProfileWithMetrics) => {
@@ -85,7 +87,7 @@ export const getDirectoryProjects = (fullVersion: boolean = false, ids: number[]
 
 export const queryDirectoryProjects = async (fullVersion: boolean = false, ids: number[] = [], keywords: string[]): Promise<DirectoryProjectsResponse> => {
   const sequelize = getSequelize()
-  const { LocationProject, LocationProjectMetric, LocationProjectCountry, LocationProjectProfile } = ModelRepository.getInstance(sequelize)
+  const { LocationProject, LocationProjectMetric, LocationProjectCountry, LocationProjectProfile, ProjectVersion } = ModelRepository.getInstance(sequelize)
 
   // form where clauses
   const whereKeywords = keywords.length === 0
@@ -108,13 +110,22 @@ export const queryDirectoryProjects = async (fullVersion: boolean = false, ids: 
       longitudeEast: { [Op.ne]: 0 },
       longitudeWest: { [Op.ne]: 0 },
       ...whereKeywords,
-      ...whereIds,
-      [Op.or]: {
-        id: { [Op.in]: sequelize.literal('(SELECT location_project_id FROM project_version WHERE is_public = true OR is_published = true)') }
-      }
+      ...whereIds
     },
+    include: [
+      {
+        model: ProjectVersion,
+        attributes: ['is_public', 'is_published'],
+        where: {
+          [Op.or]: [
+            { is_public: true },
+            { is_published: true }
+          ]
+        }
+      }
+    ],
     raw: true
-  })
+  }) as Array<ModelForInterfaceWithPk<Project, Optional<Project, 'id'>> & { 'ProjectVersion.is_published': boolean }>
   if (!fullVersion) {
     return toLightProjectsFromProjects(projects)
   } else {
@@ -134,6 +145,7 @@ export const queryDirectoryProjects = async (fullVersion: boolean = false, ids: 
       noOfSpecies: metrics.find(p => p.locationProjectId === project.id)?.speciesCount ?? 0,
       noOfRecordings: metrics.find(p => p.locationProjectId === project.id)?.recordingMinutesCount ?? 0,
       countries: countries.find(p => p.locationProjectId === project.id)?.countryCodes ?? [],
+      isPublished: project['ProjectVersion.is_published'] ?? false,
       isHighlighted: true,
       isMock: false,
       imageUrl: profiles.find(p => p.locationProjectId === project.id)?.image

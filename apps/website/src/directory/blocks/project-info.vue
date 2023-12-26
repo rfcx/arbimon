@@ -66,7 +66,7 @@
           <button
             class="btn btn-primary w-full mt-10"
             :disabled="project?.isMock"
-            :class="{'opacity-50 cursor-not-allowed': project?.isMock}"
+            :class="{'opacity-50 cursor-not-allowed': !project?.isPublished}"
           >
             View project insights
           </button>
@@ -146,6 +146,7 @@ const project = computed<ProjectProfileWithMetrics | undefined>(() => {
       countries: [],
       isHighlighted: false,
       isMock: true,
+      isPublished: false,
       imageUrl: ''
     }
   }
