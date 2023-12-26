@@ -72,6 +72,41 @@ export const getProjectStakeholders = async (projectId: number): Promise<Array<O
   })
 }
 
+export const getProjectStakeholderUsers = async (projectId: number): Promise<DashboardStakeholdersUser[]> => {
+  const sequelize = getSequelize()
+  const { LocationProjectUserRole, UserProfile } = ModelRepository.getInstance(sequelize)
+  const users = await LocationProjectUserRole.findAll({
+    where: {
+      locationProjectId: projectId,
+      ranking: {
+        [Op.gte]: 0
+      }
+    },
+    order: [['ranking', 'ASC']],
+    raw: true
+  })
+  const profile = await UserProfile.findAll({
+    where: {
+      id: {
+        [Op.in]: users.map(u => u.userId)
+      }
+    },
+    raw: true
+  })
+  return users.map(u => {
+    const p = profile.find(p => p.id === u.userId)
+    return {
+      id: u.userId,
+      email: u.ranking !== 0 ? '' : p?.email ?? '', // only return email for primary contact
+      firstName: p?.firstName ?? '',
+      lastName: p?.lastName ?? '',
+      image: getProfileImageURL(p?.image),
+      roleId: u.roleId,
+      ranking: u.ranking
+    }
+  })
+}
+
 export const updateProjectStakeholders = async (projectId: number, stakeholders: { organizations: number[], users: Array<Pick<LocationProjectUserRole, 'userId' | 'ranking'>> }): Promise<void> => {
   const sequelize = getSequelize()
   const { LocationProjectOrganization, LocationProjectUserRole } = ModelRepository.getInstance(sequelize)
