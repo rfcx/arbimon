@@ -34,7 +34,8 @@
     "lint:eslint": "eslint . --cache",
     "lint:prettier": "prettier . --check",
     "pack-api": "node --loader ts-node/esm ./create-lib-package.ts && cd lib && pnpm pack --pack-destination ../../../apps/api",
-    "test": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:test:* -- --run\""
+    "test": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:test:* -- --run\"",
+    "test:unit": "vitest .unit.test."
   },
   "dependencies": {
     "@rfcx-bio/utils": "workspace:^0.0.1",

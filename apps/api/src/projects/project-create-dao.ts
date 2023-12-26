@@ -5,7 +5,7 @@ import { getImageByObjectives } from '@/project-profile/utils/image-by-objective
 import { getSequelize } from '~/db'
 import { uniqueSlug } from './project-create-util-slug-finder'
 
-export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 'idCore' | 'name'> & { objectives?: string[], dateStart?: Date, dateEnd?: Date }): Promise<string> => {
+export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 'idCore' | 'name'> & { objectives?: string[], dateStart?: Date, dateEnd?: Date }): Promise<{ id: number, slug: string }> => {
   const sequelize = getSequelize()
   const { LocationProject, LocationProjectProfile } = ModelRepository.getInstance(sequelize)
 
@@ -30,5 +30,5 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
   }
   await LocationProjectProfile.create(profile)
 
-  return slug
+  return { id, slug }
 }

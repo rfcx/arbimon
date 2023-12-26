@@ -2,7 +2,7 @@ import { type UserProfile } from '@rfcx-bio/common/dao/types'
 
 export interface UserAndRole {
   userId: number
-  roleId: number // TODO: add this as constant => 1 owner, ..., 3 guest
+  roleId: number // See common/src/roles
 }
 export interface LocationProjectAndRoles {
   slug: string

@@ -7,7 +7,7 @@ export const projectCreateHandler: Handler<ProjectCreateResponse, unknown, unkno
   // Inputs & validation
   const project = req.body
 
-  const slug = await createProject(project, req.userToken?.idAuth0 as string, req.headers.authorization ?? '')
+  const slug = await createProject(project, req.userId as number, req.headers.authorization ?? '')
   res.statusCode = 201
   return { slug }
 }

@@ -2,6 +2,7 @@ import { QueryTypes } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type LocationProjectUserRole } from '@rfcx-bio/common/dao/types'
+import { type ProjectRole, getIdByRole } from '@rfcx-bio/common/roles'
 
 import { getSequelize } from '~/db'
 
@@ -35,4 +36,10 @@ export const get = async (locationProjectId: number): Promise<Array<Omit<Locatio
 export const getRoleIdByProjectAndUser = async (locationProjectId: number, userId: number): Promise<number | undefined> => {
   const role = await LocationProjectUserRoleModel.findOne({ where: { locationProjectId, userId } })
   return role?.roleId
+}
+
+export const create = async (data: { locationProjectId: number, userId: number, role: ProjectRole, ranking: number }): Promise<void> => {
+  const { role, ...otherFields } = data
+  const roleId = getIdByRole(role)
+  await LocationProjectUserRoleModel.create({ ...otherFields, roleId }).catch(e => { console.info(e) })
 }
