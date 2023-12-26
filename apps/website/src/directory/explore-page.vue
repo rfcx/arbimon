@@ -14,7 +14,7 @@
     />
     <project-info
       v-if="selectedProjectId !== null && !hideProjectList"
-      class="absolute z-50 h-86vh mt-10"
+      class="absolute z-50 mt-10"
       :project-id="selectedProjectId"
       @emit-close-project-info="selectedProjectId = null"
     />
