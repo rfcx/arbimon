@@ -28,6 +28,10 @@
             :is-disabled="projectUserPermissionsStore.isGuest"
             @emit-project-objectives="onEmitObjectives"
           />
+          <project-listed-form
+            :is-listed="isListedProject"
+            @emit-project-listed="toggleListedProject"
+          />
         </div>
       </div>
       <GuestBanner
@@ -93,6 +97,7 @@ import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/s
 import { useGetProjectSettings, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectForm from './components/form/project-form.vue'
+import ProjectListedForm from './components/form/project-listed-form.vue'
 import ProjectObjectiveForm from './components/form/project-objective-form.vue'
 import ProjectSummaryForm from './components/form/project-summary-form.vue'
 import type { ProjectDefault } from './types'
@@ -119,6 +124,7 @@ const hasFailed = ref(false)
 const lastUpdated = ref(false)
 const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 const lastUpdatedText = ref<string>()
+const isListedProject = ref<boolean>(false)
 
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
@@ -134,6 +140,10 @@ const onEmitSummary = (value: string) => {
 
 const onEmitObjectives = (value: string[]) => {
   newObjectives.value = value
+}
+
+const toggleListedProject = (value: boolean) => {
+  isListedProject.value = value
 }
 
 watch(() => selectedProject.value, () => {
