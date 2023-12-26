@@ -139,6 +139,7 @@ const fetchAllProjects = async () => {
 }
 
 const fetchProjectsWithMetricsByIds = async (ids: number[]) => {
+  if (isLoading.value === true || ids.length === 0) return
   isLoading.value = true
   const dataFull = await apiBioGetDirectoryProjects(apiClientBio, { full: true, ids: ids.join(',') })
   if (dataFull === undefined) return
