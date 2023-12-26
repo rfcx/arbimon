@@ -25,6 +25,10 @@ const permissions: Record<ProjectPermission, ProjectRole[]> = {
 }
 
 export const getRoleById = (roleId: number): ProjectRole => roles[roleId] ?? 'none'
+export const getIdByRole = (role: ProjectRole): number => Number(Object.keys(roles).find(id => roles[Number(id)] === role))
 
 export const hasPermission = (role: ProjectRole, permission: ProjectPermission): boolean =>
   permissions[permission].includes(role)
+
+export const RANKING_NONE = -1 // Not visible to non-project members
+export const RANKING_PRIMARY = 0 // Primary contact
