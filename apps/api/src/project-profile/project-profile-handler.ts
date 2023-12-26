@@ -1,5 +1,7 @@
+import { type DashboardStakeholdersParams, type DashboardStakeholdersResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type ProjectProfileParams, type ProjectProfileQuery, type ProjectProfileUpdateBody, type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
+import { getProjectStakeholders, getProjectStakeholderUsers } from '@/dashboard/dashboard-stakeholders-dao'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
@@ -33,4 +35,23 @@ export const projectProfileUpdateHandler: Handler<ProjectSettingsResponse, Proje
   }
 
   return await updateProjectAndProfile(req.body, req.headers.authorization ?? '', projectIdInteger)
+}
+
+export const projectProfileStakeholdersReadOnlyHandler: Handler<DashboardStakeholdersResponse, DashboardStakeholdersParams> = async (req) => {
+  // Inputs & validation
+  const { projectId } = req.params
+  assertPathParamsExist({ projectId })
+
+  const projectIdInteger = Number(projectId)
+  if (Number.isNaN(projectIdInteger)) {
+    throw BioInvalidPathParamError({ projectId })
+  }
+
+  const organizations = await getProjectStakeholders(projectIdInteger)
+  const users = await getProjectStakeholderUsers(projectIdInteger)
+
+  return {
+    users,
+    organizations
+  }
 }

@@ -2,7 +2,8 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 
-import { type ProjectInfoResponse, type ProjectProfileUpdateBody, type ProjectSettingsResponse, apiBioGetProjectInfoData, apiBioGetProjectSettingsData, apiBioUpdateProjectSettingsData } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import { type DashboardStakeholdersResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
+import { type ProjectInfoResponse, type ProjectProfileUpdateBody, type ProjectSettingsResponse, apiBioGetProjectInfoData, apiBioGetProjectSettingsData, apiBioGetProjectStakeHoldersData, apiBioUpdateProjectSettingsData } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
 export const useGetProjectSettings = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>): UseQueryReturnType<ProjectSettingsResponse, unknown> => {
   return useQuery({
@@ -24,5 +25,12 @@ export const useGetProjectInfo = (apiClient: AxiosInstance, projectId: ComputedR
   return useQuery({
     queryKey: ['get-project-settings'],
     queryFn: async () => await apiBioGetProjectInfoData(apiClient, projectId.value ?? -1, parems)
+  })
+}
+
+export const useGetProjectStakeholders = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>): UseQueryReturnType<DashboardStakeholdersResponse, unknown> => {
+  return useQuery({
+    queryKey: ['get-project-stakeholders'],
+    queryFn: async () => await apiBioGetProjectStakeHoldersData(apiClient, projectId.value ?? -1)
   })
 }
