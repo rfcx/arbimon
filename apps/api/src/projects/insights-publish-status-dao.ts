@@ -11,9 +11,15 @@ export const updateInsightsPublishStatus = async (projectId: number, status: boo
   const version = await ProjectVersion.findOne({ where: { locationProjectId: projectId } })
 
   if (version == null) {
-    await ProjectVersion.create({ locationProjectId: projectId, isPublished: status, isPublic: false }, { returning: true })
+    await ProjectVersion.create({ locationProjectId: projectId, isPublished: status, isPublic: true }, { returning: true })
     return
   }
 
-  await ProjectVersion.update({ isPublished: status }, { where: { id: version.get('id'), locationProjectId: projectId } })
+  if (status) {
+    // if status is true, then set isPublic to true
+    await ProjectVersion.update({ isPublished: status, isPublic: true }, { where: { id: version.get('id'), locationProjectId: projectId } })
+  } else {
+    // update isPublished without overwriting isPublic
+    await ProjectVersion.update({ isPublished: status }, { where: { id: version.get('id'), locationProjectId: projectId } })
+  }
 }
