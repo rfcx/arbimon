@@ -32,7 +32,7 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-  await UserProfile.destroy({ truncate: true, cascade: true })
+  await UserProfile.destroy({ where: { id: defaultUserProfile.id } })
 })
 
 describe('GET /profile', async () => {
