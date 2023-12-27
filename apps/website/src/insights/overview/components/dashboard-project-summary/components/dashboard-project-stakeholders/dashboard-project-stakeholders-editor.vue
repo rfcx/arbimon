@@ -206,7 +206,7 @@ import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGAN
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 import { useCreateOrganization } from '../../../../composables/use-create-organization'
-import { useGetSearchOrganizationsResult } from '../../../../composables/use-get-search-organizations-result'
+import { useGetRecommendedOrganizations, useGetSearchOrganizationsResult } from '../../../../composables/use-get-search-organizations-result'
 import OrganizationSearchResultCard from './organization-search-result-card.vue'
 import SelectedOrganizationCard from './selected-organization-card.vue'
 import StakeholderCardEdit from './stakeholder-card-edit.vue'
@@ -241,6 +241,7 @@ const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult, isFetching: isSearchOrganizationFetching } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
+const { data: recommendedOrganizationsResult } = useGetRecommendedOrganizations(apiClientBio, props.projectMembers.map(user => user.id))
 const { mutate: mutateNewOrganization } = useCreateOrganization(apiClientBio)
 
 const arbimonLink = computed(() => {
@@ -343,8 +344,19 @@ const orgsSearchResult = computed(() => {
   }) ?? []
 })
 
+const recommendedOrganizations = computed(() => {
+  return recommendedOrganizationsResult.value?.map(o => {
+    return {
+      ...o,
+      description: ORGANIZATION_TYPE_NAME[o.type]
+    }
+  }) ?? []
+})
+
 const displayedOrganizations = computed(() => {
-  const organizations = props.organizations.concat(addedOrganizations.value)
+  let organizations = props.organizations.concat(addedOrganizations.value)
+  const orgIds = organizations.map(o => o.id)
+  organizations = organizations.concat(recommendedOrganizations.value.filter(r => !orgIds.includes(r.id)))
   return organizations.map(o => {
     return {
       ...o,
