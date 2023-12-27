@@ -16,14 +16,14 @@ export const storeProjectGuard: NavigationGuardWithThis<undefined> = async (to, 
       // Project found
       store.updateSelectedProject(project)
       await store.updateProjectFilters()
-      await userPermissionsStore.getProjectMembers(project?.id ?? -1)
+      await userPermissionsStore.getRole(project.id ?? -1)
     } else {
       const auth0Client = await useAuth0Client()
       if (await auth0Client.isAuthenticated()) {
         // Definitely no access to project
         store.updateSelectedProject(undefined)
         await store.updateProjectFilters()
-        userPermissionsStore.projectMembers = []
+        userPermissionsStore.role = undefined
       } else {
         // Might need to login
         await auth0Client.loginWithRedirect({ appState: { target: to.fullPath } })
@@ -32,7 +32,7 @@ export const storeProjectGuard: NavigationGuardWithThis<undefined> = async (to, 
   } else {
     // just need to update the filters when both of it is the same already.
     await store.updateProjectFilters()
-    await userPermissionsStore.getProjectMembers(store.selectedProject?.id ?? -1)
+    await userPermissionsStore.getRole(store.selectedProject?.id ?? -1)
   }
 
   next()

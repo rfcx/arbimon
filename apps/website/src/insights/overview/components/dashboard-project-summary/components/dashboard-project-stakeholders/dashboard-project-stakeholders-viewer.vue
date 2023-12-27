@@ -1,7 +1,7 @@
 <template>
   <div class="px-6 pb-6">
     <div
-      v-if="projectUserPermissionsStore.currentUserRoleOfCurrentProject === 1 || projectUserPermissionsStore.currentUserRoleOfCurrentProject === 4"
+      v-if="projectUserPermissionsStore.role === 'owner' || projectUserPermissionsStore.role === 'admin'"
       class="flex w-full justify-end mt-6"
     >
       <button

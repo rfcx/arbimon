@@ -2,7 +2,7 @@ import { QueryTypes } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type LocationProjectUserRole } from '@rfcx-bio/common/dao/types'
-import { type ProjectRole, getIdByRole } from '@rfcx-bio/common/roles'
+import { type ProjectRole, getIdByRole, getRoleById } from '@rfcx-bio/common/roles'
 
 import { getSequelize } from '~/db'
 
@@ -42,4 +42,19 @@ export const create = async (data: { locationProjectId: number, userId: number, 
   const { role, ...otherFields } = data
   const roleId = getIdByRole(role)
   await LocationProjectUserRoleModel.create({ ...otherFields, roleId }).catch(e => { console.info(e) })
+}
+
+export const getUserRoleForProject = async (userId: number | undefined, projectId: number): Promise<ProjectRole> => {
+  // check if project published / public
+  const isAccessibled = true
+  if (userId === undefined) {
+    return isAccessibled ? 'guest' : 'none'
+  }
+  // check if user is project member
+  const roleId = await getRoleIdByProjectAndUser(projectId, userId)
+  if (roleId === undefined) {
+    return isAccessibled ? 'guest' : 'none'
+  }
+
+  return roleId !== undefined ? getRoleById(roleId) : 'none'
 }

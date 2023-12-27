@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 import { type GetProjectMembersResponse } from '@rfcx-bio/common/api-bio/project/project-members'
+import { type ProjectRole } from '@rfcx-bio/common/roles'
 import { getApiClient } from '@rfcx-bio/utils/api'
 
 import { getIdToken, useAuth0Client } from '~/auth-client'
@@ -22,49 +23,29 @@ import { useStore } from './index'
  * - Refetch this API when user changes the project. If the project changes to null, only clear the data and don't query for new data.
  */
 export const useProjectUserPermissionsStore = defineStore('project-user-permissions-store', () => {
+  const role = ref<ProjectRole | undefined>(undefined)
   const projectMembers = ref<GetProjectMembersResponse>([])
-  const permissionOverride = ref<number | undefined>(undefined)
   const store = useStore()
 
-  const getProjectMembers = async (id: number): Promise<void> => {
+  const getRole = async (id: number): Promise<void> => {
     if (id == null || id === -1) {
-      projectMembers.value = []
-      permissionOverride.value = undefined
+      role.value = undefined
       return
     }
     const authClient = await useAuth0Client()
     const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, store.user ? async () => await getIdToken(authClient) : undefined)
-    const members = await apiClient.get<GetProjectMembersResponse>(`/projects/${id}/users`)
-    projectMembers.value = members.data
-    permissionOverride.value = undefined
+    const response = await apiClient.get<ProjectRole>(`/projects/${id}/role`)
+    role.value = response.data
   }
 
-  const currentUserRoleOfCurrentProject = computed<number>(() => {
-    if (permissionOverride.value !== undefined) {
-      return permissionOverride.value
-    }
-
-    // This means not logged in. So guest
-    if (store.user == null || store.user?.email == null) {
-      return 3
-    }
-
-    const userIndex = projectMembers.value.findIndex(m => m.email === store.user?.email)
-    if (userIndex === -1) {
-      return 3
-    }
-
-    return projectMembers.value[userIndex]?.roleId ?? 3
-  })
-
   const isGuest = computed<boolean>(() => {
-    return currentUserRoleOfCurrentProject.value === 3 // legacy arbimon's guest role
+    return role.value === 'guest'
   })
 
   return {
+    role,
     projectMembers,
-    getProjectMembers,
-    currentUserRoleOfCurrentProject,
+    getRole,
     isGuest
   }
 })
