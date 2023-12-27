@@ -5,6 +5,7 @@ import { type LocationProjectUserRole } from '@rfcx-bio/common/dao/types'
 import { type ProjectRole, getIdByRole, getRoleById } from '@rfcx-bio/common/roles'
 
 import { getSequelize } from '~/db'
+import { getProjectVersion } from './project-version-dao'
 
 const sequelize = getSequelize()
 const { LocationProjectUserRole: LocationProjectUserRoleModel } = ModelRepository.getInstance(sequelize)
@@ -46,7 +47,8 @@ export const create = async (data: { locationProjectId: number, userId: number, 
 
 export const getUserRoleForProject = async (userId: number | undefined, projectId: number): Promise<ProjectRole> => {
   // check if project published / public
-  const isAccessibled = true
+  const version = await getProjectVersion(projectId)
+  const isAccessibled = version?.isPublic
   if (userId === undefined) {
     return isAccessibled ? 'guest' : 'none'
   }
