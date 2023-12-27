@@ -79,6 +79,7 @@
   </modal-popup>
 </template>
 <script setup lang="ts">
+// TODO: remove this component
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -150,7 +151,6 @@ const confirmSelectedProject = async () => {
   // The project filter update is nneded because guard hooks will not trigger
   // on same route component (like from one project to another).
   await store.updateProjectFilters()
-  await projectUserPermissionsStore.getProjectMembers(store.selectedProject?.id ?? -1)
 
   // If current route uses projectSlug, update it (guard will update store)
   if (route.params.projectSlug !== undefined) {
