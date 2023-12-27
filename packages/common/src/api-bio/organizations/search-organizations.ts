@@ -9,14 +9,25 @@ export interface SearchOrganizationsQuerystring {
   offset?: string
 }
 
+export interface RecommendedOrganizationsQuerystring {
+  userIds: number[]
+}
+
 // Response types
 export type SearchOrganizationsResponse = Array<OrganizationTypes['light']>
 
 // Route
 export const searchOrganizationsRoute = '/organizations/search'
 
+export const recommendedOrganizationsRoute = '/organizations/recommended'
+
 // Service
 export const apiBioGetSearchOrganizationsResult = async (apiClient: AxiosInstance, q: string, limit?: string, offset?: string): Promise<SearchOrganizationsResponse> => {
-  const response = await apiClient.get('/organizations/search', { params: { q, limit, offset } })
+  const response = await apiClient.get(searchOrganizationsRoute, { params: { q, limit, offset } })
+  return response.data
+}
+
+export const apiBioGetRecommendedOrganizations = async (apiClient: AxiosInstance, params: RecommendedOrganizationsQuerystring): Promise<SearchOrganizationsResponse> => {
+  const response = await apiClient.get(recommendedOrganizationsRoute, { params })
   return response.data
 }
