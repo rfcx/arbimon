@@ -29,7 +29,7 @@
             @emit-project-objectives="onEmitObjectives"
           />
           <project-listed-form
-            :is-listed="isListedProject"
+            :is-public="isPublic"
             @emit-project-listed="toggleListedProject"
           />
         </div>
@@ -124,7 +124,7 @@ const hasFailed = ref(false)
 const lastUpdated = ref(false)
 const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 const lastUpdatedText = ref<string>()
-const isListedProject = ref<boolean>(false)
+const isPublic = ref<boolean>(true)
 
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
@@ -143,7 +143,7 @@ const onEmitObjectives = (value: string[]) => {
 }
 
 const toggleListedProject = (value: boolean) => {
-  isListedProject.value = value
+  isPublic.value = value
 }
 
 watch(() => selectedProject.value, () => {
@@ -156,6 +156,7 @@ watch(() => settings.value, () => {
   newName.value = settings.value.name
   newSummary.value = settings.value.summary
   newObjectives.value = settings.value.objectives
+  isPublic.value = settings.value.isPublic
 
   if (settings.value.dateStart !== null) {
     dateStart.value = dayjs(settings.value.dateStart).format('YYYY-MM-DD') + 'T00:00:00.000Z'
@@ -187,8 +188,7 @@ const updateSettings = () => {
     objectives: newObjectives.value,
     dateStart: dateStart.value ? dateStart.value : null,
     dateEnd: onGoing.value ? null : dateEnd.value ? dateEnd.value : null,
-    // TODO: add isPublic
-    isPublic: true
+    isPublic: isPublic.value
   }, {
     onSuccess: () => {
       isSaving.value = false

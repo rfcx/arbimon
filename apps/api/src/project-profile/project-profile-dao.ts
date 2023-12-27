@@ -78,7 +78,8 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     objectives: resProfile?.objectives ?? [],
     dateStart: resProfile?.dateStart ?? null,
     dateEnd: resProfile?.dateEnd ?? null,
-    isPublished: version?.isPublished ?? false
+    isPublished: version?.isPublished ?? false,
+    isPublic: version?.isPublic ?? false
   }
 
   return {
