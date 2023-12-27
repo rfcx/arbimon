@@ -17,18 +17,20 @@ const fakeToken = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6ImE0NTBhMz
 const userToken = { idAuth0: 'test' }
 const userId = 9001
 
-const { LocationProject, LocationProjectProfile, LocationProjectUserRole } = modelRepositoryWithElevatedPermissions
+const { LocationProject, LocationProjectProfile, LocationProjectUserRole, ProjectVersion } = modelRepositoryWithElevatedPermissions
 
 afterEach(async () => {
   const locationProjects = await LocationProject.findAll({ where: { slug: { [Op.or]: [{ [Op.like]: 'red-squirrels%' }, { [Op.like]: 'greys-linger%' }] } } }).then(projects => projects.map(project => project.id))
   await LocationProjectProfile.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
+  await ProjectVersion.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
+  await LocationProjectUserRole.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
   await LocationProject.destroy({ where: { id: { [Op.in]: locationProjects } } })
 })
 
 test('POST /projects creates local project', async () => {
   // Arrange
   const app = await makeApp(routesProject, { userId, userToken })
-  const project: ProjectCreateRequest = { name: 'Red Squirrels are back' }
+  const project: ProjectCreateRequest = { name: 'Red Squirrels are back', isPublic: true }
 
   // Act
   const response = await app.inject({
@@ -45,7 +47,7 @@ test('POST /projects creates local project', async () => {
   expect(result.slug).toBe('red-squirrels-are-back')
 })
 
-test('POST /projects adds user as project owner', async () => {
+test('POST /projects adds extra infomation (profile, owner role, version)', async () => {
   // Arrange
   const app = await makeApp(routesProject, { userId, userToken })
 
@@ -53,7 +55,7 @@ test('POST /projects adds user as project owner', async () => {
   const response = await app.inject({
     method: POST,
     url: ROUTE,
-    payload: { name: 'Greys linger' },
+    payload: { name: 'Greys linger', isPublic: true },
     headers: { Authorization: fakeToken }
   })
 
@@ -61,7 +63,11 @@ test('POST /projects adds user as project owner', async () => {
   const result = JSON.parse(response.body)
   const project = await LocationProject.findOne({ where: { slug: result.slug } })
   expect(project).toBeDefined()
-  const projectRoles = await LocationProjectUserRole.findAll({ where: { locationProjectId: project.id } })
+  const projectRoles = await LocationProjectUserRole.findAll({ where: { locationProjectId: project?.id } })
   expect(projectRoles).toHaveLength(1)
   expect(projectRoles[0].userId).toBe(userId)
+  // Assert project version
+  const projectVersion = await ProjectVersion.findOne({ where: { locationProjectId: project?.id } })
+  expect(projectVersion).toBeDefined()
+  expect(projectVersion?.isPublic).toBe(true)
 })

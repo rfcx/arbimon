@@ -3,10 +3,11 @@ import { RANKING_PRIMARY } from '@rfcx-bio/common/roles'
 
 import { createProject as createProjectInCore, getProject as getProjectInCore } from '~/api-core/api-core'
 import { create } from './get-project-members-dao'
-import { createProject as createProjectLocal } from './project-create-dao'
+import { createProject as createProjectLocal, createProjectVersion } from './project-create-dao'
 
 export const createProject = async (request: ProjectCreateRequest, userId: number, token: string): Promise<string> => {
   // Create in Core
+  // TODO: check if we want to add is_public to the request
   const idCore = await createProjectInCore({ name: request.name, is_public: false }, token)
   const { external_id: idArbimon } = await getProjectInCore(idCore, token)
 
@@ -18,6 +19,11 @@ export const createProject = async (request: ProjectCreateRequest, userId: numbe
   }
   const project = { idCore, idArbimon, name: request.name, objectives: request.objectives, dateStart, dateEnd }
   const { id, slug } = await createProjectLocal(project)
+  // TODO: move profile from dao to bll
+
+  // create project version
+  await createProjectVersion(id, request.isPublic)
+
   // Set current user as owner
   await create({ locationProjectId: id, userId, role: 'owner', ranking: RANKING_PRIMARY })
   return slug

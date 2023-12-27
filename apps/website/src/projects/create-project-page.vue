@@ -129,7 +129,8 @@ async function create () {
   if (!verifyFields()) return
   resetErrorState()
   isCreating.value = true
-  const project = { name: name.value, objectives: objectives.value, dateStart: startDate.value ?? undefined, dateEnd: onGoing.value ? undefined : (endDate.value ?? undefined) }
+  // TODO: pass isPublic value into api request => isListed = isPublic, isNotListed = !isPublic
+  const project = { name: name.value, isPublic: true, objectives: objectives.value, dateStart: startDate.value ?? undefined, dateEnd: onGoing.value ? undefined : (endDate.value ?? undefined) }
   try {
     const response = await apiBioPostProjectCreate(apiClientBio, project)
     await store.refreshProjects()
