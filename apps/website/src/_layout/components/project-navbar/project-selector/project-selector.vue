@@ -86,13 +86,12 @@ import { useRoute, useRouter } from 'vue-router'
 import type { LocationProjectForUser } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { ROUTE_NAMES } from '~/router'
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useStore } from '~/store'
 import projectList from './project-list.vue'
 
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const emit = defineEmits<{(e: 'emitClose'): void}>()
 
