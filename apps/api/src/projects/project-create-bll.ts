@@ -3,7 +3,8 @@ import { RANKING_PRIMARY } from '@rfcx-bio/common/roles'
 
 import { createProject as createProjectInCore, getProject as getProjectInCore } from '~/api-core/api-core'
 import { create } from './get-project-members-dao'
-import { createProject as createProjectLocal, createProjectVersion } from './project-create-dao'
+import { createProject as createProjectLocal } from './project-create-dao'
+import { createProjectVersion } from './project-version-dao'
 
 export const createProject = async (request: ProjectCreateRequest, userId: number, token: string): Promise<string> => {
   // Create in Core

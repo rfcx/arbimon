@@ -186,7 +186,9 @@ const updateSettings = () => {
     summary: newSummary.value,
     objectives: newObjectives.value,
     dateStart: dateStart.value ? dateStart.value : null,
-    dateEnd: onGoing.value ? null : dateEnd.value ? dateEnd.value : null
+    dateEnd: onGoing.value ? null : dateEnd.value ? dateEnd.value : null,
+    // TODO: add isPublic
+    isPublic: true
   }, {
     onSuccess: () => {
       isSaving.value = false

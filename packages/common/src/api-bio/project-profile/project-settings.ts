@@ -18,6 +18,7 @@ export interface ProjectProfileQuery {
 
 // Response types
 export type ProjectProfileUpdateBody = {
+  isPublic?: boolean
   summary?: string
   objectives?: string[]
   dateStart?: string | null

@@ -32,9 +32,3 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
 
   return { id, slug }
 }
-
-export const createProjectVersion = async (locationProjectId: number, isPublic: boolean): Promise<void> => {
-  const sequelize = getSequelize()
-  const { ProjectVersion } = ModelRepository.getInstance(sequelize)
-  await ProjectVersion.create({ locationProjectId, isPublic, isPublished: false })
-}
