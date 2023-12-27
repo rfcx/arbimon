@@ -93,3 +93,8 @@ spec:
         backend:
           serviceName: arbimon-service
           servicePort: 80
+      - path: /citizen-scientist
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-service
+          servicePort: 80
