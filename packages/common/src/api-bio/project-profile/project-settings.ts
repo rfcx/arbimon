@@ -31,7 +31,7 @@ export type ProjectProfileUpdateResponse = Pick<LocationProjectProfile, 'summary
 
 export type ProjectInfoResponse = Pick<Project, 'name'>
   & Pick<LocationProjectProfile, 'summary' | 'objectives' | 'dateStart' | 'dateEnd'>
-  & Pick<ProjectVersion, 'isPublished'>
+  & Pick<ProjectVersion, 'isPublic' | 'isPublished'>
   & {
   countryCodes?: string[]
   readme?: string

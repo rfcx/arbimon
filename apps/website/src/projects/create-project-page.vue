@@ -19,7 +19,7 @@
       </div>
       <div class="mt-4">
         <project-listed-form
-          :is-listed="isListedProject"
+          :is-public="isPublic"
           @emit-project-listed="toggleListedProject"
         />
       </div>
@@ -88,7 +88,7 @@ const endDate = ref<string | null>('')
 const onGoing = ref<boolean>(false)
 const objectives = ref<string[]>([])
 const isCreating = ref<boolean>(false)
-const isListedProject = ref<boolean>(false)
+const isPublic = ref<boolean>(true)
 
 // error
 const DEFAULT_ERROR_MSG = 'Give us a moment to get things straight and try submitting again.'
@@ -129,8 +129,7 @@ async function create () {
   if (!verifyFields()) return
   resetErrorState()
   isCreating.value = true
-  // TODO: pass isPublic value into api request => isListed = isPublic, isNotListed = !isPublic
-  const project = { name: name.value, isPublic: true, objectives: objectives.value, dateStart: startDate.value ?? undefined, dateEnd: onGoing.value ? undefined : (endDate.value ?? undefined) }
+  const project = { name: name.value, isPublic: isPublic.value, objectives: objectives.value, dateStart: startDate.value ?? undefined, dateEnd: onGoing.value ? undefined : (endDate.value ?? undefined) }
   try {
     const response = await apiBioPostProjectCreate(apiClientBio, project)
     await store.refreshProjects()
@@ -155,6 +154,6 @@ const emitUpdateProjectObjectives = (projectObjectiveSlugs: string[]) => {
 }
 
 const toggleListedProject = (value: boolean) => {
-  isListedProject.value = value
+  isPublic.value = value
 }
 </script>
