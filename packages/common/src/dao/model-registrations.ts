@@ -1,4 +1,3 @@
-import { CacheUserProjectModel, MODEL_CACHE_USER_PROJECT } from './models/cache-user-project-model'
 import { DashboardDetectionByHourModel, MODEL_DASHBOARD_DETECTION_BY_HOUR } from './models/dashboard-detection-by-hour-model'
 import { DashboardDetectionBySiteModel, MODEL_DASHBOARD_DETECTION_BY_SITE } from './models/dashboard-detection-by-site-model'
 import { DashboardRichnessByHourModel, MODEL_DASHBOARD_RICHNESS_BY_HOUR } from './models/dashboard-richness-by-hour-model'
@@ -38,7 +37,6 @@ import { MODEL_USER_PROFILE, UserProfileModel } from './models/user-profile-mode
 
 export const modelRegistrations = {
   // Tables
-  [MODEL_CACHE_USER_PROJECT]: [CacheUserProjectModel, {}],
   [MODEL_DATA_SOURCE]: [DataSourceModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_DETECTION_BY_SITE_SPECIES_HOUR]: [DetectionBySiteSpeciesHourModel, { manyToOne: [MODEL_LOCATION_SITE, MODEL_TAXON_SPECIES] }],
   [MODEL_LOCATION_PROJECT]: [LocationProjectModel, { manyToMany: [{ model: MODEL_ORGANIZATION, through: MODEL_LOCATION_PROJECT_ORGANIZATION, foreignKey: undefined }, { model: MODEL_USER_PROFILE, through: MODEL_LOCATION_PROJECT_USER_ROLE, foreignKey: 'user_id' }] }],
