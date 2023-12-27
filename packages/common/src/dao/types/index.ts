@@ -1,4 +1,3 @@
-export * from './cache-user-project'
 export * from './data-source'
 export * from './detection-by-site-species-hour'
 export * from './location-project'
