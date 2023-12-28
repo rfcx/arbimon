@@ -2,10 +2,10 @@ import { Op } from 'sequelize'
 
 import { type LocationProjectForUser, type MyProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project, ATTRIBUTES_LOCATION_PROJECT, LocationProjectProfile } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectProfile, type Project, ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
-import { getSequelize } from '~/db'
 import { getImageUrl } from '@/users/helpers'
+import { getSequelize } from '~/db'
 
 const sequelize = getSequelize()
 const models = ModelRepository.getInstance(sequelize)
