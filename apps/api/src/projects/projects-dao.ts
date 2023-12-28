@@ -5,7 +5,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type Project, ATTRIBUTES_LOCATION_PROJECT, LocationProjectProfile } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
-import { getImageUrl, getProfileImageURL } from '@/users/helpers'
+import { getImageUrl } from '@/users/helpers'
 
 const sequelize = getSequelize()
 const models = ModelRepository.getInstance(sequelize)
