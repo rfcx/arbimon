@@ -9,7 +9,7 @@ export interface SearchOrganizationsQuerystring {
   offset?: string
 }
 
-export interface RecommendedOrganizationsQuerystring {
+export interface RecommendedOrganizationsQueryParams {
   userIds: number[]
 }
 
@@ -27,7 +27,7 @@ export const apiBioGetSearchOrganizationsResult = async (apiClient: AxiosInstanc
   return response.data
 }
 
-export const apiBioGetRecommendedOrganizations = async (apiClient: AxiosInstance, params: RecommendedOrganizationsQuerystring): Promise<SearchOrganizationsResponse> => {
+export const apiBioGetRecommendedOrganizations = async (apiClient: AxiosInstance, params: RecommendedOrganizationsQueryParams): Promise<SearchOrganizationsResponse> => {
   const response = await apiClient.get(recommendedOrganizationsRoute, { params })
   return response.data
 }

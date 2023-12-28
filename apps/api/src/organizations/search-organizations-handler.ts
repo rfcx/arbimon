@@ -1,4 +1,4 @@
-import { type RecommendedOrganizationsQuerystring, type SearchOrganizationsQuerystring, type SearchOrganizationsResponse } from '@rfcx-bio/common/api-bio/organizations/search-organizations'
+import { type RecommendedOrganizationsQueryParams, type SearchOrganizationsQuerystring, type SearchOrganizationsResponse } from '@rfcx-bio/common/api-bio/organizations/search-organizations'
 
 import { type Handler } from '~/api-helpers/types'
 import { getRecommendedOrganizations, searchOrganizations } from './search-organizations-dao'
@@ -24,12 +24,10 @@ export const searchOrganizationsHandler: Handler<SearchOrganizationsResponse, un
   return await searchOrganizations(searchQuery, limit, offset)
 }
 
-export const recommendedOrganizationsHandler: Handler<SearchOrganizationsResponse, unknown, RecommendedOrganizationsQuerystring> = async (req) => {
-  // TODO: improve this part
-  const userIds = JSON.parse(JSON.stringify(req.query))
-  if (userIds === undefined) {
-    return []
-  }
+export const recommendedOrganizationsHandler: Handler<SearchOrganizationsResponse, unknown, RecommendedOrganizationsQueryParams> = async (req) => {
+  const query = JSON.parse(JSON.stringify(req.query))
+  const userIds = query['userIds[]'] != null ? Array.isArray(query['userIds[]']) ? query['userIds[]'] : [query['userIds[]']] : undefined
+  if (userIds === undefined || userIds.length === 0) return []
 
-  return await getRecommendedOrganizations(userIds['userIds[]'])
+  return await getRecommendedOrganizations(userIds)
 }
