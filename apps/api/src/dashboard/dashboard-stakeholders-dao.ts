@@ -4,7 +4,7 @@ import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboa
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type LocationProjectUserRole, type OrganizationTypes } from '@rfcx-bio/common/dao/types'
 
-import { getProfileImageURL } from '@/users/helpers'
+import { getImageUrl } from '@/users/helpers'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 
@@ -36,7 +36,7 @@ export const getProjectUsers = async (projectId: number): Promise<DashboardStake
       email: p.email,
       firstName: p.firstName,
       lastName: p.lastName,
-      image: getProfileImageURL(p.image),
+      image: getImageUrl(p.image),
       roleId: p.roleId,
       ranking: p.ranking
     }
@@ -100,7 +100,7 @@ export const getProjectStakeholderUsers = async (projectId: number): Promise<Das
       email: u.ranking !== 0 ? '' : p?.email ?? '', // only return email for primary contact
       firstName: p?.firstName ?? '',
       lastName: p?.lastName ?? '',
-      image: getProfileImageURL(p?.image),
+      image: getImageUrl(p?.image),
       roleId: u.roleId,
       ranking: u.ranking
     }
