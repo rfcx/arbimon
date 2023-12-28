@@ -1,6 +1,7 @@
 import { updateInsightsPublishStatusRoute } from '@rfcx-bio/common/api-bio/insights-publish-status/insights-publish-status'
 import { projectCreateRoute } from '@rfcx-bio/common/api-bio/project/project-create'
 import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/project/project-filters'
+import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
 import { projectRecordingCountRoute, projectSitesRecordingCountRoute } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { myProjectsRoute, projectDirectoryRoute, projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
 
@@ -12,6 +13,7 @@ import { getProjectMembersHandler, getProjectPermissionHandler } from './get-pro
 import { patchInsightsPublishStatusHandler } from './patch-insights-publish-status-handler'
 import { projectCreateHandler } from './project-create-handler'
 import { projectFiltersHandler, projectRecordingCountBySiteHandler, projectRecordingCountHandler } from './project-filters-handler'
+import { projectUpdateImageHandler } from './project-image-handler'
 import { myProjectsHandler, projectsAllHandler } from './projects-handler'
 
 export const routesProject: RouteRegistration[] = [
@@ -54,6 +56,12 @@ export const routesProject: RouteRegistration[] = [
     url: projectCreateRoute,
     preHandler: [requireAuthorized],
     handler: projectCreateHandler
+  },
+  {
+    method: PATCH,
+    url: projectProfileImageRoute,
+    preHandler: [requireAuthorized],
+    handler: projectUpdateImageHandler
   },
   {
     method: PATCH,

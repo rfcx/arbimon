@@ -6,7 +6,7 @@ import { create } from './get-project-members-dao'
 import { createProject as createProjectLocal } from './project-create-dao'
 import { createProjectVersion } from './project-version-dao'
 
-export const createProject = async (request: ProjectCreateRequest, userId: number, token: string): Promise<string> => {
+export const createProject = async (request: ProjectCreateRequest, userId: number, token: string): Promise<[string, number]> => {
   // Create in Core
   // TODO: check if we want to add is_public to the request
   const idCore = await createProjectInCore({ name: request.name, is_public: false }, token)
@@ -27,5 +27,5 @@ export const createProject = async (request: ProjectCreateRequest, userId: numbe
 
   // Set current user as owner
   await create({ locationProjectId: id, userId, role: 'owner', ranking: RANKING_PRIMARY })
-  return slug
+  return [slug, id]
 }

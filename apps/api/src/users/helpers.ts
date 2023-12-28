@@ -5,7 +5,7 @@ const {
   AWS_S3_BUCKET_REGION: bucketRegion
 } = env
 
-export const getProfileImageURL = (profileImageUrl: string | undefined): string | undefined => {
+export const getImageUrl = (profileImageUrl: string | undefined): string | undefined => {
   if (profileImageUrl == null) {
     return undefined
   }

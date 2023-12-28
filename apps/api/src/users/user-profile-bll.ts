@@ -10,7 +10,7 @@ import { type OrganizationTypes, type UserProfile } from '@rfcx-bio/common/dao/t
 import { patchUserProfileOnCore } from '~/api-core/api-core'
 import { BioNotFoundError } from '~/errors'
 import { getObject, putObject } from '~/storage'
-import { getProfileImageURL } from './helpers'
+import { getImageUrl } from './helpers'
 import { create, get, getAllOrganizations as daoGetAllOrganizations, getIdByEmail, update } from './user-profile-dao'
 
 export const getUserProfile = async (id: number): Promise<Omit<UserProfile, 'id' | 'idAuth0'>> => {
@@ -24,7 +24,7 @@ export const getUserProfile = async (id: number): Promise<Omit<UserProfile, 'id'
     firstName: profile.firstName,
     lastName: profile.lastName,
     email: profile.email,
-    image: getProfileImageURL(profile.image),
+    image: getImageUrl(profile.image),
     organizationIdAffiliated: profile.organizationIdAffiliated
   }
 }
@@ -36,7 +36,7 @@ export const patchUserProfile = async (token: string, email: string, id: number,
   const coreProfile: Pick<CoreUser, 'firstname' | 'lastname' | 'picture'> = {
     firstname: newProfile.firstName,
     lastname: newProfile.lastName,
-    picture: getProfileImageURL(newProfile.image) ?? null
+    picture: getImageUrl(newProfile.image) ?? null
   }
   await patchUserProfileOnCore(token, email, coreProfile)
   await update(email, newProfile)
@@ -79,7 +79,7 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
   const coreProfile = {
     firstname: newProfile.firstName,
     lastname: newProfile.lastName,
-    picture: getProfileImageURL(newProfile.image) ?? null
+    picture: getImageUrl(newProfile.image) ?? null
   }
   await patchUserProfileOnCore(token, email, coreProfile)
   await putObject(imagePath, await file.toBuffer(), file.mimetype, true)
