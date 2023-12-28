@@ -14,9 +14,7 @@ export interface PatchProjectProjectImageParams {
  * const form = new FormData()
  * form.append('image', imageFileAsBlobType)
  * ```
- *
- * For the location property. Send anything that gets returned from `Location` header of project create api.
  */
-export const apiBioUpdateProjectImage = async (apiClient: AxiosInstance, location: string, form: FormData): Promise<void> => {
-  await apiClient.patch(`${location}/project-profile-image`, form)
+export const apiBioUpdateProjectImage = async (apiClient: AxiosInstance, projectId: number, form: FormData): Promise<void> => {
+  await apiClient.patch(`projects/${projectId}/project-profile-image`, form)
 }
