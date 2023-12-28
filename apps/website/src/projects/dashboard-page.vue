@@ -64,7 +64,6 @@
             @emit-close="toggleAnalysisSelector(false)"
           />
         </div>
-        <GuestBanner v-if="projectUserPermissionsStore.isGuest" />
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10">
           <DashboardAnalyses
             v-for="analysis in analyses"
@@ -85,7 +84,6 @@ import { computed, inject, onMounted, ref, watch } from 'vue'
 import { getApiClient } from '@rfcx-bio/utils/api'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'

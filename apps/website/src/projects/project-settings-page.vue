@@ -30,6 +30,7 @@
           />
           <project-listed-form
             :is-public="isPublic"
+            :is-disabled="projectUserPermissionsStore.isGuest"
             @emit-project-listed="toggleListedProject"
           />
         </div>

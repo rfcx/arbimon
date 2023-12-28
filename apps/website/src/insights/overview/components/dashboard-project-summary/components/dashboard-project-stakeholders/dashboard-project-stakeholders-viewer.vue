@@ -52,10 +52,6 @@
         :ranking="1"
       />
     </div>
-    <GuestBanner
-      v-if="projectUserPermissionsStore.isGuest"
-      class="mt-6"
-    />
     <StakeholdersTosBanner
       v-if="store.user === null"
       class="mt-6"
@@ -67,7 +63,6 @@
 import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
-import GuestBanner from '@/_layout/components/guest-banner/guest-banner.vue'
 import { useProjectUserPermissionsStore, useStore } from '~/store'
 import StakeholderCard from './stakeholder-card.vue'
 import StakeholdersTosBanner from './stakeholders-tos-banner.vue'
