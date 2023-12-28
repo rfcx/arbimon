@@ -3,8 +3,8 @@
     <div class="flex flex-row">
       <span class="font-medium">Project thumbnail photo</span>
       <icon-i-info
-        tooltip-id="project-settings-listed-project-tooltip"
-        :tooltip-text="'Do not list the project on Arbimon if the checkbox is selected'"
+        tooltip-id="project-settings-project-image"
+        :tooltip-text="'Project thumbnail photo'"
       />
     </div>
     <p>Recommended size: XXXX px by XXX px</p>
