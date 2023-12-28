@@ -3,6 +3,7 @@ import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 
 import { type DashboardStakeholdersResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
+import { apiBioUpdateProjectImage } from '@rfcx-bio/common/api-bio/project/project-image'
 import { type ProjectInfoResponse, type ProjectProfileUpdateBody, type ProjectSettingsResponse, apiBioGetProjectInfoData, apiBioGetProjectSettingsData, apiBioGetProjectStakeHoldersData, apiBioUpdateProjectSettingsData } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
 
 export const useGetProjectSettings = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>): UseQueryReturnType<ProjectSettingsResponse, unknown> => {
@@ -18,6 +19,13 @@ export const useUpdateProjectSettings = (apiClient: AxiosInstance, projectId: nu
     mutationFn: async (settings: ProjectProfileUpdateBody) => {
       return await apiBioUpdateProjectSettingsData(apiClient, projectId, settings)
     }
+  })
+}
+
+export const useUpdateProjectImage = (apiClient: AxiosInstance, projectId: number): UseMutationReturnType<void, unknown, FormData, unknown> => {
+  return useMutation({
+    mutationKey: ['patch-project-image'],
+    mutationFn: async (form: FormData) => { await apiBioUpdateProjectImage(apiClient, projectId, form) }
   })
 }
 

@@ -28,6 +28,10 @@
             :is-disabled="projectUserPermissionsStore.isGuest"
             @emit-project-objectives="onEmitObjectives"
           />
+          <project-image-form
+            :is-disabled="projectUserPermissionsStore.isGuest"
+            @emit-project-image="onEmitProjectImage"
+          />
           <project-listed-form
             :is-public="isPublic"
             :is-disabled="projectUserPermissionsStore.isGuest"
@@ -95,9 +99,10 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
 import { apiClientKey } from '@/globals'
 import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
-import { useGetProjectSettings, useUpdateProjectSettings } from './_composables/use-project-profile'
+import { useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectForm from './components/form/project-form.vue'
+import ProjectImageForm from './components/form/project-image-form.vue'
 import ProjectListedForm from './components/form/project-listed-form.vue'
 import ProjectObjectiveForm from './components/form/project-objective-form.vue'
 import ProjectSummaryForm from './components/form/project-summary-form.vue'
@@ -112,6 +117,7 @@ const selectedProjectId = computed(() => store.selectedProject?.id)
 
 const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, store.selectedProject?.id ?? -1)
 
 const newName = ref('')
 const dateStart = ref<string | null>(null)
@@ -126,6 +132,7 @@ const lastUpdated = ref(false)
 const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 const lastUpdatedText = ref<string>()
 const isPublic = ref<boolean>(true)
+const profileImageForm = ref()
 
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
@@ -141,6 +148,10 @@ const onEmitSummary = (value: string) => {
 
 const onEmitObjectives = (value: string[]) => {
   newObjectives.value = value
+}
+
+const onEmitProjectImage = (form: FormData) => {
+  profileImageForm.value = form
 }
 
 const toggleListedProject = (value: boolean) => {
@@ -206,6 +217,9 @@ const updateSettings = () => {
       errorMessage.value = DEFAULT_ERROR_MSG
       console.info(e)
     }
+  })
+  mutatePatchProfilePhoto(profileImageForm.value, {
+    onSuccess: async () => { }
   })
 }
 
