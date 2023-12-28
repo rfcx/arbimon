@@ -13,7 +13,7 @@ export const useGetSearchOrganizationsResult = (apiClient: AxiosInstance, q: Ref
 
 export const useGetRecommendedOrganizations = (apiClient: AxiosInstance, userIds: number[]): UseQueryReturnType<SearchOrganizationsResponse, unknown> => {
   return useQuery({
-    queryKey: ['get-recommended-organizations'],
+    queryKey: ['fetch-recommended-organizations', { userIds }],
     queryFn: async () => await apiBioGetRecommendedOrganizations(apiClient, { userIds })
   })
 }
