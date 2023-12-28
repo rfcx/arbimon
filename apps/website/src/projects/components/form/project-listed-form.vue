@@ -15,6 +15,7 @@
         id="project-settings-listed-project-checkbox"
         type="checkbox"
         class="w-5 h-5 border mb-1 border-util-gray-01 rounded dark:bg-echo focus:border-white-600 focus:ring-frequency dark:border-white-600 dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
+        :disabled="isDisabled"
         :checked="!isPublic"
         @click="toggleListedProject()"
       >
@@ -35,7 +36,7 @@ import { onMounted, ref } from 'vue'
 
 import IconIInfo from '../icon-i-info.vue'
 
-const props = defineProps<{ isPublic: boolean }>()
+const props = defineProps<{ isPublic: boolean, isDisabled?: boolean }>()
 
 const emit = defineEmits<{(e: 'emitProjectListed', value: boolean): void}>()
 

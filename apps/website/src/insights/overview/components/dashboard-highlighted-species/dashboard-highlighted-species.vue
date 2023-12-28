@@ -25,7 +25,6 @@
     <EmptySpeciesList
       v-if="canEdit && !speciesList.length && !isLoading"
     />
-    <GuestBanner v-if="projectUserPermissionsStore.isGuest" />
     <div
       v-if="canEdit && !projectUserPermissionsStore.isGuest"
       class="flex flex-row baseline"
@@ -53,7 +52,6 @@ import { type ComputedRef, type Ref, computed, onMounted, ref } from 'vue'
 
 import { type DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 
-import GuestBanner from '@/_layout/components/guest-banner/guest-banner.vue'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { useProjectUserPermissionsStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../types/highlighted-species'
