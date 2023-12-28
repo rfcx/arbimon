@@ -262,10 +262,6 @@ const allItems: Item[] = [
     iconRaw: 'cloud-upload',
     children: [
       {
-        title: 'Sites',
-        legacyPath: '/audiodata/sites'
-      },
-      {
         title: 'Recordings',
         legacyPath: '/audiodata/uploads/'
       }
