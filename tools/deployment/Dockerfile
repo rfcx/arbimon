@@ -27,7 +27,8 @@ WORKDIR /app
 COPY tsconfig*.json ./
 COPY tools ./tools
 COPY apps ./apps
-COPY packages ./packages
+COPY packages/common ./packages/common
+COPY packages/utils ./packages/utils
 
 ARG mode=production
 ARG release_commit
