@@ -78,7 +78,7 @@ jobs:
 
       - name: 'Extra pnpm install'
         run: |
-          curl -fsSL https://get.pnpm.io/install.sh | env PNPM_VERSION=8 sh -
+          npm install -g pnpm
 
       - name: 'Verify: pnpm install'
         # v2 (2.4.0) @ 26 July 2023 https://github.com/pnpm/action-setup/tags
