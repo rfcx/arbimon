@@ -15,6 +15,7 @@ COPY apps/cli/package.json ./apps/cli/
 COPY apps/website/package.json ./apps/website/
 COPY packages/common/package.json ./packages/common/
 COPY packages/utils/package.json ./packages/utils/
+COPY packages/testing/package.json ./packages/testing/
 
 ENV NODE_ENV=development
 RUN pnpm i --frozen-lockfile
@@ -27,8 +28,7 @@ WORKDIR /app
 COPY tsconfig*.json ./
 COPY tools ./tools
 COPY apps ./apps
-COPY packages/common ./packages/common
-COPY packages/utils ./packages/utils
+COPY packages ./packages
 
 ARG mode=production
 ARG release_commit
