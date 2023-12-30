@@ -8,6 +8,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 COPY pnpm-*.yaml ./
+COPY .npmrc ./
 COPY package.json ./
 COPY apps/api/package.json ./apps/api/
 COPY apps/cli/package.json ./apps/cli/
