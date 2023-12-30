@@ -1,8 +1,4 @@
 <template>
-  <h2 class="mt-6">
-    Taxonomic groups
-  </h2>
-  <h6>Number of species detected in each taxonomic group.</h6>
   <div class="dashboard-taxon">
     <StackDistribution
       :dataset="dataset"

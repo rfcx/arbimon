@@ -26,6 +26,10 @@
         @emit-refetch="refetchSpeciesRichnessByRisk"
       />
       <div class="mt-6">
+        <h2 class="mt-6">
+          Taxonomic groups
+        </h2>
+        <h6>Number of species detected in each taxonomic group.</h6>
         <dashboard-species-by-taxon
           :dataset="speciesRichnessByTaxon"
           :known-total-count="totalSpecies"

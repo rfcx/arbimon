@@ -1,7 +1,6 @@
 <template>
   <div
-    class="flex flex-col justify-between left-100 w-98 bg-moss transition-transform -translate-x-full rounded-lg"
-    :class="project?.isPublished ? `h-86vh` : `h-75vh`"
+    class="flex flex-col justify-between left-100 w-98 h-86vh bg-moss transition-transform -translate-x-full rounded-lg overflow-scroll"
   >
     <div class="flex flex-col">
       <div class="rounded-t-lg bg-moss">
@@ -116,9 +115,20 @@
             class="text-sm text-util-gray-01 px-2"
           >Only fake data. This project is not on dev environment. </span>
         </div>
+        <div class="border-t-1 border-util-gray-03 px-4">
+          <h4 class="mt-4 mb-2 font-medium">
+            Taxonomic groups
+          </h4>
+          <p class="text-sm">
+            Number of species detected in each taxonomic group.
+          </p>
+          <dashboard-species-by-taxon
+            :dataset="speciesRichnessByTaxon"
+            :known-total-count="`${profile?.metrics?.totalSpecies ?? 0}`"
+          />
+        </div>
       </div>
     </div>
-
     <private-project-tag
       v-if="!project?.isPublished"
       class="justify-self-end "
@@ -128,6 +138,7 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
+import type { ComputedRef } from 'vue'
 import { computed, inject, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
@@ -136,6 +147,9 @@ import { totalRecordingsInHours } from '@/_services/utils/recording-time-unit'
 import { apiClientKey } from '@/globals'
 import { useGetProjectInfo } from '@/projects/_composables/use-project-profile'
 import { useProjectDirectoryStore } from '~/store'
+import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
+import { type HorizontalStack } from '../../insights/overview/components/dashboard-species/components/stack-distribution.vue'
+import DashboardSpeciesByTaxon from '../../insights/overview/components/dashboard-species/dashboard-species-by-taxon.vue'
 import NumericMetric from '../components/numeric-metric.vue'
 import PrivateProjectTag from '../components/private-project-tag.vue'
 import { type ProjectProfileWithMetrics } from '../data/types'
@@ -167,7 +181,7 @@ const project = computed<ProjectProfileWithMetrics | undefined>(() => {
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
-const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics'])
+const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon'])
 
 watch(() => props.projectId, () => {
   profileRefetch()
@@ -190,6 +204,18 @@ const formatDateRange = (date: Date | null | undefined): string => {
 // form the total recordings value (minutes or hours)
 const totalRecordingsMin = computed(() => profile.value?.metrics?.totalRecordings ?? 0)
 const totalRecordings = computed(() => totalRecordingsInHours(totalRecordingsMin.value, 3))
+
+const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
+  return (profile.value?.richnessByTaxon ?? []).map(([taxonId, count]) => {
+    const taxonClass = TAXON_CLASSES_BY_ID[taxonId]
+    return {
+      id: taxonId,
+      name: taxonClass.label,
+      color: taxonClass.color,
+      count
+    }
+  })
+})
 
 </script>
 <style lang="scss">
