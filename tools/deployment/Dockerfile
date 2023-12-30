@@ -1,6 +1,6 @@
 # Install pnpm
 FROM node:18-alpine as node-pnpm
-RUN npm i -g pnpm@7
+RUN npm i -g pnpm@8
 
 # Install deps
 FROM node-pnpm as with-deps
