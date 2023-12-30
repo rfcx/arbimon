@@ -42,10 +42,6 @@ jobs:
         with:
           node-version: '18'
 
-      - name: 'Setup: pnpm'
-        run: |
-          npm install -g pnpm
-
       - name: 'Setup: Git checkout'
         # v4 (4.1.1) @ 17 Oct 2023 https://github.com/actions/checkout/tags
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
@@ -80,8 +76,14 @@ jobs:
           key: stylelint-${{ runner.os }}-${{ github.sha }}
           restore-keys: stylelint-${{ runner.os }}
 
-      - name: 'Verify: Install'
-        run: pnpm i -r --frozen-lockfile
+      - name: 'Verify: pnpm install'
+        # v2 (2.4.0) @ 26 July 2023 https://github.com/pnpm/action-setup/tags
+        uses: pnpm/action-setup@d882d12c64e032187b2edb46d3a0d003b7a43598
+        with:
+          version: 8
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile]
 
       - name: 'Verify: Build'
         id: build
