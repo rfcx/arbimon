@@ -1,6 +1,12 @@
 <template>
+  <span
+    v-if="simpleNoDataText && !hasData"
+    class="text-sm"
+  >
+    {{ simpleNoDataText }}
+  </span>
   <no-data-panel
-    v-if="!hasData"
+    v-else-if="!hasData"
     class="h-20"
   />
   <div v-else>
@@ -81,8 +87,10 @@ const props = withDefaults(defineProps<{
   knownTotalCount?: string,
   selectedId?: number
   viewOnly?: boolean
+  simpleNoDataText?: string // only use in project directory
 }>(), {
   knownTotalCount: undefined,
+  simpleNoDataText: undefined,
   selectedId: -1,
   viewOnly: true
 })

@@ -30,9 +30,10 @@
           Taxonomic groups
         </h2>
         <h6>Number of species detected in each taxonomic group.</h6>
-        <dashboard-species-by-taxon
+        <stack-distribution
           :dataset="speciesRichnessByTaxon"
           :known-total-count="totalSpecies"
+          class="my-6"
         />
       </div>
     </div>
@@ -63,9 +64,9 @@ import DashbordMap from './components/dashboard-map/dashboard-map.vue'
 import DashboardMetrics from './components/dashboard-metrics/dashboard-metrics.vue'
 import DashboardProjectSummary from './components/dashboard-project-summary/dashboard-project-summary.vue'
 import { type HorizontalStack } from './components/dashboard-species/components/stack-distribution.vue'
+import StackDistribution from './components/dashboard-species/components/stack-distribution.vue'
 import { useSpeciesRichnessByRisk } from './components/dashboard-species/composables/use-species'
 import DashboardSpeciesByRisk from './components/dashboard-species/dashboard-species-by-risk.vue'
-import DashboardSpeciesByTaxon from './components/dashboard-species/dashboard-species-by-taxon.vue'
 import { useGetDashboardMetrics } from './composables/use-get-dashboard-metrics'
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
