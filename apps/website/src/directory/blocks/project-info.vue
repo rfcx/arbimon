@@ -115,16 +115,18 @@
             class="text-sm text-util-gray-01 px-2"
           >Only fake data. This project is not on dev environment. </span>
         </div>
-        <div class="border-t-1 border-util-gray-03 px-4">
-          <h4 class="mt-4 mb-2 font-medium">
+        <div class="border-t-1 border-util-gray-03 px-4 mb-4">
+          <h4 class="mt-4 font-medium mb-2">
             Taxonomic groups
           </h4>
-          <p class="text-sm">
+          <p class="text-sm mb-2">
             Number of species detected in each taxonomic group.
           </p>
-          <dashboard-species-by-taxon
+          <stack-distribution
             :dataset="speciesRichnessByTaxon"
             :known-total-count="`${profile?.metrics?.totalSpecies ?? 0}`"
+            simple-no-data-text="This project has no species detection"
+            class="my-4"
           />
         </div>
       </div>
@@ -149,7 +151,7 @@ import { useGetProjectInfo } from '@/projects/_composables/use-project-profile'
 import { useProjectDirectoryStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import { type HorizontalStack } from '../../insights/overview/components/dashboard-species/components/stack-distribution.vue'
-import DashboardSpeciesByTaxon from '../../insights/overview/components/dashboard-species/dashboard-species-by-taxon.vue'
+import StackDistribution from '../../insights/overview/components/dashboard-species/components/stack-distribution.vue'
 import NumericMetric from '../components/numeric-metric.vue'
 import PrivateProjectTag from '../components/private-project-tag.vue'
 import { type ProjectProfileWithMetrics } from '../data/types'
