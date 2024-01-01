@@ -37,7 +37,7 @@
       </div>
       <span class="text-xs text-clip md:text-sm">{{ project.summary }}</span>
       <div class="flex flex-row gap-2">
-        <span class="bg-util-gray-03 px-1 rounded font-medium text-xs">{{ numeral(totalRecordings.value).format('0a') }} {{ totalRecordings.value > 1 ? totalRecordings.unit : totalRecordings.unit.replace('s', '') }} recorded</span>
+        <span class="bg-util-gray-03 px-1 rounded font-medium text-xs">{{ numeral(project.noOfRecordings).format('0a') }} {{ project.noOfRecordings > 1 ? 'minutes' : 'minute' }} recorded</span>
         <span class="bg-util-gray-03 px-1 rounded font-medium text-xs">{{ numeral(project.noOfSpecies).format('0a') }} species</span>
       </div>
     </div>
@@ -48,7 +48,6 @@ import numeral from 'numeral'
 import { computed } from 'vue'
 
 import { getCountryLabel } from '@/_services/country'
-import { totalRecordingsInHours } from '@/_services/utils/recording-time-unit'
 import TextTooltip from '../../projects/components/text-tooltip.vue'
 import { masterObjectiveTypes } from '../../projects/types'
 import type { ProjectProfileWithMetrics } from '../data/types'
@@ -66,10 +65,6 @@ const objectiveAll = computed(() => {
   })
 
   return [...new Set(objectives)].join(', ')
-})
-
-const totalRecordings = computed(() => {
-  return totalRecordingsInHours(props.project.noOfRecordings, 3)
 })
 
 </script>
