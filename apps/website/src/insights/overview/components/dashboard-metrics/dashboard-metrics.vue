@@ -62,11 +62,11 @@
     />
     <numeric-metric-with-icons
       tooltip-id="total-recordings"
-      :tooltip-text="`Total ${totalRecordings.unit} of recordings captured`"
+      :tooltip-text="`Total minutes of recordings captured`"
       title="Total recordings"
-      :value="totalRecordings.value"
+      :value="totalRecordingsMin"
       icon-name="ft-mic-lg"
-      :unit="totalRecordings.unit"
+      unit="minutes"
       class="flex-1"
     />
   </div>
@@ -77,7 +77,6 @@ import { computed } from 'vue'
 
 import type { DashboardMetricsResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-metrics'
 
-import { totalRecordingsInHours } from '@/_services/utils/recording-time-unit'
 import NumericMetricError from './components/numeric-metric-error.vue'
 import NumericMetricWithIcons from './components/numeric-metric-with-icons.vue'
 
@@ -85,5 +84,4 @@ const props = defineProps<{ loading: boolean, error: boolean, metrics: Dashboard
 
 // form the total recordings value (minutes or hours)
 const totalRecordingsMin = computed(() => props.metrics?.totalRecordings ?? 0)
-const totalRecordings = computed(() => totalRecordingsInHours(totalRecordingsMin.value, 3))
 </script>

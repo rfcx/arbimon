@@ -104,9 +104,9 @@
           />
           <numeric-metric
             tooltip-id="total-recordings"
-            :tooltip-text="`Total ${totalRecordings.unit} of recordings captured`"
-            :title="`Total recordings (${totalRecordings.unit}):`"
-            :value="totalRecordings.value"
+            :tooltip-text="`Total minutes of recordings captured`"
+            :title="`Total recordings (minutes):`"
+            :value="totalRecordingsMin"
             icon-name="ft-mic-lg"
             class="flex-1"
           />
@@ -145,7 +145,6 @@ import { computed, inject, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
 import { getCountryLabel } from '@/_services/country'
-import { totalRecordingsInHours } from '@/_services/utils/recording-time-unit'
 import { apiClientKey } from '@/globals'
 import { useGetProjectInfo } from '@/projects/_composables/use-project-profile'
 import { useProjectDirectoryStore } from '~/store'
@@ -205,7 +204,6 @@ const formatDateRange = (date: Date | null | undefined): string => {
 
 // form the total recordings value (minutes or hours)
 const totalRecordingsMin = computed(() => profile.value?.metrics?.totalRecordings ?? 0)
-const totalRecordings = computed(() => totalRecordingsInHours(totalRecordingsMin.value, 3))
 
 const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
   return (profile.value?.richnessByTaxon ?? []).map(([taxonId, count]) => {
