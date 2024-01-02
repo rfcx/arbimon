@@ -12,5 +12,11 @@ services:
       - POSTGRES_USER=user_cli
       - POSTGRES_PASSWORD=test
     command: '-c max_connections=200'
+  s3mock-test:
+    image: adobe/s3mock
+    environment:
+      - initialBuckets=bucket
+    ports:
+      - "9090:9092"
 volumes:
   data-timescaledb-test:

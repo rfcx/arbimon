@@ -11,13 +11,11 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=user_cli
       - POSTGRES_PASSWORD=test
-
   s3mock:
     image: adobe/s3mock
     environment:
       - initialBuckets=bucket
     ports:
       - "9090:9090"
-
 volumes:
   data-timescaledb:
