@@ -1,11 +1,10 @@
 import { type AxiosInstance } from 'axios'
 
 import { type LocationProjectUserRole } from '../../dao/types'
+import { type ProjectRouteParamsSerialized } from '../_helpers'
 
 // Request type
-export interface GetProjectMembersParams {
-  projectId: string
-}
+export type GetProjectMembersParams = ProjectRouteParamsSerialized
 
 // Response type
 export type GetProjectMembersResponse = Array<Omit<LocationProjectUserRole, 'createdAt' | 'updatedAt' | 'ranking'> & { email: string }>
