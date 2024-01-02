@@ -1,6 +1,6 @@
 import formAutoContent from 'form-auto-content'
 import { createReadStream } from 'fs'
-import { afterAll, afterEach, beforeAll, expect, test, vi } from 'vitest'
+import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
 
 import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
@@ -33,61 +33,82 @@ beforeAll(async () => {
 })
 
 afterEach(async () => {
-  await LocationProject.destroy({ where: { id: defaultProject.id } })
-})
-
-afterAll(async () => {
   await LocationProjectProfile.destroy({ where: { locationProjectId: defaultProject.id } })
 })
 
-test(`PATCH ${projectProfileImageRoute} uploads file to storage`, async () => {
-  // Arrange
-  const app = await makeApp(routesProject, { projectRole: 'admin' })
-  const url = projectProfileImageRoute.replace(':projectId', defaultProject.id.toString())
-  const form = formAutoContent({
-    file: createReadStream(localImageUrl)
-  })
-
-  // Act
-  const response = await app.inject({ method: PATCH, url, ...form })
-
-  // Assert
-  expect(response.statusCode).toBe(204)
-  const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
-  expect(profile).toBeDefined()
-  expect(profile?.image).toBeDefined()
-  const fileAsArrayBuffer = await getObject(profile?.image ?? '')
-  expect(fileAsArrayBuffer.byteLength).toBeGreaterThan(1000)
+afterAll(async () => {
+  await LocationProject.destroy({ where: { id: defaultProject.id } })
 })
 
-test(`PATCH ${projectProfileImageRoute} rejects non image`, async () => {
-  // Arrange
-  const app = await makeApp(routesProject, { projectRole: 'admin' })
-  const url = projectProfileImageRoute.replace(':projectId', defaultProject.id.toString())
-  const form = formAutoContent({
-    file: createReadStream(localNonImageUrl)
+describe(`PATCH ${projectProfileImageRoute}`, async () => {
+  test('updates the profile image / uploads file to storage', async () => {
+    // Arrange
+    const existingImage = 'xyz.jpg'
+    await LocationProjectProfile.create({ locationProjectId: defaultProject.id, image: existingImage, summary: '', readme: '', methods: '', keyResult: '', resources: '', objectives: [], dateStart: null, dateEnd: null })
+    const app = await makeApp(routesProject, { projectRole: 'admin' })
+    const url = projectProfileImageRoute.replace(':projectId', defaultProject.id.toString())
+    const form = formAutoContent({
+      file: createReadStream(localImageUrl)
+    })
+
+    // Act
+    const response = await app.inject({ method: PATCH, url, ...form })
+
+    // Assert
+    expect(response.statusCode).toBe(204)
+    const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
+    expect(profile?.image).not.toBe(existingImage)
+    const fileAsArrayBuffer = await getObject(profile?.image ?? '')
+    expect(fileAsArrayBuffer.byteLength).toBeGreaterThan(1000)
   })
 
-  // Act
-  const response = await app.inject({ method: PATCH, url, ...form })
+  test('creates new profile and sets image', async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { projectRole: 'admin' })
+    const url = projectProfileImageRoute.replace(':projectId', defaultProject.id.toString())
+    const form = formAutoContent({
+      file: createReadStream(localImageUrl)
+    })
 
-  // Assert
-  expect(response.statusCode).toBe(415)
-  const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
-  expect(profile).toBeNull()
-})
+    // Act
+    const response = await app.inject({ method: PATCH, url, ...form })
 
-test(`PATCH ${projectProfileImageRoute} rejects call from non admin user`, async () => {
-  // Arrange
-  const app = await makeApp(routesProject, { projectRole: 'user' })
-  const url = projectProfileImageRoute.replace(':projectId', defaultProject.id.toString())
-  const form = formAutoContent({
-    file: createReadStream(localImageUrl)
+    // Assert
+    expect(response.statusCode).toBe(204)
+    const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
+    expect(profile).toBeDefined()
+    expect(profile?.image).toBeDefined()
   })
 
-  // Act
-  const response = await app.inject({ method: PATCH, url, ...form })
+  test('rejects non image', async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { projectRole: 'admin' })
+    const url = projectProfileImageRoute.replace(':projectId', defaultProject.id.toString())
+    const form = formAutoContent({
+      file: createReadStream(localNonImageUrl)
+    })
 
-  // Assert
-  expect(response.statusCode).toBe(403)
+    // Act
+    const response = await app.inject({ method: PATCH, url, ...form })
+
+    // Assert
+    expect(response.statusCode).toBe(415)
+    const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
+    expect(profile).toBeNull()
+  })
+
+  test('rejects call from non admin user', async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { projectRole: 'user' })
+    const url = projectProfileImageRoute.replace(':projectId', defaultProject.id.toString())
+    const form = formAutoContent({
+      file: createReadStream(localImageUrl)
+    })
+
+    // Act
+    const response = await app.inject({ method: PATCH, url, ...form })
+
+    // Assert
+    expect(response.statusCode).toBe(403)
+  })
 })
