@@ -49,6 +49,11 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
 
       - name: 'Setup: Database increase max connections'
+        env:
+          PGHOST: localhost
+          PGDATABASE: postgres
+          PGUSER: user_cli
+          PGPASSWORD: test
         run: |
           docker exec -i postgres bash << EOF
             sed -i -e 's/max_connections = 100/max_connections = 1000/' /var/lib/postgresql/data/postgresql.conf
@@ -59,8 +64,13 @@ jobs:
           psql -c 'SHOW max_connections;'
 
       - name: 'Setup: Database init scripts'
+        env:
+          PGHOST: localhost
+          PGDATABASE: postgres
+          PGUSER: user_cli
+          PGPASSWORD: test
         run: |
-          find tools/db/init.d -type f | sort | PGPASSWORD=test xargs -n1 -I % psql -U user_cli -d postgres -h localhost -f %
+          find tools/db/init.d -type f | sort | xargs -n1 -I % psql -f %
 
       - name: 'Cache: Dependencies'
         # v3 (3.3.2) @ 8 Sep 2023 https://github.com/actions/cache/tags
