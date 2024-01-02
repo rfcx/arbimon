@@ -60,7 +60,7 @@ export const routesProject: RouteRegistration[] = [
   {
     method: PATCH,
     url: projectProfileImageRoute,
-    preHandler: [requireAuthorized],
+    preHandler: [requireProjectPermission('update-profile')],
     handler: projectUpdateImageHandler
   },
   {
