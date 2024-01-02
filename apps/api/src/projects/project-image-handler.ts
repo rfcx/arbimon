@@ -13,8 +13,10 @@ export const projectUpdateImageHandler: Handler<string, PatchProjectProjectImage
   }
 
   const file = await req.file()
-  await patchProjectProfileImage(projectIdInteger, file)
+  if (!file.mimetype.startsWith('image/')) {
+    return await rep.code(415).send()
+  }
 
-  void rep.code(204)
-  return ''
+  await patchProjectProfileImage(projectIdInteger, file)
+  return await rep.code(204).send()
 }

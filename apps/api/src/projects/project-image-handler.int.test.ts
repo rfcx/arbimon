@@ -74,7 +74,7 @@ test(`PATCH ${projectProfileImageRoute} rejects non image`, async () => {
   // Assert
   expect(response.statusCode).toBe(415)
   const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
-  expect(profile).not.toBeDefined()
+  expect(profile).toBeNull()
 })
 
 test(`PATCH ${projectProfileImageRoute} rejects call from non admin user`, async () => {
