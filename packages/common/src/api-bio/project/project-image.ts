@@ -1,11 +1,14 @@
 import { type AxiosInstance } from 'axios'
 
-export const projectProfileImageRoute = '/projects/:projectId/project-profile-image'
+import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 
-export interface PatchProjectProjectImageParams {
-  projectId: string
-}
+// Request types
+export type PatchProjectProjectImageParams = ProjectRouteParamsSerialized
 
+// Route
+export const projectProfileImageRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/project-profile-image`
+
+// Service
 /**
  * API connector to upload project profile image to S3. Please pass in FormData into the second argument of the function.
  *

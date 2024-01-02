@@ -5,7 +5,6 @@ import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 
 // Request types
-
 export type ProjectRecordingCountParams = ProjectRouteParamsSerialized
 
 // Response types
