@@ -17,6 +17,6 @@ services:
     environment:
       - initialBuckets=bucket
     ports:
-      - "9090:9092"
+      - "9092:9090"
 volumes:
   data-timescaledb-test:
