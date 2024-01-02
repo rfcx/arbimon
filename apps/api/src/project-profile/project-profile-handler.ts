@@ -1,5 +1,5 @@
 import { type DashboardStakeholdersParams, type DashboardStakeholdersResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
-import { type ProjectProfileParams, type ProjectProfileQuery, type ProjectProfileUpdateBody, type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import { type ProjectProfileParams, type ProjectProfileQuery, type ProjectProfileUpdateBody, type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project/project-settings'
 
 import { getProjectStakeholders, getProjectStakeholderUsers } from '@/dashboard/dashboard-stakeholders-dao'
 import { type Handler } from '~/api-helpers/types'

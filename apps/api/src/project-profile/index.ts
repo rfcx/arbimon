@@ -1,4 +1,4 @@
-import { projectDataRoute } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import { projectDataRoute } from '@rfcx-bio/common/api-bio/project/project-settings'
 
 import { requireProjectPermission } from '@/_hooks/require-permission'
 import { type RouteRegistration, GET, PATCH } from '../_services/api-helpers/types'

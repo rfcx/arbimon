@@ -4,7 +4,7 @@ import { type ComputedRef } from 'vue'
 
 import { type DashboardStakeholdersResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { apiBioUpdateProjectImage } from '@rfcx-bio/common/api-bio/project/project-image'
-import { type ProjectInfoResponse, type ProjectProfileUpdateBody, type ProjectSettingsResponse, apiBioGetProjectInfoData, apiBioGetProjectSettingsData, apiBioGetProjectStakeHoldersData, apiBioUpdateProjectSettingsData } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import { type ProjectInfoResponse, type ProjectProfileUpdateBody, type ProjectSettingsResponse, apiBioGetProjectInfoData, apiBioGetProjectSettingsData, apiBioGetProjectStakeHoldersData, apiBioUpdateProjectSettingsData } from '@rfcx-bio/common/api-bio/project/project-settings'
 
 export const useGetProjectSettings = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>): UseQueryReturnType<ProjectSettingsResponse, unknown> => {
   return useQuery({
