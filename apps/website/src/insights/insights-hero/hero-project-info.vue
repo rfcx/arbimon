@@ -81,7 +81,7 @@ import dayjs from 'dayjs'
 import { computed } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
-import { type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import { type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project/project-settings'
 
 import { masterObjectiveTypes } from '../../projects/types'
 

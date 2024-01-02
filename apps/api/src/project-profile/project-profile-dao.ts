@@ -1,6 +1,6 @@
 import { pickBy } from 'lodash-es'
 
-import type { ProjectInfoFieldType, ProjectInfoResponse, ProjectProfileUpdateBody, ProjectProfileUpdateResponse, ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project-profile/project-settings'
+import type { ProjectInfoFieldType, ProjectInfoResponse, ProjectProfileUpdateBody, ProjectProfileUpdateResponse, ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getProjectMetrics } from '@/dashboard/dashboard-metrics-dao'
