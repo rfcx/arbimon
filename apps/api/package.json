@@ -58,6 +58,7 @@
     "sequelize": "7.0.0-alpha.5"
   },
   "devDependencies": {
+    "form-auto-content": "^3.2.1",
     "pino-pretty": "^7.3.0"
   }
 }
