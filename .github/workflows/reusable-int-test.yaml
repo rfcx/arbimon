@@ -36,6 +36,12 @@ jobs:
           --health-timeout 5s
           --health-retries 5
           --name postgres
+      s3mock:
+        image: adobe/s3mock
+        env:
+          initialBuckets: bucket
+        ports:
+          - 9090:9090
 
     steps:
       - name: 'Setup: Node'
@@ -123,3 +129,4 @@ jobs:
           AWS_S3_SECRET_ACCESS_KEY: fake
           AWS_S3_BUCKET_NAME: 'bucket'
           AWS_S3_BUCKET_REGION: 'eu-west-1'
+          AWS_S3_ENDPOINT: http://localhost:9090
