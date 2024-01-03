@@ -52,12 +52,6 @@
                 >
                   <icon-custom-pres-chart-bar />
                 </span>
-                <span
-                  v-if="item.iconRaw === 'fi-settings'"
-                  class="p-0.5"
-                >
-                  <icon-custom-fi-settings />
-                </span>
                 <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
               </router-link>
               <a
@@ -91,6 +85,12 @@
                   class="p-0.5"
                 >
                   <icon-custom-fi-activity class="h-6 w-6" />
+                </span>
+                <span
+                  v-if="item.iconRaw === 'fi-settings'"
+                  class="p-0.5"
+                >
+                  <icon-custom-fi-settings />
                 </span>
                 <span class="flex-1 ml-2 text-left whitespace-nowrap hidden group-hover:block">
                   {{ item.title }}
@@ -334,9 +334,18 @@ const allItems: Item[] = [
   {
     title: 'Project settings',
     iconRaw: 'fi-settings',
-    route: {
-      name: ROUTE_NAMES.projectSettings
-    }
+    children: [
+      {
+        title: 'Project information',
+        route: {
+          name: ROUTE_NAMES.projectSettings
+        }
+      },
+      {
+        title: 'Members',
+        legacyPath: '/settings/users'
+      }
+    ]
   }
 ]
 
