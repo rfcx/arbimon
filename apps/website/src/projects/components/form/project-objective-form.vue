@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-6 flex flex-row">
+  <div class="flex flex-row">
     <label
       for="name"
       class="block font-medium text-gray-900 dark:text-insight"

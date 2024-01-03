@@ -2,7 +2,7 @@
   <div class="bg-util-gray-04 p-4 border border-util-gray-02 rounded-md w-full flex flex-col gap-4 md:(flex-row items-center min-h-12) justify-between">
     <div class="font-medium flex flex-col gap-4 md:(flex-row items-center) justify-between">
       <div class="flex flex-row gap-2 flex-shrink-0">
-        <icon-custom-ic-warning class="h-5 w-5" />
+        <icon-custom-ic-warning class="h-5 w-5 text-insight" />
         No detections
       </div>
       <span class="text-insight text-base font-medium font-sans flex-1 flex-shrink">

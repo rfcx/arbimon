@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row gap-4 border-t-1 border-util-gray-03 p-4 bg-echo">
-    <icon-custom-ic-warning />
+    <icon-custom-ic-warning class="text-insight" />
     <div class="flex flex-col gap-2">
       <span>Private project</span>
       <span class="text-sm">Project details are hidden to non-project members.</span>
