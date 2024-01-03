@@ -36,8 +36,8 @@ jobs:
           --health-timeout 5s
           --health-retries 5
           --name postgres
-      s3mock:
-        image: adobe/s3mock
+      sssmock:
+        image: adobe/s3mock:latest
         env:
           initialBuckets: bucket
         ports:
@@ -77,6 +77,10 @@ jobs:
           PGPASSWORD: test
         run: |
           find tools/db/init.d -type f | sort | xargs -n1 -I % psql -f %
+
+      - name: 'Setup: Check S3 status'
+        run: |
+          aws s3 ls s3://bucket --summarize --endpoint-url http://localhost:9090
 
       - name: 'Cache: Dependencies'
         # v3 (3.3.2) @ 8 Sep 2023 https://github.com/actions/cache/tags
@@ -129,4 +133,4 @@ jobs:
           AWS_S3_SECRET_ACCESS_KEY: fake
           AWS_S3_BUCKET_NAME: 'bucket'
           AWS_S3_BUCKET_REGION: 'eu-west-1'
-          AWS_S3_ENDPOINT: http://localhost:9090
+          AWS_S3_ENDPOINT: 'http://localhost:9090'
