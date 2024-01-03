@@ -7,7 +7,7 @@
         :tooltip-text="'Project thumbnail photo'"
       />
     </div>
-    <p>Recommended size: XXXX px by XXX px</p>
+    <p>Recommended size: 380 px by 180 px</p>
     <div>
       <input
         id="profileFileUpload"
