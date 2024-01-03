@@ -141,7 +141,15 @@
         name="about"
         class="m-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800"
       >
-        <p class="text-sm text-gray-500 dark:text-gray-400">
+        <p
+          v-if="profile?.readme"
+        >
+          {{ profile?.readme }}
+        </p>
+        <p
+          v-else
+          class="text-sm text-gray-500 dark:text-gray-400"
+        >
           This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Profile tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.
         </p>
       </el-tab-pane>
@@ -217,7 +225,7 @@ const project = computed<ProjectProfileWithMetrics | undefined>(() => {
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
-const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon'])
+const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResults'])
 
 watch(() => props.projectId, () => {
   profileRefetch()
