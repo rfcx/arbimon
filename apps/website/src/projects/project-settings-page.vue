@@ -4,8 +4,12 @@
       <h1 class="text-gray-900 dark:text-insight">
         Project settings
       </h1>
-      <p class="mt-4 text-fog">
-        Review your project information.
+      <GuestBanner
+        v-if="projectUserPermissionsStore.isGuest"
+        class="mt-6"
+      />
+      <p class="mt-6 text-fog">
+        Project information
       </p>
       <div class="grid mt-6 lg:(grid-cols-2 gap-10)">
         <div>
@@ -39,10 +43,6 @@
           />
         </div>
       </div>
-      <GuestBanner
-        v-if="projectUserPermissionsStore.isGuest"
-        class="mt-4"
-      />
       <div
         v-if="!projectUserPermissionsStore.isGuest"
         class="mt-4 sm:mt-6 flex flex-row-reverse items-center gap-4"
