@@ -1,9 +1,9 @@
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type LocationProjectProfile, type Project } from '@rfcx-bio/common/dao/types'
 
-import { getImageByObjectives } from '@/project-profile/utils/image-by-objective'
+import { getImageByObjectives } from '@/projects/utils/image-by-objective'
 import { getSequelize } from '~/db'
-import { uniqueSlug } from './project-create-util-slug-finder'
+import { uniqueSlug } from '../project-create-util-slug-finder'
 
 export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 'idCore' | 'name'> & { objectives?: string[], dateStart?: Date, dateEnd?: Date }): Promise<{ id: number, slug: string }> => {
   const sequelize = getSequelize()

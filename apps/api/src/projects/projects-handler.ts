@@ -2,7 +2,7 @@ import { type LocationProjectQuery, type MyProjectsResponse, type ProjectsRespon
 
 import { getProjects } from '@/projects/projects-bll'
 import { type Handler } from '../_services/api-helpers/types'
-import { getMyProjectsWithInfo } from './projects-dao'
+import { getMyProjectsWithInfo } from './dao/projects-dao'
 
 export const projectsAllHandler: Handler<ProjectsResponse> = async (req) => {
   return await getProjects(req.userId as number)

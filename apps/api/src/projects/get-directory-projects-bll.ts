@@ -1,6 +1,6 @@
 import { type DirectoryProjectsQuery, type DirectoryProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
 
-import { getDirectoryProjects as getMock, queryDirectoryProjects } from './get-directory-projects-dao'
+import { getDirectoryProjects as getMock, queryDirectoryProjects } from './dao/get-directory-projects-dao'
 
 export const getDirectoryProjects = async (req: DirectoryProjectsQuery): Promise<DirectoryProjectsResponse> => {
   const isFull = req.full ?? false

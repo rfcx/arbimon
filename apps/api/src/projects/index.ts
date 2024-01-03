@@ -3,6 +3,7 @@ import { projectCreateRoute } from '@rfcx-bio/common/api-bio/project/project-cre
 import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
 import { projectRecordingCountRoute, projectSitesRecordingCountRoute } from '@rfcx-bio/common/api-bio/project/project-recordings'
+import { projectDataRoute } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { myProjectsRoute, projectDirectoryRoute, projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { requireAuthorized } from '@/_hooks/require-authenticated'
@@ -14,6 +15,7 @@ import { patchInsightsPublishStatusHandler } from './patch-insights-publish-stat
 import { projectCreateHandler } from './project-create-handler'
 import { projectFiltersHandler, projectRecordingCountBySiteHandler, projectRecordingCountHandler } from './project-filters-handler'
 import { projectUpdateImageHandler } from './project-image-handler'
+import { projectProfileHandler, projectProfileStakeholdersReadOnlyHandler, projectProfileUpdateHandler } from './project-profile-handler'
 import { myProjectsHandler, projectsAllHandler } from './projects-handler'
 
 export const routesProject: RouteRegistration[] = [
@@ -59,25 +61,42 @@ export const routesProject: RouteRegistration[] = [
   },
   {
     method: PATCH,
-    url: projectProfileImageRoute,
-    preHandler: [requireProjectPermission('update-profile')],
-    handler: projectUpdateImageHandler
-  },
-  {
-    method: PATCH,
     url: updateInsightsPublishStatusRoute,
     preHandler: [requireProjectPermission('update-publish-status')],
     handler: patchInsightsPublishStatusHandler
   },
   {
     method: GET,
-    url: '/projects/:projectId/users',
+    url: projectDataRoute + '/users',
     preHandler: [requireProjectPermission('read-users')],
     handler: getProjectMembersHandler
   },
   {
     method: GET,
-    url: '/projects/:projectId/role',
+    url: projectDataRoute + '/role',
     handler: getProjectPermissionHandler
+  },
+  {
+    method: GET,
+    url: projectDataRoute + '/profile',
+    handler: projectProfileHandler
+  },
+  {
+    method: GET,
+    url: projectDataRoute + '/profile/stakeholders',
+    preHandler: [requireProjectPermission('read-profile')],
+    handler: projectProfileStakeholdersReadOnlyHandler
+  },
+  {
+    method: PATCH,
+    url: projectDataRoute + '/profile',
+    preHandler: [requireProjectPermission('update-profile')],
+    handler: projectProfileUpdateHandler
+  },
+  {
+    method: PATCH,
+    url: projectProfileImageRoute,
+    preHandler: [requireProjectPermission('update-profile')],
+    handler: projectUpdateImageHandler
   }
 ]
