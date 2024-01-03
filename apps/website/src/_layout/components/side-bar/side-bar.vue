@@ -193,13 +193,13 @@
           <div class="my-4 border-t-1 border-util-gray-03" />
           <ul class="px-2.5 flex flex-col gap-y-4">
             <li
-              class="my-2 flex items-center text-base font-normal h-10 hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+              class="my-2 flex items-center text-base font-normal h-10"
             >
               <img
                 class="h-8 w-8 self-center rounded-full"
                 :src="userImage"
               >
-              <div class="ml-2 flex flex-row align-top hidden group-hover:block">
+              <div class="ml-2 flex flex-col align-top cursor-default hidden group-hover:block">
                 <span class="block">{{ userName }}</span>
                 <span class="text-sm text-util-gray-02">{{ userEmail }}</span>
               </div>
