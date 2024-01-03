@@ -131,6 +131,39 @@
         </div>
       </div>
     </div>
+    <el-tabs
+      v-model="activeTab"
+      class="demo-tabs border-t-1 border-util-gray-03"
+      @tab-click="handleClick"
+    >
+      <el-tab-pane
+        label="About"
+        name="about"
+        class="m-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800"
+      >
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Profile tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.
+        </p>
+      </el-tab-pane>
+      <el-tab-pane
+        label="Key result"
+        name="keyResult"
+        class="m-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800"
+      >
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.
+        </p>
+      </el-tab-pane>
+      <el-tab-pane
+        label="Stakeholders"
+        name="stakeholders"
+        class="m-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800"
+      >
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Settings tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.
+        </p>
+      </el-tab-pane>
+    </el-tabs>
     <private-project-tag
       v-if="!project?.isPublished"
       class="justify-self-end "
@@ -140,8 +173,9 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
+import type { TabsPaneContext } from 'element-plus'
 import type { ComputedRef } from 'vue'
-import { computed, inject, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
 import { getCountryLabel } from '@/_services/country'
@@ -157,6 +191,7 @@ import { type ProjectProfileWithMetrics } from '../data/types'
 
 const props = defineProps<{ projectId: number }>()
 const emit = defineEmits<{(e: 'emitCloseProjectInfo'): void }>()
+const activeTab = ref('about')
 
 const pdStore = useProjectDirectoryStore()
 const project = computed<ProjectProfileWithMetrics | undefined>(() => {
@@ -217,9 +252,17 @@ const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
   })
 })
 
+const handleClick = (tab: TabsPaneContext, event: Event) => {
+  console.info(tab, event)
+}
+
 </script>
 <style lang="scss">
 .normal-flag {
   margin: 1px !important
+}
+.demo-tabs > .el-tabs__header{
+  margin: 0px;
+  padding: 4px 16px;
 }
 </style>
