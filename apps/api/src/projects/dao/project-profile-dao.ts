@@ -1,38 +1,49 @@
-import { pickBy } from 'lodash-es'
+import dayjs from 'dayjs'
 
-import type { ProjectInfoFieldType, ProjectInfoResponse, ProjectProfileUpdateBody, ProjectProfileUpdateResponse, ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project/project-settings'
+import type { ProjectInfoFieldType, ProjectInfoResponse, ProjectProfileUpdateBody, ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { type LocationProjectProfile } from '@rfcx-bio/common/dao/types'
 
 import { getProjectMetrics } from '@/dashboard/dashboard-metrics-dao'
 import { getRichnessByTaxon } from '@/dashboard/dashboard-species-data-dao'
 import { getSequelize } from '~/db'
+import { getImageByObjectives } from '../utils/image-by-objective'
 
-export const getProjectCoreId = async (locationProjectId: number): Promise<string | undefined> => {
-  const project = await ModelRepository.getInstance(getSequelize())
-  .LocationProject
-  .findOne({
-    where: { id: locationProjectId },
-    attributes: ['idCore'],
-    raw: true
-  })
-  return project?.idCore ?? undefined
+const profileDefaults: Omit<LocationProjectProfile, 'locationProjectId'> = {
+  summary: '',
+  readme: '',
+  methods: '',
+  keyResult: '',
+  resources: '',
+  image: '',
+  objectives: [],
+  dateStart: null,
+  dateEnd: null
 }
 
-export const updateProjectProfile = async (locationProjectId: number, profile: ProjectProfileUpdateBody): Promise<ProjectProfileUpdateResponse> => {
-  // remove undefined values -- only update what is provided
-  const updatedParams = pickBy({
-    summary: profile.summary,
-    objectives: profile.objectives,
-    dateStart: profile.dateStart,
-    dateEnd: profile.dateEnd
-  }, (v) => v !== undefined)
-  const locationProjectProfile = ModelRepository.getInstance(getSequelize()).LocationProjectProfile
-  const res = await locationProjectProfile.update(updatedParams, { where: { locationProjectId }, returning: true })
-  if (res[0] === 0) throw new Error(`Failed to update project profile for locationProjectId: ${locationProjectId}`)
-  const updated = res[1][0].get({ plain: true })
-  return updated
+export const getProjectProfile = async (locationProjectId: number): Promise<LocationProjectProfile | undefined> => {
+  return await ModelRepository.getInstance(getSequelize()).LocationProjectProfile.findByPk(locationProjectId) ?? undefined
 }
 
+export const createProjectProfile = async (partialProfile: Partial<LocationProjectProfile> & Pick<LocationProjectProfile, 'locationProjectId'>): Promise<void> => {
+    const profile: LocationProjectProfile = {
+      ...profileDefaults,
+      ...partialProfile,
+      image: getImageByObjectives(partialProfile.objectives)
+    }
+    await ModelRepository.getInstance(getSequelize()).LocationProjectProfile.create(profile)
+}
+
+export const updateProjectProfile = async (partialProfile: Partial<LocationProjectProfile> & Pick<LocationProjectProfile, 'locationProjectId'>): Promise<void> => {
+  const sequelize = getSequelize()
+  const { LocationProjectProfile } = ModelRepository.getInstance(sequelize)
+  const { locationProjectId, ...fields } = partialProfile
+  await LocationProjectProfile.update(fields, { where: { locationProjectId } })
+}
+
+/**
+ * @deprecated Do not use ProjectInfo, needs refactoring
+ */
 export const getProjectInfo = async (locationProjectId: number, fields: ProjectInfoFieldType[]): Promise<ProjectInfoResponse> => {
   const sequelize = getSequelize()
   const { LocationProject, LocationProjectProfile, LocationProjectCountry, ProjectVersion } = ModelRepository.getInstance(sequelize)
@@ -105,15 +116,23 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
   }
 }
 
+/**
+ * @deprecated Do not use ProjectSettings, needs refactoring
+ */
 export const getProjectSettings = async (locationProjectId: number): Promise<ProjectSettingsResponse> => {
   return await getProjectInfo(locationProjectId, ['name', 'summary', 'objectives', 'dateStart', 'dateEnd', 'countryCodes', 'isPublished'])
 }
 
+/**
+ * @deprecated Do not use ProjectSettings, needs refactoring
+ */
 export const updateProjectSettings = async (locationProjectId: number, settings: ProjectProfileUpdateBody): Promise<ProjectSettingsResponse> => {
-  if (settings.name) {
-    const locationProject = ModelRepository.getInstance(getSequelize()).LocationProject
-    await locationProject.update({ name: settings.name }, { where: { id: locationProjectId } })
+  const { name, isPublic, dateStart, dateEnd, ...fields } = settings
+  if (name) {
+    await ModelRepository.getInstance(getSequelize()).LocationProject.update({ name }, { where: { id: locationProjectId } })
   }
-  await updateProjectProfile(locationProjectId, settings)
+  const dateStartChanges = dateStart === undefined ? {} : { dateStart: dateStart ? dayjs(dateStart).toDate() : null }
+  const dateEndChanges = dateEnd === undefined ? {} : { dateEnd: dateEnd ? dayjs(dateEnd).toDate() : null }
+  await updateProjectProfile({ locationProjectId, ...fields, ...dateStartChanges, ...dateEndChanges })
   return await getProjectSettings(locationProjectId)
 }

@@ -2,7 +2,7 @@ import { Op } from 'sequelize'
 
 import { type LocationProjectForUser, type MyProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type LocationProjectProfile, type Project, ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
+import { type Project, ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
 import { getImageUrl } from '@/users/helpers'
 import { getSequelize } from '~/db'
@@ -90,17 +90,21 @@ export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, 
   }
 }
 
+export const getProjectCoreId = async (locationProjectId: number): Promise<string | undefined> => {
+  const project = await ModelRepository.getInstance(getSequelize())
+  .LocationProject
+  .findOne({
+    where: { id: locationProjectId },
+    attributes: ['idCore'],
+    raw: true
+  })
+  return project?.idCore ?? undefined
+}
+
 const getProjectIdsByUser = async (userId: number | undefined): Promise<number[]> => {
   if (userId === undefined) {
     return await Promise.resolve([])
   }
   const projects = await models.LocationProjectUserRole.findAll({ where: { userId }, attributes: ['locationProjectId'], raw: true })
   return projects.map(p => p.locationProjectId)
-}
-
-export const updateProjectProfile = async (projectId: number, projectProfile: Partial<LocationProjectProfile>): Promise<void> => {
-  const sequelize = getSequelize()
-  const { LocationProjectProfile } = ModelRepository.getInstance(sequelize)
-
-  await LocationProjectProfile.update(projectProfile, { where: { locationProjectId: projectId } })
 }
