@@ -4,7 +4,7 @@ import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioPublicError, BioUnauthorizedError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { updateInsightsPublishStatus } from './insights-publish-status-dao'
+import { updateInsightsPublishStatus } from './dao/insights-publish-status-dao'
 
 export const patchInsightsPublishStatusHandler: Handler<any, UpdateInsightsPublishStatusRequestParams, unknown, UpdateInsightsPublishStatusRequestBody> = async (req, rep) => {
   const token = req.headers.authorization

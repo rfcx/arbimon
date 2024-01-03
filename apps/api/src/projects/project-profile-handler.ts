@@ -5,8 +5,8 @@ import { getProjectStakeholders, getProjectStakeholderUsers } from '@/dashboard/
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
+import { getProjectInfo } from './dao/project-profile-dao'
 import { updateProjectAndProfile } from './project-profile-bll'
-import { getProjectInfo } from './project-profile-dao'
 
 export const projectProfileHandler: Handler<ProjectSettingsResponse, ProjectProfileParams, ProjectProfileQuery> = async (req) => {
   // Inputs & validation
