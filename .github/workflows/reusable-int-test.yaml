@@ -41,7 +41,7 @@ jobs:
         env:
           initialBuckets: bucket
         ports:
-          - 9092:9090
+          - 9090/tcp
 
     steps:
       - name: 'Setup: Node'
@@ -80,7 +80,7 @@ jobs:
 
       - name: 'Setup: Check S3 status'
         run: |
-          aws s3 ls s3://bucket --summarize --endpoint-url http://localhost:9090
+          aws s3 ls s3://bucket --summarize --endpoint-url http://localhost:${{ job.services.sssmock.ports[9090] }}
 
       - name: 'Cache: Dependencies'
         # v3 (3.3.2) @ 8 Sep 2023 https://github.com/actions/cache/tags
@@ -133,4 +133,4 @@ jobs:
           AWS_S3_SECRET_ACCESS_KEY: fake
           AWS_S3_BUCKET_NAME: 'bucket'
           AWS_S3_BUCKET_REGION: 'eu-west-1'
-          AWS_S3_ENDPOINT: 'http://localhost:9092'
+          AWS_S3_ENDPOINT: 'http://localhost:${{ job.services.sssmock.ports[9090] }}'
