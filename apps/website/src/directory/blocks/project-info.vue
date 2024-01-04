@@ -144,7 +144,16 @@
         <p
           v-if="profile?.readme"
         >
-          {{ profile?.readme }}
+          <DashboardMarkdownViewerEditor
+            id="about"
+            v-model:is-view-mored="isAboutTabViewMored"
+            v-model:is-editing="isAboutTabEditing"
+            :editable="false"
+            :raw-markdown-text="profile?.readme"
+            :default-markdown-text="readmeDefault"
+            :is-project-member="false"
+            :is-viewing-as-guest="true"
+          />
         </p>
         <p
           v-else
@@ -221,7 +230,9 @@ import { ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import { getCountryLabel } from '@/_services/country'
 import { apiClientKey } from '@/globals'
+import DashboardMarkdownViewerEditor from '@/insights/overview/components/dashboard-project-summary/components/dashboard-markdown-viewer-editor.vue'
 import StakeholderCard from '@/insights/overview/components/dashboard-project-summary/components/dashboard-project-stakeholders/stakeholder-card.vue'
+import { useMarkdownEditorDefaults } from '@/insights/overview/composables/use-markdown-editor-defaults'
 import { useGetProjectInfo, useGetProjectStakeholders } from '@/projects/_composables/use-project-profile'
 import { useProjectDirectoryStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
@@ -235,6 +246,7 @@ const props = defineProps<{ projectId: number }>()
 const emit = defineEmits<{(e: 'emitCloseProjectInfo'): void }>()
 const activeTab = ref('about')
 
+const { readme: readmeDefault } = useMarkdownEditorDefaults()
 const pdStore = useProjectDirectoryStore()
 const project = computed<ProjectProfileWithMetrics | undefined>(() => {
   const project = pdStore.getProjectWithMetricsById(props.projectId)
@@ -261,6 +273,9 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
 const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResults'])
 const { data: stakeholders, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId)
+
+const isAboutTabViewMored = ref(false)
+const isAboutTabEditing = ref(false)
 
 watch(() => props.projectId, () => {
   profileRefetch()
