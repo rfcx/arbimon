@@ -171,7 +171,8 @@
         </div>
         <div
           ref="organizationSearchResultContainer"
-          class="z-10 hidden px-4 mx-auto max-w-screen-md text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg divide-y divide-gray-100 shadow"
+          class="z-10 w-[20.0rem] hidden px-0 mx-auto max-w-screen-md text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow overflow-y-scroll"
+          :class="{'border-b-1 rounded-t-lg border-t-1': searchOrganizationValue && !organizationsSearchResult, 'border-b-1 border-t-1 rounded-t-lg h-66': orgsSearchResult?.length}"
         >
           <OrganizationSearchResultCard
             v-for="s in orgsSearchResult"
@@ -243,9 +244,9 @@ const dropdownOptions: DropdownOptions = { placement: 'bottom-start', triggerTyp
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
+const { isLoading: isLoadingProfileData, data: profileData } = useGetProfileData(apiClientBio)
 const { isPending: isUpdatingProfilePhoto, mutate: mutatePatchProfilePhoto } = usePatchProfileImage(apiClientBio)
 const { isPending: isUpdatingUserProfile, mutate: mutatePatchUserProfile } = usePatchUserProfile(apiClientBio)
-const { isLoading: isLoadingProfileData, data: profileData } = useGetProfileData(apiClientBio)
 const { data: organizationsList } = useGetOrganizationsList(apiClientBio)
 const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult, isFetching: isSearchOrganizationFetching } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
 const { mutate: mutateNewOrganization } = useCreateOrganization(apiClientBio)
@@ -263,6 +264,10 @@ onMounted(() => {
 watch(profileData, () => {
   firstName.value = profileData.value?.firstName ?? store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
   lastName.value = profileData.value?.lastName ?? store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
+})
+
+watch(organizationsList, () => {
+  searchOrganizationValue.value = displayedOrganization.value?.name ?? ''
 })
 
 const profilePhoto = computed(() => {
@@ -338,22 +343,16 @@ const refetchOrganizationsSearch = async (): Promise<void> => {
 const onAddNewOrganizationFromSearch = (id: number): void => {
   console.info(id)
   // Return when the org already exists
-  if (displayedOrganization.value?.id === id) {
-    dropdownStatus.value = 'idle'
-    return
-  }
+  if (displayedOrganization.value?.id === id) return
 
   // Add to the list when it's new org
   const newOrg = searchOrganizationValue.value ? organizationsSearchResult.value?.find((o) => o.id === id) : organizationsList.value?.find((o) => o.id === id)
-  if (newOrg == null) {
-    dropdownStatus.value = 'idle'
-    return
-  }
+  if (newOrg == null) return
   console.info(newOrg)
   selectedOrganizationId.value = newOrg.id
   addedOrganization.value = newOrg
   searchOrganizationValue.value = newOrg.name
-  dropdownStatus.value = 'idle'
+  searchDropdown.value.hide()
 }
 
 const openCreateNewOrganizationForm = async (): Promise<void> => {
