@@ -139,7 +139,7 @@
       <el-tab-pane
         label="About"
         name="about"
-        class="m-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800"
+        class="m-4"
       >
         <p
           v-if="profile?.readme"
@@ -148,27 +148,37 @@
         </p>
         <p
           v-else
-          class="text-sm text-gray-500 dark:text-gray-400"
+          class="text-sm p-4 rounded-lg border-1 border-util-gray-03 bg-util-gray-04"
         >
-          This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Profile tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.
+          Unfortunately, the project owner has not added content for this section.
         </p>
       </el-tab-pane>
       <el-tab-pane
         label="Key result"
         name="keyResult"
-        class="m-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800"
+        class="m-4"
       >
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-          This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.
+        <p
+          v-if="profile?.keyResult"
+        >
+          {{ profile?.keyResult }}
+        </p>
+        <p
+          v-else
+          class="text-sm p-4 rounded-lg border-1 border-util-gray-03 bg-util-gray-04"
+        >
+          Unfortunately, the project owner has not added content for this section.
         </p>
       </el-tab-pane>
       <el-tab-pane
         label="Stakeholders"
         name="stakeholders"
-        class="m-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800"
+        class="m-4"
       >
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-          This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Settings tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.
+        <p
+          class="text-sm p-4 rounded-lg border-1 border-util-gray-03 bg-util-gray-04"
+        >
+          Unfortunately, the project owner has not added content for this section.
         </p>
       </el-tab-pane>
     </el-tabs>
