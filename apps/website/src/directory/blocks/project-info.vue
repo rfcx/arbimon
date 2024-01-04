@@ -175,7 +175,28 @@
         name="stakeholders"
         class="m-4"
       >
+        <div
+          v-if="stakeholders?.organizations && !stakeholderError"
+        >
+          <h3 class="text-white text-xl font-medium font-sans mt-6">
+            Organizations
+          </h3>
+          <div
+            class="grid"
+            style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
+          >
+            <StakeholderCard
+              v-for="org of stakeholders?.organizations"
+              :key="org.id"
+              :name="org.name"
+              :description="ORGANIZATION_TYPE_NAME[org.type]"
+              :image="org.image ?? undefined"
+              :ranking="1"
+            />
+          </div>
+        </div>
         <p
+          v-else
           class="text-sm p-4 rounded-lg border-1 border-util-gray-03 bg-util-gray-04"
         >
           Unfortunately, the project owner has not added content for this section.
@@ -196,9 +217,12 @@ import type { ComputedRef } from 'vue'
 import { computed, inject, ref, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
+import { ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
+
 import { getCountryLabel } from '@/_services/country'
 import { apiClientKey } from '@/globals'
-import { useGetProjectInfo } from '@/projects/_composables/use-project-profile'
+import StakeholderCard from '@/insights/overview/components/dashboard-project-summary/components/dashboard-project-stakeholders/stakeholder-card.vue'
+import { useGetProjectInfo, useGetProjectStakeholders } from '@/projects/_composables/use-project-profile'
 import { useProjectDirectoryStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import { type HorizontalStack } from '../../insights/overview/components/dashboard-species/components/stack-distribution.vue'
@@ -236,9 +260,11 @@ const project = computed<ProjectProfileWithMetrics | undefined>(() => {
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
 const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResults'])
+const { data: stakeholders, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId)
 
 watch(() => props.projectId, () => {
   profileRefetch()
+  stakeholdersRefetch()
 })
 
 const countrieFlag = computed(() => {
