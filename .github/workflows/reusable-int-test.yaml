@@ -82,9 +82,7 @@ jobs:
 
       - name: 'Setup: S3 mock'
         run: |
-          docker run -d -p 9090:9090 --name s3mock 
-                      -e "initialBuckets=bucket" 
-                      adobe/s3mock
+          docker run -d -p 9090:9090 --name s3mock -e "initialBuckets=bucket" adobe/s3mock
           sleep 5
           aws --endpoint-url http://localhost:9090/ s3 ls s3://bucket
 
