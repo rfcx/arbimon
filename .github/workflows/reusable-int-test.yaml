@@ -29,7 +29,7 @@ jobs:
           POSTGRES_USER: user_cli
           POSTGRES_PASSWORD: test
         ports:
-          - 5432/tcp
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -59,7 +59,6 @@ jobs:
       - name: 'Setup: Database increase max connections'
         env:
           PGHOST: localhost
-          PGPORT: ${{ job.services.postgres.ports[5432] }}
           PGDATABASE: postgres
           PGUSER: user_cli
           PGPASSWORD: test
@@ -75,7 +74,6 @@ jobs:
       - name: 'Setup: Database init scripts'
         env:
           PGHOST: localhost
-          PGPORT: ${{ job.services.postgres.ports[5432] }}
           PGDATABASE: postgres
           PGUSER: user_cli
           PGPASSWORD: test
@@ -121,7 +119,7 @@ jobs:
         id: migrate-seed
         run: pnpm --filter=cli db-rms-int
         env:
-          BIO_DB_PORT: ${{ job.services.postgres.ports[5432] }}
+          BIO_DB_PORT: 5432
           NODE_OPTIONS: '--max_old_space_size=6656'
       
       - name: 'Verify: Integration Tests'
@@ -131,7 +129,7 @@ jobs:
           BIO_DB_DBNAME: postgres
           BIO_DB_HOSTNAME: localhost
           BIO_DB_PASSWORD: test
-          BIO_DB_PORT: ${{ job.services.postgres.ports[5432] }}
+          BIO_DB_PORT: 5432
           BIO_DB_SSL_ENABLED: false
           BIO_DB_USER: user_cli
           AUTHO_ANONYMOUS_CLIENT_SECRET: xyz
