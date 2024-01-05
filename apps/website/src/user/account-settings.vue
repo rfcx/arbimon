@@ -92,11 +92,18 @@
           <div
             ref="organizationSearchLoading"
             role="status"
-            class="absolute z-index-10 absolute top-1 right-3"
+            class="absolute z-index-10 absolute top-3 right-3"
             :class="{ hidden: !isSearchOrganizationFetching }"
           >
             <icon-custom-input-loader class="inline w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-frequency" />
             <span class="sr-only">Loading...</span>
+          </div>
+          <div
+            class="absolute z-index-10 absolute top-6 right-3 cursor-pointer"
+            :class="{ hidden: isSearchOrganizationFetching }"
+            @click="openOrganizationSearch()"
+          >
+            <icon-fa-chevron-down class="w-3 h-3 fa-chevron-down" />
           </div>
         </div>
 
@@ -172,7 +179,7 @@
         <div
           ref="organizationSearchResultContainer"
           class="z-10 w-[20.0rem] hidden px-0 mx-auto max-w-screen-md text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow overflow-y-scroll"
-          :class="{'border-b-1 rounded-t-lg border-t-1': searchOrganizationValue && !organizationsSearchResult, 'border-b-1 border-t-1 rounded-t-lg h-66': orgsSearchResult?.length}"
+          :class="{'border-b-1 rounded-t-lg border-t-1': searchOrganizationValue && !organizationsSearchResult, 'border-b-1 border-t-1 rounded-t-lg max-h-66': orgsSearchResult?.length}"
         >
           <OrganizationSearchResultCard
             v-for="s in orgsSearchResult"
@@ -266,8 +273,9 @@ watch(profileData, () => {
   lastName.value = profileData.value?.lastName ?? store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
 })
 
-watch(organizationsList, () => {
+watch(organizationsList, async () => {
   searchOrganizationValue.value = displayedOrganization.value?.name ?? ''
+  await refetchOrganizationsSearch()
 })
 
 const profilePhoto = computed(() => {
