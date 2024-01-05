@@ -139,7 +139,6 @@
       <el-tab-pane
         label="About"
         name="about"
-        class="m-4"
       >
         <p
           v-if="profile?.readme"
@@ -182,25 +181,21 @@
       <el-tab-pane
         label="Stakeholders"
         name="stakeholders"
-        class="m-4"
+        class="mt-4"
       >
         <div
           v-if="stakeholders?.organizations && !stakeholderError"
         >
-          <h3 class="text-white text-xl font-medium font-sans mt-6">
-            Organizations
-          </h3>
           <div
             class="grid"
             style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
           >
-            <StakeholderCard
-              v-for="org of stakeholders?.organizations"
-              :key="org.id"
-              :name="org.name"
-              :description="ORGANIZATION_TYPE_NAME[org.type]"
-              :image="org.image ?? undefined"
-              :ranking="1"
+            <DashboardProjectStakeholdersViewer
+              :editable="false"
+              :loading="stakeholdersLoading || stakeholdersRefetching"
+              :organizations="stakeholders?.organizations ?? []"
+              :project-members="stakeholders?.users.filter(u => u.ranking !== -1).sort((a, b) => a.ranking - b.ranking) ?? []"
+              @emit-is-updating="false"
             />
           </div>
         </div>
@@ -226,12 +221,10 @@ import type { ComputedRef } from 'vue'
 import { computed, inject, ref, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
-import { ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
-
 import { getCountryLabel } from '@/_services/country'
 import { apiClientKey } from '@/globals'
 import DashboardMarkdownViewerEditor from '@/insights/overview/components/dashboard-project-summary/components/dashboard-markdown-viewer-editor.vue'
-import StakeholderCard from '@/insights/overview/components/dashboard-project-summary/components/dashboard-project-stakeholders/stakeholder-card.vue'
+import DashboardProjectStakeholdersViewer from '@/insights/overview/components/dashboard-project-summary/components/dashboard-project-stakeholders/dashboard-project-stakeholders-viewer.vue'
 import { useMarkdownEditorDefaults } from '@/insights/overview/composables/use-markdown-editor-defaults'
 import { useGetProjectInfo, useGetProjectStakeholders } from '@/projects/_composables/use-project-profile'
 import { useProjectDirectoryStore } from '~/store'
@@ -272,7 +265,7 @@ const project = computed<ProjectProfileWithMetrics | undefined>(() => {
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
 const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResults'])
-const { data: stakeholders, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId)
+const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId)
 
 const isAboutTabViewMored = ref(false)
 const isAboutTabEditing = ref(false)
