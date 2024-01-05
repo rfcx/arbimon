@@ -133,7 +133,7 @@
     </div>
     <el-tabs
       v-model="activeTab"
-      class="demo-tabs border-t-1 border-util-gray-03"
+      class="border-t-1 border-util-gray-03"
       @tab-click="handleClick"
     >
       <el-tab-pane
@@ -312,8 +312,20 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 .normal-flag {
   margin: 1px !important
 }
-.demo-tabs > .el-tabs__header{
+.el-tabs > .el-tabs__header{
   margin: 0px;
-  padding: 4px 16px;
 }
+.el-tabs > .el-tabs__header >.el-tabs__nav-wrap >.el-tabs__nav-scroll >.el-tabs__nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+  .el-tabs__item {
+    height: 50px;
+    padding: 0px;
+    border-bottom-width: 3px;
+    --tw-border-opacity: 1;
+    border-color: rgba(75, 75, 75, var(--tw-border-opacity));
+  }
+}
+
 </style>
