@@ -170,6 +170,7 @@ export default defineConfig({
     'btn-primary': 'bg-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:bg-frequency dark:hover:bg-chirp dark:focus:ring-chirp',
     'btn-secondary': 'rounded-full text-frequency border border-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:text-frequency dark:hover:bg-chirp dark:border-frequency dark:hover:text-pitch dark:hover:border-chirp dark:focus:ring-chirp',
     'btn-disabled': 'cursor-not-allowed bg-util-gray-04 text-util-gray-02 border-transparent',
+    'btn-danger': 'bg-transparent text-danger border-2 border-danger hover:(bg-danger text-pitch)',
     'btn-icon': 'py-2 px-3 rounded-full text-frequency border border-frequency hover:bg-chirp hover:text-pitch hover:border-chirp',
     // title
     'text-giant': 'text-3xl md:text-5xl lg:text-7xl leading-10 font-header tracking-tight',
