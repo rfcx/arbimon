@@ -1,5 +1,6 @@
 <template>
-  <div class="mt-6 flex flex-col gap-y-2">
+  <h5>Photo</h5>
+  <div class="flex flex-col gap-y-2 mt-6">
     <div class="flex flex-row">
       <span class="font-medium">Project thumbnail photo</span>
       <icon-i-info
@@ -24,7 +25,7 @@
       >
         Upload file <icon-custom-cloud-upload class="ml-2 group-hover:stroke-pitch inline-flex" />
       </button>
-</div>
+    </div>
   </div>
 </template>
 

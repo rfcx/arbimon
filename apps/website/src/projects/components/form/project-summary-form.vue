@@ -12,7 +12,7 @@
   <textarea
     v-model.trim="summary"
     :disabled="isDisabled"
-    class="input-field w-full h-28 disabled:opacity-75 disabled:cursor-not-allowed"
+    class="input-field w-full h-16 disabled:opacity-75 disabled:cursor-not-allowed italic"
     :placeholder="PLACEHOLDER_SUMMARY_TEXT"
     :maxlength="MAX"
   />
@@ -53,3 +53,8 @@ watch(summary, () => {
 })
 
 </script>
+<style lang="scss">
+  .input-field {
+    color: #D3D2CF !important;
+  }
+</style>
