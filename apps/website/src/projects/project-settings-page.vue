@@ -40,12 +40,19 @@
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-image-form
             :is-disabled="projectUserPermissionsStore.isGuest"
+            :image="projectImage"
             @emit-project-image="onEmitProjectImage"
           />
+          <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-listed-form
             :is-public="isPublic"
             :is-disabled="projectUserPermissionsStore.isGuest"
             @emit-project-listed="toggleListedProject"
+          />
+          <div class="my-6 h-[1px] w-full bg-util-gray-01" />
+          <project-delete
+            :is-disabled="projectUserPermissionsStore.isGuest"
+            @emit-project-delete="onEmitProjectDelete"
           />
         </div>
       </div>
@@ -55,10 +62,10 @@
       >
         <button
           :disabled="isSaving"
-          class="self-end inline-flex items-center btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
+          class="self-end inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
           @click.prevent="save"
         >
-          Save edit
+          Save
         </button>
         <div
           v-if="isSaving"
@@ -107,6 +114,7 @@ import { apiClientKey } from '@/globals'
 import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
 import { useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
+import ProjectDelete from './components/form/project-delete.vue'
 import ProjectForm from './components/form/project-form.vue'
 import ProjectImageForm from './components/form/project-image-form.vue'
 import ProjectListedForm from './components/form/project-listed-form.vue'
@@ -141,6 +149,11 @@ const lastUpdatedText = ref<string>()
 const isPublic = ref<boolean>(true)
 const profileImageForm = ref()
 
+const projectImage = computed<string | undefined>(() => {
+  const project = store.myProjects.find(project => project.id === store.selectedProject?.id)
+  return project?.image
+})
+
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
   newName.value = value.name
@@ -163,6 +176,10 @@ const onEmitProjectImage = (form: FormData) => {
 
 const onEmitSlug = (slug: string) => {
   console.info('slug', slug)
+}
+
+const onEmitProjectDelete = () => {
+  console.info('delete project')
 }
 
 const toggleListedProject = (value: boolean) => {

@@ -1,41 +1,52 @@
 <template>
-  <h5>Photo</h5>
-  <div class="flex flex-col gap-y-2 mt-6">
-    <div class="flex flex-row">
-      <span class="font-medium">Project thumbnail photo</span>
-      <icon-i-info
-        tooltip-id="project-settings-project-image"
-        :tooltip-text="'Project thumbnail photo'"
-      />
+  <div class="flex flex-col gap-y-6">
+    <h5>Photo</h5>
+    <div class="flex flex-row justify-between gap-y-2">
+      <div class="flex flex-col">
+        <div class="flex flex-row">
+          <span class="font-medium">Project thumbnail photo</span>
+          <icon-i-info
+            tooltip-id="project-settings-project-image"
+            :tooltip-text="'Project thumbnail photo'"
+          />
+        </div>
+        <p>Recommended size: 380 px by 180 px</p>
+      </div>
+      <div>
+        <input
+          id="profileFileUpload"
+          type="file"
+          accept="image/jpeg, image/png"
+          hidden
+          :disabled="isDisabled"
+          @change="uploadPhoto"
+        >
+        <button
+          class="btn btn-secondary group"
+          type="button"
+          @click="selectPhoto"
+        >
+          Upload file <icon-custom-cloud-upload class="ml-2 group-hover:stroke-pitch inline-flex" />
+        </button>
+      </div>
     </div>
-    <p>Recommended size: 380 px by 180 px</p>
     <div>
-      <input
-        id="profileFileUpload"
-        type="file"
-        accept="image/jpeg, image/png"
-        hidden
-        :disabled="isDisabled"
-        @change="uploadPhoto"
+      <img
+        :src="projectImage"
+        alt="Project photo"
+        class="w-32 h-32 aspect-square object-cover rounded-2xl bg-util-gray-03"
       >
-      <button
-        class="btn btn-secondary group w-full"
-        type="button"
-        @click="selectPhoto"
-      >
-        Upload file <icon-custom-cloud-upload class="ml-2 group-hover:stroke-pitch inline-flex" />
-      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { initTooltips } from 'flowbite'
-import { type Ref, onMounted, ref } from 'vue'
+import { type Ref, computed, onMounted, ref } from 'vue'
 
 import IconIInfo from '../icon-i-info.vue'
 
-defineProps<{ isDisabled?: boolean }>()
+const props = defineProps<{ isDisabled?: boolean, image?: string }>()
 
 const emit = defineEmits<{(e: 'emitProjectImage', form: FormData): void}>()
 
@@ -44,6 +55,10 @@ const uploadedPhotoUrl = ref('')
 const uploadedPhotoData: Ref<Record<string, string>> = ref({
   name: '',
   type: ''
+})
+
+const projectImage = computed(() => {
+  return uploadedPhotoUrl.value ? uploadedPhotoUrl.value : props.image
 })
 
 const onEmitProjectImage = () => {
