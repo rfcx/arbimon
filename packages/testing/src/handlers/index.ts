@@ -1,3 +1,4 @@
+import fastifyMultipart from '@fastify/multipart'
 import fastifyRoutes from '@fastify/routes'
 import fastify, { type FastifyInstance, type FastifyReply, type FastifySchema, type HTTPMethods, type preValidationHookHandler, type RawReplyDefaultExpression, type RawRequestDefaultExpression, type RawServerDefault, type RequestBodyDefault, type RequestParamsDefault, type RequestQuerystringDefault, type RouteHandlerMethod } from 'fastify'
 import { type ReplyDefault } from 'fastify/types/utils'
@@ -42,6 +43,7 @@ export const makeApp = async (routes: RouteRegistration[], options: MockAppOptio
 
   const app = await fastify()
   await app.register(fastifyRoutes)
+  await app.register(fastifyMultipart)
 
   app.decorateRequest('userToken', userToken)
   app.decorateRequest('userId', userId)

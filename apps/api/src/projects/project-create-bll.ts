@@ -1,10 +1,13 @@
+import dayjs from 'dayjs'
+
 import { type ProjectCreateRequest } from '@rfcx-bio/common/api-bio/project/project-create'
 import { RANKING_PRIMARY } from '@rfcx-bio/common/roles'
 
 import { createProject as createProjectInCore, getProject as getProjectInCore } from '~/api-core/api-core'
-import { create } from './get-project-members-dao'
-import { createProject as createProjectLocal } from './project-create-dao'
-import { createProjectVersion } from './project-version-dao'
+import { create } from './dao/get-project-members-dao'
+import { createProject as createProjectLocal } from './dao/project-create-dao'
+import { createProjectProfile } from './dao/project-profile-dao'
+import { createProjectVersion } from './dao/project-version-dao'
 
 export const createProject = async (request: ProjectCreateRequest, userId: number, token: string): Promise<[string, number]> => {
   // Create in Core
@@ -13,16 +16,12 @@ export const createProject = async (request: ProjectCreateRequest, userId: numbe
   const { external_id: idArbimon } = await getProjectInCore(idCore, token)
 
   // Pre-populate insights table with the same data (will get updated from Core after sync)
-  const dateStart = request.dateStart ? new Date(request.dateStart) : undefined
-  const dateEnd = request.dateEnd ? new Date(request.dateEnd) : undefined
-  if (dateStart && dateEnd && dateStart > dateEnd) {
-    throw new Error('Date start must be before date end')
-  }
-  const project = { idCore, idArbimon, name: request.name, objectives: request.objectives, dateStart, dateEnd }
+  const project = { idCore, idArbimon, name: request.name }
   const { id, slug } = await createProjectLocal(project)
-  // TODO: move profile from dao to bll
 
-  // create project version
+  // Create project profile
+  const { objectives, dateStart, dateEnd } = request
+  await createProjectProfile({ locationProjectId: id, objectives, dateStart: dayjs(dateStart).toDate(), dateEnd: dayjs(dateEnd).toDate() })
   await createProjectVersion(id, request.isPublic)
 
   // Set current user as owner

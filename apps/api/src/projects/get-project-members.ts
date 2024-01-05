@@ -3,7 +3,7 @@ import { type ProjectRole } from '@rfcx-bio/common/roles'
 
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
-import { get, getUserRoleForProject } from './get-project-members-dao'
+import { get, getUserRoleForProject } from './dao/get-project-members-dao'
 
 export const getProjectMembersHandler: Handler<GetProjectMembersResponse, GetProjectMembersParams> = async (req) => {
   const { projectId } = req.params

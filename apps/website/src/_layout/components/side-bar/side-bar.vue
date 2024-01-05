@@ -52,12 +52,6 @@
                 >
                   <icon-custom-pres-chart-bar />
                 </span>
-                <span
-                  v-if="item.iconRaw === 'fi-settings'"
-                  class="p-0.5"
-                >
-                  <icon-custom-fi-settings />
-                </span>
                 <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
               </router-link>
               <a
@@ -91,6 +85,12 @@
                   class="p-0.5"
                 >
                   <icon-custom-fi-activity class="h-6 w-6" />
+                </span>
+                <span
+                  v-if="item.iconRaw === 'fi-settings'"
+                  class="p-0.5"
+                >
+                  <icon-custom-fi-settings />
                 </span>
                 <span class="flex-1 ml-2 text-left whitespace-nowrap hidden group-hover:block">
                   {{ item.title }}
@@ -193,13 +193,13 @@
           <div class="my-4 border-t-1 border-util-gray-03" />
           <ul class="px-2.5 flex flex-col gap-y-4">
             <li
-              class="my-2 flex items-center text-base font-normal h-10 hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+              class="my-2 flex items-center text-base font-normal h-10"
             >
               <img
                 class="h-8 w-8 self-center rounded-full"
                 :src="userImage"
               >
-              <div class="ml-2 flex flex-row align-top hidden group-hover:block">
+              <div class="ml-2 flex flex-col align-top cursor-default hidden group-hover:block">
                 <span class="block">{{ userName }}</span>
                 <span class="text-sm text-util-gray-02">{{ userEmail }}</span>
               </div>
@@ -334,9 +334,18 @@ const allItems: Item[] = [
   {
     title: 'Project settings',
     iconRaw: 'fi-settings',
-    route: {
-      name: ROUTE_NAMES.projectSettings
-    }
+    children: [
+      {
+        title: 'Project information',
+        route: {
+          name: ROUTE_NAMES.projectSettings
+        }
+      },
+      {
+        title: 'Members',
+        legacyPath: '/settings/users'
+      }
+    ]
   }
 ]
 

@@ -21,6 +21,7 @@
     "test": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:test:* -- --run\""
   },
   "dependencies": {
+    "@fastify/multipart": "6.0.0",
     "@fastify/routes": "^4.0.0",
     "@rfcx-bio/common": "workspace:^0.0.1",
     "fastify": "^3.23.1",

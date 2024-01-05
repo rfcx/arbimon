@@ -19,8 +19,9 @@ const getS3Client = (): S3Client => {
       throw new BioPublicError('AWS S3 bucket credentials are not defined', 500)
     }
 
+    const endpointOptions = endpoint !== undefined && endpoint !== '' ? { endpoint, forcePathStyle: true } : {}
     s3 = new S3Client({
-      endpoint,
+      ...endpointOptions,
       region,
       credentials: {
         accessKeyId,
@@ -28,7 +29,6 @@ const getS3Client = (): S3Client => {
       }
     })
   }
-
   return s3
 }
 

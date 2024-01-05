@@ -4,7 +4,7 @@ import { Op } from 'sequelize'
 import { type DetectRecordingQueryParams, type DetectRecordingResponse } from '@rfcx-bio/common/api-bio/detect/detect-recording'
 import { type AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
-import { getProjectById } from '@/projects/projects-dao'
+import { getProjectById } from '@/projects/dao/projects-dao'
 import { dayjs } from '~/dayjs-initialized'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'

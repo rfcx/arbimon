@@ -16,7 +16,6 @@ import { routesDashboard } from './dashboard'
 import { routesDetect } from './detect'
 import { routesLanding } from './landing'
 import { routesOrganizations } from './organizations'
-import { routesProjectProfile } from './project-profile'
 import { routesProject } from './projects'
 import { routesRichness } from './richness'
 import { routesSpecies } from './species'
@@ -49,7 +48,6 @@ export const createApp = async (): Promise<FastifyInstance> => {
     routesDetect,
     routesLanding,
     routesOrganizations,
-    routesProjectProfile,
     routesProject,
     routesRichness,
     routesSpecies,

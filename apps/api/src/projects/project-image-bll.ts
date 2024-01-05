@@ -3,11 +3,16 @@ import { randomBytes } from 'crypto'
 import { extname } from 'node:path'
 
 import { putObject } from '~/storage'
-import { updateProjectProfile } from './projects-dao'
+import { createProjectProfile, getProjectProfile, updateProjectProfile } from './dao/project-profile-dao'
 
-export const patchProjectProfileImage = async (projectId: number, file: MultipartFile): Promise<void> => {
-  const key = `projects/${projectId}/project-profile-image-${randomBytes(4).toString('hex')}${extname(file.filename)}`
+export const patchProjectProfileImage = async (locationProjectId: number, file: MultipartFile): Promise<void> => {
+  const image = `projects/${locationProjectId}/project-profile-image-${randomBytes(4).toString('hex')}${extname(file.filename)}`
 
-  await updateProjectProfile(projectId, { image: key })
-  await putObject(key, await file.toBuffer(), file.mimetype, true)
+  await putObject(image, await file.toBuffer(), file.mimetype, true)
+
+  if (await getProjectProfile(locationProjectId) === undefined) {
+    await createProjectProfile({ locationProjectId, image })
+  } else {
+    await updateProjectProfile({ locationProjectId, image })
+  }
 }
