@@ -132,6 +132,7 @@
       </div>
     </div>
     <el-tabs
+      v-if="project?.isPublished"
       v-model="activeTab"
       class="border-t-1 border-util-gray-03"
       @tab-click="handleClick"
