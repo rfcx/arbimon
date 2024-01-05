@@ -1,18 +1,15 @@
 <template>
   <section class="bg-white dark:bg-pitch pl-18">
-    <div class="px-8 md:px-10 pt-20 pb-10 mx-auto max-w-screen-xl lg:py-24">
+    <div class="py-10 mx-auto max-w-screen-xl flex flex-col gap-y-6">
       <h1 class="text-gray-900 dark:text-insight">
         Project settings
       </h1>
-      <GuestBanner
-        v-if="projectUserPermissionsStore.isGuest"
-        class="mt-6"
-      />
-      <p class="mt-6 text-fog">
-        Project information
-      </p>
-      <div class="grid mt-6 lg:(grid-cols-2 gap-10)">
+      <GuestBanner v-if="projectUserPermissionsStore.isGuest" />
+      <div class="grid lg:(grid-cols-2 gap-10)">
         <div>
+          <h5>
+            Project information
+          </h5>
           <project-form
             :existing-name="selectedProject?.name"
             :date-start="settings?.dateStart"
@@ -25,13 +22,22 @@
             :is-disabled="projectUserPermissionsStore.isGuest"
             @emit-project-summary="onEmitSummary"
           />
-        </div>
-        <div>
           <project-objective-form
             :existing-objectives="settings?.objectives"
             :is-disabled="projectUserPermissionsStore.isGuest"
             @emit-project-objectives="onEmitObjectives"
           />
+        </div>
+        <div>
+          <h5>
+            Insights
+          </h5>
+          <project-slug
+            :existing-slug="selectedProject?.slug"
+            :is-disabled="projectUserPermissionsStore.isGuest"
+            @emit-updated-slug="onEmitSlug"
+          />
+          <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-image-form
             :is-disabled="projectUserPermissionsStore.isGuest"
             @emit-project-image="onEmitProjectImage"
@@ -45,7 +51,7 @@
       </div>
       <div
         v-if="!projectUserPermissionsStore.isGuest"
-        class="mt-4 sm:mt-6 flex flex-row-reverse items-center gap-4"
+        class="flex flex-row-reverse items-center gap-4"
       >
         <button
           :disabled="isSaving"
@@ -105,6 +111,7 @@ import ProjectForm from './components/form/project-form.vue'
 import ProjectImageForm from './components/form/project-image-form.vue'
 import ProjectListedForm from './components/form/project-listed-form.vue'
 import ProjectObjectiveForm from './components/form/project-objective-form.vue'
+import ProjectSlug from './components/form/project-slug.vue'
 import ProjectSummaryForm from './components/form/project-summary-form.vue'
 import type { ProjectDefault } from './types'
 
@@ -152,6 +159,10 @@ const onEmitObjectives = (value: string[]) => {
 
 const onEmitProjectImage = (form: FormData) => {
   profileImageForm.value = form
+}
+
+const onEmitSlug = (slug: string) => {
+  console.info('slug', slug)
 }
 
 const toggleListedProject = (value: boolean) => {
