@@ -156,7 +156,7 @@
         </p>
         <p
           v-else
-          class="text-sm p-4 rounded-lg border-1 border-util-gray-03 bg-util-gray-04"
+          class="text-sm p-4 m-4 rounded-lg border-1 border-util-gray-03 bg-util-gray-04"
         >
           Unfortunately, the project owner has not added content for this section.
         </p>
@@ -181,13 +181,12 @@
       <el-tab-pane
         label="Stakeholders"
         name="stakeholders"
-        class="mt-4"
       >
         <div
           v-if="stakeholders?.organizations && !stakeholderError"
         >
           <div
-            class="grid"
+            class="grid mt-4"
             style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
           >
             <DashboardProjectStakeholdersViewer
@@ -201,7 +200,7 @@
         </div>
         <p
           v-else
-          class="text-sm p-4 rounded-lg border-1 border-util-gray-03 bg-util-gray-04"
+          class="text-sm p-4 m-4 rounded-lg border-1 border-util-gray-03 bg-util-gray-04"
         >
           Unfortunately, the project owner has not added content for this section.
         </p>
