@@ -1,28 +1,61 @@
 <template>
-  <el-select
-    v-model="selectedSpeciesSlug"
-    filterable
-    :filter-method="onFilterType"
-    class="species-input bg-steel-gray rounded my-6 focus:(border-box-gray ring-0 outline-none) min-w-64"
-    @change="onResetQuery"
-  >
-    <el-option
-      v-for="species in filteredSpecies"
-      :key="'species-selector-' + species.taxonSpeciesId"
-      :value="species.taxonSpeciesSlug"
-      class="min-h-12 h-12"
-      :label="species.scientificName"
-    >
-      <div class="leading-tight mt-1">
-        <div class="italic">
-          {{ species.scientificName }}
-        </div>
-        <div class="text-xs text-insight text-opacity-50">
-          {{ species.commonName }}
-        </div>
+  <div class="relative w-80 my-6">
+    <form>
+      <div
+        class="flex relative items-center"
+      >
+        <input
+          v-model="currentSpeciesQuery"
+          class="block bg-moss border-util-gray-03 text-sm rounded-md w-full placeholder:text-insight focus:(border-frequency ring-frequency)"
+          type="text"
+          data-dropdown-toggle="searchResultDropdown"
+          @focus="hasFocusInput = true"
+          @blur="hasFocusInput = false"
+        >
+        <span
+          class="italic absolute left-3 pointer-events-none text-sm"
+          :class="{
+            'hidden': currentSpeciesQuery !== '',
+            'text-util-gray-03': hasFocusInput
+          }"
+        >{{ allSpecies.find(s => s.taxonSpeciesSlug === selectedSpeciesSlug)?.scientificName }}</span>
+        <span class="absolute right-4 cursor-pointer pointer-events-none">
+          <span class="sr-only">Type to search</span>
+          <icon-fa-chevron-down
+            class="w-3 h-3 fa-chevron-down text-util-gray-03"
+            :class="hasFocusInput ? 'transform rotate-180' : ''"
+          />
+        </span>
       </div>
-    </el-option>
-  </el-select>
+    </form>
+    <div
+      id="searchResultDropdown"
+      class="absolute hidden w-full z-10 bg-white rounded-md shadow dark:bg-gray-700 mt-2"
+    >
+      <ul class="overflow-y-auto max-h-80 border-cloud bg-moss rounded-md">
+        <li
+          v-if="filteredSpecies.length === 0"
+          class="rounded-lg p-4 text-center text-sm"
+        >
+          No data
+        </li>
+        <li
+          v-for="species in filteredSpecies"
+          v-else
+          :key="'species-selector-' + species.taxonSpeciesId"
+          class="cursor-pointer rounded-lg px-4 py-2 hover:bg-util-gray-03 text-sm"
+          @click="onSelectSpecies(species)"
+        >
+          <div class="italic">
+            {{ species.scientificName }}
+          </div>
+          <div class="text-xs text-insight text-opacity-50">
+            {{ species.commonName }}
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -51,6 +84,8 @@ const selectedSpeciesSlug = ref('')
 const allSpecies = ref<Array<SpeciesInProjectTypes['light']>>([])
 const currentSpeciesQuery = ref('')
 
+const hasFocusInput = ref(false)
+
 const selectedSpecies = computed<SpeciesInProjectTypes['light'] | undefined>(() => {
   if (!selectedSpeciesSlug.value) {
     return undefined
@@ -70,6 +105,12 @@ const filteredSpecies = computed<Array<SpeciesInProjectTypes['light']>>(() => {
     return s.scientificName.toLowerCase().split(' ').some(w => w.startsWith(query)) || (s.commonName?.toLowerCase().split(' ').some(w => w.startsWith(query)) ?? false)
   })
 })
+
+const onSelectSpecies = (species: SpeciesInProjectTypes['light']) => {
+  selectedSpeciesSlug.value = species.taxonSpeciesSlug
+  onResetQuery()
+  // TODO: hide dropdown
+}
 
 onMounted(async () => {
   allSpecies.value = await getAllSpecies()
@@ -142,13 +183,3 @@ const getAllSpecies = async (): Promise<Array<SpeciesInProjectTypes['light']>> =
   return response.species
 }
 </script>
-
-<style scoped lang="scss">
-:deep(.el-input__inner) {
-  font-style: italic;
-}
-
-:deep(.select-trigger) {
-  width: 300px;
-}
-</style>
