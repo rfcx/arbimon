@@ -154,12 +154,9 @@
             :is-viewing-as-guest="true"
           />
         </p>
-        <p
-          v-else
-          class="text-sm p-4 m-4 rounded-lg border-1 border-util-gray-03 bg-util-gray-04"
-        >
-          Unfortunately, the project owner has not added content for this section.
-        </p>
+        <div v-else>
+          <not-have-content />
+        </div>
       </el-tab-pane>
       <el-tab-pane
         label="Key result"
@@ -179,12 +176,9 @@
             :is-viewing-as-guest="false"
           />
         </p>
-        <p
-          v-else
-          class="m-4 text-sm p-4 rounded-lg border-1 border-util-gray-03 bg-util-gray-04"
-        >
-          Unfortunately, the project owner has not added content for this section.
-        </p>
+        <div v-else>
+          <not-have-content />
+        </div>
       </el-tab-pane>
       <el-tab-pane
         label="Stakeholders"
@@ -206,12 +200,9 @@
             />
           </div>
         </div>
-        <p
-          v-else
-          class="text-sm p-4 m-4 rounded-lg border-1 border-util-gray-03 bg-util-gray-04"
-        >
-          Unfortunately, the project owner has not added content for this section.
-        </p>
+        <div v-else>
+          <not-have-content />
+        </div>
       </el-tab-pane>
     </el-tabs>
     <private-project-tag
@@ -237,6 +228,7 @@ import { useProjectDirectoryStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import { type HorizontalStack } from '../../insights/overview/components/dashboard-species/components/stack-distribution.vue'
 import StackDistribution from '../../insights/overview/components/dashboard-species/components/stack-distribution.vue'
+import NotHaveContent from '../components/not-have-content.vue'
 import NumericMetric from '../components/numeric-metric.vue'
 import PrivateProjectTag from '../components/private-project-tag.vue'
 import { type ProjectProfileWithMetrics } from '../data/types'
