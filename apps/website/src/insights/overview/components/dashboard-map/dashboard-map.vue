@@ -4,12 +4,57 @@
     <h6 class="mb-4">
       Number of species detected per site
     </h6>
-    <div class="flex flex-row items-center gap-2">
-      Filter by:
-      <taxon-filter
-        :available-taxon-classes="availableTaxons"
-        @emit-taxon-class-filter="onEmitTaxonClassFilter"
-      />
+    <div class="flex flex-row gap-2">
+      <div class="items-center inline-flex  gap-2">
+        Filter by:
+        <taxon-filter
+          :available-taxon-classes="availableTaxons"
+          @emit-taxon-class-filter="onEmitTaxonClassFilter"
+        />
+      </div>
+      <div class="items-center inline-flex gap-2">
+        Map type:
+        <div>
+          <button
+            id="mapTypeDropdown"
+            data-dropdown-toggle="mapDropdown"
+            class="border-1 border-frequency rounded-full bg-moss text-frequency px-3 py-2 flex items-center gap-2"
+            type="button"
+          >
+            {{ mapStyleLable }}
+            <span class="pl-3">
+              <icon-fa-chevron-down class="w-3 h-3 fa-chevron-down" />
+              <icon-fa-chevron-up class="w-3 h-3 fa-chevron-up hidden" />
+            </span>
+          </button>
+          <div
+            id="mapDropdown"
+            class="z-10 hidden bg-moss border-1 border-frequency rounded-lg"
+          >
+            <ul
+              aria-labelledby="mapTypeDropdown"
+              class="p-2 flex flex-col font-medium"
+            >
+              <li
+                v-for="mapStyle in mapStatisticsDisplayStyleOptions"
+                :key="mapStyle.name"
+                v-modal="mapStatisticsStyle"
+                class="bg-moss text-frequency px-3 py-2 flex items-center gap-2"
+                :class="mapStyleLable === mapStyle.name ? 'border-1 border-frequency rounded-full' : ''"
+                @click="propagateMapStatisticsStyle(mapStyle.style)"
+              >
+                <el-tag
+                  class="species-highlights items-center border-none cursor-pointer text-md select-none h-6 bg-moss"
+                  size="large"
+                  :title="mapStyle"
+                >
+                  {{ mapStyle.name }}
+                </el-tag>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="inline-grid w-full mt-4">
@@ -42,12 +87,6 @@
           :max-value="mapDataset.maxValues[MAP_KEY]"
           :title="`Number of species`"
         />
-        <map-tool-menu
-          :map-statistics-style="mapStatisticsStyle"
-          :map-ground-style="undefined"
-          :can-toggle-labels="false"
-          @emit-map-statistics-style="propagateMapStatisticsStyle"
-        />
       </div>
     </div>
   </div>
@@ -55,9 +94,10 @@
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
+import { initDropdowns } from 'flowbite'
 import { groupBy, max, sum } from 'lodash-es'
 import type { LngLatBoundsLike } from 'mapbox-gl'
-import { type ComputedRef, type Ref, computed, inject, ref } from 'vue'
+import { type ComputedRef, type Ref, computed, inject, onMounted, ref } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -67,7 +107,7 @@ import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
 import CircleLegend from '~/maps/map-legend/circle-legend.vue'
 import HeatmapLegend from '~/maps/map-legend/heatmap-legend.vue'
-import MapToolMenu from '~/maps/map-tool-menu/map-tool-menu.vue'
+import type { MapOptions } from '~/maps/map-tool-menu/types'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { useStore } from '~/store'
@@ -79,6 +119,10 @@ const store = useStore()
 
 const MAP_KEY = 'speciesRichness'
 
+onMounted(() => {
+  initDropdowns()
+})
+
 // Services
 const selectedProjectId = computed(() => store.selectedProject?.id ?? -1)
 const { isLoading: isLoadingDataBySite, isError: isErrorDataBySite, data: dataBySite } = useGetDashboardDataBySite(apiClientBio, selectedProjectId)
@@ -87,7 +131,12 @@ const { isLoading: isLoadingDataBySite, isError: isErrorDataBySite, data: dataBy
 const selectedTaxons: Ref<number[] | null> = ref(null)
 
 // Map
+const mapStatisticsDisplayStyleOptions: MapOptions[] = [
+  { style: MAPBOX_STYLE_HEATMAP, name: 'Heatmap', icon: new URL('./icons/heatmap.svg', import.meta.url).toString() },
+  { style: MAPBOX_STYLE_CIRCLE, name: 'Point map', icon: new URL('./icons/bubble.svg', import.meta.url).toString() }
+]
 const mapStatisticsStyle = ref<MapboxStatisticsStyle>(MAPBOX_STYLE_CIRCLE)
+const mapStyleLable = ref<string>(mapStatisticsDisplayStyleOptions[1].name)
 
 const filteredByTaxon = computed(() => {
   const data = dataBySite.value?.richnessBySite ?? []
@@ -130,7 +179,14 @@ const mapDataset: ComputedRef<MapDataSet> = computed(() => {
     }
 })
 
-const propagateMapStatisticsStyle = (style: MapboxStyle) => { mapStatisticsStyle.value = style as MapboxStatisticsStyle }
+const propagateMapStatisticsStyle = (style: MapboxStyle) => {
+  mapStatisticsStyle.value = style as MapboxStatisticsStyle
+  if (style === MAPBOX_STYLE_CIRCLE) {
+    mapStyleLable.value = mapStatisticsDisplayStyleOptions[1].name
+  } else {
+    mapStyleLable.value = mapStatisticsDisplayStyleOptions[0].name
+  }
+}
 
 const mapInitialBounds: ComputedRef<LngLatBoundsLike | null> = computed(() => {
   const project = store.selectedProject
@@ -158,3 +214,14 @@ const onEmitTaxonClassFilter = (taxonClassIds: string[]) => {
 }
 
 </script>
+
+<style lang="scss">
+.el-input__wrapper {
+  border-radius: 8px;
+  border: 1px solid #F9F6F2;
+  background: #060508;
+}
+.el-input__inner {
+  padding-left: 2px !important;
+}
+</style>
