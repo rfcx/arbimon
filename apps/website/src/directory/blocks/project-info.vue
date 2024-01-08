@@ -135,7 +135,6 @@
       v-if="project?.isPublished"
       v-model="activeTab"
       class="border-t-1 border-util-gray-03"
-      @tab-click="handleClick"
     >
       <el-tab-pane
         label="About"
@@ -165,16 +164,24 @@
       <el-tab-pane
         label="Key result"
         name="keyResult"
-        class="m-4"
       >
         <p
           v-if="profile?.keyResult"
         >
-          {{ profile?.keyResult }}
+          <DashboardMarkdownViewerEditor
+            id="key-result"
+            v-model:is-view-mored="isKeyResultTabViewMored"
+            v-model:is-editing="isKeyResultTabEditing"
+            :editable="false"
+            :raw-markdown-text="profile?.keyResult"
+            :default-markdown-text="keyResultDefault"
+            :is-project-member="false"
+            :is-viewing-as-guest="false"
+          />
         </p>
         <p
           v-else
-          class="text-sm p-4 rounded-lg border-1 border-util-gray-03 bg-util-gray-04"
+          class="m-4 text-sm p-4 rounded-lg border-1 border-util-gray-03 bg-util-gray-04"
         >
           Unfortunately, the project owner has not added content for this section.
         </p>
@@ -216,7 +223,6 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
-import type { TabsPaneContext } from 'element-plus'
 import type { ComputedRef } from 'vue'
 import { computed, inject, ref, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
@@ -239,7 +245,7 @@ const props = defineProps<{ projectId: number }>()
 const emit = defineEmits<{(e: 'emitCloseProjectInfo'): void }>()
 const activeTab = ref('about')
 
-const { readme: readmeDefault } = useMarkdownEditorDefaults()
+const { readme: readmeDefault, keyResult: keyResultDefault } = useMarkdownEditorDefaults()
 const pdStore = useProjectDirectoryStore()
 const project = computed<ProjectProfileWithMetrics | undefined>(() => {
   const project = pdStore.getProjectWithMetricsById(props.projectId)
@@ -269,6 +275,9 @@ const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeh
 
 const isAboutTabViewMored = ref(false)
 const isAboutTabEditing = ref(false)
+
+const isKeyResultTabViewMored = ref(false)
+const isKeyResultTabEditing = ref(false)
 
 watch(() => props.projectId, () => {
   profileRefetch()
@@ -303,10 +312,6 @@ const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
     }
   })
 })
-
-const handleClick = (tab: TabsPaneContext, event: Event) => {
-  console.info(tab, event)
-}
 
 </script>
 <style lang="scss">
