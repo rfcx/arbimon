@@ -50,7 +50,7 @@
                 class="btn btn-secondary"
                 @click="hideInsight"
               >
-                Hide Insights
+                Share Insights <span class="hidden lg:inline-flex">on Arbimon</span>
               </button>
             </template>
             <template v-else>
@@ -202,7 +202,7 @@ const shareInsight = (): void => {
 }
 
 const hideInsight = (): void => {
-  startShareInsightsNavigation.value = 'hide-insights-confirmation'
+  startShareInsightsNavigation.value = 'share-insights-successful'
 }
 
 </script>
