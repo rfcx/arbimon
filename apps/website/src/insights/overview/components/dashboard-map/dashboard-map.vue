@@ -94,7 +94,7 @@
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { initDropdowns } from 'flowbite'
+import { Dropdown, initDropdowns } from 'flowbite'
 import { groupBy, max, sum } from 'lodash-es'
 import type { LngLatBoundsLike } from 'mapbox-gl'
 import { type ComputedRef, type Ref, computed, inject, onMounted, ref } from 'vue'
@@ -118,9 +118,14 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const store = useStore()
 
 const MAP_KEY = 'speciesRichness'
+let dropdown: any = null
 
 onMounted(() => {
   initDropdowns()
+  dropdown = new Dropdown(
+    document.getElementById('mapDropdown'),
+    document.getElementById('mapTypeDropdown')
+  )
 })
 
 // Services
@@ -186,6 +191,7 @@ const propagateMapStatisticsStyle = (style: MapboxStyle) => {
   } else {
     mapStyleLable.value = mapStatisticsDisplayStyleOptions[0].name
   }
+  dropdown.hide()
 }
 
 const mapInitialBounds: ComputedRef<LngLatBoundsLike | null> = computed(() => {
