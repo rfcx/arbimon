@@ -35,7 +35,7 @@
           :extra-class="`inline-flex whitespace-nowrap min-w-0`"
         />
       </div>
-      <span class="text-xs text-clip md:text-sm">{{ project.summary }}</span>
+      <span class="text-xs text-clip">{{ project.summary }}</span>
       <div class="flex flex-row gap-2">
         <span class="bg-util-gray-03 px-1 rounded font-medium text-xs">{{ numeral(project.noOfRecordings).format('0a') }} {{ project.noOfRecordings > 1 ? 'minutes' : 'minute' }} recorded</span>
         <span class="bg-util-gray-03 px-1 rounded font-medium text-xs">{{ numeral(project.noOfSpecies).format('0a') }} species</span>
