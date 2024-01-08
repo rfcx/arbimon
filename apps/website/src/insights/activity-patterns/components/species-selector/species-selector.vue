@@ -3,12 +3,12 @@
     <form>
       <div
         class="flex relative items-center"
+        data-dropdown-toggle="searchResultDropdown"
       >
         <input
           v-model="currentSpeciesQuery"
           class="block bg-moss border-util-gray-03 text-sm rounded-md w-full placeholder:text-insight focus:(border-frequency ring-frequency)"
           type="text"
-          data-dropdown-toggle="searchResultDropdown"
           @focus="hasFocusInput = true"
           @blur="hasFocusInput = false"
         >
@@ -30,7 +30,7 @@
     </form>
     <div
       id="searchResultDropdown"
-      class="absolute hidden w-full z-10 bg-white rounded-md shadow dark:bg-gray-700 mt-2"
+      class="absolute hidden w-full z-60 bg-white rounded-md shadow dark:bg-gray-700 mt-2"
     >
       <ul class="overflow-y-auto max-h-80 border-cloud bg-moss rounded-md">
         <li
@@ -60,6 +60,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
+import { initDropdowns } from 'flowbite'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -113,6 +114,7 @@ const onSelectSpecies = (species: SpeciesInProjectTypes['light']) => {
 }
 
 onMounted(async () => {
+  initDropdowns()
   allSpecies.value = await getAllSpecies()
 })
 
