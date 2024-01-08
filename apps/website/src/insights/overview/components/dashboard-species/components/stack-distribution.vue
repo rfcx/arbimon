@@ -96,7 +96,7 @@ const props = withDefaults(defineProps<{
   selectedId?: number
   viewOnly?: boolean
   simpleNoDataText?: string // only use in project directory
-  smallVersion: boolean
+  smallVersion?: boolean
 }>(), {
   knownTotalCount: undefined,
   simpleNoDataText: undefined,
