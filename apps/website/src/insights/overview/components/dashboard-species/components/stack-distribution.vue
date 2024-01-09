@@ -11,12 +11,20 @@
   />
   <div v-else>
     <div class="relative">
-      <div class="absolute w-full h-6 rounded-4xl bg-steel-grey-light" />
+      <div
+        class="absolute w-full h-6 rounded-4xl bg-steel-grey-light"
+        :class="smallVersion ? `h-5` : `h-6`"
+      />
       <div
         v-for="(bar, idx) in bars"
         :key="'dashboard-richness-percentage-' + bar.name"
         class="absolute h-6 border-4 border-echo"
-        :class="idx === bars.length - 1 ? 'rounded-l-4xl rounded-r-4xl' : 'rounded-l-4xl'"
+        :class="{
+          'h-5': smallVersion,
+          'h-6': !smallVersion,
+          'rounded-l-4xl rounded-r-4xl': idx === bars.length - 1,
+          'rounded-l-4xl': idx !== bars.length - 1
+        }"
         :style="{ width: bar.width + '%', backgroundColor: bar.color, zIndex: bars.length - idx }"
       >
         <div
@@ -88,11 +96,13 @@ const props = withDefaults(defineProps<{
   selectedId?: number
   viewOnly?: boolean
   simpleNoDataText?: string // only use in project directory
+  smallVersion?: boolean
 }>(), {
   knownTotalCount: undefined,
   simpleNoDataText: undefined,
   selectedId: -1,
-  viewOnly: true
+  viewOnly: true,
+  smallVersion: false
 })
 
 defineEmits(['emitSelectItem'])

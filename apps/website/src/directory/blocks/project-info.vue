@@ -49,7 +49,7 @@
           <span class="text-lg font-medium">{{ project?.name }}</span>
           <div
             v-if="profile?.dateStart"
-            class="flex font-medium text-sm flex-row border-util-gray-01 mt-3 space-x-2 items-center"
+            class="flex font-medium text-sm flex-row border-util-gray-01 mt-3 space-x-2 font-display items-center"
           >
             <span>
               Project dates:
@@ -119,14 +119,15 @@
           <h4 class="mt-4 font-medium mb-2">
             Taxonomic groups
           </h4>
-          <p class="text-sm mb-2">
+          <p class="text-xs mb-2">
             Number of species detected in each taxonomic group.
           </p>
           <stack-distribution
             :dataset="speciesRichnessByTaxon"
             :known-total-count="`${profile?.metrics?.totalSpecies ?? 0}`"
+            :small-version="true"
             simple-no-data-text="This project has no species detection"
-            class="my-4"
+            class="my-4 text-xs"
           />
         </div>
       </div>
