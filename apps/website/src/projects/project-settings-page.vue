@@ -39,7 +39,7 @@
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-image-form
-            :is-disabled="projectUserPermissionsStore.isGuest"
+            :is-disabled="!isUserHasFullAccess"
             :image="settings?.image"
             @emit-project-image="onEmitProjectImage"
           />
@@ -148,6 +148,7 @@ const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 const lastUpdatedText = ref<string>()
 const isPublic = ref<boolean>(true)
 const profileImageForm = ref()
+const uploadedFile = ref()
 
 const isUserHasFullAccess = computed<boolean>(() => {
   return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
@@ -169,8 +170,21 @@ const onEmitObjectives = (value: string[]) => {
   newObjectives.value = value
 }
 
-const onEmitProjectImage = (form: FormData) => {
-  profileImageForm.value = form
+const onEmitProjectImage = (file: File) => {
+  const name = file.name
+  const type = file.type
+  const readerBuffer = new FileReader()
+  readerBuffer.addEventListener('load', e => {
+    uploadedFile.value = e.target?.result
+    const imageFileAsBlobType = new File([new Blob([uploadedFile.value as BlobPart])], name, {
+      type
+    })
+    const form = new FormData()
+    form.append('image', imageFileAsBlobType, name)
+    console.info(form.getAll('image'))
+    profileImageForm.value = form
+  })
+  readerBuffer.readAsArrayBuffer(file)
 }
 
 const onEmitSlug = (slug: string) => {
