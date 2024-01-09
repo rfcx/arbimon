@@ -32,6 +32,13 @@ const getS3Client = (): S3Client => {
   return s3
 }
 
+export const getObjectPublicUrl = (key: string): string => {
+  if (endpoint !== undefined) {
+    return `${endpoint.endsWith('/') ? endpoint : endpoint + '/'}${bucketName}/${key}`
+  }
+  return `https://${bucketName}.s3.amazonaws.com/${key}`
+}
+
 export const getObject = async (key: string): Promise<ArrayBuffer> => {
   const client = getS3Client()
 

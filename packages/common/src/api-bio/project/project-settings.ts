@@ -41,7 +41,7 @@ export type ProjectInfoResponse = Pick<Project, 'name'>
   richnessByTaxon?: ApiStack
 }
 
-export type ProjectSettingsResponse = Omit<ProjectInfoResponse, 'readme' | 'keyResults' | 'metrics' | 'image'>
+export type ProjectSettingsResponse = Omit<ProjectInfoResponse, 'readme' | 'keyResults' | 'metrics'>
 
 export const ATTRIBUTES_PROJECT_INFO_RESPONSE = attributes<ProjectInfoResponse>()({
 })
@@ -64,9 +64,6 @@ export const apiBioGetProjectStakeHoldersData = async (apiClient: AxiosInstance,
   const url = `/projects/${projectId}/profile/stakeholders`
   return await apiGetOrUndefined(apiClient, url)
 }
-
-export const apiBioGetProjectSettingsData = async (apiClient: AxiosInstance, projectId: number): Promise<ProjectSettingsResponse | undefined> =>
-  await apiBioGetProjectInfoData(apiClient, projectId, ['countryCodes'])
 
 export const apiBioUpdateProjectSettingsData = async (apiClient: AxiosInstance, projectId: number, settings: ProjectProfileUpdateBody): Promise<ProjectSettingsResponse> =>
   await apiClient.patch(`/projects/${projectId}/profile`, settings)
