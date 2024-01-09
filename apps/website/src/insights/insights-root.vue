@@ -47,7 +47,7 @@
 
             <template v-if="profile?.isPublished != null && profile?.isPublished === true && !projectUserPermissionsStore.isGuest">
               <button
-                class="btn btn-secondary"
+                class="btn btn-primary"
                 @click="hideInsight"
               >
                 Share Insights <span class="hidden lg:inline-flex">on Arbimon</span>
