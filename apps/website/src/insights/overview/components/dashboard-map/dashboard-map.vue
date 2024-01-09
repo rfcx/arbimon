@@ -21,7 +21,7 @@
             class="border-1 border-frequency rounded-full bg-moss text-frequency px-3 py-2 flex items-center gap-2"
             type="button"
           >
-            {{ mapStyleLable }}
+            {{ mapStyleLabel }}
             <span class="pl-3">
               <icon-fa-chevron-down class="w-3 h-3 fa-chevron-down" />
               <icon-fa-chevron-up class="w-3 h-3 fa-chevron-up hidden" />
@@ -40,7 +40,7 @@
                 :key="mapStyle.name"
                 v-modal="mapStatisticsStyle"
                 class="bg-moss text-frequency px-3 py-2 flex items-center gap-2"
-                :class="mapStyleLable === mapStyle.name ? 'border-1 border-frequency rounded-full' : ''"
+                :class="mapStyleLabel === mapStyle.name ? 'border-1 border-frequency rounded-full' : ''"
                 @click="propagateMapStatisticsStyle(mapStyle.style)"
               >
                 <el-tag
@@ -141,7 +141,7 @@ const mapStatisticsDisplayStyleOptions: MapOptions[] = [
   { style: MAPBOX_STYLE_CIRCLE, name: 'Point map', icon: new URL('./icons/bubble.svg', import.meta.url).toString() }
 ]
 const mapStatisticsStyle = ref<MapboxStatisticsStyle>(MAPBOX_STYLE_CIRCLE)
-const mapStyleLable = ref<string>(mapStatisticsDisplayStyleOptions[1].name)
+const mapStyleLabel = ref<string>(mapStatisticsDisplayStyleOptions[1].name)
 
 const filteredByTaxon = computed(() => {
   const data = dataBySite.value?.richnessBySite ?? []
@@ -187,9 +187,9 @@ const mapDataset: ComputedRef<MapDataSet> = computed(() => {
 const propagateMapStatisticsStyle = (style: MapboxStyle) => {
   mapStatisticsStyle.value = style as MapboxStatisticsStyle
   if (style === MAPBOX_STYLE_CIRCLE) {
-    mapStyleLable.value = mapStatisticsDisplayStyleOptions[1].name
+    mapStyleLabel.value = mapStatisticsDisplayStyleOptions[1].name
   } else {
-    mapStyleLable.value = mapStatisticsDisplayStyleOptions[0].name
+    mapStyleLabel.value = mapStatisticsDisplayStyleOptions[0].name
   }
   dropdown.hide()
 }
