@@ -46,7 +46,6 @@
         :id="`${email}EditStakeholdersButton`"
         type="button"
         class="hidden group-hover:block !ml-auto"
-        data-dropdown-trigger="hover"
         :data-dropdown-toggle="`${email}Dropdown`"
         data-dropdown-placement="right"
         @click="toggleCard()"
