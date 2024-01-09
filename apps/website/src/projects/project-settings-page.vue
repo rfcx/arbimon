@@ -46,7 +46,7 @@
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-listed-form
             :is-public="isPublic"
-            :is-disabled="projectUserPermissionsStore.isGuest"
+            :is-disabled="projectUserPermissionsStore.isGuest || isPublic === true"
             @emit-project-listed="toggleListedProject"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
