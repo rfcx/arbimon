@@ -77,6 +77,7 @@
               :user="user"
               :roles="roles"
               @emit-change-user-role="changeUserRole"
+              @emit-delete-project-member="deleteProjectMember"
             />
           </div>
         </div>
@@ -108,7 +109,7 @@ import { computed, inject, onMounted, ref } from 'vue'
 
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
-import { useGetProjectMembers } from './_composables/use-project-member'
+import { useDeleteProjectMember, useGetProjectMembers } from './_composables/use-project-member'
 import ProjectMember from './components/project-member.vue'
 
 const store = useStore()
@@ -158,9 +159,10 @@ const roles = [
   }
 ]
 
-const { data: users } = useGetProjectMembers(apiClientBio, selectedProjectId)
+const { data: users, refetch: usersRefetch } = useGetProjectMembers(apiClientBio, selectedProjectId)
 // const { mutate: mutatePostUserRole } = useUpdateUserRole(apiClientBio, store.selectedProject?.id ?? -1)
 // const { mutate: mutatePatchUserRole } = useAddUserRole(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutateDeleteProjectMember } = useDeleteProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
 
 // const userSearchResult = computed(() => {
 //   return [] // searchUserValue.value ? [] : []
@@ -190,6 +192,14 @@ const searchUsers = ():void => {
 
 const changeUserRole = ():void => {
   console.info('changeUserRole')
+}
+
+const deleteProjectMember = (userId: number):void => {
+  mutateDeleteProjectMember(userId, {
+    onSuccess: () => {
+      usersRefetch()
+    }
+  })
 }
 
 onMounted(() => {

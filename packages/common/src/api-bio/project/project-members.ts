@@ -10,6 +10,10 @@ export type GetProjectMembersParams = ProjectRouteParamsSerialized
 export type ProjectMember = Omit<LocationProjectUserRole, 'createdAt' | 'updatedAt' | 'ranking'> & Pick<UserProfile, 'email' | 'firstName' | 'lastName' | 'image'>
 export type GetProjectMembersResponse = ProjectMember[]
 
+export interface DeleteProjectMemberResponse {
+  message: string
+}
+
 // Route
 export const getProjectMembersRoute = '/projects/:projectId/users'
 
@@ -18,3 +22,6 @@ export const apiBioGetProjectMembers = async (apiClient: AxiosInstance, location
   const response = await apiClient.get(`/projects/${locationProjectId}/users`)
   return response.data
 }
+
+export const apiBioDeleteProjectMember = async (apiClient: AxiosInstance, locationProjectId: number, userId: number): Promise<DeleteProjectMemberResponse> =>
+  await apiClient.delete(`/projects/${locationProjectId}/users-delete`, { data: { userId } }).then(res => res.data)
