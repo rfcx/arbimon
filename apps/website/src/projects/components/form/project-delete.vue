@@ -29,12 +29,6 @@
 
 import IconIInfo from '../icon-i-info.vue'
 
-withDefaults(defineProps<{
-  isDisabled?: boolean
-}>(), {
-  isDisabled: false
-})
-
 defineEmits<{(e: 'emitProjectDelete'): void}>()
 
 </script>
