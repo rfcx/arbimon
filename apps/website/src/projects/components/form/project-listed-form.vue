@@ -35,7 +35,7 @@
 import { initTooltips } from 'flowbite'
 import { onMounted, ref, watch } from 'vue'
 
-const props = defineProps<{ isPublic: boolean | undefined, isDisabled: boolean }>()
+const props = defineProps<{ isPublic: boolean | undefined, isDisabled?: boolean }>()
 
 const emit = defineEmits<{(e: 'emitProjectListed', value: boolean): void}>()
 
