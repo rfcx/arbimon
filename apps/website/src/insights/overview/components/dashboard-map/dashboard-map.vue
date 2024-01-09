@@ -43,13 +43,12 @@
                 :class="mapStyleLabel === mapStyle.name ? 'border-1 border-frequency rounded-full' : ''"
                 @click="propagateMapStatisticsStyle(mapStyle.style)"
               >
-                <el-tag
+                <div
                   class="species-highlights items-center border-none cursor-pointer text-md select-none h-6 bg-moss"
                   size="large"
-                  :title="mapStyle"
                 >
                   {{ mapStyle.name }}
-                </el-tag>
+                </div>
               </li>
             </ul>
           </div>
