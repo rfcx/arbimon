@@ -12,13 +12,12 @@
         </div>
         <p>Recommended size: 380 px by 180 px</p>
       </div>
-      <div>
+      <div v-if="!isDisabled">
         <input
           id="profileFileUpload"
           type="file"
           accept="image/jpeg, image/png"
           hidden
-          :disabled="isDisabled"
           @change="uploadPhoto"
         >
         <button
@@ -42,34 +41,19 @@
 
 <script setup lang="ts">
 import { initTooltips } from 'flowbite'
-import { type Ref, computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import IconIInfo from '../icon-i-info.vue'
 
 const props = defineProps<{ isDisabled?: boolean, image?: string }>()
 
-const emit = defineEmits<{(e: 'emitProjectImage', form: FormData): void}>()
+const emit = defineEmits<{(e: 'emitProjectImage', file: File): void}>()
 
-const uploadedFile = ref()
 const uploadedPhotoUrl = ref('')
-const uploadedPhotoData: Ref<Record<string, string>> = ref({
-  name: '',
-  type: ''
-})
 
 const projectImage = computed(() => {
   return uploadedPhotoUrl.value ? uploadedPhotoUrl.value : props.image
 })
-
-const onEmitProjectImage = () => {
-  const imageFileAsBlobType = new File([new Blob([uploadedFile.value as BlobPart])], uploadedPhotoData.value.name, {
-    type: uploadedPhotoData.value.type
-  })
-  const form = new FormData()
-  form.append('image', imageFileAsBlobType, uploadedPhotoData.value.name)
-  console.info(form.getAll('image'))
-  emit('emitProjectImage', form)
-}
 
 const selectPhoto = async (): Promise<void> => {
   document.getElementById('profileFileUpload')?.click()
@@ -78,20 +62,12 @@ const selectPhoto = async (): Promise<void> => {
 const uploadPhoto = async (e: Event): Promise<void> => {
   const target = e.target as HTMLInputElement
   const file: File = (target.files as FileList)[0]
-  uploadedPhotoData.value.name = file.name
-  uploadedPhotoData.value.type = file.type
-  // the browser has NO ACCESS to the file path for security reasons
+  emit('emitProjectImage', file)
   const readerUrl = new FileReader()
-  const readerBuffer = new FileReader()
   readerUrl.addEventListener('load', e => {
     uploadedPhotoUrl.value = e.target?.result as string
   })
-  readerBuffer.addEventListener('load', e => {
-    uploadedFile.value = e.target?.result
-  })
   readerUrl.readAsDataURL(file)
-  readerBuffer.readAsArrayBuffer(file)
-  onEmitProjectImage()
 }
 
 onMounted(() => {
