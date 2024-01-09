@@ -4,8 +4,8 @@ import { type ProjectCreateRequest } from '@rfcx-bio/common/api-bio/project/proj
 import { RANKING_PRIMARY } from '@rfcx-bio/common/roles'
 
 import { createProject as createProjectInCore, getProject as getProjectInCore } from '~/api-core/api-core'
-import { create } from './dao/project-member-dao'
 import { createProject as createProjectLocal } from './dao/project-create-dao'
+import { create } from './dao/project-member-dao'
 import { createProjectProfile } from './dao/project-profile-dao'
 import { createProjectVersion } from './dao/project-version-dao'
 
