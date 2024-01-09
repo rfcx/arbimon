@@ -65,8 +65,8 @@
               <input
                 ref="organizationSearchInput"
                 v-model="searchOrganizationValue"
-                class="px-3 py-2 w-[20.0rem] text-sm text-insight bg-echo outline-none focus:(outline-none rounded-t-lg font-sans border-frequency ring-frequency)"
-                :class="{ 'rounded-b-lg': orgsSearchResult.length === 0 || dropdownStatus !== 'search' }"
+                class="px-3 py-2 w-[20.0rem] rounded-lg text-sm text-insight bg-echo outline-none focus:(outline-none rounded-lg font-sans border-frequency ring-frequency)"
+                :class="{ 'rounded-lg': orgsSearchResult.length === 0 || dropdownStatus !== 'search' }"
                 type="text"
                 placeholder="Type to search organizations"
                 data-dropdown-toggle="dropdown"
@@ -85,7 +85,7 @@
             </div>
             <div
               ref="createNewOrganizationFormContainer"
-              class="z-10 hidden w-[20.0rem] text-insight bg-moss border-cloud border-b-0 border-l border-r rounded-b-lg shadow"
+              class="z-10 hidden w-[20.0rem] text-insight bg-moss border-cloud border-b-0 border-l border-r rounded-lg shadow"
               :class="{'border-b-1': !orgsSearchResult?.length}"
             >
               <div class="max-w-sm mx-auto p-3">
@@ -139,7 +139,7 @@
             </div>
             <div
               ref="organizationSearchResultNotFoundContainer"
-              class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg shadow flex flex-row justify-between p-3"
+              class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-lg shadow flex flex-row justify-between p-3"
             >
               <p class="text-sm font-normal font-sans text-insight leading-tight">
                 We are unable to find this organization.
@@ -155,7 +155,7 @@
           </div>
           <div
             ref="organizationSearchResultContainer"
-            class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow overflow-y-scroll"
+            class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-lg divide-y divide-gray-100 shadow overflow-y-scroll"
             :class="{'border-b-1': searchOrganizationValue && !organizationsSearchResult, 'border-b-1 max-h-66': orgsSearchResult?.length}"
           >
             <OrganizationSearchResultCard
