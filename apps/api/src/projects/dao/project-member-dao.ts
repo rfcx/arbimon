@@ -66,3 +66,11 @@ export const getUserRoleForProject = async (userId: number | undefined, projectI
 
   return roleId !== undefined ? getRoleById(roleId) : 'none'
 }
+
+export const deleteProjectMember = async (projectId: number, userId: number): Promise<void> => {
+  await ModelRepository.getInstance(getSequelize())
+    .LocationProjectUserRole
+    .destroy({
+      where: { locationProjectId: projectId, userId }
+    })
+}

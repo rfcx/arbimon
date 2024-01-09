@@ -8,13 +8,13 @@ import { myProjectsRoute, projectDirectoryRoute, projectsRoute } from '@rfcx-bio
 
 import { requireAuthorized } from '@/_hooks/require-authenticated'
 import { requireProjectPermission } from '@/_hooks/require-permission'
-import { type RouteRegistration, GET, PATCH, POST } from '../_services/api-helpers/types'
+import { type RouteRegistration, DELETE, GET, PATCH, POST } from '../_services/api-helpers/types'
 import { projectsDirectoryHandler } from './get-directory-projects-handler'
-import { getProjectMembersHandler, getProjectPermissionHandler } from './get-project-members'
 import { patchInsightsPublishStatusHandler } from './patch-insights-publish-status-handler'
 import { projectCreateHandler } from './project-create-handler'
 import { projectFiltersHandler, projectRecordingCountBySiteHandler, projectRecordingCountHandler } from './project-filters-handler'
 import { projectUpdateImageHandler } from './project-image-handler'
+import { deleteProjectMemberHandler, getProjectMembersHandler, getProjectPermissionHandler } from './project-member'
 import { projectProfileHandler, projectProfileStakeholdersReadOnlyHandler, projectProfileUpdateHandler } from './project-profile-handler'
 import { myProjectsHandler, projectsAllHandler } from './projects-handler'
 
@@ -98,5 +98,11 @@ export const routesProject: RouteRegistration[] = [
     url: projectProfileImageRoute,
     preHandler: [requireProjectPermission('update-profile')],
     handler: projectUpdateImageHandler
+  },
+  {
+    method: DELETE,
+    url: projectDataRoute + '/users-delete',
+    preHandler: [requireProjectPermission('update-profile')],
+    handler: deleteProjectMemberHandler
   }
 ]

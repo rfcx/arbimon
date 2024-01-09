@@ -14,6 +14,6 @@ export const useGetProjectMembers = (apiClient: AxiosInstance, projectId: Comput
 export const useDeleteProjectMember = (apiClient: AxiosInstance, projectId: number): UseMutationReturnType<void, unknown, number, unknown> => {
   return useMutation({
     mutationKey: ['delete-project-member'],
-    mutationFn: async (userId: number) => { await apiBioDeleteProjectMember(apiClient, projectId, userId) }
+    mutationFn: async (userId: number) => { await apiBioDeleteProjectMember(apiClient, projectId, { userId }) }
   })
 }
