@@ -269,7 +269,7 @@ const togglePrimaryContact = (userId: number, email: string, isPrimaryContact: b
   tempProjectMembers.value = tempProjectMembers.value.map(user => {
     return {
       ...user,
-      ranking: user.email === email ? newRanking : (prevPrimary && prevPrimary.email === user.email) ? 1 : user.ranking
+      ranking: user.email === email ? newRanking : (prevPrimary?.email === user.email) ? 1 : user.ranking
     }
   })
   primaryContact.value.userId = isPrimaryContact === true ? userId : -1
@@ -371,6 +371,12 @@ watch(() => props.organizations, (value) => {
   addedOrganizations.value = addedOrganizations.value.filter(o => !newIds.includes(o.id))
   // Add to selected orgs
   selectedOrganizationIds.value = Array.from(new Set([...selectedOrganizationIds.value, ...newIds]))
+})
+
+watch(() => dropdownStatus.value, (value) => {
+  if (value === 'idle') {
+    searchDropdown.value.hide()
+  }
 })
 
 const createNewOrganization = (): void => {
