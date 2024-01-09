@@ -14,10 +14,7 @@
         >
         <span
           class="italic absolute left-3 pointer-events-none text-sm"
-          :class="{
-            'hidden': currentSpeciesQuery !== '',
-            'text-util-gray-03': hasFocusInput
-          }"
+          :class="{'hidden': currentSpeciesQuery !== '','text-util-gray-03': hasFocusInput}"
         >{{ allSpecies.find(s => s.taxonSpeciesSlug === selectedSpeciesSlug)?.scientificName }}</span>
         <span class="absolute right-4 cursor-pointer pointer-events-none">
           <span class="sr-only">Type to search</span>

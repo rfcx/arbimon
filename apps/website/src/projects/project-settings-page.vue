@@ -14,17 +14,17 @@
             :existing-name="selectedProject?.name"
             :date-start="settings?.dateStart"
             :date-end="settings?.dateEnd"
-            :is-disabled="projectUserPermissionsStore.isGuest"
+            :is-disabled="!isUserHasFullAccess"
             @emit-update-value="onEmitDefaultValue"
           />
           <project-summary-form
             :existing-summary="settings?.summary"
-            :is-disabled="projectUserPermissionsStore.isGuest"
+            :is-disabled="!isUserHasFullAccess"
             @emit-project-summary="onEmitSummary"
           />
           <project-objective-form
             :existing-objectives="settings?.objectives"
-            :is-disabled="projectUserPermissionsStore.isGuest"
+            :is-disabled="!isUserHasFullAccess"
             @emit-project-objectives="onEmitObjectives"
           />
         </div>
@@ -34,7 +34,7 @@
           </h5>
           <project-slug
             :existing-slug="selectedProject?.slug"
-            :is-disabled="projectUserPermissionsStore.isGuest"
+            :is-disabled="!isUserHasFullAccess"
             @emit-updated-slug="onEmitSlug"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
@@ -46,18 +46,18 @@
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-listed-form
             :is-public="isPublic"
-            :is-disabled="projectUserPermissionsStore.isGuest || isPublic === true"
+            :is-disabled="!isUserHasFullAccess || isPublic === true"
             @emit-project-listed="toggleListedProject"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-delete
-            :is-disabled="projectUserPermissionsStore.isGuest"
+            v-if="projectUserPermissionsStore.role === 'owner'"
             @emit-project-delete="onEmitProjectDelete"
           />
         </div>
       </div>
       <div
-        v-if="!projectUserPermissionsStore.isGuest"
+        v-if="isUserHasFullAccess"
         class="flex flex-row-reverse items-center gap-4"
       >
         <button
@@ -152,6 +152,10 @@ const profileImageForm = ref()
 const projectImage = computed<string | undefined>(() => {
   const project = store.myProjects.find(project => project.id === store.selectedProject?.id)
   return project?.image
+})
+
+const isUserHasFullAccess = computed<boolean>(() => {
+  return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
 })
 
 // update form values
