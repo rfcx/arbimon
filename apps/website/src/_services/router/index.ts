@@ -86,7 +86,8 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'settings',
         name: ROUTE_NAMES.projectSettings,
-        component: PAGES.ProjectSettings
+        component: PAGES.ProjectSettings,
+        beforeEnter: [authRequiredGuard]
       },
       {
         path: 'insights',
@@ -166,7 +167,8 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/account-settings',
     name: ROUTE_NAMES.accountSettings,
-    component: PAGES.AccountSettings
+    component: PAGES.AccountSettings,
+    beforeEnter: [authRequiredGuard]
   },
   {
     path: '/callback',

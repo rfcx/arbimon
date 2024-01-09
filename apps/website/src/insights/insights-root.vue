@@ -44,8 +44,7 @@
                 <icon-custom-fi-eye-off class="inline-flex text-insight mr-2" /> This page is visible to project member only
               </template>
             </span>
-
-            <template v-if="profile?.isPublished != null && profile?.isPublished === true && !projectUserPermissionsStore.isGuest">
+            <template v-if="profile?.isPublished != null && profile?.isPublished === true && isUserHasFullAccess">
               <button
                 class="btn btn-secondary"
                 @click="hideInsight"
@@ -55,9 +54,8 @@
             </template>
             <template v-else>
               <button
-                v-if="!projectUserPermissionsStore.isGuest"
+                v-if="isUserHasFullAccess"
                 class="btn btn-primary disabled:cursor-not-allowed"
-                :disabled="projectUserPermissionsStore.role === 'guest'"
                 @click="shareInsight"
               >
                 Share Insights <span class="hidden lg:inline-flex">on Arbimon</span>
@@ -182,6 +180,10 @@ const isViewingAsGuest = computed(() => {
 const startShareInsightsNavigation = ref<InsightsPublishStatus>('idle')
 
 const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch } = useGetProjectSettings(apiClientBio, selectedProjectId)
+
+const isUserHasFullAccess = computed<boolean>(() => {
+  return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
+})
 
 watch(() => profile.value, () => {
   if (!profile.value) return
