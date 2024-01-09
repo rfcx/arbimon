@@ -35,7 +35,7 @@
           </svg>
         </div>
       </div>
-      <div class="overflow-scroll">
+      <div>
         <img
           v-if="project?.imageUrl"
           :src="project?.imageUrl"
