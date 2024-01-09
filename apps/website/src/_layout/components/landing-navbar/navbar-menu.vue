@@ -40,7 +40,7 @@
       </button>
       <div
         :id="`${domId}DropdownResources`"
-        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-48 dark:bg-moss dark:divide-moss border-0"
+        class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-48 dark:bg-moss dark:divide-moss border-0"
       >
         <ul
           :aria-labelledby="`${domId}DropdownResourcesButton`"
