@@ -7,6 +7,7 @@ import { type LocationProjectProfile } from '@rfcx-bio/common/dao/types'
 import { getProjectMetrics } from '@/dashboard/dashboard-metrics-dao'
 import { getRichnessByTaxon } from '@/dashboard/dashboard-species-data-dao'
 import { getSequelize } from '~/db'
+import { getObjectPublicUrl } from '~/storage'
 import { getImageByObjectives } from '../utils/image-by-objective'
 
 const profileDefaults: Omit<LocationProjectProfile, 'locationProjectId'> = {
@@ -54,7 +55,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
   })
   const resProfile = await LocationProjectProfile.findOne({
     where: { locationProjectId },
-    attributes: ['summary', 'objectives', 'dateStart', 'dateEnd', 'readme', 'keyResult'],
+    attributes: ['summary', 'objectives', 'image', 'dateStart', 'dateEnd', 'readme', 'keyResult'],
     raw: true
   })
 
@@ -95,10 +96,10 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
 
   return {
     ...baseProject,
-    dateStart: baseProject.dateStart, // TODO:
+    dateStart: baseProject.dateStart,
     ...(fields.includes('readme') ? { readme: resProfile?.readme ?? '' } : {}),
     ...(fields.includes('keyResult') ? { keyResults: resProfile?.keyResult ?? '' } : {}),
-    ...(fields.includes('image') ? { image: '' } : {}),
+    ...(fields.includes('image') && resProfile?.image !== undefined ? { image: getObjectPublicUrl(resProfile.image) } : {}),
     ...(fields.includes('countryCodes') ? { countryCodes: resCountry?.countryCodes ?? [] } : {}),
     ...(fields.includes('richnessByTaxon') ? { richnessByTaxon } : {}),
     ...(fields.includes('metrics')

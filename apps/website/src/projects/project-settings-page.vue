@@ -40,7 +40,7 @@
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-image-form
             :is-disabled="projectUserPermissionsStore.isGuest"
-            :image="projectImage"
+            :image="settings?.image"
             @emit-project-image="onEmitProjectImage"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
@@ -148,11 +148,6 @@ const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 const lastUpdatedText = ref<string>()
 const isPublic = ref<boolean>(true)
 const profileImageForm = ref()
-
-const projectImage = computed<string | undefined>(() => {
-  const project = store.myProjects.find(project => project.id === store.selectedProject?.id)
-  return project?.image
-})
 
 const isUserHasFullAccess = computed<boolean>(() => {
   return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
