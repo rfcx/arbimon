@@ -81,10 +81,9 @@ import { initModals } from 'flowbite'
 import { type LngLatBoundsLike } from 'mapbox-gl'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 
-import { getApiClient } from '@rfcx-bio/utils/api'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { apiClientArbimonLegacyKey } from '@/globals'
+import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
@@ -110,7 +109,7 @@ const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const selectedProjectSlug = computed(() => store.selectedProject?.slug)
 
-const apiClientBio = getApiClient(import.meta.env.VITE_API_BASE_URL)
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { isLoading: isLoadingRecCountBio, data: projectRecCount } = useBioRecordingCount(apiClientBio, selectedProjectId)
 const { isLoading: isLoadingSitesRecCountBio, data: projectSitesRecCount } = useBioProjectSitesRecordingCount(apiClientBio, selectedProjectId)
 

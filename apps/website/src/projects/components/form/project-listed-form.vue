@@ -21,13 +21,12 @@
         :checked="!isPublic"
         @click="toggleListedProject()"
       >
-      <label class="ml-2">
+      <label
+        class="ml-2"
+        :class="{'text-util-gray-02': isDisabled}"
+      >
         This is a test project, do NOT list it on Arbimon.
       </label>
-      <icon-i-info
-        tooltip-id="project-settings-listed-project-tooltip"
-        :tooltip-text="'Do not list the project on Arbimon if the checkbox is selected'"
-      />
     </div>
   </div>
 </template>
@@ -35,8 +34,6 @@
 <script setup lang="ts">
 import { initTooltips } from 'flowbite'
 import { onMounted, ref } from 'vue'
-
-import IconIInfo from '../icon-i-info.vue'
 
 const props = defineProps<{ isPublic: boolean, isDisabled?: boolean }>()
 

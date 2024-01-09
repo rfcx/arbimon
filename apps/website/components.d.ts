@@ -25,6 +25,8 @@ declare module 'vue' {
     ElRow: typeof import('element-plus/lib')['ElRow']
     ElSelect: typeof import('element-plus/lib')['ElSelect']
     ElSlider: typeof import('element-plus/lib')['ElSlider']
+    ElTabPane: typeof import('element-plus/lib')['ElTabPane']
+    ElTabs: typeof import('element-plus/lib')['ElTabs']
     ElTag: typeof import('element-plus/lib')['ElTag']
     IconCustomAlertCircle: typeof import('~icons/custom-icons/alert-circle')['default']
     IconCustomArrowRight: typeof import('~icons/custom-icons/arrow-right')['default']
