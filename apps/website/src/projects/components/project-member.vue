@@ -50,7 +50,7 @@
       </button>
       <div
         :id="`dropdownRole-${user.email}`"
-        class="z-10 hidden bg-echo divide-y rounded-lg shadow w-30"
+        class="z-10 hidden bg-echo divide-y rounded-lg shadow w-35"
       >
         <ul
           :aria-labelledby="`dropdownRoleButton-${user.email}`"
@@ -59,9 +59,9 @@
           tabindex="-1"
         >
           <li
-            v-for="role in roles"
+            v-for="role in roles.filter(r => r.id !== 4)"
             :key="role.id"
-            class="flex flex-row justify-start items-center p-2 m-0 cursor-pointer"
+            class="flex flex-row justify-start items-center p-1 m-0 cursor-pointer"
             @click="$emit('emitChangeUserRole', user.userId, role.id)"
           >
             <span class="w-8">
