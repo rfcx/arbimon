@@ -155,7 +155,7 @@
           />
         </p>
         <div v-else>
-          <not-have-content />
+          <no-content-banner />
         </div>
       </el-tab-pane>
       <el-tab-pane
@@ -177,7 +177,7 @@
           />
         </p>
         <div v-else>
-          <not-have-content />
+          <no-content-banner />
         </div>
       </el-tab-pane>
       <el-tab-pane
@@ -201,7 +201,7 @@
           </div>
         </div>
         <div v-else>
-          <not-have-content />
+          <no-content-banner />
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -228,7 +228,7 @@ import { useProjectDirectoryStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import { type HorizontalStack } from '../../insights/overview/components/dashboard-species/components/stack-distribution.vue'
 import StackDistribution from '../../insights/overview/components/dashboard-species/components/stack-distribution.vue'
-import NotHaveContent from '../components/not-have-content.vue'
+import NoContentBanner from '../components/no-content-banner.vue'
 import NumericMetric from '../components/numeric-metric.vue'
 import PrivateProjectTag from '../components/private-project-tag.vue'
 import { type ProjectProfileWithMetrics } from '../data/types'
