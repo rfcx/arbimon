@@ -16,14 +16,14 @@
       <input
         id="project-settings-listed-project-checkbox"
         type="checkbox"
-        class="w-5 h-5 border mb-1 border-util-gray-01 rounded dark:bg-echo focus:border-white-600 focus:ring-frequency dark:border-white-600 dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
+        class="w-5 h-5 border mb-1 border-util-gray-01 rounded cursor-pointer  dark:bg-echo focus:border-white-600 focus:ring-frequency dark:border-white-600 dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
         :disabled="isDisabled"
-        :checked="!isPublic"
+        :checked="!isPublicProject"
         @click="toggleListedProject()"
       >
       <label
         class="ml-2"
-        :class="{'text-util-gray-02': isDisabled}"
+        :class="{'text-util-gray-02': isDisabled || isPublicProject}"
       >
         This is a test project, do NOT list it on Arbimon.
       </label>
@@ -33,21 +33,26 @@
 
 <script setup lang="ts">
 import { initTooltips } from 'flowbite'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
-const props = defineProps<{ isPublic: boolean, isDisabled?: boolean }>()
+const props = defineProps<{ isPublic: boolean | undefined, isDisabled: boolean }>()
 
 const emit = defineEmits<{(e: 'emitProjectListed', value: boolean): void}>()
 
-const isPublic = ref<boolean>(props.isPublic)
+const isPublicProject = ref(false)
 
 const toggleListedProject = () => {
-  isPublic.value = !isPublic.value
-  emit('emitProjectListed', isPublic.value)
+  isPublicProject.value = !isPublicProject.value
+  emit('emitProjectListed', isPublicProject.value)
 }
+
+watch(() => props.isPublic, (newVal) => {
+  isPublicProject.value = newVal
+})
 
 onMounted(() => {
   initTooltips()
+  isPublicProject.value = props.isPublic
 })
 
 </script>

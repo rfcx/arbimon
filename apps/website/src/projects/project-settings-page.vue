@@ -45,8 +45,8 @@
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-listed-form
-            :is-public="isPublic"
-            :is-disabled="!isUserHasFullAccess || isPublic === true"
+            :is-public="settings?.isPublic"
+            :is-disabled="!isUserHasFullAccess"
             @emit-project-listed="toggleListedProject"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
@@ -146,9 +146,10 @@ const hasFailed = ref(false)
 const lastUpdated = ref(false)
 const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 const lastUpdatedText = ref<string>()
-const isPublic = ref<boolean>(true)
 const profileImageForm = ref()
 const uploadedFile = ref()
+
+const isPublic = ref<boolean>(true)
 
 const isUserHasFullAccess = computed<boolean>(() => {
   return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
@@ -259,9 +260,11 @@ const updateSettings = () => {
       console.info(e)
     }
   })
-  mutatePatchProfilePhoto(profileImageForm.value, {
-    onSuccess: async () => { }
-  })
+  if (profileImageForm.value !== undefined) {
+    mutatePatchProfilePhoto(profileImageForm.value, {
+      onSuccess: async () => { }
+    })
+  }
 }
 
 </script>
