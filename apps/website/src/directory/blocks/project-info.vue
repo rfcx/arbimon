@@ -132,6 +132,80 @@
         </div>
       </div>
     </div>
+    <el-tabs
+      v-if="project?.isPublished"
+      v-model="activeTab"
+      class="border-t-1 border-util-gray-03"
+    >
+      <el-tab-pane
+        label="About"
+        name="about"
+      >
+        <p
+          v-if="profile?.readme"
+        >
+          <DashboardMarkdownViewerEditor
+            id="about"
+            v-model:is-view-mored="isAboutTabViewMored"
+            v-model:is-editing="isAboutTabEditing"
+            :editable="false"
+            :raw-markdown-text="profile?.readme"
+            :default-markdown-text="readmeDefault"
+            :is-project-member="false"
+            :is-viewing-as-guest="true"
+          />
+        </p>
+        <div v-else>
+          <no-content-banner />
+        </div>
+      </el-tab-pane>
+      <el-tab-pane
+        label="Key result"
+        name="keyResult"
+      >
+        <p
+          v-if="profile?.keyResult"
+        >
+          <DashboardMarkdownViewerEditor
+            id="key-result"
+            v-model:is-view-mored="isKeyResultTabViewMored"
+            v-model:is-editing="isKeyResultTabEditing"
+            :editable="false"
+            :raw-markdown-text="profile?.keyResult"
+            :default-markdown-text="keyResultDefault"
+            :is-project-member="false"
+            :is-viewing-as-guest="false"
+          />
+        </p>
+        <div v-else>
+          <no-content-banner />
+        </div>
+      </el-tab-pane>
+      <el-tab-pane
+        label="Stakeholders"
+        name="stakeholders"
+      >
+        <div
+          v-if="stakeholders?.organizations && !stakeholderError"
+        >
+          <div
+            class="grid mt-4"
+            style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
+          >
+            <DashboardProjectStakeholdersViewer
+              :editable="false"
+              :loading="stakeholdersLoading || stakeholdersRefetching"
+              :organizations="stakeholders?.organizations ?? []"
+              :project-members="stakeholders?.users.filter(u => u.ranking !== -1).sort((a, b) => a.ranking - b.ranking) ?? []"
+              @emit-is-updating="false"
+            />
+          </div>
+        </div>
+        <div v-else>
+          <no-content-banner />
+        </div>
+      </el-tab-pane>
+    </el-tabs>
     <private-project-tag
       v-if="!project?.isPublished"
       class="justify-self-end "
@@ -142,23 +216,29 @@
 import { type AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
 import type { ComputedRef } from 'vue'
-import { computed, inject, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
 import { getCountryLabel } from '@/_services/country'
 import { apiClientKey } from '@/globals'
-import { useGetProjectInfo } from '@/projects/_composables/use-project-profile'
+import DashboardMarkdownViewerEditor from '@/insights/overview/components/dashboard-project-summary/components/dashboard-markdown-viewer-editor.vue'
+import DashboardProjectStakeholdersViewer from '@/insights/overview/components/dashboard-project-summary/components/dashboard-project-stakeholders/dashboard-project-stakeholders-viewer.vue'
+import { useMarkdownEditorDefaults } from '@/insights/overview/composables/use-markdown-editor-defaults'
+import { useGetProjectInfo, useGetProjectStakeholders } from '@/projects/_composables/use-project-profile'
 import { useProjectDirectoryStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import { type HorizontalStack } from '../../insights/overview/components/dashboard-species/components/stack-distribution.vue'
 import StackDistribution from '../../insights/overview/components/dashboard-species/components/stack-distribution.vue'
+import NoContentBanner from '../components/no-content-banner.vue'
 import NumericMetric from '../components/numeric-metric.vue'
 import PrivateProjectTag from '../components/private-project-tag.vue'
 import { type ProjectProfileWithMetrics } from '../data/types'
 
 const props = defineProps<{ projectId: number }>()
 const emit = defineEmits<{(e: 'emitCloseProjectInfo'): void }>()
+const activeTab = ref('about')
 
+const { readme: readmeDefault, keyResult: keyResultDefault } = useMarkdownEditorDefaults()
 const pdStore = useProjectDirectoryStore()
 const project = computed<ProjectProfileWithMetrics | undefined>(() => {
   const project = pdStore.getProjectWithMetricsById(props.projectId)
@@ -183,10 +263,18 @@ const project = computed<ProjectProfileWithMetrics | undefined>(() => {
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
-const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon'])
+const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResults'])
+const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId)
+
+const isAboutTabViewMored = ref(false)
+const isAboutTabEditing = ref(false)
+
+const isKeyResultTabViewMored = ref(false)
+const isKeyResultTabEditing = ref(false)
 
 watch(() => props.projectId, () => {
   profileRefetch()
+  stakeholdersRefetch()
 })
 
 const countrieFlag = computed(() => {
@@ -223,4 +311,20 @@ const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
 .normal-flag {
   margin: 1px !important
 }
+.el-tabs > .el-tabs__header{
+  margin: 0px;
+}
+.el-tabs > .el-tabs__header >.el-tabs__nav-wrap >.el-tabs__nav-scroll >.el-tabs__nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+  .el-tabs__item {
+    height: 50px;
+    padding: 0px;
+    border-bottom-width: 3px;
+    --tw-border-opacity: 1;
+    border-color: rgba(75, 75, 75, var(--tw-border-opacity));
+  }
+}
+
 </style>
