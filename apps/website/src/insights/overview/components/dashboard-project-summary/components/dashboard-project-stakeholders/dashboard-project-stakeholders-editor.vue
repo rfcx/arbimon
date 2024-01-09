@@ -156,7 +156,7 @@
           <div
             ref="organizationSearchResultContainer"
             class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow overflow-y-scroll"
-            :class="{'border-b-1': searchOrganizationValue && !organizationsSearchResult, 'border-b-1 h-66': orgsSearchResult?.length}"
+            :class="{'border-b-1': searchOrganizationValue && !organizationsSearchResult, 'border-b-1 max-h-66': orgsSearchResult?.length}"
           >
             <OrganizationSearchResultCard
               v-for="s in orgsSearchResult"
