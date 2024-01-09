@@ -99,7 +99,7 @@ const { isLoading: isLoadingDataBySite, isError: isErrorDataBySite, data: dataBy
 const selectedTaxons: Ref<number[] | null> = ref(null)
 const mapStatisticsStyle = ref<MapboxStatisticsStyle>(MAPBOX_STYLE_CIRCLE)
 
-const onMapStyleChange = (style: MAPBOX_STYLE_CIRCLE) => {
+const onMapStyleChange = (style: MapboxStatisticsStyle) => {
   mapStatisticsStyle.value = style
 }
 
