@@ -281,7 +281,7 @@ const { mutate: mutateMethods } = useUpdateDashboardMethods(apiClientBio, store.
 const updateReadme = (value: string): void => {
   mutateReadme(value, {
     onSuccess: async () => {
-      isAboutTabViewMored.value = true
+      isAboutTabViewMored.value = value.length !== 0
       isAboutTabEditing.value = false
       await refetchDashboardContent()
     },
@@ -296,7 +296,7 @@ const updateReadme = (value: string): void => {
 const updateKeyResult = (value: string): void => {
   mutateKeyResult(value, {
     onSuccess: async () => {
-      isKeyResultTabViewMored.value = true
+      isKeyResultTabViewMored.value = value.length !== 0
       isKeyResultTabEditing.value = false
       await refetchDashboardContent()
     },
@@ -311,7 +311,7 @@ const updateKeyResult = (value: string): void => {
 const updateResources = (value: string): void => {
   mutateResources(value, {
     onSuccess: async () => {
-      isResourcesTabViewMored.value = true
+      isResourcesTabViewMored.value = value.length !== 0
       isResourcesTabEditing.value = false
       await refetchDashboardContent()
     },
@@ -326,7 +326,7 @@ const updateResources = (value: string): void => {
 const updateMethods = (value: string): void => {
   mutateMethods(value, {
     onSuccess: async () => {
-      isMethodsTabViewMored.value = true
+      isMethodsTabViewMored.value = value.length !== 0
       isMethodsTabEditing.value = false
       await refetchDashboardContent()
     },

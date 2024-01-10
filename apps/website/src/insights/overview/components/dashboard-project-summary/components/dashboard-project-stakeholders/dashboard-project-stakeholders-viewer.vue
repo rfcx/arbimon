@@ -9,7 +9,7 @@
         :disabled="loading"
         @click="$emit('emit-is-updating')"
       >
-        Edit displayed stakeholders
+        Edit stakeholders
         <icon-custom-ic-edit class="ml-2 w-4 h-4 self-center" />
       </button>
     </div>
