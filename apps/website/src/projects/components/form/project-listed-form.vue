@@ -17,13 +17,13 @@
         id="project-settings-listed-project-checkbox"
         type="checkbox"
         class="w-5 h-5 border mb-1 border-util-gray-01 rounded cursor-pointer  dark:bg-echo focus:border-white-600 focus:ring-frequency dark:border-white-600 dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
-        :disabled="isDisabled && !isCreateProject"
+        :disabled="isDisabled"
         :checked="!isPublicProject"
         @click="toggleListedProject()"
       >
       <label
         class="ml-2"
-        :class="{'text-util-gray-02': isDisabled && !isCreateProject}"
+        :class="{'text-util-gray-02': isDisabled}"
       >
         This is a test project, do NOT list it on Arbimon.
       </label>
@@ -35,7 +35,7 @@
 import { initTooltips } from 'flowbite'
 import { onMounted, ref, watch } from 'vue'
 
-const props = defineProps<{ isCreateProject: boolean | undefined, isPublic: boolean | undefined, isDisabled?: boolean }>()
+const props = defineProps<{ isPublic: boolean | undefined, isDisabled?: boolean }>()
 
 const emit = defineEmits<{(e: 'emitProjectListed', value: boolean): void}>()
 
