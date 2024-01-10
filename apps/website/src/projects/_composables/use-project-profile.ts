@@ -3,6 +3,7 @@ import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 
 import { type DashboardStakeholdersResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
+import { apiBioDeleteProject } from '@rfcx-bio/common/api-bio/project/project-delete'
 import { apiBioUpdateProjectImage } from '@rfcx-bio/common/api-bio/project/project-image'
 import { type ProjectInfoResponse, type ProjectProfileUpdateBody, type ProjectSettingsResponse, apiBioGetProjectInfoData, apiBioGetProjectStakeHoldersData, apiBioUpdateProjectSettingsData } from '@rfcx-bio/common/api-bio/project/project-settings'
 
@@ -40,5 +41,12 @@ export const useGetProjectStakeholders = (apiClient: AxiosInstance, projectId: C
   return useQuery({
     queryKey: ['get-project-stakeholders'],
     queryFn: async () => await apiBioGetProjectStakeHoldersData(apiClient, projectId.value ?? -1)
+  })
+}
+
+export const useDeleteProject = (apiClient: AxiosInstance): UseMutationReturnType<void, unknown, number, unknown> => {
+  return useMutation({
+    mutationKey: ['delete-project'],
+    mutationFn: async (projectId: number) => { await apiBioDeleteProject(apiClient, projectId) }
   })
 }
