@@ -7,6 +7,7 @@ import { type ModelForInterfaceWithPk } from '@rfcx-bio/common/dao/model-factory
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type Project } from '@rfcx-bio/common/dao/types'
 
+import { getImageUrl } from '@/users/helpers'
 import { getSequelize } from '~/db'
 
 const avgCoordinate = (x: number, y: number): number => {
@@ -71,7 +72,7 @@ export const getDirectoryProjects = (fullVersion: boolean = false, ids: number[]
     isHighlighted: true,
     isMock: true,
     isPublished: true,
-    imageUrl: p.image
+    imageUrl: getImageUrl(p.image) ?? ''
   }))
   const filteredProjects = projects.filter((p: ProjectProfileWithMetrics) => {
     if (ids.length > 0) {
@@ -148,7 +149,7 @@ export const queryDirectoryProjects = async (fullVersion: boolean = false, ids: 
       isPublished: project['ProjectVersion.is_published'] ?? false,
       isHighlighted: true,
       isMock: false,
-      imageUrl: profiles.find(p => p.locationProjectId === project.id)?.image
+      imageUrl: getImageUrl(profiles.find(p => p.locationProjectId === project.id)?.image) ?? ''
     }))
   }
 }
