@@ -19,6 +19,7 @@
       </div>
       <div class="mt-4">
         <project-listed-form
+          :is-create-project="true"
           :is-public="isPublic"
           @emit-project-listed="toggleListedProject"
         />
