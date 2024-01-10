@@ -23,7 +23,7 @@
       >
       <label
         class="ml-2"
-        :class="{'text-util-gray-02': (isDisabled || isPublicProject) && !isCreateProject}"
+        :class="{'text-util-gray-02': isDisabled && !isCreateProject}"
       >
         This is a test project, do NOT list it on Arbimon.
       </label>
