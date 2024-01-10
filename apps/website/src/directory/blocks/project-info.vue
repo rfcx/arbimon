@@ -48,18 +48,17 @@
         <div class="p-4 border-b border-util-gray-03">
           <span class="text-lg font-medium">{{ project?.name }}</span>
           <div
-            v-if="profile?.dateStart"
             class="flex font-medium text-sm flex-row border-util-gray-01 mt-3 space-x-2 font-display items-center"
           >
             <span>
               Project dates:
             </span>
             <span>
-              {{ formatDateRange(profile?.dateStart) }}
+              {{ dateLabel(profile?.dateStart) }}
             </span>
             <icon-custom-arrow-right-white class="self-start" />
             <span>
-              {{ formatDateRange(profile?.dateEnd) }}
+              {{ dateLabel(profile?.dateEnd) }}
             </span>
           </div>
           <router-link
@@ -289,6 +288,14 @@ const countrieFlag = computed(() => {
 const formatDateRange = (date: Date | null | undefined): string => {
   if (!dayjs(date).isValid()) return 'Present'
   else return dayjs(date).format('MM/DD/YYYY')
+}
+
+const dateLabel = (date: Date | null | undefined): string => {
+  if (profile.value?.dateStart) {
+    return formatDateRange(date)
+  } else {
+    return 'N/A'
+  }
 }
 
 // form the total recordings value (minutes or hours)
