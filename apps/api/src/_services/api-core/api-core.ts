@@ -68,6 +68,15 @@ export async function editProject (id: string, project: Pick<CoreProject, 'name'
   return response.status >= 200 && response.status <= 205
 }
 
+export async function deleteProject (id: string, token: string): Promise<void> {
+  const response = await axios.request({
+    method: 'DELETE',
+    url: `${CORE_API_BASE_URL}/projects/${id}`,
+    headers: { authorization: token }
+  }).catch(unpackAxiosError)
+  if (response.status !== 204) throw new Error('Delete project failed: expected 204 status from Core')
+}
+
 export async function updateDetectionReviewFromApi (token: string, classifierJobId: number, data: DetectReviewDetectionBody): Promise<DetectReviewDetectionResponse> {
   try {
     const resp = await axios.request<DetectReviewDetectionResponse>({

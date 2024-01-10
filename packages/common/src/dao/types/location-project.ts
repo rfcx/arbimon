@@ -12,6 +12,7 @@ export interface Project {
   longitudeWest: number
   createdAt?: Date
   updatedAt?: Date
+  deletedAt?: Date
   // TODO: Remove the following 5
   summary?: string
   objectives?: string[]

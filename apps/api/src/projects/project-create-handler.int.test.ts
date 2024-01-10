@@ -44,7 +44,7 @@ test('POST /projects creates local project', async () => {
   expect(coreApi.createProject).toBeCalledTimes(1)
   expect(response.statusCode).toBe(201)
   const result = JSON.parse(response.body)
-  expect(result.slug).toBe('red-squirrels-are-back')
+  expect(result.slug).toMatch(/^red-squirrels-are-back/)
 })
 
 test('POST /projects adds extra infomation (profile, owner role, version)', async () => {

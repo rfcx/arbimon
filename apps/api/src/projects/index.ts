@@ -1,5 +1,6 @@
 import { updateInsightsPublishStatusRoute } from '@rfcx-bio/common/api-bio/insights-publish-status/insights-publish-status'
 import { projectCreateRoute } from '@rfcx-bio/common/api-bio/project/project-create'
+import { projectDeleteRoute } from '@rfcx-bio/common/api-bio/project/project-delete'
 import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
 import { projectRecordingCountRoute, projectSitesRecordingCountRoute } from '@rfcx-bio/common/api-bio/project/project-recordings'
@@ -8,11 +9,12 @@ import { myProjectsRoute, projectDirectoryRoute, projectsRoute } from '@rfcx-bio
 
 import { requireAuthorized } from '@/_hooks/require-authenticated'
 import { requireProjectPermission } from '@/_hooks/require-permission'
-import { type RouteRegistration, GET, PATCH, POST } from '../_services/api-helpers/types'
+import { type RouteRegistration, DELETE, GET, PATCH, POST } from '../_services/api-helpers/types'
 import { projectsDirectoryHandler } from './get-directory-projects-handler'
 import { getProjectMembersHandler, getProjectPermissionHandler } from './get-project-members'
 import { patchInsightsPublishStatusHandler } from './patch-insights-publish-status-handler'
 import { projectCreateHandler } from './project-create-handler'
+import { projectDeleteHandler } from './project-delete-handler'
 import { projectFiltersHandler, projectRecordingCountBySiteHandler, projectRecordingCountHandler } from './project-filters-handler'
 import { projectUpdateImageHandler } from './project-image-handler'
 import { projectProfileHandler, projectProfileStakeholdersReadOnlyHandler, projectProfileUpdateHandler } from './project-profile-handler'
@@ -98,5 +100,11 @@ export const routesProject: RouteRegistration[] = [
     url: projectProfileImageRoute,
     preHandler: [requireProjectPermission('update-profile')],
     handler: projectUpdateImageHandler
+  },
+  {
+    method: DELETE,
+    url: projectDeleteRoute,
+    preHandler: [requireProjectPermission('delete-project')],
+    handler: projectDeleteHandler
   }
 ]
