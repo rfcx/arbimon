@@ -39,6 +39,7 @@ export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
     longitudeWest: DataTypes.FLOAT // -67.94469784
   },
   {
-    tableName: TABLE_LOCATION_PROJECT
+    tableName: TABLE_LOCATION_PROJECT,
+    paranoid: true
   }
 )

@@ -14,6 +14,11 @@ export const getProjectById = async (id: number): Promise<Project | undefined> =
   return await models.LocationProject.findByPk(id) ?? undefined
 }
 
+export const deleteProject = async (id: number): Promise<boolean> => {
+  const count = await models.LocationProject.destroy({ where: { id } })
+  return count > 0
+}
+
 /**
  * @deprecated Do not use
  */
