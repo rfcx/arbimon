@@ -48,7 +48,7 @@
             <template v-if="profile?.isPublished != null && profile?.isPublished === true && !projectUserPermissionsStore.isGuest">
               <button
                 class="btn btn-primary"
-                @click="hideInsight"
+                @click="openShareInsightsInfoPopup"
               >
                 Share Insights <span class="hidden lg:inline-flex">on Arbimon</span>
               </button>
@@ -201,7 +201,7 @@ const shareInsight = (): void => {
   startShareInsightsNavigation.value = 'share-insights-information'
 }
 
-const hideInsight = (): void => {
+const openShareInsightsInfoPopup = (): void => {
   startShareInsightsNavigation.value = 'share-insights-successful'
 }
 

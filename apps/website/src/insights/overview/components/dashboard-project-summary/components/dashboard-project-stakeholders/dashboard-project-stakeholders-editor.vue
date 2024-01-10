@@ -85,8 +85,8 @@
             </div>
             <div
               ref="createNewOrganizationFormContainer"
-              class="z-10 hidden w-[20.0rem] text-insight bg-moss border-cloud border-b-0 border-l border-r rounded-lg shadow"
-              :class="{'border-b-1': !orgsSearchResult?.length}"
+              class="z-10 hidden w-[20.0rem] text-insight bg-moss border-cloud border-1 rounded-lg shadow"
+              :class="{'border-1': !orgsSearchResult?.length}"
             >
               <div class="max-w-sm mx-auto p-3">
                 <div class="mb-5">
@@ -139,7 +139,7 @@
             </div>
             <div
               ref="organizationSearchResultNotFoundContainer"
-              class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-lg shadow flex flex-row justify-between p-3"
+              class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud rounded-lg shadow flex flex-row justify-between p-3"
             >
               <p class="text-sm font-normal font-sans text-insight leading-tight">
                 We are unable to find this organization.
@@ -155,8 +155,8 @@
           </div>
           <div
             ref="organizationSearchResultContainer"
-            class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-lg divide-y divide-gray-100 shadow overflow-y-scroll"
-            :class="{'border-b-1': searchOrganizationValue && !organizationsSearchResult, 'border-b-1 max-h-66': orgsSearchResult?.length}"
+            class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud rounded-lg divide-y divide-gray-100 shadow overflow-y-scroll"
+            :class="{'border-1': searchOrganizationValue && !organizationsSearchResult, 'border-1 max-h-66': orgsSearchResult?.length}"
           >
             <OrganizationSearchResultCard
               v-for="s in orgsSearchResult"
