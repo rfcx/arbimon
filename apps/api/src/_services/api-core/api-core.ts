@@ -62,7 +62,7 @@ export async function editProject (id: string, project: Pick<CoreProject, 'name'
   const response = await axios.request({
     method: 'PATCH',
     url: `${CORE_API_BASE_URL}/projects/${id}`,
-    headers: { authorization: token },
+    headers: { authorization: token, source: 'arbimon' },
     data: project
   }).catch(unpackAxiosError)
   return response.status >= 200 && response.status <= 205
