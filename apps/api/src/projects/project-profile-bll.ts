@@ -13,10 +13,8 @@ export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody,
   // update in Core
   // name is required as part of checking for permission in Core
   // TODO: check if we want to add is_public to the request
-  if (request.name) {
-    const updateInCoreSuccess = await editProject(coreProjectId, { name: request.name }, token)
-    if (!updateInCoreSuccess) throw new Error('Failed to update project in Core')
-  }
+  const updateInCoreSuccess = await editProject(coreProjectId, { name: request.name }, token)
+  if (!updateInCoreSuccess) throw new Error('Failed to update project in Core')
 
   // TODO: move update name here
 
