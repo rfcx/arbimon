@@ -111,6 +111,7 @@ import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { type ProjectProfileUpdateBody } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
@@ -247,14 +248,17 @@ const save = () => {
 }
 
 const updateSettings = () => {
-  mutateProjectSettings({
-    name: newName.value,
+  let opts: ProjectProfileUpdateBody = {
     summary: newSummary.value,
     objectives: newObjectives.value,
     dateStart: dateStart.value ? dateStart.value : null,
     dateEnd: onGoing.value ? null : dateEnd.value ? dateEnd.value : null,
     isPublic: isPublic.value
-  }, {
+  }
+  if (selectedProject.value?.name !== newName.value) {
+    opts = { ...opts, name: newName.value }
+  }
+  mutateProjectSettings(opts, {
     onSuccess: () => {
       isSaving.value = false
       lastUpdated.value = true

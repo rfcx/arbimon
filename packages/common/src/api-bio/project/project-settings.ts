@@ -23,7 +23,7 @@ export type ProjectProfileUpdateBody = {
   objectives?: string[]
   dateStart?: string | null
   dateEnd?: string | null
-} & { name: string } // name is required as part of checking for permission in Core
+} & { name?: string } // name is required as part of checking for permission in Core
 
 type ProjectMetrics = Pick<DashboardMetricsResponse, 'totalSites' | 'totalSpecies' | 'threatenedSpecies' | 'totalDetections' | 'totalRecordings'>
 
