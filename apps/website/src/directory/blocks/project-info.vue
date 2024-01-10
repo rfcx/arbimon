@@ -39,7 +39,7 @@
         <img
           v-if="project?.imageUrl"
           :src="project?.imageUrl"
-          class="w-full object-contain bg-util-gray-03 h-52"
+          class="w-full object-cover aspect-auto bg-util-gray-03 h-52"
         >
         <div
           v-else
