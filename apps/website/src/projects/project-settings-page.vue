@@ -52,6 +52,8 @@
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-delete
             v-if="projectUserPermissionsStore.role === 'owner'"
+            :is-deleting="isDeletingProject"
+            :is-error="isErrorDeleteProject"
             @emit-project-delete="onEmitProjectDelete"
           />
         </div>
@@ -106,13 +108,15 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
 import { apiClientKey } from '@/globals'
+import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
-import { useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
+import { useDeleteProject, useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectDelete from './components/form/project-delete.vue'
 import ProjectForm from './components/form/project-form.vue'
@@ -123,6 +127,7 @@ import ProjectSlug from './components/form/project-slug.vue'
 import ProjectSummaryForm from './components/form/project-summary-form.vue'
 import type { ProjectDefault } from './types'
 
+const router = useRouter()
 const store = useStore()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const dashboardStore = useDashboardStore()
@@ -133,6 +138,7 @@ const selectedProjectId = computed(() => store.selectedProject?.id)
 const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, store.selectedProject?.id ?? -1)
+const { isPending: isDeletingProject, isError: isErrorDeleteProject, mutate: mutateDeleteProject } = useDeleteProject(apiClientBio)
 
 const newName = ref('')
 const dateStart = ref<string | null>(null)
@@ -193,7 +199,11 @@ const onEmitSlug = (slug: string) => {
 }
 
 const onEmitProjectDelete = () => {
-  console.info('delete project')
+  mutateDeleteProject(store.selectedProject?.id ?? -1, {
+    onSuccess: async () => {
+      await router.push({ name: ROUTE_NAMES.myProjects })
+    }
+  })
 }
 
 const toggleListedProject = (value: boolean) => {

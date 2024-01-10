@@ -11,16 +11,30 @@
           :tooltip-text="'Delete project'"
         />
       </div>
-      <button
-        type="button"
-        class="btn btn-danger flex flex-row py-2 mt-4"
-        @click="$emit('emitProjectDelete')"
-      >
-        Delete project
-        <icon-fa-trash
-          class="ml-2 cursor-pointer"
-        />
-      </button>
+      <div class="flex flex-row items-center mt-4">
+        <button
+          type="button"
+          class="btn btn-danger flex flex-row py-2"
+          @click="$emit('emitProjectDelete')"
+        >
+          Delete project
+          <icon-fas-spinner
+            v-if="isDeleting"
+            class="animate-spin ml-2"
+          />
+          <icon-fa-trash
+            v-else
+            class="ml-2 cursor-pointer"
+          />
+        </button>
+        <span
+          v-if="isError"
+          class="ml-4 text-sm text-red-800 dark:text-flamingo"
+          role="alert"
+        >
+          <span class="font-medium">Failed to delete project.</span>
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -29,6 +43,7 @@
 
 import IconIInfo from '../icon-i-info.vue'
 
+defineProps<{isDeleting?: boolean, isError?: boolean}>()
 defineEmits<{(e: 'emitProjectDelete'): void}>()
 
 </script>
