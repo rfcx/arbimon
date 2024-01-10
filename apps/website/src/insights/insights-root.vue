@@ -46,10 +46,10 @@
             </span>
             <template v-if="profile?.isPublished != null && profile?.isPublished === true && isUserHasFullAccess">
               <button
-                class="btn btn-secondary"
-                @click="hideInsight"
+                class="btn btn-primary"
+                @click="openShareInsightsInfoPopup"
               >
-                Hide Insights
+                Share Insights <span class="hidden lg:inline-flex">on Arbimon</span>
               </button>
             </template>
             <template v-else>
@@ -203,8 +203,8 @@ const shareInsight = (): void => {
   startShareInsightsNavigation.value = 'share-insights-information'
 }
 
-const hideInsight = (): void => {
-  startShareInsightsNavigation.value = 'hide-insights-confirmation'
+const openShareInsightsInfoPopup = (): void => {
+  startShareInsightsNavigation.value = 'share-insights-successful'
 }
 
 </script>
