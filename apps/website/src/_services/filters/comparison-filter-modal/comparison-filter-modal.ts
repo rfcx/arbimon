@@ -9,6 +9,7 @@ import { storeKey } from '@/globals'
 import { type ComparisonFilter, type FilterPropertyEquals, type SiteGroup } from '~/filters'
 import { type BiodiversityStore } from '~/store'
 import DateRangePicker from './date-range-picker/date-range-picker.vue'
+import FilterSite from './filter-site/filter-site.vue'
 import FilterTaxon from './filter-taxon/filter-taxon.vue'
 
 interface FilterMenuItem {
@@ -22,6 +23,7 @@ const DATE_FORMAT = 'YYYY-MM-DD'
   components: {
     OnClickOutside,
     DateRangePicker,
+    FilterSite,
     FilterTaxon
   }
 })
@@ -64,10 +66,6 @@ export default class ComparisonFilterModalComponent extends Vue {
       { id: 'times', name: 'Date Range' },
       ...(this.canFilterByTaxon ? [{ id: 'taxon', name: 'Taxon' }] : [])
     ]
-  }
-
-  get isSelectedAllSites (): boolean {
-    return this.selectedSiteGroups.length === 0
   }
 
   get selectedTaxons (): number[] {
@@ -122,19 +120,9 @@ export default class ComparisonFilterModalComponent extends Vue {
     this.inputFilter = query
   }
 
-  onSiteSelected (item: SiteGroup): void {
-    if (this.selectedSiteGroups.find(sg => sg.label === item.label)) return
-    this.selectedSiteGroups.push(item)
-  }
-
   onDateChange (dateRange: [Date, Date]): void {
     this.startDate = dayjs(dateRange[0]).format(DATE_FORMAT)
     this.endDate = dayjs(dateRange[1]).format(DATE_FORMAT)
-  }
-
-  onRemoveSiteTags (item: SiteGroup): void {
-    const index = this.selectedSiteGroups.findIndex(sg => sg.label === item.label)
-    this.selectedSiteGroups.splice(index, 1)
   }
 
   setDefaultSelectedSites (): void {
@@ -149,11 +137,11 @@ export default class ComparisonFilterModalComponent extends Vue {
     return id === this.currentActiveMenuId
   }
 
-  selectAllSites (): void {
-    this.selectedSiteGroups = []
-  }
-
   updateSelectedTaxons (otherFilters: FilterPropertyEquals[]): void {
     this.otherFilters = otherFilters // TODO ??? - Are you sure this is an overwrite?
+  }
+
+  updateSelectedSites (selectedSiteGroups: SiteGroup[]): void {
+    this.selectedSiteGroups = selectedSiteGroups
   }
 }
