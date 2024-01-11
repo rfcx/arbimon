@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-1 gap-2 bg-stone-900 border-1 border-orange-100 rounded-2xl shadow p-6 dark:border-orange-100 h-46">
+  <div class="grid grid-cols-1 grid-rows-3 gap-2 bg-stone-900 border-1 border-orange-100 rounded-2xl shadow p-6 dark:border-orange-100 h-46">
     <div class="h-8 flex items-center space-x-2 sm:space-x-3">
       <icon-custom-fi-pm
         v-if="analysis.iconName === 'fi-pm'"
@@ -24,18 +24,18 @@
       </a>
     </div>
     <div class="flex items-center font-body text-xl space-x-2 sm:space-x-3 text-util-gray-01">
-      <span>{{ analysis.label }}:</span>
+      <span>{{ analysis.count ? analysis.count : 0 }}</span>
+      <span>{{ analysis.label }}</span>
       <icon-fas-spinner
         v-if="analysis.isLoading && analysis.count === undefined"
         class="animate-spin h-8 w-8 text-gray-900"
       />
-      <span v-if="analysis.count !== undefined">{{ analysis.count }}</span>
     </div>
     <div
       class="flex items-center font-body text-xl space-x-2 sm:space-x-3 text-util-gray-01"
     >
-      <span>{{ analysis.speciesTitle }} {{ analysis.speciesTitle ? ':' : '-' }}</span>
-      <span>{{ analysis.speciesDetected }}</span>
+      <span v-if="analysis.speciesTitle">{{ analysis.speciesDetected ? analysis.speciesDetected : 0 }}</span>
+      <span>{{ analysis.speciesTitle }}</span>
     </div>
   </div>
 </template>
