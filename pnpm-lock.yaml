@@ -267,6 +267,9 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.363.0
         version: 3.363.0
+      '@opensearch-project/opensearch':
+        specifier: ^2.5.0
+        version: 2.5.0
       '@rfcx-bio/common':
         specifier: workspace:^0.0.1
         version: link:../../packages/common
@@ -3230,6 +3233,19 @@ packages:
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
     dev: true
 
+  /@opensearch-project/opensearch@2.5.0:
+    resolution: {integrity: sha512-RY5J6Jt/Jbbr2F9XByGY9LJr0VNmXJjgVvvntpKE4NtZa/r9ak3o8YtGK1iey1yHgzMzze25598qq7ZYFk42DA==}
+    engines: {node: '>=10', yarn: ^1.22.10}
+    dependencies:
+      aws4: 1.11.0
+      debug: 4.3.4(supports-color@8.1.1)
+      hpagent: 1.2.0
+      ms: 2.1.3
+      secure-json-parse: 2.4.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@pinia/testing@0.1.3(pinia@2.1.7)(vue@3.3.13):
     resolution: {integrity: sha512-D2Ds2s69kKFaRf2KCcP1NhNZEg5+we59aRyQalwRm7ygWfLM25nDH66267U3hNvRUOTx8ofL24GzodZkOmB5xw==}
     peerDependencies:
@@ -5645,7 +5661,6 @@ packages:
 
   /aws4@1.11.0:
     resolution: {integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==}
-    dev: true
 
   /axios@0.27.2:
     resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
@@ -9134,6 +9149,11 @@ packages:
 
   /howler@2.2.3:
     resolution: {integrity: sha512-QM0FFkw0LRX1PR8pNzJVAY25JhIWvbKMBFM4gqk+QdV+kPXOhleWGCB6AiAF/goGjIHK2e/nIElplvjQwhr0jg==}
+    dev: false
+
+  /hpagent@1.2.0:
+    resolution: {integrity: sha512-A91dYTeIB6NoXG+PxTQpCCDDnfHsW9kc06Lvpu1TEe9gnd6ZFeiBoRO9JvzEv6xK7EX97/dUE8g/vBMTqTS3CA==}
+    engines: {node: '>=14'}
     dev: false
 
   /html-encoding-sniffer@3.0.0:
