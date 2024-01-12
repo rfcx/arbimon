@@ -54,6 +54,7 @@
             v-if="projectUserPermissionsStore.role === 'owner'"
             :is-deleting="isDeletingProject"
             :is-error="isErrorDeleteProject"
+            :is-success="isSuccessDeleteProject"
             @emit-project-delete="onEmitProjectDelete"
           />
         </div>
@@ -138,7 +139,7 @@ const selectedProjectId = computed(() => store.selectedProject?.id)
 const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, store.selectedProject?.id ?? -1)
-const { isPending: isDeletingProject, isError: isErrorDeleteProject, mutate: mutateDeleteProject } = useDeleteProject(apiClientBio)
+const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProject } = useDeleteProject(apiClientBio)
 
 const newName = ref('')
 const dateStart = ref<string | null>(null)
