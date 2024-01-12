@@ -6,7 +6,7 @@ import { UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR } from '@rfcx-bio/common/dao
 import type { SyncError } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { literalIntegerArray2D, reducedAndSortedPairs } from '@/db/seeders/_helpers/sequelize-literal-integer-array-2d'
+import { literalIntegerArray2D, reducedAndSortedPairs } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
 import { filterRepeatingDetectionMinutes } from '../parsers/parse-array'
 import type { RecordingArbimon, RecordingBySiteHourBio } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
 

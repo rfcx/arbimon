@@ -98,13 +98,13 @@ export interface SearchQueryOrganizationRawResponse {
 }
 
 export const xSearchTotalCountHeaderName = 'x-search-total-count'
-export const searchUrl = '/search'
+export const searchRoute = '/search'
 export type SearchResponse = Array<SearchResponseProject | SearchResponseOrganization>
 
 export const apiBioSearch = async (apiClient: AxiosInstance, type: SearchType, query: string, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
   const response = await apiClient.request<SearchResponse>({
     method: 'GET',
-    url: searchUrl,
+    url: searchRoute,
     params: {
       type,
       q: query,

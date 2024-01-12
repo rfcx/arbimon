@@ -4,7 +4,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
 import type { SyncError } from '@rfcx-bio/common/dao/types'
 
-import { literalIntegerArray2D, reducedAndSortedPairs } from '@/db/seeders/_helpers/sequelize-literal-integer-array-2d'
+import { literalIntegerArray2D, reducedAndSortedPairs } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
 import type { DetectionArbimon, DetectionBySiteSpeciesHourBio } from '../parsers/parse-detection-arbimon-to-bio'
 import { transformDetectionArbimonToBio } from '../parsers/parse-detection-arbimon-to-bio'
 

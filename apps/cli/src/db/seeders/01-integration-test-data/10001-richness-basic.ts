@@ -3,9 +3,8 @@ import { type MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type Project, type ProjectVersion, type RecordingBySiteHour, type Site } from '@rfcx-bio/common/dao/types'
+import { literalizeCountsByMinute } from '@rfcx-bio/common/src/dao/query-helpers/sequelize-literal-integer-array-2d'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
-
-import { literalizeCountsByMinute } from '../_helpers/sequelize-literal-integer-array-2d'
 
 // Mocked project, site, recordings
 export const testProject: Project = {

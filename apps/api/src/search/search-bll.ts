@@ -9,41 +9,29 @@ import { getAverageCoordinate } from './helpers'
 import { getTrendingProjects } from './search-dao'
 
 const localSearchDatabase = async (type: SearchType, query: string | undefined, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
-  console.info('using postgres search')
+  if (type !== 'project' || query === undefined || query === '') {
+    return {
+      total: 0,
+      data: []
+    }
+  }
+
   const sequelize = getSequelize()
   const { LocationProject, ProjectVersion, LocationProjectMetric, LocationProjectProfile, LocationProjectCountry } = ModelRepository.getInstance(sequelize)
 
-  if (query === undefined || query === '') {
-    return await getTrendingProjects(limit, offset)
-  }
-
   const response = await LocationProject.findAll({
     where: {
-      latitudeNorth: {
-        [Op.ne]: 0
-      },
-      latitudeSouth: {
-        [Op.ne]: 0
-      },
-      longitudeEast: {
-        [Op.ne]: 0
-      },
-      longitudeWest: {
-        [Op.ne]: 0
-      },
       name: {
-        [Op.iLike]: query
+        [Op.iLike]: `%${query}%`
       }
     },
     include: [
       {
         model: ProjectVersion,
         attributes: ['is_public', 'is_published'],
+        required: true,
         where: {
-          [Op.or]: [
-            { is_public: true },
-            { is_published: true }
-          ]
+          is_public: true
         }
       },
       {
@@ -62,7 +50,7 @@ const localSearchDatabase = async (type: SearchType, query: string | undefined, 
   })
 
   return {
-    total: 0,
+    total: response.length,
     data: response.map(res => {
       return {
         type: 'project',
@@ -74,17 +62,17 @@ const localSearchDatabase = async (type: SearchType, query: string | undefined, 
         name: res.name,
         slug: res.slug,
         // @ts-expect-error shut up please i'm testing
-        image: res.LocationProjectProfile.image,
+        image: res.LocationProjectProfile?.image ?? '',
         // @ts-expect-error shut up please i'm testing
-        objectives: res.LocationProjectProfile.objectives,
+        objectives: res.LocationProjectProfile?.objectives ?? '',
         // @ts-expect-error shut up please i'm testing
-        summary: res.LocationProjectProfile.summary,
+        summary: res.LocationProjectProfile?.summary ?? '',
         // @ts-expect-error shut up please i'm testing
-        speciesCount: res.LocationProjectMetric.speciesCount,
+        speciesCount: res.LocationProjectMetric?.speciesCount ?? 0,
         // @ts-expect-error shut up please i'm testing
-        recordingMinutesCount: res.LocationProjectMetric.recordingMinutesCount,
+        recordingMinutesCount: res.LocationProjectMetric?.recordingMinutesCount ?? 0,
         // @ts-expect-error shut up please i'm testing
-        countryCodes: res.LocationProjectCountry.countryCodes
+        countryCodes: res.LocationProjectCountry?.countryCodes ?? []
       }
     })
   }
