@@ -8,11 +8,9 @@ import { searchDatabase } from './search-bll'
 export const searchHandler: Handler<SearchResponse, unknown, SearchRequestQueryParams> = async (request, reply) => {
   const { type, q, limit, offset } = request.query
 
-  // @ts-expect-error guard preventing undefineds
-  if (type === undefined || type === '') {
+  if (type === undefined) {
     throw new BioPublicError('invalid query parameter "type" cannot be empty', 400)
   }
-
   if (!SEARCH_TYPE.includes(type)) {
     throw new BioPublicError(`invalid query parameter "type" of "${type}"`, 400)
   }
