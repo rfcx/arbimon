@@ -3,7 +3,7 @@ import { projectCreateRoute } from '@rfcx-bio/common/api-bio/project/project-cre
 import { projectDeleteRoute } from '@rfcx-bio/common/api-bio/project/project-delete'
 import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
-import { projectRecordingCountRoute, projectSitesRecordingCountRoute } from '@rfcx-bio/common/api-bio/project/project-recordings'
+import { projectSitesRecordingCountRoute } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { projectDataRoute } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { myProjectsRoute, projectDirectoryRoute, projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
 
@@ -15,7 +15,7 @@ import { getProjectMembersHandler, getProjectPermissionHandler } from './get-pro
 import { patchInsightsPublishStatusHandler } from './patch-insights-publish-status-handler'
 import { projectCreateHandler } from './project-create-handler'
 import { projectDeleteHandler } from './project-delete-handler'
-import { projectFiltersHandler, projectRecordingCountBySiteHandler, projectRecordingCountHandler } from './project-filters-handler'
+import { projectFiltersHandler, projectRecordingCountBySiteHandler } from './project-filters-handler'
 import { projectUpdateImageHandler } from './project-image-handler'
 import { projectProfileHandler, projectProfileStakeholdersReadOnlyHandler, projectProfileUpdateHandler } from './project-profile-handler'
 import { myProjectsHandler, projectsAllHandler } from './projects-handler'
@@ -42,12 +42,6 @@ export const routesProject: RouteRegistration[] = [
     url: projectFiltersRoute,
     preHandler: [requireProjectPermission('read-insights')],
     handler: projectFiltersHandler
-  },
-  {
-    method: GET,
-    url: projectRecordingCountRoute,
-    preHandler: [requireProjectPermission('read-insights')],
-    handler: projectRecordingCountHandler
   },
   {
     method: GET,
