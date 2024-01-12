@@ -2,11 +2,11 @@
   <div class="mt-6">
     <div class="flex flex-row">
       <label
-        for="name"
+        for="slug"
         class="block mb-2 font-medium text-gray-900 dark:text-insight"
       >Insight URL*</label>
       <icon-i-info
-        tooltip-id="project-name"
+        tooltip-id="project-slug"
         :tooltip-text="placeholderText"
       />
     </div>
