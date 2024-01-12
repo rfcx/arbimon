@@ -72,8 +72,8 @@ export const modelRegistrations = {
   [MODEL_DASHBOARD_RICHNESS_BY_TAXON]: [DashboardRichnessByTaxonModel],
   [MODEL_DASHBOARD_SPECIES_HIGHLIGHTED]: [DashboardSpeciesHighlightedModel],
   [MODEL_DASHBOARD_SPECIES_THREATENED]: [DashboardSpeciesThreatenedModel],
-  [MODEL_LOCATION_PROJECT_METRIC]: [LocationProjectMetricModel],
-  [MODEL_LOCATION_PROJECT_COUNTRY]: [LocationProjectCountryModel],
+  [MODEL_LOCATION_PROJECT_METRIC]: [LocationProjectMetricModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
+  [MODEL_LOCATION_PROJECT_COUNTRY]: [LocationProjectCountryModel, { oneToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_SPECIES_IN_PROJECT]: [SpeciesInProjectModel]
 } as const
 

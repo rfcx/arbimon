@@ -5,8 +5,10 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '~/db'
 import { env } from '~/env'
+import { getAverageCoordinate } from './helpers'
 
 const localSearchDatabase = async (type: SearchType, query: string | undefined, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
+  console.info('using postgres search')
   const sequelize = getSequelize()
   const { LocationProject, ProjectVersion, LocationProjectMetric, LocationProjectProfile, LocationProjectCountry } = ModelRepository.getInstance(sequelize)
 
@@ -61,37 +63,38 @@ const localSearchDatabase = async (type: SearchType, query: string | undefined, 
     ]
   })
 
-  console.info(response)
-
   return {
     total: 0,
-    data: []
+    data: response.map(res => {
+      return {
+        type: 'project',
+        avgLatitude: getAverageCoordinate(res.latitudeNorth, res.latitudeSouth),
+        avgLongitude: getAverageCoordinate(res.longitudeEast, res.longitudeWest),
+        id: res.id,
+        idCore: res.idCore,
+        idArbimon: res.idArbimon,
+        name: res.name,
+        slug: res.slug,
+        // @ts-expect-error shut up please i'm testing
+        image: res.LocationProjectProfile.image,
+        // @ts-expect-error shut up please i'm testing
+        objectives: res.LocationProjectProfile.objectives,
+        // @ts-expect-error shut up please i'm testing
+        summary: res.LocationProjectProfile.summary,
+        // @ts-expect-error shut up please i'm testing
+        speciesCount: res.LocationProjectMetric.speciesCount,
+        // @ts-expect-error shut up please i'm testing
+        recordingMinutesCount: res.LocationProjectMetric.recordingMinutesCount,
+        // @ts-expect-error shut up please i'm testing
+        countryCodes: res.LocationProjectCountry.countryCodes
+      }
+    })
   }
-
-  // return {
-  //   total: 0,
-  //   data: response.map(res => {
-  //     return {
-  //       type: 'project',
-  //       avgLatitude: getAverageCoordinate(res.latitudeNorth, res.latitudeSouth),
-  //       avgLongitude: getAverageCoordinate(res.longitudeEast, res.longitudeWest),
-  //       id: res.id,
-  //       idCore: res.idCore,
-  //       idArbimon: res.idArbimon,
-  //       name: res.name,
-  //       slug: res.slug,
-  //       image: res.LocationProjectProfile.image,
-  //       objectives: res.LocationProjectProfile.objectives,
-  //       summary: res.LocationProjectProfile.summary,
-  //       speciesCount: res.LocationProjectMetric.speciesCount,
-  //       recordingMinutesCount: res.LocationProjectMetric.recordingMinutesCount,
-  //       countryCodes: res.LocationProjectCountry.countryCodes
-  //     }
-  //   })
-  // }
 }
 
 const opensearchSearchDatabase = async (type: SearchType, query: string | undefined, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
+  console.info('using opensearch')
+
   // TODO: the actual oopensearch stuff
   return {
     total: 0,
