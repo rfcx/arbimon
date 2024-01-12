@@ -159,14 +159,3 @@ const onEmitTaxonClassFilter = (taxonClassIds: string[]) => {
 }
 
 </script>
-
-<style lang="scss">
-.el-input__wrapper {
-  border-radius: 8px;
-  border: 1px solid #F9F6F2;
-  background: #060508;
-}
-.el-input__inner {
-  padding-left: 2px !important;
-}
-</style>
