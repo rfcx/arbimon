@@ -68,7 +68,6 @@
           >
             <button
               class="btn btn-primary w-full mt-10"
-              :disabled="project?.isMock"
               :class="{'opacity-50 cursor-not-allowed': !project?.isPublished}"
             >
               View project insights
@@ -109,10 +108,6 @@
             icon-name="ft-mic-lg"
             class="flex-1"
           />
-          <span
-            v-if="project?.isMock"
-            class="text-sm text-util-gray-01 px-2"
-          >Only fake data. This project is not on dev environment. </span>
         </div>
         <div class="border-t-1 border-util-gray-03 px-4 mb-4">
           <h4 class="mt-4 font-medium mb-2">
@@ -251,8 +246,6 @@ const project = computed<ProjectProfileWithMetrics | undefined>(() => {
       noOfSpecies: 0,
       noOfRecordings: 0,
       countries: [],
-      isHighlighted: false,
-      isMock: true,
       isPublished: false,
       imageUrl: ''
     }
