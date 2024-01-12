@@ -251,8 +251,6 @@ const project = computed<ProjectProfileWithMetrics | undefined>(() => {
       noOfSpecies: 0,
       noOfRecordings: 0,
       countries: [],
-      isHighlighted: false,
-      isMock: true,
       isPublished: false,
       imageUrl: ''
     }
