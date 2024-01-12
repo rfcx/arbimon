@@ -16,7 +16,7 @@ export const searchHandler: Handler<SearchResponse, unknown, SearchRequestQueryP
   }
 
   const { limit: parsedLimit, offset: parsedOffset } = parseLimitOffset(limit, offset, { maxOffset: 10000, defaultLimit: 20 })
-  const result = await searchDatabase(type, q, parsedLimit, parsedOffset)
+  const result = await searchDatabase(type, q === undefined ? '' : q, parsedLimit, parsedOffset)
 
   void reply.header(xSearchTotalCountHeaderName, result.total)
   return result.data

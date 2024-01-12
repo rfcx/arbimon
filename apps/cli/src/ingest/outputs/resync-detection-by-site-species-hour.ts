@@ -3,10 +3,10 @@ import { type Sequelize, type Transaction, Op } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
+import { literalIntegerArray2D, reducedAndSortedPairs } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
 import type { SyncError } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { literalIntegerArray2D, reducedAndSortedPairs } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
 import { filterRepeatingDetectionMinutes } from '../parsers/parse-array'
 import type { DetectionArbimon, DetectionBySiteSpeciesHourBio } from '../parsers/parse-detection-arbimon-to-bio'
 
