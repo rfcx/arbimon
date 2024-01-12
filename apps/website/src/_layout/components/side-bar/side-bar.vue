@@ -295,12 +295,20 @@ const allItems: Item[] = [
         legacyPath: '/jobs'
       },
       {
-        title: 'Pattern Matching',
+        title: 'Pattern Matching (PM)',
         legacyPath: '/analysis/patternmatching'
+      },
+      {
+        title: 'PM Templates',
+        legacyPath: '/audiodata/templates'
       },
       {
         title: 'Random Forest Models',
         legacyPath: '/analysis/random-forest-models/models'
+      },
+      {
+        title: 'RFM Training Sets',
+        legacyPath: '/audiodata/training-sets'
       },
       {
         title: 'Soundscape Analysis',
@@ -314,6 +322,14 @@ const allItems: Item[] = [
         route: {
           name: ROUTE_NAMES.cnnJobList
         }
+      },
+      {
+        title: 'Audio Event Detection',
+        legacyPath: '/analysis/audio-event-detections-clustering'
+      },
+      {
+        title: 'Clustering',
+        legacyPath: '/analysis/clustering-jobs'
       }
     ]
   },
