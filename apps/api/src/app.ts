@@ -18,6 +18,7 @@ import { routesLanding } from './landing'
 import { routesOrganizations } from './organizations'
 import { routesProject } from './projects'
 import { routesRichness } from './richness'
+import { routesSearch } from './search'
 import { routesSpecies } from './species'
 import { routesSpotlight } from './spotlight'
 import { routesStatus } from './status'
@@ -54,7 +55,8 @@ export const createApp = async (): Promise<FastifyInstance> => {
     routesSpotlight,
     routesStatus,
     routesSync,
-    routesUserProfile
+    routesUserProfile,
+    routesSearch
   ]
 
   routesRegistrations
