@@ -6,7 +6,7 @@ import { type DetectionBySiteSpeciesHour, type Project, type ProjectVersion, typ
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { taxonSpeciesAndClassForId } from '@/db/seeders/_data/integration/test-taxon-species'
-import { literalizeCountsByMinute } from '../_helpers/sequelize-literal-integer-array-2d'
+import { literalizeCountsByMinute } from '../../../../../../packages/common/src/dao/query-helpers/sequelize-literal-integer-array-2d'
 
 // Mocked project, site, recordings, detections
 export const testProject: Project = {

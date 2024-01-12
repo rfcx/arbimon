@@ -2,28 +2,14 @@ import { Op } from 'sequelize'
 import { afterEach, expect, test } from 'vitest'
 
 import { projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
-import { type Project } from '@rfcx-bio/common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
+import { makeProject } from '@rfcx-bio/testing/model-builders/project-model-builder'
 
 import { GET } from '~/api-helpers/types'
 import { routesProject } from './index'
 
 const userId = 9001
-
-function makeProject (id: number, name: string): Project {
-  return {
-    id,
-    idCore: id.toString(),
-    idArbimon: id,
-    slug: name.toLowerCase().replace(' ', '-'),
-    name,
-    latitudeNorth: 0,
-    latitudeSouth: 0,
-    longitudeEast: 0,
-    longitudeWest: 0
-  }
-}
 
 const { LocationProject, ProjectVersion } = modelRepositoryWithElevatedPermissions
 
