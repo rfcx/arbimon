@@ -1,6 +1,5 @@
 <template>
   <div class="mt-6 flex flex-col gap-y-[17px]">
-    <h5>Test project</h5>
     <p>
       Your project's basic information, such as its name, will be listed and searchable on Arbimon.
       Detailed insights can be shared at your discretion. Review our
@@ -11,12 +10,11 @@
         privacy policies
       </a>
     </p>
-    <span class="text-xs">Make sure the Project’s Insight is hidden to make it a test project.</span>
     <div class="flex flex-row">
       <input
         id="project-settings-listed-project-checkbox"
         type="checkbox"
-        class="w-5 h-5 border mb-1 border-util-gray-01 rounded cursor-pointer  dark:bg-echo focus:border-white-600 focus:ring-frequency dark:border-white-600 dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
+        class="w-5 h-5 border-2 mb-1 rounded cursor-pointer  dark:bg-echo border-white focus:ring-frequency dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
         :disabled="isDisabled"
         :checked="!isPublicProject"
         @click="toggleListedProject()"
