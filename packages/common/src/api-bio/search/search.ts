@@ -2,7 +2,7 @@ import { type AxiosInstance } from 'axios'
 
 import { type LocationProjectCountry, type LocationProjectMetric, type LocationProjectProfile, type Organization, type OrganizationType, type Project } from '@/dao/types'
 
-export const SEARCH_TYPE = ['project', 'organization', 'all'] as const
+export const SEARCH_TYPE = ['project', 'organization'] as const
 export type SearchType = typeof SEARCH_TYPE[number]
 
 export interface SearchRequestQueryParams {
