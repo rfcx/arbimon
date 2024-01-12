@@ -14,7 +14,6 @@
       </div>
       <div>
         <map-style-options
-          :dropdown="dropdown"
           @emit-map-style="onMapStyleChange"
         />
       </div>
@@ -57,10 +56,9 @@
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { Dropdown, initDropdowns } from 'flowbite'
 import { groupBy, max, sum } from 'lodash-es'
 import type { LngLatBoundsLike } from 'mapbox-gl'
-import { type ComputedRef, type Ref, computed, inject, onMounted, ref } from 'vue'
+import { type ComputedRef, type Ref, computed, inject, ref } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -81,15 +79,6 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const store = useStore()
 
 const MAP_KEY = 'speciesRichness'
-let dropdown: Dropdown
-
-onMounted(() => {
-  initDropdowns()
-  dropdown = new Dropdown(
-    document.getElementById('mapDropdown'),
-    document.getElementById('mapTypeDropdown')
-  )
-})
 
 // Services
 const selectedProjectId = computed(() => store.selectedProject?.id ?? -1)

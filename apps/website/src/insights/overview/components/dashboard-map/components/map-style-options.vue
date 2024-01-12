@@ -44,15 +44,11 @@
 </template>
 
 <script setup lang="ts">
-import { type Dropdown, initDropdowns } from 'flowbite'
+import { Dropdown, initDropdowns } from 'flowbite'
 import { onMounted, ref } from 'vue'
 
 import { type MapboxStatisticsStyle, type MapboxStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_HEATMAP } from '~/maps'
 import type { MapOptions } from '~/maps/map-tool-menu/types'
-
-const props = defineProps<{
-  dropdown?: Dropdown
-}>()
 
 const emit = defineEmits<{(e: 'emitMapStyle', style: MapboxStatisticsStyle): void}>()
 const mapStatisticsDisplayStyleOptions: MapOptions[] = [
@@ -61,9 +57,14 @@ const mapStatisticsDisplayStyleOptions: MapOptions[] = [
 ]
 const mapStatisticsStyle = ref<MapboxStatisticsStyle>(MAPBOX_STYLE_CIRCLE)
 const mapStyleLabel = ref<string>(mapStatisticsDisplayStyleOptions[1].name)
+let dropdown: Dropdown
 
 onMounted(() => {
   initDropdowns()
+  dropdown = new Dropdown(
+    document.getElementById('mapDropdown'),
+    document.getElementById('mapTypeDropdown')
+  )
 })
 
 const propagateMapStatisticsStyle = (style: MapboxStyle) => {
@@ -73,9 +74,7 @@ const propagateMapStatisticsStyle = (style: MapboxStyle) => {
   } else {
     mapStyleLabel.value = mapStatisticsDisplayStyleOptions[0].name
   }
-  if (props?.dropdown !== undefined) {
-    props?.dropdown.hide()
-  }
+  dropdown.hide()
   emit('emitMapStyle', mapStatisticsStyle.value)
 }
 
