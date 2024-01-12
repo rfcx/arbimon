@@ -47,7 +47,7 @@ export const toLightProjectsFromProjects = (projects: Project[]): ProjectLight[]
     name: project.name,
     slug: project.slug,
     avgLatitude: avgCoordinate(project.latitudeNorth, project.latitudeSouth),
-    avgLongitude: avgCoordinate(project.longitudeEast, project.longitudeWest),
+    avgLongitude: avgCoordinate(project.longitudeEast, project.longitudeWest)
   }))
 }
 
