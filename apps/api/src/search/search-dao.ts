@@ -1,21 +1,14 @@
 import { Op } from 'sequelize'
 
-import { type SearchResponse, type SearchType } from '@rfcx-bio/common/api-bio/search/search'
+import { type SearchResponse } from '@rfcx-bio/common/api-bio/search/search'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '~/db'
-import { env } from '~/env'
 import { getAverageCoordinate } from './helpers'
-import { getTrendingProjects } from './search-dao'
 
-const localSearchDatabase = async (type: SearchType, query: string | undefined, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
-  console.info('using postgres search')
+export const getTrendingProjects = async (limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
   const sequelize = getSequelize()
   const { LocationProject, ProjectVersion, LocationProjectMetric, LocationProjectProfile, LocationProjectCountry } = ModelRepository.getInstance(sequelize)
-
-  if (query === undefined || query === '') {
-    return await getTrendingProjects(limit, offset)
-  }
 
   const response = await LocationProject.findAll({
     where: {
@@ -30,9 +23,6 @@ const localSearchDatabase = async (type: SearchType, query: string | undefined, 
       },
       longitudeWest: {
         [Op.ne]: 0
-      },
-      name: {
-        [Op.iLike]: query
       }
     },
     include: [
@@ -89,15 +79,3 @@ const localSearchDatabase = async (type: SearchType, query: string | undefined, 
     })
   }
 }
-
-const opensearchSearchDatabase = async (type: SearchType, query: string | undefined, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
-  console.info('using opensearch')
-
-  // TODO: the actual oopensearch stuff
-  return {
-    total: 0,
-    data: []
-  }
-}
-
-export const searchDatabase = env.OPENSEARCH_ENABLED === 'true' ? opensearchSearchDatabase : localSearchDatabase
