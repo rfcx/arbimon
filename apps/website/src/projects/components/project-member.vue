@@ -12,9 +12,7 @@
         >
           {{ user.firstName }} {{ user.lastName }}
         </h6>
-        <span
-          class="text-util-gray-03"
-        >
+        <span class="text-fog mt-2">
           {{ user.email }}
         </span>
       </div>
@@ -43,7 +41,7 @@
       <button
         v-if="user.roleId !== 4"
         type="button"
-        class="bg-echo text-frequency rounded-lg flex flex-row items-center py-1 px-2 ml-2"
+        class="bg-echo text-danger rounded-lg flex flex-row items-center py-1 px-2 ml-2"
         @click="$emit('emitDeleteProjectMember', user.userId)"
       >
         <icon-fa-close class="cursor-pointer h-3 inline" />
