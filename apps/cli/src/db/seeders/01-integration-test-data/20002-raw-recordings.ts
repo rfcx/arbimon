@@ -3,8 +3,8 @@ import { type MigrationFn } from 'umzug'
 
 import { RecordingBySiteHourModel } from '@rfcx-bio/common/dao/models/recording-by-site-hour-model'
 
+import { literalizeCountsByMinute } from '../../../../../../packages/common/src/dao/query-helpers/sequelize-literal-integer-array-2d'
 import { rawRecordingBySiteHour } from '../_data/integration/raw-recordings'
-import { literalizeCountsByMinute } from '../_helpers/sequelize-literal-integer-array-2d'
 
 export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }): Promise<void> => {
   await RecordingBySiteHourModel(sequelize)

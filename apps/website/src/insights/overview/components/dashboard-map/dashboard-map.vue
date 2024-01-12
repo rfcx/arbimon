@@ -4,12 +4,19 @@
     <h6 class="mb-4">
       Number of species detected per site
     </h6>
-    <div class="flex flex-row items-center gap-2">
-      Filter by:
-      <taxon-filter
-        :available-taxon-classes="availableTaxons"
-        @emit-taxon-class-filter="onEmitTaxonClassFilter"
-      />
+    <div class="flex flex-row gap-2">
+      <div class="items-center inline-flex  gap-2">
+        Filter by:
+        <taxon-filter
+          :available-taxon-classes="availableTaxons"
+          @emit-taxon-class-filter="onEmitTaxonClassFilter"
+        />
+      </div>
+      <div>
+        <map-style-options
+          @emit-map-style="onMapStyleChange"
+        />
+      </div>
     </div>
   </div>
   <div class="inline-grid w-full mt-4">
@@ -42,12 +49,6 @@
           :max-value="mapDataset.maxValues[MAP_KEY]"
           :title="`Number of species`"
         />
-        <map-tool-menu
-          :map-statistics-style="mapStatisticsStyle"
-          :map-ground-style="undefined"
-          :can-toggle-labels="false"
-          @emit-map-statistics-style="propagateMapStatisticsStyle"
-        />
       </div>
     </div>
   </div>
@@ -62,16 +63,16 @@ import { type ComputedRef, type Ref, computed, inject, ref } from 'vue'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientKey } from '@/globals'
-import { type MapboxStatisticsStyle, type MapboxStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_HEATMAP } from '~/maps'
+import { type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_HEATMAP } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
 import CircleLegend from '~/maps/map-legend/circle-legend.vue'
 import HeatmapLegend from '~/maps/map-legend/heatmap-legend.vue'
-import MapToolMenu from '~/maps/map-tool-menu/map-tool-menu.vue'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { useStore } from '~/store'
 import { useGetDashboardDataBySite } from './_composables/use-get-visaulizer'
+import MapStyleOptions from './components/map-style-options.vue'
 import TaxonFilter from './components/taxon-filter.vue'
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
@@ -85,9 +86,11 @@ const { isLoading: isLoadingDataBySite, isError: isErrorDataBySite, data: dataBy
 
 // UI
 const selectedTaxons: Ref<number[] | null> = ref(null)
-
-// Map
 const mapStatisticsStyle = ref<MapboxStatisticsStyle>(MAPBOX_STYLE_CIRCLE)
+
+const onMapStyleChange = (style: MapboxStatisticsStyle) => {
+  mapStatisticsStyle.value = style
+}
 
 const filteredByTaxon = computed(() => {
   const data = dataBySite.value?.richnessBySite ?? []
@@ -129,8 +132,6 @@ const mapDataset: ComputedRef<MapDataSet> = computed(() => {
       }
     }
 })
-
-const propagateMapStatisticsStyle = (style: MapboxStyle) => { mapStatisticsStyle.value = style as MapboxStatisticsStyle }
 
 const mapInitialBounds: ComputedRef<LngLatBoundsLike | null> = computed(() => {
   const project = store.selectedProject

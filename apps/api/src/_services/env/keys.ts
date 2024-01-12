@@ -32,5 +32,6 @@ export const envKeysOptional = [
   'FASTIFY_PORT',
   'FASTIFY_ADDRESS',
   'GOOGLE_SPREADSHEET_API_KEY',
+  'OPENSEARCH_ENABLED',
   'NODE_ENV'
 ] as const
