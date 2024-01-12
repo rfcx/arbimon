@@ -38,7 +38,7 @@
               class="text-insight text-sm font-medium font-display leading-none"
             >
               <template v-if="profile?.isPublished != null && profile?.isPublished === true">
-                <icon-custom-fi-eye class="inline-flex text-frequency mr-2" /> This page is now live on Arbimon's Directory
+                <icon-custom-fi-eye class="inline-flex text-frequency mr-2" /> This page is now live on Arbimon's Projects
               </template>
               <template v-else>
                 <icon-custom-fi-eye-off class="inline-flex text-insight mr-2" /> This page is visible to project member only
