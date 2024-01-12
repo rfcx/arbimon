@@ -33,7 +33,7 @@
       <img
         :src="projectImage"
         alt="Project photo"
-        class="w-32 h-32 aspect-square object-cover rounded-2xl bg-util-gray-03"
+        class="w-95 h-45 aspect-video object-cover rounded-2xl bg-util-gray-03"
       >
     </div>
   </div>
