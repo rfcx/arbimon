@@ -54,6 +54,14 @@
         :ranking="1"
       />
     </div>
+    <div
+      v-if="organizations.length === 0"
+      class="mt-4"
+    >
+      <dashboard-project-stakeholders-empty
+        @emit-add-stakeholders="$emit('emit-is-updating')"
+      />
+    </div>
     <StakeholdersTosBanner
       v-if="store.user === null"
       class="mt-6"
@@ -66,6 +74,7 @@ import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboa
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import { useProjectUserPermissionsStore, useStore } from '~/store'
+import DashboardProjectStakeholdersEmpty from './dashboard-project-stakeholders-empty.vue'
 import StakeholderCard from './stakeholder-card.vue'
 import StakeholdersTosBanner from './stakeholders-tos-banner.vue'
 
