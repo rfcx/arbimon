@@ -37,9 +37,7 @@ export const toLightProjects = (projects: ProjectProfileWithMetrics[]): ProjectL
     name: project.name,
     slug: project.slug,
     avgLatitude: project.avgLatitude,
-    avgLongitude: project.avgLongitude,
-    isHighlighted: project.isHighlighted,
-    isMock: project.isMock
+    avgLongitude: project.avgLongitude
   }))
 }
 
@@ -50,8 +48,6 @@ export const toLightProjectsFromProjects = (projects: Project[]): ProjectLight[]
     slug: project.slug,
     avgLatitude: avgCoordinate(project.latitudeNorth, project.latitudeSouth),
     avgLongitude: avgCoordinate(project.longitudeEast, project.longitudeWest),
-    isHighlighted: true,
-    isMock: false
   }))
 }
 
@@ -69,8 +65,6 @@ export const getDirectoryProjects = (fullVersion: boolean = false, ids: number[]
     noOfSpecies: p.species_count ?? 0,
     noOfRecordings: p.recording_minutes_count ?? 0,
     countries: [],
-    isHighlighted: true,
-    isMock: true,
     isPublished: true,
     imageUrl: getImageUrl(p.image) ?? ''
   }))
@@ -126,16 +120,30 @@ export const queryDirectoryProjects = async (fullVersion: boolean = false, ids: 
       }
     ],
     raw: true
-  }) as Array<ModelForInterfaceWithPk<Project, Optional<Project, 'id'>> & { 'ProjectVersion.is_published': boolean }>
+  }) as Array<ModelForInterfaceWithPk<Project, Optional<Project, 'id'>> & { 'ProjectVersion.is_published': boolean, 'ProjectVersion.is_public': boolean }>
+
+  const whereLocationProjectIds = ids.length === 0 ? {} : { locationProjectId: { [Op.in]: ids } }
+  const metrics = await LocationProjectMetric.findAll({ where: { ...whereLocationProjectIds }, raw: true })
+
+  const projectsWithMetrics = projects.map((project) => ({
+    ...project,
+    speciesCount: metrics.find(p => p.locationProjectId === project.id)?.speciesCount ?? 0,
+    recordingMinutesCount: metrics.find(p => p.locationProjectId === project.id)?.recordingMinutesCount ?? 0
+  }))
+
+  // project to show in directorys
+  const filteredProjects = projectsWithMetrics
+    .filter(p => p['ProjectVersion.is_published'] || (p['ProjectVersion.is_public'] && p.recordingMinutesCount > 100))
+    .sort((a) => a['ProjectVersion.is_published'] ? -1 : 1)
+    .sort((a, b) => b.recordingMinutesCount - a.recordingMinutesCount)
+
   if (!fullVersion) {
-    return toLightProjectsFromProjects(projects)
+    return toLightProjectsFromProjects(filteredProjects)
   } else {
     // TODO: add where clauses for metrics, countries, profiles
-    const whereLocationProjectIds = ids.length === 0 ? {} : { locationProjectId: { [Op.in]: ids } }
     const profiles = await LocationProjectProfile.findAll({ where: { ...whereLocationProjectIds }, raw: true })
-    const metrics = await LocationProjectMetric.findAll({ where: { ...whereLocationProjectIds }, raw: true })
     const countries = await LocationProjectCountry.findAll({ where: { ...whereLocationProjectIds }, raw: true })
-    return projects.map((project) => ({
+    return filteredProjects.map((project) => ({
       id: Number(project.id),
       name: project.name,
       slug: project.slug,
@@ -147,8 +155,6 @@ export const queryDirectoryProjects = async (fullVersion: boolean = false, ids: 
       noOfRecordings: metrics.find(p => p.locationProjectId === project.id)?.recordingMinutesCount ?? 0,
       countries: countries.find(p => p.locationProjectId === project.id)?.countryCodes ?? [],
       isPublished: project['ProjectVersion.is_published'] ?? false,
-      isHighlighted: true,
-      isMock: false,
       imageUrl: getImageUrl(profiles.find(p => p.locationProjectId === project.id)?.image) ?? ''
     }))
   }
