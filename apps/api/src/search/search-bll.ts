@@ -14,8 +14,6 @@ const localSearchDatabase = async (type: SearchType, query: string, limit: numbe
 }
 
 const opensearchSearchDatabase = async (type: SearchType, query: string, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
-  console.info('using opensearch')
-
   // TODO: the actual oopensearch stuff
   return {
     total: 0,
@@ -23,4 +21,6 @@ const opensearchSearchDatabase = async (type: SearchType, query: string, limit: 
   }
 }
 
-export const searchDatabase = env.OPENSEARCH_ENABLED === 'true' ? opensearchSearchDatabase : localSearchDatabase
+export const searchDatabase = async (type: SearchType, query: string, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
+  return env.OPENSEARCH_ENABLED === 'true' ? await opensearchSearchDatabase(type, query, limit, offset) : await localSearchDatabase(type, query, limit, offset)
+}

@@ -29,10 +29,10 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
     CREATE VIEW ${VIEW_NAME} AS
       SELECT
         p.id location_project_id,
-        coalesce(dm.species_count, 0) species_count,
-        coalesce(rm.site_count, 0) site_count,
-        coalesce(rm.recording_minutes_count, 0) recording_minutes_count,
-        coalesce(dm.detection_minutes_count, 0) detection_minutes_count,
+        coalesce(dm.species_count, 0)::int species_count,
+        coalesce(rm.site_count, 0)::int site_count,
+        coalesce(rm.recording_minutes_count, 0)::int recording_minutes_count,
+        coalesce(dm.detection_minutes_count, 0)::int detection_minutes_count,
         least(dm.min_date, rm.min_date) min_date,
         greatest(dm.max_date, rm.max_date) max_date,
         rm.min_date recording_min_date,
