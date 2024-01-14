@@ -10,7 +10,7 @@ export const getProjectsByQuery = async (query: string, limit: number, offset: n
   const sequelize = getSequelize()
   const { LocationProject, ProjectVersion, LocationProjectMetric, LocationProjectProfile, LocationProjectCountry } = ModelRepository.getInstance(sequelize)
 
-  const response = await LocationProject.findAll({
+  const results = await LocationProject.findAll({
     where: {
       name: {
         [Op.iLike]: `%${query}%`
@@ -41,29 +41,25 @@ export const getProjectsByQuery = async (query: string, limit: number, offset: n
   })
 
   return {
-    total: response.length,
-    data: response.map(res => {
+    total: results.length,
+    data: results.map(result => {
+      // @ts-expect-error Sequelize types don't know about includes
+      const { LocationProjectProfile: profile, LocationProjectMetric: metric, LocationProjectCountry: country, ...project } = result.toJSON()
       return {
         type: 'project',
-        avgLatitude: getAverageCoordinate(res.latitudeNorth, res.latitudeSouth),
-        avgLongitude: getAverageCoordinate(res.longitudeEast, res.longitudeWest),
-        id: res.id,
-        idCore: res.idCore,
-        idArbimon: res.idArbimon,
-        name: res.name,
-        slug: res.slug,
-        // @ts-expect-error shut up please i'm testing
-        image: res.LocationProjectProfile?.image ?? '',
-        // @ts-expect-error shut up please i'm testing
-        objectives: res.LocationProjectProfile?.objectives ?? '',
-        // @ts-expect-error shut up please i'm testing
-        summary: res.LocationProjectProfile?.summary ?? '',
-        // @ts-expect-error shut up please i'm testing
-        speciesCount: res.LocationProjectMetric?.speciesCount ?? 0,
-        // @ts-expect-error shut up please i'm testing
-        recordingMinutesCount: res.LocationProjectMetric?.recordingMinutesCount ?? 0,
-        // @ts-expect-error shut up please i'm testing
-        countryCodes: res.LocationProjectCountry?.countryCodes ?? []
+        avgLatitude: getAverageCoordinate(project.latitudeNorth, project.latitudeSouth),
+        avgLongitude: getAverageCoordinate(project.longitudeEast, project.longitudeWest),
+        id: project.id,
+        idCore: project.idCore,
+        idArbimon: project.idArbimon,
+        name: project.name,
+        slug: project.slug,
+        image: profile?.image ?? '',
+        objectives: profile?.objectives ?? '',
+        summary: profile?.summary ?? '',
+        speciesCount: metric?.speciesCount ?? 0,
+        recordingMinutesCount: metric?.recordingMinutesCount ?? 0,
+        countryCodes: country?.countryCodes ?? []
       }
     })
   }
