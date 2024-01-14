@@ -38,7 +38,7 @@
       <div>
         <img
           v-if="project?.imageUrl"
-          :src="project?.imageUrl"
+          :src="urlWrapper(project.imageUrl)"
           class="w-full object-cover aspect-auto bg-util-gray-03 h-52"
         >
         <div
@@ -214,6 +214,7 @@ import { computed, inject, ref, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
 import { getCountryLabel } from '@/_services/country'
+import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientKey } from '@/globals'
 import DashboardMarkdownViewerEditor from '@/insights/overview/components/dashboard-project-summary/components/dashboard-markdown-viewer-editor.vue'
 import DashboardProjectStakeholdersViewer from '@/insights/overview/components/dashboard-project-summary/components/dashboard-project-stakeholders/dashboard-project-stakeholders-viewer.vue'

@@ -40,7 +40,7 @@
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-image-form
             :is-disabled="!isUserHasFullAccess"
-            :image="settings?.image"
+            :image="settings?.image !== undefined ? urlWrapper(settings?.image) : undefined"
             @emit-project-image="onEmitProjectImage"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
@@ -114,6 +114,7 @@ import { useRouter } from 'vue-router'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
+import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
