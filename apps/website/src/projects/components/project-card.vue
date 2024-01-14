@@ -6,7 +6,7 @@
     <div>
       <img
         v-if="project.image"
-        :src="project.image"
+        :src="urlWrapper(project.image)"
         class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-03"
       >
       <div
@@ -66,6 +66,7 @@ import { computed } from 'vue'
 import type { Project } from '@rfcx-bio/common/dao/types'
 
 import { getCountryLabel } from '@/_services/country'
+import { urlWrapper } from '@/_services/images/url-wrapper'
 import { ROUTE_NAMES } from '~/router'
 import TextTooltip from '../components/text-tooltip.vue'
 import { masterObjectiveTypes } from '../types'
