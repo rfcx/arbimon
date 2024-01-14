@@ -4,8 +4,8 @@ import { type LocationProjectForUser, type MyProjectsResponse } from '@rfcx-bio/
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type Project, ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
-import { getImageUrl } from '@/users/helpers'
 import { getSequelize } from '~/db'
+import { fileUrl } from '~/format-helpers/file-url'
 
 const sequelize = getSequelize()
 const models = ModelRepository.getInstance(sequelize)
@@ -87,7 +87,7 @@ export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, 
     data: myProjects.map(p => ({
       ...p,
       summary: profileInfo.find(pi => pi.locationProjectId === p.id)?.summary ?? '',
-      image: getImageUrl(profileInfo.find(pi => pi.locationProjectId === p.id)?.image) ?? '',
+      image: fileUrl(profileInfo.find(pi => pi.locationProjectId === p.id)?.image) ?? '',
       objectives: profileInfo.find(pi => pi.locationProjectId === p.id)?.objectives ?? [],
       countries: countryInfo.find(ci => ci.locationProjectId === p.id)?.countryCodes ?? [],
       isPublished: publishedInfo.find(pi => pi.locationProjectId === p.id)?.isPublished ?? false
