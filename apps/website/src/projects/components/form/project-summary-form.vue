@@ -12,7 +12,7 @@
   <textarea
     v-model.trim="summary"
     :disabled="isDisabled"
-    class="input-field w-full h-16 disabled:opacity-75 disabled:cursor-not-allowed italic"
+    class="input-field w-full h-16 disabled:opacity-75 disabled:cursor-not-allowed placeholder-shown:italic"
     :placeholder="PLACEHOLDER_SUMMARY_TEXT"
     :maxlength="MAX"
   />
