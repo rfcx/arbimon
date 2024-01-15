@@ -25,6 +25,12 @@
       >
         This is a test project, do NOT list it on Arbimon.
       </label>
+      <icon-i-info
+        class="w-50"
+        tooltip-id="test-project"
+        :tooltip-text="PLACEHOLDER_TEXT"
+        :extra-class="`w-100`"
+      />
     </div>
   </div>
 </template>
@@ -33,11 +39,14 @@
 import { initTooltips } from 'flowbite'
 import { onMounted, ref, watch } from 'vue'
 
+import IconIInfo from '../icon-i-info.vue'
+
 const props = defineProps<{ isPublic: boolean | undefined, isDisabled?: boolean }>()
 
 const emit = defineEmits<{(e: 'emitProjectListed', value: boolean): void}>()
 
 const isPublicProject = ref(props.isPublic)
+const PLACEHOLDER_TEXT = 'Selecting this creates a private test project, which may be periodically archived and become inaccessible. Uncheck for permanent access.'
 
 const toggleListedProject = () => {
   isPublicProject.value = !isPublicProject.value
