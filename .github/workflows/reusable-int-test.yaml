@@ -141,3 +141,6 @@ jobs:
           AWS_S3_BUCKET_REGION: 'eu-west-1'
           AWS_S3_ENDPOINT: 'http://localhost:${{ job.services.s3mock.ports[9090] }}'
           AWS_EC2_METADATA_DISABLED: true
+          OPENSEARCH_HOST: localhost
+          OPENSEARCH_PORT: 9202
+          OPENSEARCH_SSL_ENABLED: false
