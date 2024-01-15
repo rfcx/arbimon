@@ -97,7 +97,6 @@ const emit = defineEmits<{(e: 'emitClose'): void}>()
 
 // Tabs
 const myProjects = computed(() => store.projects.filter(p => p.isMyProject))
-const showcaseProjects = computed(() => store.projects.filter(p => p.isShowcaseProject))
 
 const tabIds = {
   myProjects: 'myProjects',
@@ -114,7 +113,7 @@ const tabs = computed(() => ([
   {
     id: tabIds.showcaseProjects,
     label: 'Showcase projects',
-    projects: showcaseProjects.value,
+    projects: [],
     noProjectsMessage: 'No projects found'
   }
 ]))
