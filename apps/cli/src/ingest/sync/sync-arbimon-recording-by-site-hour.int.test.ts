@@ -20,12 +20,12 @@ const SYNC_CONFIG: SyncConfig = {
   syncBatchLimit: 100
 }
 
-const BIO_PROJECT = { idCore: '807cuoi3cvw0', idArbimon: 1920, name: 'RFCx 1', slug: 'rfcx-1', latitudeNorth: 1, latitudeSouth: 1, longitudeEast: 1, longitudeWest: 1 }
+const BIO_PROJECT = { idCore: '807cuoi3cvw0', idArbimon: 1920, name: 'RFCx 1', slug: 'rfcx-1', status: 'published', statusUpdatedAt: new Date(), latitudeNorth: 1, latitudeSouth: 1, longitudeEast: 1, longitudeWest: 1 }
 
 const BIO_SITES = (locationProjectId: number): Array<Omit<Site, 'id'>> => {
   return [
-    { idCore: 'cm1n9bvgn0jr', idArbimon: 88526, locationProjectId, name: 'NU - 1', latitude: 16.74, longitude: 100.17, altitude: 0 },
-    { idCore: 'wchdzd6327i4', idArbimon: 88527, locationProjectId, name: 'NU - 2', latitude: 16.75, longitude: 100.18, altitude: 0 }
+    { idCore: 'cm1n9bvgn0jr', idArbimon: 88526, locationProjectId, name: 'NU - 1', latitude: 16.74, longitude: 100.17, altitude: 0, countryCode: 'TH' },
+    { idCore: 'wchdzd6327i4', idArbimon: 88527, locationProjectId, name: 'NU - 2', latitude: 16.75, longitude: 100.18, altitude: 0, countryCode: 'TH' }
   ]
 }
 

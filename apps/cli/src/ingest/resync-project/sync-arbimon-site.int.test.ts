@@ -22,7 +22,7 @@ const SQL_INSERT_SITE = `
   VALUES ($projectId, $siteId, $createdAt, $updatedAt, $name, $siteTypeId, $lat, $lon, $alt, $published, $tokenCreatedOn, $externalId, $timezone, $countryCode);
 `
 const DEFAULT_ARB_PROJECT = { projectId: 1920, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z', deletedAt: null, name: 'RFCx 1', url: 'rfcx-1', description: 'A test project for testing', projectTypeId: 1, isPrivate: 1, isEnabled: 1, currentPlan: 846, storageUsage: 0.0, processingUsage: 0.0, patternMatchingEnabled: 1, citizenScientistEnabled: 0, cnnEnabled: 0, aedEnabled: 0, clusteringEnabled: 0, externalId: '807cuoi3cvw0', featured: 0, image: null, reportsEnabled: 1 }
-const DEFAULT_BIO_PROJECT = { id: 1, idCore: '807cuoi3cvwx', idArbimon: DEFAULT_ARB_PROJECT.projectId, name: 'RFCx 1', slug: 'rfcx-1', latitudeNorth: 1, latitudeSouth: 1, longitudeEast: 1, longitudeWest: 1, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z' }
+const DEFAULT_BIO_PROJECT = { id: 1, idCore: '807cuoi3cvwx', idArbimon: DEFAULT_ARB_PROJECT.projectId, name: 'RFCx 1', slug: 'rfcx-1', status: 'listed', statusUpdatedAt: new Date(), latitudeNorth: 1, latitudeSouth: 1, longitudeEast: 1, longitudeWest: 1, createdAt: new Date(), updatedAt: new Date() }
 const DEFAULT_ARB_SITE = { projectId: DEFAULT_ARB_PROJECT.projectId, siteId: 88528, createdAt: '2022-01-03 01:00:00', updatedAt: '2022-01-04 01:00:00', name: 'Site 3', siteTypeId: 2, lat: 16.742010693566815, lon: 100.1923308193772, alt: 0.0, published: 0, tokenCreatedOn: null, externalId: 'cydwrzz91cbz', timezone: 'Asia/Bangkok', countryCode: 'TH' }
 const DEFAULT_ARB_SITES = [DEFAULT_ARB_SITE, { ...DEFAULT_ARB_SITE, siteId: 88527, name: 'Site 2', externalId: 'cydwrzz91cba' }]
 

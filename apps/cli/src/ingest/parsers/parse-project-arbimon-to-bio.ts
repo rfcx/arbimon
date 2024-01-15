@@ -2,7 +2,7 @@ import { type Sequelize, Op } from 'sequelize'
 import { type SafeParseReturnType, z } from 'zod'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project } from '@rfcx-bio/common/dao/types'
+import { type Project, type ProjectStatus } from '@rfcx-bio/common/dao/types'
 
 const ProjectArbimonSchema = z.object({
   idArbimon: z.number(),
@@ -23,9 +23,9 @@ export type ProjectArbimon = z.infer<typeof ProjectArbimonSchema>
 export const parseProjectArbimonToBio = (projectArbimon: unknown): SafeParseReturnType<unknown, ProjectArbimon> =>
   ProjectArbimonSchema.safeParse(projectArbimon)
 
-const transformProjectArbimonToProjectBio = (project: ProjectArbimon): Omit<Project, 'id' | 'status' | 'statusUpdatedAt'> => {
+const transformProjectArbimonToProjectBio = (project: ProjectArbimon): Omit<Project, 'id' | 'statusUpdatedAt'> => {
   const { updatedAt, deletedAt, isPrivate, ...rest } = project
-  return { ...rest }
+  return { ...rest, status: (isPrivate ? 'unlisted' : 'published') as ProjectStatus }
 }
 
 export const getTransformedProjects = async (projects: ProjectArbimon[], sequelize: Sequelize): Promise<any[]> => {
