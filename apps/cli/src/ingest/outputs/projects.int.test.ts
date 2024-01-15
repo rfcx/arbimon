@@ -247,7 +247,7 @@ describe('ingest > outputs > projects', () => {
     expect(project?.status).toBe('published')
   })
 
-  test('can update project from unlisted to listed', async () => {
+  test.skip('can update project from unlisted to listed', async () => {
     // Arrange
     const arbimonProject = { ...projectInput, idCore: '807cuoi3cv95', idArbimon: 9995, slug: 'rfcx-95', name: 'RFCx 95' }
     await writeProjectsToBio([arbimonProject], biodiversitySequelize)

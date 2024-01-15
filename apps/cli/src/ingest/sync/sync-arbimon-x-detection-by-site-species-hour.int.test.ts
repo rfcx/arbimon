@@ -2,7 +2,7 @@ import { afterAll, beforeEach, describe, expect, test } from 'vitest'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Site, type SyncStatus, type TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { type ProjectStatus, type Site, type SyncStatus, type TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
@@ -26,6 +26,7 @@ const PROJECT_INPUT: Omit<ProjectArbimon, 'id'> = {
   idCore: '807cuoi3cvw0',
   slug: 'rfcx-1',
   name: 'rfcx 1',
+  isPrivate: 0,
   latitudeNorth: 0,
   latitudeSouth: 0,
   longitudeEast: 0,
@@ -41,7 +42,8 @@ const SITE_INPUT: Omit<Site, 'id'> = {
   name: 'Site 3',
   latitude: 16.742010693566815,
   longitude: 100.1923308193772,
-  altitude: 0.0
+  altitude: 0.0,
+  countryCode: 'TH'
 }
 
 const SQL_INSERT_PROJECT = `
@@ -298,7 +300,7 @@ describe('ingest > sync', () => {
       await arbimonSequelize.query(SQL_INSERT_SITE, { bind: DEFAULT_SITE })
       await arbimonSequelize.query(SQL_INSERT_RECORDING, { bind: DEFAULT_RECORDING })
       await arbimonSequelize.query(SQL_INSERT_REC_VALIDATIONS, { bind: { ...DEFAULT_REC_VALIDATIONS, recordingValidationId: 2391000, recordingId: 1000001, projectId: 1940, userId: 1017, speciesId: 501, songtypeId: 1, present: 1, presentReview: 0, createdAt: '2022-05-17T11:10:00.000Z', updatedAt: '2022-05-17T11:10:00.000Z' } })
-      await ModelRepository.getInstance(biodiversitySequelize).LocationProject.create({ ...PROJECT_INPUT, idArbimon: 1940, idCore: '807cuoi3cvw5', slug: 'rfcx-2' })
+      await ModelRepository.getInstance(biodiversitySequelize).LocationProject.create({ ...PROJECT_INPUT, idArbimon: 1940, idCore: '807cuoi3cvw5', slug: 'rfcx-2', status: 'published' as ProjectStatus, statusUpdatedAt: new Date(), updatedAt: undefined, deletedAt: undefined })
       const project = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findOne({ where: { idArbimon: 1940 } })
       if (project) {
         await ModelRepository.getInstance(biodiversitySequelize).LocationSite.create({ ...SITE_INPUT, idCore: 'cydwrzz91c40', idArbimon: 88540, locationProjectId: project.id, name: 'Site test' })
