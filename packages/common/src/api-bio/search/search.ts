@@ -13,7 +13,7 @@ export interface SearchRequestQueryParams {
 }
 
 export type SearchResponseProject = { type: 'project', avgLatitude: number, avgLongitude: number }
-  & Pick<Project, 'id' | 'idCore' | 'idArbimon' | 'name' | 'slug'>
+  & Pick<Project, 'id' | 'idCore' | 'idArbimon' | 'name' | 'slug' | 'status'>
   & Pick<LocationProjectProfile, 'image' | 'objectives' | 'summary'>
   & Pick<LocationProjectMetric, 'speciesCount' | 'recordingMinutesCount'>
   & Pick<LocationProjectCountry, 'countryCodes'>

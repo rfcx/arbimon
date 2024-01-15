@@ -76,12 +76,6 @@ describe('ingest > sync', () => {
       })
       expect(projects).toHaveLength(2)
 
-      // - Assert new project version got created
-      const projectVersions = await ModelRepository.getInstance(biodiversitySequelize).ProjectVersion.findAll({
-        where: { locationProjectId: { [Op.in]: projects.map(p => p.id) } }
-      })
-      expect(projectVersions).toHaveLength(2)
-
       // - Assert update sync status
       await expectLastSyncIdInSyncStatusToBe(idsArbimon[idsArbimon.length - 1])
     })

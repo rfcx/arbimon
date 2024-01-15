@@ -23,8 +23,8 @@ export type ProjectArbimon = z.infer<typeof ProjectArbimonSchema>
 export const parseProjectArbimonToBio = (projectArbimon: unknown): SafeParseReturnType<unknown, ProjectArbimon> =>
   ProjectArbimonSchema.safeParse(projectArbimon)
 
-const transformProjectArbimonToProjectBio = (project: ProjectArbimon): Omit<Project, 'id'> => {
-  const { updatedAt, deletedAt, ...rest } = project
+const transformProjectArbimonToProjectBio = (project: ProjectArbimon): Omit<Project, 'id' | 'status' | 'statusUpdatedAt'> => {
+  const { updatedAt, deletedAt, isPrivate, ...rest } = project
   return { ...rest }
 }
 

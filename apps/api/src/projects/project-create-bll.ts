@@ -7,7 +7,6 @@ import { createProject as createProjectInCore, getProject as getProjectInCore } 
 import { create } from './dao/get-project-members-dao'
 import { createProject as createProjectLocal } from './dao/project-create-dao'
 import { createProjectProfile } from './dao/project-profile-dao'
-import { createProjectVersion } from './dao/project-version-dao'
 
 export const createProject = async (request: ProjectCreateRequest, userId: number, token: string): Promise<[string, number]> => {
   // Create in Core
@@ -22,7 +21,6 @@ export const createProject = async (request: ProjectCreateRequest, userId: numbe
   // Create project profile
   const { objectives, dateStart, dateEnd } = request
   await createProjectProfile({ locationProjectId: id, objectives, dateStart: dayjs(dateStart).toDate(), dateEnd: dayjs(dateEnd).toDate() })
-  await createProjectVersion(id, request.isPublic)
 
   // Set current user as owner
   await create({ locationProjectId: id, userId, role: 'owner', ranking: RANKING_PRIMARY })

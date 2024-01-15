@@ -8,23 +8,16 @@ import { getAverageCoordinate } from './helpers'
 
 export const getProjectsByQuery = async (query: string, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
   const sequelize = getSequelize()
-  const { LocationProject, ProjectVersion, LocationProjectMetric, LocationProjectProfile, LocationProjectCountry } = ModelRepository.getInstance(sequelize)
+  const { LocationProject, LocationProjectMetric, LocationProjectProfile, LocationProjectCountry } = ModelRepository.getInstance(sequelize)
 
   const results = await LocationProject.findAll({
     where: {
       name: {
         [Op.iLike]: `%${query}%`
-      }
+      },
+      status: ['listed', 'published']
     },
     include: [
-      {
-        model: ProjectVersion,
-        attributes: ['is_public', 'is_published'],
-        required: true,
-        where: {
-          is_public: true
-        }
-      },
       {
         model: LocationProjectMetric,
         as: 'LocationProjectMetric'
@@ -54,6 +47,7 @@ export const getProjectsByQuery = async (query: string, limit: number, offset: n
         idArbimon: project.idArbimon,
         name: project.name,
         slug: project.slug,
+        status: project.status,
         image: profile?.image ?? '',
         objectives: profile?.objectives ?? '',
         summary: profile?.summary ?? '',

@@ -6,6 +6,8 @@ export const fakeProject: Project = {
   idArbimon: 201,
   slug: 'dci-fake',
   name: 'DCI Fake Project',
+  status: 'listed',
+  statusUpdatedAt: new Date(),
   latitudeNorth: 0,
   latitudeSouth: 0,
   longitudeEast: 0,

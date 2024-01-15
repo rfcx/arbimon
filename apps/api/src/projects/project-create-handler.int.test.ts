@@ -17,12 +17,11 @@ const fakeToken = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6ImE0NTBhMz
 const userToken = { idAuth0: 'test' }
 const userId = 9001
 
-const { LocationProject, LocationProjectProfile, LocationProjectUserRole, ProjectVersion } = modelRepositoryWithElevatedPermissions
+const { LocationProject, LocationProjectProfile, LocationProjectUserRole } = modelRepositoryWithElevatedPermissions
 
 afterEach(async () => {
   const locationProjects = await LocationProject.findAll({ where: { slug: { [Op.or]: [{ [Op.like]: 'red-squirrels%' }, { [Op.like]: 'greys-linger%' }] } } }).then(projects => projects.map(project => project.id))
   await LocationProjectProfile.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
-  await ProjectVersion.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
   await LocationProjectUserRole.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
   await LocationProject.destroy({ where: { id: { [Op.in]: locationProjects } } })
 })
@@ -63,12 +62,9 @@ test('POST /projects adds extra infomation (profile, owner role, version)', asyn
   const result = JSON.parse(response.body)
   const project = await LocationProject.findOne({ where: { slug: result.slug } })
   expect(project).toBeDefined()
+  expect(project?.status).toBe('unlisted')
   expect(response.headers.location).toBe(`/projects/${project?.id ?? -1}`)
   const projectRoles = await LocationProjectUserRole.findAll({ where: { locationProjectId: project?.id } })
   expect(projectRoles).toHaveLength(1)
   expect(projectRoles[0].userId).toBe(userId)
-  // Assert project version
-  const projectVersion = await ProjectVersion.findOne({ where: { locationProjectId: project?.id } })
-  expect(projectVersion).toBeDefined()
-  expect(projectVersion?.isPublic).toBe(true)
 })

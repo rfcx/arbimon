@@ -47,7 +47,7 @@
       </p>
     </div>
     <div>
-      <template v-if="project.isPublished">
+      <template v-if="project.status === 'published'">
         <div class="mt-4">
           <icon-custom-fi-eye class="inline-flex text-insight mr-2" /> Live on Arbimon’s Project
         </div>

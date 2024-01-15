@@ -47,21 +47,15 @@ export const updateProjectProfile = async (partialProfile: Partial<LocationProje
  */
 export const getProjectInfo = async (locationProjectId: number, fields: ProjectInfoFieldType[]): Promise<ProjectInfoResponse> => {
   const sequelize = getSequelize()
-  const { LocationProject, LocationProjectProfile, LocationProjectCountry, ProjectVersion } = ModelRepository.getInstance(sequelize)
+  const { LocationProject, LocationProjectProfile, LocationProjectCountry } = ModelRepository.getInstance(sequelize)
   const resProject = await LocationProject.findOne({
     where: { id: locationProjectId },
-    attributes: ['name'],
+    attributes: ['name', 'status'],
     raw: true
   })
   const resProfile = await LocationProjectProfile.findOne({
     where: { locationProjectId },
     attributes: ['summary', 'objectives', 'image', 'dateStart', 'dateEnd', 'readme', 'keyResult'],
-    raw: true
-  })
-
-  const version = await ProjectVersion.findOne({
-    where: { locationProjectId },
-    attributes: ['isPublished', 'isPublic'],
     raw: true
   })
 
@@ -90,8 +84,8 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     objectives: resProfile?.objectives ?? [],
     dateStart: resProfile?.dateStart ?? null,
     dateEnd: resProfile?.dateEnd ?? null,
-    isPublished: version?.isPublished ?? false,
-    isPublic: version?.isPublic ?? false
+    isPublished: resProject.status === 'published',
+    isPublic: resProject.status !== 'hidden'
   }
 
   return {
