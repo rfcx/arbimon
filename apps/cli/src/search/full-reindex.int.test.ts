@@ -28,13 +28,15 @@ const makeRecordingBySiteHour = (locationProjectId: number, locationSiteId: numb
 
 // Before any test we recreate data in postgres
 beforeEach(async () => {
-  const project1 = makeProject(2431213, 'Fullham Diversity')
-  const project2 = makeProject(2431214, 'Nottingham Diversity') // hidden by user
-  const project3 = makeProject(2431215, 'Westham Diversity') // not enough recordings to be existed on the page
-  await LocationProject.bulkCreate([project1, project2, project3], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+  const project1 = makeProject(2431213, 'Fullham Diversity', 'listed')
+  const project2 = makeProject(2431214, 'Nottingham Diversity', 'hidden') // hidden by user
+  const project3 = makeProject(2431215, 'Westham Diversity', 'unlisted') // not enough recordings to be existed on the page
+  await LocationProject.create(project1)
+  await LocationProject.create(project2)
+  await LocationProject.create(project3)
 
   const project1Site = { id: 99221144, idCore: 'alskdmfiiee', idArbimon: 99221144, name: 'North Fullham 121e', locationProjectId: project1.id, latitude: 0, longitude: 0, altitude: 0, countryCode: 'US' }
-  await LocationSite.bulkCreate([project1Site])
+  await LocationSite.create(project1Site)
   const p1s1recordings = Array.from({ length: 20 }, (_, i) => {
     return literalizeCountsByMinute(makeRecordingBySiteHour(project1.id, project1Site.id, '2024-01-01', i), sequelize)
   })
@@ -46,11 +48,12 @@ beforeEach(async () => {
 afterEach(async () => {
   const locationProjectIds = [2431213, 2431214, 2431215]
   await RecordingBySiteHourModel.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
+  await LocationProjectProfile.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
   await LocationSite.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
   await LocationProject.destroy({ where: { id: { [Op.in]: locationProjectIds } }, force: true })
 })
 
-test('connect and create indexes ', async () => {
+test('connect and create indexes', async () => {
   await fullReindex(opensearchClient, sequelize)
 
   const indices = await opensearchClient.cat.indices({ format: 'json' }).then(response => (response.body as Array<{ index: string }>).map(i => i.index))
@@ -74,9 +77,11 @@ test('a reindex will sync the passed criteria projects over', async () => {
   })
 
   expect(response.body.hits.hits.length).toBe(1)
+  // INFO: https://stackoverflow.com/a/17911698/12386405 if you set the id key on passing it, opensearch rips it off and yank it into `_id` field.
+  expect(response.body.hits.hits[0]._id).toBe('2431213')
 })
 
-test.todo('a reindex wont sync unpassed criteria over', async () => {
+test('a reindex wont sync unpassed criteria over', async () => {
   await fullReindex(opensearchClient, sequelize)
 
   const response = await opensearchClient.search({
@@ -92,12 +97,12 @@ test.todo('a reindex wont sync unpassed criteria over', async () => {
     }
   })
 
-  expect(response.body.hits.hits).toBeUndefined()
+  expect(response.body?.hits?.hits?.length).toBe(0)
 })
 
-test.todo('a reindex will resync the projects after their contents are edited', async () => {
+test('a reindex will resync the projects after their contents are edited', async () => {
   const summary = '## Welcome to Fullham diversity'
-  await LocationProjectProfile.update({ summary }, { where: { locationProjectId: 2431213 } })
+  await LocationProjectProfile.create({ summary, locationProjectId: 2431213, image: '', readme: '', methods: '', keyResult: '', objectives: [], resources: '', dateStart: null, dateEnd: null })
 
   await fullReindex(opensearchClient, sequelize)
 
@@ -117,7 +122,7 @@ test.todo('a reindex will resync the projects after their contents are edited', 
   expect(response.body.hits.hits[0]._source.summary).toBe(summary)
 })
 
-test.todo('a reindex will remove deleted projects', async () => {
+test('a reindex will remove deleted projects', async () => {
   await LocationProject.update({ deletedAt: dayjs().toDate() }, { where: { id: 2431213 } })
 
   await fullReindex(opensearchClient, sequelize)
@@ -135,5 +140,5 @@ test.todo('a reindex will remove deleted projects', async () => {
     }
   })
 
-  expect(response.body.hits.hits).toBeUndefined()
+  expect(response.body.hits.hits.length).toBe(0)
 })
