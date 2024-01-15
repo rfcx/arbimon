@@ -221,6 +221,9 @@ importers:
       '@js-temporal/polyfill':
         specifier: ^0.3.0
         version: 0.3.0
+      '@opensearch-project/opensearch':
+        specifier: ^2.5.0
+        version: 2.5.0
       '@rfcx-bio/common':
         specifier: workspace:^0.0.1
         version: link:../../packages/common
@@ -285,6 +288,9 @@ importers:
       cheerio:
         specifier: 1.0.0-rc.12
         version: 1.0.0-rc.12
+      countries-list:
+        specifier: ^3.0.6
+        version: 3.0.6
       dayjs:
         specifier: ^1.11.7
         version: 1.11.8

@@ -46,6 +46,7 @@
     "@fastify/routes": "^4.0.0",
     "@fastify/static": "^5.0.2",
     "@js-temporal/polyfill": "^0.3.0",
+    "@opensearch-project/opensearch": "^2.5.0",
     "@rfcx-bio/common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
     "axios": "^0.27.2",
