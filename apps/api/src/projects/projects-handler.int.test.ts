@@ -11,20 +11,18 @@ import { routesProject } from './index'
 
 const userId = 9001
 
-const { LocationProject, ProjectVersion } = modelRepositoryWithElevatedPermissions
+const { LocationProject } = modelRepositoryWithElevatedPermissions
 
 afterEach(async () => {
   const locationProjectIds = [1234001, 1234002]
-  await ProjectVersion.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
   await LocationProject.destroy({ where: { id: { [Op.in]: locationProjectIds } } })
 })
 
 test('GET /projects contains public projects', async () => {
   // Arrange
   const app = await makeApp(routesProject, { userId })
-  const publicProject = makeProject(1234001, 'Public Project 1')
+  const publicProject = makeProject(1234001, 'Public Project 1', 'published')
   await LocationProject.bulkCreate([publicProject], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
-  await ProjectVersion.create({ locationProjectId: publicProject.id, isPublished: true, isPublic: true })
 
   // Act
   const response = await app.inject({
@@ -43,9 +41,8 @@ test('GET /projects contains public projects', async () => {
 test('GET /projects does not contain non-public projects', async () => {
   // Arrange
   const app = await makeApp(routesProject, { userId })
-  const project = makeProject(1234002, 'Private Project 1')
+  const project = makeProject(1234002, 'Private Project 1', 'hidden')
   await LocationProject.bulkCreate([project], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
-  await ProjectVersion.create({ locationProjectId: project.id, isPublished: false, isPublic: false })
 
   // Act
   const response = await app.inject({

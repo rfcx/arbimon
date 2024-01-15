@@ -47,7 +47,7 @@ export const getViewableProjects = async (userId: number | undefined): Promise<L
       where: {
         [Op.or]: [
           { id: memberProjectIds },
-          { id: { [Op.in]: sequelize.literal('(SELECT location_project_id FROM project_version WHERE is_published = true)') } }
+          { status: ['listed', 'published'] }
         ]
       },
       attributes: ATTRIBUTES_LOCATION_PROJECT.light,
@@ -69,14 +69,13 @@ export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, 
     .findAll({
       where: { id: memberProjectIds },
       attributes: ATTRIBUTES_LOCATION_PROJECT.light,
-      order: ['name'],
+      order: ['name', 'status'],
       offset,
       limit,
       raw: true
     })
 
   const myProjectIds = myProjects.map(p => p.id)
-  const publishedInfo = await models.ProjectVersion.findAll({ where: { locationProjectId: myProjectIds }, raw: true })
   const profileInfo = await models.LocationProjectProfile.findAll({ where: { locationProjectId: myProjectIds }, raw: true })
   const countryInfo = await models.LocationProjectCountry.findAll({ where: { locationProjectId: myProjectIds }, raw: true })
 
@@ -90,7 +89,7 @@ export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, 
       image: fileUrl(profileInfo.find(pi => pi.locationProjectId === p.id)?.image) ?? '',
       objectives: profileInfo.find(pi => pi.locationProjectId === p.id)?.objectives ?? [],
       countries: countryInfo.find(ci => ci.locationProjectId === p.id)?.countryCodes ?? [],
-      isPublished: publishedInfo.find(pi => pi.locationProjectId === p.id)?.isPublished ?? false
+      isPublished: p.status === 'published'
     }))
   }
 }

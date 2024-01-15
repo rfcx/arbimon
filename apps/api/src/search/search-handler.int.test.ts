@@ -28,20 +28,17 @@ function makeRecordingBySiteHour (locationProjectId: number, locationSiteId: num
   }
 }
 
-const { LocationProject, LocationSite, ProjectVersion, RecordingBySiteHour: RecordingBySiteHourModel } = modelRepositoryWithElevatedPermissions
+const { LocationProject, LocationSite, RecordingBySiteHour: RecordingBySiteHourModel } = modelRepositoryWithElevatedPermissions
 const sequelize = RecordingBySiteHourModel.sequelize as Sequelize
 
 describe('Local search', async () => {
   beforeAll(async () => {
     env.OPENSEARCH_ENABLED = 'false'
 
-    const p1 = makeProject(2345001, 'Listed khaokho 1')
-    const p2 = makeProject(2345002, 'Unlisted khaokho 1') // user requested hidden
-    const p3 = makeProject(2345003, 'Unlisted khaokho 2') // does not meet the criteria for listing
+    const p1 = makeProject(2345001, 'Listed khaokho 1', 'listed')
+    const p2 = makeProject(2345002, 'Unlisted khaokho 1', 'hidden') // user requested hidden
+    const p3 = makeProject(2345003, 'Unlisted khaokho 2', 'unlisted') // does not meet the criteria for listing
     await LocationProject.bulkCreate([p1, p2, p3], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
-    await ProjectVersion.create({ locationProjectId: p1.id, isPublished: false, isPublic: true })
-    await ProjectVersion.create({ locationProjectId: p2.id, isPublished: false, isPublic: false })
-    await ProjectVersion.create({ locationProjectId: p3.id, isPublished: false, isPublic: true })
 
     // p1 needs meet the listing critera (recordingsCount > 1000)
     const p1s1 = { id: 23450011, idCore: '23450011', idArbimon: 23450011, name: 'Site 1', locationProjectId: p1.id, latitude: 0, longitude: 0, altitude: 0, countryCode: 'US' }
@@ -55,7 +52,6 @@ describe('Local search', async () => {
     const locationProjectIds = [2345001, 2345002, 2345003]
     await RecordingBySiteHourModel.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
     await LocationSite.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
-    await ProjectVersion.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
     await LocationProject.destroy({ where: { id: { [Op.in]: locationProjectIds } }, force: true })
   })
 

@@ -13,7 +13,7 @@ import { getOpenSearchClient } from './opensearch'
 
 const opensearchClient = getOpenSearchClient()
 const sequelize = getSequelize()
-const { LocationProject, LocationProjectProfile, ProjectVersion, LocationSite, RecordingBySiteHour: RecordingBySiteHourModel } = ModelRepository.getInstance(sequelize)
+const { LocationProject, LocationProjectProfile, LocationSite, RecordingBySiteHour: RecordingBySiteHourModel } = ModelRepository.getInstance(sequelize)
 
 const makeRecordingBySiteHour = (locationProjectId: number, locationSiteId: number, startDate: string, hourOffset: number): RecordingBySiteHour => {
   return {
@@ -32,9 +32,6 @@ beforeEach(async () => {
   const project2 = makeProject(2431214, 'Nottingham Diversity') // hidden by user
   const project3 = makeProject(2431215, 'Westham Diversity') // not enough recordings to be existed on the page
   await LocationProject.bulkCreate([project1, project2, project3], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
-  await ProjectVersion.create({ locationProjectId: project1.id, isPublished: false, isPublic: true })
-  await ProjectVersion.create({ locationProjectId: project2.id, isPublished: false, isPublic: false })
-  await ProjectVersion.create({ locationProjectId: project3.id, isPublished: false, isPublic: true })
 
   const project1Site = { id: 99221144, idCore: 'alskdmfiiee', idArbimon: 99221144, name: 'North Fullham 121e', locationProjectId: project1.id, latitude: 0, longitude: 0, altitude: 0, countryCode: 'US' }
   await LocationSite.bulkCreate([project1Site])
@@ -50,7 +47,6 @@ afterEach(async () => {
   const locationProjectIds = [2431213, 2431214, 2431215]
   await RecordingBySiteHourModel.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
   await LocationSite.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
-  await ProjectVersion.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
   await LocationProject.destroy({ where: { id: { [Op.in]: locationProjectIds } }, force: true })
 })
 

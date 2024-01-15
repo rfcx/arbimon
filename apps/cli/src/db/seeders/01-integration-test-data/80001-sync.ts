@@ -3,7 +3,7 @@ import { type MigrationFn } from 'umzug'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project, type ProjectVersion, type Site, type SyncLogByProject } from '@rfcx-bio/common/dao/types'
+import { type Project, type Site, type SyncLogByProject } from '@rfcx-bio/common/dao/types'
 
 // Mocked project, site, recordings, detections
 export const testProject: Project = {
@@ -12,17 +12,12 @@ export const testProject: Project = {
   idArbimon: 80001001,
   slug: 'integration-test-project-80001001',
   name: 'Integration Test Project 8',
+  status: 'published',
+  statusUpdatedAt: new Date(),
   latitudeNorth: 18.3,
   latitudeSouth: 18.4,
   longitudeEast: -65.2,
   longitudeWest: -65.3
-}
-
-export const testProjectVersion: ProjectVersion = {
-  id: 8,
-  locationProjectId: testProject.id,
-  isPublished: true,
-  isPublic: true
 }
 
 export const testSites: Site[] = [
@@ -72,8 +67,6 @@ export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }
   // Create projects and versions
   const projects: Project[] = [testProject]
   await models.LocationProject.bulkCreate(projects)
-  const projectsVersions: ProjectVersion[] = [testProjectVersion]
-  await models.ProjectVersion.bulkCreate(projectsVersions)
 
   // Create sites
   await models.LocationSite.bulkCreate(testSites)
