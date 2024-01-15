@@ -8,14 +8,14 @@
       <span class="text-insight text-base font-medium font-sans flex-1">
         Don't leave this space empty - make it meaningful by adding your content.
       </span>
-      <span
+      <button
         class="text-frequency cursor-pointer font-display flex-shrink-0"
-        :class="{ 'disabled:cursor-not-allowed': projectUserPermissionsStore.isGuest }"
+        :class="{ 'disabled:cursor-not-allowed disabled:opacity-70': projectUserPermissionsStore.isGuest }"
         :disabled="projectUserPermissionsStore.isGuest"
         @click="onAddContentClicked"
       >
         Add content
-      </span>
+      </button>
     </div>
   </div>
 </template>

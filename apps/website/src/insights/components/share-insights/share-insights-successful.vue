@@ -41,7 +41,7 @@
         <!-- Modal body -->
         <div class="px-4 py-6 space-y-3">
           <h3 class="text-frequency text-base font-medium font-sans leading-normal">
-            This page is now live on Arbimon's Projects .
+            This page is now live on Arbimon's Projects.
           </h3>
           <input
             type="text"
