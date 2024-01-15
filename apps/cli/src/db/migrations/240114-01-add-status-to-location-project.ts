@@ -4,7 +4,7 @@ import { type MigrationFn } from 'umzug'
 const TABLE_NAME = 'location_project'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  await params.context.sequelize.query('DROP TYPE "enum_location_project_status"')
+  await params.context.sequelize.query('DROP TYPE IF EXISTS "enum_location_project_status"')
   await params.context.addColumn(TABLE_NAME, 'status', {
       type: DataTypes.ENUM('hidden', 'unlisted', 'listed', 'published'),
       allowNull: false,
