@@ -69,7 +69,7 @@ describe('Local search', async () => {
     // Assert
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body)
-    expect(results).toHaveLength(2)
+    expect(results).toHaveLength(1)
     const project = results.find((p: { id: number }) => p.id === 2345001)
     expect(project).toBeDefined()
     expect(project.name).toBeDefined()

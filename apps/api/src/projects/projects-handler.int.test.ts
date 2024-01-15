@@ -15,10 +15,10 @@ const { LocationProject } = modelRepositoryWithElevatedPermissions
 
 afterEach(async () => {
   const locationProjectIds = [1234001, 1234002]
-  await LocationProject.destroy({ where: { id: { [Op.in]: locationProjectIds } } })
+  await LocationProject.destroy({ where: { id: { [Op.in]: locationProjectIds } }, force: true })
 })
 
-test('GET /projects contains public projects', async () => {
+test('GET /projects contains published projects', async () => {
   // Arrange
   const app = await makeApp(routesProject, { userId })
   const publicProject = makeProject(1234001, 'Public Project 1', 'published')
@@ -32,13 +32,12 @@ test('GET /projects contains public projects', async () => {
 
   // Assert
   expect(response.statusCode).toBe(200)
-
   const results = JSON.parse(response.body)
   const expectedProject = results.find((p: any) => p.slug === publicProject.slug)
   expect(expectedProject).toBeDefined()
 })
 
-test('GET /projects does not contain non-public projects', async () => {
+test('GET /projects does not contain hidden projects', async () => {
   // Arrange
   const app = await makeApp(routesProject, { userId })
   const project = makeProject(1234002, 'Private Project 1', 'hidden')
@@ -52,8 +51,7 @@ test('GET /projects does not contain non-public projects', async () => {
 
   // Assert
   expect(response.statusCode).toBe(200)
-
   const results = JSON.parse(response.body)
   const expectedProject = results.find((p: any) => p.slug === project.slug)
-  expect(expectedProject).not.toBeDefined()
+  expect(expectedProject).toBeUndefined()
 })

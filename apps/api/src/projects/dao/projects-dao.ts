@@ -23,23 +23,6 @@ export const deleteProject = async (id: number): Promise<boolean> => {
  * @deprecated Do not use
  */
 export const getViewableProjects = async (userId: number | undefined): Promise<LocationProjectForUser[]> => {
-  // Temporarily hard-code showcase projects
-  const showcaseSlugs = [
-    'bci-panama-2018',
-    'birds-of-madeira-flooded-habitats',
-    'las-balsas-jocotoco-foundation-project',
-    'puerto-rico',
-    'puerto-rico-island-wide',
-    'rfcx-guardians-madre-de-dios-peru',
-    'weforest-wildlife-corridors',
-    'mangrove-finch-galapagos',
-    'coal-road-hutan-harapan-p4f',
-    'hutan-indo',
-    'cratere-degli-astroni-rns',
-    'tech4nature-mexico',
-    'similajau'
-  ]
-
   const memberProjectIds = await getProjectIdsByUser(userId)
 
   const projects = await models.LocationProject
@@ -57,8 +40,7 @@ export const getViewableProjects = async (userId: number | undefined): Promise<L
 
   return projects.map(p => ({
       ...p,
-      isMyProject: memberProjectIds.includes(p.id),
-      isShowcaseProject: showcaseSlugs.includes(p.slug)
+      isMyProject: memberProjectIds.includes(p.id)
     }))
 }
 
