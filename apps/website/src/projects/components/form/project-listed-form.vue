@@ -1,5 +1,6 @@
 <template>
   <div class="mt-6 flex flex-col gap-y-[17px]">
+    <h5 v-if="!isCreateProject">Test project</h5>
     <p>
       Your project's basic information, such as its name, will be listed and searchable on Arbimon.
       Detailed insights can be shared at your discretion. Review our
@@ -10,6 +11,7 @@
         privacy policies
       </a>
     </p>
+    <span v-if="!isCreateProject" class="text-xs">Make sure the Project’s Insight is hidden to make it a test project.</span>
     <div class="flex flex-row">
       <input
         id="project-settings-listed-project-checkbox"
@@ -41,7 +43,7 @@ import { onMounted, ref, watch } from 'vue'
 
 import IconIInfo from '../icon-i-info.vue'
 
-const props = defineProps<{ isPublic: boolean | undefined, isDisabled?: boolean }>()
+const props = defineProps<{ isPublic: boolean | undefined, isDisabled?: boolean, isCreateProject?: boolean }>()
 
 const emit = defineEmits<{(e: 'emitProjectListed', value: boolean): void}>()
 
