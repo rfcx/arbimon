@@ -281,10 +281,10 @@ const setupMapPopup = () => {
 const getPopup = (datum: MapSiteData): string => {
   const value = props.getPopupHtml(datum, props.dataKey)
   if ((datum?.isExpand) ?? false) {
-    return `<strong>${datum.siteName}${value ? ': ' : ''}</strong>${value} <br>
+    return `<div class="font-sans"><strong>${datum.siteName}${value ? ': ' : ''}</strong>${value} <br>
       <strong>Total recordings${value ? ': ' : ''}</strong>${datum.values['Total recordings']} <br>
-      <strong>Days with recordings${value ? ': ' : ''}</strong>${datum.values['Days with recordings']}`
-  } else return `<strong>${datum.siteName}${value ? ': ' : ''}</strong>${value}`
+      <strong>Days with recordings${value ? ': ' : ''}</strong>${datum.values['Days with recordings']}</div>`
+  } else return `<div class="font-sans"><strong>${datum.siteName}${value ? ': ' : ''}</strong>${value}</div>`
 }
 
 const generateChartNextTick = (rezoom = true) => {
