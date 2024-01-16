@@ -58,6 +58,7 @@ describe('Local search', async () => {
   })
 
   test(`GET ${searchRoute}?type=project returns projects`, async () => {
+    env.OPENSEARCH_ENABLED = 'false'
     // Arrange
     const app = await makeApp(routesSearch)
 
@@ -76,6 +77,23 @@ describe('Local search', async () => {
     expect(project).toBeDefined()
     expect(project.name).toBeDefined()
     expect(project.recordingMinutesCount).toBe(1260)
+  })
+
+  test(`GET ${searchRoute}?type=project&q= will return projects which orders by recording minutes count`, async () => {
+    env.OPENSEARCH_ENABLED = 'false'
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: { type: 'project', q: '' }
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(200)
+    expect(response.headers?.[xSearchTotalCountHeaderName]).toBeDefined()
   })
 })
 
@@ -137,7 +155,7 @@ describe('OpenSearch search', async () => {
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body)
     expect(results).toHaveLength(1)
-    const project = results.find((p: { id: string }) => p.id === '7689921')
+    const project = results.find((p: { id: number }) => p.id === 7689921)
     expect(project).toBeDefined()
     expect(project.name).toBeDefined()
     expect(project.recordingMinutesCount).toBe(1890)
