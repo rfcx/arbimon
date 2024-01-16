@@ -10,7 +10,7 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
 
   const slug = await uniqueSlug(projectPartial.name, async (slug) => await LocationProject.count({ where: { slug }, paranoid: false }).then(x => x === 0))
 
-  const projectDefaults = { latitudeNorth: 0, latitudeSouth: 0, longitudeEast: 0, longitudeWest: 0 }
+  const projectDefaults = { latitudeNorth: 0, latitudeSouth: 0, longitudeEast: 0, longitudeWest: 0, image: 'https://drive.google.com/uc?export=view&id=1l4gjdtf35QWGWiYWhxV6UcyVf9_ZbxxF' }
   const project: Omit<Project, 'id'> = { ...projectDefaults, ...projectPartial, slug, status: 'unlisted', statusUpdatedAt: new Date() }
   const { id } = await LocationProject.create(project)
 
