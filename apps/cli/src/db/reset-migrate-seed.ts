@@ -1,7 +1,8 @@
 import { execSeeders } from '@/db/actions/exec-seeders'
 import { refreshMviews } from '@/db/actions/refresh-mviews'
+import { getOpenSearchClient } from '@/search/opensearch'
 import { updateMasterData } from './_helpers/update-master-data'
-import { dropTables, execMigrations } from './actions'
+import { dropTables, execMigrations, indexOpensearch } from './actions'
 import { getSequelize } from './connections'
 import { defaultSeederPaths } from './seeders/default-seeders'
 
@@ -14,6 +15,7 @@ const main = async (): Promise<void> => {
   try {
     // Setup
     const sequelize1 = getSequelize(verbose)
+    const opensearch = getOpenSearchClient()
     const sequelize2 = getSequelize(verbose) // Seeders uses a different Umzug (which seems to require a fresh Sequelize instance)
 
     // Reset, migrate, seed, refresh mviews
@@ -24,6 +26,7 @@ const main = async (): Promise<void> => {
       await execSeeders(sequelize2, seederPath, verbose)
     }
     await refreshMviews(sequelize2)
+    await indexOpensearch(opensearch, sequelize1)
 
     // Teardown
     await sequelize1.close()
