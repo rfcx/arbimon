@@ -1,38 +1,78 @@
 import { type Client } from '@opensearch-project/opensearch'
 import { type Sequelize } from 'sequelize'
 
+import { analysis } from './analysis'
+import { mappings } from './mappings'
+
+/** check which index is there, delete them, then recreate them and put data */
 export const fullReindex = async (client: Client, sequelize: Sequelize): Promise<void> => {
-  // Create indices if needed
+  // Check for existing indices
   const indices = await client.cat.indices({ format: 'json' }).then(response => response.body) as Array<{ index: string }>
   const requiredIndexes = ['projects', 'organizations']
+
   for (const indexName of requiredIndexes) {
-    if (indices.find(index => index.index === indexName) !== undefined) continue
-    await client.indices.create({ index: indexName })
+    // if a required index is found and existed in prior session. Delete and recreate the index
+    // ignore other index types
+    if (indices.find(index => index.index === indexName) !== undefined) {
+      if (indexName === 'projects') {
+        await client.indices.delete({ index: indexName })
+        await client.indices.create({
+          index: indexName,
+          body: {
+            mappings,
+            settings: {
+              analysis
+            }
+          }
+        })
+
+        continue
+      }
+
+      await client.indices.delete({ index: indexName })
+      await client.indices.create({
+        index: indexName
+      })
+    }
   }
 
   // Index projects
   const sql = `
-    select
-      p.id, 
-      p.name, 
-      p.slug, 
-      p.created_at, 
-      p.updated_at, 
-      p.latitude_north, 
-      p.latitude_south, 
-      p.longitude_east, 
-      p.longitude_west, 
-      pp.summary, 
-      pp.readme, 
-      pm.species_count, 
-      pm.min_date, 
-      pm.max_date, 
-      pm.detection_minutes_count 
-    from location_project p 
-      left join location_project_profile pp on p.id = pp.location_project_id
-      left join location_project_metric pm on p.id = pm.location_project_id
+    select 
+      location_project.id,
+      location_project.id_core,
+      location_project.id_arbimon,
+      location_project.name,
+      location_project.slug,
+      location_project.status,
+      location_project.latitude_north,
+      location_project.latitude_south,
+      location_project.longitude_east,
+      location_project.longitude_west,
+      coalesce(location_project_profile.summary, '') as summary,
+      location_project_profile.date_start,
+      location_project_profile.date_end,
+      coalesce(location_project_profile.objectives, '{}') as objectives,
+      coalesce(location_project_profile.image, '') as image,
+      coalesce(location_project_country.country_codes, '{}') as country_codes,
+      location_project_metric.species_count,
+      location_project_metric.recording_minutes_count,
+      location_project_metric.detection_minutes_count,
+      location_project_metric.min_date,
+      location_project_metric.max_date,
+      location_project_metric.recording_min_date,
+      location_project_metric.recording_max_date,
+      location_project_metric.detection_min_date,
+      location_project_metric.detection_max_date
+    from location_project
+    left join location_project_profile on location_project.id = location_project_profile.location_project_id
+    left join location_project_country on location_project.id = location_project_country.location_project_id
+    left join location_project_metric on location_project.id = location_project_metric.location_project_id
+    where (location_project.status = 'listed' or location_project.status = 'published') and location_project.deleted_at is null
   `
+
   const projects = await sequelize.query(sql, { raw: true }).then(([rows, _]) => rows) as Array<{ id: string }>
+
   for (const project of projects) {
     const { id, ...body } = project
     await client.index({ id, body, index: 'projects', refresh: true })

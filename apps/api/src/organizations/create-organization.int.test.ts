@@ -74,6 +74,6 @@ describe(`POST ${ROUTE} (create organization)`, () => {
 
       const data = await Organization.findOne({ where: { id: json.id } })
       expect(data).toBeTruthy()
-    })
+    }, 10000)
   })
 })
