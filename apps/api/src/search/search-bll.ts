@@ -1,7 +1,7 @@
 import { type SearchResponse, type SearchType } from '@rfcx-bio/common/api-bio/search/search'
 
 import { env } from '~/env'
-import { getProjectsByQuery } from './search-local-dao'
+import { getProjectsByQuery, getTrendingProjects } from './search-local-dao'
 import { getOpensearchProjects } from './search-opensearch-dao'
 
 const localSearchDatabase = async (type: SearchType, query: string, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
