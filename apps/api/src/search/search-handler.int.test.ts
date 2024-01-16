@@ -45,15 +45,17 @@ const { LocationProject, LocationSite, RecordingBySiteHour: RecordingBySiteHourM
 const sequelize = RecordingBySiteHourModel.sequelize as Sequelize
 const opensearch = getOpenSearchClient()
 
+const [p1id, p2id, p3id, p4id, p5id] = [2345001, 2345002, 2345003, 2345004, 2345005]
+
 describe('Local search', async () => {
   beforeAll(async () => {
     env.OPENSEARCH_ENABLED = 'false'
 
-    const p1 = makeProject(2345001, 'Listed khaokho 1', 'listed')
-    const p2 = makeProject(2345002, 'Listed sukhothai 2', 'published')
-    const p3 = makeProject(2345003, 'Listed sukhothai 3', 'published')
-    const p4 = makeProject(2345004, 'Unlisted khaokho 1', 'hidden') // user requested hidden
-    const p5 = makeProject(2345005, 'Unlisted khaokho 2', 'unlisted') // does not meet the criteria for listing
+    const p1 = makeProject(p1id, 'Listed khaokho 1', 'listed')
+    const p2 = makeProject(p2id, 'Listed sukhothai 2', 'published')
+    const p3 = makeProject(p3id, 'Listed sukhothai 3', 'published')
+    const p4 = makeProject(p4id, 'Unlisted khaokho 1', 'hidden') // user requested hidden
+    const p5 = makeProject(p5id, 'Unlisted khaokho 2', 'unlisted') // does not meet the criteria for listing
     await LocationProject.bulkCreate([p1, p2, p3, p4, p5], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
 
     // p1 needs meet the listing critera (recordingsCount > 1000)
@@ -74,14 +76,14 @@ describe('Local search', async () => {
   })
 
   afterAll(async () => {
-    const locationProjectIds = [2345001, 2345002, 2345003]
+    const locationProjectIds = [p1id, p2id, p3id, p4id, p5id]
+    await DetectionBySiteSpeciesHourModel.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
     await RecordingBySiteHourModel.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
     await LocationSite.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
     await LocationProject.destroy({ where: { id: { [Op.in]: locationProjectIds } }, force: true })
   })
 
   test(`GET ${searchRoute}?type=project returns projects`, async () => {
-    env.OPENSEARCH_ENABLED = 'false'
     // Arrange
     const app = await makeApp(routesSearch)
 
@@ -96,14 +98,13 @@ describe('Local search', async () => {
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body)
     expect(results).toHaveLength(1)
-    const project = results.find((p: { id: number }) => p.id === 2345001)
+    const project = results.find((p: { id: number }) => p.id === p1id)
     expect(project).toBeDefined()
     expect(project.name).toBeDefined()
     expect(project.recordingMinutesCount).toBe(1260)
   })
 
   test(`GET ${searchRoute}?type=project&q= will return projects which orders by recording minutes count`, async () => {
-    env.OPENSEARCH_ENABLED = 'false'
     // Arrange
     const app = await makeApp(routesSearch)
 
@@ -111,12 +112,18 @@ describe('Local search', async () => {
     const response = await app.inject({
       method: GET,
       url: searchRoute,
-      query: { type: 'project', q: '' }
+      query: { type: 'project' }
     })
 
     // Assert
     expect(response.statusCode).toBe(200)
     expect(response.headers?.[xSearchTotalCountHeaderName]).toBeDefined()
+    const results = JSON.parse(response.body)
+    const projectsUnderTest = results.filter((p: { id: number }) => [p1id, p2id, p3id, p4id, p5id].includes(p.id))
+    expect(projectsUnderTest).toHaveLength(3)
+    expect(projectsUnderTest[0].id).toBe(p3id) // Published, more species than p2
+    expect(projectsUnderTest[1].id).toBe(p2id) // Published
+    expect(projectsUnderTest[2].id).toBe(p1id) // Listed
   })
 })
 
@@ -158,7 +165,6 @@ describe('OpenSearch search', async () => {
   })
 
   afterAll(async () => {
-    env.OPENSEARCH_ENABLED = 'false'
     await opensearch.delete({ index: 'projects', id: '7689921' })
   })
 
