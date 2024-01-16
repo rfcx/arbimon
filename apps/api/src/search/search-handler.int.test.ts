@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, test } from 'vitest'
 
 import { searchRoute, xSearchTotalCountHeaderName } from '@rfcx-bio/common/api-bio/search/search'
 import { literalizeCountsByMinute } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
-import { type RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
+import { type DetectionBySiteSpeciesHour, type RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 import { makeProject } from '@rfcx-bio/testing/model-builders/project-model-builder'
@@ -29,7 +29,19 @@ function makeRecordingBySiteHour (locationProjectId: number, locationSiteId: num
   }
 }
 
-const { LocationProject, LocationSite, RecordingBySiteHour: RecordingBySiteHourModel } = modelRepositoryWithElevatedPermissions
+function makeDetectionBySiteSpeciesHour (locationProjectId: number, locationSiteId: number, taxonClassId: number, taxonSpeciesId: number, startDate: string, hourOffset: number): DetectionBySiteSpeciesHour {
+  return {
+    timePrecisionHourLocal: dayjs(startDate, 'YYYY-MM-DD').add(hourOffset, 'hour').toDate(),
+    locationProjectId,
+    locationSiteId,
+    taxonClassId,
+    taxonSpeciesId,
+    count: 1,
+    countsByMinute: [[5, 1]]
+  }
+}
+
+const { LocationProject, LocationSite, RecordingBySiteHour: RecordingBySiteHourModel, DetectionBySiteSpeciesHour: DetectionBySiteSpeciesHourModel, TaxonSpecies } = modelRepositoryWithElevatedPermissions
 const sequelize = RecordingBySiteHourModel.sequelize as Sequelize
 const opensearch = getOpenSearchClient()
 
@@ -38,16 +50,27 @@ describe('Local search', async () => {
     env.OPENSEARCH_ENABLED = 'false'
 
     const p1 = makeProject(2345001, 'Listed khaokho 1', 'listed')
-    const p2 = makeProject(2345002, 'Unlisted khaokho 1', 'hidden') // user requested hidden
-    const p3 = makeProject(2345003, 'Unlisted khaokho 2', 'unlisted') // does not meet the criteria for listing
-    await LocationProject.bulkCreate([p1, p2, p3], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+    const p2 = makeProject(2345002, 'Listed sukhothai 2', 'published')
+    const p3 = makeProject(2345003, 'Listed sukhothai 3', 'published')
+    const p4 = makeProject(2345004, 'Unlisted khaokho 1', 'hidden') // user requested hidden
+    const p5 = makeProject(2345005, 'Unlisted khaokho 2', 'unlisted') // does not meet the criteria for listing
+    await LocationProject.bulkCreate([p1, p2, p3, p4, p5], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
 
     // p1 needs meet the listing critera (recordingsCount > 1000)
-    const p1s1 = { id: 23450011, idCore: '23450011', idArbimon: 23450011, name: 'Site 1', locationProjectId: p1.id, latitude: 0, longitude: 0, altitude: 0, countryCode: 'US' }
+    const p1s1 = { id: 23450011, idCore: '23450011', idArbimon: 23450011, name: 'P1 Site 1', locationProjectId: p1.id, latitude: 0, longitude: 0, altitude: 0, countryCode: 'US' }
     await LocationSite.bulkCreate([p1s1])
     const p1s1recordings = zeroToN(20).map(i => literalizeCountsByMinute(makeRecordingBySiteHour(p1.id, p1s1.id, '2023-05-02', i), sequelize))
     await RecordingBySiteHourModel.bulkCreate(p1s1recordings)
+
+    // p3 needs more species than p2
+    const taxonSpecies = await TaxonSpecies.findOne()
+    const p3s1 = { id: 23450031, idCore: '23450031', idArbimon: 23450031, name: 'P3 Site 1', locationProjectId: p3.id, latitude: 0, longitude: 0, altitude: 0, countryCode: 'US' }
+    await LocationSite.bulkCreate([p3s1])
+    const p3s1detections = [literalizeCountsByMinute(makeDetectionBySiteSpeciesHour(p3.id, p3s1.id, taxonSpecies?.taxonClassId ?? 0, taxonSpecies?.id ?? 0, '2023-05-02', 0), sequelize)]
+    await DetectionBySiteSpeciesHourModel.bulkCreate(p3s1detections)
+
     await sequelize.query('REFRESH MATERIALIZED VIEW location_project_recording_metric')
+    await sequelize.query('REFRESH MATERIALIZED VIEW location_project_detection_metric')
   })
 
   afterAll(async () => {
