@@ -143,11 +143,7 @@
               class="btn btn-primary group"
               @click="saveHighlightedSpecies"
             >
-              Continue
-              <icon-custom-arrow-right
-                v-if="!isLoadingPostSpecies"
-                class="ml-2 h-4 w-4 inline text-pitch group-hover:stroke-pitch"
-              />
+              Select species
               <icon-fas-spinner
                 v-if="isLoadingPostSpecies || isLoadingDeleteSpecies"
                 class="ml-2 h-4 w-4 inline text-pitch group-hover:stroke-pitch"
