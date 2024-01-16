@@ -6,8 +6,8 @@ import { type LocationProjectProfile } from '@rfcx-bio/common/dao/types'
 
 import { getProjectMetrics } from '@/dashboard/dashboard-metrics-dao'
 import { getRichnessByTaxon } from '@/dashboard/dashboard-species-data-dao'
-import { getImageUrl } from '@/users//helpers'
 import { getSequelize } from '~/db'
+import { fileUrl } from '~/format-helpers/file-url'
 import { getImageByObjectives } from '../utils/image-by-objective'
 
 const profileDefaults: Omit<LocationProjectProfile, 'locationProjectId'> = {
@@ -47,21 +47,15 @@ export const updateProjectProfile = async (partialProfile: Partial<LocationProje
  */
 export const getProjectInfo = async (locationProjectId: number, fields: ProjectInfoFieldType[]): Promise<ProjectInfoResponse> => {
   const sequelize = getSequelize()
-  const { LocationProject, LocationProjectProfile, LocationProjectCountry, ProjectVersion } = ModelRepository.getInstance(sequelize)
+  const { LocationProject, LocationProjectProfile, LocationProjectCountry } = ModelRepository.getInstance(sequelize)
   const resProject = await LocationProject.findOne({
     where: { id: locationProjectId },
-    attributes: ['name'],
+    attributes: ['name', 'status'],
     raw: true
   })
   const resProfile = await LocationProjectProfile.findOne({
     where: { locationProjectId },
     attributes: ['summary', 'objectives', 'image', 'dateStart', 'dateEnd', 'readme', 'keyResult'],
-    raw: true
-  })
-
-  const version = await ProjectVersion.findOne({
-    where: { locationProjectId },
-    attributes: ['isPublished', 'isPublic'],
     raw: true
   })
 
@@ -90,8 +84,8 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     objectives: resProfile?.objectives ?? [],
     dateStart: resProfile?.dateStart ?? null,
     dateEnd: resProfile?.dateEnd ?? null,
-    isPublished: version?.isPublished ?? false,
-    isPublic: version?.isPublic ?? false
+    isPublished: resProject.status === 'published',
+    isPublic: resProject.status !== 'hidden'
   }
 
   return {
@@ -99,7 +93,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     dateStart: baseProject.dateStart,
     ...(fields.includes('readme') ? { readme: resProfile?.readme ?? '' } : {}),
     ...(fields.includes('keyResult') ? { keyResults: resProfile?.keyResult ?? '' } : {}),
-    ...(fields.includes('image') && resProfile?.image !== undefined ? { image: getImageUrl(resProfile.image) ?? '' } : {}),
+    ...(fields.includes('image') ? { image: fileUrl(resProfile?.image) ?? '' } : {}),
     ...(fields.includes('countryCodes') ? { countryCodes: resCountry?.countryCodes ?? [] } : {}),
     ...(fields.includes('richnessByTaxon') ? { richnessByTaxon } : {}),
     ...(fields.includes('metrics')

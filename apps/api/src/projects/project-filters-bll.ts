@@ -2,7 +2,7 @@ import { type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/pr
 import { type SitesRecCountAndDates } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
-import { getLatestSync, getRecordingCount, getSites, getSitesRecordingCountAndDates, getTaxonClasses, getTimeBounds } from '@/projects/dao/project-filters-dao'
+import { getLatestSync, getSites, getSitesRecordingCountAndDates, getTaxonClasses, getTimeBounds } from '@/projects/dao/project-filters-dao'
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 import { getProjectById } from './dao/projects-dao'
@@ -25,17 +25,6 @@ export const getProjectFilters = async (locationProjectId: number): Promise<Proj
     dateEndInclusiveUtc,
     latestSync
   }
-}
-
-export const getProjectRecordingCount = async (locationProjectId: number): Promise<number> => {
-  const project = await getProjectById(locationProjectId)
-  if (project === undefined) throw BioNotFoundError()
-
-  const [projectRecCount] = await Promise.all([
-    getRecordingCount(locationProjectId)
-  ])
-
-  return projectRecCount
 }
 
 export const getProjectRecordingCountBySite = async (locationProjectId: number): Promise<SitesRecCountAndDates[]> => {

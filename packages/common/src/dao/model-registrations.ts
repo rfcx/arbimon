@@ -17,7 +17,6 @@ import { LocationProjectSpeciesModel, MODEL_LOCATION_PROJECT_SPECIES } from './m
 import { LocationProjectUserRoleModel, MODEL_LOCATION_PROJECT_USER_ROLE } from './models/location-project-user-role-model'
 import { LocationSiteModel, MODEL_LOCATION_SITE } from './models/location-site-model'
 import { MODEL_ORGANIZATION, OrganizationModel } from './models/organization-model'
-import { MODEL_PROJECT_VERSION, ProjectVersionModel } from './models/project-version-model'
 import { MODEL_RECORDING_BY_SITE_HOUR, RecordingBySiteHourModel } from './models/recording-by-site-hour-model'
 import { MODEL_RISK_RATING_IUCN, RiskRatingIucnModel } from './models/risk-rating-iucn-model'
 import { MODEL_SPECIES_IN_PROJECT, SpeciesInProjectModel } from './models/species-in-project-model'
@@ -46,7 +45,6 @@ export const modelRegistrations = {
   [MODEL_LOCATION_PROJECT_USER_ROLE]: [LocationProjectUserRoleModel, {}],
   [MODEL_LOCATION_SITE]: [LocationSiteModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_ORGANIZATION]: [OrganizationModel, { manyToMany: [{ model: MODEL_LOCATION_PROJECT, through: MODEL_LOCATION_PROJECT_ORGANIZATION, foreignKey: undefined }] }],
-  [MODEL_PROJECT_VERSION]: [ProjectVersionModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_RECORDING_BY_SITE_HOUR]: [RecordingBySiteHourModel, { manyToOne: [MODEL_LOCATION_SITE] }],
   [MODEL_RISK_RATING_IUCN]: [RiskRatingIucnModel, {}],
   [MODEL_TAXON_CLASS]: [TaxonClassModel, {}],
@@ -72,7 +70,7 @@ export const modelRegistrations = {
   [MODEL_DASHBOARD_RICHNESS_BY_TAXON]: [DashboardRichnessByTaxonModel],
   [MODEL_DASHBOARD_SPECIES_HIGHLIGHTED]: [DashboardSpeciesHighlightedModel],
   [MODEL_DASHBOARD_SPECIES_THREATENED]: [DashboardSpeciesThreatenedModel],
-  [MODEL_LOCATION_PROJECT_METRIC]: [LocationProjectMetricModel, { manyToOne: [MODEL_LOCATION_PROJECT] }],
+  [MODEL_LOCATION_PROJECT_METRIC]: [LocationProjectMetricModel, { oneToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_LOCATION_PROJECT_COUNTRY]: [LocationProjectCountryModel, { oneToOne: [MODEL_LOCATION_PROJECT] }],
   [MODEL_SPECIES_IN_PROJECT]: [SpeciesInProjectModel]
 } as const

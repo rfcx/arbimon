@@ -2,9 +2,9 @@ import type { Sequelize, Transaction } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { UPDATE_ON_DUPLICATE_RECORDING_BY_SITE_HOUR } from '@rfcx-bio/common/dao/models/recording-by-site-hour-model'
+import { literalIntegerArray2D, reducedAndSortedPairs } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
 import type { RecordingBySiteHour, SyncError } from '@rfcx-bio/common/dao/types'
 
-import { literalIntegerArray2D, reducedAndSortedPairs } from '@/db/seeders/_helpers/sequelize-literal-integer-array-2d'
 import type { RecordingArbimon, RecordingBySiteHourBio, RecordingDeletedArbimon } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
 import { mapRecordingBySiteHourArbimonWithBioFk, transformDeletedRecordingToBio } from '../parsers/parse-recording-by-site-hour-arbimon-to-bio'
 

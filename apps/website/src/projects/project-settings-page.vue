@@ -40,7 +40,7 @@
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-image-form
             :is-disabled="!isUserHasFullAccess"
-            :image="settings?.image"
+            :image="settings?.image !== undefined ? urlWrapper(settings?.image) : undefined"
             @emit-project-image="onEmitProjectImage"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
@@ -55,6 +55,7 @@
             v-if="projectUserPermissionsStore.role === 'owner'"
             :is-deleting="isDeletingProject"
             :is-error="isErrorDeleteProject"
+            :is-success="isSuccessDeleteProject"
             @emit-project-delete="onEmitProjectDelete"
           />
         </div>
@@ -114,6 +115,7 @@ import { useRouter } from 'vue-router'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
+import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
@@ -139,7 +141,7 @@ const selectedProjectId = computed(() => store.selectedProject?.id)
 const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, store.selectedProject?.id ?? -1)
-const { isPending: isDeletingProject, isError: isErrorDeleteProject, mutate: mutateDeleteProject } = useDeleteProject(apiClientBio)
+const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProject } = useDeleteProject(apiClientBio)
 
 const newName = ref('')
 const dateStart = ref<string | null>(null)

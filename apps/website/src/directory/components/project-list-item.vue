@@ -6,7 +6,7 @@
     <div class="w-18 aspect-square h-18">
       <img
         v-if="project.imageUrl"
-        :src="project.imageUrl"
+        :src="urlWrapper(project.imageUrl)"
         class="w-full h-full rounded bg-util-gray-03"
       >
       <div
@@ -48,6 +48,7 @@ import numeral from 'numeral'
 import { computed } from 'vue'
 
 import { getCountryLabel } from '@/_services/country'
+import { urlWrapper } from '@/_services/images/url-wrapper'
 import TextTooltip from '../../projects/components/text-tooltip.vue'
 import { masterObjectiveTypes } from '../../projects/types'
 import type { ProjectProfileWithMetrics } from '../data/types'

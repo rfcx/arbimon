@@ -3,7 +3,6 @@ import { type MigrationFn } from 'umzug'
 
 import { DetectionBySiteSpeciesHourModel, UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR } from '@rfcx-bio/common/dao/models/detection-by-site-species-hour-model'
 import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
-import { ProjectVersionModel } from '@rfcx-bio/common/dao/models/project-version-model'
 import { TaxonClassModel } from '@rfcx-bio/common/dao/models/taxon-class-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 import { type DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
@@ -28,13 +27,6 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
   const siteArbimonToBio: Record<number, number> = Object.fromEntries(sites.map(s => [s.idArbimon, s.id]))
 
   // Save data
-  await ProjectVersionModel(sequelize)
-    .create({
-      locationProjectId: puertoRicoProjectId,
-      isPublished: false,
-      isPublic: false
-    })
-
   const detectionSummaries: DetectionBySiteSpeciesHour[] = rawDetections
     .map(d => ({
       timePrecisionHourLocal: new Date(new Date(d.date).getTime() + d.hour * 60 * 60 * 1000),
@@ -51,8 +43,3 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
       updateOnDuplicate: UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR
     })
 }
-
-/**
- * latest => findOne(...) ~~ SELECT * FROM project_version ORDER BY created_at DESC LIMIT 1
- * most-recent published => findOne(...) ~~ SELECT * FROM project_version WHERE is_published=true ORDER BY created_at DESC LIMIT 1
- */

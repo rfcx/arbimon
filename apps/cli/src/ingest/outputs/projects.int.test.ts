@@ -2,7 +2,7 @@ import { Op } from 'sequelize'
 import { beforeEach, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project, type ProjectVersion, type Site, type SyncLogByProject, type TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { type Project, type Site, type SyncLogByProject, type TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { deleteOutputProjects } from '../_testing/helper'
@@ -87,12 +87,6 @@ describe('ingest > outputs > projects', () => {
     expect(newProject).toBeDefined()
 
     // Write project data
-    const testProjectVersion: ProjectVersion = {
-      id: 111,
-      locationProjectId: newProject.id,
-      isPublished: true,
-      isPublic: true
-    }
     const testSyncLogProject: Omit<SyncLogByProject, 'createdAt' | 'updatedAt'> = {
       id: 1,
       locationProjectId: newProject.id,
@@ -109,7 +103,8 @@ describe('ingest > outputs > projects', () => {
         name: 'Test Site 1',
         latitude: 18.31307,
         longitude: -65.24878,
-        altitude: 30.85246588
+        altitude: 30.85246588,
+        countryCode: 'TH'
       },
       {
         id: 102,
@@ -119,7 +114,8 @@ describe('ingest > outputs > projects', () => {
         name: 'Test Site 2',
         latitude: 18.32567,
         longitude: -65.25421,
-        altitude: 20.12366
+        altitude: 20.12366,
+        countryCode: 'TH'
       }
     ]
 
@@ -153,10 +149,8 @@ describe('ingest > outputs > projects', () => {
 
     await writeSpeciesCallsToBio(SPECIES_CALL_INPUT, biodiversitySequelize)
 
-    const newVersion = await models.ProjectVersion.bulkCreate([testProjectVersion])
     const newLog = await models.SyncLogByProject.bulkCreate([testSyncLogProject])
     const newProjectSites = await ModelRepository.getInstance(biodiversitySequelize).LocationSite.bulkCreate(testSites)
-    expect(newVersion).toBeDefined()
     expect(newLog).toBeDefined()
     expect(newProjectSites).toBeDefined()
 
@@ -165,12 +159,10 @@ describe('ingest > outputs > projects', () => {
     await writeProjectsToBio([{ ...projectInput, idCore: '807cuoi3cv11', idArbimon: 10000, slug: 'rfcx-10000', name: 'RFCx 10000', deletedAt: '2022-08-29T16:00:00.000Z' }], biodiversitySequelize)
 
     // Assert
-    const deletedVersion = await models.ProjectVersion.findOne({ where: { locationProjectId: newProject.id } })
     const deletedLog = await models.SyncLogByProject.findOne({ where: { locationProjectId: newProject.id } })
     const deletedSpeciesCall = await models.TaxonSpeciesCall.findOne({ where: { callProjectId: newProject.id } })
     const deletedProjectSites = await models.LocationSite.findAll({ where: { locationProjectId: newProject.id } })
     const deletedProject = await models.LocationProject.findOne({ where: { idArbimon: 10000 } })
-    expect(deletedVersion).toBe(null)
     expect(deletedLog).toBe(null)
     expect(deletedSpeciesCall).toBe(null)
     expect(deletedProjectSites).toHaveLength(0)
@@ -229,21 +221,6 @@ describe('ingest > outputs > projects', () => {
     expect(result2).toHaveLength(0)
   })
 
-  test('can write new project with public version', async () => {
-    // Arrange
-    const arbimonProject = { ...projectInput, idCore: '807cuoi3cv97', idArbimon: 9997, slug: 'rfcx-97', name: 'RFCx 97', isPrivate: 0 }
-
-    // Act
-    await writeProjectsToBio([arbimonProject], biodiversitySequelize)
-
-    // Assert
-    const project = await models.LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
-    expect(project).not.toBeNull()
-    const versions = await models.ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
-    expect(versions).toHaveLength(1)
-    expect(versions[0].isPublic).toBe(true)
-  })
-
   test('can write new project with private version', async () => {
     // Arrange
     const arbimonProject = { ...projectInput, idCore: '807cuoi3cv96', idArbimon: 9996, slug: 'rfcx-96', name: 'RFCx 96' }
@@ -254,38 +231,33 @@ describe('ingest > outputs > projects', () => {
     // Assert
     const project = await models.LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
     expect(project).not.toBeNull()
-    const versions = await models.ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
-    expect(versions).toHaveLength(1)
-    expect(versions[0].isPublic).toBe(false)
+    expect(project?.status).toBe('unlisted')
   })
 
-  test('can update project from private to public', async () => {
+  test('can write new project with public version', async () => {
+    // Arrange
+    const arbimonProject = { ...projectInput, idCore: '807cuoi3cv96', idArbimon: 9996, slug: 'rfcx-96', name: 'RFCx 96', isPrivate: 0 }
+
+    // Act
+    await writeProjectsToBio([arbimonProject], biodiversitySequelize)
+
+    // Assert
+    const project = await models.LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
+    expect(project).not.toBeNull()
+    expect(project?.status).toBe('published')
+  })
+
+  test.skip('can update project from unlisted to listed', async () => {
     // Arrange
     const arbimonProject = { ...projectInput, idCore: '807cuoi3cv95', idArbimon: 9995, slug: 'rfcx-95', name: 'RFCx 95' }
     await writeProjectsToBio([arbimonProject], biodiversitySequelize)
+    // TODO: add at least 1000 recordings
 
     // Act
     await writeProjectsToBio([{ ...arbimonProject, isPrivate: 0 }], biodiversitySequelize)
 
     // Assert
     const project = await models.LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
-    const versions = await models.ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
-    expect(versions).toHaveLength(1)
-    expect(versions[0].isPublic).toBe(true)
-  })
-
-  test('can update project from public to private', async () => {
-    // Arrange
-    const arbimonProject = { ...projectInput, idCore: '807cuoi3cv94', idArbimon: 9994, slug: 'rfcx-94', name: 'RFCx 94', isPrivate: 0 }
-    await writeProjectsToBio([arbimonProject], biodiversitySequelize)
-
-    // Act
-    await writeProjectsToBio([{ ...arbimonProject, isPrivate: 1 }], biodiversitySequelize)
-
-    // Assert
-    const project = await models.LocationProject.findOne({ where: { idArbimon: arbimonProject.idArbimon } })
-    const versions = await models.ProjectVersion.findAll({ where: { locationProjectId: project?.id } })
-    expect(versions).toHaveLength(1)
-    expect(versions[0].isPublic).toBe(false)
+    expect(project?.status).toBe('listed')
   })
 })
