@@ -11,6 +11,11 @@ const localSearchDatabase = async (type: SearchType, query: string, limit: numbe
       data: []
     }
   }
+
+  if (type === 'project' && query === '') {
+    return await getTrendingProjects(limit, offset)
+  }
+
   return await getProjectsByQuery(query, limit, offset)
 }
 
