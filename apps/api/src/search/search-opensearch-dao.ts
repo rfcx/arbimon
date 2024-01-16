@@ -32,7 +32,7 @@ export const getOpensearchProjects = async (query: string, limit: number, offset
       type: 'project',
       avgLatitude: getAverageCoordinate(hit._source.latitude_north, hit._source.latitude_south),
       avgLongitude: getAverageCoordinate(hit._source.longitude_west, hit._source.longitude_east),
-      id: hit._id,
+      id: Number(hit._id),
       idCore: hit._source.id_core,
       idArbimon: hit._source.id_arbimon,
       name: hit._source.name,
