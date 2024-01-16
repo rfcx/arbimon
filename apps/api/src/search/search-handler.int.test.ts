@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { type Sequelize, Op } from 'sequelize'
 import { afterAll, beforeAll, describe, expect, test } from 'vitest'
 
-import { searchRoute } from '@rfcx-bio/common/api-bio/search/search'
+import { searchRoute, xSearchTotalCountHeaderName } from '@rfcx-bio/common/api-bio/search/search'
 import { literalizeCountsByMinute } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
 import { type RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
@@ -11,6 +11,7 @@ import { makeProject } from '@rfcx-bio/testing/model-builders/project-model-buil
 
 import { GET } from '~/api-helpers/types'
 import { env } from '~/env'
+import { getOpenSearchClient } from '~/opensearch'
 import { routesSearch } from './index'
 
 function zeroToN (n: number): number[] {
@@ -30,6 +31,7 @@ function makeRecordingBySiteHour (locationProjectId: number, locationSiteId: num
 
 const { LocationProject, LocationSite, RecordingBySiteHour: RecordingBySiteHourModel } = modelRepositoryWithElevatedPermissions
 const sequelize = RecordingBySiteHourModel.sequelize as Sequelize
+const opensearch = getOpenSearchClient()
 
 describe('Local search', async () => {
   beforeAll(async () => {
@@ -78,9 +80,45 @@ describe('Local search', async () => {
 })
 
 describe('OpenSearch search', async () => {
-  beforeAll(() => {
+  beforeAll(async () => {
     env.OPENSEARCH_ENABLED = 'true'
-    // TODO populate opensearch
+    const p1 = makeProject(7689921, 'Alton diversity', 'published')
+    await opensearch.index({
+      id: '7689921',
+      index: 'projects',
+      body: {
+        id_core: p1.idCore,
+        id_arbimon: p1.idArbimon,
+        name: p1.name,
+        slug: p1.slug,
+        status: p1.status,
+        latitude_north: p1.latitudeNorth,
+        latitude_south: p1.latitudeSouth,
+        longitude_east: p1.longitudeEast,
+        longitude_west: p1.longitudeWest,
+        summary: '',
+        date_start: null,
+        date_end: null,
+        objectives: [],
+        image: '',
+        country_codes: [],
+        species_count: 18,
+        recording_minutes_count: 1890,
+        detection_minutes_count: 1992,
+        min_date: '2023-01-01T00:00:00.000Z',
+        max_date: '2023-11-25T18:24:59.223Z',
+        recording_min_date: '2023-02-01T00:00:00.000Z',
+        recording_max_date: '2023-11-20T18:24:59.223Z',
+        detection_min_date: '2023-01-01T00:00:00.000Z',
+        detection_max_date: '2023-11-25T18:24:59.223Z'
+      },
+      refresh: true
+    })
+  })
+
+  afterAll(async () => {
+    env.OPENSEARCH_ENABLED = 'false'
+    await opensearch.delete({ index: 'projects', id: '7689921' })
   })
 
   test(`GET ${searchRoute}?type=project returns projects`, async () => {
@@ -91,11 +129,17 @@ describe('OpenSearch search', async () => {
     const response = await app.inject({
       method: GET,
       url: searchRoute,
-      query: { type: 'project', q: 'khaokho' }
+      query: { type: 'project', q: 'Alton' }
     })
 
     // Assert
+    expect(response.headers?.[xSearchTotalCountHeaderName]).toBe(1)
     expect(response.statusCode).toBe(200)
-    // TODO: check response body
+    const results = JSON.parse(response.body)
+    expect(results).toHaveLength(1)
+    const project = results.find((p: { id: string }) => p.id === '7689921')
+    expect(project).toBeDefined()
+    expect(project.name).toBeDefined()
+    expect(project.recordingMinutesCount).toBe(1890)
   })
 })
