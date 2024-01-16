@@ -4,8 +4,8 @@ import { type SearchResponse } from '@rfcx-bio/common/api-bio/search/search'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
 import { getSequelize } from '~/db'
-import { getAverageCoordinate } from './helpers'
 import { fileUrl } from '~/format-helpers/file-url'
+import { getAverageCoordinate } from './helpers'
 
 export const getProjectsByQuery = async (query: string, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
   const sequelize = getSequelize()
@@ -18,6 +18,8 @@ export const getProjectsByQuery = async (query: string, limit: number, offset: n
       },
       status: ['listed', 'published']
     },
+    limit,
+    offset,
     include: [
       {
         model: LocationProjectMetric,

@@ -5,7 +5,7 @@ import { getProjectsByQuery, getTrendingProjects } from './search-local-dao'
 import { getOpensearchProjects } from './search-opensearch-dao'
 
 const localSearchDatabase = async (type: SearchType, query: string, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
-  if (type !== 'project' || query === '') {
+  if (type !== 'project') {
     return {
       total: 0,
       data: []
