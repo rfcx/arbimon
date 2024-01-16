@@ -48,7 +48,7 @@ const props = defineProps<{ isPublic: boolean | undefined, isDisabled?: boolean,
 const emit = defineEmits<{(e: 'emitProjectListed', value: boolean): void}>()
 
 const isPublicProject = ref(props.isPublic)
-const PLACEHOLDER_TEXT = 'Selecting this creates a private test project, which may be periodically archived and become inaccessible. Uncheck for permanent access.'
+const PLACEHOLDER_TEXT = 'Selecting this creates a private' + ' test project, which may be periodically archived and become inaccessible. Uncheck for permanent access.'
 
 const toggleListedProject = () => {
   isPublicProject.value = !isPublicProject.value
