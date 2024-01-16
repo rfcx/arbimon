@@ -68,6 +68,8 @@ export const getTrendingProjects = async (limit: number, offset: number): Promis
     where: {
       status: ['listed', 'published']
     },
+    limit,
+    offset,
     include: [
       {
         model: LocationProjectMetric,
