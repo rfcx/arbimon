@@ -77,7 +77,6 @@ test('a reindex will sync the passed criteria projects over', async () => {
   })
 
   expect(response.body.hits.hits.length).toBe(1)
-  // INFO: https://stackoverflow.com/a/17911698/12386405 if you set the id key on passing it, opensearch rips it off and yank it into `_id` field.
   expect(response.body.hits.hits[0]._id).toBe('2431213')
 })
 
