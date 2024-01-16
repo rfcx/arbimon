@@ -38,7 +38,7 @@ export const getOpensearchProjects = async (query: string, limit: number, offset
       name: hit._source.name,
       slug: hit._source.slug,
       status: hit._source.status,
-      image: fileUrl(hit._source.image),
+      image: fileUrl(hit._source.image) ?? '',
       objectives: hit._source.objectives,
       summary: hit._source.summary,
       speciesCount: hit._source.species_count,
