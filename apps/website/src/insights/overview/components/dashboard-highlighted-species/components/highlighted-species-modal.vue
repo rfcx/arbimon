@@ -6,7 +6,7 @@
     aria-hidden="true"
     class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
   >
-    <div class="relative w-full max-w-3/5 max-h-full">
+    <div class="relative w-full max-w-4/5 max-h-full">
       <div class="relative p-6 bg-white rounded-lg shadow dark:bg-moss">
         <div class="flex flex-col gap-y-4">
           <!-- Modal header -->
@@ -89,7 +89,7 @@
                   v-for="item in speciesForCurrentPage"
                   :key="'specie-highlighted-' + item.slug"
                   :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 h-full md:(flex-row h-21) lg:(flex-row h-21 justify-between) bg-echo hover:(border-frequency cursor-pointer)"
+                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 h-full h-23 md:(flex-row) lg:(flex-row justify-between) bg-echo hover:(border-frequency cursor-pointer)"
                   @click="selectSpecie(item)"
                 >
                   <SpecieCard
@@ -98,6 +98,7 @@
                     :common-name="item.commonName"
                     :photo-url="item.photoUrl"
                     :redirect="false"
+                    :text-black="false"
                   />
                   <div class="self-center">
                     <el-tag
