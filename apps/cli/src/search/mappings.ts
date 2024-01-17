@@ -1,8 +1,5 @@
 export const mappings = {
   properties: {
-    id: {
-      type: 'integer'
-    },
     id_core: {
       type: 'keyword',
       ignore_above: 256
@@ -72,7 +69,7 @@ export const mappings = {
     max_date: {
       type: 'date'
     },
-    recordin_min_date: {
+    recording_min_date: {
       type: 'date'
     },
     recording_max_date: {
