@@ -36,56 +36,68 @@
           aria-hidden="true"
           class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
         >
-          <div class="relative w-full max-w-2/5 max-h-full">
+          <div class="relative w-full max-w-115 max-h-full">
             <div class="relative p-6 bg-white rounded-lg shadow dark:bg-moss">
-              <div class="flex flex-col gap-y-4">
-                <div class="flex items-center justify-between">
-                  <div class="flex flex-col gap-y-3">
-                    <h2>Delete project</h2>
+              <div class="flex flex-col">
+                <div class="flex items-start justify-between">
+                  <div class="rounded-full bg-util-gray-01 p-3">
+                    <icon-fa-trash
+                      class="text-flamingo"
+                    />
                   </div>
                   <button
                     type="button"
                     data-modal-toggle="project-delete-modal"
+                    title="Cancel"
                     @click="closeModal"
                   >
-                    <icon-custom-fi-close-thin class="cursor-pointer" />
+                    <icon-custom-fi-close-thin class="h-6 w-6 cursor-pointer" />
                   </button>
                 </div>
-                <div class="w-full">
-                  Are you sure you want to delete this project?
+                <div class="mt-6 w-full text-cloud">
+                  <h2>Delete project</h2>
+                  <p class="mt-2">
+                    Are you sure you want to delete this project?
+                  </p>
+                  <p>This action cannot be undone</p>
                 </div>
-                <div class="flex flex-row justify-end items-center gap-x-4">
+                <div
+                  v-if="isError"
+                  class="bg-[#F5D1D6] mt-6 flex flex-row items-center p-2 border-l-3 rounded-lg border-l-[#CC1E3D]"
+                >
+                  <icon-custom-alert-triangle class="h-6 w-6 cursor-pointer" />
                   <span
-                    v-if="isError"
-                    class="text-sm text-red-800 dark:text-flamingo"
+                    class="text-sm ml-2 text-util-gray-04 font-medium"
                     role="alert"
                   >
-                    <span class="font-medium">Failed to delete project.</span>
+                    Action failed due to system errors. Please try again.
                   </span>
+                </div>
+                <div class="flex flex-row justify-center items-center mt-8 gap-x-4">
+                  <button
+                    data-modal-hide="species-highlighted-modal"
+                    type="button"
+                    class="btn btn-secondary flex flex-row justify-center px-6 py-3 w-49"
+                    @click="closeModal"
+                  >
+                    <span>Cancel</span>
+                  </button>
                   <button
                     data-modal-target="project-delete-modal"
                     data-modal-toggle="project-delete-modal"
                     type="button"
-                    class="btn btn-danger flex flex-row py-2"
+                    class="btn bg-[#CC1E3D] flex flex-row text-insight justify-center px-6 py-3 w-49"
                     @click="accessToDelete"
                   >
-                    I accept
+                    <span>Delete project</span>
                     <icon-fas-spinner
                       v-if="isDeleting"
-                      class="animate-spin ml-2"
+                      class="animate-spin ml-2 h-6 w-6"
                     />
                     <icon-fa-trash
                       v-else
                       class="ml-2 cursor-pointer"
                     />
-                  </button>
-                  <button
-                    data-modal-hide="species-highlighted-modal"
-                    type="button"
-                    class="btn btn-secondary flex flex-row py-2"
-                    @click="closeModal"
-                  >
-                    Decline
                   </button>
                 </div>
               </div>

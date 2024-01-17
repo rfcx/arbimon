@@ -29,6 +29,7 @@ declare module 'vue' {
     ElTabs: typeof import('element-plus/lib')['ElTabs']
     ElTag: typeof import('element-plus/lib')['ElTag']
     IconCustomAlertCircle: typeof import('~icons/custom-icons/alert-circle')['default']
+    IconCustomAlertTriangle: typeof import('~icons/custom-icons/alert-triangle')['default']
     IconCustomArrowRight: typeof import('~icons/custom-icons/arrow-right')['default']
     IconCustomArrowRightWhite: typeof import('~icons/custom-icons/arrow-right-white')['default']
     IconCustomChevronLeft: typeof import('~icons/custom-icons/chevron-left')['default']
