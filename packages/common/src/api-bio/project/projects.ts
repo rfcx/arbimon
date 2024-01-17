@@ -37,8 +37,6 @@ export type ProjectLight = Pick<Project, 'id' | 'slug' | 'name'> & {
 }
 
 export type ProjectProfileWithMetrics = ProjectLight & Pick<LocationProjectProfile, 'summary' | 'objectives' > & {
-  avgLatitude: number
-  avgLongitude: number
   isPublished: boolean
   noOfRecordings: number
   noOfSpecies: number
