@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { type Sequelize, Op } from 'sequelize'
 import { afterAll, beforeAll, describe, expect, test } from 'vitest'
 
-import { searchRoute, xSearchTotalCountHeaderName } from '@rfcx-bio/common/api-bio/search/search'
+import { SearchQueryProjectRawResponse, SearchResponseProject, searchRoute, xSearchTotalCountHeaderName } from '@rfcx-bio/common/api-bio/search/search'
 import { literalizeCountsByMinute } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
 import { type DetectionBySiteSpeciesHour, type RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
@@ -131,41 +131,142 @@ describe('OpenSearch search', async () => {
   beforeAll(async () => {
     env.OPENSEARCH_ENABLED = 'true'
     const p1 = makeProject(7689921, 'Alton diversity', 'published')
-    await opensearch.index({
-      id: '7689921',
-      index: 'projects',
-      body: {
-        id_core: p1.idCore,
-        id_arbimon: p1.idArbimon,
-        name: p1.name,
-        slug: p1.slug,
-        status: p1.status,
-        latitude_north: p1.latitudeNorth,
-        latitude_south: p1.latitudeSouth,
-        longitude_east: p1.longitudeEast,
-        longitude_west: p1.longitudeWest,
-        summary: '',
-        date_start: null,
-        date_end: null,
-        objectives: [],
-        image: '',
-        country_codes: [],
-        species_count: 18,
-        recording_minutes_count: 1890,
-        detection_minutes_count: 1992,
-        min_date: '2023-01-01T00:00:00.000Z',
-        max_date: '2023-11-25T18:24:59.223Z',
-        recording_min_date: '2023-02-01T00:00:00.000Z',
-        recording_max_date: '2023-11-20T18:24:59.223Z',
-        detection_min_date: '2023-01-01T00:00:00.000Z',
-        detection_max_date: '2023-11-25T18:24:59.223Z'
-      },
-      refresh: true
-    })
+    const p2 = makeProject(7689922, 'Kristiansand diversity', 'published')
+    const p3 = makeProject(7689923, 'Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch diversity', 'published')
+    const p4 = makeProject(7689924, 'Cairo diversity', 'published')
+
+    await Promise.all([
+      await opensearch.index({
+        id: '7689921',
+        index: 'projects',
+        body: {
+          id_core: p1.idCore,
+          id_arbimon: p1.idArbimon,
+          name: p1.name,
+          slug: p1.slug,
+          status: p1.status,
+          latitude_north: p1.latitudeNorth,
+          latitude_south: p1.latitudeSouth,
+          longitude_east: p1.longitudeEast,
+          longitude_west: p1.longitudeWest,
+          summary: '',
+          date_start: null,
+          date_end: null,
+          objectives: [],
+          image: '',
+          country_codes: [],
+          species_count: 18,
+          recording_minutes_count: 1890,
+          detection_minutes_count: 1992,
+          min_date: '2023-01-01T00:00:00.000Z',
+          max_date: '2023-11-25T18:24:59.223Z',
+          recording_min_date: '2023-02-01T00:00:00.000Z',
+          recording_max_date: '2023-11-20T18:24:59.223Z',
+          detection_min_date: '2023-01-01T00:00:00.000Z',
+          detection_max_date: '2023-11-25T18:24:59.223Z'
+        },
+        refresh: true
+      }),
+      await opensearch.index<SearchQueryProjectRawResponse>({
+        id: '7689922',
+        index: 'projects',
+        body: {
+          id_core: p2.idCore,
+          id_arbimon: p2.idArbimon,
+          name: p2.name,
+          slug: p2.slug,
+          status: p2.status,
+          latitude_north: p2.latitudeNorth,
+          latitude_south: p2.latitudeSouth,
+          longitude_east: p2.longitudeEast,
+          longitude_west: p2.longitudeWest,
+          summary: 'Filled with such diverse terrain, this place is a bliss for all species',
+          date_start: null,
+          date_end: null,
+          objectives: ['impact-human'],
+          image: '',
+          country_codes: ['SE', 'NO', 'DK'],
+          species_count: 18,
+          recording_minutes_count: 4433,
+          detection_minutes_count: 3843,
+          min_date: '2023-01-01T00:00:00.000Z',
+          max_date: '2023-11-25T18:24:59.223Z',
+          recording_min_date: '2023-02-01T00:00:00.000Z',
+          recording_max_date: '2023-11-20T18:24:59.223Z',
+          detection_min_date: '2023-01-01T00:00:00.000Z',
+          detection_max_date: '2023-11-25T18:24:59.223Z'
+        }
+      }),
+      await opensearch.index({
+        id: '7689923',
+        index: 'projects',
+        body: {
+          id_core: p3.idCore,
+          id_arbimon: p3.idArbimon,
+          name: p3.name,
+          slug: p3.slug,
+          status: p3.status,
+          latitude_north: p3.latitudeNorth,
+          latitude_south: p3.latitudeSouth,
+          longitude_east: p3.longitudeEast,
+          longitude_west: p3.longitudeWest,
+          summary: 'What could the longest town name of all England could have in their forest???',
+          date_start: null,
+          date_end: null,
+          objectives: ['bio-baseline', 'monitor-species'],
+          image: '',
+          country_codes: ['GB'],
+          species_count: 12,
+          recording_minutes_count: 1213,
+          detection_minutes_count: 2233,
+          min_date: '2022-08-12T00:00:00.000Z',
+          max_date: '2023-12-22T00:33:33.594Z',
+          recording_min_date: '2022-08-12T00:00:00.000Z',
+          recording_max_date: '2023-12-22T00:33:33.594Z',
+          detection_min_date: '2023-08-14T12:44:39.984Z',
+          detection_max_date: '2023-11-30T11:12:14.334Z'
+        }
+      }),
+      await opensearch.index({
+        id: '7689924',
+        index: 'projects',
+        body: {
+          id_core: p4.idCore,
+          id_arbimon: p4.idArbimon,
+          name: p4.name,
+          slug: p4.slug,
+          status: p4.status,
+          latitude_north: p4.latitudeNorth,
+          latitude_south: p4.latitudeSouth,
+          longitude_east: p4.longitudeEast,
+          longitude_west: p4.longitudeWest,
+          summary: 'a cool Cairo biodviersity project to help all the travellers',
+          date_start: null,
+          date_end: null,
+          objectives: ['Helping camels'],
+          image: '',
+          country_codes: ['EG'],
+          species_count: 12,
+          recording_minutes_count: 1213,
+          detection_minutes_count: 2233,
+          min_date: '2022-08-12T00:00:00.000Z',
+          max_date: '2023-12-22T00:33:33.594Z',
+          recording_min_date: '2022-08-12T00:00:00.000Z',
+          recording_max_date: '2023-12-22T00:33:33.594Z',
+          detection_min_date: '2023-08-14T12:44:39.984Z',
+          detection_max_date: '2023-11-30T11:12:14.334Z'
+        }
+      })
+    ])
   })
 
   afterAll(async () => {
-    await opensearch.delete({ index: 'projects', id: '7689921' })
+    await Promise.all([
+      await opensearch.delete({ index: 'projects', id: '7689921' }),
+      await opensearch.delete({ index: 'projects', id: '7689922' }),
+      await opensearch.delete({ index: 'projects', id: '7689923' }),
+      await opensearch.delete({ index: 'projects', id: '7689924' })
+    ])
   })
 
   test(`GET ${searchRoute}?type=project returns projects`, async () => {
@@ -188,5 +289,84 @@ describe('OpenSearch search', async () => {
     expect(project).toBeDefined()
     expect(project.name).toBeDefined()
     expect(project.recordingMinutesCount).toBe(1890)
+  })
+
+  test.todo('opensearch can search for projects based on their objective alias', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+    console.info(await opensearch.get({ index: 'projects', id: '7689922' }))
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: 'Evaluate human impact'
+      }
+    })
+
+    console.info(response.body)
+
+    // Assert
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    expect(results.find(r => r.id === 7689922)).toBeDefined()
+  })
+
+  test.todo('opensearch can search for custom objectives', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: 'Helping camels'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    expect(results.find(r => r.id === 7689924)).toBeDefined()
+  })
+
+  test.todo('opensearch can search for country name alias', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: 'Sweden'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    expect(results.find(r => r.id === 7689922)).toBeDefined()
+  })
+  test.todo('opensearch can search based on text inside summary field', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: 'Cairo'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    expect(results.find(r => r.id === 7689924)).toBeDefined()
   })
 })
