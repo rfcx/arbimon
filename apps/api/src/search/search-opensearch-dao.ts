@@ -20,7 +20,8 @@ export const getOpensearchProjects = async (query: string, limit: number, offset
             'name._2gram',
             'name._3gram',
             'objectives',
-            'country_codes'
+            'country_codes',
+            'summary'
           ]
         }
       }
