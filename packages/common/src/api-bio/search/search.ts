@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
-import { type LocationProjectCountry, type LocationProjectMetric, type LocationProjectProfile, type Organization, type OrganizationType, type Project, type ProjectStatus } from '@/dao/types'
+import { type LocationProjectCountry, type LocationProjectMetric, type LocationProjectProfile, type Organization, type OrganizationType, type Project, type ProjectStatus } from '../../dao/types'
 
 export const SEARCH_TYPE = ['project', 'organization'] as const
 export type SearchType = typeof SEARCH_TYPE[number]
@@ -43,7 +43,7 @@ export interface RawElasticSearchResponseBody<T> {
 // Nulls have to be kept because that's how they're synced to.
 // This is so bad since elasticsearch client 7.10's type system is not yet finished :(
 export interface SearchQueryProjectRawResponse {
-  _index: 'location_project'
+  _index: 'projects'
   _type: string
   _id: string
   _score: number
@@ -83,7 +83,7 @@ export interface SearchQueryProjectRawResponse {
 }
 
 export interface SearchQueryOrganizationRawResponse {
-  _index: 'location_project'
+  _index: 'organizations'
   _type: string
   _id: string
   _score: number

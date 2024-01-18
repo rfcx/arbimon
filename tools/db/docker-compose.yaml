@@ -17,5 +17,24 @@ services:
       - initialBuckets=bucket
     ports:
       - "9090:9090"
+  search:
+    image: opensearchproject/opensearch:2.11.0
+    environment:
+      discovery.type: single-node
+      plugins.security.disabled: true
+      bootstrap.memory_lock: true
+    restart: unless-stopped
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "9200:9200"
+    volumes:
+      - data-search:/usr/share/opensearch/data
 volumes:
   data-timescaledb:
+  data-search:
