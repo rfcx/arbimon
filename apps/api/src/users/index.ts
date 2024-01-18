@@ -1,4 +1,4 @@
-import { organizationsListRoute, userProfileRoute } from '@rfcx-bio/common/api-bio/users/profile'
+import { organizationsListRoute, userProfileRoute, usersRoute } from '@rfcx-bio/common/api-bio/users/profile'
 import { userProfileImageRoute } from '@rfcx-bio/common/api-bio/users/profile-image'
 
 import { requireAuthorized } from '@/_hooks/require-authenticated'
@@ -6,6 +6,7 @@ import { type RouteRegistration, GET, PATCH } from '../_services/api-helpers/typ
 import { organizationsListHandler } from './organizations-handler'
 import { patchUserProfileHandler, userProfileHandler } from './user-profile-handler'
 import { getUserProfileImageHandler, patchUserProfileImageHandler } from './user-profile-image-handler'
+import { usersHandler } from './users-handler'
 
 export const routesUserProfile: RouteRegistration[] = [
   {
@@ -31,6 +32,12 @@ export const routesUserProfile: RouteRegistration[] = [
     url: userProfileImageRoute,
     preHandler: [requireAuthorized],
     handler: patchUserProfileImageHandler
+  },
+  {
+    method: GET,
+    url: usersRoute,
+    preHandler: [requireAuthorized],
+    handler: usersHandler
   },
   // TODO: Definitely doesn't belong under `/me/organizations` if it gets all organizations
   // Consider moving endpoint to `/organizations`

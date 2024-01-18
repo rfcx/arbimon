@@ -1,3 +1,5 @@
+import { type AttributeTypes, attributes } from '../type-helpers'
+
 export interface UserProfile {
   id: number
   email: string // idCore + idArbimon
@@ -9,3 +11,9 @@ export interface UserProfile {
   createdAt?: Date
   updatedAt?: Date
 }
+
+export const ATTRIBUTES_USER = attributes<UserProfile>()({
+  light: ['id', 'email', 'firstName', 'lastName', 'image']
+})
+
+export type UserTypes = AttributeTypes<UserProfile, typeof ATTRIBUTES_USER>
