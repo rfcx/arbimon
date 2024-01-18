@@ -38,10 +38,11 @@ export interface RawElasticSearchResponseBody<T> {
   }
 }
 
-// INFO:
-// These 2 interfaces has to be kept in sync with `./apps/pgsync/src/schema.json`
-// Nulls have to be kept because that's how they're synced to.
-// This is so bad since elasticsearch client 7.10's type system is not yet finished :(
+// INFO: This type has to be kept because opensearch does not have full typescript support.
+// So to keep everything intact and not scream for potentially null references. This is needed.
+// There has been a proposal for recreating a typescript-first opensearch client.
+// See `https://github.com/opensearch-project/opensearch-js/issues/444`
+// but seems like the author stopped working on it.
 export interface SearchQueryProjectRawResponse {
   _index: 'projects'
   _type: string
