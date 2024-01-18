@@ -13,7 +13,7 @@
           <div class="flex items-center justify-between">
             <div class="flex flex-col gap-y-3">
               <h2>Highlighted species</h2>
-              <h6>
+              <h6 class="text-util-gray-01">
                 Select up to five species to highlight in this project.
               </h6>
             </div>
@@ -29,7 +29,7 @@
             v-model="searchKeyword"
             placeholder="Search species"
             size="large"
-            class="bg-mock"
+            class="bg-mock sm:w-70"
           >
             <template #prefix>
               <div class="inline-flex items-center">
@@ -37,11 +37,11 @@
               </div>
             </template>
           </el-input>
-          <div class="flex flex-row items-center gap-x-2">
+          <div class="grid xl:grid-cols-3 items-center gap-x-2 my-1">
             <button
               id="dropdownButton"
               data-dropdown-toggle="dropdown"
-              class="bg-echo text-frequency text-xs rounded-full flex flex-row items-center py-1 px-2"
+              class="bg-echo text-frequency w-30 text-xs rounded-full flex col-span-2 flex-row items-center py-1 px-2"
               type="button"
             >
               IUCN status
@@ -76,6 +76,9 @@
                   </el-tag>
                 </li>
               </ul>
+            </div>
+            <div class="xl:grid col-span-1 flex-row hidden ml-2 font-medium">
+              <h4>Selected species</h4>
             </div>
           </div>
           <!-- Modal body -->
