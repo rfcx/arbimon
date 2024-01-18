@@ -27,6 +27,21 @@
             </router-link>
           </div>
           <div class="my-4 border-t-1 border-util-gray-03" />
+          <div
+            v-if="showSidebar"
+            class="px-4"
+          >
+            <p class="text-xs text-util-gray-02 font-medium">
+              Project name
+            </p>
+            <p class="text-sm text-util-gray-01 mt-2 font-normal text-wrap">
+              {{ store.selectedProject?.name }}
+            </p>
+          </div>
+          <div
+            v-if="showSidebar"
+            class="my-4 border-t-1 border-util-gray-03"
+          />
           <ul class="px-2 flex flex-col gap-y-3 border-gray-200 dark:border-gray-700">
             <li
               v-for="item in items"
