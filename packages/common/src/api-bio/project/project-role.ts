@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
-import { type ProjectRole } from '@/roles'
+import { type ProjectRole } from '../../roles'
 import { PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 
 // Route
