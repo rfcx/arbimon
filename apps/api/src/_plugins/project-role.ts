@@ -3,7 +3,7 @@ import fp from 'fastify-plugin'
 
 import { type ProjectRole, getRoleById } from '@rfcx-bio/common/roles'
 
-import { getRoleIdByProjectAndUser } from '@/projects/dao/get-project-members-dao'
+import { getRoleIdByProjectAndUser } from '@/projects/dao/project-member-dao'
 import { getProjectById } from '@/projects/dao/projects-dao'
 
 const plugin: FastifyPluginCallback = (instance, _options, done) => {

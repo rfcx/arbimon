@@ -1,13 +1,23 @@
 import { type AxiosInstance } from 'axios'
 
-import { type LocationProjectUserRole } from '../../dao/types'
+import { type LocationProjectUserRole, type UserProfile } from '../../dao/types'
 import { type ProjectRouteParamsSerialized } from '../_helpers'
 
 // Request type
-export type GetProjectMembersParams = ProjectRouteParamsSerialized
+export type ProjectMembersParams = ProjectRouteParamsSerialized
 
 // Response type
-export type GetProjectMembersResponse = Array<Omit<LocationProjectUserRole, 'createdAt' | 'updatedAt' | 'ranking'> & { email: string }>
+export type ProjectMember = Omit<LocationProjectUserRole, 'createdAt' | 'updatedAt' | 'ranking'> & Pick<UserProfile, 'email' | 'firstName' | 'lastName' | 'image'>
+export type GetProjectMembersResponse = ProjectMember[]
+
+export interface DeleteProjectMemberResponse {
+  message: string
+}
+
+export interface ProjectMemberResponseBody {
+  userId: number
+  roleId?: number
+}
 
 // Route
 export const getProjectMembersRoute = '/projects/:projectId/users'
@@ -17,3 +27,6 @@ export const apiBioGetProjectMembers = async (apiClient: AxiosInstance, location
   const response = await apiClient.get(`/projects/${locationProjectId}/users`)
   return response.data
 }
+
+export const apiBioDeleteProjectMember = async (apiClient: AxiosInstance, locationProjectId: number, payload: ProjectMemberResponseBody): Promise<DeleteProjectMemberResponse> =>
+  await apiClient.delete(`/projects/${locationProjectId}/users-delete`, { data: payload }).then(res => res.data)
