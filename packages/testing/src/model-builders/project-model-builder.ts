@@ -22,8 +22,8 @@ export const makeIndexRequest = (
   project: Project,
   waitForRefresh: boolean | 'wait_for',
   summary = '',
-  objectives?: string[] = [],
-  countryCodes?: string[] = []
+  objectives: string[] = [],
+  countryCodes: string[] = []
 ): { id: string, index: string, body: SearchQueryProjectRawResponse['_source'], refresh: boolean | 'wait_for' } => {
   return {
     id: project.id.toString(),
