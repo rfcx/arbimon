@@ -186,7 +186,7 @@ describe('OpenSearch search', async () => {
         detection_min_date: '2023-01-01T00:00:00.000Z',
         detection_max_date: '2023-11-25T18:24:59.223Z'
       },
-      refresh: true
+      refresh: 'wait_for'
     })
 
     await opensearch.index<SearchQueryProjectRawResponse>({
@@ -218,7 +218,7 @@ describe('OpenSearch search', async () => {
         detection_min_date: '2023-01-01T00:00:00.000Z',
         detection_max_date: '2023-11-25T18:24:59.223Z'
       },
-      refresh: true
+      refresh: 'wait_for'
     })
 
     await opensearch.index({
@@ -250,7 +250,7 @@ describe('OpenSearch search', async () => {
         detection_min_date: '2023-08-14T12:44:39.984Z',
         detection_max_date: '2023-11-30T11:12:14.334Z'
       },
-      refresh: true
+      refresh: 'wait_for'
     })
 
     await opensearch.index({
