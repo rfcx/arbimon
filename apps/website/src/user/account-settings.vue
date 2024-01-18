@@ -237,6 +237,7 @@ const uploadedPhotoData: Ref<Record<string, string>> = ref({
 })
 const searchDropdown = ref() as Ref<Dropdown>
 const notFoundDropdown = ref() as Ref<Dropdown>
+const createNewOrganizationForm = ref() as Ref<Dropdown>
 const dropdownStatus = ref<'idle' | 'search' | 'create-org'>('idle')
 const organizationSearchInput = ref<HTMLDivElement | null>(null)
 const organizationSearchResultContainer = ref<HTMLDivElement | null>(null)
@@ -266,6 +267,7 @@ onMounted(() => {
   email.value = store.user?.email ?? ''
   searchDropdown.value = new Dropdown(organizationSearchResultContainer.value, organizationSearchInput.value, dropdownOptions)
   notFoundDropdown.value = new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, dropdownOptions)
+  createNewOrganizationForm.value = new Dropdown(createNewOrganizationFormContainer.value, organizationSearchInput.value, dropdownOptions)
 })
 
 watch(profileData, () => {
@@ -320,11 +322,13 @@ const hideNotFoundContainer = async (): Promise<void> => {
 }
 
 const organizationSearchInputChanged = async () => {
+  createNewOrganizationForm.value.hide()
   dropdownStatus.value = 'search'
   await refetchOrganizationsSearch()
   if (orgsSearchResult.value && orgsSearchResult.value.length === 0) {
     showNotFoundContainer()
   } else {
+    showNotFoundContainer()
     hideNotFoundContainer()
     searchDropdown.value.show()
   }
@@ -362,7 +366,8 @@ const onAddNewOrganizationFromSearch = async (id: number): Promise<void> => {
 
 const openCreateNewOrganizationForm = async (): Promise<void> => {
   dropdownStatus.value = 'create-org'
-  new Dropdown(createNewOrganizationFormContainer.value, organizationSearchInput.value, dropdownOptions).show()
+  notFoundDropdown.value.hide()
+  createNewOrganizationForm.value.show()
 }
 
 const createNewOrganization = (): void => {
