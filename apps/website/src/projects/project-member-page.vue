@@ -172,12 +172,13 @@ import { type AxiosInstance } from 'axios'
 import { type DropdownOptions, Dropdown, initTooltips } from 'flowbite'
 import { type Ref, computed, inject, onMounted, ref } from 'vue'
 
+import type { UserTypes } from '@rfcx-bio/common/dao/types'
+
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 import { useDeleteProjectMember, useGetProjectMembers, useSearchUsers } from './_composables/use-project-member'
 import ProjectMember from './components/project-member.vue'
 import ProjectUserSearch from './components/project-user-search.vue'
-import type { UserType } from './types'
 
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
@@ -295,7 +296,7 @@ const inviteNewUser = (): void => {
   // TODO: 1. add a new user 2. refetch data
 }
 
-const onEmitSelectedUser = (user: UserType):void => {
+const onEmitSelectedUser = (user: UserTypes['light']):void => {
   userSearchValue.value = user.email
   userToAdd.value.firstName = user.firstName
   userToAdd.value.lastName = user.lastName
