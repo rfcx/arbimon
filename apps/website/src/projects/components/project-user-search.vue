@@ -21,8 +21,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { UserType } from '../types'
+import type { UserTypes } from '@rfcx-bio/common/dao/types'
 
-defineProps<{user: UserType}>()
-defineEmits<{(e: 'emitSelectedUser', user: UserType): void}>()
+defineProps<{user: UserTypes['light']}>()
+defineEmits<{(e: 'emitSelectedUser', user: UserTypes['light']): void}>()
 </script>
