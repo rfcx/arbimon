@@ -31,8 +31,8 @@ export const mappings = {
       type: 'float'
     },
     summary: {
-      type: 'keyword',
-      ignore_above: 256
+      type: 'text',
+      analyzer: 'simple'
     },
     date_start: {
       type: 'date'
