@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { type Sequelize, Op } from 'sequelize'
 import { afterAll, beforeAll, describe, expect, test } from 'vitest'
 
-import { SearchQueryProjectRawResponse, SearchResponseProject, searchRoute, xSearchTotalCountHeaderName } from '@rfcx-bio/common/api-bio/search/search'
+import { type SearchQueryProjectRawResponse, type SearchResponseProject, searchRoute, xSearchTotalCountHeaderName } from '@rfcx-bio/common/api-bio/search/search'
 import { literalizeCountsByMinute } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
 import { type DetectionBySiteSpeciesHour, type RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
