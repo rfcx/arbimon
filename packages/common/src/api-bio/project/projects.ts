@@ -21,7 +21,6 @@ export type LocationProjectForUser =
   LocationProjectTypes['light'] &
   {
     isMyProject: boolean
-    isShowcaseProject: boolean
   }
 
 export type LocationProjectWithInfo = LocationProjectTypes['light'] &
@@ -30,21 +29,14 @@ export type LocationProjectWithInfo = LocationProjectTypes['light'] &
   objectives: string[]
   countries: string[]
   image: string
-  isPublished: boolean
 }
 
 export type ProjectLight = Pick<Project, 'id' | 'slug' | 'name'> & {
   avgLatitude: number
   avgLongitude: number
-  isHighlighted: boolean
-  isMock: boolean // TODO: remove this
 }
 
 export type ProjectProfileWithMetrics = ProjectLight & Pick<LocationProjectProfile, 'summary' | 'objectives' > & {
-  avgLatitude: number
-  avgLongitude: number
-  isHighlighted: boolean
-  isMock: boolean // TODO: remove this
   isPublished: boolean
   noOfRecordings: number
   noOfSpecies: number

@@ -8,10 +8,10 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
   const sequelize = getSequelize()
   const { LocationProject } = ModelRepository.getInstance(sequelize)
 
-  const slug = await uniqueSlug(projectPartial.name, async (slug) => await LocationProject.count({ where: { slug } }).then(x => x === 0))
+  const slug = await uniqueSlug(projectPartial.name, async (slug) => await LocationProject.count({ where: { slug }, paranoid: false }).then(x => x === 0))
 
   const projectDefaults = { latitudeNorth: 0, latitudeSouth: 0, longitudeEast: 0, longitudeWest: 0 }
-  const project = { ...projectDefaults, ...projectPartial, slug }
+  const project: Omit<Project, 'id'> = { ...projectDefaults, ...projectPartial, slug, status: 'unlisted', statusUpdatedAt: new Date() }
   const { id } = await LocationProject.create(project)
 
   return { id, slug }

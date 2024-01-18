@@ -18,5 +18,28 @@ services:
       - initialBuckets=bucket
     ports:
       - "9092:9090"
+  search-test:
+    image: opensearchproject/opensearch:2.11.0
+    environment:
+      discovery.type: single-node
+      plugins.security.disabled: true
+      bootstrap.memory_lock: true
+    # healthcheck:
+    #   interval: 10s
+    #   retries: 80
+    #   test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:9200/
+    restart: unless-stopped
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "9202:9200"
+    volumes:
+      - data-search-test:/usr/share/opensearch/data
 volumes:
   data-timescaledb-test:
+  data-search-test:

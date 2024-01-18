@@ -81,10 +81,10 @@ import { initModals } from 'flowbite'
 import { type LngLatBoundsLike } from 'mapbox-gl'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 
-import { getApiClient } from '@rfcx-bio/utils/api'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { apiClientArbimonLegacyKey } from '@/globals'
+import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
+import { useGetDashboardMetrics } from '@/insights/overview/composables/use-get-dashboard-metrics'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
@@ -95,11 +95,9 @@ import { useProjectUserPermissionsStore, useStore } from '~/store'
 import { useAedJobCount, useClusteringJobCount, useClusteringSpeciesDetected } from './_composables/use-aed-count'
 import { usePlaylistCount } from './_composables/use-playlist-count'
 import { usePmSpeciesDetected, usePmTemplateCount } from './_composables/use-pm-count'
-import { useBioProjectSitesRecordingCount, useBioRecordingCount } from './_composables/use-recording-count'
+import { useBioProjectSitesRecordingCount } from './_composables/use-recording-count'
 import { useRfmJobCount, useRfmSpeciesDetected } from './_composables/use-rfm-count'
-import { useSiteCount } from './_composables/use-site-count'
 import { useSoundscapeCount } from './_composables/use-soundscape-count'
-import { useSpeciesCount } from './_composables/use-species-count'
 import CreateAnalysis from './components/create-analysis.vue'
 import DashboardAnalyses from './components/dashboard-analyses.vue'
 import DashboardOverview from './components/dashboard-overview.vue'
@@ -110,8 +108,8 @@ const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const selectedProjectSlug = computed(() => store.selectedProject?.slug)
 
-const apiClientBio = getApiClient(import.meta.env.VITE_API_BASE_URL)
-const { isLoading: isLoadingRecCountBio, data: projectRecCount } = useBioRecordingCount(apiClientBio, selectedProjectId)
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 const { isLoading: isLoadingSitesRecCountBio, data: projectSitesRecCount } = useBioProjectSitesRecordingCount(apiClientBio, selectedProjectId)
 
 const BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
@@ -124,8 +122,6 @@ const tabHeight = 360
 
 // External data
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
-const { isLoading: isLoadingSiteCount, isError: isErrorSiteCount, data: siteCount } = useSiteCount(apiClientArbimon, selectedProjectSlug)
-const { isLoading: isLoadingSpeciesCount, data: speciesCount } = useSpeciesCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingPlaylistCount, data: playlistCount } = usePlaylistCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingRFMCount, data: rfmCount } = useRfmJobCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingSpDetected, data: rfmSpDetected } = useRfmSpeciesDetected(apiClientArbimon, selectedProjectSlug)
@@ -137,17 +133,17 @@ const { isLoading: isLoadingPmtCount, data: pmSpeciesCount } = usePmSpeciesDetec
 const { isLoading: isLoadingPmTemplateCount, data: pmTemplateCount } = usePmTemplateCount(apiClientArbimon, selectedProjectSlug)
 
 const stats = computed(() => [
-  { value: 'site', title: 'Sites created', description: 'Number of sites with recordings', count: isErrorSiteCount.value ? 0 : siteCount.value, isLoading: isLoadingSiteCount.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
-  { value: 'recording', title: 'Recordings', description: 'Total minutes of recordings across sites', count: projectRecCount.value, isLoading: isLoadingRecCountBio.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/recordings` },
+  { value: 'site', title: 'Sites created', description: 'Number of sites with recordings', count: isErrorMetrics.value ? 0 : metrics.value?.totalSites, isLoading: isLoadingMetrics.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
+  { value: 'recording', title: 'Recordings', description: 'Total minutes of recordings across sites', count: metrics.value?.totalRecordings ?? 0, isLoading: isLoadingMetrics.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/recordings` },
   { value: 'playlist', title: 'Playlists created', description: 'Number of playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` },
-  { value: 'species', title: 'Species detected', description: 'Number of species detected', count: speciesCount.value, isLoading: isLoadingSpeciesCount.value, label: 'Add new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` }
+  { value: 'species', title: 'Species detected', description: 'Number of species detected', count: metrics.value?.totalSpecies ?? 0, isLoading: isLoadingMetrics.value, label: 'Add new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` }
 ])
 
 const analyses = computed(() => [
-  { value: 'pm', title: 'Pattern Matching', iconName: 'fi-pm', count: pmSpeciesCount.value, isLoading: isLoadingPmtCount.value || isLoadingPmTemplateCount.value, label: 'Number of templates', speciesTitle: 'Number of species analyzed', speciesDetected: pmTemplateCount.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching` },
-  { value: 'soundscapes', title: 'Soundscapes', iconName: 'fi-soundscape', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Number of soundscapes', link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/soundscapes` },
-  { value: 'aed', title: 'AED & Clustering', iconName: 'fi-aed', count: (aedJobCount.value != null) ? aedJobCount.value : 0 + ((clusteringJobCount.value != null) ? clusteringJobCount.value : 0), isLoading: isLoadingAedJobCount.value || isLoadingClusteringJobCount.value || isLoadingClusteringSpDetected.value, label: 'Number of jobs created', speciesTitle: 'Number of species detected', speciesDetected: clusteringSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` },
-  { value: 'rfm', title: 'Random Forest Models', iconName: 'fi-rfm', count: rfmCount.value, isLoading: isLoadingRFMCount.value || isLoadingSpDetected.value, label: 'Number of models created', speciesTitle: 'Number of species analyzed', speciesDetected: rfmSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` }
+  { value: 'pm', title: 'Pattern Matching', iconName: 'fi-pm', count: pmSpeciesCount.value, isLoading: isLoadingPmtCount.value || isLoadingPmTemplateCount.value, label: 'Templates', speciesTitle: 'Species analyzed', speciesDetected: pmTemplateCount.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching` },
+  { value: 'soundscapes', title: 'Soundscapes', iconName: 'fi-soundscape', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Soundscapes completed', link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/soundscapes` },
+  { value: 'aed', title: 'AED & Clustering', iconName: 'fi-aed', count: (aedJobCount.value != null) ? aedJobCount.value : 0 + ((clusteringJobCount.value != null) ? clusteringJobCount.value : 0), isLoading: isLoadingAedJobCount.value || isLoadingClusteringJobCount.value || isLoadingClusteringSpDetected.value, label: 'Jobs completed', speciesTitle: 'Species detected', speciesDetected: clusteringSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` },
+  { value: 'rfm', title: 'Random Forest Models', iconName: 'fi-rfm', count: rfmCount.value, isLoading: isLoadingRFMCount.value || isLoadingSpDetected.value, label: 'Models completed', speciesTitle: 'Species analyzed', speciesDetected: rfmSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` }
 ])
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`

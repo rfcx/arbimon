@@ -1,11 +1,25 @@
+import { type WhereValue, Op } from 'sequelize'
+
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type OrganizationTypes, type UserProfile } from '@rfcx-bio/common/dao/types'
+import { type OrganizationTypes, type UserProfile, type UserTypes, ATTRIBUTES_USER } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 
 const sequelize = getSequelize()
 const { UserProfile: UserProfileModel } = ModelRepository.getInstance(sequelize)
+
+export const query = async (filters: { emailLike?: string }, options?: { limit?: number, offset?: number }): Promise<Array<UserTypes['light']>> => {
+  const attributes = ATTRIBUTES_USER.light
+  const where: { email?: WhereValue } = {}
+  if (filters.emailLike) {
+    where.email = { [Op.iLike]: `${filters.emailLike}%` }
+  }
+  const limit = options?.limit ?? 10
+  const offset = options?.offset ?? 0
+
+  return await UserProfileModel.findAll({ where, attributes, limit, offset })
+}
 
 export const getIdByEmail = async (email: string): Promise<number | undefined> => {
   const user = await UserProfileModel.findOne({
@@ -16,12 +30,15 @@ export const getIdByEmail = async (email: string): Promise<number | undefined> =
 }
 
 export const get = async (id: number): Promise<Omit<UserProfile, 'id' | 'idAuth0'> | undefined> => {
-  return (await UserProfileModel.findOne({
+  const profile = await UserProfileModel.findOne({
     where: { id },
     attributes: {
       exclude: ['id', 'idAuth0', 'createdAt', 'updatedAt']
     }
-  }))?.toJSON() ?? undefined
+  })
+  if (profile === null) return undefined
+  const { image, ...rest } = profile.toJSON()
+  return { ...rest, image: image === null ? undefined : image } // TODO: image should not be nullable
 }
 
 export const create = async (data: Omit<UserProfile, 'id' | 'createdAt' | 'updatedAt'>): Promise<number> => {

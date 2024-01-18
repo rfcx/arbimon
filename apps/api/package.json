@@ -34,7 +34,7 @@
     "preview-reset": "rimraf \"./*.tgz\" && pnpm use-ws",
     "serve": "nodemon --watch src --watch ../../packages/common/src --watch ../../packages/utils/src -e ts --exec \"pnpm build && node --experimental-specifier-resolution=node lib/index.js\"",
     "test": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:test:* -- --run\"",
-    "test:int": "cross-env BIO_DB_PORT=5434 AWS_S3_ENDPOINT=http://localhost:9092 pnpm ci-test-int --",
+    "test:int": "cross-env BIO_DB_PORT=5434 AWS_S3_ENDPOINT=http://localhost:9092 OPENSEARCH_PORT=9202 pnpm ci-test-int --",
     "test:unit": "vitest .unit.test.",
     "use-packed": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add ./*.tgz",
     "use-ws": "pnpm remove @rfcx-bio/common @rfcx-bio/utils && pnpm add @rfcx-bio/utils @rfcx-bio/common"
@@ -46,6 +46,7 @@
     "@fastify/routes": "^4.0.0",
     "@fastify/static": "^5.0.2",
     "@js-temporal/polyfill": "^0.3.0",
+    "@opensearch-project/opensearch": "^2.5.0",
     "@rfcx-bio/common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
     "axios": "^0.27.2",

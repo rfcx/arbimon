@@ -6,7 +6,7 @@
     <div class="w-18 aspect-square h-18">
       <img
         v-if="project.imageUrl"
-        :src="project.imageUrl"
+        :src="urlWrapper(project.imageUrl)"
         class="w-full h-full rounded bg-util-gray-03"
       >
       <div
@@ -35,7 +35,7 @@
           :extra-class="`inline-flex whitespace-nowrap min-w-0`"
         />
       </div>
-      <span class="text-xs text-clip md:text-sm">{{ project.summary }}</span>
+      <span class="text-xs text-clip">{{ project.summary }}</span>
       <div class="flex flex-row gap-2">
         <span class="bg-util-gray-03 px-1 rounded font-medium text-xs">{{ numeral(project.noOfRecordings).format('0a') }} {{ project.noOfRecordings > 1 ? 'minutes' : 'minute' }} recorded</span>
         <span class="bg-util-gray-03 px-1 rounded font-medium text-xs">{{ numeral(project.noOfSpecies).format('0a') }} species</span>
@@ -48,6 +48,7 @@ import numeral from 'numeral'
 import { computed } from 'vue'
 
 import { getCountryLabel } from '@/_services/country'
+import { urlWrapper } from '@/_services/images/url-wrapper'
 import TextTooltip from '../../projects/components/text-tooltip.vue'
 import { masterObjectiveTypes } from '../../projects/types'
 import type { ProjectProfileWithMetrics } from '../data/types'

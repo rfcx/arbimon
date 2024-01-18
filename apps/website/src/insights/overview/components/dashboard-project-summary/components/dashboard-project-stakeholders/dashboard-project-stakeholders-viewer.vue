@@ -1,7 +1,7 @@
 <template>
   <div class="px-6 pb-6">
     <div
-      v-if="projectUserPermissionsStore.role === 'owner' || projectUserPermissionsStore.role === 'admin'"
+      v-if="(projectUserPermissionsStore.role === 'owner' || projectUserPermissionsStore.role === 'admin') && editable"
       class="flex w-full justify-end mt-6"
     >
       <button
@@ -9,32 +9,34 @@
         :disabled="loading"
         @click="$emit('emit-is-updating')"
       >
-        Edit displayed stakeholders
+        Edit stakeholders
         <icon-custom-ic-edit class="ml-2 w-4 h-4 self-center" />
       </button>
     </div>
-    <h3 class="text-white text-xl font-medium font-sans mt-2">
-      Project members
-    </h3>
-    <div
-      v-if="loading"
-      class="py-2"
-    >
-      <icon-fas-spinner class="animate-spin inline w-4 h-4 mr-1" /> Loading...
-    </div>
-    <div
-      v-else
-      class="grid"
-      style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
-    >
-      <StakeholderCard
-        v-for="(member, idx) of projectMembers"
-        :key="idx"
-        :name="member.firstName + ' ' + member.lastName"
-        :image="member.image ?? undefined"
-        :email="member.email ?? ''"
-        :ranking="member.ranking"
-      />
+    <div v-if="projectMembers.length !== 0">
+      <h3 class="text-white text-xl font-medium font-sans mt-2">
+        Project members
+      </h3>
+      <div
+        v-if="loading"
+        class="py-2"
+      >
+        <icon-fas-spinner class="animate-spin inline w-4 h-4 mr-1" /> Loading...
+      </div>
+      <div
+        v-else
+        class="grid"
+        style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
+      >
+        <StakeholderCard
+          v-for="(member, idx) of projectMembers"
+          :key="idx"
+          :name="member.firstName + ' ' + member.lastName"
+          :image="member.image ?? undefined"
+          :email="member.email ?? ''"
+          :ranking="member.ranking"
+        />
+      </div>
     </div>
     <h3 class="text-white text-xl font-medium font-sans mt-6">
       Affiliated organizations

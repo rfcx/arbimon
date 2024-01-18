@@ -19,7 +19,7 @@ const plugin: FastifyPluginCallback = (instance, _options, done) => {
     // TODO: check projectId is not NaN
 
     // TODO: we would like a cache of projectId => isPublished
-    const projectIsPublished = await getProjectById(projectId).then(p => p?.isPublished ?? false)
+    const projectIsPublished = await getProjectById(projectId).then(p => p?.status === 'published' ?? false)
     const userId = request.userId
 
     // When there is no user (no token) and project is not published, no role

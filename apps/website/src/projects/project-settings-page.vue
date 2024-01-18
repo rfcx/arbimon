@@ -14,17 +14,17 @@
             :existing-name="selectedProject?.name"
             :date-start="settings?.dateStart"
             :date-end="settings?.dateEnd"
-            :is-disabled="projectUserPermissionsStore.isGuest"
+            :is-disabled="!isUserHasFullAccess"
             @emit-update-value="onEmitDefaultValue"
           />
           <project-summary-form
             :existing-summary="settings?.summary"
-            :is-disabled="projectUserPermissionsStore.isGuest"
+            :is-disabled="!isUserHasFullAccess"
             @emit-project-summary="onEmitSummary"
           />
           <project-objective-form
             :existing-objectives="settings?.objectives"
-            :is-disabled="projectUserPermissionsStore.isGuest"
+            :is-disabled="!isUserHasFullAccess"
             @emit-project-objectives="onEmitObjectives"
           />
         </div>
@@ -34,30 +34,33 @@
           </h5>
           <project-slug
             :existing-slug="selectedProject?.slug"
-            :is-disabled="projectUserPermissionsStore.isGuest"
+            :is-disabled="!isUserHasFullAccess"
             @emit-updated-slug="onEmitSlug"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-image-form
-            :is-disabled="projectUserPermissionsStore.isGuest"
-            :image="projectImage"
+            :is-disabled="!isUserHasFullAccess"
+            :image="settings?.image !== undefined ? urlWrapper(settings?.image) : undefined"
             @emit-project-image="onEmitProjectImage"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-listed-form
-            :is-public="isPublic"
-            :is-disabled="projectUserPermissionsStore.isGuest"
+            :is-public="settings?.isPublic"
+            :is-disabled="!isUserHasFullAccess || settings?.isPublished"
             @emit-project-listed="toggleListedProject"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-delete
-            :is-disabled="projectUserPermissionsStore.isGuest"
+            v-if="projectUserPermissionsStore.role === 'owner'"
+            :is-deleting="isDeletingProject"
+            :is-error="isErrorDeleteProject"
+            :is-success="isSuccessDeleteProject"
             @emit-project-delete="onEmitProjectDelete"
           />
         </div>
       </div>
       <div
-        v-if="!projectUserPermissionsStore.isGuest"
+        v-if="isUserHasFullAccess"
         class="flex flex-row-reverse items-center gap-4"
       >
         <button
@@ -106,13 +109,16 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
+import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientKey } from '@/globals'
+import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
-import { useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
+import { useDeleteProject, useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectDelete from './components/form/project-delete.vue'
 import ProjectForm from './components/form/project-form.vue'
@@ -123,6 +129,7 @@ import ProjectSlug from './components/form/project-slug.vue'
 import ProjectSummaryForm from './components/form/project-summary-form.vue'
 import type { ProjectDefault } from './types'
 
+const router = useRouter()
 const store = useStore()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const dashboardStore = useDashboardStore()
@@ -133,6 +140,7 @@ const selectedProjectId = computed(() => store.selectedProject?.id)
 const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, store.selectedProject?.id ?? -1)
+const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProject } = useDeleteProject(apiClientBio)
 
 const newName = ref('')
 const dateStart = ref<string | null>(null)
@@ -146,12 +154,13 @@ const hasFailed = ref(false)
 const lastUpdated = ref(false)
 const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 const lastUpdatedText = ref<string>()
-const isPublic = ref<boolean>(true)
 const profileImageForm = ref()
+const uploadedFile = ref()
 
-const projectImage = computed<string | undefined>(() => {
-  const project = store.myProjects.find(project => project.id === store.selectedProject?.id)
-  return project?.image
+const isPublic = ref<boolean>(true)
+
+const isUserHasFullAccess = computed<boolean>(() => {
+  return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
 })
 
 // update form values
@@ -170,8 +179,21 @@ const onEmitObjectives = (value: string[]) => {
   newObjectives.value = value
 }
 
-const onEmitProjectImage = (form: FormData) => {
-  profileImageForm.value = form
+const onEmitProjectImage = (file: File) => {
+  const name = file.name
+  const type = file.type
+  const readerBuffer = new FileReader()
+  readerBuffer.addEventListener('load', e => {
+    uploadedFile.value = e.target?.result
+    const imageFileAsBlobType = new File([new Blob([uploadedFile.value as BlobPart])], name, {
+      type
+    })
+    const form = new FormData()
+    form.append('image', imageFileAsBlobType, name)
+    console.info(form.getAll('image'))
+    profileImageForm.value = form
+  })
+  readerBuffer.readAsArrayBuffer(file)
 }
 
 const onEmitSlug = (slug: string) => {
@@ -179,7 +201,11 @@ const onEmitSlug = (slug: string) => {
 }
 
 const onEmitProjectDelete = () => {
-  console.info('delete project')
+  mutateDeleteProject(store.selectedProject?.id ?? -1, {
+    onSuccess: async () => {
+      await router.push({ name: ROUTE_NAMES.myProjects })
+    }
+  })
 }
 
 const toggleListedProject = (value: boolean) => {
@@ -246,9 +272,11 @@ const updateSettings = () => {
       console.info(e)
     }
   })
-  mutatePatchProfilePhoto(profileImageForm.value, {
-    onSuccess: async () => { }
-  })
+  if (profileImageForm.value !== undefined) {
+    mutatePatchProfilePhoto(profileImageForm.value, {
+      onSuccess: async () => { }
+    })
+  }
 }
 
 </script>

@@ -27,7 +27,7 @@
             </router-link>
           </div>
           <div class="my-4 border-t-1 border-util-gray-03" />
-          <ul class="px-3 flex flex-col gap-y-4 border-gray-200 dark:border-gray-700">
+          <ul class="px-2 flex flex-col gap-y-3 border-gray-200 dark:border-gray-700">
             <li
               v-for="item in items"
               :key="item.title"
@@ -38,7 +38,7 @@
                 :to="item.route"
                 :title="item.title"
                 exact-active-class="bg-insight rounded text-moss"
-                class="flex items-center text-base hover:(bg-util-gray-03 rounded transition duration-300)"
+                class="flex items-center text-base py-1 px-1 h-9 hover:(bg-util-gray-03 rounded transition duration-300)"
               >
                 <span
                   v-if="item.iconRaw === 'fi-grid'"
@@ -52,52 +52,45 @@
                 >
                   <icon-custom-pres-chart-bar />
                 </span>
-                <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
+                <span class="ml-1.9 hidden group-hover:block">{{ item.title }}</span>
               </router-link>
-              <a
-                v-else-if="item.legacyPath"
-                :href="arbimonLink + item.legacyPath"
-                class="flex items-center text-base ease-in-out active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
-              >
-                <span class="ml-2 hidden group-hover:block">{{ item.title }}</span>
-              </a>
               <button
                 v-else
                 type="button"
-                class="mainmenu flex items-center w-full text-base font-normal active:text-moss hover:(bg-util-gray-03 rounded transition duration-300)"
+                class="mainmenu flex items-center w-full text-base font-normal py-1 px-1 h-9 active:text-moss hover:(bg-util-gray-03 rounded transition duration-300)"
                 :aria-controls="itemId(item.title)"
                 :data-collapse-toggle="itemId(item.title)"
               >
                 <span
                   v-if="item.iconRaw === 'cloud-upload'"
-                  class="p-0.5"
+                  class="p-0.5 w-[26px]"
                 >
                   <icon-custom-cloud-upload />
                 </span>
                 <span
                   v-if="item.iconRaw === 'fa-search'"
-                  class="p-0.5"
+                  class="p-0.5 w-[26px]"
                 >
                   <icon-fa-search class="h-5 w-5" />
                 </span>
                 <span
                   v-if="item.iconRaw === 'fi-aed'"
-                  class="p-0.5"
+                  class="p-0.5 w-[26px]"
                 >
                   <icon-custom-fi-activity class="h-6 w-6" />
                 </span>
                 <span
                   v-if="item.iconRaw === 'fi-settings'"
-                  class="p-0.5"
+                  class="p-0.5 w-[26px]"
                 >
                   <icon-custom-fi-settings />
                 </span>
-                <span class="flex-1 ml-2 text-left whitespace-nowrap hidden group-hover:block">
+                <span class="flex-1 ml-2 text-left whitespace-nowrap w-[180px] hidden group-hover:block">
                   {{ item.title }}
                 </span>
                 <span
                   v-if="showSidebar"
-                  class="p-0.5"
+                  class="pt-0.43"
                 >
                   <icon-fa-chevron-down class="w-3 h-3 fa-chevron-down" />
                   <icon-fa-chevron-up class="w-3 h-3 fa-chevron-up hidden" />
@@ -112,21 +105,21 @@
                 <li
                   v-for="childItem in item.children"
                   :key="childItem.title"
-                  class="mt-4"
+                  class="mt-3"
                 >
                   <router-link
                     v-show="childItem.visibleCondition == null || childItem.visibleCondition() === true"
                     v-if="childItem.route"
                     :to="childItem.route"
                     exact-active-class="bg-insight rounded text-moss"
-                    class="flex items-center pl-12 w-full text-base font-normal hover:(bg-util-gray-03 rounded transition duration-300)"
+                    class="flex items-center pl-9 py-1 h-9 w-full text-base font-normal hover:(bg-util-gray-03 rounded transition duration-300)"
                   >
                     {{ childItem.title }}
                   </router-link>
                   <a
                     v-else-if="childItem.legacyPath"
                     :href="arbimonLink + childItem.legacyPath"
-                    class="flex items-center pl-12 w-full text-base font-normal hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+                    class="flex items-center pl-9 py-1 h-9 w-full text-base font-normal hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
                   >
                     {{ childItem.title }}
                   </a>
@@ -135,23 +128,23 @@
             </li>
           </ul>
           <div class="my-4 border-t-1 border-util-gray-03" />
-          <ul class="px-3 flex flex-col gap-y-4">
+          <ul class="px-2 flex flex-col gap-y-3">
             <li>
               <a
                 :title="'Arbimon Support'"
                 :href="supportLink"
                 exact-active-class="bg-insight rounded text-moss"
-                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+                class="flex items-center text-base font-normal py-1 px-1 h-9 active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <icon-custom-fi-help />
-                <span class="ml-2 hidden group-hover:block">Help</span>
+                <span class="ml-3 hidden group-hover:block">Help</span>
               </a>
             </li>
             <li>
               <router-link
                 :to="{ name: ROUTE_NAMES.myProjects }"
                 exact-active-class="bg-insight rounded text-moss"
-                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+                class="flex items-center text-base font-normal py-1 px-1 h-9 active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <span
                   class="p-0.5"
@@ -165,12 +158,12 @@
         </div>
         <div>
           <div class="my-4 border-t-1 border-util-gray-03" />
-          <ul class="px-3 flex flex-col gap-y-4">
+          <ul class="px-2 flex flex-col gap-y-3">
             <li>
               <router-link
                 :to="{ name: ROUTE_NAMES.accountSettings }"
                 exact-active-class="bg-insight rounded text-moss"
-                class="flex items-center text-base font-normal active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+                class="flex items-center text-base font-normal py-1 px-1 h-9 active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               >
                 <span
                   class="p-0.5"
@@ -181,7 +174,7 @@
               </router-link>
             </li>
             <li
-              class="my-2 flex items-center cursor-pointer text-base font-normal active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
+              class="flex items-center cursor-pointer text-base font-normal py-1 px-1 h-9 active:text-moss hover:(bg-util-gray-03 rounded transition duration-300) active:(bg-insight rounded text-moss)"
               @click="logout"
             >
               <span class="p-0.5">
@@ -191,7 +184,7 @@
             </li>
           </ul>
           <div class="my-4 border-t-1 border-util-gray-03" />
-          <ul class="px-2.5 flex flex-col gap-y-4">
+          <ul class="px-2.5 flex flex-col gap-y-3">
             <li
               class="my-2 flex items-center text-base font-normal h-10"
             >
@@ -302,12 +295,20 @@ const allItems: Item[] = [
         legacyPath: '/jobs'
       },
       {
-        title: 'Pattern Matching',
+        title: 'Pattern Matching (PM)',
         legacyPath: '/analysis/patternmatching'
+      },
+      {
+        title: 'PM Templates',
+        legacyPath: '/audiodata/templates'
       },
       {
         title: 'Random Forest Models',
         legacyPath: '/analysis/random-forest-models/models'
+      },
+      {
+        title: 'RFM Training Sets',
+        legacyPath: '/audiodata/training-sets'
       },
       {
         title: 'Soundscape Analysis',
@@ -321,6 +322,14 @@ const allItems: Item[] = [
         route: {
           name: ROUTE_NAMES.cnnJobList
         }
+      },
+      {
+        title: 'Audio Event Detection',
+        legacyPath: '/analysis/audio-event-detections-clustering'
+      },
+      {
+        title: 'Clustering',
+        legacyPath: '/analysis/clustering-jobs'
       }
     ]
   },

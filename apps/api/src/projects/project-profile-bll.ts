@@ -1,8 +1,8 @@
 import { type ProjectProfileUpdateBody, type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project/project-settings'
 
-import { updateProjectVersion } from '@/projects/dao/project-version-dao'
 import { editProject } from '~/api-core/api-core'
 import { updateProjectSettings as updateProjectSettingsLocal } from './dao/project-profile-dao'
+import { updateProjectHiddenStatus } from './dao/project-status-dao'
 import { getProjectCoreId } from './dao/projects-dao'
 
 export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody, token: string, projectId: number): Promise<ProjectSettingsResponse> => {
@@ -19,7 +19,7 @@ export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody,
   // TODO: move update name here
 
   if (request.isPublic !== undefined) {
-    await updateProjectVersion(projectId, request.isPublic)
+    await updateProjectHiddenStatus(projectId, !request.isPublic)
   }
 
   // update in local db
