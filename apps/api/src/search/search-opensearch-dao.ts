@@ -14,6 +14,7 @@ export const getOpensearchProjects = async (query: string, limit: number, offset
     body: {
       query: {
         multi_match: {
+          type: 'bool_prefix',
           query,
           fields: [
             'name',
