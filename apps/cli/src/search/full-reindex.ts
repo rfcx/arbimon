@@ -87,4 +87,8 @@ export const fullReindex = async (client: Client, sequelize: Sequelize): Promise
       await client.index({ id, body, index: 'projects', refresh: true })
     }
   }
+
+  await client.indices.refresh({
+    index: 'projects'
+  })
 }
