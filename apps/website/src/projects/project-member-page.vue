@@ -9,23 +9,23 @@
           <div class="flex flex-row justify-end">
             <input
               ref="userSearchInput"
-              v-model="searchUserValue"
-              class="block bg-moss border-util-gray-03 text-sm rounded-md border-r-0 rounded-r-none w-55 placeholder:text-insight focus:(border-frequency ring-frequency border border-r-2 rounded)"
+              v-model="userSearchValue"
+              class="block bg-moss border-util-gray-03 text-sm rounded-md border-r-0 rounded-r-none w-60 placeholder:text-insight focus:(border-frequency ring-frequency border border-r-2 rounded)"
               type="text"
               placeholder="Search by user name, email"
               data-dropdown-toggle="dropdown"
-              @input="searchUsers"
+              @input="searchUserInputChanged"
               @click="openUserSearch()"
             >
             <div>
               <button
-                class="btn bg-moss border border-util-gray-03 rounded-md border-l-0 rounded-l-none"
-                @click="addUser()"
+                class="btn bg-moss border border-util-gray-03 rounded-md border-l-0 rounded-l-none dark:hover:bg-util-gray-04 dark:hover:text-pitch dark:focus:ring-util-gray-04"
+                data-tooltip-target="projectMembers"
+                data-tooltip-style="light"
+                @click="addSelectedUser()"
               >
                 <icon-fa-plus
-                  class="h-3 w-3 text-insight"
-                  data-tooltip-target="projectMembers"
-                  data-tooltip-style="light"
+                  class="h-3 w-3 text-insight focus:border-none focus:border-transparent ring-moss outline-none"
                 />
                 <div
                   id="projectMembers"
@@ -45,30 +45,95 @@
               />
             </div>
             <div
-              v-if="noResults"
-              class="absolute bottom-0 left-1 w-20"
+              ref="userSearchResultNotFoundContainer"
+              class="z-10 hidden w-[15rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg shadow flex flex-row justify-between p-3"
             >
-              <span>No users found</span>
+              <p class="text-sm font-normal font-sans text-insight leading-tight">
+                We are unable to find this user.
+              </p>
               <button
-                class="btn btn-primary btn-sm"
-                ng-click="invite()"
+                type="button"
+                class="text-frequency text-sm font-medium font-display leading-none"
+                @click="openInviteNewUserForm"
               >
                 Invite
               </button>
             </div>
-            <!-- <div
-              ref="userSearchResultContainer"
-              class="z-10 w-[20.0rem] hidden px-0 mx-auto max-w-screen-md text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow overflow-y-scroll"
-              :class="{'border-b-1 rounded-t-lg border-t-1': searchUserValue && !usersSearchResult, 'border-b-1 border-t-1 rounded-t-lg max-h-66': orgsSearchResult?.length}"
+
+            <div
+              ref="inviteNewUserFormContainer"
+              class="z-10 hidden w-[15rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg shadow flex flex-col gap-y-5 px-2 py-5"
             >
-              <UserSearchResultCard
-                v-for="u in usersSearchResult"
-                :id="u.userId"
+              <div class="flex flex-col gap-y-3">
+                <div>
+                  <p class="text-insight text-base font-medium font-sans">
+                    First name*
+                  </p>
+                  <input
+                    id="new-user-firstName"
+                    v-model="newUser.firstName"
+                    name="firstName"
+                    type="text"
+                    class="w-full mt-1 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
+                    required
+                  >
+                </div>
+                <div>
+                  <p class="text-insight text-base font-medium font-sans">
+                    Last name*
+                  </p>
+                  <input
+                    id="new-user-lastName"
+                    v-model="newUser.lastName"
+                    name="lastName"
+                    type="text"
+                    class="w-full mt-1 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
+                    required
+                  >
+                </div>
+                <div>
+                  <p class="text-insight text-base font-medium font-sans">
+                    Email*
+                  </p>
+                  <input
+                    id="new-user-email"
+                    v-model="newUser.email"
+                    name="email"
+                    type="text"
+                    class="w-full mt-1 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
+                  >
+                </div>
+              </div>
+              <div
+                v-if="addNewUserError"
+                class="bg-[#FFDADA] border-l-3 border-[#CC1E3D] rounded p-1 text-moss text-sm"
+              >
+                All fields are required.
+              </div>
+              <div class="flex w-full flex-row justify-end">
+                <button
+                  type="submit"
+                  class="btn btn-primary px-3 py-1"
+                  @click="inviteNewUser"
+                >
+                  Invite
+                </button>
+              </div>
+            </div>
+
+            <div
+              ref="userSearchResultContainer"
+              class="z-10 w-[15rem] hidden px-0 mx-auto max-w-screen-md text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow overflow-y-scroll"
+              :class="{'border-b-1 rounded-t-lg border-t-1': userSearchValue && !userSearchResult, 'border-b-1 border-t-1 rounded-t-lg max-h-66': userSearchResult}"
+            >
+              <ProjectUserSearch
+                v-for="u in userSearchResult"
+                :id="u.id"
                 :key="`${u.email}-search`"
                 :user="u"
-                @emit-add-selected-user="addUser"
+                @emit-selected-user="onEmitSelectedUser"
               />
-            </div> -->
+            </div>
           </div>
           <div class="flex flex-col gap-y-4">
             <ProjectMember
@@ -104,26 +169,44 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { initTooltips } from 'flowbite'
-import { computed, inject, onMounted, ref } from 'vue'
+import { type DropdownOptions, Dropdown, initTooltips } from 'flowbite'
+import { type Ref, computed, inject, onMounted, ref } from 'vue'
 
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
-import { useDeleteProjectMember, useGetProjectMembers } from './_composables/use-project-member'
+import { useDeleteProjectMember, useGetProjectMembers, useSearchUsers } from './_composables/use-project-member'
 import ProjectMember from './components/project-member.vue'
+import ProjectUserSearch from './components/project-user-search.vue'
+import type { UserType } from './types'
 
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => store.selectedProject?.id)
 
+const searchDropdown = ref() as Ref<Dropdown>
+const notFoundDropdown = ref() as Ref<Dropdown>
+const dropdownOptions: DropdownOptions = { placement: 'bottom-start', triggerType: 'none', offsetDistance: 1 }
+
 const userSearchInput = ref<HTMLDivElement | null>(null)
+const userSearchResultContainer = ref<HTMLDivElement | null>(null)
+const userSearchResultNotFoundContainer = ref<HTMLDivElement | null>(null)
+const inviteNewUserFormContainer = ref<HTMLDivElement | null>(null)
+
 const isSearchingUsers = ref(false)
-const noResults = ref(false)
-const searchUserValue = ref('')
-const userToAdd = ref({
+const addNewUserError = ref(false)
+const userSearchValue = ref('')
+
+const newUser = ref({
   firstName: '',
   lastName: '',
   email: ''
+})
+
+const userToAdd = ref({
+  firstName: '',
+  lastName: '',
+  email: '',
+  id: -1
 })
 
 const roles = [
@@ -160,34 +243,70 @@ const roles = [
 ]
 
 const { data: users, refetch: usersRefetch } = useGetProjectMembers(apiClientBio, selectedProjectId)
+const { data: searchedUsers, refetch: searchUsersRefetch } = useSearchUsers(apiClientBio, userSearchValue)
 // const { mutate: mutatePostUserRole } = useUpdateUserRole(apiClientBio, store.selectedProject?.id ?? -1)
 // const { mutate: mutatePatchUserRole } = useAddUserRole(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateDeleteProjectMember } = useDeleteProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
 
-// const userSearchResult = computed(() => {
-//   return [] // searchUserValue.value ? [] : []
-// })
+const userSearchResult = computed(() => {
+  return searchedUsers.value
+})
+
+onMounted(() => {
+  searchDropdown.value = new Dropdown(userSearchResultContainer.value, userSearchInput.value, dropdownOptions)
+  notFoundDropdown.value = new Dropdown(userSearchResultNotFoundContainer.value, userSearchInput.value, dropdownOptions)
+})
 
 const openUserSearch = async () => {
   userSearchInput.value?.focus()
-  // searchDropdown.value.show()
+  if (userSearchResult.value && userSearchResult.value.length !== 0) searchDropdown.value.show()
 }
 
-const addUser = ():void => {
-  if (userToAdd.value.email) return
-
-  console.info(selectedProjectId, userToAdd.value)
-  // TODO: 1.add a new user 2. refetch data
+const openInviteNewUserForm = async (): Promise<void> => {
+  hideNotFoundContainer()
+  new Dropdown(inviteNewUserFormContainer.value, userSearchInput.value, dropdownOptions).show()
 }
 
-const searchUsers = ():void => {
-  // await refetchUsersSearch()
-  // if (userSearchResult.value && userSearchResult.value.length === 0) {
-  //   showNotFoundContainer()
-  // } else {
-  //   showNotFoundContainer()
-  //   hideNotFoundContainer()
-  // }
+const showNotFoundContainer = async (): Promise<void> => {
+  notFoundDropdown.value.show()
+}
+
+const hideNotFoundContainer = async (): Promise<void> => {
+  notFoundDropdown.value.hide()
+}
+
+const searchUserInputChanged = async () => {
+  if (userSearchValue.value.length > 2) await searchUsersRefetch()
+  if (userSearchResult.value && userSearchResult.value.length) {
+    showNotFoundContainer()
+    hideNotFoundContainer()
+    searchDropdown.value.show()
+  } else showNotFoundContainer()
+}
+
+const inviteNewUser = (): void => {
+  if (!newUser.value.firstName.length || !newUser.value.lastName.length || !newUser.value.email.length) {
+    addNewUserError.value = true
+    return
+  }
+  addNewUserError.value = false
+  new Dropdown(inviteNewUserFormContainer.value, userSearchInput.value, dropdownOptions).hide()
+  console.info('inviteNewUser', newUser.value)
+  // TODO: 1. add a new user 2. refetch data
+}
+
+const onEmitSelectedUser = (user: UserType):void => {
+  userSearchValue.value = user.email
+  userToAdd.value.firstName = user.firstName
+  userToAdd.value.lastName = user.lastName
+  userToAdd.value.email = user.email
+  userToAdd.value.id = user.id
+  searchDropdown.value.hide()
+}
+
+const addSelectedUser = ():void => {
+  console.info('addSelectedUser', selectedProjectId.value, userToAdd.value)
+  // TODO: 1. add the user 2. refetch data
 }
 
 const changeUserRole = ():void => {
