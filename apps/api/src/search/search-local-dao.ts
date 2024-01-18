@@ -1,22 +1,31 @@
-import { Op } from 'sequelize'
+import { type Order, type WhereOptions, Op } from 'sequelize'
 
 import { type SearchResponse } from '@rfcx-bio/common/api-bio/search/search'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { type Project } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
 import { getAverageCoordinate } from './helpers'
 
-export const getProjectsByQuery = async (query: string, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
+export const getProjectsByQuery = async (keyword?: string, limit?: number, offset?: number, order?: Order): Promise<{ total: number, data: SearchResponse }> => {
   const sequelize = getSequelize()
   const { LocationProject, LocationProjectMetric, LocationProjectProfile, LocationProjectCountry } = ModelRepository.getInstance(sequelize)
 
+  const whereOptional: WhereOptions<Project> = {}
+  if (keyword) {
+    whereOptional.name = {
+      [Op.iLike]: `%${keyword}%`
+    }
+  }
+
   const results = await LocationProject.findAll({
     where: {
-      name: {
-        [Op.iLike]: `%${query}%`
-      },
+      ...whereOptional,
       status: ['listed', 'published']
     },
+    order: order !== undefined ? order : sequelize.literal('"status" DESC, "LocationProjectMetric.speciesCount" DESC'),
+    limit: limit !== undefined ? limit : 20,
+    offset: offset !== undefined ? offset : 0,
     include: [
       {
         model: LocationProjectMetric,

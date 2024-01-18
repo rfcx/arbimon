@@ -45,6 +45,8 @@ import { type AxiosInstance } from 'axios'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 
 import { type ProjectLight, type ProjectProfileWithMetrics, apiBioGetDirectoryProjects } from '@rfcx-bio/common/api-bio/project/projects'
+import type { SearchResponseProject } from '@rfcx-bio/common/api-bio/search/search'
+import { apiBioSearch } from '@rfcx-bio/common/api-bio/search/search'
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
@@ -64,7 +66,6 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedTab = ref<Tab>('All')
 
 const isLoading = ref(false)
-
 /** List of projects (with profile) you got from search results, initial is the first 20 in the list -- to show in the list */
 const projectResults = ref<ProjectLight[]>(pdStore.allProjects)
 
@@ -105,12 +106,7 @@ const onEmitSwapTab = (tab: Tab) => {
 }
 
 const onEmitSearch = async (keyword: string) => {
-    const projectsInCriteria = pdStore.allProjects.filter(p => p.name.toLowerCase().includes(keyword.toLowerCase()))
-    projectResults.value = projectsInCriteria
-    const ids = projectsInCriteria.map(p => p.id)
-    const projectsWithMetrics = pdStore.getProjectWithMetricsByIds(ids)
-    if (projectsWithMetrics.length === ids.length) return
-    await fetchProjectsWithMetricsByIds(ids)
+    await fetchSearch(keyword)
 }
 
 const onEmitLoadMore = async () => {
@@ -144,6 +140,32 @@ const fetchProjectsWithMetricsByIds = async (ids: number[]) => {
   const dataFull = await apiBioGetDirectoryProjects(apiClientBio, { full: true, ids: ids.join(',') })
   if (dataFull === undefined) return
   pdStore.addProjectsWithMetrics(dataFull as ProjectProfileWithMetrics[])
+  isLoading.value = false
+}
+
+const fetchSearch = async (keyword: string) => {
+  if (isLoading.value === true) return
+  isLoading.value = true
+  const searchResponse = await apiBioSearch(apiClientBio, 'project', keyword, 100, 0)
+  if (searchResponse === undefined) return
+  const projectWithMetrics = (searchResponse.data as SearchResponseProject[]).map((p: SearchResponseProject): ProjectProfileWithMetrics => {
+    return {
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      objectives: p.objectives,
+      summary: p.summary,
+      imageUrl: p.image,
+      avgLatitude: p.avgLatitude,
+      avgLongitude: p.avgLongitude,
+      noOfRecordings: p.recordingMinutesCount,
+      noOfSpecies: p.speciesCount,
+      countries: p.countryCodes,
+      isPublished: true
+    }
+  })
+  pdStore.addProjectsWithMetrics(projectWithMetrics)
+  projectResults.value = projectWithMetrics
   isLoading.value = false
 }
 
