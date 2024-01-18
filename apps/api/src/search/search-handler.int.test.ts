@@ -14,6 +14,24 @@ import { env } from '~/env'
 import { getOpenSearchClient } from '~/opensearch'
 import { routesSearch } from './index'
 
+const EXPECTED_PROPS = [
+  'type',
+  'avgLatitude',
+  'avgLongitude',
+  'id',
+  'idCore',
+  'idArbimon',
+  'name',
+  'slug',
+  'status',
+  'image',
+  'objectives',
+  'summary',
+  'speciesCount',
+  'recordingMinutesCount',
+  'countryCodes'
+]
+
 function zeroToN (n: number): number[] {
   return [...Array(n + 1).keys()]
 }
@@ -102,6 +120,10 @@ describe('Local search', async () => {
     expect(project).toBeDefined()
     expect(project.name).toBeDefined()
     expect(project.recordingMinutesCount).toBe(1260)
+
+    for (const prop of EXPECTED_PROPS) {
+      expect(project).toHaveProperty(prop)
+    }
   })
 
   test(`GET ${searchRoute}?type=project&q= will return projects which orders by recording minutes count`, async () => {
@@ -130,134 +152,138 @@ describe('Local search', async () => {
 describe('OpenSearch search', async () => {
   beforeAll(async () => {
     env.OPENSEARCH_ENABLED = 'true'
-    const p1 = makeProject(7689921, 'Alton diversity', 'published')
-    const p2 = makeProject(7689922, 'Kristiansand diversity', 'published')
-    const p3 = makeProject(7689923, 'Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch diversity', 'published')
-    const p4 = makeProject(7689924, 'Cairo diversity', 'published')
+    const p1 = makeProject(7689921, 'Alton planet', 'published')
+    const p2 = makeProject(7689922, 'Kristiansand planet', 'published')
+    const p3 = makeProject(7689923, 'Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch planet', 'published')
+    const p4 = makeProject(7689924, 'Cairo planet', 'published')
 
-    await Promise.all([
-      await opensearch.index({
-        id: '7689921',
-        index: 'projects',
-        body: {
-          id_core: p1.idCore,
-          id_arbimon: p1.idArbimon,
-          name: p1.name,
-          slug: p1.slug,
-          status: p1.status,
-          latitude_north: p1.latitudeNorth,
-          latitude_south: p1.latitudeSouth,
-          longitude_east: p1.longitudeEast,
-          longitude_west: p1.longitudeWest,
-          summary: '',
-          date_start: null,
-          date_end: null,
-          objectives: [],
-          image: '',
-          country_codes: [],
-          species_count: 18,
-          recording_minutes_count: 1890,
-          detection_minutes_count: 1992,
-          min_date: '2023-01-01T00:00:00.000Z',
-          max_date: '2023-11-25T18:24:59.223Z',
-          recording_min_date: '2023-02-01T00:00:00.000Z',
-          recording_max_date: '2023-11-20T18:24:59.223Z',
-          detection_min_date: '2023-01-01T00:00:00.000Z',
-          detection_max_date: '2023-11-25T18:24:59.223Z'
-        },
-        refresh: true
-      }),
-      await opensearch.index<SearchQueryProjectRawResponse>({
-        id: '7689922',
-        index: 'projects',
-        body: {
-          id_core: p2.idCore,
-          id_arbimon: p2.idArbimon,
-          name: p2.name,
-          slug: p2.slug,
-          status: p2.status,
-          latitude_north: p2.latitudeNorth,
-          latitude_south: p2.latitudeSouth,
-          longitude_east: p2.longitudeEast,
-          longitude_west: p2.longitudeWest,
-          summary: 'Filled with such diverse terrain, this place is a bliss for all species',
-          date_start: null,
-          date_end: null,
-          objectives: ['impact-human'],
-          image: '',
-          country_codes: ['SE', 'NO', 'DK'],
-          species_count: 18,
-          recording_minutes_count: 4433,
-          detection_minutes_count: 3843,
-          min_date: '2023-01-01T00:00:00.000Z',
-          max_date: '2023-11-25T18:24:59.223Z',
-          recording_min_date: '2023-02-01T00:00:00.000Z',
-          recording_max_date: '2023-11-20T18:24:59.223Z',
-          detection_min_date: '2023-01-01T00:00:00.000Z',
-          detection_max_date: '2023-11-25T18:24:59.223Z'
-        }
-      }),
-      await opensearch.index({
-        id: '7689923',
-        index: 'projects',
-        body: {
-          id_core: p3.idCore,
-          id_arbimon: p3.idArbimon,
-          name: p3.name,
-          slug: p3.slug,
-          status: p3.status,
-          latitude_north: p3.latitudeNorth,
-          latitude_south: p3.latitudeSouth,
-          longitude_east: p3.longitudeEast,
-          longitude_west: p3.longitudeWest,
-          summary: 'What could the longest town name of all England could have in their forest???',
-          date_start: null,
-          date_end: null,
-          objectives: ['bio-baseline', 'monitor-species'],
-          image: '',
-          country_codes: ['GB'],
-          species_count: 12,
-          recording_minutes_count: 1213,
-          detection_minutes_count: 2233,
-          min_date: '2022-08-12T00:00:00.000Z',
-          max_date: '2023-12-22T00:33:33.594Z',
-          recording_min_date: '2022-08-12T00:00:00.000Z',
-          recording_max_date: '2023-12-22T00:33:33.594Z',
-          detection_min_date: '2023-08-14T12:44:39.984Z',
-          detection_max_date: '2023-11-30T11:12:14.334Z'
-        }
-      }),
-      await opensearch.index({
-        id: '7689924',
-        index: 'projects',
-        body: {
-          id_core: p4.idCore,
-          id_arbimon: p4.idArbimon,
-          name: p4.name,
-          slug: p4.slug,
-          status: p4.status,
-          latitude_north: p4.latitudeNorth,
-          latitude_south: p4.latitudeSouth,
-          longitude_east: p4.longitudeEast,
-          longitude_west: p4.longitudeWest,
-          summary: 'a cool Cairo biodviersity project to help all the travellers',
-          date_start: null,
-          date_end: null,
-          objectives: ['Helping camels'],
-          image: '',
-          country_codes: ['EG'],
-          species_count: 12,
-          recording_minutes_count: 1213,
-          detection_minutes_count: 2233,
-          min_date: '2022-08-12T00:00:00.000Z',
-          max_date: '2023-12-22T00:33:33.594Z',
-          recording_min_date: '2022-08-12T00:00:00.000Z',
-          recording_max_date: '2023-12-22T00:33:33.594Z',
-          detection_min_date: '2023-08-14T12:44:39.984Z',
-          detection_max_date: '2023-11-30T11:12:14.334Z'
-        }
-      })
-    ])
+    await opensearch.index({
+      id: '7689921',
+      index: 'projects',
+      body: {
+        id_core: p1.idCore,
+        id_arbimon: p1.idArbimon,
+        name: p1.name,
+        slug: p1.slug,
+        status: p1.status,
+        latitude_north: p1.latitudeNorth,
+        latitude_south: p1.latitudeSouth,
+        longitude_east: p1.longitudeEast,
+        longitude_west: p1.longitudeWest,
+        summary: '',
+        date_start: null,
+        date_end: null,
+        objectives: [],
+        image: '',
+        country_codes: [],
+        species_count: 18,
+        recording_minutes_count: 1890,
+        detection_minutes_count: 1992,
+        min_date: '2023-01-01T00:00:00.000Z',
+        max_date: '2023-11-25T18:24:59.223Z',
+        recording_min_date: '2023-02-01T00:00:00.000Z',
+        recording_max_date: '2023-11-20T18:24:59.223Z',
+        detection_min_date: '2023-01-01T00:00:00.000Z',
+        detection_max_date: '2023-11-25T18:24:59.223Z'
+      },
+      refresh: true
+    })
+
+    await opensearch.index<SearchQueryProjectRawResponse>({
+      id: '7689922',
+      index: 'projects',
+      body: {
+        id_core: p2.idCore,
+        id_arbimon: p2.idArbimon,
+        name: p2.name,
+        slug: p2.slug,
+        status: p2.status,
+        latitude_north: p2.latitudeNorth,
+        latitude_south: p2.latitudeSouth,
+        longitude_east: p2.longitudeEast,
+        longitude_west: p2.longitudeWest,
+        summary: 'Filled with such diverse terrain, this place is a bliss for all species',
+        date_start: null,
+        date_end: null,
+        objectives: ['bio-baseline'],
+        image: '',
+        country_codes: ['SE', 'NO', 'DK'],
+        species_count: 18,
+        recording_minutes_count: 4433,
+        detection_minutes_count: 3843,
+        min_date: '2023-01-01T00:00:00.000Z',
+        max_date: '2023-11-25T18:24:59.223Z',
+        recording_min_date: '2023-02-01T00:00:00.000Z',
+        recording_max_date: '2023-11-20T18:24:59.223Z',
+        detection_min_date: '2023-01-01T00:00:00.000Z',
+        detection_max_date: '2023-11-25T18:24:59.223Z'
+      },
+      refresh: true
+    })
+
+    await opensearch.index({
+      id: '7689923',
+      index: 'projects',
+      body: {
+        id_core: p3.idCore,
+        id_arbimon: p3.idArbimon,
+        name: p3.name,
+        slug: p3.slug,
+        status: p3.status,
+        latitude_north: p3.latitudeNorth,
+        latitude_south: p3.latitudeSouth,
+        longitude_east: p3.longitudeEast,
+        longitude_west: p3.longitudeWest,
+        summary: 'What could the longest town name of all England could have in their forest???',
+        date_start: null,
+        date_end: null,
+        objectives: ['bio-baseline', 'monitor-species'],
+        image: '',
+        country_codes: ['GB'],
+        species_count: 12,
+        recording_minutes_count: 1213,
+        detection_minutes_count: 2233,
+        min_date: '2022-08-12T00:00:00.000Z',
+        max_date: '2023-12-22T00:33:33.594Z',
+        recording_min_date: '2022-08-12T00:00:00.000Z',
+        recording_max_date: '2023-12-22T00:33:33.594Z',
+        detection_min_date: '2023-08-14T12:44:39.984Z',
+        detection_max_date: '2023-11-30T11:12:14.334Z'
+      },
+      refresh: true
+    })
+
+    await opensearch.index({
+      id: '7689924',
+      index: 'projects',
+      body: {
+        id_core: p4.idCore,
+        id_arbimon: p4.idArbimon,
+        name: p4.name,
+        slug: p4.slug,
+        status: p4.status,
+        latitude_north: p4.latitudeNorth,
+        latitude_south: p4.latitudeSouth,
+        longitude_east: p4.longitudeEast,
+        longitude_west: p4.longitudeWest,
+        summary: 'a cool Cairo biodviersity project to help all the travellers',
+        date_start: null,
+        date_end: null,
+        objectives: ['Helping camels'],
+        image: '',
+        country_codes: ['EG'],
+        species_count: 12,
+        recording_minutes_count: 1213,
+        detection_minutes_count: 2233,
+        min_date: '2022-08-12T00:00:00.000Z',
+        max_date: '2023-12-22T00:33:33.594Z',
+        recording_min_date: '2022-08-12T00:00:00.000Z',
+        recording_max_date: '2023-12-22T00:33:33.594Z',
+        detection_min_date: '2023-08-14T12:44:39.984Z',
+        detection_max_date: '2023-11-30T11:12:14.334Z'
+      },
+      refresh: 'wait_for'
+    })
   })
 
   afterAll(async () => {
@@ -291,10 +317,9 @@ describe('OpenSearch search', async () => {
     expect(project.recordingMinutesCount).toBe(1890)
   })
 
-  test.todo('opensearch can search for projects based on their objective alias', async () => {
+  test('opensearch can search for projects based on their objective alias', async () => {
     // Arrange
     const app = await makeApp(routesSearch)
-    console.info(await opensearch.get({ index: 'projects', id: '7689922' }))
 
     // Act
     const response = await app.inject({
@@ -302,19 +327,17 @@ describe('OpenSearch search', async () => {
       url: searchRoute,
       query: {
         type: 'project',
-        q: 'Evaluate human impact'
+        q: 'biodiversity'
       }
     })
-
-    console.info(response.body)
 
     // Assert
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body) as SearchResponseProject[]
-    expect(results.find(r => r.id === 7689922)).toBeDefined()
+    expect(results.findIndex(r => r.id === 7689922)).not.toBe(-1)
   })
 
-  test.todo('opensearch can search for custom objectives', async () => {
+  test('opensearch can search for custom objectives', async () => {
     // Arrange
     const app = await makeApp(routesSearch)
 
@@ -330,10 +353,10 @@ describe('OpenSearch search', async () => {
 
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body) as SearchResponseProject[]
-    expect(results.find(r => r.id === 7689924)).toBeDefined()
+    expect(results.findIndex(r => r.id === 7689924)).not.toBe(-1)
   })
 
-  test.todo('opensearch can search for country name alias', async () => {
+  test('opensearch can search for country name alias', async () => {
     // Arrange
     const app = await makeApp(routesSearch)
 
@@ -349,9 +372,10 @@ describe('OpenSearch search', async () => {
 
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body) as SearchResponseProject[]
-    expect(results.find(r => r.id === 7689922)).toBeDefined()
+    expect(results.findIndex(r => r.id === 7689922)).not.toBe(-1)
   })
-  test.todo('opensearch can search based on text inside summary field', async () => {
+
+  test('opensearch can search based on text inside summary field', async () => {
     // Arrange
     const app = await makeApp(routesSearch)
 
@@ -361,12 +385,37 @@ describe('OpenSearch search', async () => {
       url: searchRoute,
       query: {
         type: 'project',
-        q: 'Cairo'
+        q: 'help all the travellers'
       }
     })
 
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body) as SearchResponseProject[]
-    expect(results.find(r => r.id === 7689924)).toBeDefined()
+    expect(results.findIndex(r => r.id === 7689924)).not.toBe(-1)
+  })
+
+  test('opensearch response provides correct fields', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: 'Kris'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    const index = results.findIndex(r => r.id === 7689922)
+    expect(index).not.toBe(-1)
+    const result = results[index]
+
+    for (const prop of EXPECTED_PROPS) {
+      expect(result).toHaveProperty(prop)
+    }
   })
 })
