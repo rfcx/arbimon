@@ -18,7 +18,7 @@ export const getProjectMembersHandler: Handler<GetProjectMembersResponse, Projec
   return projectUsers
 }
 
-export const getProjectPermissionHandler: Handler<ProjectRole, ProjectMembersParams> = async (req) => {
+export const getProjectRoleHandler: Handler<ProjectRole, ProjectMembersParams> = async (req) => {
   const { projectId } = req.params
   const userId = req.userId
   const projectIdInteger = parseInt(projectId)

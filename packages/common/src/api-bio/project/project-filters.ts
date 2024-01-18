@@ -23,4 +23,4 @@ export const projectFiltersRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/filters`
 
 // Service
 export const apiBioGetProjectFilters = async (apiClient: AxiosInstance, projectId: number): Promise<ProjectFiltersResponse | undefined> =>
-  await apiGetOrUndefined(apiClient, `/projects/${projectId}/filters`)
+  await apiGetOrUndefined(apiClient, projectFiltersRoute.replace(':projectId', projectId.toString()))

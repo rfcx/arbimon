@@ -19,5 +19,5 @@ export const projectProfileImageRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/projec
  * ```
  */
 export const apiBioUpdateProjectImage = async (apiClient: AxiosInstance, projectId: number, form: FormData): Promise<void> => {
-  await apiClient.patch(`projects/${projectId}/project-profile-image`, form)
+  await apiClient.patch(projectProfileImageRoute.replace(':projectId', projectId.toString()), form)
 }
