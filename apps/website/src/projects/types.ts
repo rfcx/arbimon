@@ -40,6 +40,14 @@ export interface ProjectDefault {
   onGoing: boolean
 }
 
+export interface UserType {
+  email: string
+  firstName: string
+  lastName: string
+  image: string
+  id: number
+}
+
 // TODO: Investigate why this is needed
 export type ProjectObjective = ProjectObjectiveShared
 export const masterObjectiveTypes = masterObjectiveTypesShared
