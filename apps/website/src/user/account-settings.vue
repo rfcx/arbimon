@@ -325,8 +325,8 @@ const organizationSearchInputChanged = async () => {
   if (orgsSearchResult.value && orgsSearchResult.value.length === 0) {
     showNotFoundContainer()
   } else {
-    showNotFoundContainer()
     hideNotFoundContainer()
+    searchDropdown.value.show()
   }
 }
 
@@ -348,19 +348,16 @@ const refetchOrganizationsSearch = async (): Promise<void> => {
   }
 }
 
-const onAddNewOrganizationFromSearch = (id: number): void => {
-  console.info(id)
-  // Return when the org already exists
-  if (displayedOrganization.value?.id === id) return
+const onAddNewOrganizationFromSearch = async (id: number): Promise<void> => {
+  searchDropdown.value.hide()
 
   // Add to the list when it's new org
   const newOrg = searchOrganizationValue.value ? organizationsSearchResult.value?.find((o) => o.id === id) : organizationsList.value?.find((o) => o.id === id)
   if (newOrg == null) return
-  console.info(newOrg)
   selectedOrganizationId.value = newOrg.id
   addedOrganization.value = newOrg
   searchOrganizationValue.value = newOrg.name
-  searchDropdown.value.hide()
+  await refetchOrganizationsSearch()
 }
 
 const openCreateNewOrganizationForm = async (): Promise<void> => {
@@ -420,7 +417,6 @@ const saveProfilePhoto = async (): Promise<void> => {
   })
   const form = new FormData()
   form.append('image', imageFileAsBlobType, uploadedPhotoData.value.name)
-  console.info(form.getAll('image'))
   mutatePatchProfilePhoto(form, {
     onSuccess: async () => { }
   })
