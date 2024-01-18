@@ -30,10 +30,8 @@ export const analysis = {
       ]
     },
     objective_synonym_analyzer: {
-      tokenizer: 'standard',
-      filter: [
-        'objective_synonym_filter'
-      ]
+      tokenizer: 'keyword',
+      filter: ['objective_synonym_filter']
     }
   },
   filter: {
@@ -42,13 +40,14 @@ export const analysis = {
       synonyms: getCountrySynonyms()
     },
     objective_synonym_filter: {
+      ignore_case: 'true',
       type: 'synonym',
       synonyms: [
-        'Establish biodiversity baseline, Establish baseline => bio-baseline',
-        'Detect / monitor endangered species, Detect rare species => monitor-species',
-        'Detect and monitor illegal activity, Detect illegal activity => monitor-illegal-act',
-        'Evaluate impact of human activities on biodiversity, Evaluate human impact => impact-human',
-        'Evaluate impact of conservation initiatives on biodiversity, Evaluate conservation impact => impact-conservation'
+        'biodiversity, baseline => bio-baseline',
+        'monitor, endangered, species, rare => monitor-species',
+        'illegal, act => monitor-illegal-act',
+        'human, impact => impact-human',
+        'conservation, initiatives => impact-conservation'
       ]
     }
   }
