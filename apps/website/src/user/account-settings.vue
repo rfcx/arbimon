@@ -152,7 +152,8 @@
             <div class="flex w-full flex-row justify-end">
               <button
                 type="submit"
-                class="btn btn-primary px-3 py-2"
+                class="btn btn-primary px-3 py-2 disabled:hover:btn-disabled disabled:btn-disabled"
+                :disabled="createNewOrganizationLoading"
                 @click="createNewOrganization"
               >
                 Create organization
@@ -163,7 +164,7 @@
 
         <div
           ref="organizationSearchResultNotFoundContainer"
-          class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg shadow flex flex-row justify-between p-3"
+          class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border rounded-lg shadow flex flex-row justify-between p-3"
         >
           <p class="text-sm font-normal font-sans text-insight leading-tight">
             We are unable to find this organization.
@@ -248,6 +249,7 @@ const createNewOrganizationFormContainer = ref<HTMLDivElement | null>(null)
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
 const newOrganizationUrl = ref<string>('')
 const dropdownOptions: DropdownOptions = { placement: 'bottom-start', triggerType: 'none', offsetDistance: 1 }
+const createNewOrganizationLoading = ref(false)
 
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
@@ -371,14 +373,20 @@ const openCreateNewOrganizationForm = async (): Promise<void> => {
 }
 
 const createNewOrganization = (): void => {
+  createNewOrganizationLoading.value = true
   mutateNewOrganization({ name: searchOrganizationValue.value, type: newOrganizationType.value, url: newOrganizationUrl.value }, {
     onSuccess: (newOrganization) => {
       addedOrganization.value = newOrganization
       selectedOrganizationId.value = newOrganization.id
       dropdownStatus.value = 'idle'
+      refetchOrganizationsSearch()
+      createNewOrganizationLoading.value = false
+      createNewOrganizationForm.value.hide()
     },
     onError: () => {
       dropdownStatus.value = 'idle'
+      createNewOrganizationLoading.value = false
+      createNewOrganizationForm.value.hide()
     }
   })
 }
