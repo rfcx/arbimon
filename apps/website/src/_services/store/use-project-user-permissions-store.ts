@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 import { type GetProjectMembersResponse } from '@rfcx-bio/common/api-bio/project/project-members'
+import { apiBioGetProjectRole } from '@rfcx-bio/common/api-bio/project/project-role'
 import { type ProjectRole } from '@rfcx-bio/common/roles'
 import { getApiClient } from '@rfcx-bio/utils/api'
 
@@ -34,8 +35,7 @@ export const useProjectUserPermissionsStore = defineStore('project-user-permissi
     }
     const authClient = await useAuth0Client()
     const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, store.user ? async () => await getIdToken(authClient) : undefined)
-    const response = await apiClient.get<ProjectRole>(`/projects/${id}/role`)
-    role.value = response.data
+    role.value = await apiBioGetProjectRole(apiClient, id)
   }
 
   const isGuest = computed<boolean>(() => {

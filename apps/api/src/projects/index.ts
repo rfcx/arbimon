@@ -4,6 +4,7 @@ import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/project/project-fi
 import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
 import { updateProjectPublishStatusRoute } from '@rfcx-bio/common/api-bio/project/project-publish-status'
 import { projectSitesRecordingCountRoute } from '@rfcx-bio/common/api-bio/project/project-recordings'
+import { projectRoleRoute } from '@rfcx-bio/common/api-bio/project/project-role'
 import { projectDataRoute } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { myProjectsRoute, projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
 
@@ -14,7 +15,7 @@ import { projectCreateHandler } from './project-create-handler'
 import { projectDeleteHandler } from './project-delete-handler'
 import { projectFiltersHandler, projectRecordingCountBySiteHandler } from './project-filters-handler'
 import { projectUpdateImageHandler } from './project-image-handler'
-import { deleteProjectMemberHandler, getProjectMembersHandler, getProjectPermissionHandler } from './project-member'
+import { deleteProjectMemberHandler, getProjectMembersHandler, getProjectRoleHandler } from './project-member'
 import { projectProfileHandler, projectProfileStakeholdersReadOnlyHandler, projectProfileUpdateHandler } from './project-profile-handler'
 import { patchProjectPublishStatusHandler } from './project-publish-status-handler'
 import { myProjectsHandler, projectsAllHandler } from './projects-handler'
@@ -63,8 +64,8 @@ export const routesProject: RouteRegistration[] = [
   },
   {
     method: GET,
-    url: projectDataRoute + '/role',
-    handler: getProjectPermissionHandler
+    url: projectRoleRoute,
+    handler: getProjectRoleHandler
   },
   {
     method: GET,

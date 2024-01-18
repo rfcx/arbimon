@@ -10,5 +10,5 @@ export const projectDeleteRoute = PROJECT_SPECIFIC_ROUTE_PREFIX
 
 // Service
 export const apiBioDeleteProject = async (apiClient: AxiosInstance, projectId: number): Promise<void> => {
-  await apiClient.delete(`/projects/${projectId}`)
+  await apiClient.delete(projectDeleteRoute.replace(':projectId', projectId.toString()))
 }
