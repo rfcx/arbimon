@@ -10,11 +10,11 @@ import { myProjectsRoute, projectsRoute } from '@rfcx-bio/common/api-bio/project
 import { requireAuthorized } from '@/_hooks/require-authenticated'
 import { requireProjectPermission } from '@/_hooks/require-permission'
 import { type RouteRegistration, DELETE, GET, PATCH, POST } from '../_services/api-helpers/types'
-import { getProjectMembersHandler, getProjectPermissionHandler } from './get-project-members'
 import { projectCreateHandler } from './project-create-handler'
 import { projectDeleteHandler } from './project-delete-handler'
 import { projectFiltersHandler, projectRecordingCountBySiteHandler } from './project-filters-handler'
 import { projectUpdateImageHandler } from './project-image-handler'
+import { deleteProjectMemberHandler, getProjectMembersHandler, getProjectPermissionHandler } from './project-member'
 import { projectProfileHandler, projectProfileStakeholdersReadOnlyHandler, projectProfileUpdateHandler } from './project-profile-handler'
 import { patchProjectPublishStatusHandler } from './project-publish-status-handler'
 import { myProjectsHandler, projectsAllHandler } from './projects-handler'
@@ -88,6 +88,12 @@ export const routesProject: RouteRegistration[] = [
     url: projectProfileImageRoute,
     preHandler: [requireProjectPermission('update-profile')],
     handler: projectUpdateImageHandler
+  },
+  {
+    method: DELETE,
+    url: projectDataRoute + '/users-delete',
+    preHandler: [requireProjectPermission('update-profile')],
+    handler: deleteProjectMemberHandler
   },
   {
     method: DELETE,
