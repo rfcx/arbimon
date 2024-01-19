@@ -214,6 +214,9 @@ describe('OpenSearch search', async () => {
     })
 
     // Assert
+    const opensearchData = await opensearch.get({ index: 'projects', id: '7689922' })
+    console.info(JSON.stringify(opensearchData))
+    console.info(response.body)
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body) as SearchResponseProject[]
     expect(results.findIndex(r => r.id === 7689922)).not.toBe(-1)
@@ -252,11 +255,9 @@ describe('OpenSearch search', async () => {
       }
     })
 
-    try {
-      await opensearch.get({ index: 'projects', id: '7689922' })
-    } catch (e) {
-      console.error(e)
-    }
+    const opensearchData = await opensearch.get({ index: 'projects', id: '7689922' })
+    console.info(JSON.stringify(opensearchData))
+    console.info(response.body)
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body) as SearchResponseProject[]
     expect(results.findIndex(r => r.id === 7689922)).not.toBe(-1)
