@@ -17,3 +17,4 @@ data:
   AWS_S3_BUCKET_NAME: arbimon-staging
   AWS_S3_BUCKET_REGION: eu-west-1
   CORE_API_BASE_URL: https://staging-api.rfcx.org
+  OPENSEARCH_ENABLED: false
