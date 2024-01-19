@@ -130,7 +130,7 @@ const isLoading = ref(false)
 const hasFailed = ref(false)
 
 const loadMoreProject = async (): Promise<void> => {
-  if (hasFetchedAll.value || isLoading.value) return
+  if (hasFetchedAll.value || isLoading.value || hasFailed.value) return
   fetchProjects(projects.value.length, LIMIT)
 }
 
