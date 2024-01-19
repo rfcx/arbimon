@@ -141,7 +141,10 @@ const fetchProjects = async (offset:number, limit: number): Promise<void> => {
   try {
     const myProjectResponse = await apiBioGetMyProjects(apiClientBio, limit, offset)
     isLoading.value = false
-    if (myProjectResponse === undefined) return
+    if (myProjectResponse === undefined) {
+      hasFailed.value = true
+      return
+    }
     hasFetchedAll.value = myProjectResponse.total < myProjectResponse.limit // check if reaching the end
     store.updateMyProject(myProjectResponse?.data)
   } catch (e) {
