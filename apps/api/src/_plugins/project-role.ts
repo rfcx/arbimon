@@ -3,7 +3,7 @@ import fp from 'fastify-plugin'
 
 import { type ProjectRole, getRoleById } from '@rfcx-bio/common/roles'
 
-import { getRoleIdByProjectAndUser } from '@/projects/dao/get-project-members-dao'
+import { getRoleIdByProjectAndUser } from '@/projects/dao/project-member-dao'
 import { getProjectById } from '@/projects/dao/projects-dao'
 
 const plugin: FastifyPluginCallback = (instance, _options, done) => {
@@ -19,7 +19,7 @@ const plugin: FastifyPluginCallback = (instance, _options, done) => {
     // TODO: check projectId is not NaN
 
     // TODO: we would like a cache of projectId => isPublished
-    const projectIsPublished = await getProjectById(projectId).then(p => p?.isPublished ?? false)
+    const projectIsPublished = await getProjectById(projectId).then(p => p?.status === 'published' ?? false)
     const userId = request.userId
 
     // When there is no user (no token) and project is not published, no role

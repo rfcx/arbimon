@@ -44,6 +44,16 @@ jobs:
           - 9090/tcp
         options: >-
           --name s3mock
+      search:
+        image: opensearchproject/opensearch:2.11.0
+        env:
+          discovery.type: single-node
+          plugins.security.disabled: true
+          bootstrap.memory_lock: true
+        ports:
+          - 9202:9200
+        options: >-
+          --name search
 
     steps:
       - name: 'Setup: Node'
@@ -120,6 +130,7 @@ jobs:
         run: pnpm --filter=cli db-rms-int
         env:
           BIO_DB_PORT: 5432
+          OPENSEARCH_PORT: 9202
           NODE_OPTIONS: '--max_old_space_size=6656'
       
       - name: 'Verify: Integration Tests'
@@ -141,3 +152,6 @@ jobs:
           AWS_S3_BUCKET_REGION: 'eu-west-1'
           AWS_S3_ENDPOINT: 'http://localhost:${{ job.services.s3mock.ports[9090] }}'
           AWS_EC2_METADATA_DISABLED: true
+          OPENSEARCH_HOST: localhost
+          OPENSEARCH_PORT: 9202
+          OPENSEARCH_SSL_ENABLED: false

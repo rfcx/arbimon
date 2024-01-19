@@ -19,13 +19,8 @@ export interface ProjectRecordingCountResponse {
 }
 
 // Route
-export const projectRecordingCountRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/recording-count`
-
 export const projectSitesRecordingCountRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/sites-recording-count`
 
 // Service
-export const apiBioGetProjectRecordingCount = async (apiClient: AxiosInstance, projectId: number): Promise<number | undefined> =>
-  await apiGetOrUndefined(apiClient, `/projects/${projectId}/recording-count`)
-
 export const apiBioGetProjectRecordingCountBySite = async (apiClient: AxiosInstance, projectId: number): Promise<number | undefined> =>
-  await apiGetOrUndefined(apiClient, `/projects/${projectId}/sites-recording-count`)
+  await apiGetOrUndefined(apiClient, projectSitesRecordingCountRoute.replace(':projectId', projectId.toString()))

@@ -1,8 +1,8 @@
 import { type AxiosInstance } from 'axios'
 
-import { type LocationProjectCountry, type LocationProjectMetric, type LocationProjectProfile, type Organization, type OrganizationType, type Project } from '@/dao/types'
+import { type LocationProjectCountry, type LocationProjectMetric, type LocationProjectProfile, type Organization, type OrganizationType, type Project, type ProjectStatus } from '../../dao/types'
 
-export const SEARCH_TYPE = ['project', 'organization', 'all'] as const
+export const SEARCH_TYPE = ['project', 'organization'] as const
 export type SearchType = typeof SEARCH_TYPE[number]
 
 export interface SearchRequestQueryParams {
@@ -13,7 +13,7 @@ export interface SearchRequestQueryParams {
 }
 
 export type SearchResponseProject = { type: 'project', avgLatitude: number, avgLongitude: number }
-  & Pick<Project, 'id' | 'idCore' | 'idArbimon' | 'name' | 'slug'>
+  & Pick<Project, 'id' | 'idCore' | 'idArbimon' | 'name' | 'slug' | 'status'>
   & Pick<LocationProjectProfile, 'image' | 'objectives' | 'summary'>
   & Pick<LocationProjectMetric, 'speciesCount' | 'recordingMinutesCount'>
   & Pick<LocationProjectCountry, 'countryCodes'>
@@ -38,53 +38,53 @@ export interface RawElasticSearchResponseBody<T> {
   }
 }
 
-// INFO:
-// These 2 interfaces has to be kept in sync with `./apps/pgsync/src/schema.json`
-// Nulls have to be kept because that's how they're synced to.
-// This is so bad since elasticsearch client 7.10's type system is not yet finished :(
+// INFO: This type has to be kept because opensearch does not have full typescript support.
+// So to keep everything intact and not scream for potentially null references. This is needed.
+// There has been a proposal for recreating a typescript-first opensearch client.
+// See `https://github.com/opensearch-project/opensearch-js/issues/444`
+// but seems like the author stopped working on it.
 export interface SearchQueryProjectRawResponse {
-  _index: 'location_project'
+  _index: 'projects'
   _type: string
   _id: string
   _score: number
   _source: {
-    id: number
+    // from `location_project` table
     id_core: string
     id_arbimon: number
     name: string
     slug: string
+    status: ProjectStatus
     latitude_north: number
     latitude_south: number
     longitude_east: number
     longitude_west: number
-    location_project_profile: {
-      summary: string
-      date_start: string
-      date_end: string | null
-      objectives: string[]
-      image: string
-    } | null
-    location_project_country: {
-      location_project_id: number
-      country_codes: string[]
-    } | null
-    location_project_metric: {
-      location_project_id: number
-      species_count: number
-      recording_minutes_count: number
-      detection_minutes_count: number
-      min_date: string
-      max_date: string
-      recording_min_date: string
-      recording_max_date: string
-      detection_min_date: string
-      detection_max_date: string
-    } | null
+
+    // from `location_project_profile` table
+    summary: string
+    date_start: string | null
+    date_end: string | null
+    objectives: string[]
+    image: string
+
+    // from `location_project_country` materialized view
+    country_codes: string[]
+
+    // from `location_project_metric` materialized view
+    species_count: number
+    recording_minutes_count: number
+    detection_minutes_count: number
+    min_date: string | null
+    max_date: string | null
+    recording_min_date: string | null
+    recording_max_date: string | null
+    detection_min_date: string | null
+    detection_max_date: string | null
   }
 }
 
 export interface SearchQueryOrganizationRawResponse {
-  _index: 'location_project'
+  _index: 'organizations'
   _type: string
   _id: string
   _score: number
@@ -98,13 +98,13 @@ export interface SearchQueryOrganizationRawResponse {
 }
 
 export const xSearchTotalCountHeaderName = 'x-search-total-count'
-export const searchUrl = '/search'
+export const searchRoute = '/search'
 export type SearchResponse = Array<SearchResponseProject | SearchResponseOrganization>
 
 export const apiBioSearch = async (apiClient: AxiosInstance, type: SearchType, query: string, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
   const response = await apiClient.request<SearchResponse>({
     method: 'GET',
-    url: searchUrl,
+    url: searchRoute,
     params: {
       type,
       q: query,

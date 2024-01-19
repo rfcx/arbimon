@@ -1,33 +1,39 @@
 import { QueryTypes } from 'sequelize'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type LocationProjectUserRole } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectUserRole, type UserProfile } from '@rfcx-bio/common/dao/types'
 import { type ProjectRole, getIdByRole, getRoleById } from '@rfcx-bio/common/roles'
 
 import { getSequelize } from '~/db'
-import { getProjectVersion } from './project-version-dao'
+import { getProjectById } from './projects-dao'
 
 const sequelize = getSequelize()
 const { LocationProjectUserRole: LocationProjectUserRoleModel } = ModelRepository.getInstance(sequelize)
 
-export const get = async (locationProjectId: number): Promise<Array<Omit<LocationProjectUserRole, 'createdAt' | 'updatedAt' | 'ranking'> & { email: string }>> => {
+export const get = async (locationProjectId: number): Promise<Array<Omit<LocationProjectUserRole, 'createdAt' | 'updatedAt' | 'ranking'> & Pick<UserProfile, 'email' | 'firstName' | 'lastName' | 'image'>>> => {
   const sql = `
     select
       location_project_user_role.location_project_id as "locationProjectId",
       location_project_user_role.user_id as "userId",
-      user_profile.email as "email",
       location_project_user_role.role_id as "roleId",
-      location_project_user_role.ranking as "ranking"
+      location_project_user_role.ranking as "ranking",
+      user_profile.first_name as "firstName",
+      user_profile.last_name as "lastName",
+      user_profile.image,
+      user_profile.email
     from location_project_user_role
     inner join user_profile on location_project_user_role.user_id = user_profile.id
     where location_project_user_role.location_project_id = $1`
 
-  const users = await sequelize.query<Omit<LocationProjectUserRole, 'createdAt' | 'updatedAt' | 'ranking'> & { email: string }>(sql, { bind: [locationProjectId], type: QueryTypes.SELECT })
+  const users = await sequelize.query<Omit<LocationProjectUserRole, 'createdAt' | 'updatedAt' | 'ranking'> & Pick<UserProfile, 'email' | 'firstName' | 'lastName' | 'image'>>(sql, { bind: [locationProjectId], type: QueryTypes.SELECT })
 
   return users.map(u => {
     return {
       locationProjectId: u.locationProjectId,
       userId: u.userId,
+      firstName: u.firstName,
+      lastName: u.lastName,
+      image: u.image,
       email: u.email,
       roleId: u.roleId
     }
@@ -47,16 +53,24 @@ export const create = async (data: { locationProjectId: number, userId: number, 
 
 export const getUserRoleForProject = async (userId: number | undefined, projectId: number): Promise<ProjectRole> => {
   // check if project published / public
-  const version = await getProjectVersion(projectId)
-  const isAccessibled = version?.isPublic
+  const project = await getProjectById(projectId)
+  const isPubliclyAccessible = project?.status === 'published'
   if (userId === undefined) {
-    return isAccessibled ? 'guest' : 'none'
+    return isPubliclyAccessible ? 'guest' : 'none'
   }
   // check if user is project member
   const roleId = await getRoleIdByProjectAndUser(projectId, userId)
   if (roleId === undefined) {
-    return isAccessibled ? 'guest' : 'none'
+    return isPubliclyAccessible ? 'guest' : 'none'
   }
 
-  return roleId !== undefined ? getRoleById(roleId) : 'none'
+  return getRoleById(roleId)
+}
+
+export const deleteProjectMember = async (projectId: number, userId: number): Promise<void> => {
+  await ModelRepository.getInstance(getSequelize())
+    .LocationProjectUserRole
+    .destroy({
+      where: { locationProjectId: projectId, userId }
+    })
 }

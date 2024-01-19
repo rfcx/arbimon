@@ -2,10 +2,9 @@ import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project, type ProjectVersion, type RecordingBySiteHour, type Site } from '@rfcx-bio/common/dao/types'
+import { literalizeCountsByMinute } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
+import { type Project, type RecordingBySiteHour, type Site } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
-
-import { literalizeCountsByMinute } from '../_helpers/sequelize-literal-integer-array-2d'
 
 // Mocked project, site, recordings
 export const testProject: Project = {
@@ -14,17 +13,12 @@ export const testProject: Project = {
   idArbimon: 10001001,
   slug: 'integration-test-project-10001001',
   name: 'Integration Test Project 1',
+  status: 'published',
+  statusUpdatedAt: new Date(),
   latitudeNorth: 0,
   latitudeSouth: 0,
   longitudeEast: 0,
   longitudeWest: 0
-}
-
-export const testProjectVersion: ProjectVersion = {
-  id: 1,
-  locationProjectId: 10001001,
-  isPublished: true,
-  isPublic: true
 }
 
 export const testSites: Site[] = [
@@ -141,10 +135,6 @@ export const up: MigrationFn<QueryInterface> = async ({ context: { sequelize } }
   // Create mocked project
   const projects: Project[] = [testProject]
   await models.LocationProject.bulkCreate(projects)
-
-  // Create mocked projects versions
-  const projectsVersions: ProjectVersion[] = [testProjectVersion]
-  await models.ProjectVersion.bulkCreate(projectsVersions)
 
   // Create mocked project sites
   await models.LocationSite.bulkCreate(testSites)

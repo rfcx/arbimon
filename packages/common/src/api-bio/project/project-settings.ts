@@ -5,7 +5,7 @@ import { type AxiosInstance } from 'axios'
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
 import { type AttributeTypes, attributes } from '../../dao/type-helpers'
-import { type LocationProjectProfile, type Project, type ProjectVersion } from '../../dao/types'
+import { type LocationProjectProfile, type Project } from '../../dao/types'
 import { type ApiStack, type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 import { type DashboardMetricsResponse } from '../dashboard/dashboard-metrics'
 import { type DashboardStakeholdersResponse } from '../dashboard/dashboard-stakeholders'
@@ -31,15 +31,16 @@ export type ProjectProfileUpdateResponse = Pick<LocationProjectProfile, 'summary
 
 export type ProjectInfoResponse = Pick<Project, 'name'>
   & Pick<LocationProjectProfile, 'summary' | 'objectives' | 'dateStart' | 'dateEnd'>
-  & Pick<ProjectVersion, 'isPublic' | 'isPublished'>
   & {
-  countryCodes?: string[]
-  readme?: string
-  keyResult?: string
-  metrics?: ProjectMetrics
-  image?: string
-  richnessByTaxon?: ApiStack
-}
+    isPublished: boolean
+    isPublic: boolean
+    countryCodes?: string[]
+    readme?: string
+    keyResult?: string
+    metrics?: ProjectMetrics
+    image?: string
+    richnessByTaxon?: ApiStack
+  }
 
 export type ProjectSettingsResponse = Omit<ProjectInfoResponse, 'readme' | 'keyResults' | 'metrics'>
 

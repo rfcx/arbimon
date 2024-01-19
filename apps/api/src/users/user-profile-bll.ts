@@ -5,13 +5,16 @@ import { extname } from 'node:path'
 import { URL } from 'node:url'
 
 import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
-import { type OrganizationTypes, type UserProfile } from '@rfcx-bio/common/dao/types'
+import { type OrganizationTypes, type UserProfile, type UserTypes } from '@rfcx-bio/common/dao/types'
 
 import { patchUserProfileOnCore } from '~/api-core/api-core'
 import { BioNotFoundError } from '~/errors'
+import { fileUrl } from '~/format-helpers/file-url'
 import { getObject, putObject } from '~/storage'
-import { getImageUrl } from './helpers'
-import { create, get, getAllOrganizations as daoGetAllOrganizations, getIdByEmail, update } from './user-profile-dao'
+import { create, get, getAllOrganizations as daoGetAllOrganizations, getIdByEmail, query, update } from './user-profile-dao'
+
+export const getUsers = async (emailLike: string): Promise<Array<UserTypes['light']>> =>
+  await query({ emailLike })
 
 export const getUserProfile = async (id: number): Promise<Omit<UserProfile, 'id' | 'idAuth0'>> => {
   const profile = await get(id)
@@ -24,7 +27,7 @@ export const getUserProfile = async (id: number): Promise<Omit<UserProfile, 'id'
     firstName: profile.firstName,
     lastName: profile.lastName,
     email: profile.email,
-    image: getImageUrl(profile.image),
+    image: fileUrl(profile.image),
     organizationIdAffiliated: profile.organizationIdAffiliated
   }
 }
@@ -36,7 +39,7 @@ export const patchUserProfile = async (token: string, email: string, id: number,
   const coreProfile: Pick<CoreUser, 'firstname' | 'lastname' | 'picture'> = {
     firstname: newProfile.firstName,
     lastname: newProfile.lastName,
-    picture: getImageUrl(newProfile.image) ?? null
+    picture: fileUrl(newProfile.image) ?? null
   }
   await patchUserProfileOnCore(token, email, coreProfile)
   await update(email, newProfile)
@@ -79,7 +82,7 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
   const coreProfile = {
     firstname: newProfile.firstName,
     lastname: newProfile.lastName,
-    picture: getImageUrl(newProfile.image) ?? null
+    picture: fileUrl(newProfile.image) ?? null
   }
   await patchUserProfileOnCore(token, email, coreProfile)
   await putObject(imagePath, await file.toBuffer(), file.mimetype, true)

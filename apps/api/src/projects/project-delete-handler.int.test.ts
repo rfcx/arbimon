@@ -16,7 +16,7 @@ const fakeToken = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6ImE0NTBhMz
 const userToken = { idAuth0: 'test' }
 const userId = 9001
 
-const { LocationProject, LocationProjectProfile, LocationProjectUserRole, ProjectVersion } = modelRepositoryWithElevatedPermissions
+const { LocationProject, LocationProjectProfile, LocationProjectUserRole } = modelRepositoryWithElevatedPermissions
 
 beforeEach(async () => {
   await createProject({ name: 'Snail with an itchy foot', isPublic: true }, userId, fakeToken)
@@ -25,7 +25,6 @@ beforeEach(async () => {
 afterEach(async () => {
   const locationProjects = await LocationProject.findAll({ where: { slug: { [Op.like]: 'snail%' } } }).then(projects => projects.map(project => project.id))
   await LocationProjectProfile.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
-  await ProjectVersion.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
   await LocationProjectUserRole.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
   await LocationProject.destroy({ where: { id: { [Op.in]: locationProjects } } })
 })

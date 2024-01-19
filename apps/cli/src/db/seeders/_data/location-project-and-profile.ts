@@ -101,10 +101,7 @@ const dataFakeProject = {
   image: ''
 }
 
-type ProjectAndProfile = Omit<Project, 'id'> & Omit<LocationProjectProfile, 'locationProjectId' > & {
-  isPublic: boolean
-  isPublished: boolean
-}
+type ProjectAndProfile = Omit<Project, 'id'> & Omit<LocationProjectProfile, 'locationProjectId' >
 
 export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile[]> = {
   default: [
@@ -113,8 +110,8 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1556,
       slug: 'puerto-rico',
       name: 'Puerto Rico',
-      isPublic: true,
-      isPublished: true,
+      status: 'published',
+      statusUpdatedAt: new Date(),
       ...dataPr
     },
     {
@@ -122,8 +119,8 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1209,
       slug: 'bci-panama-2018',
       name: 'BCI-Panama_2018',
-      isPublic: true,
-      isPublished: false,
+      status: 'listed',
+      statusUpdatedAt: new Date(),
       ...dataBci
     },
     {
@@ -131,8 +128,8 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1918,
       slug: 'fake-arbimon-project-for-bio',
       name: 'Fake Project',
-      isPublic: false,
-      isPublished: false,
+      status: 'hidden',
+      statusUpdatedAt: new Date(),
       ...dataFakeProject
     }
   ],
@@ -142,8 +139,8 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1556,
       slug: 'puerto-rico',
       name: 'Puerto Rico',
-      isPublic: true,
-      isPublished: false,
+      status: 'listed',
+      statusUpdatedAt: new Date(),
       ...dataPr
     },
     {
@@ -151,8 +148,8 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1209,
       slug: 'bci-panama-2018',
       name: 'BCI-Panama_2018',
-      isPublic: true,
-      isPublished: false,
+      status: 'listed',
+      statusUpdatedAt: new Date(),
       ...dataBci
     },
     {
@@ -160,8 +157,8 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1918,
       slug: 'fake-arbimon-project-for-bio',
       name: 'Fake Project',
-      isPublic: false,
-      isPublished: false,
+      status: 'unlisted',
+      statusUpdatedAt: new Date(),
       ...dataFakeProject
     }
   ],
@@ -171,8 +168,8 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1556,
       slug: 'puerto-rico',
       name: 'Puerto Rico',
-      isPublic: true,
-      isPublished: false,
+      status: 'listed',
+      statusUpdatedAt: new Date(),
       ...dataPr
     },
     {
@@ -180,8 +177,8 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1209,
       slug: 'bci-panama-2018',
       name: 'BCI-Panama_2018',
-      isPublic: true,
-      isPublished: false,
+      status: 'listed',
+      statusUpdatedAt: new Date(),
       ...dataBci
     }
   ],
@@ -191,8 +188,8 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1989,
       slug: 'puerto-rico-island-wide',
       name: 'Puerto Rico Island-Wide',
-      isPublic: true,
-      isPublished: false,
+      status: 'listed',
+      statusUpdatedAt: new Date(),
       ...dataPr
     },
     {
@@ -200,8 +197,8 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1209,
       slug: 'bci-panama-2018',
       name: 'BCI-Panama_2018',
-      isPublic: true,
-      isPublished: false,
+      status: 'listed',
+      statusUpdatedAt: new Date(),
       ...dataBci
     },
     {
@@ -209,8 +206,8 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       idArbimon: 1429,
       slug: 'rfcx-guardians-madre-de-dios-peru',
       name: 'RFCx-Guardians in Madre de Dios Peru',
-      isPublic: true,
-      isPublished: false,
+      status: 'published',
+      statusUpdatedAt: new Date(),
       ...dataMadre
     }
   ]

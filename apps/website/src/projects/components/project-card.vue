@@ -6,7 +6,7 @@
     <div>
       <img
         v-if="project.image"
-        :src="project.image"
+        :src="urlWrapper(project.image)"
         class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-03"
       >
       <div
@@ -47,7 +47,7 @@
       </p>
     </div>
     <div>
-      <template v-if="project.isPublished">
+      <template v-if="project.status === 'published'">
         <div class="mt-4">
           <icon-custom-fi-eye class="inline-flex text-insight mr-2" /> Live on Arbimon’s Project
         </div>
@@ -66,6 +66,7 @@ import { computed } from 'vue'
 import type { Project } from '@rfcx-bio/common/dao/types'
 
 import { getCountryLabel } from '@/_services/country'
+import { urlWrapper } from '@/_services/images/url-wrapper'
 import { ROUTE_NAMES } from '~/router'
 import TextTooltip from '../components/text-tooltip.vue'
 import { masterObjectiveTypes } from '../types'

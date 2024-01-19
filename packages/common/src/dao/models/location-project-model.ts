@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaultsAutoPk } from '../model-factory-helpers/defaults'
-import { type Project } from '../types'
+import { type Project, PROJECT_STATUS_ORDERED } from '../types'
 
 export const MODEL_LOCATION_PROJECT = 'LocationProject'
 export const TABLE_LOCATION_PROJECT = 'location_project'
@@ -33,6 +33,11 @@ export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
 
     // Facts
     name: DataTypes.STRING(255), // Puerto Rico Island-Wide
+    status: {
+      type: DataTypes.ENUM(...PROJECT_STATUS_ORDERED),
+      allowNull: false
+    },
+    statusUpdatedAt: DataTypes.DATE,
     latitudeNorth: DataTypes.FLOAT, // 18.51375
     latitudeSouth: DataTypes.FLOAT, // 17.93168
     longitudeEast: DataTypes.FLOAT, // -65.24505

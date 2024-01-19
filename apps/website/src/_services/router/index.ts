@@ -90,6 +90,11 @@ const routes: RouteRecordRaw[] = [
         beforeEnter: [authRequiredGuard]
       },
       {
+        path: 'users',
+        name: ROUTE_NAMES.projectMember,
+        component: PAGES.ProjectMember
+      },
+      {
         path: 'insights',
         component: PAGES.InsightsRoot,
         children: [

@@ -1,12 +1,12 @@
-import { type UpdateInsightsPublishStatusRequestBody, type UpdateInsightsPublishStatusRequestParams } from '@rfcx-bio/common/api-bio/insights-publish-status/insights-publish-status'
+import { type UpdateProjectPublishStatusRequestBody, type UpdateProjectPublishStatusRequestParams } from '@rfcx-bio/common/api-bio/project/project-publish-status'
 
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioPublicError, BioUnauthorizedError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { updateInsightsPublishStatus } from './dao/insights-publish-status-dao'
+import { updateProjectPublishStatus } from './dao/project-status-dao'
 
-export const patchInsightsPublishStatusHandler: Handler<any, UpdateInsightsPublishStatusRequestParams, unknown, UpdateInsightsPublishStatusRequestBody> = async (req, rep) => {
+export const patchProjectPublishStatusHandler: Handler<any, UpdateProjectPublishStatusRequestParams, unknown, UpdateProjectPublishStatusRequestBody> = async (req, rep) => {
   const token = req.headers.authorization
 
   // no token no data
@@ -26,6 +26,6 @@ export const patchInsightsPublishStatusHandler: Handler<any, UpdateInsightsPubli
     throw new BioPublicError('Invalid required body parameter `status`', 400)
   }
 
-  await updateInsightsPublishStatus(projectIdInteger, status)
+  await updateProjectPublishStatus(projectIdInteger, status)
   void rep.code(204)
 }

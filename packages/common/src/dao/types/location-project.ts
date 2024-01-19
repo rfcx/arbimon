@@ -1,11 +1,17 @@
 import { type AttributeTypes, attributes } from '../type-helpers'
 
+export const PROJECT_STATUS_ORDERED = ['hidden', 'unlisted', 'listed', 'published'] as const
+
+export type ProjectStatus = typeof PROJECT_STATUS_ORDERED[number]
+
 export interface Project {
   id: number
   idCore: string
   idArbimon: number
   slug: string
   name: string
+  status: ProjectStatus
+  statusUpdatedAt: Date
   latitudeNorth: number
   latitudeSouth: number
   longitudeEast: number
@@ -13,16 +19,15 @@ export interface Project {
   createdAt?: Date
   updatedAt?: Date
   deletedAt?: Date
-  // TODO: Remove the following 5
+  // TODO: Remove the following 4
   summary?: string
   objectives?: string[]
   countries?: string[]
   image?: string
-  isPublished?: boolean
 }
 
 export const ATTRIBUTES_LOCATION_PROJECT = attributes<Project>()({
-  light: ['id', 'idCore', 'slug', 'name', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
+  light: ['id', 'idCore', 'slug', 'name', 'status', 'statusUpdatedAt', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
 })
 
 export type LocationProjectTypes = AttributeTypes<Project, typeof ATTRIBUTES_LOCATION_PROJECT>

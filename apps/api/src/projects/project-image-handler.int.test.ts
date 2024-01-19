@@ -3,6 +3,7 @@ import { createReadStream } from 'fs'
 import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
 
 import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
+import { type Project } from '@rfcx-bio/common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
@@ -14,12 +15,14 @@ vi.mock('~/api-core/api-core')
 
 const { LocationProject, LocationProjectProfile } = modelRepositoryWithElevatedPermissions
 
-const defaultProject = {
+const defaultProject: Project = {
   id: 50010,
   idArbimon: 5010,
   idCore: 's1O7h5',
   name: 'Sloths hanging from branches',
   slug: 'sloths-hanging',
+  status: 'published',
+  statusUpdatedAt: new Date(),
   latitudeNorth: 0,
   latitudeSouth: 0,
   longitudeEast: 0,

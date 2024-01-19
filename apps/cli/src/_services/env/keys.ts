@@ -55,6 +55,12 @@ export const envGetters = {
   AWS_S3_BUCKET_SECRET_ACCESS_KEY: stringGetter,
   AWS_S3_BUCKET_NAME: stringGetter,
 
+  OPENSEARCH_HOST: stringGetter,
+  OPENSEARCH_PORT: numberGetter,
+  OPENSEARCH_SSL_ENABLED: booleanGetter,
+  OPENSEARCH_HTTPAUTH_USER: stringGetter,
+  OPENSEARCH_HTTPAUTH_PASSWORD: stringGetter,
+
   SLACK_TOKEN: stringGetter,
 
   ARBIMON_PROJECT_ID: numberGetter,
