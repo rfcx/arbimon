@@ -59,8 +59,10 @@
       class="mt-4"
     >
       <dashboard-project-stakeholders-empty
+        v-if="editable && !projectUserPermissionsStore.isGuest"
         @emit-add-stakeholders="$emit('emit-is-updating')"
       />
+      <ProjectSummaryEmptyForNonProjectMember v-else />
     </div>
     <StakeholdersTosBanner
       v-if="store.user === null"
@@ -74,6 +76,7 @@ import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboa
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import { useProjectUserPermissionsStore, useStore } from '~/store'
+import ProjectSummaryEmptyForNonProjectMember from '../project-summary-empty-for-non-project-member.vue'
 import DashboardProjectStakeholdersEmpty from './dashboard-project-stakeholders-empty.vue'
 import StakeholderCard from './stakeholder-card.vue'
 import StakeholdersTosBanner from './stakeholders-tos-banner.vue'
