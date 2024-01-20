@@ -165,7 +165,7 @@ describe('full reindex from postgres to opensearch', () => {
   test('a reindex will remove deleted projects', async () => {
     // Arrange
     await fullReindex(opensearchClient, sequelize)
-    await LocationProject.update({ deletedAt: dayjs().toDate() }, { where: { id: 2431216 } })
+    await LocationProject.destroy({ where: { id: 2431216 } })
 
     // Act
     await fullReindex(opensearchClient, sequelize)
