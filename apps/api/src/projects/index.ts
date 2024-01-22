@@ -2,6 +2,7 @@ import { projectCreateRoute } from '@rfcx-bio/common/api-bio/project/project-cre
 import { projectDeleteRoute } from '@rfcx-bio/common/api-bio/project/project-delete'
 import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
+import { projectMembersRoute } from '@rfcx-bio/common/api-bio/project/project-members'
 import { updateProjectPublishStatusRoute } from '@rfcx-bio/common/api-bio/project/project-publish-status'
 import { projectSitesRecordingCountRoute } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { projectRoleRoute } from '@rfcx-bio/common/api-bio/project/project-role'
@@ -15,7 +16,7 @@ import { projectCreateHandler } from './project-create-handler'
 import { projectDeleteHandler } from './project-delete-handler'
 import { projectFiltersHandler, projectRecordingCountBySiteHandler } from './project-filters-handler'
 import { projectUpdateImageHandler } from './project-image-handler'
-import { deleteProjectMemberHandler, getProjectMembersHandler, getProjectRoleHandler } from './project-member'
+import { addProjectMemberHandler, deleteProjectMemberHandler, getProjectMembersHandler, getProjectRoleHandler } from './project-member-handler'
 import { projectProfileHandler, projectProfileStakeholdersReadOnlyHandler, projectProfileUpdateHandler } from './project-profile-handler'
 import { patchProjectPublishStatusHandler } from './project-publish-status-handler'
 import { myProjectsHandler, projectsAllHandler } from './projects-handler'
@@ -58,13 +59,26 @@ export const routesProject: RouteRegistration[] = [
   },
   {
     method: GET,
-    url: projectDataRoute + '/users',
+    url: projectMembersRoute,
     preHandler: [requireProjectPermission('read-users')],
     handler: getProjectMembersHandler
   },
   {
+    method: POST,
+    url: projectMembersRoute,
+    preHandler: [requireProjectPermission('update-users')],
+    handler: addProjectMemberHandler
+  },
+  {
+    method: DELETE,
+    url: projectMembersRoute,
+    preHandler: [requireProjectPermission('update-users')],
+    handler: deleteProjectMemberHandler
+  },
+  {
     method: GET,
     url: projectRoleRoute,
+    preHandler: [requireAuthorized],
     handler: getProjectRoleHandler
   },
   {
@@ -89,12 +103,6 @@ export const routesProject: RouteRegistration[] = [
     url: projectProfileImageRoute,
     preHandler: [requireProjectPermission('update-profile')],
     handler: projectUpdateImageHandler
-  },
-  {
-    method: DELETE,
-    url: projectDataRoute + '/users-delete',
-    preHandler: [requireProjectPermission('update-profile')],
-    handler: deleteProjectMemberHandler
   },
   {
     method: DELETE,

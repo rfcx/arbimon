@@ -45,10 +45,16 @@ export const getRoleIdByProjectAndUser = async (locationProjectId: number, userI
   return role?.roleId
 }
 
-export const create = async (data: { locationProjectId: number, userId: number, role: ProjectRole, ranking: number }): Promise<void> => {
+export const create = async (data: { locationProjectId: number, userId: number, role: Exclude<ProjectRole, 'none'>, ranking: number }): Promise<void> => {
   const { role, ...otherFields } = data
   const roleId = getIdByRole(role)
-  await LocationProjectUserRoleModel.create({ ...otherFields, roleId }).catch(e => { console.info(e) })
+  await LocationProjectUserRoleModel.create({ ...otherFields, roleId })
+}
+
+export const destroy = async (projectId: number, userId: number): Promise<void> => {
+  await LocationProjectUserRoleModel.destroy({
+    where: { locationProjectId: projectId, userId }
+  })
 }
 
 export const getUserRoleForProject = async (userId: number | undefined, projectId: number): Promise<ProjectRole> => {
@@ -65,12 +71,4 @@ export const getUserRoleForProject = async (userId: number | undefined, projectI
   }
 
   return getRoleById(roleId)
-}
-
-export const deleteProjectMember = async (projectId: number, userId: number): Promise<void> => {
-  await ModelRepository.getInstance(getSequelize())
-    .LocationProjectUserRole
-    .destroy({
-      where: { locationProjectId: projectId, userId }
-    })
 }
