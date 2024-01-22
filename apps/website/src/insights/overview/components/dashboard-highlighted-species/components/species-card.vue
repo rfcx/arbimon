@@ -13,21 +13,24 @@
       v-if="redirect === true"
       :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: slug }, query: $route.query }"
       :title="scientificName"
-      exact-active-class="!text-gray-900 !dark:text-insight"
+      exact-active-class="!dark:text-insight"
       class="text-s italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
+      :class="{'text-black' : textBlack}"
     >
       {{ scientificName }}
     </router-link>
     <p
       v-else
-      class="text-sm italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
+      class="text-sm font-normal italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
       :title="scientificName"
+      :class="{'text-black' : textBlack}"
     >
       {{ scientificName }}
     </p>
     <p
-      class="mt-1 text-xs tracking-tight line-clamp-1 md:(overflow-hidden text-ellipsis)"
+      class="mt-1 font-medium text-xs tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
       :title="commonName || 'Unknown'"
+      :class="{'text-black' : textBlack}"
     >
       {{ commonName || 'Unknown' }}
     </p>
@@ -37,6 +40,6 @@
 <script setup lang="ts">
 import { ROUTE_NAMES } from '~/router'
 
-defineProps<{ slug: string, scientificName: string, commonName: string | undefined, photoUrl: string | undefined, redirect: boolean }>()
+defineProps<{ slug: string, scientificName: string, commonName: string | undefined, photoUrl: string | undefined, redirect: boolean, textBlack: boolean }>()
 
 </script>

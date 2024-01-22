@@ -12,6 +12,7 @@
           :common-name="item.commonName"
           :photo-url="item.photoUrl"
           :redirect="true"
+          :text-black="false"
         />
       </div>
       <div class="flex items-center">

@@ -6,14 +6,14 @@
     aria-hidden="true"
     class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
   >
-    <div class="relative w-full max-w-3/5 max-h-full">
+    <div class="relative w-full max-w-4/5 max-h-full">
       <div class="relative p-6 bg-white rounded-lg shadow dark:bg-moss">
         <div class="flex flex-col gap-y-4">
           <!-- Modal header -->
           <div class="flex items-center justify-between">
             <div class="flex flex-col gap-y-3">
               <h2>Highlighted species</h2>
-              <h6>
+              <h6 class="text-util-gray-01">
                 Select up to five species to highlight in this project.
               </h6>
             </div>
@@ -29,7 +29,7 @@
             v-model="searchKeyword"
             placeholder="Search species"
             size="large"
-            class="bg-mock"
+            class="bg-mock sm:w-70"
           >
             <template #prefix>
               <div class="inline-flex items-center">
@@ -37,11 +37,11 @@
               </div>
             </template>
           </el-input>
-          <div class="flex flex-row items-center gap-x-2">
+          <div class="grid xl:grid-cols-3 items-center gap-x-2 my-1">
             <button
               id="dropdownButton"
               data-dropdown-toggle="dropdown"
-              class="bg-echo text-frequency text-xs rounded-full flex flex-row items-center py-1 px-2"
+              class="bg-echo text-frequency w-30 text-xs rounded-full flex col-span-2 flex-row items-center py-1 px-2"
               type="button"
             >
               IUCN status
@@ -77,6 +77,9 @@
                 </li>
               </ul>
             </div>
+            <div class="xl:grid col-span-1 flex-row hidden ml-2 font-medium">
+              <h4>Selected species</h4>
+            </div>
           </div>
           <!-- Modal body -->
           <div class="grid gap-x-4 w-full sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
@@ -89,7 +92,7 @@
                   v-for="item in speciesForCurrentPage"
                   :key="'specie-highlighted-' + item.slug"
                   :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 h-full md:(flex-row h-21) lg:(flex-row h-21 justify-between) bg-echo hover:(border-frequency cursor-pointer)"
+                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 h-full h-23 md:(flex-row) lg:(flex-row justify-between) bg-echo hover:(border-frequency cursor-pointer)"
                   @click="selectSpecie(item)"
                 >
                   <SpecieCard
@@ -98,6 +101,7 @@
                     :common-name="item.commonName"
                     :photo-url="item.photoUrl"
                     :redirect="false"
+                    :text-black="false"
                   />
                   <div class="self-center">
                     <el-tag
@@ -143,11 +147,7 @@
               class="btn btn-primary group"
               @click="saveHighlightedSpecies"
             >
-              Continue
-              <icon-custom-arrow-right
-                v-if="!isLoadingPostSpecies"
-                class="ml-2 h-4 w-4 inline text-pitch group-hover:stroke-pitch"
-              />
+              Select species
               <icon-fas-spinner
                 v-if="isLoadingPostSpecies || isLoadingDeleteSpecies"
                 class="ml-2 h-4 w-4 inline text-pitch group-hover:stroke-pitch"

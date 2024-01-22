@@ -74,6 +74,7 @@ declare module 'vue' {
     IconCustomIcArrowViewMore: typeof import('~icons/custom-icons/ic-arrow-view-more')['default']
     IconCustomIcEdit: typeof import('~icons/custom-icons/ic-edit')['default']
     IconCustomIcInfo: typeof import('~icons/custom-icons/ic-info')['default']
+    IconCustomIcPlus: typeof import('~icons/custom-icons/ic-plus')['default']
     IconCustomIcWarning: typeof import('~icons/custom-icons/ic-warning')['default']
     IconCustomImageSlash: typeof import('~icons/custom-icons/image-slash')['default']
     IconCustomInputLoader: typeof import('~icons/custom-icons/input-loader')['default']
