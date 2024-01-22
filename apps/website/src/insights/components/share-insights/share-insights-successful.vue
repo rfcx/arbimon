@@ -41,7 +41,7 @@
         <!-- Modal body -->
         <div class="px-4 py-6 space-y-3">
           <h3 class="text-frequency text-base font-medium font-sans leading-normal">
-            This page is now live on Arbimon's Directory.
+            This page is now live on Arbimon's Projects.
           </h3>
           <input
             type="text"
@@ -50,7 +50,7 @@
             :value="arbimonLink"
           >
           <p class="text-base text-white font-normal font-sans leading-normal mb-0.5">
-            This project is searchable on Arbimon's Directory and is visible to anyone.
+            This project is searchable on Arbimon's Projects and the detailed Insights are visible to anyone.
           </p>
         </div>
         <!-- Modal footer -->
