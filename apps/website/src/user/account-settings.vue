@@ -152,7 +152,8 @@
             <div class="flex w-full flex-row justify-end">
               <button
                 type="submit"
-                class="btn btn-primary px-3 py-2"
+                class="btn btn-primary px-3 py-2 disabled:hover:btn-disabled disabled:btn-disabled"
+                :disabled="createNewOrganizationLoading"
                 @click="createNewOrganization"
               >
                 Create organization
@@ -163,7 +164,7 @@
 
         <div
           ref="organizationSearchResultNotFoundContainer"
-          class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border-b border-l border-r rounded-b-lg shadow flex flex-row justify-between p-3"
+          class="z-10 hidden w-[20.0rem] text-insight bg-echo border-cloud border rounded-lg shadow flex flex-row justify-between p-3"
         >
           <p class="text-sm font-normal font-sans text-insight leading-tight">
             We are unable to find this organization.
@@ -237,6 +238,7 @@ const uploadedPhotoData: Ref<Record<string, string>> = ref({
 })
 const searchDropdown = ref() as Ref<Dropdown>
 const notFoundDropdown = ref() as Ref<Dropdown>
+const createNewOrganizationForm = ref() as Ref<Dropdown>
 const dropdownStatus = ref<'idle' | 'search' | 'create-org'>('idle')
 const organizationSearchInput = ref<HTMLDivElement | null>(null)
 const organizationSearchResultContainer = ref<HTMLDivElement | null>(null)
@@ -247,6 +249,7 @@ const createNewOrganizationFormContainer = ref<HTMLDivElement | null>(null)
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
 const newOrganizationUrl = ref<string>('')
 const dropdownOptions: DropdownOptions = { placement: 'bottom-start', triggerType: 'none', offsetDistance: 1 }
+const createNewOrganizationLoading = ref(false)
 
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
@@ -266,6 +269,7 @@ onMounted(() => {
   email.value = store.user?.email ?? ''
   searchDropdown.value = new Dropdown(organizationSearchResultContainer.value, organizationSearchInput.value, dropdownOptions)
   notFoundDropdown.value = new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, dropdownOptions)
+  createNewOrganizationForm.value = new Dropdown(createNewOrganizationFormContainer.value, organizationSearchInput.value, dropdownOptions)
 })
 
 watch(profileData, () => {
@@ -320,6 +324,7 @@ const hideNotFoundContainer = async (): Promise<void> => {
 }
 
 const organizationSearchInputChanged = async () => {
+  createNewOrganizationForm.value.hide()
   dropdownStatus.value = 'search'
   await refetchOrganizationsSearch()
   if (orgsSearchResult.value && orgsSearchResult.value.length === 0) {
@@ -327,6 +332,7 @@ const organizationSearchInputChanged = async () => {
   } else {
     showNotFoundContainer()
     hideNotFoundContainer()
+    searchDropdown.value.show()
   }
 }
 
@@ -348,35 +354,39 @@ const refetchOrganizationsSearch = async (): Promise<void> => {
   }
 }
 
-const onAddNewOrganizationFromSearch = (id: number): void => {
-  console.info(id)
-  // Return when the org already exists
-  if (displayedOrganization.value?.id === id) return
+const onAddNewOrganizationFromSearch = async (id: number): Promise<void> => {
+  searchDropdown.value.hide()
 
   // Add to the list when it's new org
   const newOrg = searchOrganizationValue.value ? organizationsSearchResult.value?.find((o) => o.id === id) : organizationsList.value?.find((o) => o.id === id)
   if (newOrg == null) return
-  console.info(newOrg)
   selectedOrganizationId.value = newOrg.id
   addedOrganization.value = newOrg
   searchOrganizationValue.value = newOrg.name
-  searchDropdown.value.hide()
+  await refetchOrganizationsSearch()
 }
 
 const openCreateNewOrganizationForm = async (): Promise<void> => {
   dropdownStatus.value = 'create-org'
-  new Dropdown(createNewOrganizationFormContainer.value, organizationSearchInput.value, dropdownOptions).show()
+  notFoundDropdown.value.hide()
+  createNewOrganizationForm.value.show()
 }
 
 const createNewOrganization = (): void => {
+  createNewOrganizationLoading.value = true
   mutateNewOrganization({ name: searchOrganizationValue.value, type: newOrganizationType.value, url: newOrganizationUrl.value }, {
     onSuccess: (newOrganization) => {
       addedOrganization.value = newOrganization
       selectedOrganizationId.value = newOrganization.id
       dropdownStatus.value = 'idle'
+      refetchOrganizationsSearch()
+      createNewOrganizationLoading.value = false
+      createNewOrganizationForm.value.hide()
     },
     onError: () => {
       dropdownStatus.value = 'idle'
+      createNewOrganizationLoading.value = false
+      createNewOrganizationForm.value.hide()
     }
   })
 }
@@ -420,7 +430,6 @@ const saveProfilePhoto = async (): Promise<void> => {
   })
   const form = new FormData()
   form.append('image', imageFileAsBlobType, uploadedPhotoData.value.name)
-  console.info(form.getAll('image'))
   mutatePatchProfilePhoto(form, {
     onSuccess: async () => { }
   })
