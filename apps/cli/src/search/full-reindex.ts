@@ -4,6 +4,20 @@ import { type Sequelize } from 'sequelize'
 import { analysis } from './analysis'
 import { mappings } from './mappings'
 
+/**
+ * @param config.delete specify `false` to not delete the index before the create. Just leave empty if you want to do index recreation.
+ */
+const recreateIndex = async (client: Client, index: string, config: { delete?: boolean, body?: object }): Promise<void> => {
+  if (config.delete === undefined || config.delete) {
+    await client.indices.delete({ index })
+  }
+
+  await client.indices.create({
+    index,
+    body: config.body
+  })
+}
+
 /** check which index is there, delete them, then recreate them and put data */
 export const fullReindex = async (client: Client, sequelize: Sequelize): Promise<void> => {
   // Check for existing indices
@@ -11,28 +25,25 @@ export const fullReindex = async (client: Client, sequelize: Sequelize): Promise
   const requiredIndexes = ['projects', 'organizations']
 
   for (const indexName of requiredIndexes) {
-    // if a required index is found and existed in prior session. Delete and recreate the index
-    // ignore other index types
-    if (indices.find(index => index.index === indexName) !== undefined) {
-      if (indexName === 'projects') {
-        await client.indices.delete({ index: indexName })
-        await client.indices.create({
-          index: indexName,
-          body: {
-            mappings,
-            settings: {
-              analysis
-            }
-          }
-        })
+    const requiredIndexExists = indices.find(index => index.index === indexName) !== undefined
 
-        continue
-      }
-
-      await client.indices.delete({ index: indexName })
-      await client.indices.create({
-        index: indexName
-      })
+    if (requiredIndexExists) {
+      await recreateIndex(
+        client,
+        indexName,
+        {
+          body: indexName === 'projects' ? { mappings, settings: { analysis } } : undefined
+        }
+      )
+    } else {
+      await recreateIndex(
+        client,
+        indexName,
+        {
+          delete: false,
+          body: indexName === 'projects' ? { mappings, settings: { analysis } } : undefined
+        }
+      )
     }
   }
 
