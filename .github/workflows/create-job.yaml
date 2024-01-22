@@ -9,6 +9,7 @@ on:
         - 'sync-daily'
         - 'sync-incremental'
         - 'export-csv'
+        - 'opensearch-full-reindex'
         required: true
       environment:
         description: Environment (namespace)
@@ -60,6 +61,10 @@ jobs:
               "export-csv": {
                 "JOB_NAME": "biodiversity-cli-export-csv",
                 "NODE_COMMAND": "apps/cli/lib/export/export-csv.js"
+              },
+              "opensearch-full-reindex": {
+                "JOB_NAME": "biodiversity-cli-opensearch-full-reindex",
+                "NODE_COMMAND": "apps/cli/lib/search/main.js"
               }
             }
 
