@@ -52,7 +52,7 @@
               exact-active-class="!text-gray-900 !dark:text-insight"
               class="block px-4 py-2 dark:text-insight dark:hover:text-frequency"
             >
-              About
+              Mission
             </router-link>
           </li>
           <li class="pb-2">
