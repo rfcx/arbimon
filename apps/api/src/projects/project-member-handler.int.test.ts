@@ -6,7 +6,7 @@ import { getIdByRole } from '@rfcx-bio/common/roles'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
-import { DELETE, POST } from '~/api-helpers/types'
+import { DELETE, PATCH, POST } from '~/api-helpers/types'
 import { routesProject } from './index'
 import { createProject } from './project-create-bll'
 
@@ -99,4 +99,27 @@ test(`DELETE ${projectMembersRoute} removes user`, async () => {
   expect(response.statusCode).toBe(204)
   const projectUserRole = await LocationProjectUserRole.findOne({ where: { locationProjectId, userId } })
   expect(projectUserRole).toBeNull()
+})
+
+test(`PATCH ${projectMembersRoute} removes user`, async () => {
+  // Arrange
+  const app = await makeApp(routesProject, { projectRole: 'admin' })
+  const locationProjectId = await LocationProject.findOne({ where: { slug: { [Op.like]: 'grey-blue-humpback%' } } }).then(p => p?.id ?? 0)
+  const userId = await UserProfile.findOne({ where: { email: newUser.email } }).then(u => u?.id ?? 0)
+  await LocationProjectUserRole.create({ locationProjectId, userId, roleId: getIdByRole('user'), ranking: 0 })
+  const payload: ProjectMemberAddRemoveRequest = { email: newUser.email, role: 'expert' }
+
+  // Act
+  const response = await app.inject({
+    method: PATCH,
+    url: projectMembersRoute.replace(':projectId', locationProjectId.toString() ?? ''),
+    payload,
+    headers: { Authorization: fakeToken }
+  })
+
+  // Assert
+  expect(response.statusCode).toBe(204)
+  const projectUserRole = await LocationProjectUserRole.findOne({ where: { locationProjectId, userId } })
+  expect(projectUserRole).not.toBeNull()
+  expect(projectUserRole?.roleId).toBe(getIdByRole('expert'))
 })

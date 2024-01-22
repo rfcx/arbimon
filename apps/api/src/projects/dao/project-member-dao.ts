@@ -57,6 +57,12 @@ export const destroy = async (projectId: number, userId: number): Promise<void> 
   })
 }
 
+export const update = async (data: { locationProjectId: number, userId: number, role: Exclude<ProjectRole, 'none'> }): Promise<void> => {
+  const { role, ...where } = data
+  const roleId = getIdByRole(role)
+  await LocationProjectUserRoleModel.update({ roleId }, { where })
+}
+
 export const getUserRoleForProject = async (userId: number | undefined, projectId: number): Promise<ProjectRole> => {
   // check if project published / public
   const project = await getProjectById(projectId)
