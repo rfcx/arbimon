@@ -173,10 +173,11 @@ import { type DropdownOptions, Dropdown, initTooltips } from 'flowbite'
 import { type Ref, computed, inject, onMounted, ref } from 'vue'
 
 import type { UserTypes } from '@rfcx-bio/common/dao/types'
+import { type ProjectRole } from '@rfcx-bio/common/roles'
 
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
-import { useDeleteProjectMember, useGetProjectMembers, useSearchUsers } from './_composables/use-project-member'
+import { useAddProjectMember, useDeleteProjectMember, useGetProjectMembers, useSearchUsers, useUpdateProjectMember } from './_composables/use-project-member'
 import ProjectMember from './components/project-member.vue'
 import ProjectUserSearch from './components/project-user-search.vue'
 
@@ -245,8 +246,8 @@ const roles = [
 
 const { data: users, refetch: usersRefetch } = useGetProjectMembers(apiClientBio, selectedProjectId)
 const { data: searchedUsers, refetch: searchUsersRefetch } = useSearchUsers(apiClientBio, userSearchValue)
-// const { mutate: mutatePostUserRole } = useUpdateUserRole(apiClientBio, store.selectedProject?.id ?? -1)
-// const { mutate: mutatePatchUserRole } = useAddUserRole(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutatePatchUserRole } = useUpdateProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutatePostProjectMember } = useAddProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutateDeleteProjectMember } = useDeleteProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
 
 const userSearchResult = computed(() => {
@@ -306,12 +307,25 @@ const onEmitSelectedUser = (user: UserTypes['light']):void => {
 }
 
 const addSelectedUser = ():void => {
-  console.info('addSelectedUser', selectedProjectId.value, userToAdd.value)
-  // TODO: 1. add the user 2. refetch data
+  mutatePostProjectMember({
+    email: userToAdd.value.email,
+    role: 'user'
+  }, {
+    onSuccess: () => {
+      usersRefetch()
+    }
+  })
 }
 
-const changeUserRole = ():void => {
-  console.info('changeUserRole')
+const changeUserRole = (email: string, role: string):void => {
+  mutatePatchUserRole({
+    email,
+    role: role.toLowerCase() as Exclude<ProjectRole, 'none'>
+  }, {
+    onSuccess: () => {
+      usersRefetch()
+    }
+  })
 }
 
 const deleteProjectMember = (email: string):void => {

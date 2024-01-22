@@ -60,7 +60,7 @@
             v-for="role in roles.filter(r => r.id !== 4)"
             :key="role.id"
             class="flex flex-row justify-start items-center p-1 m-0 cursor-pointer"
-            @click="$emit('emitChangeUserRole', user.userId, role.id)"
+            @click="$emit('emitChangeUserRole', user.email, role.name); closeMenu()"
           >
             <span class="w-8">
               <icon-fa-check
@@ -76,7 +76,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { initDropdowns } from 'flowbite'
+import { Dropdown, initDropdowns } from 'flowbite'
 import { onMounted } from 'vue'
 
 import type { ProjectMember } from '@rfcx-bio/common/api-bio/project/project-members'
@@ -87,16 +87,26 @@ interface Role {
   description: string
 }
 
+let dropdown: Dropdown
+
 const props = defineProps<{user: ProjectMember, roles: Role[]}>()
-defineEmits<{(e: 'emitChangeUserRole', userId: number, roleId: number): void, (e: 'emitDeleteProjectMember', email: string): void}>()
+defineEmits<{(e: 'emitChangeUserRole', email: string, role: string): void, (e: 'emitDeleteProjectMember', email: string): void}>()
 
 const getUserRoleName = (): string => {
   const role = props.roles.find(r => r.id === props.user.roleId)
   return role !== undefined ? role.name : 'Not defined'
 }
 
+const closeMenu = (): void => {
+  dropdown.hide()
+}
+
 onMounted(() => {
   initDropdowns()
+  dropdown = new Dropdown(
+    document.getElementById(`dropdownRole-${props.user.email}`),
+    document.getElementById(`dropdownRoleButton-${props.user.email}`)
+  )
 })
 </script>
 <style lang="scss">
