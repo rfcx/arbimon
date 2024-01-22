@@ -56,7 +56,7 @@
             :title="'Create New Analysis Job'"
             @click="toggleAnalysisSelector(true)"
           >
-            <icon-fa-plus-circle class="h-3 w-3" />
+            <icon-custom-ic-plus class="h-4 w-4 mb-3px" />
             <span class="font-display text-base">Create new analysis</span>
           </button>
           <CreateAnalysis
