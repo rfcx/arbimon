@@ -1,4 +1,4 @@
-import { getSequelize } from '@/db/connections'
+import { getSequelize } from '../db/connections'
 import { fullReindex } from './full-reindex'
 import { getOpenSearchClient } from './opensearch'
 
