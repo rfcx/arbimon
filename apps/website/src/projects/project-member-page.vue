@@ -314,8 +314,8 @@ const changeUserRole = ():void => {
   console.info('changeUserRole')
 }
 
-const deleteProjectMember = (userId: number):void => {
-  mutateDeleteProjectMember(userId, {
+const deleteProjectMember = (email: string):void => {
+  mutateDeleteProjectMember(email, {
     onSuccess: () => {
       usersRefetch()
     }
