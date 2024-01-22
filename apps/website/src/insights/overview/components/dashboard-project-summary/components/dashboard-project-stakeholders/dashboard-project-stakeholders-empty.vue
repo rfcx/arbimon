@@ -6,15 +6,15 @@
     </div>
     <div class="flex flex-col md:(flex-row items-center) gap-4">
       <span class="text-insight text-base font-medium font-sans flex-1">
-        Don't leave this space empty - make it meaningful by adding your content.
+        Don't leave this space empty - showcase the people and organizations behind this project.
       </span>
       <button
         class="text-frequency cursor-pointer font-display flex-shrink-0"
         :class="{ 'disabled:cursor-not-allowed disabled:opacity-70': projectUserPermissionsStore.isGuest }"
         :disabled="projectUserPermissionsStore.isGuest"
-        @click="onAddContentClicked"
+        @click="onAddStakeholdersClicked"
       >
-        Add content
+        Add stakeholders
       </button>
     </div>
   </div>
@@ -23,12 +23,12 @@
 <script setup lang="ts">
 import { useProjectUserPermissionsStore } from '~/store'
 
-const emit = defineEmits<{(event: 'emit-add-content'): void}>()
+const emit = defineEmits<{(event: 'emit-add-stakeholders'): void}>()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
-const onAddContentClicked = () => {
+const onAddStakeholdersClicked = () => {
   if (!projectUserPermissionsStore.isGuest) {
-    emit('emit-add-content')
+    emit('emit-add-stakeholders')
   }
 }
 </script>

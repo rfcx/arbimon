@@ -11,26 +11,29 @@
     </div>
     <a
       v-if="!projectUserPermissionsStore.isGuest"
-      :href="analysisUrl"
       target="_blank"
       class="text-frequency cursor-pointer font-display flex-shrink-0"
+      @click="toggleAnalysisSelector(true)"
     >
       Run analysis
     </a>
+    <CreateAnalysis
+      v-if="hasOpenedAnalysisSelector"
+      @emit-close="toggleAnalysisSelector(false)"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref } from 'vue'
 
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import CreateAnalysis from '@/projects/components/create-analysis.vue'
+import { useProjectUserPermissionsStore } from '~/store'
 
-const store = useStore()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
+const hasOpenedAnalysisSelector = ref(false)
 
-const selectedProject = computed(() => store.selectedProject)
-
-const BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
-const analysisUrl = `${BASE_URL}/project/${selectedProject.value?.slug}/analysis`
-
+function toggleAnalysisSelector (isOpened: boolean): void {
+  hasOpenedAnalysisSelector.value = isOpened
+}
 </script>
