@@ -367,7 +367,9 @@ const allItems: Item[] = [
       },
       {
         title: 'Members',
-        legacyPath: '/settings/users'
+        route: {
+          name: ROUTE_NAMES.projectMember
+        }
       }
     ]
   }
