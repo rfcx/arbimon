@@ -55,7 +55,13 @@
               Mission
             </router-link>
           </li>
-          <li class="pb-2">
+          <li>
+            <a
+              href="https://rfcx.org/press"
+              class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
+            >Press</a>
+          </li>
+          <li>
             <router-link
               :to="{ name: ROUTE_NAMES.landingPublications }"
               exact-active-class="!text-gray-900 !dark:text-insight"
@@ -63,6 +69,12 @@
             >
               Publications
             </router-link>
+          </li>
+          <li>
+            <a
+              href="https://rfcx.org/blog"
+              class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
+            >Blog</a>
           </li>
           <li>
             <router-link
