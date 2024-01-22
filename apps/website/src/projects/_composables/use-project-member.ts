@@ -2,7 +2,7 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import { type AxiosInstance } from 'axios'
 import { type ComputedRef, type Ref } from 'vue'
 
-import { type ProjectMembersResponse, apiBioGetProjectMembers, apiBioRemoveProjectMember } from '@rfcx-bio/common/api-bio/project/project-members'
+import { type ProjectMemberAddRemoveRequest, type ProjectMembersResponse, type ProjectMemberUpdateRequest, apiBioAddProjectMember, apiBioGetProjectMembers, apiBioRemoveProjectMember, apiBioUpdateProjectMember } from '@rfcx-bio/common/api-bio/project/project-members'
 import { type UsersLightResponse, type UsersRequestQueryParams, apiGetUsers } from '@rfcx-bio/common/api-bio/users/profile'
 
 export const useGetProjectMembers = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>): UseQueryReturnType<ProjectMembersResponse, unknown> => {
@@ -16,6 +16,20 @@ export const useSearchUsers = (apiClient: AxiosInstance, q: Ref<string>): UseQue
   return useQuery({
     queryKey: ['get-search-users'],
     queryFn: async () => await apiGetUsers(apiClient, { q: q.value })
+  })
+}
+
+export const useAddProjectMember = (apiClient: AxiosInstance, projectId: number): UseMutationReturnType<void, unknown, ProjectMemberAddRemoveRequest, unknown> => {
+  return useMutation({
+    mutationKey: ['post-project-member'],
+    mutationFn: async (payload: ProjectMemberAddRemoveRequest) => { await apiBioAddProjectMember(apiClient, projectId, payload) }
+  })
+}
+
+export const useUpdateProjectMember = (apiClient: AxiosInstance, projectId: number): UseMutationReturnType<void, unknown, ProjectMemberUpdateRequest, unknown> => {
+  return useMutation({
+    mutationKey: ['patch-project-member'],
+    mutationFn: async (payload: ProjectMemberUpdateRequest) => { await apiBioUpdateProjectMember(apiClient, projectId, payload) }
   })
 }
 
