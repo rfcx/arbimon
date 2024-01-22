@@ -40,7 +40,7 @@ jobs:
                 "ECR_REPO": "biodiversity-cli/staging"
               },
               "testing": {
-                "ECR_REPO": "biodiversity-cli"
+                "ECR_REPO": "biodiversity-cli/testing"
               }
             }
       - name: 'Setup: ENV job'
