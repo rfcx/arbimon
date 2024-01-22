@@ -42,7 +42,7 @@
         v-if="user.roleId !== 4"
         type="button"
         class="bg-echo text-danger rounded-lg flex flex-row items-center py-1 px-2 ml-2"
-        @click="$emit('emitDeleteProjectMember', user.userId)"
+        @click="$emit('emitDeleteProjectMember', user.email)"
       >
         <icon-fa-close class="cursor-pointer h-3 inline" />
       </button>
@@ -88,7 +88,7 @@ interface Role {
 }
 
 const props = defineProps<{user: ProjectMember, roles: Role[]}>()
-defineEmits<{(e: 'emitChangeUserRole', userId: number, roleId: number): void, (e: 'emitDeleteProjectMember', userId: number): void}>()
+defineEmits<{(e: 'emitChangeUserRole', userId: number, roleId: number): void, (e: 'emitDeleteProjectMember', email: string): void}>()
 
 const getUserRoleName = (): string => {
   const role = props.roles.find(r => r.id === props.user.roleId)
