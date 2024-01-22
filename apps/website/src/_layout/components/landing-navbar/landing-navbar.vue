@@ -1,6 +1,6 @@
 <template>
   <header>
-    <nav class="bg-white border-frequency border-b-1 px-4 lg:px-6 py-2.5 dark:bg-echo">
+    <nav class="bg-white border-frequency border-b-1 px-4 lg:px-6 py-1.7 dark:bg-echo">
       <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
         <div class="flex gap-10 items-center">
           <!-- Logo -->
