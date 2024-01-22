@@ -1,7 +1,7 @@
 import { getObjectPublicUrl } from '~/storage'
 
 export const fileUrl = (pathOrUrl: string | undefined): string | undefined => {
-  if (pathOrUrl === undefined || pathOrUrl.length === 0) {
+  if (pathOrUrl === undefined || pathOrUrl === null || pathOrUrl.length === 0) {
     return undefined
   }
 
