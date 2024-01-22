@@ -15,6 +15,10 @@ export interface ProjectMemberAddRemoveRequest {
   email: string
   role?: Exclude<ProjectRole, 'none'>
 }
+export interface ProjectMemberUpdateRequest {
+  email: string
+  role: Exclude<ProjectRole, 'none'>
+}
 
 // Route
 export const projectMembersRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/members`

@@ -16,7 +16,7 @@ import { projectCreateHandler } from './project-create-handler'
 import { projectDeleteHandler } from './project-delete-handler'
 import { projectFiltersHandler, projectRecordingCountBySiteHandler } from './project-filters-handler'
 import { projectUpdateImageHandler } from './project-image-handler'
-import { addProjectMemberHandler, deleteProjectMemberHandler, getProjectMembersHandler, getProjectRoleHandler } from './project-member-handler'
+import { addProjectMemberHandler, deleteProjectMemberHandler, getProjectMembersHandler, getProjectRoleHandler, patchProjectMemberHandler } from './project-member-handler'
 import { projectProfileHandler, projectProfileStakeholdersReadOnlyHandler, projectProfileUpdateHandler } from './project-profile-handler'
 import { patchProjectPublishStatusHandler } from './project-publish-status-handler'
 import { myProjectsHandler, projectsAllHandler } from './projects-handler'
@@ -68,6 +68,12 @@ export const routesProject: RouteRegistration[] = [
     url: projectMembersRoute,
     preHandler: [requireProjectPermission('update-users')],
     handler: addProjectMemberHandler
+  },
+  {
+    method: PATCH,
+    url: projectMembersRoute,
+    preHandler: [requireProjectPermission('update-users')],
+    handler: patchProjectMemberHandler
   },
   {
     method: DELETE,
