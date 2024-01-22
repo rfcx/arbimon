@@ -1,7 +1,7 @@
 import { type AxiosInstance } from 'axios'
 
-import { type ProjectRole } from '@/roles'
 import { type LocationProjectUserRole, type UserProfile } from '../../dao/types'
+import { type ProjectRole } from '../../roles'
 import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 
 // Request type

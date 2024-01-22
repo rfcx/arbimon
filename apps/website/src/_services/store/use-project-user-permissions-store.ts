@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-import { type GetProjectMembersResponse } from '@rfcx-bio/common/api-bio/project/project-members'
+import { type ProjectMembersResponse } from '@rfcx-bio/common/api-bio/project/project-members'
 import { apiBioGetProjectRole } from '@rfcx-bio/common/api-bio/project/project-role'
 import { type ProjectRole } from '@rfcx-bio/common/roles'
 import { getApiClient } from '@rfcx-bio/utils/api'
@@ -25,7 +25,7 @@ import { useStore } from './index'
  */
 export const useProjectUserPermissionsStore = defineStore('project-user-permissions-store', () => {
   const role = ref<ProjectRole | undefined>(undefined)
-  const projectMembers = ref<GetProjectMembersResponse>([])
+  const projectMembers = ref<ProjectMembersResponse>([])
   const store = useStore()
 
   const getRole = async (id: number): Promise<void> => {
