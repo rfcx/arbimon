@@ -106,17 +106,22 @@ const onEmitSwapTab = (tab: Tab) => {
 }
 
 const onEmitSearch = async (keyword: string) => {
-    await fetchSearch(keyword)
+  const searchResponse = await fetchSearch(keyword, 100, 0)
+  if (searchResponse === undefined) return
+  projectResults.value = searchResponse.data
 }
 
 const onEmitLoadMore = async () => {
-  const LIMIT = 20
-  const offset = pdStore.allProjectsWithMetrics.length
-  const total = pdStore.allProjects.length
-  if (offset === total) return
-  if (isLoading.value) return
-  const ids: number[] = pdStore.allProjects.slice(offset, offset + LIMIT).map(p => p.id)
-  await fetchProjectsWithMetricsByIds(ids)
+  return
+  // TODO: uncomment this when the all projects API is ready
+  // console.log('onEmitLoadMore')
+  // const LIMIT = 20
+  // const offset = pdStore.allProjectsWithMetrics.length
+  // // TODO: update the logic for first
+  // const total = pdStore.allProjects.length
+  // if (offset === total) return
+  // if (isLoading.value) return
+  // await fetchSearch('', offset + LIMIT, offset)
 }
 
 onMounted(async () => {
@@ -127,26 +132,18 @@ onMounted(async () => {
 })
 
 const fetchAllProjects = async () => {
-  const dataLight = await apiBioGetDirectoryProjects(apiClientBio, { full: false })
-  if (dataLight !== undefined) {
-    const p = dataLight as ProjectLight[]
-    pdStore.updateAllProjects(p)
-  }
+  // TODO: update the api
+  const searchResponse = await fetchSearch('', 10000, 0)
+  if (searchResponse === undefined) return
+  const p = searchResponse.data as ProjectLight[]
+  pdStore.updateAllProjects(p)
+  pdStore.addProjectsWithMetrics(searchResponse.data) // TODO: remove this line
 }
 
-const fetchProjectsWithMetricsByIds = async (ids: number[]) => {
-  if (isLoading.value === true || ids.length === 0) return
-  isLoading.value = true
-  const dataFull = await apiBioGetDirectoryProjects(apiClientBio, { full: true, ids: ids.join(',') })
-  if (dataFull === undefined) return
-  pdStore.addProjectsWithMetrics(dataFull as ProjectProfileWithMetrics[])
-  isLoading.value = false
-}
-
-const fetchSearch = async (keyword: string) => {
+const fetchSearch = async (keyword: string, limit: number, offset: number): Promise<{ total: number, data: ProjectProfileWithMetrics[]} | undefined> => {
   if (isLoading.value === true) return
   isLoading.value = true
-  const searchResponse = await apiBioSearch(apiClientBio, 'project', keyword, 100, 0)
+  const searchResponse = await apiBioSearch(apiClientBio, 'project', keyword, limit, offset)
   if (searchResponse === undefined) return
   const projectWithMetrics = (searchResponse.data as SearchResponseProject[]).map((p: SearchResponseProject): ProjectProfileWithMetrics => {
     return {
@@ -165,8 +162,8 @@ const fetchSearch = async (keyword: string) => {
     }
   })
   pdStore.addProjectsWithMetrics(projectWithMetrics)
-  projectResults.value = projectWithMetrics
   isLoading.value = false
+  return { total: searchResponse.total, data: projectWithMetrics }
 }
 
 watch(() => selectedTab.value, (newVal) => {
