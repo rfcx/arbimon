@@ -24,10 +24,13 @@ export interface Project {
   objectives?: string[]
   countries?: string[]
   image?: string
+  latitudeAvg?: number
+  longitudeAvg?: number
 }
 
 export const ATTRIBUTES_LOCATION_PROJECT = attributes<Project>()({
-  light: ['id', 'idCore', 'slug', 'name', 'status', 'statusUpdatedAt', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest']
+  light: ['id', 'idCore', 'slug', 'name', 'status', 'statusUpdatedAt', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest'],
+  geo: ['id', 'slug', 'name', 'latitudeAvg', 'longitudeAvg']
 })
 
 export type LocationProjectTypes = AttributeTypes<Project, typeof ATTRIBUTES_LOCATION_PROJECT>

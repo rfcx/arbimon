@@ -7,7 +7,7 @@ import { updateProjectPublishStatusRoute } from '@rfcx-bio/common/api-bio/projec
 import { projectSitesRecordingCountRoute } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { projectRoleRoute } from '@rfcx-bio/common/api-bio/project/project-role'
 import { projectDataRoute } from '@rfcx-bio/common/api-bio/project/project-settings'
-import { myProjectsRoute, projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
+import { myProjectsRoute, projectsDeprecatedRoute, projectsGeoRoute } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { requireAuthorized } from '@/_hooks/require-authenticated'
 import { requireProjectPermission } from '@/_hooks/require-permission'
@@ -19,13 +19,18 @@ import { projectUpdateImageHandler } from './project-image-handler'
 import { addProjectMemberHandler, deleteProjectMemberHandler, getProjectMembersHandler, getProjectRoleHandler, patchProjectMemberHandler } from './project-member-handler'
 import { projectProfileHandler, projectProfileStakeholdersReadOnlyHandler, projectProfileUpdateHandler } from './project-profile-handler'
 import { patchProjectPublishStatusHandler } from './project-publish-status-handler'
-import { myProjectsHandler, projectsAllHandler } from './projects-handler'
+import { myProjectsHandler, projectsAllHandler, projectsGeoHandler } from './projects-handler'
 
 export const routesProject: RouteRegistration[] = [
   {
     method: GET,
-    url: projectsRoute,
+    url: projectsDeprecatedRoute,
     handler: projectsAllHandler
+  },
+  {
+    method: GET,
+    url: projectsGeoRoute,
+    handler: projectsGeoHandler
   },
   {
     method: GET,

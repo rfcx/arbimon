@@ -44,7 +44,8 @@ export type ProjectProfileWithMetrics = ProjectLight & Pick<LocationProjectProfi
   imageUrl: string
 }
 
-export type ProjectsResponse = LocationProjectForUser[]
+export type ProjectsResponse = Array<LocationProjectTypes['light']>
+export type ProjectsGeoResponse = Array<LocationProjectTypes['geo']>
 
 export interface MyProjectsResponse {
   data: LocationProjectWithInfo[]
@@ -56,13 +57,17 @@ export interface MyProjectsResponse {
 export type DirectoryProjectsResponse = ProjectLight[] | ProjectProfileWithMetrics[]
 
 // Route
-export const projectsRoute = '/projects'
+export const projectsGeoRoute = '/projects-geo'
+export const projectsDeprecatedRoute = '/projects-deprecated'
 export const projectDirectoryRoute = '/directory/projects'
 export const myProjectsRoute = '/me/projects'
 
 // Service
-export const apiBioGetProjects = async (apiClient: AxiosInstance): Promise<ProjectsResponse | undefined> =>
-  await apiGetOrUndefined(apiClient, projectsRoute)
+export const apiBioGetProjectsGeo = async (apiClient: AxiosInstance): Promise<Array<LocationProjectTypes['geo']>> =>
+  await apiClient.get<Array<LocationProjectTypes['geo']>>(projectsDeprecatedRoute).then(res => res.data)
+
+export const apiBioGetProjectsDeprecated = async (apiClient: AxiosInstance): Promise<LocationProjectForUser[] | undefined> =>
+  await apiGetOrUndefined(apiClient, projectsDeprecatedRoute)
 
 export const apiBioGetMyProjects = async (apiClient: AxiosInstance, limit?: number, offset?: number): Promise<MyProjectsResponse | undefined> => {
   let url = myProjectsRoute
