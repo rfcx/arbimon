@@ -13,8 +13,8 @@ const {
 let opensearchClient: Client | undefined
 export const getOpenSearchClient = (): Client => {
   if (opensearchClient === undefined) {
-    const httpAuth = opensearchHttpUser && opensearchHttpPassword ? `${opensearchHttpUser}:${opensearchHttpPassword}@` : ''
-    const node = `${opensearchSslEnabled === 'true' ? 'https' : 'http'}://${httpAuth}${opensearchHost}:${opensearchPort}`
+    const httpAuth = opensearchHttpUser && opensearchHttpPassword ? `${opensearchHttpUser.trim()}:${opensearchHttpPassword.trim()}@` : ''
+    const node = `${opensearchSslEnabled === 'true' ? 'https' : 'http'}://${httpAuth.trim()}${opensearchHost.trim()}:${opensearchPort}`
     opensearchClient = new Client({ node })
   }
 
