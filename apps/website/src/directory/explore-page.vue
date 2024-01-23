@@ -112,7 +112,7 @@ const onEmitSearch = async (keyword: string) => {
 }
 
 const onEmitLoadMore = async () => {
-  return
+
   // TODO: uncomment this when the all projects API is ready
   // console.log('onEmitLoadMore')
   // const LIMIT = 20

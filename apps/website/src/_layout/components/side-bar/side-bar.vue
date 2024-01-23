@@ -312,7 +312,7 @@ const allItems: Item[] = [
       {
         title: 'Pattern Matching',
         legacyPath: '/analysis/patternmatching'
-      }
+      },
       {
         title: 'Random Forest Models',
         legacyPath: '/analysis/random-forest-models/models'
