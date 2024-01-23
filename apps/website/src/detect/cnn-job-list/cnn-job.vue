@@ -1,5 +1,5 @@
 <template>
-  <section class="max-w-screen-xl mx-auto pt-28 mx-auto">
+  <section class="max-w-screen-xl pt-28 pl-18 pr-4">
     <div class="flex items-center justify-between">
       <page-title page-title="CNN Jobs" />
       <router-link :to="{ name: ROUTE_NAMES.cnnJobCreate }">
