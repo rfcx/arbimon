@@ -17,7 +17,10 @@
         </span>
       </div>
     </div>
-    <div class="flex flex-row bg-light-500items-center">
+    <div
+      v-if="isProjectMember && !isViewingAsGuest"
+      class="flex flex-row bg-light-500items-center"
+    >
       <p
         v-if="user.roleId === 4"
         class="text-frequency"
@@ -29,7 +32,10 @@
         :id="`dropdownRoleButton-${user.email}`"
         :data-dropdown-toggle="`dropdownRole-${user.email}`"
         data-dropdown-placement="bottom"
-        class="bg-echo text-frequency rounded-lg flex flex-row items-center py-1 px-2"
+        :data-tooltip-target="`${user.userId}changeUserRoleTooltipId`"
+        data-tooltip-placement="bottom"
+        class="bg-echo text-frequency rounded-lg flex flex-row items-center py-1 px-2 disabled:hover:btn-disabled disabled:btn-disabled"
+        :disabled="!editable"
         type="button"
       >
         {{ getUserRoleName() }}
@@ -38,14 +44,40 @@
           <icon-fa-chevron-up class="w-3 h-3 fa-chevron-up hidden" />
         </span>
       </button>
+      <div
+        v-if="!editable"
+        :id="`${user.userId}changeUserRoleTooltipId`"
+        role="tooltip"
+        class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+      >
+        {{ disableChangeUserRoleText }}
+        <div
+          class="tooltip-arrow"
+          data-popper-arrow
+        />
+      </div>
       <button
         v-if="user.roleId !== 4"
         type="button"
-        class="bg-echo text-danger rounded-lg flex flex-row items-center py-1 px-2 ml-2"
+        class="bg-echo text-danger rounded-lg flex flex-row items-center py-1 px-2 ml-2 disabled:hover:btn-disabled disabled:btn-disabled"
+        :data-tooltip-target="`${user.userId}deleteUserTooltipId`"
+        data-tooltip-placement="bottom"
+        :disabled="!editable"
         @click="$emit('emitDeleteProjectMember', user.email)"
       >
         <icon-fa-close class="cursor-pointer h-3 inline" />
       </button>
+      <div
+        :id="`${user.userId}deleteUserTooltipId`"
+        role="tooltip"
+        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+      >
+        {{ editable ? 'Delete user' : disableDeleteUserText }}
+        <div
+          class="tooltip-arrow"
+          data-popper-arrow
+        />
+      </div>
       <div
         :id="`dropdownRole-${user.email}`"
         class="z-10 hidden bg-echo divide-y rounded-lg shadow w-35"
@@ -76,8 +108,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { Dropdown, initDropdowns } from 'flowbite'
-import { onMounted } from 'vue'
+import { Dropdown, initDropdowns, initTooltips } from 'flowbite'
+import { onMounted, ref } from 'vue'
 
 import type { ProjectMember } from '@rfcx-bio/common/api-bio/project/project-members'
 
@@ -89,8 +121,11 @@ interface Role {
 
 let dropdown: Dropdown
 
-const props = defineProps<{user: ProjectMember, roles: Role[]}>()
+const props = defineProps<{user: ProjectMember, roles: Role[], editable: boolean, isProjectMember: boolean, isViewingAsGuest: boolean}>()
 defineEmits<{(e: 'emitChangeUserRole', email: string, role: string): void, (e: 'emitDeleteProjectMember', email: string): void}>()
+
+const disableDeleteUserText = ref('Contact your project administrator for permission to delete project member')
+const disableChangeUserRoleText = ref('Contact your project administrator for permission to manage project members')
 
 const getUserRoleName = (): string => {
   const role = props.roles.find(r => r.id === props.user.roleId)
@@ -103,6 +138,7 @@ const closeMenu = (): void => {
 
 onMounted(() => {
   initDropdowns()
+  initTooltips()
   dropdown = new Dropdown(
     document.getElementById(`dropdownRole-${props.user.email}`),
     document.getElementById(`dropdownRoleButton-${props.user.email}`)

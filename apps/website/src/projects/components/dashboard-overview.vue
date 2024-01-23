@@ -47,7 +47,31 @@
         class="text-3xl text-white font-header font-medium"
       >{{ valueShortScale }}</span>
     </div>
-    <div v-if="!projectUserPermissionsStore.isGuest">
+    <div v-if="stat.value === 'site' && hasPermissionSite">
+      <a
+        class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-util-gray-01 border-b-1 border-frequency"
+        :href="stat.link"
+      >
+        {{ stat.label }}
+      </a>
+    </div>
+    <div v-if="stat.value === 'recording' && hasPermissionRecording">
+      <a
+        class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-util-gray-01 border-b-1 border-frequency"
+        :href="stat.link"
+      >
+        {{ stat.label }}
+      </a>
+    </div>
+    <div v-if="stat.value === 'playlist' && hasPermissionPlaylist">
+      <a
+        class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-util-gray-01 border-b-1 border-frequency"
+        :href="stat.link"
+      >
+        {{ stat.label }}
+      </a>
+    </div>
+    <div v-if="stat.value === 'species' && hasPermissionSpecies">
       <a
         class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-util-gray-01 border-b-1 border-frequency"
         :href="stat.link"
@@ -61,13 +85,21 @@
 import { initTooltips } from 'flowbite'
 import numeral from 'numeral'
 import { computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 
-import { useProjectUserPermissionsStore } from '~/store'
+import { useProjectUserPermissionsStore, useStore } from '~/store'
 import { type Stat } from '../types'
 
 const props = defineProps<{stat: Stat}>()
 
+const store = useStore()
+const route = useRoute()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
+
+const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
+const isViewingAsGuest = computed(() => {
+  return route.query.guest === '1' || projectUserPermissionsStore.isGuest
+})
 
 onMounted(() => {
   initTooltips()
@@ -77,6 +109,22 @@ const valueShortScale = computed(() => {
   const formattedNumber = numeral(props.stat.count).format('0.0a')
   const firstDecimalDigit = (x: string) => x.split('.')[1].slice(0, 1)
   return firstDecimalDigit(formattedNumber) === '0' ? formattedNumber.replace('.0', '') : formattedNumber
+})
+
+const hasPermissionSite = computed<boolean>(() => {
+  return isProjectMember.value && !isViewingAsGuest.value && projectUserPermissionsStore.role !== 'entry'
+})
+
+const hasPermissionRecording = computed<boolean>(() => {
+  return isProjectMember.value && !isViewingAsGuest.value
+})
+
+const hasPermissionPlaylist = computed<boolean>(() => {
+  return isProjectMember.value && !isViewingAsGuest.value && projectUserPermissionsStore.role !== 'entry'
+})
+
+const hasPermissionSpecies = computed<boolean>(() => {
+  return isProjectMember.value && !isViewingAsGuest.value
 })
 
 </script>

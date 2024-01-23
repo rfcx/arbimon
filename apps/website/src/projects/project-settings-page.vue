@@ -4,7 +4,7 @@
       <h1 class="text-gray-900 dark:text-insight">
         Project settings
       </h1>
-      <GuestBanner v-if="projectUserPermissionsStore.isGuest" />
+      <GuestBanner v-if="isViewingAsGuest" />
       <div class="grid lg:(grid-cols-2 gap-10)">
         <div>
           <h5>
@@ -61,16 +61,30 @@
         </div>
       </div>
       <div
-        v-if="isUserHasFullAccess"
+        v-if="isProjectMember && !isViewingAsGuest"
         class="flex flex-row-reverse items-center gap-4"
       >
         <button
-          :disabled="isSaving"
+          :disabled="isSaving || !isUserHasFullAccess"
           class="self-end inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
+          data-tooltip-target="projectSettingsSaveTooltipId"
+          data-tooltip-placement="bottom"
           @click.prevent="save"
         >
           Save
         </button>
+        <div
+          v-if="!isUserHasFullAccess"
+          id="projectSettingsSaveTooltipId"
+          role="tooltip"
+          class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+        >
+          {{ disableText }}
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
         <div
           v-if="isSaving"
           class="inline-flex"
@@ -110,7 +124,7 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -131,12 +145,17 @@ import ProjectSummaryForm from './components/form/project-summary-form.vue'
 import type { ProjectDefault } from './types'
 
 const router = useRouter()
+const route = useRoute()
 const store = useStore()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
+const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
+const isViewingAsGuest = computed(() => {
+  return route.query.guest === '1' || projectUserPermissionsStore.isGuest
+})
 
 const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
@@ -157,8 +176,8 @@ const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 const lastUpdatedText = ref<string>()
 const profileImageForm = ref()
 const uploadedFile = ref()
-
 const isPublic = ref<boolean>(true)
+const disableText = ref('Contact your project administrator for permission to edit project settings')
 
 const isUserHasFullAccess = computed<boolean>(() => {
   return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'

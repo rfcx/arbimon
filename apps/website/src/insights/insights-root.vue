@@ -20,7 +20,7 @@
           :default-text="dashboardStore.projectSummary ?? ''"
         />
         <div
-          v-if="isProjectMember && !isViewingAsGuest"
+          v-if="showShareInsights"
           class="flex gap-4 py-4 md:justify-between order-first"
         >
           <router-link
@@ -47,18 +47,19 @@
             <button
               class="btn btn-primary disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
               data-tooltip-target="shareInsightsTooltipId"
-              :disabled="isLoadingMetrics || isErrorMetrics || metrics?.totalSites === 0"
+              data-tooltip-placement="bottom"
+              :disabled="disableShareInsights"
               @click="openShareInsightsInfoPopup"
             >
               Share Insights <span class="hidden lg:inline-flex">on Arbimon</span>
             </button>
             <div
-              v-if="isLoadingMetrics || isErrorMetrics || metrics?.totalSites === 0"
+              v-if="metrics?.totalSites === 0 || disableShareInsights"
               id="shareInsightsTooltipId"
               role="tooltip"
               class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
             >
-              {{ enablePublicsharingText }}
+              {{ metrics?.totalSites === 0 ? enablePublicSharingText : disablePublicSharingText }}
               <div
                 class="tooltip-arrow"
                 data-popper-arrow
@@ -178,7 +179,7 @@ const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
 const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1'
+  return route.query.guest === '1' || projectUserPermissionsStore.isGuest
 })
 
 const startShareInsightsNavigation = ref<InsightsPublishStatus>('idle')
@@ -187,10 +188,19 @@ const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch } = 
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 
 // eslint-disable-next-line regex/invalid
-const enablePublicsharingText = ref('Create a project site to enable public sharing of insights')
+const enablePublicSharingText = ref('Create a project site to enable public sharing of insights')
+const disablePublicSharingText = ref('Contact your project administrator for permission to share')
 
 const isUserHasFullAccess = computed<boolean>(() => {
   return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
+})
+
+const showShareInsights = computed<boolean>(() => {
+  return isProjectMember.value && !isViewingAsGuest.value
+})
+
+const disableShareInsights = computed<boolean>(() => {
+  return isLoadingMetrics.value || isErrorMetrics.value || metrics.value?.totalSites === 0 || !isUserHasFullAccess.value
 })
 
 watch(() => profile.value, () => {

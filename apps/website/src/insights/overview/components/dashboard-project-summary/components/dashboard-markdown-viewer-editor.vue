@@ -8,17 +8,30 @@
   </template>
   <template v-else>
     <div
-      v-show="!isEditing && !projectUserPermissionsStore.isGuest"
+      v-if="isProjectMember && !isViewingAsGuest"
       class="flex flex-row justify-end pr-6"
     >
       <button
-        class="flex flex-row items-center disabled:hover:btn-disabled disabled:btn-disabled"
-        :class="editable ? 'btn btn-primary py-2 px-3' : 'invisible'"
-        :disabled="projectUserPermissionsStore.isGuest"
+        class="flex flex-row items-center btn btn-primary py-2 px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+        :data-tooltip-target="`${id}EditTextTooltipId`"
+        data-tooltip-placement="bottom"
+        :disabled="!editable"
         @click="editMarkdownContent"
       >
         <span>Edit text</span> <icon-custom-ic-edit class="ml-2 self-center" />
       </button>
+      <div
+        v-if="!editable"
+        :id="`${id}EditTextTooltipId`"
+        role="tooltip"
+        class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+      >
+        {{ disableText }}
+        <div
+          class="tooltip-arrow"
+          data-popper-arrow
+        />
+      </div>
     </div>
     <MarkdownViewer
       v-show="!isEditing"
@@ -69,6 +82,7 @@
 </template>
 
 <script setup lang="ts">
+import { initTooltips } from 'flowbite'
 import { computed, nextTick, onMounted, ref, unref, watch } from 'vue'
 
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
@@ -85,6 +99,7 @@ const emit = defineEmits<{(e: 'on-editor-close', value: string): void, (e: 'upda
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const markdownViewerRef = ref<{ markdownViewerWrapperComponent: HTMLDivElement | null } | null>(null)
 const editableMarkdownText = ref(props.rawMarkdownText == null || props.rawMarkdownText === '' ? '' : unref(props.rawMarkdownText))
+const disableText = ref('Contact your project administrator for permission to edit text')
 
 watch(() => props.rawMarkdownText, value => {
   if (value != null && value !== '') {
@@ -98,6 +113,7 @@ watch(() => props.rawMarkdownText, value => {
 })
 
 onMounted(async () => {
+  initTooltips()
   await nextTick(() => {
     const scrollHeight = markdownViewerRef.value?.markdownViewerWrapperComponent?.scrollHeight ?? 0
     const clientHeight = markdownViewerRef.value?.markdownViewerWrapperComponent?.clientHeight ?? 0

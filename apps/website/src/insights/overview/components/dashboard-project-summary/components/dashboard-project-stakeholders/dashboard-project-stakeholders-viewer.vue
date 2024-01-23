@@ -1,17 +1,31 @@
 <template>
   <div class="px-6 pb-6">
     <div
-      v-if="(projectUserPermissionsStore.role === 'owner' || projectUserPermissionsStore.role === 'admin') && editable"
+      v-if="isProjectMember && !isGuest"
       class="flex w-full justify-end mt-6"
     >
       <button
         class="btn btn-primary font-medium flex flex-row py-2 px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-        :disabled="loading"
+        data-tooltip-target="editStakeholdersTooltipId"
+        data-tooltip-placement="bottom"
+        :disabled="loading || !editable"
         @click="$emit('emit-is-updating')"
       >
         Edit stakeholders
         <icon-custom-ic-edit class="ml-2 w-4 h-4 self-center" />
       </button>
+      <div
+        v-if="!editable"
+        id="editStakeholdersTooltipId"
+        role="tooltip"
+        class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+      >
+        {{ disableText }}
+        <div
+          class="tooltip-arrow"
+          data-popper-arrow
+        />
+      </div>
     </div>
     <div v-if="projectMembers.length !== 0">
       <h3 class="text-white text-xl font-medium font-sans mt-2">
@@ -72,6 +86,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+
 import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
@@ -83,6 +99,8 @@ import StakeholdersTosBanner from './stakeholders-tos-banner.vue'
 
 defineProps<{
   editable: boolean,
+  isProjectMember: boolean,
+  isGuest: boolean,
   loading: boolean,
   organizations: Array<OrganizationTypes['light']>
   projectMembers: Array<DashboardStakeholdersUser>
@@ -92,4 +110,6 @@ defineEmits<{(event: 'emit-is-updating'): void}>()
 const store = useStore()
 
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
+
+const disableText = ref('Contact your project administrator for permission to edit stakeholders')
 </script>
