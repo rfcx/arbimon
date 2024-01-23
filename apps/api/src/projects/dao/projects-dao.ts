@@ -1,4 +1,5 @@
 import { Op } from 'sequelize'
+import { type Literal } from 'sequelize/types/lib/utils'
 
 import { type LocationProjectForUser, type MyProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
@@ -14,13 +15,33 @@ export const getProjectById = async (id: number): Promise<Project | undefined> =
   return await models.LocationProject.findByPk(id) ?? undefined
 }
 
+const computedAttributes: Record<string, [Literal, string]> = {
+  latitudeAvg: [sequelize.literal('(latitude_north+latitude_south)/2'), 'latitudeAvg'],
+  longitudeAvg: [sequelize.literal('(longitude_east+longitude_west)/2'), 'longitudeAvg']
+}
+
+export const query = async <T extends Project>(filters: { readableBy?: number }, options?: { limit?: number, offset?: number, attributesSet?: 'geo' }): Promise<T[]> => {
+  const expectedAttributes = options?.attributesSet === 'geo' ? ATTRIBUTES_LOCATION_PROJECT.geo : ATTRIBUTES_LOCATION_PROJECT.light
+  const attributes: Array<string | [Literal, string]> = expectedAttributes.map(a => computedAttributes[a] !== undefined ? computedAttributes[a] : a)
+
+  const limit = options?.limit !== undefined ? options?.limit : 20
+  const offset = options?.offset !== undefined ? options?.offset : 0
+
+  const results = await models.LocationProject.findAll({
+    attributes, limit, offset, raw: true
+  })
+
+  // TODO find a better way to manage types
+  return results as unknown as T[]
+}
+
 export const deleteProject = async (id: number): Promise<boolean> => {
   const count = await models.LocationProject.destroy({ where: { id } })
   return count > 0
 }
 
 /**
- * @deprecated Do not use
+ * @deprecated Do not use - type will be removed
  */
 export const getViewableProjects = async (userId: number | undefined): Promise<LocationProjectForUser[]> => {
   const memberProjectIds = await getProjectIdsByUser(userId)
@@ -44,6 +65,9 @@ export const getViewableProjects = async (userId: number | undefined): Promise<L
     }))
 }
 
+/**
+ * @deprecated Do not use - type will be removed
+ */
 export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, limit: number = 20): Promise<MyProjectsResponse> => {
   const memberProjectIds = await getProjectIdsByUser(userId)
 

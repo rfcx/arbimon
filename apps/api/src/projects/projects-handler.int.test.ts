@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
-import { afterEach, expect, test } from 'vitest'
+import { afterEach, describe, expect, test } from 'vitest'
 
-import { projectsRoute } from '@rfcx-bio/common/api-bio/project/projects'
+import { projectsDeprecatedRoute, projectsGeoRoute } from '@rfcx-bio/common/api-bio/project/projects'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 import { makeProject } from '@rfcx-bio/testing/model-builders/project-model-builder'
@@ -13,45 +13,77 @@ const userId = 9001
 
 const { LocationProject } = modelRepositoryWithElevatedPermissions
 
+function zeroToN (n: number): number[] {
+  return [...Array(n + 1).keys()]
+}
+
 afterEach(async () => {
-  const locationProjectIds = [1234001, 1234002]
+  const locationProjectIds = zeroToN(99).map(i => 1234000 + i)
   await LocationProject.destroy({ where: { id: { [Op.in]: locationProjectIds } }, force: true })
 })
 
-test('GET /projects contains published projects', async () => {
-  // Arrange
-  const app = await makeApp(routesProject, { userId })
-  const publicProject = makeProject(1234001, 'Public Project 1', 'published')
-  await LocationProject.bulkCreate([publicProject], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+describe('Geo route', async () => {
+  test(`GET ${projectsGeoRoute} returns`, async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { userId })
+    const publicProjects = zeroToN(99).map(i => makeProject(1234000 + i, `Public Project ${i}`, 'published'))
+    await LocationProject.bulkCreate(publicProjects, { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
 
-  // Act
-  const response = await app.inject({
-    method: GET,
-    url: projectsRoute
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: projectsGeoRoute,
+      query: { limit: '90' }
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(results).toHaveLength(90)
+    expect(typeof results[49].id).toBe('number')
+    expect(typeof results[49].slug).toBe('string')
+    expect(typeof results[49].name).toBe('string')
+    expect(typeof results[49].latitudeAvg).toBe('number')
+    expect(typeof results[49].longitudeAvg).toBe('number')
   })
-
-  // Assert
-  expect(response.statusCode).toBe(200)
-  const results = JSON.parse(response.body)
-  const expectedProject = results.find((p: any) => p.slug === publicProject.slug)
-  expect(expectedProject).toBeDefined()
 })
 
-test('GET /projects does not contain hidden projects', async () => {
-  // Arrange
-  const app = await makeApp(routesProject, { userId })
-  const project = makeProject(1234002, 'Private Project 1', 'hidden')
-  await LocationProject.bulkCreate([project], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+describe('Deprecated', async () => {
+  test(`GET ${projectsDeprecatedRoute} contains published projects`, async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { userId })
+    const publicProject = makeProject(1234001, 'Public Project 1', 'published')
+    await LocationProject.bulkCreate([publicProject], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
 
-  // Act
-  const response = await app.inject({
-    method: GET,
-    url: projectsRoute
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: projectsDeprecatedRoute
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    const expectedProject = results.find((p: any) => p.slug === publicProject.slug)
+    expect(expectedProject).toBeDefined()
   })
 
-  // Assert
-  expect(response.statusCode).toBe(200)
-  const results = JSON.parse(response.body)
-  const expectedProject = results.find((p: any) => p.slug === project.slug)
-  expect(expectedProject).toBeUndefined()
+  test(`GET ${projectsDeprecatedRoute} does not contain hidden projects`, async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { userId })
+    const project = makeProject(1234002, 'Private Project 1', 'hidden')
+    await LocationProject.bulkCreate([project], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: projectsDeprecatedRoute
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    const expectedProject = results.find((p: any) => p.slug === project.slug)
+    expect(expectedProject).toBeUndefined()
+  })
 })
