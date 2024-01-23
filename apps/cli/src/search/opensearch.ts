@@ -6,8 +6,8 @@ const { OPENSEARCH_HOST: host, OPENSEARCH_PORT: port, OPENSEARCH_SSL_ENABLED: is
 const { OPENSEARCH_HTTPAUTH_USER: httpUser, OPENSEARCH_HTTPAUTH_PASSWORD: httpPassword } = optionalEnv('OPENSEARCH_HTTPAUTH_USER', 'OPENSEARCH_HTTPAUTH_PASSWORD')
 
 export const getOpenSearchClient = (): Client => {
-  const httpAuth = httpUser && httpPassword ? `${httpUser}:${httpPassword}@` : ''
-  const node = `${isSsl ? 'https' : 'http'}://${httpAuth}${host}:${port}`
+  const httpAuth = httpUser && httpPassword ? `${httpUser.trim()}:${httpPassword.trim()}@` : ''
+  const node = `${isSsl ? 'https' : 'http'}://${httpAuth.trim()}${host.trim()}:${port}`
   console.info('node', node)
   const client = new Client({ node })
   return client
