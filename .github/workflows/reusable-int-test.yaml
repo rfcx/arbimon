@@ -155,6 +155,6 @@ jobs:
           OPENSEARCH_HOST: localhost
           OPENSEARCH_PORT: 9202
           OPENSEARCH_SSL_ENABLED: false
-          AWS_ACCESS_KEY_ID: ''
-          AWS_SECRET_ACCESS_KEY: ''
+          AWS_ACCESS_KEY_ID: 'who'
+          AWS_SECRET_ACCESS_KEY: 'who'
           OPENSEARCH_AWS_BUCKET_REGION: eu-west-1
