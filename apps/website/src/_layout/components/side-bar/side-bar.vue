@@ -310,13 +310,9 @@ const allItems: Item[] = [
         legacyPath: '/jobs'
       },
       {
-        title: 'Pattern Matching (PM)',
+        title: 'Pattern Matching',
         legacyPath: '/analysis/patternmatching'
-      },
-      {
-        title: 'PM Templates',
-        legacyPath: '/audiodata/templates'
-      },
+      }
       {
         title: 'Random Forest Models',
         legacyPath: '/analysis/random-forest-models/models'
