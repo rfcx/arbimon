@@ -6,7 +6,10 @@
       </h1>
       <div class="grid lg:(grid-cols-2 gap-10)">
         <div class="flex flex-col gap-y-4">
-          <div class="flex flex-row justify-end">
+          <div
+            v-if="isProjectMember && !isViewingAsGuest"
+            class="flex flex-row justify-end"
+          >
             <input
               ref="userSearchInput"
               v-model="userSearchValue"
@@ -14,25 +17,42 @@
               type="text"
               placeholder="Search by user name, email"
               data-dropdown-toggle="dropdown"
+              data-tooltip-target="userSearchInputTooltipId"
+              data-tooltip-placement="bottom"
+              :disabled="!isUserHasFullAccess"
               @input="searchUserInputChanged"
               @click="openUserSearch()"
             >
+            <div
+              v-if="!isUserHasFullAccess"
+              id="userSearchInputTooltipId"
+              role="tooltip"
+              class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+            >
+              {{ disableText }}
+              <div
+                class="tooltip-arrow"
+                data-popper-arrow
+              />
+            </div>
             <div>
               <button
-                class="btn bg-moss border border-util-gray-03 rounded-md border-l-0 rounded-l-none dark:hover:bg-util-gray-04 dark:hover:text-pitch dark:focus:ring-util-gray-04"
-                data-tooltip-target="projectMembers"
+                class="btn bg-moss border border-util-gray-03 rounded-md border-l-0 rounded-l-none group dark:hover:bg-util-gray-04 dark:hover:text-pitch dark:focus:ring-util-gray-04 disabled:hover:btn-disabled disabled:btn-disabled"
+                data-tooltip-target="addProjectMemberTooltipId"
                 data-tooltip-style="light"
+                data-tooltip-placement="bottom"
+                :disabled="!isUserHasFullAccess"
                 @click="addSelectedUser()"
               >
                 <icon-fa-plus
-                  class="h-3 w-3 text-insight focus:border-none focus:border-transparent ring-moss outline-none"
+                  class="h-3 w-3 text-insight focus:border-none focus:border-transparent ring-moss outline-none group-disabled:text-util-gray-03"
                 />
                 <div
-                  id="projectMembers"
+                  id="addProjectMemberTooltipId"
                   role="tooltip"
                   class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
                 >
-                  Add new user
+                  {{ isUserHasFullAccess ? 'Add new user' : disableText }}
                   <div
                     class="tooltip-arrow"
                     data-popper-arrow
@@ -141,6 +161,9 @@
               :key="`${user.email}`"
               :user="user"
               :roles="roles"
+              :editable="isUserHasFullAccess"
+              :is-project-member="isProjectMember"
+              :is-viewing-as-guest="isViewingAsGuest"
               @emit-change-user-role="changeUserRole"
               @emit-delete-project-member="deleteProjectMember"
             />
@@ -171,19 +194,26 @@
 import { type AxiosInstance } from 'axios'
 import { type DropdownOptions, Dropdown, initTooltips } from 'flowbite'
 import { type Ref, computed, inject, onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 import type { UserTypes } from '@rfcx-bio/common/dao/types'
 import { type ProjectRole } from '@rfcx-bio/common/roles'
 
 import { apiClientKey } from '@/globals'
-import { useStore } from '~/store'
+import { useProjectUserPermissionsStore, useStore } from '~/store'
 import { useAddProjectMember, useDeleteProjectMember, useGetProjectMembers, useSearchUsers, useUpdateProjectMember } from './_composables/use-project-member'
 import ProjectMember from './components/project-member.vue'
 import ProjectUserSearch from './components/project-user-search.vue'
 
+const route = useRoute()
 const store = useStore()
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => store.selectedProject?.id)
+const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
+const isViewingAsGuest = computed(() => {
+  return route.query.guest === '1' || projectUserPermissionsStore.isGuest
+})
 
 const searchDropdown = ref() as Ref<Dropdown>
 const notFoundDropdown = ref() as Ref<Dropdown>
@@ -197,6 +227,8 @@ const inviteNewUserFormContainer = ref<HTMLDivElement | null>(null)
 const isSearchingUsers = ref(false)
 const addNewUserError = ref(false)
 const userSearchValue = ref('')
+
+const disableText = ref('Contact your project administrator for permission to manage project members')
 
 const newUser = ref({
   firstName: '',
@@ -252,6 +284,10 @@ const { mutate: mutateDeleteProjectMember } = useDeleteProjectMember(apiClientBi
 
 const userSearchResult = computed(() => {
   return searchedUsers.value
+})
+
+const isUserHasFullAccess = computed<boolean>(() => {
+  return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
 })
 
 onMounted(() => {

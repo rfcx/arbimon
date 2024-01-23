@@ -26,18 +26,33 @@
       v-if="canEdit && !speciesList.length && !isLoading"
     />
     <div
-      v-if="canEdit && !projectUserPermissionsStore.isGuest"
+      v-if="isProjectMember && !isViewingAsGuest"
       class="flex flex-row baseline"
     >
       <button
-        class="btn btn-secondary group w-full"
+        class="btn btn-secondary group w-full disabled:hover:btn-disabled disabled:btn-disabled"
         data-modal-target="species-highlighted-modal"
         data-modal-toggle="species-highlighted-modal"
+        data-tooltip-target="selectSpeciesTooltipId"
+        data-tooltip-placement="bottom"
         type="button"
+        :disabled="!canEdit"
         @click="openModalToSelectSpecies"
       >
         Select Species <icon-custom-ic-edit class="ml-2 group-hover:!disabled:stroke-pitch disabled:hover:btn-disabled" />
       </button>
+      <div
+        v-if="!canEdit"
+        id="selectSpeciesTooltipId"
+        role="tooltip"
+        class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+      >
+        {{ disableText }}
+        <div
+          class="tooltip-arrow"
+          data-popper-arrow
+        />
+      </div>
     </div>
     <HighlightedSpeciesModal
       :highlighted-species="speciesList"
@@ -53,16 +68,15 @@ import { type ComputedRef, type Ref, computed, onMounted, ref } from 'vue'
 import { type DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
-import { useProjectUserPermissionsStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../types/highlighted-species'
 import EmptySpeciesList from './components/empty-species-list.vue'
 import HighlightedSpeciesList from './components/highlighted-species-list.vue'
 import HighlightedSpeciesModal from './components/highlighted-species-modal.vue'
 
-const props = defineProps<{ species: DashboardSpecies[] | undefined, canEdit: boolean, isLoading: boolean }>()
+const props = defineProps<{ species: DashboardSpecies[] | undefined, canEdit: boolean, isProjectMember: boolean, isViewingAsGuest: boolean, isLoading: boolean }>()
 const emit = defineEmits<{(e: 'emitRefetch'): void }>()
 const modal = ref() as Ref<Modal>
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
+const disableText = ref('Contact your project administrator for permission to manage')
 
 const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   if (props.species === undefined) {

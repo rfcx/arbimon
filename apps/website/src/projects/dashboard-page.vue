@@ -50,15 +50,30 @@
             Analyses
           </h2>
           <button
-            v-if="!projectUserPermissionsStore.isGuest"
-            class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3"
+            v-if="hasPermissionAnalyses"
+            class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3 disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
             type="button"
             :title="'Create New Analysis Job'"
+            data-tooltip-target="analysesTooltipId"
+            data-tooltip-placement="bottom"
+            :disable="projectUserPermissionsStore.role !== 'entry'"
             @click="toggleAnalysisSelector(true)"
           >
             <icon-custom-ic-plus class="h-4 w-4 mb-3px" />
             <span class="font-display text-base">Create new analysis</span>
           </button>
+          <div
+            v-if="projectUserPermissionsStore.role !== 'entry'"
+            id="analysesTooltipId"
+            role="tooltip"
+            class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+          >
+            {{ disableText }}
+            <div
+              class="tooltip-arrow"
+              data-popper-arrow
+            />
+          </div>
           <CreateAnalysis
             v-if="hasOpenedAnalysisSelector"
             @emit-close="toggleAnalysisSelector(false)"
@@ -80,6 +95,7 @@ import type { AxiosInstance } from 'axios'
 import { initModals } from 'flowbite'
 import { type LngLatBoundsLike } from 'mapbox-gl'
 import { computed, inject, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -103,10 +119,17 @@ import DashboardAnalyses from './components/dashboard-analyses.vue'
 import DashboardOverview from './components/dashboard-overview.vue'
 
 const store = useStore()
+const route = useRoute()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const selectedProjectSlug = computed(() => store.selectedProject?.slug)
+const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
+const isViewingAsGuest = computed(() => {
+  return route.query.guest === '1' || projectUserPermissionsStore.isGuest
+})
+
+const disableText = ref('Contact your project administrator for permission to manage analyses')
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
@@ -145,6 +168,10 @@ const analyses = computed(() => [
   { value: 'aed', title: 'AED & Clustering', iconName: 'fi-aed', count: (aedJobCount.value != null) ? aedJobCount.value : 0 + ((clusteringJobCount.value != null) ? clusteringJobCount.value : 0), isLoading: isLoadingAedJobCount.value || isLoadingClusteringJobCount.value || isLoadingClusteringSpDetected.value, label: 'Jobs completed', speciesTitle: 'Species detected', speciesDetected: clusteringSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` },
   { value: 'rfm', title: 'Random Forest Models', iconName: 'fi-rfm', count: rfmCount.value, isLoading: isLoadingRFMCount.value || isLoadingSpDetected.value, label: 'Models completed', speciesTitle: 'Species analyzed', speciesDetected: rfmSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` }
 ])
+
+const hasPermissionAnalyses = computed<boolean>(() => {
+  return isProjectMember.value && !isViewingAsGuest.value && projectUserPermissionsStore.role !== 'entry'
+})
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`
 const hasOpenedAnalysisSelector = ref(false)
