@@ -178,7 +178,6 @@
   backdrop-filter: blur(7.5px);
 }
 
-.tab:hover::after,
 .tab-active::after {
   @media (min-width: 1024px) {
     content: " ";
