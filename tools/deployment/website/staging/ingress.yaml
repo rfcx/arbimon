@@ -63,6 +63,11 @@ spec:
         backend:
           serviceName: biodiversity-website-service
           servicePort: 80
+      - path: /admin
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-service
+          servicePort: 80
       - path: /auth0-login
         pathType: Prefix
         backend:
