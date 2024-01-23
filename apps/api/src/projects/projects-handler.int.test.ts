@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { afterEach, describe, expect, test } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 
 import { projectsDeprecatedRoute, projectsGeoRoute } from '@rfcx-bio/common/api-bio/project/projects'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
@@ -7,6 +7,7 @@ import { makeApp } from '@rfcx-bio/testing/handlers'
 import { makeProject } from '@rfcx-bio/testing/model-builders/project-model-builder'
 
 import { GET } from '~/api-helpers/types'
+import * as projectsDao from './dao/projects-dao'
 import { routesProject } from './index'
 
 const userId = 9001
@@ -45,6 +46,39 @@ describe('Geo route', async () => {
     expect(typeof results[49].name).toBe('string')
     expect(typeof results[49].latitudeAvg).toBe('number')
     expect(typeof results[49].longitudeAvg).toBe('number')
+  })
+
+  test(`GET ${projectsGeoRoute} again with same limit offset will create a cache hit`, async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { userId })
+    const publicProjects = zeroToN(99).map(i => makeProject(1234000 + i, `Who called ${i}`, 'published'))
+    await LocationProject.bulkCreate(publicProjects, { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+    const spy = vi.spyOn(projectsDao, 'query')
+
+    // Act
+    const response1 = await app.inject({
+      method: GET,
+      url: projectsGeoRoute,
+      query: {
+        limit: '90',
+        offset: '0'
+      }
+    })
+
+    const response2 = await app.inject({
+      method: GET,
+      url: projectsGeoRoute,
+      query: {
+        limit: '90',
+        offset: '0'
+      }
+    })
+
+    expect(spy).toHaveBeenCalledOnce()
+    const results1 = JSON.parse(response1.body)
+    const results2 = JSON.parse(response2.body)
+    expect(results1.length).toEqual(results2.length)
+    expect(results1).toHaveLength(90)
   })
 })
 
