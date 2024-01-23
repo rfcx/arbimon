@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.363.0",
+    "@aws-sdk/credential-provider-node": "^3.496.0",
     "@fastify/cors": "^7.0.0",
     "@fastify/multipart": "6.0.0",
     "@fastify/routes": "^4.0.0",

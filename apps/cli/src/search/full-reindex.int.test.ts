@@ -137,6 +137,22 @@ describe('full reindex from postgres to opensearch', () => {
     expect(response.body?.hits?.hits?.length).toBe(0)
   })
 
+  test('a reindex will correctly parse the country name to synonym', async () => {
+    // Act
+    await fullReindex(opensearchClient, sequelize)
+    const result = await opensearchClient.indices.analyze({
+      index: 'projects',
+      body: {
+        field: 'country_codes',
+        text: 'Sweden'
+      }
+    })
+
+    // Assert
+    expect(result.body.tokens[0].token).toBe('SE')
+    expect(result.body.tokens[0].type).toBe('SYNONYM')
+  })
+
   test('a reindex will resync the projects after their contents are edited', async () => {
     // Arrange
     await fullReindex(opensearchClient, sequelize)
