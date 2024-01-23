@@ -21,6 +21,7 @@
         <project-listed-form
           :is-public="isPublic"
           :is-disabled="false"
+          :is-create-project="true"
           @emit-project-listed="toggleListedProject"
         />
       </div>
