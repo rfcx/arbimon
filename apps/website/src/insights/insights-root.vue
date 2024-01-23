@@ -44,23 +44,26 @@
                 <icon-custom-fi-eye-off class="inline-flex text-insight mr-2" /> This page is visible to project member only
               </template>
             </span>
-            <template v-if="profile?.isPublished != null && profile?.isPublished === true && isUserHasFullAccess">
-              <button
-                class="btn btn-primary"
-                @click="openShareInsightsInfoPopup"
-              >
-                Share Insights <span class="hidden lg:inline-flex">on Arbimon</span>
-              </button>
-            </template>
-            <template v-else>
-              <button
-                v-if="isUserHasFullAccess"
-                class="btn btn-primary disabled:cursor-not-allowed"
-                @click="shareInsight"
-              >
-                Share Insights <span class="hidden lg:inline-flex">on Arbimon</span>
-              </button>
-            </template>
+            <button
+              class="btn btn-primary disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
+              data-tooltip-target="shareInsightsTooltipId"
+              :disabled="isLoadingMetrics || isErrorMetrics || metrics?.totalSites === 0"
+              @click="openShareInsightsInfoPopup"
+            >
+              Share Insights <span class="hidden lg:inline-flex">on Arbimon</span>
+            </button>
+            <div
+              v-if="isLoadingMetrics || isErrorMetrics || metrics?.totalSites === 0"
+              id="shareInsightsTooltipId"
+              role="tooltip"
+              class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+            >
+              {{ enablePublicsharingText }}
+              <div
+                class="tooltip-arrow"
+                data-popper-arrow
+              />
+            </div>
           </div>
         </div>
         <div
@@ -136,6 +139,7 @@ import ShareInsight from './components/share-insights/share-insights.vue'
 import type { InsightsPublishStatus } from './components/share-insights/types'
 import HeroBriefOverview from './insights-hero/hero-brief-overview.vue'
 import HeroProjectInfo from './insights-hero/hero-project-info.vue'
+import { useGetDashboardMetrics } from './overview/composables/use-get-dashboard-metrics'
 
 const items = [
   {
@@ -180,6 +184,10 @@ const isViewingAsGuest = computed(() => {
 const startShareInsightsNavigation = ref<InsightsPublishStatus>('idle')
 
 const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch } = useGetProjectSettings(apiClientBio, selectedProjectId)
+const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
+
+// eslint-disable-next-line regex/invalid
+const enablePublicsharingText = ref('Create a project site to enable public sharing of insights')
 
 const isUserHasFullAccess = computed<boolean>(() => {
   return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
@@ -199,12 +207,12 @@ const refetchInsightsPublishStatus = async (): Promise<void> => {
   await profileRefetch()
 }
 
-const shareInsight = (): void => {
-  startShareInsightsNavigation.value = 'share-insights-information'
-}
-
 const openShareInsightsInfoPopup = (): void => {
-  startShareInsightsNavigation.value = 'share-insights-successful'
+  if (profile.value?.isPublished != null && profile.value?.isPublished === true && isUserHasFullAccess.value) {
+    startShareInsightsNavigation.value = 'share-insights-successful'
+  } else {
+    startShareInsightsNavigation.value = 'share-insights-information'
+  }
 }
 
 </script>
