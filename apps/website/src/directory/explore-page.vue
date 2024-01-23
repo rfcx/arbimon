@@ -44,7 +44,7 @@
 import { type AxiosInstance } from 'axios'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 
-import { type ProjectLight, type ProjectProfileWithMetrics, apiBioGetDirectoryProjects } from '@rfcx-bio/common/api-bio/project/projects'
+import { type ProjectLight, type ProjectProfileWithMetrics } from '@rfcx-bio/common/api-bio/project/projects'
 import type { SearchResponseProject } from '@rfcx-bio/common/api-bio/search/search'
 import { apiBioSearch } from '@rfcx-bio/common/api-bio/search/search'
 

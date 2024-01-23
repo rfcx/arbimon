@@ -81,20 +81,3 @@ export const apiBioGetMyProjects = async (apiClient: AxiosInstance, limit?: numb
   }
   return await apiGetOrUndefined(apiClient, url)
 }
-
-export const apiBioGetDirectoryProjects = async (apiClient: AxiosInstance, query: DirectoryProjectsQuery): Promise<DirectoryProjectsResponse | undefined> => {
-  let url = projectDirectoryRoute
-  // TODO: should be using `params` - needs testing:
-  // const params = { ids, keywords, full: query.full ? '1' : '0' }
-  // return await apiGetOrUndefined(apiClient, url, { params })
-  if (query.full !== undefined) {
-    url = url + '?full=' + (query.full ? '1' : '0')
-  }
-  if (query.ids !== undefined) {
-    url = url + '&ids=' + query.ids.toString()
-  }
-  if (query.keywords !== undefined) {
-    url = url + '&keywords=' + query.keywords.toString()
-  }
-  return await apiGetOrUndefined(apiClient, url)
-}
