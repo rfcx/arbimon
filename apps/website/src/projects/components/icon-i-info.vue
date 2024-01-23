@@ -9,6 +9,7 @@
     :id="tooltipId"
     role="tooltip"
     class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+    :class="extraClass"
   >
     {{ tooltipText }}
     <div
@@ -25,6 +26,7 @@ import { onMounted } from 'vue'
 defineProps<{
   tooltipId: string
   tooltipText?: string
+  extraClass?: string
 }>()
 
 onMounted(() => {

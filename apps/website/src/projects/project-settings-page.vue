@@ -47,6 +47,7 @@
           <project-listed-form
             :is-public="settings?.isPublic"
             :is-disabled="!isUserHasFullAccess || settings?.isPublished"
+            :is-create-project="false"
             @emit-project-listed="toggleListedProject"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
