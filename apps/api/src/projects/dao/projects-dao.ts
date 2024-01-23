@@ -31,7 +31,7 @@ export const query = async <T extends Project>(filters: { readableBy?: number },
     attributes, limit, offset, raw: true
   })
 
-  // TODO find a better way to manage types
+  // TODO: find a better way to manage types
   return results as unknown as T[]
 }
 
