@@ -524,6 +524,9 @@ importers:
 
   packages/common:
     dependencies:
+      '@opensearch-project/opensearch':
+        specifier: ^2.5.0
+        version: 2.5.0
       '@rfcx-bio/utils':
         specifier: workspace:^0.0.1
         version: link:../utils

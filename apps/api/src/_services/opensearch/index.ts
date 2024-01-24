@@ -1,50 +1,34 @@
-import { defaultProvider } from '@aws-sdk/credential-provider-node'
-import { Client } from '@opensearch-project/opensearch'
-import { AwsSigv4Signer } from '@opensearch-project/opensearch/aws'
+import { type Client } from '@opensearch-project/opensearch'
+
+import { openSearchClient } from '@rfcx-bio/common/search/connections'
 
 import { env } from '../env'
 
-const {
-  OPENSEARCH_HTTPAUTH_USER: opensearchHttpUser,
-  OPENSEARCH_HTTPAUTH_PASSWORD: opensearchHttpPassword,
-  OPENSEARCH_HOST: opensearchHost,
-  OPENSEARCH_PORT: opensearchPort,
-  OPENSEARCH_SSL_ENABLED: opensearchSslEnabled,
-  OPENSEARCH_AWS_BUCKET_REGION: opensearchAwsBucketRegion
-} = env
+let client: Client | undefined
 
-let opensearchClient: Client | undefined
+const {
+  OPENSEARCH_HOST: host,
+  OPENSEARCH_PORT: portString,
+  OPENSEARCH_SSL_ENABLED: sslString,
+  OPENSEARCH_HTTPAUTH_USER: httpUser,
+  OPENSEARCH_HTTPAUTH_PASSWORD: httpPassword,
+  AWS_OSS_REGION: region,
+  AWS_OSS_ACCESS_KEY_ID: accessKeyId,
+  AWS_OSS_SECRET_ACCESS_KEY: secretAccessKey
+} = env
 
 /**
  * Singleton function that returns a single instance of opensearch if it's never been created.
  * This singleton functions supports both testing locally and running on the cloud
  * The way to separate the local and on-cloud instance is by using the host
- *
- * If the passed `OPENSEARCH_HOST` environment variable is `localhost`. We could assume that we're
- * connecting to the local host instance for testing
  */
 export const getOpenSearchClient = (): Client => {
-  if (opensearchClient === undefined) {
-    const httpAuth = opensearchHttpUser && opensearchHttpPassword ? `${opensearchHttpUser.trim()}:${opensearchHttpPassword.trim()}@` : ''
-    let node = `${opensearchSslEnabled === 'true' ? 'https' : 'http'}://${httpAuth.trim()}${opensearchHost.trim()}`
-    node += opensearchHost === 'localhost' ? `:${opensearchPort}` : ''
-
-    const awsCredentials = opensearchHost === 'localhost'
-      ? undefined
-      : AwsSigv4Signer({
-          region: opensearchAwsBucketRegion,
-          service: 'es',
-          getCredentials: async () => {
-            const credentialsProvider = defaultProvider()
-            return await credentialsProvider()
-          }
-        })
-
-    opensearchClient = new Client({
-      ...awsCredentials,
-      node
-    })
+  if (client === undefined) {
+    const port = Number(portString)
+    const ssl = sslString === 'true'
+    const httpAuth = httpUser && httpPassword ? { user: httpUser, password: httpPassword } : undefined
+    const aws = region && accessKeyId && secretAccessKey ? { region, accessKeyId, secretAccessKey } : undefined
+    client = openSearchClient(host, { port, ssl, httpAuth, aws })
   }
-
-  return opensearchClient
+  return client
 }

@@ -25,4 +25,4 @@ data:
 
   AWS_S3_BUCKET_REGION: eu-west-1
   AWS_S3_BUCKET_NAME: arbimon-exports
-  OPENSEARCH_AWS_BUCKET_REGION: eu-west-1
+  AWS_OSS_REGION: eu-west-1
