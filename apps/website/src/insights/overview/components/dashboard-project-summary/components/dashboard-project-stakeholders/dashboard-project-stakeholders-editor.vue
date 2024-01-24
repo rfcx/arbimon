@@ -129,7 +129,8 @@
                 <div class="flex w-full flex-row justify-end">
                   <button
                     type="submit"
-                    class="btn btn-primary px-3 py-2"
+                    class="btn btn-primary px-3 py-2 disabled:hover:btn-disabled disabled:btn-disabled"
+                    :disabled="createNewOrganizationLoading"
                     @click="createNewOrganization"
                   >
                     Create organization
@@ -218,6 +219,8 @@ const props = defineProps<{
 const emit = defineEmits<{(event: 'emit-finished-editing', orgIds: number[], selectedProjectMembers: UpdateDashboardStakeholdersRequestBodyUser[]): void}>()
 
 const searchDropdown = ref() as Ref<Dropdown>
+const notFoundDropdown = ref() as Ref<Dropdown>
+const createNewOrganizationForm = ref() as Ref<Dropdown>
 const dropdownStatus = ref<'idle' | 'search' | 'create-org'>('idle')
 const createNewOrganizationFormContainer = ref<HTMLDivElement | null>(null)
 const organizationSearchInput = ref<HTMLDivElement | null>(null)
@@ -229,6 +232,7 @@ const searchOrganizationValue = ref('')
 const selectedOrganizationIds = ref(props.organizations.map(o => o.id))
 const newOrganizationType = ref<OrganizationType>('non-profit-organization')
 const newOrganizationUrl = ref<string>('')
+const createNewOrganizationLoading = ref(false)
 
 const selectedProjectMembers = ref(props.projectMembers.filter(u => u.ranking !== -1).map(u => u.email))
 const primaryContact = ref({
@@ -290,10 +294,19 @@ const openOrganizationSearch = async () => {
 }
 
 const organizationSearchInputChanged = async (): Promise<void> => {
+  createNewOrganizationForm.value?.hide()
   dropdownStatus.value = 'search'
   await refetchOrganizationsSearch()
-  if (orgsSearchResult.value.length) searchDropdown.value.show()
-  else new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).show()
+  if (orgsSearchResult.value.length) {
+    searchDropdown.value.show()
+    notFoundDropdown.value?.hide()
+  } else {
+    notFoundDropdown.value = new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 })
+    notFoundDropdown.value.show()
+  }
+  if (searchOrganizationValue.value.length === 0) {
+    notFoundDropdown.value?.hide()
+  }
 }
 
 const onBlur = () => {
@@ -301,18 +314,20 @@ const onBlur = () => {
   // If you remove this timeout. The dropdown will close and turn to button before the `onAddNewOrganizationFromSearch` function gets called.
   setTimeout(() => {
     if (dropdownStatus.value === 'create-org') {
-      new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).show()
-      new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).hide()
+      notFoundDropdown.value?.show()
+      notFoundDropdown.value?.hide()
       return
     }
 
     dropdownStatus.value = 'idle'
-  }, 1000)
+  }, 200)
 }
 
 const openCreateNewOrganizationForm = async (): Promise<void> => {
   dropdownStatus.value = 'create-org'
-  new Dropdown(createNewOrganizationFormContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }).show()
+  notFoundDropdown.value.hide()
+  createNewOrganizationForm.value = new Dropdown(createNewOrganizationFormContainer.value, organizationSearchInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 })
+  createNewOrganizationForm.value.show()
 }
 
 const onAddNewOrganizationFromSearch = (id: number): void => {
@@ -332,6 +347,8 @@ const onAddNewOrganizationFromSearch = (id: number): void => {
 
   selectedOrganizationIds.value.push(newOrg.id)
   addedOrganizations.value.push(newOrg)
+  searchOrganizationValue.value = newOrg.name
+  refetchOrganizationsSearch()
   dropdownStatus.value = 'idle'
 }
 
@@ -380,15 +397,21 @@ watch(() => dropdownStatus.value, (value) => {
 })
 
 const createNewOrganization = (): void => {
+  createNewOrganizationLoading.value = true
   mutateNewOrganization({ name: searchOrganizationValue.value, type: newOrganizationType.value, url: newOrganizationUrl.value }, {
     onSuccess: (newOrganization) => {
       addedOrganizations.value.push(newOrganization)
       selectedOrganizationIds.value.push(newOrganization.id)
       dropdownStatus.value = 'idle'
+      refetchOrganizationsSearch()
+      createNewOrganizationLoading.value = false
+      createNewOrganizationForm.value?.hide()
     },
     onError: () => {
       // TODO: Show user some respect and show them error
       dropdownStatus.value = 'idle'
+      createNewOrganizationLoading.value = false
+      createNewOrganizationForm.value?.hide()
     }
   })
 }
