@@ -12,7 +12,7 @@ export const openSearchClient = (host: string, config: { port?: number, ssl?: bo
       service: 'aoss',
       getCredentials: async () => await Promise.resolve(credentials)
     })
-    return new Client({ node, ...signer })
+    return new Client({ ...signer, node })
   }
 
   return new Client({ node })

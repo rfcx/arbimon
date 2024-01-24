@@ -26,16 +26,7 @@ export const fullReindex = async (client: Client, sequelize: Sequelize): Promise
 
   for (const indexName of requiredIndexes) {
     const requiredIndexExists = indices.find(index => index.index === indexName) !== undefined
-
-    if (requiredIndexExists) {
-      await recreateIndex(
-        client,
-        indexName,
-        {
-          body: indexName === 'projects' ? { mappings, settings: { analysis } } : undefined
-        }
-      )
-    } else {
+    if (!requiredIndexExists) {
       await recreateIndex(
         client,
         indexName,
@@ -95,11 +86,14 @@ export const fullReindex = async (client: Client, sequelize: Sequelize): Promise
 
     for (const project of projects) {
       const { id, ...body } = project
-      await client.index({ id, body, index: 'projects', refresh: true })
+      await client.index({ id, body, index: 'projects' })
     }
   }
-
-  await client.indices.refresh({
-    index: 'projects'
+  await client.indices.refresh({ index: 'projects' }).catch(e => {
+    if (e.statusCode === 404) {
+      console.info('Refresh not supported (likely AWS OpenSearch Serverless')
+    } else {
+      throw e
+    }
   })
 }
