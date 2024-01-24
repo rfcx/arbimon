@@ -21,12 +21,14 @@ const recreateIndex = async (client: Client, index: string, config: { delete?: b
 /** check which index is there, delete them, then recreate them and put data */
 export const fullReindex = async (client: Client, sequelize: Sequelize): Promise<void> => {
   // Check for existing indices
+  console.info('- checking for existing indices')
   const indices = await client.cat.indices({ format: 'json' }).then(response => response.body) as Array<{ index: string }>
   const requiredIndexes = ['projects', 'organizations']
 
   for (const indexName of requiredIndexes) {
     const requiredIndexExists = indices.find(index => index.index === indexName) !== undefined
     if (!requiredIndexExists) {
+      console.info('- required index found, recreating index ', indexName)
       await recreateIndex(
         client,
         indexName,
@@ -42,6 +44,8 @@ export const fullReindex = async (client: Client, sequelize: Sequelize): Promise
   let offset = 0
   const limit = 250
   let responseCount = 1
+
+  console.info('- start indexing data from postgres to elastic')
 
   while (responseCount !== 0) {
     const sql = `
@@ -80,15 +84,18 @@ export const fullReindex = async (client: Client, sequelize: Sequelize): Promise
       offset $2
     `
 
-    const projects = await sequelize.query(sql, { bind: [limit, offset], raw: true }).then(([rows, _]) => rows) as Array<{ id: string }>
+    const projects = await sequelize.query(sql, { bind: [limit, offset], raw: true }).then(([rows, _]) => rows) as Array<{ id: string, name: string }>
     offset += limit
     responseCount = projects.length
 
     for (const project of projects) {
       const { id, ...body } = project
+      console.info('- indexing project', id, body.name)
       await client.index({ id, body, index: 'projects' })
     }
   }
+
+  console.info('- refreshing the index for availability')
   await client.indices.refresh({ index: 'projects' }).catch(e => {
     if (e.statusCode === 404) {
       console.info('Refresh not supported (likely AWS OpenSearch Serverless')
