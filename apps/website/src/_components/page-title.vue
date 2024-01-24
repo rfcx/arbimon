@@ -2,7 +2,7 @@
   <div class="flex flex-row justify-between items-center w-full">
     <div>
       <div class="flex flex-row items-baseline">
-        <h1 class="text-4xl capitalize py-1 mr-2">
+        <h1 class="capitalize py-1 mr-2">
           {{ pageTitle }}
         </h1>
       </div>
