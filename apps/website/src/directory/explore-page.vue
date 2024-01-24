@@ -43,6 +43,7 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import { computed, inject, onMounted, ref, watch } from 'vue'
+import debounce from 'lodash.debounce'
 
 import { type ProjectLight, type ProjectProfileWithMetrics } from '@rfcx-bio/common/api-bio/project/projects'
 import type { SearchResponseProject } from '@rfcx-bio/common/api-bio/search/search'
@@ -105,14 +106,13 @@ const onEmitSwapTab = (tab: Tab) => {
   }
 }
 
-const onEmitSearch = async (keyword: string) => {
+const onEmitSearch = debounce(async (keyword: string) => {
   const searchResponse = await fetchSearch(keyword, 100, 0)
   if (searchResponse === undefined) return
   projectResults.value = searchResponse.data
-}
+}, 500)
 
 const onEmitLoadMore = async () => {
-
   // TODO: uncomment this when the all projects API is ready
   // console.log('onEmitLoadMore')
   // const LIMIT = 20

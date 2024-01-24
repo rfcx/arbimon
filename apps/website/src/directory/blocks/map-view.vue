@@ -23,6 +23,7 @@ const props = defineProps<{
 const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void}>()
 
 const hoveredId = ref<number | null>(null)
+const mapHasLoaded = ref(false)
 
 const mapCenter = computed((): [number, number] => {
   if (props.data.length === 0) return [0, 0]
@@ -83,6 +84,7 @@ onMounted(() => {
   }
 
   map.on('load', () => {
+    mapHasLoaded.value = true
     // load image for markers
     Object.entries(markers).forEach(([name, imagePath]) => {
       map.loadImage(imagePath, (error, image) => {
@@ -244,7 +246,7 @@ watch(() => props.data, (newData) => {
   map.easeTo({
     center: mapCenter.value
   })
-  if (map.loaded() === false) { return }
+  if (mapHasLoaded.value === false) { return }
   if (map.getSource('projects') === undefined) {
     map.addSource('projects', { type: 'geojson', data: toGeoJson(newData) })
   } else {
