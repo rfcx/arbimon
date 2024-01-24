@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<{
   data: ProjectLight[],
   selectedProjectId?: number
 }>(), {
-  data: [],
+  data: () => [],
   selectedProjectId: undefined
 })
 const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void}>()
