@@ -8,9 +8,10 @@
     <div class="h-full overflow-y">
       <div class="p-6">
         <input
-          v-model="searchKeyword"
+          v-model.lazy="searchKeyword"
           class="input-field w-full p-3 rounded"
           placeholder="Search by project name, objectives, countries, etc."
+          @keyup.enter="emitSearch(searchKeyword)"
         >
       </div>
       <ul
@@ -57,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 
 import { useProjectDirectoryStore } from '~/store'
 import ProjectListItem from '../components/project-list-item.vue'
@@ -85,10 +86,6 @@ const emitSwapTab = (tab: Tab) => {
   emit('emitSwapTab', tab)
 }
 
-watch(searchKeyword, (keyword) => {
-  emit('emitSearch', keyword)
-})
-
 const loadMore = () => {
   emit('emitLoadMore')
 }
@@ -96,4 +93,9 @@ const loadMore = () => {
 const emitSelectedProject = (projectId: number) => {
   emit('emitSelectedProject', projectId)
 }
+
+const emitSearch = (keyword: string) => {
+  emit('emitSearch', keyword)
+}
+
 </script>
