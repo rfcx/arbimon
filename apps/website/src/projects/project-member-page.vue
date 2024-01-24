@@ -39,7 +39,6 @@
               <button
                 class="btn bg-moss border border-util-gray-03 rounded-md border-l-0 rounded-l-none group dark:hover:bg-util-gray-04 dark:hover:text-pitch dark:focus:ring-util-gray-04 disabled:hover:btn-disabled disabled:btn-disabled"
                 data-tooltip-target="addProjectMemberTooltipId"
-                data-tooltip-style="light"
                 data-tooltip-placement="bottom"
                 :disabled="!isUserHasFullAccess"
                 @click="addSelectedUser()"
@@ -50,7 +49,7 @@
                 <div
                   id="addProjectMemberTooltipId"
                   role="tooltip"
-                  class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+                  class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
                 >
                   {{ isUserHasFullAccess ? 'Add new user' : disableText }}
                   <div

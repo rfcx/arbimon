@@ -50,20 +50,20 @@
             Analyses
           </h2>
           <button
-            v-if="hasPermissionAnalyses"
+            v-if="!isViewingAsGuest"
             class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3 disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
             type="button"
             :title="'Create New Analysis Job'"
             data-tooltip-target="analysesTooltipId"
             data-tooltip-placement="bottom"
-            :disable="projectUserPermissionsStore.role !== 'entry'"
+            :disabled="!hasPermissionAnalyses"
             @click="toggleAnalysisSelector(true)"
           >
             <icon-custom-ic-plus class="h-4 w-4 mb-3px" />
             <span class="font-display text-base">Create new analysis</span>
           </button>
           <div
-            v-if="projectUserPermissionsStore.role !== 'entry'"
+            v-if="!hasPermissionAnalyses"
             id="analysesTooltipId"
             role="tooltip"
             class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -170,7 +170,7 @@ const analyses = computed(() => [
 ])
 
 const hasPermissionAnalyses = computed<boolean>(() => {
-  return isProjectMember.value && !isViewingAsGuest.value && projectUserPermissionsStore.role !== 'entry'
+  return isProjectMember.value && !isViewingAsGuest.value && projectUserPermissionsStore.role !== 'entry' && projectUserPermissionsStore.role !== 'user'
 })
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`
