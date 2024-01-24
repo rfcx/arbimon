@@ -58,7 +58,7 @@ export const getProjectsByQuery = async (keyword?: string, limit?: number, offse
         name: project.name,
         slug: project.slug,
         status: project.status,
-        image: fileUrl(profile?.image) ?? 'https://drive.google.com/uc?export=view&id=1l4gjdtf35QWGWiYWhxV6UcyVf9_ZbxxF',
+        image: fileUrl(profile?.image) ?? 'static://project/bio-baseline.png',
         objectives: profile?.objectives ?? [],
         summary: profile?.summary ?? '',
         speciesCount: metric?.speciesCount ?? 0,
