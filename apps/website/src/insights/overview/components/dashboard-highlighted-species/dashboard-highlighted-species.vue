@@ -76,7 +76,7 @@ import HighlightedSpeciesModal from './components/highlighted-species-modal.vue'
 const props = defineProps<{ species: DashboardSpecies[] | undefined, canEdit: boolean, isProjectMember: boolean, isViewingAsGuest: boolean, isLoading: boolean }>()
 const emit = defineEmits<{(e: 'emitRefetch'): void }>()
 const modal = ref() as Ref<Modal>
-const disableText = ref('Contact your project administrator for permission to manage')
+const disableText = ref('Contact your project administrator for permission to select species')
 
 const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   if (props.species === undefined) {
