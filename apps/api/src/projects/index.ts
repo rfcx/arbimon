@@ -89,7 +89,6 @@ export const routesProject: RouteRegistration[] = [
   {
     method: GET,
     url: projectRoleRoute,
-    preHandler: [requireAuthorized],
     handler: getProjectRoleHandler
   },
   {
