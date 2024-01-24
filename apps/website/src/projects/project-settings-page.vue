@@ -1,6 +1,6 @@
 <template>
   <section class="bg-white dark:bg-pitch pl-18">
-    <div class="py-10 mx-auto max-w-screen-xl flex flex-col gap-y-6">
+    <div class="py-10 mx-auto max-w-screen-xl flex flex-col gap-y-6 pr-4">
       <h1 class="text-gray-900 dark:text-insight">
         Project settings
       </h1>
