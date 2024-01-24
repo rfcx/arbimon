@@ -55,15 +55,15 @@ export const envGetters = {
   AWS_S3_BUCKET_SECRET_ACCESS_KEY: stringGetter,
   AWS_S3_BUCKET_NAME: stringGetter,
 
+  AWS_OSS_REGION: stringGetter,
+  AWS_OSS_ACCESS_KEY_ID: stringGetter,
+  AWS_OSS_SECRET_ACCESS_KEY: stringGetter,
+
   OPENSEARCH_HOST: stringGetter,
   OPENSEARCH_PORT: numberGetter,
   OPENSEARCH_SSL_ENABLED: booleanGetter,
   OPENSEARCH_HTTPAUTH_USER: stringGetter,
   OPENSEARCH_HTTPAUTH_PASSWORD: stringGetter,
-  OPENSEARCH_AWS_BUCKET_REGION: stringGetter,
-
-  AWS_ACCESS_KEY_ID: stringGetter,
-  AWS_SECRET_ACCESS_KEY: stringGetter,
 
   SLACK_TOKEN: stringGetter,
 
