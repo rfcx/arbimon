@@ -6,6 +6,7 @@ metadata:
 spec:
   # every 15 minutes for testing
   schedule: '*/15 * * * *'
+  concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
   jobTemplate:
