@@ -137,6 +137,7 @@
       >
         <p
           v-if="profile?.readme"
+          class="pt-4"
         >
           <DashboardMarkdownViewerEditor
             id="about"
@@ -159,6 +160,7 @@
       >
         <p
           v-if="profile?.keyResult"
+          class="pt-4"
         >
           <DashboardMarkdownViewerEditor
             id="key-result"

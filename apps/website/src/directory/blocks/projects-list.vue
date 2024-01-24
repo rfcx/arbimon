@@ -8,10 +8,10 @@
     <div class="h-full overflow-y">
       <div class="p-6">
         <input
-          v-model.lazy="searchKeyword"
+          v-model="searchKeyword"
           class="input-field w-full p-3 rounded"
           placeholder="Search by project name, objectives, countries, etc."
-          @keyup.enter="emitSearch(searchKeyword)"
+          @input="emitSearch(searchKeyword)"
         >
       </div>
       <ul
@@ -77,7 +77,7 @@ const dataWithMetrics = computed((): ProjectProfileWithMetrics[] => {
   if (props.selectedTab === 'All' && searchKeyword.value === '') {
     return pdStore.allProjectsWithMetrics
   } else {
-    const id = props.data.map(p => p.id)
+    const id = props.data.map((p: ProjectLight): number => p.id)
     return pdStore.getProjectWithMetricsByIds(id)
   }
 })
