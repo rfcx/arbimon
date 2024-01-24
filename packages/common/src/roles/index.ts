@@ -19,7 +19,7 @@ const permissions: Record<ProjectPermission, ProjectRole[]> = {
   'read-profile': rolesGreaterOrEqualTo('guest'),
   'read-insights': rolesGreaterOrEqualTo('guest'),
   'read-insights-sensitive': rolesGreaterOrEqualTo('user'),
-  'read-users': rolesGreaterOrEqualTo('user'),
+  'read-users': rolesGreaterOrEqualTo('guest'),
   'update-profile': rolesGreaterOrEqualTo('admin'),
   'update-project-status': rolesGreaterOrEqualTo('admin'),
   'update-users': rolesGreaterOrEqualTo('admin'),
