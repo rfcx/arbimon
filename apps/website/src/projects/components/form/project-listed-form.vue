@@ -14,7 +14,7 @@
       </a>
     </p>
     <span
-      v-if="!isCreateProject"
+      v-if="!isCreateProject && isPublicProject"
       class="text-xs"
     >Make sure the Project’s Insight is hidden to make it a test project.</span>
     <div class="flex flex-row">
