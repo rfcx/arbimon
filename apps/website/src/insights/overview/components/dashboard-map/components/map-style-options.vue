@@ -9,7 +9,7 @@
         type="button"
       >
         {{ mapStyleLabel }}
-        <span class="pl-3">
+        <span>
           <icon-fa-chevron-down class="w-3 h-3 fa-chevron-down" />
           <icon-fa-chevron-up class="w-3 h-3 fa-chevron-up hidden" />
         </span>
