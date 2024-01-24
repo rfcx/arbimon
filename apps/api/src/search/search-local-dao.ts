@@ -5,6 +5,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type Project } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
+import { fileUrl } from '~/format-helpers/file-url'
 import { getAverageCoordinate } from './helpers'
 
 export const getProjectsByQuery = async (keyword?: string, limit?: number, offset?: number, order?: Order): Promise<{ total: number, data: SearchResponse }> => {
@@ -57,8 +58,8 @@ export const getProjectsByQuery = async (keyword?: string, limit?: number, offse
         name: project.name,
         slug: project.slug,
         status: project.status,
-        image: profile?.image ?? '',
-        objectives: profile?.objectives ?? '',
+        image: fileUrl(profile?.image) ?? 'https://drive.google.com/uc?export=view&id=1l4gjdtf35QWGWiYWhxV6UcyVf9_ZbxxF',
+        objectives: profile?.objectives ?? [],
         summary: profile?.summary ?? '',
         speciesCount: metric?.speciesCount ?? 0,
         recordingMinutesCount: metric?.recordingMinutesCount ?? 0,
