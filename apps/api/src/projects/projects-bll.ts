@@ -11,8 +11,8 @@ export const getProjects = async (limit?: number, offset?: number): Promise<Proj
 
 const projectsGeoCache = new QuickLRU<string, ProjectsGeoResponse>({
   maxSize: 10,
-  // 3 hour cache
-  maxAge: 1000 * 60 * 60 * 3
+  // 15 minutes cache
+  maxAge: 1000 * 60 * 15
 })
 
 export const getProjectsGeo = async (limit?: number, offset?: number): Promise<ProjectsGeoResponse> => {
