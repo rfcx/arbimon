@@ -158,7 +158,7 @@ const fetchSearch = async (keyword: string, limit: number, offset: number): Prom
       noOfRecordings: p.recordingMinutesCount,
       noOfSpecies: p.speciesCount,
       countries: p.countryCodes,
-      isPublished: true
+      isPublished: p.status === 'published'
     }
   })
   pdStore.addProjectsWithMetrics(projectWithMetrics)
