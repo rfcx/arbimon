@@ -8,7 +8,7 @@ const isEligibleForListedStatus = async (locationProjectId: number): Promise<boo
   const { LocationProjectMetric } = ModelRepository.getInstance(sequelize)
   const metric = await LocationProjectMetric.findOne({ where: { locationProjectId } })
   if (metric === null) return false
-  return metric.recordingMinutesCount > 1000
+  return metric.recordingMinutesCount > 1000 && metric.siteCount > 1
 }
 
 export const updateProjectPublishStatus = async (locationProjectId: number, published: boolean): Promise<void> => {
