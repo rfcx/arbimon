@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<{
   data: ProjectLight[],
   selectedProjectId?: number
 }>(), {
+  data: [],
   selectedProjectId: undefined
 })
 const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void}>()
@@ -49,7 +50,9 @@ const mapConfig = computed((): MapboxOptions => ({
   container: 'mapRoot',
   bounds: mapBounds.value,
   preserveDrawingBuffer: true,
-  zoom: 1.8
+  zoom: 8,
+  maxZoom: 15,
+  minZoom: 2
 }))
 
 const mapRoot = ref<InstanceType<typeof HTMLElement> | null>(null)
@@ -93,8 +96,6 @@ onMounted(() => {
     })
     map.addSource('projects', {
       type: 'geojson',
-      // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
-      // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
       data: toGeoJson(props.data),
       cluster: true,
       generateId: true,
@@ -242,14 +243,15 @@ watch(() => props.selectedProjectId, (id) => {
 
 // TODO: if the props.data updated, the data source of the map should be updated as well
 watch(() => props.data, (newData) => {
+  // adjust map center
+  map.easeTo({
+    center: mapCenter.value
+  })
   if (map.loaded() === false) { return }
   if (map.getSource('projects') === undefined) {
     map.addSource('projects', { type: 'geojson', data: toGeoJson(newData) })
   } else {
     (map.getSource('projects') as GeoJSONSource).setData(toGeoJson(newData))
-    map.easeTo({
-      center: mapCenter.value
-    })
   }
 })
 
