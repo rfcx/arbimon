@@ -206,9 +206,6 @@ importers:
       '@aws-sdk/client-s3':
         specifier: ^3.363.0
         version: 3.363.0
-      '@aws-sdk/credential-provider-node':
-        specifier: ^3.496.0
-        version: 3.496.0
       '@fastify/cors':
         specifier: ^7.0.0
         version: 7.0.0
