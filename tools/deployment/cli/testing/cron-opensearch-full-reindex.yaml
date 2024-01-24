@@ -4,8 +4,8 @@ metadata:
   name: biodiversity-cli-opensearch-full-reindex
   namespace: testing
 spec:
-  # every 3 hours. (set to debug)
-  schedule: '0 */3 * * *'
+  # every 15 minutes for testing
+  schedule: '*/15 * * * *'
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
   jobTemplate:
