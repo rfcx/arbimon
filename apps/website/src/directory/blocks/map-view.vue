@@ -49,7 +49,7 @@ const mapConfig = computed((): MapboxOptions => ({
   bounds: mapBounds.value,
   preserveDrawingBuffer: true,
   zoom: 8,
-  maxZoom: 15,
+  maxZoom: 13,
   minZoom: 2
 }))
 
@@ -282,7 +282,7 @@ const flyToProject = (id: number) => {
 
   map.flyTo({
     center: setCoordinateToRight(coordinates), // to avoid overlapping with sidebar
-    zoom: 12.5,
+    zoom: 13,
     essential: true
   })
 }
