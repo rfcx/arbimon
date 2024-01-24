@@ -15,31 +15,28 @@ import selectedMarkerIcon from '@/_assets/explore/map-marker-selected.png'
 import { createMap } from '~/maps'
 import type { ProjectLight } from '../data/types'
 
-// TODO: set default if data is empty
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   data: ProjectLight[],
   selectedProjectId?: number
-}>(), {
-  data: () => [],
-  selectedProjectId: undefined
-})
+}>()
+
 const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void}>()
 
 const hoveredId = ref<number | null>(null)
 
 const mapCenter = computed((): [number, number] => {
   if (props.data.length === 0) return [0, 0]
-  const lat = props.data.reduce((acc, datum) => acc + datum.avgLatitude, 0) / props.data.length
-  const lng = props.data.reduce((acc, datum) => acc + datum.avgLongitude, 0) / props.data.length
+  const lat = props.data.reduce((acc: number, datum: ProjectLight) => acc + datum.avgLatitude, 0) / props.data.length
+  const lng = props.data.reduce((acc: number, datum: ProjectLight) => acc + datum.avgLongitude, 0) / props.data.length
   return [lng, lat]
 })
 
 const mapBounds = computed((): [number, number, number, number] => {
   if (props.data.length === 0) return [-180, -90, 180, 90]
-  const latNorth = Math.max(...props.data.map(datum => datum.avgLatitude))
-  const latSouth = Math.min(...props.data.map(datum => datum.avgLatitude))
-  const lngWest = Math.min(...props.data.map(datum => datum.avgLongitude))
-  const lngEast = Math.max(...props.data.map(datum => datum.avgLongitude))
+  const latNorth = Math.max(...props.data.map((datum: ProjectLight): number => datum.avgLatitude))
+  const latSouth = Math.min(...props.data.map((datum: ProjectLight): number => datum.avgLatitude))
+  const lngWest = Math.min(...props.data.map((datum: ProjectLight): number => datum.avgLongitude))
+  const lngEast = Math.max(...props.data.map((datum: ProjectLight): number => datum.avgLongitude))
   return [lngWest, latSouth, lngEast, latNorth]
 })
 
@@ -262,7 +259,7 @@ const setCoordinateToRight = (coordinates: [number, number]) => {
 }
 
 const setSelectedProject = (id: number) => {
-  const selectedProjectGeoJson = toGeoJson(props.data.filter(datum => datum.id === id))
+  const selectedProjectGeoJson = toGeoJson(props.data.filter((datum: ProjectLight) => datum.id === id))
   if (map.getSource('selected-project') === undefined) {
     map.addSource('selected-project', {
     type: 'geojson',
@@ -274,7 +271,7 @@ const setSelectedProject = (id: number) => {
 }
 
 const flyToProject = (id: number) => {
-  const project = props.data.find(datum => datum.id === id)
+  const project = props.data.find((datum: ProjectLight) => datum.id === id)
   const coordinates = [project?.avgLongitude ?? 0, project?.avgLatitude ?? 0] as [number, number]
 
   // check if already at coordinates
