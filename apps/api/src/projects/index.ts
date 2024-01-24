@@ -65,8 +65,7 @@ export const routesProject: RouteRegistration[] = [
   {
     method: GET,
     url: projectMembersRoute,
-    // Frontend manages this logic. There is a disabled state for expert/data entry/user roles.
-    // preHandler: [requireProjectPermission('read-users')],
+    preHandler: [requireProjectPermission('read-users')],
     handler: getProjectMembersHandler
   },
   {
