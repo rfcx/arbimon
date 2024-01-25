@@ -132,7 +132,23 @@
                 layout="prev, pager, next"
               />
             </div>
-            <div class="hidden grid-cols-1 xl:grid">
+            <div
+              v-if="preSelectedSpecies.length === 0"
+              class="hidden grid-cols-1 xl:grid h-127 border-1 border-dashed rounded-lg"
+            >
+              <div class="my-auto items-center p-5 text-center">
+                <h4 class="font-medium">
+                  No species are selected.
+                </h4>
+                <p>
+                  Find and select focal species to emphasize in your project.
+                </p>
+              </div>
+            </div>
+            <div
+              v-else
+              class="hidden grid-cols-1 xl:grid"
+            >
               <HighlightedSpeciesSelector
                 :species="preSelectedSpecies"
                 @emit-remove-specie="removeSpecieFromList"
