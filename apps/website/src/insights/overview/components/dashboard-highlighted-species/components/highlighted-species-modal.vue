@@ -140,7 +140,7 @@
                 <h4 class="font-medium">
                   No species are selected.
                 </h4>
-                <p>
+                <p class="mt-4">
                   Find and select focal species to emphasize in your project.
                 </p>
               </div>
@@ -156,20 +156,37 @@
             </div>
           </div>
           <!-- Modal footer -->
-          <div class="flex flex-row justify-end baseline">
-            <button
-              data-modal-hide="species-highlighted-modal"
-              type="button"
-              class="btn btn-primary group"
-              @click="saveHighlightedSpecies"
-            >
-              Select species
-              <icon-fas-spinner
-                v-if="isLoadingPostSpecies || isLoadingDeleteSpecies"
-                class="ml-2 h-4 w-4 inline text-pitch group-hover:stroke-pitch"
-                :disabled="isLoadingPostSpecies || isLoadingDeleteSpecies"
-              />
-            </button>
+          <div class="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+            <div class="grid gap-3 col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-3">
+              <div
+                v-if="showHaveReachedLimit"
+                class="flex flex-row inline-flex text-black bg-rose-200 p-3 border-1 border-rose-600 border-l-3 rounded-lg items-center"
+              >
+                <icon-custom-ic-error-message class="basis-1/12" />
+                <span class="ml-2 basis-10/12">
+                  You have reached the limit of 5 highlighted species allowed.
+                </span>
+                <icon-custom-ic-close-black
+                  class="ml-2 basis-1/12 baseline justify-end"
+                  @click="closeHaveReachedLimit"
+                />
+              </div>
+            </div>
+            <div class="flex flex-row justify-end baseline col-span-1 mt-4 md:m-auto">
+              <button
+                data-modal-hide="species-highlighted-modal"
+                type="button"
+                class="btn btn-primary group h-12"
+                @click="saveHighlightedSpecies"
+              >
+                Select species
+                <icon-fas-spinner
+                  v-if="isLoadingPostSpecies || isLoadingDeleteSpecies"
+                  class="ml-2 h-4 w-4 inline text-pitch group-hover:stroke-pitch"
+                  :disabled="isLoadingPostSpecies || isLoadingDeleteSpecies"
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -201,6 +218,7 @@ const selectedProjectId = computed(() => store.selectedProject?.id)
 
 const searchKeyword = ref('')
 const searchRisk = ref('')
+const showHaveReachedLimit = ref(false)
 
 const selectedSpeciesSlug = ref<string[]>([])
 
@@ -310,6 +328,8 @@ const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
     // only 5 species might be highlighted
     if (selectedSpeciesSlug.value.length < 5) {
       selectedSpeciesSlug.value.push(specie.slug)
+    } else {
+      showHaveReachedLimit.value = true
     }
   }
 }
@@ -320,6 +340,7 @@ const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
 }
 
 const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
+  showHaveReachedLimit.value = false
   findIndexToRemove(specie.slug)
 }
 
@@ -338,6 +359,10 @@ const filterByCode = (code: string): void => {
 const saveHighlightedSpecies = async (): Promise<void> => {
   if (speciesToRemove.value.length) await deleteHighlightedSpecies()
   if (newSpeciesToAdd.value.length) await addHighlightedSpecies()
+}
+
+const closeHaveReachedLimit = (): void => {
+  showHaveReachedLimit.value = false
 }
 
 const deleteHighlightedSpecies = async (): Promise<void> => {
