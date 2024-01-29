@@ -100,7 +100,7 @@ const signup = async (): Promise<void> => {
 }
 
 const login = async (): Promise<void> => {
-  await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } } })
+  await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, prompt: 'login' })
 }
 
 const logout = async (): Promise<void> => {
