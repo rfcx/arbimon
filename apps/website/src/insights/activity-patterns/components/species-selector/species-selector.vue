@@ -11,6 +11,7 @@
           type="text"
           @focus="hasFocusInput = true"
           @blur="hasFocusInput = false"
+          @click="onClickSpeciesInput"
         >
         <span
           class="italic absolute left-3 pointer-events-none text-sm"
@@ -57,7 +58,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { initDropdowns } from 'flowbite'
+import { Dropdown, initDropdowns } from 'flowbite'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -83,6 +84,7 @@ const allSpecies = ref<Array<SpeciesInProjectTypes['light']>>([])
 const currentSpeciesQuery = ref('')
 
 const hasFocusInput = ref(false)
+let dropdown: Dropdown
 
 const selectedSpecies = computed<SpeciesInProjectTypes['light'] | undefined>(() => {
   if (!selectedSpeciesSlug.value) {
@@ -107,12 +109,15 @@ const filteredSpecies = computed<Array<SpeciesInProjectTypes['light']>>(() => {
 const onSelectSpecies = (species: SpeciesInProjectTypes['light']) => {
   selectedSpeciesSlug.value = species.taxonSpeciesSlug
   onResetQuery()
-  // TODO: hide dropdown
+  dropdown.hide()
 }
 
 onMounted(async () => {
   initDropdowns()
   allSpecies.value = await getAllSpecies()
+  dropdown = new Dropdown(
+    document.getElementById('searchResultDropdown')
+  )
 })
 
 watch(() => route, async (to, from) => {
@@ -164,6 +169,10 @@ const onFilterType = (query: string): void => {
 
 const onResetQuery = (): void => {
   onFilterType('')
+}
+
+const onClickSpeciesInput = (): void => {
+  dropdown.show()
 }
 
 const getAllSpecies = async (): Promise<Array<SpeciesInProjectTypes['light']>> => {
