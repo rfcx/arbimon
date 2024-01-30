@@ -45,6 +45,7 @@ import { type AxiosInstance } from 'axios'
 import debounce from 'lodash.debounce'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 
+import { apiBioGetProjectsGeo } from '@rfcx-bio/common/api-bio/project/projects'
 import { type ProjectLight, type ProjectProfileWithMetrics } from '@rfcx-bio/common/api-bio/project/projects'
 import type { SearchResponseProject } from '@rfcx-bio/common/api-bio/search/search'
 import { apiBioSearch } from '@rfcx-bio/common/api-bio/search/search'
@@ -113,15 +114,12 @@ const onEmitSearch = debounce(async (keyword: string) => {
 }, 500)
 
 const onEmitLoadMore = async () => {
-  // TODO: uncomment this when the all projects API is ready
-  // console.log('onEmitLoadMore')
-  // const LIMIT = 20
-  // const offset = pdStore.allProjectsWithMetrics.length
-  // // TODO: update the logic for first
-  // const total = pdStore.allProjects.length
-  // if (offset === total) return
-  // if (isLoading.value) return
-  // await fetchSearch('', offset + LIMIT, offset)
+  const LIMIT = 20
+  const offset = pdStore.allProjectsWithMetrics.length
+  const total = pdStore.allProjects.length
+  if (offset === total) return
+  if (isLoading.value) return
+  await fetchSearch('', offset + LIMIT, offset)
 }
 
 onMounted(async () => {
@@ -132,12 +130,10 @@ onMounted(async () => {
 })
 
 const fetchAllProjects = async () => {
-  // TODO: update the api
-  const searchResponse = await fetchSearch('', 10000, 0)
-  if (searchResponse === undefined) return
-  const p = searchResponse.data as ProjectLight[]
+  const allProjects = await apiBioGetProjectsGeo(apiClientBio)
+  if (allProjects === undefined) return
+  const p = allProjects as ProjectLight[]
   pdStore.updateAllProjects(p)
-  pdStore.addProjectsWithMetrics(searchResponse.data) // TODO: remove this line
 }
 
 const fetchSearch = async (keyword: string, limit: number, offset: number): Promise<{ total: number, data: ProjectProfileWithMetrics[]} | undefined> => {
