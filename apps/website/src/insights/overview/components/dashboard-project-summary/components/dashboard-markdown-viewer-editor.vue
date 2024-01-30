@@ -8,7 +8,7 @@
   </template>
   <template v-else>
     <div
-      v-if="isProjectMember && !isViewingAsGuest"
+      v-if="isProjectMember && !isViewingAsGuest && !isEditing"
       class="flex flex-row justify-end pr-6"
     >
       <button
