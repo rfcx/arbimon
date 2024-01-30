@@ -318,10 +318,6 @@ const allItems: Item[] = [
         legacyPath: '/analysis/random-forest-models/models'
       },
       {
-        title: 'RFM Training Sets',
-        legacyPath: '/audiodata/training-sets'
-      },
-      {
         title: 'Soundscape Analysis',
         legacyPath: '/analysis/soundscapes'
       },
