@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-cols-1 gap-2 bg-stone-900 border-1 border-insight rounded-2xl shadow py-4 px-6 h-36 shadow-lg shadow-frequency/10">
-    <div class="flex flex-row h-6 items-baseline">
+    <div class="flex flex-row h-6 items-center">
       <h5
         v-if="stat.title"
         class="text-spoonbill text-base font-eyebrow font-medium flex-grow"

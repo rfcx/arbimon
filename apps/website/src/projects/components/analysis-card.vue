@@ -30,7 +30,7 @@
       class="text-left"
     >
       <a
-        class="text-base cursor-pointer text-util-gray-01"
+        class="text-base cursor-pointer text-util-gray-01 hover:underline"
         :href="analysis.link"
         :title="analysis.label"
       >
