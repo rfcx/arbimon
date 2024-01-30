@@ -4,6 +4,7 @@
     :data-tooltip-target="tooltipId"
     data-tooltip-style="light"
     class="inline-block basis-8 h-4 w-4 cursor-pointer text-insight mt-icon-i mt-3.5px"
+    :class="extraClassIcon"
   />
   <div
     :id="tooltipId"
@@ -27,6 +28,7 @@ defineProps<{
   tooltipId: string
   tooltipText?: string
   extraClass?: string
+  extraClassIcon?: string
 }>()
 
 onMounted(() => {

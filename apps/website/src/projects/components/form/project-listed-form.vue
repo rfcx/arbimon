@@ -34,6 +34,7 @@
       </label>
       <icon-i-info
         :extra-class="`w-100`"
+        :extra-class-icon="isDisabled ? 'text-util-gray-02' : '' "
         tooltip-id="project-settings-project-listed"
         :tooltip-text="infoIconText"
       />
