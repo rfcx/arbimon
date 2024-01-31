@@ -6,24 +6,22 @@ import { type Project } from '@rfcx-bio/common/dao/types'
 import { query } from './dao/projects-dao'
 
 export const getProjects = async (limit?: number, offset?: number): Promise<ProjectsResponse> => {
-  return await query<Project>({}, { limit, offset })
+  return await query<Project>({ status: ['listed', 'published'] }, { limit, offset })
 }
 
 const projectsGeoCache = new QuickLRU<string, ProjectsGeoResponse>({
   maxSize: 10,
-  // 15 minutes cache
-  maxAge: 1000 * 60 * 15
+  maxAge: 900000 // 15 minutes
 })
 
 export const getProjectsGeo = async (limit?: number, offset?: number): Promise<ProjectsGeoResponse> => {
-  const key = JSON.stringify({ limit, offset })
-
-  const cacheHit = projectsGeoCache.get(key)
+  const cacheKey = JSON.stringify({ limit, offset })
+  const cacheHit = projectsGeoCache.get(cacheKey)
   if (cacheHit !== undefined) {
     return cacheHit
   }
 
-  const projects = await query<Project>({}, { limit, offset, attributesSet: 'geo' })
-  projectsGeoCache.set(key, projects)
+  const projects = await query<Project>({ status: ['listed', 'published'] }, { limit, offset, attributesSet: 'geo' })
+  projectsGeoCache.set(cacheKey, projects)
   return projects
 }
