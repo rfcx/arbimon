@@ -75,6 +75,11 @@ spec:
         backend:
           serviceName: arbimon-service
           servicePort: 80
+      - path: /legacy-login-callback
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-service
+          servicePort: 80
       - path: /legacy-logout
         pathType: Prefix
         backend:
