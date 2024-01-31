@@ -369,7 +369,7 @@ const allItems: Item[] = [
 
 const logout = async (): Promise<void> => {
   // Auth0 logout forces a full refresh (redirect to auth.rfcx.org for SSO purposes)
-  await auth.logout({ returnTo: `${ARBIMON_BASE_URL}/logout` })
+  await auth.logout({ returnTo: `${ARBIMON_BASE_URL}/legacy-logout` })
 }
 
 function itemId (title: string): string {
