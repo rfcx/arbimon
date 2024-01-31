@@ -49,25 +49,9 @@ export type SpecieRow = {
 const props = defineProps<{ species: HighlightedSpeciesRow[] | undefined }>()
 const emit = defineEmits<{(e: 'emitRemoveSpecie', specie: SpecieRow): void }>()
 
-const emptyRow = {
-  slug: 'not-selected',
-  scientificName: 'Species',
-  commonName: 'Not selected',
-  photoUrl: undefined
-}
-
-const emptySpecies: SpecieRow[] = Array(5).fill(emptyRow).map((item, index) => {
-  return {
-    slug: emptyRow.slug,
-    scientificName: `${emptyRow.scientificName} ${index + 1}`,
-    commonName: emptyRow.commonName,
-    photoUrl: emptyRow.photoUrl
-  }
-})
-
 const speciesList = computed(() => {
   if (!props.species || !props.species.length) {
-    return emptySpecies
+    return
   }
   const species = props.species.map(({ slug, scientificName, commonName, photoUrl }) => {
     return {
@@ -77,14 +61,6 @@ const speciesList = computed(() => {
       photoUrl: photoUrl ?? ''
     }
   })
-  if (props.species.length < 5) {
-    return Array.from({ length: 5 }, (_, idx) => {
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      if (species[idx]) {
-        return species[idx]
-      } else return { ...emptyRow, scientificName: `${emptyRow.scientificName} ${idx + 1}` }
-    })
-  }
   return species
 })
 
