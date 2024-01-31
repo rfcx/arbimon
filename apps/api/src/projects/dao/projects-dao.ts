@@ -1,9 +1,9 @@
-import { Op } from 'sequelize'
+import { type WhereOptions, Op } from 'sequelize'
 import { type Literal } from 'sequelize/types/lib/utils'
 
 import { type LocationProjectForUser, type MyProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project, ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
+import { type Project, type ProjectStatus, ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '~/db'
 import { fileUrl } from '~/format-helpers/file-url'
@@ -20,15 +20,20 @@ const computedAttributes: Record<string, [Literal, string]> = {
   longitudeAvg: [sequelize.literal('(longitude_east+longitude_west)/2'), 'longitudeAvg']
 }
 
-export const query = async <T extends Project>(filters: { readableBy?: number }, options?: { limit?: number, offset?: number, attributesSet?: 'geo' }): Promise<T[]> => {
+export const query = async <T extends Project>(filters: { status?: ProjectStatus[] | ProjectStatus }, options?: { limit?: number, offset?: number, attributesSet?: 'geo' }): Promise<T[]> => {
+  const where: WhereOptions<Project> = {}
+  if (filters.status !== undefined) {
+    where.status = filters.status
+  }
+
   const expectedAttributes = options?.attributesSet === 'geo' ? ATTRIBUTES_LOCATION_PROJECT.geo : ATTRIBUTES_LOCATION_PROJECT.light
-  const attributes: Array<string | [Literal, string]> = expectedAttributes.map(a => computedAttributes[a] !== undefined ? computedAttributes[a] : a)
+  const attributes: Array<string | [Literal, string]> = expectedAttributes.map(a => computedAttributes[a] ?? a)
 
   const limit = options?.limit !== undefined ? options?.limit : 20
   const offset = options?.offset !== undefined ? options?.offset : 0
 
   const results = await models.LocationProject.findAll({
-    attributes, limit, offset, raw: true
+    where, attributes, limit, offset, raw: true
   })
 
   // TODO: find a better way to manage types
