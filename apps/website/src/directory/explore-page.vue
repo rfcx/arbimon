@@ -78,6 +78,7 @@ const myProjects = computed(() => {
 
 const onEmitSelectedProject = (locationProjectId: number) => {
   selectedProjectId.value = locationProjectId
+  hideProjectList.value = false
 }
 
 const toggleProjectList = () => {
