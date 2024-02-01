@@ -15,9 +15,9 @@
             :to="{ name: ROUTE_NAMES.createProject }"
             class=" flex-row ml-6"
           >
-            <a class="btn btn-primary">
+            <button class="btn btn-primary">
               Create a new project +
-            </a>
+            </button>
           </router-link>
         </div>
         <div>
@@ -50,7 +50,7 @@
         </div>
         <div
           v-if="projects.length !== 0"
-          class="grid grid-cols-2 gap-4 py-8 lg:gap-6 lg:py-16 lg:grid-cols-3"
+          class="grid grid-cols-1 md:grid-cols-2 gap-4 py-8 lg:gap-6 lg:py-16 lg:grid-cols-3"
         >
           <ProjectCard
             v-for="project in projects"
