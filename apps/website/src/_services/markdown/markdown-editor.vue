@@ -144,7 +144,7 @@
         class="bg-frequency text-black text-base font-medium rounded-4xl px-4 py-2"
         @click="closeEditorView"
       >
-        Save edit
+        Save changes
       </button>
     </div>
 
