@@ -27,17 +27,17 @@ const mapHasLoaded = ref(false)
 
 const mapCenter = computed((): [number, number] => {
   if (props.data.length === 0) return [0, 0]
-  const lat = props.data.reduce((acc: number, datum: ProjectLight) => acc + datum.avgLatitude, 0) / props.data.length
-  const lng = props.data.reduce((acc: number, datum: ProjectLight) => acc + datum.avgLongitude, 0) / props.data.length
+  const lat = props.data.reduce((acc: number, datum: ProjectLight) => acc + datum.latitudeAvg, 0) / props.data.length
+  const lng = props.data.reduce((acc: number, datum: ProjectLight) => acc + datum.longitudeAvg, 0) / props.data.length
   return [lng, lat]
 })
 
 const mapBounds = computed((): [number, number, number, number] => {
   if (props.data.length === 0) return [-180, -90, 180, 90]
-  const latNorth = Math.max(...props.data.map((datum: ProjectLight): number => datum.avgLatitude))
-  const latSouth = Math.min(...props.data.map((datum: ProjectLight): number => datum.avgLatitude))
-  const lngWest = Math.min(...props.data.map((datum: ProjectLight): number => datum.avgLongitude))
-  const lngEast = Math.max(...props.data.map((datum: ProjectLight): number => datum.avgLongitude))
+  const latNorth = Math.max(...props.data.map((datum: ProjectLight): number => datum.latitudeAvg))
+  const latSouth = Math.min(...props.data.map((datum: ProjectLight): number => datum.latitudeAvg))
+  const lngWest = Math.min(...props.data.map((datum: ProjectLight): number => datum.longitudeAvg))
+  const lngEast = Math.max(...props.data.map((datum: ProjectLight): number => datum.longitudeAvg))
   return [lngWest, latSouth, lngEast, latNorth]
 })
 
@@ -63,7 +63,7 @@ const toGeoJson = (mapData: ProjectLight[]): FeatureCollection => {
     type: 'FeatureCollection',
     features: mapData.map(datum => ({
       type: 'Feature',
-      geometry: { type: 'Point', coordinates: [datum.avgLongitude, datum.avgLatitude], id: datum.id },
+      geometry: { type: 'Point', coordinates: [datum.longitudeAvg, datum.latitudeAvg], id: datum.id },
       properties: {
         title: datum.name,
         id: datum.id,
@@ -274,7 +274,7 @@ const setSelectedProject = (id: number) => {
 
 const flyToProject = (id: number) => {
   const project = props.data.find((datum: ProjectLight) => datum.id === id)
-  const coordinates = [project?.avgLongitude ?? 0, project?.avgLatitude ?? 0] as [number, number]
+  const coordinates = [project?.longitudeAvg ?? 0, project?.latitudeAvg ?? 0] as [number, number]
 
   // check if already at coordinates
   const currentCenter = map.getCenter()

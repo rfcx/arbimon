@@ -32,8 +32,8 @@ export type LocationProjectWithInfo = LocationProjectTypes['light'] &
 }
 
 export type ProjectLight = Pick<Project, 'id' | 'slug' | 'name'> & {
-  avgLatitude: number
-  avgLongitude: number
+  latitudeAvg: number
+  longitudeAvg: number
 }
 
 export type ProjectProfileWithMetrics = ProjectLight & Pick<LocationProjectProfile, 'summary' | 'objectives' > & {
@@ -64,7 +64,7 @@ export const myProjectsRoute = '/me/projects'
 
 // Service
 export const apiBioGetProjectsGeo = async (apiClient: AxiosInstance): Promise<Array<LocationProjectTypes['geo']>> =>
-  await apiClient.get<Array<LocationProjectTypes['geo']>>(projectsDeprecatedRoute).then(res => res.data)
+  await apiClient.get<Array<LocationProjectTypes['geo']>>(projectsGeoRoute).then(res => res.data)
 
 export const apiBioGetProjectsDeprecated = async (apiClient: AxiosInstance): Promise<LocationProjectForUser[] | undefined> =>
   await apiGetOrUndefined(apiClient, projectsDeprecatedRoute)
