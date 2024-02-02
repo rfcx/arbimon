@@ -5,8 +5,11 @@ export const openSearchClient = (host: string, config: { port?: number, ssl?: bo
   const httpAuth = config.httpAuth ? `${config.httpAuth.user}:${config.httpAuth.password}@` : ''
   const node = `${config.ssl === true ? 'https' : 'http'}://${httpAuth}${host}${config.port !== undefined ? ':' + config.port.toString() : ''}`
 
+  console.info('aoss node', node)
+
   if (config.aws) {
     const { region, ...credentials } = config.aws
+    console.info('aoss aws region', region)
     const signer = AwsSigv4Signer({
       region,
       service: 'aoss',
