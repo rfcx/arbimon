@@ -3,7 +3,7 @@ import { AwsSigv4Signer } from '@opensearch-project/opensearch/aws'
 
 export const openSearchClient = (host: string, config: { port?: number, ssl?: boolean, httpAuth?: { user: string, password: string }, aws?: { region: string, accessKeyId: string, secretAccessKey: string } }): Client => {
   const httpAuth = config.httpAuth ? `${config.httpAuth.user}:${config.httpAuth.password}@` : ''
-  const node = `${config.ssl === true ? 'https' : 'http'}://${httpAuth}${host}${config.port !== undefined ? ':' + config.port.toString() : ''}`
+  const node = `${config.ssl === true ? 'https' : 'http'}://${httpAuth}${host}${config.port !== undefined && config.port > 0 ? ':' + config.port.toString() : ''}`
   console.info('Instantiating OpenSearch client for node:', node)
 
   if (config.aws) {
