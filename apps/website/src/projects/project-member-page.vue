@@ -5,7 +5,7 @@
         Members
       </h1>
       <div class="grid lg:(grid-cols-2 gap-10)">
-        <div class="flex flex-col gap-y-4">
+        <div class="flex flex-col gap-y-10">
           <div
             v-if="isProjectMember && !isViewingAsGuest"
             class="flex flex-row justify-end"
@@ -13,7 +13,7 @@
             <input
               ref="userSearchInput"
               v-model="userSearchValue"
-              class="block bg-moss text-sm border-white rounded-md border-r-0 rounded-r-none w-60 placeholder:text-insight  placeholder:text-white focus:(border-frequency ring-frequency border border-r-2 rounded)"
+              class="block bg-pitch border-white rounded-md border-r-0 rounded-r-none w-66 placeholder:text-insight placeholder-gray-100 focus:(border-frequency ring-frequency border border-r-2 rounded)"
               type="text"
               placeholder="Search by user name, email"
               data-dropdown-toggle="dropdown"
