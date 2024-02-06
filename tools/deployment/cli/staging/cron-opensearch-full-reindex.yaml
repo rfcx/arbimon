@@ -4,8 +4,9 @@ metadata:
   name: biodiversity-cli-opensearch-full-reindex
   namespace: staging
 spec:
-  # Daily at 03:37 UTC
-  schedule: '37 3 * * *'
+  # every 15 minutes for testing
+  schedule: '*/15 * * * *'
+  concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
   jobTemplate:
