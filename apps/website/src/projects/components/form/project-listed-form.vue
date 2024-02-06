@@ -21,7 +21,7 @@
       <input
         id="project-settings-listed-project-checkbox"
         type="checkbox"
-        class="w-5 h-5 border-2 mb-1 rounded cursor-pointer  dark:bg-echo border-white focus:ring-frequency dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
+        class="w-5 h-5 border-2 mb-1 rounded cursor-pointer dark:bg-echo border-white focus:ring-frequency dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-40 disabled:cursor-not-allowed"
         :disabled="isDisabled"
         :checked="!isPublicProject"
         @click="toggleListedProject()"

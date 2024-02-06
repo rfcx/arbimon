@@ -1,7 +1,7 @@
 <template>
   <el-date-picker
     v-model="dateValue"
-    class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+    class="w-full border text-fog border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
     type="date"
     :disabled="isDisabled"
     placeholder="Choose date"
