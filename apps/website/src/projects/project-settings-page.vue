@@ -71,7 +71,7 @@
           data-tooltip-placement="bottom"
           @click.prevent="save"
         >
-          Save
+          Save changes
         </button>
         <div
           v-if="!isUserHasFullAccess"

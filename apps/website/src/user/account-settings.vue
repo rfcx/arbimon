@@ -197,7 +197,7 @@
           type="button"
           @click="saveAccountSetting"
         >
-          Save
+          Save changes
           <icon-fas-spinner
             v-if="isUpdatingProfilePhoto || isUpdatingUserProfile"
             class="animate-spin w-4 h-4 ml-2 inline"
