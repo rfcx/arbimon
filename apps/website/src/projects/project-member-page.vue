@@ -164,6 +164,9 @@
               :editable="isUserHasFullAccess"
               :is-project-member="isProjectMember"
               :is-viewing-as-guest="isViewingAsGuest"
+              :is-deleting="isDeletingProject"
+              :is-error="isErrorDeleteProject"
+              :is-success="isSuccessDeleteProject"
               @emit-change-user-role="changeUserRole"
               @emit-delete-project-member="deleteProjectMember"
             />
@@ -280,7 +283,7 @@ const { data: users, refetch: usersRefetch } = useGetProjectMembers(apiClientBio
 const { data: searchedUsers, refetch: searchUsersRefetch } = useSearchUsers(apiClientBio, userSearchValue)
 const { mutate: mutatePatchUserRole } = useUpdateProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutatePostProjectMember } = useAddProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
-const { mutate: mutateDeleteProjectMember } = useDeleteProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
+const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProjectMember } = useDeleteProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
 
 const userSearchResult = computed(() => {
   return searchedUsers.value

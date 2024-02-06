@@ -56,17 +56,15 @@
           data-popper-arrow
         />
       </div>
-      <button
+      <MemberDelete
         v-if="user.roleId !== 4"
-        type="button"
-        class="bg-echo text-danger border-1 border-util-gray-03 rounded-lg flex flex-row items-center py-1 px-2 ml-2 disabled:hover:btn-disabled disabled:btn-disabled"
-        :data-tooltip-target="`${user.userId}deleteUserTooltipId`"
-        data-tooltip-placement="bottom"
-        :disabled="!editable"
-        @click="$emit('emitDeleteProjectMember', user.email)"
-      >
-        Delect <icon-fa-close class="cursor-pointer h-3 inline" />
-      </button>
+        :user-id="user.userId"
+        :disabled-delete-button="!editable"
+        :is-deleting="isDeleting"
+        :is-error="isError"
+        :is-success="isSuccess"
+        @emit-delete-project-member="$emit('emitDeleteProjectMember', user.email)"
+      />
       <div
         :id="`${user.userId}deleteUserTooltipId`"
         role="tooltip"
@@ -113,6 +111,8 @@ import { onMounted, ref } from 'vue'
 
 import type { ProjectMember } from '@rfcx-bio/common/api-bio/project/project-members'
 
+import MemberDelete from '@/projects/components/form/member-delete.vue'
+
 interface Role {
   id: number
   name: string
@@ -121,7 +121,7 @@ interface Role {
 
 let dropdown: Dropdown
 
-const props = defineProps<{user: ProjectMember, roles: Role[], editable: boolean, isProjectMember: boolean, isViewingAsGuest: boolean}>()
+const props = defineProps<{user: ProjectMember, roles: Role[], editable: boolean, isProjectMember: boolean, isViewingAsGuest: boolean, isDeleting?: boolean, isError?: boolean, isSuccess?: boolean}>()
 defineEmits<{(e: 'emitChangeUserRole', email: string, role: string): void, (e: 'emitDeleteProjectMember', email: string): void}>()
 
 const disableDeleteUserText = ref('Contact your project administrator for permission to delete project member')
@@ -137,12 +137,15 @@ const closeMenu = (): void => {
 }
 
 onMounted(() => {
-  initDropdowns()
-  initTooltips()
-  dropdown = new Dropdown(
+  try {
+    initDropdowns()
+    initTooltips()
+
+    dropdown = new Dropdown(
     document.getElementById(`dropdownRole-${props.user.email}`),
     document.getElementById(`dropdownRoleButton-${props.user.email}`)
   )
+  } catch (e) { }
 })
 </script>
 <style lang="scss">
