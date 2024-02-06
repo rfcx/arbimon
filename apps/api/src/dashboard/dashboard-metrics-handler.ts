@@ -15,5 +15,11 @@ export const dashboardMetricsHandler: Handler<DashboardMetricsResponse, Dashboar
     throw BioInvalidPathParamError({ projectId })
   }
 
-  return await getProjectMetrics(projectIdInteger)
+  const projectMetrics = await getProjectMetrics(projectIdInteger)
+
+  // set 5 minutes of caching
+  void rep.header('cache-control', 'public, s-maxage=1800')
+  return {
+    ...projectMetrics
+  }
 }
