@@ -158,7 +158,13 @@
           <!-- Modal footer -->
           <div class="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
             <div class="grid gap-3 col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-3">
-              <div
+              <div v-if="showHaveReachedLimit">
+                <span class="ml-3 bg-rose-200 inline-flex text-black items-center p-3 border-1 border-rose-600 border-l-3 rounded-lg">
+                  <icon-custom-ic-error-message class="<xl:basis-2/12" />
+                  You have reached the limit of 5 highlighted species allowed.
+                </span>
+              </div>
+              <!-- <div
                 v-if="showHaveReachedLimit"
                 class="flex flex-row inline-flex text-black bg-rose-200 p-3 border-1 border-rose-600 border-l-3 rounded-lg items-center"
               >
@@ -166,11 +172,7 @@
                 <span class="ml-2 basis-10/12">
                   You have reached the limit of 5 highlighted species allowed.
                 </span>
-                <icon-custom-ic-close-black
-                  class="ml-2 basis-1/12 baseline justify-end"
-                  @click="closeHaveReachedLimit"
-                />
-              </div>
+              </div> -->
             </div>
             <div class="flex flex-row justify-end baseline col-span-1 mt-4 md:m-auto">
               <button
@@ -324,6 +326,7 @@ const findIndexToRemove = (slug: string): void => {
 const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
   if (isSpecieSelected(specie)) {
     findIndexToRemove(specie.slug)
+    showHaveReachedLimit.value = selectedSpeciesSlug.value.length >= 5
   } else {
     // only 5 species might be highlighted
     if (selectedSpeciesSlug.value.length < 5) {
@@ -359,10 +362,6 @@ const filterByCode = (code: string): void => {
 const saveHighlightedSpecies = async (): Promise<void> => {
   if (speciesToRemove.value.length) await deleteHighlightedSpecies()
   if (newSpeciesToAdd.value.length) await addHighlightedSpecies()
-}
-
-const closeHaveReachedLimit = (): void => {
-  showHaveReachedLimit.value = false
 }
 
 const deleteHighlightedSpecies = async (): Promise<void> => {
