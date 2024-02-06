@@ -5,7 +5,7 @@ import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
 import { getProjectMetrics } from './dashboard-metrics-dao'
 
-export const dashboardMetricsHandler: Handler<DashboardMetricsResponse, DashboardMetricsParams> = async (req) => {
+export const dashboardMetricsHandler: Handler<DashboardMetricsResponse, DashboardMetricsParams> = async (req, rep) => {
   // Inputs & validation
   const { projectId } = req.params
   assertPathParamsExist({ projectId })
