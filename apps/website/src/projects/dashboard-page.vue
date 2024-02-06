@@ -157,7 +157,7 @@ const { isLoading: isLoadingPmTemplateCount, data: pmTemplateCount } = usePmTemp
 
 const stats = computed(() => [
   { value: 'site', title: 'Sites created', description: 'Number of sites with recordings', count: isErrorMetrics.value ? 0 : metrics.value?.totalSites, isLoading: isLoadingMetrics.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
-  { value: 'recording', title: 'Recordings', description: 'Total minutes of recordings across sites', count: metrics.value?.totalRecordings ?? 0, isLoading: isLoadingMetrics.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/recordings` },
+  { value: 'recording', title: 'Total recordings (minutes)', description: 'Total minutes of recordings captured', count: metrics.value?.totalRecordings ?? 0, isLoading: isLoadingMetrics.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/recordings` },
   { value: 'playlist', title: 'Playlists created', description: 'Number of playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` },
   { value: 'species', title: 'Species detected', description: 'Number of species detected', count: metrics.value?.totalSpecies ?? 0, isLoading: isLoadingMetrics.value, label: 'Add new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` }
 ])
