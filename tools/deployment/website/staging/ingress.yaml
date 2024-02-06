@@ -46,9 +46,9 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: 'http'
 
     # Add http basic auth (user/password in bio-basic-auth-secrets)
-    nginx.ingress.kubernetes.io/auth-type: basic
-    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
-    nginx.ingress.kubernetes.io/auth-secret: bio-basic-auth-secrets
+    # nginx.ingress.kubernetes.io/auth-type: basic
+    # nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+    # nginx.ingress.kubernetes.io/auth-secret: bio-basic-auth-secrets
   name: arbimon-combined-ingress
   namespace: staging
   labels:
