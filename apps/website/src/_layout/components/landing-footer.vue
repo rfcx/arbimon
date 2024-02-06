@@ -17,7 +17,7 @@
           aria-label="Follow us on Social Media"
         >
           <a
-            href="https://twitter.com/rainforestcx"
+            href="https://twitter.com/ARBlMON"
             class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
             aria-label="Twitter"
           >
@@ -27,7 +27,7 @@
             >
           </a>
           <a
-            href="https://www.linkedin.com/company/rainforest-connection"
+            href="https://www.linkedin.com/company/arbimon/"
             class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
             aria-label="LinkedIn"
           >
@@ -37,7 +37,7 @@
             >
           </a>
           <a
-            href="https://www.instagram.com/rainforestcx/"
+            href="https://www.instagram.com/arbimon/"
             class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
             aria-label="Instagram"
           >
@@ -47,7 +47,7 @@
             >
           </a>
           <a
-            href="https://www.facebook.com/RainforestCx/"
+            href="https://www.facebook.com/ARBIMON"
             class="text-gray-500 hover:text-gray-900 dark:hover:text-white"
             aria-label="Facebook"
           >
