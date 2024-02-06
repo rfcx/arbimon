@@ -25,18 +25,20 @@
               <icon-custom-fi-close-thin class="cursor-pointer" />
             </button>
           </div>
-          <el-input
-            v-model="searchKeyword"
-            placeholder="Search species"
-            size="large"
-            class="bg-mock sm:w-70"
-          >
-            <template #prefix>
-              <div class="inline-flex items-center">
-                <icon-fas-search class="text-base text-insight" />
-              </div>
-            </template>
-          </el-input>
+          <div class="grid sm:grid-cols-1 md:(grid-cols-2 mr-4) xl:(grid-cols-3 mr-4) ">
+            <el-input
+              v-model="searchKeyword"
+              placeholder="Search species"
+              size="large"
+              class="bg-mock grid col-span-1"
+            >
+              <template #prefix>
+                <div class="inline-flex items-center">
+                  <icon-fas-search class="text-base text-insight" />
+                </div>
+              </template>
+            </el-input>
+          </div>
           <div class="grid xl:grid-cols-3 items-center gap-x-2 my-1">
             <button
               id="dropdownButton"
