@@ -18,4 +18,4 @@ data:
   AWS_S3_BUCKET_REGION: eu-west-1
   AWS_OSS_REGION: eu-west-1
   CORE_API_BASE_URL: https://staging-api.rfcx.org
-  OPENSEARCH_ENABLED: "false"
+  OPENSEARCH_ENABLED: "true"
