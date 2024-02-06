@@ -1,6 +1,6 @@
 <template>
-  <div class="grid grid-cols-1 gap-2 bg-stone-900 border-1 border-insight rounded-2xl shadow py-4 px-6 h-36 shadow-lg shadow-frequency/10">
-    <div class="flex flex-row h-6 items-center">
+  <div class="grid grid-cols-1 gap-2 bg-stone-900 border-1 border-insight rounded-2xl shadow py-4 px-6 shadow-lg shadow-frequency/10">
+    <div class="flex flex-row h-13">
       <h5
         v-if="stat.title"
         class="text-spoonbill text-base font-eyebrow font-medium flex-grow"
@@ -11,7 +11,7 @@
         v-if="stat.description"
         :data-tooltip-target="stat.value"
         data-tooltip-style="light"
-        class="inline-block basis-8 h-4 w-4 cursor-pointer text-spoonbill"
+        class="inline-block basis-8 h-4 w-4 mt-1.25 cursor-pointer text-spoonbill"
       />
       <div
         :id="stat.value"
