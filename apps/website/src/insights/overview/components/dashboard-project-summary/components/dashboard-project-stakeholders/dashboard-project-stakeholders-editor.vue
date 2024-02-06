@@ -189,7 +189,7 @@
         class="btn btn-primary"
         @click="onFinishedEditing"
       >
-        Save
+        Save changes
       </button>
     </div>
   </div>
