@@ -112,6 +112,8 @@ onMounted(() => {
   const slowSpinZoom = 3
 
   let userInteracting = false
+  let userClick = false
+  let userDrag = false
   const spinEnabled = true
 
   function spinGlobe () {
@@ -145,8 +147,11 @@ onMounted(() => {
   // These events account for cases where the mouse has moved
   // off the map, so 'mouseup' will not be fired.
   map.on('dragend', () => {
-    userInteracting = false
-    spinGlobe()
+    userDrag = true
+    userInteracting = true
+
+    const center = map.getCenter()
+    map.easeTo({ center, duration: 0, easing: (n) => n })
   })
   map.on('pitchend', () => {
     userInteracting = false
@@ -155,6 +160,19 @@ onMounted(() => {
   map.on('rotateend', () => {
     userInteracting = false
     spinGlobe()
+  })
+
+  map.on('click', () => {
+      if (userDrag) {
+        userDrag = false
+        userInteracting = false
+        spinGlobe()
+        return
+      }
+      userClick = !userClick || userInteracting
+      userInteracting = userClick
+      const center = map.getCenter()
+      map.easeTo({ center, duration: 0, easing: (n) => n })
   })
 
   // When animation is complete, start spinning if there is no ongoing interaction
