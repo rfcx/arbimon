@@ -22,24 +22,27 @@ export const getProjectRoleHandler: Handler<ProjectRole, ProjectMembersParams> =
 
 export const addProjectMemberHandler: Handler<string, ProjectMembersParams, unknown, ProjectMemberAddRemoveRequest> = async (request, reply) => {
   const projectId = projectIdPathParam(request.params)
+  const token = request.headers.authorization as string
 
-  await addProjectMember(projectId, request.body.email, request.body.role)
+  await addProjectMember(token, projectId, request.body.email, request.body.role)
   void reply.status(204)
   return ''
 }
 
 export const deleteProjectMemberHandler: Handler<string, ProjectMembersParams, unknown, ProjectMemberAddRemoveRequest> = async (request, reply) => {
   const projectId = projectIdPathParam(request.params)
+  const token = request.headers.authorization as string
 
-  await removeProjectMember(projectId, request.body.email)
+  await removeProjectMember(token, projectId, request.body.email)
   void reply.status(204)
   return ''
 }
 
 export const patchProjectMemberHandler: Handler<string, ProjectMembersParams, unknown, ProjectMemberUpdateRequest> = async (request, reply) => {
   const projectId = projectIdPathParam(request.params)
+  const token = request.headers.authorization as string
 
-  await updateProjectMember(projectId, request.body.email, request.body.role)
+  await updateProjectMember(token, projectId, request.body.email, request.body.role)
   void reply.status(204)
   return ''
 }

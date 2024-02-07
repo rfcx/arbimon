@@ -19,3 +19,4 @@ data:
   AWS_OSS_REGION: eu-west-1
   CORE_API_BASE_URL: https://staging-api.rfcx.org
   OPENSEARCH_ENABLED: "true"
+  LEGACY_ARBIMON_API_BASE_URL: https://dev.arbimon.org/legacy-api

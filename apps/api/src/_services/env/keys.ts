@@ -24,7 +24,8 @@ export const envKeysRequired = [
   // Config
   'AWS_S3_BUCKET_NAME',
   'AWS_S3_BUCKET_REGION',
-  'CORE_API_BASE_URL'
+  'CORE_API_BASE_URL',
+  'LEGACY_ARBIMON_API_BASE_URL'
 ] as const
 
 // CAN be undefined or empty string
