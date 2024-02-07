@@ -30,8 +30,9 @@
               @change="uploadPhoto"
             >
             <button
-              class="btn btn-secondary group mt-5"
+              class="btn btn-secondary group mt-5 disabled:btn-disabled disabled:hover:btn-disabled disabled:opacity-75 disabled:cursor-not-allowed"
               type="button"
+              :disabled="!isAuth0Account"
               @click="selectPhoto"
             >
               Upload photo <icon-custom-cloud-upload class="ml-2 group-hover:stroke-pitch inline-flex" />
@@ -48,7 +49,8 @@
           v-model="firstName"
           name="firstName"
           type="text"
-          class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
+          :disabled="!isAuth0Account"
+          class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
           required
         >
         <p class="mt-5 text-insight text-base font-medium font-sans">
@@ -59,7 +61,8 @@
           v-model="lastName"
           name="lastName"
           type="text"
-          class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
+          :disabled="!isAuth0Account"
+          class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
           required
         >
         <p class="mt-5 opacity-70 text-insight text-base font-medium font-sans">
@@ -70,7 +73,7 @@
           v-model="email"
           name="email"
           type="text"
-          class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
+          class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
           disabled
         >
         <p class="mt-5 text-insight text-base font-medium font-sans">
@@ -284,6 +287,10 @@ watch(organizationsList, async () => {
 
 const profilePhoto = computed(() => {
   return uploadedPhotoUrl.value ? uploadedPhotoUrl.value : store.user?.picture ? store.user?.picture : image
+})
+
+const isAuth0Account = computed(() => {
+  return store.user?.auth0_user_id?.includes('auth0') === true
 })
 
 const orgsSearchResult = computed(() => {
