@@ -11,7 +11,7 @@ export async function addProjectMemberOnLegacyAndCore (token: string, slug: stri
   try {
     await axios.request<{ success: boolean }>({
       method: 'POST',
-      url: `${LEGACY_ARBIMON_API_BASE_URL}/${slug}/user/add`,
+      url: `${LEGACY_ARBIMON_API_BASE_URL}/project/${slug}/user/add`,
       headers: {
         authorization: token
       },
@@ -29,7 +29,7 @@ export async function removeProjectMemberOnLegacyAndCore (token: string, slug: s
   try {
     await axios.request<{ success: boolean }>({
       method: 'POST',
-      url: `${LEGACY_ARBIMON_API_BASE_URL}/${slug}/user/del`,
+      url: `${LEGACY_ARBIMON_API_BASE_URL}/project/${slug}/user/del`,
       headers: {
         authorization: token
       },
@@ -46,7 +46,7 @@ export async function updateProjectMemberOnLegacyAndCore (token: string, slug: s
   try {
     await axios.request<{ success: boolean }>({
       method: 'POST',
-      url: `${LEGACY_ARBIMON_API_BASE_URL}/${slug}/user/role`,
+      url: `${LEGACY_ARBIMON_API_BASE_URL}/project/${slug}/user/role`,
       headers: {
         authorization: token
       },
