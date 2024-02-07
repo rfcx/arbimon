@@ -2,10 +2,10 @@
   <section class="bg-white dark:bg-pitch pl-18">
     <div class="py-10 mx-auto max-w-screen-xl flex flex-col gap-y-6">
       <h1 class="text-gray-900 dark:text-insight">
-        Project Users
+        Members
       </h1>
       <div class="grid lg:(grid-cols-2 gap-10)">
-        <div class="flex flex-col gap-y-4">
+        <div class="flex flex-col gap-y-10">
           <div
             v-if="isProjectMember && !isViewingAsGuest"
             class="flex flex-row justify-end"
@@ -13,7 +13,7 @@
             <input
               ref="userSearchInput"
               v-model="userSearchValue"
-              class="block bg-moss border-util-gray-03 text-sm rounded-md border-r-0 rounded-r-none w-60 placeholder:text-insight focus:(border-frequency ring-frequency border border-r-2 rounded)"
+              class="block bg-pitch border-white rounded-md border-r-0 rounded-r-none w-66 placeholder:text-insight placeholder-gray-100 focus:(border-frequency ring-frequency border border-r-2 rounded)"
               type="text"
               placeholder="Search by user name, email"
               data-dropdown-toggle="dropdown"
@@ -37,14 +37,15 @@
             </div>
             <div>
               <button
-                class="btn bg-moss border border-util-gray-03 rounded-md border-l-0 rounded-l-none group dark:hover:bg-util-gray-04 dark:hover:text-pitch dark:focus:ring-util-gray-04 disabled:hover:btn-disabled disabled:btn-disabled"
+                class="inline-flex btn bg-moss border items-center justify-center text-white rounded-md border-l-1 rounded-l-none group dark:hover:bg-util-gray-04 dark:focus:ring-util-gray-04 disabled:hover:btn-disabled disabled:btn-disabled"
                 data-tooltip-target="addProjectMemberTooltipId"
                 data-tooltip-placement="bottom"
                 :disabled="!isUserHasFullAccess"
                 @click="addSelectedUser()"
               >
+                Add member
                 <icon-fa-plus
-                  class="h-3 w-3 text-insight focus:border-none focus:border-transparent ring-moss outline-none group-disabled:text-util-gray-03"
+                  class="h-3 w-3 ml-2 text-insight focus:border-none focus:border-transparent ring-moss outline-none group-disabled:text-util-gray-03"
                 />
                 <div
                   id="addProjectMemberTooltipId"
@@ -163,6 +164,9 @@
               :editable="isUserHasFullAccess"
               :is-project-member="isProjectMember"
               :is-viewing-as-guest="isViewingAsGuest"
+              :is-deleting="isDeletingProject"
+              :is-error="isErrorDeleteProject"
+              :is-success="isSuccessDeleteProject"
               @emit-change-user-role="changeUserRole"
               @emit-delete-project-member="deleteProjectMember"
             />
@@ -279,7 +283,7 @@ const { data: users, refetch: usersRefetch } = useGetProjectMembers(apiClientBio
 const { data: searchedUsers, refetch: searchUsersRefetch } = useSearchUsers(apiClientBio, userSearchValue)
 const { mutate: mutatePatchUserRole } = useUpdateProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
 const { mutate: mutatePostProjectMember } = useAddProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
-const { mutate: mutateDeleteProjectMember } = useDeleteProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
+const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProjectMember } = useDeleteProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
 
 const userSearchResult = computed(() => {
   return searchedUsers.value
