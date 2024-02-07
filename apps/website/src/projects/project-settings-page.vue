@@ -34,9 +34,10 @@
           </h5>
           <project-slug
             :existing-slug="selectedProject?.slug"
-            :is-disabled="!isUserHasFullAccess"
+            :is-disabled="true"
             @emit-updated-slug="onEmitSlug"
           />
+          <!-- :is-disabled= !isUserHasFullAccess -->
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-image-form
             :is-disabled="!isUserHasFullAccess"
