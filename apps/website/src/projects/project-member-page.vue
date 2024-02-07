@@ -13,7 +13,7 @@
             <input
               ref="userSearchInput"
               v-model="userSearchValue"
-              class="block bg-pitch border-white rounded-md border-r-0 rounded-r-none w-66 placeholder:text-insight placeholder-gray-100 focus:(border-frequency ring-frequency border border-r-2 rounded)"
+              class="block text-sm bg-pitch border-white rounded-md border-r-0 rounded-r-none w-60 placeholder:text-insight placeholder-gray-100 focus:(border-frequency ring-frequency border border-r-2 rounded)"
               type="text"
               placeholder="Search by user name, email"
               data-dropdown-toggle="dropdown"
@@ -37,22 +37,21 @@
             </div>
             <div>
               <button
-                class="inline-flex btn bg-moss border items-center justify-center text-white rounded-md border-l-1 rounded-l-none group dark:hover:bg-util-gray-04 dark:focus:ring-util-gray-04 disabled:hover:btn-disabled disabled:btn-disabled"
-                data-tooltip-target="addProjectMemberTooltipId"
-                data-tooltip-placement="bottom"
+                class="inline-flex py-2 px-3 text-sm btn bg-moss border items-center justify-center text-white rounded-md border-l-1 rounded-l-none group dark:hover:bg-util-gray-04 dark:focus:ring-util-gray-04 disabled:hover:btn-disabled disabled:btn-disabled"
                 :disabled="!isUserHasFullAccess"
                 @click="addSelectedUser()"
               >
                 Add member
                 <icon-fa-plus
-                  class="h-3 w-3 ml-2 text-insight focus:border-none focus:border-transparent ring-moss outline-none group-disabled:text-util-gray-03"
+                  class="h-2 w-2 ml-2 text-insight focus:border-none focus:border-transparent ring-moss outline-none group-disabled:text-util-gray-03"
                 />
                 <div
+                  v-if="!isUserHasFullAccess"
                   id="addProjectMemberTooltipId"
                   role="tooltip"
                   class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
                 >
-                  {{ isUserHasFullAccess ? 'Add new user' : disableText }}
+                  {{ disableText }}
                   <div
                     class="tooltip-arrow"
                     data-popper-arrow
