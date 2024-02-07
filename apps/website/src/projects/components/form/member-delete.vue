@@ -7,7 +7,7 @@
     :disabled="disabledDeleteButton"
     @click="openModalToDeleteProjectMember"
   >
-    Delect <icon-fa-close class="cursor-pointer h-3 inline" />
+    Delete <icon-fa-close class="cursor-pointer h-3 inline" />
   </button>
   <div
     id="project-member-delete-modal"
