@@ -98,7 +98,7 @@ export const fullReindex = async (client: Client, sequelize: Sequelize): Promise
   console.info('- refreshing the index for availability')
   await client.indices.refresh({ index: 'projects' }).catch(e => {
     if (e.statusCode === 404) {
-      console.info('Refresh not supported (likely AWS OpenSearch Serverless')
+      console.info('Refresh not supported (likely AWS OpenSearch Serverless)')
     } else {
       throw e
     }

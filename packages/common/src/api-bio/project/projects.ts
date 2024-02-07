@@ -64,7 +64,7 @@ export const myProjectsRoute = '/me/projects'
 
 // Service
 export const apiBioGetProjectsGeo = async (apiClient: AxiosInstance): Promise<Array<LocationProjectTypes['geo']>> =>
-  await apiClient.get<Array<LocationProjectTypes['geo']>>(projectsGeoRoute).then(res => res.data)
+  await apiClient.get<Array<LocationProjectTypes['geo']>>(projectsGeoRoute, { params: { limit: 5000, offset: 0 } }).then(res => res.data)
 
 export const apiBioGetProjectsDeprecated = async (apiClient: AxiosInstance): Promise<LocationProjectForUser[] | undefined> =>
   await apiGetOrUndefined(apiClient, projectsDeprecatedRoute)
