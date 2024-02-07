@@ -16,7 +16,7 @@
     aria-hidden="true"
     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
   >
-    <div class="relative w-full max-w-115 max-h-full">
+    <div class="relative w-full max-w-100 max-h-full">
       <div class="relative p-6 bg-white rounded-lg shadow dark:bg-moss">
         <div class="flex flex-col">
           <div class="flex items-start justify-between">
@@ -56,7 +56,7 @@
             <button
               data-modal-hide="species-highlighted-modal"
               type="button"
-              class="btn btn-secondary flex flex-row justify-center px-6 py-3 w-49"
+              class="btn btn-secondary text-sm flex flex-row justify-center px-6 py-3 w-49"
               @click="closeModal"
             >
               <span>Cancel</span>
@@ -65,7 +65,7 @@
               data-modal-target="project-member-delete-modal"
               data-modal-toggle="project-member-delete-modal"
               type="button"
-              class="btn bg-[#CC1E3D] flex flex-row text-insight justify-center px-6 py-3 w-49"
+              class="btn bg-[#CC1E3D] flex flex-row text-sm text-insight justify-center px-6 py-3 w-49"
               @click="$emit('emitDeleteProjectMember')"
             >
               <span>Delete member</span>
