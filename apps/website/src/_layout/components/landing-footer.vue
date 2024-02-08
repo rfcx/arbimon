@@ -22,7 +22,7 @@
             aria-label="Twitter"
           >
             <img
-              class="w-8"
+              class="w-8 p-2"
               src="@/_assets/landing/footer/fi_twitter.svg"
             >
           </a>
