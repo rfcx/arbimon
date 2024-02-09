@@ -6,14 +6,12 @@ import { updateProjectHiddenStatus } from './dao/project-status-dao'
 import { getProjectById } from './dao/projects-dao'
 
 export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody, token: string, projectId: number): Promise<ProjectSettingsResponse> => {
-  // get arbimon id
   const project = await getProjectById(projectId)
   if (project === undefined) {
     throw new Error(`Failed to get arbimon project id for locationProjectId: ${projectId}`)
   }
 
-  // update in arbimon
-  // arbimon updates core by itself
+  // Update Legacy (note: updates core by itself)
   await updateProjectSettingsOnLegacyAndCore(token, project.slug, {
     project: {
       project_id: project.idArbimon,

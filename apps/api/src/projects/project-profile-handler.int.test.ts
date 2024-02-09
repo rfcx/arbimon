@@ -8,13 +8,7 @@ import { makeApp } from '@rfcx-bio/testing/handlers'
 import { PATCH } from '~/api-helpers/types'
 import { routesProject } from './index'
 
-vi.mock('../_services/api-legacy-arbimon', async () => {
-  return {
-    updateProjectSettingsOnLegacyAndCore: vi.fn(async () => {
-      await Promise.resolve()
-    })
-  }
-})
+vi.mock('~/api-legacy-arbimon')
 
 const { LocationProject, LocationProjectProfile } = modelRepositoryWithElevatedPermissions
 
@@ -72,9 +66,7 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
   test('updates successfully', async () => {
     // Arrange
     const app = await makeApp(routesProject, { projectRole: 'admin' })
-    const projectClone = structuredClone(project)
-    projectClone.name = 'Tbilisi cats diversities'
-    projectClone.slug = 'tbilisi-cats-diversities'
+    const projectClone = { ...project, name: 'Tbilisi cats diversities', slug: 'tbilisi-cats-diversities' }
 
     // Act
     const response = await app.inject({
