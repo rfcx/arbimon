@@ -24,6 +24,8 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: 'http'
+    nginx.ingress.kubernetes.io/limit-rpm: "120"
+    nginx.ingress.kubernetes.io/proxy-body-size: "200m"
   name: arbimon-legacy-api-ingress
   namespace: production
   labels:
