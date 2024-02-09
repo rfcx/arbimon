@@ -6,13 +6,13 @@ import { type ProjectRole, getIdByRole } from '@rfcx-bio/common/roles'
 import { unpackAxiosError } from '~/api-helpers/axios-errors'
 import { env } from '../env'
 
-const LEGACY_ARBIMON_API_BASE_URL = env.LEGACY_ARBIMON_API_BASE_URL
+const API_BASE_URL = env.ARBIMON_LEGACY_API_BASE_URL
 
 export async function addProjectMemberOnLegacyAndCore (token: string, slug: string, email: string, role: Exclude<ProjectRole, 'none'>): Promise<void> {
   try {
     await axios.request<{ success: boolean }>({
       method: 'POST',
-      url: `${LEGACY_ARBIMON_API_BASE_URL}/project/${slug}/user/add`,
+      url: `${API_BASE_URL}/project/${slug}/user/add`,
       headers: {
         authorization: token
       },
@@ -30,7 +30,7 @@ export async function removeProjectMemberOnLegacyAndCore (token: string, slug: s
   try {
     await axios.request<{ success: boolean }>({
       method: 'POST',
-      url: `${LEGACY_ARBIMON_API_BASE_URL}/project/${slug}/user/del`,
+      url: `${API_BASE_URL}/project/${slug}/user/del`,
       headers: {
         authorization: token
       },
@@ -47,7 +47,7 @@ export async function updateProjectMemberOnLegacyAndCore (token: string, slug: s
   try {
     await axios.request<{ success: boolean }>({
       method: 'POST',
-      url: `${LEGACY_ARBIMON_API_BASE_URL}/project/${slug}/user/role`,
+      url: `${API_BASE_URL}/project/${slug}/user/role`,
       headers: {
         authorization: token
       },
@@ -65,7 +65,7 @@ export async function updateProjectSettingsOnLegacyAndCore (token: string, slug:
   try {
     await axios.request({
       method: 'POST',
-      url: `${LEGACY_ARBIMON_API_BASE_URL}/project/${slug}/info/update`,
+      url: `${API_BASE_URL}/project/${slug}/info/update`,
       headers: {
         authorization: token
       },
