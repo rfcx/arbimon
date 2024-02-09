@@ -58,7 +58,7 @@
       </div>
       <MemberDelete
         v-if="user.roleId !== 4"
-        :user-id="user.userId"
+        :user="user"
         :disabled-delete-button="!editable"
         :is-deleting="isDeleting"
         :is-error="isError"
