@@ -156,7 +156,7 @@
           </div>
           <div class="flex flex-col gap-y-4">
             <ProjectMember
-              v-for="user in users"
+              v-for="user in userSort"
               :key="`${user.email}`"
               :user="user"
               :roles="roles"
@@ -286,6 +286,10 @@ const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: 
 
 const userSearchResult = computed(() => {
   return searchedUsers.value
+})
+
+const userSort = computed(() => {
+  return users.value?.filter(u => u.roleId === 4).concat(users.value?.filter(u => u.roleId !== 4))
 })
 
 const isUserHasFullAccess = computed<boolean>(() => {
