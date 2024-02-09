@@ -289,7 +289,11 @@ const userSearchResult = computed(() => {
 })
 
 const userSort = computed(() => {
-  return users.value?.filter(u => u.roleId === 4).concat(users.value?.filter(u => u.roleId !== 4))
+  return users.value?.filter(u => u.roleId === 4).concat(users.value?.filter(u => u.roleId !== 4).sort(function (a, b) {
+    if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) return -1
+    if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) return 1
+    return 0
+  }))
 })
 
 const isUserHasFullAccess = computed<boolean>(() => {
