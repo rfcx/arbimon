@@ -28,5 +28,14 @@ export const taxonSpeciesRfcx: Record<string, Partial<TaxonSpeciesRfcx>> =
     },
     'Melopyrrha portoricensis': { // Solveable via alias: Pyrrhulagra portoricensis
       commonName: 'Puerto Rican bullfinch'
+    },
+    'Corvus cornix': { // Missing in IUCN
+      commonName: 'Hooded Crow'
+    },
+    'Pelophylax esculentus': { // Missing in IUCN
+      commonName: 'the Edible Frog'
+    },
+    'Parus cinereus': { // Missing in IUCN
+      commonName: 'Parus cinereus'
     }
   })
