@@ -322,6 +322,14 @@ const allItems: Item[] = [
         legacyPath: '/analysis/soundscapes'
       },
       {
+        title: 'Audio Event Detection',
+        legacyPath: '/analysis/audio-event-detections-clustering'
+      },
+      {
+        title: 'Clustering',
+        legacyPath: '/analysis/clustering-jobs'
+      },
+      {
         title: 'CNN',
         visibleCondition: () => {
           return userEmail.value.includes('rfcx.org')
@@ -329,14 +337,6 @@ const allItems: Item[] = [
         route: {
           name: ROUTE_NAMES.cnnJobList
         }
-      },
-      {
-        title: 'Audio Event Detection',
-        legacyPath: '/analysis/audio-event-detections-clustering'
-      },
-      {
-        title: 'Clustering',
-        legacyPath: '/analysis/clustering-jobs'
       }
     ]
   },
