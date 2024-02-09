@@ -1,7 +1,7 @@
 <template>
   <button
-    data-modal-target="project-member-delete-modal"
-    data-modal-toggle="project-member-delete-modal"
+    :data-modal-target="'project-member-delete-modal-' + user.userId"
+    :data-modal-toggle="'project-member-delete-modal' + user.userId"
     type="button"
     class="bg-echo text-danger border-1 border-util-gray-03 rounded-lg flex flex-row items-center py-1 px-2 ml-2 disabled:hover:btn-disabled disabled:btn-disabled"
     :disabled="disabledDeleteButton"
@@ -10,7 +10,7 @@
     Delete <icon-fa-close class="cursor-pointer h-3 inline" />
   </button>
   <div
-    id="project-member-delete-modal"
+    :id="'project-member-delete-modal' + user.userId"
     data-modal-backdrop="static"
     tabindex="-1"
     aria-hidden="true"
@@ -66,7 +66,7 @@
               data-modal-toggle="project-member-delete-modal"
               type="button"
               class="btn bg-[#CC1E3D] flex flex-row text-sm text-insight justify-center px-6 py-3 w-49"
-              @click="$emit('emitDeleteProjectMember')"
+              @click="$emit('emitDeleteProjectMember', user.email)"
             >
               <span>Delete member</span>
             </button>
@@ -81,8 +81,10 @@
 import { Modal } from 'flowbite'
 import { type Ref, ref, watch } from 'vue'
 
-const props = defineProps<{userId: number, disabledDeleteButton: boolean, isDeleting?: boolean, isError?: boolean, isSuccess?: boolean}>()
-defineEmits<{(e: 'emitDeleteProjectMember'): void}>()
+import type { ProjectMember } from '@rfcx-bio/common/api-bio/project/project-members'
+
+const props = defineProps<{user: ProjectMember, disabledDeleteButton: boolean, isDeleting?: boolean, isError?: boolean, isSuccess?: boolean}>()
+defineEmits<{(e: 'emitDeleteProjectMember', email: string): void}>()
 
 const modal = ref() as Ref<Modal | null>
 
@@ -91,7 +93,7 @@ watch(() => props.isSuccess, (val) => {
 })
 
 const openModalToDeleteProjectMember = (): void => {
-  modal.value = new Modal(document.getElementById('project-member-delete-modal'), {
+  modal.value = new Modal(document.getElementById('project-member-delete-modal' + props.user.userId), {
     placement: 'top-center',
     backdrop: 'dynamic',
     backdropClasses: 'bg-pitch bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
