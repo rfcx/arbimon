@@ -36,6 +36,6 @@ export const taxonSpeciesRfcx: Record<string, Partial<TaxonSpeciesRfcx>> =
       commonName: 'the Edible Frog'
     },
     'Parus cinereus': { // Missing in IUCN
-      commonName: 'Parus cinereus'
+      commonName: 'Cinereus Tit'
     }
   })
