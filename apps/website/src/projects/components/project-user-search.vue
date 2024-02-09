@@ -9,11 +9,11 @@
       alt="User image"
     >
     <div class="ml-3 flex flex-col justify-start text-sm">
-      <h6
+      <span
         class="font-bold tracking-tight line-clamp-2 text-gray-900 dark:text-insight"
       >
         {{ user.firstName }} {{ user.lastName }}
-      </h6>
+      </span>
       <span class="text-fog mt-2">
         {{ user.email }}
       </span>
