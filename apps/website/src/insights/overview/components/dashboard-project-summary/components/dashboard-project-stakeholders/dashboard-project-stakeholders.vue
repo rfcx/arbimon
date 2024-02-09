@@ -10,7 +10,7 @@
       v-if="isEditing === false"
       :editable="editable"
       :is-project-member="isProjectMember"
-      :is-guest="isViewingAsGuest"
+      :is-external-guest="isViewingAsGuest"
       :loading="stakeholdersLoading || stakeholdersRefetching || isUpdating"
       :organizations="stakeholders?.organizations ?? []"
       :project-members="stakeholders?.users.filter(u => u.ranking !== -1).sort((a, b) => a.ranking - b.ranking) ?? []"

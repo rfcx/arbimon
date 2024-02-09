@@ -191,7 +191,7 @@
             <DashboardProjectStakeholdersViewer
               :editable="false"
               :is-project-member="false"
-              :is-guest="true"
+              :is-external-guest="true"
               :loading="stakeholdersLoading || stakeholdersRefetching"
               :organizations="stakeholders?.organizations ?? []"
               :project-members="stakeholders?.users.filter(u => u.ranking !== -1).sort((a, b) => a.ranking - b.ranking) ?? []"
