@@ -13,9 +13,9 @@
             <input
               ref="userSearchInput"
               v-model="userSearchValue"
-              class="block text-sm bg-pitch border-white rounded-md border-r-0 rounded-r-none w-60 placeholder:text-insight placeholder-gray-100 focus:(border-frequency ring-frequency border border-r-2 rounded)"
+              class="mainLoginInput block text-sm bg-pitch border-white rounded-md border-r-0 rounded-r-none w-60 placeholder:text-insight placeholder-gray-100 focus:(border-frequency ring-frequency border border-r-2 rounded)"
               type="text"
-              placeholder="Search by user name, email"
+              placeholder="&#61442; Search by user name, email"
               data-dropdown-toggle="dropdown"
               data-tooltip-target="userSearchInputTooltipId"
               data-tooltip-placement="bottom"
@@ -387,3 +387,18 @@ onMounted(() => {
 })
 
 </script>
+
+<style lang="scss" scoped>
+@import "//netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css";
+.mainLoginInput::-webkit-input-placeholder {
+font-family: Poppins, Roboto, Noto Sans, FontAwesome
+}
+
+.mainLoginInput::-moz-placeholder  {
+font-family: FontAwesome;
+}
+
+.mainLoginInput:-ms-input-placeholder  {
+font-family: FontAwesome;
+}
+</style>
