@@ -50,7 +50,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
   const { LocationProject, LocationProjectProfile, LocationProjectCountry } = ModelRepository.getInstance(sequelize)
   const resProject = await LocationProject.findOne({
     where: { id: locationProjectId },
-    attributes: ['name', 'status'],
+    attributes: ['name', 'slug', 'status'],
     raw: true
   })
   const resProfile = await LocationProjectProfile.findOne({
@@ -80,6 +80,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
   if (!resProject) throw new Error(`Failed to get project settings for locationProjectId: ${locationProjectId}`)
   const baseProject = {
     name: resProject.name,
+    slug: resProject.slug,
     summary: resProfile?.summary ?? '',
     objectives: resProfile?.objectives ?? [],
     dateStart: resProfile?.dateStart ?? null,
@@ -122,10 +123,17 @@ export const getProjectSettings = async (locationProjectId: number): Promise<Pro
  * @deprecated Do not use ProjectSettings, needs refactoring
  */
 export const updateProjectSettings = async (locationProjectId: number, settings: ProjectProfileUpdateBody): Promise<ProjectSettingsResponse> => {
-  const { name, isPublic, dateStart, dateEnd, ...fields } = settings
+  const { name, slug, isPublic, dateStart, dateEnd, ...fields } = settings
+  const sequelize = getSequelize()
+
   if (name) {
-    await ModelRepository.getInstance(getSequelize()).LocationProject.update({ name }, { where: { id: locationProjectId } })
+    await ModelRepository.getInstance(sequelize).LocationProject.update({ name }, { where: { id: locationProjectId } })
   }
+
+  if (slug) {
+    await ModelRepository.getInstance(sequelize).LocationProject.update({ slug }, { where: { id: locationProjectId } })
+  }
+
   const dateStartChanges = dateStart === undefined ? {} : { dateStart: dateStart ? dayjs(dateStart).toDate() : null }
   const dateEndChanges = dateEnd === undefined ? {} : { dateEnd: dateEnd ? dayjs(dateEnd).toDate() : null }
   await updateProjectProfile({ locationProjectId, ...fields, ...dateStartChanges, ...dateEndChanges })
