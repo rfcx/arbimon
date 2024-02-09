@@ -1,7 +1,7 @@
 <template>
   <div class="px-6 pb-6">
     <div
-      v-if="isProjectMember && !isGuest"
+      v-if="isProjectMember && !isExternalGuest"
       class="flex w-full justify-end mt-6"
     >
       <button
@@ -73,7 +73,7 @@
       class="mt-4"
     >
       <dashboard-project-stakeholders-empty
-        v-if="editable && !projectUserPermissionsStore.isGuest"
+        v-if="editable && !projectUserPermissionsStore.isExternalGuest"
         @emit-add-stakeholders="$emit('emit-is-updating')"
       />
       <ProjectSummaryEmptyForNonProjectMember v-else />
@@ -100,7 +100,7 @@ import StakeholdersTosBanner from './stakeholders-tos-banner.vue'
 defineProps<{
   editable: boolean,
   isProjectMember: boolean,
-  isGuest: boolean,
+  isExternalGuest: boolean,
   loading: boolean,
   organizations: Array<OrganizationTypes['light']>
   projectMembers: Array<DashboardStakeholdersUser>

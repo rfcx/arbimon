@@ -10,8 +10,8 @@
       </span>
       <button
         class="text-frequency cursor-pointer font-display flex-shrink-0"
-        :class="{ 'disabled:cursor-not-allowed disabled:opacity-70': projectUserPermissionsStore.isGuest }"
-        :disabled="projectUserPermissionsStore.isGuest"
+        :class="{ 'disabled:cursor-not-allowed disabled:opacity-70': projectUserPermissionsStore.isExternalGuest }"
+        :disabled="projectUserPermissionsStore.isExternalGuest"
         @click="onAddStakeholdersClicked"
       >
         Add stakeholders
@@ -27,7 +27,7 @@ const emit = defineEmits<{(event: 'emit-add-stakeholders'): void}>()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const onAddStakeholdersClicked = () => {
-  if (!projectUserPermissionsStore.isGuest) {
+  if (!projectUserPermissionsStore.isExternalGuest) {
     emit('emit-add-stakeholders')
   }
 }

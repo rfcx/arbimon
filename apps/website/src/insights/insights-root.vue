@@ -24,7 +24,7 @@
           class="flex gap-4 py-4 md:justify-between order-first"
         >
           <router-link
-            v-if="!projectUserPermissionsStore.isGuest"
+            v-if="!projectUserPermissionsStore.isExternalGuest"
             :to="{ name: ROUTE_NAMES.projectSettings }"
             class="flex flex-row items-center justify-start order-last md:order-first"
           >
@@ -179,7 +179,7 @@ const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
 const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1' || projectUserPermissionsStore.isGuest
+  return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
 })
 
 const startShareInsightsNavigation = ref<InsightsPublishStatus>('idle')

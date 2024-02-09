@@ -1,7 +1,7 @@
 <template>
   <template v-if="(rawMarkdownText == null || rawMarkdownText === '') && !isViewMored">
     <project-summary-empty
-      v-if="editable && !projectUserPermissionsStore.isGuest"
+      v-if="editable && !projectUserPermissionsStore.isExternalGuest"
       @emit-add-content="editMarkdownContent"
     />
     <ProjectSummaryEmptyForNonProjectMember v-else />
@@ -56,7 +56,7 @@
       </button>
     </div>
     <div
-      v-show="isEditing && !projectUserPermissionsStore.isGuest"
+      v-show="isEditing && !projectUserPermissionsStore.isExternalGuest"
       id="markdown-editor-apply-template"
       class="flex flex-row justify-start items-center gap-x-3 mb-4"
     >
@@ -71,7 +71,7 @@
       </button>
     </div>
     <MarkdownEditor
-      v-show="isEditing && !projectUserPermissionsStore.isGuest"
+      v-show="isEditing && !projectUserPermissionsStore.isExternalGuest"
       :id="id"
       v-model="editableMarkdownText"
       :character-limit="props.characterLimit"

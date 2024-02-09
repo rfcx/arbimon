@@ -99,7 +99,7 @@ const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
 const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1' || projectUserPermissionsStore.isGuest
+  return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
 })
 
 onMounted(() => {

@@ -155,7 +155,7 @@ const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
 const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1' || projectUserPermissionsStore.isGuest
+  return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
 })
 
 const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId)

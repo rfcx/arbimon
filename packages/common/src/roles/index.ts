@@ -1,25 +1,25 @@
-export type ProjectRole = 'none' | 'guest' | 'entry' | 'user' | 'expert' | 'admin' | 'owner'
+export type ProjectRole = 'none' | 'external' | 'viewer' | 'entry' | 'user' | 'expert' | 'admin' | 'owner'
 export type ProjectPermission = 'read-profile' | 'read-insights' | 'read-insights-sensitive' | 'read-users' | 'update-profile' | 'update-project-status' | 'update-users' | 'delete-project'
 
 const roles: Record<number, ProjectRole> = {
   1: 'admin',
   2: 'user',
-  3: 'guest',
+  3: 'viewer',
   4: 'owner',
   5: 'entry',
   6: 'expert'
 }
 
-const orderedRoles: ProjectRole[] = ['guest', 'entry', 'user', 'expert', 'admin', 'owner']
+const orderedRoles: ProjectRole[] = ['external', 'viewer', 'entry', 'user', 'expert', 'admin', 'owner']
 
 export const rolesGreaterOrEqualTo = (role: ProjectRole): ProjectRole[] =>
   orderedRoles.filter((r, i) => i >= orderedRoles.indexOf(role))
 
 const permissions: Record<ProjectPermission, ProjectRole[]> = {
-  'read-profile': rolesGreaterOrEqualTo('guest'),
-  'read-insights': rolesGreaterOrEqualTo('guest'),
-  'read-insights-sensitive': rolesGreaterOrEqualTo('user'),
-  'read-users': rolesGreaterOrEqualTo('guest'),
+  'read-profile': rolesGreaterOrEqualTo('external'),
+  'read-insights': rolesGreaterOrEqualTo('external'),
+  'read-insights-sensitive': rolesGreaterOrEqualTo('viewer'),
+  'read-users': rolesGreaterOrEqualTo('viewer'),
   'update-profile': rolesGreaterOrEqualTo('admin'),
   'update-project-status': rolesGreaterOrEqualTo('admin'),
   'update-users': rolesGreaterOrEqualTo('admin'),

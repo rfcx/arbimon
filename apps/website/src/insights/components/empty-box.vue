@@ -10,7 +10,7 @@
       </span>
     </div>
     <a
-      v-if="!projectUserPermissionsStore.isGuest"
+      v-if="!projectUserPermissionsStore.isExternalGuest"
       target="_blank"
       class="text-frequency cursor-pointer font-display flex-shrink-0"
       @click="toggleAnalysisSelector(true)"

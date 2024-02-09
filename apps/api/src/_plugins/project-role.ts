@@ -1,10 +1,9 @@
 import { type FastifyPluginCallback } from 'fastify'
 import fp from 'fastify-plugin'
 
-import { type ProjectRole, getRoleById } from '@rfcx-bio/common/roles'
+import { type ProjectRole } from '@rfcx-bio/common/roles'
 
-import { getRoleIdByProjectAndUser } from '@/projects/dao/project-member-dao'
-import { getProjectById } from '@/projects/dao/projects-dao'
+import { getUserRoleForProject } from '@/projects/dao/project-member-dao'
 
 const plugin: FastifyPluginCallback = (instance, _options, done) => {
   instance.decorateRequest('projectRole', 'none', ['userId'])
@@ -18,28 +17,9 @@ const plugin: FastifyPluginCallback = (instance, _options, done) => {
     const projectId = Number(params.projectId)
     // TODO: check projectId is not NaN
 
-    // TODO: we would like a cache of projectId => isPublished
-    const projectIsPublished = await getProjectById(projectId).then(p => p?.status === 'published' ?? false)
-    const userId = request.userId
-
-    // When there is no user (no token) and project is not published, no role
-    // When there is no user and project is published, set as guest
-    if (userId === undefined) {
-      request.projectRole = projectIsPublished ? 'guest' : 'none'
-      return
-    }
-
-    // TODO: we would like a cache of userId => roleId
-    const roleId = await getRoleIdByProjectAndUser(projectId, userId)
-
-    // When the user is not a project member and project is not published, no role
-    // When the user is not a project member and project is published, set as guest
-    if (roleId === undefined) {
-      request.projectRole = projectIsPublished ? 'guest' : 'none'
-    }
-
-    // Else user is project member, set the role from the db
-    request.projectRole = roleId !== undefined ? getRoleById(roleId) : 'none'
+    const role = await getUserRoleForProject(request.userId, projectId)
+    // TODO: cache this result
+    request.projectRole = role
   })
 
   done()

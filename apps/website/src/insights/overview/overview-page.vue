@@ -81,7 +81,7 @@ const dashboardStore = useDashboardStore()
 // view type
 const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
 const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1' || projectUserPermissionsStore.isGuest
+  return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
 })
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
