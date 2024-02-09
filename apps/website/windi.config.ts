@@ -55,7 +55,7 @@ export default defineConfig({
         header: ['ABCFavoritExpanded'],
         display: ['ABCFavoritExtended'],
         eyebrow: ['Roboto Mono'],
-        sans: ['Poppins', 'ui-sans-serif', 'system-ui', '-apple-system', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji']['Poppins', 'ui-sans-serif', 'system-ui', '-apple-system', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji']
+        sans: ['Poppins', 'ui-sans-serif', 'system-ui', '-apple-system', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji']
       },
       fontSize: { // ref: https://www.figma.com/file/sP3kZZDOiOd5hqTZCkXH0x/RFCx%2FArbimon-Design-Library?type=design&node-id=1846%3A9636&mode=design&t=Fp0xjfu9wQz3wggK-1
         xxs: '0.5rem',
