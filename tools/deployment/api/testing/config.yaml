@@ -17,6 +17,6 @@ data:
   AWS_S3_BUCKET_NAME: arbimon-development
   AWS_S3_BUCKET_REGION: eu-west-1
   AWS_OSS_REGION: eu-west-1
+  ARBIMON_LEGACY_API_BASE_URL: https://dev.arbimon.org/legacy-api
   CORE_API_BASE_URL: https://staging-api.rfcx.org
   OPENSEARCH_ENABLED: "true"
-  LEGACY_ARBIMON_API_BASE_URL: https://dev.arbimon.org/legacy-api
