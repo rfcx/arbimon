@@ -72,7 +72,6 @@ declare module 'vue' {
     IconCustomFtSearchLg: typeof import('~icons/custom-icons/ft-search-lg')['default']
     IconCustomFtUndo: typeof import('~icons/custom-icons/ft-undo')['default']
     IconCustomIcArrowViewMore: typeof import('~icons/custom-icons/ic-arrow-view-more')['default']
-    IconCustomIcCloseBlack: typeof import('~icons/custom-icons/ic-close-black')['default']
     IconCustomIcEdit: typeof import('~icons/custom-icons/ic-edit')['default']
     IconCustomIcErrorMessage: typeof import('~icons/custom-icons/ic-error-message')['default']
     IconCustomIcInfo: typeof import('~icons/custom-icons/ic-info')['default']

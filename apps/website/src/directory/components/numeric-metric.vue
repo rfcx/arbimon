@@ -51,8 +51,9 @@
 
 <script setup lang="ts">
 import { initTooltips } from 'flowbite'
-import numeral from 'numeral'
 import { computed, onMounted } from 'vue'
+
+import { metricValue } from '@rfcx-bio/utils/number'
 
 const props = defineProps<{
   tooltipId: string
@@ -67,6 +68,6 @@ onMounted(() => {
   initTooltips()
 })
 
-const valueShortScale = computed(() => numeral(props.value).format('0a'))
-const totalShortScale = computed(() => props.totalValue === undefined ? undefined : numeral(props.totalValue).format('0a'))
+const valueShortScale = computed(() => metricValue(props.value))
+const totalShortScale = computed(() => props.totalValue === undefined ? undefined : metricValue(props.totalValue))
 </script>

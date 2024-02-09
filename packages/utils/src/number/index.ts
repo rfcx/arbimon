@@ -14,7 +14,11 @@ export const firstDiffDigit = (newVal: number, oldVal: number): number => {
 
 export const displayValue = (value: number): string => {
   if (value > 99_999) return numeral(value).format('0a')
+  return numeral(value).format('0,0')
+}
 
+export const metricValue = (value: number): string => {
+  if (value > 999) return numeral(value).format('0.0a', Math.round)
   return numeral(value).format('0,0')
 }
 

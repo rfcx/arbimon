@@ -37,15 +37,16 @@
       </div>
       <span class="text-xs text-clip">{{ project.summary }}</span>
       <div class="flex flex-row gap-2">
-        <span class="bg-util-gray-03 px-1 rounded font-medium text-xs">{{ numeral(project.noOfRecordings).format('0a') }} {{ project.noOfRecordings > 1 ? 'minutes' : 'minute' }} recorded</span>
-        <span class="bg-util-gray-03 px-1 rounded font-medium text-xs">{{ numeral(project.noOfSpecies).format('0a') }} species</span>
+        <span class="bg-util-gray-03 px-1 rounded font-medium text-xs">{{ metricValue(project.noOfRecordings) }} {{ project.noOfRecordings > 1 ? 'minutes' : 'minute' }} recorded</span>
+        <span class="bg-util-gray-03 px-1 rounded font-medium text-xs">{{ metricValue(project.noOfSpecies) }} species</span>
       </div>
     </div>
   </li>
 </template>
 <script setup lang="ts">
-import numeral from 'numeral'
 import { computed } from 'vue'
+
+import { metricValue } from '@rfcx-bio/utils/number'
 
 import { getCountryLabel } from '@/_services/country'
 import { urlWrapper } from '@/_services/images/url-wrapper'
