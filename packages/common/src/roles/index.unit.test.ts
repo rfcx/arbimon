@@ -3,7 +3,7 @@ import { expect, test } from 'vitest'
 import { getIdByRole, rolesGreaterOrEqualTo } from './index'
 
 test('rolesGreaterOrEqualTo returns roles', () => {
-  expect(rolesGreaterOrEqualTo('guest')).toEqual(['guest', 'entry', 'user', 'expert', 'admin', 'owner'])
+  expect(rolesGreaterOrEqualTo('external')).toEqual(['external', 'viewer', 'entry', 'user', 'expert', 'admin', 'owner'])
   expect(rolesGreaterOrEqualTo('entry')).toEqual(['entry', 'user', 'expert', 'admin', 'owner'])
   expect(rolesGreaterOrEqualTo('expert')).toEqual(['expert', 'admin', 'owner'])
   expect(rolesGreaterOrEqualTo('owner')).toEqual(['owner'])

@@ -38,14 +38,14 @@ export const useProjectUserPermissionsStore = defineStore('project-user-permissi
     role.value = await apiBioGetProjectRole(apiClient, id)
   }
 
-  const isGuest = computed<boolean>(() => {
-    return role.value === 'guest'
+  const isExternalGuest = computed<boolean>(() => {
+    return role.value === 'external'
   })
 
   return {
     role,
     projectMembers,
     getRole,
-    isGuest
+    isExternalGuest
   }
 })

@@ -22,7 +22,7 @@ describe(`GET ${ROUTE} (project filters dataset)`, async () => {
   describe('simple tests', async () => {
     test('exists', async () => {
       // Arrange
-      const app = await makeApp(routesProject, { projectRole: 'guest' })
+      const app = await makeApp(routesProject, { projectRole: 'external' })
 
       // Act
       const routes = [...app.routes.keys()]
@@ -33,7 +33,7 @@ describe(`GET ${ROUTE} (project filters dataset)`, async () => {
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await makeApp(routesProject, { projectRole: 'guest' })
+      const app = await makeApp(routesProject, { projectRole: 'external' })
 
       // Act
       const response = await app.inject({
@@ -51,7 +51,7 @@ describe(`GET ${ROUTE} (project filters dataset)`, async () => {
 
     test('contains all expected props & no more', async () => {
       // Arrange
-      const app = await makeApp(routesProject, { projectRole: 'guest' })
+      const app = await makeApp(routesProject, { projectRole: 'external' })
 
       // Act
       const response = await app.inject({
@@ -67,7 +67,7 @@ describe(`GET ${ROUTE} (project filters dataset)`, async () => {
   })
   describe('known data tests', async () => {
     // Arrange & Act once
-    const app = await makeApp(routesProject, { projectRole: 'guest' })
+    const app = await makeApp(routesProject, { projectRole: 'external' })
 
     const response = await app.inject({
       method: GET,

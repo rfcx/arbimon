@@ -64,17 +64,22 @@ export const update = async (data: { locationProjectId: number, userId: number, 
 }
 
 export const getUserRoleForProject = async (userId: number | undefined, projectId: number): Promise<ProjectRole> => {
-  // check if project published / public
-  const project = await getProjectById(projectId)
-  const isPubliclyAccessible = project?.status === 'published'
+  const projectIsPublished = await getProjectById(projectId).then(p => p?.status === 'published' ?? false)
+
+  // When there is no user (no token) and project is not published, no role
+  // When there is no user and project is published, set as external
   if (userId === undefined) {
-    return isPubliclyAccessible ? 'guest' : 'none'
-  }
-  // check if user is project member
-  const roleId = await getRoleIdByProjectAndUser(projectId, userId)
-  if (roleId === undefined) {
-    return isPubliclyAccessible ? 'guest' : 'none'
+    return projectIsPublished ? 'external' : 'none'
   }
 
+  const roleId = await getRoleIdByProjectAndUser(projectId, userId)
+
+  // When the user is not a project member and project is not published, no role
+  // When the user is not a project member and project is published, set as external
+  if (roleId === undefined) {
+    return projectIsPublished ? 'external' : 'none'
+  }
+
+  // Else user is project member, set the role from the db
   return getRoleById(roleId)
 }

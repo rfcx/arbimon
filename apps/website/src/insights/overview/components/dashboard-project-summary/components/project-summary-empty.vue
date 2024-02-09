@@ -10,8 +10,8 @@
       </span>
       <button
         class="text-frequency cursor-pointer font-display flex-shrink-0"
-        :class="{ 'disabled:cursor-not-allowed disabled:opacity-70': projectUserPermissionsStore.isGuest }"
-        :disabled="projectUserPermissionsStore.isGuest"
+        :class="{ 'disabled:cursor-not-allowed disabled:opacity-70': projectUserPermissionsStore.isExternalGuest }"
+        :disabled="projectUserPermissionsStore.isExternalGuest"
         @click="onAddContentClicked"
       >
         Add content
@@ -27,7 +27,7 @@ const emit = defineEmits<{(event: 'emit-add-content'): void}>()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const onAddContentClicked = () => {
-  if (!projectUserPermissionsStore.isGuest) {
+  if (!projectUserPermissionsStore.isExternalGuest) {
     emit('emit-add-content')
   }
 }

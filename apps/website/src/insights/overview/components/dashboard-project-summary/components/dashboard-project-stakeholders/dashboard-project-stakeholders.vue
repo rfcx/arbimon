@@ -1,7 +1,7 @@
 <template>
   <template v-if="stakeholders?.organizations.length === 0 && stakeholders?.users.length === 0 && !isEditing">
     <ProjectSummaryEmpty
-      v-if="editable && !projectUserPermissionsStore.isGuest"
+      v-if="editable && !projectUserPermissionsStore.isExternalGuest"
       @emit-add-content="isEditing = true"
     />
   </template>

@@ -40,7 +40,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await makeApp(routesActivity, { projectRole: 'guest' })
+      const app = await makeApp(routesActivity, { projectRole: 'external' })
 
       // Act
       const response = await app.inject({
@@ -59,7 +59,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('contains all expected props', async () => {
       // Arrange
-      const app = await makeApp(routesActivity, { projectRole: 'guest' })
+      const app = await makeApp(routesActivity, { projectRole: 'external' })
 
       // Act
       const response = await app.inject({
@@ -75,7 +75,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('does not contain any additional props', async () => {
       // Arrange
-      const app = await makeApp(routesActivity, { projectRole: 'guest' })
+      const app = await makeApp(routesActivity, { projectRole: 'external' })
 
       // Act
       const response = await app.inject({
@@ -374,7 +374,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
   describe('known data tests with redacted data', async () => {
     // Arrange & Act once
-    const app = await makeApp(routesActivity, { projectRole: 'guest' })
+    const app = await makeApp(routesActivity, { projectRole: 'external' })
 
     const response = await app.inject({
       method: GET,
@@ -394,7 +394,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
   describe('client errors', () => {
     test('rejects missing query', async () => {
       // Arrange
-      const app = await makeApp(routesActivity, { projectRole: 'guest' })
+      const app = await makeApp(routesActivity, { projectRole: 'external' })
 
       // Act
       const response = await app.inject({
@@ -408,7 +408,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('rejects invalid project id', async () => {
       // Arrange
-      const app = await makeApp(routesActivity, { projectRole: 'guest' })
+      const app = await makeApp(routesActivity, { projectRole: 'external' })
 
       // Act
       const response = await app.inject({
@@ -426,7 +426,7 @@ describe(`GET ${ROUTE} (activity dataset)`, () => {
 
     test('rejects invalid date', async () => {
       // Arrange
-      const app = await makeApp(routesActivity, { projectRole: 'guest' })
+      const app = await makeApp(routesActivity, { projectRole: 'external' })
 
       // Act
       const response1 = await app.inject({
