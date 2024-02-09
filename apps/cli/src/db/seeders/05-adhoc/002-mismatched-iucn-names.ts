@@ -10,10 +10,7 @@ import { syncIucnSpeciesInfo } from '@/sync/species-info/iucn'
 const mismatchedNames: Record<string, string> = {
   // Arbimon name : IUCN name
   'Camarhynchus pallidus': 'Geospiza pallida',
-  'Camarhynchus heliobates': 'Geospiza heliobates',
-  'Corvus cornix': 'Hooded Crow',
-  'Pelophylax esculentus': 'the Edible Frog',
-  'Parus cinereus': 'Cinereus Tit'
+  'Camarhynchus heliobates': 'Geospiza heliobates'
 }
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
