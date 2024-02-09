@@ -83,9 +83,10 @@
 </template>
 <script setup lang="ts">
 import { initTooltips } from 'flowbite'
-import numeral from 'numeral'
 import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+
+import { metricValue } from '@rfcx-bio/utils/number'
 
 import { useProjectUserPermissionsStore, useStore } from '~/store'
 import { type Stat } from '../types'
@@ -106,9 +107,7 @@ onMounted(() => {
 })
 
 const valueShortScale = computed(() => {
-  const formattedNumber = numeral(props.stat.count).format('0.0a')
-  const firstDecimalDigit = (x: string) => x.split('.')[1].slice(0, 1)
-  return firstDecimalDigit(formattedNumber) === '0' ? formattedNumber.replace('.0', '') : formattedNumber
+  return props.stat.count === undefined ? '-' : metricValue(props.stat.count)
 })
 
 const hasPermissionSite = computed<boolean>(() => {
