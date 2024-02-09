@@ -116,6 +116,17 @@ export const getProjectCoreId = async (locationProjectId: number): Promise<strin
   return project?.idCore ?? undefined
 }
 
+export const getProjectArbimonId = async (locationProjectId: number): Promise<number | undefined> => {
+  const project = await ModelRepository.getInstance(getSequelize()).LocationProject.findOne({
+    where: {
+      id: locationProjectId
+    },
+    attributes: ['idArbimon'],
+    raw: true
+  })
+  return project?.idArbimon ?? undefined
+}
+
 const getProjectIdsByUser = async (userId: number | undefined): Promise<number[]> => {
   if (userId === undefined) {
     return await Promise.resolve([])

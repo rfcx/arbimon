@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+import { type ProjectProfileLegacyUpdateBody } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { type ProjectRole, getIdByRole } from '@rfcx-bio/common/roles'
 
 import { unpackAxiosError } from '~/api-helpers/axios-errors'
@@ -54,6 +55,21 @@ export async function updateProjectMemberOnLegacyAndCore (token: string, slug: s
         user_email: email,
         role_id: getIdByRole(role)
       }
+    })
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function updateProjectSettingsOnLegacyAndCore (token: string, slug: string, projectInformation: ProjectProfileLegacyUpdateBody): Promise<void> {
+  try {
+    await axios.request({
+      method: 'POST',
+      url: `${LEGACY_ARBIMON_API_BASE_URL}/project/${slug}/info/update`,
+      headers: {
+        authorization: token
+      },
+      data: projectInformation
     })
   } catch (e) {
     return unpackAxiosError(e)

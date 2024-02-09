@@ -20,10 +20,21 @@ export interface ProjectProfileQuery {
 export type ProjectProfileUpdateBody = {
   isPublic?: boolean
   summary?: string
+  slug?: string
   objectives?: string[]
   dateStart?: string | null
   dateEnd?: string | null
 } & { name: string } // name is required as part of checking for permission in Core
+
+export interface ProjectProfileLegacyUpdateBody {
+  project: {
+    project_id: number
+    name: string
+    url?: string
+    description?: string
+    is_private?: 0 | 1
+  }
+}
 
 type ProjectMetrics = Pick<DashboardMetricsResponse, 'totalSites' | 'totalSpecies' | 'threatenedSpecies' | 'totalDetections' | 'totalRecordings'>
 
