@@ -2,7 +2,7 @@ import { type RouteRecordRaw, type RouterOptions, RouterView } from 'vue-router'
 
 import { authRequiredGuard } from './guard-auth-required'
 import { rfcxEmailRequired } from './guard-rfcx-email'
-import { storeProjectGuard } from './guard-store-project'
+import { storeMemberGuard, storeProjectGuard } from './guard-store-project'
 import * as PAGES from './pages'
 import { ROUTE_NAMES } from './route-names'
 
@@ -81,18 +81,20 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'dashboard',
         name: ROUTE_NAMES.dashboard,
-        component: PAGES.Dashboard
+        component: PAGES.Dashboard,
+        beforeEnter: [authRequiredGuard, storeMemberGuard]
       },
       {
         path: 'settings',
         name: ROUTE_NAMES.projectSettings,
         component: PAGES.ProjectSettings,
-        beforeEnter: [authRequiredGuard]
+        beforeEnter: [authRequiredGuard, storeMemberGuard]
       },
       {
         path: 'users',
         name: ROUTE_NAMES.projectMember,
-        component: PAGES.ProjectMember
+        component: PAGES.ProjectMember,
+        beforeEnter: [authRequiredGuard, storeMemberGuard]
       },
       {
         path: 'insights',
@@ -129,7 +131,7 @@ const routes: RouteRecordRaw[] = [
         path: 'analyse',
         component: RouterView,
         redirect: { name: ROUTE_NAMES.cnnJobList },
-        beforeEnter: [authRequiredGuard, rfcxEmailRequired],
+        beforeEnter: [authRequiredGuard, rfcxEmailRequired, storeMemberGuard],
         children: [
           {
             path: 'cnn',

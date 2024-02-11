@@ -1,7 +1,10 @@
 import { type NavigationGuardWithThis } from 'vue-router'
 
+import { rolesGreaterOrEqualTo } from '@rfcx-bio/common/roles'
+
 import { useAuth0Client } from '~/auth-client'
 import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { ROUTE_NAMES } from './route-names'
 
 export const storeProjectGuard: NavigationGuardWithThis<undefined> = async (to, _from, next) => {
   const store = useStore()
@@ -36,4 +39,14 @@ export const storeProjectGuard: NavigationGuardWithThis<undefined> = async (to, 
   }
 
   next()
+}
+
+export const storeMemberGuard: NavigationGuardWithThis<undefined> = async (to, _from, next) => {
+  const userPermissionsStore = useProjectUserPermissionsStore()
+  const currentRole = userPermissionsStore.role ?? 'none'
+  if (rolesGreaterOrEqualTo('viewer').includes(currentRole)) {
+    next()
+  } else {
+    next({ name: ROUTE_NAMES.error, query: { error: 'This project either does not exist or you do not have permission to access it.' } })
+  }
 }
