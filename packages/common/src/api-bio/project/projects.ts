@@ -20,7 +20,7 @@ export interface DirectoryProjectsQuery {
 export type LocationProjectForUser =
   LocationProjectTypes['light'] &
   {
-    isMyProject: boolean
+    isMyProject: boolean // TODO: remove this field
   }
 
 export type LocationProjectWithInfo = LocationProjectTypes['light'] &

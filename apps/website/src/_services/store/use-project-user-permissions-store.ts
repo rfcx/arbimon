@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 
 import { type ProjectMembersResponse } from '@rfcx-bio/common/api-bio/project/project-members'
 import { apiBioGetProjectRole } from '@rfcx-bio/common/api-bio/project/project-role'
-import { type ProjectRole } from '@rfcx-bio/common/roles'
+import { type ProjectRole, rolesGreaterOrEqualTo } from '@rfcx-bio/common/roles'
 import { getApiClient } from '@rfcx-bio/utils/api'
 
 import { getIdToken, useAuth0Client } from '~/auth-client'
@@ -46,11 +46,16 @@ export const useProjectUserPermissionsStore = defineStore('project-user-permissi
     return role.value === 'viewer'
   })
 
+  const isMember = computed<boolean>(() => {
+    return rolesGreaterOrEqualTo('viewer').includes(role.value ?? 'none')
+  })
+
   return {
     role,
     projectMembers,
     getRole,
     isExternalGuest,
-    isMemberGuest
+    isMemberGuest,
+    isMember
   }
 })
