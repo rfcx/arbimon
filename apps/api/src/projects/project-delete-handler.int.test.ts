@@ -19,7 +19,7 @@ const userId = 9001
 const { LocationProject, LocationProjectProfile, LocationProjectUserRole } = modelRepositoryWithElevatedPermissions
 
 beforeEach(async () => {
-  await createProject({ name: 'Snail with an itchy foot', isPublic: true }, userId, fakeToken)
+  await createProject({ name: 'Snail with an itchy foot' }, userId, fakeToken)
 })
 
 afterEach(async () => {

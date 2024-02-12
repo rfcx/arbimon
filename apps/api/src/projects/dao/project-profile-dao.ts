@@ -122,8 +122,8 @@ export const getProjectSettings = async (locationProjectId: number): Promise<Pro
 /**
  * @deprecated Do not use ProjectSettings, needs refactoring
  */
-export const updateProjectSettings = async (locationProjectId: number, settings: ProjectProfileUpdateBody): Promise<ProjectSettingsResponse> => {
-  const { name, slug, isPublic, dateStart, dateEnd, ...fields } = settings
+export const updateProjectSettings = async (locationProjectId: number, settings: ProjectProfileUpdateBody): Promise<void> => {
+  const { name, slug, hidden, dateStart, dateEnd, ...fields } = settings
   const sequelize = getSequelize()
 
   if (name) {
@@ -137,5 +137,4 @@ export const updateProjectSettings = async (locationProjectId: number, settings:
   const dateStartChanges = dateStart === undefined ? {} : { dateStart: dateStart ? dayjs(dateStart).toDate() : null }
   const dateEndChanges = dateEnd === undefined ? {} : { dateEnd: dateEnd ? dayjs(dateEnd).toDate() : null }
   await updateProjectProfile({ locationProjectId, ...fields, ...dateStartChanges, ...dateEndChanges })
-  return await getProjectSettings(locationProjectId)
 }

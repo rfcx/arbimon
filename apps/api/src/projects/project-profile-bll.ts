@@ -1,11 +1,11 @@
-import { type ProjectProfileUpdateBody, type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project/project-settings'
+import { type ProjectProfileUpdateBody } from '@rfcx-bio/common/api-bio/project/project-settings'
 
 import { updateProjectLegacy } from '~/api-legacy-arbimon'
 import { updateProjectSettings as updateProjectSettingsLocal } from './dao/project-profile-dao'
 import { updateProjectHiddenStatus } from './dao/project-status-dao'
 import { getProjectById } from './dao/projects-dao'
 
-export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody, token: string, projectId: number): Promise<ProjectSettingsResponse> => {
+export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody, token: string, projectId: number): Promise<void> => {
   const project = await getProjectById(projectId)
   if (project === undefined) {
     throw new Error(`Failed to get arbimon project id for locationProjectId: ${projectId}`)
@@ -21,10 +21,8 @@ export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody,
   }
 
   // Update locally
-
-  if (request.isPublic !== undefined) {
-    await updateProjectHiddenStatus(projectId, !request.isPublic)
+  if (request.hidden !== undefined) {
+    await updateProjectHiddenStatus(projectId, request.hidden)
   }
-
-  return await updateProjectSettingsLocal(projectId, request)
+  await updateProjectSettingsLocal(projectId, request)
 }

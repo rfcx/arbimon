@@ -22,7 +22,7 @@ const newUser = { email: 'ronnie@test.com', firstName: 'Ronnie', lastName: 'OS' 
 const { LocationProject, LocationProjectProfile, LocationProjectUserRole, UserProfile } = modelRepositoryWithElevatedPermissions
 
 beforeAll(async () => {
-  await createProject({ name: 'Grey-blue humpback whales', isPublic: true }, currentUserId, '')
+  await createProject({ name: 'Grey-blue humpback whales' }, currentUserId, '')
   await UserProfile.create(newUser)
 })
 
