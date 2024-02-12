@@ -1,10 +1,11 @@
 import { type Dayjs } from 'dayjs'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
+import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { BASE_SQL, SYNC_BATCH_LIMIT, SYNC_DATA_TYPE_ID, SYNC_SOURCE_ID } from './constants'
+import { BASE_SQL, SYNC_BATCH_LIMIT } from './constants'
 
 export const getProjects = async (sequelize: Sequelize, constraint?: { type: 'deleted' | 'updated', time?: Dayjs }): Promise<Array<{ id: number, name: string }>> => {
   let offset = 0
@@ -75,16 +76,16 @@ export const saveOpensearchSyncStatus = async (sequelize: Sequelize, syncUntilDa
 
   const latestSyncCheckpoint = await SyncStatus.findOne({
     where: {
-      syncSourceId: SYNC_SOURCE_ID,
-      syncDataTypeId: SYNC_DATA_TYPE_ID
+      syncSourceId: masterSources.NewArbimon.id,
+      syncDataTypeId: masterSyncDataTypes.Opensearch.id
     }
   })
 
   if (latestSyncCheckpoint === null || latestSyncCheckpoint === undefined) {
     console.info('- latest `sync_status` checkpoint not found. Creating new checkpoint')
     await SyncStatus.create({
-      syncSourceId: SYNC_SOURCE_ID,
-      syncDataTypeId: SYNC_DATA_TYPE_ID,
+      syncSourceId: masterSources.NewArbimon.id,
+      syncDataTypeId: masterSyncDataTypes.Opensearch.id,
       syncUntilDate: syncUntilDate.toDate(),
       syncUntilId: '0',
       syncBatchLimit: SYNC_BATCH_LIMIT
@@ -97,8 +98,8 @@ export const saveOpensearchSyncStatus = async (sequelize: Sequelize, syncUntilDa
       },
       {
         where: {
-          syncSourceId: SYNC_SOURCE_ID,
-          syncDataTypeId: SYNC_DATA_TYPE_ID
+          syncSourceId: masterSources.NewArbimon.id,
+          syncDataTypeId: masterSyncDataTypes.Opensearch.id
         }
       }
     )
