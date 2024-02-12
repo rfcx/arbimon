@@ -42,10 +42,15 @@ export const useProjectUserPermissionsStore = defineStore('project-user-permissi
     return role.value === 'external'
   })
 
+  const isMemberGuest = computed<boolean>(() => {
+    return role.value === 'viewer'
+  })
+
   return {
     role,
     projectMembers,
     getRole,
-    isExternalGuest
+    isExternalGuest,
+    isMemberGuest
   }
 })
