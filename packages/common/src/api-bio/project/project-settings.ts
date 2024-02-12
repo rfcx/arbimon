@@ -24,7 +24,6 @@ export type ProjectProfileUpdateBody = {
   objectives?: string[]
   dateStart?: string | null
   dateEnd?: string | null
-  hidden: boolean
 } & { name: string } // name is required as part of checking for permission in Core
 
 export interface ProjectProfileLegacyUpdateBody {
