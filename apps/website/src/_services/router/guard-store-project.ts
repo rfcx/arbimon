@@ -4,7 +4,6 @@ import { type ProjectRole, rolesGreaterOrEqualTo } from '@rfcx-bio/common/roles'
 
 import { useAuth0Client } from '~/auth-client'
 import { useProjectUserPermissionsStore, useStore } from '~/store'
-import { ROUTE_NAMES } from './route-names'
 
 export const storeProjectGuard: NavigationGuardWithThis<undefined> = async (to, _from, next) => {
   const store = useStore()
@@ -42,15 +41,27 @@ export const storeProjectGuard: NavigationGuardWithThis<undefined> = async (to, 
 }
 
 export const storePublicGuard: NavigationGuardWithThis<undefined> = async (to, _from, next) => {
-  if (hasRoleGreaterThan('external')) { next() } else { next({ name: ROUTE_NAMES.error, query: { error: 'This project either does not exist or you do not have permission to access it.' } }) }
+  if (!hasRoleGreaterThan('external')) {
+    await resetSelectedProject()
+  }
+  next()
 }
 
 export const storeMemberGuard: NavigationGuardWithThis<undefined> = async (to, _from, next) => {
-  if (hasRoleGreaterThan('viewer')) { next() } else { next({ name: ROUTE_NAMES.error, query: { error: 'This project either does not exist or you do not have permission to access it.' } }) }
+  if (!hasRoleGreaterThan('viewer')) {
+    await resetSelectedProject()
+  }
+  next()
 }
 
 const hasRoleGreaterThan = (minimumRole: ProjectRole): boolean => {
   const userPermissionsStore = useProjectUserPermissionsStore()
   const currentRole = userPermissionsStore.role ?? 'none'
   return rolesGreaterOrEqualTo(minimumRole).includes(currentRole)
+}
+
+const resetSelectedProject = async (): Promise<void> => {
+  const store = useStore()
+  store.updateSelectedProject(undefined)
+  await store.updateProjectFilters()
 }
