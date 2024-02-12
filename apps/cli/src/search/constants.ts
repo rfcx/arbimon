@@ -34,9 +34,3 @@ export const BASE_SQL = `
 export const PROJECTS_INDEX_NAME = 'projects'
 export const ORGANIZATIONS_INDEX_NAME = 'organizations'
 export const SYNC_BATCH_LIMIT = 1000
-
-/* New arbimon sync source id */
-export const SYNC_SOURCE_ID = 300
-
-/* Opensearch sync data type */
-export const SYNC_DATA_TYPE_ID = 800

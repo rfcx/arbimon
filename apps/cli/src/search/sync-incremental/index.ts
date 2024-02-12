@@ -1,11 +1,12 @@
 import { type Client } from '@opensearch-project/opensearch'
 import { type Sequelize } from 'sequelize'
 
+import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { analysis } from '../analysis'
-import { PROJECTS_INDEX_NAME, SYNC_DATA_TYPE_ID, SYNC_SOURCE_ID } from '../constants'
+import { PROJECTS_INDEX_NAME } from '../constants'
 import { mappings } from '../mappings'
 import { ensureRequiredIndexInitialized, refreshIndex } from '../opensearch'
 import { getCurrentDatabaseTime, getProjects, saveOpensearchSyncStatus } from '../postgres'
@@ -23,8 +24,8 @@ export const syncAllProjectsIncrementally = async (client: Client, sequelize: Se
   console.info('- querying `sync_status` checkpoint')
   const latestSyncCheckpoint = await SyncStatus.findOne({
     where: {
-      syncSourceId: SYNC_SOURCE_ID,
-      syncDataTypeId: SYNC_DATA_TYPE_ID
+      syncSourceId: masterSources.NewArbimon.id,
+      syncDataTypeId: masterSyncDataTypes.Opensearch.id
     }
   })
 
