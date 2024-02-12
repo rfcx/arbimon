@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { Op } from 'sequelize'
-import { afterEach, beforeEach, describe, expect, test } from 'vitest'
+import { afterAll, afterEach, beforeEach, describe, expect, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { literalizeCountsByMinute } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
@@ -8,12 +8,12 @@ import { type RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 
 import { makeProject } from '@/../../../packages/testing/src/model-builders/project-model-builder'
 import { getSequelize } from '@/db/connections'
-import { fullReindex } from './full-reindex'
 import { getOpenSearchClient } from './opensearch'
+import { syncAllProjects } from './sync-all'
 
 const opensearchClient = getOpenSearchClient()
 const sequelize = getSequelize()
-const { LocationProject, LocationProjectProfile, LocationSite, RecordingBySiteHour: RecordingBySiteHourModel } = ModelRepository.getInstance(sequelize)
+const { LocationProject, LocationProjectProfile, LocationSite, RecordingBySiteHour: RecordingBySiteHourModel, SyncStatus } = ModelRepository.getInstance(sequelize)
 
 const makeRecordingBySiteHour = (locationProjectId: number, locationSiteId: number, startDate: string, hourOffset: number): RecordingBySiteHour => {
   return {
@@ -82,19 +82,53 @@ afterEach(async () => {
   await LocationProject.destroy({ where: { id: { [Op.in]: locationProjectIds } }, force: true })
 })
 
-describe('full reindex from postgres to opensearch', () => {
+afterAll(async () => {
+  await SyncStatus.destroy({ where: { syncSourceId: 300, syncDataTypeId: 800 } })
+})
+
+const delay = async (millis: number): Promise<unknown> => {
+  const p = new Promise(resolve => setTimeout(resolve, millis))
+  return await p
+}
+
+describe('daily index from postgres to opensearch', () => {
   test('connect and create indexes', async () => {
     // Act
-    await fullReindex(opensearchClient, sequelize)
+    await syncAllProjects(opensearchClient, sequelize)
 
     // Assert
     const indices = await opensearchClient.cat.indices({ format: 'json' }).then(response => (response.body as Array<{ index: string }>).map(i => i.index))
     expect(indices).toContain('projects')
   })
 
+  test('an entry inside sync_status table will get created after the reindex', async () => {
+    // Act
+    await syncAllProjects(opensearchClient, sequelize)
+
+    // Assert
+    const { SyncStatus } = ModelRepository.getInstance(sequelize)
+    const status = await SyncStatus.findOne({ where: { [Op.and]: { syncSourceId: 300, syncDataTypeId: 800 } } })
+    expect(status).not.toBe(null)
+  })
+
+  test('calling a reindex 2 times after each other will update the sync until date', async () => {
+    // Act
+    const { SyncStatus } = ModelRepository.getInstance(sequelize)
+    await syncAllProjects(opensearchClient, sequelize)
+    const latestSyncDate1 = await SyncStatus.findOne({ where: { [Op.and]: { syncSourceId: 300, syncDataTypeId: 800 } } })
+    await delay(2000)
+    await syncAllProjects(opensearchClient, sequelize)
+
+    // Assert
+    const latestSyncDate2 = await SyncStatus.findOne({ where: { [Op.and]: { syncSourceId: 300, syncDataTypeId: 800 } } })
+    expect(latestSyncDate1?.syncUntilDate).not.toEqual(null)
+    expect(latestSyncDate2?.syncUntilDate).not.toEqual(null)
+    expect(dayjs(latestSyncDate1?.syncUntilDate).isBefore(latestSyncDate2?.syncUntilDate)).toBe(true)
+  }, 10_000)
+
   test('a reindex will sync the passed criteria projects over', async () => {
     // Arrange
-    await fullReindex(opensearchClient, sequelize)
+    await syncAllProjects(opensearchClient, sequelize)
 
     // Act
     const response = await opensearchClient.search({
@@ -115,9 +149,9 @@ describe('full reindex from postgres to opensearch', () => {
     expect(response.body.hits.hits[0]._id).toBe('2431213')
   })
 
-  test('a reindex will not sync unpassed criteria over', async () => {
+  test('a reindex will not sync unpassed criteria projects over', async () => {
     // Arrange
-    await fullReindex(opensearchClient, sequelize)
+    await syncAllProjects(opensearchClient, sequelize)
 
     // Act
     const response = await opensearchClient.search({
@@ -137,9 +171,9 @@ describe('full reindex from postgres to opensearch', () => {
     expect(response.body?.hits?.hits?.length).toBe(0)
   })
 
-  test('a reindex will correctly parse the country name to synonym', async () => {
+  test('opensearch will correctly parse the country name to synonym', async () => {
     // Act
-    await fullReindex(opensearchClient, sequelize)
+    await syncAllProjects(opensearchClient, sequelize)
     const result = await opensearchClient.indices.analyze({
       index: 'projects',
       body: {
@@ -155,12 +189,12 @@ describe('full reindex from postgres to opensearch', () => {
 
   test('a reindex will resync the projects after their contents are edited', async () => {
     // Arrange
-    await fullReindex(opensearchClient, sequelize)
+    await syncAllProjects(opensearchClient, sequelize)
     const summary = '## Welcome to Fullham diversity'
     await LocationProjectProfile.create({ summary, locationProjectId: 2431213, image: '', readme: '', methods: '', keyResult: '', objectives: [], resources: '', dateStart: null, dateEnd: null })
 
     // Act
-    await fullReindex(opensearchClient, sequelize)
+    await syncAllProjects(opensearchClient, sequelize)
     const response = await opensearchClient.search({
       index: 'projects',
       body: {
@@ -180,11 +214,11 @@ describe('full reindex from postgres to opensearch', () => {
 
   test('a reindex will remove deleted projects', async () => {
     // Arrange
-    await fullReindex(opensearchClient, sequelize)
+    await syncAllProjects(opensearchClient, sequelize)
     await LocationProject.destroy({ where: { id: 2431216 } })
 
     // Act
-    await fullReindex(opensearchClient, sequelize)
+    await syncAllProjects(opensearchClient, sequelize)
     const response = await opensearchClient.search({
       index: 'projects',
       body: {

@@ -22,3 +22,25 @@ export const getOpenSearchClient = (): Client => {
   const aws = region && accessKeyId && secretAccessKey ? { region, accessKeyId, secretAccessKey } : undefined
   return openSearchClient(host, { port, ssl, httpAuth, aws })
 }
+
+export const ensureRequiredIndexInitialized = async (client: Client, index: string, indexSettings?: object): Promise<void> => {
+  const availableIndexes = await client.cat.indices({ format: 'json' }).then(res => res.body) as Array<{ index: string }>
+  const isIndexExists = availableIndexes.find(ai => ai.index === index) !== undefined
+
+  if (!isIndexExists) {
+    await client.indices.create({
+      index,
+      body: indexSettings
+    })
+  }
+}
+
+export const refreshIndex = async (client: Client, index: string): Promise<void> => {
+  await client.indices.refresh({ index }).catch(e => {
+    if (e.statusCode === 404) {
+      console.info('Refresh not supported (Likely AWS OpenSearch Serverless)')
+    } else {
+      throw e
+    }
+  })
+}
