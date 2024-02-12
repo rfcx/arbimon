@@ -1,6 +1,6 @@
 <template>
   <section class="bg-white dark:bg-pitch pl-18">
-    <div class="py-10 mx-auto max-w-screen-xl flex flex-col gap-y-6">
+    <div class="py-10 mx-auto max-w-screen-xl flex flex-col gap-y-6 pr-4">
       <h1 class="text-gray-900 dark:text-insight">
         Members
       </h1>
@@ -15,7 +15,7 @@
               v-model="userSearchValue"
               class="mainLoginInput block text-sm bg-pitch border-white rounded-md border-r-0 rounded-r-none w-60 placeholder:text-insight placeholder-gray-100 focus:(border-frequency ring-frequency border border-r-2 rounded)"
               type="text"
-              placeholder="&#61442; Search by user name, email"
+              placeholder="&#61442; Search by user email"
               data-dropdown-toggle="dropdown"
               data-tooltip-target="userSearchInputTooltipId"
               data-tooltip-placement="bottom"
