@@ -22,8 +22,8 @@ export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody,
 
   // Update locally
 
-  if (request.hidden !== undefined) {
-    await updateProjectHiddenStatus(projectId, request.hidden)
+  if (request.isPublic !== undefined) {
+    await updateProjectHiddenStatus(projectId, !request.isPublic)
   }
 
   return await updateProjectSettingsLocal(projectId, request)
