@@ -29,7 +29,7 @@ afterEach(async () => {
 test('POST /projects creates local project', async () => {
   // Arrange
   const app = await makeApp(routesProject, { userId, userToken })
-  const project: ProjectCreateRequest = { name: 'Red Squirrels are back', isPublic: true }
+  const project: ProjectCreateRequest = { name: 'Red Squirrels are back' }
 
   // Act
   const response = await app.inject({
@@ -54,7 +54,7 @@ test('POST /projects adds extra infomation (profile, owner role, version)', asyn
   const response = await app.inject({
     method: POST,
     url: ROUTE,
-    payload: { name: 'Greys linger', isPublic: true },
+    payload: { name: 'Greys linger' },
     headers: { Authorization: fakeToken }
   })
 

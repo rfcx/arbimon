@@ -275,7 +275,7 @@ const updateSettings = () => {
     objectives: newObjectives.value,
     dateStart: dateStart.value ? dateStart.value : null,
     dateEnd: onGoing.value ? null : dateEnd.value ? dateEnd.value : null,
-    isPublic: isPublic.value,
+    hidden: !isPublic.value,
     slug: newSlug.value !== null ? newSlug.value : undefined
   }, {
     onSuccess: () => {

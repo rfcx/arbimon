@@ -5,24 +5,23 @@ import { RANKING_PRIMARY } from '@rfcx-bio/common/roles'
 
 import { createProject as createProjectInCore, getProject as getProjectInCore } from '~/api-core/api-core'
 import { createProject as createProjectLocal } from './dao/project-create-dao'
-import { create } from './dao/project-member-dao'
+import { create as createProjectMember } from './dao/project-member-dao'
 import { createProjectProfile } from './dao/project-profile-dao'
 
 export const createProject = async (request: ProjectCreateRequest, userId: number, token: string): Promise<[string, number]> => {
   // Create in Core
-  // TODO: check if we want to add is_public to the request
   const idCore = await createProjectInCore({ name: request.name, is_public: false }, token)
   const { external_id: idArbimon } = await getProjectInCore(idCore, token)
 
   // Pre-populate insights table with the same data (will get updated from Core after sync)
   const project = { idCore, idArbimon, name: request.name }
-  const { id, slug } = await createProjectLocal(project)
+  const { id, slug } = await createProjectLocal(project, request.hidden ?? false)
 
   // Create project profile
   const { objectives, dateStart, dateEnd } = request
   await createProjectProfile({ locationProjectId: id, objectives, dateStart: dayjs(dateStart).toDate(), dateEnd: dayjs(dateEnd).toDate() })
 
   // Set current user as owner
-  await create({ locationProjectId: id, userId, role: 'owner', ranking: RANKING_PRIMARY })
+  await createProjectMember({ locationProjectId: id, userId, role: 'owner', ranking: RANKING_PRIMARY })
   return [slug, id]
 }
