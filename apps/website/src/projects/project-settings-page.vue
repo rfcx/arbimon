@@ -285,6 +285,11 @@ const updateSettings = () => {
       store.updateProjectName(newName.value)
       dashboardStore.updateProjectObjectives(newObjectives.value)
       dashboardStore.updateProjectSummary(newSummary.value)
+      if (newSlug.value !== null) {
+        store.updateProjectSlug(newSlug.value)
+        // refresh the page to reflect the new slug
+        router.push({ path: `/p/${newSlug.value}/settings` })
+      }
     },
     onError: (e) => {
       isSaving.value = false
