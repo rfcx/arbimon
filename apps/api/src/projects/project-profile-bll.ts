@@ -1,6 +1,6 @@
 import { type ProjectProfileUpdateBody, type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project/project-settings'
 
-import { updateProjectSettingsOnLegacyAndCore } from '~/api-legacy-arbimon'
+import { updateProjectLegacy } from '~/api-legacy-arbimon'
 import { updateProjectSettings as updateProjectSettingsLocal } from './dao/project-profile-dao'
 import { updateProjectHiddenStatus } from './dao/project-status-dao'
 import { getProjectById } from './dao/projects-dao'
@@ -11,22 +11,20 @@ export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody,
     throw new Error(`Failed to get arbimon project id for locationProjectId: ${projectId}`)
   }
 
-  // Update Legacy (note: updates core by itself)
-  await updateProjectSettingsOnLegacyAndCore(token, project.slug, {
-    project: {
-      project_id: project.idArbimon,
-      name: request.name,
-      url: request.slug,
-      // TODO: Updating is_private to legacy and core?
-      description: request.summary
-    }
-  })
-
-  // TODO: move update name here
-  if (request.isPublic !== undefined) {
-    await updateProjectHiddenStatus(projectId, !request.isPublic)
+  // Update Legacy (note: updates Core by itself)
+  if (request.name !== undefined || request.slug !== undefined) {
+    const name = request.name ?? project.name
+    const url = request.slug ?? project.slug
+    await updateProjectLegacy(token, project.slug, {
+      project: { name, url, project_id: project.idArbimon }
+    })
   }
 
-  // update in local db
+  // Update locally
+
+  if (request.hidden !== undefined) {
+    await updateProjectHiddenStatus(projectId, request.hidden)
+  }
+
   return await updateProjectSettingsLocal(projectId, request)
 }

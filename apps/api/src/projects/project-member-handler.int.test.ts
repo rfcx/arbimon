@@ -11,14 +11,7 @@ import { routesProject } from './index'
 import { createProject } from './project-create-bll'
 
 vi.mock('~/api-core/api-core')
-
-vi.mock('../_services/api-legacy-arbimon', () => {
-  return {
-    addProjectMemberOnLegacyAndCore: vi.fn(async () => { await Promise.resolve() }),
-    removeProjectMemberOnLegacyAndCore: vi.fn(async () => { await Promise.resolve() }),
-    updateProjectMemberOnLegacyAndCore: vi.fn(async () => { await Promise.resolve() })
-  }
-})
+vi.mock('~/api-legacy-arbimon')
 
 const fakeToken = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6ImE0NTBhMzFkMjEwYTY5N2ZmMDI3NjU0YmZhMWZmMTFlIn0.eyJhdXRoMF91c2VyX2lkIjoidGVzdCJ9.571qutLhQm4Wc6hdhsVCxKm_rh4szTg9Wygz2JVxIItf3M_hNI5ats5W-HoJJjmFsBJ_oOwI1uU_6e4bfaFcrg'
 
@@ -41,7 +34,7 @@ afterAll(async () => {
   const locationProjects = await LocationProject.findAll({ where: { slug: { [Op.like]: 'grey-blue-humpback%' } } }).then(projects => projects.map(project => project.id))
   await LocationProjectProfile.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
   await LocationProjectUserRole.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
-  await LocationProject.destroy({ where: { id: { [Op.in]: locationProjects } } })
+  await LocationProject.destroy({ where: { id: { [Op.in]: locationProjects } }, force: true })
   await UserProfile.destroy({ where: { email: newUser.email } })
 })
 

@@ -30,9 +30,7 @@ export interface ProjectProfileLegacyUpdateBody {
   project: {
     project_id: number
     name: string
-    url?: string
-    description?: string
-    is_private?: 0 | 1
+    url: string
   }
 }
 
