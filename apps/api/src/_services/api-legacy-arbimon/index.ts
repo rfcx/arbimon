@@ -19,7 +19,7 @@ async function post<T> (apiPath: string, token: string, data: any): Promise<void
   }).catch(e => unpackAxiosError(e))
 }
 
-export async function addProjectMemberOnLegacyAndCore (token: string, slug: string, email: string, role: Exclude<ProjectRole, 'none'>): Promise<void> {
+export async function addProjectMemberLegacy (token: string, slug: string, email: string, role: Exclude<ProjectRole, 'none'>): Promise<void> {
   const data = {
     user_email: email,
     role_id: getIdByRole(role)
@@ -27,14 +27,14 @@ export async function addProjectMemberOnLegacyAndCore (token: string, slug: stri
   await post<{ success: boolean }>(`/project/${slug}/user/add`, token, data)
 }
 
-export async function removeProjectMemberOnLegacyAndCore (token: string, slug: string, email: string): Promise<void> {
+export async function removeProjectMemberLegacy (token: string, slug: string, email: string): Promise<void> {
   const data = {
     user_email: email
   }
   await post<{ success: boolean }>(`/project/${slug}/user/del`, token, data)
 }
 
-export async function updateProjectMemberOnLegacyAndCore (token: string, slug: string, email: string, role: Exclude<ProjectRole, 'none'>): Promise<void> {
+export async function updateProjectMemberLegacy (token: string, slug: string, email: string, role: Exclude<ProjectRole, 'none'>): Promise<void> {
   const data = {
     user_email: email,
     role_id: getIdByRole(role)
@@ -42,6 +42,6 @@ export async function updateProjectMemberOnLegacyAndCore (token: string, slug: s
   await post<{ success: boolean }>(`/project/${slug}/user/role`, token, data)
 }
 
-export async function updateProjectSettingsOnLegacyAndCore (token: string, slug: string, projectInformation: ProjectProfileLegacyUpdateBody): Promise<void> {
+export async function updateProjectLegacy (token: string, slug: string, projectInformation: ProjectProfileLegacyUpdateBody): Promise<void> {
   await post(`/project/${slug}/info/update`, token, projectInformation)
 }

@@ -40,7 +40,7 @@ afterEach(async () => {
 })
 
 afterAll(async () => {
-  await LocationProject.destroy({ where: { id: defaultProject.id } })
+  await LocationProject.destroy({ where: { id: defaultProject.id }, force: true })
 })
 
 describe(`PATCH ${projectProfileImageRoute}`, async () => {

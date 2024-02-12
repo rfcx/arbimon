@@ -23,7 +23,7 @@ afterEach(async () => {
   const locationProjects = await LocationProject.findAll({ where: { slug: { [Op.or]: [{ [Op.like]: 'red-squirrels%' }, { [Op.like]: 'greys-linger%' }] } } }).then(projects => projects.map(project => project.id))
   await LocationProjectProfile.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
   await LocationProjectUserRole.destroy({ where: { locationProjectId: { [Op.in]: locationProjects } } })
-  await LocationProject.destroy({ where: { id: { [Op.in]: locationProjects } } })
+  await LocationProject.destroy({ where: { id: { [Op.in]: locationProjects } }, force: true })
 })
 
 test('POST /projects creates local project', async () => {

@@ -24,9 +24,9 @@ export const projectProfileHandler: Handler<ProjectSettingsResponse, ProjectProf
   return projectContent
 }
 
-export const projectProfileUpdateHandler: Handler<ProjectSettingsResponse, ProjectProfileParams, unknown, ProjectProfileUpdateBody> = async (req) => {
+export const projectProfileUpdateHandler: Handler<string, ProjectProfileParams, unknown, ProjectProfileUpdateBody> = async (request, reply) => {
   // Inputs & validation
-  const { projectId } = req.params
+  const { projectId } = request.params
   assertPathParamsExist({ projectId })
 
   const projectIdInteger = Number(projectId)
@@ -34,7 +34,9 @@ export const projectProfileUpdateHandler: Handler<ProjectSettingsResponse, Proje
     throw BioInvalidPathParamError({ projectId })
   }
 
-  return await updateProjectAndProfile(req.body, req.headers.authorization ?? '', projectIdInteger)
+  await updateProjectAndProfile(request.body, request.headers.authorization ?? '', projectIdInteger)
+  void reply.code(204)
+  return ''
 }
 
 export const projectProfileStakeholdersReadOnlyHandler: Handler<DashboardStakeholdersResponse, DashboardStakeholdersParams> = async (req) => {

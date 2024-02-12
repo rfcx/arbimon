@@ -106,9 +106,7 @@ export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, 
 }
 
 export const getProjectCoreId = async (locationProjectId: number): Promise<string | undefined> => {
-  const project = await ModelRepository.getInstance(getSequelize())
-  .LocationProject
-  .findOne({
+  const project = await ModelRepository.getInstance(getSequelize()).LocationProject.findOne({
     where: { id: locationProjectId },
     attributes: ['idCore'],
     raw: true
@@ -118,9 +116,7 @@ export const getProjectCoreId = async (locationProjectId: number): Promise<strin
 
 export const getProjectArbimonId = async (locationProjectId: number): Promise<number | undefined> => {
   const project = await ModelRepository.getInstance(getSequelize()).LocationProject.findOne({
-    where: {
-      id: locationProjectId
-    },
+    where: { id: locationProjectId },
     attributes: ['idArbimon'],
     raw: true
   })
