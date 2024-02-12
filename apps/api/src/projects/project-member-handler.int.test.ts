@@ -7,6 +7,7 @@ import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { DELETE, PATCH, POST } from '~/api-helpers/types'
+import { addProjectMemberLegacy, removeProjectMemberLegacy, updateProjectMemberLegacy } from '~/api-legacy-arbimon'
 import { routesProject } from './index'
 import { createProject } from './project-create-bll'
 
@@ -26,6 +27,7 @@ beforeAll(async () => {
 })
 
 afterEach(async () => {
+  vi.resetAllMocks()
   const locationProjects = await LocationProject.findAll({ where: { slug: { [Op.like]: 'grey-blue-humpback%' } } }).then(projects => projects.map(project => project.id))
   await LocationProjectUserRole.destroy({ where: { locationProjectId: { [Op.in]: locationProjects }, userId: { [Op.ne]: currentUserId } } })
 })
@@ -57,6 +59,7 @@ test(`POST ${projectMembersRoute} adds user assigns default role`, async () => {
   const projectUserRole = await LocationProjectUserRole.findOne({ where: { locationProjectId: project?.id, userId: { [Op.ne]: currentUserId } } })
   expect(projectUserRole).not.toBeNull()
   expect(projectUserRole?.roleId).toBe(getIdByRole('user'))
+  expect(addProjectMemberLegacy).toBeCalledTimes(1)
 })
 
 test(`POST ${projectMembersRoute} adds user with role`, async () => {
@@ -78,6 +81,7 @@ test(`POST ${projectMembersRoute} adds user with role`, async () => {
   const projectUserRole = await LocationProjectUserRole.findOne({ where: { locationProjectId: project?.id, userId: { [Op.ne]: currentUserId } } })
   expect(projectUserRole).not.toBeNull()
   expect(projectUserRole?.roleId).toBe(getIdByRole('admin'))
+  expect(addProjectMemberLegacy).toBeCalledTimes(1)
 })
 
 test(`DELETE ${projectMembersRoute} removes user`, async () => {
@@ -100,6 +104,7 @@ test(`DELETE ${projectMembersRoute} removes user`, async () => {
   expect(response.statusCode).toBe(204)
   const projectUserRole = await LocationProjectUserRole.findOne({ where: { locationProjectId, userId } })
   expect(projectUserRole).toBeNull()
+  expect(removeProjectMemberLegacy).toBeCalledTimes(1)
 })
 
 test(`PATCH ${projectMembersRoute} removes user`, async () => {
@@ -123,4 +128,5 @@ test(`PATCH ${projectMembersRoute} removes user`, async () => {
   const projectUserRole = await LocationProjectUserRole.findOne({ where: { locationProjectId, userId } })
   expect(projectUserRole).not.toBeNull()
   expect(projectUserRole?.roleId).toBe(getIdByRole('expert'))
+  expect(updateProjectMemberLegacy).toBeCalledTimes(1)
 })
