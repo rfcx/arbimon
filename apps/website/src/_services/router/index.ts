@@ -2,7 +2,7 @@ import { type RouteRecordRaw, type RouterOptions, RouterView } from 'vue-router'
 
 import { authRequiredGuard } from './guard-auth-required'
 import { rfcxEmailRequired } from './guard-rfcx-email'
-import { storeMemberGuard, storeProjectGuard } from './guard-store-project'
+import { storeMemberGuard, storeProjectGuard, storePublicGuard } from './guard-store-project'
 import * as PAGES from './pages'
 import { ROUTE_NAMES } from './route-names'
 
@@ -75,7 +75,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/p/:projectSlug',
     component: PAGES.ProjectRoot,
-    beforeEnter: [storeProjectGuard],
+    beforeEnter: [storeProjectGuard, storePublicGuard],
     redirect: { name: ROUTE_NAMES.overview },
     children: [
       {
