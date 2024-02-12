@@ -1,119 +1,121 @@
 <template>
-  <page-title page-title="Create New CNN Job" />
-  <el-alert
-    v-if="errors.length > 0"
-    :title="errors.join('; ')"
-    type="warning"
-    class="my-4"
-    effect="dark"
-    show-icon
-  />
-  <form class="mt-5">
-    <ol class="relative border-box-gray">
-      <li class="border-l-1 border-box-gray pb-8 pl-6">
-        <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
-          1
-        </span>
-        <h2 class="mb-4 text-md">
-          Choose Model
-        </h2>
-        <span v-if="isLoadingClassifiers">Loading</span>
-        <span v-else-if="isErrorClassifier">Error</span>
-        <span v-else-if="classifiers === undefined">No response</span>
-        <classifier-picker
-          v-else
-          :classifier-models="classifiers"
-          @selected-classifier="onSelectClassifier"
-        />
-      </li>
-      <li class="border-l-1 border-box-gray pb-8 pl-6">
-        <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
-          2
-        </span>
-        <h2 class="mb-4 text-md">
-          Choose Parameters
-        </h2>
-        <div class="mb-4">
-          <label
-            for="sites"
-            class="block mb-2 text-md"
-          >
-            Sites
-          </label>
-          <site-picker
-            :initial-sites="projectFilters?.locationSites"
-            @emit-select-sites="onSelectQuerySites"
+  <section class="max-w-screen-xl py-20 pl-115px pr-4">
+    <page-title page-title="Create New CNN Job" />
+    <el-alert
+      v-if="errors.length > 0"
+      :title="errors.join('; ')"
+      type="warning"
+      class="my-4"
+      effect="dark"
+      show-icon
+    />
+    <form class="mt-5">
+      <ol class="relative border-box-gray">
+        <li class="border-l-1 border-box-gray pb-8 pl-6">
+          <span class="mt-1.5 flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
+            1
+          </span>
+          <h2 class="mb-4 text-md">
+            Choose Model
+          </h2>
+          <span v-if="isLoadingClassifiers">Loading</span>
+          <span v-else-if="isErrorClassifier">Error</span>
+          <span v-else-if="classifiers === undefined">No response</span>
+          <classifier-picker
+            v-else
+            :classifier-models="classifiers"
+            @selected-classifier="onSelectClassifier"
           />
-        </div>
-        <div class="mb-4">
-          <label
-            for="date"
-            class="block mb-2 text-sm"
+        </li>
+        <li class="border-l-1 border-box-gray pb-8 pl-6">
+          <span class="mt-1.5 flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
+            2
+          </span>
+          <h2 class="mb-4 text-md">
+            Choose Parameters
+          </h2>
+          <div class="mb-4">
+            <label
+              for="sites"
+              class="block mb-2 text-md"
+            >
+              Sites
+            </label>
+            <site-picker
+              :initial-sites="projectFilters?.locationSites"
+              @emit-select-sites="onSelectQuerySites"
+            />
+          </div>
+          <div class="mb-4">
+            <label
+              for="date"
+              class="block mb-2 text-sm"
+            >
+              Date
+            </label>
+            <date-picker
+              :initial-dates="projectDateRange"
+              @emit-select-date-range="onSelectQueryDates"
+            />
+          </div>
+          <div class="mb-4">
+            <label
+              for="time"
+              class="block mb-2 text-md"
+            >
+              Time of day
+            </label>
+            <TimeOfDayPicker @emit-select-time="onSelectQueryHours" />
+          </div>
+        </li>
+        <li class="pb-8 pl-6">
+          <span class="mt-1.5 flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
+            3
+          </span>
+          <h2 class="mb-4 text-md">
+            Job size estimation
+          </h2>
+          <span v-if="isLoadingDetectRecording">Loading</span>
+          <span v-else-if="isErrorDetectRecording">Error</span>
+          <span v-else-if="recordingData === undefined">No response</span>
+          <span
+            v-else
+            class="text-subtle"
+          >{{ totalDurationInMinutes }} minutes of recordings</span>
+        </li>
+      </ol>
+      <div class="flex flex-row items-center space-x-4">
+        <router-link :to="{ name: ROUTE_NAMES.cnnJobList }">
+          <button
+            title="Cancel"
+            class="btn btn-secondary"
           >
-            Date
-          </label>
-          <date-picker
-            :initial-dates="projectDateRange"
-            @emit-select-date-range="onSelectQueryDates"
-          />
-        </div>
-        <div class="mb-4">
-          <label
-            for="time"
-            class="block mb-2 text-md"
-          >
-            Time of day
-          </label>
-          <TimeOfDayPicker @emit-select-time="onSelectQueryHours" />
-        </div>
-      </li>
-      <li class="pb-8 pl-6">
-        <span class="flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
-          3
-        </span>
-        <h2 class="mb-4 text-md">
-          Job size estimation
-        </h2>
-        <span v-if="isLoadingDetectRecording">Loading</span>
-        <span v-else-if="isErrorDetectRecording">Error</span>
-        <span v-else-if="recordingData === undefined">No response</span>
-        <span
-          v-else
-          class="text-subtle"
-        >{{ totalDurationInMinutes }} minutes of recordings</span>
-      </li>
-    </ol>
-    <div class="flex flex-row items-center space-x-4">
-      <router-link :to="{ name: ROUTE_NAMES.cnnJobList }">
+            Cancel
+          </button>
+        </router-link>
         <button
-          title="Cancel"
-          class="btn btn-secondary"
+          :disabled="isLoadingPostJob || errors.length > 0"
+          title="Create"
+          class="btn btn-primary"
+          @click.prevent="createJob"
         >
-          Cancel
+          <span v-if="isLoadingPostJob">Saving</span>
+          <span v-else>Create</span>
         </button>
-      </router-link>
-      <button
-        :disabled="isLoadingPostJob || errors.length > 0"
-        title="Create"
-        class="btn btn-primary"
-        @click.prevent="createJob"
-      >
-        <span v-if="isLoadingPostJob">Saving</span>
-        <span v-else>Create</span>
-      </button>
-      <span v-if="isErrorPostJob">Error saving job :(</span>
-    </div>
-  </form>
-  <el-alert
-    v-if="false"
-    title="Debugging"
-    type="info"
-    class="my-4"
-    effect="dark"
-    show-icon
-  >
-    <pre>{{ JSON.stringify(job, null, 2).replace(/, /g, ',\r\n  ') }}</pre>
-  </el-alert>
+        <span v-if="isErrorPostJob">Error saving job :(</span>
+      </div>
+    </form>
+    <el-alert
+      v-if="false"
+      title="Debugging"
+      type="info"
+      class="my-4"
+      effect="dark"
+      show-icon
+    >
+      <pre>{{ JSON.stringify(job, null, 2).replace(/, /g, ',\r\n  ') }}</pre>
+    </el-alert>
+  </section>
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
