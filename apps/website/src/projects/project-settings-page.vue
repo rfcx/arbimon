@@ -34,10 +34,9 @@
           </h5>
           <project-slug
             :existing-slug="selectedProject?.slug"
-            :is-disabled="true"
+            :is-disabled="!isUserHasFullAccess"
             @emit-updated-slug="onEmitSlug"
           />
-          <!-- :is-disabled= !isUserHasFullAccess -->
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-image-form
             :is-disabled="!isUserHasFullAccess"
@@ -168,6 +167,7 @@ const dateStart = ref<string | null>(null)
 const dateEnd = ref<string | null>(null)
 const onGoing = ref(false)
 const newSummary = ref('')
+const newSlug = ref<string | null>(null)
 const newObjectives = ref([''])
 const isSaving = ref(false)
 const DEFAULT_ERROR_MSG = 'Failed!'
@@ -218,7 +218,7 @@ const onEmitProjectImage = (file: File) => {
 }
 
 const onEmitSlug = (slug: string) => {
-  console.info('slug', slug)
+  newSlug.value = slug
 }
 
 const onEmitProjectDelete = () => {
@@ -275,7 +275,8 @@ const updateSettings = () => {
     objectives: newObjectives.value,
     dateStart: dateStart.value ? dateStart.value : null,
     dateEnd: onGoing.value ? null : dateEnd.value ? dateEnd.value : null,
-    isPublic: isPublic.value
+    isPublic: isPublic.value,
+    slug: newSlug.value !== null ? newSlug.value : undefined
   }, {
     onSuccess: () => {
       isSaving.value = false
