@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest'
+import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
 
 import { projectDataRoute } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { type Project } from '@rfcx-bio/common/dao/types'
@@ -6,6 +6,7 @@ import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { PATCH } from '~/api-helpers/types'
+import { updateProjectLegacy } from '~/api-legacy-arbimon'
 import { routesProject } from './index'
 
 vi.mock('~/api-legacy-arbimon')
@@ -46,6 +47,10 @@ beforeAll(async () => {
   })
 })
 
+afterEach(async () => {
+  vi.resetAllMocks()
+})
+
 afterAll(async () => {
   await LocationProjectProfile.destroy({ where: { locationProjectId: project.id } })
   await LocationProject.destroy({ where: { id: project.id }, force: true })
@@ -77,5 +82,6 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
     expect(projectInDatabase?.get('name')).toBe('Tbilisi cats diversities')
     expect(projectInDatabase?.get('slug')).toBe('tbilisi-cats-diversities')
     expect(projectProfileInDatabase?.get('summary')).toBe('tbilisi cat diversities between each color of the cats')
+    expect(updateProjectLegacy).toBeCalledTimes(1)
   })
 })
