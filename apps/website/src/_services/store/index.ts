@@ -54,6 +54,10 @@ export const useStore = defineStore('root', {
       this.selectedProject = project
       this.projectFilters = undefined
     },
+    updateProjectSlug (slug: string) {
+      if (this.selectedProject == null) return
+      this.selectedProject.slug = slug
+    },
     updateProjectName (name: string) {
       if (this.selectedProject == null) return
       this.selectedProject.name = name
