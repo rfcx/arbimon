@@ -6,7 +6,7 @@
     >
       <button
         :title="item.name"
-        class="btn btn-secondary <2xl:(btn-icon) font-sans text-sm p-2 focus:ring-0"
+        class="btn btn-secondary btn-icon font-sans text-sm p-2 focus:ring-0"
         :class="{
           'bg-frequency text-pitch': props.mapStyle === item.style,
           'rounded-r-none': idx !== props.mapOptions.length - 1,
@@ -14,25 +14,11 @@
         }"
         @click="$emit('emitMapStyle', item.style)"
       >
-        <div
-          class="<2xl:hidden"
-          :class="{
-            'text-pitch': props.mapStyle === item.style
-          }"
+        <img
+          class="h-4 align-middle hover:icon-pitch"
+          :class="props.mapStyle === item.style ? 'icon-pitch' : 'icon-white'"
+          :src="item.icon"
         >
-          {{ item.name }}
-        </div>
-        <div>
-          <img
-            class="2xl:hidden <2xl:visible"
-            :class="{
-              'icon-pitch': props.mapStyle === item.style
-            }"
-            :src="item.icon"
-            width="16"
-            height="16"
-          >
-        </div>
       </button>
     </template>
   </div>
@@ -52,5 +38,9 @@ defineEmits<{(e: 'emitMapStyle', style: MapboxStyle): void}>()
 <style lang="scss">
 .icon-pitch {
   filter: brightness(0) saturate(100%) invert(1%) sepia(6%) saturate(7021%) hue-rotate(222deg) brightness(85%) contrast(97%);
-  }
+}
+
+.icon-white {
+  filter: opacity(99%);
+}
 </style>

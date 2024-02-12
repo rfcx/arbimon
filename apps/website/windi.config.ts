@@ -41,7 +41,8 @@ export default defineConfig({
         xl: '1280px',
         '2xl': '1440px',
         '3xl': '1600px',
-        '4xl': '1920px'
+        '4xl': '1920px',
+        's-xl': '1140px'
       },
       gridTemplateColumns: {
         // Simple 16 column grid
