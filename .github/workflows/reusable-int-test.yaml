@@ -155,3 +155,4 @@ jobs:
           OPENSEARCH_HOST: localhost
           OPENSEARCH_PORT: 9202
           OPENSEARCH_SSL_ENABLED: false
+          ARBIMON_LEGACY_API_BASE_URL: http://localhost:3000/legacy-api
