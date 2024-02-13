@@ -90,7 +90,7 @@
             v-for="role in roles.filter(r => r.id !== 4)"
             :key="role.id"
             class="flex flex-row justify-start items-center p-1 m-0 cursor-pointer"
-            @click="$emit('emitChangeUserRole', user.email, role.name); closeMenu()"
+            @click="$emit('emitChangeUserRole', user.email, getRoleById(role.id)); closeMenu()"
           >
             <span class="w-8">
               <icon-fa-check
@@ -110,6 +110,7 @@ import { Dropdown, initDropdowns, initTooltips } from 'flowbite'
 import { onMounted, ref } from 'vue'
 
 import type { ProjectMember } from '@rfcx-bio/common/api-bio/project/project-members'
+import { type ProjectRole, getRoleById } from '@rfcx-bio/common/roles'
 
 import MemberDelete from '@/projects/components/form/member-delete.vue'
 
@@ -122,7 +123,7 @@ interface Role {
 let dropdown: Dropdown
 
 const props = defineProps<{user: ProjectMember, roles: Role[], editable: boolean, isProjectMember: boolean, isViewingAsGuest: boolean, isDeleting?: boolean, isError?: boolean, isSuccess?: boolean}>()
-defineEmits<{(e: 'emitChangeUserRole', email: string, role: string): void, (e: 'emitDeleteProjectMember', email: string): void}>()
+defineEmits<{(e: 'emitChangeUserRole', email: string, role: ProjectRole): void, (e: 'emitDeleteProjectMember', email: string): void}>()
 
 const disableDeleteUserText = ref('Contact your project administrator for permission to delete project member')
 const disableChangeUserRoleText = ref('Contact your project administrator for permission to manage project members')

@@ -246,35 +246,35 @@ const userToAdd = ref({
 })
 
 const roles = [
-{
-      id: 4,
-      name: 'Owner',
-      description: 'Project Owner - can manage and delete project, validate species, manage project settings'
+  {
+    id: 4,
+    name: 'Owner',
+    description: 'Project Owner - can manage and delete project, validate species, manage project settings'
   },
   {
-      id: 1,
-      name: 'Admin',
-      description: 'Project Administrator - can view and manage the project, validate species and manage project settings'
+    id: 1,
+    name: 'Admin',
+    description: 'Project Administrator - can view and manage the project, validate species and manage project settings'
   },
   {
-      id: 6,
-      name: 'Expert',
-      description: 'Project Member + Species Validator - can view and manage the project and validate species'
+    id: 6,
+    name: 'Expert',
+    description: 'Project Member + Species Validator - can view and manage the project and validate species'
   },
   {
-      id: 2,
-      name: 'User',
-      description: 'Project Member - can view the project, manage project species, manage recordings, view and create playlists and run jobs'
+    id: 2,
+    name: 'User',
+    description: 'Project Member - can view the project, manage project species, manage recordings, view and create playlists and run jobs'
   },
   {
-      id: 5,
-      name: 'Data Entry',
-      description: 'Limited Project Member - can view the project, manage project species, and manage recordings'
+    id: 5,
+    name: 'Data Entry',
+    description: 'Limited Project Member - can view the project, manage project species, and manage recordings'
   },
   {
-      id: 3,
-      name: 'Guest',
-      description: 'Project Guest - can view the project (and be Citizen Scientist if enabled)'
+    id: 3,
+    name: 'Guest',
+    description: 'Project Guest - can view the project (and be Citizen Scientist if enabled)'
   }
 ]
 
@@ -363,10 +363,12 @@ const addSelectedUser = ():void => {
   })
 }
 
-const changeUserRole = (email: string, role: string):void => {
+const changeUserRole = (email: string, role: ProjectRole):void => {
   mutatePatchUserRole({
     email,
-    role: role.toLowerCase() as Exclude<ProjectRole, 'none'>
+    // castable because the roles are converted from variable `roles` up top which non of it
+    // cannot invoke the return value of `none`
+    role: role as Exclude<ProjectRole, 'none'>
   }, {
     onSuccess: () => {
       usersRefetch()
