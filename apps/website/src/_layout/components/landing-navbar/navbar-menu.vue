@@ -87,7 +87,7 @@
           </li>
           <li class="pt-2">
             <a
-              href="https://support.rfcx.org"
+              href="https://help.arbimon.org/"
               class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
             >Help &amp; support <icon-custom-linkout class="inline ml-1" /></a>
           </li>
