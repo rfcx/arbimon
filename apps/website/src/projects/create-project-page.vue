@@ -134,7 +134,6 @@ async function create () {
   const project = { name: name.value, hidden: !isPublic.value, objectives: objectives.value, dateStart: startDate.value ?? undefined, dateEnd: onGoing.value ? undefined : (endDate.value ?? undefined) }
   try {
     const response = await apiBioPostProjectCreate(apiClientBio, project)
-    await store.refreshProjects()
     await router.push({ name: ROUTE_NAMES.dashboard, params: { projectSlug: response?.slug } })
   } catch (e) {
     if (e instanceof Error) console.error(e.message)

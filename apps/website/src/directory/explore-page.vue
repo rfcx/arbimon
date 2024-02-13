@@ -72,7 +72,7 @@ const isLoading = ref(false)
 const projectResults = ref<ProjectLight[]>(pdStore.allProjects)
 
 const myProjects = computed(() => {
-  const myProjectIds = store.projects.filter(p => p.isMyProject).map(p => p.id)
+  const myProjectIds = store.myProjects.map(p => p.id)
   return pdStore.allProjects.filter(p => myProjectIds.includes(p.id))
 })
 
