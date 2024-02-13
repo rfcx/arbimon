@@ -1,17 +1,22 @@
 <template>
   <div class="flex items-center justify-start space-x-3 py-4 pr-4">
     <img
+      v-if="image"
       class="w-12 h-12 rounded-full shadow"
-      :src="image || 'https://inaturalist-open-data.s3.amazonaws.com/photos/332643265/small.jpeg'"
+      :src="image"
       alt="user profile image"
     >
+    <div
+      v-else
+      class="w-12 h-12 rounded-full shadow bg-util-gray-03"
+    />
     <div>
-      <h3
+      <span
         v-if="ranking === 0"
         class="text-xs text-pitch bg-frequency font-normal font-eyebrow font-sans leading-5 px-2 rounded-sm inline-block"
       >
         Primary contact
-      </h3>
+      </span>
       <h3 class="text-base font-normal font-sans">
         {{ name }}
       </h3>
