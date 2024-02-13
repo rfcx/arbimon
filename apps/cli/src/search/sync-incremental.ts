@@ -1,9 +1,9 @@
 import { getSequelize } from '@/db/connections'
+import { syncAllProjectsIncrementally } from './incremental'
 import { getOpenSearchClient } from './opensearch'
-import { syncAllProjectsIncrementally } from './sync-incremental'
 
 const main = async (): Promise<void> => {
-  console.info('- opensearch incremental reindex start')
+  console.info('opensearch incremental reindex start')
 
   try {
     const opensearchClient = getOpenSearchClient()
@@ -13,7 +13,7 @@ const main = async (): Promise<void> => {
   } catch (e) {
     console.error(e)
     process.exitCode = 1
-    console.info('- opensearch incremental reindex failed')
+    console.info('opensearch incremental reindex failed')
   }
 }
 

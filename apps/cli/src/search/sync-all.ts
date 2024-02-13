@@ -1,6 +1,6 @@
 import { getSequelize } from '@/db/connections'
+import { syncAllProjects } from './all'
 import { getOpenSearchClient } from './opensearch'
-import { syncAllProjects } from './sync-all'
 
 const main = async (): Promise<void> => {
   console.info('Opensearch daily sync start')
