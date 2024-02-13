@@ -27,8 +27,13 @@
       >
         {{ getUserRoleName() }}
       </p>
+      <p
+        v-if="user.roleId !== 4 && projectUserPermissionsStore.isMemberGuest"
+      >
+        {{ getUserRoleName() }}
+      </p>
       <button
-        v-else
+        v-if="user.roleId !== 4 && !projectUserPermissionsStore.isMemberGuest"
         :id="`dropdownRoleButton-${user.email}`"
         :data-dropdown-toggle="`dropdownRole-${user.email}`"
         data-dropdown-placement="bottom"
@@ -45,7 +50,7 @@
         </span>
       </button>
       <div
-        v-if="!editable"
+        v-if="!editable && !projectUserPermissionsStore.isMemberGuest"
         :id="`${user.userId}changeUserRoleTooltipId`"
         role="tooltip"
         class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -57,7 +62,7 @@
         />
       </div>
       <MemberDelete
-        v-if="user.roleId !== 4"
+        v-if="user.roleId !== 4 && !projectUserPermissionsStore.isMemberGuest"
         :user="user"
         :disabled-delete-button="!editable"
         :is-deleting="isDeleting"
@@ -113,6 +118,7 @@ import type { ProjectMember } from '@rfcx-bio/common/api-bio/project/project-mem
 import { type ProjectRole, getRoleById } from '@rfcx-bio/common/roles'
 
 import MemberDelete from '@/projects/components/form/member-delete.vue'
+import { useProjectUserPermissionsStore } from '~/store'
 
 interface Role {
   id: number
@@ -127,6 +133,8 @@ defineEmits<{(e: 'emitChangeUserRole', email: string, role: ProjectRole): void, 
 
 const disableDeleteUserText = ref('Contact your project administrator for permission to delete project member')
 const disableChangeUserRoleText = ref('Contact your project administrator for permission to manage project members')
+
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const getUserRoleName = (): string => {
   const role = props.roles.find(r => r.id === props.user.roleId)

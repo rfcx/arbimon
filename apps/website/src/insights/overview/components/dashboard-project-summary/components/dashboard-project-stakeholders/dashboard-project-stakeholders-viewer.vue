@@ -5,6 +5,7 @@
       class="flex w-full justify-end mt-6"
     >
       <button
+        v-if="!projectUserPermissionsStore.isMemberGuest"
         class="btn btn-primary font-medium flex flex-row py-2 px-3 disabled:hover:btn-disabled disabled:btn-disabled"
         data-tooltip-target="editStakeholdersTooltipId"
         data-tooltip-placement="bottom"

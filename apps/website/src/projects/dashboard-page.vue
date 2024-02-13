@@ -50,7 +50,7 @@
             Analyses
           </h2>
           <button
-            v-if="!isViewingAsGuest"
+            v-if="!isViewingAsGuest && !projectUserPermissionsStore.isMemberGuest"
             class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3 disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
             type="button"
             :title="'Create New Analysis Job'"
