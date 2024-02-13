@@ -2,7 +2,7 @@ import { type User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
 
 import { type ProjectFiltersResponse, apiBioGetProjectFilters } from '@rfcx-bio/common/api-bio/project/project-filters'
-import { type LocationProjectForUser, type LocationProjectWithInfo, apiBioGetProjectBySlug, apiBioGetProjectsDeprecated } from '@rfcx-bio/common/api-bio/project/projects'
+import { type LocationProjectForUser, type LocationProjectWithInfo, apiBioGetProjectBySlug } from '@rfcx-bio/common/api-bio/project/projects'
 import { getApiClient } from '@rfcx-bio/utils/api'
 
 import { getIdToken, useAuth0Client } from '~/auth-client'
@@ -17,8 +17,7 @@ export const useStore = defineStore('root', {
   state: () => ({
     user: undefined as User | undefined,
     datasetColors: COLORS_BIO_INCLUSIVE,
-    projects: [] as LocationProjectForUser[], // TODO: remove this as no longer needed
-    myProjects: [] as LocationProjectWithInfo[], // TODO: remove this as no longer needed
+    myProjects: [] as LocationProjectWithInfo[],
     selectedProject: undefined as LocationProjectForUser | undefined, // TODO: update this to fetch from the new endpoint (getProjectBySlug)
     projectFilters: undefined as ProjectFiltersResponse | undefined,
     currentVersion: ''
@@ -27,15 +26,6 @@ export const useStore = defineStore('root', {
   actions: {
     async updateUser (user: User | undefined = undefined) {
       this.user = user
-      await this.refreshProjects()
-      const selectedProject = this.selectedProject ?? this.projects?.[0]
-      this.updateSelectedProject(selectedProject)
-    },
-    async refreshProjects () {
-      // Temporary hack to get an API Client (this will be extracted in the loading branch)
-      const authClient = await useAuth0Client()
-      const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, this.user ? async () => await getIdToken(authClient) : undefined)
-      this.projects = await apiBioGetProjectsDeprecated(apiClient) ?? []
     },
     updateMyProject (projects?: LocationProjectWithInfo[]) {
       projects?.forEach(p => {
