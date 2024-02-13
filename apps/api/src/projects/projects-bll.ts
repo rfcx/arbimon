@@ -1,9 +1,12 @@
 import QuickLRU from 'quick-lru'
 
-import { type ProjectsGeoResponse, type ProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
+import { type LocationProjectForUser, type ProjectsGeoResponse, type ProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
 import { type Project } from '@rfcx-bio/common/dao/types'
+import { rolesGreaterOrEqualTo } from '@rfcx-bio/common/roles'
 
-import { query } from './dao/projects-dao'
+import { BioNotFoundError } from '~/errors'
+import { getUserRoleForProject } from './dao/project-member-dao'
+import { getProjectBySlug, query } from './dao/projects-dao'
 
 export const getProjects = async (limit?: number, offset?: number): Promise<ProjectsResponse> => {
   return await query<Project>({ status: ['listed', 'published'] }, { limit, offset })
@@ -24,4 +27,19 @@ export const getProjectsGeo = async (limit?: number, offset?: number): Promise<P
   const projects = await query<Project>({ status: ['listed', 'published'] }, { limit, offset, attributesSet: 'geo' })
   projectsGeoCache.set(cacheKey, projects)
   return projects
+}
+
+export const getProjectBySlugForUser = async (slug: string, userId: number | undefined): Promise<LocationProjectForUser> => {
+  const project = await getProjectBySlug(slug)
+
+  if (project === undefined) { throw BioNotFoundError() }
+
+  const role = await getUserRoleForProject(userId, project.id)
+
+  // if not published, only allow access if user is a member
+  if (project.status !== 'published' && !rolesGreaterOrEqualTo('viewer').includes(role)) {
+    throw BioNotFoundError()
+  }
+
+  return { ...project, isMyProject: rolesGreaterOrEqualTo('viewer').includes(role) }
 }

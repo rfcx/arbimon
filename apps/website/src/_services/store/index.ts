@@ -17,9 +17,9 @@ export const useStore = defineStore('root', {
   state: () => ({
     user: undefined as User | undefined,
     datasetColors: COLORS_BIO_INCLUSIVE,
-    projects: [] as LocationProjectForUser[],
-    myProjects: [] as LocationProjectWithInfo[],
-    selectedProject: undefined as LocationProjectForUser | undefined,
+    projects: [] as LocationProjectForUser[], // TODO: remove this as no longer needed
+    myProjects: [] as LocationProjectWithInfo[], // TODO: remove this as no longer needed
+    selectedProject: undefined as LocationProjectForUser | undefined, // TODO: update this to fetch from the new endpoint (getProjectBySlug)
     projectFilters: undefined as ProjectFiltersResponse | undefined,
     currentVersion: ''
   }),

@@ -61,6 +61,7 @@ export const projectsGeoRoute = '/projects-geo'
 export const projectsDeprecatedRoute = '/projects-deprecated'
 export const projectDirectoryRoute = '/directory/projects'
 export const myProjectsRoute = '/me/projects'
+export const projectBySlugRoute = '/projects/:slug'
 
 // Service
 export const apiBioGetProjectsGeo = async (apiClient: AxiosInstance): Promise<Array<LocationProjectTypes['geo']>> =>
@@ -84,5 +85,10 @@ export const apiBioGetMyProjects = async (apiClient: AxiosInstance, limit?: numb
       url = url + '?offset=' + offset.toString()
     }
   }
+  return await apiGetOrUndefined(apiClient, url)
+}
+
+export const apiBioGetProjectBySlug = async (apiClient: AxiosInstance, slug: string): Promise<LocationProjectForUser | undefined> => {
+  const url = `/projects/${slug}`
   return await apiGetOrUndefined(apiClient, url)
 }

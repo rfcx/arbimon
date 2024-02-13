@@ -15,6 +15,10 @@ export const getProjectById = async (id: number): Promise<Project | undefined> =
   return await models.LocationProject.findByPk(id) ?? undefined
 }
 
+export const getProjectBySlug = async (slug: string): Promise<Project | undefined> => {
+  return await models.LocationProject.findOne({ where: { slug } }) ?? undefined
+}
+
 const computedAttributes: Record<string, [Literal, string]> = {
   latitudeAvg: [sequelize.literal('(latitude_north+latitude_south)/2'), 'latitudeAvg'],
   longitudeAvg: [sequelize.literal('(longitude_east+longitude_west)/2'), 'longitudeAvg']
