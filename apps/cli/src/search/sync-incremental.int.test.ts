@@ -7,8 +7,8 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { makeProject } from '@/../../../packages/testing/src/model-builders/project-model-builder'
 import { getSequelize } from '@/db/connections'
+import { syncAllProjectsIncrementally } from './incremental'
 import { getOpenSearchClient } from './opensearch'
-import { syncAllProjectsIncrementally } from './sync-incremental'
 
 dayjs.extend(minMax)
 

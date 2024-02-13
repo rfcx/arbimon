@@ -1,8 +1,8 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: biodiversity-cli-opensearch-incremental-sync
-  namespace: staging
+  name: biodiversity-cli-opensearch-sync-incremental
+  namespace: testing
 spec:
   # every 15 minutes for testing
   schedule: '*/15 * * * *'
@@ -14,8 +14,8 @@ spec:
       template:
         spec:
           containers:
-          - name: biodiversity-cli-opensearch-incremental-sync
-            command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/search/incremental.js"]
+          - name: biodiversity-cli-opensearch-sync-incremental
+            command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/search/sync-incremental.js"]
             image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:latest
             imagePullPolicy: IfNotPresent
             envFrom:

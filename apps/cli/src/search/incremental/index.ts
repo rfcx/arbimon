@@ -5,12 +5,12 @@ import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
+import { syncAllProjects } from '../all'
 import { analysis } from '../analysis'
 import { PROJECTS_INDEX_NAME } from '../constants'
 import { mappings } from '../mappings'
 import { ensureRequiredIndexInitialized, refreshIndex } from '../opensearch'
 import { getCurrentDatabaseTime, getProjects, saveOpensearchSyncStatus } from '../postgres'
-import { syncAllProjects } from '../sync-all'
 
 export const syncAllProjectsIncrementally = async (client: Client, sequelize: Sequelize): Promise<void> => {
   const { SyncStatus } = ModelRepository.getInstance(sequelize)
