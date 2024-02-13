@@ -35,7 +35,7 @@
           v-for="(member, idx) of sortedProjectMembers"
           :key="idx"
           v-model="selectedProjectMembers"
-          :name="member.firstName + ' ' + member.lastName"
+          :name="memberName(member.firstName, member.lastName)"
           :image="member.image ?? undefined"
           :email="member.email ?? ''"
           :ranking="member.ranking"
@@ -203,6 +203,7 @@ import { type Ref, computed, inject, nextTick, ref, unref, watch } from 'vue'
 
 import { type DashboardStakeholdersUser, type UpdateDashboardStakeholdersRequestBodyUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
+import { memberName } from '@rfcx-bio/utils/string'
 
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
