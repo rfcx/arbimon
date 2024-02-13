@@ -6,13 +6,25 @@
     aria-labelledby="drawer-navigation-label"
   >
     <div class="h-full overflow-y">
-      <div class="p-6">
-        <input
-          v-model="searchKeyword"
-          class="input-field w-full p-3 rounded"
-          placeholder="Search by project name, objectives, countries, etc."
-          @input="emitSearch(searchKeyword)"
-        >
+      <div class="p-6 relative sticky top-0 bg-moss border-b-1 border-util-gray-02">
+        <form class="w-full">
+          <div class="relative">
+            <input
+              v-model="searchKeyword"
+              class="input-field text-insight"
+              placeholder="Search for projects"
+              @input="emitSearch(searchKeyword)"
+              @focus="isSearchBoxFocused = true"
+              @blur="isSearchBoxFocused = false"
+            >
+          </div>
+          <label
+            v-if="isSearchBoxFocused"
+            class="block mt-4 text-xs font-medium text-fog"
+          >
+            Search for project names, summary, countries or objectives.
+          </label>
+        </form>
       </div>
       <ul
         v-if="false"
@@ -70,6 +82,7 @@ const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void, (
 
 const pdStore = useProjectDirectoryStore()
 
+const isSearchBoxFocused = ref(false)
 const isFetching = ref(false)
 const searchKeyword = ref('')
 
