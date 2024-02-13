@@ -8,8 +8,8 @@ import { env } from '../env'
 
 const API_BASE_URL = env.ARBIMON_LEGACY_API_BASE_URL
 
-async function post<T> (apiPath: string, token: string, data: any): Promise<void> {
-  await axios.request<T>({
+async function post<T> (apiPath: string, token: string, data: any): Promise<T> {
+  const res = await axios.request<T>({
     method: 'POST',
     url: `${API_BASE_URL}${apiPath}`,
     headers: {
@@ -17,6 +17,8 @@ async function post<T> (apiPath: string, token: string, data: any): Promise<void
     },
     data
   }).catch(e => unpackAxiosError(e))
+
+  return res.data
 }
 
 export async function addProjectMemberLegacy (token: string, slug: string, email: string, role: Exclude<ProjectRole, 'none'>): Promise<void> {
@@ -42,6 +44,6 @@ export async function updateProjectMemberLegacy (token: string, slug: string, em
   await post<{ success: boolean }>(`/project/${slug}/user/role`, token, data)
 }
 
-export async function updateProjectLegacy (token: string, slug: string, projectInformation: ProjectProfileLegacyUpdateBody): Promise<void> {
-  await post(`/project/${slug}/info/update`, token, projectInformation)
+export async function updateProjectLegacy (token: string, slug: string, projectInformation: ProjectProfileLegacyUpdateBody): Promise<{ success: boolean, error?: string }> {
+  return await post(`/project/${slug}/info/update`, token, projectInformation)
 }
