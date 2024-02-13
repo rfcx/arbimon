@@ -1,6 +1,6 @@
 <template>
   <h2>Conservation status</h2>
-  <p>Threatened species detected in this project based on the IUCN Red List.</p>
+  <h6>Threatened species detected in this project based on the IUCN Red List.</h6>
   <div class="dashboard-species">
     <div
       v-if="isLoading"
