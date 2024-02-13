@@ -1,11 +1,11 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: biodiversity-cli-opensearch-daily-sync
-  namespace: testing
+  name: biodiversity-cli-opensearch-sync-incremental
+  namespace: staging
 spec:
-  # once a day on 03:08 AM UTC
-  schedule: '8 3 * * *'
+  # every 15 minutes for testing
+  schedule: '*/15 * * * *'
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
@@ -14,8 +14,8 @@ spec:
       template:
         spec:
           containers:
-          - name: biodiversity-cli-opensearch-daily-sync
-            command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/search/daily.js"]
+          - name: biodiversity-cli-opensearch-sync-incremental
+            command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/search/sync-incremental.js"]
             image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:latest
             imagePullPolicy: IfNotPresent
             envFrom:

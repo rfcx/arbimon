@@ -86,12 +86,7 @@ afterAll(async () => {
   await SyncStatus.destroy({ where: { syncSourceId: 300, syncDataTypeId: 800 } })
 })
 
-const delay = async (millis: number): Promise<unknown> => {
-  const p = new Promise(resolve => setTimeout(resolve, millis))
-  return await p
-}
-
-describe('daily index from postgres to opensearch', () => {
+describe('index all data from postgres to opensearch', () => {
   test('connect and create indexes', async () => {
     // Act
     await syncAllProjects(opensearchClient, sequelize)
@@ -111,12 +106,13 @@ describe('daily index from postgres to opensearch', () => {
     expect(status).not.toBe(null)
   })
 
-  test('calling a reindex 2 times after each other will update the sync until date', async () => {
-    // Act
+  test('reindex updates the sync until date', async () => {
+    // Arrange
     const { SyncStatus } = ModelRepository.getInstance(sequelize)
     await syncAllProjects(opensearchClient, sequelize)
     const latestSyncDate1 = await SyncStatus.findOne({ where: { [Op.and]: { syncSourceId: 300, syncDataTypeId: 800 } } })
-    await delay(2000)
+
+    // Act
     await syncAllProjects(opensearchClient, sequelize)
 
     // Assert
