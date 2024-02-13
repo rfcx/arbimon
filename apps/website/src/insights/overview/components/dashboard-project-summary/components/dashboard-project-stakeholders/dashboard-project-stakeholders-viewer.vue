@@ -45,7 +45,7 @@
         <StakeholderCard
           v-for="(member, idx) of projectMembers"
           :key="idx"
-          :name="member.firstName + ' ' + member.lastName"
+          :name="memberName(member.firstName, member.lastName)"
           :image="member.image ?? undefined"
           :email="member.email ?? ''"
           :ranking="member.ranking"
@@ -90,6 +90,7 @@ import { ref } from 'vue'
 
 import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
+import { memberName } from '@rfcx-bio/utils/string'
 
 import { useProjectUserPermissionsStore, useStore } from '~/store'
 import ProjectSummaryEmptyForNonProjectMember from '../project-summary-empty-for-non-project-member.vue'
