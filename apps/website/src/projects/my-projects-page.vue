@@ -94,7 +94,7 @@
             </router-link>
             <h6 class="mt-8 text-base">
               Not sure where to start? Check out our <a
-                href="https://support.rfcx.org/"
+                href="https://help.arbimon.org/"
                 class="text-frequency"
               >help & support documents</a>.
             </h6>

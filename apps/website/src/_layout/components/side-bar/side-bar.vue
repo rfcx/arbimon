@@ -230,7 +230,7 @@ import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 
 const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
-const supportLink = ref('https://support.rfcx.org/')
+const supportLink = ref('https://help.arbimon.org/')
 
 const auth = inject(authClientKey) as Auth0Client
 const store = useStore()
