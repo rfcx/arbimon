@@ -11,6 +11,8 @@ export const storeProjectGuard: NavigationGuardWithThis<undefined> = async (to, 
   const currentProjectSlug = store.selectedProject?.slug
   const newProjectSlug = to.params.projectSlug // TODO 44: Extract `projectSlug` as a const?
 
+  // TODO: get project from API by slug
+
   if (newProjectSlug !== currentProjectSlug) {
     const project = store.projects?.find(p => p.slug === newProjectSlug)
 

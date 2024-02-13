@@ -2,7 +2,7 @@ import { type LocationProjectForUser, type LocationProjectQuery, type MyProjects
 
 import { type Handler } from '../_services/api-helpers/types'
 import { getMyProjectsWithInfo, getViewableProjects } from './dao/projects-dao'
-import { getProjectsGeo } from './projects-bll'
+import { getProjectBySlugForUser, getProjectsGeo } from './projects-bll'
 
 export const projectsGeoHandler: Handler<ProjectsGeoResponse, unknown, LocationProjectQuery> = async (req) => {
   return await getProjectsGeo(req.query.limit, req.query.offset)
@@ -14,4 +14,9 @@ export const projectsAllHandler: Handler<LocationProjectForUser[], unknown, Loca
 
 export const myProjectsHandler: Handler<MyProjectsResponse, unknown, LocationProjectQuery> = async (req) => {
   return await getMyProjectsWithInfo(req.userId as number, req.query.offset, req.query.limit)
+}
+
+export const getProjectBySlugHandler: Handler<LocationProjectForUser, { slug: string }, unknown, unknown> = async (req) => {
+  const userId = req.userId
+  return await getProjectBySlugForUser(req.params.slug, userId)
 }

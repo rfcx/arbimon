@@ -139,3 +139,51 @@ describe('Deprecated', async () => {
     expect(expectedProject).toBeUndefined()
   })
 })
+
+describe('Project by slug', async () => {
+  test('GET /projects/:slug returns a project', async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { userId })
+    const project = makeProject(1234003, 'Project by slug', 'published')
+    await LocationProject.bulkCreate([project], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: `/projects/${project.slug}`
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(200)
+    const result = JSON.parse(response.body)
+    expect(result.slug).toBe(project.slug)
+  })
+  test('GET /projects/:slug returns 404 for non-existent project', async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { userId })
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: '/projects/non-existent'
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(404)
+  })
+  test('GET /projects/:slug returns 404 for hidden project', async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { userId })
+    const project = makeProject(1234004, 'Hidden Project', 'hidden')
+    await LocationProject.bulkCreate([project], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: `/projects/${project.slug}`
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(404)
+  })
+})
