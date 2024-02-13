@@ -5,7 +5,7 @@ metadata:
   namespace: testing
 spec:
   # every 15 minutes
-  schedule: '*/15 * * * *'
+  schedule: '30 * * * *'
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
