@@ -45,6 +45,7 @@
               </template>
             </span>
             <button
+              v-if="!projectUserPermissionsStore.isMemberGuest && !projectUserPermissionsStore.isExternalGuest"
               class="btn btn-primary disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
               data-tooltip-target="shareInsightsTooltipId"
               data-tooltip-placement="bottom"

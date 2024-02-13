@@ -7,7 +7,7 @@
       <div class="grid lg:(grid-cols-2 gap-10)">
         <div class="flex flex-col gap-y-10">
           <div
-            v-if="isProjectMember && !isViewingAsGuest"
+            v-if="isProjectMember && !isViewingAsGuest && !projectUserPermissionsStore.isMemberGuest"
             class="flex flex-row justify-end"
           >
             <input
