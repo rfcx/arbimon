@@ -24,7 +24,7 @@ export function getDatasetMetadata (filters: ColoredFilter[]): DatasetMetadata[]
       start: startDate.format(META_DATE_FORMAT),
       end: endDate.format(META_DATE_FORMAT),
       sites: sitesNames.length > 0 ? sitesNames.join(',') : 'All sites',
-      taxons: taxonNames.length > 0 ? taxonNames.join(',') : 'All taxons'
+      taxons: taxonNames.length > 0 ? taxonNames.join(',') : 'All taxa'
     }
   })
 }

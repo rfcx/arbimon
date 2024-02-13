@@ -64,7 +64,7 @@ export default class ComparisonFilterModalComponent extends Vue {
     return [
       { id: 'sites', name: 'Sites' },
       { id: 'times', name: 'Date Range' },
-      ...(this.canFilterByTaxon ? [{ id: 'taxon', name: 'Taxon' }] : [])
+      ...(this.canFilterByTaxon ? [{ id: 'taxon', name: 'Taxa' }] : [])
     ]
   }
 

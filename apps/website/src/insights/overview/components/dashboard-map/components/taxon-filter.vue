@@ -49,7 +49,7 @@
           </div>
           <div class="ml-2">
             <label :for="`class-checkbox-text-all`">
-              All taxons
+              All taxa
             </label>
           </div>
         </div>
@@ -111,11 +111,11 @@ const selectedTaxonClasses = ref<string[]>(TAXON_CLASS_OPTIONS.value.map(({ id }
 
 const selectedTaxonTitle = computed(() => {
   if (selectedTaxonClasses.value.length === 0) {
-    return 'All taxons'
+    return 'All taxa'
   }
 
   if (selectedTaxonClasses.value.length === TAXON_CLASS_OPTIONS.value.length) {
-    return 'All taxons'
+    return 'All taxa'
   }
 
   if (selectedTaxonClasses.value.length === 1) {
