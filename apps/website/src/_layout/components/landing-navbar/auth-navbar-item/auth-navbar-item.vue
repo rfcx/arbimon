@@ -46,7 +46,7 @@
       </button>
       <div
         id="user-dropdown"
-        class="z-50 my-4 hidden text-base w-36 list-none bg-moss rounded-lg text-insight divide-y divide-gray-100 shadow"
+        class="z-50 my-4 hidden text-base w-50 list-none bg-moss rounded-lg text-insight divide-y divide-gray-100 shadow"
       >
         <ul
           class="py-2 font-medium"
@@ -59,7 +59,7 @@
             class="px-4 py-2 rounded-lg hover:(bg-moss cursor-pointer text-frequency)"
             @click="openProfile"
           >
-            Profile
+            Account settings
           </li>
           <li
             class="px-4 py-2 rounded-lg hover:(bg-moss cursor-pointer text-frequency)"
