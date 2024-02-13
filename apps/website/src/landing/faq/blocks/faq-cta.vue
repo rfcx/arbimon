@@ -10,7 +10,7 @@
     </h2>
     <p>
       Check out our <a
-        href="https://support.rfcx.org/"
+        href="https://help.arbimon.org/"
         class="text-frequency underline"
       >Support Documents</a> or
       <router-link
