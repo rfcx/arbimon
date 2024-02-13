@@ -2,7 +2,7 @@ import { type User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
 
 import { type ProjectFiltersResponse, apiBioGetProjectFilters } from '@rfcx-bio/common/api-bio/project/project-filters'
-import { type LocationProjectForUser, type LocationProjectWithInfo, apiBioGetProjectsDeprecated } from '@rfcx-bio/common/api-bio/project/projects'
+import { type LocationProjectForUser, type LocationProjectWithInfo, apiBioGetProjectBySlug, apiBioGetProjectsDeprecated } from '@rfcx-bio/common/api-bio/project/projects'
 import { getApiClient } from '@rfcx-bio/utils/api'
 
 import { getIdToken, useAuth0Client } from '~/auth-client'
@@ -46,6 +46,12 @@ export const useStore = defineStore('root', {
           this.myProjects[index] = p // update the changes to existing objects
         }
       })
+    },
+    async updateSelectedProjectSlug (slug: string) {
+      // Temporary hack to get an API Client (this will be extracted in the loading branch)
+      const authClient = await useAuth0Client()
+      const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, this.user ? async () => await getIdToken(authClient) : undefined)
+      this.selectedProject = await apiBioGetProjectBySlug(apiClient, slug)
     },
     updateSelectedProject (project?: LocationProjectForUser) {
       if (this.selectedProject?.id === project?.id) return

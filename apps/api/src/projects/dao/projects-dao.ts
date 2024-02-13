@@ -16,7 +16,7 @@ export const getProjectById = async (id: number): Promise<Project | undefined> =
 }
 
 export const getProjectBySlug = async (slug: string): Promise<Project | undefined> => {
-  return await models.LocationProject.findOne({ where: { slug } }) ?? undefined
+  return await models.LocationProject.findOne({ where: { slug }, raw: true }) ?? undefined
 }
 
 const computedAttributes: Record<string, [Literal, string]> = {
