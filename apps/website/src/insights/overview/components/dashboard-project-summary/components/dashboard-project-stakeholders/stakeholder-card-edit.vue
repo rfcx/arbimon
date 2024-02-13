@@ -8,11 +8,17 @@
       class="text-frequency bg-pitch w-6 h-6 absolute -translate-y-1/2 translate-x-1/2 left-auto -top-3 -right-3"
     />
     <img
+      v-if="image"
       class="w-12 h-12 mr-3 rounded-full shadow"
-      :src="image || 'https://inaturalist-open-data.s3.amazonaws.com/photos/332643265/small.jpeg'"
+      :src="image"
       alt="user profile image"
       @click="toggleSelectMemberCard()"
     >
+    <div
+      v-else
+      class="w-12 h-12 mr-3 rounded-full shadow bg-util-gray-03"
+      @click="toggleSelectMemberCard()"
+    />
     <div
       class="flex flex-col gap-y-1 w-3/5"
       @click="toggleSelectMemberCard()"
