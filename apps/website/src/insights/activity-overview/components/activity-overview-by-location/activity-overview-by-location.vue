@@ -2,7 +2,7 @@
   <div class="w-full">
     <section-title>
       <template #title>
-        <div class="sm:(flex flex-row items-center)">
+        <div class="flex flex-col md:(flex-row items-center) text-subtle gap-2">
           <select
             v-model="selectedType"
             class="text-xl text-subtle py-1 bg-echo font-header border-t-0 border-l-0 border-r-0 border-b-1 border-dashed focus:(border-box-gray border-t-0 border-l-0 border-r-0 border-b-1 ring-0 outline-none)"
