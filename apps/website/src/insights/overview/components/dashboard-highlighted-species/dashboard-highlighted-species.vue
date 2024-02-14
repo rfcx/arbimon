@@ -30,7 +30,7 @@
       class="flex flex-row baseline"
     >
       <button
-        v-if="!projectUserPermissionsStore.isMemberGuest"
+        v-if="store.userIsAdminProjectMember"
         class="btn btn-secondary group w-full disabled:hover:btn-disabled disabled:btn-disabled"
         data-modal-target="species-highlighted-modal"
         data-modal-toggle="species-highlighted-modal"
@@ -69,7 +69,7 @@ import { type ComputedRef, type Ref, computed, onMounted, ref } from 'vue'
 import { type DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
-import { useProjectUserPermissionsStore } from '~/store'
+import { useStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../types/highlighted-species'
 import EmptySpeciesList from './components/empty-species-list.vue'
 import HighlightedSpeciesList from './components/highlighted-species-list.vue'
@@ -79,7 +79,7 @@ const props = defineProps<{ species: DashboardSpecies[] | undefined, canEdit: bo
 const emit = defineEmits<{(e: 'emitRefetch'): void }>()
 const modal = ref() as Ref<Modal>
 const disableText = ref('Contact your project administrator for permission to select species')
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
+const store = useStore()
 
 const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
   if (props.species === undefined) {

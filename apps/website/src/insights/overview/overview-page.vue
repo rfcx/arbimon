@@ -1,7 +1,7 @@
 <template>
   <div>
     <empty-box
-      v-if="isProjectMember && !isViewingAsGuest && (!isLoadingMetrics && ((metrics?.totalRecordings ?? 0) === 0))"
+      v-if="store.userIsProjectMember && !isViewingAsGuest && (!isLoadingMetrics && ((metrics?.totalRecordings ?? 0) === 0))"
       class="mb-6"
     />
     <dashboard-metrics
@@ -13,16 +13,16 @@
   <div class="grid grid-col-1 lg:grid-cols-12 gap-20 mt-10 lg:mt-20">
     <div class="lg:col-span-8">
       <dashboard-project-summary
-        :can-edit="isUserHasFullAccess"
-        :is-project-member="isProjectMember"
+        :can-edit="store.userIsAdminProjectMember"
+        :is-project-member="store.userIsProjectMember"
         :is-viewing-as-guest="isViewingAsGuest"
       />
     </div>
     <div class="lg:col-span-4 flex flex-col">
       <dashboard-highlighted-species
         :species="species?.speciesHighlighted"
-        :can-edit="isUserHasFullAccess"
-        :is-project-member="isProjectMember"
+        :can-edit="store.userIsAdminProjectMember"
+        :is-project-member="store.userIsProjectMember"
         :is-viewing-as-guest="isViewingAsGuest"
         :is-loading="isLoadingSpecies"
         @emit-refetch="refetchSpeciesRichnessByRisk"
@@ -58,7 +58,7 @@ import { useRoute } from 'vue-router'
 
 import { apiClientKey } from '@/globals'
 import { RISKS_BY_ID } from '~/risk-ratings'
-import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
+import { useDashboardStore, useStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import EmptyBox from '../components/empty-box.vue'
 import DashboardHighlightedSpecies from './components/dashboard-highlighted-species/dashboard-highlighted-species.vue'
@@ -75,21 +75,13 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const route = useRoute()
 const store = useStore()
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const dashboardStore = useDashboardStore()
 
 // view type
-const isProjectMember = computed(() => projectUserPermissionsStore.isMember)
-const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
-})
-const selectedProjectId = computed(() => store.selectedProject?.id)
+const isViewingAsGuest = computed(() => route.query.guest === '1' || store.userIsExternalGuest)
+const selectedProjectId = computed(() => store.project?.id)
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 const { isLoading: isLoadingSpecies, isError: isErrorSpecies, refetch: refetchData, data: species } = useSpeciesRichnessByRisk(apiClientBio)
-
-const isUserHasFullAccess = computed<boolean>(() => {
-  return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
-})
 
 const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
   return (species.value?.richnessByTaxon ?? []).map(([taxonId, count]) => {

@@ -1,7 +1,7 @@
 import { type WhereOptions, Op } from 'sequelize'
 import { type Literal } from 'sequelize/types/lib/utils'
 
-import { type LocationProjectForUser, type MyProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
+import { type LocationProjectWithRole, type MyProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type Project, type ProjectStatus, ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
 
@@ -52,7 +52,7 @@ export const deleteProject = async (id: number): Promise<boolean> => {
 /**
  * @deprecated Do not use - type will be removed
  */
-export const getViewableProjects = async (userId: number | undefined): Promise<LocationProjectForUser[]> => {
+export const getViewableProjects = async (userId: number | undefined): Promise<LocationProjectWithRole[]> => {
   const memberProjectIds = await getProjectIdsByUser(userId)
 
   const projects = await models.LocationProject

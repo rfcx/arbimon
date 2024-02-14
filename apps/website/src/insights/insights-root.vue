@@ -2,8 +2,8 @@
   <div
     class="px-4 bg-gray-50 dark:bg-pitch"
     :class="{
-      'pl-18': isProjectMember,
-      'md:px-10': !isProjectMember
+      'pl-18': store.userIsProjectMember,
+      'md:px-10': !store.userIsProjectMember
     }"
   >
     <div class="max-w-screen-xl mx-auto pt-6 pb-10 text-gray-900 dark:text-insight">
@@ -24,7 +24,7 @@
           class="flex gap-4 py-4 md:justify-between order-first"
         >
           <router-link
-            v-if="!projectUserPermissionsStore.isExternalGuest"
+            v-if="store.userIsProjectMember"
             :to="{ name: ROUTE_NAMES.projectSettings }"
             class="flex flex-row items-center justify-start order-last md:order-first"
           >
@@ -45,7 +45,7 @@
               </template>
             </span>
             <button
-              v-if="!projectUserPermissionsStore.isMemberGuest && !projectUserPermissionsStore.isExternalGuest"
+              v-if="store.userIsAdminProjectMember"
               class="btn btn-primary disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
               data-tooltip-target="shareInsightsTooltipId"
               data-tooltip-placement="bottom"
@@ -85,8 +85,8 @@
   <nav
     class="sticky top-0 px-4 bg-gray-50 dark:bg-pitch border-b-1 border-fog z-40"
     :class="{
-      'pl-18': isProjectMember,
-      'md:px-10': !isProjectMember,
+      'pl-18': store.userIsProjectMember,
+      'md:px-10': !store.userIsProjectMember,
       'default-scroll-start': route.name !== items[0].route.name
     }"
   >
@@ -114,8 +114,8 @@
   <div
     class="px-4"
     :class="{
-      'pl-18': isProjectMember,
-      'md:px-10': !isProjectMember
+      'pl-18': store.userIsProjectMember,
+      'md:px-10': !store.userIsProjectMember
     }"
   >
     <div
@@ -124,7 +124,7 @@
       <router-view />
     </div>
   </div>
-  <footer-bar v-if="!isProjectMember || isViewingAsGuest" />
+  <footer-bar v-if="!store.userIsProjectMember || isViewingAsGuest" />
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
@@ -134,7 +134,7 @@ import { useRoute } from 'vue-router'
 import FooterBar from '@/_layout/components/landing-footer.vue'
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
+import { useDashboardStore, useStore } from '~/store'
 import { useGetProjectSettings } from '../projects/_composables/use-project-profile'
 import ProjectNav from './components/project-nav.vue'
 import ShareInsight from './components/share-insights/share-insights.vue'
@@ -172,16 +172,12 @@ const items = [
 
 const store = useStore()
 const route = useRoute()
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
-const selectedProject = computed(() => store.selectedProject)
-const selectedProjectId = computed(() => store.selectedProject?.id)
-const isProjectMember = computed(() => projectUserPermissionsStore.isMember)
-const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
-})
+const selectedProject = computed(() => store.project)
+const selectedProjectId = computed(() => store.project?.id)
+const isViewingAsGuest = computed(() => route.query.guest === '1' || store.userIsExternalGuest)
 
 const startShareInsightsNavigation = ref<InsightsPublishStatus>('idle')
 
@@ -192,16 +188,10 @@ const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = 
 const enablePublicSharingText = ref('Create a project site to enable public sharing of insights')
 const disablePublicSharingText = ref('Contact your project administrator for permission to share')
 
-const isUserHasFullAccess = computed<boolean>(() => {
-  return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
-})
-
-const showShareInsights = computed<boolean>(() => {
-  return isProjectMember.value && !isViewingAsGuest.value
-})
+const showShareInsights = computed<boolean>(() => store.userIsFullProjectMember && !isViewingAsGuest.value)
 
 const disableShareInsights = computed<boolean>(() => {
-  return isLoadingMetrics.value || isErrorMetrics.value || metrics.value?.totalSites === 0 || !isUserHasFullAccess.value
+  return isLoadingMetrics.value || isErrorMetrics.value || metrics.value?.totalSites === 0 || !store.userIsAdminProjectMember
 })
 
 watch(() => profile.value, () => {
@@ -219,7 +209,7 @@ const refetchInsightsPublishStatus = async (): Promise<void> => {
 }
 
 const openShareInsightsInfoPopup = (): void => {
-  if (profile.value?.isPublished != null && profile.value?.isPublished === true && isUserHasFullAccess.value) {
+  if (profile.value?.isPublished != null && profile.value?.isPublished === true && store.userIsAdminProjectMember) {
     startShareInsightsNavigation.value = 'share-insights-successful'
   } else {
     startShareInsightsNavigation.value = 'share-insights-information'

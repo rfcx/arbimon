@@ -7,7 +7,7 @@ import { type SyncHistoryParams, type SyncHistoryResponse, apiBioGetSyncHistory 
 import { useStoreOutsideSetup } from '~/store'
 
 const store = useStoreOutsideSetup()
-const projectId = computed(() => store.selectedProject?.id)
+const projectId = computed(() => store.project?.id)
 
 export const useSyncHistory = (apiClient: AxiosInstance): UseQueryReturnType<SyncHistoryResponse, unknown> =>
   useQuery({

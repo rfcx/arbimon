@@ -4,7 +4,6 @@
       <h1 class="text-gray-900 dark:text-insight">
         Project settings
       </h1>
-      <GuestBanner v-if="isViewingAsGuest" />
       <div class="grid lg:(grid-cols-2 gap-10)">
         <div>
           <h5>
@@ -14,17 +13,17 @@
             :existing-name="selectedProject?.name"
             :date-start="settings?.dateStart"
             :date-end="settings?.dateEnd"
-            :is-disabled="!isUserHasFullAccess"
+            :is-disabled="!store.userIsAdminProjectMember"
             @emit-update-value="onEmitDefaultValue"
           />
           <project-summary-form
             :existing-summary="settings?.summary"
-            :is-disabled="!isUserHasFullAccess"
+            :is-disabled="!store.userIsAdminProjectMember"
             @emit-project-summary="onEmitSummary"
           />
           <project-objective-form
             :existing-objectives="settings?.objectives"
-            :is-disabled="!isUserHasFullAccess"
+            :is-disabled="!store.userIsAdminProjectMember"
             @emit-project-objectives="onEmitObjectives"
           />
         </div>
@@ -34,25 +33,25 @@
           </h5>
           <project-slug
             :existing-slug="selectedProject?.slug"
-            :is-disabled="!isUserHasFullAccess"
+            :is-disabled="!store.userIsAdminProjectMember"
             @emit-updated-slug="onEmitSlug"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-image-form
-            :is-disabled="!isUserHasFullAccess"
+            :is-disabled="!store.userIsAdminProjectMember"
             :image="settings?.image !== undefined ? urlWrapper(settings?.image) : undefined"
             @emit-project-image="onEmitProjectImage"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-listed-form
             :is-public="settings?.isPublic"
-            :is-disabled="!isUserHasFullAccess || settings?.isPublished"
+            :is-disabled="!store.userIsAdminProjectMember || settings?.isPublished"
             :is-create-project="false"
             @emit-project-listed="toggleListedProject"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-delete
-            v-if="projectUserPermissionsStore.role === 'owner'"
+            v-if="store.project?.role === 'owner'"
             :is-deleting="isDeletingProject"
             :is-error="isErrorDeleteProject"
             :is-success="isSuccessDeleteProject"
@@ -61,11 +60,10 @@
         </div>
       </div>
       <div
-        v-if="projectUserPermissionsStore.isMember && !isViewingAsGuest"
         class="flex flex-row-reverse items-center gap-4"
       >
         <button
-          :disabled="isSaving || !isUserHasFullAccess"
+          :disabled="isSaving || !store.userIsAdminProjectMember"
           class="inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
           data-tooltip-target="projectSettingsSaveTooltipId"
           data-tooltip-placement="bottom"
@@ -74,7 +72,7 @@
           Save changes
         </button>
         <div
-          v-if="!isUserHasFullAccess"
+          v-if="!store.userIsAdminProjectMember"
           id="projectSettingsSaveTooltipId"
           role="tooltip"
           class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -124,15 +122,14 @@
 <script setup lang="ts">
 import { type AxiosError, type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
 import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
+import { useDashboardStore, useStore } from '~/store'
 import { useDeleteProject, useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectDelete from './components/form/project-delete.vue'
@@ -145,20 +142,15 @@ import ProjectSummaryForm from './components/form/project-summary-form.vue'
 import type { ProjectDefault } from './types'
 
 const router = useRouter()
-const route = useRoute()
 const store = useStore()
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
-const selectedProject = computed(() => store.selectedProject)
-const selectedProjectId = computed(() => store.selectedProject?.id)
-const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1' || projectUserPermissionsStore.isMemberGuest
-})
+const selectedProject = computed(() => store.project)
+const selectedProjectId = computed(() => store.project?.id)
 
 const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId)
-const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
-const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.project?.id ?? -1)
+const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, store.project?.id ?? -1)
 const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProject } = useDeleteProject(apiClientBio)
 
 const newName = ref('')
@@ -178,10 +170,6 @@ const profileImageForm = ref()
 const uploadedFile = ref()
 const isPublic = ref<boolean>(true)
 const disableText = ref('Contact your project administrator for permission to edit project settings')
-
-const isUserHasFullAccess = computed<boolean>(() => {
-  return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
-})
 
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
@@ -221,7 +209,7 @@ const onEmitSlug = (slug: string) => {
 }
 
 const onEmitProjectDelete = () => {
-  mutateDeleteProject(store.selectedProject?.id ?? -1, {
+  mutateDeleteProject(store.project?.id ?? -1, {
     onSuccess: async () => {
       await router.push({ name: ROUTE_NAMES.myProjects })
     }

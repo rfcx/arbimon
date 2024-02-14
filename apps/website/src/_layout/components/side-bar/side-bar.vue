@@ -136,7 +136,7 @@
               Project name
             </p>
             <p class="text-sm text-util-gray-01 mt-2 font-normal text-wrap">
-              {{ store.selectedProject?.name }}
+              {{ store.project?.name }}
             </p>
           </div>
         </div>
@@ -227,18 +227,17 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { authClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useStore } from '~/store'
 
 const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 const supportLink = ref('https://help.arbimon.org/')
 
 const auth = inject(authClientKey) as Auth0Client
 const store = useStore()
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 // TODO: pass the link / nav menus in as props
 const arbimonLink = computed(() => {
-  const selectedProjectSlug = store.selectedProject?.slug
+  const selectedProjectSlug = store.project?.slug
   if (selectedProjectSlug === undefined) return ''
   else return `${import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL}/project/${selectedProjectSlug}`
 })
@@ -250,8 +249,7 @@ const userName = computed<string>(() => store.user?.given_name + ' ' + store.use
 type Item = { title: string, iconRaw?: string, public?: boolean, visibleCondition?: () => boolean, route?: RouteLocationRaw, legacyPath?: string, children?: Item[] }
 
 const items = computed(() => {
-  // TODO Correctly identify my projects
-  return (store.selectedProject?.slug === 'puerto-rico-island-wide' || projectUserPermissionsStore.isMember) ? allItems : allItems.filter(i => i.public)
+  return store.userIsProjectMember ? allItems : allItems.filter(i => i.public)
 })
 
 const allItems: Item[] = [

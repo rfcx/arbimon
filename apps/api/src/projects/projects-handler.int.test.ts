@@ -157,7 +157,9 @@ describe('Project by slug', async () => {
     expect(response.statusCode).toBe(200)
     const result = JSON.parse(response.body)
     expect(result.slug).toBe(project.slug)
+    expect(result.role).toBe('external')
   })
+
   test('GET /projects/:slug returns 404 for non-existent project', async () => {
     // Arrange
     const app = await makeApp(routesProject, { userId })
@@ -171,6 +173,7 @@ describe('Project by slug', async () => {
     // Assert
     expect(response.statusCode).toBe(404)
   })
+
   test('GET /projects/:slug returns 404 for hidden project', async () => {
     // Arrange
     const app = await makeApp(routesProject, { userId })

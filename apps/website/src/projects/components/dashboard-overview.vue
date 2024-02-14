@@ -47,7 +47,7 @@
         class="text-3xl text-white font-header font-medium"
       >{{ valueShortScale }}</span>
     </div>
-    <div v-if="stat.value === 'site' && hasPermissionSite">
+    <div v-if="stat.value === 'site' && store.userIsFullProjectMember">
       <a
         class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-util-gray-01 border-b-1 border-frequency"
         :href="stat.link"
@@ -55,7 +55,7 @@
         {{ stat.label }}
       </a>
     </div>
-    <div v-if="stat.value === 'recording' && hasPermissionRecording">
+    <div v-if="stat.value === 'recording' && store.userIsProjectMember">
       <a
         class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-util-gray-01 border-b-1 border-frequency"
         :href="stat.link"
@@ -63,7 +63,7 @@
         {{ stat.label }}
       </a>
     </div>
-    <div v-if="stat.value === 'playlist' && hasPermissionPlaylist">
+    <div v-if="stat.value === 'playlist' && store.userIsFullProjectMember">
       <a
         class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-util-gray-01 border-b-1 border-frequency"
         :href="stat.link"
@@ -71,7 +71,7 @@
         {{ stat.label }}
       </a>
     </div>
-    <div v-if="stat.value === 'species' && hasPermissionSpecies">
+    <div v-if="stat.value === 'species' && store.userIsProjectMember">
       <a
         class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-util-gray-01 border-b-1 border-frequency"
         :href="stat.link"
@@ -84,22 +84,15 @@
 <script setup lang="ts">
 import { initTooltips } from 'flowbite'
 import { computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
 
 import { metricValue } from '@rfcx-bio/utils/number'
 
-import { useProjectUserPermissionsStore } from '~/store'
+import { useStore } from '~/store'
 import { type Stat } from '../types'
 
 const props = defineProps<{stat: Stat}>()
 
-const route = useRoute()
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
-
-const isProjectMember = computed(() => projectUserPermissionsStore.isMember)
-const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
-})
+const store = useStore()
 
 onMounted(() => {
   initTooltips()
@@ -108,21 +101,4 @@ onMounted(() => {
 const valueShortScale = computed(() => {
   return props.stat.count === undefined ? '-' : metricValue(props.stat.count)
 })
-
-const hasPermissionSite = computed<boolean>(() => {
-  return isProjectMember.value && !isViewingAsGuest.value && projectUserPermissionsStore.role !== 'entry'
-})
-
-const hasPermissionRecording = computed<boolean>(() => {
-  return isProjectMember.value && !isViewingAsGuest.value
-})
-
-const hasPermissionPlaylist = computed<boolean>(() => {
-  return isProjectMember.value && !isViewingAsGuest.value && projectUserPermissionsStore.role !== 'entry'
-})
-
-const hasPermissionSpecies = computed<boolean>(() => {
-  return isProjectMember.value && !isViewingAsGuest.value
-})
-
 </script>

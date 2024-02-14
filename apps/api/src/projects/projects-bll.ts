@@ -1,8 +1,7 @@
 import QuickLRU from 'quick-lru'
 
-import { type LocationProjectForUser, type ProjectsGeoResponse, type ProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
+import { type LocationProjectWithRole, type ProjectsGeoResponse, type ProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
 import { type Project } from '@rfcx-bio/common/dao/types'
-import { rolesGreaterOrEqualTo } from '@rfcx-bio/common/roles'
 
 import { BioNotFoundError } from '~/errors'
 import { getUserRoleForProject } from './dao/project-member-dao'
@@ -29,17 +28,12 @@ export const getProjectsGeo = async (limit?: number, offset?: number): Promise<P
   return projects
 }
 
-export const getProjectBySlugForUser = async (slug: string, userId: number | undefined): Promise<LocationProjectForUser> => {
+export const getProjectBySlugForUser = async (slug: string, userId: number | undefined): Promise<LocationProjectWithRole> => {
   const project = await getProjectBySlug(slug)
-
   if (project === undefined) { throw BioNotFoundError() }
 
   const role = await getUserRoleForProject(userId, project.id)
+  if (role === 'none') { throw BioNotFoundError() }
 
-  // if not published, only allow access if user is a member
-  if (project.status !== 'published' && !rolesGreaterOrEqualTo('viewer').includes(role)) {
-    throw BioNotFoundError()
-  }
-
-  return { ...project, isMyProject: rolesGreaterOrEqualTo('viewer').includes(role) }
+  return { ...project, role }
 }

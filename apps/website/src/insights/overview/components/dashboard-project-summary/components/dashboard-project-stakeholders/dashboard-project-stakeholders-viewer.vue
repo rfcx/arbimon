@@ -5,7 +5,7 @@
       class="flex w-full justify-end mt-6"
     >
       <button
-        v-if="!projectUserPermissionsStore.isMemberGuest"
+        v-if="!store.userIsAdminProjectMember"
         class="btn btn-primary font-medium flex flex-row py-2 px-3 disabled:hover:btn-disabled disabled:btn-disabled"
         data-tooltip-target="editStakeholdersTooltipId"
         data-tooltip-placement="bottom"
@@ -74,7 +74,7 @@
       class="mt-4"
     >
       <dashboard-project-stakeholders-empty
-        v-if="editable && !projectUserPermissionsStore.isExternalGuest"
+        v-if="editable && store.userIsAdminProjectMember"
         @emit-add-stakeholders="$emit('emit-is-updating')"
       />
       <ProjectSummaryEmptyForNonProjectMember v-else />
@@ -93,7 +93,7 @@ import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboa
 import { type OrganizationTypes, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 import { memberName } from '@rfcx-bio/utils/string'
 
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useStore } from '~/store'
 import ProjectSummaryEmptyForNonProjectMember from '../project-summary-empty-for-non-project-member.vue'
 import DashboardProjectStakeholdersEmpty from './dashboard-project-stakeholders-empty.vue'
 import StakeholderCard from './stakeholder-card.vue'
@@ -110,8 +110,6 @@ defineProps<{
 defineEmits<{(event: 'emit-is-updating'): void}>()
 
 const store = useStore()
-
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const disableText = ref('Contact your project administrator for permission to edit stakeholders')
 </script>

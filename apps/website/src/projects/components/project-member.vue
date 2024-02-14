@@ -23,7 +23,6 @@
       </div>
     </div>
     <div
-      v-if="isProjectMember && !isViewingAsGuest"
       class="flex flex-row bg-light-500items-center"
     >
       <p
@@ -32,13 +31,8 @@
       >
         {{ getUserRoleName() }}
       </p>
-      <p
-        v-else-if="projectUserPermissionsStore.isMemberGuest"
-      >
-        {{ getUserRoleName() }}
-      </p>
       <button
-        v-else-if="!projectUserPermissionsStore.isMemberGuest"
+        v-else-if="store.userIsAdminProjectMember"
         :id="`dropdownRoleButton-${user.email}`"
         :data-dropdown-toggle="`dropdownRole-${user.email}`"
         data-dropdown-placement="bottom"
@@ -54,8 +48,13 @@
           <icon-fa-chevron-up class="w-3 h-3 fa-chevron-up hidden" />
         </span>
       </button>
+      <p
+        v-else
+      >
+        {{ getUserRoleName() }}
+      </p>
       <div
-        v-if="!editable && !projectUserPermissionsStore.isMemberGuest"
+        v-if="!editable && store.userIsAdminProjectMember"
         :id="`${user.userId}changeUserRoleTooltipId`"
         role="tooltip"
         class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -67,7 +66,7 @@
         />
       </div>
       <MemberDelete
-        v-if="user.roleId !== 4 && !projectUserPermissionsStore.isMemberGuest"
+        v-if="user.roleId !== 4 && store.userIsAdminProjectMember"
         :user="user"
         :disabled-delete-button="!editable"
         :is-deleting="isDeleting"
@@ -123,7 +122,7 @@ import type { ProjectMember } from '@rfcx-bio/common/api-bio/project/project-mem
 import { type ProjectRole, getRoleById } from '@rfcx-bio/common/roles'
 
 import MemberDelete from '@/projects/components/form/member-delete.vue'
-import { useProjectUserPermissionsStore } from '~/store'
+import { useStore } from '~/store'
 
 interface Role {
   id: number
@@ -133,13 +132,13 @@ interface Role {
 
 let dropdown: Dropdown
 
-const props = defineProps<{user: ProjectMember, roles: Role[], editable: boolean, isProjectMember: boolean, isViewingAsGuest: boolean, isDeleting?: boolean, isError?: boolean, isSuccess?: boolean}>()
+const props = defineProps<{user: ProjectMember, roles: Role[], editable: boolean, isDeleting?: boolean, isError?: boolean, isSuccess?: boolean}>()
 defineEmits<{(e: 'emitChangeUserRole', email: string, role: ProjectRole): void, (e: 'emitDeleteProjectMember', email: string): void}>()
 
 const disableDeleteUserText = ref('Contact your project administrator for permission to delete project member')
 const disableChangeUserRoleText = ref('Contact your project administrator for permission to manage project members')
 
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
+const store = useStore()
 
 const getUserRoleName = (): string => {
   const role = props.roles.find(r => r.id === props.user.roleId)

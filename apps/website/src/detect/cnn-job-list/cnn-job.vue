@@ -95,7 +95,7 @@ const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 const store = useStore()
 const params = reactive({
   created_by: 'all',
-  projects: [store.selectedProject?.idCore ?? ''],
+  projects: [store.project?.idCore ?? ''],
   fields: [
     'id',
     'classifier_id',
@@ -114,8 +114,8 @@ const params = reactive({
   ]
 })
 
-watch(() => store.selectedProject, () => {
-  params.projects = [store.selectedProject?.idCore ?? '']
+watch(() => store.project, () => {
+  params.projects = [store.project?.idCore ?? '']
 })
 
 const { isLoading: isLoadingClassifierJobs, isError: isErrorClassifierJobs, data: classifierJobs } = useClassifierJobs(apiClientCore, params)

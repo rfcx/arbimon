@@ -6,7 +6,7 @@
     >
       <div class="text-gray-900 dark:text-white">
         <h1 class="text-5xl font-header font-normal <sm:text-2xl">
-          {{ store.selectedProject?.name }}
+          {{ store.project?.name }}
         </h1>
       </div>
       <div class="text-gray-900 dark:text-white flex flex-col gap-y-6">
@@ -50,20 +50,20 @@
             Analyses
           </h2>
           <button
-            v-if="!isViewingAsGuest && !projectUserPermissionsStore.isMemberGuest"
+            v-if="store.userIsFullProjectMember"
             class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3 disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
             type="button"
             :title="'Create New Analysis Job'"
             data-tooltip-target="analysesTooltipId"
             data-tooltip-placement="bottom"
-            :disabled="!hasPermissionAnalyses"
+            :disabled="!store.userIsFullProjectMember"
             @click="toggleAnalysisSelector(true)"
           >
             <icon-custom-ic-plus class="h-4 w-4 mb-3px" />
             <span class="font-display text-base">Create new analysis</span>
           </button>
           <div
-            v-if="!hasPermissionAnalyses"
+            v-if="!store.userIsFullProjectMember"
             id="analysesTooltipId"
             role="tooltip"
             class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -95,7 +95,6 @@ import type { AxiosInstance } from 'axios'
 import { initModals } from 'flowbite'
 import { type LngLatBoundsLike } from 'mapbox-gl'
 import { computed, inject, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -107,7 +106,7 @@ import { MapBaseComponent } from '~/maps/map-base'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { type CircleStyle } from '~/maps/utils/circle-style/types'
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useStore } from '~/store'
 import { useAedJobCount, useClusteringJobCount, useClusteringSpeciesDetected } from './_composables/use-aed-count'
 import { usePlaylistCount } from './_composables/use-playlist-count'
 import { usePmSpeciesDetected, usePmTemplateCount } from './_composables/use-pm-count'
@@ -119,14 +118,9 @@ import DashboardAnalyses from './components/dashboard-analyses.vue'
 import DashboardOverview from './components/dashboard-overview.vue'
 
 const store = useStore()
-const route = useRoute()
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
-const selectedProject = computed(() => store.selectedProject)
-const selectedProjectId = computed(() => store.selectedProject?.id)
-const selectedProjectSlug = computed(() => store.selectedProject?.slug)
-const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
-})
+const selectedProject = computed(() => store.project)
+const selectedProjectId = computed(() => store.project?.id)
+const selectedProjectSlug = computed(() => store.project?.slug)
 
 const disableText = ref('Contact your project administrator for permission to manage analyses')
 
@@ -167,10 +161,6 @@ const analyses = computed(() => [
   { value: 'aed', title: 'AED & Clustering', iconName: 'fi-aed', count: (aedJobCount.value != null) ? aedJobCount.value : 0 + ((clusteringJobCount.value != null) ? clusteringJobCount.value : 0), isLoading: isLoadingAedJobCount.value || isLoadingClusteringJobCount.value || isLoadingClusteringSpDetected.value, label: 'Jobs completed', speciesTitle: 'Species detected', speciesDetected: clusteringSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` },
   { value: 'rfm', title: 'Random Forest Models', iconName: 'fi-rfm', count: rfmCount.value, isLoading: isLoadingRFMCount.value || isLoadingSpDetected.value, label: 'Models completed', speciesTitle: 'Species analyzed', speciesDetected: rfmSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` }
 ])
-
-const hasPermissionAnalyses = computed<boolean>(() => {
-  return projectUserPermissionsStore.isMember && !isViewingAsGuest.value && projectUserPermissionsStore.role !== 'entry' && projectUserPermissionsStore.role !== 'user'
-})
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`
 const hasOpenedAnalysisSelector = ref(false)
@@ -219,7 +209,7 @@ function findDaysWithRecordings (id: number): number {
 }
 
 function mapInitialBounds (): LngLatBoundsLike | undefined {
-  const project = store.selectedProject
+  const project = store.project
   if (!project) return undefined
   return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
 }

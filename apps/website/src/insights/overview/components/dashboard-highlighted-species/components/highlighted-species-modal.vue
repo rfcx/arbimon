@@ -218,7 +218,7 @@ watch(() => props.highlightedSpecies, () => { fillExistingSpeciesSlug() })
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
-const selectedProjectId = computed(() => store.selectedProject?.id)
+const selectedProjectId = computed(() => store.project?.id)
 
 const searchKeyword = ref('')
 const searchRisk = ref('')

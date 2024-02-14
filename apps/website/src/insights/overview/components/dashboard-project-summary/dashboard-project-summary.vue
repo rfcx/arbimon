@@ -269,14 +269,14 @@ const isEnabled = computed(() => {
 
 const { isLoading, data: dashboardContent, refetch: refetchDashboardContent } = useGetDashboardContent(
   apiClientBio,
-  store.selectedProject?.id ?? -1,
+  store.project?.id ?? -1,
   isEnabled
 )
 
-const { mutate: mutateReadme } = useUpdateDashboardReadme(apiClientBio, store.selectedProject?.id ?? -1)
-const { mutate: mutateKeyResult } = useUpdateDashboardKeyResult(apiClientBio, store.selectedProject?.id ?? -1)
-const { mutate: mutateResources } = useUpdateDashboardResources(apiClientBio, store.selectedProject?.id ?? -1)
-const { mutate: mutateMethods } = useUpdateDashboardMethods(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutateReadme } = useUpdateDashboardReadme(apiClientBio, store.project?.id ?? -1)
+const { mutate: mutateKeyResult } = useUpdateDashboardKeyResult(apiClientBio, store.project?.id ?? -1)
+const { mutate: mutateResources } = useUpdateDashboardResources(apiClientBio, store.project?.id ?? -1)
+const { mutate: mutateMethods } = useUpdateDashboardMethods(apiClientBio, store.project?.id ?? -1)
 
 const updateReadme = (value: string): void => {
   mutateReadme(value, {

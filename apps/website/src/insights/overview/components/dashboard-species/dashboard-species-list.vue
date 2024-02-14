@@ -40,7 +40,7 @@
       <router-link
         v-for="item in currentSetOfData"
         :key="item.slug"
-        :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.selectedProject?.slug, speciesSlug: item.slug } }"
+        :to="{ name: ROUTE_NAMES.activityPatterns, params: { projectSlug: store.project?.slug, speciesSlug: item.slug } }"
       >
         <species-card :item="item" />
       </router-link>
