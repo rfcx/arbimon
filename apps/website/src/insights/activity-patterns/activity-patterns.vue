@@ -108,7 +108,7 @@ import ComparisonListComponent from '~/filters/comparison-list/comparison-list.v
 import { INFO_TOPICS } from '~/info/info-page'
 import type { MapDataSet } from '~/maps/types'
 import { ROUTE_NAMES } from '~/router'
-import { useStore } from '~/store'
+import { useProjectUserPermissionsStore, useStore } from '~/store'
 import ActivityPatternsByLocation from './components/activity-patterns-by-location/activity-patterns-by-location.vue'
 import ActivityPatternsByTime from './components/activity-patterns-by-time/activity-patterns-by-time.vue'
 import type { SpotlightTimeDataset } from './components/activity-patterns-by-time/types'
@@ -145,9 +145,10 @@ const speciesInformation: Ref<SpeciesInProjectTypes['light'] | null> = ref(null)
 const speciesCalls: Ref<Array<TaxonSpeciesCallTypes['light']> > = ref([])
 const speciesPhotos: Ref<Array<TaxonSpeciesPhotoTypes['light']>> = ref([])
 const isLocationRedacted: Ref<boolean> = ref(false)
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const isProjectMember = computed(() => {
-  return store.selectedProject?.isMyProject ?? false
+  return projectUserPermissionsStore.isMember
 })
 
 const isViewingAsGuest = computed(() => route.query.guest === '1')

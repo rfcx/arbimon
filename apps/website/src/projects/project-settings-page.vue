@@ -61,7 +61,7 @@
         </div>
       </div>
       <div
-        v-if="isProjectMember && !isViewingAsGuest"
+        v-if="projectUserPermissionsStore.isMember && !isViewingAsGuest"
         class="flex flex-row-reverse items-center gap-4"
       >
         <button
@@ -152,7 +152,6 @@ const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
-const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
 const isViewingAsGuest = computed(() => {
   return route.query.guest === '1' || projectUserPermissionsStore.isMemberGuest
 })

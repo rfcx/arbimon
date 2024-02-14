@@ -64,7 +64,7 @@ import type { ColoredFilter } from '~/filters'
 import { ComparisonListComponent, filterToQuery } from '~/filters'
 import { INFO_TOPICS } from '~/info/info-page'
 import type { MapDataSet } from '~/maps/types'
-import { useStore } from '~/store'
+import { useProjectUserPermissionsStore, useStore } from '~/store'
 import type { SpeciesDataset } from './components/activity-overview-by-species/activity-overview-by-species'
 
 const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
@@ -82,8 +82,9 @@ const tableDatasets = ref<SpeciesDataset[]>([])
 const exportDatasets = ref<ActivityOverviewDataBySpecies[][]>([])
 const isLocationRedacted = ref<boolean>(true)
 const loading = ref<boolean>(true)
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
-const isProjectMember = computed(() => store?.selectedProject?.isMyProject)
+const isProjectMember = computed(() => projectUserPermissionsStore.isMember)
 const isViewingAsGuest = computed(() => route.query.guest === '1')
 const hasData = computed(() => exportDatasets.value.length > 0)
 const infoTopic = ref(INFO_TOPICS.activity)

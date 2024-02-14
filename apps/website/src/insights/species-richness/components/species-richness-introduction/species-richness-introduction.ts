@@ -9,9 +9,10 @@ import { apiClientKey, storeKey } from '@/globals'
 import { downloadCsvReports } from '@/insights/species-richness/csv'
 import { type ColoredFilter, filterToQuery } from '~/filters'
 import { INFO_TOPICS } from '~/info/info-page'
-import { type BiodiversityStore } from '~/store'
+import { type BiodiversityStore, useProjectUserPermissionsStore } from '~/store'
 
 const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 export default class SpeciesRichnessIntroduction extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
@@ -27,7 +28,7 @@ export default class SpeciesRichnessIntroduction extends Vue {
   }
 
   get isProjectMember (): boolean {
-    return this.store?.selectedProject?.isMyProject ?? false
+    return projectUserPermissionsStore.isMember
   }
 
   get isViewingAsGuest (): boolean {

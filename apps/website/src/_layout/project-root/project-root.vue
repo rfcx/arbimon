@@ -1,5 +1,5 @@
 <template>
-  <landing-navbar v-if="!isProjectMember || isViewingAsGuest" />
+  <landing-navbar v-if="!projectUserPermissionsStore.isMember || isViewingAsGuest" />
   <sidebar v-else />
   <div
     v-if="store.selectedProject"
@@ -17,6 +17,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { useProjectUserPermissionsStore } from '~/store'
 import { useStore } from '../../_services/store'
 import InvalidProjectComponent from '../components/invalid-project/invalid-project.vue'
 import LandingNavbar from '../components/landing-navbar/landing-navbar.vue'
@@ -25,7 +26,7 @@ import Sidebar from '../components/side-bar/side-bar.vue'
 
 const store = useStore()
 const route = useRoute()
-const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const isViewingAsGuest = computed(() => {
   return route.query.guest === '1'

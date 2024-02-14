@@ -178,7 +178,7 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
-const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
+const isProjectMember = computed(() => projectUserPermissionsStore.isMember)
 const isViewingAsGuest = computed(() => {
   return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
 })

@@ -88,16 +88,15 @@ import { useRoute } from 'vue-router'
 
 import { metricValue } from '@rfcx-bio/utils/number'
 
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useProjectUserPermissionsStore } from '~/store'
 import { type Stat } from '../types'
 
 const props = defineProps<{stat: Stat}>()
 
-const store = useStore()
 const route = useRoute()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
-const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
+const isProjectMember = computed(() => projectUserPermissionsStore.isMember)
 const isViewingAsGuest = computed(() => {
   return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
 })
