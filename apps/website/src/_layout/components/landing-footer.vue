@@ -125,7 +125,7 @@
         </div>
       </div>
       <div class="sm:flex sm:items-center sm:justify-between mt-10 py-4">
-        <span class="text-util-gray-02 text-xs sm:text-center font-eyebrow">© 2024 <a
+        <span class="text-util-gray-02 text-xs sm:text-center font-eyebrow">© {{ new Date().getFullYear() }} <a
           href="https://rfcx.org"
           class="hover:underline font-eyebrow"
         >Rainforest Connection™</a>
