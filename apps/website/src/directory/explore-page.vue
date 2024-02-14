@@ -6,6 +6,7 @@
       :data="projectResults"
       :selected-project-id="selectedProjectId ?? undefined"
       :selected-tab="selectedTab"
+      :is-loading="isLoading"
       class="absolute z-40 h-100vh"
       @emit-selected-project="onEmitSelectedProject"
       @emit-search="onEmitSearch"
