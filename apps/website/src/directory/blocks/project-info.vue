@@ -181,9 +181,7 @@
         label="Stakeholders"
         name="stakeholders"
       >
-        <div
-          v-if="stakeholders?.organizations && !stakeholderError"
-        >
+        <div v-if="shouldShowStakeholdersContent">
           <div
             class="grid mt-4"
             style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
@@ -206,7 +204,7 @@
     </el-tabs>
     <private-project-tag
       v-if="!project?.isPublished"
-      class="justify-self-end "
+      class="justify-self-end"
     />
   </div>
 </template>
@@ -268,6 +266,12 @@ const isAboutTabEditing = ref(false)
 
 const isKeyResultTabViewMored = ref(false)
 const isKeyResultTabEditing = ref(false)
+
+const shouldShowStakeholdersContent = computed(() => {
+  const hasOrganizations = (stakeholders.value?.organizations && stakeholders.value?.organizations.length > 0) ?? false
+  const hasUsers = (stakeholders.value?.users && stakeholders.value?.users.length > 0) ?? false
+  return (hasUsers || hasOrganizations) && !stakeholderError.value
+})
 
 watch(() => props.projectId, () => {
   profileRefetch()
