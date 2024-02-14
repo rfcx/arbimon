@@ -227,13 +227,14 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { authClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { useStore } from '~/store'
+import { useProjectUserPermissionsStore, useStore } from '~/store'
 
 const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 const supportLink = ref('https://help.arbimon.org/')
 
 const auth = inject(authClientKey) as Auth0Client
 const store = useStore()
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 // TODO: pass the link / nav menus in as props
 const arbimonLink = computed(() => {
@@ -250,7 +251,7 @@ type Item = { title: string, iconRaw?: string, public?: boolean, visibleConditio
 
 const items = computed(() => {
   // TODO Correctly identify my projects
-  return (store.selectedProject?.slug === 'puerto-rico-island-wide' || (store.selectedProject?.isMyProject ?? false)) ? allItems : allItems.filter(i => i.public)
+  return (store.selectedProject?.slug === 'puerto-rico-island-wide' || projectUserPermissionsStore.isMember) ? allItems : allItems.filter(i => i.public)
 })
 
 const allItems: Item[] = [

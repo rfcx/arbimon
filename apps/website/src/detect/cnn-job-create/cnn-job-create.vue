@@ -135,13 +135,14 @@ import SitePicker from '@/_services/picker/site-picker.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
 import { apiClientCoreKey, apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { useStore } from '~/store'
+import { useProjectUserPermissionsStore, useStore } from '~/store'
 import { useClassifiers } from '../_composables/use-classifiers'
 import { useDetectRecording } from '../_composables/use-detect-recording'
 import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 
 const router = useRouter()
 const store = useStore()
+const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 // Fields
 const job: ClassifierJobCreateConfiguration = reactive({
@@ -169,13 +170,13 @@ const hasProjectPermission = ref(false)
 onMounted(() => {
   job.projectIdCore = store.selectedProject?.idCore ?? null
   project.projectId = store.selectedProject?.id.toString() ?? '-1'
-  hasProjectPermission.value = store.selectedProject?.isMyProject ?? false
+  hasProjectPermission.value = projectUserPermissionsStore.isMember
 })
 
 watch(() => store.selectedProject, () => {
   job.projectIdCore = store.selectedProject?.idCore ?? null
   project.projectId = store.selectedProject?.id.toString() ?? '-1'
-  hasProjectPermission.value = store.selectedProject?.isMyProject ?? false
+  hasProjectPermission.value = projectUserPermissionsStore.isMember
 })
 
 // Internal data

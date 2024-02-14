@@ -124,7 +124,6 @@ const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const selectedProject = computed(() => store.selectedProject)
 const selectedProjectId = computed(() => store.selectedProject?.id)
 const selectedProjectSlug = computed(() => store.selectedProject?.slug)
-const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
 const isViewingAsGuest = computed(() => {
   return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
 })
@@ -170,7 +169,7 @@ const analyses = computed(() => [
 ])
 
 const hasPermissionAnalyses = computed<boolean>(() => {
-  return isProjectMember.value && !isViewingAsGuest.value && projectUserPermissionsStore.role !== 'entry' && projectUserPermissionsStore.role !== 'user'
+  return projectUserPermissionsStore.isMember && !isViewingAsGuest.value && projectUserPermissionsStore.role !== 'entry' && projectUserPermissionsStore.role !== 'user'
 })
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`

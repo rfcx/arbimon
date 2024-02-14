@@ -79,7 +79,7 @@ const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const dashboardStore = useDashboardStore()
 
 // view type
-const isProjectMember = computed(() => store.selectedProject?.isMyProject ?? false)
+const isProjectMember = computed(() => projectUserPermissionsStore.isMember)
 const isViewingAsGuest = computed(() => {
   return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
 })
