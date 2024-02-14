@@ -66,7 +66,7 @@
       >
         <button
           :disabled="isSaving || !isUserHasFullAccess"
-          class="self-end inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
+          class="inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
           data-tooltip-target="projectSettingsSaveTooltipId"
           data-tooltip-placement="bottom"
           @click.prevent="save"
