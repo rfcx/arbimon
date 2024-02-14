@@ -6,55 +6,51 @@
     aria-labelledby="drawer-navigation-label"
   >
     <div class="h-full overflow-y">
-      <div class="p-6 relative sticky top-0 bg-moss border-b-1 border-util-gray-02">
-        <form class="w-full">
-          <div class="relative">
-            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-              <span class="p-2">🔍</span>
+      <ul v-infinite-scroll="loadMore">
+        <li class="p-6 relative sticky top-0 bg-moss border-b-1 border-util-gray-02">
+          <form class="w-full">
+            <div class="relative">
+              <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <span class="p-2">🔍</span>
+              </div>
+              <input
+                id="searchInput"
+                v-model="searchKeyword"
+                name="searchInput"
+                type="text"
+                class="input-field text-insight shadow-lg shadow-frequency/10"
+                placeholder="Search for projects"
+                @input="emitSearch(searchKeyword)"
+                @focus="isSearchBoxFocused = true"
+                @blur="isSearchBoxFocused = false"
+              >
             </div>
-            <input
-              id="searchInput"
-              v-model="searchKeyword"
-              name="searchInput"
-              type="text"
-              class="input-field text-insight shadow-lg shadow-frequency/10"
-              placeholder="Search for projects"
-              @input="emitSearch(searchKeyword)"
-              @focus="isSearchBoxFocused = true"
-              @blur="isSearchBoxFocused = false"
+            <label
+              v-if="isSearchBoxFocused"
+              class="block mt-4 text-xs font-medium text-fog"
             >
-          </div>
-          <label
-            v-if="isSearchBoxFocused"
-            class="block mt-4 text-xs font-medium text-fog"
-          >
-            Search for project names, summary, countries or objectives.
-          </label>
-        </form>
-      </div>
-      <ul
-        v-if="false"
-        class="p-6 border-b border-chirp text-frequency flex flex-row gap-10"
-      >
-        <li
-          class="cursor-pointer font-medium"
-          :class="{'border-frequency border-b-4': selectedTab === 'All'}"
-          @click="emitSwapTab('All')"
-        >
-          All
+              Search for project names, summary, countries or objectives.
+            </label>
+          </form>
         </li>
-        <li
-          class="cursor-pointer font-medium"
-          :class="{'border-frequency border-b-4': selectedTab === 'My projects'}"
-          @click="emitSwapTab('My projects')"
-        >
-          My projects
+        <li v-if="false">
+          <ul class="p-6 border-b border-chirp text-frequency flex flex-row gap-10">
+            <li
+              class="cursor-pointer font-medium"
+              :class="{'border-frequency border-b-4': selectedTab === 'All'}"
+              @click="emitSwapTab('All')"
+            >
+              All
+            </li>
+            <li
+              class="cursor-pointer font-medium"
+              :class="{'border-frequency border-b-4': selectedTab === 'My projects'}"
+              @click="emitSwapTab('My projects')"
+            >
+              My projects
+            </li>
+          </ul>
         </li>
-      </ul>
-      <ul
-        v-infinite-scroll="loadMore"
-        :infinite-scroll-distance="40"
-      >
         <project-list-item
           v-for="p in dataWithMetrics"
           :key="p.id"
