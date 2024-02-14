@@ -22,7 +22,7 @@
           <div class="flex items-start justify-between">
             <div class="rounded-full bg-util-gray-01 p-3">
               <icon-fa-trash
-                class="text-flamingo"
+                class="text-[#CC1E3D]"
               />
             </div>
             <button
