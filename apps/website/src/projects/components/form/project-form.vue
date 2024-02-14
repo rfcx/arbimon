@@ -143,6 +143,17 @@ onMounted(() => {
   }
 })
 
+watch(() => props.dateStart, (dateStartValue) => {
+  const start = dayjs(dateStartValue).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+  startDate.value = start
+})
+
+watch(() => props.dateEnd, (dateEndValue) => {
+  if (dateEndValue === null) return
+  const end = dayjs(dateEndValue).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+  endDate.value = end
+})
+
 watch(name, () => {
   emit('emitUpdateValue', value.value)
 })
