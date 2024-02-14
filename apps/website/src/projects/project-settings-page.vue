@@ -122,7 +122,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import { type AxiosInstance } from 'axios'
+import { type AxiosError, type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -295,7 +295,13 @@ const updateSettings = () => {
       hasFailed.value = true
       lastUpdated.value = false
       errorMessage.value = DEFAULT_ERROR_MSG
-      console.info(e)
+
+      const error = e as AxiosError<Error>
+      if (error.response?.data !== undefined) {
+        if (error.response.data.message.includes('URL') && error.response.data.message.includes('redundant')) {
+          errorMessage.value = DEFAULT_ERROR_MSG + ' This URL is currently in use. Please try again.'
+        }
+      }
     }
   })
   if (profileImageForm.value !== undefined) {
