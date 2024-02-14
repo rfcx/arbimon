@@ -36,9 +36,15 @@
           </div>
           <div class="mt-6 w-full text-cloud">
             <h2>Delete member?</h2>
-            <p class="mt-2">
+            <p
+              v-if="!isDeleting"
+              class="mt-2"
+            >
               Are you sure you want to delete this member? You can always add them again.
             </p>
+          </div>
+          <div v-if="isDeleting">
+            <icon-fas-spinner class="my-6 mx-auto animate-spin" />
           </div>
           <div
             v-if="isError"
