@@ -2,10 +2,15 @@
   <div class="flex flex-row justify-between items-center border-b-1 border-util-gray-03 pb-4">
     <div class="flex flex-row justify-start items-center">
       <img
+        v-if="user.image"
         :src="user.image"
         class="h-8 w-8 self-center rounded-full"
         alt="User image"
       >
+      <div
+        v-else
+        class="h-8 w-8 bg-util-gray-03 rounded-full"
+      />
       <div class="ml-3 flex flex-col justify-start">
         <span
           class="font-bold tracking-tight line-clamp-2 text-gray-900 dark:text-insight"
@@ -28,12 +33,12 @@
         {{ getUserRoleName() }}
       </p>
       <p
-        v-if="user.roleId !== 4 && projectUserPermissionsStore.isMemberGuest"
+        v-else-if="projectUserPermissionsStore.isMemberGuest"
       >
         {{ getUserRoleName() }}
       </p>
       <button
-        v-if="user.roleId !== 4 && !projectUserPermissionsStore.isMemberGuest"
+        v-else-if="!projectUserPermissionsStore.isMemberGuest"
         :id="`dropdownRoleButton-${user.email}`"
         :data-dropdown-toggle="`dropdownRole-${user.email}`"
         data-dropdown-placement="bottom"
@@ -94,7 +99,7 @@
           <li
             v-for="role in roles.filter(r => r.id !== 4)"
             :key="role.id"
-            class="flex flex-row justify-start items-center p-1 m-0 cursor-pointer hover:bg-chirp hover:text-pitch hover:(border-chirp rounded-lg)"
+            class="flex flex-row justify-start items-center p-1 m-0 cursor-pointer"
             @click="$emit('emitChangeUserRole', user.email, getRoleById(role.id)); closeMenu()"
           >
             <span class="w-8">
