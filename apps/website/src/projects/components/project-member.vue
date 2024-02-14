@@ -94,7 +94,7 @@
           <li
             v-for="role in roles.filter(r => r.id !== 4)"
             :key="role.id"
-            class="flex flex-row justify-start items-center p-1 m-0 cursor-pointer"
+            class="flex flex-row justify-start items-center p-1 m-0 cursor-pointer hover:bg-chirp hover:text-pitch hover:(border-chirp rounded-lg)"
             @click="$emit('emitChangeUserRole', user.email, getRoleById(role.id)); closeMenu()"
           >
             <span class="w-8">
