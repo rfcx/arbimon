@@ -31,10 +31,15 @@
     </div>
     <div>
       <img
+        v-if="projectImage"
         :src="projectImage"
         alt="Project photo"
         class="w-95 h-45 aspect-video object-cover rounded-2xl bg-util-gray-03"
       >
+      <div
+        v-else
+        class="w-95 h-45 aspect-video object-cover rounded-2xl bg-util-gray-03"
+      />
     </div>
   </div>
 </template>
