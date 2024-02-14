@@ -11,7 +11,12 @@
           <form class="w-full">
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <span class="p-2">🔍</span>
+                <span class="p-2">
+                  <icon-custom-ic-search
+                    class="w-5 h-5 text-insight stroke-insight"
+                    storke="white"
+                  />
+                </span>
               </div>
               <input
                 id="searchInput"

@@ -76,6 +76,7 @@ declare module 'vue' {
     IconCustomIcErrorMessage: typeof import('~icons/custom-icons/ic-error-message')['default']
     IconCustomIcInfo: typeof import('~icons/custom-icons/ic-info')['default']
     IconCustomIcPlus: typeof import('~icons/custom-icons/ic-plus')['default']
+    IconCustomIcSearch: typeof import('~icons/custom-icons/ic-search')['default']
     IconCustomIcUser: typeof import('~icons/custom-icons/ic-user')['default']
     IconCustomIcWarning: typeof import('~icons/custom-icons/ic-warning')['default']
     IconCustomImageSlash: typeof import('~icons/custom-icons/image-slash')['default']
