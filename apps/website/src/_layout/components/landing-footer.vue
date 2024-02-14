@@ -111,7 +111,7 @@
           </div>
         </div>
         <div class="mt-8 md:mt-0">
-          <span class="block mb-4 text-gray-900 dark:text-insight text-base font-medium">In collaboration with</span>
+          <span class="block mb-4 text-gray-900 dark:text-insight text-base font-medium">An initiative by</span>
           <span class="sr-only">Rainforest Connection™</span>
           <a
             href="https://rfcx.org/"
@@ -125,7 +125,7 @@
         </div>
       </div>
       <div class="sm:flex sm:items-center sm:justify-between mt-10 py-4">
-        <span class="text-util-gray-02 text-xs sm:text-center font-eyebrow">© 2023 <a
+        <span class="text-util-gray-02 text-xs sm:text-center font-eyebrow">© 2024 <a
           href="https://rfcx.org"
           class="hover:underline font-eyebrow"
         >Rainforest Connection™</a>
