@@ -9,9 +9,15 @@
       <div class="p-6 relative sticky top-0 bg-moss border-b-1 border-util-gray-02">
         <form class="w-full">
           <div class="relative">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+              <span class="p-2">🔍</span>
+            </div>
             <input
+              id="searchInput"
               v-model="searchKeyword"
-              class="input-field text-insight"
+              name="searchInput"
+              type="text"
+              class="input-field text-insight shadow-lg shadow-frequency/10"
               placeholder="Search for projects"
               @input="emitSearch(searchKeyword)"
               @focus="isSearchBoxFocused = true"
@@ -129,3 +135,9 @@ const emitSearch = (keyword: string) => {
 }
 
 </script>
+
+<style scoped lang="scss">
+#searchInput {
+  padding-inline-start: 2rem;
+}
+</style>
