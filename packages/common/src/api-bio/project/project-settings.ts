@@ -45,7 +45,7 @@ export type ProjectInfoResponse = Pick<Project, 'name'>
     isPublic: boolean
     countryCodes?: string[]
     readme?: string
-    keyResult?: string
+    keyResults?: string
     metrics?: ProjectMetrics
     image?: string
     richnessByTaxon?: ApiStack
