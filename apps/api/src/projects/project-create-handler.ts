@@ -8,11 +8,14 @@ export const projectCreateHandler: Handler<ProjectCreateResponse, unknown, unkno
   const project = req.body
   const dateStart = project.dateStart ? new Date(project.dateStart) : undefined
   const dateEnd = project.dateEnd ? new Date(project.dateEnd) : undefined
+  if (dateStart === undefined && dateEnd !== undefined) {
+    throw new Error('Date start is required if date end is set')
+  }
   if (dateStart && dateEnd && dateStart > dateEnd) {
     throw new Error('Date start must be before date end')
   }
 
-  const [slug, id] = await createProject(project, req.userId as number, req.headers.authorization ?? '')
+  const [slug, id] = await createProject({ ...project, dateStart, dateEnd }, req.userId as number, req.headers.authorization ?? '')
   res.statusCode = 201
   void res.header('Location', `/projects/${id}`)
   return { slug }

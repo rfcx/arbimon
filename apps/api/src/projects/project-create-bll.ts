@@ -1,6 +1,3 @@
-import dayjs from 'dayjs'
-
-import { type ProjectCreateRequest } from '@rfcx-bio/common/api-bio/project/project-create'
 import { RANKING_PRIMARY } from '@rfcx-bio/common/roles'
 
 import { createProject as createProjectInCore, getProject as getProjectInCore } from '~/api-core/api-core'
@@ -8,7 +5,16 @@ import { createProject as createProjectLocal } from './dao/project-create-dao'
 import { create as createProjectMember } from './dao/project-member-dao'
 import { createProjectProfile } from './dao/project-profile-dao'
 
-export const createProject = async (request: ProjectCreateRequest, userId: number, token: string): Promise<[string, number]> => {
+interface ProjectCreateRequestParsed {
+  name: string
+  hidden?: boolean
+  objectives?: string[]
+  associatedOrganizations?: string
+  dateStart?: Date
+  dateEnd?: Date // undefined => ongoing
+}
+
+export const createProject = async (request: ProjectCreateRequestParsed, userId: number, token: string): Promise<[string, number]> => {
   // Create in Core
   const idCore = await createProjectInCore({ name: request.name, is_public: false }, token)
   const { external_id: idArbimon } = await getProjectInCore(idCore, token)
@@ -19,7 +25,8 @@ export const createProject = async (request: ProjectCreateRequest, userId: numbe
 
   // Create project profile
   const { objectives, dateStart, dateEnd } = request
-  await createProjectProfile({ locationProjectId: id, objectives, dateStart: dayjs(dateStart).toDate(), dateEnd: dateEnd ? dayjs(dateEnd).toDate() : null })
+
+  await createProjectProfile({ locationProjectId: id, objectives, dateStart, dateEnd })
 
   // Set current user as owner
   await createProjectMember({ locationProjectId: id, userId, role: 'owner', ranking: RANKING_PRIMARY })
