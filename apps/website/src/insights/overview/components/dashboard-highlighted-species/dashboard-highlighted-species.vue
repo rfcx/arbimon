@@ -34,7 +34,7 @@
         class="btn btn-secondary group w-full disabled:hover:btn-disabled disabled:btn-disabled"
         data-modal-target="species-highlighted-modal"
         data-modal-toggle="species-highlighted-modal"
-        data-tooltip-target="selectSpeciesTooltipId"
+        :data-tooltip-target="!canEdit ? 'selectSpeciesTooltipId' : null"
         data-tooltip-placement="bottom"
         type="button"
         :disabled="!canEdit"
