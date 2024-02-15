@@ -252,7 +252,7 @@ const { mutate: mutateNewOrganization } = useCreateOrganization(apiClientBio)
 const arbimonLink = computed(() => {
   const selectedProjectSlug = store.selectedProject?.slug
   if (selectedProjectSlug === undefined) return ''
-  else return `${import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL}/project/${selectedProjectSlug}/settings/users`
+  else return `${import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL}/p/${selectedProjectSlug}/users`
 })
 
 const checkAllUsersSelection = computed(() => {
