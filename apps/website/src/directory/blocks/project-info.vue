@@ -95,7 +95,7 @@
           <numeric-metric
             tooltip-id="total-detections"
             title="Total detections:"
-            tooltip-text="Total number of species calls detected."
+            tooltip-text="Total number of species calls detected"
             :value="profile?.metrics?.totalDetections ?? 0"
             icon-name="ft-search-lg"
             class="flex-1"
