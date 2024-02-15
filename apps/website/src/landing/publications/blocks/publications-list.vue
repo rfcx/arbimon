@@ -16,6 +16,10 @@
         />
       </aside>
       <main class="md:col-span-8 mt-8 md:mt-20 mx-5">
+        <icon-custom-ic-loading
+          v-if="isLoading"
+          class="block bg-none w-8 h-8 mx-auto mt-6"
+        />
         <svg
           v-if="isLoading"
           xmlns="http://www.w3.org/2000/svg"
