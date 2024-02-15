@@ -103,7 +103,7 @@
           <numeric-metric
             tooltip-id="total-recordings"
             :tooltip-text="`Total minutes of recordings captured`"
-            :title="`Total recordings (minutes):`"
+            :title="`Minutes of recordings:`"
             :value="totalRecordingsMin"
             icon-name="ft-mic-lg"
             class="flex-1"
