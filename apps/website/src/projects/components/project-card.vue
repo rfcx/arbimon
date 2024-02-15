@@ -1,6 +1,7 @@
 <template>
   <router-link
     :to="{ name: ROUTE_NAMES.dashboard, params: { projectSlug: project.slug }}"
+    @click="$emit('on-click-project', true)"
     class="block flex flex-col justify-between p-6 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-moss dark:border-util-gray-03 dark:hover:bg-util-gray-04 h-auto"
   >
     <div>
@@ -71,7 +72,8 @@ import { ROUTE_NAMES } from '~/router'
 import TextTooltip from '../components/text-tooltip.vue'
 import { masterObjectiveTypes } from '../types'
 
-const props = defineProps<{project: Omit<Project, 'idArbimon'>}>()
+const props = defineProps<{project: Omit<Project, 'idArbimon'> }>()
+defineEmits<{(e: 'on-click-project', value: boolean): void}>()
 
 const countries = computed(() => {
   return props.project.countries ?? []

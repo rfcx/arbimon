@@ -22,7 +22,7 @@
         </div>
         <div>
           <div
-            v-if="isLoading && projects.length === 0"
+            v-if="(isLoading && projects.length === 0) || showLoading"
             class="fixed inset-0 flex flex-col justify-center items-center"
           >
             <div class="animate-spin h-10 w-10">
@@ -49,13 +49,14 @@
           </div>
         </div>
         <div
-          v-if="projects.length !== 0"
+          v-if="projects.length !== 0 && !showLoading"
           class="grid grid-cols-1 md:grid-cols-2 gap-4 py-8 lg:gap-6 lg:py-16 lg:grid-cols-3"
         >
           <ProjectCard
             v-for="project in projects"
             :key="project.id"
             :project="project"
+            @on-click-project="onProjectClicked"
           />
         </div>
         <div class="mx-auto max-w-screen-md text-center">
@@ -127,6 +128,7 @@ const projects = computed(() => store.myProjects)
 const hasFetchedAll = ref(false)
 const LIMIT = 20
 const isLoading = ref(false)
+const showLoading = ref(false)
 const hasFailed = ref(false)
 
 const loadMoreProject = async (): Promise<void> => {
@@ -151,6 +153,10 @@ const fetchProjects = async (offset:number, limit: number): Promise<void> => {
     isLoading.value = false
     hasFailed.value = true
   }
+}
+
+const onProjectClicked = (value: boolean) => {
+  showLoading.value = value
 }
 
 </script>
