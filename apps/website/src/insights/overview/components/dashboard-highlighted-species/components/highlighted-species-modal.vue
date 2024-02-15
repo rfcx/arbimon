@@ -367,7 +367,13 @@ const saveHighlightedSpecies = async (): Promise<void> => {
 }
 
 const deleteHighlightedSpecies = async (): Promise<void> => {
-  mutateDeleteSpecie({ species: speciesToRemove.value })
+  mutateDeleteSpecie({ species: speciesToRemove.value }, {
+    onSuccess: async () => {
+      if (!newSpeciesToAdd.value.length) {
+        emit('emitClose')
+      }
+    }
+  })
 }
 
 const addHighlightedSpecies = async (): Promise<void> => {
