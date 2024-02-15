@@ -8,7 +8,7 @@
         <span class="font-medium">Delete project</span>
         <icon-i-info
           tooltip-id="project-delete"
-          :tooltip-text="'Delete this project permanently'"
+          :tooltip-text="'Delete this project permanently.'"
         />
       </div>
       <div class="flex flex-row items-center mt-4">

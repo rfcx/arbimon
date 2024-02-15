@@ -77,7 +77,7 @@
         <div class="p-4">
           <numeric-metric
             tooltip-id="deployment-sites"
-            tooltip-text="Number of sites with recorders deployed"
+            tooltip-text="Number of sites with recorders deployed."
             title="Project sites:"
             :value="profile?.metrics?.totalSites ?? 0"
             icon-name="ft-map-pin-lg"
@@ -86,7 +86,7 @@
           <numeric-metric
             tooltip-id="threatened-species-over-all-species"
             title="Threatened / total species:"
-            tooltip-text="Number of Near Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found"
+            tooltip-text="Number of Near Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
             :value="profile?.metrics?.threatenedSpecies ?? 0"
             :total-value="profile?.metrics?.totalSpecies ?? 0"
             icon-name="ft-actual-bird"
@@ -95,14 +95,14 @@
           <numeric-metric
             tooltip-id="total-detections"
             title="Total detections:"
-            tooltip-text="Total number of species calls detected"
+            tooltip-text="Total number of species calls detected."
             :value="profile?.metrics?.totalDetections ?? 0"
             icon-name="ft-search-lg"
             class="flex-1"
           />
           <numeric-metric
             tooltip-id="total-recordings"
-            :tooltip-text="`Total minutes of recordings captured`"
+            :tooltip-text="`Total minutes of recordings captured.`"
             :title="`Minutes of recordings:`"
             :value="totalRecordingsMin"
             icon-name="ft-mic-lg"
