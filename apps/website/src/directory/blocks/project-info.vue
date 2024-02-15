@@ -159,7 +159,7 @@
         name="keyResult"
       >
         <p
-          v-if="profile?.keyResult"
+          v-if="profile?.keyResults"
           class="pt-4"
         >
           <DashboardMarkdownViewerEditor
@@ -167,7 +167,7 @@
             v-model:is-view-mored="isKeyResultTabViewMored"
             v-model:is-editing="isKeyResultTabEditing"
             :editable="false"
-            :raw-markdown-text="profile?.keyResult"
+            :raw-markdown-text="profile?.keyResults"
             :default-markdown-text="keyResultDefault"
             :is-project-member="false"
             :is-viewing-as-guest="false"
