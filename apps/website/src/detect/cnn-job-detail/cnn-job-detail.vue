@@ -1,27 +1,29 @@
 <template>
-  <job-detail-header />
-  <job-detail-information
-    :is-loading-summary="isLoadingJobSummary"
-    :is-error-summary="isErrorJobSummary"
-    :summary="jobSummary"
-    :is-loading-results="isLoadingJobResults"
-    :is-error-results="isErrorJobResults"
-    :results="jobResults"
-    class="mt-4"
-  />
-  <job-detail-result
-    :is-loading="isLoadingJobResults"
-    :is-error="isErrorJobResults"
-    :data="jobResults"
-    :classifier-id="classifierId"
-    class="mt-4"
-  />
-  <job-detections
-    :is-loading="isLoadingDetections"
-    :is-error="isErrorDetections"
-    :data="detections"
-    class="mt-4"
-  />
+  <section class="max-w-screen-xl pt-20 pl-115px pr-4">
+    <job-detail-header />
+    <job-detail-information
+      :is-loading-summary="isLoadingJobSummary"
+      :is-error-summary="isErrorJobSummary"
+      :summary="jobSummary"
+      :is-loading-results="isLoadingJobResults"
+      :is-error-results="isErrorJobResults"
+      :results="jobResults"
+      class="mt-4"
+    />
+    <job-detail-result
+      :is-loading="isLoadingJobResults"
+      :is-error="isErrorJobResults"
+      :data="jobResults"
+      :classifier-id="classifierId"
+      class="mt-4"
+    />
+    <job-detections
+      :is-loading="isLoadingDetections"
+      :is-error="isErrorDetections"
+      :data="detections"
+      class="mt-4"
+    />
+  </section>
 </template>
 
 <script setup lang="ts">
