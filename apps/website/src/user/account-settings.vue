@@ -216,6 +216,7 @@ import { type AxiosInstance } from 'axios'
 import type { DropdownOptions } from 'flowbite'
 import { Dropdown } from 'flowbite'
 import { type Ref, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
@@ -255,6 +256,7 @@ const dropdownOptions: DropdownOptions = { placement: 'bottom-start', triggerTyp
 const createNewOrganizationLoading = ref(false)
 
 const store = useStore()
+const router = useRouter()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { isLoading: isLoadingProfileData, data: profileData } = useGetProfileData(apiClientBio)
@@ -438,7 +440,9 @@ const saveProfilePhoto = async (): Promise<void> => {
   const form = new FormData()
   form.append('image', imageFileAsBlobType, uploadedPhotoData.value.name)
   mutatePatchProfilePhoto(form, {
-    onSuccess: async () => { }
+    onSuccess: async () => {
+      router.go(0)
+    }
   })
 }
 
