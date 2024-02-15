@@ -5,8 +5,8 @@ import { type LocationProjectUserRole, type UserProfile } from '@rfcx-bio/common
 import { type ProjectRole, getIdByRole, getRoleById } from '@rfcx-bio/common/roles'
 
 import { getSequelize } from '~/db'
-import { getProjectById } from './projects-dao'
 import { fileUrl } from '~/format-helpers/file-url'
+import { getProjectById } from './projects-dao'
 
 const sequelize = getSequelize()
 const { LocationProjectUserRole: LocationProjectUserRoleModel } = ModelRepository.getInstance(sequelize)
