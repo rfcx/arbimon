@@ -80,13 +80,19 @@
                   class="hover:underline"
                 >Help &amp; Support</a>
               </li>
-              <li>
+              <li class="mb-4">
                 <router-link
                   to="/contact"
                   class="hover:underline"
                 >
                   Contact us
                 </router-link>
+              </li>
+              <li>
+                <a
+                  href="http://status.rfcx.org/"
+                  class="hover:underline"
+                >System status</a>
               </li>
             </ul>
           </div>
