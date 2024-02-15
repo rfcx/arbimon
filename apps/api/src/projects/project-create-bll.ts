@@ -19,7 +19,7 @@ export const createProject = async (request: ProjectCreateRequest, userId: numbe
 
   // Create project profile
   const { objectives, dateStart, dateEnd } = request
-  await createProjectProfile({ locationProjectId: id, objectives, dateStart: dayjs(dateStart).toDate(), dateEnd: dayjs(dateEnd).toDate() })
+  await createProjectProfile({ locationProjectId: id, objectives, dateStart: dayjs(dateStart).toDate(), dateEnd: dateEnd ? dayjs(dateEnd).toDate() : null })
 
   // Set current user as owner
   await createProjectMember({ locationProjectId: id, userId, role: 'owner', ranking: RANKING_PRIMARY })
