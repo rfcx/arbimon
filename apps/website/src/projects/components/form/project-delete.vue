@@ -7,8 +7,8 @@
       <div class="flex flex-row">
         <span class="font-medium">Delete project</span>
         <icon-i-info
-          tooltip-id="project-settings-project-image"
-          :tooltip-text="'Delete project'"
+          tooltip-id="project-delete"
+          :tooltip-text="'Delete this project permanently'"
         />
       </div>
       <div class="flex flex-row items-center mt-4">
@@ -42,7 +42,7 @@
                 <div class="flex items-start justify-between">
                   <div class="rounded-full bg-util-gray-01 p-3">
                     <icon-fa-trash
-                      class="text-flamingo"
+                      class="text-[#CC1E3D]"
                     />
                   </div>
                   <button
