@@ -21,7 +21,7 @@
               <input
                 id="searchInput"
                 v-model="searchKeyword"
-                name="searchInput"
+                name="search"
                 type="text"
                 class="input-field text-insight shadow-lg shadow-frequency/10"
                 placeholder="Search for projects"
@@ -75,20 +75,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import { useProjectDirectoryStore } from '~/store'
 import ProjectListItem from '../components/project-list-item.vue'
 import type { ProjectLight, ProjectProfileWithMetrics, Tab } from '../data/types'
 
-const props = defineProps<{ data: ProjectLight[], selectedProjectId: number | undefined, selectedTab: Tab, isLoading: boolean }>()
+const props = defineProps<{ data: ProjectLight[], selectedProjectId: number | undefined, selectedTab: Tab, isLoading: boolean, initialSearch: string }>()
 const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void, (e: 'emitLoadMore'): void, (e: 'emitSearch', keyword: string): void, (e: 'emitSwapTab', tab: Tab): void
 }>()
 
 const pdStore = useProjectDirectoryStore()
 
 const isSearchBoxFocused = ref(false)
-const searchKeyword = ref('')
+const searchKeyword = ref(props.initialSearch)
 
 const dataWithMetrics = computed((): ProjectProfileWithMetrics[] => {
   if (props.selectedTab === 'All' && searchKeyword.value === '') {
@@ -114,6 +114,11 @@ const emitSelectedProject = (projectId: number) => {
 const emitSearch = (keyword: string) => {
   emit('emitSearch', keyword)
 }
+
+watch(() => props.initialSearch, (newVal) => {
+  searchKeyword.value = newVal
+  emitSearch(newVal)
+})
 
 </script>
 
