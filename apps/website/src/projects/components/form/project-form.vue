@@ -147,6 +147,8 @@ watch(() => props.dateStart, (dateStartValue) => {
   if (!dateStartValue) return
   const start = dayjs(dateStartValue).format('YYYY-MM-DD') + 'T00:00:00.000Z'
   startDate.value = start
+
+  onGoing.value = !props.dateEnd
 })
 
 watch(() => props.dateEnd, (dateEndValue) => {
