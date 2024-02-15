@@ -140,11 +140,10 @@ export function getDateRange (startRange: Dayjs, endRange: Dayjs, unit: 'month' 
   return ranges
 }
 
-export async function getMonthCSVData (startDate: Dayjs, endDate: Dayjs, dataset: SpotlightDetectionDataByTime): Promise<string> {
+export async function getMonthCSVData (startDate: Dayjs, endDate: Dayjs, dataset: SpotlightDetectionDataByTime<string>): Promise<string> {
   const { detection, detectionFrequency } = dataset
   const monthRanges = getDateRange(startDate.startOf('month'), endDate.endOf('month'), 'month', 'MM/YYYY')
-  const dataAsJson = monthRanges.map(monthString => {
-    const month = Number(monthString)
+  const dataAsJson = monthRanges.map(month => {
     return {
       month,
       detections: detection[month] ?? 0,
