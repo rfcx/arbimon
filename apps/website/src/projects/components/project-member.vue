@@ -42,7 +42,7 @@
         :id="`dropdownRoleButton-${user.email}`"
         :data-dropdown-toggle="`dropdownRole-${user.email}`"
         data-dropdown-placement="bottom"
-        :data-tooltip-target="`${user.userId}changeUserRoleTooltipId`"
+        :data-tooltip-target="!editable && !projectUserPermissionsStore.isMemberGuest ? `${user.userId}changeUserRoleTooltipId` : null"
         data-tooltip-placement="bottom"
         class="bg-echo text-frequency border-1 border-util-gray-03 rounded-lg flex flex-row items-center py-1 px-2 disabled:hover:btn-disabled disabled:btn-disabled hover:bg-chirp hover:text-pitch hover:border-chirp"
         :disabled="!editable"

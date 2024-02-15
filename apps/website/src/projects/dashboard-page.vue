@@ -54,7 +54,7 @@
             class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3 disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
             type="button"
             :title="'Create New Analysis Job'"
-            data-tooltip-target="analysesTooltipId"
+            :data-tooltip-target="!hasPermissionAnalyses ? 'analysesTooltipId' : null"
             data-tooltip-placement="bottom"
             :disabled="!hasPermissionAnalyses"
             @click="toggleAnalysisSelector(true)"

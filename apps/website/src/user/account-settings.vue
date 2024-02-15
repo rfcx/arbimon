@@ -87,7 +87,6 @@
             :class="{ 'rounded-b-lg': orgsSearchResult?.length === 0 || dropdownStatus !== 'search' }"
             type="text"
             placeholder="Type to search organizations"
-            data-dropdown-toggle="dropdown"
             @input="organizationSearchInputChanged"
             @blur="onBlur"
             @click="openOrganizationSearch()"
