@@ -32,7 +32,7 @@
           <div class="w-full text-black mapboxgl-map">
             <map-base-component
               :dataset="mapDataset()"
-              data-key="refactorThis"
+              data-key="Total recordings"
               :loading="false"
               :get-popup-html="getPopupHtml"
               map-export-name="dashboard-sites"
@@ -201,7 +201,7 @@ function mapDataset (): MapDataSet {
         latitude,
         longitude,
         values: {
-          [MAP_KEY_THAT_SHOULD_NOT_EXIST]: siteName,
+          'Site name': siteName,
           'Total recordings': findTotalRecordings(id),
           'Days with recordings': findDaysWithRecordings(id)
         }
