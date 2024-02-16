@@ -24,7 +24,7 @@ export const getOpenSearchClient = (): Client => {
 }
 
 export const ensureRequiredIndexInitialized = async (client: Client, index: string, indexSettings?: object): Promise<void> => {
-  const availableIndexes = await client.cat.indices({ format: 'json' }).then(res => res.body) as Array<{ index: string }>
+  const availableIndexes = await client.cat.indices({ format: 'json', v: true }).then(res => res.body) as Array<{ index: string }>
   const isIndexExists = availableIndexes.find(ai => ai.index === index) !== undefined
 
   if (!isIndexExists) {
