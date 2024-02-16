@@ -1,5 +1,8 @@
 <template>
-  <hero-content :hero-image-url="heroImage">
+  <hero-content
+    :hero-image-url="heroImage"
+    class="default-scroll-start"
+  >
     <h1 class="text-giant mb-4 text-gray-900 dark:text-frequency">
       How it works
     </h1>
