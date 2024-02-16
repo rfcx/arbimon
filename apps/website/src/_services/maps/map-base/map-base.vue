@@ -301,7 +301,7 @@ const generateChart = (rezoom = true) => {
   styleChange.value = false
 }
 
-const updateDataSourcesAndLayers = async () => {
+const updateDataSourcesAndLayers = () => {
   const [rawNonZero, rawZero] = partition(props.dataset.data, d => d.values[props.dataKey] === true || (typeof d.values[props.dataKey] === 'number' && Number(d.values[props.dataKey]) > 0))
   if (props.mapStatisticsStyle !== MAPBOX_STYLE_HEATMAP) {
     updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint.value(props.styleNonZero) })
