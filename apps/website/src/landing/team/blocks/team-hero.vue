@@ -7,7 +7,7 @@
       Mission
     </h1>
     <h4 class="text-gray-500 dark:text-insight">
-      We are changing the landscape for bioaccoustic monitoring.
+      We are changing the landscape for bioacoustic monitoring.
     </h4>
   </hero-content>
 </template>
