@@ -107,6 +107,8 @@ const emitSwapTab = (tab: Tab) => {
 }
 
 const loadMore = () => {
+  // hotfix: disable infinite scroll when search keyword is not empty - remove this when explore page supports infinite scroll with search
+  if (searchKeyword.value !== '') return
   emit('emitLoadMore')
 }
 
