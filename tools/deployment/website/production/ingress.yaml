@@ -150,6 +150,32 @@ metadata:
     app: biodiversity-website
 spec:
   rules:
-    - host: arbimon.rfcx.org
-    - host: bio.rfcx.org
     - host: www.arbimon.org
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/server-snippet: |
+      return 301 https://arbimon.org$request_uri;
+  name: arbimon-ingress-arbimonrfcx-redirect
+  namespace: production
+  labels:
+    app: biodiversity-website
+spec:
+  rules:
+    - host: arbimon.rfcx.org
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/server-snippet: |
+      return 301 https://arbimon.org/p$request_uri;
+  name: arbimon-ingress-biorfcx-redirect
+  namespace: production
+  labels:
+    app: biodiversity-website
+spec:
+  rules:
+    - host: bio.rfcx.org
