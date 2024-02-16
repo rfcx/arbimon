@@ -76,7 +76,7 @@
               </li>
               <li class="mb-4">
                 <a
-                  href="https://support.rfcx.org"
+                  href="https://help.arbimon.org/"
                   class="hover:underline"
                 >Help &amp; Support</a>
               </li>
