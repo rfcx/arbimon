@@ -130,6 +130,14 @@ spec:
         backend:
           serviceName: core-api-service
           servicePort: 80
+  - host: media.arbimon.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          serviceName: media-api-service
+          servicePort: 80
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -143,4 +151,5 @@ metadata:
 spec:
   rules:
     - host: arbimon.rfcx.org
+    - host: bio.rfcx.org
     - host: www.arbimon.org
