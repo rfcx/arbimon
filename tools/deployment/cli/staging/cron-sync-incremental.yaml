@@ -4,8 +4,8 @@ metadata:
   name: biodiversity-cli-sync-incremental
   namespace: staging
 spec:
-  # every 15 minutes for testing
-  schedule: '0 * * * *'
+  # every 5 minutes for testing
+  schedule: '*/5 * * * *'
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
