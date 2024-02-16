@@ -133,7 +133,7 @@ const onEmitLoadMore = async () => {
   const total = pdStore.allProjects.length
   if (offset === total) return
   if (isLoading.value) return
-  await fetchSearch('', offset + LIMIT, offset)
+  await fetchSearch('', LIMIT, offset)
 }
 
 onMounted(async () => {
