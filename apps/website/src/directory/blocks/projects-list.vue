@@ -8,7 +8,10 @@
     <div class="h-full overflow-y">
       <ul v-infinite-scroll="loadMore">
         <li class="p-6 relative sticky top-0 bg-moss border-b-1 border-util-gray-02">
-          <form class="w-full">
+          <form
+            class="w-full"
+            autocomplete="off"
+          >
             <div class="relative">
               <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                 <span class="p-2">
