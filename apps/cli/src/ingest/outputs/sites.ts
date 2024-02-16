@@ -32,9 +32,10 @@ const loopUpsert = async (sites: Array<Omit<Site, 'id'>>, sequelize: Sequelize, 
       await ModelRepository.getInstance(sequelize).LocationSite.upsert(site)
     } catch (e: any) {
       const errorMessage = (e instanceof Error) ? e.message : ''
+      const errorName = (e instanceof Error) ? e.name : ''
       failed.push({
         externalId: `${site.idArbimon}`,
-        error: `InsertError: ${errorMessage}`
+        error: `InsertError: ${errorMessage}, ${errorName}, idC:${site.idCore}, idP:${site.locationProjectId}, n:${site.name}`
       })
     }
   }
