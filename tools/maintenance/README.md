@@ -14,8 +14,8 @@
    kubectl delete ingress arbimon-ingress-org-redirect -n production
    kubectl delete ingress arbimon-ingress -n production
    kubectl delete ingress biodiversity-website-ingress-legacy-redirect -n production
-   kubectl delete ingress biodiversity-website -n production
-   kubectl delete ingress biodiversity-website-with-api -n production
+   kubectl delete ingress biodiversity-website-ingress -n production
+   kubectl delete ingress biodiversity-website-with-api-ingress -n production
    ```
 
 3. Deploy
