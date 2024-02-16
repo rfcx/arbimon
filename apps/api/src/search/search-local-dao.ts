@@ -24,7 +24,7 @@ export const getProjectsByQuery = async (keyword?: string, limit?: number, offse
       ...whereOptional,
       status: ['listed', 'published']
     },
-    order: order !== undefined ? order : sequelize.literal('"status" DESC, "LocationProjectMetric.speciesCount" DESC'),
+    order: order !== undefined ? order : sequelize.literal('"status" DESC, "LocationProjectMetric.recordingMinutesCount" DESC'),
     limit: limit !== undefined ? limit : 20,
     offset: offset !== undefined ? offset : 0,
     include: [
@@ -58,7 +58,7 @@ export const getProjectsByQuery = async (keyword?: string, limit?: number, offse
         name: project.name,
         slug: project.slug,
         status: project.status,
-        image: fileUrl(profile?.image) ?? 'static://project/bio-baseline.png',
+        image: fileUrl(profile?.image) ?? '',
         objectives: profile?.objectives ?? [],
         summary: profile?.summary ?? '',
         speciesCount: metric?.speciesCount ?? 0,
