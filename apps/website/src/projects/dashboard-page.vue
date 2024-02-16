@@ -1,4 +1,5 @@
 <template>
+  <BannerWhatNew />
   <div class="bg-gray-50 dark:bg-pitch grid px-4 pl-18 default-scroll-start smooth">
     <section
       class="grid gap-y-20 mx-auto py-20 w-full max-w-screen-xl"
@@ -101,6 +102,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
 import { useGetDashboardMetrics } from '@/insights/overview/composables/use-get-dashboard-metrics'
+import BannerWhatNew from '@/projects/components/banner-what-new.vue'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
