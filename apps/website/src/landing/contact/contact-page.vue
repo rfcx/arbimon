@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-white dark:bg-echo mx-6 my-10 lg:(my-30 mx-20)">
+  <section class="bg-white dark:bg-pitch mx-6 my-10 lg:(my-30 mx-20)">
     <div class="mx-auto max-w-screen-xl rounded-2xl border-1 border-frequency">
       <div class="flex flex-col items-center lg:(flex-row-reverse)">
         <div class="bg-hero-contact basis-2/5 flex flex-1 self-stretch border-b-1 border-l-0 rounded-t-2xl rounded-r-none border-b-frequency text-gray-500 dark:text-insight lg:(flex-col border-l-1 border-b-0 border-l-frequency rounded-t-none rounded-r-2xl)">
@@ -36,7 +36,7 @@
           <form
             action="https://webto.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8"
             method="POST"
-            class="space-y-8 p-10 bg-gradient-to-br from-bg-moss to-bg-transparent"
+            class="space-y-8 p-10 dark:bg-echo rounded-l-2xl bg-gradient-to-br from-bg-moss to-bg-transparent"
           >
             <div v-if="isSubmitted">
               <div
