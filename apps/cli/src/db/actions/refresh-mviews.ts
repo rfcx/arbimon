@@ -6,8 +6,7 @@ export const refreshMviews = async (sequelize: Sequelize): Promise<void> => {
     'species_in_project',
     'location_project_detection_metric',
     'location_project_recording_metric',
-    'location_project_country',
-    'location_project_metric'
+    'location_project_country'
   ]
 
   // Get a list of all other views
