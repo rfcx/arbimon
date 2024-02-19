@@ -103,14 +103,31 @@
         </ul>
       </div>
     </li>
+    <li>
+      <div
+        v-if="!store.user"
+      >
+        <button
+          class="lg:hidden block font-medium px-3 py-2 dark:text-insight dark:hover:text-frequency !text-gray-900 !dark:text-insight"
+          @click="login"
+        >
+          Log in/ Sign up
+        </button>
+      </div>
+    </li>
   </ul>
 </template>
 <script setup lang="ts">
+import { type Auth0Client } from '@auth0/auth0-spa-js'
 import { initDropdowns } from 'flowbite'
 import { inject, onMounted } from 'vue'
 
-import { togglesKey } from '@/globals'
+import { authClientKey, togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+import { useStore } from '~/store'
+
+const store = useStore()
+const auth = inject(authClientKey) as Auth0Client
 
 defineProps<{
   domId: string
@@ -121,4 +138,9 @@ const toggles = inject(togglesKey)
 onMounted(() => {
   initDropdowns()
 })
+
+const login = async (): Promise<void> => {
+  await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, prompt: 'login' })
+}
+
 </script>
