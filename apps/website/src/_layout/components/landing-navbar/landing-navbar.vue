@@ -22,11 +22,14 @@
         <!-- Right menus -->
         <div class="flex items-center lg:order-2">
           <client-only v-if="!toggles?.legacyLogin">
-            <auth-navbar-item dom-id="navbar-auth-desktop" />
+            <auth-navbar-item
+              dom-id="navbar-auth-desktop"
+              class="<lg:hidden"
+            />
           </client-only>
           <div
             v-else-if="!store.user"
-            class="flex items-center"
+            class="flex items-center <lg:hidden"
           >
             <a
               :href="universalLoginUrl"
