@@ -352,8 +352,9 @@ const onEmitSelectedUser = (user: UserTypes['light']):void => {
 }
 
 const addSelectedUser = ():void => {
+  if (userSearchValue.value === '') return
   mutatePostProjectMember({
-    email: userToAdd.value.email,
+    email: userSearchValue.value,
     role: 'user'
   }, {
     onSuccess: () => {
