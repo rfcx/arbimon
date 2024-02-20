@@ -63,7 +63,6 @@
                 <li
                   v-for="(riskRating, index) in existingRiskCode"
                   :key="riskRating.code"
-                  v-modal="searchRisk"
                   @click="filterByCode(existingRiskCode[index].code)"
                 >
                   <el-tag
