@@ -151,6 +151,7 @@
               >Type of inquiry <span class="text-sm font-normal">(required)</span></label>
               <select
                 id="inquiry_type"
+                v-model="inquiryType"
                 name="00NEZ000000OYOW"
                 class="w-full p-2 border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 required
@@ -168,6 +169,47 @@
                   Other
                 </option>
               </select>
+            </div>
+            <div v-if="isSupportType">
+              <label
+                for="product_name"
+                class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
+              >Product <span class="text-sm font-normal">(required)</span></label>
+              <select
+                id="product_name"
+                v-model="productName"
+                class="w-full p-2 border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+                required
+              >
+                <option value="Arbimon1">
+                  Arbimon1
+                </option>
+                <option value="Arbimon2">
+                  Arbimon2
+                </option>
+                <option value="Arbimon3">
+                  Arbimon3
+                </option>
+                <option value="Arbimon4">
+                  Arbimon4
+                </option>
+              </select>
+            </div>
+            <div
+              v-if="isSupportType"
+              class="col-span-2"
+            >
+              <label
+                for="url"
+                class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
+              >Link</label>
+              <input
+                id="url"
+                v-model="url"
+                type="text"
+                class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+                placeholder="Url where the problem can be found"
+              >
             </div>
             <div>
               <label
@@ -225,7 +267,9 @@
               >Message <span class="text-sm font-normal">(required)</span></label>
               <textarea
                 id="message"
+                :v-model="message"
                 name="description"
+                :value="getDescription.toString()"
                 rows="6"
                 class="p-2 w-full text-base border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 placeholder="Reach out to us, ask a question or leave a comment..."
@@ -279,7 +323,7 @@
   <footer-contact />
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import FooterContact from '@/_layout/components/landing-footer-contact.vue'
@@ -288,8 +332,30 @@ const route = useRoute()
 
 const firstName = ref('')
 const lastName = ref('')
+const inquiryType = ref('Collaboration')
+const productName = ref('Arbimon1')
+const message = ref('')
+const url = ref<string | undefined>()
+const isSupportType = ref(false)
 
 const isTestForm = import.meta.env.DEV
 const returnUrl = (typeof window !== 'undefined' ? window.location.origin : 'https://arbimon.org') + '/contact?submitted=true'
 const isSubmitted = route.query.submitted === 'true'
+
+watch(inquiryType, (newValue) => {
+  isSupportType.value = newValue === 'Support'
+})
+
+const getDescription = computed(() => {
+  if (isSupportType.value) {
+    return `
+    [product name]: ${productName.value}
+    [url]: ${url.value}
+    [message]: ${message.value}
+  `
+  } else {
+  return message.value
+  }
+})
+
 </script>
