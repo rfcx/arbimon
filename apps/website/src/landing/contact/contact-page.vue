@@ -361,7 +361,7 @@ const getDescription = computed(() => {
   if (isSupportType.value) {
     return `
     [product name]: ${productName.value}
-    [url]: ${url.value}
+    [url]: ${url.value === undefined ? '' : url.value}
     [message]: ${message.value}
   `
   } else {
