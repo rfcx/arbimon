@@ -304,8 +304,8 @@ const generateChart = (rezoom = true) => {
 const updateDataSourcesAndLayers = () => {
   const [rawNonZero, rawZero] = partition(props.dataset.data, d => d.values[props.dataKey] === true || (typeof d.values[props.dataKey] === 'number' && Number(d.values[props.dataKey]) > 0))
   if (props.mapStatisticsStyle !== MAPBOX_STYLE_HEATMAP) {
-    updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint.value(props.styleNonZero) })
     updateDataSourceAndLayer(DATA_LAYER_ZERO_ID, rawZero, { ...styleToPaint.value(props.styleZero) })
+    updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint.value(props.styleNonZero) })
   } else {
     updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint.value(props.styleNonZero, { heatmapIntensity: heatmapIntensity.value, heatmapWeight: heatmapWeight.value, heatmapRadius: heatmapRadius.value }) })
   }
@@ -320,7 +320,7 @@ const updateDataSourceAndLayer = (id: string, mapData: MapSiteData[], paint: Any
       geometry: { type: 'Point', coordinates: [datum.longitude, datum.latitude] },
       properties: {
         title: datum.siteName,
-        radius: datum.isExpand !== null ? 8 : props.mapBaseFormatter.getRadius(Number(datum.values[props.dataKey])),
+        radius: datum.isExpand !== null ? 5 : props.mapBaseFormatter.getRadius(Number(datum.values[props.dataKey])),
         popup: getPopup(datum)
       }
     }))
