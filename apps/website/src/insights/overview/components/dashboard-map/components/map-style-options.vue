@@ -25,7 +25,6 @@
           <li
             v-for="mapStyle in mapStatisticsDisplayStyleOptions"
             :key="mapStyle.name"
-            v-modal="mapStatisticsStyle"
             class="bg-moss text-frequency px-3 py-2 flex items-center gap-2"
             :class="mapStyleLabel === mapStyle.name ? 'border-1 border-frequency rounded-full' : ''"
             @click="propagateMapStatisticsStyle(mapStyle.style)"
