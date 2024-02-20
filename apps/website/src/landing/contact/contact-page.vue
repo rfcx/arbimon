@@ -181,17 +181,26 @@
                 class="w-full p-2 border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 required
               >
-                <option value="Arbimon1">
-                  Arbimon1
+                <option value="Companion app">
+                  Companion app
                 </option>
-                <option value="Arbimon2">
-                  Arbimon2
+                <option value="Uploader app">
+                  Uploader app
                 </option>
-                <option value="Arbimon3">
-                  Arbimon3
+                <option value="Data Management (Explore pages)">
+                  Data Management (Explore pages)
                 </option>
-                <option value="Arbimon4">
-                  Arbimon4
+                <option value="Visualizer">
+                  Visualizer
+                </option>
+                <option value="Audio Analyses">
+                  Audio Analyses
+                </option>
+                <option value="Ecological Insights">
+                  Ecological Insights
+                </option>
+                <option value="Other">
+                  Other
                 </option>
               </select>
             </div>
@@ -267,15 +276,18 @@
               >Message <span class="text-sm font-normal">(required)</span></label>
               <textarea
                 id="message"
-                :v-model="message"
-                name="description"
-                :value="getDescription.toString()"
+                v-model="message"
                 rows="6"
                 class="p-2 w-full text-base border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 placeholder="Reach out to us, ask a question or leave a comment..."
               />
             </div>
             <div class="text-right">
+              <input
+                type="hidden"
+                name="description"
+                :value="getDescription.toString()"
+              >
               <input
                 type="hidden"
                 name="name"
@@ -333,7 +345,7 @@ const route = useRoute()
 const firstName = ref('')
 const lastName = ref('')
 const inquiryType = ref('Collaboration')
-const productName = ref('Arbimon1')
+const productName = ref('Companion app')
 const message = ref('')
 const url = ref<string | undefined>()
 const isSupportType = ref(false)
