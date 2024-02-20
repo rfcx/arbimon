@@ -60,8 +60,9 @@
       </button>
       <div
         :id="`${email}Dropdown`"
-        class="z-50 hidden list-none bg-moss divide-y divide-gray-100 rounded-lg shadow p-3 w-70"
-        @mouseleave="toggleCard()"
+        class="z-50 list-none bg-moss divide-y divide-gray-100 rounded-lg shadow p-3 w-70"
+        :class="{ hidden: isHiddenCard }"
+        @mouseleave="handleScroll"
       >
         <ul
           :aria-labelledby="`${email}EditStakeholdersButton`"
@@ -88,12 +89,13 @@
 
 <script setup lang="ts">
 import { initDropdowns } from 'flowbite'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const props = defineProps<{ userId: number, name: string, email: string, image?: string, ranking?: number, modelValue: string[] }>()
 const emit = defineEmits<{(event: 'emitPrimaryContact', userId: number, email: string, isPrimaryContact: boolean): void, (event: 'update:modelValue', value: string[]): void}>()
 
 const isHovered = ref<boolean>(false)
+const isHiddenCard = ref<boolean>(true)
 const isRemovedPrimaryContact = ref<boolean>(props.ranking === 0)
 const checked = computed<boolean>(() => {
   return props.modelValue.includes(props.email)
@@ -101,6 +103,10 @@ const checked = computed<boolean>(() => {
 
 const toggleCard = (): void => {
   isHovered.value = !isHovered.value
+  isHiddenCard.value = false
+}
+const handleScroll = (): void => {
+  isHiddenCard.value = true
 }
 
 const toggleSelectMemberCard = (): void => {
@@ -116,11 +122,18 @@ const toggleSelectMemberCard = (): void => {
 }
 
 const togglePrimaryContact = (): void => {
+  isHiddenCard.value = true
+
   isRemovedPrimaryContact.value = !isRemovedPrimaryContact.value
   emit('emitPrimaryContact', props.userId, props.email, isRemovedPrimaryContact.value)
 }
 
 onMounted(() => {
   initDropdowns()
+  window.addEventListener('scroll', handleScroll)
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll)
 })
 </script>
