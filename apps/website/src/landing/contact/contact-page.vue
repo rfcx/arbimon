@@ -280,6 +280,7 @@
                 rows="6"
                 class="p-2 w-full text-base border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 placeholder="Reach out to us, ask a question or leave a comment..."
+                required
               />
             </div>
             <div class="text-right">
