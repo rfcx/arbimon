@@ -335,7 +335,7 @@
   <footer-contact />
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import FooterContact from '@/_layout/components/landing-footer-contact.vue'
@@ -348,14 +348,13 @@ const inquiryType = ref('Collaboration')
 const productName = ref('Companion app')
 const message = ref('')
 const url = ref<string | undefined>()
-const isSupportType = ref(false)
 
 const isTestForm = import.meta.env.DEV
 const returnUrl = (typeof window !== 'undefined' ? window.location.origin : 'https://arbimon.org') + '/contact?submitted=true'
 const isSubmitted = route.query.submitted === 'true'
 
-watch(inquiryType, (newValue) => {
-  isSupportType.value = newValue === 'Support'
+const isSupportType = computed(() => {
+  return inquiryType.value === 'Support'
 })
 
 const getDescription = computed(() => {
