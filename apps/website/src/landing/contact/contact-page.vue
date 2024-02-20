@@ -347,7 +347,7 @@ const lastName = ref('')
 const inquiryType = ref('Collaboration')
 const productName = ref('Companion app')
 const message = ref('')
-const url = ref<string | undefined>()
+const url = ref('')
 
 const isTestForm = import.meta.env.DEV
 const returnUrl = (typeof window !== 'undefined' ? window.location.origin : 'https://arbimon.org') + '/contact?submitted=true'
@@ -361,7 +361,7 @@ const getDescription = computed(() => {
   if (isSupportType.value) {
     return `
     [product name]: ${productName.value}
-    [url]: ${url.value === undefined ? '' : url.value}
+    [url]: ${url.value}
     [message]: ${message.value}
   `
   } else {
