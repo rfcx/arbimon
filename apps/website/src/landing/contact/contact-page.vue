@@ -220,7 +220,7 @@
                 placeholder="Url where the problem can be found"
               >
             </div>
-            <div>
+            <div v-if="!isSupportType">
               <label
                 for="referral_source"
                 class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
@@ -229,7 +229,7 @@
                 id="referral_source"
                 name="00NEZ000000OYOb"
                 class="w-full p-2 border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
-                required
+                :required="!isSupportType"
               >
                 <option value="Instagram">
                   Instagram
