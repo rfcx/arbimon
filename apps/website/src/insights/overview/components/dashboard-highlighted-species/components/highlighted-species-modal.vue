@@ -165,15 +165,6 @@
                   You have reached the limit of 5 highlighted species allowed.
                 </span>
               </div>
-              <!-- <div
-                v-if="showHaveReachedLimit"
-                class="flex flex-row inline-flex text-black bg-rose-200 p-3 border-1 border-rose-600 border-l-3 rounded-lg items-center"
-              >
-                <icon-custom-ic-error-message class="basis-1/12" />
-                <span class="ml-2 basis-10/12">
-                  You have reached the limit of 5 highlighted species allowed.
-                </span>
-              </div> -->
             </div>
             <div class="flex flex-row justify-end baseline col-span-1 mt-4 md:m-auto">
               <button
@@ -209,10 +200,16 @@ import { useSpeciesInProject } from '../composables/use-species-in-project'
 import HighlightedSpeciesSelector, { type SpecieRow } from './highlighted-species-selector.vue'
 import SpecieCard from './species-card.vue'
 
-const props = defineProps<{ highlightedSpecies: HighlightedSpeciesRow[] }>()
+const props = defineProps<{ highlightedSpecies: HighlightedSpeciesRow[], toggleShowModal: boolean }>()
 const emit = defineEmits<{(e: 'emitClose'): void}>()
 
-watch(() => props.highlightedSpecies, () => { fillExistingSpeciesSlug() })
+watch(() => props.highlightedSpecies, () => {
+  fillExistingSpeciesSlug()
+})
+
+watch(() => props.toggleShowModal, () => {
+  fillExistingSpeciesSlug()
+})
 
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
@@ -296,10 +293,6 @@ const existingRiskCode = computed(() => {
   return speciesList.value.length ? speciesList.value.map(specie => specie.riskRating).filter((value, index, self) => self.findIndex(({ code }) => code === value.code) === index) : []
 })
 
-const existingSlugInDB = computed(() => {
-  return props.highlightedSpecies.map(sp => sp.slug)
-})
-
 const newSpeciesToAdd = computed(() => {
   const existingSlugsInDB = props.highlightedSpecies.map(sp => sp.slug)
   return preSelectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
@@ -350,7 +343,7 @@ const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
 
 const fillExistingSpeciesSlug = (): void => {
   if (props.highlightedSpecies.length) {
-    selectedSpeciesSlug.value = existingSlugInDB.value
+    selectedSpeciesSlug.value = props.highlightedSpecies.map(sp => sp.slug)
   } else selectedSpeciesSlug.value = []
 }
 
