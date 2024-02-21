@@ -161,8 +161,8 @@ onMounted(() => {
         'text-field': [
           'case',
           ['<', ['get', 'point_count'], 10],
-          ['get', 'point_count'],
-          '10+'
+          ['to-string', ['get', 'point_count']],
+          ['concat', ['to-string', ['*', ['ceil', ['/', ['get', 'point_count'], 10]], 10]], '+']
         ],
         'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
         'text-size': 12
