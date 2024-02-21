@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-white dark:bg-echo mx-6 my-10 lg:(my-30 mx-20)">
+  <section class="bg-white dark:bg-pitch mx-6 my-10 lg:(my-30 mx-20)">
     <div class="mx-auto max-w-screen-xl rounded-2xl border-1 border-frequency">
       <div class="flex flex-col items-center lg:(flex-row-reverse)">
         <div class="bg-hero-contact basis-2/5 flex flex-1 self-stretch border-b-1 border-l-0 rounded-t-2xl rounded-r-none border-b-frequency text-gray-500 dark:text-insight lg:(flex-col border-l-1 border-b-0 border-l-frequency rounded-t-none rounded-r-2xl)">
@@ -36,7 +36,7 @@
           <form
             action="https://webto.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8"
             method="POST"
-            class="space-y-8 p-10 bg-gradient-to-br from-bg-moss to-bg-transparent"
+            class="space-y-8 p-10 dark:bg-echo rounded-l-2xl bg-gradient-to-br from-bg-moss to-bg-transparent"
           >
             <div v-if="isSubmitted">
               <div
@@ -151,6 +151,7 @@
               >Type of inquiry <span class="text-sm font-normal">(required)</span></label>
               <select
                 id="inquiry_type"
+                v-model="inquiryType"
                 name="00NEZ000000OYOW"
                 class="w-full p-2 border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 required
@@ -168,6 +169,56 @@
                   Other
                 </option>
               </select>
+            </div>
+            <div v-if="isSupportType">
+              <label
+                for="product_name"
+                class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
+              >Product <span class="text-sm font-normal">(required)</span></label>
+              <select
+                id="product_name"
+                v-model="productName"
+                class="w-full p-2 border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+                required
+              >
+                <option value="Companion app">
+                  Companion app
+                </option>
+                <option value="Uploader app">
+                  Uploader app
+                </option>
+                <option value="Explore & Manage Data (i.e. Sites, Recordings, Species, Playlist)">
+                  Explore & Manage Data (i.e. Sites, Recordings, Species, Playlist)
+                </option>
+                <option value="Visualizer">
+                  Visualizer
+                </option>
+                <option value="Audio Analyses (PM, RFM, AED-C, Soundscape)">
+                  Audio Analyses (PM, RFM, AED-C, Soundscape)
+                </option>
+                <option value="Ecological Insights">
+                  Ecological Insights
+                </option>
+                <option value="Other">
+                  Other
+                </option>
+              </select>
+            </div>
+            <div
+              v-if="isSupportType"
+              class="col-span-2"
+            >
+              <label
+                for="url"
+                class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
+              >Link</label>
+              <input
+                id="url"
+                v-model="url"
+                type="text"
+                class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+                placeholder="Url where the problem can be found"
+              >
             </div>
             <div>
               <label
@@ -225,13 +276,19 @@
               >Message <span class="text-sm font-normal">(required)</span></label>
               <textarea
                 id="message"
-                name="description"
+                v-model="message"
                 rows="6"
                 class="p-2 w-full text-base border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 placeholder="Reach out to us, ask a question or leave a comment..."
+                required
               />
             </div>
             <div class="text-right">
+              <input
+                type="hidden"
+                name="description"
+                :value="description"
+              >
               <input
                 type="hidden"
                 name="name"
@@ -279,7 +336,7 @@
   <footer-contact />
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import FooterContact from '@/_layout/components/landing-footer-contact.vue'
@@ -288,8 +345,29 @@ const route = useRoute()
 
 const firstName = ref('')
 const lastName = ref('')
+const inquiryType = ref('Collaboration')
+const productName = ref('Companion app')
+const message = ref('')
+const url = ref('')
 
 const isTestForm = import.meta.env.DEV
 const returnUrl = (typeof window !== 'undefined' ? window.location.origin : 'https://arbimon.org') + '/contact?submitted=true'
 const isSubmitted = route.query.submitted === 'true'
+
+const isSupportType = computed(() => {
+  return inquiryType.value === 'Support'
+})
+
+const description = computed(() => {
+  if (isSupportType.value) {
+    return `
+      [product name]: ${productName.value}
+      [url]: ${url.value}
+      [message]: ${message.value}
+    `
+  } else {
+    return message.value
+  }
+})
+
 </script>

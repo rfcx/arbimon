@@ -81,7 +81,7 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
   return mapValues(summariesBySite, (siteSummaries, siteIdString) => {
     const siteId: number = Number(siteIdString)
     const matchedSite = sites.find(s => s.id === siteId)
-    const siteTotalRecordedMinutes = summariesRecordingBySite !== undefined ? summariesRecordingBySite[siteId] : 0
+    const siteTotalRecordedMinutes = summariesRecordingBySite[siteId] !== undefined ? summariesRecordingBySite[siteId] : 0
     const siteSpeciesSummaries = siteSummaries.filter(r => r.taxonSpeciesId === filter.taxonSpeciesId)
     const siteDetectionMinutesCount = calculateDetectionMinutesCount(siteSpeciesSummaries)
     const siteDetectionFrequency = siteTotalRecordedMinutes === 0 ? 0 : siteDetectionMinutesCount / siteTotalRecordedMinutes

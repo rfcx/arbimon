@@ -5,6 +5,7 @@ import { type LocationProjectUserRole, type UserProfile } from '@rfcx-bio/common
 import { type ProjectRole, getIdByRole, getRoleById } from '@rfcx-bio/common/roles'
 
 import { getSequelize } from '~/db'
+import { fileUrl } from '~/format-helpers/file-url'
 import { getProjectById } from './projects-dao'
 
 const sequelize = getSequelize()
@@ -33,7 +34,7 @@ export const get = async (locationProjectId: number): Promise<Array<Omit<Locatio
       userId: u.userId,
       firstName: u.firstName,
       lastName: u.lastName,
-      image: u.image,
+      image: fileUrl(u.image) ?? '',
       email: u.email,
       roleId: u.roleId
     }

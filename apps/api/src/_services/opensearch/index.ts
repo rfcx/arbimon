@@ -28,7 +28,7 @@ export const getOpenSearchClient = (): Client => {
     const ssl = sslString === 'true'
     const httpAuth = httpUser && httpPassword ? { user: httpUser, password: httpPassword } : undefined
     const aws = region && accessKeyId && secretAccessKey ? { region, accessKeyId, secretAccessKey } : undefined
-    client = openSearchClient(host, { port, ssl, httpAuth, aws }, env.NODE_ENV !== 'test')
+    client = openSearchClient(host, { port, ssl, httpAuth, aws }, false)
   }
   return client
 }

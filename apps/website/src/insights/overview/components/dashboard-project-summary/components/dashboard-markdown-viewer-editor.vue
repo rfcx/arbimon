@@ -12,8 +12,9 @@
       class="flex flex-row justify-end pr-6"
     >
       <button
+        v-if="!projectUserPermissionsStore.isMemberGuest && !projectUserPermissionsStore.isExternalGuest"
         class="flex flex-row items-center btn btn-primary py-2 px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-        :data-tooltip-target="`${id}EditTextTooltipId`"
+        :data-tooltip-target="!editable ? `${id}EditTextTooltipId` : null"
         data-tooltip-placement="bottom"
         :disabled="!editable"
         @click="editMarkdownContent"

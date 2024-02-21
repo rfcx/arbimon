@@ -15,8 +15,7 @@
               class="mainLoginInput block text-sm bg-pitch border-white rounded-md border-r-0 rounded-r-none w-60 h-9 placeholder:text-insight placeholder-gray-100 focus:(border-frequency ring-frequency border border-r-2 rounded)"
               type="text"
               placeholder="&#61442; Search by user email"
-              data-dropdown-toggle="dropdown"
-              data-tooltip-target="userSearchInputTooltipId"
+              :data-tooltip-target="!isUserHasFullAccess ? 'userSearchInputTooltipId' : null"
               data-tooltip-placement="bottom"
               :disabled="!store.userIsAdminProjectMember"
               @input="searchUserInputChanged"
@@ -339,8 +338,9 @@ const onEmitSelectedUser = (user: UserTypes['light']):void => {
 }
 
 const addSelectedUser = ():void => {
+  if (userSearchValue.value === '') return
   mutatePostProjectMember({
-    email: userToAdd.value.email,
+    email: userSearchValue.value,
     role: 'user'
   }, {
     onSuccess: () => {

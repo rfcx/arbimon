@@ -47,7 +47,7 @@
             <button
               v-if="store.userIsAdminProjectMember"
               class="btn btn-primary disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
-              data-tooltip-target="shareInsightsTooltipId"
+              :data-tooltip-target="metrics?.totalSites === 0 || disableShareInsights ? `shareInsightsTooltipId` : null"
               data-tooltip-placement="bottom"
               :disabled="disableShareInsights"
               @click="openShareInsightsInfoPopup"

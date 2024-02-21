@@ -77,7 +77,7 @@
         <div class="p-4">
           <numeric-metric
             tooltip-id="deployment-sites"
-            tooltip-text="Number of sites with recorders deployed"
+            tooltip-text="Number of sites with recorders deployed."
             title="Project sites:"
             :value="profile?.metrics?.totalSites ?? 0"
             icon-name="ft-map-pin-lg"
@@ -86,7 +86,7 @@
           <numeric-metric
             tooltip-id="threatened-species-over-all-species"
             title="Threatened / total species:"
-            tooltip-text="Number of Near Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found"
+            tooltip-text="Number of Near Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
             :value="profile?.metrics?.threatenedSpecies ?? 0"
             :total-value="profile?.metrics?.totalSpecies ?? 0"
             icon-name="ft-actual-bird"
@@ -102,8 +102,8 @@
           />
           <numeric-metric
             tooltip-id="total-recordings"
-            :tooltip-text="`Total minutes of recordings captured`"
-            :title="`Total recordings (minutes):`"
+            :tooltip-text="`Total minutes of recordings captured.`"
+            :title="`Minutes of recordings:`"
             :value="totalRecordingsMin"
             icon-name="ft-mic-lg"
             class="flex-1"
@@ -159,7 +159,7 @@
         name="keyResult"
       >
         <p
-          v-if="profile?.keyResult"
+          v-if="profile?.keyResults"
           class="pt-4"
         >
           <DashboardMarkdownViewerEditor
@@ -167,7 +167,7 @@
             v-model:is-view-mored="isKeyResultTabViewMored"
             v-model:is-editing="isKeyResultTabEditing"
             :editable="false"
-            :raw-markdown-text="profile?.keyResult"
+            :raw-markdown-text="profile?.keyResults"
             :default-markdown-text="keyResultDefault"
             :is-project-member="false"
             :is-viewing-as-guest="false"
@@ -181,9 +181,7 @@
         label="Stakeholders"
         name="stakeholders"
       >
-        <div
-          v-if="stakeholders?.organizations && !stakeholderError"
-        >
+        <div v-if="shouldShowStakeholdersContent">
           <div
             class="grid mt-4"
             style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
@@ -206,7 +204,7 @@
     </el-tabs>
     <private-project-tag
       v-if="!project?.isPublished"
-      class="justify-self-end "
+      class="justify-self-end"
     />
   </div>
 </template>
@@ -268,6 +266,12 @@ const isAboutTabEditing = ref(false)
 
 const isKeyResultTabViewMored = ref(false)
 const isKeyResultTabEditing = ref(false)
+
+const shouldShowStakeholdersContent = computed(() => {
+  const hasOrganizations = (stakeholders.value?.organizations && stakeholders.value?.organizations.length > 0) ?? false
+  const hasUsers = (stakeholders.value?.users && stakeholders.value?.users.length > 0) ?? false
+  return (hasUsers || hasOrganizations) && !stakeholderError.value
+})
 
 watch(() => props.projectId, () => {
   profileRefetch()

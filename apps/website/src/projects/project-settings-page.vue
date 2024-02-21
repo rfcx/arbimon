@@ -211,6 +211,7 @@ const onEmitSlug = (slug: string) => {
 const onEmitProjectDelete = () => {
   mutateDeleteProject(store.project?.id ?? -1, {
     onSuccess: async () => {
+      store.deleteProject(store.selectedProject?.id)
       await router.push({ name: ROUTE_NAMES.myProjects })
     }
   })

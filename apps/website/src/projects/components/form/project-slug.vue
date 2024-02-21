@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{(e: 'emitUpdatedSlug', slug: string): void}>()
 const placeholderText = 'Enter a unique URL for your project using dash.'
-const projectBasePath = 'https://arbimon.rfcx.org/project/'
+const projectBasePath = window.location.origin + '/p/'
 const slug = ref('')
 
 const value: ComputedRef<string> = computed(() => {

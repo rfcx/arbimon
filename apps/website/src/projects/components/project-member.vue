@@ -36,7 +36,7 @@
         :id="`dropdownRoleButton-${user.email}`"
         :data-dropdown-toggle="`dropdownRole-${user.email}`"
         data-dropdown-placement="bottom"
-        :data-tooltip-target="`${user.userId}changeUserRoleTooltipId`"
+        :data-tooltip-target="!editable && !projectUserPermissionsStore.isMemberGuest ? `${user.userId}changeUserRoleTooltipId` : null"
         data-tooltip-placement="bottom"
         class="bg-echo text-frequency border-1 border-util-gray-03 rounded-lg flex flex-row items-center py-1 px-2 disabled:hover:btn-disabled disabled:btn-disabled hover:bg-chirp hover:text-pitch hover:border-chirp"
         :disabled="!editable"
@@ -98,7 +98,7 @@
           <li
             v-for="role in roles.filter(r => r.id !== 4)"
             :key="role.id"
-            class="flex flex-row justify-start items-center p-1 m-0 cursor-pointer"
+            class="flex flex-row justify-start items-center p-1 m-0 cursor-pointer hover:bg-chirp hover:text-pitch hover:(border-chirp rounded-lg)"
             @click="$emit('emitChangeUserRole', user.email, getRoleById(role.id)); closeMenu()"
           >
             <span class="w-8">

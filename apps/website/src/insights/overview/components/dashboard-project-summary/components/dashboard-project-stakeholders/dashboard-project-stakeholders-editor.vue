@@ -24,12 +24,12 @@
           >
         </div>
       </div>
-      <a
-        :href="arbimonLink"
+      <router-link
+        :to="{name: ROUTE_NAMES.projectMember, params: { projectSlug: store.selectedProject?.slug }}"
         class="text-frequency text-sm font-medium font-display leading-none"
       >
         <icon-custom-fi-external-link class="w-4 h-4 inline-flex" /> Manage project members
-      </a>
+      </router-link>
       <div class="grid grid-cols-2 gap-3 lg:grid-cols-3">
         <StakeholderCardEdit
           v-for="(member, idx) of sortedProjectMembers"
@@ -206,6 +206,7 @@ import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGAN
 import { memberName } from '@rfcx-bio/utils/string'
 
 import { apiClientKey } from '@/globals'
+import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useCreateOrganization } from '../../../../composables/use-create-organization'
 import { useGetRecommendedOrganizations, useGetSearchOrganizationsResult } from '../../../../composables/use-get-search-organizations-result'
@@ -248,12 +249,6 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult, isFetching: isSearchOrganizationFetching } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
 const { data: recommendedOrganizationsResult } = useGetRecommendedOrganizations(apiClientBio, props.projectMembers.map(user => user.id))
 const { mutate: mutateNewOrganization } = useCreateOrganization(apiClientBio)
-
-const arbimonLink = computed(() => {
-  const selectedProjectSlug = store.project?.slug
-  if (selectedProjectSlug === undefined) return ''
-  else return `${import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL}/project/${selectedProjectSlug}/settings/users`
-})
 
 const checkAllUsersSelection = computed(() => {
   return selectedProjectMembers.value.length === props.projectMembers.length

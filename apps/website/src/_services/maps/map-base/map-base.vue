@@ -281,7 +281,7 @@ const setupMapPopup = () => {
 const getPopup = (datum: MapSiteData): string => {
   const value = props.getPopupHtml(datum, props.dataKey)
   if ((datum?.isExpand) ?? false) {
-    return `<div class="font-sans"><strong>${datum.siteName}${value ? ': ' : ''}</strong>${value} <br>
+    return `<div class="font-sans"><strong>${datum.siteName}${value ? ': ' : ''}</strong>${datum.values['Site name']} <br>
       <strong>Total recordings${value ? ': ' : ''}</strong>${datum.values['Total recordings']} <br>
       <strong>Days with recordings${value ? ': ' : ''}</strong>${datum.values['Days with recordings']}</div>`
   } else return `<div class="font-sans"><strong>${datum.siteName}${value ? ': ' : ''}</strong>${value}</div>`
@@ -302,7 +302,7 @@ const generateChart = (rezoom = true) => {
 }
 
 const updateDataSourcesAndLayers = () => {
-  const [rawNonZero, rawZero] = partition(props.dataset.data, d => d.values[props.dataKey] === true || d.values[props.dataKey] !== null)
+  const [rawNonZero, rawZero] = partition(props.dataset.data, d => d.values[props.dataKey] === true || (typeof d.values[props.dataKey] === 'number' && Number(d.values[props.dataKey]) > 0))
   if (props.mapStatisticsStyle !== MAPBOX_STYLE_HEATMAP) {
     updateDataSourceAndLayer(DATA_LAYER_ZERO_ID, rawZero, { ...styleToPaint.value(props.styleZero) })
     updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint.value(props.styleNonZero) })
@@ -320,7 +320,7 @@ const updateDataSourceAndLayer = (id: string, mapData: MapSiteData[], paint: Any
       geometry: { type: 'Point', coordinates: [datum.longitude, datum.latitude] },
       properties: {
         title: datum.siteName,
-        radius: props.mapBaseFormatter.getRadius(Number(datum.values[props.dataKey])), // TODO Remove this once boolean is removed from type
+        radius: datum.isExpand !== null ? 5 : props.mapBaseFormatter.getRadius(Number(datum.values[props.dataKey])),
         popup: getPopup(datum)
       }
     }))

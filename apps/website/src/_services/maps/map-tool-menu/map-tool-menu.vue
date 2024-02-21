@@ -17,7 +17,7 @@
     </div>
     <button
       v-if="canToggleLabels"
-      class="btn btn-secondary ml-2 p-2"
+      class="btn btn-secondary ml-2 py-1 px-2"
       :class="{ '<2xl:(bg-brand-primary btn-icon bg-frequency)': isShowLabel }"
       @click="emitShowLabelsToggle"
     >

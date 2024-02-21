@@ -42,6 +42,9 @@ export const useStore = defineStore('root', {
         }
       })
     },
+    deleteProject (projectId?: number) {
+      this.myProjects = this.myProjects.filter(p => p.id !== projectId)
+    },
     async updateSelectedProjectSlug (slug: string) {
       // Temporary hack to get an API Client (this will be extracted in the loading branch)
       const authClient = await useAuth0Client()

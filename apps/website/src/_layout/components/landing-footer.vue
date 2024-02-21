@@ -76,17 +76,23 @@
               </li>
               <li class="mb-4">
                 <a
-                  href="https://support.rfcx.org"
+                  href="https://help.arbimon.org/"
                   class="hover:underline"
                 >Help &amp; Support</a>
               </li>
-              <li>
+              <li class="mb-4">
                 <router-link
                   to="/contact"
                   class="hover:underline"
                 >
                   Contact us
                 </router-link>
+              </li>
+              <li>
+                <a
+                  href="http://status.rfcx.org/"
+                  class="hover:underline"
+                >System status</a>
               </li>
             </ul>
           </div>
@@ -125,7 +131,7 @@
         </div>
       </div>
       <div class="sm:flex sm:items-center sm:justify-between mt-10 py-4">
-        <span class="text-util-gray-02 text-xs sm:text-center font-eyebrow">© 2024 <a
+        <span class="text-util-gray-02 text-xs sm:text-center font-eyebrow">© {{ new Date().getFullYear() }} <a
           href="https://rfcx.org"
           class="hover:underline font-eyebrow"
         >Rainforest Connection™</a>

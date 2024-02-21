@@ -7,7 +7,7 @@
       <button
         v-if="!store.userIsAdminProjectMember"
         class="btn btn-primary font-medium flex flex-row py-2 px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-        data-tooltip-target="editStakeholdersTooltipId"
+        :data-tooltip-target="!editable ? 'editStakeholdersTooltipId' : null"
         data-tooltip-placement="bottom"
         :disabled="loading || !editable"
         @click="$emit('emit-is-updating')"

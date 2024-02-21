@@ -34,7 +34,7 @@
         class="btn btn-secondary group w-full disabled:hover:btn-disabled disabled:btn-disabled"
         data-modal-target="species-highlighted-modal"
         data-modal-toggle="species-highlighted-modal"
-        data-tooltip-target="selectSpeciesTooltipId"
+        :data-tooltip-target="!canEdit ? 'selectSpeciesTooltipId' : null"
         data-tooltip-placement="bottom"
         type="button"
         :disabled="!canEdit"
@@ -57,6 +57,7 @@
     </div>
     <HighlightedSpeciesModal
       :highlighted-species="speciesList"
+      :toggle-show-modal="toggleShowModal"
       @emit-close="closeModal"
     />
   </div>
@@ -78,6 +79,7 @@ import HighlightedSpeciesModal from './components/highlighted-species-modal.vue'
 const props = defineProps<{ species: DashboardSpecies[] | undefined, canEdit: boolean, isProjectMember: boolean, isViewingAsGuest: boolean, isLoading: boolean }>()
 const emit = defineEmits<{(e: 'emitRefetch'): void }>()
 const modal = ref() as Ref<Modal>
+const toggleShowModal = ref(false)
 const disableText = ref('Contact your project administrator for permission to select species')
 const store = useStore()
 
@@ -109,6 +111,7 @@ onMounted(() => {
 
 const openModalToSelectSpecies = (): void => {
   modal.value.show()
+  toggleShowModal.value = !toggleShowModal.value
 }
 
 const closeModal = (): void => {

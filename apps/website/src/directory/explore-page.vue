@@ -6,6 +6,7 @@
       :data="projectResults"
       :selected-project-id="selectedProjectId ?? undefined"
       :selected-tab="selectedTab"
+      :initial-search="searchInputFromQuery"
       :is-loading="isLoading"
       class="absolute z-40 h-100vh"
       @emit-selected-project="onEmitSelectedProject"
@@ -45,6 +46,7 @@
 import { type AxiosInstance } from 'axios'
 import debounce from 'lodash.debounce'
 import { computed, inject, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 import { apiBioGetProjectsGeo } from '@rfcx-bio/common/api-bio/project/projects'
 import { type ProjectLight, type ProjectProfileWithMetrics } from '@rfcx-bio/common/api-bio/project/projects'
@@ -53,12 +55,15 @@ import { apiBioSearch } from '@rfcx-bio/common/api-bio/search/search'
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
+import { ROUTE_NAMES } from '~/router'
 import { useProjectDirectoryStore, useStore } from '~/store'
 import MapView from './blocks/map-view.vue'
 import ProjectInfo from './blocks/project-info.vue'
 import ProjectList from './blocks/projects-list.vue'
 import type { Tab } from './data/types'
 
+const router = useRouter()
+const route = useRoute()
 const store = useStore()
 const pdStore = useProjectDirectoryStore()
 const selectedProjectId = ref<number | null>(null)
@@ -67,6 +72,7 @@ const hideProjectList = ref<boolean>(false)
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const selectedTab = ref<Tab>('All')
+const searchInputFromQuery = ref<string>('')
 
 const isLoading = ref(false)
 /** List of projects (with profile) you got from search results, initial is the first 20 in the list -- to show in the list */
@@ -110,9 +116,15 @@ const onEmitSwapTab = (tab: Tab) => {
 }
 
 const onEmitSearch = debounce(async (keyword: string) => {
+  if (keyword === '') {
+    projectResults.value = pdStore.allProjects
+    router.push({ name: ROUTE_NAMES.explore })
+    return
+  }
   const searchResponse = await fetchSearch(keyword, 100, 0)
   if (searchResponse === undefined) return
   projectResults.value = searchResponse.data
+  router.push({ name: ROUTE_NAMES.explore, query: { search: keyword } })
 }, 500)
 
 const onEmitLoadMore = async () => {
@@ -121,10 +133,13 @@ const onEmitLoadMore = async () => {
   const total = pdStore.allProjects.length
   if (offset === total) return
   if (isLoading.value) return
-  await fetchSearch('', offset + LIMIT, offset)
+  await fetchSearch('', LIMIT, offset)
 }
 
 onMounted(async () => {
+  if (typeof route.query.search === 'string' && route.query.search !== '') {
+    searchInputFromQuery.value = route.query.search
+  }
   // fetch all projects
   await fetchAllProjects()
   projectResults.value = pdStore.allProjects
