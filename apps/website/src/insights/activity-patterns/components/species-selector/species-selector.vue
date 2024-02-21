@@ -1,6 +1,9 @@
 <template>
   <div class="relative w-80 my-6">
-    <form>
+    <form
+      id="siteSearchInput"
+      ref="siteSearchInput"
+    >
       <div
         class="flex relative items-center"
         data-dropdown-toggle="searchResultDropdown"
@@ -28,7 +31,7 @@
     </form>
     <div
       id="searchResultDropdown"
-      class="absolute hidden w-full z-60 bg-white rounded-md shadow dark:bg-gray-700 mt-2"
+      class="absolute hidden w-full z-40 bg-white rounded-md shadow dark:bg-gray-700 mt-2"
     >
       <ul class="overflow-y-auto max-h-80 border-cloud bg-moss rounded-md">
         <li
@@ -59,6 +62,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { Dropdown, initDropdowns } from 'flowbite'
+import type { Ref } from 'vue'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -84,7 +88,9 @@ const allSpecies = ref<Array<SpeciesInProjectTypes['light']>>([])
 const currentSpeciesQuery = ref('')
 
 const hasFocusInput = ref(false)
-let dropdown: Dropdown
+
+const siteSearchInput = ref<HTMLDivElement | null>(null)
+const dropdown = ref() as Ref<Dropdown>
 
 const selectedSpecies = computed<SpeciesInProjectTypes['light'] | undefined>(() => {
   if (!selectedSpeciesSlug.value) {
@@ -109,14 +115,16 @@ const filteredSpecies = computed<Array<SpeciesInProjectTypes['light']>>(() => {
 const onSelectSpecies = (species: SpeciesInProjectTypes['light']) => {
   selectedSpeciesSlug.value = species.taxonSpeciesSlug
   onResetQuery()
-  dropdown.hide()
+  dropdown.value.hide()
 }
 
 onMounted(async () => {
   initDropdowns()
   allSpecies.value = await getAllSpecies()
-  dropdown = new Dropdown(
-    document.getElementById('searchResultDropdown')
+  dropdown.value = new Dropdown(
+    document.getElementById('searchResultDropdown'),
+    document.getElementById('siteSearchInput'),
+    { placement: 'bottom-start', triggerType: 'none', offsetDistance: 1 }
   )
 })
 
@@ -172,7 +180,7 @@ const onResetQuery = (): void => {
 }
 
 const onClickSpeciesInput = (): void => {
-  dropdown.show()
+  dropdown.value.show()
 }
 
 const getAllSpecies = async (): Promise<Array<SpeciesInProjectTypes['light']>> => {
