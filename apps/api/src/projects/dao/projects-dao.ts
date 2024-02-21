@@ -70,7 +70,7 @@ export const getViewableProjects = async (userId: number | undefined): Promise<L
 
   return projects.map(p => ({
       ...p,
-      isMyProject: memberProjectIds.includes(p.id)
+      role: memberProjectIds.includes(p.id) ? 'viewer' : 'external'
     }))
 }
 
