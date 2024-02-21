@@ -97,6 +97,7 @@ onMounted(() => {
       type: 'geojson',
       data: toGeoJson(props.data),
       cluster: true,
+      clusterMinPoints: 8,
       generateId: true,
       clusterMaxZoom: 14, // Max zoom to cluster points on
       clusterRadius: 100 // Radius of each cluster when clustering points (defaults to 50)
