@@ -217,6 +217,7 @@ onMounted(() => {
   map.on('click', 'unclustered-point', (e) => {
     const features = map.queryRenderedFeatures(e.point, { layers: ['unclustered-point'] })
     const { id } = features[0]?.properties ?? {}
+    goToProject(id)
     emit('emitSelectedProject', id)
   })
 
@@ -229,15 +230,8 @@ onMounted(() => {
 
 watch(() => props.selectedProjectId, (id) => {
   setSelectedProject(id ?? -1)
-  if (id === undefined) {
-    map.flyTo({
-      center: mapCenter.value,
-      zoom: 1.8,
-      essential: true
-    })
-    return
-  }
-  flyToProject(id)
+  if (id === undefined) { return }
+  goToProject(id)
 })
 
 // TODO: if the props.data updated, the data source of the map should be updated as well
@@ -272,7 +266,7 @@ const setSelectedProject = (id: number) => {
   }
 }
 
-const flyToProject = (id: number) => {
+const goToProject = (id: number) => {
   const project = props.data.find((datum: ProjectLight) => datum.id === id)
   const coordinates = [project?.longitudeAvg ?? 0, project?.latitudeAvg ?? 0] as [number, number]
 
@@ -280,10 +274,8 @@ const flyToProject = (id: number) => {
   const currentCenter = map.getCenter()
   if (currentCenter.lng === coordinates[0] && currentCenter.lat === coordinates[1]) return
 
-  map.flyTo({
-    center: setCoordinateToRight(coordinates), // to avoid overlapping with sidebar
-    zoom: 13,
-    essential: true
+  map.easeTo({
+    center: setCoordinateToRight(coordinates)
   })
 }
 </script>
