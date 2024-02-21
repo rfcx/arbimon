@@ -187,14 +187,14 @@
                 <option value="Uploader app">
                   Uploader app
                 </option>
-                <option value="Data Management (Explore pages)">
-                  Data Management (Explore pages)
+                <option value="Explore & Manage Data (i.e. Sites, Recordings, Species, Playlist)">
+                  Explore & Manage Data (i.e. Sites, Recordings, Species, Playlist)
                 </option>
                 <option value="Visualizer">
                   Visualizer
                 </option>
-                <option value="Audio Analyses">
-                  Audio Analyses
+                <option value="Audio Analyses (PM, RFM, AED-C, Soundscape)">
+                  Audio Analyses (PM, RFM, AED-C, Soundscape)
                 </option>
                 <option value="Ecological Insights">
                   Ecological Insights
