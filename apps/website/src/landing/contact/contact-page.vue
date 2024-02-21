@@ -287,7 +287,7 @@
               <input
                 type="hidden"
                 name="description"
-                :value="getDescription.toString()"
+                :value="description"
               >
               <input
                 type="hidden"
@@ -358,15 +358,15 @@ const isSupportType = computed(() => {
   return inquiryType.value === 'Support'
 })
 
-const getDescription = computed(() => {
+const description = computed(() => {
   if (isSupportType.value) {
     return `
-    [product name]: ${productName.value}
-    [url]: ${url.value}
-    [message]: ${message.value}
-  `
+      [product name]: ${productName.value}
+      [url]: ${url.value}
+      [message]: ${message.value}
+    `
   } else {
-  return message.value
+    return message.value
   }
 })
 
