@@ -208,7 +208,8 @@ onMounted(() => {
       const coordinates = (features[0]?.geometry as Point).coordinates.slice() as [number, number]
       if (err === null) {
         map.easeTo({
-          center: setCoordinateToRight(coordinates),
+          padding: { top: 0, bottom: 0, left: 500, right: 0 },
+          center: coordinates,
           zoom
         })
       }
@@ -249,12 +250,6 @@ watch(() => props.data, (newData) => {
   }
 })
 
-const setCoordinateToRight = (coordinates: [number, number]) => {
-  const [lng, lat] = coordinates
-  const newLng = lng - 0.03
-  return [newLng, lat] as [number, number]
-}
-
 const setSelectedProject = (id: number) => {
   const selectedProjectGeoJson = toGeoJson(props.data.filter((datum: ProjectLight) => datum.id === id))
   if (map.getSource('selected-project') === undefined) {
@@ -276,7 +271,8 @@ const goToProject = (id: number) => {
   if (currentCenter.lng === coordinates[0] && currentCenter.lat === coordinates[1]) return
 
   map.easeTo({
-    center: setCoordinateToRight(coordinates)
+    padding: { top: 0, bottom: 0, left: 500, right: 0 },
+    center: coordinates
   })
 }
 </script>
