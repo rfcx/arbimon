@@ -3,7 +3,7 @@ import { type DetectDetectionsParams, type DetectDetectionsQueryParams, type Det
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioUnauthorizedError } from '~/errors'
-import { assertPathParamsExist } from '~/validation'
+import { assertPathParamsExist, assertQueryParamsExist } from '~/validation'
 import { getDetections } from './detect-bll'
 
 export const detectDetectionsHandler: Handler<DetectDetectionsResponse, DetectDetectionsParams, DetectDetectionsQueryParams> = async (req) => {
@@ -16,6 +16,8 @@ export const detectDetectionsHandler: Handler<DetectDetectionsResponse, DetectDe
 
   const { jobId } = req.params
   assertPathParamsExist({ jobId })
+  const { start, end } = req.query
+  assertQueryParamsExist({ start, end })
 
   const jobIdInteger = parseInt(jobId)
   if (Number.isNaN(jobIdInteger)) throw BioInvalidPathParamError({ jobId })
