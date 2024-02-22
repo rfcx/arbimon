@@ -140,7 +140,7 @@ const mapInitialBounds: ComputedRef<LngLatBoundsLike | null> = computed(() => {
 })
 
 const circleFormatter: ComputedRef<MapBaseFormatter> = computed(() => {
-  return new CircleFormatterNormalizedWithMin({ maxValueRaw: mapDataset.value.maxValues[MAP_KEY], showZeroInLegend: false })
+  return new CircleFormatterNormalizedWithMin({ maxValueRaw: mapDataset.value.maxValues[MAP_KEY] })
 })
 
 const circleStyle = computed(() => {
