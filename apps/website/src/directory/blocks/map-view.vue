@@ -97,7 +97,6 @@ onMounted(() => {
       type: 'geojson',
       data: toGeoJson(props.data),
       cluster: true,
-      clusterMinPoints: 10,
       generateId: true,
       clusterMaxZoom: 14, // Max zoom to cluster points on
       clusterRadius: 100 // Radius of each cluster when clustering points (defaults to 50)
@@ -162,8 +161,8 @@ onMounted(() => {
         'text-field': [
           'case',
           ['<', ['get', 'point_count'], 10],
-          ['to-string', ['get', 'point_count']],
-          ['concat', ['to-string', ['*', ['ceil', ['/', ['get', 'point_count'], 10]], 10]], '+']
+          ['get', 'point_count'],
+          '10+'
         ],
         'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
         'text-size': 12
@@ -208,8 +207,7 @@ onMounted(() => {
       const coordinates = (features[0]?.geometry as Point).coordinates.slice() as [number, number]
       if (err === null) {
         map.easeTo({
-          padding: { top: 0, bottom: 0, left: 500, right: 0 },
-          center: coordinates,
+          center: setCoordinateToRight(coordinates),
           zoom
         })
       }
@@ -219,7 +217,6 @@ onMounted(() => {
   map.on('click', 'unclustered-point', (e) => {
     const features = map.queryRenderedFeatures(e.point, { layers: ['unclustered-point'] })
     const { id } = features[0]?.properties ?? {}
-    goToProject(id)
     emit('emitSelectedProject', id)
   })
 
@@ -232,8 +229,15 @@ onMounted(() => {
 
 watch(() => props.selectedProjectId, (id) => {
   setSelectedProject(id ?? -1)
-  if (id === undefined) { return }
-  goToProject(id)
+  if (id === undefined) {
+    map.flyTo({
+      center: mapCenter.value,
+      zoom: 1.8,
+      essential: true
+    })
+    return
+  }
+  flyToProject(id)
 })
 
 // TODO: if the props.data updated, the data source of the map should be updated as well
@@ -250,6 +254,12 @@ watch(() => props.data, (newData) => {
   }
 })
 
+const setCoordinateToRight = (coordinates: [number, number]) => {
+  const [lng, lat] = coordinates
+  const newLng = lng - 0.03
+  return [newLng, lat] as [number, number]
+}
+
 const setSelectedProject = (id: number) => {
   const selectedProjectGeoJson = toGeoJson(props.data.filter((datum: ProjectLight) => datum.id === id))
   if (map.getSource('selected-project') === undefined) {
@@ -262,7 +272,7 @@ const setSelectedProject = (id: number) => {
   }
 }
 
-const goToProject = (id: number) => {
+const flyToProject = (id: number) => {
   const project = props.data.find((datum: ProjectLight) => datum.id === id)
   const coordinates = [project?.longitudeAvg ?? 0, project?.latitudeAvg ?? 0] as [number, number]
 
@@ -270,9 +280,10 @@ const goToProject = (id: number) => {
   const currentCenter = map.getCenter()
   if (currentCenter.lng === coordinates[0] && currentCenter.lat === coordinates[1]) return
 
-  map.easeTo({
-    padding: { top: 0, bottom: 0, left: 500, right: 0 },
-    center: coordinates
+  map.flyTo({
+    center: setCoordinateToRight(coordinates), // to avoid overlapping with sidebar
+    zoom: 13,
+    essential: true
   })
 }
 </script>

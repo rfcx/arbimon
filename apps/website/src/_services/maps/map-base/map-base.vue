@@ -320,7 +320,7 @@ const updateDataSourceAndLayer = (id: string, mapData: MapSiteData[], paint: Any
       geometry: { type: 'Point', coordinates: [datum.longitude, datum.latitude] },
       properties: {
         title: datum.siteName,
-        radius: (datum.isExpand ?? false) ? 5 : props.mapBaseFormatter.getRadius(Number(datum.values[props.dataKey])),
+        radius: datum.isExpand !== null ? 5 : props.mapBaseFormatter.getRadius(Number(datum.values[props.dataKey])),
         popup: getPopup(datum)
       }
     }))
