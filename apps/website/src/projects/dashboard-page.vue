@@ -1,93 +1,98 @@
 <template>
-  <div class="bg-gray-50 dark:bg-pitch grid px-4 pl-18 default-scroll-start smooth">
-    <section
-      class="grid gap-y-20 mx-auto py-20 w-full max-w-screen-xl"
-      :class="{'overflow-y-hidden h-screen': hasOpenedAnalysisSelector === true}"
-    >
-      <div class="text-gray-900 dark:text-white">
-        <h1 class="text-5xl font-header font-normal <sm:text-2xl">
-          {{ store.project?.name }}
-        </h1>
-      </div>
-      <div class="text-gray-900 dark:text-white flex flex-col gap-y-6">
-        <h2>
-          Overview
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
-          <DashboardOverview
-            v-for="stat in stats"
-            :key="stat.value"
-            :stat="stat"
-          />
+  <div class="default-scroll-start smooth">
+    <BannerWhatNew
+      :extra-class="`ml-6`"
+    />
+    <div class="bg-gray-50 dark:bg-pitch grid px-4 pl-18">
+      <section
+        class="grid gap-y-20 mx-auto py-20 w-full max-w-screen-xl"
+        :class="{'overflow-y-hidden h-screen': hasOpenedAnalysisSelector === true}"
+      >
+        <div class="text-gray-900 dark:text-white">
+          <h1 class="text-5xl font-header font-normal <sm:text-2xl">
+            {{ store.project?.name }}
+          </h1>
         </div>
-      </div>
-      <div class="text-gray-900 dark:text-white flex flex-col gap-y-6">
-        <h2>
-          Sites
-        </h2>
-        <div class="w-full text-black mapboxgl-map">
-          <map-base-component
-            :dataset="mapDataset()"
-            data-key="refactorThis"
-            :loading="false"
-            :get-popup-html="getPopupHtml"
-            map-export-name="dashboard-sites"
-            :map-id="'dashboard-sites'"
-            :map-initial-bounds="mapInitialBounds()"
-            :map-base-formatter="circleFormatter()"
-            :map-ground-style="mapGroundStyle"
-            :map-statistics-style="mapStatisticsStyle"
-            :is-show-labels="isShowLabels"
-            :map-height="tabHeight"
-            :style-non-zero="circleStyle()"
-            class="map-bubble w-full"
-          />
-        </div>
-      </div>
-      <div class="text-gray-900 dark:text-white flex flex-col gap-y-6">
-        <div class="flex items-center space-x-8">
+        <div class="text-gray-900 dark:text-white flex flex-col gap-y-6">
           <h2>
-            Analyses
+            Overview
           </h2>
-          <button
-            v-if="store.userIsFullProjectMember"
-            class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3 disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
-            type="button"
-            :title="'Create New Analysis Job'"
-            data-tooltip-target="analysesTooltipId"
-            data-tooltip-placement="bottom"
-            :disabled="!store.userIsFullProjectMember"
-            @click="toggleAnalysisSelector(true)"
-          >
-            <icon-custom-ic-plus class="h-4 w-4 mb-3px" />
-            <span class="font-display text-base">Create new analysis</span>
-          </button>
-          <div
-            v-if="!store.userIsFullProjectMember"
-            id="analysesTooltipId"
-            role="tooltip"
-            class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
-          >
-            {{ disableText }}
-            <div
-              class="tooltip-arrow"
-              data-popper-arrow
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
+            <DashboardOverview
+              v-for="stat in stats"
+              :key="stat.value"
+              :stat="stat"
             />
           </div>
-          <CreateAnalysis
-            v-if="hasOpenedAnalysisSelector"
-            @emit-close="toggleAnalysisSelector(false)"
-          />
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10">
-          <DashboardAnalyses
-            v-for="analysis in analyses"
-            :key="analysis.value"
-            :analysis="analysis"
-          />
+        <div class="text-gray-900 dark:text-white flex flex-col gap-y-6">
+          <h2>
+            Sites
+          </h2>
+          <div class="w-full text-black mapboxgl-map">
+            <map-base-component
+              :dataset="mapDataset()"
+              data-key="refactorThis"
+              :loading="false"
+              :get-popup-html="getPopupHtml"
+              map-export-name="dashboard-sites"
+              :map-id="'dashboard-sites'"
+              :map-initial-bounds="mapInitialBounds()"
+              :map-base-formatter="circleFormatter()"
+              :map-ground-style="mapGroundStyle"
+              :map-statistics-style="mapStatisticsStyle"
+              :is-show-labels="isShowLabels"
+              :map-height="tabHeight"
+              :style-non-zero="circleStyle()"
+              class="map-bubble w-full"
+            />
+          </div>
         </div>
-      </div>
-    </section>
+        <div class="text-gray-900 dark:text-white flex flex-col gap-y-6">
+          <div class="flex items-center space-x-8">
+            <h2>
+              Analyses
+            </h2>
+            <button
+              v-if="store.userIsFullProjectMember"
+              class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3 disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
+              type="button"
+              :title="'Create New Analysis Job'"
+              data-tooltip-target="analysesTooltipId"
+              data-tooltip-placement="bottom"
+              :disabled="!store.userIsFullProjectMember"
+              @click="toggleAnalysisSelector(true)"
+            >
+              <icon-custom-ic-plus class="h-4 w-4 mb-3px" />
+              <span class="font-display text-base">Create new analysis</span>
+            </button>
+            <div
+              v-if="!store.userIsFullProjectMember"
+              id="analysesTooltipId"
+              role="tooltip"
+              class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+            >
+              {{ disableText }}
+              <div
+                class="tooltip-arrow"
+                data-popper-arrow
+              />
+            </div>
+            <CreateAnalysis
+              v-if="hasOpenedAnalysisSelector"
+              @emit-close="toggleAnalysisSelector(false)"
+            />
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10">
+            <DashboardAnalyses
+              v-for="analysis in analyses"
+              :key="analysis.value"
+              :analysis="analysis"
+            />
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -100,6 +105,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
 import { useGetDashboardMetrics } from '@/insights/overview/composables/use-get-dashboard-metrics'
+import BannerWhatNew from '@/projects/components/banner-what-new.vue'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
