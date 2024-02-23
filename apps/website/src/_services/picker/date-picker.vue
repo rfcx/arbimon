@@ -53,3 +53,14 @@ watchEffect(() => { emitSelectDateRange(dateValues.value) })
 const disableFutureDate = (date: Date): boolean => date > dayjs().toDate()
 
 </script>
+
+<style lang="scss">
+.el-input__wrapper {
+  border: 1px solid #F9F6F2 !important;
+  box-shadow: none !important;
+}
+
+.el-icon {
+  color: #fff !important;
+}
+</style>
