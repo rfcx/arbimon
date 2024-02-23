@@ -79,7 +79,7 @@ const routes: RouteRecordRaw[] = [
     redirect: { name: ROUTE_NAMES.overview },
     children: [
       {
-        path: 'dashboard',
+        path: 'overview',
         name: ROUTE_NAMES.dashboard,
         component: PAGES.Dashboard,
         beforeEnter: [authRequiredGuard, storeMemberGuard]
