@@ -1,6 +1,8 @@
 <template>
   <section class="max-w-screen-xl py-20 pl-115px pr-4">
-    <page-title page-title="Create New CNN Job" />
+    <div class="text-frequency">
+      <page-title page-title="Create New CNN Job" />
+    </div>
     <el-alert
       v-if="errors.length > 0"
       :title="errors.join('; ')"
@@ -15,12 +17,27 @@
           <span class="mt-1.5 flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
             1
           </span>
-          <h2 class="mb-4 text-md">
+          <h6 class="mb-4 text-base">
             Choose Model
-          </h2>
-          <span v-if="isLoadingClassifiers">Loading</span>
-          <span v-else-if="isErrorClassifier">Error</span>
-          <span v-else-if="classifiers === undefined">No response</span>
+          </h6>
+          <span
+            v-if="isLoadingClassifiers"
+            class="text-sm"
+          >
+            Loading
+          </span>
+          <span
+            v-else-if="isErrorClassifier"
+            class="text-sm"
+          >
+            Error
+          </span>
+          <span
+            v-else-if="classifiers === undefined"
+            class="text-sm"
+          >
+            No response
+          </span>
           <classifier-picker
             v-else
             :classifier-models="classifiers"
@@ -31,13 +48,13 @@
           <span class="mt-1.5 flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
             2
           </span>
-          <h2 class="mb-4 text-md">
+          <h6 class="mb-4 text-base">
             Choose Parameters
-          </h2>
+          </h6>
           <div class="mb-4">
             <label
               for="sites"
-              class="block mb-2 text-md"
+              class="block mb-2 text-sm"
             >
               Sites
             </label>
@@ -61,7 +78,7 @@
           <div class="mb-4">
             <label
               for="time"
-              class="block mb-2 text-md"
+              class="block mb-2 text-sm"
             >
               Time of day
             </label>
@@ -72,15 +89,15 @@
           <span class="mt-1.5 flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
             3
           </span>
-          <h2 class="mb-4 text-md">
+          <h6 class="mb-4 text-base">
             Job size estimation
-          </h2>
+          </h6>
           <span v-if="isLoadingDetectRecording">Loading</span>
           <span v-else-if="isErrorDetectRecording">Error</span>
           <span v-else-if="recordingData === undefined">No response</span>
           <span
             v-else
-            class="text-subtle"
+            class="text-sm"
           >{{ totalDurationInMinutes }} minutes of recordings</span>
         </li>
       </ol>

@@ -8,7 +8,7 @@
       :color="item.label === selectedTime.selectedTimeType ? '#45485D' : '#232436'"
       round
       bg
-      class="capitalize"
+      class="capitalize text-sm"
       @click="selectTimeType(item)"
     >
       {{ item.label }}
@@ -16,7 +16,7 @@
   </el-row>
   <el-input
     v-model="selectedTime.selectedHourRange"
-    size="large"
+    size="small"
     placeholder="e.g. 0-5, 7-11, 14, 15"
     @focus="clearTimeInput"
     @input="selectTimeInput"
