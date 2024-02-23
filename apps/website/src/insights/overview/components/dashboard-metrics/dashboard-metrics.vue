@@ -37,9 +37,9 @@
   >
     <numeric-metric-with-icons
       tooltip-id="total-sites"
-      tooltip-text="Total sites created."
+      tooltip-text="Number of sites with recordings."
       title="Total sites"
-      :value="totalSitesCreated"
+      :value="metrics?.totalSites ?? 0"
       icon-name="ft-map-pin-lg"
       class="flex-1"
     />
@@ -76,15 +76,11 @@ import { computed } from 'vue'
 
 import type { DashboardMetricsResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-metrics'
 
-import { useStore } from '~/store'
 import NumericMetricError from './components/numeric-metric-error.vue'
 import NumericMetricWithIcons from './components/numeric-metric-with-icons.vue'
-
-const store = useStore()
 
 const props = defineProps<{ loading: boolean, error: boolean, metrics: DashboardMetricsResponse | undefined }>()
 
 // form the total recordings value (minutes or hours)
 const totalRecordingsMin = computed(() => props.metrics?.totalRecordings ?? 0)
-const totalSitesCreated = computed(() => store.projectFilters?.locationSites.length ?? 0)
 </script>
