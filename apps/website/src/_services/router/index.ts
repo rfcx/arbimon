@@ -118,7 +118,8 @@ const routes: RouteRecordRaw[] = [
           {
             path: 'spotlight/:speciesSlug?',
             name: ROUTE_NAMES.activityPatterns,
-            component: PAGES.InsightsActivityPatterns
+            component: PAGES.InsightsActivityPatterns,
+            alias: ['/:projectSlug/spotlight/:speciesSlug?']
           },
           {
             path: 'sync-history',
