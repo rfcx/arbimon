@@ -51,7 +51,7 @@
           <h6 class="mb-4 text-base">
             Choose Parameters
           </h6>
-          <div class="mb-4">
+          <div class="mb-3">
             <label
               for="sites"
               class="block mb-2 text-sm"
@@ -63,7 +63,7 @@
               @emit-select-sites="onSelectQuerySites"
             />
           </div>
-          <div class="mb-4">
+          <div class="mb-3 mt-5">
             <label
               for="date"
               class="block mb-2 text-sm"
@@ -75,14 +75,37 @@
               @emit-select-date-range="onSelectQueryDates"
             />
           </div>
-          <div class="mb-4">
+          <div class="mb-3 mt-5">
             <label
               for="time"
               class="block mb-2 text-sm"
             >
               Time of day
             </label>
-            <TimeOfDayPicker @emit-select-time="onSelectQueryHours" />
+            <div class="flex inline-flex ">
+              <button
+                type="button"
+                class="h-8 px-3 text-sm flex-shrink-0 rounded-md flex justify-center items-center"
+                :class="selectedTime.selectedTimeType === 'All day' ? 'bg-util-gray-01 text-black' : 'bg-pitch border-1 border-white text-white'"
+                @click="selectAllDay"
+              >
+                All Day
+              </button>
+              <button
+                type="button"
+                class="ml-3 h-8 px-3 text-sm flex-shrink-0 rounded-md flex justify-center items-center"
+                :class="selectedTime.selectedTimeType === 'All day' ? 'bg-pitch border-1 border-white text-white' : 'bg-util-gray-01 text-black'"
+                @click="selectCustom"
+              >
+                Custom
+              </button>
+            </div>
+            <input
+              v-model="selectedTime.selectedHourRangeLable"
+              type="text"
+              class="p-2 mt-4 bg-pitch text-insight w-full border border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
+              @input="onSelectQueryHours(selectedTime.selectedHourRangeLable)"
+            >
           </div>
         </li>
         <li class="pb-8 pl-6">
@@ -149,7 +172,6 @@ import ClassifierPicker from '@/_services/picker/classifier-picker.vue'
 import DatePicker from '@/_services/picker/date-picker.vue'
 import type { DateRange } from '@/_services/picker/date-range-picker-interface'
 import SitePicker from '@/_services/picker/site-picker.vue'
-import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
 import { apiClientCoreKey, apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useProjectUserPermissionsStore, useStore } from '~/store'
@@ -180,6 +202,12 @@ const recordingQuery: DetectRecordingQueryParams = reactive({
 
 const project = reactive({
   projectId: '-1'
+})
+
+const selectedTime = reactive({
+  selectedTimeType: '',
+  selectedHourRange: '',
+  selectedHourRangeLable: ''
 })
 
 const hasProjectPermission = ref(false)
@@ -232,6 +260,21 @@ const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) =
   recordingQuery.dateStartLocal = dateStartLocalIso
   recordingQuery.dateEndLocal = dateEndLocalIso
 }
+
+const selectAllDay = () => {
+  selectedTime.selectedTimeType = 'All day'
+  selectedTime.selectedHourRange = '0-23'
+  selectedTime.selectedHourRangeLable = '00:00-23:00'
+  onSelectQueryHours('0-23')
+}
+
+const selectCustom = () => {
+  selectedTime.selectedTimeType = 'Custom'
+  selectedTime.selectedHourRange = ''
+  selectedTime.selectedHourRangeLable = ''
+  onSelectQueryHours('')
+}
+
 const onSelectQueryHours = (queryHours: string) => {
   validated.value = false
   job.queryHours = queryHours
