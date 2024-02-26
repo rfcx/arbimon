@@ -11,7 +11,7 @@
     "stylelint.vscode-stylelint",
     "vue.volar",
     "yzhang.markdown-all-in-one",
-    "zixuanchen.vitest-explorer",
+    "vitest.explorer",
     "bradlc.vscode-tailwindcss"
   ],
 

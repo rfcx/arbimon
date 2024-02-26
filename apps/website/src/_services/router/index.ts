@@ -79,7 +79,7 @@ const routes: RouteRecordRaw[] = [
     redirect: { name: ROUTE_NAMES.overview },
     children: [
       {
-        path: 'dashboard',
+        path: 'overview',
         name: ROUTE_NAMES.dashboard,
         component: PAGES.Dashboard,
         beforeEnter: [authRequiredGuard, storeMemberGuard]
@@ -118,7 +118,8 @@ const routes: RouteRecordRaw[] = [
           {
             path: 'spotlight/:speciesSlug?',
             name: ROUTE_NAMES.activityPatterns,
-            component: PAGES.InsightsActivityPatterns
+            component: PAGES.InsightsActivityPatterns,
+            alias: ['/:projectSlug/spotlight/:speciesSlug?']
           },
           {
             path: 'sync-history',

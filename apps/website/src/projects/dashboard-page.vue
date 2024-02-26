@@ -137,7 +137,7 @@ const isViewingAsGuest = computed(() => {
 const disableText = ref('Contact your project administrator for permission to manage analyses')
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
-const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
+const { isLoading: isLoadingMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 const { isLoading: isLoadingSitesRecCountBio, data: projectSitesRecCount } = useBioProjectSitesRecordingCount(apiClientBio, selectedProjectId)
 
 const BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
@@ -161,7 +161,7 @@ const { isLoading: isLoadingPmtCount, data: pmSpeciesCount } = usePmSpeciesDetec
 const { isLoading: isLoadingPmTemplateCount, data: pmTemplateCount } = usePmTemplateCount(apiClientArbimon, selectedProjectSlug)
 
 const stats = computed(() => [
-  { value: 'site', title: 'Sites created', description: 'Number of sites with recordings', count: isErrorMetrics.value ? 0 : metrics.value?.totalSites, isLoading: isLoadingMetrics.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
+  { value: 'site', title: 'Sites created', description: 'Total sites created', count: totalSitesCreated.value, isLoading: isLoadingMetrics.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
   { value: 'recording', title: 'Minutes of recordings', description: 'Total minutes of recordings captured', count: metrics.value?.totalRecordings ?? 0, isLoading: isLoadingMetrics.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/uploads/` },
   { value: 'playlist', title: 'Playlists created', description: 'Number of playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` },
   { value: 'species', title: 'Species detected', description: 'Number of species detected', count: metrics.value?.totalSpecies ?? 0, isLoading: isLoadingMetrics.value, label: 'Add new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` }
@@ -173,6 +173,8 @@ const analyses = computed(() => [
   { value: 'aed', title: 'AED & Clustering', iconName: 'fi-aed', count: (aedJobCount.value != null) ? aedJobCount.value : 0 + ((clusteringJobCount.value != null) ? clusteringJobCount.value : 0), isLoading: isLoadingAedJobCount.value || isLoadingClusteringJobCount.value || isLoadingClusteringSpDetected.value, label: 'Jobs completed', speciesTitle: 'Species detected', speciesDetected: clusteringSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` },
   { value: 'rfm', title: 'Random Forest Models', iconName: 'fi-rfm', count: rfmCount.value, isLoading: isLoadingRFMCount.value || isLoadingSpDetected.value, label: 'Models completed', speciesTitle: 'Species analyzed', speciesDetected: rfmSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` }
 ])
+
+const totalSitesCreated = computed(() => store.projectFilters?.locationSites.length ?? 0)
 
 const hasPermissionAnalyses = computed<boolean>(() => {
   return projectUserPermissionsStore.isMember && !isViewingAsGuest.value && projectUserPermissionsStore.role !== 'entry' && projectUserPermissionsStore.role !== 'user'
