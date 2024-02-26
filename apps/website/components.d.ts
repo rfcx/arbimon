@@ -112,6 +112,7 @@ declare module 'vue' {
     IconFasSearch: typeof import('~icons/fa-solid/search')['default']
     IconFasSpinner: typeof import('~icons/fa-solid/spinner')['default']
     IconFasTag: typeof import('~icons/fa-solid/tag')['default']
+    IconFaTimes: typeof import('~icons/fa/times')['default']
     IconFaTrash: typeof import('~icons/fa/trash')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

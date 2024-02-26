@@ -131,7 +131,7 @@ const selectedProjectSlug = computed(() => store.project?.slug)
 const disableText = ref('Contact your project administrator for permission to manage analyses')
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
-const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
+const { isLoading: isLoadingMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 const { isLoading: isLoadingSitesRecCountBio, data: projectSitesRecCount } = useBioProjectSitesRecordingCount(apiClientBio, selectedProjectId)
 
 const BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
@@ -155,7 +155,7 @@ const { isLoading: isLoadingPmtCount, data: pmSpeciesCount } = usePmSpeciesDetec
 const { isLoading: isLoadingPmTemplateCount, data: pmTemplateCount } = usePmTemplateCount(apiClientArbimon, selectedProjectSlug)
 
 const stats = computed(() => [
-  { value: 'site', title: 'Sites created', description: 'Number of sites with recordings', count: isErrorMetrics.value ? 0 : metrics.value?.totalSites, isLoading: isLoadingMetrics.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
+  { value: 'site', title: 'Sites created', description: 'Total sites created', count: store.projectFilters?.locationSites.length ?? 0, isLoading: isLoadingMetrics.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
   { value: 'recording', title: 'Minutes of recordings', description: 'Total minutes of recordings captured', count: metrics.value?.totalRecordings ?? 0, isLoading: isLoadingMetrics.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/uploads/` },
   { value: 'playlist', title: 'Playlists created', description: 'Number of playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` },
   { value: 'species', title: 'Species detected', description: 'Number of species detected', count: metrics.value?.totalSpecies ?? 0, isLoading: isLoadingMetrics.value, label: 'Add new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` }
@@ -216,7 +216,7 @@ function findDaysWithRecordings (id: number): number {
 
 function mapInitialBounds (): LngLatBoundsLike | undefined {
   const project = store.project
-  if (!project) return undefined
+  if (project === undefined) return undefined
   return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
 }
 
