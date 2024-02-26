@@ -1,20 +1,17 @@
 <template>
-  <el-select
+  <select
+    id="selected-classifier"
     v-model="selectedClassifier"
-    filterable
-    placeholder="Select classifier"
-    no-data-text="No matching classifiers"
-    class="block w-full"
-    size="large"
+    class="bg-pitch border border-frequency text-insight text-sm rounded-md block w-full p-3 font-sans border border-1 focus:border-frequency focus:outline-none focus:ring-0"
   >
-    <el-option
+    <option
       v-for="classifier in classifierModels"
       :key="classifier.id"
       :value="classifier.id"
-      class="my-0.5"
+      class="w-full"
       :label="classifier.name + ' (v' + classifier.version + ')'"
     />
-  </el-select>
+  </select>
 </template>
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
