@@ -12,12 +12,12 @@
         <li
           v-for="site in selectedOptions"
           :key="site"
-          class="bg-util-gray-04 rounded-sm px-2 py-1 flex flex-row grow items-center text-sm"
+          class="bg-util-gray-04 cursor-pointer rounded-sm px-2 py-1 flex flex-row grow items-center text-sm"
         >
           {{ site === ALL_SITES_OPTIONS.value ? ALL_SITES_OPTIONS.label : site }}
           <button
             type="button"
-            class="ml-2"
+            class="ml-2 p-0.5 hover:bg-util-gray-03 rounded-sm"
             @click="unselectSite(site)"
           >
             <icon-fa-times class="w-2 h-2" />
