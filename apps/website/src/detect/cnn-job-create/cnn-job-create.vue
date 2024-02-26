@@ -62,6 +62,10 @@
               :initial-sites="projectFilters?.locationSites"
               @emit-select-sites="onSelectQuerySites"
             />
+            <site-input
+              class="mt-2"
+              :initial-sites="projectFilters?.locationSites"
+            />
           </div>
           <div class="mb-3 mt-5">
             <label
@@ -171,6 +175,7 @@ import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 import ClassifierPicker from '@/_services/picker/classifier-picker.vue'
 import DatePicker from '@/_services/picker/date-picker.vue'
 import type { DateRange } from '@/_services/picker/date-range-picker-interface'
+import SiteInput from '@/_services/picker/site-input.vue'
 import SitePicker from '@/_services/picker/site-picker.vue'
 import { apiClientCoreKey, apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
