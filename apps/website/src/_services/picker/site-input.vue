@@ -1,9 +1,9 @@
 <template>
   <div class="relative my-6">
     <form
-      id="siteDropdownTrigger"
+      ref="siteResultInput"
       class="relative w-full py-1 px-2 flex flex-row items-center gap-1 flex-wrap border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
-      data-dropdown-toggle="siteResultDropdown"
+      @click="openSiteTrigger()"
     >
       <!-- selected sites so far -->
       <ul
@@ -41,7 +41,7 @@
       </span>
     </form>
     <div
-      id="siteResultDropdown"
+      ref="siteResultDropdownContainer"
       class="absolute w-5/6 left-4 z-40 bg-white rounded-md shadow dark:bg-moss border-util-gray-03 border-1 hidden"
     >
       <!-- dropdown (list of sites) -->
@@ -77,7 +77,9 @@
  *
  *  */
 
-import { computed, ref } from 'vue'
+import type { DropdownOptions } from 'flowbite'
+import { Dropdown } from 'flowbite'
+import { type Ref, computed, nextTick, onMounted, ref } from 'vue'
 
 import type { Site, SiteInputOptions } from '@rfcx-bio/common/dao/types'
 
@@ -90,7 +92,28 @@ const props = defineProps<{
 }>()
 const inputFilter = ref('')
 const hasFocusInput = ref(false)
+const hasDeletedSite = ref(false)
+const dropdownOptions: DropdownOptions = { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }
+const siteSearchDropdown = ref() as Ref<Dropdown>
+const siteResultInput = ref<HTMLDivElement | null>(null)
+const siteResultDropdownContainer = ref<HTMLDivElement | null>(null)
 
+onMounted(() => {
+  siteSearchDropdown.value = new Dropdown(siteResultDropdownContainer.value, siteResultInput.value, dropdownOptions)
+})
+
+const openSiteTrigger = async () => {
+  if (hasDeletedSite.value) {
+    siteSearchDropdown.value.hide()
+    hasDeletedSite.value = false
+    return
+  }
+
+  await nextTick()
+  siteResultInput.value?.focus()
+  siteSearchDropdown.value = new Dropdown(siteResultDropdownContainer.value, siteResultInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 })
+  siteSearchDropdown.value.show()
+}
 // TODO: change type to be Site[]
 const projectSiteOptions = computed(() => props.initialSites ?? [])
 
@@ -161,6 +184,7 @@ const unselectSite = (site: string) => {
   } else {
     selectedOptions.value = selectedOptions.value.filter((s) => s !== site)
   }
+  hasDeletedSite.value = true
 }
 
 const onKeydownDeleteSiteInput = () => {
