@@ -65,6 +65,7 @@
             <site-input
               class="mt-2"
               :initial-sites="projectFilters?.locationSites"
+              @emit-select-sites="onSelectQuerySites"
             />
           </div>
           <div class="mb-3 mt-5">
@@ -254,6 +255,7 @@ const onSelectClassifier = (classifierId: number) => {
   job.classifierId = classifierId
 }
 const onSelectQuerySites = (queryStreams: string | null) => {
+  console.info(queryStreams)
   validated.value = false
   job.queryStreams = queryStreams
   recordingQuery.querySites = queryStreams ?? undefined

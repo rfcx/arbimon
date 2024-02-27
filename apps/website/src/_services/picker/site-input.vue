@@ -11,10 +11,10 @@
       >
         <li
           v-for="site in selectedOptions"
-          :key="site"
+          :key="site.label"
           class="cursor-pointer rounded-sm px-2 py-1 flex flex-row grow items-center text-sm bg-util-gray-01 text-black"
         >
-          {{ site === ALL_SITES_OPTIONS.value ? ALL_SITES_OPTIONS.label : site }}
+          {{ site === ALL_SITES_OPTIONS ? ALL_SITES_OPTIONS.label : site.label }}
           <button
             type="button"
             class="ml-2 p-0.5 hover:bg-util-gray-02 rounded-sm"
@@ -79,7 +79,7 @@
  *  */
 
 import { Dropdown } from 'flowbite'
-import { type Ref, computed, nextTick, onMounted, ref } from 'vue'
+import { type Ref, computed, nextTick, onMounted, ref, watch } from 'vue'
 
 import type { Site, SiteInputOptions } from '@rfcx-bio/common/dao/types'
 
@@ -90,6 +90,7 @@ const ALL_SITES_OPTIONS = {
 const props = defineProps<{
   initialSites?: Site[]
 }>()
+const emit = defineEmits<{(e: 'emitSelectSites', value: string | null): void}>()
 const inputFilter = ref('')
 const hasFocusInput = ref(false)
 const hasDeletedSite = ref(false)
@@ -152,8 +153,8 @@ const groupOptions = computed(() => {
 })
 
 // selected values
-const selectedOptions = ref([ALL_SITES_OPTIONS.label])
-const isAllSiteOptionSelected = computed(() => selectedOptions.value.includes(ALL_SITES_OPTIONS.label))
+const selectedOptions = ref([ALL_SITES_OPTIONS])
+const isAllSiteOptionSelected = computed(() => selectedOptions.value.includes(ALL_SITES_OPTIONS))
 
 // emit data to the parent component
 // const selectedQuerySites = computed(() => {
@@ -163,25 +164,25 @@ const isAllSiteOptionSelected = computed(() => selectedOptions.value.includes(AL
 const selectSite = (site: SiteInputOptions) => {
   // if selected all sites, then remove all other sites
   if (site.value === ALL_SITES_OPTIONS.value) {
-    selectedOptions.value = [ALL_SITES_OPTIONS.value]
+    selectedOptions.value = [ALL_SITES_OPTIONS]
     return
   }
   // if selected filter sites, then remove all sites
-  const addOtherSitesWhileAllSitesSelected = (selectedOptions.value.find(s => s === ALL_SITES_OPTIONS.value) !== undefined) && site.value !== ALL_SITES_OPTIONS.value
+  const addOtherSitesWhileAllSitesSelected = (selectedOptions.value.find(s => s === ALL_SITES_OPTIONS) !== undefined) && site.value !== ALL_SITES_OPTIONS.value
   if (addOtherSitesWhileAllSitesSelected) { selectedOptions.value = [] }
 
   // if already selected, then do nothing
-  if (selectedOptions.value.includes(site.label)) { return }
+  if (selectedOptions.value.includes(site)) { return }
 
-  selectedOptions.value = [...selectedOptions.value, site.label]
+  selectedOptions.value = [...selectedOptions.value, site]
 }
 
-const unselectSite = (site: string) => {
+const unselectSite = (site: SiteInputOptions) => {
   // force to default value = all sites
   if (selectedOptions.value.length === 1) {
-    selectedOptions.value = [ALL_SITES_OPTIONS.value]
+    selectedOptions.value = [ALL_SITES_OPTIONS]
   } else {
-    selectedOptions.value = selectedOptions.value.filter((s) => s !== site)
+    selectedOptions.value = selectedOptions.value.filter((s) => s.value !== site.value)
   }
   hasDeletedSite.value = true
 }
@@ -191,5 +192,14 @@ const onKeydownDeleteSiteInput = () => {
     unselectSite(selectedOptions.value[selectedOptions.value.length - 1])
   }
 }
+
+const selectedQuerySites = computed(() => {
+  const listSite = selectedOptions.value.map(a => a.value)
+  return isAllSiteOptionSelected.value ? null : listSite.join(',')
+})
+
+watch(selectedQuerySites, () => {
+  emit('emitSelectSites', selectedQuerySites.value)
+})
 
 </script>
