@@ -1,7 +1,7 @@
 <template>
   <div class="relative my-6">
     <form
-      ref="siteResultInput"
+      ref="siteResultForm"
       class="relative w-full py-1 px-2 flex flex-row items-center gap-1 flex-wrap border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
       @click="openSiteTrigger()"
     >
@@ -25,6 +25,7 @@
         </li>
       </ul>
       <input
+        ref="siteResultInput"
         v-model="inputFilter"
         type="text"
         class="border-transparent px-2 py-1 bg-transparent ring-0 focus:ring-0 focus:border-transparent"
@@ -77,7 +78,6 @@
  *
  *  */
 
-import type { DropdownOptions } from 'flowbite'
 import { Dropdown } from 'flowbite'
 import { type Ref, computed, nextTick, onMounted, ref } from 'vue'
 
@@ -93,13 +93,13 @@ const props = defineProps<{
 const inputFilter = ref('')
 const hasFocusInput = ref(false)
 const hasDeletedSite = ref(false)
-const dropdownOptions: DropdownOptions = { placement: 'bottom', triggerType: 'none', offsetDistance: 1 }
 const siteSearchDropdown = ref() as Ref<Dropdown>
+const siteResultForm = ref<HTMLDivElement | null>(null)
 const siteResultInput = ref<HTMLDivElement | null>(null)
 const siteResultDropdownContainer = ref<HTMLDivElement | null>(null)
 
 onMounted(() => {
-  siteSearchDropdown.value = new Dropdown(siteResultDropdownContainer.value, siteResultInput.value, dropdownOptions)
+  siteSearchDropdown.value = new Dropdown(siteResultDropdownContainer.value, siteResultForm.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 })
 })
 
 const openSiteTrigger = async () => {
@@ -111,7 +111,6 @@ const openSiteTrigger = async () => {
 
   await nextTick()
   siteResultInput.value?.focus()
-  siteSearchDropdown.value = new Dropdown(siteResultDropdownContainer.value, siteResultInput.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 })
   siteSearchDropdown.value.show()
 }
 // TODO: change type to be Site[]
