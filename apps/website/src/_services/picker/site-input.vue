@@ -1,7 +1,7 @@
 <template>
   <div class="relative my-6">
     <form
-      id="siteResultDropdownTrigger"
+      id="siteDropdownTrigger"
       class="relative w-full p-2 border-fog border-1 rounded-lg flex flex-row items-center gap-1 flex-wrap"
       data-dropdown-toggle="siteResultDropdown"
     >
@@ -42,13 +42,14 @@
     </form>
     <div
       id="siteResultDropdown"
-      class="absolute w-5/6 left-4 z-40 bg-white rounded-md shadow dark:bg-moss border-util-gray-03 border-1"
+      class="absolute w-5/6 left-4 z-40 bg-white rounded-md shadow dark:bg-moss border-util-gray-03 border-1 hidden"
     >
       <!-- dropdown (list of sites) -->
       <!-- TODO: use flowbite dropdown -->
       <ul
         v-for="group in groupOptions"
         :key="group.label"
+        class="overflow-y-auto max-h-80 border-cloud bg-moss rounded-md"
       >
         <li class="rounded-md px-4 py-2 text-sm text-subtle font-medium">
           {{ group.label }}
