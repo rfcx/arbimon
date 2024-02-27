@@ -2,7 +2,7 @@
   <div class="relative my-6">
     <form
       id="siteDropdownTrigger"
-      class="relative w-full p-2 border-fog border-1 rounded-lg flex flex-row items-center gap-1 flex-wrap"
+      class="relative w-full py-1 px-2 flex flex-row items-center gap-1 flex-wrap border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
       data-dropdown-toggle="siteResultDropdown"
     >
       <!-- selected sites so far -->
@@ -12,12 +12,12 @@
         <li
           v-for="site in selectedOptions"
           :key="site"
-          class="bg-util-gray-04 cursor-pointer rounded-sm px-2 py-1 flex flex-row grow items-center text-sm"
+          class="cursor-pointer rounded-sm px-2 py-1 flex flex-row grow items-center text-sm bg-util-gray-01 text-black"
         >
           {{ site === ALL_SITES_OPTIONS.value ? ALL_SITES_OPTIONS.label : site }}
           <button
             type="button"
-            class="ml-2 p-0.5 hover:bg-util-gray-03 rounded-sm"
+            class="ml-2 p-0.5 hover:bg-util-gray-02 rounded-sm"
             @click="unselectSite(site)"
           >
             <icon-fa-times class="w-2 h-2" />
