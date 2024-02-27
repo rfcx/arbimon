@@ -63,4 +63,54 @@ const disableFutureDate = (date: Date): boolean => date > dayjs().toDate()
 .el-icon {
   color: #fff !important;
 }
+
+.el-date-range-picker__content .el-date-range-picker__header div {
+  color: rgba(173, 255, 44);
+}
+
+.el-picker-panel__icon-btn .el-icon{
+  color: rgba(173, 255, 44) !important;
+}
+
+.el-date-range-picker .el-picker-panel__body {
+  background-color: rgba(20, 19, 13);
+}
+
+.el-date-table td.in-range {
+  .el-date-table-cell__text {
+    color: rgb(1, 1, 0) !important;
+  }
+  .el-date-table-cell {
+    background-color: rgba(211, 210, 207);
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 5px;
+    &:hover {
+      background-color: rgb(176, 176, 174);
+    }
+  }
+}
+
+.el-date-table td.start-date .el-date-table-cell__text,
+.el-date-table td.end-date .el-date-table-cell__text {
+  background-color: transparent;
+}
+
+.el-date-table-cell__text {
+  color: rgba(173, 255, 44) !important;
+}
+
+.el-date-table td.available .el-date-table-cell:hover {
+  background-color: rgb(176, 176, 174);
+  margin-left: 5px;
+  margin-right: 5px;
+  border-radius: 5px;
+}
+
+td.next-month, td.prev-month {
+  .el-date-table-cell__text {
+    color: rgb(99, 144, 26)!important;
+  }
+}
+
 </style>
