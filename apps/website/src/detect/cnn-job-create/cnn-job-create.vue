@@ -255,7 +255,6 @@ const onSelectClassifier = (classifierId: number) => {
   job.classifierId = classifierId
 }
 const onSelectQuerySites = (queryStreams: string | null) => {
-  console.info(queryStreams)
   validated.value = false
   job.queryStreams = queryStreams
   recordingQuery.querySites = queryStreams ?? undefined

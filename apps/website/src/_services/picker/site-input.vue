@@ -166,6 +166,8 @@ const selectSite = (site: SiteInputOptions) => {
   if (site.value === ALL_SITES_OPTIONS.value) {
     selectedOptions.value = [ALL_SITES_OPTIONS]
     return
+  } else {
+    selectedOptions.value = selectedOptions.value.filter(s => s.value !== ALL_SITES_OPTIONS.value)
   }
   // if selected filter sites, then remove all sites
   const addOtherSitesWhileAllSitesSelected = (selectedOptions.value.find(s => s === ALL_SITES_OPTIONS) !== undefined) && site.value !== ALL_SITES_OPTIONS.value
