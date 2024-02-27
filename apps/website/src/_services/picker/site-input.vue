@@ -58,7 +58,7 @@
           v-for="item in group.options"
           :key="item.value"
           class="cursor-pointer rounded-md px-4 py-2 hover:bg-util-gray-03 text-sm"
-          @click="selectSite(item.value)"
+          @click="selectSite(item)"
         >
           {{ item.label }}
         </li>
@@ -79,7 +79,7 @@
 
 import { computed, ref } from 'vue'
 
-import type { Site } from '@rfcx-bio/common/dao/types'
+import type { Site, SiteInputOptions } from '@rfcx-bio/common/dao/types'
 
 const ALL_SITES_OPTIONS = {
   value: '',
@@ -130,28 +130,28 @@ const groupOptions = computed(() => {
 })
 
 // selected values
-const selectedOptions = ref([ALL_SITES_OPTIONS.value])
-const isAllSiteOptionSelected = computed(() => selectedOptions.value.includes(ALL_SITES_OPTIONS.value))
+const selectedOptions = ref([ALL_SITES_OPTIONS.label])
+const isAllSiteOptionSelected = computed(() => selectedOptions.value.includes(ALL_SITES_OPTIONS.label))
 
 // emit data to the parent component
 // const selectedQuerySites = computed(() => {
 //   return isAllSiteOptionSelected.value ? null : selectedOptions.value.join(',')
 // })
 
-const selectSite = (site: string) => {
+const selectSite = (site: SiteInputOptions) => {
   // if selected all sites, then remove all other sites
-  if (site === ALL_SITES_OPTIONS.value) {
+  if (site.value === ALL_SITES_OPTIONS.value) {
     selectedOptions.value = [ALL_SITES_OPTIONS.value]
     return
   }
   // if selected filter sites, then remove all sites
-  const addOtherSitesWhileAllSitesSelected = (selectedOptions.value.find(s => s === ALL_SITES_OPTIONS.value) !== undefined) && site !== ALL_SITES_OPTIONS.value
+  const addOtherSitesWhileAllSitesSelected = (selectedOptions.value.find(s => s === ALL_SITES_OPTIONS.value) !== undefined) && site.value !== ALL_SITES_OPTIONS.value
   if (addOtherSitesWhileAllSitesSelected) { selectedOptions.value = [] }
 
   // if already selected, then do nothing
-  if (selectedOptions.value.includes(site)) { return }
+  if (selectedOptions.value.includes(site.label)) { return }
 
-  selectedOptions.value = [...selectedOptions.value, site]
+  selectedOptions.value = [...selectedOptions.value, site.label]
 }
 
 const unselectSite = (site: string) => {
