@@ -30,7 +30,7 @@ export const getProjects = async (sequelize: Sequelize, constraint?: { type: 'de
   if (constraint?.type === 'updated') {
     if (constraint?.time) {
       console.info('- querying updated projects after', constraint?.time?.toISOString())
-      completeSql += ' and location_project.updated_at >= :latest_sync_date'
+      completeSql += ' and (location_project.updated_at >= :latest_sync_date or location_project_profile.updated_at >= :latest_sync_date)'
     }
   }
 
