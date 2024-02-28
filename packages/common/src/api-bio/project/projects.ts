@@ -8,6 +8,7 @@ import { type LocationProjectProfile, type LocationProjectTypes, type Project } 
 export interface LocationProjectQuery {
   limit?: number
   offset?: number
+  keyword?: string
 }
 
 export interface DirectoryProjectsQuery {
