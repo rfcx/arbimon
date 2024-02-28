@@ -4,12 +4,12 @@
       <img
         v-if="user.image"
         :src="user.image"
-        class="h-8 w-8 self-center rounded-full"
+        class="h-8 w-8 min-w-8 self-center rounded-full"
         alt="User image"
       >
       <div
         v-else
-        class="h-8 w-8 bg-util-gray-03 rounded-full"
+        class="h-8 w-8 min-w-8 bg-util-gray-03 rounded-full"
       />
       <div class="mx-3 flex flex-col justify-start whitespace-nowrap text-ellipsis overflow-hidden">
         <span
