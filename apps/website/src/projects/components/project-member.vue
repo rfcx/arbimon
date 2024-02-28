@@ -18,7 +18,7 @@
           {{ user.firstName }} {{ user.lastName }}
         </span>
         <span class="text-fog whitespace-nowrap text-ellipsis overflow-hidden">
-          {{ user.email }}{{ user.email }}
+          {{ user.email }}
         </span>
       </div>
     </div>
