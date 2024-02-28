@@ -17,7 +17,10 @@
         >
           {{ user.firstName }} {{ user.lastName }}
         </span>
-        <span class="text-fog whitespace-nowrap text-ellipsis overflow-hidden">
+        <span
+          class="text-fog whitespace-nowrap text-ellipsis overflow-hidden"
+          :title="user.email"
+        >
           {{ user.email }}
         </span>
       </div>
