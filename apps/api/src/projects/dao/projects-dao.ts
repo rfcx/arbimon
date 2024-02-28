@@ -80,10 +80,10 @@ export const getViewableProjects = async (userId: number | undefined): Promise<L
 export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, limit: number = 20, keyword?: string): Promise<MyProjectsResponse> => {
   const memberProjectIds = await getProjectIdsByUser(userId)
 
-  let where = { id: memberProjectIds }
+  const where: WhereOptions<Project> = { id: memberProjectIds }
 
   if (keyword) {
-    where = Object.assign(where, { name: { [Op.iLike]: `%${keyword}%` } })
+    where.name = { [Op.iLike]: `%${keyword}%` }
   }
 
   const myProjects = await models.LocationProject
