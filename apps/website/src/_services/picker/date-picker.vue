@@ -78,10 +78,10 @@ const disableFutureDate = (date: Date): boolean => date > dayjs().toDate()
 
 .el-date-table td.in-range {
   .el-date-table-cell__text {
-    color: rgb(1, 1, 0) !important;
+    color: rgba(20, 19, 13) !important;
   }
   .el-date-table-cell {
-    background-color: rgba(211, 210, 207);
+    background-color: rgba(173, 255, 44);
     margin-left: 5px;
     margin-right: 5px;
     border-radius: 5px;
