@@ -1,23 +1,26 @@
 <template>
   <div class="flex flex-row justify-between items-center border-b-1 border-util-gray-03 pb-4">
-    <div class="flex flex-row justify-start items-center">
+    <div class="flex flex-row justify-start items-center whitespace-nowrap text-ellipsis overflow-hidden">
       <img
         v-if="user.image"
         :src="user.image"
-        class="h-8 w-8 self-center rounded-full"
+        class="h-8 w-8 min-w-8 self-center rounded-full"
         alt="User image"
       >
       <div
         v-else
-        class="h-8 w-8 bg-util-gray-03 rounded-full"
+        class="h-8 w-8 min-w-8 bg-util-gray-03 rounded-full"
       />
-      <div class="ml-3 flex flex-col justify-start">
+      <div class="mx-3 flex flex-col justify-start whitespace-nowrap text-ellipsis overflow-hidden">
         <span
           class="font-bold tracking-tight line-clamp-2 text-gray-900 dark:text-insight"
         >
           {{ user.firstName }} {{ user.lastName }}
         </span>
-        <span class="text-fog">
+        <span
+          class="text-fog whitespace-nowrap text-ellipsis overflow-hidden"
+          :title="user.email"
+        >
           {{ user.email }}
         </span>
       </div>

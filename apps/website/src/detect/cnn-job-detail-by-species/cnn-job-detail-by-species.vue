@@ -1,24 +1,26 @@
 <template>
-  <div>
-    <JobDetailHeader :species-name="speciesName" />
-    <JobFilterOptions
-      :species-name="speciesName"
-      :species-count="speciesCount?.total ?? 0"
-    />
-    <JobValidationStatus
-      :total="speciesCount?.total ?? 0"
-      :uncertain="speciesCount?.uncertain ?? 0"
-      :rejected="speciesCount?.rejected ?? 0"
-      :confirmed="speciesCount?.confirmed ?? 0"
-    />
-    <JobDetections
-      v-model:page="page"
-      :is-loading="isLoadingJobDetections"
-      :is-error="isErrorJobDetections"
-      :data="jobDetections"
-      :page-size="PAGE_SIZE_LIMIT"
-    />
-  </div>
+  <section class="max-w-screen-xl pt-20 pl-115px pr-4">
+    <div>
+      <JobDetailHeader :species-name="speciesName" />
+      <JobFilterOptions
+        :species-name="speciesName"
+        :species-count="speciesCount?.total ?? 0"
+      />
+      <JobValidationStatus
+        :total="speciesCount?.total ?? 0"
+        :uncertain="speciesCount?.uncertain ?? 0"
+        :rejected="speciesCount?.rejected ?? 0"
+        :confirmed="speciesCount?.confirmed ?? 0"
+      />
+      <JobDetections
+        v-model:page="page"
+        :is-loading="isLoadingJobDetections"
+        :is-error="isErrorJobDetections"
+        :data="jobDetections"
+        :page-size="PAGE_SIZE_LIMIT"
+      />
+    </div>
+  </section>
 </template>
 
 <script setup lang="ts">

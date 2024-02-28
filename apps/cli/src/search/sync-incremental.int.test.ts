@@ -14,7 +14,7 @@ dayjs.extend(minMax)
 
 const opensearchClient = getOpenSearchClient()
 const sequelize = getSequelize()
-const { LocationProject, SyncStatus } = ModelRepository.getInstance(sequelize)
+const { LocationProject, SyncStatus, LocationProjectProfile } = ModelRepository.getInstance(sequelize)
 
 beforeEach(async () => {
   const p1 = makeProject(839483, 'Acton diversities', 'published')
@@ -27,6 +27,7 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
+  await LocationProjectProfile.destroy({ where: { locationProjectId: { [Op.in]: [839483, 849483, 859483] } }, force: true })
   await LocationProject.destroy({ where: { id: { [Op.in]: [839483, 849483, 859483] } }, force: true })
 })
 
@@ -65,5 +66,17 @@ describe('incremental reindex from postgres to opensearch', async () => {
 
     // Assert
     expect(dayjs(status1?.syncUntilDate).isBefore(dayjs(status2?.syncUntilDate))).toBe(true)
+  })
+
+  it('updates project that have the description inside the location_project_profile table updated', async () => {
+    // Arrange
+    await LocationProjectProfile.create({ locationProjectId: 859483, summary: 'welcome guys', image: '', readme: '', methods: '', keyResult: '', resources: '', objectives: [], dateStart: null, dateEnd: null })
+
+    // Act
+    await syncAllProjectsIncrementally(opensearchClient, sequelize)
+
+    // Assert
+    const result = await opensearchClient.get({ index: 'projects', id: '859483' })
+    expect(result.body._source.summary).toBe('welcome guys')
   })
 })
