@@ -8,7 +8,7 @@
           <div class="flex flex-1 flex-row items-center">
             <span
               class="text-spoonbill font-medium text-xs ml-4 my-3.5"
-            >{{ getCountryLabel(project?.countries ?? [], 1) }}</span>
+            >{{ getCountryLabel(profile?.countryCodes ?? [], 1) }}</span>
             <div
               v-if="countrieFlag"
               class="align-baseline flex"
@@ -20,7 +20,7 @@
               />
             </div>
             <icon-custom-fi-globe
-              v-if="project?.countries ? project?.countries.length > 1 : false"
+              v-if="profile?.countryCodes ? profile?.countryCodes.length > 1 : false"
               class="flex m-2 my-3"
             />
           </div>
@@ -37,8 +37,8 @@
       </div>
       <div>
         <img
-          v-if="project?.imageUrl"
-          :src="urlWrapper(project.imageUrl)"
+          v-if="profile?.image"
+          :src="urlWrapper(profile.image)"
           class="w-full object-cover aspect-auto bg-util-gray-03 h-52"
         >
         <div
@@ -46,7 +46,7 @@
           class="w-full h-52 object-contain bg-util-gray-03 flex justify-center items-center"
         />
         <div class="p-4 border-b border-util-gray-03">
-          <span class="text-lg font-medium">{{ project?.name }}</span>
+          <span class="text-lg font-medium">{{ profile?.name }}</span>
           <div
             class="flex font-medium text-sm flex-row border-util-gray-01 mt-3 space-x-2 font-display items-center"
           >
@@ -62,13 +62,13 @@
             </span>
           </div>
           <router-link
-            v-if="project?.isPublished"
-            :to="`/p/${project?.slug}`"
+            v-if="profile?.isPublished"
+            :to="`/p/${profile?.slug}`"
             class="text-frequency"
           >
             <button
               class="btn btn-primary w-full mt-10"
-              :class="{'opacity-50 cursor-not-allowed': !project?.isPublished}"
+              :class="{'opacity-50 cursor-not-allowed': !profile?.isPublished}"
             >
               View project insights
             </button>
@@ -127,7 +127,7 @@
       </div>
     </div>
     <el-tabs
-      v-if="project?.isPublished"
+      v-if="profile?.isPublished"
       v-model="activeTab"
       class="border-t-1 border-util-gray-03"
     >
@@ -203,7 +203,7 @@
       </el-tab-pane>
     </el-tabs>
     <private-project-tag
-      v-if="!project?.isPublished"
+      v-if="!profile?.isPublished"
       class="justify-self-end"
     />
   </div>
@@ -222,43 +222,22 @@ import DashboardMarkdownViewerEditor from '@/insights/overview/components/dashbo
 import DashboardProjectStakeholdersViewer from '@/insights/overview/components/dashboard-project-summary/components/dashboard-project-stakeholders/dashboard-project-stakeholders-viewer.vue'
 import { useMarkdownEditorDefaults } from '@/insights/overview/composables/use-markdown-editor-defaults'
 import { useGetProjectInfo, useGetProjectStakeholders } from '@/projects/_composables/use-project-profile'
-import { useProjectDirectoryStore } from '~/store'
 import { TAXON_CLASSES_BY_ID } from '~/taxon-classes'
 import { type HorizontalStack } from '../../insights/overview/components/dashboard-species/components/stack-distribution.vue'
 import StackDistribution from '../../insights/overview/components/dashboard-species/components/stack-distribution.vue'
 import NoContentBanner from '../components/no-content-banner.vue'
 import NumericMetric from '../components/numeric-metric.vue'
 import PrivateProjectTag from '../components/private-project-tag.vue'
-import { type ProjectProfileWithMetrics } from '../data/types'
 
 const props = defineProps<{ projectId: number }>()
 const emit = defineEmits<{(e: 'emitCloseProjectInfo'): void }>()
 const activeTab = ref('about')
 
 const { readme: readmeDefault, keyResult: keyResultDefault } = useMarkdownEditorDefaults()
-const pdStore = useProjectDirectoryStore()
-const project = computed<ProjectProfileWithMetrics | undefined>(() => {
-  const project = pdStore.getProjectWithMetricsById(props.projectId)
-  if (!project) { // TODO: fetch from api if there is no metrics in store
-    const projectLight = pdStore.getProjectLightById(props.projectId)
-    if (projectLight === undefined) return undefined
-    return {
-      ...projectLight,
-      summary: 'This is a test project!',
-      objectives: ['bio-baseline'],
-      noOfSpecies: 0,
-      noOfRecordings: 0,
-      countries: [],
-      isPublished: false,
-      imageUrl: ''
-    }
-  }
-  return project
-})
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
-const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResults'])
+const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResults', 'countryCodes'])
 const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId)
 
 const isAboutTabViewMored = ref(false)
@@ -279,11 +258,11 @@ watch(() => props.projectId, () => {
 })
 
 const countrieFlag = computed(() => {
-  if (project.value?.countries == null) return ''
-  if (project.value?.countries.length > 1) {
+  if (profile.value?.countryCodes == null) return ''
+  if (profile.value?.countryCodes.length > 1) {
     return ''
   } else {
-    return project.value?.countries[0]
+    return profile.value?.countryCodes[0]
   }
 })
 

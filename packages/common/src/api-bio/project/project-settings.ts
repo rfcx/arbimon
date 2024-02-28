@@ -38,7 +38,7 @@ type ProjectMetrics = Pick<DashboardMetricsResponse, 'totalSites' | 'totalSpecie
 
 export type ProjectProfileUpdateResponse = Pick<LocationProjectProfile, 'summary' | 'objectives' | 'dateStart' | 'dateEnd'>
 
-export type ProjectInfoResponse = Pick<Project, 'name'>
+export type ProjectInfoResponse = Pick<Project, 'name' | 'slug'>
   & Pick<LocationProjectProfile, 'summary' | 'objectives' | 'dateStart' | 'dateEnd'>
   & {
     isPublished: boolean
