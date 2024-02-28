@@ -174,7 +174,7 @@ const selectSite = (site: SiteInputOptions) => {
   if (addOtherSitesWhileAllSitesSelected) { selectedOptions.value = [] }
 
   // if already selected, then do nothing
-  if (selectedOptions.value.includes(site)) { return }
+  if (selectedOptions.value.some(s => s.value === site.value)) { return }
 
   selectedOptions.value = [...selectedOptions.value, site]
 }
