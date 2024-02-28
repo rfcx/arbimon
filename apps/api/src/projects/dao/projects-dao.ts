@@ -77,12 +77,18 @@ export const getViewableProjects = async (userId: number | undefined): Promise<L
 /**
  * @deprecated Do not use - type will be removed
  */
-export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, limit: number = 20): Promise<MyProjectsResponse> => {
+export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, limit: number = 20, keyword?: string): Promise<MyProjectsResponse> => {
   const memberProjectIds = await getProjectIdsByUser(userId)
+
+  const where: WhereOptions<Project> = { id: memberProjectIds }
+
+  if (keyword) {
+    where.name = { [Op.iLike]: `%${keyword}%` }
+  }
 
   const myProjects = await models.LocationProject
     .findAll({
-      where: { id: memberProjectIds },
+      where,
       attributes: ATTRIBUTES_LOCATION_PROJECT.light,
       order: ['name', 'status'],
       offset,
