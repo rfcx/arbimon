@@ -206,14 +206,15 @@ const project = reactive({
 })
 
 const selectedTime = reactive({
-  selectedTimeType: '',
-  selectedHourRange: '',
-  selectedHourRangeLable: ''
+  selectedTimeType: 'All day',
+  selectedHourRange: '0-23',
+  selectedHourRangeLable: '00:00-23:00'
 })
 
 const hasProjectPermission = ref(false)
 
 onMounted(() => {
+  onSelectQueryHours(selectedTime.selectedHourRange)
   job.projectIdCore = store.selectedProject?.idCore ?? null
   project.projectId = store.selectedProject?.id.toString() ?? '-1'
   hasProjectPermission.value = projectUserPermissionsStore.isMember
