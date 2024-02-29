@@ -83,31 +83,7 @@
             >
               Time of day
             </label>
-            <div class="flex inline-flex">
-              <button
-                type="button"
-                class="h-8 px-3 text-base flex-shrink-0 rounded-md flex justify-center items-center"
-                :class="selectedTime.selectedTimeType === 'All day' ? 'bg-util-gray-01 text-black' : 'bg-pitch border-1 border-white text-white'"
-                @click="selectAllDay"
-              >
-                All Day
-              </button>
-              <button
-                type="button"
-                class="ml-3 h-8 px-3 text-base flex-shrink-0 rounded-md flex justify-center items-center"
-                :class="selectedTime.selectedTimeType === 'All day' ? 'bg-pitch border-1 border-white text-white' : 'bg-util-gray-01 text-black'"
-                @click="selectCustom"
-              >
-                Custom
-              </button>
-            </div>
-            <input
-              v-model="selectedTime.selectedHourRangeLabel"
-              type="text"
-              placeholder="e.g. 0-5, 7-11, 14, 15"
-              class="p-2 mt-4 bg-pitch text-base w-full border border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
-              @input="onSelectQueryHours(selectedTime.selectedHourRangeLabel)"
-            >
+            <TimeOfDayPicker @emit-select-time="onSelectQueryHours" />
           </div>
         </li>
         <li class="pb-8 pl-6">
@@ -174,6 +150,7 @@ import ClassifierPicker from '@/_services/picker/classifier-picker.vue'
 import DatePicker from '@/_services/picker/date-picker.vue'
 import type { DateRange } from '@/_services/picker/date-range-picker-interface'
 import SiteInput from '@/_services/picker/site-input.vue'
+import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
 import { apiClientCoreKey, apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useProjectUserPermissionsStore, useStore } from '~/store'
@@ -262,20 +239,6 @@ const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) =
   job.queryEnd = dateEndLocalIso
   recordingQuery.dateStartLocal = dateStartLocalIso
   recordingQuery.dateEndLocal = dateEndLocalIso
-}
-
-const selectAllDay = () => {
-  selectedTime.selectedTimeType = 'All day'
-  selectedTime.selectedHourRange = '0-23'
-  selectedTime.selectedHourRangeLabel = '00:00-23:00'
-  onSelectQueryHours('0-23')
-}
-
-const selectCustom = () => {
-  selectedTime.selectedTimeType = 'Custom'
-  selectedTime.selectedHourRange = ''
-  selectedTime.selectedHourRangeLabel = ''
-  onSelectQueryHours('')
 }
 
 const onSelectQueryHours = (queryHours: string) => {
