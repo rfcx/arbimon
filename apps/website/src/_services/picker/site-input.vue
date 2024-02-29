@@ -78,7 +78,7 @@
 import { Dropdown } from 'flowbite'
 import { type Ref, computed, nextTick, onMounted, ref, watch } from 'vue'
 
-import type { Site, SiteInputOptions } from '@rfcx-bio/common/dao/types'
+import type { Site } from '@rfcx-bio/common/dao/types'
 
 const ALL_SITES_OPTIONS = {
   value: '',
@@ -158,7 +158,7 @@ const isAllSiteOptionSelected = computed(() => selectedOptions.value.includes(AL
 //   return isAllSiteOptionSelected.value ? null : selectedOptions.value.join(',')
 // })
 
-const selectSite = (site: SiteInputOptions) => {
+const selectSite = (site: {value: string, label: string}) => {
   // if selected all sites, then remove all other sites
   if (site.value === ALL_SITES_OPTIONS.value) {
     selectedOptions.value = [ALL_SITES_OPTIONS]
@@ -175,7 +175,7 @@ const selectSite = (site: SiteInputOptions) => {
   selectedOptions.value = [...selectedOptions.value, site]
 }
 
-const unselectSite = (site: SiteInputOptions) => {
+const unselectSite = (site: {value: string, label: string}) => {
   // force to default value = all sites
   if (selectedOptions.value.length === 1) {
     selectedOptions.value = [ALL_SITES_OPTIONS]

@@ -14,11 +14,6 @@ export interface Site {
   updatedAt?: Date
 }
 
-export interface SiteInputOptions {
-  value: string
-  label: string
-}
-
 export const ATTRIBUTES_LOCATION_SITE = attributes<Site>()({
   light: ['id', 'idCore', 'name', 'latitude', 'longitude', 'altitude', 'countryCode']
 })
