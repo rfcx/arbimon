@@ -42,7 +42,7 @@
             <td>
               <router-link
                 :to="`/admin/${project.url}/members`"
-                class="text-sm text-frequency"
+                class="text-frequency text-sm"
               >
                 Manage members
               </router-link>
