@@ -8,18 +8,48 @@
     <BannerWhatNew />
     <section class="pt-8 bg-white dark:bg-pitch mx-8">
       <div class="py-8 mx-auto max-w-screen-xl">
-        <div class="mt-6 flex flex-row items-center">
-          <h2 class="text-gray-900 dark:text-insight">
-            My Projects
-          </h2>
-          <router-link
-            :to="{ name: ROUTE_NAMES.createProject }"
-            class=" flex-row ml-6"
-          >
-            <button class="btn btn-primary">
-              Create a new project +
-            </button>
-          </router-link>
+        <div class="mt-6 flex flex-row justify-between">
+          <div class="flex flex-row items-center">
+            <h2 class="text-gray-900 dark:text-insight">
+              My Projects
+            </h2>
+            <router-link
+              :to="{ name: ROUTE_NAMES.createProject }"
+              class=" flex-row ml-6"
+            >
+              <button class="btn btn-primary">
+                Create a new project +
+              </button>
+            </router-link>
+          </div>
+          <div>
+            <form
+              class="w-80"
+              autocomplete="off"
+            >
+              <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                  <span class="p-2">
+                    <icon-custom-ic-search
+                      class="w-5 h-5 text-insight stroke-insight"
+                      storke="white"
+                    />
+                  </span>
+                </div>
+                <input
+                  id="projectSearchInput"
+                  v-model="projectSearchValue"
+                  name="search"
+                  type="text"
+                  class="input-field text-insight shadow-lg shadow-frequency/10"
+                  placeholder="Search projects by name"
+                  @input="searchProjectInputChanged"
+                  @focus="isSearchBoxFocused = true"
+                  @blur="isSearchBoxFocused = false"
+                >
+              </div>
+            </form>
+          </div>
         </div>
         <div>
           <div
@@ -113,6 +143,18 @@ const isLoading = ref(false)
 const showLoading = ref(false)
 const hasFailed = ref(false)
 
+const projectSearchValue = ref('')
+const isSearchBoxFocused = ref(false)
+const projectSearchInput = ref<HTMLDivElement | null>(null)
+
+const openProjectSearch = async () => {
+  projectSearchInput.value?.focus()
+}
+
+const searchProjectInputChanged = async () => {
+  console.info(projectSearchValue)
+}
+
 const loadMoreProject = async (): Promise<void> => {
   if (hasFetchedAll.value || isLoading.value || hasFailed.value) return
   fetchProjects(projects.value.length, LIMIT)
@@ -142,3 +184,9 @@ const onProjectClicked = (value: boolean) => {
 }
 
 </script>
+
+<style scoped lang="scss">
+#projectSearchInput {
+  padding-inline-start: 2rem;
+}
+</style>
