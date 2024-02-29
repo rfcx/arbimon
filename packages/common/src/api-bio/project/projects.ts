@@ -11,12 +11,6 @@ export interface LocationProjectQuery {
   keyword?: string
 }
 
-export interface DirectoryProjectsQuery {
-  full?: boolean
-  ids?: string
-  keywords?: string
-}
-
 // Response types
 export type LocationProjectForUser =
   LocationProjectTypes['light'] &
