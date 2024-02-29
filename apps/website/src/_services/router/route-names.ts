@@ -32,7 +32,8 @@ export const ROUTE_NAMES = {
   accountSettings: 'account_settings',
   // Other
   admin: 'admin',
-  adminProjectMember: 'admin_project_member',
+  adminProject: 'admin_project',
+  adminMember: 'admin_member',
   callback: 'callback',
   info: 'info',
   error: 'error'
