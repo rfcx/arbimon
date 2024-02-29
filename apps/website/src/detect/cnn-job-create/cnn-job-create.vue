@@ -83,7 +83,7 @@
             >
               Time of day
             </label>
-            <div class="flex inline-flex ">
+            <div class="flex inline-flex">
               <button
                 type="button"
                 class="h-8 px-3 text-sm flex-shrink-0 rounded-md flex justify-center items-center"
@@ -102,10 +102,10 @@
               </button>
             </div>
             <input
-              v-model="selectedTime.selectedHourRangeLable"
+              v-model="selectedTime.selectedHourRangeLabel"
               type="text"
               class="p-2 mt-4 bg-pitch text-insight w-full border border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
-              @input="onSelectQueryHours(selectedTime.selectedHourRangeLable)"
+              @input="onSelectQueryHours(selectedTime.selectedHourRangeLabel)"
             >
           </div>
         </li>
@@ -208,7 +208,7 @@ const project = reactive({
 const selectedTime = reactive({
   selectedTimeType: 'All day',
   selectedHourRange: '0-23',
-  selectedHourRangeLable: '00:00-23:00'
+  selectedHourRangeLabel: '00:00-23:00'
 })
 
 const hasProjectPermission = ref(false)
@@ -266,14 +266,14 @@ const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) =
 const selectAllDay = () => {
   selectedTime.selectedTimeType = 'All day'
   selectedTime.selectedHourRange = '0-23'
-  selectedTime.selectedHourRangeLable = '00:00-23:00'
+  selectedTime.selectedHourRangeLabel = '00:00-23:00'
   onSelectQueryHours('0-23')
 }
 
 const selectCustom = () => {
   selectedTime.selectedTimeType = 'Custom'
   selectedTime.selectedHourRange = ''
-  selectedTime.selectedHourRangeLable = ''
+  selectedTime.selectedHourRangeLabel = ''
   onSelectQueryHours('')
 }
 
