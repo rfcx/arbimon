@@ -20,7 +20,7 @@
             class="ml-2 p-0.5 hover:bg-util-gray-02 rounded-sm"
             @click="unselectSite(site)"
           >
-            <icon-fa-times class="w-2 h-2" />
+            <icon-custom-ic-close-black class="w-4 h-4 cursor-pointer" />
           </button>
         </li>
       </ul>
