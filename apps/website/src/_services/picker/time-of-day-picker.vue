@@ -3,7 +3,7 @@
     <button
       type="button"
       class="h-8 px-3 text-base flex-shrink-0 rounded-md flex justify-center items-center"
-      :class="selectedTime.selectedTimeType === 'All day' ? 'bg-util-gray-01 text-black' : 'bg-pitch border-1 border-white text-white'"
+      :class="selectedTime.selectedTimeType === hours.all.label ? 'bg-util-gray-01 text-pitch' : 'bg-pitch border-1 border-white text-insight'"
       @click="selectAllDay"
     >
       All Day
@@ -11,18 +11,18 @@
     <button
       type="button"
       class="ml-3 h-8 px-3 text-base flex-shrink-0 rounded-md flex justify-center items-center"
-      :class="selectedTime.selectedTimeType === 'All day' ? 'bg-pitch border-1 border-white text-white' : 'bg-util-gray-01 text-black'"
+      :class="selectedTime.selectedTimeType === hours.custom.label ? 'bg-util-gray-01 text-pitch' : 'bg-pitch border-1 border-white text-insight'"
       @click="selectCustom"
     >
       Custom
     </button>
   </div>
   <input
-    v-model="selectedTime.selectedHourRangeLabel"
+    v-model="selectedTime.selectedHourRange"
     type="text"
     placeholder="e.g. 0-5, 7-11, 14, 15"
     class="p-2 mt-4 bg-pitch text-base w-full border border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
-    @input="$emit('emitSelectTime', selectedTime.selectedHourRangeLabel)"
+    @input="$emit('emitSelectTime', selectedTime.selectedHourRange)"
   >
 </template>
 
@@ -35,8 +35,7 @@ const emit = defineEmits<{(e: 'emitSelectTime', value: string): void}>()
 
 const selectedTime = reactive({
   selectedTimeType: hours.all.label,
-  selectedHourRange: hours.all.value,
-  selectedHourRangeLabel: '00:00-23:00'
+  selectedHourRange: hours.all.value
 })
 
 onMounted(() => {
@@ -44,20 +43,18 @@ onMounted(() => {
 })
 
 const selectAllDay = () => {
-  selectedTime.selectedTimeType = 'All day'
-  selectedTime.selectedHourRange = '0-23'
-  selectedTime.selectedHourRangeLabel = '00:00-23:00'
+  selectedTime.selectedTimeType = hours.all.label
+  selectedTime.selectedHourRange = hours.all.value
   emit('emitSelectTime', selectedTime.selectedHourRange)
 }
 
 const selectCustom = () => {
-  selectedTime.selectedTimeType = 'Custom'
-  selectedTime.selectedHourRange = ''
-  selectedTime.selectedHourRangeLabel = ''
+  selectedTime.selectedTimeType = hours.custom.label
+  selectedTime.selectedHourRange = hours.custom.value
   emit('emitSelectTime', selectedTime.selectedHourRange)
 }
 
-watch(() => selectedTime.selectedHourRangeLabel, (hourRange) => {
-  selectedTime.selectedTimeType = hourRange === '0-23' ? 'All day' : 'Custom'
+watch(() => selectedTime.selectedHourRange, (hourRange) => {
+  selectedTime.selectedTimeType = hourRange === '0-23' ? hours.all.label : hours.custom.label
 })
 </script>

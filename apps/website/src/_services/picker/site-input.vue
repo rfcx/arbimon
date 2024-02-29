@@ -12,7 +12,7 @@
         <li
           v-for="site in selectedOptions"
           :key="site.label"
-          class="cursor-pointer rounded-sm px-2 py-1 flex flex-row grow items-center text-base bg-util-gray-01 text-black"
+          class="cursor-pointer rounded-sm px-2 py-1 flex flex-row grow items-center text-base bg-util-gray-01 text-pitch"
         >
           {{ site === ALL_SITES_OPTIONS ? ALL_SITES_OPTIONS.label : site.label }}
           <button
@@ -96,6 +96,11 @@ const siteResultForm = ref<HTMLDivElement | null>(null)
 const siteResultInput = ref<HTMLDivElement | null>(null)
 const siteResultDropdownContainer = ref<HTMLDivElement | null>(null)
 
+export interface SiteInputOptions {
+  value: string
+  label: string
+}
+
 onMounted(() => {
   siteSearchDropdown.value = new Dropdown(siteResultDropdownContainer.value, siteResultForm.value, { placement: 'bottom', triggerType: 'none', offsetDistance: 1 })
 })
@@ -153,21 +158,15 @@ const groupOptions = computed(() => {
 const selectedOptions = ref([ALL_SITES_OPTIONS])
 const isAllSiteOptionSelected = computed(() => selectedOptions.value.includes(ALL_SITES_OPTIONS))
 
-// emit data to the parent component
-// const selectedQuerySites = computed(() => {
-//   return isAllSiteOptionSelected.value ? null : selectedOptions.value.join(',')
-// })
-
-const selectSite = (site: {value: string, label: string}) => {
+const selectSite = (site: SiteInputOptions) => {
   // if selected all sites, then remove all other sites
   if (site.value === ALL_SITES_OPTIONS.value) {
     selectedOptions.value = [ALL_SITES_OPTIONS]
     return
+  } else {
+    // if selected filter sites, then remove all sites
+    selectedOptions.value = selectedOptions.value.filter(s => s.value !== ALL_SITES_OPTIONS.value)
   }
-
-  // if selected filter sites, then remove all sites
-  const addOtherSitesWhileAllSitesSelected = (selectedOptions.value.find(s => s.value === ALL_SITES_OPTIONS.value) !== undefined) && site.value !== ALL_SITES_OPTIONS.value
-  if (addOtherSitesWhileAllSitesSelected) { selectedOptions.value = [] }
 
   // if already selected, then do nothing
   if (selectedOptions.value.some(s => s.value === site.value)) { return }
@@ -175,7 +174,7 @@ const selectSite = (site: {value: string, label: string}) => {
   selectedOptions.value = [...selectedOptions.value, site]
 }
 
-const unselectSite = (site: {value: string, label: string}) => {
+const unselectSite = (site: SiteInputOptions) => {
   // force to default value = all sites
   if (selectedOptions.value.length === 1) {
     selectedOptions.value = [ALL_SITES_OPTIONS]
