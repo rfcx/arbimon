@@ -14,27 +14,27 @@
     <form class="mt-5">
       <ol class="relative border-white">
         <li class="border-l-1 border-white pb-8 pl-6">
-          <span class="flex absolute -left-3 text-base justify-center items-center w-6 h-6 bg-pitch rounded-full ring-1 ring-white">
+          <span class="flex absolute -left-3 text-xl justify-center items-center w-6 h-6 bg-pitch rounded-full ring-1 ring-white">
             1
           </span>
-          <h6 class="mb-4 text-base">
+          <h6 class="mb-4 text-xl">
             Choose Model
           </h6>
           <span
             v-if="isLoadingClassifiers"
-            class="text-sm"
+            class="text-base"
           >
             Loading
           </span>
           <span
             v-else-if="isErrorClassifier"
-            class="text-sm"
+            class="text-base"
           >
             Error
           </span>
           <span
             v-else-if="classifiers === undefined"
-            class="text-sm"
+            class="text-base"
           >
             No response
           </span>
@@ -45,16 +45,16 @@
           />
         </li>
         <li class="border-l-1 border-white pb-8 pl-6">
-          <span class="flex absolute -left-3 text-base justify-center items-center w-6 h-6 bg-pitch rounded-full ring-1 ring-white">
+          <span class="flex absolute -left-3 text-xl justify-center items-center w-6 h-6 bg-pitch rounded-full ring-1 ring-white">
             2
           </span>
-          <h6 class="mb-4 text-base">
+          <h6 class="mb-4 text-xl">
             Choose Parameters
           </h6>
           <div class="mb-3">
             <label
               for="sites"
-              class="block mb-2 text-sm"
+              class="block mb-2 text-base"
             >
               Sites
             </label>
@@ -67,7 +67,7 @@
           <div class="mb-3 mt-5">
             <label
               for="date"
-              class="block mb-2 text-sm"
+              class="block mb-2 text-base"
             >
               Date
             </label>
@@ -79,14 +79,14 @@
           <div class="mb-3 mt-5">
             <label
               for="time"
-              class="block mb-2 text-sm"
+              class="block mb-2 text-base"
             >
               Time of day
             </label>
             <div class="flex inline-flex">
               <button
                 type="button"
-                class="h-8 px-3 text-sm flex-shrink-0 rounded-md flex justify-center items-center"
+                class="h-8 px-3 text-base flex-shrink-0 rounded-md flex justify-center items-center"
                 :class="selectedTime.selectedTimeType === 'All day' ? 'bg-util-gray-01 text-black' : 'bg-pitch border-1 border-white text-white'"
                 @click="selectAllDay"
               >
@@ -94,7 +94,7 @@
               </button>
               <button
                 type="button"
-                class="ml-3 h-8 px-3 text-sm flex-shrink-0 rounded-md flex justify-center items-center"
+                class="ml-3 h-8 px-3 text-base flex-shrink-0 rounded-md flex justify-center items-center"
                 :class="selectedTime.selectedTimeType === 'All day' ? 'bg-pitch border-1 border-white text-white' : 'bg-util-gray-01 text-black'"
                 @click="selectCustom"
               >
@@ -105,16 +105,16 @@
               v-model="selectedTime.selectedHourRangeLabel"
               type="text"
               placeholder="e.g. 0-5, 7-11, 14, 15"
-              class="p-2 mt-4 bg-pitch text-insight w-full border border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
+              class="p-2 mt-4 bg-pitch text-base w-full border border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
               @input="onSelectQueryHours(selectedTime.selectedHourRangeLabel)"
             >
           </div>
         </li>
         <li class="pb-8 pl-6">
-          <span class="flex absolute -left-3 text-base justify-center items-center w-6 h-6 bg-pitch rounded-full ring-1 ring-white">
+          <span class="flex absolute -left-3 text-xl justify-center items-center w-6 h-6 bg-pitch rounded-full ring-1 ring-white">
             3
           </span>
-          <h6 class="mb-4 text-base">
+          <h6 class="mb-4 text-xl">
             Job size estimation
           </h6>
           <span v-if="isLoadingDetectRecording">Loading</span>
@@ -122,7 +122,7 @@
           <span v-else-if="recordingData === undefined">No response</span>
           <span
             v-else
-            class="text-sm"
+            class="text-base"
           >{{ totalDurationInMinutes }} minutes of recordings</span>
         </li>
       </ol>

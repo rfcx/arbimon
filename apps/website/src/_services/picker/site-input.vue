@@ -12,7 +12,7 @@
         <li
           v-for="site in selectedOptions"
           :key="site.label"
-          class="cursor-pointer rounded-sm px-2 py-1 flex flex-row grow items-center text-sm bg-util-gray-01 text-black"
+          class="cursor-pointer rounded-sm px-2 py-1 flex flex-row grow items-center text-base bg-util-gray-01 text-black"
         >
           {{ site === ALL_SITES_OPTIONS ? ALL_SITES_OPTIONS.label : site.label }}
           <button
@@ -29,7 +29,6 @@
         v-model="inputFilter"
         type="text"
         class="border-transparent px-2 py-1 bg-transparent ring-0 focus:ring-0 focus:border-transparent"
-        placeholder="Search for sites"
         @keydown.delete="onKeydownDeleteSiteInput"
         @focus="hasFocusInput = true"
         @blur="hasFocusInput = false"
@@ -50,13 +49,13 @@
         :key="group.label"
         class="overflow-y-auto max-h-80 border-cloud bg-moss rounded-md"
       >
-        <li class="rounded-md px-4 py-2 text-sm text-subtle font-medium">
+        <li class="rounded-md px-4 py-2 text-base text-subtle font-medium">
           {{ group.label }}
         </li>
         <li
           v-for="item in group.options"
           :key="item.value"
-          class="cursor-pointer rounded-md px-4 py-2 hover:bg-util-gray-03 text-sm"
+          class="cursor-pointer rounded-md px-4 py-2 hover:bg-util-gray-03 text-base"
           @click="selectSite(item)"
         >
           {{ item.label }}
