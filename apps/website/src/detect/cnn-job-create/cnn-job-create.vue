@@ -104,6 +104,7 @@
             <input
               v-model="selectedTime.selectedHourRangeLabel"
               type="text"
+              placeholder="e.g. 0-5, 7-11, 14, 15"
               class="p-2 mt-4 bg-pitch text-insight w-full border border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
               @input="onSelectQueryHours(selectedTime.selectedHourRangeLabel)"
             >
