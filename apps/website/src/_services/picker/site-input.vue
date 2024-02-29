@@ -45,8 +45,6 @@
       ref="siteResultDropdownContainer"
       class="absolute w-5/6 left-4 z-40 bg-white rounded-md shadow dark:bg-moss border-util-gray-03 border-1 hidden"
     >
-      <!-- dropdown (list of sites) -->
-      <!-- TODO: use flowbite dropdown -->
       <ul
         v-for="group in groupOptions"
         :key="group.label"
@@ -166,11 +164,10 @@ const selectSite = (site: SiteInputOptions) => {
   if (site.value === ALL_SITES_OPTIONS.value) {
     selectedOptions.value = [ALL_SITES_OPTIONS]
     return
-  } else {
-    selectedOptions.value = selectedOptions.value.filter(s => s.value !== ALL_SITES_OPTIONS.value)
   }
+
   // if selected filter sites, then remove all sites
-  const addOtherSitesWhileAllSitesSelected = (selectedOptions.value.find(s => s === ALL_SITES_OPTIONS) !== undefined) && site.value !== ALL_SITES_OPTIONS.value
+  const addOtherSitesWhileAllSitesSelected = (selectedOptions.value.find(s => s.value === ALL_SITES_OPTIONS.value) !== undefined) && site.value !== ALL_SITES_OPTIONS.value
   if (addOtherSitesWhileAllSitesSelected) { selectedOptions.value = [] }
 
   // if already selected, then do nothing
