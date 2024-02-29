@@ -30,13 +30,13 @@
             v-else-if="isErrorClassifier"
             class="text-base"
           >
-            Error
+            {{ errorText }}
           </span>
           <span
             v-else-if="classifiers === undefined"
             class="text-base"
           >
-            No response
+            {{ errorUndefinedText }}
           </span>
           <classifier-picker
             v-else
@@ -95,7 +95,7 @@
           </h6>
           <span v-if="isLoadingDetectRecording">Loading</span>
           <span v-else-if="isErrorDetectRecording">Error</span>
-          <span v-else-if="recordingData === undefined">No response</span>
+          <span v-else-if="recordingData === undefined">{{ errorUndefinedText }}</span>
           <span
             v-else
             class="text-base"
@@ -161,6 +161,9 @@ import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 const router = useRouter()
 const store = useStore()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
+
+const errorText = 'Error - there’s a problem loading the models. Please refresh this page and try again.'
+const errorUndefinedText = 'Error - content unavailable.'
 
 // Fields
 const job: ClassifierJobCreateConfiguration = reactive({
