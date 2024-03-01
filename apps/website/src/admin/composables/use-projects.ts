@@ -15,7 +15,6 @@ interface Error {
 }
 
 export const useGetSuperProjects = (apiClient: AxiosInstance, options: { keyword?: Ref<string>, limit?: Ref<number>, offset?: Ref<number> }): UseQueryReturnType<Array<LocationProjectTypes['light']>, Error> => {
-  console.log('useGetSuperProjects', options)
   return useQuery({
     queryKey: ['get-projects', options.keyword, options.limit, options.offset],
     queryFn: async () => await apiBioSuperGetProjects(apiClient, { keyword: options.keyword?.value, limit: options.limit?.value, offset: options.offset?.value }),
