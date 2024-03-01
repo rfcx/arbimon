@@ -1,14 +1,17 @@
 <template>
   <div class="px-4 sm:px-6 py-8 lg:(pt-6 px-20) bg-white dark:bg-pitch">
     <div class="mx-auto max-w-screen-xl">
-      <div class="mt-20 text-sm">
-        <router-link
-          :to="`/admin`"
-          class="font-medium"
-        >
+      <div class="mt-20 flex flex-row gap-x-2 text-xs font-medium items-center">
+        <router-link :to="{ name: ROUTE_NAMES.adminProject }">
           Projects
-        </router-link> /
-        <span class="text-fog"> Arbimon 2024 </span>
+        </router-link>
+        <icon-fa-chevron-right class="self-center text-xxs" />
+        <router-link
+          :to="{ name: ROUTE_NAMES.adminMember, params: { projectSlug: route.params.projectSlug } }"
+          class="font-bold"
+        >
+          {{ route.params.projectSlug }}
+        </router-link>
       </div>
       <h2 class="mt-2 mb-10">
         Manage project members
@@ -72,6 +75,12 @@
 </template>
 
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
+
+import { ROUTE_NAMES } from '~/router'
+
+const route = useRoute()
+
 interface Member {
   id: number
   name: string
@@ -82,4 +91,5 @@ const members: Member[] = [
   { id: 1, name: 'John Doe', email: 'john@cx.com', role: 'Admin' },
   { id: 2, name: 'Jane Doe', email: 'jane@cy.com', role: 'Member' }
 ]
+
 </script>
