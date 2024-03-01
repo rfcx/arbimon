@@ -7,29 +7,37 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { BASE_SQL, SYNC_BATCH_LIMIT } from './constants'
 
-export const getProjects = async (sequelize: Sequelize, constraint?: { type: 'deleted' | 'updated', time?: Dayjs }): Promise<Array<{ id: number, name: string }>> => {
+export const getProjects = async (sequelize: Sequelize, status: 'eligible' | 'non-eligible', constraint?: { type: 'deleted' | 'updated', time?: Dayjs }): Promise<Array<{ id: number, name: string }>> => {
   let offset = 0
   let totalCount = 0
   let responseCount = 1
 
   let completeSql = BASE_SQL
 
+  if (status === 'eligible') {
+    console.info('- getProjects: querying projects that are eligible for project directory')
+    completeSql += ' (location_project.status = \'listed\' or location_project.status = \'published\')'
+  } else {
+    console.info('- getProjects: querying projects that are not eligible for project directory')
+    completeSql += ' (location_project.status = \'unlisted\' or location_project.status = \'hidden\')'
+  }
+
   if (constraint?.type === 'deleted') {
     if (constraint?.time) {
-      console.info('- querying projects that are deleted after', constraint?.time?.toISOString())
+      console.info('- getProjects: querying projects that are deleted after', constraint?.time?.toISOString())
       completeSql += ' and location_project.deleted_at >= :latest_sync_date'
     } else {
-      console.info('- querying all deleted projects')
+      console.info('- getProjects: querying all deleted projects')
       completeSql += ' and location_project.deleted_at is not null'
     }
   } else {
-    console.info('- querying all not deleted projects')
+    console.info('- getProjects: querying all not deleted projects')
     completeSql += ' and location_project.deleted_at is null'
   }
 
   if (constraint?.type === 'updated') {
     if (constraint?.time) {
-      console.info('- querying updated projects after', constraint?.time?.toISOString())
+      console.info('- getProjects: querying updated projects after', constraint?.time?.toISOString())
       completeSql += ' and (location_project.updated_at >= :latest_sync_date or location_project_profile.updated_at >= :latest_sync_date)'
     }
   }
@@ -39,7 +47,7 @@ export const getProjects = async (sequelize: Sequelize, constraint?: { type: 'de
   const projectList: Array<{ id: number, name: string }> = []
 
   while (responseCount !== 0) {
-    console.info('- querying projects between limit', SYNC_BATCH_LIMIT, 'and offset', offset)
+    console.info('- getProjects: querying projects between limit', SYNC_BATCH_LIMIT, 'and offset', offset)
     const projects = await sequelize.query<{ id: number, name: string }>(completeSql, {
       raw: true,
       replacements: {
@@ -54,11 +62,11 @@ export const getProjects = async (sequelize: Sequelize, constraint?: { type: 'de
     offset += SYNC_BATCH_LIMIT
     responseCount = projects.length
 
-    console.info('- found', projects.length, 'projects between limit', SYNC_BATCH_LIMIT, 'and offset', offset)
+    console.info('- getProjects: found', projects.length, 'projects between limit', SYNC_BATCH_LIMIT, 'and offset', offset)
     projectList.push(...projects)
   }
 
-  console.info('- found', totalCount, 'projects in total')
+  console.info('- getProjects: found', totalCount, 'projects in total')
   return projectList
 }
 

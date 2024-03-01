@@ -29,7 +29,7 @@ export const BASE_SQL = `
   left join location_project_profile on location_project.id = location_project_profile.location_project_id
   left join location_project_country on location_project.id = location_project_country.location_project_id
   left join location_project_metric on location_project.id = location_project_metric.location_project_id
-  where (location_project.status = 'listed' or location_project.status = 'published')`
+  where `
 
 export const PROJECTS_INDEX_NAME = 'projects'
 export const ORGANIZATIONS_INDEX_NAME = 'organizations'

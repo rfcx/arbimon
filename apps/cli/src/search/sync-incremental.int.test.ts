@@ -1,6 +1,6 @@
 import minMax from 'dayjs/plugin/minMax'
 import { Op } from 'sequelize'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, test } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
@@ -78,5 +78,17 @@ describe('incremental reindex from postgres to opensearch', async () => {
     // Assert
     const result = await opensearchClient.get({ index: 'projects', id: '859483' })
     expect(result.body._source.summary).toBe('welcome guys')
+  })
+
+  test('previously published projects that got hidden will get removed from opensearch', async () => {
+    // Arrange
+    await syncAllProjectsIncrementally(opensearchClient, sequelize)
+    await LocationProject.update({ status: 'hidden', statusUpdatedAt: new Date() }, { where: { id: 839483 } })
+
+    // Act
+    await syncAllProjectsIncrementally(opensearchClient, sequelize)
+
+    // Assert
+    await expect(opensearchClient.get({ index: 'projects', id: '839483' })).rejects.toThrow()
   })
 })

@@ -231,4 +231,16 @@ describe('index all data from postgres to opensearch', () => {
     // Assert
     expect(response.body.hits.hits.length).toBe(0)
   })
+
+  test('a project that its status went to hidden/unlisted will get removed from opensearch', async () => {
+    // Arrange
+    await syncAllProjects(opensearchClient, sequelize)
+    await LocationProject.update({ status: 'hidden', statusUpdatedAt: new Date() }, { where: { id: 2431216 } })
+
+    // Act
+    await syncAllProjects(opensearchClient, sequelize)
+
+    // Assert
+    await expect(opensearchClient.get({ index: 'projects', id: '2431216' })).rejects.toThrow()
+  })
 })
