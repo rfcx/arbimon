@@ -79,7 +79,7 @@
               Content not available.
               <span
                 class="text-frequency cursor-pointer"
-                @click="fetchProjects(0, LIMIT, undefined)"
+                @click="fetchProjects(0, LIMIT, 0)"
               >
                 Try again.
               </span>
@@ -87,7 +87,15 @@
           </div>
         </div>
         <div class="mx-auto max-w-screen-md text-center mt-35 xl:mt-45">
-          <div v-if="projects.length === 0 && !isLoading && !hasFailed">
+          <div>
+            <h5
+              v-if="projects.length === 0 && (projectSearchValue !== '' || projectSearchValue !== undefined)"
+              class="text-lg mb-8 font-header"
+            >
+              Project not found. Try again.
+            </h5>
+          </div>
+          <div v-if="projects.length === 0 && !isLoading && !hasFailed && (projectSearchValue === '' || projectSearchValue === undefined)">
             <h2 class="mb-8 text-gray-900 dark:text-insight font-header">
               Welcome to My Projects
             </h2>
@@ -144,7 +152,7 @@ const projectSearchValue = ref(undefined)
 const isSearchBoxFocused = ref(false)
 
 onMounted(() => {
-  fetchProjects(0, LIMIT, undefined)
+  fetchProjects(0, LIMIT, 0)
   projects.value = myProjects.value
 })
 
