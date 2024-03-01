@@ -79,7 +79,7 @@
               Content not available.
               <span
                 class="text-frequency cursor-pointer"
-                @click="fetchProjects(0, LIMIT)"
+                @click="fetchProjects(0, LIMIT, undefined)"
               >
                 Try again.
               </span>
@@ -120,7 +120,7 @@
 import { type AxiosInstance } from 'axios'
 import { computed, inject, onMounted, ref } from 'vue'
 
-import { apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
+import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
@@ -129,46 +129,60 @@ import { useStore } from '~/store'
 import BannerWhatNew from './components/banner-what-new.vue'
 import ProjectCard from './components/project-card.vue'
 
-onMounted(() => {
-  fetchProjects(0, LIMIT)
-})
-
 const store = useStore()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
-const projects = computed(() => store.myProjects)
+const myProjects = computed(() => store.myProjects)
+const projects = ref<LocationProjectWithInfo[]>([])
 const hasFetchedAll = ref(false)
 const LIMIT = 20
 const isLoading = ref(false)
 const showLoading = ref(false)
 const hasFailed = ref(false)
 
-const projectSearchValue = ref('')
+const projectSearchValue = ref(undefined)
 const isSearchBoxFocused = ref(false)
 
+onMounted(() => {
+  fetchProjects(0, LIMIT, undefined)
+  projects.value = myProjects.value
+})
+
 const searchProjectInputChanged = async () => {
-  const myProjectResponse = await apiBioGetMyProjects(apiClientBio, undefined, undefined, projectSearchValue.value)
-  console.info(myProjectResponse)
+  if (projectSearchValue.value === '') {
+    projects.value = myProjects.value
+    return
+  }
+  const myProjectResponse = await apiBioGetMyProjects(apiClientBio, LIMIT, 0, projectSearchValue.value)
+  if (myProjectResponse?.data === undefined) return
+  projects.value = myProjectResponse?.data
+  hasFetchedAll.value = false
 }
 
 const loadMoreProject = async (): Promise<void> => {
   if (hasFetchedAll.value || isLoading.value || hasFailed.value) return
-  fetchProjects(projects.value.length, LIMIT)
+  fetchProjects(projects.value.length, LIMIT, projectSearchValue.value === '' ? undefined : projectSearchValue.value)
 }
 
-const fetchProjects = async (offset:number, limit: number): Promise<void> => {
+const fetchProjects = async (offset:number, limit: number, keyword: string | undefined): Promise<void> => {
   isLoading.value = true
   hasFailed.value = false
 
   try {
-    const myProjectResponse = await apiBioGetMyProjects(apiClientBio, limit, offset)
+    const myProjectResponse = await apiBioGetMyProjects(apiClientBio, limit, offset, keyword)
     isLoading.value = false
     if (myProjectResponse === undefined) {
       hasFailed.value = true
       return
     }
     hasFetchedAll.value = myProjectResponse.total < myProjectResponse.limit // check if reaching the end
-    store.updateMyProject(myProjectResponse?.data)
+    if (keyword !== undefined) {
+      myProjectResponse?.data.forEach(p => {
+        projects.value.push(p)
+      })
+    } else {
+      store.updateMyProject(myProjectResponse?.data)
+    }
   } catch (e) {
     isLoading.value = false
     hasFailed.value = true
