@@ -145,14 +145,10 @@ const hasFailed = ref(false)
 
 const projectSearchValue = ref('')
 const isSearchBoxFocused = ref(false)
-const projectSearchInput = ref<HTMLDivElement | null>(null)
-
-const openProjectSearch = async () => {
-  projectSearchInput.value?.focus()
-}
 
 const searchProjectInputChanged = async () => {
-  console.info(projectSearchValue)
+  const myProjectResponse = await apiBioGetMyProjects(apiClientBio, undefined, undefined, projectSearchValue.value)
+  console.info(myProjectResponse)
 }
 
 const loadMoreProject = async (): Promise<void> => {
