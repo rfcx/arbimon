@@ -20,12 +20,10 @@
           <h6 class="mb-4 text-xl">
             Choose Model
           </h6>
-          <span
+          <div
             v-if="isLoadingClassifiers"
-            class="text-base"
-          >
-            Loading
-          </span>
+            class="loading-shimmer h-9 mt-2"
+          />
           <span
             v-else-if="isErrorClassifier"
             class="text-base"
@@ -36,7 +34,7 @@
             v-else-if="classifiers === undefined"
             class="text-base"
           >
-            {{ errorUndefinedText }}
+            😔 Content not available
           </span>
           <classifier-picker
             v-else
@@ -95,7 +93,7 @@
           </h6>
           <span v-if="isLoadingDetectRecording">Loading</span>
           <span v-else-if="isErrorDetectRecording">Error</span>
-          <span v-else-if="recordingData === undefined">{{ errorUndefinedText }}</span>
+          <span v-else-if="recordingData === undefined">😔 Content not available</span>
           <span
             v-else
             class="text-base"
@@ -163,7 +161,6 @@ const store = useStore()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const errorText = 'Error - there’s a problem loading the models. Please refresh this page and try again.'
-const errorUndefinedText = 'Error - content unavailable.'
 
 // Fields
 const job: ClassifierJobCreateConfiguration = reactive({
