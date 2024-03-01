@@ -44,3 +44,13 @@ export const refreshIndex = async (client: Client, index: string): Promise<void>
     }
   })
 }
+
+export const deleteDocument = async (client: Client, index: string, id: string): Promise<void> => {
+  await client.delete({ index, id }).catch(e => {
+    if (e.statusCode === 404) {
+      console.info('- project id', id, 'already removed in opensearch')
+    } else {
+      throw e
+    }
+  })
+}
