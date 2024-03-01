@@ -25,7 +25,6 @@
           <div>
             <form
               class="w-80"
-              autocomplete="off"
             >
               <div class="relative">
                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -79,7 +78,7 @@
               Content not available.
               <span
                 class="text-frequency cursor-pointer"
-                @click="fetchProjects(0, LIMIT, 0)"
+                @click="fetchProjects(0, LIMIT, undefined)"
               >
                 Try again.
               </span>
@@ -140,7 +139,6 @@ import ProjectCard from './components/project-card.vue'
 const store = useStore()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
-const myProjects = computed(() => store.myProjects)
 const projects = ref<LocationProjectWithInfo[]>([])
 const hasFetchedAll = ref(false)
 const LIMIT = 20
@@ -152,13 +150,13 @@ const projectSearchValue = ref(undefined)
 const isSearchBoxFocused = ref(false)
 
 onMounted(() => {
-  fetchProjects(0, LIMIT, 0)
-  projects.value = myProjects.value
+  fetchProjects(0, LIMIT, undefined)
+  projects.value = store.myProjects
 })
 
 const searchProjectInputChanged = async () => {
   if (projectSearchValue.value === '') {
-    projects.value = myProjects.value
+    projects.value = store.myProjects
     return
   }
   const myProjectResponse = await apiBioGetMyProjects(apiClientBio, LIMIT, 0, projectSearchValue.value)
