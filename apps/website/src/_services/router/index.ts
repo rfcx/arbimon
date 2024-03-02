@@ -196,7 +196,7 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.AdminProject
       },
       {
-        path: ':projectSlug/members',
+        path: ':projectId/members',
         name: ROUTE_NAMES.adminMember,
         component: PAGES.AdminMember
       }

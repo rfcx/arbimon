@@ -45,7 +45,7 @@
           <tfoot>
             <tr colspan="3">
               <td class="py-3 text-sm text-subtle">
-                Can't find the project you want ? Keep on typing search for it.
+                Can't find the project you want? Try searching for it by name or keyword.
               </td>
             </tr>
           </tfoot>
@@ -63,7 +63,7 @@
               </td>
               <td>
                 <router-link
-                  :to=" { name: ROUTE_NAMES.adminMember, params: { projectSlug: project.slug } }"
+                  :to=" { name: ROUTE_NAMES.adminMember, params: { projectId: project.id } }"
                   class="text-frequency text-sm"
                 >
                   Manage members
