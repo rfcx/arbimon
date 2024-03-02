@@ -184,6 +184,25 @@ const routes: RouteRecordRaw[] = [
     component: PAGES.Callback
   },
   {
+    path: '/admin',
+    name: ROUTE_NAMES.admin,
+    component: PAGES.Admin,
+    redirect: { name: ROUTE_NAMES.adminProject },
+    beforeEnter: [authRequiredGuard],
+    children: [
+      {
+        path: '',
+        name: ROUTE_NAMES.adminProject,
+        component: PAGES.AdminProject
+      },
+      {
+        path: ':projectId/members',
+        name: ROUTE_NAMES.adminMember,
+        component: PAGES.AdminMember
+      }
+    ]
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: ROUTE_NAMES.error,
     component: PAGES.Error

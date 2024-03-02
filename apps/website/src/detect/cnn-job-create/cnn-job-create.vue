@@ -1,6 +1,8 @@
 <template>
   <section class="max-w-screen-xl py-20 pl-115px pr-4">
-    <page-title page-title="Create New CNN Job" />
+    <div class="text-frequency">
+      <page-title page-title="Create New CNN Job" />
+    </div>
     <el-alert
       v-if="errors.length > 0"
       :title="errors.join('; ')"
@@ -10,46 +12,60 @@
       show-icon
     />
     <form class="mt-5">
-      <ol class="relative border-box-gray">
-        <li class="border-l-1 border-box-gray pb-8 pl-6">
-          <span class="mt-1.5 flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
+      <ol class="relative border-white">
+        <li class="border-l-1 border-white pb-8 pl-6">
+          <span class="flex absolute -left-3 text-xl justify-center items-center w-6 h-6 bg-pitch rounded-full ring-1 ring-white">
             1
           </span>
-          <h2 class="mb-4 text-md">
+          <h6 class="mb-4 text-xl">
             Choose Model
-          </h2>
-          <span v-if="isLoadingClassifiers">Loading</span>
-          <span v-else-if="isErrorClassifier">Error</span>
-          <span v-else-if="classifiers === undefined">No response</span>
+          </h6>
+          <div
+            v-if="isLoadingClassifiers"
+            class="loading-shimmer h-9 mt-2"
+          />
+          <span
+            v-else-if="isErrorClassifier"
+            class="text-base"
+          >
+            {{ errorText }}
+          </span>
+          <span
+            v-else-if="classifiers === undefined"
+            class="text-base"
+          >
+            😔 Content not available
+          </span>
           <classifier-picker
             v-else
             :classifier-models="classifiers"
             @selected-classifier="onSelectClassifier"
           />
         </li>
-        <li class="border-l-1 border-box-gray pb-8 pl-6">
-          <span class="mt-1.5 flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
+        <li class="border-l-1 border-white pb-8 pl-6">
+          <span class="flex absolute -left-3 text-xl justify-center items-center w-6 h-6 bg-pitch rounded-full ring-1 ring-white">
             2
           </span>
-          <h2 class="mb-4 text-md">
+          <h6 class="mb-4 text-xl">
             Choose Parameters
-          </h2>
-          <div class="mb-4">
+          </h6>
+          <div class="mb-3">
             <label
               for="sites"
-              class="block mb-2 text-md"
+              class="block mb-2 text-base"
             >
               Sites
             </label>
-            <site-picker
+            <site-input
+              class="mt-2"
               :initial-sites="projectFilters?.locationSites"
               @emit-select-sites="onSelectQuerySites"
             />
           </div>
-          <div class="mb-4">
+          <div class="mb-3 mt-5">
             <label
               for="date"
-              class="block mb-2 text-sm"
+              class="block mb-2 text-base"
             >
               Date
             </label>
@@ -58,10 +74,10 @@
               @emit-select-date-range="onSelectQueryDates"
             />
           </div>
-          <div class="mb-4">
+          <div class="mb-3 mt-5">
             <label
               for="time"
-              class="block mb-2 text-md"
+              class="block mb-2 text-base"
             >
               Time of day
             </label>
@@ -69,18 +85,18 @@
           </div>
         </li>
         <li class="pb-8 pl-6">
-          <span class="mt-1.5 flex absolute -left-3 text-xs justify-center items-center w-6 h-6 bg-steel-gray rounded-full ring-1 ring-box-gray">
+          <span class="flex absolute -left-3 text-xl justify-center items-center w-6 h-6 bg-pitch rounded-full ring-1 ring-white">
             3
           </span>
-          <h2 class="mb-4 text-md">
+          <h6 class="mb-4 text-xl">
             Job size estimation
-          </h2>
+          </h6>
           <span v-if="isLoadingDetectRecording">Loading</span>
           <span v-else-if="isErrorDetectRecording">Error</span>
-          <span v-else-if="recordingData === undefined">No response</span>
+          <span v-else-if="recordingData === undefined">😔 Content not available</span>
           <span
             v-else
-            class="text-subtle"
+            class="text-base"
           >{{ totalDurationInMinutes }} minutes of recordings</span>
         </li>
       </ol>
@@ -131,7 +147,7 @@ import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 import ClassifierPicker from '@/_services/picker/classifier-picker.vue'
 import DatePicker from '@/_services/picker/date-picker.vue'
 import type { DateRange } from '@/_services/picker/date-range-picker-interface'
-import SitePicker from '@/_services/picker/site-picker.vue'
+import SiteInput from '@/_services/picker/site-input.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
 import { apiClientCoreKey, apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
@@ -142,6 +158,8 @@ import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 
 const router = useRouter()
 const store = useStore()
+
+const errorText = 'Error - there’s a problem loading the models. Please refresh this page and try again.'
 
 // Fields
 const job: ClassifierJobCreateConfiguration = reactive({
@@ -214,6 +232,7 @@ const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) =
   recordingQuery.dateStartLocal = dateStartLocalIso
   recordingQuery.dateEndLocal = dateEndLocalIso
 }
+
 const onSelectQueryHours = (queryHours: string) => {
   validated.value = false
   job.queryHours = queryHours

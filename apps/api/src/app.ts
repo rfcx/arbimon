@@ -22,6 +22,7 @@ import { routesSearch } from './search'
 import { routesSpecies } from './species'
 import { routesSpotlight } from './spotlight'
 import { routesStatus } from './status'
+import { routesSuper } from './super'
 import { routesSync } from './sync'
 import { routesUserProfile } from './users'
 import { findOrCreateUserId } from './users/user-profile-bll'
@@ -51,12 +52,13 @@ export const createApp = async (): Promise<FastifyInstance> => {
     routesOrganizations,
     routesProject,
     routesRichness,
+    routesSearch,
     routesSpecies,
     routesSpotlight,
     routesStatus,
+    routesSuper,
     routesSync,
-    routesUserProfile,
-    routesSearch
+    routesUserProfile
   ]
 
   routesRegistrations

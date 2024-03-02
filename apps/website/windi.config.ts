@@ -83,6 +83,7 @@ export default defineConfig({
         // Secondary
         spoonbill: '#FFAFAF',
         flamingo: '#FF6868',
+        ibis: '#A31A33',
         palm: '#008059',
         chirp: '#D2FF8A',
         // Neutrals

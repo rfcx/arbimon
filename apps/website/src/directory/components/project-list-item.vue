@@ -27,7 +27,10 @@
             :text-full="getCountryLabel(props.project.countries, props.project.countries.length)"
           />
         </span>
-        <span class="text-util-gray-01 inline-flex mx-1"> | </span>
+        <span
+          v-if="project.countries.length > 0 && project.objectives.length > 0"
+          class="text-util-gray-01 inline-flex mx-1"
+        > | </span>
         <text-tooltip
           :tooltip-id="`${props.project.id}-objective`"
           :text-shorten="objectiveAll"

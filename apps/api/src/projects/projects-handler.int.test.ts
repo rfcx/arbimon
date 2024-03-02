@@ -3,6 +3,7 @@ import { afterEach, describe, expect, test, vi } from 'vitest'
 
 import { projectsDeprecatedRoute, projectsGeoRoute } from '@rfcx-bio/common/api-bio/project/projects'
 import { type Project } from '@rfcx-bio/common/dao/types'
+import { myProjectsRoute } from '@rfcx-bio/common/lib/api-bio/project/projects'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 import { makeProject } from '@rfcx-bio/testing/model-builders/project-model-builder'
@@ -13,7 +14,7 @@ import { routesProject } from './index'
 
 const userId = 9001
 
-const { LocationProject } = modelRepositoryWithElevatedPermissions
+const { LocationProject, LocationProjectUserRole } = modelRepositoryWithElevatedPermissions
 
 function zeroToN (n: number): number[] {
   return [...Array(n + 1).keys()]
@@ -188,5 +189,111 @@ describe('Project by slug', async () => {
 
     // Assert
     expect(response.statusCode).toBe(404)
+  })
+})
+
+describe('User projects', async () => {
+  test(`GET ${myProjectsRoute} returns with no params`, async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { userId })
+    const projects = zeroToN(90).map(i => makeProject(1234000 + i, `Project #${i}`))
+    const roles = projects.map(project => ({ locationProjectId: project.id, userId, roleId: 1, ranking: -1 }))
+    await LocationProject.bulkCreate(projects, { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+    await LocationProjectUserRole.bulkCreate(roles)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: myProjectsRoute
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(results.data).toHaveLength(20)
+  })
+
+  test(`GET ${myProjectsRoute} returns with set limit`, async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { userId })
+    const projects = zeroToN(90).map(i => makeProject(1234000 + i, `Project #${i}`))
+    const roles = projects.map(project => ({ locationProjectId: project.id, userId, roleId: 1, ranking: -1 }))
+    await LocationProject.bulkCreate(projects, { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+    await LocationProjectUserRole.bulkCreate(roles)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: myProjectsRoute,
+      query: { limit: '75' }
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(results.data).toHaveLength(75)
+  })
+
+  test(`GET ${myProjectsRoute} returns a project by keyword`, async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { userId })
+    const projects = zeroToN(90).map(i => makeProject(1234000 + i, `Project #${i}`))
+    const roles = projects.map(project => ({ locationProjectId: project.id, userId, roleId: 1, ranking: -1 }))
+    await LocationProject.bulkCreate(projects, { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+    await LocationProjectUserRole.bulkCreate(roles)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: myProjectsRoute,
+      query: { keyword: '#10' }
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(results.data).toHaveLength(1)
+  })
+
+  test(`GET ${myProjectsRoute} returns all projects by keyword (case-insensitive)`, async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { userId })
+    const projects = zeroToN(90).map(i => makeProject(1234000 + i, i % 2 === 0 ? `Project #${i}` : `Project Keyword #${i}`))
+    const roles = projects.map(project => ({ locationProjectId: project.id, userId, roleId: 1, ranking: -1 }))
+    await LocationProject.bulkCreate(projects, { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+    await LocationProjectUserRole.bulkCreate(roles)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: myProjectsRoute,
+      query: { keyword: 'keyword', limit: '90' }
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(results.data).toHaveLength(45)
+  })
+
+  test(`GET ${myProjectsRoute} returns projects by keyword and default limit`, async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { userId })
+    const projects = zeroToN(90).map(i => makeProject(1234000 + i, i % 2 === 0 ? `Project #${i}` : `Project Keyword #${i}`))
+    const roles = projects.map(project => ({ locationProjectId: project.id, userId, roleId: 1, ranking: -1 }))
+    await LocationProject.bulkCreate(projects, { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+    await LocationProjectUserRole.bulkCreate(roles)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: myProjectsRoute,
+      query: { keyword: 'key' }
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(results.data).toHaveLength(20)
   })
 })

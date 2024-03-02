@@ -9,7 +9,7 @@ import { syncAllProjects } from '../all'
 import { analysis } from '../analysis'
 import { PROJECTS_INDEX_NAME } from '../constants'
 import { mappings } from '../mappings'
-import { ensureRequiredIndexInitialized, refreshIndex } from '../opensearch'
+import { deleteDocument, ensureRequiredIndexInitialized, refreshIndex } from '../opensearch'
 import { getCurrentDatabaseTime, getProjects, saveOpensearchSyncStatus } from '../postgres'
 
 export const syncAllProjectsIncrementally = async (client: Client, sequelize: Sequelize): Promise<void> => {
@@ -35,18 +35,20 @@ export const syncAllProjectsIncrementally = async (client: Client, sequelize: Se
     return
   }
 
-  const deletedProjects = await getProjects(sequelize, { type: 'deleted', time: dayjs(latestSyncCheckpoint.syncUntilDate) })
+  console.info('- syncing deleted projects')
+  const deletedProjects = await getProjects(sequelize, 'eligible', { type: 'deleted', time: dayjs(latestSyncCheckpoint.syncUntilDate) })
   for (const project of deletedProjects) {
-    await client.delete({ index: PROJECTS_INDEX_NAME, id: project.id.toString() }).catch(e => {
-      if (e.statusCode === 404) {
-        console.info('- project id', project.id, 'already does not exist in opensearch')
-      } else {
-        throw e
-      }
-    })
+    await deleteDocument(client, PROJECTS_INDEX_NAME, project.id.toString())
   }
 
-  const updatedProjects = await getProjects(sequelize, { type: 'updated', time: dayjs(latestSyncCheckpoint.syncUntilDate) })
+  console.info('- syncing non-eligible projects (removing recently hidden/unlisted projects out of opensearch)')
+  const nonEligibleProjects = await getProjects(sequelize, 'non-eligible', { type: 'updated', time: dayjs(latestSyncCheckpoint.syncUntilDate) })
+  for (const project of nonEligibleProjects) {
+    await deleteDocument(client, PROJECTS_INDEX_NAME, project.id.toString())
+  }
+
+  console.info('- syncing updated projects')
+  const updatedProjects = await getProjects(sequelize, 'eligible', { type: 'updated', time: dayjs(latestSyncCheckpoint.syncUntilDate) })
   for (const project of updatedProjects) {
     const { id, ...body } = project
     await client.index({ index: PROJECTS_INDEX_NAME, id: id.toString(), body })

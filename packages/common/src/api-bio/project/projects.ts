@@ -9,12 +9,7 @@ import { type ProjectRole } from '../../roles'
 export interface LocationProjectQuery {
   limit?: number
   offset?: number
-}
-
-export interface DirectoryProjectsQuery {
-  full?: boolean
-  ids?: string
-  keywords?: string
+  keyword?: string
 }
 
 // Response types

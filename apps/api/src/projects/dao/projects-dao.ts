@@ -24,10 +24,13 @@ const computedAttributes: Record<string, [Literal, string]> = {
   longitudeAvg: [sequelize.literal('(longitude_east+longitude_west)/2'), 'longitudeAvg']
 }
 
-export const query = async <T extends Project>(filters: { status?: ProjectStatus[] | ProjectStatus }, options?: { limit?: number, offset?: number, attributesSet?: 'geo' }): Promise<T[]> => {
+export const query = async <T extends Project>(filters: { status?: ProjectStatus[] | ProjectStatus, keyword?: string }, options?: { limit?: number, offset?: number, attributesSet?: 'geo' }): Promise<T[]> => {
   const where: WhereOptions<Project> = {}
   if (filters.status !== undefined) {
     where.status = filters.status
+  }
+  if (filters.keyword) {
+    where.name = { [Op.iLike]: `%${filters.keyword}%` }
   }
 
   const expectedAttributes = options?.attributesSet === 'geo' ? ATTRIBUTES_LOCATION_PROJECT.geo : ATTRIBUTES_LOCATION_PROJECT.light
@@ -77,12 +80,18 @@ export const getViewableProjects = async (userId: number | undefined): Promise<L
 /**
  * @deprecated Do not use - type will be removed
  */
-export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, limit: number = 20): Promise<MyProjectsResponse> => {
+export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, limit: number = 20, keyword?: string): Promise<MyProjectsResponse> => {
   const memberProjectIds = await getProjectIdsByUser(userId)
+
+  const where: WhereOptions<Project> = { id: memberProjectIds }
+
+  if (keyword) {
+    where.name = { [Op.iLike]: `%${keyword}%` }
+  }
 
   const myProjects = await models.LocationProject
     .findAll({
-      where: { id: memberProjectIds },
+      where,
       attributes: ATTRIBUTES_LOCATION_PROJECT.light,
       order: ['name', 'status'],
       offset,

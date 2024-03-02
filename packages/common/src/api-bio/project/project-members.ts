@@ -25,18 +25,17 @@ export const projectMembersRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/members`
 
 // Service
 export const apiBioGetProjectMembers = async (apiClient: AxiosInstance, projectId: number): Promise<ProjectMembersResponse> => {
-  const response = await apiClient.get(projectMembersRoute.replace(':projectId', projectId.toString()))
-  return response.data
+  return await apiClient.get(projectMembersRoute.replace(':projectId', projectId.toString())).then(res => res.data)
 }
 
 export const apiBioAddProjectMember = async (apiClient: AxiosInstance, projectId: number, payload: ProjectMemberAddRemoveRequest): Promise<void> => {
-  await apiClient.post(projectMembersRoute.replace(':projectId', projectId.toString()), payload).then(res => res.data)
+  await apiClient.post(projectMembersRoute.replace(':projectId', projectId.toString()), payload)
 }
 
 export const apiBioUpdateProjectMember = async (apiClient: AxiosInstance, projectId: number, payload: ProjectMemberUpdateRequest): Promise<void> => {
-  await apiClient.patch(projectMembersRoute.replace(':projectId', projectId.toString()), payload).then(res => res.data)
+  await apiClient.patch(projectMembersRoute.replace(':projectId', projectId.toString()), payload)
 }
 
 export const apiBioRemoveProjectMember = async (apiClient: AxiosInstance, projectId: number, payload: ProjectMemberAddRemoveRequest): Promise<void> => {
-  await apiClient.delete(projectMembersRoute.replace(':projectId', projectId.toString()), { data: payload }).then(res => res.data)
+  await apiClient.delete(projectMembersRoute.replace(':projectId', projectId.toString()), { data: payload })
 }

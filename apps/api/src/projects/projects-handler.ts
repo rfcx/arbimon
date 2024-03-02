@@ -13,7 +13,7 @@ export const projectsAllHandler: Handler<LocationProjectWithRole[], unknown, Loc
 }
 
 export const myProjectsHandler: Handler<MyProjectsResponse, unknown, LocationProjectQuery> = async (req) => {
-  return await getMyProjectsWithInfo(req.userId as number, req.query.offset, req.query.limit)
+  return await getMyProjectsWithInfo(req.userId as number, req.query.offset, req.query.limit, req.query.keyword)
 }
 
 export const getProjectBySlugHandler: Handler<LocationProjectWithRole, { slug: string }, unknown, unknown> = async (req) => {
