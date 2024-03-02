@@ -10,7 +10,7 @@ const roles: Record<number, ProjectRole> = {
   6: 'expert'
 }
 
-const orderedRoles: ProjectRole[] = ['external', 'viewer', 'entry', 'user', 'expert', 'admin', 'owner']
+export const orderedRoles: ProjectRole[] = ['external', 'viewer', 'entry', 'user', 'expert', 'admin', 'owner']
 
 export const rolesGreaterOrEqualTo = (role: ProjectRole): ProjectRole[] =>
   orderedRoles.filter((r, i) => i >= orderedRoles.indexOf(role))

@@ -1,6 +1,8 @@
 <template>
   <landing-navbar />
-  <router-view />
+  <div class="default-scroll-start">
+    <router-view />
+  </div>
 </template>
 <script setup lang="ts">
 

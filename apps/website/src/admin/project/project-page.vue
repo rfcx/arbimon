@@ -31,6 +31,9 @@
         <table class="w-full text-left rtl:text-right table-auto mt-6">
           <thead class="border-y-1 border-util-gray-03 text-fog text-sm">
             <tr>
+              <th class="w-10 <sm:hidden">
+                Id
+              </th>
               <th class="py-3">
                 Name
               </th>
@@ -42,19 +45,15 @@
               </th>
             </tr>
           </thead>
-          <tfoot>
-            <tr colspan="3">
-              <td class="py-3 text-sm text-subtle">
-                Can't find the project you want? Try searching for it by name or keyword.
-              </td>
-            </tr>
-          </tfoot>
           <tbody>
             <tr
               v-for="project in projects"
               :key="project.id"
               class="border-y-1 border-util-gray-03"
             >
+              <td class="<sm:hidden">
+                {{ project.id }}
+              </td>
               <td class="py-3">
                 {{ project.name }}
               </td>
@@ -72,6 +71,9 @@
             </tr>
           </tbody>
         </table>
+        <div class="mt-3 text-sm text-subtle">
+          Can't find the project you want? Try searching for it by name or keyword.
+        </div>
       </div>
     </div>
   </div>
@@ -80,11 +82,11 @@
 <script setup lang="ts">
 import { useDebounce } from '@vueuse/core'
 import { type AxiosInstance } from 'axios'
-import { inject, onBeforeUnmount, ref } from 'vue'
+import { inject, ref } from 'vue'
 
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { useGetSuperProjects } from './composables/use-projects'
+import { useGetSuperProjects } from './_composables/use-projects'
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
@@ -93,11 +95,6 @@ const limit = ref(200)
 const offset = ref(0)
 
 const searchParams = useDebounce(searchKeyword, 500)
-
-onBeforeUnmount(() => {
-  offset.value = 0
-  projects.value = []
-})
 
 const { isError, isLoading, error, data: projects } = useGetSuperProjects(apiClientBio, { keyword: searchParams, limit, offset })
 
