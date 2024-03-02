@@ -4,6 +4,15 @@
       <h1 class="mt-20 mb-6">
         Projects
       </h1>
+      <input
+        id="searchInput"
+        v-model="searchKeyword"
+        name="search"
+        type="text"
+        class="input-field text-insight shadow-lg shadow-frequency/10"
+        placeholder="Search for projects"
+        autocomplete="off"
+      >
       <div
         v-if="isError"
         class="text-insight"
@@ -19,15 +28,6 @@
         <icon-custom-ic-loading class="h-10 w-10" />
       </div>
       <div v-else>
-        <input
-          id="searchInput"
-          v-model="searchKeyword"
-          name="search"
-          type="text"
-          class="input-field text-insight shadow-lg shadow-frequency/10"
-          placeholder="Search for projects"
-          autocomplete="off"
-        >
         <table class="w-full text-left rtl:text-right table-auto mt-6">
           <thead class="border-y-1 border-util-gray-03 text-fog text-sm">
             <tr>
@@ -82,13 +82,15 @@
 <script setup lang="ts">
 import { useDebounce } from '@vueuse/core'
 import { type AxiosInstance } from 'axios'
-import { inject, ref } from 'vue'
+import { inject, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useGetSuperProjects } from './_composables/use-projects'
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
+const router = useRouter()
 
 const searchKeyword = ref('')
 const limit = ref(200)
@@ -98,4 +100,9 @@ const searchParams = useDebounce(searchKeyword, 500)
 
 const { isError, isLoading, error, data: projects } = useGetSuperProjects(apiClientBio, { keyword: searchParams, limit, offset })
 
+watch(error, (newError) => {
+  if (newError?.response?.status === 401) {
+    router.push({ name: ROUTE_NAMES.error })
+  }
+})
 </script>

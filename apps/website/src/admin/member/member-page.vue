@@ -88,8 +88,8 @@
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { computed, inject, onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, inject, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
@@ -98,6 +98,7 @@ import { useSuperAddProjectMember, useSuperDeleteProjectMember, useSuperGetProje
 import MemberItem from './components/member-item.vue'
 
 const route = useRoute()
+const router = useRouter()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
@@ -106,10 +107,16 @@ const project = computed(() => {
 })
 
 // == get members ==
-const { data: members, refetch: refetchMembers } = useSuperGetProjectMembers(apiClientBio, project.value.id)
+const { data: members, refetch: refetchMembers, error } = useSuperGetProjectMembers(apiClientBio, project.value.id)
 
 onMounted(() => {
   refetchMembers()
+})
+
+watch(error, (newError) => {
+  if (newError?.response?.status === 401) {
+    router.push({ name: ROUTE_NAMES.error })
+  }
 })
 
 // == add member ==
