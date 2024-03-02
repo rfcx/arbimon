@@ -17,6 +17,8 @@ export const addProjectMember = async (token: string, locationProjectId: number,
     throw BioNotFoundError()
   }
 
+  // TODO #1533: check if user is already a member - should return 409
+
   // Legacy
   await addProjectMemberLegacy(token, project.slug, email, role ?? 'user')
 

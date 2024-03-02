@@ -5,7 +5,7 @@ import { type Ref } from 'vue'
 import { apiBioSuperGetProjects } from '@rfcx-bio/common/api-bio/super/projects'
 import { type LocationProjectTypes } from '@rfcx-bio/common/dao/types'
 
-import { type Error } from './error'
+import { type Error } from '../../error'
 
 export const useGetSuperProjects = (apiClient: AxiosInstance, options: { keyword?: Ref<string>, limit?: Ref<number>, offset?: Ref<number> }): UseQueryReturnType<Array<LocationProjectTypes['light']>, Error> => {
   return useQuery({
