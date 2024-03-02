@@ -7,10 +7,10 @@
         </router-link>
         <icon-fa-chevron-right class="self-center text-xxs" />
         <router-link
-          :to="{ name: ROUTE_NAMES.adminMember, params: { projectSlug: route.params.projectSlug } }"
+          :to="{ name: ROUTE_NAMES.adminMember, params: { projectId: project.id } }"
           class="font-bold"
         >
-          {{ route.params.projectSlug }}
+          {{ project.slug ?? project.id }}
         </router-link>
       </div>
       <h2 class="mt-2 mb-10">
@@ -50,17 +50,17 @@
         <tbody>
           <tr
             v-for="member in members"
-            :key="member.id"
+            :key="member.userId"
             class="border-y-1 border-util-gray-03"
           >
             <td class="px-2 py-3">
-              {{ member.name }}
+              {{ member.firstName }} {{ member.lastName }}
             </td>
             <td class="px-2 py-3">
               {{ member.email }}
             </td>
             <td class="px-2 py-3">
-              {{ member.role }}
+              {{ getRoleById(member.roleId) }}
             </td>
             <td class="px-2 py-3">
               <button class="text-sm text-insight bg-ibis rounded-md px-2 py-1">
@@ -75,21 +75,24 @@
 </template>
 
 <script setup lang="ts">
+import { type AxiosInstance } from 'axios'
+import { computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { getRoleById } from '@rfcx-bio/common/roles'
+
+import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+import { useGetSuperProjectMembers } from './composables/use-members'
 
 const route = useRoute()
 
-interface Member {
-  id: number
-  name: string
-  email: string
-  role: string
-}
-const members: Member[] = [
-  { id: 1, name: 'John Doe', email: 'john@cx.com', role: 'Admin' },
-  { id: 2, name: 'Jane Doe', email: 'jane@cy.com', role: 'Member' }
-]
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+
+const project = computed(() => {
+  return { id: Number(route.params.projectId), slug: route.params.projectSlug }
+})
+
+const { data: members } = useGetSuperProjectMembers(apiClientBio, project.value.id)
 
 </script>
