@@ -4,6 +4,7 @@ import { type Sequelize } from 'sequelize'
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type SyncStatus } from '@rfcx-bio/common/dao/types'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getArbimonSites } from '../inputs/get-arbimon-site'
 import { writeSitesToBio } from '../outputs/sites'
@@ -43,7 +44,7 @@ export const syncArbimonSitesBatch = async (arbimonSequelize: Sequelize, biodive
 
   try {
     // Update sync status
-    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: lastSyncdSite.updatedAt, syncUntilId: lastSyncdSite.idArbimon.toString() }
+    const updatedSyncStatus: SyncStatus = { ...syncStatus, syncUntilDate: dayjs(lastSyncdSite.updatedAt).toDate(), syncUntilId: lastSyncdSite.idArbimon.toString() }
     await writeSyncResult(updatedSyncStatus, biodiversitySequelize, transaction)
 
     await Promise.all(inputsAndParsingErrors.map(async e => {
@@ -94,6 +95,4 @@ export const syncArbimonSites = async (arbimonSequelize: Sequelize, biodiversity
 
   const updatedSyncStatus = await syncArbimonSitesBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
   return (syncStatus.syncUntilDate === updatedSyncStatus.syncUntilDate && syncStatus.syncUntilId === updatedSyncStatus.syncUntilId)
-      // || numberOfItemsSynced < syncStatus.syncBatchLimit
-      // TODO: add number of syncd items as a response of syncArbimonProjectsBatch so that we can check the case above ☝️
 }
