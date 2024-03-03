@@ -184,7 +184,7 @@ const routes: RouteRecordRaw[] = [
     component: PAGES.Callback
   },
   {
-    path: '/admin',
+    path: '/sa',
     name: ROUTE_NAMES.admin,
     component: PAGES.Admin,
     redirect: { name: ROUTE_NAMES.adminProject },
