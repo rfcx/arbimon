@@ -6,10 +6,10 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { syncAllProjects } from '../all'
-import { analysis } from '../analysis'
 import { PROJECTS_INDEX_NAME } from '../constants'
-import { mappings } from '../mappings'
-import { deleteDocument, ensureRequiredIndexInitialized, refreshIndex } from '../opensearch'
+import { analysis } from '../opensearch/analysis'
+import { mappings } from '../opensearch/mappings'
+import { deleteDocument, ensureRequiredIndexInitialized, refreshIndex } from '../opensearch/utilities'
 import { getCurrentDatabaseTime, getProjects, saveOpensearchSyncStatus } from '../postgres'
 
 export const syncAllProjectsIncrementally = async (client: Client, sequelize: Sequelize): Promise<void> => {

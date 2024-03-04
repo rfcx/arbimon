@@ -1,10 +1,10 @@
 import { type Client } from '@opensearch-project/opensearch'
 import { type Sequelize } from 'sequelize'
 
-import { analysis } from '../analysis'
 import { PROJECTS_INDEX_NAME } from '../constants'
-import { mappings } from '../mappings'
-import { deleteDocument, ensureRequiredIndexInitialized, refreshIndex } from '../opensearch'
+import { analysis } from '../opensearch/analysis'
+import { mappings } from '../opensearch/mappings'
+import { deleteDocument, ensureRequiredIndexInitialized, refreshIndex } from '../opensearch/utilities'
 import { getCurrentDatabaseTime, getProjects, saveOpensearchSyncStatus } from '../postgres'
 
 export const syncAllProjects = async (client: Client, sequelize: Sequelize): Promise<void> => {
