@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, watch } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -36,25 +36,18 @@ const disabledDate = (time: Date) => {
   return time.getTime() > Date.now()
 }
 
-watchEffect(() => {
-  dateValue.value = props.initialDate ? dayjs(props.initialDate).startOf('day').toDate() : undefined
+watch(() => props.initialDate, (newValue) => {
+  dateValue.value = newValue ? dayjs(newValue).startOf('day').toDate() : undefined
 })
 
 // Emit on change
-const emitSelectDate = (date: Date): void => {
-  const dateLocalIso = dayjs(date).format('YYYY-MM-DD') + 'T00:00:00.000Z'
-  emit('emitSelectDate', dateLocalIso)
-}
-
 const dateChange = () => {
-  if (dateValue.value === null) {
+  if (dateValue.value === null || dateValue.value === undefined) {
     emit('emitSelectDate', null)
+  } else {
+    const dateLocalIso = dayjs(dateValue.value).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+    emit('emitSelectDate', dateLocalIso)
   }
 }
 
-watchEffect(() => {
-  if (dateValue.value) {
-    emitSelectDate(dateValue.value)
-  }
-})
 </script>
