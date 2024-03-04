@@ -126,7 +126,7 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import debounce from 'lodash.debounce'
-import { inject, onMounted, ref } from 'vue'
+import { inject, onMounted, ref, watch } from 'vue'
 
 import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
@@ -157,7 +157,6 @@ onMounted(() => {
 
 const searchProjectInputChanged = debounce(async () => {
   if (projectSearchValue.value === '') {
-    projects.value = store.myProjects
     return
   }
   const myProjectResponse = await apiBioGetMyProjects(apiClientBio, LIMIT, 0, projectSearchValue.value)
@@ -165,6 +164,12 @@ const searchProjectInputChanged = debounce(async () => {
   projects.value = myProjectResponse?.data
   hasFetchedAll.value = false
 }, 500)
+
+watch(() => projectSearchValue.value, () => {
+  if (projectSearchValue.value === '') {
+    projects.value = store.myProjects
+  }
+})
 
 const loadMoreProject = async (): Promise<void> => {
   if (hasFetchedAll.value || isLoading.value || hasFailed.value) return
