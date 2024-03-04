@@ -104,14 +104,14 @@
       </div>
     </div>
 
-    <div class="px-6 py-4">
-      <p class="flex text-3xl font-header">
+    <div class="p-6">
+      <p class="flex text-3xl font-header text-insight">
         Summary
       </p>
-      <div class="grid grid-cols-2 text-lg mt-4">
+      <div class="grid grid-cols-2 text-lg py-4 border-b-1 border-util-gray-03">
         <div class="flex">
-          <span>Model:</span>
-          <div class="ml-2">
+          <span class="text-util-gray-01">Model:</span>
+          <div class="ml-2 text-insight">
             <h5>
               {{ props.summary?.classifier.name ?? 'asian-elephant-edge' }}
             </h5>
@@ -121,8 +121,41 @@
           </div>
         </div>
         <div>
-          aaa
+          <h2 class="text-lg">
+            {{ CLASSIFIER_JOB_LABELS[props.summary?.status ?? 30] }}
+          </h2>
         </div>
+      </div>
+      <div class="grid grid-cols-3 pt-4 text-lg">
+        <div>
+          <span class="text-util-gray-01">Input</span>
+          <div
+            id="cnn-job-information-input"
+            class="grid grid-rows-3 gap-y-4 mt-4 text-base text-insight"
+          >
+            <icon-custom-ft-map-pin-lg-frequency class="block m-auto" />
+            <span
+              class="truncate ml-2"
+              :title="queryStreamsInfoString"
+            >
+              {{ queryStreamsInfoString }}
+            </span>
+            <icon-custom-ic-calendar-frequency class="block m-auto" />
+            <span class="ml-2">
+              {{ queryStart }} - {{ queryEnd }}
+            </span>
+            <icon-custom-ic-clock-frequency class="block m-auto" />
+            <span class="ml-2">
+              {{ queryHours }}
+            </span>
+            <icon-custom-ft-mic-lg-frequency class="block m-auto" />
+            <span class="ml-2">
+              TODO: Minutes of recordings
+            </span>
+          </div>
+        </div>
+        <div>Validation Status</div>
+        <div>Output</div>
       </div>
     </div>
   </div>
