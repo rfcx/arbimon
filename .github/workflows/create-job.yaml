@@ -10,6 +10,7 @@ on:
         - 'sync-incremental'
         - 'export-csv'
         - 'opensearch-full-reindex'
+        - 'recreate-opensearch-indexes'
         required: true
       environment:
         description: Environment (namespace)
@@ -64,7 +65,11 @@ jobs:
               },
               "opensearch-full-reindex": {
                 "JOB_NAME": "biodiversity-cli-opensearch-full-reindex",
-                "NODE_COMMAND": "apps/cli/lib/search/main.js"
+                "NODE_COMMAND": "apps/cli/lib/search/sync-all.js"
+              },
+              "recreate-opensearch-indexes": {
+                "JOB_NAME": "biodiversity-cli-recreate-opensearch-indexes",
+                "NODE_COMMAND": "apps/cli/lib/search/recreate-indexes.js"
               }
             }
 
