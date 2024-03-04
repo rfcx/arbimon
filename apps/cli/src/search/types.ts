@@ -1,3 +1,7 @@
+/**
+ * short type referenced to needed columns for manipulating the data
+ * for opensearch. Just the needed columns, nothing more.
+ */
 export interface AbbreviatedProject {
   id: number
   name: string

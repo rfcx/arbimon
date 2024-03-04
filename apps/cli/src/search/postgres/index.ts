@@ -6,8 +6,8 @@ import { masterObjectiveValues, masterSources, masterSyncDataTypes } from '@rfcx
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { BASE_SQL, SYNC_BATCH_LIMIT } from './constants'
-import { type AbbreviatedProject, type ExpandedProject } from './types'
+import { BASE_SQL, SYNC_BATCH_LIMIT } from '../constants'
+import { type AbbreviatedProject, type ExpandedProject } from '../types'
 
 export const getProjects = async (sequelize: Sequelize, status: 'eligible' | 'non-eligible', constraint?: { type: 'deleted' | 'updated', time?: Dayjs }): Promise<ExpandedProject[]> => {
   let offset = 0
