@@ -7,7 +7,6 @@
     placeholder="Choose date"
     format="MM/DD/YYYY"
     :disabled-date="disabledDate"
-    @change="dateChange"
   />
 </template>
 
@@ -40,14 +39,13 @@ watch(() => props.initialDate, (newValue) => {
   dateValue.value = newValue ? dayjs(newValue).startOf('day').toDate() : undefined
 })
 
-// Emit on change
-const dateChange = () => {
-  if (dateValue.value === null || dateValue.value === undefined) {
+watch(() => dateValue.value, (newValue) => {
+  if (newValue === null || newValue === undefined) {
     emit('emitSelectDate', null)
   } else {
-    const dateLocalIso = dayjs(dateValue.value).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+    const dateLocalIso = dayjs(newValue).format('YYYY-MM-DD') + 'T00:00:00.000Z'
     emit('emitSelectDate', dateLocalIso)
   }
-}
+})
 
 </script>
