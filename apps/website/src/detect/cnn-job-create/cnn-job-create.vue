@@ -104,7 +104,7 @@
         <router-link :to="{ name: ROUTE_NAMES.cnnJobList }">
           <button
             title="Cancel"
-            class="btn btn-secondary"
+            class="px-3 py-0 btn btn-secondary h-40px w-106px"
           >
             Cancel
           </button>
@@ -112,7 +112,7 @@
         <button
           :disabled="isLoadingPostJob || errors.length > 0"
           title="Create"
-          class="btn btn-primary"
+          class="px-3 py-0 btn btn-primary h-40px w-106px"
           @click.prevent="createJob"
         >
           <span v-if="isLoadingPostJob">Saving</span>
