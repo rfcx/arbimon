@@ -3,14 +3,12 @@
     <div class="text-frequency">
       <page-title page-title="Create New CNN Job" />
     </div>
-    <el-alert
-      v-if="errors.length > 0"
-      :title="errors.join('; ')"
-      type="warning"
-      class="my-4"
-      effect="dark"
-      show-icon
-    />
+    <div v-if="errors.length > 0">
+      <span class="my-4 bg-rose-200 inline-flex text-echo items-center p-3 border-1 border-rose-600 border-l-3 rounded-lg w-full">
+        <icon-custom-ic-error-message />
+        {{ errors.join('; ') }}
+      </span>
+    </div>
     <form class="mt-5">
       <ol class="relative border-white">
         <li class="border-l-1 border-white pb-8 pl-6">
