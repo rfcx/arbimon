@@ -23,12 +23,10 @@
   </div>
   <div
     id="dateRangePicker"
-    date-rangepicker
     class="flex mt-6 items-center gap-4"
   >
     <div class="flex-1">
       <label
-        for="start"
         class="block mb-2 font-medium text-gray-900 dark:text-insight"
       >Project start date</label>
       <div class="relative flex-1">
@@ -44,7 +42,6 @@
     <span class="mt-7">-</span>
     <div class="flex-1">
       <label
-        for="end-date"
         class="block mb-2 font-medium text-gray-900 dark:text-insight"
       >Project end date</label>
       <div
