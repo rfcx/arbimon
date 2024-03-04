@@ -9,7 +9,7 @@ import { type RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 import { makeProject } from '@/../../../packages/testing/src/model-builders/project-model-builder'
 import { getSequelize } from '@/db/connections'
 import { syncAllProjects } from './all'
-import { getOpenSearchClient } from './opensearch'
+import { getOpenSearchClient } from './opensearch/utilities'
 
 const opensearchClient = getOpenSearchClient()
 const sequelize = getSequelize()
