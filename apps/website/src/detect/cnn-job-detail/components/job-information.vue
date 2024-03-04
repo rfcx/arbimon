@@ -1,18 +1,22 @@
 <template>
   <div class="job-information-wrapper border-1 border-box-grey rounded-md">
     <div
+      v-if="false"
       id="job-information-summary-grid"
       class="grid lg:grid-cols-4 lg:gap-x-4 <lg:gap-y-4 px-6 py-4"
     >
+      <!-- mock: v-if="false"  -->
+
       <div
         v-if="props.isLoadingSummary"
         class="loading-shimmer mx-2 rounded-lg"
       />
-      <ComponentError v-else-if="props.isErrorSummary" />
+      <!-- <ComponentError v-else-if="props.isErrorSummary" /> -->
       <div v-else>
         <span class="text-subtle">Model</span>
         <h2 class="text-lg">
-          {{ props.summary?.classifier.name ?? '' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
+          <!-- mock: {{ props.summary?.classifier.name ?? 'asian-elephant-edge' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : 'v3' }} -->
+          {{ props.summary?.classifier.name ?? 'asian-elephant-edge' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : 'v3' }}
         </h2>
       </div>
 
@@ -20,7 +24,7 @@
         v-if="props.isLoadingSummary"
         class="loading-shimmer mx-2 rounded-lg"
       />
-      <ComponentError v-else-if="props.isErrorSummary" />
+      <!-- mock: <ComponentError v-else-if="props.isErrorSummary" /> -->
       <div v-else>
         <span class="text-subtle">Input</span>
         <div
@@ -49,7 +53,7 @@
         v-if="props.isLoadingSummary"
         class="loading-shimmer mx-2 rounded-lg"
       />
-      <ComponentError v-else-if="props.isErrorSummary" />
+      <!-- mock: <ComponentError v-else-if="props.isErrorSummary" /> -->
       <div v-else>
         <span class="text-subtle">Status</span>
         <div
@@ -84,7 +88,7 @@
         v-if="props.isLoadingResults"
         class="loading-shimmer mx-2 rounded-lg"
       />
-      <ComponentError v-else-if="props.isErrorResults" />
+      <!-- mock: <ComponentError v-else-if="props.isErrorResults" /> -->
       <div>
         <span class="text-subtle">Validation Status</span>
         <h2 class="text-lg">
@@ -97,6 +101,28 @@
         <!--     Rreviewed 3 hours ago by Gabriel -->
         <!--   </h3> -->
         <!-- </div> -->
+      </div>
+    </div>
+
+    <div class="px-6 py-4">
+      <p class="flex text-3xl font-header">
+        Summary
+      </p>
+      <div class="grid grid-cols-2 text-lg mt-4">
+        <div class="flex">
+          <span>Model:</span>
+          <div class="ml-2">
+            <h5>
+              {{ props.summary?.classifier.name ?? 'asian-elephant-edge' }}
+            </h5>
+            <h5>
+              {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : 'v3' }}
+            </h5>
+          </div>
+        </div>
+        <div>
+          aaa
+        </div>
       </div>
     </div>
   </div>
@@ -112,7 +138,7 @@ import { CLASSIFIER_JOB_LABELS, CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/a
 
 import { hours } from '~/picker/time-of-day-constants'
 import { useStore } from '~/store'
-import ComponentError from './component-error.vue'
+// import ComponentError from './component-error.vue'
 import jobInformationStatus from './job-information-status.vue'
 
 const props = withDefaults(defineProps<{ isLoadingSummary: boolean, isErrorSummary: boolean, summary: DetectSummaryResponse | undefined, isLoadingResults: boolean, isErrorResults: boolean, results: DetectValidationResultsResponse | undefined }>(), {
@@ -126,7 +152,7 @@ const store = useStore()
 
 const queryStart = computed(() => {
   if (props.summary?.queryStart == null) {
-    return ''
+    return '2018/04/22' // mock: return ''
   }
 
   return dayjs(props.summary.queryStart).format('YYYY/MM/DD')
@@ -134,7 +160,7 @@ const queryStart = computed(() => {
 
 const queryEnd = computed(() => {
   if (props.summary?.queryEnd == null) {
-    return ''
+    return '2018/04/25' // mock: return ''
   }
 
   return dayjs(props.summary.queryEnd).format('YYYY/MM/DD')
@@ -189,7 +215,7 @@ const validationStatus = computed(() => {
  */
 const progress = computed(() => {
   if (props.summary?.minutesTotal === null || props.summary?.minutesTotal === 0) {
-    return 0.0
+    return 100.0 // mock: return 0.0
   }
 
   if (props.summary?.status === CLASSIFIER_JOB_STATUS.WAITING) {
