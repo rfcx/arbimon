@@ -1,13 +1,15 @@
+import { type TCountryCode, getCountryData } from 'countries-list'
 import { type Dayjs } from 'dayjs'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
-import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
+import { masterObjectiveValues, masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { BASE_SQL, SYNC_BATCH_LIMIT } from './constants'
+import { type AbbreviatedProject, type ExpandedProject } from './types'
 
-export const getProjects = async (sequelize: Sequelize, status: 'eligible' | 'non-eligible', constraint?: { type: 'deleted' | 'updated', time?: Dayjs }): Promise<Array<{ id: number, name: string }>> => {
+export const getProjects = async (sequelize: Sequelize, status: 'eligible' | 'non-eligible', constraint?: { type: 'deleted' | 'updated', time?: Dayjs }): Promise<ExpandedProject[]> => {
   let offset = 0
   let totalCount = 0
   let responseCount = 1
@@ -44,11 +46,11 @@ export const getProjects = async (sequelize: Sequelize, status: 'eligible' | 'no
 
   completeSql += ' limit :limit offset :offset'
 
-  const projectList: Array<{ id: number, name: string }> = []
+  const projectList: AbbreviatedProject[] = []
 
   while (responseCount !== 0) {
     console.info('- getProjects: querying projects between limit', SYNC_BATCH_LIMIT, 'and offset', offset)
-    const projects = await sequelize.query<{ id: number, name: string }>(completeSql, {
+    const projects = await sequelize.query<AbbreviatedProject>(completeSql, {
       raw: true,
       replacements: {
         limit: SYNC_BATCH_LIMIT,
@@ -67,7 +69,19 @@ export const getProjects = async (sequelize: Sequelize, status: 'eligible' | 'no
   }
 
   console.info('- getProjects: found', totalCount, 'projects in total')
-  return projectList
+  return projectList.map(p => {
+    return {
+      ...p,
+      expanded_country_names: p.country_codes.map(c => {
+        const countryData = getCountryData(c as TCountryCode)
+        return countryData?.name ?? ''
+      }).filter(c => c !== ''),
+      expanded_objectives: p.objectives.map(o => {
+        const foundObjective = masterObjectiveValues.find(masterObjective => masterObjective.slug === o)
+        return foundObjective?.description ?? o
+      })
+    }
+  })
 }
 
 export const getCurrentDatabaseTime = async (sequelize: Sequelize): Promise<Dayjs> => {
