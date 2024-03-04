@@ -15,7 +15,15 @@ const {
   AWS_OSS_REGION: region,
   AWS_OSS_ACCESS_KEY_ID: accessKeyId,
   AWS_OSS_SECRET_ACCESS_KEY: secretAccessKey
-} = optionalEnv('OPENSEARCH_PORT', 'OPENSEARCH_SSL_ENABLED', 'OPENSEARCH_HTTPAUTH_USER', 'OPENSEARCH_HTTPAUTH_PASSWORD', 'AWS_OSS_REGION', 'AWS_OSS_ACCESS_KEY_ID', 'AWS_OSS_SECRET_ACCESS_KEY')
+} = optionalEnv(
+  'OPENSEARCH_PORT',
+  'OPENSEARCH_SSL_ENABLED',
+  'OPENSEARCH_HTTPAUTH_USER',
+  'OPENSEARCH_HTTPAUTH_PASSWORD',
+  'AWS_OSS_REGION',
+  'AWS_OSS_ACCESS_KEY_ID',
+  'AWS_OSS_SECRET_ACCESS_KEY'
+)
 
 export const getOpenSearchClient = (): Client => {
   const httpAuth = httpUser && httpPassword ? { user: httpUser, password: httpPassword } : undefined
@@ -23,16 +31,25 @@ export const getOpenSearchClient = (): Client => {
   return openSearchClient(host, { port, ssl, httpAuth, aws })
 }
 
+export const getAvailableIndexes = async (client: Client): Promise<Array<{ index: string }>> => {
+  return await client.cat.indices({ format: 'json', v: true }).then(res => res.body) as Array<{ index: string }>
+}
+
 export const ensureRequiredIndexInitialized = async (client: Client, index: string, indexSettings?: object): Promise<void> => {
-  const availableIndexes = await client.cat.indices({ format: 'json', v: true }).then(res => res.body) as Array<{ index: string }>
+  const availableIndexes = await getAvailableIndexes(client)
   const isIndexExists = availableIndexes.find(ai => ai.index === index) !== undefined
 
   if (!isIndexExists) {
-    await client.indices.create({
-      index,
-      body: indexSettings
-    })
+    await createIndex(client, index, indexSettings)
   }
+}
+
+export const deleteIndex = async (client: Client, index: string): Promise<void> => {
+  await client.indices.delete({ index })
+}
+
+export const createIndex = async (client: Client, index: string, body?: object): Promise<void> => {
+  await client.indices.create({ index, body })
 }
 
 export const refreshIndex = async (client: Client, index: string): Promise<void> => {

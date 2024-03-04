@@ -1,4 +1,4 @@
-export const mappings = {
+const mappings = {
   properties: {
     id_core: {
       type: 'keyword',
@@ -88,4 +88,8 @@ export const mappings = {
       type: 'search_as_you_type'
     }
   }
+} as const
+
+export const getMappings = (): typeof mappings => {
+  return mappings
 }
