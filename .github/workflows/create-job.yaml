@@ -56,7 +56,7 @@ jobs:
               },
               "sync-incremental": {
                 "JOB_NAME": "biodiversity-cli-sync-incremental-user",
-                "NODE_COMMAND": "apps/cli/lib/ingest/sync/incremental.js"
+                "NODE_COMMAND": "apps/cli/lib/sync/incrementally.js"
               },
               "export-csv": {
                 "JOB_NAME": "biodiversity-cli-export-csv",
