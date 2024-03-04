@@ -88,7 +88,7 @@
         <div class="mx-auto max-w-screen-md text-center mt-35 xl:mt-45">
           <div>
             <h5
-              v-if="projects.length === 0 && (projectSearchValue !== '' || projectSearchValue !== undefined)"
+              v-if="projects.length === 0 && (projectSearchValue !== '' || projectSearchValue !== undefined) && !hasFailed && !isLoading"
               class="text-lg mb-8 font-header"
             >
               Project not found. Try again.
