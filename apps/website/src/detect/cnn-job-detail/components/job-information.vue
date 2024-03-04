@@ -131,7 +131,7 @@
           <span class="text-util-gray-01">Input</span>
           <div
             id="cnn-job-information-input"
-            class="grid grid-rows-3 gap-y-4 mt-4 text-base text-insight"
+            class="grid grid-rows-4 gap-y-4 mt-4 text-base text-insight"
           >
             <icon-custom-ft-map-pin-lg-frequency class="block m-auto" />
             <span
@@ -154,7 +154,14 @@
             </span>
           </div>
         </div>
-        <div>Validation Status</div>
+        <div>
+          <span class="text-util-gray-01">Validation Status</span>
+          <job-result-validation-status
+            :is-loading="props.isLoadingResults"
+            :is-error="props.isErrorResults"
+            :data="props.results"
+          />
+        </div>
         <div>Output</div>
       </div>
     </div>
@@ -173,10 +180,12 @@ import { hours } from '~/picker/time-of-day-constants'
 import { useStore } from '~/store'
 // import ComponentError from './component-error.vue'
 import jobInformationStatus from './job-information-status.vue'
+import JobResultValidationStatus from './job-result-validation-status.vue'
 
 const props = withDefaults(defineProps<{ isLoadingSummary: boolean, isErrorSummary: boolean, summary: DetectSummaryResponse | undefined, isLoadingResults: boolean, isErrorResults: boolean, results: DetectValidationResultsResponse | undefined }>(), {
   isLoadingSummary: true,
   isLoadingResults: true,
+  isErrorResults: false,
   data: undefined,
   results: undefined
 })

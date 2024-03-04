@@ -87,6 +87,7 @@ declare module 'vue' {
     IconCustomLinkout: typeof import('~icons/custom-icons/linkout')['default']
     IconCustomPresChartBar: typeof import('~icons/custom-icons/pres-chart-bar')['default']
     IconFaCalendar: typeof import('~icons/fa/calendar')['default']
+    IconFaCalendaricCalendarFrequency: typeof import('~icons/fa/calendaric-calendar-frequency')['default']
     IconFaCheck: typeof import('~icons/fa/check')['default']
     IconFaChevronDown: typeof import('~icons/fa/chevron-down')['default']
     IconFaChevronRight: typeof import('~icons/fa/chevron-right')['default']

@@ -1,11 +1,8 @@
 <template>
-  <div class="job-result-validation-status-wrapper">
-    <h3 class="job-result-validation-status-header text-subtle text-sm mb-2">
-      Validation status
-    </h3>
+  <div class="job-result-validation-status-wrapper mt-4">
     <div
       v-if="props.isLoading"
-      class="loading-shimmer mx-2 rounded-lg"
+      class="loading-shimmer ml-2 mr-10 rounded-lg h-8"
     />
     <ComponentError
       v-else-if="props.isError"
@@ -14,15 +11,17 @@
     <div
       v-else
       id="job-result-validation-status-grid-table"
-      class="grid gap-x-4"
-      style="grid-template-columns: fit-content(4rem) 1fr;"
+      class="grid gap-x-4 gap-y-2 text-base text-insight"
     >
       <template
         v-for="key in Object.entries(props.data?.reviewStatus ?? {})"
         :key="'validation-status-' + key[0]"
       >
-        <span class="font-medium justify-self-start text-right text-lg">{{ validationStatusValue(key[0], key[1]) }}</span>
-        <span class="text-lg">{{ validationStatusName(key[0]) }}</span>
+        <div class="grid grid-cols-4">
+          <span>{{ validationStatusName(key[0]) }}</span>
+          <span class="flex items-center justify-center">{{ validationStatusValue(key[0], key[1]) }}</span>
+          <!-- <span class="flex items-center justify-center">0%</span> -->
+        </div>
       </template>
     </div>
   </div>
