@@ -217,7 +217,8 @@
                 v-model="url"
                 type="text"
                 class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
-                placeholder="URL of the project/page you’d like support with" required
+                placeholder="URL of the project/page you’d like support with" 
+                required
               >
             </div>
             <div v-if="!isSupportType">
