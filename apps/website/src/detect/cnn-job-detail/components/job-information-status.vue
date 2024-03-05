@@ -1,6 +1,10 @@
 <template>
   <div class="flex items-center">
-    <icon-custom-ic-circle />
+    <icon-custom-ic-circle v-if="props.variant === 0" />
+    <icon-custom-ic-progress v-if="props.variant === 20" />
+    <icon-custom-ic-success v-if="props.variant === 30" />
+    <icon-custom-ic-error v-if="props.variant === 40" />
+    <icon-custom-ic-cancelled v-if="props.variant === 50" />
     <span class="ml-2 text-base text-insight">{{ classifierStatus.title }}</span>
     <div class="w-52 ml-4 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
       <div
