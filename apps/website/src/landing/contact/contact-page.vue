@@ -211,7 +211,9 @@
               <label
                 for="url"
                 class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
-              >Link to project</label>
+              >Link to project 
+              <span class="text-sm font-normal">(required)</span>
+              </label>
               <input
                 id="url"
                 v-model="url"
@@ -279,7 +281,7 @@
                 id="message"
                 v-model="message"
                 rows="6"
-                class="p-2 w-full text-base border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+                class="p-2 w-full text-base border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency) placeholder-gray-500"
                 placeholder="Reach out to us, ask a question or leave a comment..."
                 required
               />
