@@ -51,7 +51,7 @@
 
   // Formatter: ESLint
   "[javascript]": { "editor.defaultFormatter": "dbaeumer.vscode-eslint" },
-  "[typescript]": { "editor.defaultFormatter": "dbaeumer.vscode-eslint" },
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[typescriptreact]": { "editor.defaultFormatter": "dbaeumer.vscode-eslint" },
   "[vue]": { "editor.defaultFormatter": "dbaeumer.vscode-eslint" },
 
