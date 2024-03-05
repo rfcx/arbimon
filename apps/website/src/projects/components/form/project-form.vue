@@ -21,14 +21,13 @@
       required
     >
   </div>
+  <!--
   <div
     id="dateRangePicker"
-    date-rangepicker
     class="flex mt-6 items-center gap-4"
   >
     <div class="flex-1">
       <label
-        for="start"
         class="block mb-2 font-medium text-gray-900 dark:text-insight"
       >Project start date</label>
       <div class="relative flex-1">
@@ -44,7 +43,6 @@
     <span class="mt-7">-</span>
     <div class="flex-1">
       <label
-        for="end-date"
         class="block mb-2 font-medium text-gray-900 dark:text-insight"
       >Project end date</label>
       <div
@@ -75,6 +73,7 @@
       @click="onGoingClick()"
     >This is an on-going project</label>
   </div>
+  -->
 </template>
 
 <script setup lang="ts">
@@ -85,7 +84,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import type { ProjectDefault } from '../../types'
 import IconIInfo from '../icon-i-info.vue'
-import ChooseDatePicker from './choose-date-picker.vue'
+// import ChooseDatePicker from './choose-date-picker.vue'
 
 const props = withDefaults(defineProps<{
   existingName?: string
@@ -116,15 +115,15 @@ const value: ComputedRef<ProjectDefault> = computed(() => {
   }
 })
 
-const onSelectStartDate = (dateStartLocalIso: string | null) => {
-  startDate.value = dateStartLocalIso
-  emit('emitUpdateValue', value.value)
-}
+// const onSelectStartDate = (dateStartLocalIso: string | null) => {
+//   startDate.value = dateStartLocalIso
+//   emit('emitUpdateValue', value.value)
+// }
 
-const onSelectEndDate = (dateEndLocalIso: string | null) => {
-  endDate.value = dateEndLocalIso
-  emit('emitUpdateValue', value.value)
-}
+// const onSelectEndDate = (dateEndLocalIso: string | null) => {
+//   endDate.value = dateEndLocalIso
+//   emit('emitUpdateValue', value.value)
+// }
 
 onMounted(() => {
   if (props.existingName) {
@@ -161,10 +160,10 @@ watch(name, () => {
   emit('emitUpdateValue', value.value)
 })
 
-const onGoingClick = () => {
-  onGoing.value = !onGoing.value
-  emit('emitUpdateValue', value.value)
-}
+// const onGoingClick = () => {
+//   onGoing.value = !onGoing.value
+//   emit('emitUpdateValue', value.value)
+// }
 </script>
 
 <style lang="scss">
