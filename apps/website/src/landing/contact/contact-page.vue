@@ -211,13 +211,13 @@
               <label
                 for="url"
                 class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
-              >Link</label>
+              >Link to project</label>
               <input
                 id="url"
                 v-model="url"
                 type="text"
                 class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
-                placeholder="Url where the problem can be found"
+                placeholder="URL of the project/page you’d like support with" required
               >
             </div>
             <div v-if="!isSupportType">
