@@ -122,7 +122,10 @@
         </div>
         <div>
           <h2 class="text-lg">
-            {{ CLASSIFIER_JOB_LABELS[props.summary?.status ?? 30] }}
+            <jobInformationStatus
+              :variant="props.summary?.status ?? 0"
+              :progress="progress"
+            />
           </h2>
         </div>
       </div>
@@ -162,7 +165,9 @@
             :data="props.results"
           />
         </div>
-        <div>Output</div>
+        <div>
+          <span class="text-util-gray-01">Output</span>
+        </div>
       </div>
     </div>
   </div>

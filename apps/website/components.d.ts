@@ -73,6 +73,7 @@ declare module 'vue' {
     IconCustomFtUndo: typeof import('~icons/custom-icons/ft-undo')['default']
     IconCustomIcArrowViewMore: typeof import('~icons/custom-icons/ic-arrow-view-more')['default']
     IconCustomIcCalendarFrequency: typeof import('~icons/custom-icons/ic-calendar-frequency')['default']
+    IconCustomIcCircle: typeof import('~icons/custom-icons/ic-circle')['default']
     IconCustomIcClockFrequency: typeof import('~icons/custom-icons/ic-clock-frequency')['default']
     IconCustomIcCloseBlack: typeof import('~icons/custom-icons/ic-close-black')['default']
     IconCustomIcEdit: typeof import('~icons/custom-icons/ic-edit')['default']

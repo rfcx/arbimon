@@ -139,7 +139,12 @@ export default defineConfig({
           DEFAULT: '#373639',
           light: '#060508',
           dark: '#040406'
-        }
+        },
+        'progress-status': '#02af91',
+        'success-status': '#adff2c',
+        'queue-status': '#ffc947',
+        'error-status': '#cd1d3c',
+        'cancelled-status': '#cd1d3c'
       },
       backgroundImage: {
         'hero-data': "url('@/_assets/landing/hero-data.webp')",
