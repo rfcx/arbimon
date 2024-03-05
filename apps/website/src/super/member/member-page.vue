@@ -1,7 +1,7 @@
 <template>
   <div class="px-4 sm:px-6 py-8 lg:(pt-6 px-20) bg-white dark:bg-pitch">
-    <div class="mx-auto max-w-screen-xl">
-      <div class="mt-20 flex flex-row gap-x-2 text-xs font-medium items-center">
+    <div class="mx-auto max-w-screen-xl pt-4 md:pt-10">
+      <div class="flex flex-row gap-x-2 text-xs font-medium items-center">
         <router-link :to="{ name: ROUTE_NAMES.adminProject }">
           Projects
         </router-link>
@@ -70,7 +70,7 @@
         </tfoot>
         <tbody>
           <tr
-            v-for="member in members"
+            v-for="member in sortedMembers"
             :key="member.userId"
             class="border-y-1 border-util-gray-03"
           >
@@ -109,6 +109,13 @@ const project = computed(() => {
 // == get members ==
 const { data: members, refetch: refetchMembers, error } = useSuperGetProjectMembers(apiClientBio, project.value.id)
 
+const sortedMembers = computed(() => {
+  return members.value?.filter(u => u.roleId === 4).concat(members.value?.filter(u => u.roleId !== 4).sort(function (a, b) {
+    if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) return -1
+    if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) return 1
+    return 0
+  }))
+})
 onMounted(() => {
   refetchMembers()
 })
