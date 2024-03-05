@@ -21,6 +21,7 @@
       required
     >
   </div>
+  <!--
   <div
     id="dateRangePicker"
     class="flex mt-6 items-center gap-4"
@@ -72,6 +73,7 @@
       @click="onGoingClick()"
     >This is an on-going project</label>
   </div>
+  -->
 </template>
 
 <script setup lang="ts">
@@ -82,7 +84,6 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import type { ProjectDefault } from '../../types'
 import IconIInfo from '../icon-i-info.vue'
-import ChooseDatePicker from './choose-date-picker.vue'
 
 const props = withDefaults(defineProps<{
   existingName?: string
@@ -113,15 +114,15 @@ const value: ComputedRef<ProjectDefault> = computed(() => {
   }
 })
 
-const onSelectStartDate = (dateStartLocalIso: string | null) => {
-  startDate.value = dateStartLocalIso
-  emit('emitUpdateValue', value.value)
-}
+// const onSelectStartDate = (dateStartLocalIso: string | null) => {
+//   startDate.value = dateStartLocalIso
+//   emit('emitUpdateValue', value.value)
+// }
 
-const onSelectEndDate = (dateEndLocalIso: string | null) => {
-  endDate.value = dateEndLocalIso
-  emit('emitUpdateValue', value.value)
-}
+// const onSelectEndDate = (dateEndLocalIso: string | null) => {
+//   endDate.value = dateEndLocalIso
+//   emit('emitUpdateValue', value.value)
+// }
 
 onMounted(() => {
   if (props.existingName) {
@@ -158,10 +159,10 @@ watch(name, () => {
   emit('emitUpdateValue', value.value)
 })
 
-const onGoingClick = () => {
-  onGoing.value = !onGoing.value
-  emit('emitUpdateValue', value.value)
-}
+// const onGoingClick = () => {
+//   onGoing.value = !onGoing.value
+//   emit('emitUpdateValue', value.value)
+// }
 </script>
 
 <style lang="scss">
