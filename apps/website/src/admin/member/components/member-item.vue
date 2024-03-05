@@ -11,7 +11,11 @@
     <div
       class="flex flex-start flex-row items-center gap-2 justify-start"
     >
+      <p v-if="selectedRoleId === getIdByRole('owner')">
+        Owner
+      </p>
       <select
+        v-else
         :id="`role-${member.email}`"
         v-model="selectedRoleId"
         class="rounded-md px-2 py-1 w-full lg:w-1/2 capitalize text-base border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
@@ -60,7 +64,7 @@
 
     </span>
     <button
-      v-else
+      v-else-if="selectedRoleId !== getIdByRole('owner')"
       class="text-sm text-insight bg-ibis rounded-md px-2 py-1"
       @click="needConfirmToDelete = true"
     >
@@ -89,7 +93,7 @@ const props = defineProps<{
 const emit = defineEmits<{(e: 'emitDeleteMember', email: string): void }>()
 
 // update role
-const roleOptions = orderedRoles.filter(r => r !== 'external').map(r => ({ role: r, id: getIdByRole(r) })).reverse()
+const roleOptions = orderedRoles.filter(r => !['external', 'owner'].includes(r)).map(r => ({ role: r, id: getIdByRole(r) })).reverse()
 const selectedRoleId = ref(props.member.roleId)
 const isUpdatingRole = ref(false)
 const { mutate: matateUpdateMember } = useSuperUpdateProjectMember(apiClientBio, props.projectId)
