@@ -1,109 +1,5 @@
 <template>
   <div class="job-information-wrapper border-1 border-box-grey rounded-md">
-    <div
-      v-if="false"
-      id="job-information-summary-grid"
-      class="grid lg:grid-cols-4 lg:gap-x-4 <lg:gap-y-4 px-6 py-4"
-    >
-      <!-- mock: v-if="false"  -->
-
-      <div
-        v-if="props.isLoadingSummary"
-        class="loading-shimmer mx-2 rounded-lg"
-      />
-      <!-- <ComponentError v-else-if="props.isErrorSummary" /> -->
-      <div v-else>
-        <span class="text-subtle">Model</span>
-        <h2 class="text-lg">
-          <!-- mock: {{ props.summary?.classifier.name ?? 'asian-elephant-edge' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : 'v3' }} -->
-          {{ props.summary?.classifier.name ?? 'asian-elephant-edge' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : 'v3' }}
-        </h2>
-      </div>
-
-      <div
-        v-if="props.isLoadingSummary"
-        class="loading-shimmer mx-2 rounded-lg"
-      />
-      <!-- mock: <ComponentError v-else-if="props.isErrorSummary" /> -->
-      <div v-else>
-        <span class="text-subtle">Input</span>
-        <div
-          id="cnn-job-information-input"
-          class="grid grid-rows-3 gap-y-1"
-        >
-          <icon-fa-map-marker class="block m-auto" />
-          <h2
-            class="text-lg truncate"
-            :title="queryStreamsInfoString"
-          >
-            {{ queryStreamsInfoString }}
-          </h2>
-          <icon-fa-calendar class="block m-auto" />
-          <h2 class="text-lg">
-            {{ queryStart }} - {{ queryEnd }}
-          </h2>
-          <icon-fas-clock class="block m-auto" />
-          <h2 class="text-lg">
-            {{ queryHours }}
-          </h2>
-        </div>
-      </div>
-
-      <div
-        v-if="props.isLoadingSummary"
-        class="loading-shimmer mx-2 rounded-lg"
-      />
-      <!-- mock: <ComponentError v-else-if="props.isErrorSummary" /> -->
-      <div v-else>
-        <span class="text-subtle">Status</span>
-        <div
-          id="cnn-job-information-status"
-          class="grid grid-rows-3"
-        >
-          <div class="my-auto w-6">
-            <jobInformationStatus :variant="props.summary?.status ?? 0" />
-          </div>
-          <h2 class="text-lg">
-            {{ CLASSIFIER_JOB_LABELS[props.summary?.status ?? 0] }}
-          </h2>
-          <el-progress
-            id="job-information-status-progress-bar"
-            class="col-span-2"
-            color="#232436"
-            :stroke-width="12"
-            :percentage="progress"
-            :format="progressFormat"
-          />
-          <!-- TODO: we're droppping this UI out for now as we don't have good ways of looking up this data -->
-          <!-- <div class="flex flex-row col-span-2"> -->
-          <!--   <icon-fa-calendar class="block mr-2" /> -->
-          <!--   <h3 class="text-md text-subtle"> -->
-          <!--     Jun 29, 2022 13:24 - Tomaz -->
-          <!--   </h3> -->
-          <!-- </div> -->
-        </div>
-      </div>
-
-      <div
-        v-if="props.isLoadingResults"
-        class="loading-shimmer mx-2 rounded-lg"
-      />
-      <!-- mock: <ComponentError v-else-if="props.isErrorResults" /> -->
-      <div>
-        <span class="text-subtle">Validation Status</span>
-        <h2 class="text-lg">
-          {{ validationStatus }}
-        </h2>
-        <!-- TODO: we're droppping this UI out for now as we don't have good ways of looking up this data -->
-        <!-- <div class="flex flex-row mt-2"> -->
-        <!--   <icon-fa-calendar class="block mr-2" /> -->
-        <!--   <h3 class="text-md text-subtle"> -->
-        <!--     Rreviewed 3 hours ago by Gabriel -->
-        <!--   </h3> -->
-        <!-- </div> -->
-      </div>
-    </div>
-
     <div class="p-6">
       <p class="flex text-3xl font-header text-insight">
         Summary
@@ -179,11 +75,10 @@ import { computed } from 'vue'
 
 import type { DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import type { DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
-import { CLASSIFIER_JOB_LABELS, CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
+import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { hours } from '~/picker/time-of-day-constants'
 import { useStore } from '~/store'
-// import ComponentError from './component-error.vue'
 import jobInformationStatus from './job-information-status.vue'
 import JobResultValidationStatus from './job-result-validation-status.vue'
 
@@ -254,10 +149,10 @@ const queryHours = computed(() => {
   return props.summary.queryHours
 })
 
-const validationStatus = computed(() => {
-  const processed = (props.results?.reviewStatus.confirmed ?? 0) + (props.results?.reviewStatus.rejected ?? 0) + (props.results?.reviewStatus.uncertain ?? 0)
-  return `${processed}/${props.results?.reviewStatus.total ?? 0}`
-})
+// const validationStatus = computed(() => {
+//   const processed = (props.results?.reviewStatus.confirmed ?? 0) + (props.results?.reviewStatus.rejected ?? 0) + (props.results?.reviewStatus.uncertain ?? 0)
+//   return `${processed}/${props.results?.reviewStatus.total ?? 0}`
+// })
 
 /**
  * Returns the progress of the bar calculated from `minutesCompleted` and `minutesTotal`.
@@ -283,23 +178,7 @@ const progress = computed(() => {
   return rounded > 100 ? 100.0 : rounded
 })
 
-/**
- * Returns the end text of the progress bar
- *
- * - will return `''` for jobs with status `WAITING` regardless of the computed value
- * - will return `100%` for jobs with status `DONE` regardless of the computed value
- * - will return actual value for other statuses
- */
-const progressFormat = (percentage: number) => {
-  if (props.summary?.status === CLASSIFIER_JOB_STATUS.WAITING) {
-    return ''
-  }
 
-  if (props.summary?.status === CLASSIFIER_JOB_STATUS.DONE) {
-    return '100%'
-  }
-  return `${percentage}%`
-}
 </script>
 
 <style lang="scss">
