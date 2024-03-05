@@ -1,7 +1,7 @@
 <template>
   <div class="px-4 sm:px-6 py-8 lg:(pt-6 px-20) bg-white dark:bg-pitch">
-    <div class="mx-auto max-w-screen-xl">
-      <h1 class="mt-20 mb-6">
+    <div class="mx-auto max-w-screen-xl pt-4 md:pt-10">
+      <h1 class="mb-6">
         Projects
       </h1>
       <input
