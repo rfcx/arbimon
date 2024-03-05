@@ -153,7 +153,7 @@
             </span>
             <icon-custom-ft-mic-lg-frequency class="block m-auto" />
             <span class="ml-2">
-              TODO: Minutes of recordings
+              {{ minOfRecordings }}
             </span>
           </div>
         </div>
@@ -231,6 +231,12 @@ const sitesCount = computed(() => {
 
 const queryStreamsInfoString = computed(() => {
   return `${queryStreams.value} (${sitesCount.value} sites)`
+})
+
+const minOfRecordings = computed(() => {
+  if (props.summary?.minutesTotal === undefined || props.summary?.minutesTotal === 0 || props.summary?.minutesTotal === 1) return '0 min of recordings'
+  if (props.summary?.minutesTotal === 1) return '1 min of recordings'
+  return `${props.summary?.minutesTotal} mins of recordings`
 })
 
 const queryHours = computed(() => {
