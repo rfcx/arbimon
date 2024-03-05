@@ -37,6 +37,13 @@ export const rawUsers: UserProfile[] = [
     idAuth0: 'auth0|5fa13093c5fb6300798e93fa',
     firstName: 'Ratree',
     lastName: 'Onchana'
+  },
+  {
+    id: 9005,
+    email: 'turk@rfcx.org',
+    idAuth0: 'google-oauth2|116355329881579447082',
+    firstName: 'Sirirak',
+    lastName: 'Phetnit'
   }
 ]
 
@@ -46,13 +53,15 @@ export const rawUsersWithRolesToProjects: LocationProjectAndRoles[] = [
     users: [
       { userId: 9001, roleId: 1 }, // nui as owner
       { userId: 9002, roleId: 3 }, // art as guest
-      { userId: 9003, roleId: 1 } // tree as admin
+      { userId: 9003, roleId: 1 }, // tree as admin
+      { userId: 9005, roleId: 1 }  // turk as admin
     ]
   },
   {
     slug: 'bci-panama-2018',
     users: [
-      { userId: 9001, roleId: 3 } // nui as guest
+      { userId: 9001, roleId: 3 }, // nui as guest
+      { userId: 9005, roleId: 1 }  // turk as admin
     ]
   }
 ]
