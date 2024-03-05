@@ -203,6 +203,11 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: '/tmp/calendar',
+    name: 'calendar',
+    component: PAGES.Calendar
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: ROUTE_NAMES.error,
     component: PAGES.Error
