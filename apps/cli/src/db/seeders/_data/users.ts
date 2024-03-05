@@ -54,14 +54,14 @@ export const rawUsersWithRolesToProjects: LocationProjectAndRoles[] = [
       { userId: 9001, roleId: 1 }, // nui as owner
       { userId: 9002, roleId: 3 }, // art as guest
       { userId: 9003, roleId: 1 }, // tree as admin
-      { userId: 9005, roleId: 1 }  // turk as admin
+      { userId: 9005, roleId: 1 } // turk as admin
     ]
   },
   {
     slug: 'bci-panama-2018',
     users: [
       { userId: 9001, roleId: 3 }, // nui as guest
-      { userId: 9005, roleId: 1 }  // turk as admin
+      { userId: 9005, roleId: 1 } // turk as admin
     ]
   }
 ]
