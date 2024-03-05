@@ -211,8 +211,8 @@
               <label
                 for="url"
                 class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
-              >Link to project 
-              <span class="text-sm font-normal">(required)</span>
+              >Link to project
+                <span class="text-sm font-normal">(required)</span>
               </label>
               <input
                 id="url"
