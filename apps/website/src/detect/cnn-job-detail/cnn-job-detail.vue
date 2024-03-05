@@ -10,24 +10,25 @@
       :results="jobResults"
       class="mt-4"
     />
-    <job-detail-result
+    <!-- <job-detail-result
       :is-loading="isLoadingJobResults"
       :is-error="isErrorJobResults"
       :data="jobResults"
       :classifier-id="classifierId"
       class="mt-4"
-    />
+    /> -->
     <job-detections
       :is-loading="isLoadingDetections"
       :is-error="isErrorDetections"
       :data="detections"
-      class="mt-4"
+      @emit-search="onEmitSearch"
     />
   </section>
 </template>
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
+import debounce from 'lodash.debounce'
 import { computed, inject, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -42,7 +43,7 @@ import { useGetJobValidationResults } from '../_composables/use-get-job-validati
 import JobDetailHeader from './components/job-detail-header.vue'
 import JobDetections from './components/job-detections.vue'
 import JobDetailInformation from './components/job-information.vue'
-import JobDetailResult from './components/job-result.vue'
+// import JobDetailResult from './components/job-result.vue'
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
@@ -127,6 +128,14 @@ const params = computed<DetectDetectionsQueryParams>(() => ({
     'classification'
   ]
 }))
+
+const onEmitSearch = debounce(async (keyword: string) => {
+  if (keyword === '') {
+    return
+  }
+  console.info(keyword)
+  // TODO: Call api for search
+}, 500)
 
 const { isLoading: isLoadingDetections, isError: isErrorDetections, data: detections } = useGetJobDetections(apiClientBio, jobId.value, params, enabled, refetchDetections)
 </script>

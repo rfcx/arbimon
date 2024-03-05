@@ -1,5 +1,5 @@
 <template>
-  <div class="job-result-wrapper">
+  <div v-if="false" class="job-result-wrapper">
     <template
       v-for="species in allSpecies"
       :key="'job-detections-' + species.speciesSlug"
@@ -39,12 +39,45 @@
       @emit-close="closeValidator"
     />
   </div>
+
+  <div class="job-information-wrapper border-1 border-box-grey rounded-md mt-6">
+    <div class="p-6">
+      <p class="flex text-3xl font-header text-insight">
+        Detections
+      </p>
+      <form
+        class="h-12 w-72 my-6"
+      >
+        <div class="relative">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <span class="p-2">
+              <icon-custom-ic-search
+                class="w-5 h-5 text-insight stroke-insight"
+                storke="white"
+              />
+            </span>
+          </div>
+          <input
+            id="searchSpeciesInput"
+            v-model="searchSpeciesKeyword"
+            name="search"
+            type="text"
+            class="input-field text-insight shadow-lg shadow-frequency/10"
+            placeholder="Search for species, sounds..."
+            @input="$emit('emitSearch', searchSpeciesKeyword)"
+            @focus="isSearchBoxFocused = true"
+            @blur="isSearchBoxFocused = false"
+          >
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { groupBy } from 'lodash-es'
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
@@ -71,6 +104,11 @@ const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, d
   isError: false,
   data: undefined
 })
+
+const searchSpeciesKeyword = ref('')
+const isSearchBoxFocused = ref(false)
+
+defineEmits<{(e: 'emitSearch', keyword: string): void }>()
 
 const filterOptions = computed<DetectionValidationStatus[]>(() => {
   const validation = detectionsResultFilterStore.validationStatusFilterOptions
@@ -176,3 +214,9 @@ const validateDetection = async (validation: ReviewStatus): Promise<void> => {
   updateValidatedDetections(selectedDetectionIds, validation, responses)
 }
 </script>
+
+<style scoped lang="scss">
+#searchSpeciesInput {
+  padding-inline-start: 2rem;
+}
+</style>

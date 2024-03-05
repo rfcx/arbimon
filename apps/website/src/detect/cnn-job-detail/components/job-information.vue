@@ -178,7 +178,6 @@ const progress = computed(() => {
   return rounded > 100 ? 100.0 : rounded
 })
 
-
 </script>
 
 <style lang="scss">
