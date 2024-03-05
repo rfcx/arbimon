@@ -31,7 +31,7 @@
         <table class="w-full text-left rtl:text-right table-auto mt-6">
           <thead class="border-y-1 border-util-gray-03 text-fog text-sm">
             <tr>
-              <th class="w-10 <sm:hidden">
+              <th class="w-20 <sm:hidden">
                 Id
               </th>
               <th class="py-3">
