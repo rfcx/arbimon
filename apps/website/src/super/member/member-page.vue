@@ -165,7 +165,7 @@ const addMember = () => {
       refetchMembers()
     },
     onError: (error: Error) => {
-      errorMessage.value = 'Failed to add member (code: ' + error.response?.status + ')'
+      errorMessage.value = `Failed to add member (${error.response?.status} ${error.response?.statusText})`
     }
   })
 }
