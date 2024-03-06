@@ -70,6 +70,10 @@
           >
         </div>
       </form>
+      <cnn-job-species-detected
+        :datasets="tableDatasets"
+        :loading="loading"
+      />
     </div>
   </div>
 </template>
@@ -77,9 +81,10 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { groupBy } from 'lodash-es'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
+// import { apiBioGetActivityDataset } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
 import { type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 import { apiBioDetectReviewDetection } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
@@ -88,6 +93,8 @@ import { apiClientKey } from '@/globals'
 import { getMediaLink } from '~/media'
 import { ROUTE_NAMES } from '~/router'
 import { useDetectionsResultFilterStore } from '~/store'
+import type { SpeciesDataset } from './cnn-job-species-detected'
+import CnnJobSpeciesDetected from './cnn-job-species-detected.vue'
 import DetectionItem from './detection-item.vue'
 import DetectionValidator from './detection-validator.vue'
 import type { DetectionMedia, DetectionValidationStatus } from './types'
@@ -98,6 +105,8 @@ const detectionsResultFilterStore = useDetectionsResultFilterStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const route = useRoute()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
+const tableDatasets = ref<SpeciesDataset[]>([])
+const loading = ref<boolean>(false)
 
 const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectDetectionsResponse | undefined }>(), {
   isLoading: true,
@@ -109,6 +118,31 @@ const searchSpeciesKeyword = ref('')
 const isSearchBoxFocused = ref(false)
 
 defineEmits<{(e: 'emitSearch', keyword: string): void }>()
+
+onMounted(() => {
+  tableDatasets.value = [
+  {
+    color: '#66CCFF',
+    data: [{
+      commonName: 'Puerto Rican sharp-shinned hawk',
+      detectionFrequency: 0.00599,
+      detectionMinutesCount: 1,
+      occupancyNaive: 0.2,
+      occupiedSites: 1,
+      scientificName: 'Accipiter striatus venator',
+      taxon: 'Birds'
+  },
+  {
+    commonName: 'Yellow-shouldered Blackbird',
+    detectionFrequency: 0.00599,
+    detectionMinutesCount: 1,
+    occupancyNaive: 0.2,
+    occupiedSites: 1,
+    scientificName: 'Agelaius xanthomus',
+    taxon: 'Birds'
+  }]
+}]
+})
 
 const filterOptions = computed<DetectionValidationStatus[]>(() => {
   const validation = detectionsResultFilterStore.validationStatusFilterOptions
