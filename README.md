@@ -218,3 +218,60 @@ Environments `staging` and `production` are automatically deployed by GitHub Act
   3. Use `inject()` to get feature toggles for using inside the component
 
 _Note: The feature toggle value can be override following the override env file level from [Modes](./apps/cli/README.md#modes)_
+
+## Configure the project for local development with rfcx-api
+
+In some cases you wanted to test out the functionality with the [core api](https://github.com/rfcx/rfcx-api).
+
+### Tools required from core
+- `psql`
+
+  make sure `psql` is installed in your machine. You can install just `libpq` to make this work.
+  ```
+  brew install libpq
+  ```
+
+  make sure you have linked it to your shell
+  ```bash
+  export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+  ```
+
+- `yarn`
+  You can install yarn with homebrew
+  ```
+  brew install yarn
+  ```
+
+- `python3` and `setuptools`
+  You can install `python3` from `pyenv` or use a local install of `python3` inside of your OS
+  ```
+  pip install setuptools
+  ```
+
+### Core preparation
+
+- Startup core by cloning rfcx-api to your machine
+  ```
+  git clone git@github.com:rfcx/rfcx-api ./rfcx-api
+  cd rfcx-api
+  ```
+
+- Setup environment variables for core
+  ```
+  cp ./common/config/env-vars.js.sample ./common/config/env-vars.js
+  ```
+
+- Install dependencies, start core's database and perform reset-migrate-seed
+  ```
+  yarn serve-db:core
+  ```
+
+- Start core server with
+  ```
+  yarn dev:core
+  ```
+
+### Arbimon preparation
+
+- Change `CORE_API_BASE_URL` to `http://localhost:8080` inside `./apps/api/.env`
+- Change `VITE_CORE_API_BASE_URL` to `http://loaclhost:8080` inside `./apps/website/.env`
