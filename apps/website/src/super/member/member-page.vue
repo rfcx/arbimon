@@ -50,6 +50,7 @@
                     autocomplete="off"
                     class="border-0 w-full rounded-md p-2 input-field relative"
                     placeholder="+ Add new member by email"
+                    @keydown.delete="errorMessage = ''"
                   >
                   <button
                     v-if="newMemberEmail.length > 0"
