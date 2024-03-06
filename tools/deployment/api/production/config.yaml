@@ -20,4 +20,4 @@ data:
   ARBIMON_LEGACY_API_BASE_URL: https://arbimon.org/legacy-api
   CORE_API_BASE_URL: https://api.rfcx.org
   OPENSEARCH_ENABLED: "true"
-  SUPER_USER_EMAILS: support@rfcx.org,super-scientist@rfcx.org
+  SUPER_USER_EMAILS: support@rfcx.org,scientist-super@rfcx.org
