@@ -1,13 +1,13 @@
 <template>
   <td
-    class="px-2 py-3 <sm:hidden"
+    class="py-3 <sm:hidden"
   >
     {{ member.firstName }} {{ member.lastName }}
   </td>
-  <td class="px-2 py-3">
+  <td class="py-3">
     {{ member.email }}
   </td>
-  <td class="px-2 py-3">
+  <td class="py-3">
     <div
       class="flex flex-start flex-row items-center gap-2 justify-start"
     >
@@ -42,7 +42,7 @@
       </span>
     </div>
   </td>
-  <td class="px-2 py-3">
+  <td class="py-3">
     <span
       v-if="needConfirmToDelete"
       class="text-sm flex flex-col gap-1"
