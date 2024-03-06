@@ -12,6 +12,7 @@ import { useDetectionsResultFilterBySpeciesStore } from './use-detections-result
 import { useDetectionsResultFilterStore } from './use-detections-result-filter-store'
 import { useProjectDirectoryStore } from './use-project-directory-store'
 import { useProjectUserPermissionsStore } from './use-project-user-permissions-store'
+import { useSuperStore } from './use-super-admin-store'
 
 export const useStore = defineStore('root', {
   state: () => ({
@@ -88,5 +89,6 @@ export {
   useDetectionsResultFilterBySpeciesStore,
   useDetectionsResultFilterStore,
   useProjectDirectoryStore,
-  useProjectUserPermissionsStore
+  useProjectUserPermissionsStore,
+  useSuperStore
 }

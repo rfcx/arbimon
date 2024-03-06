@@ -64,6 +64,7 @@
                 <router-link
                   :to=" { name: ROUTE_NAMES.adminMember, params: { projectId: project.id } }"
                   class="text-frequency text-sm"
+                  @click="superStore.setSelectedProject(project)"
                 >
                   Manage members
                 </router-link>
@@ -87,10 +88,12 @@ import { useRouter } from 'vue-router'
 
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+import { useSuperStore } from '~/store'
 import { useGetSuperProjects } from './_composables/use-projects'
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const router = useRouter()
+const superStore = useSuperStore()
 
 const searchKeyword = ref('')
 const limit = ref(200)
