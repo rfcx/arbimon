@@ -15,7 +15,7 @@
           :disabled="isDisabled"
           placeholder="Choose date"
           format="MM/DD/YYYY"
-          :disabled-date="enableDisabledDate ? disabledStartDateRange : undefined"
+          :disabled-date="disabledStartDateRange"
         />
       </div>
     </div>
@@ -35,7 +35,7 @@
           :disabled="isDisabled"
           placeholder="Choose date"
           format="MM/DD/YYYY"
-          :disabled-date="enableDisabledDate ? disabledEndDateRange : undefined"
+          :disabled-date="disabledEndDateRange"
         />
       </div>
     </div>
@@ -65,8 +65,7 @@ const props = defineProps<{
   initialDateStart?: Date,
   initialDateEnd?: Date,
   onGoing?: boolean,
-  isDisabled?: boolean,
-  enableDisabledDate?: boolean
+  isDisabled?: boolean
 }>()
 
 const emit = defineEmits<{(e: 'emitSelectDateRange', value: DateRange & {onGoing: boolean }): void}>()
@@ -112,6 +111,14 @@ const onSelectOnGoing = () => {
   //
   if (onGoing.value) { dateEnd.value = '' }
 }
+
+watch(() => props.initialDateEnd, (newValue) => {
+  dateEnd.value = newValue !== undefined ? dateLocalIso(newValue) : ''
+})
+
+watch(() => props.initialDateStart, (newValue) => {
+  dateStart.value = newValue !== undefined ? dateLocalIso(newValue) : ''
+})
 
 watch(() => value.value, (newValue) => {
   emit('emitSelectDateRange', newValue)
