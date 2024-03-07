@@ -21,59 +21,12 @@
       required
     >
   </div>
-  <!--
-  <div
-    id="dateRangePicker"
-    class="flex mt-6 items-center gap-4"
-  >
-    <div class="flex-1">
-      <label
-        class="block mb-2 font-medium text-gray-900 dark:text-insight"
-      >Project start date</label>
-      <div class="relative flex-1">
-        <ChooseDatePicker
-          :initial-date="startDate ? new Date(startDate) : undefined"
-          :disabled="isDisabled"
-          :date-min="undefined"
-          :date-max="new Date()"
-          @emit-select-date="onSelectStartDate"
-        />
-      </div>
-    </div>
-    <span class="mt-7">-</span>
-    <div class="flex-1">
-      <label
-        class="block mb-2 font-medium text-gray-900 dark:text-insight"
-      >Project end date</label>
-      <div
-        class="relative flex-1"
-        :class="{'not-allowed': onGoing}"
-      >
-        <ChooseDatePicker
-          :initial-date="endDate ? new Date(endDate) : undefined"
-          :disabled="isDisabled || onGoing"
-          :date-min="startDate ? new Date(startDate) : new Date()"
-          :date-max="undefined"
-          @emit-select-date="onSelectEndDate"
-        />
-      </div>
-    </div>
-  </div>
-  <div class="items-center mt-4">
-    <input
-      id="project-settings-on-going-project-checkbox"
-      type="checkbox"
-      class="w-5 h-5 border-2 mb-1 rounded dark:bg-echo focus:ring-frequency border-white dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
-      :disabled="isDisabled"
-      :checked="onGoing"
-      @click="onGoingClick()"
-    >
-    <label
-      class="font-light ml-2 cursor-pointer"
-      @click="onGoingClick()"
-    >This is an on-going project</label>
-  </div>
-  -->
+  <ProjectDateRangeForm
+    :initial-date-start="dateStart !== null ? new Date(dateStart) : undefined"
+    :initial-date-end="dateEnd !== null ? new Date(dateEnd) : undefined"
+    :is-disabled="isDisabled"
+    @emit-select-date-range="onSelectDateRange"
+  />
 </template>
 
 <script setup lang="ts">
@@ -84,7 +37,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import type { ProjectDefault } from '../../types'
 import IconIInfo from '../icon-i-info.vue'
-// import ChooseDatePicker from './choose-date-picker.vue'
+import ProjectDateRangeForm from './project-date-range-form.vue'
 
 const props = withDefaults(defineProps<{
   existingName?: string
@@ -114,16 +67,6 @@ const value: ComputedRef<ProjectDefault> = computed(() => {
     onGoing: onGoing.value
   }
 })
-
-// const onSelectStartDate = (dateStartLocalIso: string | null) => {
-//   startDate.value = dateStartLocalIso
-//   emit('emitUpdateValue', value.value)
-// }
-
-// const onSelectEndDate = (dateEndLocalIso: string | null) => {
-//   endDate.value = dateEndLocalIso
-//   emit('emitUpdateValue', value.value)
-// }
 
 onMounted(() => {
   if (props.existingName) {
@@ -160,10 +103,13 @@ watch(name, () => {
   emit('emitUpdateValue', value.value)
 })
 
-// const onGoingClick = () => {
-//   onGoing.value = !onGoing.value
-//   emit('emitUpdateValue', value.value)
-// }
+const onSelectDateRange = (v: { dateStartLocalIso: string, dateEndLocalIso: string, onGoing: boolean }) => {
+  startDate.value = v.dateStartLocalIso
+  endDate.value = v.dateEndLocalIso
+  onGoing.value = v.onGoing
+  emit('emitUpdateValue', value.value)
+}
+
 </script>
 
 <style lang="scss">
