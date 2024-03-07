@@ -1,6 +1,6 @@
 import { getSequelize } from '@/db/connections'
 import { syncAllProjectsIncrementally } from './incremental'
-import { getOpenSearchClient } from './opensearch'
+import { getOpenSearchClient } from './opensearch/utilities'
 
 const main = async (): Promise<void> => {
   console.info('opensearch incremental reindex start')

@@ -2,7 +2,7 @@
   <div class="relative my-6">
     <form
       ref="siteResultForm"
-      class="relative w-full py-1 px-2 flex flex-row items-center gap-1 flex-wrap border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
+      class="relative w-full py-1 px-2 h-11 flex flex-row items-center gap-1 flex-wrap border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
       @click="openSiteTrigger()"
     >
       <!-- selected sites so far -->

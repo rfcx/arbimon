@@ -2,7 +2,7 @@
   <select
     id="selected-classifier"
     v-model="selectedClassifier"
-    class="bg-pitch border border-frequency text-insight text-base rounded-md block w-full p-3 font-sans border border-1 focus:border-frequency focus:outline-none focus:ring-0"
+    class="bg-pitch border border-frequency h-11 text-insight text-base rounded-md block w-full px-3 font-sans border border-1 focus:border-frequency focus:outline-none focus:ring-0"
   >
     <option
       v-for="classifier in classifierModels"

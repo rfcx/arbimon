@@ -1,7 +1,7 @@
 <template>
   <div class="px-4 sm:px-6 py-8 lg:(pt-6 px-20) bg-white dark:bg-pitch">
-    <div class="mx-auto max-w-screen-xl">
-      <h1 class="mt-20 mb-6">
+    <div class="mx-auto max-w-screen-xl pt-4 md:pt-10">
+      <h1 class="mb-6">
         Projects
       </h1>
       <input
@@ -31,7 +31,7 @@
         <table class="w-full text-left rtl:text-right table-auto mt-6">
           <thead class="border-y-1 border-util-gray-03 text-fog text-sm">
             <tr>
-              <th class="w-10 <sm:hidden">
+              <th class="w-20 <sm:hidden">
                 Id
               </th>
               <th class="py-3">
@@ -64,6 +64,7 @@
                 <router-link
                   :to=" { name: ROUTE_NAMES.adminMember, params: { projectId: project.id } }"
                   class="text-frequency text-sm"
+                  @click="superStore.setSelectedProject(project)"
                 >
                   Manage members
                 </router-link>
@@ -87,10 +88,12 @@ import { useRouter } from 'vue-router'
 
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+import { useSuperStore } from '~/store'
 import { useGetSuperProjects } from './_composables/use-projects'
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const router = useRouter()
+const superStore = useSuperStore()
 
 const searchKeyword = ref('')
 const limit = ref(200)

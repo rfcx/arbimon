@@ -1,6 +1,6 @@
 import { execSeeders } from '@/db/actions/exec-seeders'
 import { refreshMviews } from '@/db/actions/refresh-mviews'
-import { getOpenSearchClient } from '@/search/opensearch'
+import { getOpenSearchClient } from '@/search/opensearch/utilities'
 import { updateMasterData } from './_helpers/update-master-data'
 import { dropTables, execMigrations, indexOpensearch } from './actions'
 import { getSequelize } from './connections'

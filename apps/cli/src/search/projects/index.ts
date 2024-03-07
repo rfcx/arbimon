@@ -1,13 +1,17 @@
+import { type TCountryCode, getCountryData } from 'countries-list'
 import { type Dayjs } from 'dayjs'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
-import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+import { masterObjectiveValues } from '@rfcx-bio/common/dao/master-data'
 
-import { BASE_SQL, SYNC_BATCH_LIMIT } from './constants'
+import { BASE_SQL, SYNC_BATCH_LIMIT } from '../constants'
+import { type AbbreviatedProject, type ExpandedProject } from '../types'
 
-export const getProjects = async (sequelize: Sequelize, status: 'eligible' | 'non-eligible', constraint?: { type: 'deleted' | 'updated', time?: Dayjs }): Promise<Array<{ id: number, name: string }>> => {
+export const getProjects = async (
+  sequelize: Sequelize,
+  status: 'eligible' | 'non-eligible',
+  constraint?: { type: 'deleted' | 'updated', time?: Dayjs }
+): Promise<ExpandedProject[]> => {
   let offset = 0
   let totalCount = 0
   let responseCount = 1
@@ -44,11 +48,11 @@ export const getProjects = async (sequelize: Sequelize, status: 'eligible' | 'no
 
   completeSql += ' limit :limit offset :offset'
 
-  const projectList: Array<{ id: number, name: string }> = []
+  const projectList: AbbreviatedProject[] = []
 
   while (responseCount !== 0) {
     console.info('- getProjects: querying projects between limit', SYNC_BATCH_LIMIT, 'and offset', offset)
-    const projects = await sequelize.query<{ id: number, name: string }>(completeSql, {
+    const projects = await sequelize.query<AbbreviatedProject>(completeSql, {
       raw: true,
       replacements: {
         limit: SYNC_BATCH_LIMIT,
@@ -67,49 +71,17 @@ export const getProjects = async (sequelize: Sequelize, status: 'eligible' | 'no
   }
 
   console.info('- getProjects: found', totalCount, 'projects in total')
-  return projectList
-}
-
-export const getCurrentDatabaseTime = async (sequelize: Sequelize): Promise<Dayjs> => {
-  const time = await sequelize.query<{ now: string }>('select now() as "now"', {
-    plain: true,
-    type: QueryTypes.SELECT
-  })
-
-  return dayjs(time.now)
-}
-
-export const saveOpensearchSyncStatus = async (sequelize: Sequelize, syncUntilDate: Dayjs): Promise<void> => {
-  const { SyncStatus } = ModelRepository.getInstance(sequelize)
-
-  const latestSyncCheckpoint = await SyncStatus.findOne({
-    where: {
-      syncSourceId: masterSources.NewArbimon.id,
-      syncDataTypeId: masterSyncDataTypes.Opensearch.id
+  return projectList.map(p => {
+    return {
+      ...p,
+      expanded_country_names: p.country_codes.map(c => {
+        const countryData = getCountryData(c as TCountryCode)
+        return countryData?.name ?? ''
+      }).filter(c => c !== ''),
+      expanded_objectives: p.objectives.map(o => {
+        const foundObjective = masterObjectiveValues.find(masterObjective => masterObjective.slug === o)
+        return foundObjective?.description ?? o
+      })
     }
   })
-
-  if (latestSyncCheckpoint === null || latestSyncCheckpoint === undefined) {
-    console.info('- latest `sync_status` checkpoint not found. Creating new checkpoint')
-    await SyncStatus.create({
-      syncSourceId: masterSources.NewArbimon.id,
-      syncDataTypeId: masterSyncDataTypes.Opensearch.id,
-      syncUntilDate: syncUntilDate.toDate(),
-      syncUntilId: '0',
-      syncBatchLimit: SYNC_BATCH_LIMIT
-    })
-  } else {
-    console.info('- latest `sync_status` checkpoint found. Updating the date for the checkpoint')
-    await SyncStatus.update(
-      {
-        syncUntilDate: syncUntilDate.toDate()
-      },
-      {
-        where: {
-          syncSourceId: masterSources.NewArbimon.id,
-          syncDataTypeId: masterSyncDataTypes.Opensearch.id
-        }
-      }
-    )
-  }
 }

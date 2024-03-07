@@ -11,6 +11,7 @@ export const BASE_SQL = `
     location_project.longitude_east,
     location_project.longitude_west,
     coalesce(location_project_profile.summary, '') as summary,
+    coalesce(location_project_profile.readme, '') as readme,
     location_project_profile.date_start,
     location_project_profile.date_end,
     coalesce(location_project_profile.objectives, '{}') as objectives,

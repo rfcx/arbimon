@@ -6,3 +6,5 @@ export const masterObjectiveTypes = {
   ImpactConservation: { id: 500, slug: 'impact-conservation', description: 'Evaluate impact of conservation initiatives on biodiversity', shorten: 'Evaluate conservation impact', imageUrl: 'static://project/impact-conservation.png' },
   Others: { id: 999, slug: 'others', description: 'Others', shorten: 'Others', imageUrl: 'static://project/others.png' }
 }
+
+export const masterObjectiveValues = Object.values(masterObjectiveTypes)

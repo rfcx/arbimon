@@ -9,7 +9,7 @@ import { type RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
 import { makeProject } from '@/../../../packages/testing/src/model-builders/project-model-builder'
 import { getSequelize } from '@/db/connections'
 import { syncAllProjects } from './all'
-import { getOpenSearchClient } from './opensearch'
+import { getOpenSearchClient } from './opensearch/utilities'
 
 const opensearchClient = getOpenSearchClient()
 const sequelize = getSequelize()
@@ -165,22 +165,6 @@ describe('index all data from postgres to opensearch', () => {
 
     // Assert
     expect(response.body?.hits?.hits?.length).toBe(0)
-  })
-
-  test('opensearch will correctly parse the country name to synonym', async () => {
-    // Act
-    await syncAllProjects(opensearchClient, sequelize)
-    const result = await opensearchClient.indices.analyze({
-      index: 'projects',
-      body: {
-        field: 'country_codes',
-        text: 'Sweden'
-      }
-    })
-
-    // Assert
-    expect(result.body.tokens[0].token).toBe('SE')
-    expect(result.body.tokens[0].type).toBe('SYNONYM')
   })
 
   test('a reindex will resync the projects after their contents are edited', async () => {

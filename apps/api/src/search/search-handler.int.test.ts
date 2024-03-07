@@ -27,6 +27,7 @@ const EXPECTED_PROPS = [
   'image',
   'objectives',
   'summary',
+  'readme',
   'speciesCount',
   'recordingMinutesCount',
   'countryCodes'

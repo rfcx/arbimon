@@ -63,22 +63,10 @@ export const apiBioGetProjectsGeo = async (apiClient: AxiosInstance): Promise<Ar
 export const apiBioGetProjectsDeprecated = async (apiClient: AxiosInstance): Promise<LocationProjectWithRole[] | undefined> =>
   await apiGetOrUndefined(apiClient, projectsDeprecatedRoute)
 
-export const apiBioGetMyProjects = async (apiClient: AxiosInstance, limit?: number, offset?: number): Promise<MyProjectsResponse | undefined> => {
-  let url = myProjectsRoute
-  // TODO: should be using `params` - needs testing:
-  // const params = { limit, offset }
-  // return await apiGetOrUndefined(apiClient, url, { params })
-  if (limit !== undefined && offset !== undefined) {
-    url = url + '?limit=' + limit.toString() + '&offset=' + offset.toString()
-  } else {
-    if (limit !== undefined) {
-      url = url + '?limit=' + limit.toString()
-    }
-    if (offset !== undefined) {
-      url = url + '?offset=' + offset.toString()
-    }
-  }
-  return await apiGetOrUndefined(apiClient, url)
+export const apiBioGetMyProjects = async (apiClient: AxiosInstance, limit?: number, offset?: number, keyword?: string): Promise<MyProjectsResponse | undefined> => {
+  const url = myProjectsRoute
+  const params = { limit, offset, keyword }
+  return await apiGetOrUndefined(apiClient, url, { params })
 }
 
 export const apiBioGetProjectBySlug = async (apiClient: AxiosInstance, slug: string): Promise<LocationProjectWithRole | undefined> => {

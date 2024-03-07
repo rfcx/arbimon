@@ -14,7 +14,7 @@ export interface SearchRequestQueryParams {
 
 export type SearchResponseProject = { type: 'project', avgLatitude: number, avgLongitude: number }
   & Pick<Project, 'id' | 'idCore' | 'idArbimon' | 'name' | 'slug' | 'status'>
-  & Pick<LocationProjectProfile, 'image' | 'objectives' | 'summary'>
+  & Pick<LocationProjectProfile, 'image' | 'objectives' | 'summary' | 'readme'>
   & Pick<LocationProjectMetric, 'speciesCount' | 'recordingMinutesCount'>
   & Pick<LocationProjectCountry, 'countryCodes'>
 export type SearchResponseOrganization = { type: 'organization', organizationType: OrganizationType } & Pick<Organization, 'id' | 'image' | 'name' | 'url'>
@@ -62,6 +62,7 @@ export interface SearchQueryProjectRawResponse {
 
     // from `location_project_profile` table
     summary: string
+    readme: string
     date_start: string | null
     date_end: string | null
     objectives: string[]
@@ -80,6 +81,10 @@ export interface SearchQueryProjectRawResponse {
     recording_max_date: string | null
     detection_min_date: string | null
     detection_max_date: string | null
+
+    // expanded country name and objectives column
+    expanded_country_names: string[]
+    expanded_objectives: string[]
   }
 }
 
