@@ -12,8 +12,8 @@
           </h5>
           <project-form
             :existing-name="selectedProject?.name"
-            :date-start="settings?.dateStart"
-            :date-end="settings?.dateEnd"
+            :date-start="settings?.dateStart ? new Date(settings?.dateStart) : undefined"
+            :date-end="settings?.dateEnd ? new Date(settings?.dateEnd) : undefined"
             :is-disabled="!isUserHasFullAccess"
             @emit-update-value="onEmitDefaultValue"
           />
