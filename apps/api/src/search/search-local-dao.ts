@@ -22,9 +22,9 @@ export const getProjectsByQuery = async (keyword?: string, limit?: number, offse
   const results = await LocationProject.findAll({
     where: {
       ...whereOptional,
-      status: ['listed', 'published']
+      status: { [Op.in]: ['listed', 'published'] }
     },
-    order: order !== undefined ? order : sequelize.literal('"status" DESC, "LocationProjectMetric.recordingMinutesCount" DESC'),
+    order: order !== undefined ? order : sequelize.literal('"status" DESC, "LocationProjectMetric.speciesCount" DESC'),
     limit: limit !== undefined ? limit : 20,
     offset: offset !== undefined ? offset : 0,
     include: [
