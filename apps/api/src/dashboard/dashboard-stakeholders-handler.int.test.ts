@@ -92,7 +92,6 @@ test(`GET ${dashboardStakeholdersRoute} returns all users for owner`, async () =
 
     const result = JSON.parse(response.body)
     expect(result).toBeDefined()
-    expect(result).toBeTypeOf('object')
     expect(result.users).toBeDefined()
-    expect(result.organizations).toBeDefined()
+    expect(result.users).toHaveLength(3)
 })
