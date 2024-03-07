@@ -14,7 +14,7 @@
           Arbimon’s Impact at-a-Glance
         </h1>
         <p class="text-pitch dark:text-insight">
-          With more than 110 million minutes of acoustic recordings uploaded, Arbimon has made it possible to uncover critical insights into the behavior and conservation of some of the world’s most endangered species, paving the way to transformative action and a better understanding of our planet.
+          Arbimon has made it possible to uncover critical insights into the behavior and conservation of some of the world’s most endangered species, paving the way to transformative action and a better understanding of our planet.
         </p>
 
         <div class="flex flex-col mt-20">
