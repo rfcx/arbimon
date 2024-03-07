@@ -9,22 +9,22 @@
       </div>
       <div class="grid grid-cols-2 gap-4 grid-flow-row lg:grid-cols-4">
         <number-stat
-          :number="recordingsCount ? recordingsCount : 152889191"
+          :number="recordingsCount ?? 0"
           :loading="isLoadingRecordingsCount"
           title="Recordings uploaded"
         />
         <number-stat
-          :number="jobsCount ? jobsCount : 1715129028"
+          :number="jobsCount ?? 0"
           :loading="isLoadingJobsCount"
           title="Analyses performed"
         />
         <number-stat
-          :number="projectsCount ? projectsCount : 4435"
+          :number="projectsCount ?? 0"
           :loading="isLoadingProjectsCount"
           title="Projects created"
         />
         <number-stat
-          :number="recordingsSpeciesCount ? recordingsSpeciesCount : 4088"
+          :number="recordingsSpeciesCount ?? 0"
           :loading="isLoadingRecordingsSpeciesCount"
           title="Species identified"
         />
