@@ -11,7 +11,7 @@
         <span class="text-subtle">{{ jobId }}</span>
       </el-breadcrumb-item>
     </el-breadcrumb>
-    <div>
+    <div class="hidden">
       <el-button
         type="info"
         size="large"

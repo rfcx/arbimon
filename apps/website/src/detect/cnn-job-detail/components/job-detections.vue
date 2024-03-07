@@ -125,18 +125,18 @@ onMounted(() => {
     color: '#66CCFF',
     data: [{
       commonName: 'Puerto Rican sharp-shinned hawk',
-      detectionFrequency: 0.00599,
+      detectionFrequency: 4,
       detectionMinutesCount: 1,
-      occupancyNaive: 0.2,
+      occupancyNaive: 2,
       occupiedSites: 1,
       scientificName: 'Accipiter striatus venator',
       taxon: 'Birds'
   },
   {
     commonName: 'Yellow-shouldered Blackbird',
-    detectionFrequency: 0.00599,
+    detectionFrequency: 5,
     detectionMinutesCount: 1,
-    occupancyNaive: 0.2,
+    occupancyNaive: 3,
     occupiedSites: 1,
     scientificName: 'Agelaius xanthomus',
     taxon: 'Birds'

@@ -19,7 +19,7 @@ export interface SpeciesDataset {
 }
 
 type SortableColumn = 'scientificName' | 'taxon' | SortableDetail
-type SortableDetail = 'detectionMinutesCount' | 'detectionFrequency' | 'occupiedSites' | 'occupancyNaive'
+type SortableDetail = 'detectionMinutesCount' | 'detectionFrequency' | 'occupiedSites'
 type SortDirection = 1 | -1
 
 const SORT_ASC: SortDirection = 1
@@ -56,14 +56,6 @@ const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection
       const details2 = Math.max(...e2.details.map(({ occupiedSites }) => occupiedSites))
       return details2 - details1 || e1.scientificName.localeCompare(e2.scientificName)
     }
-  },
-  occupancyNaive: {
-    defaultDirection: SORT_DESC,
-    sortFunction: (e1, e2) => {
-      const details1 = Math.max(...e1.details.map(({ occupancyNaive }) => occupancyNaive))
-      const details2 = Math.max(...e2.details.map(({ occupancyNaive }) => occupancyNaive))
-      return details2 - details1 || e1.scientificName.localeCompare(e2.scientificName)
-    }
   }
 }
 
@@ -81,12 +73,11 @@ export default class ActivityOverviewBySpecies extends Vue {
 
   get tableHeader (): Header[] {
     return [
-      { title: 'Species name', key: 'scientificName' },
-      { title: 'Class', key: 'taxon' },
-      { title: 'Detection', key: 'detectionMinutesCount' },
-      { title: 'Detection frequency', key: 'detectionFrequency' },
-      { title: 'Occupied sites', key: 'occupiedSites' },
-      { title: 'Naive Occupancy', key: 'occupancyNaive' }
+      { title: 'Class', key: 'scientificName' },
+      { title: 'Unvalidated', key: 'taxon' },
+      { title: 'Present', key: 'detectionMinutesCount' },
+      { title: 'Not Present', key: 'detectionFrequency' },
+      { title: 'Unknown', key: 'occupiedSites' }
     ]
   }
 

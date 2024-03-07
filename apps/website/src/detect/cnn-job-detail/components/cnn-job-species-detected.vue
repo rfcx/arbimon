@@ -9,16 +9,16 @@
   />
   <div
     v-else
-    class="mt-2 bg-echo p-4"
+    class="mt-2 bg-echo"
   >
     <div class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-box-gray scrollbar-track-box-util-gray-01">
       <table class="w-full table-fixed">
-        <thead class="h-10">
+        <thead class="h-10 border-b-1 border-util-gray-02">
           <tr>
             <th
               v-for="(item, idx) in tableHeader"
               :key="'species-table-header-' + item.title"
-              class="font-bold capitalize pt-2 select-none"
+              class="font-bold capitalize select-none px-4"
               :class="{
                 'text-left': idx < 2,
                 'w-52 lg:w-66': idx < 1,
@@ -56,43 +56,46 @@
             v-for="(row, idx) in pageData"
             :key="'species-table-row-' + row.scientificName + idx"
           >
-            <tr>
-              <td class="pt-2 px-1 sticky left-0 z-10">
+            <tr class="border-b-1 border-util-gray-01">
+              <td class="py-2 pl-4 sticky left-0 z-10">
                 <router-link
                   :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.scientificName) }, query: $route.query }"
-                  class="text-subtle hover:(underline text-white)"
+                  class="text-subtle hover:(underline text-white) flex"
                 >
-                  <span class="text-insight italic">{{ row.scientificName }}</span>
-                  <icon-fas-caret-right class="inline-block w-3.5 h-3.5 " />
-                  <p
-                    v-if="row.commonName"
-                    class="text-xs"
+                  <img
+                    class="h-8 w-8 self-center rounded-full"
+                    src="https://www.birds.cornell.edu/home/wp-content/uploads/2023/09/334289821-Baltimore_Oriole-Matthew_Plante.jpg"
                   >
-                    {{ row.commonName }}
-                  </p>
-                  <p
-                    v-else
-                    class="invisible text-xs"
-                  >
-                    Unknown
-                  </p>
+                  <div class="ml-2">
+                    <span class="text-insight text-base italic">{{ row.scientificName }}</span>
+                    <icon-fas-caret-right class="inline-block w-3.5 h-3.5" />
+                    <p
+                      v-if="row.commonName"
+                      class="text-xs text-util-gray-01"
+                    >
+                      {{ row.commonName }}
+                    </p>
+                    <p
+                      v-else
+                      class="invisible text-xs text-util-gray-01"
+                    >
+                      Unknown
+                    </p>
+                  </div>
                 </router-link>
               </td>
               <template v-if="!hasMoreThanOneDatasets">
-                <td class="p-2">
-                  {{ row.taxon }}
-                </td>
-                <td class="p-2 text-center">
+                <td class="p-2 text-center text-xs text-insight">
                   {{ getFormattedNumber(row.details[0].detectionMinutesCount) }}
                 </td>
-                <td class="p-2 text-center">
-                  {{ getThreeDecimalNumber(row.details[0].detectionFrequency) }}
+                <td class="p-2 text-center text-xs text-insight">
+                  {{ getFormattedNumber(row.details[0].detectionFrequency) }}
                 </td>
-                <td class="p-2 text-center">
+                <td class="p-2 text-center text-xs text-insight">
                   {{ getFormattedNumber(row.details[0].occupiedSites) }}
                 </td>
-                <td class="p-2 text-center">
-                  {{ getThreeDecimalNumber(row.details[0].occupancyNaive) }}
+                <td class="p-2 text-center text-xs text-insight">
+                  {{ getFormattedNumber(row.details[0].occupancyNaive) }}
                 </td>
               </template>
             </tr>
@@ -112,9 +115,6 @@
                     </div>
                   </div>
                 </td>
-                <td>
-                  {{ row.taxon }}
-                </td>
                 <td class="p-2 text-center">
                   {{ getFormattedNumber(speciesData.detectionMinutesCount) }}
                 </td>
@@ -125,7 +125,7 @@
                   {{ getFormattedNumber(speciesData.occupiedSites) }}
                 </td>
                 <td class="p-2 text-center">
-                  {{ getThreeDecimalNumber(speciesData.occupancyNaive) }}
+                  {{ getFormattedNumber(speciesData.occupancyNaive) }}
                 </td>
               </tr>
             </template>
@@ -148,29 +148,29 @@
     </div>
     <div class="flex justify-end mt-3">
       <div class="flex justify-end">
-        <div>
+        <div class="text-sm">
           <input
             v-model.number="pageIndex"
             type="number"
             min="1"
             :max="maxPage"
-            class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+            class="text-center bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
             @keyup.enter="blur"
           >
           of
           <span class="ml-1.5">{{ maxPage }}</span>
         </div>
         <button
-          class="btn btn-icon ml-4"
+          class="btn btn-icon ml-4 rounded-md bg-fog border-0"
           @click="previousPage()"
         >
-          <icon-fas-chevron-left class="w-3 h-3" />
+          <icon-fas-chevron-left class="w-3 h-3 text-pitch" />
         </button>
         <button
-          class="btn btn-icon ml-2"
+          class="btn btn-icon ml-2 rounded-md bg-fog border-0"
           @click="nextPage()"
         >
-          <icon-fas-chevron-right class="w-3 h-3" />
+          <icon-fas-chevron-right class="w-3 h-3 text-pitch" />
         </button>
       </div>
     </div>
