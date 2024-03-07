@@ -6,7 +6,6 @@
         :initial-date-start="new Date(dateStart) ?? undefined"
         :initial-date-end="new Date(dateEnd) ?? undefined"
         :is-disabled="false"
-        :enable-disabled-date="true"
         @emit-select-date-range="onSelectDateRange"
       />
     </div>
@@ -16,7 +15,6 @@
         :initial-date-start="new Date(dateStart2) ?? undefined"
         :initial-date-end="new Date(dateEnd2) ?? undefined"
         :is-disabled="false"
-        :enable-disabled-date="false"
         @emit-select-date-range="onSelectDateRange2"
       />
     </div>
