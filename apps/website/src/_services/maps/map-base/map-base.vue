@@ -70,6 +70,7 @@ import { createMap, DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_MAP_HEIGHT, LAB
 import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/constants'
 import { downloadMapPng } from '~/maps/functions'
 import type { MapBaseFormatter, MapBaseStyle, MapDataSet, MapMoveEvent, MapSiteData, StyleToPaint } from '~/maps/types'
+import { useStore } from '~/store'
 import HeatmapConfig from '../heatmap-config/heatmap-config.vue'
 import { circleStyleToPaint } from '../utils/circle-style/style-to-paint'
 import type { HeatmapCustomByZoom, HeatmapOption } from '../utils/heatmap-style/style-to-paint'
@@ -117,6 +118,7 @@ const props = withDefaults(defineProps<{
   mapMoveEvent: null
 })
 
+const store = useStore()
 const emit = defineEmits<{(e: 'emitMapMoved', mapMoveEvent: MapMoveEvent): void}>()
 
 const mapIsLoading = ref(true)
@@ -179,7 +181,11 @@ const styleChange = ref(true)
 const heatmapWeight = ref<HeatmapCustomByZoom>([0, 0, 10, 2])
 const heatmapIntensity = ref<HeatmapCustomByZoom>([7, 0.1, 9, 1])
 const heatmapRadius = ref<HeatmapCustomByZoom>([0, 1, 10, 20])
-const isAllowHeatmapConfig = computed(() => toggles?.heatmapConfig === true)
+const isAllowHeatmapConfig = computed(() => {
+  const isInternalUser = store.user?.email?.includes('rfcx.org') ?? false
+  const isHeatmapStyle = props.mapStatisticsStyle === MAPBOX_STYLE_HEATMAP
+  return toggles?.heatmapConfig === true && isInternalUser && isHeatmapStyle
+})
 
 watch(() => heatmapWeight.value, () => {
   styleChange.value = true
