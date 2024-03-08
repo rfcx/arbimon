@@ -19,7 +19,6 @@ const user1 = {
     firstName: 'John',
     lastName: 'Smith'
 }
-
 const user2 = {
     email: 'adam@test.org',
     firstName: 'Adam',
