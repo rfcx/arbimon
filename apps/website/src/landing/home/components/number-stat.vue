@@ -2,10 +2,10 @@
   <section class="text-center lg:w-52">
     <icon-custom-ic-loading
       v-if="loading"
-      class="mb-4"
+      class="mb-4 h-8"
     />
     <h1
-      v-if="!loading"
+      v-else
       class="text-flamingo"
     >
       {{ valueShortScale }}
