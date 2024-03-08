@@ -55,7 +55,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
   })
   const resProfile = await LocationProjectProfile.findOne({
     where: { locationProjectId },
-    attributes: ['summary', 'objectives', 'image', 'dateStart', 'dateEnd', 'readme', 'keyResult'],
+    attributes: ['summary', 'objectives', 'image', 'resources', 'methods', 'dateStart', 'dateEnd', 'readme', 'keyResult'],
     raw: true
   })
 
@@ -97,6 +97,8 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     ...(fields.includes('image') ? { image: fileUrl(resProfile?.image) ?? '' } : {}),
     ...(fields.includes('countryCodes') ? { countryCodes: resCountry?.countryCodes ?? [] } : {}),
     ...(fields.includes('richnessByTaxon') ? { richnessByTaxon } : {}),
+    ...(fields.includes('resources') ? { resources: resProfile?.resources } : {}),
+    ...(fields.includes('methods') ? { methods: resProfile?.methods } : {}),
     ...(fields.includes('metrics')
         ? {
         metrics: {
