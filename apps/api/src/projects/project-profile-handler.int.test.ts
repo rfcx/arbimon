@@ -1,18 +1,18 @@
+import dayjs from 'dayjs'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { projectDataRoute } from '@rfcx-bio/common/api-bio/project/project-settings'
-import { LocationProjectProfile, type Project } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectProfile, type Project } from '@rfcx-bio/common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET, PATCH } from '~/api-helpers/types'
 import { updateProjectLegacy } from '../_services/api-legacy-arbimon'
 import { routesProject } from './index'
-import dayjs from 'dayjs'
 
 vi.mock('../_services/api-legacy-arbimon')
 
-const { LocationProject, LocationProjectProfile } = modelRepositoryWithElevatedPermissions
+const { LocationProject, LocationProjectProfile: LocationProjectProfileModel } = modelRepositoryWithElevatedPermissions
 
 const url = (projectId: number): string => {
   return `/projects/${projectId}/profile`
@@ -61,10 +61,10 @@ const profileForGetRouteTest: LocationProjectProfile = {
 
 beforeEach(async () => {
   await LocationProject.create(projectForGetRouteTest)
-  await LocationProjectProfile.create(profileForGetRouteTest)
+  await LocationProjectProfileModel.create(profileForGetRouteTest)
 
   await LocationProject.create(project)
-  await LocationProjectProfile.create({
+  await LocationProjectProfileModel.create({
     locationProjectId: project.id,
     summary: '',
     image: '',
@@ -80,7 +80,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
   vi.resetAllMocks()
-  await LocationProjectProfile.destroy({ where: { locationProjectId: [project.id, projectForGetRouteTest.id] }, force: true })
+  await LocationProjectProfileModel.destroy({ where: { locationProjectId: [project.id, projectForGetRouteTest.id] }, force: true })
   await LocationProject.destroy({ where: { id: [project.id, projectForGetRouteTest.id] }, force: true })
 })
 
@@ -104,7 +104,7 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
     // Assert
     expect(response.statusCode).toBe(204)
     const projectInDatabase = await LocationProject.findOne({ where: { id: project.id } })
-    const projectProfileInDatabase = await LocationProjectProfile.findOne({ where: { locationProjectId: project.id } })
+    const projectProfileInDatabase = await LocationProjectProfileModel.findOne({ where: { locationProjectId: project.id } })
     expect(projectInDatabase).toBeTruthy()
     expect(projectProfileInDatabase).toBeTruthy()
     expect(projectInDatabase?.get('name')).toBe('Tbilisi cats diversities')
