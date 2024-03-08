@@ -189,14 +189,16 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { type ComputedRef, computed, inject, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
+
+import { type ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
 
 import { apiClientKey } from '@/globals'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { useStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
 import { useDeleteSpecieHighlighted, usePostSpeciesHighlighted } from '../composables/use-post-highlighted-species'
-import { useSpeciesInProject } from '../composables/use-species-in-project'
+import { apiBioGetProjectSpecies } from '../composables/use-species-in-project'
 import HighlightedSpeciesSelector, { type SpecieRow } from './highlighted-species-selector.vue'
 import SpecieCard from './species-card.vue'
 
@@ -204,10 +206,6 @@ const props = defineProps<{ highlightedSpecies: HighlightedSpeciesRow[], toggleS
 const emit = defineEmits<{(e: 'emitClose'): void}>()
 
 watch(() => props.highlightedSpecies, () => {
-  fillExistingSpeciesSlug()
-})
-
-watch(() => props.toggleShowModal, () => {
   fillExistingSpeciesSlug()
 })
 
@@ -219,23 +217,31 @@ const selectedProjectId = computed(() => store.selectedProject?.id)
 const searchKeyword = ref('')
 const searchRisk = ref('')
 const showHaveReachedLimit = ref(false)
+const isLoadingSpecies = ref(false)
 
 const selectedSpeciesSlug = ref<string[]>([])
 
 const PAGE_SIZE = 10
 const currentPage = ref(1)
 
-const { isLoading: isLoadingSpecies, data: speciesResp } = useSpeciesInProject(apiClientBio, selectedProjectId)
-const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
-const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
+const speciesList = ref<HighlightedSpeciesRow[]>([])
 
-// Full list of species for selected project
-const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
-  if (speciesResp.value === undefined || !speciesResp.value.species.length) {
-    return []
+watch(() => props.toggleShowModal, () => {
+  fillExistingSpeciesSlug()
+  fetchProjectsSpecies()
+})
+
+const fetchProjectsSpecies = async () => {
+  isLoadingSpecies.value = true
+  const projectSpecies = await apiBioGetProjectSpecies(apiClientBio, selectedProjectId)
+
+  if (projectSpecies === undefined) {
+    isLoadingSpecies.value = false
+    return
   }
 
-  return speciesResp.value.species.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => {
+  const s = projectSpecies as ProjectSpeciesAllResponse
+  speciesList.value = s.species.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => {
     return {
       slug,
       taxonSlug,
@@ -245,7 +251,11 @@ const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
       riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
     }
   })
-})
+  isLoadingSpecies.value = false
+}
+
+const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
+const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
 
 // Filtered list of species by search, risk or both
 const speciesListFiltered = computed(() => {
