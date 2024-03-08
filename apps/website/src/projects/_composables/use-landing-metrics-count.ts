@@ -1,10 +1,7 @@
 import { type UseQueryReturnType, useQuery } from '@tanstack/vue-query'
 import { type AxiosInstance } from 'axios'
 
-import { apiArbimonGetJobsCount } from '@rfcx-bio/common/api-arbimon/metrics/jobs-count'
-import { apiArbimonGetProjectsCount } from '@rfcx-bio/common/api-arbimon/metrics/project-count'
-import { apiArbimonGetRecordingsCount } from '@rfcx-bio/common/api-arbimon/metrics/recordings-count'
-import { apiArbimonGetRecordingsSpeciesCount } from '@rfcx-bio/common/api-arbimon/metrics/recordings-species-count'
+import { apiArbimonGetJobsCount, apiArbimonGetProjectsCount, apiArbimonGetRecordingsCount, apiArbimonGetRecordingsSpeciesCount } from '@rfcx-bio/common/api-arbimon/metrics/landing-metrics'
 
 export const useProjectsCount = (apiClient: AxiosInstance): UseQueryReturnType<number | undefined, unknown> => {
   return useQuery({
