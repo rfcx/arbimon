@@ -6,7 +6,7 @@ import { BioNotFoundError } from '~/errors'
 import { create, destroy, getRoleIdByProjectAndUser, update } from './dao/project-member-dao'
 import { getProjectById } from './dao/projects-dao'
 
-export const addProjectMember = async (token: string, locationProjectId: number, email: string, role?: Exclude<ProjectRole, 'none'>): Promise<void> => {
+export const addProjectMember = async (token: string, locationProjectId: number, email: string, role?: Exclude<ProjectRole, 'none'>): Promise<boolean> => {
   const project = await getProjectById(locationProjectId)
   if (project === undefined) {
     throw BioNotFoundError()
@@ -19,7 +19,7 @@ export const addProjectMember = async (token: string, locationProjectId: number,
 
   const userRole = await getRoleIdByProjectAndUser(locationProjectId, userId)
   if (userRole !== undefined) {
-    return
+    return true
   }
 
   // Legacy
@@ -27,6 +27,7 @@ export const addProjectMember = async (token: string, locationProjectId: number,
 
   // Local
   await create({ locationProjectId, userId, role: role ?? 'user', ranking: RANKING_NONE })
+  return false
 }
 
 export const removeProjectMember = async (token: string, locationProjectId: number, email: string): Promise<void> => {
