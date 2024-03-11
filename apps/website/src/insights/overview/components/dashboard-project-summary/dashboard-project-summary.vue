@@ -157,7 +157,7 @@
             id="key-result"
             v-model:is-view-mored="isKeyResultTabViewMored"
             v-model:is-editing="isKeyResultTabEditing"
-            :raw-markdown-text="profile?.keyResults"
+            :raw-markdown-text="profile?.keyResult"
             :default-markdown-text="keyResultDefault"
             :editable="canEdit"
             :is-project-member="isProjectMember"
@@ -210,14 +210,12 @@ import { type AxiosInstance } from 'axios'
 import { type TabItem, type TabsOptions, Tabs } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
+import type { ProjectProfileUpdateBody } from '@rfcx-bio/common/api-bio/project/project-settings'
+
 import { apiClientKey } from '@/globals'
-import { useGetProjectInfo } from '@/projects/_composables/use-project-profile'
+import { useGetProjectInfo, useUpdateProjectSettings } from '@/projects/_composables/use-project-profile'
 import { useStore } from '~/store'
 import { useMarkdownEditorDefaults } from '../../composables/use-markdown-editor-defaults'
-import { useUpdateDashboardKeyResult } from '../../composables/use-update-dashboard-key-result'
-import { useUpdateDashboardMethods } from '../../composables/use-update-dashboard-methods'
-import { useUpdateDashboardReadme } from '../../composables/use-update-dashboard-readme'
-import { useUpdateDashboardResources } from '../../composables/use-update-dashboard-resources'
 import DashboardMarkdownViewerEditor from './components/dashboard-markdown-viewer-editor.vue'
 import DashboardProjectStakeholders from './components/dashboard-project-stakeholders/dashboard-project-stakeholders.vue'
 
@@ -248,13 +246,14 @@ const isEnabled = computed(() => {
 
 const { isLoading, data: profile, refetch: refetchContent } = useGetProjectInfo(apiClientBio, computed(() => store.selectedProject?.id ?? -1), ['readme', 'keyResults', 'resources', 'methods'], isEnabled)
 
-const { mutate: mutateReadme } = useUpdateDashboardReadme(apiClientBio, store.selectedProject?.id ?? -1)
-const { mutate: mutateKeyResult } = useUpdateDashboardKeyResult(apiClientBio, store.selectedProject?.id ?? -1)
-const { mutate: mutateResources } = useUpdateDashboardResources(apiClientBio, store.selectedProject?.id ?? -1)
-const { mutate: mutateMethods } = useUpdateDashboardMethods(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
 
 const updateReadme = (value: string): void => {
-  mutateReadme(value, {
+  const update: ProjectProfileUpdateBody = {
+    name: profile.value?.name ?? '',
+    readme: value
+  }
+  mutateProjectSettings(update, {
     onSuccess: async () => {
       isAboutTabViewMored.value = value.length !== 0
       isAboutTabEditing.value = false
@@ -269,7 +268,11 @@ const updateReadme = (value: string): void => {
 }
 
 const updateKeyResult = (value: string): void => {
-  mutateKeyResult(value, {
+  const update: ProjectProfileUpdateBody = {
+    name: profile.value?.name ?? '',
+    keyResult: value
+  }
+  mutateProjectSettings(update, {
     onSuccess: async () => {
       isKeyResultTabViewMored.value = value.length !== 0
       isKeyResultTabEditing.value = false
@@ -284,7 +287,11 @@ const updateKeyResult = (value: string): void => {
 }
 
 const updateResources = (value: string): void => {
-  mutateResources(value, {
+  const update: ProjectProfileUpdateBody = {
+    name: profile.value?.name ?? '',
+    resources: value
+  }
+  mutateProjectSettings(update, {
     onSuccess: async () => {
       isResourcesTabViewMored.value = value.length !== 0
       isResourcesTabEditing.value = false
@@ -303,7 +310,11 @@ const stakeholdersTabContent = () : void => {
 }
 
 const updateMethods = (value: string): void => {
-  mutateMethods(value, {
+  const update: ProjectProfileUpdateBody = {
+    name: profile.value?.name ?? '',
+    methods: value
+  }
+  mutateProjectSettings(update, {
     onSuccess: async () => {
       isMethodsTabViewMored.value = value.length !== 0
       isMethodsTabEditing.value = false
