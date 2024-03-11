@@ -24,8 +24,9 @@ export const addProjectMemberHandler: Handler<string, ProjectMembersParams, unkn
   const projectId = projectIdPathParam(request.params)
   const token = request.headers.authorization as string
 
-  await addProjectMember(token, projectId, request.body.email, request.body.role)
+  const isUserAlreadyExisted = await addProjectMember(token, projectId, request.body.email, request.body.role)
   void reply.status(204)
+  void reply.header('x-user-already-existed', isUserAlreadyExisted)
   return ''
 }
 
