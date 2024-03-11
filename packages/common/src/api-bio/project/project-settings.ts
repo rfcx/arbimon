@@ -20,6 +20,10 @@ export interface ProjectProfileQuery {
 export type ProjectProfileUpdateBody = {
   hidden?: boolean
   summary?: string
+  readme?: string
+  keyResult?: string
+  resources?: string
+  methods?: string
   slug?: string
   objectives?: string[]
   dateStart?: string | null
@@ -45,7 +49,9 @@ export type ProjectInfoResponse = Pick<Project, 'name' | 'slug'>
     isPublic: boolean
     countryCodes?: string[]
     readme?: string
-    keyResults?: string
+    keyResult?: string
+    resources?: string
+    methods?: string
     metrics?: ProjectMetrics
     image?: string
     resources?: string

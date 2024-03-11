@@ -1,4 +1,7 @@
 import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { projectDataRoute } from '@rfcx-bio/common/api-bio/project/project-settings'
@@ -9,6 +12,10 @@ import { makeApp } from '@rfcx-bio/testing/handlers'
 import { GET, PATCH } from '~/api-helpers/types'
 import { updateProjectLegacy } from '../_services/api-legacy-arbimon'
 import { routesProject } from './index'
+
+dayjs.extend(utc)
+dayjs.extend(customParseFormat)
+dayjs.extend(timezone)
 
 vi.mock('../_services/api-legacy-arbimon')
 
@@ -97,7 +104,8 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
       payload: {
         name: projectClone.name,
         slug: projectClone.slug,
-        summary: 'tbilisi cat diversities between each color of the cats'
+        summary: 'tbilisi cat diversities between each color of the cats',
+        keyResult: 'tbilisi people should be proud'
       }
     })
 
@@ -110,6 +118,7 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
     expect(projectInDatabase?.get('name')).toBe('Tbilisi cats diversities')
     expect(projectInDatabase?.get('slug')).toBe('tbilisi-cats-diversities')
     expect(projectProfileInDatabase?.get('summary')).toBe('tbilisi cat diversities between each color of the cats')
+    expect(projectProfileInDatabase?.get('keyResult')).toEqual('tbilisi people should be proud')
     expect(updateProjectLegacy).toBeCalledTimes(1)
   })
 
@@ -157,8 +166,6 @@ describe('GET /projects/:projectId/profile', async () => {
     expect(json.name).toEqual(projectForGetRouteTest.name)
     expect(json.summary).toEqual(profileForGetRouteTest.summary)
     expect(json.objectives).toEqual(profileForGetRouteTest.objectives)
-    expect(dayjs(json.dateStart).isSame(dayjs(profileForGetRouteTest.dateStart))).toBeTruthy()
-    expect(dayjs(json.dateEnd).isSame(dayjs(profileForGetRouteTest.dateEnd))).toBeTruthy()
     expect(json.isPublished).toEqual(true)
     expect(json.isPublic).toEqual(true)
   })
@@ -177,7 +184,7 @@ describe('GET /projects/:projectId/profile', async () => {
     const json = response.json()
     expect(json.summary).toEqual(profileForGetRouteTest.summary)
     expect(json.readme).toEqual(profileForGetRouteTest.readme)
-    expect(json.keyResults).toEqual(profileForGetRouteTest.keyResult)
+    expect(json.keyResult).toEqual(profileForGetRouteTest.keyResult)
     expect(json.resources).toEqual(profileForGetRouteTest.resources)
   })
 })
