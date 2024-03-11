@@ -58,14 +58,11 @@
         class="h-6 w-6 cursor-pointer item-center"
       />
       <div
-        data-v-b90261d1=""
         class="ms-3 text-sm px-2"
       >
         <span
-          data-v-b90261d1=""
           class="font-medium p-2"
         > Duplicate  </span><span
-          data-v-b90261d1=""
           class="p-1"
         > The use is already a project member</span>
       </div><button
@@ -79,14 +76,13 @@
         <span
           class="sr-only"
         >Close</span><svg
-          data-v-b90261d1=""
+          id="triggerElement"
           class="w-3 h-3"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 14 14"
         ><path
-          data-v-b90261d1=""
           stroke="black"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -109,14 +105,11 @@
         class="h-6 w-6 cursor-pointer item-center"
       />
       <div
-        data-v-b90261d1=""
         class="ms-3 text-sm px-2"
       >
         <span
-          data-v-b90261d1=""
           class="font-medium p-2"
         > Error  </span><span
-          data-v-b90261d1=""
           class="p-1"
         > failed to add project member</span>
       </div><button
@@ -128,17 +121,15 @@
         @click="closeAlert"
       >
         <span
-          data-v-b90261d1=""
           class="sr-only"
         >Close</span><svg
-          data-v-b90261d1=""
+          id="triggerElement"
           class="w-3 h-3"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 14 14"
         ><path
-          data-v-b90261d1=""
           stroke="black"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -168,8 +159,8 @@ const closeAlert = (): void => {
     timing: 'ease-out',
 
     onHide: (context, targetEl) => {
-      console.log('element has been dismissed')
-      console.log(targetEl)
+      console.info('element has been dismissed')
+      console.info(targetEl)
     }
   }
 
