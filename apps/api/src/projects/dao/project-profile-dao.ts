@@ -93,7 +93,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     ...baseProject,
     dateStart: baseProject.dateStart,
     ...(fields.includes('readme') ? { readme: resProfile?.readme ?? '' } : {}),
-    ...(fields.includes('keyResult') ? { keyResults: resProfile?.keyResult ?? '' } : {}),
+    ...(fields.includes('keyResult') ? { keyResult: resProfile?.keyResult ?? '' } : {}),
     ...(fields.includes('image') ? { image: fileUrl(resProfile?.image) ?? '' } : {}),
     ...(fields.includes('countryCodes') ? { countryCodes: resCountry?.countryCodes ?? [] } : {}),
     ...(fields.includes('richnessByTaxon') ? { richnessByTaxon } : {}),
