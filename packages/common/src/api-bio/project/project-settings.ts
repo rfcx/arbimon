@@ -48,6 +48,8 @@ export type ProjectInfoResponse = Pick<Project, 'name' | 'slug'>
     keyResults?: string
     metrics?: ProjectMetrics
     image?: string
+    resources?: string
+    methods?: string
     richnessByTaxon?: ApiStack
   }
 

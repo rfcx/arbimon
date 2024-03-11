@@ -237,7 +237,7 @@ const { readme: readmeDefault, keyResult: keyResultDefault } = useMarkdownEditor
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
-const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResults', 'countryCodes', 'image'])
+const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResults', 'countryCodes', 'image'], computed(() => true))
 const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId)
 
 const isAboutTabViewMored = ref(false)
