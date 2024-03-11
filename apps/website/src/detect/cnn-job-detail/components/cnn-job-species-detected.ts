@@ -1,88 +1,45 @@
 import { kebabCase } from 'lodash-es'
-import numeral from 'numeral'
 import { Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { routeNamesKey } from '@/globals'
-import { type ActivityOverviewBySpeciesDataset, getFormatSpeciesDataset } from '@/insights/activity-overview/components/activity-overview-by-species/functions'
-import { type ActivityOverviewDataBySpecies } from '@/insights/activity-overview/types'
 import { type RouteNames } from '~/router'
 
 interface Header {
   title: string
-  key: SortableColumn
+  key: string
 }
-
-export interface SpeciesDataset {
-  color: string
-  data: ActivityOverviewDataBySpecies[]
-}
-
-type SortableColumn = 'scientificName' | 'taxon' | SortableDetail
-type SortableDetail = 'detectionMinutesCount' | 'detectionFrequency' | 'occupiedSites'
-type SortDirection = 1 | -1
-
-const SORT_ASC: SortDirection = 1
-const SORT_DESC: SortDirection = -1
-const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection, sortFunction: (e1: ActivityOverviewBySpeciesDataset, e2: ActivityOverviewBySpeciesDataset) => number }> = {
-  scientificName: {
-    defaultDirection: SORT_ASC,
-    sortFunction: (e1, e2) => e1.scientificName.localeCompare(e2.scientificName)
-  },
-  taxon: {
-    defaultDirection: SORT_ASC,
-    sortFunction: (e1, e2) => e1.taxon.localeCompare(e2.taxon) || e1.scientificName.localeCompare(e2.scientificName)
-  },
-  detectionMinutesCount: {
-    defaultDirection: SORT_DESC,
-    sortFunction: (e1, e2) => {
-      const details1 = Math.max(...e1.details.map(({ detectionMinutesCount }) => detectionMinutesCount))
-      const details2 = Math.max(...e2.details.map(({ detectionMinutesCount }) => detectionMinutesCount))
-      return details2 - details1 || e1.scientificName.localeCompare(e2.scientificName)
-    }
-  },
-  detectionFrequency: {
-    defaultDirection: SORT_DESC,
-    sortFunction: (e1, e2) => {
-      const details1 = Math.max(...e1.details.map(({ detectionFrequency }) => detectionFrequency))
-      const details2 = Math.max(...e2.details.map(({ detectionFrequency }) => detectionFrequency))
-      return details2 - details1 || e1.scientificName.localeCompare(e2.scientificName)
-    }
-  },
-  occupiedSites: {
-    defaultDirection: SORT_DESC,
-    sortFunction: (e1, e2) => {
-      const details1 = Math.max(...e1.details.map(({ occupiedSites }) => occupiedSites))
-      const details2 = Math.max(...e2.details.map(({ occupiedSites }) => occupiedSites))
-      return details2 - details1 || e1.scientificName.localeCompare(e2.scientificName)
-    }
-  }
+export interface ClassificationsSummaryDataset {
+  value: string
+  title: string
+  image: string | null
+  total: number
+  rejected: number
+  uncertain: number
+  confirmed: number
 }
 
 export default class ActivityOverviewBySpecies extends Vue {
   @Inject({ from: routeNamesKey }) readonly ROUTE_NAMES!: RouteNames
 
-  @Prop() datasets!: SpeciesDataset[]
+  @Prop() datasets!: ClassificationsSummaryDataset[]
   @Prop({ default: false }) loading!: boolean
 
   pageIndex = 1 // 1-based for humans
-  sortColumn: SortableColumn = 'scientificName'
-  sortDetail: SortableDetail = 'detectionMinutesCount'
-  sortDirection: SortDirection = SORTABLE_COLUMNS.scientificName.defaultDirection
-  formattedDatasets: ActivityOverviewBySpeciesDataset[] = []
+  formattedDatasets: ClassificationsSummaryDataset[] = []
 
   get tableHeader (): Header[] {
     return [
       { title: 'Class', key: 'scientificName' },
-      { title: 'Unvalidated', key: 'taxon' },
-      { title: 'Present', key: 'detectionMinutesCount' },
-      { title: 'Not Present', key: 'detectionFrequency' },
-      { title: 'Unknown', key: 'occupiedSites' }
+      { title: 'Unvalidated', key: 'unvalidated' },
+      { title: 'Present', key: 'present' },
+      { title: 'Not Present', key: 'notPresent' },
+      { title: 'Unknown', key: 'unknown' }
     ]
   }
 
   get hasTableData (): boolean {
-    return this.datasets.length > 0 && this.datasets.some(dataset => dataset.data.length > 0)
+    return this.datasets !== undefined
   }
 
   get hasMoreThanOneDatasets (): boolean {
@@ -93,23 +50,14 @@ export default class ActivityOverviewBySpecies extends Vue {
     return Math.ceil(this.formattedDatasets.length / this.pageSize)
   }
 
-  /**
-   * Sort by user choice then our default
-   */
-  get sortedDatasets (): ActivityOverviewBySpeciesDataset[] {
-    const sortedDatasets = this.formattedDatasets.sort((a, b) => SORTABLE_COLUMNS[this.sortColumn].sortFunction(a, b) * this.sortDirection)
-    if (this.sortColumn === this.sortDetail) {
-      sortedDatasets.map(({ details, ...ds }) => ({ ...ds, details: details.sort((a, b) => ((b[this.sortDetail] - a[this.sortDetail]) || b.datasetIdx - a.datasetIdx) * this.sortDirection) }))
-    }
-    return sortedDatasets
-  }
-
-  get pageData (): ActivityOverviewBySpeciesDataset[] {
+  get pageData (): ClassificationsSummaryDataset[] {
+    if (this.datasets === undefined) return []
     const start = (this.pageIndex - 1) * this.pageSize
-    return this.sortedDatasets.slice(start, start + this.pageSize)
+    return this.datasets.slice(start, start + this.pageSize)
   }
 
   get pageSize (): number {
+    if (this.datasets === undefined) return 0
     const numberOfDatasets = this.datasets.length
     switch (numberOfDatasets) {
       case 2:
@@ -123,7 +71,7 @@ export default class ActivityOverviewBySpecies extends Vue {
   }
 
   get blankRows (): number {
-    return (this.pageSize - this.pageData.length) * this.pageData[0].details.length
+    return (this.pageSize - this.pageData.length) * this.pageData.length
   }
 
   get totalSpecies (): number {
@@ -134,19 +82,11 @@ export default class ActivityOverviewBySpecies extends Vue {
   onDataChange (): void {
     console.info(this.datasets)
     if (this.pageIndex > this.maxPage) this.pageIndex = 1
-    this.formattedDatasets = getFormatSpeciesDataset(this.datasets)
+    // this.formattedDatasets = getFormatSpeciesDataset(this.datasets)
   }
 
   getSpeciesSlug (scientificName: string): string {
     return kebabCase(scientificName)
-  }
-
-  getFormattedNumber (value: number): string {
-    return numeral(value).format('0,0')
-  }
-
-  getThreeDecimalNumber (value: number): string {
-    return value.toFixed(3)
   }
 
   previousPage (): void {
@@ -164,25 +104,6 @@ export default class ActivityOverviewBySpecies extends Vue {
     if (page > this.maxPage) newPage = 1
 
     this.pageIndex = newPage
-  }
-
-  sort (column?: SortableColumn): void {
-    if (!column) return
-
-    if (this.sortColumn === column) {
-      // Change direction
-      this.sortDirection = this.sortDirection === SORT_ASC
-        ? SORT_DESC
-        : SORT_ASC
-    } else {
-      // Change column
-      this.sortColumn = column
-      this.sortDirection = SORTABLE_COLUMNS[column].defaultDirection
-    }
-
-    if (column !== 'scientificName' && column !== 'taxon') {
-      this.sortDetail = column
-    }
   }
 
   blur (event: Event): void {

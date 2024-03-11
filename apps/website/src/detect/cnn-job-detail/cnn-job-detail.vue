@@ -21,6 +21,7 @@
       :is-loading="isLoadingDetections"
       :is-error="isErrorDetections"
       :data="detections"
+      :results="resultsData"
       @emit-search="onEmitSearch"
     />
   </section>
@@ -90,6 +91,20 @@ watch(jobSummary, async (newValue) => {
 })
 
 const { isLoading: isLoadingJobResults, isError: isErrorJobResults, data: jobResults } = useGetJobValidationResults(apiClientBio, jobId.value, { fields: ['classifications_summary'] })
+
+const resultsData = computed(() => {
+  return jobResults.value?.classificationsSummary.map(d => {
+    return {
+      value: d.value,
+      title: d.title,
+      image: d.image,
+      total: d.total,
+      rejected: d.rejected,
+      uncertain: d.uncertain,
+      confirmed: d.confirmed
+    }
+  })
+})
 
 const classifierId = computed(() => jobSummary.value?.classifierId)
 const enabled = computed(() => jobSummary.value?.classifierId != null)

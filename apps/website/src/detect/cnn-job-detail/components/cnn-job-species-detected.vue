@@ -27,7 +27,6 @@
                 'sticky left-0': idx === 0,
                 'cursor-pointer': item.key
               }"
-              @click="sort(item.key)"
             >
               <div
                 class="flex items-center text-xs"
@@ -39,12 +38,10 @@
                   class="ml-2 text-faded"
                 >
                   <icon-fa-chevron-up
-                    class="text-xxs"
-                    :class="{'text-white': sortColumn === item.key && sortDirection === 1 }"
+                    class="text-xxs hidden"
                   />
                   <icon-fa-chevron-down
-                    class="text-xxs"
-                    :class="{'text-white': sortColumn === item.key && sortDirection === -1 }"
+                    class="text-xxs hidden"
                   />
                 </div>
               </div>
@@ -59,7 +56,7 @@
             <tr class="border-b-1 border-util-gray-01">
               <td class="py-2 pl-4 sticky left-0 z-10">
                 <router-link
-                  :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.scientificName) }, query: $route.query }"
+                  :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.title) }, query: $route.query }"
                   class="text-subtle hover:(underline text-white) flex"
                 >
                   <img
@@ -67,13 +64,12 @@
                     src="https://www.birds.cornell.edu/home/wp-content/uploads/2023/09/334289821-Baltimore_Oriole-Matthew_Plante.jpg"
                   >
                   <div class="ml-2">
-                    <span class="text-insight text-base italic">{{ row.scientificName }}</span>
-                    <icon-fas-caret-right class="inline-block w-3.5 h-3.5" />
+                    <span class="text-insight text-base italic">{{ row.title }}</span>
                     <p
-                      v-if="row.commonName"
+                      v-if="row.value"
                       class="text-xs text-util-gray-01"
                     >
-                      {{ row.commonName }}
+                      {{ row.value }}
                     </p>
                     <p
                       v-else
@@ -86,49 +82,19 @@
               </td>
               <template v-if="!hasMoreThanOneDatasets">
                 <td class="p-2 text-center text-xs text-insight">
-                  {{ getFormattedNumber(row.details[0].detectionMinutesCount) }}
+                  {{ row.total }}
                 </td>
                 <td class="p-2 text-center text-xs text-insight">
-                  {{ getFormattedNumber(row.details[0].detectionFrequency) }}
+                  {{ row.confirmed }}
                 </td>
                 <td class="p-2 text-center text-xs text-insight">
-                  {{ getFormattedNumber(row.details[0].occupiedSites) }}
+                  {{ row.rejected }}
                 </td>
                 <td class="p-2 text-center text-xs text-insight">
-                  {{ getFormattedNumber(row.details[0].occupancyNaive) }}
+                  {{ row.uncertain }}
                 </td>
               </template>
             </tr>
-            <template v-if="hasMoreThanOneDatasets">
-              <tr
-                v-for="speciesData in row.details"
-                :key="'species-details-row-' + row.scientificName + speciesData.datasetIdx"
-              >
-                <td class="px-1 sticky left-0 z-10">
-                  <div class="flex items-center">
-                    <div
-                      class="rounded-full w-1.5 h-1.5"
-                      :style="`background-color:${datasets[speciesData.datasetIdx].color}`"
-                    />
-                    <div class="ml-2">
-                      Dataset {{ speciesData.datasetIdx + 1 }}
-                    </div>
-                  </div>
-                </td>
-                <td class="p-2 text-center">
-                  {{ getFormattedNumber(speciesData.detectionMinutesCount) }}
-                </td>
-                <td class="p-2 text-center">
-                  {{ getThreeDecimalNumber(speciesData.detectionFrequency) }}
-                </td>
-                <td class="p-2 text-center">
-                  {{ getFormattedNumber(speciesData.occupiedSites) }}
-                </td>
-                <td class="p-2 text-center">
-                  {{ getFormattedNumber(speciesData.occupancyNaive) }}
-                </td>
-              </tr>
-            </template>
           </template>
           <tr
             v-for="blankIndex in pageSize - pageData.length"
