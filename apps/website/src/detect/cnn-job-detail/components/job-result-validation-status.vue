@@ -20,7 +20,7 @@
         <div class="grid grid-cols-4">
           <span>{{ validationStatusName(key[0]) }}</span>
           <span class="flex items-center justify-center">{{ validationStatusValue(key[0], key[1]) }}</span>
-          <!-- <span class="flex items-center justify-center">0%</span> -->
+          <span class="flex items-center justify-center">{{ getValidationPercentage(key[1], totalDetection) }}%</span>
         </div>
       </template>
     </div>
@@ -28,8 +28,9 @@
 </template>
 
 <script setup lang="ts">
+import numeral from 'numeral'
 import type { Ref } from 'vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import { type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 
@@ -69,4 +70,14 @@ const validationStatusMap: Ref<Record<string, string>> = ref({
   confirmed: 'Present',
   total: 'Total'
 })
+
+const totalDetection = computed(() => {
+  const value = props.data?.reviewStatus
+  return (value?.confirmed ?? 0) + (value?.rejected ?? 0) + (value?.total ?? 0) + (value?.uncertain ?? 0)
+})
+
+const getValidationPercentage = (x: number, total: number): string => {
+   return numeral(total === 0 ? 0 : x / total * 100).format('0,0')
+}
+
 </script>
