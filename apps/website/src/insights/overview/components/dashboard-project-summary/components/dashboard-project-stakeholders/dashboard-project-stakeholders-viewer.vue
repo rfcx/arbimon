@@ -53,7 +53,10 @@
         />
       </div>
     </div>
-    <h3 class="text-white text-xl font-medium font-sans mt-6">
+    <h3
+      v-show="organizations.length !== 0"
+      class="text-white text-xl font-medium font-sans mt-6"
+    >
       Affiliated organizations
     </h3>
     <div
@@ -70,7 +73,7 @@
       />
     </div>
     <div
-      v-if="organizations.length === 0"
+      v-if="organizations.length == 0 && projectMembers.length == 0"
       class="mt-4"
     >
       <dashboard-project-stakeholders-empty

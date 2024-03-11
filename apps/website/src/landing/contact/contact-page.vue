@@ -27,7 +27,7 @@
                 Address
               </h3>
               <p class="mb-4">
-                Rainforest Connection, 1708 Spring Green Blvd, Ste 120 #120, Katy, TX 77494, USA, +1 (415) 792-9472
+                1708 Spring Green Blvd, Ste 120 #120,<br> Katy, TX 77494, USA
               </p>
             </div>
           </div>
