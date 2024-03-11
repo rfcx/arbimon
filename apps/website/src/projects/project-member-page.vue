@@ -187,6 +187,13 @@
             </div>
           </div>
         </div>
+
+        <DialogMember
+          :show-alert-success="showAlertSuccess"
+          :show-alert-error="showAlertError"
+          :show-alert-duplicate="showAlertDuplicate"
+          @click="closeAlert"
+        />
       </div>
     </div>
   </section>
@@ -200,6 +207,7 @@ import { useRoute } from 'vue-router'
 import type { UserTypes } from '@rfcx-bio/common/dao/types'
 import { type ProjectRole } from '@rfcx-bio/common/roles'
 
+import DialogMember from '@/_components/dialog_member.vue'
 import { apiClientKey } from '@/globals'
 import { useProjectUserPermissionsStore, useStore } from '~/store'
 import { useAddProjectMember, useDeleteProjectMember, useGetProjectMembers, useSearchUsers, useUpdateProjectMember } from './_composables/use-project-member'
@@ -359,7 +367,19 @@ const addSelectedUser = ():void => {
   }, {
     onSuccess: () => {
       usersRefetch()
-    }
+      showAlertSuccess.value = true
+      setTimeout(() => {
+        showAlertSuccess.value = false
+        console.info('text')
+  }, 7000)
+    },
+    onError: () => {
+      showAlertError.value = (true)
+      setTimeout(() => {
+        showAlertError.value = false
+        console.info('text')
+  }, 7000)
+}
   })
 }
 
@@ -387,6 +407,10 @@ const deleteProjectMember = (email: string):void => {
 onMounted(() => {
   initTooltips()
 })
+
+const showAlertSuccess = ref()
+const showAlertError = ref(false)
+const showAlertDuplicate = ref(false)
 
 </script>
 
