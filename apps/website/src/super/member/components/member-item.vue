@@ -1,17 +1,21 @@
 <template>
   <td
-    class="px-2 py-3 <sm:hidden"
+    class="py-3 <sm:hidden"
   >
     {{ member.firstName }} {{ member.lastName }}
   </td>
-  <td class="px-2 py-3">
+  <td class="py-3">
     {{ member.email }}
   </td>
-  <td class="px-2 py-3">
+  <td class="py-3">
     <div
       class="flex flex-start flex-row items-center gap-2 justify-start"
     >
+      <p v-if="selectedRoleId === getIdByRole('owner')">
+        Owner
+      </p>
       <select
+        v-else
         :id="`role-${member.email}`"
         v-model="selectedRoleId"
         class="rounded-md px-2 py-1 w-full lg:w-1/2 capitalize text-base border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
@@ -38,7 +42,7 @@
       </span>
     </div>
   </td>
-  <td class="px-2 py-3">
+  <td class="py-3">
     <span
       v-if="needConfirmToDelete"
       class="text-sm flex flex-col gap-1"
@@ -60,7 +64,7 @@
 
     </span>
     <button
-      v-else
+      v-else-if="selectedRoleId !== getIdByRole('owner')"
       class="text-sm text-insight bg-ibis rounded-md px-2 py-1"
       @click="needConfirmToDelete = true"
     >
@@ -89,7 +93,7 @@ const props = defineProps<{
 const emit = defineEmits<{(e: 'emitDeleteMember', email: string): void }>()
 
 // update role
-const roleOptions = orderedRoles.filter(r => r !== 'external').map(r => ({ role: r, id: getIdByRole(r) })).reverse()
+const roleOptions = orderedRoles.filter(r => !['external', 'owner'].includes(r)).map(r => ({ role: r, id: getIdByRole(r) })).reverse()
 const selectedRoleId = ref(props.member.roleId)
 const isUpdatingRole = ref(false)
 const { mutate: matateUpdateMember } = useSuperUpdateProjectMember(apiClientBio, props.projectId)

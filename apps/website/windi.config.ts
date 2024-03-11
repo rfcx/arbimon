@@ -91,7 +91,7 @@ export default defineConfig({
         cloud: '#F9F6F2',
         fog: '#E9E6E1',
         'util-gray-01': '#D3D2CF',
-        'util-gray-02': '#7F7D78',
+        'util-gray-02': '#A1A19E',
         'util-gray-03': '#4B4B4B',
         'util-gray-04': '#242424',
         // Olds

@@ -20,9 +20,14 @@ export const getOpensearchProjects = async (query: string, limit: number, offset
             'name',
             'name._2gram',
             'name._3gram',
-            'objectives',
-            'country_codes',
-            'summary'
+            'expanded_country_names',
+            'expanded_country_names._2gram',
+            'expanded_country_names._3gram',
+            'expanded_objectives',
+            'expanded_objectives._2gram',
+            'expanded_objectives._3gram',
+            'summary',
+            'readme'
           ]
         }
       }
@@ -43,6 +48,7 @@ export const getOpensearchProjects = async (query: string, limit: number, offset
       image: fileUrl(hit._source.image) ?? '',
       objectives: hit._source.objectives,
       summary: hit._source.summary,
+      readme: hit._source.readme,
       speciesCount: hit._source.species_count,
       recordingMinutesCount: hit._source.recording_minutes_count,
       countryCodes: hit._source.country_codes

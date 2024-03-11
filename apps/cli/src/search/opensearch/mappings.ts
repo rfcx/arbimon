@@ -1,4 +1,4 @@
-export const mappings = {
+const mappings = {
   properties: {
     id_core: {
       type: 'keyword',
@@ -34,6 +34,10 @@ export const mappings = {
       type: 'text',
       analyzer: 'simple'
     },
+    readme: {
+      type: 'text',
+      analyzer: 'simple'
+    },
     date_start: {
       type: 'date'
     },
@@ -41,18 +45,14 @@ export const mappings = {
       type: 'date'
     },
     objectives: {
-      type: 'text',
-      analyzer: 'objective_synonym_analyzer',
-      search_analyzer: 'objective_synonym_analyzer'
+      type: 'text'
     },
     image: {
       type: 'keyword',
       ignore_above: 256
     },
     country_codes: {
-      type: 'text',
-      analyzer: 'country_synonym_analyzer',
-      search_analyzer: 'country_synonym_analyzer'
+      type: 'text'
     },
     species_count: {
       type: 'long'
@@ -80,6 +80,16 @@ export const mappings = {
     },
     detection_max_date: {
       type: 'date'
+    },
+    expanded_country_names: {
+      type: 'search_as_you_type'
+    },
+    expanded_objectives: {
+      type: 'search_as_you_type'
     }
   }
+} as const
+
+export const getMappings = (): typeof mappings => {
+  return mappings
 }

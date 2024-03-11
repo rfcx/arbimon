@@ -1,8 +1,8 @@
 <template>
   <router-link
     :to="{ name: ROUTE_NAMES.dashboard, params: { projectSlug: project.slug }}"
-    @click="$emit('on-click-project', true)"
     class="block flex flex-col justify-between p-6 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 dark:bg-moss dark:border-util-gray-03 dark:hover:bg-util-gray-04 h-auto"
+    @click="$emit('on-click-project', true)"
   >
     <div>
       <img

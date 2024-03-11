@@ -1,17 +1,18 @@
+import dayjs from 'dayjs'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { projectDataRoute } from '@rfcx-bio/common/api-bio/project/project-settings'
-import { type Project } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectProfile, type Project } from '@rfcx-bio/common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
-import { PATCH } from '~/api-helpers/types'
+import { GET, PATCH } from '~/api-helpers/types'
 import { updateProjectLegacy } from '../_services/api-legacy-arbimon'
 import { routesProject } from './index'
 
 vi.mock('../_services/api-legacy-arbimon')
 
-const { LocationProject, LocationProjectProfile } = modelRepositoryWithElevatedPermissions
+const { LocationProject, LocationProjectProfile: LocationProjectProfileModel } = modelRepositoryWithElevatedPermissions
 
 const url = (projectId: number): string => {
   return `/projects/${projectId}/profile`
@@ -31,9 +32,39 @@ const project: Project = {
   longitudeWest: 0
 }
 
+const projectForGetRouteTest: Project = {
+  id: 1938433,
+  idArbimon: 94834,
+  idCore: 'kdj99r4iexvi',
+  name: 'Dimitrovgrad diversities',
+  slug: 'dimitrovgrad-diversities',
+  status: 'published',
+  statusUpdatedAt: new Date(),
+  latitudeNorth: 0,
+  latitudeSouth: 0,
+  longitudeEast: 0,
+  longitudeWest: 0
+}
+
+const profileForGetRouteTest: LocationProjectProfile = {
+  locationProjectId: 1938433,
+  dateStart: dayjs('2023-06-01').toDate(),
+  dateEnd: dayjs('2023-09-30').toDate(),
+  summary: 'summary value',
+  readme: 'readme value',
+  keyResult: 'keyResult value',
+  resources: 'resources value',
+  methods: 'methods value',
+  objectives: ['bio-baseline'],
+  image: ''
+}
+
 beforeEach(async () => {
+  await LocationProject.create(projectForGetRouteTest)
+  await LocationProjectProfileModel.create(profileForGetRouteTest)
+
   await LocationProject.create(project)
-  await LocationProjectProfile.create({
+  await LocationProjectProfileModel.create({
     locationProjectId: project.id,
     summary: '',
     image: '',
@@ -49,8 +80,8 @@ beforeEach(async () => {
 
 afterEach(async () => {
   vi.resetAllMocks()
-  await LocationProjectProfile.destroy({ where: { locationProjectId: project.id } })
-  await LocationProject.destroy({ where: { id: project.id }, force: true })
+  await LocationProjectProfileModel.destroy({ where: { locationProjectId: [project.id, projectForGetRouteTest.id] }, force: true })
+  await LocationProject.destroy({ where: { id: [project.id, projectForGetRouteTest.id] }, force: true })
 })
 
 describe(`PATCH ${projectDataRoute}/profile route`, async () => {
@@ -73,7 +104,7 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
     // Assert
     expect(response.statusCode).toBe(204)
     const projectInDatabase = await LocationProject.findOne({ where: { id: project.id } })
-    const projectProfileInDatabase = await LocationProjectProfile.findOne({ where: { locationProjectId: project.id } })
+    const projectProfileInDatabase = await LocationProjectProfileModel.findOne({ where: { locationProjectId: project.id } })
     expect(projectInDatabase).toBeTruthy()
     expect(projectProfileInDatabase).toBeTruthy()
     expect(projectInDatabase?.get('name')).toBe('Tbilisi cats diversities')
@@ -106,5 +137,47 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
     expect(projectInDatabase?.name).toBe('Istanbul cats diversities')
     expect(projectInDatabase?.slug).toBe('istanbul-cats-diversities')
     expect(updateProjectLegacy).toBeCalledTimes(1)
+  })
+})
+
+describe('GET /projects/:projectId/profile', async () => {
+  test('gets profile successfully', async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { projectRole: 'admin' })
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: url(projectForGetRouteTest.id)
+    })
+
+    // Assert
+    const json = response.json()
+    expect(json.slug).toEqual(projectForGetRouteTest.slug)
+    expect(json.name).toEqual(projectForGetRouteTest.name)
+    expect(json.summary).toEqual(profileForGetRouteTest.summary)
+    expect(json.objectives).toEqual(profileForGetRouteTest.objectives)
+    expect(dayjs(json.dateStart).isSame(dayjs(profileForGetRouteTest.dateStart))).toBeTruthy()
+    expect(dayjs(json.dateEnd).isSame(dayjs(profileForGetRouteTest.dateEnd))).toBeTruthy()
+    expect(json.isPublished).toEqual(true)
+    expect(json.isPublic).toEqual(true)
+  })
+
+  test('get with additional fields successfully', async () => {
+    const app = await makeApp(routesProject, { projectRole: 'admin' })
+
+    const response = await app.inject({
+      method: GET,
+      url: url(projectForGetRouteTest.id),
+      query: {
+        fields: 'summary,readme,keyResult,resources'
+      }
+    })
+
+    const json = response.json()
+    expect(json.summary).toEqual(profileForGetRouteTest.summary)
+    expect(json.readme).toEqual(profileForGetRouteTest.readme)
+    expect(json.keyResults).toEqual(profileForGetRouteTest.keyResult)
+    expect(json.resources).toEqual(profileForGetRouteTest.resources)
   })
 })

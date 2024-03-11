@@ -21,7 +21,7 @@ const getCountrySynonyms = (): string[] => {
   return synonyms
 }
 
-export const analysis = {
+const analysis = {
   analyzer: {
     country_synonym_analyzer: {
       tokenizer: 'standard',
@@ -51,4 +51,8 @@ export const analysis = {
       ]
     }
   }
+}
+
+export const getAnalysis = (): typeof analysis => {
+  return analysis
 }

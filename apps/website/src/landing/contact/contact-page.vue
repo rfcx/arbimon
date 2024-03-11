@@ -27,7 +27,7 @@
                 Address
               </h3>
               <p class="mb-4">
-                440 Cobia Drive, Suite 1902,<br>Katy, TX, 77494, USA
+                1708 Spring Green Blvd, Ste 120 #120,<br> Katy, TX 77494, USA
               </p>
             </div>
           </div>
@@ -211,13 +211,16 @@
               <label
                 for="url"
                 class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
-              >Link</label>
+              >Link to project
+                <span class="text-sm font-normal">(required)</span>
+              </label>
               <input
                 id="url"
                 v-model="url"
                 type="text"
                 class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
-                placeholder="Url where the problem can be found"
+                placeholder="URL of the project/page you’d like support with"
+                required
               >
             </div>
             <div v-if="!isSupportType">
@@ -278,7 +281,7 @@
                 id="message"
                 v-model="message"
                 rows="6"
-                class="p-2 w-full text-base border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+                class="p-2 w-full text-base border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency) placeholder-gray-500"
                 placeholder="Reach out to us, ask a question or leave a comment..."
                 required
               />

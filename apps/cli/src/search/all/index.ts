@@ -1,15 +1,16 @@
 import { type Client } from '@opensearch-project/opensearch'
 import { type Sequelize } from 'sequelize'
 
-import { analysis } from '../analysis'
 import { PROJECTS_INDEX_NAME } from '../constants'
-import { mappings } from '../mappings'
-import { deleteDocument, ensureRequiredIndexInitialized, refreshIndex } from '../opensearch'
-import { getCurrentDatabaseTime, getProjects, saveOpensearchSyncStatus } from '../postgres'
+import { getAnalysis } from '../opensearch/analysis'
+import { getMappings } from '../opensearch/mappings'
+import { deleteDocument, ensureRequiredIndexInitialized, refreshIndex } from '../opensearch/utilities'
+import { getCurrentDatabaseTime, saveOpensearchSyncStatus } from '../postgres'
+import { getProjects } from '../projects'
 
 export const syncAllProjects = async (client: Client, sequelize: Sequelize): Promise<void> => {
   console.info('- ensuring the index is present')
-  await ensureRequiredIndexInitialized(client, PROJECTS_INDEX_NAME, { mappings, settings: { analysis } })
+  await ensureRequiredIndexInitialized(client, PROJECTS_INDEX_NAME, { mappings: getMappings(), settings: { analysis: getAnalysis() } })
 
   console.info('- querying current database time as checkpoint')
   const currentDbTime = await getCurrentDatabaseTime(sequelize)

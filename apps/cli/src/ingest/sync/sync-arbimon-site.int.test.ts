@@ -162,6 +162,42 @@ describe('ingest > sync > site', () => {
     expect(project?.longitudeWest).toBe(newSite.lon)
   })
 
+  test('project latitude and longitude is null after deleting all sites', async () => {
+    // Arrange
+    const currentSyncStatus = await syncArbimonSitesBatch(arbimonSequelize, biodiversitySequelize, { ...syncStatus, syncBatchLimit: 4 }, false)
+    for (const site of DEFAULT_ARB_SITES) {
+      await arbimonSequelize.query('UPDATE sites SET deleted_at = datetime(\'now\'), updated_at = datetime(\'now\') WHERE site_id = $siteId', { bind: { siteId: site.siteId } })
+    }
+
+    // Act
+    await syncArbimonSitesBatch(arbimonSequelize, biodiversitySequelize, currentSyncStatus, false)
+
+    // Assert
+    const project = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findOne({ where: { idArbimon: DEFAULT_ARB_PROJECT.projectId } })
+    expect(project?.latitudeNorth).toBeNull()
+    expect(project?.latitudeSouth).toBeNull()
+    expect(project?.longitudeEast).toBeNull()
+    expect(project?.longitudeWest).toBeNull()
+  })
+
+  test('project latitude and longitude is null after setting sites to 0,0', async () => {
+    // Arrange
+    const currentSyncStatus = await syncArbimonSitesBatch(arbimonSequelize, biodiversitySequelize, { ...syncStatus, syncBatchLimit: 4 }, false)
+    for (const site of DEFAULT_ARB_SITES) {
+      await arbimonSequelize.query('UPDATE sites SET lat = 0, lon = 0, updated_at = datetime(\'now\') WHERE site_id = $siteId', { bind: { siteId: site.siteId } })
+    }
+
+    // Act
+    await syncArbimonSitesBatch(arbimonSequelize, biodiversitySequelize, currentSyncStatus, false)
+
+    // Assert
+    const project = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findOne({ where: { idArbimon: DEFAULT_ARB_PROJECT.projectId } })
+    expect(project?.latitudeNorth).toBeNull()
+    expect(project?.latitudeSouth).toBeNull()
+    expect(project?.longitudeEast).toBeNull()
+    expect(project?.longitudeWest).toBeNull()
+  })
+
   test('recordings updated when project id changes', async () => {
     // Arrange
     const currentSyncStatus = await syncArbimonSitesBatch(arbimonSequelize, biodiversitySequelize, syncStatus, false)
