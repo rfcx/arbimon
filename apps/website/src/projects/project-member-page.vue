@@ -192,7 +192,6 @@
           :show-alert-success="showAlertSuccess"
           :show-alert-error="showAlertError"
           :show-alert-duplicate="showAlertDuplicate"
-          @click="closeAlert"
         />
       </div>
     </div>
