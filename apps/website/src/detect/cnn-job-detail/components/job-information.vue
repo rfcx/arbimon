@@ -12,7 +12,7 @@
               {{ props.summary?.classifier.name ?? 'asian-elephant-edge' }}
             </h5>
             <h5>
-              {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : 'v3' }}
+              {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
             </h5>
           </div>
         </div>
@@ -94,7 +94,7 @@ const store = useStore()
 
 const queryStart = computed(() => {
   if (props.summary?.queryStart == null) {
-    return '2018/04/22' // mock: return ''
+    return ''
   }
 
   return dayjs(props.summary.queryStart).format('YYYY/MM/DD')
@@ -102,7 +102,7 @@ const queryStart = computed(() => {
 
 const queryEnd = computed(() => {
   if (props.summary?.queryEnd == null) {
-    return '2018/04/25' // mock: return ''
+    return ''
   }
 
   return dayjs(props.summary.queryEnd).format('YYYY/MM/DD')
@@ -163,7 +163,7 @@ const queryHours = computed(() => {
  */
 const progress = computed(() => {
   if (props.summary?.minutesTotal === null || props.summary?.minutesTotal === 0) {
-    return 100.0 // mock: return 0.0
+    return 0.0
   }
 
   if (props.summary?.status === CLASSIFIER_JOB_STATUS.WAITING) {
