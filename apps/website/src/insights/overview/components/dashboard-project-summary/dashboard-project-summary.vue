@@ -71,6 +71,7 @@
             role="tab"
             aria-controls="stakeholders"
             aria-selected="false"
+            @click="stakeholdersTabContent"
           >
             Stakeholders
           </button>
@@ -176,6 +177,7 @@
           :editable="canEdit"
           :is-project-member="isProjectMember"
           :is-viewing-as-guest="isViewingAsGuest"
+          :is-selected-tab="selectedStakeholdersTab"
         />
       </div>
 
@@ -235,6 +237,8 @@ const isKeyResultTabEditing = ref(false)
 
 const isResourcesTabViewMored = ref(false)
 const isResourcesTabEditing = ref(false)
+
+const selectedStakeholdersTab = ref(false)
 
 const store = useStore()
 
@@ -296,6 +300,10 @@ const updateResources = (value: string): void => {
       await refetchDashboardContent()
     }
   })
+}
+
+const stakeholdersTabContent = () : void => {
+  selectedStakeholdersTab.value = true
 }
 
 const updateMethods = (value: string): void => {
