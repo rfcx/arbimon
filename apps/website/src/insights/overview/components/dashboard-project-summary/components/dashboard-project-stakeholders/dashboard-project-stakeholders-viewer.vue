@@ -73,7 +73,7 @@
       />
     </div>
     <div
-      v-if="organizations.length === 0"
+      v-if="organizations.length == 0 && projectMembers.length == 0"
       class="mt-4"
     >
       <dashboard-project-stakeholders-empty
