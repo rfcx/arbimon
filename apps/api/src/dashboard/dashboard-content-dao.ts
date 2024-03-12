@@ -5,7 +5,6 @@ import { type LocationProjectProfileContentType } from '@rfcx-bio/common/dao/typ
 import { checkUserPermissionForEditingDashboardContent } from '~/api-core/api-core'
 import { getSequelize } from '~/db'
 import { BioPublicError } from '~/errors'
-import { sqlValues } from './sql-values'
 
 export const getDashboardContent = async (locationProjectId: number): Promise<DashboardContentResponse> => {
   const sequelize = getSequelize()
