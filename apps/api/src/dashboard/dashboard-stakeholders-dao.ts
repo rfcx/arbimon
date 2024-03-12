@@ -8,7 +8,7 @@ import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 import { fileUrl } from '~/format-helpers/file-url'
 
-export const getProjectUsers = async (projectId: number, onlyListedMembers: boolean = false): Promise<DashboardStakeholdersUser[]> => {
+export const getProjectUsers = async (projectId: number, onlyListedMembers: boolean = true): Promise<DashboardStakeholdersUser[]> => {
   const sequelize = getSequelize()
 
   const mainQuery = `
@@ -24,9 +24,9 @@ export const getProjectUsers = async (projectId: number, onlyListedMembers: bool
     inner join user_profile on location_project_user_role.user_id = user_profile.id
     where location_project_user_role.location_project_id = $1`
 
-  const listedMembersOnly = ' and location_project_user_role.ranking != -1'
+  const listedMembersSql = ' and location_project_user_role.ranking != -1'
 
-  const sql = `${mainQuery}${!onlyListedMembers ? listedMembersOnly : ''}`
+  const sql = `${mainQuery}${onlyListedMembers ? listedMembersSql : ''}`
 
   const projectUsers = await sequelize.query<DashboardStakeholdersUser>(sql, { bind: [projectId], type: QueryTypes.SELECT })
 

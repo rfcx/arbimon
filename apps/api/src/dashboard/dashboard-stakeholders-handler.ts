@@ -1,5 +1,4 @@
 import { type DashboardStakeholdersParams, type DashboardStakeholdersResponse, type UpdateDashboardStakeholdersParams, type UpdateDashboardStakeholdersRequestBody } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
-import { hasPermission } from '@rfcx-bio/common/roles'
 
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'
@@ -20,7 +19,8 @@ export const dashboardStakeholdersHandler: Handler<DashboardStakeholdersResponse
   const organizations = await getProjectStakeholders(projectIdInteger)
 
   const { projectRole } = req
-  const users = await getProjectUsers(projectIdInteger, hasPermission(projectRole, 'read-users'))
+  const includeAllMembers = projectRole === 'admin' || projectRole === 'owner'
+  const users = await getProjectUsers(projectIdInteger, !includeAllMembers)
 
   return {
     users,
