@@ -22,6 +22,7 @@
         :disabled="isDisabled"
         class="w-full border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
         required
+        maxlength="50"
       >
     </div>
   </div>
