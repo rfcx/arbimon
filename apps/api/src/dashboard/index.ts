@@ -7,6 +7,7 @@ import { dashboardSpeciesByRiskDataRoute } from '@rfcx-bio/common/api-bio/dashbo
 import { dashboardSpeciesDataRoute, speciesHighlightedDeleteRoute, speciesHighlightedPostRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
 import { dashboardStakeholdersRoute, updateDashboardStakeholdersRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 
+import { requireProjectPermission } from '@/_hooks/require-permission'
 import { type RouteRegistration, DELETE, GET, PATCH, POST } from '../_services/api-helpers/types'
 import { dashboardContentHandler, updateDashboardContentHandler } from './dashboard-content-handler'
 import { dashboardDataByHourHandler } from './dashboard-data-by-hour-handler'
@@ -15,7 +16,6 @@ import { dashboardMetricsHandler } from './dashboard-metrics-handler'
 import { dashboardSpeciesByRiskDataHandler } from './dashboard-species-by-risk-handler'
 import { dashboardSpeciesDataHandler, dashboardSpeciesHighlightedDeleteHandler, dashboardSpeciesHighlightedPostHandler } from './dashboard-species-data-handler'
 import { dashboardStakeholdersHandler, updateDashboardStakeholdersHandler } from './dashboard-stakeholders-handler'
-import {requireProjectPermission} from "@/_hooks/require-permission";
 
 export const routesDashboard: RouteRegistration[] = [
   {
