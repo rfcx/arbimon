@@ -66,7 +66,7 @@ import type { Ref } from 'vue'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { apiBioGetProjectSpeciesLight } from '@rfcx-bio/common/api-bio/species/project-species-all'
+import { apiBioGetProjectSpecies } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import type { SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { apiClientKey } from '@/globals'
@@ -190,7 +190,7 @@ const getAllSpecies = async (): Promise<Array<SpeciesInProjectTypes['light']>> =
     return []
   }
 
-  const response = await apiBioGetProjectSpeciesLight(apiClientBio, projectId)
+  const response = await apiBioGetProjectSpecies(apiClientBio, projectId)
 
   if (response == null) {
     return []
