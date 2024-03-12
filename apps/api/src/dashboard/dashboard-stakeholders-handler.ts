@@ -20,7 +20,7 @@ export const dashboardStakeholdersHandler: Handler<DashboardStakeholdersResponse
   const organizations = await getProjectStakeholders(projectIdInteger)
 
   const { projectRole } = req
-  const users = await getProjectUsers(projectIdInteger, hasPermission(projectRole, 'read-all-users'))
+  const users = await getProjectUsers(projectIdInteger, hasPermission(projectRole, 'read-users'))
 
   return {
     users,

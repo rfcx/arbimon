@@ -15,6 +15,7 @@ import { dashboardMetricsHandler } from './dashboard-metrics-handler'
 import { dashboardSpeciesByRiskDataHandler } from './dashboard-species-by-risk-handler'
 import { dashboardSpeciesDataHandler, dashboardSpeciesHighlightedDeleteHandler, dashboardSpeciesHighlightedPostHandler } from './dashboard-species-data-handler'
 import { dashboardStakeholdersHandler, updateDashboardStakeholdersHandler } from './dashboard-stakeholders-handler'
+import {requireProjectPermission} from "@/_hooks/require-permission";
 
 export const routesDashboard: RouteRegistration[] = [
   {
@@ -70,6 +71,7 @@ export const routesDashboard: RouteRegistration[] = [
   {
     method: GET,
     url: dashboardStakeholdersRoute,
+    preHandler: [requireProjectPermission('read-insights')],
     handler: dashboardStakeholdersHandler
   },
   {

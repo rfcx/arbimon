@@ -57,7 +57,7 @@ describe(`GET ${dashboardStakeholdersRoute}`, async () => {
 
     test('returns successfully', async () => {
         // Arrange
-        const app = await makeApp(routesDashboard, { userId: currentUserId })
+        const app = await makeApp(routesDashboard, { projectRole: 'user' })
         const project = await LocationProject.findOne({ where: { slug: { [Op.like]: 'grey-blue-humpback%' } } })
 
         // Act
@@ -130,5 +130,20 @@ describe(`GET ${dashboardStakeholdersRoute}`, async () => {
         expect(result).toBeDefined()
         expect(result.users).toBeDefined()
         expect(result.users).toHaveLength(1)
+    })
+
+    test('throws 403 (Forbidden) if there is no user role', async () => {
+        // Arrange
+        const app = await makeApp(routesDashboard)
+        const project = await LocationProject.findOne({ where: { slug: { [Op.like]: 'grey-blue-humpback%' } } })
+
+        // Act
+        const response = await app.inject({
+            method: GET,
+            url: dashboardStakeholdersRoute.replace(':projectId', project?.id.toString() ?? '')
+        })
+
+        // Assert
+        expect(response.statusCode).toBe(403)
     })
 })
