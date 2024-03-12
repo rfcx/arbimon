@@ -253,12 +253,17 @@ const shouldShowStakeholdersContent = computed(() => {
   return (hasUsers || hasOrganizations) && !stakeholderError.value
 })
 
-watch(() => props.projectId, () => {
-  profileRefetch()
-  stakeholdersRefetch()
+watch(() => props.projectId, async () => {
+  if (activeTab.value === 'stakeholders') {
+    isStakeholdersSelected.value = true
+    await stakeholdersRefetch()
+  } else {
+    isStakeholdersSelected.value = false
+  }
+  await profileRefetch()
 })
 
-watch(() => activeTab.value, () => {
+watch(activeTab, () => {
   if (activeTab.value === 'stakeholders') {
     isStakeholdersSelected.value = true
   }
