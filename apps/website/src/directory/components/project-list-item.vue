@@ -7,7 +7,7 @@
       <img
         v-if="project.imageUrl"
         :src="urlWrapper(project.imageUrl)"
-        class="w-full h-full rounded bg-util-gray-03"
+        class="w-full h-full rounded bg-util-gray-03 object-cover"
       >
       <div
         v-else
