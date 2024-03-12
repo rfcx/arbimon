@@ -4,7 +4,7 @@
     <div
       v-if="showAlertSuccess"
       id="targetElement"
-      class="flex absolute bottom-4 justify-around items-center p-4 mb-4 rounded-lg text-white bg-white shadow dark:bg-moss border-1 border-[#7F7D78] rounded text-sm w-fit "
+      class="flex absolute bottom-4 justify-around items-center p-4 mb-4 rounded-lg text-white bg-white shadow dark:bg-moss border-1 border-util-gray-02 rounded text-sm w-fit "
       role="alert"
     >
       <icon-custom-ic-success />
