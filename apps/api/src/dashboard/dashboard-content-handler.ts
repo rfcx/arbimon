@@ -7,6 +7,9 @@ import { BioInvalidPathParamError, BioPublicError, BioUnauthorizedError } from '
 import { assertPathParamsExist } from '~/validation'
 import { getDashboardContent, updateDashboardContent } from './dashboard-content-dao'
 
+/**
+ * @deprecated please use GET `/projects/:projectId/profile?fields=readme,keyResult,resources,methods` instead
+ */
 export const dashboardContentHandler: Handler<DashboardContentResponse, DashboardContentParams> = async (req) => {
   // Inputs & validation
   const { projectId } = req.params
@@ -21,6 +24,9 @@ export const dashboardContentHandler: Handler<DashboardContentResponse, Dashboar
   return projectContent
 }
 
+/**
+ * @deprecated please use PATCH `/projects/:projectId/profile` instead
+ */
 export const updateDashboardContentHandler: Handler<UpdateDashboardContentResponse, UpdateDashboardContentParams, unknown, UpdateDashboardContentRequestBody> = async (req) => {
   const token = req.headers.authorization
 
