@@ -360,6 +360,13 @@ const onEmitSelectedUser = (user: UserTypes['light']):void => {
 
 const addSelectedUser = ():void => {
   if (userSearchValue.value === '') return
+  const isDuplicate = users.value.some(user => user.email === userSearchValue.value)
+  if (isDuplicate) {
+    showAlertDuplicate.value = true
+    setTimeout(() => {
+      showAlertDuplicate.value = false
+  }, 7000)
+  }
   mutatePostProjectMember({
     email: userSearchValue.value,
     role: 'user'
@@ -369,14 +376,12 @@ const addSelectedUser = ():void => {
       showAlertSuccess.value = true
       setTimeout(() => {
         showAlertSuccess.value = false
-        console.info('text')
   }, 7000)
     },
     onError: () => {
       showAlertError.value = (true)
       setTimeout(() => {
         showAlertError.value = false
-        console.info('text')
   }, 7000)
 }
   })
