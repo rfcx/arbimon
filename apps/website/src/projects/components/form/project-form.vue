@@ -104,8 +104,8 @@ watch(name, () => {
 })
 
 const onSelectDateRange = (v: { dateStartLocalIso: string, dateEndLocalIso: string, onGoing: boolean }) => {
-  startDate.value = v.dateStartLocalIso
-  endDate.value = v.dateEndLocalIso
+  startDate.value = dayjs(v.dateStartLocalIso).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+  endDate.value = dayjs(v.dateEndLocalIso).format('YYYY-MM-DD') + 'T00:00:00.000Z'
   onGoing.value = v.onGoing
   emit('emitUpdateValue', value.value)
 }
