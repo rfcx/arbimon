@@ -234,11 +234,12 @@ const emit = defineEmits<{(e: 'emitCloseProjectInfo'): void }>()
 const activeTab = ref('about')
 
 const { readme: readmeDefault, keyResult: keyResultDefault } = useMarkdownEditorDefaults()
+const isStakeholdersSelected = ref(false)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
 const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'])
-const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId)
+const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId, computed(() => isStakeholdersSelected.value))
 
 const isAboutTabViewMored = ref(false)
 const isAboutTabEditing = ref(false)
@@ -252,9 +253,20 @@ const shouldShowStakeholdersContent = computed(() => {
   return (hasUsers || hasOrganizations) && !stakeholderError.value
 })
 
-watch(() => props.projectId, () => {
-  profileRefetch()
-  stakeholdersRefetch()
+watch(() => props.projectId, async () => {
+  if (activeTab.value === 'stakeholders') {
+    isStakeholdersSelected.value = true
+    await stakeholdersRefetch()
+  } else {
+    isStakeholdersSelected.value = false
+  }
+  await profileRefetch()
+})
+
+watch(activeTab, () => {
+  if (activeTab.value === 'stakeholders') {
+    isStakeholdersSelected.value = true
+  }
 })
 
 const countrieFlag = computed(() => {
