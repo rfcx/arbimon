@@ -15,6 +15,7 @@
         <number-stat
           v-else
           :number="props.countPublication"
+          :loading="false"
           title="Papers published"
         />
         <icon-custom-ic-loading
@@ -24,6 +25,7 @@
         <number-stat
           v-else
           :number="props.countCitation"
+          :loading="false"
           title="Total citations"
         />
       </div>
