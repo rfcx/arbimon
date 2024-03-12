@@ -3,10 +3,10 @@ import { type ProjectRole, RANKING_NONE } from '@rfcx-bio/common/roles'
 import { getIdByEmail } from '@/users/user-profile-dao'
 import { addProjectMemberLegacy, removeProjectMemberLegacy, updateProjectMemberLegacy } from '~/api-legacy-arbimon'
 import { BioNotFoundError } from '~/errors'
-import { create, destroy, update } from './dao/project-member-dao'
+import { create, destroy, getRoleIdByProjectAndUser, update } from './dao/project-member-dao'
 import { getProjectById } from './dao/projects-dao'
 
-export const addProjectMember = async (token: string, locationProjectId: number, email: string, role?: Exclude<ProjectRole, 'none'>): Promise<void> => {
+export const addProjectMember = async (token: string, locationProjectId: number, email: string, role?: Exclude<ProjectRole, 'none'>): Promise<boolean> => {
   const project = await getProjectById(locationProjectId)
   if (project === undefined) {
     throw BioNotFoundError()
@@ -17,13 +17,17 @@ export const addProjectMember = async (token: string, locationProjectId: number,
     throw BioNotFoundError()
   }
 
-  // TODO #1533: check if user is already a member - should return 409
+  const userRole = await getRoleIdByProjectAndUser(locationProjectId, userId)
+  if (userRole !== undefined) {
+    return true
+  }
 
   // Legacy
   await addProjectMemberLegacy(token, project.slug, email, role ?? 'user')
 
   // Local
   await create({ locationProjectId, userId, role: role ?? 'user', ranking: RANKING_NONE })
+  return false
 }
 
 export const removeProjectMember = async (token: string, locationProjectId: number, email: string): Promise<void> => {

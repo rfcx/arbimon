@@ -123,7 +123,7 @@
               </div>
               <div
                 v-if="addNewUserError"
-                class="bg-[#FFDADA] border-l-3 border-[#CC1E3D] rounded p-1 text-moss text-sm"
+                class="bg-spoonbill border-l-3 border-ibis rounded p-1 text-moss text-sm"
               >
                 All fields are required.
               </div>

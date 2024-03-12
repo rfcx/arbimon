@@ -27,7 +27,7 @@
                 Address
               </h3>
               <p class="mb-4">
-                440 Cobia Drive, Suite 1902,<br>Katy, TX, 77494, USA
+                1708 Spring Green Blvd, Ste 120 #120,<br> Katy, TX 77494, USA
               </p>
             </div>
           </div>

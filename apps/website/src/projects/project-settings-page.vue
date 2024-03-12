@@ -124,6 +124,7 @@ import { type AxiosError, type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+import type { ProjectProfileUpdateBody } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { urlWrapper } from '@/_services/images/url-wrapper'
@@ -257,15 +258,23 @@ const save = () => {
 }
 
 const updateSettings = () => {
-  mutateProjectSettings({
+  const update: ProjectProfileUpdateBody = {
     name: newName.value,
-    summary: newSummary.value,
     objectives: newObjectives.value,
     dateStart: dateStart.value ? dateStart.value : null,
-    dateEnd: onGoing.value ? null : dateEnd.value ? dateEnd.value : null,
-    hidden: !isPublic.value,
-    slug: newSlug.value !== null ? newSlug.value : undefined
-  }, {
+    dateEnd: onGoing.value ? null : dateEnd.value ? dateEnd.value : null
+  }
+  if (isPublic.value !== settings.value?.isPublic) {
+    update.hidden = isPublic.value
+  }
+  if (newSummary.value !== settings.value?.summary) {
+    update.summary = newSummary.value
+  }
+  if (newSlug.value !== settings.value?.slug && newSlug.value !== null) {
+    update.slug = newSlug.value
+  }
+
+  mutateProjectSettings(update, {
     onSuccess: () => {
       isSaving.value = false
       lastUpdated.value = true

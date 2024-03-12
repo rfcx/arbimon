@@ -22,7 +22,7 @@
           <div class="flex items-start justify-between">
             <div class="rounded-full bg-util-gray-01 p-3">
               <icon-fa-trash
-                class="text-[#CC1E3D]"
+                class="text-ibis"
               />
             </div>
             <button
@@ -48,7 +48,7 @@
           </div>
           <div
             v-if="isError"
-            class="bg-[#F5D1D6] mt-6 flex flex-row items-center p-2 border-l-3 rounded-lg border-l-[#CC1E3D]"
+            class="bg-spoonbill mt-6 flex flex-row items-center p-2 border-l-3 rounded-lg border-l-ibis"
           >
             <icon-custom-alert-triangle class="h-6 w-6 cursor-pointer" />
             <span
@@ -71,7 +71,7 @@
               data-modal-target="project-member-delete-modal"
               data-modal-toggle="project-member-delete-modal"
               type="button"
-              class="btn bg-[#CC1E3D] flex flex-row text-sm text-insight justify-center px-6 py-3 w-49"
+              class="btn bg-ibis flex flex-row text-sm text-insight justify-center px-6 py-3 w-49"
               @click="$emit('emitDeleteProjectMember', user.email)"
             >
               <span>Delete member</span>

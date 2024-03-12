@@ -159,7 +159,7 @@
         name="keyResult"
       >
         <p
-          v-if="profile?.keyResults"
+          v-if="profile?.keyResult"
           class="pt-4"
         >
           <DashboardMarkdownViewerEditor
@@ -167,7 +167,7 @@
             v-model:is-view-mored="isKeyResultTabViewMored"
             v-model:is-editing="isKeyResultTabEditing"
             :editable="false"
-            :raw-markdown-text="profile?.keyResults"
+            :raw-markdown-text="profile?.keyResult"
             :default-markdown-text="keyResultDefault"
             :is-project-member="false"
             :is-viewing-as-guest="false"
@@ -237,7 +237,7 @@ const { readme: readmeDefault, keyResult: keyResultDefault } = useMarkdownEditor
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
-const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResults', 'countryCodes', 'image'])
+const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'])
 const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId)
 
 const isAboutTabViewMored = ref(false)
