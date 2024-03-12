@@ -23,11 +23,13 @@ export const routesSpecies: RouteRegistration[] = [
   {
     method: GET,
     url: projectSpeciesLightRoute,
+    preHandler: [requireProjectPermission('read-insights')],
     handler: projectSpeciesLightHandler
   },
   {
     method: GET,
     url: projectSpeciesAllRoute,
+    preHandler: [requireProjectPermission('read-insights')],
     handler: projectSpeciesAllHandler
   },
   {
