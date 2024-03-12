@@ -5,7 +5,6 @@ import { type LocationProjectProfileContentType } from '@rfcx-bio/common/dao/typ
 import { checkUserPermissionForEditingDashboardContent } from '~/api-core/api-core'
 import { getSequelize } from '~/db'
 import { BioPublicError } from '~/errors'
-import { sqlValues } from './sql-values'
 
 export const getDashboardContent = async (locationProjectId: number): Promise<DashboardContentResponse> => {
   const sequelize = getSequelize()
@@ -24,7 +23,7 @@ export const getDashboardContent = async (locationProjectId: number): Promise<Da
 export const updateDashboardContent = async (token: string, locationProjectId: number, contentType: LocationProjectProfileContentType, value: string): Promise<void> => {
   const sequelize = getSequelize()
 
-  const { LocationProject } = ModelRepository.getInstance(sequelize)
+  const { LocationProject, LocationProjectProfile } = ModelRepository.getInstance(sequelize)
 
   const project = await LocationProject.findOne({ where: { id: locationProjectId } })
 
@@ -38,18 +37,23 @@ export const updateDashboardContent = async (token: string, locationProjectId: n
     throw new BioPublicError('You are not allowed to edit this content', 403)
   }
 
-  const values = sqlValues(contentType, value)
+  const profile = await LocationProjectProfile.findOne({ where: { locationProjectId } })
 
-  await sequelize.query(`
-    insert into location_project_profile (
-      location_project_id,
-      created_at,
-      updated_at,
-      ${values.keys}
-    ) values (
-      ${locationProjectId},
-      now(),
-      now(),
-      ${values.values}
-    ) on conflict (location_project_id) do update set ${values.updateClause}, updated_at = now();`)
+  if (profile === null || profile === undefined) {
+    const createObject = {
+      locationProjectId,
+      summary: '',
+      readme: '',
+      methods: '',
+      keyResult: '',
+      resources: '',
+      image: ''
+    }
+    createObject[contentType] = value
+    // @ts-expect-error the type mismatches but the amount of guards make this safe.
+    await LocationProjectProfile.create(createObject)
+    return
+  }
+
+  await LocationProjectProfile.update({ [contentType]: value }, { where: { locationProjectId } })
 }

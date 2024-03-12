@@ -84,6 +84,33 @@ test(`POST ${projectMembersRoute} adds user with role`, async () => {
   expect(addProjectMemberLegacy).toBeCalledTimes(1)
 })
 
+test(`POST ${projectMembersRoute} multiple times results in 204 calls not 500`, async () => {
+  // Arrange
+  const app = await makeApp(routesProject, { projectRole: 'admin' })
+  const project = await LocationProject.findOne({ where: { slug: { [Op.like]: 'grey-blue-humpback%' } } })
+  const payload: ProjectMemberAddRemoveRequest = { email: newUser.email, role: 'admin' }
+  const responseFirst = await app.inject({
+    method: POST,
+    url: projectMembersRoute.replace(':projectId', project?.id.toString() ?? ''),
+    payload,
+    headers: { authorization: fakeToken }
+  })
+
+  // Act
+  const responseSecond = await app.inject({
+    method: POST,
+    url: projectMembersRoute.replace(':projectId', project?.id.toString() ?? ''),
+    payload,
+    headers: { authorization: fakeToken }
+  })
+
+  // Assert
+  expect(responseFirst.statusCode).toEqual(204)
+  expect(responseFirst.headers?.['x-user-already-existed']).toEqual(false)
+  expect(responseSecond.statusCode).toEqual(204)
+  expect(responseSecond.headers?.['x-user-already-existed']).toEqual(true)
+})
+
 test(`DELETE ${projectMembersRoute} removes user`, async () => {
   // Arrange
   const app = await makeApp(routesProject, { projectRole: 'admin' })

@@ -37,10 +37,11 @@ export const useGetProjectInfo = (apiClient: AxiosInstance, projectId: ComputedR
   })
 }
 
-export const useGetProjectStakeholders = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>): UseQueryReturnType<DashboardStakeholdersResponse, unknown> => {
+export const useGetProjectStakeholders = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>, enabled: ComputedRef<boolean>): UseQueryReturnType<DashboardStakeholdersResponse, unknown> => {
   return useQuery({
     queryKey: ['get-project-stakeholders'],
-    queryFn: async () => await apiBioGetProjectStakeHoldersData(apiClient, projectId.value ?? -1)
+    queryFn: async () => await apiBioGetProjectStakeHoldersData(apiClient, projectId.value ?? -1),
+    enabled
   })
 }
 

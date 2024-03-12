@@ -83,7 +83,7 @@ describe(`GET ${ROUTE} (dashboard content)`, () => {
 describe(`PATCH ${ROUTE} (dashboard content)`, () => {
   describe('insert when initial rows are empty', async () => {
     beforeEach(async () => {
-      await LocationProjectProfile.destroy({ where: { locationProjectId: PROJECT_ID_BASIC } })
+      await LocationProjectProfile.destroy({ where: { locationProjectId: PROJECT_ID_BASIC }, force: true })
     })
 
     test('insert to summary', async () => {

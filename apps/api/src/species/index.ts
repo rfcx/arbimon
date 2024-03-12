@@ -23,6 +23,7 @@ export const routesSpecies: RouteRegistration[] = [
   {
     method: GET,
     url: projectSpeciesRoute,
+    preHandler: [requireProjectPermission('read-insights')],
     handler: projectSpeciesHandler
   },
   {

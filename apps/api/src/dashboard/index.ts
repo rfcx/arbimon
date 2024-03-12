@@ -7,6 +7,7 @@ import { dashboardSpeciesByRiskDataRoute } from '@rfcx-bio/common/api-bio/dashbo
 import { dashboardSpeciesDataRoute, speciesHighlightedDeleteRoute, speciesHighlightedPostRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
 import { dashboardStakeholdersRoute, updateDashboardStakeholdersRoute } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 
+import { requireProjectPermission } from '@/_hooks/require-permission'
 import { type RouteRegistration, DELETE, GET, PATCH, POST } from '../_services/api-helpers/types'
 import { dashboardContentHandler, updateDashboardContentHandler } from './dashboard-content-handler'
 import { dashboardDataByHourHandler } from './dashboard-data-by-hour-handler'
@@ -20,51 +21,61 @@ export const routesDashboard: RouteRegistration[] = [
   {
     method: GET,
     url: dashboardMetricsRoute,
+    preHandler: [requireProjectPermission('read-insights')],
     handler: dashboardMetricsHandler
   },
   {
     method: GET,
     url: dashboardDataByHourRoute,
+    preHandler: [requireProjectPermission('read-insights')],
     handler: dashboardDataByHourHandler
   },
   {
     method: GET,
     url: dashboardContentRoute,
+    preHandler: [requireProjectPermission('read-insights')],
     handler: dashboardContentHandler
   },
   {
     method: PATCH,
     url: dashboardContentRoute,
+    preHandler: [requireProjectPermission('update-profile')],
     handler: updateDashboardContentHandler
   },
   {
     method: GET,
     url: dashboardDataBySiteRoute,
+    preHandler: [requireProjectPermission('read-insights')],
     handler: dashboardDataBySiteHandler
   },
-  { // TODO: remove this route
+  {
     method: GET,
     url: dashboardSpeciesDataRoute,
+    preHandler: [requireProjectPermission('read-insights')],
     handler: dashboardSpeciesDataHandler
   },
   {
     method: GET,
     url: dashboardProfileRoute,
+    preHandler: [requireProjectPermission('read-insights')],
     handler: dashboardContentHandler
   },
   {
     method: GET,
     url: dashboardSpeciesByRiskDataRoute,
+    preHandler: [requireProjectPermission('read-insights')],
     handler: dashboardSpeciesByRiskDataHandler
   },
   {
     method: POST,
     url: speciesHighlightedPostRoute,
+    preHandler: [requireProjectPermission('update-profile')],
     handler: dashboardSpeciesHighlightedPostHandler
   },
   {
     method: DELETE,
     url: speciesHighlightedDeleteRoute,
+    preHandler: [requireProjectPermission('update-profile')],
     handler: dashboardSpeciesHighlightedDeleteHandler
   },
   {
@@ -75,6 +86,7 @@ export const routesDashboard: RouteRegistration[] = [
   {
     method: PATCH,
     url: updateDashboardStakeholdersRoute,
+    preHandler: [requireProjectPermission('update-profile')],
     handler: updateDashboardStakeholdersHandler
   }
 ]
