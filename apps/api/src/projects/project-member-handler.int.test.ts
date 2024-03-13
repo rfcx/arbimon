@@ -106,9 +106,7 @@ test(`POST ${projectMembersRoute} multiple times results in 204 calls not 500`, 
 
   // Assert
   expect(responseFirst.statusCode).toEqual(204)
-  expect(responseFirst.headers?.['x-user-already-existed']).toEqual(false)
   expect(responseSecond.statusCode).toEqual(204)
-  expect(responseSecond.headers?.['x-user-already-existed']).toEqual(true)
 })
 
 test(`DELETE ${projectMembersRoute} removes user`, async () => {

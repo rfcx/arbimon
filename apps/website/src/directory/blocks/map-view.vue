@@ -111,7 +111,7 @@ onMounted(() => {
       source: 'projects',
       layout: {
         'icon-image': 'default-marker',
-        'icon-size': 1.2
+        'icon-size': 0.6
       },
       paint: {
         'icon-opacity': [
@@ -129,7 +129,7 @@ onMounted(() => {
       source: 'selected-project',
       layout: {
         'icon-image': 'selected-marker',
-        'icon-size': 1.2
+        'icon-size': 0.6
       },
       paint: {
         'icon-opacity': [

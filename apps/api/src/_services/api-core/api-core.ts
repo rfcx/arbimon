@@ -2,6 +2,7 @@ import axios from 'axios'
 import { type FastifyLoggerInstance } from 'fastify'
 
 import { type ClassifierQueryParams, type ClassifierResponse } from '@rfcx-bio/common/api-bio/classifiers/classifier'
+import { type ClassifierJob, type GetClassifierJobsResponse } from '@rfcx-bio/common/api-bio/cnn/classifier-jobs'
 import { type DetectSummaryQueryParams, type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { type DetectValidationResultsQueryParams, type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 import { type DetectReviewDetectionBody, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
@@ -95,6 +96,42 @@ export async function updateDetectionReviewFromApi (token: string, classifierJob
     })
 
     return resp.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getClassifierJobs (token: string, query: { project: string, createdBy?: 'me' | 'all' }): Promise<ClassifierJob[]> {
+  try {
+    const response = await axios.request<GetClassifierJobsResponse>({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifier-jobs`,
+      headers: {
+        authorization: token
+      },
+      params: {
+        projects: query?.project ? [query.project] : [],
+        created_by: query?.createdBy ? query?.createdBy : 'all',
+        fields: [
+          'id',
+          'classifier_id',
+          'project_id',
+          'query_streams',
+          'query_start',
+          'query_end',
+          'query_hours',
+          'minutes_total',
+          'minutes_completed',
+          'status',
+          'created_by_id',
+          'created_at',
+          'completed_at',
+          'classifier'
+        ]
+      }
+    })
+
+    return response.data
   } catch (e) {
     return unpackAxiosError(e)
   }
