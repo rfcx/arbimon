@@ -2,7 +2,7 @@
   <section class="bg-white dark:bg-pitch border-y-1 border-frequency bg-hero-data bg-cover bg-no-repeat bg-bottom-right">
     <div class="flex flex-col items-center justify-between lg:flex-row lg:py-10 px-4 py-20 gap-10 max-w-screen-xl mx-auto">
       <div class="text-center xl:w-52">
-        <h3 class="text-2xl lg:text-xl font-medium font-header">
+        <h3 class="text-2xl lg:text-xl font-medium font-header pb-2">
           Powered by data
         </h3>
         <p>Arbimon’s archive is continuously growing!</p>
