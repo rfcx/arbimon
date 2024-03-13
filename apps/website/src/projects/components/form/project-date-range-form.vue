@@ -122,6 +122,10 @@ watch(() => props.initialDateStart, (newValue, oldValue) => {
   dateStart.value = newValue !== undefined ? dateLocalIso(newValue) : ''
 })
 
+watch(() => props.onGoing, (newValue) => {
+  onGoing.value = newValue
+})
+
 watch(() => value.value, (newValue) => {
   emit('emitSelectDateRange', newValue)
 })
