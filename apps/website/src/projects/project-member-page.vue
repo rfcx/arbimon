@@ -189,9 +189,10 @@
         </div>
 
         <DialogMember
-          :show-alert-success="showAlertSuccess"
-          :show-alert-error="showAlertError"
-          :show-alert-duplicate="showAlertDuplicate"
+          :success="success"
+          :title="title"
+          :message="message"
+          :show-alert="showAlert"
         />
       </div>
     </div>
@@ -362,29 +363,39 @@ const addSelectedUser = ():void => {
   if (userSearchValue.value === '') return
   const isDuplicate = users.value?.some(user => user.email === userSearchValue.value) ?? false
   if (isDuplicate) {
-    showAlertDuplicate.value = true
+    showAlert.value = true
+    success.value = false
+    title.value = 'Duplicate'
+    message.value = 'The user is already a project member'
     setTimeout(() => {
-      showAlertDuplicate.value = false
+        showAlert.value = false
   }, 7000)
-  }
+  } else {
   mutatePostProjectMember({
     email: userSearchValue.value,
     role: 'user'
   }, {
     onSuccess: () => {
       usersRefetch()
-      showAlertSuccess.value = true
+      showAlert.value = true
+      success.value = true
+      title.value = 'Success'
+      message.value = 'New Project member added successfully'
       setTimeout(() => {
-        showAlertSuccess.value = false
+        showAlert.value = false
   }, 7000)
     },
     onError: () => {
-      showAlertError.value = (true)
+      showAlert.value = true
+      success.value = false
+      title.value = 'Error'
+      message.value = 'failed to add project member'
       setTimeout(() => {
-        showAlertError.value = false
+        showAlert.value = false
   }, 7000)
 }
   })
+}
 }
 
 const changeUserRole = (email: string, role: ProjectRole):void => {
@@ -412,9 +423,10 @@ onMounted(() => {
   initTooltips()
 })
 
-const showAlertSuccess = ref()
-const showAlertError = ref(false)
-const showAlertDuplicate = ref(false)
+const success = ref(false)
+const title = ref('')
+const message = ref('')
+const showAlert = ref(false)
 
 </script>
 
