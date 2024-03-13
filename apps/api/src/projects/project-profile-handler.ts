@@ -1,13 +1,13 @@
 import { type DashboardStakeholdersParams, type DashboardStakeholdersResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 import { type ProjectProfileParams, type ProjectProfileQuery, type ProjectProfileUpdateBody, type ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project/project-settings'
+import { isValidSlug, PROJECT_SLUG_MAX_LENGTH } from '@rfcx-bio/utils/string/slug'
 
 import { getProjectStakeholders, getProjectStakeholderUsers } from '@/dashboard/dashboard-stakeholders-dao'
 import { type Handler } from '~/api-helpers/types'
-import { BioInvalidBodyError, BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
+import { BioInvalidBodyError, BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
 import { getProjectInfo } from './dao/project-profile-dao'
 import { updateProjectAndProfile } from './project-profile-bll'
-import { isValidSlug, PROJECT_SLUG_MAX_LENGTH } from '@rfcx-bio/utils/string/slug'
 
 export const projectProfileHandler: Handler<ProjectSettingsResponse, ProjectProfileParams, ProjectProfileQuery> = async (req) => {
   // Inputs & validation
