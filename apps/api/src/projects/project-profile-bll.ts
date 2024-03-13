@@ -1,4 +1,4 @@
-import { type ProjectProfileUpdateBody } from '@rfcx-bio/common/api-bio/project/project-settings'
+import { type ProjectProfileUpdateBody, ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE } from '@rfcx-bio/common/api-bio/project/project-settings'
 
 import { updateProjectLegacy } from '~/api-legacy-arbimon'
 import { BioPublicError } from '~/errors'
@@ -21,7 +21,7 @@ export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody,
     })
 
     if (!res.success && res?.error?.startsWith('URL') === true) {
-      throw new BioPublicError('Slug is not unique', 400)
+      throw new BioPublicError(ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE, 400)
     }
   }
 

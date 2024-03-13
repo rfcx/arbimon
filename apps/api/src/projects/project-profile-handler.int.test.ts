@@ -4,7 +4,7 @@ import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
-import { projectDataRoute } from '@rfcx-bio/common/api-bio/project/project-settings'
+import { ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE, projectDataRoute } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { type LocationProjectProfile, type Project } from '@rfcx-bio/common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
@@ -143,7 +143,7 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
 
     expect(response.statusCode).toBe(400)
     const json = response.json<{ statusCode: number, error: string, message: string }>()
-    expect(json.message).toBe('Slug is not unique')
+    expect(json.message).toBe(ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE)
   })
 })
 

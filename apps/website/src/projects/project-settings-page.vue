@@ -126,7 +126,7 @@ import { type AxiosError, type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import type { ProjectProfileUpdateBody } from '@rfcx-bio/common/api-bio/project/project-settings'
+import { type ProjectProfileUpdateBody, ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
@@ -307,10 +307,8 @@ const updateSettings = () => {
       errorMessage.value = DEFAULT_ERROR_MSG
 
       const error = e as AxiosError<Error>
-      if (error.response?.data !== undefined) {
-        if (error.response.data.message.includes('URL') && error.response.data.message.includes('redundant')) {
-          errorMessage.value = DEFAULT_ERROR_MSG + ' This URL is currently in use. Please try again.'
-        }
+      if (error.response?.data !== undefined && error.response.data.message === ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE) {
+        errorMessage.value = DEFAULT_ERROR_MSG + ' Project URL must be unique.'
       }
     }
   })
