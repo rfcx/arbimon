@@ -21,17 +21,25 @@
     v-model="selectedTime.selectedHourRange"
     type="text"
     placeholder="e.g. 0-5, 7-11, 14, 15"
+    maxlength="5"
     class="p-2 mt-4 bg-pitch h-11 text-base w-full border border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
     @input="$emit('emitSelectTime', selectedTime.selectedHourRange)"
   >
+  <span
+    v-if="isWrongFormat"
+    class="text-sm text-flamingo"
+  >
+    Wrong format, please enter e.g. 0-5, 7-11, 14, 15
+  </span>
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, watch } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 
 import { hours } from './time-of-day-constants'
 
 const emit = defineEmits<{(e: 'emitSelectTime', value: string): void}>()
+const isWrongFormat = ref(false)
 
 const selectedTime = reactive({
   selectedTimeType: hours.all.label,
@@ -56,5 +64,22 @@ const selectCustom = () => {
 
 watch(() => selectedTime.selectedHourRange, (hourRange) => {
   selectedTime.selectedTimeType = hourRange === '0-23' ? hours.all.label : hours.custom.label
+  isWrongFormat.value = !validate(hourRange)
 })
+
+const validate = (hourRange: string): boolean => {
+  if (hourRange.includes('-')) {
+    const hour = hourRange.split('-')
+    if (hour.length > 3) return false
+    if (hour[0] === '' || hour[1] === '') {
+      return false
+    } else if (Number(hour[0]) < 24 && Number(hour[1]) < 24) {
+      return true
+    }
+  } else {
+    return Number(hourRange) < 24
+  }
+  return false
+}
+
 </script>
