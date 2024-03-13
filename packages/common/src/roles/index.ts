@@ -1,5 +1,5 @@
 export type ProjectRole = 'none' | 'external' | 'viewer' | 'entry' | 'user' | 'expert' | 'admin' | 'owner'
-export type ProjectPermission = 'read-profile' | 'read-insights' | 'read-insights-sensitive' | 'read-users' | 'update-profile' | 'update-project-status' | 'update-users' | 'delete-project'
+export type ProjectPermission = 'read-profile' | 'read-insights' | 'read-insights-sensitive' | 'read-users' | 'update-profile' | 'update-project-status' | 'update-users' | 'delete-project' | 'read-cnn'
 
 const roles: Record<number, ProjectRole> = {
   1: 'admin',
@@ -23,6 +23,7 @@ const permissions: Record<ProjectPermission, ProjectRole[]> = {
   'update-profile': rolesGreaterOrEqualTo('admin'),
   'update-project-status': rolesGreaterOrEqualTo('admin'),
   'update-users': rolesGreaterOrEqualTo('admin'),
+  'read-cnn': rolesGreaterOrEqualTo('user'),
   'delete-project': ['owner']
 }
 

@@ -78,7 +78,7 @@
 import { useQueryClient } from '@tanstack/vue-query'
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
-import { computed, inject, onBeforeUnmount, onMounted, reactive, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
@@ -93,39 +93,20 @@ import JobItemRow from './components/job-item-row.vue'
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 
 const store = useStore()
-const params = reactive({
-  created_by: 'all',
-  projects: [store.selectedProject?.idCore ?? ''],
-  fields: [
-    'id',
-    'classifier_id',
-    'project_id',
-    'minutes_completed',
-    'minutes_total',
-    'created_by_id',
-    'completed_at',
-    'created_at',
-    'status',
-    'classifier',
-    'query_streams',
-    'query_start',
-    'query_end',
-    'query_hours'
-  ]
-})
+const createdBy = ref<'me' | 'all'>('all')
 
-watch(() => store.selectedProject, () => {
-  params.projects = [store.selectedProject?.idCore ?? '']
-})
-
-const { isLoading: isLoadingClassifierJobs, isError: isErrorClassifierJobs, data: classifierJobs } = useClassifierJobs(apiClientCore, params)
+const { isLoading: isLoadingClassifierJobs, isError: isErrorClassifierJobs, data: classifierJobs } = useClassifierJobs(
+  apiClientCore,
+  store.selectedProject?.idCore ?? '',
+  createdBy
+)
 
 const filterOptions: JobFilterItem[] = [
   { value: 'me', label: 'My jobs', checked: false },
   { value: 'all', label: 'All jobs', checked: true }
 ]
 
-const jobs = computed((): Job[] => classifierJobs.value?.items?.map(cj => ({
+const jobs = computed((): Job[] => classifierJobs.value?.map(cj => ({
   id: cj.id,
   modelName: cj.classifier.name,
   input: {
@@ -147,7 +128,7 @@ const getProgress = (minutesComplete: number, minutesTotal: number): number => {
 }
 
 const onFilterChange = (filter: string): void => {
-  params.created_by = filter === 'me' ? 'me' : 'all'
+  params.createdBy = filter === 'me' ? 'me' : 'all'
 }
 
 const queryClient = useQueryClient()
