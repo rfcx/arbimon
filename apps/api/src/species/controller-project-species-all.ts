@@ -47,13 +47,14 @@ export const getProjectSpecies = async (locationProjectId: number, params: Proje
   })
 
   if (fields === 'dashboard') {
-    const dashboardSpecies = species.map(sp => {
-      const { taxonSpeciesSlug, taxonClassSlug, riskRatingId, ...rest } = sp
+    const dashboardSpecies = species.map(({ taxonSpeciesSlug, taxonClassSlug, scientificName, commonName, riskRatingId, photoUrl }) => {
       return {
         slug: taxonSpeciesSlug,
         taxonSlug: taxonClassSlug,
+        scientificName,
+        commonName,
         riskId: riskRatingId,
-        ...rest
+        photoUrl
       }
     })
     return { species: dashboardSpecies }

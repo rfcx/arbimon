@@ -9,13 +9,13 @@ import { routesSpecies } from './index'
 const TEST_PROJECT_ID = '40001001'
 const REQUIRED_FIELDS = {
     light: ['taxonSpeciesId', 'taxonSpeciesSlug', 'scientificName', 'commonName', 'taxonClassSlug'],
-    dashboard: ['taxonSpeciesId', 'taxonSpeciesSlug', 'scientificName', 'commonName', 'taxonClassSlug', 'riskRatingId', 'photoUrl']
+    dashboard: ['slug', 'taxonSlug', 'scientificName', 'commonName', 'riskId', 'photoUrl']
 }
 
 describe(`GET ${projectSpeciesRoute}`, async () => {
     test('exists', async () => {
         // Arrange
-        const app = await makeApp(routesSpecies)
+        const app = await makeApp(routesSpecies, { projectRole: 'user' })
 
         // Act
         const routes = [...app.routes.keys()]
@@ -26,7 +26,7 @@ describe(`GET ${projectSpeciesRoute}`, async () => {
 
     test('returns successfully', async () => {
         // Arrange
-        const app = await makeApp(routesSpecies)
+        const app = await makeApp(routesSpecies, { projectRole: 'user' })
 
         // Act
         const response = await app.inject({
@@ -44,7 +44,7 @@ describe(`GET ${projectSpeciesRoute}`, async () => {
 
     test('returns data with limit', async () => {
         // Arrange
-        const app = await makeApp(routesSpecies)
+        const app = await makeApp(routesSpecies, { projectRole: 'user' })
 
         // Act
         const response = await app.inject({
@@ -64,7 +64,7 @@ describe(`GET ${projectSpeciesRoute}`, async () => {
 
     test('returns default fields', async () => {
         // Arrange
-        const app = await makeApp(routesSpecies)
+        const app = await makeApp(routesSpecies, { projectRole: 'user' })
         const fields = 'light'
         const defaultFields = REQUIRED_FIELDS[fields]
 
@@ -86,7 +86,7 @@ describe(`GET ${projectSpeciesRoute}`, async () => {
 
     test('query fields=light returns the required fields', async () => {
         // Arrange
-        const app = await makeApp(routesSpecies)
+        const app = await makeApp(routesSpecies, { projectRole: 'user' })
         const fields = 'light'
         const defaultFields = REQUIRED_FIELDS[fields]
 
@@ -108,7 +108,7 @@ describe(`GET ${projectSpeciesRoute}`, async () => {
 
     test('query fields=dashboard returns the required fields', async () => {
         // Arrange
-        const app = await makeApp(routesSpecies)
+        const app = await makeApp(routesSpecies, { projectRole: 'user' })
         const fields = 'dashboard'
         const dashboardFields = REQUIRED_FIELDS[fields]
 
