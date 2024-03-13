@@ -3,10 +3,11 @@ import { type ProjectProfileParams, type ProjectProfileQuery, type ProjectProfil
 
 import { getProjectStakeholders, getProjectStakeholderUsers } from '@/dashboard/dashboard-stakeholders-dao'
 import { type Handler } from '~/api-helpers/types'
-import { BioInvalidPathParamError } from '~/errors'
+import { BioInvalidBodyError, BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
 import { getProjectInfo } from './dao/project-profile-dao'
 import { updateProjectAndProfile } from './project-profile-bll'
+import { isValidSlug, PROJECT_SLUG_MAX_LENGTH } from '@rfcx-bio/utils/string/slug'
 
 export const projectProfileHandler: Handler<ProjectSettingsResponse, ProjectProfileParams, ProjectProfileQuery> = async (req) => {
   // Inputs & validation
@@ -32,6 +33,10 @@ export const projectProfileUpdateHandler: Handler<string, ProjectProfileParams, 
   const projectIdInteger = Number(projectId)
   if (Number.isNaN(projectIdInteger)) {
     throw BioInvalidPathParamError({ projectId })
+  }
+
+  if (request.body.slug && (request.body.slug.length > PROJECT_SLUG_MAX_LENGTH || !isValidSlug(request.body.slug))) {
+    throw BioInvalidBodyError({ slug: request.body.slug })
   }
 
   await updateProjectAndProfile(request.body, request.headers.authorization ?? '', projectIdInteger)
