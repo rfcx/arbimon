@@ -56,9 +56,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-import detectSpeciesImage from '@/_assets/landing/how-it-works/detect-species.png'
-import gainInsightsImage from '@/_assets/landing/how-it-works/gain-insights.png'
-import uploadAudioImage from '@/_assets/landing/how-it-works/upload-audio.png'
+import detectSpeciesImage from '@/_assets/landing/how-it-works/detect-species.webp'
+import gainInsightsImage from '@/_assets/landing/how-it-works/gain-insights.webp'
+import uploadAudioImage from '@/_assets/landing/how-it-works/upload-audio.webp'
 import { ROUTE_NAMES } from '~/router'
 
 const config = [
