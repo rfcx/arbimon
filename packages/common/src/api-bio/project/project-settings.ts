@@ -59,6 +59,8 @@ export type ProjectInfoResponse = Pick<Project, 'name' | 'slug'>
 
 export type ProjectSettingsResponse = Omit<ProjectInfoResponse, 'readme' | 'keyResults' | 'metrics'>
 
+export const ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE = 'Slug is not unique'
+
 export const ATTRIBUTES_PROJECT_INFO_RESPONSE = attributes<ProjectInfoResponse>()({
 })
 
