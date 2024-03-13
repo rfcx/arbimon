@@ -10,15 +10,6 @@
       </router-link>
     </li>
 
-    <li v-if="store.user">
-      <router-link
-        :to="{ name: ROUTE_NAMES.myProjects }"
-        exact-active-class="text-gray-900 dark:text-insight tab-active"
-        class="block tab relative"
-      >
-        My Projects
-      </router-link>
-    </li>
     <li>
       <router-link
         :to="{ name: ROUTE_NAMES.landingHowItWorks }"
@@ -112,6 +103,15 @@
           </li>
         </ul>
       </div>
+    </li>
+    <li v-if="store.user">
+      <router-link
+        :to="{ name: ROUTE_NAMES.myProjects }"
+        exact-active-class="text-gray-900 dark:text-insight tab-active"
+        class="block tab relative"
+      >
+        My Projects
+      </router-link>
     </li>
     <li>
       <div
