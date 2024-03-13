@@ -131,7 +131,7 @@ describe(`PATCH ${ROUTE} (dashboard stakeholders)`, () => {
 
   test('partial update to user role', async () => {
     // Arrange
-    const app = await makeApp(routesDashboard)
+    const app = await makeApp(routesDashboard, { projectRole: 'admin' })
 
     // Act
     const response = await app.inject({

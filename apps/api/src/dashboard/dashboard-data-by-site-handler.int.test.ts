@@ -31,7 +31,7 @@ describe('simple tests', () => {
 
   test('returns successfully', async () => {
     // Arrange
-    const app = await makeApp(routesDashboard)
+    const app = await makeApp(routesDashboard, { projectRole: 'user' })
 
     // Act
     const response = await app.inject({
@@ -49,7 +49,7 @@ describe('simple tests', () => {
 
   test('contains all expected props & no more', async () => {
     // Arrange
-    const app = await makeApp(routesDashboard)
+    const app = await makeApp(routesDashboard, { projectRole: 'user' })
 
     // Act
     const response = await app.inject({
@@ -65,7 +65,7 @@ describe('simple tests', () => {
 
   describe('known data tests', async () => {
     // Arrange & Act once
-    const app = await makeApp(routesDashboard)
+    const app = await makeApp(routesDashboard, { projectRole: 'user' })
 
     const response = await app.inject({
       method: GET,
