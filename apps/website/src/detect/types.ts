@@ -1,6 +1,6 @@
 import { type Dayjs } from 'dayjs'
 
-import { type CLASSIFIER_JOB_LABELS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
+import { type ClassifierJobStatusNumber } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 export interface JobInput {
   sites: string
@@ -9,7 +9,7 @@ export interface JobInput {
 }
 
 export interface JobProgress {
-  status: typeof CLASSIFIER_JOB_LABELS[keyof typeof CLASSIFIER_JOB_LABELS]
+  status: ClassifierJobStatusNumber
   value: number
 }
 
