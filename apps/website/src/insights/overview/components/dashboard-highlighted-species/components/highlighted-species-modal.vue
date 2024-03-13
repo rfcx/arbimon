@@ -191,14 +191,13 @@
 import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 
-import { type ProjectSpeciesAllResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
+import { type ProjectSpeciesAllResponse, apiBioGetProjectSpeciesAll } from '@rfcx-bio/common/api-bio/species/project-species-all'
 
 import { apiClientKey } from '@/globals'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { useStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
 import { useDeleteSpecieHighlighted, usePostSpeciesHighlighted } from '../composables/use-post-highlighted-species'
-import { apiBioGetProjectSpecies } from '../composables/use-species-in-project'
 import HighlightedSpeciesSelector, { type SpecieRow } from './highlighted-species-selector.vue'
 import SpecieCard from './species-card.vue'
 
@@ -218,6 +217,7 @@ const searchKeyword = ref('')
 const searchRisk = ref('')
 const showHaveReachedLimit = ref(false)
 const isLoadingSpecies = ref(false)
+const hasFetchedAll = ref(false)
 
 const selectedSpeciesSlug = ref<string[]>([])
 
@@ -226,14 +226,21 @@ const currentPage = ref(1)
 
 const speciesList = ref<HighlightedSpeciesRow[]>([])
 
-watch(() => props.toggleShowModal, () => {
+watch(() => props.toggleShowModal, async () => {
   fillExistingSpeciesSlug()
-  fetchProjectsSpecies()
+  speciesList.value = []
+  await fetchProjectsSpecies(PAGE_SIZE, 0)
+
+  if (!hasFetchedAll.value) {
+    await fetchProjectsSpecies(PAGE_SIZE, speciesList.value.length)
+  }
 })
 
-const fetchProjectsSpecies = async () => {
+const fetchProjectsSpecies = async (limit: number, offset: number) => {
   isLoadingSpecies.value = true
-  const projectSpecies = await apiBioGetProjectSpecies(apiClientBio, selectedProjectId)
+
+  if (selectedProjectId.value === undefined) return
+  const projectSpecies = await apiBioGetProjectSpeciesAll(apiClientBio, selectedProjectId.value, { limit, offset })
 
   if (projectSpecies === undefined) {
     isLoadingSpecies.value = false
@@ -241,15 +248,17 @@ const fetchProjectsSpecies = async () => {
   }
 
   const s = projectSpecies as ProjectSpeciesAllResponse
-  speciesList.value = s.species.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => {
-    return {
+  hasFetchedAll.value = s.species.length < limit // check if reaching the end
+
+  s.species.forEach(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => {
+    speciesList.value.push({
       slug,
       taxonSlug,
       scientificName,
       commonName,
       photoUrl: photoUrl ?? '',
       riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
-    }
+    })
   })
   isLoadingSpecies.value = false
 }
