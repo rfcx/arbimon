@@ -22,7 +22,7 @@
         :disabled="isDisabled"
         class="w-full border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
         required
-        maxlength="50"
+        :maxlength="PROJECT_SLUG_MAX_LENGTH"
       >
     </div>
   </div>
@@ -31,6 +31,8 @@
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
+
+import { PROJECT_SLUG_MAX_LENGTH } from '@rfcx-bio/utils/string/slug'
 
 import IconIInfo from '../icon-i-info.vue'
 
