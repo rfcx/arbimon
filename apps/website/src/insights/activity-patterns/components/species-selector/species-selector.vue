@@ -196,6 +196,6 @@ const getAllSpecies = async (): Promise<Array<SpeciesInProjectTypes['light']>> =
     return []
   }
 
-  return response.species
+  return response.species as Array<SpeciesInProjectTypes['light']>
 }
 </script>

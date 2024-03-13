@@ -96,6 +96,7 @@ export default class SpeciesSelector extends Vue {
     const projectId = this.store.selectedProject?.id
     if (projectId === undefined) return []
 
-    return await apiBioGetProjectSpecies(this.apiClientBio, projectId).then(res => res?.species) ?? []
+    const projectSpecies = await apiBioGetProjectSpecies(this.apiClientBio, projectId)
+    return projectSpecies?.species as Array<SpeciesInProjectTypes['light']> ?? []
   }
 }

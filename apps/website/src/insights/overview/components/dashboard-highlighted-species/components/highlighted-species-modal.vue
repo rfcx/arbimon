@@ -191,6 +191,8 @@
 import { type AxiosInstance } from 'axios'
 import { type ComputedRef, computed, inject, ref, watch } from 'vue'
 
+import type { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
+
 import { apiClientKey } from '@/globals'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { useStore } from '~/store'
@@ -225,7 +227,7 @@ const selectedSpeciesSlug = ref<string[]>([])
 const PAGE_SIZE = 10
 const currentPage = ref(1)
 
-const { isLoading: isLoadingSpecies, data: speciesResp } = useSpeciesInProject(apiClientBio, selectedProjectId)
+const { isLoading: isLoadingSpecies, data: speciesResp } = useSpeciesInProject(apiClientBio, selectedProjectId, { fields: 'dashboard' })
 const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
 const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
 
@@ -235,7 +237,8 @@ const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
     return []
   }
 
-  return speciesResp.value.species.map(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => {
+  return speciesResp.value.species.map(sp => {
+    const { slug, taxonSlug, scientificName, commonName, photoUrl, riskId } = sp as DashboardSpecies
     return {
       slug,
       taxonSlug,
