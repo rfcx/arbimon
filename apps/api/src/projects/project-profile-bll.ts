@@ -21,7 +21,7 @@ export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody,
     })
 
     if (!res.success && res?.error?.startsWith('URL') === true) {
-      throw new BioPublicError(`URL ${url} is redundant`, 400)
+      throw new BioPublicError('Slug is not unique', 400)
     }
   }
 

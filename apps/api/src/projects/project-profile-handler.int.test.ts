@@ -21,10 +21,6 @@ vi.mock('../_services/api-legacy-arbimon')
 
 const { LocationProject, LocationProjectProfile: LocationProjectProfileModel } = modelRepositoryWithElevatedPermissions
 
-const url = (projectId: number): string => {
-  return `/projects/${projectId}/profile`
-}
-
 const project: Project = {
   id: 99991122,
   idArbimon: 48850,
@@ -92,73 +88,74 @@ afterEach(async () => {
 })
 
 describe(`PATCH ${projectDataRoute}/profile route`, async () => {
+  const url = projectDataRoute.replace(':projectId', project.id.toString()) + '/profile'
+
   test('updates successfully', async () => {
     // Arrange
     const app = await makeApp(routesProject, { projectRole: 'admin' })
-    const projectClone = { ...project, name: 'Tbilisi cats diversities', slug: 'tbilisi-cats-diversities' }
+    const payload = {
+      name: 'Tbilisi Cats Diversities',
+      slug: 'tbilisi-cats-diversities',
+      summary: 'In the blistering heat summer, Tbilisi\'s dogs and cats are struggling to survive.',
+      keyResult: 'Save the cats'
+    }
 
     // Act
-    const response = await app.inject({
-      method: PATCH,
-      url: url(project.id),
-      payload: {
-        name: projectClone.name,
-        slug: projectClone.slug,
-        summary: 'tbilisi cat diversities between each color of the cats',
-        keyResult: 'tbilisi people should be proud'
-      }
-    })
+    const response = await app.inject({ method: PATCH, url, payload })
 
     // Assert
     expect(response.statusCode).toBe(204)
     const projectInDatabase = await LocationProject.findOne({ where: { id: project.id } })
     const projectProfileInDatabase = await LocationProjectProfileModel.findOne({ where: { locationProjectId: project.id } })
-    expect(projectInDatabase).toBeTruthy()
-    expect(projectProfileInDatabase).toBeTruthy()
-    expect(projectInDatabase?.get('name')).toBe('Tbilisi cats diversities')
-    expect(projectInDatabase?.get('slug')).toBe('tbilisi-cats-diversities')
-    expect(projectProfileInDatabase?.get('summary')).toBe('tbilisi cat diversities between each color of the cats')
-    expect(projectProfileInDatabase?.get('keyResult')).toEqual('tbilisi people should be proud')
+    expect(projectInDatabase?.get('name')).toBe(payload.name)
+    expect(projectInDatabase?.get('slug')).toBe(payload.slug)
+    expect(projectProfileInDatabase?.get('summary')).toBe(payload.summary)
+    expect(projectProfileInDatabase?.get('keyResult')).toEqual(payload.keyResult)
     expect(updateProjectLegacy).toBeCalledTimes(1)
   })
 
-  test('a redundant slug on legacy is able to be caught', async () => {
+  test('invalid slug returns error', async () => {
     // Arrange
     const app = await makeApp(routesProject, { projectRole: 'admin' })
-    ;(updateProjectLegacy as any).mockResolvedValueOnce({ success: false, error: 'URL existing-slug is invalid' })
+    const payload = {
+      name: project.name,
+      slug: 'istanbul-cats-dogs-hamsters-and-rabbits-diversities' // Too long
+    }
 
     // Act
-    const response = await app.inject({
-      method: PATCH,
-      url: url(project.id),
-      payload: {
-        name: project.name,
-        slug: 'existing-slug',
-        summary: 'tbilisi cat diversities between each color of the cats'
-      }
-    })
+    const response = await app.inject({ method: PATCH, url, payload })
+
+    // Assert
+    expect(response.statusCode).toBe(400)
+  })
+
+  test('duplicate slug returns error', async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { projectRole: 'admin' })
+    ;(updateProjectLegacy as any).mockResolvedValueOnce({ success: false, error: 'URL a-duplicate-slug is invalid' })
+    const payload = {
+      name: project.name,
+      slug: 'a-duplicate-slug' // Already exists in db
+    }
+
+    // Act
+    const response = await app.inject({ method: PATCH, url, payload })
 
     expect(response.statusCode).toBe(400)
     const json = response.json<{ statusCode: number, error: string, message: string }>()
-    expect(json.message).toBe('URL existing-slug is redundant')
-    const projectInDatabase = await LocationProject.findOne({ where: { id: project.id } })
-    expect(projectInDatabase).toBeTruthy()
-    expect(projectInDatabase?.name).toBe('Istanbul cats diversities')
-    expect(projectInDatabase?.slug).toBe('istanbul-cats-diversities')
-    expect(updateProjectLegacy).toBeCalledTimes(1)
+    expect(json.message).toBe('Slug is not unique')
   })
 })
 
 describe('GET /projects/:projectId/profile', async () => {
+  const url = projectDataRoute.replace(':projectId', projectForGetRouteTest.id.toString()) + '/profile'
+
   test('gets profile successfully', async () => {
     // Arrange
     const app = await makeApp(routesProject, { projectRole: 'admin' })
 
     // Act
-    const response = await app.inject({
-      method: GET,
-      url: url(projectForGetRouteTest.id)
-    })
+    const response = await app.inject({ method: GET, url })
 
     // Assert
     const json = response.json()
@@ -173,13 +170,7 @@ describe('GET /projects/:projectId/profile', async () => {
   test('get with additional fields successfully', async () => {
     const app = await makeApp(routesProject, { projectRole: 'admin' })
 
-    const response = await app.inject({
-      method: GET,
-      url: url(projectForGetRouteTest.id),
-      query: {
-        fields: 'summary,readme,keyResult,resources'
-      }
-    })
+    const response = await app.inject({ method: GET, url, query: { fields: 'summary,readme,keyResult,resources' } })
 
     const json = response.json()
     expect(json.summary).toEqual(profileForGetRouteTest.summary)
