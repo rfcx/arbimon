@@ -21,7 +21,7 @@
     v-model="selectedTime.selectedHourRange"
     type="text"
     placeholder="e.g. 0-5, 7-11, 14, 15"
-    maxlength="5"
+    onkeypress="return event.charCode === 44 || event.charCode === 45 || (event.charCode > 47 && event.charCode < 58);"
     class="p-2 mt-4 bg-pitch h-11 text-base w-full border border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
     @input="$emit('emitSelectTime', selectedTime.selectedHourRange)"
   >
@@ -68,18 +68,43 @@ watch(() => selectedTime.selectedHourRange, (hourRange) => {
 })
 
 const validate = (hourRange: string): boolean => {
-  if (hourRange.includes('-')) {
-    const hour = hourRange.split('-')
-    if (hour.length > 3) return false
-    if (hour[0] === '' || hour[1] === '') {
-      return false
-    } else if (Number(hour[0]) < 24 && Number(hour[1]) < 24) {
-      return true
+  let isValidate = false
+
+  if (hourRange.includes(',')) {
+    const hourItems = hourRange.split(',')
+    if (hourItems[0] === '' || hourItems[hourItems.length - 1] === '') {
+      isValidate = false
+    } else {
+        hourItems.forEach(h => {
+        if (h.includes('-')) {
+          const hour = h.split('-')
+          if (hour[0] === '' || hour[1] === '') {
+            isValidate = false
+          } else if (Number(hour[0]) < 24 && Number(hour[1]) < 24) {
+            isValidate = true
+          } else {
+            isValidate = false
+          }
+        } else {
+          isValidate = Number(h) < 24
+        }
+      })
     }
   } else {
-    return Number(hourRange) < 24
-  }
-  return false
+    if (hourRange.includes('-')) {
+        const hour = hourRange.split('-')
+        if (hour[0] === '' || hour[1] === '') {
+          isValidate = false
+        } else if (Number(hour[0]) < 24 && Number(hour[1]) < 24) {
+          isValidate = true
+        } else {
+          isValidate = false
+        }
+      } else {
+        isValidate = Number(hourRange) < 24
+      }
+    }
+  return isValidate
 }
 
 </script>
