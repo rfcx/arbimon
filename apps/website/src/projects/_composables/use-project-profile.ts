@@ -30,10 +30,10 @@ export const useUpdateProjectImage = (apiClient: AxiosInstance, projectId: numbe
   })
 }
 
-export const useGetProjectInfo = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>, parems: string[], enabled: ComputedRef<boolean>): UseQueryReturnType<ProjectInfoResponse, unknown> => {
+export const useGetProjectInfo = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>, params: string[], enabled: ComputedRef<boolean>): UseQueryReturnType<ProjectInfoResponse, unknown> => {
   return useQuery({
     queryKey: ['get-project-settings'],
-    queryFn: async () => await apiBioGetProjectInfoData(apiClient, projectId.value ?? -1, parems),
+    queryFn: async () => await apiBioGetProjectInfoData(apiClient, projectId.value ?? -1, params),
     enabled
   })
 }
