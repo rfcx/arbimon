@@ -30,8 +30,10 @@ export interface GetClassifierJobsQueryParams {
 
 export type GetClassifierJobsResponse = ClassifierJob[]
 
+export const getClassifierJobsRoute = '/jobs'
+
 export const apiBioGetClassifierJobs = async (apiClientBio: AxiosInstance, projectId: string, createdBy: 'me' | 'all'): Promise<GetClassifierJobsResponse[]> => {
-  return await apiClientBio.get('/jobs', {
+  return await apiClientBio.get(getClassifierJobsRoute, {
     params: new URLSearchParams([['project', projectId.toString()], ['createdBy', createdBy]])
   }).then(res => res.data)
 }
