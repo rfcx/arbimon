@@ -10,10 +10,15 @@
     />
     <div class="flex items-center justify-start space-x-3">
       <img
+        v-if="image"
         class="w-12 h-12 rounded-full shadow"
-        :src="image ?? undefined"
+        :src="image"
         alt="user profile image"
       >
+      <div
+        v-else
+        class="w-12 h-12 rounded-full shadow bg-util-gray-03"
+      />
       <div class="ml-2">
         <h3 class="text-base font-normal font-sans">
           {{ name }}
