@@ -26,7 +26,7 @@
     @input="$emit('emitSelectTime', selectedTime.selectedHourRange)"
   >
   <span
-    v-if="isWrongFormat"
+    v-if="isValid"
     class="text-sm text-flamingo"
   >
     Wrong format, please enter e.g. 0-5, 7-11, 14, 15
@@ -39,7 +39,7 @@ import { onMounted, reactive, ref, watch } from 'vue'
 import { hours } from './time-of-day-constants'
 
 const emit = defineEmits<{(e: 'emitSelectTime', value: string): void}>()
-const isWrongFormat = ref(false)
+const isValid = ref(false)
 
 const selectedTime = reactive({
   selectedTimeType: hours.all.label,
@@ -64,7 +64,7 @@ const selectCustom = () => {
 
 watch(() => selectedTime.selectedHourRange, (hourRange) => {
   selectedTime.selectedTimeType = hourRange === '0-23' ? hours.all.label : hours.custom.label
-  isWrongFormat.value = !validate(hourRange)
+  isValid.value = !validate(hourRange)
 })
 
 const validate = (hourRange: string): boolean => {
