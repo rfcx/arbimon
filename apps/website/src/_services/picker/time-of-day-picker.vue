@@ -29,7 +29,7 @@
     v-if="isValid"
     class="text-sm text-flamingo"
   >
-    Wrong format, please enter e.g. 0-5, 7-11, 14, 15
+    Invalid hour range. Example: for recordings between 5:00 and 9:00 and between 16:00 and 20:00, use 5-8,16-19.
   </span>
 </template>
 
