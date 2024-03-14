@@ -95,7 +95,7 @@
           <span
             v-else
             class="text-base"
-          >{{ totalDurationInMinutes }} minutes of recordings</span>
+          >{{ totalDurationInMinutes.toFixed(0) }} minutes of recordings</span>
         </li>
       </ol>
       <div class="flex flex-row items-center space-x-4">
