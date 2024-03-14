@@ -20,7 +20,7 @@
           @click="openModalToDeleteProject"
         >
           Delete project
-          <icon-fas-spinner
+          <icon-custom-ic-loading
             v-if="isDeleting"
             class="animate-spin ml-2"
           />
@@ -64,7 +64,7 @@
                   </div>
                 </div>
                 <div v-if="isDeleting">
-                  <icon-fas-spinner class="my-6 mx-auto animate-spin" />
+                  <icon-custom-ic-loading class="my-6 mx-auto animate-spin" />
                 </div>
                 <div
                   v-if="isError"

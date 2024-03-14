@@ -97,7 +97,7 @@
             class="absolute z-index-10 absolute top-3 right-3"
             :class="{ hidden: !isSearchOrganizationFetching }"
           >
-            <icon-custom-input-loader class="inline w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-frequency" />
+            <icon-custom-ic-loading class="inline w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-frequency" />
             <span class="sr-only">Loading...</span>
           </div>
           <div
@@ -200,7 +200,7 @@
           @click="saveAccountSetting"
         >
           Save changes
-          <icon-fas-spinner
+          <icon-custom-ic-loading
             v-if="isUpdatingProfilePhoto || isUpdatingUserProfile"
             class="animate-spin w-4 h-4 ml-2 inline"
           />

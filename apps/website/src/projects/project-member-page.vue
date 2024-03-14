@@ -57,7 +57,7 @@
                   />
                 </div>
               </button>
-              <icon-fas-spinner
+              <icon-custom-ic-loading
                 v-if="isSearchingUsers"
                 class="absolute t-1 r-1 animate-spin h-8 w-8 text-gray-900"
               />

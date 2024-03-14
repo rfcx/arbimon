@@ -89,7 +89,7 @@
           v-if="isSaving"
           class="inline-flex"
         >
-          <icon-fas-spinner class="animate-spin" />
+          <icon-custom-ic-loading class="animate-spin" />
           <span class="ml-2">
             Saving...
           </span>

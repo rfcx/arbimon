@@ -3,7 +3,7 @@
     <div
       class="flex flex-row items-center font-display text-sm"
     >
-      <icon-fas-spinner
+      <icon-custom-ic-loading
         v-if="isLoadingProfile"
         class="animate-spin"
         aria-label="Loading"

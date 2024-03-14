@@ -44,7 +44,7 @@
             </p>
           </div>
           <div v-if="isDeleting">
-            <icon-fas-spinner class="my-6 mx-auto animate-spin" />
+            <icon-custom-ic-loading class="my-6 mx-auto animate-spin" />
           </div>
           <div
             v-if="isError"
