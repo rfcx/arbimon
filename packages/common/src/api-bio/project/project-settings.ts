@@ -17,7 +17,8 @@ export interface ProjectProfileQuery {
 }
 
 // Response types
-export type ProjectProfileUpdateBody = {
+export interface ProjectProfileUpdateBody {
+  name?: string
   hidden?: boolean
   summary?: string
   readme?: string
@@ -28,7 +29,7 @@ export type ProjectProfileUpdateBody = {
   objectives?: string[]
   dateStart?: string | null
   dateEnd?: string | null
-} & { name: string } // name is required as part of checking for permission in Core
+}
 
 export interface ProjectProfileLegacyUpdateBody {
   project: {

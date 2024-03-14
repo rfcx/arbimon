@@ -118,7 +118,6 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
     // Arrange
     const app = await makeApp(routesProject, { projectRole: 'admin' })
     const payload = {
-      name: project.name,
       slug: 'istanbul-cats-dogs-hamsters-and-rabbits-diversities' // Too long
     }
 
@@ -134,7 +133,6 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
     const app = await makeApp(routesProject, { projectRole: 'admin' })
     ;(updateProjectLegacy as any).mockResolvedValueOnce({ success: false, error: 'URL a-duplicate-slug is invalid' })
     const payload = {
-      name: project.name,
       slug: 'a-duplicate-slug' // Already exists in db
     }
 
