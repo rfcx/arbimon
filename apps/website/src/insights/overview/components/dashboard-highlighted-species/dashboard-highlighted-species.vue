@@ -16,7 +16,7 @@
       v-if="isLoading"
       class="flex justify-center"
     >
-      <icon-fas-spinner class="animate-spin w-8 h-8 lg:mx-24" />
+      <icon-custom-ic-loading class="animate-spin w-8 h-8 lg:mx-24" />
     </div>
     <HighlightedSpeciesList
       v-if="speciesList && speciesList.length > 0 && !isLoading"

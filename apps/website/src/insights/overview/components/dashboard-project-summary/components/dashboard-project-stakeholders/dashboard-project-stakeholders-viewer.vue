@@ -36,7 +36,7 @@
         v-if="loading"
         class="py-2"
       >
-        <icon-fas-spinner class="animate-spin inline w-4 h-4 mr-1" /> Loading...
+        <icon-custom-ic-loading class="animate-spin inline w-4 h-4 mr-1" /> Loading...
       </div>
       <div
         v-else

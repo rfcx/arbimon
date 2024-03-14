@@ -117,7 +117,7 @@
                   </div>
                 </li>
               </ul>
-              <icon-fas-spinner
+              <icon-custom-ic-loading
                 v-if="isLoadingSpecies"
                 class="animate-spin w-8 h-8 lg:mx-24 mx-12"
               />
@@ -174,7 +174,7 @@
                 @click="saveHighlightedSpecies"
               >
                 Select species
-                <icon-fas-spinner
+                <icon-custom-ic-loading
                   v-if="isLoadingPostSpecies || isLoadingDeleteSpecies"
                   class="ml-2 h-4 w-4 inline text-pitch group-hover:stroke-pitch"
                   :disabled="isLoadingPostSpecies || isLoadingDeleteSpecies"
