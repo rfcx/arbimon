@@ -8,9 +8,9 @@
     </div>
     <div
       v-if="!canEdit && !speciesList.length && !isLoading"
-      class="w-full rounded-lg p-6 shadow bg-util-gray-04"
+      class="w-full rounded-lg p-4 shadow bg-util-gray-04 border border-util-gray-02"
     >
-      <span>The project owner has not selected highlighted species for this project.</span>
+      <span>No content</span>
     </div>
     <div
       v-if="isLoading"
