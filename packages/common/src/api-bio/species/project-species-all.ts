@@ -2,33 +2,29 @@ import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
+import { type DashboardSpecies } from '../../api-bio/dashboard/common'
 import { type SpeciesInProjectTypes } from '../../dao/types/species-in-project'
 import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
-import { type DashboardSpecies } from '../dashboard/common'
 
 // Request types
-export type ProjectSpeciesAllParams = ProjectRouteParamsSerialized
+export type ProjectSpeciesParams = ProjectRouteParamsSerialized
+
+export type ProjectSpeciesFieldSet = 'light' | 'dashboard'
 
 export interface ProjectSpeciesQueryParams {
   limit?: number
   offset?: number
+  fields?: ProjectSpeciesFieldSet
 }
 
 // Response types
-export interface ProjectSpeciesLightResponse {
-  species: Array<SpeciesInProjectTypes['light']>
-}
-export interface ProjectSpeciesAllResponse {
-  species: DashboardSpecies[]
+export interface ProjectSpeciesResponse {
+  species: Array<SpeciesInProjectTypes[ProjectSpeciesFieldSet] | DashboardSpecies>
 }
 
 // Route
-export const projectSpeciesLightRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/species`
-export const projectSpeciesAllRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/species-all`
+export const projectSpeciesRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/species`
 
 // Service
-export const apiBioGetProjectSpeciesLight = async (apiClient: AxiosInstance, projectId: number): Promise<ProjectSpeciesLightResponse | undefined> =>
-  await apiGetOrUndefined(apiClient, `/projects/${projectId}/species`)
-
-export const apiBioGetProjectSpeciesAll = async (apiClient: AxiosInstance, projectId: number, params: ProjectSpeciesQueryParams = {}): Promise<ProjectSpeciesAllResponse | undefined> =>
-  await apiGetOrUndefined(apiClient, `/projects/${projectId}/species-all`, { params })
+export const apiBioGetProjectSpecies = async (apiClient: AxiosInstance, projectId: number, params: ProjectSpeciesQueryParams = {}): Promise<ProjectSpeciesResponse | undefined> =>
+    await apiGetOrUndefined(apiClient, `/projects/${projectId}/species`, { params })

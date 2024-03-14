@@ -20,7 +20,8 @@ export interface SpeciesInProject {
 }
 
 export const ATTRIBUTES_SPECIES_IN_PROJECT = attributes<SpeciesInProject>()({
-  light: ['taxonSpeciesId', 'taxonSpeciesSlug', 'scientificName', 'commonName', 'taxonClassSlug']
+  light: ['taxonSpeciesId', 'taxonSpeciesSlug', 'scientificName', 'commonName', 'taxonClassSlug'],
+  dashboard: ['taxonSpeciesId', 'taxonSpeciesSlug', 'scientificName', 'commonName', 'taxonClassSlug', 'riskRatingId', 'photoUrl']
 })
 
 export type SpeciesInProjectTypes = AttributeTypes< SpeciesInProject, typeof ATTRIBUTES_SPECIES_IN_PROJECT>
