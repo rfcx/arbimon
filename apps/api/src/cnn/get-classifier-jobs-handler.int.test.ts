@@ -48,7 +48,7 @@ describe('GET /jobs', async () => {
       method: 'GET',
       url: '/jobs',
       query: {
-        project: cnnProject.id.toString(),
+        project: cnnProject.idCore.toString(),
         createdBy: 'all'
       }
     })
@@ -93,7 +93,7 @@ describe('GET /jobs', async () => {
       method: 'GET',
       url: '/jobs',
       query: {
-        project: cnnProject.id.toString()
+        project: cnnProject.idCore.toString()
       }
     })
 
@@ -115,7 +115,7 @@ describe('GET /jobs', async () => {
       method: 'GET',
       url: '/jobs',
       query: {
-        project: cnnProject.id.toString(),
+        project: cnnProject.idCore.toString(),
         createdBy: 'all'
       }
     })
@@ -130,7 +130,7 @@ describe('GET /jobs', async () => {
       method: 'GET',
       url: '/jobs',
       query: {
-        project: cnnProject.id.toString(),
+        project: cnnProject.idCore.toString(),
         createdBy: 'all'
       }
     })
