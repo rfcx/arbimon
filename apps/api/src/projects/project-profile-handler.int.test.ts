@@ -105,12 +105,12 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
 
     // Assert
     expect(response.statusCode).toBe(204)
-    const projectInDatabase = await LocationProject.findOne({ where: { id: project.id } })
-    const projectProfileInDatabase = await LocationProjectProfileModel.findOne({ where: { locationProjectId: project.id } })
-    expect(projectInDatabase?.get('name')).toBe(payload.name)
-    expect(projectInDatabase?.get('slug')).toBe(payload.slug)
-    expect(projectProfileInDatabase?.get('summary')).toBe(payload.summary)
-    expect(projectProfileInDatabase?.get('keyResult')).toEqual(payload.keyResult)
+    const updatedProject = await LocationProject.findOne({ where: { id: project.id } })
+    const updatedProjectProfile = await LocationProjectProfileModel.findOne({ where: { locationProjectId: project.id } })
+    expect(updatedProject?.get('name')).toBe(payload.name)
+    expect(updatedProject?.get('slug')).toBe(payload.slug)
+    expect(updatedProjectProfile?.get('summary')).toBe(payload.summary)
+    expect(updatedProjectProfile?.get('keyResult')).toEqual(payload.keyResult)
     expect(updateProjectLegacy).toBeCalledTimes(1)
   })
 
@@ -144,6 +144,37 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
     expect(response.statusCode).toBe(400)
     const json = response.json<{ statusCode: number, error: string, message: string }>()
     expect(json.message).toBe(ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE)
+  })
+
+  test('cannot set hidden when published', async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { projectRole: 'admin' })
+    const payload = {
+      hidden: true
+    }
+
+    // Act
+    const response = await app.inject({ method: PATCH, url, payload })
+
+    // Assert
+    expect(response.statusCode).toBe(400)
+  })
+
+  test('can set hidden when listed', async () => {
+    // Arrange
+    const app = await makeApp(routesProject, { projectRole: 'admin' })
+    await LocationProject.upsert({ ...project, status: 'listed' })
+    const payload = {
+      hidden: true
+    }
+
+    // Act
+    const response = await app.inject({ method: PATCH, url, payload })
+
+    // Assert
+    expect(response.statusCode).toBe(204)
+    const updatedProject = await LocationProject.findOne({ where: { id: project.id } })
+    expect(updatedProject?.status).toBe('hidden')
   })
 })
 
