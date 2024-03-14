@@ -185,7 +185,7 @@ const isViewingAsGuest = computed(() => {
 
 const startShareInsightsNavigation = ref<InsightsPublishStatus>('idle')
 
-const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['readme', 'keyResults', 'resources', 'methods', 'countryCodes', 'image'], computed(() => true))
+const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['readme', 'keyResults', 'resources', 'methods', 'countryCodes'], computed(() => true))
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 
 // eslint-disable-next-line regex/invalid
