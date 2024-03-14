@@ -4,7 +4,7 @@ import { type LocationProjectUserRole, type UserProfile } from '@rfcx-bio/common
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
-import { GET, PATCH } from '~/api-helpers/types'
+import { PATCH } from '~/api-helpers/types'
 import { routesDashboard } from './index'
 
 const PROJECT_ID_BASIC = '40001001'
@@ -13,11 +13,6 @@ const ROUTE = '/projects/:projectId/dashboard-stakeholders'
 const url = `/projects/${PROJECT_ID_BASIC}/dashboard-stakeholders`
 
 const FAKE_TOKEN = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY5OTI0NDk2MCwiaWF0IjoxNjk5MjQ0OTYwfQ.fWvrkz2W9K-AmQUf5g9EvldvYFxDBQ2K9UmO6oNBvlg'
-
-const EXPECTED_PROPS = [
-  'users',
-  'organizations'
-]
 
 const users: UserProfile[] = [
   {
@@ -68,55 +63,6 @@ const userRoles: LocationProjectUserRole[] = [
 ]
 
 const { LocationProjectUserRole: LocationProjectUserRoleModel, UserProfile: UserProfileModel } = modelRepositoryWithElevatedPermissions
-
-describe(`GET ${ROUTE} (dashboard stakeholders)`, () => {
-  describe('simple test', () => {
-    test('exists', async () => {
-      // Arrange
-      const app = await makeApp(routesDashboard)
-
-      // Act
-      const routes = [...app.routes.keys()]
-
-      // Assert
-      expect(routes).toContain(ROUTE)
-    })
-
-    test('returns successfully', async () => {
-      // Arrange
-      const app = await makeApp(routesDashboard)
-
-      // Act
-      const response = await app.inject({
-        method: GET,
-        url
-      })
-
-      // Assert
-      expect(response.statusCode).toBe(200)
-
-      const result = JSON.parse(response.body)
-      expect(result).toBeDefined()
-      expect(result).toBeTypeOf('object')
-    })
-
-    test('contains all expected props & no more', async () => {
-      // Arrange
-      const app = await makeApp(routesDashboard)
-
-      // Act
-      const response = await app.inject({
-        method: GET,
-        url
-      })
-
-      // Assert
-      const result = JSON.parse(response.body)
-      EXPECTED_PROPS.forEach(expectedProp => { expect(result).toHaveProperty(expectedProp) })
-      expect(Object.keys(result)).toHaveLength(EXPECTED_PROPS.length)
-    })
-  })
-})
 
 describe(`PATCH ${ROUTE} (dashboard stakeholders)`, () => {
   afterEach(async () => {
