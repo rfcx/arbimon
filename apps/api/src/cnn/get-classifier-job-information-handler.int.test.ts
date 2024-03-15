@@ -24,7 +24,6 @@ describe('GET /jobs/:jobId', async () => {
       url: `/jobs/${jobId}`
     })
 
-
     // Assert
     expect(response.statusCode).toEqual(200)
     const json = response.json()
