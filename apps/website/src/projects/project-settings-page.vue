@@ -128,7 +128,6 @@ import { useRoute, useRouter } from 'vue-router'
 
 import { type ProjectProfileUpdateBody, ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
-import { isValidSlug } from '@rfcx-bio/utils/string/slug'
 
 import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
 import { urlWrapper } from '@/_services/images/url-wrapper'
@@ -265,12 +264,6 @@ const save = () => {
     errorMessage.value = dateError
     return
   }
-  if (!isValidSlug(newSlug.value ?? '')) {
-    hasFailed.value = true
-    errorMessage.value = 'Failed! URL must be lowercase letters, numbers, and dashes (-).'
-    return
-  }
-
   hasFailed.value = false
   isSaving.value = true
   updateSettings()
