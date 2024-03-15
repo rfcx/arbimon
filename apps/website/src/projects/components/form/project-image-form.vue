@@ -65,12 +65,53 @@ const selectPhoto = async (): Promise<void> => {
 }
 
 const uploadPhoto = async (e: Event): Promise<void> => {
+  const maxWidth = 600
+  const maxHeigt = 600
+  let width = maxWidth
+  let height = maxHeigt
+
   const target = e.target as HTMLInputElement
-  const file: File = (target.files as FileList)[0]
-  emit('emitProjectImage', file)
+  let file: File = (target.files as FileList)[0]
   const readerUrl = new FileReader()
   readerUrl.addEventListener('load', e => {
     uploadedPhotoUrl.value = e.target?.result as string
+    const img = new Image()
+      img.src = e.target?.result as string
+      img.onload = () => {
+        if (img.width > maxWidth && img.height > maxHeigt) {
+          if (img.height > img.width) {
+            height = maxHeigt
+            const ration = maxHeigt / img.height
+            width = Math.round(img.width * ration)
+          } else {
+            width = maxWidth
+            const ration = maxWidth / img.width
+            height = Math.round(img.height * ration)
+          }
+        } else if (img.width > maxWidth) {
+          width = maxWidth
+          const ration = maxWidth / img.width
+          height = Math.round(img.height * ration)
+        } else if (img.height > maxHeigt) {
+          height = maxHeigt
+          const ration = maxHeigt / img.height
+          width = Math.round(img.width * ration)
+        } else {
+          return emit('emitProjectImage', file)
+        }
+
+        const canvas = document.createElement('canvas')
+        canvas.width = width
+        canvas.height = height
+        const image = new Image()
+        image.src = e.target?.result as string
+        canvas.getContext('2d')?.drawImage(image, 0, 0, width, height)
+        canvas.toBlob((blob) => {
+          if (!blob) return
+          file = new File([blob], 'converted-image.jpg', { type: 'image/jpeg' })
+          return emit('emitProjectImage', file)
+        }, 'image/jpeg')
+      }
   })
   readerUrl.readAsDataURL(file)
 }
