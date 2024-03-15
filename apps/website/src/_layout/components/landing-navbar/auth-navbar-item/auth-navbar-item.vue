@@ -65,7 +65,7 @@
             class="px-4 py-2 rounded-lg hover:(bg-moss cursor-pointer text-frequency)"
             @click="logout"
           >
-            Sign out
+            Log out
           </li>
         </ul>
       </div>
