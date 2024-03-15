@@ -65,6 +65,10 @@ export interface ClassifierJobAll {
 }
 
 // Service
+
+/**
+ * @deprecated please use [`apiBioGetClassifierJobs`] instead. The function resides in `src/api-bio/cnn/classifier-jobs.ts`
+ */
 export const apiCoreGetClassifierJobAll = async (apiClient: AxiosInstance, params: ClassifierJobAllParams = {}): Promise<ClassifierJobAll> => {
   const res = await apiClient.get<ClassifierJobAllResponse>('/classifier-jobs', { params })
   if (!Array.isArray(res.data)) return { total: 0, items: [] }
