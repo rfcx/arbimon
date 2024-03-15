@@ -138,21 +138,21 @@ describe('GET /jobs', async () => {
     expect(response.statusCode).toEqual(200)
     const json = response.json()
     expect(json).toHaveLength(1)
-    expect(json[0]).toHaveProperty([
-      'id',
-      'classifierId',
-      'projectId',
-      'queryStreams',
-      'queryStart',
-      'queryEnd',
-      'queryHours',
-      'minutesTotal',
-      'minutesComlpleted',
-      'status',
-      'createdById',
-      'createdAt',
-      'completedAt',
-      'classifier'
-    ])
+    expect(json.status).toEqual('done')
+    expect(json).toHaveProperty('id')
+    expect(json).toHaveProperty('classifierId')
+    expect(json).toHaveProperty('projectId')
+    expect(json).toHaveProperty('queryStreams')
+    expect(json).toHaveProperty('queryStart')
+    expect(json).toHaveProperty('queryEnd')
+    expect(json).toHaveProperty('queryHours')
+    expect(json).toHaveProperty('minutesTotal')
+    expect(json).toHaveProperty('minutesCompleted')
+    expect(json).toHaveProperty('status')
+    expect(json).toHaveProperty('createdById')
+    expect(json).toHaveProperty('createdAt')
+    expect(json).toHaveProperty('completedAt')
+    expect(json).toHaveProperty('classifier')
+    expect(json).toHaveProperty('streams')
   })
 })

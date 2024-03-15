@@ -1,7 +1,14 @@
 import { type AxiosInstance } from 'axios'
 
-import { type CLASSIFIER_JOB_LABELS } from '../../api-core/classifier-job/classifier-job-status'
+export const CLASSIFIER_JOB_LABELS = {
+  0: 'queued',
+  20: 'running',
+  30: 'done',
+  40: 'error',
+  50: 'cancelled'
+} as const
 
+// Response type
 export interface ClassifierJob {
   id: number
   classifierId: number
@@ -23,15 +30,18 @@ export interface ClassifierJob {
   }
 }
 
+export type GetClassifierJobsResponse = ClassifierJob[]
+
+// Request type
 export interface GetClassifierJobsQueryParams {
   project: string
   createdBy?: 'me' | 'all'
 }
 
-export type GetClassifierJobsResponse = ClassifierJob[]
-
+// Route
 export const getClassifierJobsRoute = '/jobs'
 
+// Service
 export const apiBioGetClassifierJobs = async (apiClientBio: AxiosInstance, projectId: string, createdBy: 'me' | 'all'): Promise<GetClassifierJobsResponse[]> => {
   return await apiClientBio.get(getClassifierJobsRoute, {
     params: new URLSearchParams([['project', projectId.toString()], ['createdBy', createdBy]])
