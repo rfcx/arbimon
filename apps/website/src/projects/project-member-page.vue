@@ -188,7 +188,7 @@
           </div>
         </div>
 
-        <DialogMember
+        <alertDialog
           :success="success"
           :title="title"
           :message="message"
@@ -207,7 +207,7 @@ import { useRoute } from 'vue-router'
 import type { UserTypes } from '@rfcx-bio/common/dao/types'
 import { type ProjectRole } from '@rfcx-bio/common/roles'
 
-import DialogMember from '@/_components/dialog_member.vue'
+import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientKey } from '@/globals'
 import { useProjectUserPermissionsStore, useStore } from '~/store'
 import { useAddProjectMember, useDeleteProjectMember, useGetProjectMembers, useSearchUsers, useUpdateProjectMember } from './_composables/use-project-member'
@@ -363,13 +363,7 @@ const addSelectedUser = ():void => {
   if (userSearchValue.value === '') return
   const isDuplicate = users.value?.some(user => user.email === userSearchValue.value) ?? false
   if (isDuplicate) {
-    showAlert.value = true
-    success.value = false
-    title.value = 'Duplicate'
-    message.value = 'The user is already a project member'
-    setTimeout(() => {
-        showAlert.value = false
-  }, 7000)
+    showAlertDialog(false, 'Duplicate', 'The user is already a project member')
   } else {
   mutatePostProjectMember({
     email: userSearchValue.value,
@@ -377,22 +371,10 @@ const addSelectedUser = ():void => {
   }, {
     onSuccess: () => {
       usersRefetch()
-      showAlert.value = true
-      success.value = true
-      title.value = 'Success'
-      message.value = 'New Project member added successfully'
-      setTimeout(() => {
-        showAlert.value = false
-  }, 7000)
+      showAlertDialog(true, 'Success', 'New Project member added successfully')
     },
     onError: () => {
-      showAlert.value = true
-      success.value = false
-      title.value = 'Error'
-      message.value = 'failed to add project member'
-      setTimeout(() => {
-        showAlert.value = false
-  }, 7000)
+      showAlertDialog(false, 'Error', 'Failed to add project member')
 }
   })
 }
@@ -423,10 +405,20 @@ onMounted(() => {
   initTooltips()
 })
 
-const success = ref(false)
+const success = ref()
 const title = ref('')
 const message = ref('')
 const showAlert = ref(false)
+
+const showAlertDialog = (successValue: boolean, titleValue: string, messageValue: string, hideAfter = 7000) => {
+  showAlert.value = true
+  success.value = successValue
+  title.value = titleValue
+  message.value = messageValue
+  setTimeout(() => {
+    showAlert.value = false
+  }, hideAfter)
+}
 
 </script>
 

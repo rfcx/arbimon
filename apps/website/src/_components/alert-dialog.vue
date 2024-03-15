@@ -1,14 +1,14 @@
 <template>
   <!-- Dialog Success -->
   <Transition
-    v-if="showAlert"
+    v-if="showAlert && success"
+    severity="success"
     enter-active-class="transition opacity 400ms ease-out"
     leave-active-class="transition opacity 400ms ease-out"
     enter-from-class="opacity-0 transition opacity 700ms ease-out"
     leave-to-class="opacity-0 transition opacity 700ms ease-out"
   >
     <div
-      v-if="success"
       id="targetElement"
       class="flex absolute bottom-4 justify-around items-center p-4 mb-4 rounded-lg text-white bg-white shadow dark:bg-moss border-1 border-util-gray-02 rounded text-sm w-fit transition-opacity duration-700 ease-out"
       role="alert"
@@ -41,12 +41,21 @@
         />
       </button>
     </div>
+  </Transition>
 
+  <Transition
+    v-else-if="showAlert && !success"
+    severity="error"
+    enter-active-class="transition opacity 400ms ease-out"
+    leave-active-class="transition opacity 400ms ease-out"
+    enter-from-class="opacity-0 transition opacity 700ms ease-out"
+    leave-to-class="opacity-0 transition opacity 700ms ease-out"
+  >
     <div
-      v-else
       id="targetElement"
       class="flex absolute bottom-4 justify-around items-center p-4 mb-4 rounded-lg bg-rose-200 border-1 border-l-4 border-ibis rounded text-moss text-sm w-fit"
       role="alert"
+      severity="error"
     >
       <icon-custom-alert-triangle
         class="h-6 w-6 cursor-pointer item-center"
