@@ -82,43 +82,8 @@ watch(() => selectedTime.selectedHourRange, (hourRange) => {
 })
 
 const validate = (hourRange: string): boolean => {
-  let isValidate = false
-
-  if (hourRange.includes(',')) {
-    const hourItems = hourRange.split(',')
-    if (hourItems[0] === '' || hourItems[hourItems.length - 1] === '') {
-      isValidate = false
-    } else {
-        hourItems.forEach(h => {
-        if (h.includes('-')) {
-          const hour = h.split('-')
-          if (hour[0] === '' || hour[1] === '') {
-            isValidate = false
-          } else if (Number(hour[0]) < 24 && Number(hour[1]) < 24) {
-            isValidate = true
-          } else {
-            isValidate = false
-          }
-        } else {
-          isValidate = Number(h) < 24
-        }
-      })
-    }
-  } else {
-    if (hourRange.includes('-')) {
-        const hour = hourRange.split('-')
-        if (hour[0] === '' || hour[1] === '') {
-          isValidate = false
-        } else if (Number(hour[0]) < 24 && Number(hour[1]) < 24) {
-          isValidate = true
-        } else {
-          isValidate = false
-        }
-      } else {
-        isValidate = Number(hourRange) < 24
-      }
-    }
-  return isValidate
+  const regexpassword = /^(\b(0?[0-9]|1[0-9]|2[0-3])\b)(((-|,)\b(0?[0-9]|1[0-9]|2[0-3])\b)?)+$/
+  return regexpassword.test(hourRange)
 }
 
 </script>
