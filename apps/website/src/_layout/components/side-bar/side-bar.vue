@@ -192,7 +192,7 @@
               <span class="p-0.5">
                 <icon-custom-fi-log-out />
               </span>
-              <span class="ml-2 hidden group-hover:block">Sign Out</span>
+              <span class="ml-2 hidden group-hover:block">Log out</span>
             </li>
           </ul>
           <div class="my-4 border-t-1 border-util-gray-03" />
