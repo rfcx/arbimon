@@ -98,7 +98,7 @@ const updateProjectComputedColumns = async (ids: number[], sequelize: Sequelize,
       FROM location_project left join (select location_project_id, latitude, longitude FROM location_site WHERE latitude != 0 AND latitude is not null) s ON location_project.id = s.location_project_id GROUP BY 1)
     UPDATE location_project
     SET latitude_north = subquery.latitude_min, latitude_south = subquery.latitude_max, longitude_east = subquery.longitude_min, longitude_west = subquery.longitude_max, updated_at = now()
-    FROM subquery WHERE location_project.id = subquery.id and locatiqon_project.id = $id
+    FROM subquery WHERE location_project.id = subquery.id and location_project.id = $id
   `
   const failed: Array<Omit<SyncError, 'syncSourceId' | 'syncDataTypeId'>> = []
   for (const id of ids) {
