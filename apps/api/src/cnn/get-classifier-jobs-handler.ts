@@ -2,7 +2,7 @@ import { type GetClassifierJobsQueryParams, type GetClassifierJobsResponse } fro
 
 import { type Handler } from '~/api-helpers/types'
 import { BioMissingQueryParamError } from '~/errors'
-import { getClassifierJobsFromApi } from './get-classifier-jobs-bll'
+import { getClassifierJobs } from './get-classifier-jobs-bll'
 
 export const getClassifierJobsHandler: Handler<GetClassifierJobsResponse, unknown, GetClassifierJobsQueryParams, unknown> = async (req) => {
   const token = req.headers.authorization ?? ''
@@ -15,6 +15,6 @@ export const getClassifierJobsHandler: Handler<GetClassifierJobsResponse, unknow
     throw BioMissingQueryParamError('project')
   }
 
-  const classifierJobs = await getClassifierJobsFromApi(token, req.query)
+  const classifierJobs = await getClassifierJobs(token, req.query)
   return classifierJobs
 }
