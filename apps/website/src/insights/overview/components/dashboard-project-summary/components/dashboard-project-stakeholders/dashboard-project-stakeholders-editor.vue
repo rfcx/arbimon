@@ -179,7 +179,7 @@
           v-model="selectedOrganizationIds"
           :name="o.name"
           :description="o.description"
-          :image="o.image"
+          :image="handleImageUrl(o.image)"
         />
       </div>
     </div>
@@ -279,6 +279,11 @@ const togglePrimaryContact = (userId: number, email: string, isPrimaryContact: b
 const toggleAllUsersSelect = (): void => {
   isAllUsersSelected.value = !isAllUsersSelected.value
   selectedProjectMembers.value = isAllUsersSelected.value ? props.projectMembers.map(u => u.email) : []
+}
+
+const handleImageUrl = (url: string | undefined): string | undefined => {
+  const isValidUrl = /^[^\s]+\.(jpg|jpeg|png)/i.test(url ?? '')
+  return isValidUrl ? url : undefined
 }
 
 const openOrganizationSearch = async () => {
