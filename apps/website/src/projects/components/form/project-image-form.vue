@@ -66,9 +66,9 @@ const selectPhoto = async (): Promise<void> => {
 
 const uploadPhoto = async (e: Event): Promise<void> => {
   const maxWidth = 600
-  const maxHeigt = 600
+  const maxHeight = 600
   let width = maxWidth
-  let height = maxHeigt
+  let height = maxHeight
 
   const target = e.target as HTMLInputElement
   let file: File = (target.files as FileList)[0]
@@ -78,10 +78,10 @@ const uploadPhoto = async (e: Event): Promise<void> => {
     const img = new Image()
       img.src = e.target?.result as string
       img.onload = () => {
-        if (img.width > maxWidth && img.height > maxHeigt) {
+        if (img.width > maxWidth && img.height > maxHeight) {
           if (img.height > img.width) {
-            height = maxHeigt
-            const ration = maxHeigt / img.height
+            height = maxHeight
+            const ration = maxHeight / img.height
             width = Math.round(img.width * ration)
           } else {
             width = maxWidth
@@ -92,9 +92,9 @@ const uploadPhoto = async (e: Event): Promise<void> => {
           width = maxWidth
           const ration = maxWidth / img.width
           height = Math.round(img.height * ration)
-        } else if (img.height > maxHeigt) {
-          height = maxHeigt
-          const ration = maxHeigt / img.height
+        } else if (img.height > maxHeight) {
+          height = maxHeight
+          const ration = maxHeight / img.height
           width = Math.round(img.width * ration)
         } else {
           return emit('emitProjectImage', file)
