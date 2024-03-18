@@ -90,8 +90,8 @@ const mappings = {
     species: {
       type: 'object',
       properties: {
-        scientific_name: { type: 'text' },
-        common_name: { type: 'text' },
+        scientific_name: { type: 'keyword' },
+        common_name: { type: 'keyword' },
         taxon_class: { type: 'keyword' },
         risk_rating: { type: 'keyword' },
         is_threatened: { type: 'boolean' }

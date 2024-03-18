@@ -95,7 +95,7 @@ beforeEach(async () => {
       taxonClassId: taxonSpecies?.taxonClassId ?? 0,
       count: 2,
       countsByMinute: [[11, 1], [14, 1]]
-    },
+    }
   ]
   await DetectionBySiteSpeciesHour.bulkCreate(detections.map(r => literalizeCountsByMinute(r, sequelize)))
 
