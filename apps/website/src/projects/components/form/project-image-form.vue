@@ -50,8 +50,7 @@ import { computed, onMounted, ref } from 'vue'
 
 import IconIInfo from '../icon-i-info.vue'
 
-const maxWidth = 600
-const maxHeight = 600
+const maxSize = 1200
 
 const props = defineProps<{ isDisabled?: boolean, image?: string }>()
 
@@ -62,10 +61,6 @@ const uploadedPhotoUrl = ref('')
 const projectImage = computed(() => {
   return uploadedPhotoUrl.value ? uploadedPhotoUrl.value : props.image
 })
-
-const widthAndHeightIsInRange = (img: HTMLImageElement) => {
-  return img.width < maxWidth && img.height < maxHeight
-}
 
 const selectPhoto = async (): Promise<void> => {
   document.getElementById('profileFileUpload')?.click()
@@ -80,51 +75,34 @@ const uploadPhoto = async (e: Event): Promise<void> => {
     const img = new Image()
     img.src = e.target?.result as string
     img.onload = () => {
-      if (widthAndHeightIsInRange(img)) {
+      if (img.width < maxSize && img.height < maxSize) {
         return emit('emitProjectImage', file)
       } else {
-        resize(e, img, file)
+        resize(img)
       }
     }
   })
   readerUrl.readAsDataURL(file)
 }
 
-const resize = (e: Event, img: HTMLImageElement, file: File) => {
-  let width = maxWidth
-  let height = maxHeight
-
-  if (img.width > maxWidth && img.height > maxHeight) {
-    if (img.height > img.width) {
-      height = maxHeight
-      const ration = maxHeight / img.height
-      width = Math.round(img.width * ration)
-    } else {
-      width = maxWidth
-      const ration = maxWidth / img.width
-      height = Math.round(img.height * ration)
-    }
-  } else if (img.width > maxWidth) {
-    width = maxWidth
-    const ration = maxWidth / img.width
-    height = Math.round(img.height * ration)
-  } else {
-    height = maxHeight
-    const ration = maxHeight / img.height
-    width = Math.round(img.width * ration)
-  }
-
+const resize = (img: HTMLImageElement) => {
+  const sizeImage = getSize(img.width, img.height, maxSize)
   const canvas = document.createElement('canvas')
-  canvas.width = width
-  canvas.height = height
-
-  let newfile: File = file
-  canvas.getContext('2d')?.drawImage(img, 0, 0, width, height)
+  canvas.width = sizeImage.width
+  canvas.height = sizeImage.height
+  canvas.getContext('2d')?.drawImage(img, 0, 0, sizeImage.width, sizeImage.height)
   canvas.toBlob((blob) => {
     if (!blob) return
-    newfile = new File([blob], 'converted-image.jpg', { type: 'image/jpeg' })
+    const newfile = new File([blob], 'converted-image.jpg', { type: 'image/jpeg' })
     return emit('emitProjectImage', newfile)
   }, 'image/jpeg')
+}
+
+const getSize = (imageWidth: number, imageHeight: number, maxSize: number): {width: number, height: number} => {
+  const oldBiggestDimension = Math.max(imageWidth, imageHeight)
+  const maxNewSize = Math.min(oldBiggestDimension, maxSize)
+  const ratio = oldBiggestDimension === 0 ? oldBiggestDimension : maxNewSize / oldBiggestDimension
+  return { width: ratio * imageWidth, height: ratio * imageHeight }
 }
 
 onMounted(() => {
