@@ -13,7 +13,7 @@
         v-if="image"
         class="w-12 h-12 rounded-full shadow"
         :src="image"
-        alt="user profile image"
+        alt="organization image"
       >
       <div
         v-else
