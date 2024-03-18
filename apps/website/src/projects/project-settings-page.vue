@@ -288,9 +288,11 @@ const updateSettings = () => {
 
   mutateProjectSettings(update, {
     onSuccess: () => {
-      isSaving.value = false
-      lastUpdated.value = true
-      lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+      if (profileImageForm.value === undefined) {
+        isSaving.value = false
+        lastUpdated.value = true
+        lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+      }
       store.updateProjectName(newName.value)
       dashboardStore.updateProjectObjectives(newObjectives.value)
       dashboardStore.updateProjectSummary(newSummary.value)
@@ -314,7 +316,17 @@ const updateSettings = () => {
   })
   if (profileImageForm.value !== undefined) {
     mutatePatchProfilePhoto(profileImageForm.value, {
-      onSuccess: async () => { }
+      onSuccess: async () => {
+        isSaving.value = false
+        lastUpdated.value = true
+        lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+      },
+      onError: () => {
+        isSaving.value = false
+        hasFailed.value = true
+        lastUpdated.value = false
+        errorMessage.value = DEFAULT_ERROR_MSG + ' The photo upload was unsuccessful.'
+      }
     })
   }
 }
