@@ -50,6 +50,9 @@ import { computed, onMounted, ref } from 'vue'
 
 import IconIInfo from '../icon-i-info.vue'
 
+const maxWidth = 600
+const maxHeight = 600
+
 const props = defineProps<{ isDisabled?: boolean, image?: string }>()
 
 const emit = defineEmits<{(e: 'emitProjectImage', file: File): void}>()
@@ -60,60 +63,68 @@ const projectImage = computed(() => {
   return uploadedPhotoUrl.value ? uploadedPhotoUrl.value : props.image
 })
 
+const widthAndHeightIsInRange = (img: HTMLImageElement) => {
+  return img.width < maxWidth && img.height < maxHeight
+}
+
 const selectPhoto = async (): Promise<void> => {
   document.getElementById('profileFileUpload')?.click()
 }
 
 const uploadPhoto = async (e: Event): Promise<void> => {
-  const maxWidth = 600
-  const maxHeight = 600
-  let width = maxWidth
-  let height = maxHeight
-
   const target = e.target as HTMLInputElement
-  let file: File = (target.files as FileList)[0]
+  const file: File = (target.files as FileList)[0]
   const readerUrl = new FileReader()
   readerUrl.addEventListener('load', e => {
     uploadedPhotoUrl.value = e.target?.result as string
     const img = new Image()
-      img.src = e.target?.result as string
-      img.onload = () => {
-        if (img.width > maxWidth && img.height > maxHeight) {
-          if (img.height > img.width) {
-            height = maxHeight
-            const ration = maxHeight / img.height
-            width = Math.round(img.width * ration)
-          } else {
-            width = maxWidth
-            const ration = maxWidth / img.width
-            height = Math.round(img.height * ration)
-          }
-        } else if (img.width > maxWidth) {
-          width = maxWidth
-          const ration = maxWidth / img.width
-          height = Math.round(img.height * ration)
-        } else if (img.height > maxHeight) {
-          height = maxHeight
-          const ration = maxHeight / img.height
-          width = Math.round(img.width * ration)
-        } else {
-          return emit('emitProjectImage', file)
-        }
-
-        const canvas = document.createElement('canvas')
-        canvas.width = width
-        canvas.height = height
-        const image = new Image()
-        image.src = e.target?.result as string
-        canvas.getContext('2d')?.drawImage(image, 0, 0, width, height)
-        canvas.toBlob((blob) => {
-          if (!blob) return
-          file = new File([blob], 'converted-image.jpg', { type: 'image/jpeg' })
-          return emit('emitProjectImage', file)
-        }, 'image/jpeg')
+    img.src = e.target?.result as string
+    img.onload = () => {
+      if (widthAndHeightIsInRange(img)) {
+        return emit('emitProjectImage', file)
+      } else {
+        resize(e, img, file)
       }
+    }
   })
   readerUrl.readAsDataURL(file)
+}
+
+const resize = (e: Event, img: HTMLImageElement, file: File) => {
+  let width = maxWidth
+  let height = maxHeight
+
+  if (img.width > maxWidth && img.height > maxHeight) {
+    if (img.height > img.width) {
+      height = maxHeight
+      const ration = maxHeight / img.height
+      width = Math.round(img.width * ration)
+    } else {
+      width = maxWidth
+      const ration = maxWidth / img.width
+      height = Math.round(img.height * ration)
+    }
+  } else if (img.width > maxWidth) {
+    width = maxWidth
+    const ration = maxWidth / img.width
+    height = Math.round(img.height * ration)
+  } else {
+    height = maxHeight
+    const ration = maxHeight / img.height
+    width = Math.round(img.width * ration)
+  }
+
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+
+  let newfile: File = file
+  canvas.getContext('2d')?.drawImage(img, 0, 0, width, height)
+  canvas.toBlob((blob) => {
+    if (!blob) return
+    newfile = new File([blob], 'converted-image.jpg', { type: 'image/jpeg' })
+    return emit('emitProjectImage', newfile)
+  }, 'image/jpeg')
 }
 
 onMounted(() => {
