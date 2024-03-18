@@ -27,7 +27,7 @@ describe('GET /jobs/:jobId', async () => {
     // Assert
     expect(response.statusCode).toEqual(200)
     const json = response.json()
-    expect(json.status).toEqual('done')
+    expect(json.status).toEqual(30)
   })
 
   test('person with incorrect email cannot get information out from this API', async () => {
@@ -83,6 +83,6 @@ describe('GET /jobs/:jobId', async () => {
     expect(json).toHaveProperty('classifier')
     expect(json).toHaveProperty('streams')
     expect(json).toHaveProperty('validationStatus')
-    expect(json.status).toEqual('done')
+    expect(json.status).toEqual(30)
   })
 })

@@ -19,7 +19,7 @@ export interface ClassifierJob {
   queryHours: string
   minutesTotal: number
   minutesCompleted: number
-  status: typeof CLASSIFIER_JOB_LABELS[keyof typeof CLASSIFIER_JOB_LABELS]
+  status: keyof typeof CLASSIFIER_JOB_LABELS
   createdById: number
   createdAt: string
   completedAt: string | null
