@@ -14,7 +14,7 @@
       class="grid gap-x-4 gap-y-2 text-base text-insight"
     >
       <template
-        v-for="key in Object.entries(props.data?.reviewStatus ?? {})"
+        v-for="key in Object.entries(props.data ?? {})"
         :key="'validation-status-' + key[0]"
       >
         <div class="grid grid-cols-4">
@@ -32,11 +32,11 @@ import numeral from 'numeral'
 import type { Ref } from 'vue'
 import { computed, ref } from 'vue'
 
-import { type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
+import { type ValidationStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 import ComponentError from './component-error.vue'
 
-const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectValidationResultsResponse | undefined }>(), {
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: ValidationStatus | undefined }>(), {
   isLoading: true,
   isError: false,
   data: undefined
@@ -48,11 +48,6 @@ const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, d
  * `total` - (`uncertain` + `confirmed` + `rejected`)
  */
 const validationStatusValue = (key: string, value: number): number => {
-  if (key === 'total') {
-    const sum = (props.data?.reviewStatus.uncertain ?? 0) + (props.data?.reviewStatus.confirmed ?? 0) + (props.data?.reviewStatus.rejected ?? 0)
-    return (props.data?.reviewStatus.total ?? 0) - sum
-  }
-
   return value
 }
 
@@ -60,20 +55,20 @@ const validationStatusName = (key: string): string => {
   if (key === 'total') {
     return 'Unreviewed'
   }
-
+console.info(key)
   return validationStatusMap.value[key]
 }
 
 const validationStatusMap: Ref<Record<string, string>> = ref({
-  rejected: 'Not Present',
-  uncertain: 'Unknown',
-  confirmed: 'Present',
-  total: 'Total'
+  notPresent: 'Not Present',
+  unknown: 'Unknown',
+  present: 'Present',
+  unvalidated: 'Unvalidated'
 })
 
 const totalDetection = computed(() => {
-  const value = props.data?.reviewStatus
-  return (value?.confirmed ?? 0) + (value?.rejected ?? 0) + (value?.total ?? 0) + (value?.uncertain ?? 0)
+  const value = props.data
+  return (value?.notPresent ?? 0) + (value?.present ?? 0) + (value?.unknown ?? 0) + (value?.unvalidated ?? 0)
 })
 
 const getValidationPercentage = (x: number, total: number): string => {

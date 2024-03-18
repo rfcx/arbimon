@@ -56,13 +56,13 @@
         <div>
           <span class="text-util-gray-01">Validation Status</span>
           <job-result-validation-status
-            :is-loading="props.isLoadingResults"
-            :is-error="props.isErrorResults"
-            :data="props.results"
+            :is-loading="props.isLoadingSummary"
+            :is-error="props.isErrorSummary"
+            :data="props.summary?.validationStatus"
           />
         </div>
         <div>
-          <span class="text-util-gray-01">Output</span>
+          <span class="text-util-gray-01 hidden">Output</span>
         </div>
       </div>
     </div>
@@ -73,8 +73,7 @@
 import dayjs from 'dayjs'
 import { computed } from 'vue'
 
-import type { DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
-import type { DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
+import type { GetClassifierJobInformationResponse } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { hours } from '~/picker/time-of-day-constants'
@@ -82,7 +81,7 @@ import { useStore } from '~/store'
 import jobInformationStatus from './job-information-status.vue'
 import JobResultValidationStatus from './job-result-validation-status.vue'
 
-const props = withDefaults(defineProps<{ isLoadingSummary: boolean, isErrorSummary: boolean, summary: DetectSummaryResponse | undefined, isLoadingResults: boolean, isErrorResults: boolean, results: DetectValidationResultsResponse | undefined }>(), {
+const props = withDefaults(defineProps<{ isLoadingSummary: boolean, isErrorSummary: boolean, summary: GetClassifierJobInformationResponse | undefined}>(), {
   isLoadingSummary: true,
   isLoadingResults: true,
   isErrorResults: false,
