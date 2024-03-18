@@ -18,11 +18,11 @@
     </button>
   </div>
   <input
-    id="timeOfDayInput"
     v-model="selectedTime.selectedHourRange"
     type="text"
     placeholder="e.g. 0-5, 7-11, 14, 15"
     class="p-2 mt-4 bg-pitch h-11 text-base w-full border border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
+    :onkeypress="setOnKeyPress"
     @input="$emit('emitSelectTime', selectedTime.selectedHourRange)"
   >
   <span
@@ -46,22 +46,16 @@ const selectedTime = reactive({
   selectedHourRange: hours.all.value
 })
 
-const setOnKeyPress = () => {
-  const timeOfDayInput = document.querySelector('#timeOfDayInput')
-  if (timeOfDayInput === null) return
-  timeOfDayInput.addEventListener('keypress', (e) => {
-    const event = e as KeyboardEvent
-    if (event.keyCode !== 44 && event.keyCode !== 45 && !(event.charCode > 47 && event.charCode < 58)) {
-        if (!parseInt(String.fromCharCode(event.which))) {
-            event.preventDefault()
-        }
-    }
-  })
+const setOnKeyPress = (event: KeyboardEvent) => {
+  if (event.keyCode !== 44 && event.keyCode !== 45 && !(event.charCode > 47 && event.charCode < 58)) {
+      if (!parseInt(String.fromCharCode(event.which))) {
+          event.preventDefault()
+      }
+  }
 }
 
 onMounted(() => {
   emit('emitSelectTime', selectedTime.selectedHourRange)
-  setOnKeyPress()
 })
 
 const selectAllDay = () => {
@@ -82,8 +76,8 @@ watch(() => selectedTime.selectedHourRange, (hourRange) => {
 })
 
 const validate = (hourRange: string): boolean => {
-  const regexpassword = /^(\b(0?[0-9]|1[0-9]|2[0-3])\b)(((-|,)\b(0?[0-9]|1[0-9]|2[0-3])\b)?)+$/
-  return regexpassword.test(hourRange)
+  const validateFormat = /^(\b(0?[0-9]|1[0-9]|2[0-3])\b)(((-|,)\b(0?[0-9]|1[0-9]|2[0-3])\b)?)+$/
+  return validateFormat.test(hourRange)
 }
 
 </script>
