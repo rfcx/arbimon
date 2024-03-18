@@ -12,4 +12,14 @@ export interface AbbreviatedProject {
 export interface ExpandedProject extends AbbreviatedProject {
   expanded_country_names: string[]
   expanded_objectives: string[]
+  species: ProjectSpecies[]
+}
+
+export interface ProjectSpecies {
+  scientific_name: string
+  common_name: string
+  taxon_class: string
+  is_threatened: boolean
+  risk_rating?: string
+  code?: string
 }

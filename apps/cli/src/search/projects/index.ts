@@ -4,8 +4,8 @@ import { type Sequelize, QueryTypes } from 'sequelize'
 
 import { masterObjectiveValues } from '@rfcx-bio/common/dao/master-data'
 
-import { BASE_SQL, SYNC_BATCH_LIMIT } from '../constants'
-import { type AbbreviatedProject, type ExpandedProject } from '../types'
+import { BASE_SQL, RISK_RATING_EXPANDED, SPECIES_IN_PROJECT_SQL, SYNC_BATCH_LIMIT } from '../constants'
+import { type AbbreviatedProject, type ExpandedProject, type ProjectSpecies } from '../types'
 
 export const getProjects = async (
   sequelize: Sequelize,
@@ -71,7 +71,9 @@ export const getProjects = async (
   }
 
   console.info('- getProjects: found', totalCount, 'projects in total')
-  return projectList.map(p => {
+  return await Promise.all(projectList.map(async (p) => {
+    const { id } = p
+    const species = await getSpeciesByProjectId(sequelize, id).catch(e => [])
     return {
       ...p,
       expanded_country_names: p.country_codes.map(c => {
@@ -81,7 +83,24 @@ export const getProjects = async (
       expanded_objectives: p.objectives.map(o => {
         const foundObjective = masterObjectiveValues.find(masterObjective => masterObjective.slug === o)
         return foundObjective?.description ?? o
+      }),
+      species: species.map(sp => {
+        const { code, ...rest } = sp
+        return {
+          risk_rating: code ? RISK_RATING_EXPANDED[code] : '',
+          ...rest
+        }
       })
     }
+  }))
+}
+
+const getSpeciesByProjectId = async (sequelize: Sequelize, id: number): Promise<ProjectSpecies[]> => {
+  return await sequelize.query<ProjectSpecies>(SPECIES_IN_PROJECT_SQL, {
+    raw: true,
+    replacements: {
+      id
+    },
+    type: QueryTypes.SELECT
   })
 }

@@ -32,6 +32,31 @@ export const BASE_SQL = `
   left join location_project_metric on location_project.id = location_project_metric.location_project_id
   where `
 
+export const SPECIES_IN_PROJECT_SQL = `
+  select 
+    s.scientific_name, 
+    s.common_name, 
+    s.taxon_class_slug as taxon_class, 
+    r.is_threatened, 
+    r.code
+  from species_in_project s 
+  left join risk_rating_iucn r on r.id = s.risk_rating_id
+  where location_project_id = :id`
+
 export const PROJECTS_INDEX_NAME = 'projects'
 export const ORGANIZATIONS_INDEX_NAME = 'organizations'
 export const SYNC_BATCH_LIMIT = 1000
+
+export const RISK_RATING_EXPANDED: Record<string, string> = {
+    NL: 'Not Listed',
+    NE: 'Not Evaluated',
+    DD: 'Data Deficient',
+    LC: 'Least Concern',
+    NT: 'Near Threatened',
+    VU: 'Vulnerable',
+    EN: 'Endangered',
+    CR: 'Critically Endangered',
+    RE: 'Regionally Extinct',
+    EW: 'Extinct in the Wild',
+    EX: 'Extinct'
+}

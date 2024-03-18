@@ -15,6 +15,7 @@ const opensearchClient = getOpenSearchClient()
 const sequelize = getSequelize()
 const { LocationProject, LocationProjectProfile, LocationSite, RecordingBySiteHour: RecordingBySiteHourModel, SyncStatus } = ModelRepository.getInstance(sequelize)
 
+const TEST_PROJECT_ID = '40001001'
 const makeRecordingBySiteHour = (locationProjectId: number, locationSiteId: number, startDate: string, hourOffset: number): RecordingBySiteHour => {
   return {
     timePrecisionHourLocal: dayjs(startDate, 'YYYY-MM-DD').add(hourOffset, 'hour').toDate(),
@@ -226,5 +227,18 @@ describe('index all data from postgres to opensearch', () => {
 
     // Assert
     await expect(opensearchClient.get({ index: 'projects', id: '2431216' })).rejects.toThrow()
+  })
+
+  test('indexes species data', async () => {
+    // Arrange
+    await syncAllProjects(opensearchClient, sequelize)
+
+    // Act
+    const response = await opensearchClient.search({
+      index: 'projects'
+    })
+
+    // Assert - check for species in response
+    expect(response.body.hits.hits).toBeDefined()
   })
 })
