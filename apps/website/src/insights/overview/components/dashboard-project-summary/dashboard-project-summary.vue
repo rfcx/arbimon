@@ -244,7 +244,7 @@ const isEnabled = computed(() => {
   return isAboutTabEditing.value !== true || isMethodsTabEditing.value !== true || isKeyResultTabEditing.value !== true || isResourcesTabEditing.value !== true
 })
 
-const { isLoading, data: profile, refetch: refetchContent } = useGetProjectInfo(apiClientBio, computed(() => store.selectedProject?.id ?? -1), ['readme', 'keyResults', 'resources', 'methods'], isEnabled)
+const { isLoading, data: profile } = useGetProjectInfo(apiClientBio, computed(() => store.selectedProject?.id ?? -1), ['readme', 'keyResults', 'resources', 'methods'], isEnabled)
 
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
 
@@ -257,12 +257,10 @@ const updateReadme = (value: string): void => {
     onSuccess: async () => {
       isAboutTabViewMored.value = value.length !== 0
       isAboutTabEditing.value = false
-      await refetchContent()
     },
     onError: async () => {
       isAboutTabViewMored.value = true
       isAboutTabEditing.value = true
-      await refetchContent()
     }
   })
 }
@@ -276,12 +274,10 @@ const updateKeyResult = (value: string): void => {
     onSuccess: async () => {
       isKeyResultTabViewMored.value = value.length !== 0
       isKeyResultTabEditing.value = false
-      await refetchContent()
     },
     onError: async () => {
       isKeyResultTabViewMored.value = true
       isKeyResultTabEditing.value = true
-      await refetchContent()
     }
   })
 }
@@ -295,12 +291,10 @@ const updateResources = (value: string): void => {
     onSuccess: async () => {
       isResourcesTabViewMored.value = value.length !== 0
       isResourcesTabEditing.value = false
-      await refetchContent()
     },
     onError: async () => {
       isResourcesTabViewMored.value = true
       isResourcesTabEditing.value = true
-      await refetchContent()
     }
   })
 }
@@ -318,12 +312,10 @@ const updateMethods = (value: string): void => {
     onSuccess: async () => {
       isMethodsTabViewMored.value = value.length !== 0
       isMethodsTabEditing.value = false
-      await refetchContent()
     },
     onError: async () => {
       isMethodsTabViewMored.value = true
       isResourcesTabEditing.value = true
-      await refetchContent()
     }
   })
 }
