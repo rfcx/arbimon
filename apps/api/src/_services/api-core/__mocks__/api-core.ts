@@ -28,7 +28,8 @@ export const getClassifierJobs = vi.fn(async (): Promise<CoreClassifierJob[]> =>
         id: 105,
         name: 'BioDiv_Caribbean_PuertoRico_USFW',
         version: 3
-      }
+      },
+      totalDistinctClassifications: 5
     }
   ]
 })
