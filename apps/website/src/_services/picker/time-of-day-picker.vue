@@ -26,7 +26,7 @@
     @input="$emit('emitSelectTime', selectedTime.selectedHourRange)"
   >
   <span
-    v-if="isValid"
+    v-if="isValid && selectedTime.selectedHourRange !== ''"
     class="text-sm text-flamingo"
   >
     Invalid hour range. Example: for recordings between 5:00 and 9:00 and between 16:00 and 20:00, use 5-8,16-19.
