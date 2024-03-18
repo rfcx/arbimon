@@ -9,6 +9,7 @@
         Projects
       </router-link>
     </li>
+
     <li>
       <router-link
         :to="{ name: ROUTE_NAMES.landingHowItWorks }"
@@ -103,6 +104,15 @@
         </ul>
       </div>
     </li>
+    <li v-if="store.user">
+      <router-link
+        :to="{ name: ROUTE_NAMES.myProjects }"
+        exact-active-class="text-gray-900 dark:text-insight tab-active"
+        class="lg:hidden block tab relative"
+      >
+        My Projects
+      </router-link>
+    </li>
     <li>
       <div
         v-if="!store.user"
@@ -112,6 +122,15 @@
           @click="login"
         >
           Log in / sign up
+        </button>
+      </div>
+
+      <div v-else>
+        <button
+          class="lg:hidden block font-medium px-3 py-2 dark:text-insight dark:hover:text-frequency !text-gray-900 !dark:text-insight"
+          @click="logout"
+        >
+          Log out
         </button>
       </div>
     </li>
@@ -141,6 +160,10 @@ onMounted(() => {
 
 const login = async (): Promise<void> => {
   await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, prompt: 'login' })
+}
+
+const logout = async (): Promise<void> => {
+  await auth.logout({ returnTo: window.location.origin })
 }
 
 </script>

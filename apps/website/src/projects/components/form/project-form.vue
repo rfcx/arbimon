@@ -24,6 +24,7 @@
   <ProjectDateRangeForm
     :initial-date-start="dateStart !== null ? new Date(dateStart) : undefined"
     :initial-date-end="dateEnd !== null ? new Date(dateEnd) : undefined"
+    :on-going="onGoing"
     :is-disabled="isDisabled"
     @emit-select-date-range="onSelectDateRange"
   />
@@ -85,9 +86,9 @@ onMounted(() => {
   }
 })
 
-watch(() => props.dateStart, (dateStartValue) => {
-  if (!dateStartValue) return
-  const start = dayjs(dateStartValue).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+watch(() => props.dateStart, (newValue, oldValue) => {
+  if (!newValue || newValue?.toDateString() === oldValue?.toDateString()) return
+  const start = dayjs(newValue).format('YYYY-MM-DD') + 'T00:00:00.000Z'
   startDate.value = start
 
   onGoing.value = !props.dateEnd

@@ -2,13 +2,13 @@
   <div class="flex items-center justify-start space-x-3 py-4 pr-4">
     <img
       v-if="image"
-      class="w-12 h-12 rounded-full shadow"
+      class="w-12 h-12 mr-3 rounded-full shadow"
       :src="image"
       alt="user profile image"
     >
     <div
       v-else
-      class="w-12 h-12 rounded-full shadow bg-util-gray-03"
+      class="w-12 h-12 mr-3 rounded-full shadow bg-util-gray-03"
     />
     <div>
       <span

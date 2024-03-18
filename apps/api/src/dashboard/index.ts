@@ -81,6 +81,7 @@ export const routesDashboard: RouteRegistration[] = [
   {
     method: GET,
     url: dashboardStakeholdersRoute,
+    preHandler: [requireProjectPermission('read-insights')],
     handler: dashboardStakeholdersHandler
   },
   {

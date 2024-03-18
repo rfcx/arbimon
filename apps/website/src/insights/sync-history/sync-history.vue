@@ -7,7 +7,7 @@
       v-if="isLoading"
       class="flex"
     >
-      <icon-fas-spinner class="animate-spin inline mr-1" /> Loading...
+      <icon-custom-ic-loading class="animate-spin inline mr-1" /> Loading...
     </div>
 
     <!-- STATE: Error -->

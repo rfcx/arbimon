@@ -97,12 +97,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import frogImage from '@/_assets/landing/media-player/ameerega-trivittata.png'
 import frogSound from '@/_assets/landing/media-player/ameerega-trivittata.wav'
-import monkeyImage from '@/_assets/landing/media-player/hylobates-agilis.png'
+import frogImage from '@/_assets/landing/media-player/ameerega-trivittata.webp'
 import monkeySound from '@/_assets/landing/media-player/hylobates-agilis.wav'
-import birdImage from '@/_assets/landing/media-player/psilopogon-pyrolophus.png'
+import monkeyImage from '@/_assets/landing/media-player/hylobates-agilis.webp'
 import birdSound from '@/_assets/landing/media-player/psilopogon-pyrolophus.wav'
+import birdImage from '@/_assets/landing/media-player/psilopogon-pyrolophus.webp'
 import MediaPlayer from '../components/media-player.vue'
 import { type MediaHeroContent } from '../data/type'
 

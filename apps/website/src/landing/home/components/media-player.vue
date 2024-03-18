@@ -6,7 +6,7 @@
       class="w-8"
       @click="togglePlay"
     >
-      <icon-fas-spinner
+      <icon-custom-ic-loading
         v-if="isLoading"
         class="animate-spin"
         aria-label="Loading"

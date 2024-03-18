@@ -17,7 +17,10 @@ export const dashboardStakeholdersHandler: Handler<DashboardStakeholdersResponse
   }
 
   const organizations = await getProjectStakeholders(projectIdInteger)
-  const users = await getProjectUsers(projectIdInteger)
+
+  const { projectRole } = req
+  const includeAllMembers = projectRole === 'admin' || projectRole === 'owner'
+  const users = await getProjectUsers(projectIdInteger, !includeAllMembers)
 
   return {
     users,

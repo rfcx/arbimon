@@ -117,7 +117,7 @@
                   </div>
                 </li>
               </ul>
-              <icon-fas-spinner
+              <icon-custom-ic-loading
                 v-if="isLoadingSpecies"
                 class="animate-spin w-8 h-8 lg:mx-24 mx-12"
               />
@@ -174,7 +174,7 @@
                 @click="saveHighlightedSpecies"
               >
                 Select species
-                <icon-fas-spinner
+                <icon-custom-ic-loading
                   v-if="isLoadingPostSpecies || isLoadingDeleteSpecies"
                   class="ml-2 h-4 w-4 inline text-pitch group-hover:stroke-pitch"
                   :disabled="isLoadingPostSpecies || isLoadingDeleteSpecies"
@@ -191,7 +191,8 @@
 import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 
-import { type ProjectSpeciesAllResponse, apiBioGetProjectSpeciesAll } from '@rfcx-bio/common/api-bio/species/project-species-all'
+import type { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
+import { type ProjectSpeciesFieldSet, type ProjectSpeciesResponse, apiBioGetProjectSpecies } from '@rfcx-bio/common/api-bio/species/project-species-all'
 
 import { apiClientKey } from '@/globals'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
@@ -225,7 +226,6 @@ const PAGE_SIZE = 10
 const currentPage = ref(1)
 
 const speciesList = ref<HighlightedSpeciesRow[]>([])
-
 watch(() => props.toggleShowModal, async () => {
   fillExistingSpeciesSlug()
   speciesList.value = []
@@ -240,17 +240,19 @@ const fetchProjectsSpecies = async (limit: number, offset: number) => {
   isLoadingSpecies.value = true
 
   if (selectedProjectId.value === undefined) return
-  const projectSpecies = await apiBioGetProjectSpeciesAll(apiClientBio, selectedProjectId.value, { limit, offset })
+  const fields: ProjectSpeciesFieldSet = 'dashboard'
+  const projectSpecies = await apiBioGetProjectSpecies(apiClientBio, selectedProjectId.value, { limit, offset, fields })
 
   if (projectSpecies === undefined) {
     isLoadingSpecies.value = false
     return
   }
 
-  const s = projectSpecies as ProjectSpeciesAllResponse
+  const s = projectSpecies as ProjectSpeciesResponse
   hasFetchedAll.value = s.species.length < limit // check if reaching the end
 
-  s.species.forEach(({ slug, taxonSlug, scientificName, commonName, riskId, photoUrl }) => {
+  s.species.forEach(sp => {
+    const { slug, taxonSlug, scientificName, commonName, photoUrl, riskId } = sp as DashboardSpecies
     speciesList.value.push({
       slug,
       taxonSlug,

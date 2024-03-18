@@ -4,7 +4,7 @@
     action-name="Loading"
     class="hover:cursor-not-allowed"
   >
-    <icon-fas-spinner
+    <icon-custom-ic-loading
       class="animate-spin"
       :class="'text-' + size"
     />
