@@ -13,9 +13,10 @@ import { getOpenSearchClient } from './opensearch/utilities'
 
 const opensearchClient = getOpenSearchClient()
 const sequelize = getSequelize()
-const { LocationProject, LocationProjectProfile, LocationSite, RecordingBySiteHour: RecordingBySiteHourModel, SyncStatus } = ModelRepository.getInstance(sequelize)
+const { LocationProject, LocationProjectProfile, LocationSite, RecordingBySiteHour: RecordingBySiteHourModel, SyncStatus, DetectionBySiteSpeciesHour, TaxonSpecies } = ModelRepository.getInstance(sequelize)
 
-const TEST_PROJECT_ID = '40001001'
+const SPECIES_REQUIRED_FIELDS = ['scientific_name', 'common_name', 'taxon_class', 'is_threatened', 'risk_rating']
+
 const makeRecordingBySiteHour = (locationProjectId: number, locationSiteId: number, startDate: string, hourOffset: number): RecordingBySiteHour => {
   return {
     timePrecisionHourLocal: dayjs(startDate, 'YYYY-MM-DD').add(hourOffset, 'hour').toDate(),
@@ -29,6 +30,7 @@ const makeRecordingBySiteHour = (locationProjectId: number, locationSiteId: numb
 
 // Before any test we recreate data in postgres
 beforeEach(async () => {
+  // Create projects
   const project1 = makeProject(2431213, 'Fullham Diversity', 'listed')
   const project2 = makeProject(2431214, 'Nottingham Diversity', 'hidden') // hidden by user
   const project3 = makeProject(2431215, 'Westham Diversity', 'unlisted') // not enough recordings to be existed on the page
@@ -38,6 +40,7 @@ beforeEach(async () => {
   await LocationProject.create(project3)
   await LocationProject.create(project4)
 
+  // Create sites for two projects that are going to be in the index
   const project1Site = {
     id: 99221144,
     idCore: 'alskdmfiiee',
@@ -71,12 +74,40 @@ beforeEach(async () => {
     return literalizeCountsByMinute(makeRecordingBySiteHour(project4.id, project4Site.id, '2024-01-02', i), sequelize)
   })
   await RecordingBySiteHourModel.bulkCreate(p4s1recordings)
+
+  // Create detections to be able to add species to indexed documents
+  const taxonSpecies = await TaxonSpecies.findOne()
+  const detections = [
+    {
+      locationSiteId: 99221144,
+      locationProjectId: 2431213,
+      timePrecisionHourLocal: new Date(),
+      taxonSpeciesId: taxonSpecies?.id ?? 0,
+      taxonClassId: taxonSpecies?.taxonClassId ?? 0,
+      count: 2,
+      countsByMinute: [[11, 1], [14, 1]]
+    },
+    {
+      locationSiteId: 84958833,
+      locationProjectId: 2431216,
+      timePrecisionHourLocal: new Date(),
+      taxonSpeciesId: taxonSpecies?.id ?? 0,
+      taxonClassId: taxonSpecies?.taxonClassId ?? 0,
+      count: 2,
+      countsByMinute: [[11, 1], [14, 1]]
+    },
+  ]
+  await DetectionBySiteSpeciesHour.bulkCreate(detections.map(r => literalizeCountsByMinute(r, sequelize)))
+
+  // Refresh views
+  await sequelize.query('REFRESH MATERIALIZED VIEW location_project_recording_metric')
   await sequelize.query('REFRESH MATERIALIZED VIEW location_project_recording_metric')
 })
 
 // destroy data in postgres
 afterEach(async () => {
   const locationProjectIds = [2431213, 2431214, 2431215, 2431216]
+  await DetectionBySiteSpeciesHour.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } }, force: true })
   await RecordingBySiteHourModel.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
   await LocationProjectProfile.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
   await LocationSite.destroy({ where: { locationProjectId: { [Op.in]: locationProjectIds } } })
@@ -229,7 +260,7 @@ describe('index all data from postgres to opensearch', () => {
     await expect(opensearchClient.get({ index: 'projects', id: '2431216' })).rejects.toThrow()
   })
 
-  test('indexes species data', async () => {
+  test('indexed projects include species array', async () => {
     // Arrange
     await syncAllProjects(opensearchClient, sequelize)
 
@@ -240,5 +271,28 @@ describe('index all data from postgres to opensearch', () => {
 
     // Assert - check for species in response
     expect(response.body.hits.hits).toBeDefined()
+    expect(response.body.hits.hits[0]._source.species).toBeDefined()
+  })
+
+  test('species array within indexed documents contains the correct data', async () => {
+    // Arrange
+    await syncAllProjects(opensearchClient, sequelize)
+
+    // Act
+    const response = await opensearchClient.search({
+      index: 'projects'
+    })
+
+    // Assert - check for species data in response
+    expect(response.body.hits.hits).toBeDefined()
+    const hits = response.body.hits.hits
+    const speciesReduced = hits.reduce((acc: Array<Record<string, any>>, hit: { _source: { species: Array<Record<string, any>> } }) => {
+      const species = hit._source.species
+      acc.push(...species)
+      return acc
+    }, [])
+    speciesReduced.forEach((sp: Array<Record<string, any>>) => {
+      SPECIES_REQUIRED_FIELDS.forEach(field => { expect(sp).toHaveProperty(field) })
+    })
   })
 })
