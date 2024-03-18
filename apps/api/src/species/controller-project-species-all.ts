@@ -10,7 +10,6 @@ import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
 import { type Handler } from '../_services/api-helpers/types'
 import { getSequelize } from '../_services/db'
 import { assertPathParamsExist } from '../_services/validation'
-import {FindAndCountOptions} from "sequelize";
 
 export const projectSpeciesHandler: Handler<ProjectSpeciesResponse, ProjectSpeciesParams, ProjectSpeciesQueryParams> = async (req) => {
   // Inputs & validation
@@ -47,7 +46,7 @@ export const getProjectSpecies = async (locationProjectId: number, params: Proje
     offset
   })
 
-  const { rows: species, count: total } = result
+  const { rows: species = [], count: total = 0 } = result
 
   if (fields === 'dashboard') {
     const dashboardSpecies = species.map(({ taxonSpeciesSlug, taxonClassSlug, scientificName, commonName, riskRatingId, photoUrl }) => {
