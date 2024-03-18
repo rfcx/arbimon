@@ -38,7 +38,7 @@
       <icon-custom-ft-actual-bird
         v-if="stat.value === 'species'"
       />
-      <icon-fas-spinner
+      <icon-custom-ic-loading
         v-if="stat.isLoading && stat.count === undefined"
         class="animate-spin h-8 w-8 text-white"
       />

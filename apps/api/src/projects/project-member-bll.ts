@@ -18,7 +18,7 @@ export const addProjectMember = async (token: string, locationProjectId: number,
   }
 
   const userRole = await getRoleIdByProjectAndUser(locationProjectId, userId)
-  if (userRole === undefined) {
+  if (userRole !== undefined) {
     return
   }
 

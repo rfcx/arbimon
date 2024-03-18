@@ -17,14 +17,19 @@ export interface ProjectProfileQuery {
 }
 
 // Response types
-export type ProjectProfileUpdateBody = {
+export interface ProjectProfileUpdateBody {
+  name?: string
   hidden?: boolean
   summary?: string
+  readme?: string
+  keyResult?: string
+  resources?: string
+  methods?: string
   slug?: string
   objectives?: string[]
   dateStart?: string | null
   dateEnd?: string | null
-} & { name: string } // name is required as part of checking for permission in Core
+}
 
 export interface ProjectProfileLegacyUpdateBody {
   project: {
@@ -45,13 +50,18 @@ export type ProjectInfoResponse = Pick<Project, 'name' | 'slug'>
     isPublic: boolean
     countryCodes?: string[]
     readme?: string
-    keyResults?: string
+    keyResult?: string
+    resources?: string
+    methods?: string
     metrics?: ProjectMetrics
     image?: string
     richnessByTaxon?: ApiStack
   }
 
 export type ProjectSettingsResponse = Omit<ProjectInfoResponse, 'readme' | 'keyResults' | 'metrics'>
+
+export const ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE = 'Slug is not unique'
+export const ERROR_MESSAGE_UPDATE_PROJECT_SET_HIDDEN_WHEN_PUBLISHED = 'Cannot set hidden when published'
 
 export const ATTRIBUTES_PROJECT_INFO_RESPONSE = attributes<ProjectInfoResponse>()({
 })

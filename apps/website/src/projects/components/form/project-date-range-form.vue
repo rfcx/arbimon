@@ -14,7 +14,7 @@
           type="date"
           :disabled="isDisabled"
           placeholder="Choose date"
-          format="MM/DD/YYYY"
+          format="DD/MM/YYYY"
           :disabled-date="disabledStartDateRange"
         />
       </div>
@@ -34,7 +34,7 @@
           type="date"
           :disabled="isDisabled || onGoing"
           placeholder="Choose date"
-          format="MM/DD/YYYY"
+          format="DD/MM/YYYY"
           :disabled-date="disabledEndDateRange"
         />
       </div>
@@ -112,12 +112,18 @@ const onSelectOnGoing = () => {
   if (onGoing.value) { dateEnd.value = '' }
 }
 
-watch(() => props.initialDateEnd, (newValue) => {
+watch(() => props.initialDateEnd, (newValue, oldValue) => {
+  if (newValue?.toDateString() === oldValue?.toDateString()) return
   dateEnd.value = newValue !== undefined ? dateLocalIso(newValue) : ''
 })
 
-watch(() => props.initialDateStart, (newValue) => {
+watch(() => props.initialDateStart, (newValue, oldValue) => {
+  if (newValue?.toDateString() === oldValue?.toDateString()) return
   dateStart.value = newValue !== undefined ? dateLocalIso(newValue) : ''
+})
+
+watch(() => props.onGoing, (newValue) => {
+  onGoing.value = newValue
 })
 
 watch(() => value.value, (newValue) => {

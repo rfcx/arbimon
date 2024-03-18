@@ -1,6 +1,13 @@
 <template>
   <section class="text-center lg:w-52">
-    <h1 class="text-flamingo">
+    <icon-custom-ic-loading
+      v-if="loading"
+      class="mb-4 h-8"
+    />
+    <h1
+      v-else
+      class="text-flamingo"
+    >
       {{ valueShortScale }}
     </h1>
     <p class="text-sm font-medium">
@@ -17,6 +24,7 @@ import { computed } from 'vue'
 const props = defineProps<{
   title: string
   number: number
+  loading: boolean
 }>()
 
 const valueShortScale = computed(() => {

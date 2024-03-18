@@ -46,7 +46,7 @@ describe(`GET ${ROUTE} (dashboard content)`, () => {
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -64,7 +64,7 @@ describe(`GET ${ROUTE} (dashboard content)`, () => {
 
     test('contains all expected props & no more', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -83,12 +83,12 @@ describe(`GET ${ROUTE} (dashboard content)`, () => {
 describe(`PATCH ${ROUTE} (dashboard content)`, () => {
   describe('insert when initial rows are empty', async () => {
     beforeEach(async () => {
-      await LocationProjectProfile.destroy({ where: { locationProjectId: PROJECT_ID_BASIC } })
+      await LocationProjectProfile.destroy({ where: { locationProjectId: PROJECT_ID_BASIC }, force: true })
     })
 
     test('insert to summary', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'admin' })
 
       // Act
       const response = await app.inject({
@@ -119,7 +119,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('insert to readme', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'admin' })
 
       // Act
       const response = await app.inject({
@@ -150,7 +150,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('insert to keyResult', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'admin' })
 
       // Act
       const response = await app.inject({
@@ -181,7 +181,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('insert to resources', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'admin' })
 
       // Act
       const response = await app.inject({
@@ -212,7 +212,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('insert to methods', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'admin' })
 
       // Act
       const response = await app.inject({
@@ -249,7 +249,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('try editing summary', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'admin' })
 
       // Act
       const response = await app.inject({
@@ -280,7 +280,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('try editing readme', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'admin' })
 
       // Act
       const response = await app.inject({
@@ -311,7 +311,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('try editing keyResult', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'admin' })
 
       // Act
       const response = await app.inject({
@@ -342,7 +342,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('try editing resources', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'admin' })
 
       // Act
       const response = await app.inject({
@@ -373,7 +373,7 @@ describe(`PATCH ${ROUTE} (dashboard content)`, () => {
 
     test('try editing methods', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'admin' })
 
       // Act
       const response = await app.inject({

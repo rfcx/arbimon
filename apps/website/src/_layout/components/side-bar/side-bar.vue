@@ -27,7 +27,7 @@
             </router-link>
           </div>
           <div class="my-4 border-t-1 border-util-gray-03" />
-          <ul class="px-2 flex flex-col gap-y-3 border-gray-200 dark:border-gray-700">
+          <ul class="sidebar-items px-2 flex flex-col gap-y-3 border-gray-200 dark:border-gray-700">
             <li
               v-for="item in items"
               :key="item.title"
@@ -192,7 +192,7 @@
               <span class="p-0.5">
                 <icon-custom-fi-log-out />
               </span>
-              <span class="ml-2 hidden group-hover:block">Sign Out</span>
+              <span class="ml-2 hidden group-hover:block">Log out</span>
             </li>
           </ul>
           <div class="my-4 border-t-1 border-util-gray-03" />
@@ -402,6 +402,17 @@ onMounted(() => {
 })
 </script>
 <style lang="scss">
+
+.sidebar-items {
+  .router-link-active {
+    --tw-text-opacity: 1;
+    color: rgba(30, 28, 19, var(--tw-text-opacity));
+    border-radius: 0.25rem;
+    --tw-bg-opacity: 1;
+    background-color: rgba(255, 254, 252, var(--tw-bg-opacity));
+  }
+}
+
 button[aria-expanded=true] .fa-chevron-up {
   display: inline-block;
 }

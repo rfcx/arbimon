@@ -12,7 +12,13 @@ import { isValidToken } from '~/api-helpers/is-valid-token'
 import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
-import { type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore } from './types'
+import {
+  type CoreClassifierJob,
+  type CoreClassifierJobClassificationSummary,
+  type CoreClassifierJobInformation,
+  type DetectDetectionsQueryParamsCore,
+  type DetectDetectionsResponseCore
+} from './types'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 
@@ -100,6 +106,96 @@ export async function updateDetectionReviewFromApi (token: string, classifierJob
   }
 }
 
+export async function getClassifierJobs (token: string, query: { project: string, createdBy?: 'me' | 'all' }): Promise<CoreClassifierJob[]> {
+  try {
+    const response = await axios.request<CoreClassifierJob[]>({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifier-jobs`,
+      headers: {
+        authorization: token
+      },
+      params: {
+        projects: query?.project ? [query.project] : [],
+        created_by: query?.createdBy ? query?.createdBy : 'all',
+        fields: [
+          'id',
+          'classifier_id',
+          'project_id',
+          'query_streams',
+          'query_start',
+          'query_end',
+          'query_hours',
+          'minutes_total',
+          'minutes_completed',
+          'status',
+          'created_by_id',
+          'created_at',
+          'completed_at',
+          'classifier'
+        ]
+      }
+    })
+
+    return response.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getClassifierJobInformation (token: string, jobId: number): Promise<CoreClassifierJobInformation> {
+  try {
+    const resp = await axios.request<CoreClassifierJobInformation>({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifier-jobs/${jobId}`,
+      headers: {
+        authorization: token
+      },
+      params: {
+        fields: [
+          'id',
+          'classifier_id',
+          'project_id',
+          'minutes_completed',
+          'minutes_total',
+          'created_by_id',
+          'created_at',
+          'completed_at',
+          'status',
+          'query_start',
+          'query_end',
+          'query_hours',
+          'query_streams',
+          'classifier',
+          'streams'
+        ]
+      }
+    })
+
+    return resp.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getClassifierJobTotalDetectionsCount (token: string, jobId: number): Promise<CoreClassifierJobClassificationSummary> {
+  try {
+    const resp = await axios.request({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifier-jobs/${jobId}/summary`,
+      headers: {
+        authorization: token
+      }
+    })
+
+    return resp.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+/**
+ * @deprecated because the bll from the route that calls this function will be deprecated
+ */
 export async function getDetectionsStatusFromApi (token: string, jobId: number, query: DetectSummaryQueryParams): Promise<DetectSummaryResponse> {
   try {
     const resp = await axios.request<DetectSummaryResponse>({
@@ -117,6 +213,9 @@ export async function getDetectionsStatusFromApi (token: string, jobId: number, 
   }
 }
 
+/**
+ * @deprecated because the bll that calls this function will be deprecated
+ */
 export async function getClassifierJobResultsFromApi (token: string, jobId: number, query: DetectValidationResultsQueryParams): Promise<DetectValidationResultsResponse> {
   try {
     const resp = await axios.request({

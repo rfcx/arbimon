@@ -32,7 +32,7 @@ describe(`GET ${ROUTE} (dashboard-species-data)`, () => {
 
     test('returns successfully', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
@@ -50,7 +50,7 @@ describe(`GET ${ROUTE} (dashboard-species-data)`, () => {
 
     test('contains all expected props & no more', async () => {
       // Arrange
-      const app = await makeApp(routesDashboard)
+      const app = await makeApp(routesDashboard, { projectRole: 'user' })
 
       // Act
       const response = await app.inject({
