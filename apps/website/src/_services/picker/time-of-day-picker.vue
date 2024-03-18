@@ -22,7 +22,7 @@
     type="text"
     placeholder="e.g. 0-5, 7-11, 14, 15"
     class="p-2 mt-4 bg-pitch h-11 text-base w-full border border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
-    :onkeypress="setOnKeyPress"
+    :onBeforeinput="onBeforeinput"
     @input="$emit('emitSelectTime', selectedTime.selectedHourRange)"
   >
   <span
@@ -46,11 +46,13 @@ const selectedTime = reactive({
   selectedHourRange: hours.all.value
 })
 
-const setOnKeyPress = (event: KeyboardEvent) => {
-  if (event.keyCode !== 44 && event.keyCode !== 45 && !(event.charCode > 47 && event.charCode < 58)) {
-      if (!parseInt(String.fromCharCode(event.which))) {
-          event.preventDefault()
-      }
+const onBeforeinput = (e: Event) => {
+  const inputEvent = e as InputEvent
+  if (inputEvent.inputType === 'insertText' || inputEvent.inputType === 'insertFromPaste') {
+    const data = inputEvent.data
+    if (data !== ',' && data !== '-' && data !== '0' && !(Number(data))) {
+      e.preventDefault()
+    }
   }
 }
 

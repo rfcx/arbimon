@@ -95,7 +95,7 @@
           <span
             v-else
             class="text-base"
-          >{{ totalDurationInMinutes.toFixed(0) }} minutes of recordings</span>
+          >{{ formatNumberWithCommas(totalDurationInMinutes) }} minutes of recordings</span>
         </li>
       </ol>
       <div class="flex flex-row items-center space-x-4">
@@ -251,6 +251,10 @@ const errors = computed(() => validated.value ? [errorProject.value, errorPermis
 const totalDurationInMinutes = computed(() => {
   return recordingData.value?.totalDurationInMinutes ?? 0
 })
+
+const formatNumberWithCommas = (totalDuration: number) => {
+  return totalDuration.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
 
 // Create job (call API)
 const createJob = async (): Promise<void> => {
