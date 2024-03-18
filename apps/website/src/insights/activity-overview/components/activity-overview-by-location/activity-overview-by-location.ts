@@ -76,7 +76,15 @@ export default class ActivityOverviewByLocation extends Vue {
     return this.datasets.map((d, idx) => ({ ...DEFAULT_NON_ZERO_STYLE, color: this.store.datasetColors[idx] }))
   }
 
-  propagateMapMove (mapMoveEvent: MapMoveEvent): void { this.mapMoveEvent = mapMoveEvent }
+  propagateMapMove (mapMoveEvent: MapMoveEvent): void {
+    if (this.datasets.length > 1 && this.mapMoveEvent !== null) {
+      // only adjust zoom level for multi-dataset maps
+      this.mapMoveEvent.zoom = 10
+    } else {
+      this.mapMoveEvent = mapMoveEvent
+    }
+  }
+
   propagateMapGroundStyle (style: MapboxGroundStyle): void { this.mapGroundStyle = style }
   propagateMapStatisticsStyle (style: MapboxStatisticsStyle): void { this.mapStatisticsStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }
