@@ -190,7 +190,7 @@
             :key="`${s.id}-${s.name}-search`"
             :name="s.name"
             :description="s.description"
-            :image="handleImageUrl(s.image)"
+            :image="s.image"
             @emit-add-to-selected-organization="onAddNewOrganizationFromSearch"
           />
         </div>
@@ -444,10 +444,4 @@ const saveProfilePhoto = async (): Promise<void> => {
     }
   })
 }
-
-const handleImageUrl = (url: string | undefined): string | undefined => {
-  const isValidUrl = /^[^\s]+\.(jpg|jpeg|png)/i.test(url ?? '')
-  return isValidUrl ? url : undefined
-}
-
 </script>
