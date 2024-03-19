@@ -22,6 +22,7 @@
           size="large"
           :color="item.riskRating.color"
           :title="item.riskRating.label"
+          :style="{ color: item.riskRating.text }"
         >
           {{ item.riskRating.code }}
         </el-tag>

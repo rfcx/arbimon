@@ -15,7 +15,7 @@
     </section-title>
     <div
       class="grid gap-2 mt-2"
-      :class="{ [`xl:grid-cols-${columnCount}`]: true }"
+      :class="{ [`md:grid-cols-${columnCount}`]: true }"
     >
       <map-base-component
         v-for="(dataset, idx) in datasets"

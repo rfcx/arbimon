@@ -54,4 +54,17 @@ describe('limit offset converter test', () => {
     expect(parsed.limit).toEqual(100)
     expect(parsed.offset).toEqual(0)
   })
+
+  test('when maxOffset is undefined, use the value as is even it\'s so big', () => {
+    // Arrange
+    const limit = '100'
+    const offset = '100000'
+
+    // Act
+    const parsed = parseLimitOffset(limit, offset, { maxOffset: undefined, defaultLimit: 100 })
+
+    // Assert
+    expect(parsed.limit).toEqual(100)
+    expect(parsed.offset).toEqual(100000)
+  })
 })

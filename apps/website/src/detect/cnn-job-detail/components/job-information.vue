@@ -176,8 +176,8 @@ const queryHours = computed(() => {
 })
 
 const validationStatus = computed(() => {
-  const processed = (props.results?.reviewStatus.confirmed ?? 0) + (props.results?.reviewStatus.rejected ?? 0) + (props.results?.reviewStatus.uncertain ?? 0)
-  return `${processed}/${props.results?.reviewStatus.total ?? 0}`
+  const processed = (props.results?.reviewStatus?.confirmed ?? 0) + (props.results?.reviewStatus?.rejected ?? 0) + (props.results?.reviewStatus?.uncertain ?? 0)
+  return `${processed}/${props.results?.reviewStatus?.total ?? 0}`
 })
 
 /**

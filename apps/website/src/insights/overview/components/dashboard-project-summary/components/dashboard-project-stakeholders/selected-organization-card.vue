@@ -10,10 +10,15 @@
     />
     <div class="flex items-center justify-start space-x-3">
       <img
+        v-if="image"
         class="w-12 h-12 rounded-full shadow"
-        :src="image ?? undefined"
-        alt="user profile image"
+        :src="image"
+        @error="replaceByDefault"
       >
+      <div
+        v-else
+        class="w-12 h-12 rounded-full shadow bg-util-gray-03"
+      />
       <div class="ml-2">
         <h3 class="text-base font-normal font-sans">
           {{ name }}
@@ -49,5 +54,9 @@ const toggleCheckList = (): void => {
   } else {
     emit('update:modelValue', [...props.modelValue, props.id])
   }
+}
+
+const replaceByDefault = (event: Event) => {
+  (event.target as HTMLImageElement).src = new URL('@/_assets/default-stakeholder-image.png', import.meta.url).toString()
 }
 </script>
