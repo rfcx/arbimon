@@ -325,7 +325,7 @@ const updateSettings = () => {
         isSaving.value = false
         hasFailed.value = true
         lastUpdated.value = false
-        errorMessage.value = DEFAULT_ERROR_MSG + ' The photo upload was unsuccessful.'
+        errorMessage.value = 'The photo upload was failed to upload.'
       }
     })
   }
