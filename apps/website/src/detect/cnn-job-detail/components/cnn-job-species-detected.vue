@@ -80,20 +80,18 @@
                   </div>
                 </router-link>
               </td>
-              <template v-if="!hasMoreThanOneDatasets">
-                <td class="p-2 text-center text-xs text-insight">
-                  {{ row.total }}
-                </td>
-                <td class="p-2 text-center text-xs text-insight">
-                  {{ row.confirmed }}
-                </td>
-                <td class="p-2 text-center text-xs text-insight">
-                  {{ row.rejected }}
-                </td>
-                <td class="p-2 text-center text-xs text-insight">
-                  {{ row.uncertain }}
-                </td>
-              </template>
+              <td class="p-2 text-center text-xs text-insight">
+                {{ row.total }}
+              </td>
+              <td class="p-2 text-center text-xs text-insight">
+                {{ row.confirmed }}
+              </td>
+              <td class="p-2 text-center text-xs text-insight">
+                {{ row.rejected }}
+              </td>
+              <td class="p-2 text-center text-xs text-insight">
+                {{ row.uncertain }}
+              </td>
             </tr>
           </template>
           <tr

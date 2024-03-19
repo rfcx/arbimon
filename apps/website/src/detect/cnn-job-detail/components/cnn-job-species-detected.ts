@@ -47,7 +47,7 @@ export default class ActivityOverviewBySpecies extends Vue {
   }
 
   get maxPage (): number {
-    return Math.ceil(this.formattedDatasets.length / this.pageSize)
+    return Math.ceil(this.datasets.length / this.pageSize)
   }
 
   get pageData (): ClassificationsSummaryDataset[] {
@@ -58,16 +58,7 @@ export default class ActivityOverviewBySpecies extends Vue {
 
   get pageSize (): number {
     if (this.datasets === undefined) return 0
-    const numberOfDatasets = this.datasets.length
-    switch (numberOfDatasets) {
-      case 2:
-      case 3:
-        return 5
-      case 4:
-      case 5:
-        return 3
-      default: return 10
-    }
+    return 25
   }
 
   get blankRows (): number {
@@ -82,7 +73,6 @@ export default class ActivityOverviewBySpecies extends Vue {
   onDataChange (): void {
     console.info(this.datasets)
     if (this.pageIndex > this.maxPage) this.pageIndex = 1
-    // this.formattedDatasets = getFormatSpeciesDataset(this.datasets)
   }
 
   getSpeciesSlug (scientificName: string): string {
