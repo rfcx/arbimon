@@ -98,6 +98,7 @@ const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
       id: taxonId,
       name: taxonClass.label,
       color: taxonClass.color,
+      text: taxonClass.text,
       count
     }
   })
