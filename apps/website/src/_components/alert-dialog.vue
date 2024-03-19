@@ -7,7 +7,6 @@
     leave-to-class="opacity-0 transition opacity 700ms ease-out"
   >
     <div
-      v-if="showAlert && success"
       id="targetElement"
       class="flex absolute bottom-4 justify-around items-center p-4 mb-4 rounded-lg border-1 w-fit"
       :class="{
