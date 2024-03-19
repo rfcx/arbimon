@@ -75,7 +75,15 @@ export default class SpeciesRichnessByLocation extends Vue {
     })
   }
 
-  propagateMapMove (mapMove: MapMoveEvent): void { this.mapMoveEvent = mapMove }
+  propagateMapMove (mapMove: MapMoveEvent): void {
+    if (this.datasets.length > 1 && this.mapMoveEvent !== null) {
+      // only adjust zoom level for multi-dataset maps
+      this.mapMoveEvent.zoom = 10
+    } else {
+      this.mapMoveEvent = mapMove
+    }
+  }
+
   propagateMapGroundStyle (style: MapboxGroundStyle): void { this.mapGroundStyle = style }
   propagateMapStatisticsStyle (style: MapboxStatisticsStyle): void { this.mapStatisticsStyle = style }
   propagateToggleLabels (isShowLabels: boolean): void { this.isShowLabels = isShowLabels }

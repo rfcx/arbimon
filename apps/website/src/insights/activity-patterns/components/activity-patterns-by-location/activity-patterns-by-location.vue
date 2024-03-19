@@ -134,7 +134,15 @@ const circleStyles = computed<CircleStyle[]>(() => {
   })
 })
 
-const propagateMapMove = (mapMove: MapMoveEvent): void => { mapMoveEvent.value = mapMove }
+const propagateMapMove = (mapMove: MapMoveEvent): void => {
+  if (props.datasets.length > 1 && mapMoveEvent.value !== null) {
+    // only adjust zoom level for multi-dataset maps
+    mapMoveEvent.value.zoom = 10
+  } else {
+    mapMoveEvent.value = mapMove
+  }
+}
+
 const propagateMapGroundStyle = (style: MapboxStyle): void => {
   // @ts-expect-error the type mismatch but the given type is just only the subset so this should be fine.
   mapGroundStyle.value = style
