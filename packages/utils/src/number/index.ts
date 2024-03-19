@@ -37,3 +37,7 @@ export const gcd = (a: number, b: number): number => {
 export const toPrecisionNumber = (value: number, precision?: number | undefined): number => {
   return parseFloat(value.toPrecision(precision))
 }
+
+export const numberWithCommas = (num: number): string => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}

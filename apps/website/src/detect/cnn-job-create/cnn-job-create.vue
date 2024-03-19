@@ -95,7 +95,7 @@
           <span
             v-else
             class="text-base"
-          >{{ formatNumberWithCommas(totalDurationInMinutes) }} minutes of recordings</span>
+          >{{ numberWithCommas(Math.floor(129932466530.03999)) }} minutes of recordings</span>
         </li>
       </ol>
       <div class="flex flex-row items-center space-x-4">
@@ -139,6 +139,7 @@ import { useRouter } from 'vue-router'
 import type { DetectRecordingQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-recording'
 import type { ClassifierJobCreateConfiguration } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-create'
 import { apiCorePostClassifierJobUpdateStatus } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-update-status'
+import { numberWithCommas } from '@rfcx-bio/utils/number'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 
@@ -251,10 +252,6 @@ const errors = computed(() => validated.value ? [errorProject.value, errorPermis
 const totalDurationInMinutes = computed(() => {
   return recordingData.value?.totalDurationInMinutes ?? 0
 })
-
-const formatNumberWithCommas = (totalDuration: number) => {
-  return totalDuration.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-}
 
 // Create job (call API)
 const createJob = async (): Promise<void> => {
