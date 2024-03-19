@@ -81,8 +81,8 @@ const onGoing = ref<boolean>(props.onGoing || false)
 const value = computed(() => {
   const isValidDate = (date: string) => date !== '' && date !== null && new Date(date).toString() !== 'Invalid Date'
   return {
-    dateStartLocalIso: isValidDate(dateStart.value) ? dateStart.value : '',
-    dateEndLocalIso: isValidDate(dateEnd.value) ? dateEnd.value : '',
+    dateStartLocalIso: isValidDate(dateStart.value) ? dateLocalIso(new Date(dateStart.value)) : '',
+    dateEndLocalIso: isValidDate(dateEnd.value) ? dateLocalIso(new Date(dateEnd.value)) : '',
     onGoing: onGoing.value
   }
 })

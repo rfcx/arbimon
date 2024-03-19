@@ -1,11 +1,7 @@
 import { type GetClassifierJobInformationResponse } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 import { getClassifierJobInformation as coreGetClassifierJobInformation, getClassifierJobTotalDetectionsCount } from '~/api-core/api-core'
-import { type CoreClassifierJobSummary } from '~/api-core/types'
-
-const getUnvalidatedCount = (reviewStatus: CoreClassifierJobSummary): number => {
-  return reviewStatus.total - (reviewStatus.uncertain + reviewStatus.confirmed + reviewStatus.rejected)
-}
+import { getUnvalidatedCount } from '~/maths'
 
 export const getClassifierJobInformation = async (token: string, jobId: number): Promise<GetClassifierJobInformationResponse> => {
   const [classifierJobInfo, validationStatusAcrossJob] = await Promise.all([

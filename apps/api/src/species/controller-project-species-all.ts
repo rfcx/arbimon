@@ -38,13 +38,15 @@ export const getProjectSpecies = async (locationProjectId: number, params: Proje
     throw BioInvalidQueryParamError({ fields })
   }
 
-  const species = await models.SpeciesInProject.findAll({
+  const result = await models.SpeciesInProject.findAndCountAll({
     where: { locationProjectId },
     attributes,
     order: [['scientificName', 'ASC']],
     limit,
     offset
   })
+
+  const { rows: species = [], count: total = 0 } = result
 
   if (fields === 'dashboard') {
     const dashboardSpecies = species.map(({ taxonSpeciesSlug, taxonClassSlug, scientificName, commonName, riskRatingId, photoUrl }) => {
@@ -57,8 +59,8 @@ export const getProjectSpecies = async (locationProjectId: number, params: Proje
         photoUrl
       }
     })
-    return { species: dashboardSpecies }
+    return { species: dashboardSpecies, total }
   }
 
-  return { species }
+  return { species, total }
 }

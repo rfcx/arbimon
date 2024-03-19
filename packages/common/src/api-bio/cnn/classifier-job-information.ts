@@ -27,6 +27,7 @@ export const CLASSIFICATION_STATUS_CORE_ARBIMON_MAP = {
 export interface GetClassifierJobInformationResponse extends ClassifierJob {
   streams: Array<{ id: string, name: string }>
   validationStatus: ValidationStatus
+  totalDistinctClassifications: number
 }
 
 // Request type

@@ -83,6 +83,7 @@ describe('GET /jobs/:jobId', async () => {
     expect(json).toHaveProperty('classifier')
     expect(json).toHaveProperty('streams')
     expect(json).toHaveProperty('validationStatus')
+    expect(json).toHaveProperty('totalDistinctClassifications')
     expect(json.status).toEqual(30)
   })
 })
