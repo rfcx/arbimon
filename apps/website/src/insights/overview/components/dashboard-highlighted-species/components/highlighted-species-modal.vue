@@ -132,6 +132,7 @@
                 :page-size="PAGE_SIZE"
                 :total="speciesLength"
                 layout="prev, pager, next"
+                @current-change="handleCurrentChange"
               />
             </div>
             <div
@@ -225,17 +226,20 @@ const selectedSpeciesSlug = ref<string[]>([])
 
 const PAGE_SIZE = 10
 const currentPage = ref(1)
+const totalProjectsSpecies = ref(0)
 
 const speciesList = ref<HighlightedSpeciesRow[]>([])
 watch(() => props.toggleShowModal, async () => {
   fillExistingSpeciesSlug()
   speciesList.value = []
   await fetchProjectsSpecies(PAGE_SIZE, 0)
+})
 
-  if (!hasFetchedAll.value) {
+const handleCurrentChange = async (page: number) => {
+  if (!hasFetchedAll.value && (page * PAGE_SIZE) > speciesList.value.length) {
     await fetchProjectsSpecies(PAGE_SIZE, speciesList.value.length)
   }
-})
+}
 
 const fetchProjectsSpecies = async (limit: number, offset: number) => {
   isLoadingSpecies.value = true
@@ -251,6 +255,7 @@ const fetchProjectsSpecies = async (limit: number, offset: number) => {
 
   const s = projectSpecies as ProjectSpeciesResponse
   hasFetchedAll.value = s.species.length < limit // check if reaching the end
+  totalProjectsSpecies.value = s.total
 
   s.species.forEach(sp => {
     const { slug, taxonSlug, scientificName, commonName, photoUrl, riskId } = sp as DashboardSpecies
@@ -300,7 +305,7 @@ const speciesListFiltered = computed(() => {
 })
 
 const speciesLength = computed(() => {
-  return speciesListFiltered.value.length
+  return totalProjectsSpecies.value !== 0 ? totalProjectsSpecies.value : speciesListFiltered.value.length
 })
 
 const speciesForCurrentPage = computed(() => {
