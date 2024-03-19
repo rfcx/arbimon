@@ -50,7 +50,7 @@ import { computed, onMounted, ref } from 'vue'
 
 import IconIInfo from '../icon-i-info.vue'
 
-const maxSize = 1200
+const maxSize = 600
 
 const props = defineProps<{ isDisabled?: boolean, image?: string }>()
 
@@ -74,28 +74,29 @@ const uploadPhoto = async (e: Event): Promise<void> => {
     uploadedPhotoUrl.value = e.target?.result as string
     const img = new Image()
     img.src = e.target?.result as string
-    img.onload = () => {
+    img.onload = async () => {
       if (img.width < maxSize && img.height < maxSize) {
-        return emit('emitProjectImage', file)
+        emit('emitProjectImage', file)
       } else {
-        resize(img)
+        const resizedImageFile = await resize(img, file.name)
+        emit('emitProjectImage', resizedImageFile)
       }
     }
   })
   readerUrl.readAsDataURL(file)
 }
 
-const resize = (img: HTMLImageElement) => {
+const resize = async (img: HTMLImageElement, fileName: string): Promise<File> => {
   const sizeImage = getSize(img.width, img.height, maxSize)
   const canvas = document.createElement('canvas')
   canvas.width = sizeImage.width
   canvas.height = sizeImage.height
   canvas.getContext('2d')?.drawImage(img, 0, 0, sizeImage.width, sizeImage.height)
-  canvas.toBlob((blob) => {
-    if (!blob) return
-    const newfile = new File([blob], 'converted-image.jpg', { type: 'image/jpeg' })
-    return emit('emitProjectImage', newfile)
-  }, 'image/jpeg')
+  return await new Promise(resolve => canvas.toBlob(blob => {
+    if (blob) {
+      resolve(new File([blob], fileName, { type: blob.type }))
+    }
+  }))
 }
 
 const getSize = (imageWidth: number, imageHeight: number, maxSize: number): {width: number, height: number} => {
