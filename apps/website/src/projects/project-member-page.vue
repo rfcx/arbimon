@@ -188,11 +188,17 @@
           </div>
         </div>
 
-        <alertDialog
-          :success="success"
+        <alert-dialog
+          v-if="showAlert && success"
+          severity="success"
           :title="title"
           :message="message"
-          :show-alert="showAlert"
+        />
+        <alert-dialog
+          v-else-if="showAlert && !success"
+          severity="error"
+          :title="title"
+          :message="message"
         />
       </div>
     </div>
@@ -405,7 +411,7 @@ onMounted(() => {
   initTooltips()
 })
 
-const success = ref()
+const success = ref(false)
 const title = ref('')
 const message = ref('')
 const showAlert = ref(false)

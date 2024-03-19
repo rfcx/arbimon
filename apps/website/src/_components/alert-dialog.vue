@@ -7,49 +7,15 @@
     leave-to-class="opacity-0 transition opacity 700ms ease-out"
   >
     <div
-      v-if="showAlert && success"
       id="targetElement"
-      severity="success"
-      class="flex absolute bottom-4 justify-around items-center p-4 mb-4 rounded-lg text-white bg-white shadow dark:bg-moss border-1 border-util-gray-02 rounded text-sm w-fit transition-opacity duration-700 ease-out"
+      :class="{'flex absolute bottom-4 justify-around items-center p-4 mb-4 rounded-lg text-white bg-white shadow dark:bg-moss border-1 border-util-gray-02 rounded text-sm w-fit transition-opacity duration-700 ease-out': severity === 'success', 'flex absolute bottom-4 justify-around items-center p-4 mb-4 rounded-lg bg-rose-200 border-1 border-l-4 border-ibis rounded text-moss text-sm w-fit': severity === 'error'}"
       role="alert"
     >
-      <icon-custom-ic-success />
-      <div
-        class="ms-3 text-sm px-2"
-      >
-        <span
-          class="font-medium p-2"
-        > {{ title }} </span>
-        <span
-          class="p-1"
-        > {{ message }}
-        </span>
-      </div><button
-        id="closeButton"
-        type="button"
-        class="ms-auto -mx-1.5 -my-1.5 text-white rounded-lg inline-flex items-center justify-center h-8 w-8 closeAlertButton"
-        data-dismiss-target="#targetElement"
-        aria-label="Close"
-        closable
-        @click="closeAlert"
-      >
-        <span
-          class="sr-only"
-        >Close</span>
-        <icon-custom-ic-close-black
-          class="fill-white"
-        />
-      </button>
-    </div>
-
-    <div
-      v-else-if="showAlert && !success"
-      id="targetElement"
-      severity="error"
-      class="flex absolute bottom-4 justify-around items-center p-4 mb-4 rounded-lg bg-rose-200 border-1 border-l-4 border-ibis rounded text-moss text-sm w-fit"
-      role="alert"
-    >
+      <icon-custom-ic-success
+        v-if=" severity === 'success' "
+      />
       <icon-custom-alert-triangle
+        v-else-if=" severity === 'error' "
         class="h-6 w-6 cursor-pointer item-center"
       />
       <div
@@ -74,7 +40,11 @@
         <span
           class="sr-only"
         >Close</span>
-        <icon-custom-ic-close-black />
+        <icon-custom-ic-close-black
+          v-if=" severity === 'success' "
+          class="fill-white"
+        />
+        <icon-custom-ic-close-black v-else-if=" severity === 'error' " />
       </button>
     </div>
   </Transition>
@@ -85,7 +55,8 @@
 import type { DismissInterface, DismissOptions, InstanceOptions } from 'flowbite'
 import { Dismiss } from 'flowbite'
 
-defineProps<{showAlert: boolean, success: boolean, title: string, message: string}>()
+export type AlertDialogType = 'success' | 'error'
+defineProps<{severity: AlertDialogType, title: string, message: string}>()
 
 const closeAlert = (): void => {
   const $targetEl: HTMLElement | null = document.getElementById('targetElement')
