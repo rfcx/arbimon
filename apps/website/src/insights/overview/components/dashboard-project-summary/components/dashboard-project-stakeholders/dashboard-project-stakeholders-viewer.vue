@@ -68,7 +68,7 @@
         :key="org.id"
         :name="org.name"
         :description="ORGANIZATION_TYPE_NAME[org.type]"
-        :image="org.image ?? undefined"
+        :image="org.image"
         :ranking="1"
       />
     </div>

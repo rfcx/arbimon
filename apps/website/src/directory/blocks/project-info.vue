@@ -238,7 +238,8 @@ const isStakeholdersSelected = ref(false)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
-const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'])
+
+const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'], computed(() => true))
 const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId, computed(() => isStakeholdersSelected.value))
 
 const isAboutTabViewMored = ref(false)
@@ -301,6 +302,7 @@ const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
       id: taxonId,
       name: taxonClass.label,
       color: taxonClass.color,
+      text: taxonClass.text,
       count
     }
   })

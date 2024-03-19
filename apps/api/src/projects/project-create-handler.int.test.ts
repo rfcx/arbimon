@@ -68,3 +68,19 @@ test('POST /projects adds extra infomation (profile, owner role, version)', asyn
   expect(projectRoles).toHaveLength(1)
   expect(projectRoles[0].userId).toBe(userId)
 })
+
+test('POST /projects handles invalid dates', async () => {
+  // Arrange
+  const app = await makeApp(routesProject, { userId, userToken })
+
+  // Act
+  const response = await app.inject({
+    method: POST,
+    url: ROUTE,
+    payload: { name: 'Greys linger', dateStart: 'Invalid date' },
+    headers: { Authorization: fakeToken }
+  })
+
+  // Assert
+  expect(response.statusCode).toBe(400)
+})

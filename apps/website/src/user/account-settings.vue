@@ -444,5 +444,4 @@ const saveProfilePhoto = async (): Promise<void> => {
     }
   })
 }
-
 </script>
