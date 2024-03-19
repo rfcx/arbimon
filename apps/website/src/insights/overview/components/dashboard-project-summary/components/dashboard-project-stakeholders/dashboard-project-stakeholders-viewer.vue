@@ -68,7 +68,7 @@
         :key="org.id"
         :name="org.name"
         :description="ORGANIZATION_TYPE_NAME[org.type]"
-        :image="handleImageUrl(org.image)"
+        :image="org.image"
         :ranking="1"
       />
     </div>
@@ -117,9 +117,4 @@ const store = useStore()
 const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const disableText = ref('Contact your project administrator for permission to edit stakeholders')
-
-const handleImageUrl = (url: string | undefined): string | undefined => {
-  const isValidUrl = /^[^\s]+\.(jpg|jpeg|png)/i.test(url ?? '')
-  return isValidUrl ? url : undefined
-}
 </script>

@@ -4,7 +4,7 @@
       v-if="image"
       class="w-12 h-12 mr-3 rounded-full shadow"
       :src="image"
-      alt="user profile image"
+      @error="replaceByDefault"
     >
     <div
       v-else
@@ -58,5 +58,9 @@ const copyEmail = async (email: string):Promise<void> => {
   setTimeout(() => {
     isCopied.value = false
   }, 1000)
+}
+
+const replaceByDefault = (event: Event) => {
+  (event.target as HTMLImageElement).src = new URL('@/_assets/default-stakeholder-image.png', import.meta.url).toString()
 }
 </script>
