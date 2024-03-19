@@ -44,11 +44,14 @@
         class="rounded-full border-1 text-insight px-4 py-2"
         :style="{
           borderColor: bar.color,
-          backgroundColor: bar.id === selectedId ? bar.color : ''
+          backgroundColor: bar.id === selectedId ? bar.color : '',
+          color: bar.id === selectedId ? bar.text : ''
         }"
         @click="$emit('emitSelectItem', bar.id)"
       >
-        <span class="font-display text-sm">{{ bar.name }} ({{ bar.count }}, {{ bar.percentage.toFixed(1) }}%)</span>
+        <span
+          class="font-display text-sm"
+        >{{ bar.name }} ({{ bar.count }}, {{ bar.percentage.toFixed(1) }}%)</span>
       </button>
     </div>
     <div
@@ -79,6 +82,7 @@ export interface HorizontalStack {
   name: string
   count: number
   color: string
+  text: string
 }
 
 export interface Bar {
@@ -88,6 +92,7 @@ export interface Bar {
   count: number
   width: number
   color: string
+  text: string
 }
 
 const props = withDefaults(defineProps<{
@@ -128,7 +133,7 @@ const bars = computed<Bar[]>(() => {
   let width = 0
   const outputs: Bar[] = []
 
-  inputs.forEach(({ id, name, count, color }) => {
+  inputs.forEach(({ id, name, count, color, text }) => {
     const percentage = count / totalCount.value * 100
     width += percentage
 
@@ -138,7 +143,8 @@ const bars = computed<Bar[]>(() => {
       percentage,
       count,
       width: Math.round(width),
-      color
+      color,
+      text
     })
   })
 
