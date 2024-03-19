@@ -88,13 +88,15 @@ const mappings = {
       type: 'search_as_you_type'
     },
     species: {
-      type: 'object',
+      type: 'nested',
       properties: {
-        scientific_name: { type: 'keyword' },
-        common_name: { type: 'keyword' },
-        taxon_class: { type: 'keyword' },
-        risk_rating: { type: 'keyword' },
-        is_threatened: { type: 'boolean' }
+        scientific_name: { type: 'text' },
+        common_name: { type: 'text' },
+        taxon_class: { type: 'text' },
+        risk_rating: { type: 'text' },
+        is_threatened: { type: 'boolean' },
+        risk_category: { type: 'text' },
+        countries: { type: 'text' }
       }
     }
   }

@@ -15,7 +15,7 @@ const opensearchClient = getOpenSearchClient()
 const sequelize = getSequelize()
 const { LocationProject, LocationProjectProfile, LocationSite, RecordingBySiteHour: RecordingBySiteHourModel, SyncStatus, DetectionBySiteSpeciesHour, TaxonSpecies } = ModelRepository.getInstance(sequelize)
 
-const SPECIES_REQUIRED_FIELDS = ['scientific_name', 'common_name', 'taxon_class', 'is_threatened', 'risk_rating']
+const SPECIES_REQUIRED_FIELDS = ['scientific_name', 'common_name', 'taxon_class', 'is_threatened', 'risk_rating', 'countries']
 
 const makeRecordingBySiteHour = (locationProjectId: number, locationSiteId: number, startDate: string, hourOffset: number): RecordingBySiteHour => {
   return {
@@ -101,7 +101,7 @@ beforeEach(async () => {
 
   // Refresh views
   await sequelize.query('REFRESH MATERIALIZED VIEW location_project_recording_metric')
-  await sequelize.query('REFRESH MATERIALIZED VIEW location_project_recording_metric')
+  await sequelize.query('REFRESH MATERIALIZED VIEW location_project_detection_metric')
 })
 
 // destroy data in postgres

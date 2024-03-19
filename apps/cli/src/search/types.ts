@@ -20,6 +20,8 @@ export interface ProjectSpecies {
   common_name: string
   taxon_class: string
   is_threatened: boolean
+  risk_rating_category?: string
   risk_rating?: string
   code?: string
+  countries?: string[]
 }

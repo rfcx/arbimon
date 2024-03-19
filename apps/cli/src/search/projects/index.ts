@@ -4,7 +4,12 @@ import { type Sequelize, QueryTypes } from 'sequelize'
 
 import { masterObjectiveValues } from '@rfcx-bio/common/dao/master-data'
 
-import { BASE_SQL, RISK_RATING_EXPANDED, SPECIES_IN_PROJECT_SQL, SYNC_BATCH_LIMIT } from '../constants'
+import {
+  BASE_SQL,
+  RISK_RATING_EXPANDED,
+  SPECIES_IN_PROJECT_SQL,
+  SYNC_BATCH_LIMIT
+} from '../constants'
 import { type AbbreviatedProject, type ExpandedProject, type ProjectSpecies } from '../types'
 
 export const getProjects = async (
@@ -76,18 +81,18 @@ export const getProjects = async (
     const species = await getSpeciesByProjectId(sequelize, id).catch(e => [])
     return {
       ...p,
-      expanded_country_names: p.country_codes.map(c => {
-        const countryData = getCountryData(c as TCountryCode)
-        return countryData?.name ?? ''
-      }).filter(c => c !== ''),
+      expanded_country_names: p.country_codes.map(c => expandCountry(c)).filter(c => c !== ''),
       expanded_objectives: p.objectives.map(o => {
         const foundObjective = masterObjectiveValues.find(masterObjective => masterObjective.slug === o)
         return foundObjective?.description ?? o
       }),
       species: species.map(sp => {
-        const { code, ...rest } = sp
+        const { code, countries = [], ...rest } = sp
+        const { expanded = '', threatened = false } = code ? RISK_RATING_EXPANDED[code] : {}
         return {
-          risk_rating: code ? RISK_RATING_EXPANDED[code] : '',
+          risk_rating: expanded || '',
+          risk_category: threatened ? 'threatened' : '',
+          countries: countries.map(code => expandCountry(code)),
           ...rest
         }
       })
@@ -103,4 +108,9 @@ const getSpeciesByProjectId = async (sequelize: Sequelize, id: number): Promise<
     },
     type: QueryTypes.SELECT
   })
+}
+
+const expandCountry = (code: string): string => {
+  const countryData = getCountryData(code as TCountryCode)
+  return countryData?.name ?? ''
 }
