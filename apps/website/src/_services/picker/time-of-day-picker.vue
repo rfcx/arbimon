@@ -23,10 +23,9 @@
     placeholder="e.g. 0-5, 7-11, 14, 15"
     class="p-2 mt-4 bg-pitch h-11 text-base w-full border border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
     :onBeforeinput="onBeforeinput"
-    @input="$emit('emitSelectTime', selectedTime.selectedHourRange)"
   >
   <span
-    v-if="isValid && selectedTime.selectedHourRange !== ''"
+    v-if="showError"
     class="text-sm text-flamingo"
   >
     Invalid hour range. Example: for recordings between 5:00 and 9:00 and between 16:00 and 20:00, use 5-8,16-19.
@@ -39,7 +38,7 @@ import { onMounted, reactive, ref, watch } from 'vue'
 import { hours } from './time-of-day-constants'
 
 const emit = defineEmits<{(e: 'emitSelectTime', value: string): void}>()
-const isValid = ref(false)
+const showError = ref(false)
 
 const selectedTime = reactive({
   selectedTimeType: hours.all.label,
@@ -74,12 +73,15 @@ const selectCustom = () => {
 
 watch(() => selectedTime.selectedHourRange, (hourRange) => {
   selectedTime.selectedTimeType = hourRange === '0-23' ? hours.all.label : hours.custom.label
-  isValid.value = !validate(hourRange)
+  showError.value = !isValidHourRange(hourRange) && selectedTime.selectedHourRange !== ''
+  if (isValidHourRange(hourRange)) {
+    emit('emitSelectTime', hourRange)
+  }
 })
 
-const validate = (hourRange: string): boolean => {
-  const validateFormat = /^(\b(0?[0-9]|1[0-9]|2[0-3])\b)(((-|,)\b(0?[0-9]|1[0-9]|2[0-3])\b)?)+$/
-  return validateFormat.test(hourRange)
+function isValidHourRange (hourRange: string): boolean {
+  const hourRangeRegex = /^(\b(0?[0-9]|1[0-9]|2[0-3])\b)(((-|,)\b(0?[0-9]|1[0-9]|2[0-3])\b)?)+$/
+  return hourRangeRegex.test(hourRange)
 }
 
 </script>
