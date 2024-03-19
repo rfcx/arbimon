@@ -95,7 +95,7 @@
           <span
             v-else
             class="text-base"
-          >{{ numberWithCommas(Math.floor(129932466530.03999)) }} minutes of recordings</span>
+          >{{ numberWithCommas(Math.floor(totalDurationInMinutes)) }} minutes of recordings</span>
         </li>
       </ol>
       <div class="flex flex-row items-center space-x-4">
