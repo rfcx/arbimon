@@ -175,7 +175,7 @@ const recordingQuery: DetectRecordingQueryParams = reactive({
   dateStartLocal: '',
   dateEndLocal: '',
   querySites: '',
-  queryHours: ''
+  queryHours: '0-23'
 })
 
 const project = reactive({
@@ -226,6 +226,8 @@ const onSelectQuerySites = (queryStreams: string | null) => {
   recordingQuery.querySites = queryStreams ?? undefined
 }
 const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
+  if (project.projectId === '-1') return
+
   validated.value = false
   job.queryStart = dateStartLocalIso
   job.queryEnd = dateEndLocalIso

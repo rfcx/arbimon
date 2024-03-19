@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
 
 import { hours } from './time-of-day-constants'
 
@@ -54,10 +54,6 @@ const onBeforeinput = (e: Event) => {
     }
   }
 }
-
-onMounted(() => {
-  emit('emitSelectTime', selectedTime.selectedHourRange)
-})
 
 const selectAllDay = () => {
   selectedTime.selectedTimeType = hours.all.label

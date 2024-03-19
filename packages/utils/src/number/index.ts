@@ -39,5 +39,5 @@ export const toPrecisionNumber = (value: number, precision?: number | undefined)
 }
 
 export const numberWithCommas = (num: number): string => {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return numeral(num).format('0,0')
 }
