@@ -51,7 +51,7 @@ export const PROJECTS_INDEX_NAME = 'projects'
 export const ORGANIZATIONS_INDEX_NAME = 'organizations'
 export const SYNC_BATCH_LIMIT = 1000
 
-export const RISK_RATING_EXPANDED: Record<string, { expanded: string, threatened: boolean}> = {
+export const RISK_RATING_EXPANDED: Record<string, { expanded: string, threatened: boolean }> = {
     NL: { expanded: 'Not Listed', threatened: false },
     NE: { expanded: 'Not Evaluated', threatened: false },
     DD: { expanded: 'Data Deficient', threatened: false },
