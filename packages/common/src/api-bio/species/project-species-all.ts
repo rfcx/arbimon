@@ -20,6 +20,7 @@ export interface ProjectSpeciesQueryParams {
 // Response types
 export interface ProjectSpeciesResponse {
   species: Array<SpeciesInProjectTypes[ProjectSpeciesFieldSet] | DashboardSpecies>
+  total: number
 }
 
 // Route

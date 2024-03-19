@@ -138,7 +138,7 @@ describe('GET /jobs', async () => {
     expect(response.statusCode).toEqual(200)
     const json = response.json()
     expect(json).toHaveLength(1)
-    expect(json.status).toEqual('done')
+    expect(json.status).toEqual(30)
     expect(json).toHaveProperty('id')
     expect(json).toHaveProperty('classifierId')
     expect(json).toHaveProperty('projectId')

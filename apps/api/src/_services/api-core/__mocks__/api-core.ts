@@ -58,7 +58,8 @@ export const getClassifierJobInformation = vi.fn(async (): Promise<CoreClassifie
         id: 'kdivmdkfogie',
         name: 'GU01'
       }
-    ]
+    ],
+    totalDistinctClassifications: 5
   }
 })
 

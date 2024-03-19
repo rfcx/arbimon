@@ -73,4 +73,5 @@ export interface CoreClassifierJob {
 
 export interface CoreClassifierJobInformation extends CoreClassifierJob {
   streams: Array<{ id: string, name: string }>
+  totalDistinctClassifications: number
 }
