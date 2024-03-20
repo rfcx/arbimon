@@ -1,3 +1,4 @@
+import { type CLASSIFICATION_STATUS_CORE_ARBIMON_MAP } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type CLASSIFIER_JOB_LABELS } from '@rfcx-bio/common/api-bio/cnn/classifier-jobs'
 import { type REVIEW_STATUS_MAPPING, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 
@@ -45,9 +46,20 @@ export interface CoreClassifierJobSummary {
   confirmed: number
 }
 
+export interface GetClassifierJobClassificationSummaryQueryParams {
+  keyword?: string
+  limit?: number
+  offset?: number
+  sort?: 'name' | typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP[keyof typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP]
+  order?: 'asc' | 'desc'
+}
+
 export interface CoreClassifierJobClassificationSummary {
-  reviewStatus: CoreClassifierJobSummary
   classificationsSummary: Array<CoreClassifierJobSummary & { title: string, value: string, image: string | null }>
+}
+
+export interface CoreClassifierJobTotalDetections {
+  reviewStatus: CoreClassifierJobSummary
 }
 
 export interface CoreClassifierJob {

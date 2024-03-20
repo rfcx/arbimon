@@ -1,6 +1,8 @@
 <template>
   <section class="max-w-screen-xl pt-20 pl-115px pr-4">
-    <job-detail-header />
+    <job-detail-header
+      :is-cancel-job-enable="isRefetchIntervalEnable"
+    />
     <job-detail-information
       :is-loading-summary="isLoadingJobSummary"
       :is-error-summary="isErrorJobSummary"
@@ -20,7 +22,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import debounce from 'lodash.debounce'
-import { computed, inject, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { DetectDetectionsQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-detections'
@@ -43,15 +45,24 @@ const detectionsResultFilterStore = useDetectionsResultFilterStore()
 
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
-// these two queries below will run simultaneously
-const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummary, refetch } = useGetClassifierJobInformation(
+const isRefetch = ref<boolean>(true)
+
+const refetchInterval = computed(() => {
+  return isRefetch.value ? 30_000 : false
+})
+
+const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSummary, refetch: refetchJobSummary } = useGetClassifierJobInformation(
   apiClientBio,
-  jobId.value
+  jobId.value,
+  refetchInterval
 )
 
+const { data: jobResults } = useGetJobValidationResults(apiClientBio, jobId.value, { fields: ['classifications_summary'] }, refetchInterval)
+
 watch(jobSummary, async (newValue) => {
+  isRefetch.value = isRefetchIntervalEnable.value
   if (newValue == null) {
-    await refetch()
+    await refetchJobSummary()
     return
   }
 
@@ -60,8 +71,6 @@ watch(jobSummary, async (newValue) => {
   // chunk given date range to 7 days range
   detectionsResultFilterStore.updateStartEndRanges(newValue.queryStart, newValue.queryEnd, 7)
 })
-
-const { data: jobResults } = useGetJobValidationResults(apiClientBio, jobId.value, { fields: ['classifications_summary'] })
 
 const resultsData = computed(() => {
   return jobResults.value?.classificationsSummary.map(d => {
@@ -77,19 +86,12 @@ const resultsData = computed(() => {
   })
 })
 
+const isRefetchIntervalEnable = computed(() => {
+  return jobSummary.value?.status != null && (jobSummary.value.status === CLASSIFIER_JOB_STATUS.WAITING || jobSummary.value.status === CLASSIFIER_JOB_STATUS.RUNNING)
+})
+
 const classifierId = computed(() => jobSummary.value?.classifierId)
 const enabled = computed(() => jobSummary.value?.classifierId != null)
-
-/**
- * Only refetch every 30 seconds when job status is not null and job status is running.
- */
-const refetchDetections = computed(() => {
-  if (jobSummary.value?.status != null && jobSummary.value.status === CLASSIFIER_JOB_STATUS.RUNNING) {
-    return 30_000
-  }
-
-  return false
-})
 
 // This query will run after `useGetJobValidationResults`
 const params = computed<DetectDetectionsQueryParams>(() => ({
@@ -123,5 +125,5 @@ const onEmitSearch = debounce(async (keyword: string) => {
   // TODO: Call api for search
 }, 500)
 
-const { isLoading: isLoadingDetections, isError: isErrorDetections, data: detections } = useGetJobDetections(apiClientBio, jobId.value, params, enabled, refetchDetections)
+const { isLoading: isLoadingDetections, isError: isErrorDetections, data: detections } = useGetJobDetections(apiClientBio, jobId.value, params, enabled, refetchInterval)
 </script>

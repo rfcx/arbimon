@@ -1,12 +1,23 @@
 import { type GetClassifierJobInformationResponse } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 import { getClassifierJobInformation as coreGetClassifierJobInformation, getClassifierJobTotalDetectionsCount } from '~/api-core/api-core'
+import { BioInvalidPathParamError } from '~/errors'
 import { getUnvalidatedCount } from '~/maths'
 
-export const getClassifierJobInformation = async (token: string, jobId: number): Promise<GetClassifierJobInformationResponse> => {
+export const getClassifierJobInformation = async (token: string, jobId: string | undefined): Promise<GetClassifierJobInformationResponse> => {
+  if (
+    jobId === null ||
+    jobId === undefined ||
+    jobId === '' ||
+    Number.isNaN(Number(jobId))
+  ) {
+    throw BioInvalidPathParamError({ jobId })
+  }
+
+  const jobIdInt = Number(jobId)
   const [classifierJobInfo, validationStatusAcrossJob] = await Promise.all([
-    coreGetClassifierJobInformation(token, jobId),
-    getClassifierJobTotalDetectionsCount(token, jobId)
+    coreGetClassifierJobInformation(token, jobIdInt),
+    getClassifierJobTotalDetectionsCount(token, jobIdInt)
   ])
 
   return {

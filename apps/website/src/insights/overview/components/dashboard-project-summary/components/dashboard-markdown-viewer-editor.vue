@@ -13,7 +13,7 @@
     >
       <button
         v-if="!projectUserPermissionsStore.isMemberGuest && !projectUserPermissionsStore.isExternalGuest"
-        class="flex flex-row items-center btn btn-primary py-2 px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+        class="flex flex-row items-center btn btn-primary py-2 px-3 mb-3 disabled:hover:btn-disabled disabled:btn-disabled"
         :data-tooltip-target="!editable ? `${id}EditTextTooltipId` : null"
         data-tooltip-placement="bottom"
         :disabled="!editable"
@@ -85,6 +85,7 @@
 <script setup lang="ts">
 import { initTooltips } from 'flowbite'
 import { computed, nextTick, onMounted, ref, unref, watch } from 'vue'
+import { event } from 'vue-gtag'
 
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
@@ -147,6 +148,11 @@ const toggleExpandMarkdownContent = (): void => {
 }
 
 const editMarkdownContent = (): void => {
+  event('edit_content', {
+    event_category: 'project_summary',
+    event_label: 'edit_content',
+    value: props.id
+  })
   emit('update:isEditing', true)
   emit('update:isViewMored', true)
 }

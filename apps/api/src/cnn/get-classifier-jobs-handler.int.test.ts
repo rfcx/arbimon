@@ -98,7 +98,7 @@ describe('GET /jobs', async () => {
     })
 
     expect(response.statusCode).toEqual(200)
-    expect(spy).toHaveBeenCalledWith('', { project: cnnProject.idCore.toString(), createdBy: undefined })
+    expect(spy).toHaveBeenCalledWith('', { projects: [cnnProject.idCore.toString()], createdBy: 'all' })
     const json = response.json()
     expect(json).toHaveLength(1)
   })

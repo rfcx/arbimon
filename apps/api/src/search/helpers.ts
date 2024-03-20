@@ -1,4 +1,4 @@
-export const parseLimitOffset = (limit: string | undefined, offset: string | undefined, config: { maxOffset: number, defaultLimit: number }): { limit: number, offset: number } => {
+export const parseLimitOffset = (limit: string | undefined, offset: string | undefined, config: { maxOffset?: number, defaultLimit: number }): { limit: number, offset: number } => {
   let limitNumber = config.defaultLimit
   let offsetNumber = 0 // default offset is 0
 
@@ -13,7 +13,7 @@ export const parseLimitOffset = (limit: string | undefined, offset: string | und
     offsetNumber = parsedOffset
   }
 
-  if (offsetNumber > config.maxOffset) {
+  if (config?.maxOffset !== undefined && offsetNumber > config.maxOffset) {
     offsetNumber = config.maxOffset
   }
 
