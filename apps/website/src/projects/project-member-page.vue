@@ -187,6 +187,19 @@
             </div>
           </div>
         </div>
+
+        <alert-dialog
+          v-if="showAlert && success == 'success'"
+          severity="success"
+          :title="title"
+          :message="message"
+        />
+        <alert-dialog
+          v-else-if="showAlert && success == 'error'"
+          severity="error"
+          :title="title"
+          :message="message"
+        />
       </div>
     </div>
   </section>
@@ -200,6 +213,8 @@ import { useRoute } from 'vue-router'
 import type { UserTypes } from '@rfcx-bio/common/dao/types'
 import { type ProjectRole } from '@rfcx-bio/common/roles'
 
+import type { AlertDialogType } from '@/_components/alert-dialog.vue'
+import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientKey } from '@/globals'
 import { useProjectUserPermissionsStore, useStore } from '~/store'
 import { useAddProjectMember, useDeleteProjectMember, useGetProjectMembers, useSearchUsers, useUpdateProjectMember } from './_composables/use-project-member'
@@ -353,14 +368,23 @@ const onEmitSelectedUser = (user: UserTypes['light']):void => {
 
 const addSelectedUser = ():void => {
   if (userSearchValue.value === '') return
+  const isDuplicate = users.value?.some(user => user.email === userSearchValue.value) ?? false
+  if (isDuplicate) {
+    showAlertDialog('error', 'Duplicate', 'The user is already a project member')
+  } else {
   mutatePostProjectMember({
     email: userSearchValue.value,
     role: 'user'
   }, {
     onSuccess: () => {
       usersRefetch()
-    }
+      showAlertDialog('success', 'Success', 'New Project member added successfully')
+    },
+    onError: () => {
+      showAlertDialog('error', 'Error', 'Failed to add project member')
+}
   })
+}
 }
 
 const changeUserRole = (email: string, role: ProjectRole):void => {
@@ -387,6 +411,21 @@ const deleteProjectMember = (email: string):void => {
 onMounted(() => {
   initTooltips()
 })
+
+const success = ref('')
+const title = ref('')
+const message = ref('')
+const showAlert = ref(false)
+
+const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue: string, hideAfter = 7000) => {
+  showAlert.value = true
+  success.value = type
+  title.value = titleValue
+  message.value = messageValue
+  setTimeout(() => {
+    showAlert.value = false
+  }, hideAfter)
+}
 
 </script>
 
