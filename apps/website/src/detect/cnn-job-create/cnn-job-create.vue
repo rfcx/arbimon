@@ -95,7 +95,7 @@
           <span
             v-else
             class="text-base"
-          >{{ numberWithCommas(Math.floor(totalDurationInMinutes)) }} minutes of recordings</span>
+          >{{ displayFullValue(Math.floor(totalDurationInMinutes)) }} minutes of recordings</span>
         </li>
       </ol>
       <div class="flex flex-row items-center space-x-4">
@@ -139,7 +139,7 @@ import { useRouter } from 'vue-router'
 import type { DetectRecordingQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-recording'
 import type { ClassifierJobCreateConfiguration } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-create'
 import { apiCorePostClassifierJobUpdateStatus } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-update-status'
-import { numberWithCommas } from '@rfcx-bio/utils/number'
+import { displayFullValue } from '@rfcx-bio/utils/number'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 
