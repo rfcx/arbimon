@@ -222,7 +222,7 @@ const showHaveReachedLimit = ref(false)
 const isLoadingSpecies = ref(false)
 const hasFetchedAll = ref(false)
 
-const selectedSpeciesSlug = ref<string[]>([])
+const selectedSpeciesSlug = ref<HighlightedSpeciesRow[]>([])
 
 const PAGE_SIZE = 10
 const currentPage = ref(1)
@@ -313,7 +313,7 @@ const speciesForCurrentPage = computed(() => {
 })
 
 const preSelectedSpecies = computed(() => {
-  return speciesList.value.length ? selectedSpeciesSlug.value.map((slug) => speciesList.value.filter((specie) => specie.slug === slug)[0]) ?? [] : []
+  return speciesList.value.length ? selectedSpeciesSlug.value : []
 })
 
 const existingRiskCode = computed(() => {
@@ -340,7 +340,7 @@ const resetSearch = (): void => {
 }
 
 const findIndexToRemove = (slug: string): void => {
-  const index = selectedSpeciesSlug.value.findIndex(sl => sl === slug)
+  const index = selectedSpeciesSlug.value.findIndex(sl => sl.slug === slug)
   selectedSpeciesSlug.value.splice(index, 1)
 }
 
@@ -351,7 +351,7 @@ const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
   } else {
     // only 5 species might be highlighted
     if (selectedSpeciesSlug.value.length < 5) {
-      selectedSpeciesSlug.value.push(specie.slug)
+      selectedSpeciesSlug.value.push(specie)
     } else {
       showHaveReachedLimit.value = true
     }
@@ -359,7 +359,7 @@ const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
 }
 
 const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
-  const slugs = selectedSpeciesSlug.value.filter(slug => slug === specie.slug)
+  const slugs = selectedSpeciesSlug.value.filter(slug => slug.slug === specie.slug)
   return slugs.length > 0
 }
 
@@ -370,7 +370,7 @@ const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
 
 const fillExistingSpeciesSlug = (): void => {
   if (props.highlightedSpecies.length) {
-    selectedSpeciesSlug.value = props.highlightedSpecies.map(sp => sp.slug)
+    selectedSpeciesSlug.value = props.highlightedSpecies
   } else selectedSpeciesSlug.value = []
 }
 
