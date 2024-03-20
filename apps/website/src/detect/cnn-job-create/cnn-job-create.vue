@@ -79,7 +79,7 @@
             >
               Time of day
             </label>
-            <TimeOfDayPicker @emit-select-time="onSelectQueryHours" />
+            <TimeOfDayPicker @emit-hour-range="onSelectQueryHours" />
           </div>
         </li>
         <li class="pb-8 pl-6">
