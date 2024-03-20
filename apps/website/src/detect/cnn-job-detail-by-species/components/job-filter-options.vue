@@ -1,5 +1,5 @@
 <template>
-  <div class="py-24 mx-auto max-w-screen-xl">
+  <div class="pt-24 mx-auto max-w-screen-xl">
     <div class="flex flex-row items-center">
       <h1>Species Validation</h1>
     </div>
@@ -25,6 +25,6 @@ import JobResultFilterBySpecies from './job-result-filter-by-species.vue'
 
 withDefaults(defineProps<{ speciesName: string | undefined, detectionsCount: number | undefined }>(), {
   speciesName: undefined,
-  speciesCount: undefined
+  detectionsCount: undefined
 })
 </script>
