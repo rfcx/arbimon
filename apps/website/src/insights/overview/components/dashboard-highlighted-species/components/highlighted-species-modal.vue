@@ -136,7 +136,7 @@
               />
             </div>
             <div
-              v-if="preSelectedSpecies.length === 0"
+              v-if="selectedSpeciesSlug.length === 0"
               class="hidden grid-cols-1 xl:grid h-127 border-1 border-dashed rounded-lg"
             >
               <div class="my-auto items-center p-5 text-center">
@@ -153,7 +153,7 @@
               class="hidden grid-cols-1 xl:grid"
             >
               <HighlightedSpeciesSelector
-                :species="preSelectedSpecies"
+                :species="selectedSpeciesSlug"
                 @emit-remove-specie="removeSpecieFromList"
               />
             </div>
@@ -311,21 +311,17 @@ const speciesForCurrentPage = computed(() => {
   return speciesListFiltered.value
 })
 
-const preSelectedSpecies = computed(() => {
-  return selectedSpeciesSlug.value
-})
-
 const existingRiskCode = computed(() => {
   return speciesList.value.length ? speciesList.value.map(specie => specie.riskRating).filter((value, index, self) => self.findIndex(({ code }) => code === value.code) === index) : []
 })
 
 const newSpeciesToAdd = computed(() => {
   const existingSlugsInDB = props.highlightedSpecies.map(sp => sp.slug)
-  return preSelectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
+  return selectedSpeciesSlug.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
 })
 
 const speciesToRemove = computed(() => {
-  const preSelectedSpeciesSlug = preSelectedSpecies.value.map(sp => sp.slug)
+  const preSelectedSpeciesSlug = selectedSpeciesSlug.value.map(sp => sp.slug)
   return props.highlightedSpecies.filter(sp => !preSelectedSpeciesSlug.includes(sp.slug))
 })
 
@@ -368,9 +364,7 @@ const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
 }
 
 const fillExistingSpeciesSlug = (): void => {
-  if (props.highlightedSpecies.length) {
-    selectedSpeciesSlug.value = props.highlightedSpecies
-  } else selectedSpeciesSlug.value = []
+  selectedSpeciesSlug.value = props.highlightedSpecies.length ? props.highlightedSpecies : []
 }
 
 const filterByCode = (code: string): void => {
