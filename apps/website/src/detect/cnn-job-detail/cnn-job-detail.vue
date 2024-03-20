@@ -25,6 +25,7 @@ import debounce from 'lodash.debounce'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { apiBioGetClassifierJobSpecies } from '@rfcx-bio/common/api-bio/cnn/classifier-job-species'
 import type { DetectDetectionsQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
@@ -33,10 +34,10 @@ import { useDetectionsResultFilterStore } from '~/store'
 import { useGetJobDetections } from '../_composables/use-get-detections'
 import { useGetClassifierJobInformation } from '../_composables/use-get-job-detection-summary'
 import { useGetJobValidationResults } from '../_composables/use-get-job-validation-results'
+import type { ClassificationsSummaryDataset } from './components/cnn-job-species-detected'
 import JobDetailHeader from './components/job-detail-header.vue'
 import JobDetections from './components/job-detections.vue'
 import JobDetailInformation from './components/job-information.vue'
-// import JobDetailResult from './components/job-result.vue'
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
@@ -46,6 +47,7 @@ const detectionsResultFilterStore = useDetectionsResultFilterStore()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
 const isRefetch = ref<boolean>(true)
+const detectionList = ref<ClassificationsSummaryDataset[]>()
 
 const refetchInterval = computed(() => {
   return isRefetch.value ? 30_000 : false
@@ -72,8 +74,12 @@ watch(jobSummary, async (newValue) => {
   detectionsResultFilterStore.updateStartEndRanges(newValue.queryStart, newValue.queryEnd, 7)
 })
 
-const resultsData = computed(() => {
-  return jobResults.value?.classificationsSummary.map(d => {
+watch(jobResults, () => {
+  resetDetectionList()
+})
+
+const resetDetectionList = () => {
+  detectionList.value = jobResults.value?.classificationsSummary.map(d => {
     return {
       value: d.value,
       title: d.title,
@@ -84,6 +90,10 @@ const resultsData = computed(() => {
       confirmed: d.confirmed
     }
   })
+}
+
+const resultsData = computed(() => {
+  return detectionList.value
 })
 
 const isRefetchIntervalEnable = computed(() => {
@@ -119,10 +129,23 @@ const params = computed<DetectDetectionsQueryParams>(() => ({
 
 const onEmitSearch = debounce(async (keyword: string) => {
   if (keyword === '') {
+    resetDetectionList()
     return
   }
-  console.info(keyword)
-  // TODO: Call api for search
+
+  const searchResponse = await apiBioGetClassifierJobSpecies(apiClientBio, jobId.value, { q: keyword })
+  if (searchResponse?.data === undefined) return
+  detectionList.value = searchResponse?.data.map(d => {
+    return {
+      value: d.value,
+      title: d.title,
+      image: d.image,
+      total: d.unvalidated,
+      rejected: d.notPresent,
+      uncertain: d.unknown,
+      confirmed: d.present
+    }
+  })
 }, 500)
 
 const { isLoading: isLoadingDetections, isError: isErrorDetections, data: detections } = useGetJobDetections(apiClientBio, jobId.value, params, enabled, refetchInterval)
