@@ -162,7 +162,7 @@
           <div class="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
             <div class="grid gap-3 col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-3">
               <div v-if="showHaveReachedLimit">
-                <span class="ml-3 bg-rose-200 inline-flex text-echo items-center p-3 border-1 border-rose-600 border-l-3 rounded-lg">
+                <span class="ml-3 bg-danger-background inline-flex text-echo items-center p-3 border-1 border-rose-600 border-l-3 rounded-lg">
                   <icon-custom-ic-error-message class="<xl:basis-2/12" />
                   You have reached the limit of 5 highlighted species allowed.
                 </span>
