@@ -213,6 +213,7 @@ import { useRoute } from 'vue-router'
 import type { UserTypes } from '@rfcx-bio/common/dao/types'
 import { type ProjectRole } from '@rfcx-bio/common/roles'
 
+import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientKey } from '@/globals'
 import { useProjectUserPermissionsStore, useStore } from '~/store'
@@ -411,14 +412,14 @@ onMounted(() => {
   initTooltips()
 })
 
-const success = ref(false)
+const success = ref('')
 const title = ref('')
 const message = ref('')
 const showAlert = ref(false)
 
-const showAlertDialog = (successValue: boolean, titleValue: string, messageValue: string, hideAfter = 7000) => {
+const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue: string, hideAfter = 7000) => {
   showAlert.value = true
-  success.value = successValue
+  success.value = type
   title.value = titleValue
   message.value = messageValue
   setTimeout(() => {
