@@ -122,11 +122,11 @@
                 v-if="isLoadingSpecies"
                 class="animate-spin w-8 h-8 lg:mx-24 mx-12"
               />
-              <h6 v-if="!speciesList.length">
+              <h6 v-else-if="!speciesList.length">
                 No species in a project.
               </h6>
               <el-pagination
-                v-if="speciesList.length"
+                v-else
                 v-model:currentPage="currentPage"
                 class="flex items-center justify-center mb-2"
                 :page-size="PAGE_SIZE"
@@ -312,7 +312,7 @@ const speciesForCurrentPage = computed(() => {
 })
 
 const preSelectedSpecies = computed(() => {
-  return speciesList.value.length ? selectedSpeciesSlug.value : []
+  return selectedSpeciesSlug.value
 })
 
 const existingRiskCode = computed(() => {
