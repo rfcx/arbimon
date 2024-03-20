@@ -136,7 +136,7 @@
               />
             </div>
             <div
-              v-if="selectedSpeciesSlug.length === 0"
+              v-if="selectedSpecies.length === 0"
               class="hidden grid-cols-1 xl:grid h-127 border-1 border-dashed rounded-lg"
             >
               <div class="my-auto items-center p-5 text-center">
@@ -153,7 +153,7 @@
               class="hidden grid-cols-1 xl:grid"
             >
               <HighlightedSpeciesSelector
-                :species="selectedSpeciesSlug"
+                :species="selectedSpecies"
                 @emit-remove-specie="removeSpecieFromList"
               />
             </div>
@@ -222,7 +222,7 @@ const showHaveReachedLimit = ref(false)
 const isLoadingSpecies = ref(false)
 const hasFetchedAll = ref(false)
 
-const selectedSpeciesSlug = ref<HighlightedSpeciesRow[]>([])
+const selectedSpecies = ref<HighlightedSpeciesRow[]>([])
 
 const PAGE_SIZE = 10
 const currentPage = ref(1)
@@ -317,11 +317,11 @@ const existingRiskCode = computed(() => {
 
 const newSpeciesToAdd = computed(() => {
   const existingSlugsInDB = props.highlightedSpecies.map(sp => sp.slug)
-  return selectedSpeciesSlug.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
+  return selectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
 })
 
 const speciesToRemove = computed(() => {
-  const preSelectedSpeciesSlug = selectedSpeciesSlug.value.map(sp => sp.slug)
+  const preSelectedSpeciesSlug = selectedSpecies.value.map(sp => sp.slug)
   return props.highlightedSpecies.filter(sp => !preSelectedSpeciesSlug.includes(sp.slug))
 })
 
@@ -335,18 +335,18 @@ const resetSearch = (): void => {
 }
 
 const findIndexToRemove = (slug: string): void => {
-  const index = selectedSpeciesSlug.value.findIndex(sl => sl.slug === slug)
-  selectedSpeciesSlug.value.splice(index, 1)
+  const index = selectedSpecies.value.findIndex(sl => sl.slug === slug)
+  selectedSpecies.value.splice(index, 1)
 }
 
 const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
   if (isSpecieSelected(specie)) {
     findIndexToRemove(specie.slug)
-    showHaveReachedLimit.value = selectedSpeciesSlug.value.length >= 5
+    showHaveReachedLimit.value = selectedSpecies.value.length >= 5
   } else {
     // only 5 species might be highlighted
-    if (selectedSpeciesSlug.value.length < 5) {
-      selectedSpeciesSlug.value.push(specie)
+    if (selectedSpecies.value.length < 5) {
+      selectedSpecies.value.push(specie)
     } else {
       showHaveReachedLimit.value = true
     }
@@ -354,8 +354,7 @@ const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
 }
 
 const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
-  const slugs = selectedSpeciesSlug.value.filter(slug => slug.slug === specie.slug)
-  return slugs.length > 0
+  return selectedSpecies.value.find(sp => sp.slug === specie.slug) !== undefined
 }
 
 const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
@@ -364,7 +363,7 @@ const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
 }
 
 const fillExistingSpeciesSlug = (): void => {
-  selectedSpeciesSlug.value = props.highlightedSpecies.length ? props.highlightedSpecies : []
+  selectedSpecies.value = props.highlightedSpecies.length ? props.highlightedSpecies : []
 }
 
 const filterByCode = (code: string): void => {
