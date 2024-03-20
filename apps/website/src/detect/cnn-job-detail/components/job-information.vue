@@ -62,7 +62,10 @@
           />
         </div>
         <div>
-          <span class="text-util-gray-01 hidden">Output</span>
+          <span class="text-util-gray-01">Output</span>
+          <span class="flex text-base text-insight mt-4">
+            Total number of detected species: {{ props.summary?.totalDistinctClassifications }}
+          </span>
         </div>
       </div>
     </div>
