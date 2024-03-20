@@ -51,6 +51,7 @@ declare module 'vue' {
     IconCustomFiLink: typeof import('~icons/custom-icons/fi-link')['default']
     IconCustomFiList: typeof import('~icons/custom-icons/fi-list')['default']
     IconCustomFiLogOut: typeof import('~icons/custom-icons/fi-log-out')['default']
+    IconCustomFiMenu: typeof import('~icons/custom-icons/fi-menu')['default']
     IconCustomFiPm: typeof import('~icons/custom-icons/fi-pm')['default']
     IconCustomFiRfm: typeof import('~icons/custom-icons/fi-rfm')['default']
     IconCustomFiSettings: typeof import('~icons/custom-icons/fi-settings')['default']
