@@ -6,7 +6,7 @@
     />
     <ComponentError
       v-else-if="props.isError"
-      class="py-8"
+      class="mx-2"
     />
     <div
       v-else
