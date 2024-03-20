@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
-import { CLASSIFICATION_STATUS_CORE_ARBIMON_MAP } from './classifier-job-information'
+import { type CLASSIFICATION_STATUS_CORE_ARBIMON_MAP } from './classifier-job-information'
 
 // Request type
 export interface GetClassifierJobSpeciesQueryParams {
