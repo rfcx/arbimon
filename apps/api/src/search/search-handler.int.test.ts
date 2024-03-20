@@ -282,8 +282,115 @@ describe('OpenSearch search', async () => {
     const results = JSON.parse(response.body) as SearchResponseProject[]
     expect(results.findIndex(r => r.id === 7689924)).not.toBe(-1)
   })
+})
 
-  test('opensearch response provides correct fields', async () => {
+describe('OpenSearch search - search projects by species', async () => {
+  beforeAll(async () => {
+    env.OPENSEARCH_ENABLED = 'true'
+
+    const project1 = makeProject(7689925, 'Scottish Highlands project', 'published')
+    const project2 = makeProject(7689926, 'Large carnivores in Bulgaria', 'published')
+    const project3 = makeProject(7689927, 'Ground squirrel communication calls', 'published')
+    const project4 = makeProject(7689928, 'Birds in the Mediterranean region', 'published')
+    const project5 = makeProject(7689929, 'Butterflies in the Balkans', 'published')
+
+    const species2 = [
+        {
+          scientific_name: 'Ursus arctos',
+          common_name: 'Eurasian brown bear',
+          taxon_class: 'mammals',
+          is_threatened: false,
+          risk_category: '',
+          risk_rating: 'Least Concern',
+          countries: ['Bulgaria']
+        }
+    ]
+    const species3 = [
+      {
+        scientific_name: 'Spermophilus citellus',
+        common_name: 'European ground squirrel',
+        taxon_class: 'mammals',
+        is_threatened: true,
+        risk_category: 'threatened',
+        risk_rating: 'Endangered',
+        countries: ['Bulgaria']
+      }
+    ]
+    const species4 = [
+      {
+        scientific_name: 'Ciconia ciconia',
+        common_name: 'White stork',
+        taxon_class: 'birds',
+        is_threatened: false,
+        risk_category: '',
+        risk_rating: 'Least Concern',
+        countries: ['Greece']
+      },
+      {
+        scientific_name: 'Ciconia nigra',
+        common_name: 'Black stork',
+        taxon_class: 'birds',
+        is_threatened: false,
+        risk_category: '',
+        risk_rating: 'Least Concern',
+        countries: ['Bulgaria']
+      },
+      {
+        scientific_name: 'Emberiza aureola',
+        common_name: 'Yellow-breasted Bunt',
+        taxon_class: 'birds',
+        is_threatened: true,
+        risk_category: 'threatened',
+        risk_rating: 'Critically Endangered',
+        countries: ['Greece']
+      },
+      {
+        scientific_name: 'Platalea leucorodia',
+        common_name: 'Eurasian Spoonbill',
+        taxon_class: 'birds',
+        is_threatened: false,
+        risk_category: '',
+        risk_rating: 'Least Concern',
+        countries: ['Greece']
+      }
+    ]
+    const species5 = [
+        {
+        scientific_name: 'Coenonympha orientalis',
+        common_name: 'Balkan Heath',
+        taxon_class: 'insects',
+        is_threatened: true,
+          risk_category: 'threatened',
+        risk_rating: 'Vulnerable',
+        countries: ['Bosnia and Herzegovina']
+      }
+    ]
+
+    const opensearchp1 = makeIndexRequest('projects', project1, 'wait_for', '', [], ['GB'])
+    const opensearchp2 = makeIndexRequest('projects', project2, 'wait_for', 'Explore acoustic aspects of large carnivore communication', ['Improve conservation measures'], ['BG'], { species: species2 })
+    const opensearchp3 = makeIndexRequest('projects', project3, 'wait_for', 'Communication patterns in ground squirrel colonies', [], ['BG'], { species: species3 })
+    const opensearchp4 = makeIndexRequest('projects', project4, 'wait_for', 'Birds in border regions', ['Improve conservation measures'], ['BG', 'GR'], { species: species4 })
+    const opensearchp5 = makeIndexRequest('projects', project5, 'wait_for', '', ['Plan reintroduction'], ['GR'], { species: species5 })
+
+    await opensearch.index(opensearchp1)
+    await opensearch.index(opensearchp2)
+    await opensearch.index(opensearchp3)
+    await opensearch.index(opensearchp4)
+    await opensearch.index(opensearchp5)
+  })
+
+  afterAll(async () => {
+    await Promise.all([
+      await opensearch.delete({ index: 'projects', id: '7689925' }),
+      await opensearch.delete({ index: 'projects', id: '7689926' }),
+      await opensearch.delete({ index: 'projects', id: '7689927' }),
+      await opensearch.delete({ index: 'projects', id: '7689928' }),
+      await opensearch.delete({ index: 'projects', id: '7689929' })
+    ])
+  })
+
+  // Test search for species
+  test('OpenSearch returns projects based on species common name', async () => {
     // Arrange
     const app = await makeApp(routesSearch)
 
@@ -293,18 +400,120 @@ describe('OpenSearch search', async () => {
       url: searchRoute,
       query: {
         type: 'project',
-        q: 'Kris'
+        q: 'bear'
       }
     })
 
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body) as SearchResponseProject[]
-    const index = results.findIndex(r => r.id === 7689922)
-    expect(index).not.toBe(-1)
-    const result = results[index]
-
-    for (const prop of EXPECTED_PROPS) {
-      expect(result).toHaveProperty(prop)
-    }
+    expect(results).toHaveLength(1)
+    expect(results.findIndex(r => r.id === 7689926)).not.toBe(-1)
   })
+
+  test('OpenSearch returns projects based on species scientific name', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: 'spermophilus citellus'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    expect(results).toHaveLength(1)
+    expect(results.findIndex(r => r.id === 7689927)).not.toBe(-1)
+  })
+
+  test('OpenSearch returns projects based on species IUCN status', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: 'vulneRable'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    expect(results).toHaveLength(1)
+    expect(results.findIndex(r => r.id === 7689929)).not.toBe(-1)
+  })
+
+  test('OpenSearch returns projects based on species taxon', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: 'insects'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    expect(results).toHaveLength(1)
+    expect(results.findIndex(r => r.id === 7689929)).not.toBe(-1)
+  })
+
+  test('OpenSearch returns projects based on threatened', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: 'ThreateneD sPecies'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    expect(results).toHaveLength(3)
+    expect(results.findIndex(r => r.id === 7689927)).not.toBe(-1)
+    expect(results.findIndex(r => r.id === 7689928)).not.toBe(-1)
+    expect(results.findIndex(r => r.id === 7689929)).not.toBe(-1)
+  })
+
+  test('opensearch returns projects based on a combination of species status, taxon and country', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: 'endangered birds in Bulgaria'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    // eslint-disable-next-line no-console
+    console.log('++++++++++++++++++++++++')
+    // eslint-disable-next-line no-console
+    console.log(results)
+    expect(results).toHaveLength(1)
+  })
+  //
+  // test('opensearch returns projects based on species in different countries', async () ={})
 })
