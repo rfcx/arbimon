@@ -189,13 +189,13 @@
         </div>
 
         <alert-dialog
-          v-if="showAlert && success"
+          v-if="showAlert && success == 'success'"
           severity="success"
           :title="title"
           :message="message"
         />
         <alert-dialog
-          v-else-if="showAlert && !success"
+          v-else-if="showAlert && success == 'error'"
           severity="error"
           :title="title"
           :message="message"
@@ -370,7 +370,7 @@ const addSelectedUser = ():void => {
   if (userSearchValue.value === '') return
   const isDuplicate = users.value?.some(user => user.email === userSearchValue.value) ?? false
   if (isDuplicate) {
-    showAlertDialog(false, 'Duplicate', 'The user is already a project member')
+    showAlertDialog('error', 'Duplicate', 'The user is already a project member')
   } else {
   mutatePostProjectMember({
     email: userSearchValue.value,
@@ -378,10 +378,10 @@ const addSelectedUser = ():void => {
   }, {
     onSuccess: () => {
       usersRefetch()
-      showAlertDialog(true, 'Success', 'New Project member added successfully')
+      showAlertDialog('success', 'Success', 'New Project member added successfully')
     },
     onError: () => {
-      showAlertDialog(false, 'Error', 'Failed to add project member')
+      showAlertDialog('error', 'Error', 'Failed to add project member')
 }
   })
 }
