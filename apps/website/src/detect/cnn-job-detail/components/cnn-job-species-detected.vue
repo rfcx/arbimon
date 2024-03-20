@@ -60,9 +60,14 @@
                   class="text-subtle hover:(underline text-white) flex"
                 >
                   <img
+                    v-if="row.image"
                     class="h-8 w-8 self-center rounded-full"
-                    src="https://www.birds.cornell.edu/home/wp-content/uploads/2023/09/334289821-Baltimore_Oriole-Matthew_Plante.jpg"
+                    :src="row.image"
                   >
+                  <div
+                    v-else
+                    class="h-8 w-8 rounded-full bg-util-gray-03"
+                  />
                   <div class="ml-2">
                     <span class="text-insight text-base italic">{{ row.title }}</span>
                     <p
