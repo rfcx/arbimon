@@ -236,9 +236,8 @@ watch(() => props.toggleShowModal, async () => {
 })
 
 const handleCurrentChange = async (page: number) => {
-  if (!hasFetchedAll.value && (page * PAGE_SIZE) > speciesList.value.length) {
-    await fetchProjectsSpecies(PAGE_SIZE, speciesList.value.length)
-  }
+  speciesList.value = []
+  await fetchProjectsSpecies(PAGE_SIZE, (page - 1) * PAGE_SIZE)
 }
 
 const fetchProjectsSpecies = async (limit: number, offset: number) => {
@@ -309,7 +308,7 @@ const speciesLength = computed(() => {
 })
 
 const speciesForCurrentPage = computed(() => {
-  return speciesListFiltered.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
+  return speciesListFiltered.value
 })
 
 const preSelectedSpecies = computed(() => {
