@@ -29,6 +29,15 @@
         <div>
           <span class="text-util-gray-01">Input</span>
           <div
+            v-if="props.isLoadingSummary"
+            class="mx-2 mt-4 loading-shimmer w-full rounded-lg py-15 max-w-64"
+          />
+          <ComponentError
+            v-else-if="props.isErrorSummary"
+            class="mx-2 mt-4"
+          />
+          <div
+            v-else
             id="cnn-job-information-input"
             class="grid grid-rows-4 gap-y-4 mt-4 text-base text-insight"
           >
@@ -63,7 +72,18 @@
         </div>
         <div>
           <span class="text-util-gray-01">Output</span>
-          <span class="flex text-base text-insight mt-4">
+          <div
+            v-if="props.isLoadingSummary"
+            class="m-2 mt-4 loading-shimmer w-full rounded-lg py-4 max-w-64"
+          />
+          <ComponentError
+            v-else-if="props.isErrorSummary"
+            class="mx-2 mt-4"
+          />
+          <span
+            v-else
+            class="flex text-base text-insight mt-4"
+          >
             Total number of detected species: {{ props.summary?.totalDistinctClassifications }}
           </span>
         </div>
@@ -81,6 +101,7 @@ import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/
 
 import { hours } from '~/picker/time-of-day-constants'
 import { useStore } from '~/store'
+import ComponentError from './component-error.vue'
 import jobInformationStatus from './job-information-status.vue'
 import JobResultValidationStatus from './job-result-validation-status.vue'
 

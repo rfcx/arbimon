@@ -2,7 +2,7 @@
   <div class="job-result-validation-status-wrapper mt-4">
     <div
       v-if="props.isLoading"
-      class="loading-shimmer ml-2 mr-10 rounded-lg h-8"
+      class="m-2 loading-shimmer w-full rounded-lg py-15 max-w-64"
     />
     <ComponentError
       v-else-if="props.isError"
