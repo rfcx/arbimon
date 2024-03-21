@@ -34,12 +34,13 @@ export const getOpensearchProjects = async (query: string, limit: number, offset
                   ]
                 }
               },
-              // Allow complex queries like 'endangered birds in Puerto Rico'
+              // Allow searching for species
               {
                 nested: {
                   path: 'species',
                   query: {
                     multi_match: {
+                      // Enable complex queries like 'endangered birds in Puerto Rico'
                       type: 'cross_fields',
                       query,
                       fields: [

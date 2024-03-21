@@ -284,15 +284,15 @@ describe('OpenSearch search', async () => {
   })
 })
 
-describe('OpenSearch search - search projects by species', async () => {
+describe('OpenSearch - search projects by species', async () => {
   beforeAll(async () => {
     env.OPENSEARCH_ENABLED = 'true'
 
     const project1 = makeProject(7689925, 'Scottish Highlands project', 'published')
-    const project2 = makeProject(7689926, 'Large carnivores in Bulgaria', 'published')
+    const project2 = makeProject(7689926, 'Large carnivores', 'published')
     const project3 = makeProject(7689927, 'Ground squirrel communication calls', 'published')
     const project4 = makeProject(7689928, 'Birds in the Mediterranean region', 'published')
-    const project5 = makeProject(7689929, 'Butterflies in the Balkans', 'published')
+    const project5 = makeProject(7689929, 'Butterflies in mountainous regions', 'published')
 
     const species2 = [
         {
@@ -390,7 +390,7 @@ describe('OpenSearch search - search projects by species', async () => {
   })
 
   // Test search for species
-  test('OpenSearch returns projects based on species common name', async () => {
+  test('returns projects based on common name', async () => {
     // Arrange
     const app = await makeApp(routesSearch)
 
@@ -410,7 +410,7 @@ describe('OpenSearch search - search projects by species', async () => {
     expect(results.findIndex(r => r.id === 7689926)).not.toBe(-1)
   })
 
-  test('OpenSearch returns projects based on species scientific name', async () => {
+  test('returns projects based on scientific name', async () => {
     // Arrange
     const app = await makeApp(routesSearch)
 
@@ -430,7 +430,7 @@ describe('OpenSearch search - search projects by species', async () => {
     expect(results.findIndex(r => r.id === 7689927)).not.toBe(-1)
   })
 
-  test('OpenSearch returns projects based on species IUCN status', async () => {
+  test('returns projects based on IUCN status', async () => {
     // Arrange
     const app = await makeApp(routesSearch)
 
@@ -450,7 +450,7 @@ describe('OpenSearch search - search projects by species', async () => {
     expect(results.findIndex(r => r.id === 7689929)).not.toBe(-1)
   })
 
-  test('OpenSearch returns projects based on species taxon', async () => {
+  test('returns projects based on taxon', async () => {
     // Arrange
     const app = await makeApp(routesSearch)
 
@@ -470,7 +470,7 @@ describe('OpenSearch search - search projects by species', async () => {
     expect(results.findIndex(r => r.id === 7689929)).not.toBe(-1)
   })
 
-  test('OpenSearch returns projects based on threatened', async () => {
+  test('returns projects that have threatened species', async () => {
     // Arrange
     const app = await makeApp(routesSearch)
 
@@ -492,7 +492,7 @@ describe('OpenSearch search - search projects by species', async () => {
     expect(results.findIndex(r => r.id === 7689929)).not.toBe(-1)
   })
 
-  test('opensearch returns projects based on a combination of species status, taxon and country', async () => {
+  test('returns projects based on species status and taxon', async () => {
     // Arrange
     const app = await makeApp(routesSearch)
 
@@ -502,18 +502,34 @@ describe('OpenSearch search - search projects by species', async () => {
       url: searchRoute,
       query: {
         type: 'project',
-        q: 'endangered birds in Bulgaria'
+        q: 'vulnerable butterflies'
       }
     })
 
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body) as SearchResponseProject[]
-    // eslint-disable-next-line no-console
-    console.log('++++++++++++++++++++++++')
-    // eslint-disable-next-line no-console
-    console.log(results)
     expect(results).toHaveLength(1)
+    const mostRelevant = results[0]
+    expect(mostRelevant.id).toBe(7689929)
   })
-  //
-  // test('opensearch returns projects based on species in different countries', async () ={})
+
+  test('returns projects based on a combination of species status, taxon and country', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: 'endangered birds in Greece'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    const mostRelevant = results[0]
+    expect(mostRelevant.id).toBe(7689928)
+  })
 })
