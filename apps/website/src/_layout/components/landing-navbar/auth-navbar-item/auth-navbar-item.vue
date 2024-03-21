@@ -135,12 +135,13 @@ const openProfile = async (): Promise<void> => {
 
 const isLoading = ref(true)
 
-setTimeout(() => {
-    isLoading.value = false
-  }, 1000)
-
 onMounted(() => {
-  initDropdowns()
+  auth.isAuthenticated().then((authenticated) => {
+    isLoading.value = !authenticated
+    if (authenticated) {
+      initDropdowns()
+    }
+  })
 })
 
 </script>
