@@ -4,7 +4,7 @@
       <page-title page-title="Create New CNN Job" />
     </div>
     <div v-if="errors.length > 0">
-      <span class="my-4 bg-rose-200 inline-flex text-echo items-center p-3 border-1 border-rose-600 border-l-3 rounded-lg w-full">
+      <span class="my-4 bg-danger-background inline-flex text-echo items-center p-3 border-1 border-rose-600 border-l-3 rounded-lg w-full">
         <icon-custom-ic-error-message />
         {{ errors.join('; ') }}
       </span>

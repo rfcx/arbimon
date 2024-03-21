@@ -1,40 +1,51 @@
 <template>
   <div class="job-detail-header-wrapper flex justify-between">
-    <el-breadcrumb
-      class="job-detail-breadcrumb"
-      separator="/"
+    <nav
+      class="flex justify-between"
+      aria-label="Breadcrumb"
     >
-      <el-breadcrumb-item :to="{ name: ROUTE_NAMES.cnnJobList }">
-        CNN Jobs
-      </el-breadcrumb-item>
-      <el-breadcrumb-item>
-        <span class="text-subtle">{{ jobId }}</span>
-      </el-breadcrumb-item>
-    </el-breadcrumb>
-    <div class="hidden">
-      <el-button
+      <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse text-insight">
+        <li class="inline-flex items-center text-sm font-display">
+          <router-link
+            :to="{ name: ROUTE_NAMES.cnnJobList }"
+            class="inline-flex items-center hover:text-util-gray-02"
+          >
+            CNN Jobs
+          </router-link>
+        </li>
+        <li>
+          <div class="flex items-center text-sm font-display text-insight">
+            <icon-fas-chevron-right class="w-3 h-3 mr-2" />
+            <router-link
+              :to="{ name: ROUTE_NAMES.cnnJobDetail, params: { jobId } }"
+              class="inline-flex items-center hover:text-util-gray-02"
+            >
+              Job {{ jobId }}
+            </router-link>
+          </div>
+        </li>
+      </ol>
+    </nav>
+    <div class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+      <button
         v-if="isCancelJobEnable"
-        type="info"
-        size="large"
-        class="rounded-md uppercase font-medium"
+        class="btn btn-secondary py-2 flex flex-row justify-center items-center"
       >
-        <icon-fa-pause class="h-4 w-4 mr-2" /> Pause
-      </el-button>
-      <el-button
+        <icon-custom-fi-pause class="h-4 w-4 mr-2" />
+        <span class="pt-1">Pause job</span>
+      </button>
+      <button
         v-if="isCancelJobEnable"
-        type="info"
-        size="large"
-        class="uppercase font-medium text-sm text-flamingo rounded-md"
+        class="btn btn-danger py-2 flex flex-row justify-center items-center"
       >
-        Cancel job
-      </el-button>
-      <el-button
-        type="info"
-        size="large"
-        class="rounded-md"
+        <span class="pt-1">Cancel job</span>
+        <icon-fa-trash class="h-4 w-4 ml-2" />
+      </button>
+      <button
+        class="btn btn-secondary py-3.5"
       >
-        <icon-fa-ellipsis-h />
-      </el-button>
+        <icon-custom-fi-menu class="h-4 w-4" />
+      </button>
     </div>
   </div>
 </template>

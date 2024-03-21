@@ -1,10 +1,10 @@
 <template>
-  <section class="max-w-screen-xl pt-20 pl-115px pr-4">
+  <section class="max-w-screen-xl pt-22 pl-115px pr-4">
     <div>
       <JobDetailHeader :species-name="speciesName" />
       <JobFilterOptions
         :species-name="speciesName"
-        :species-count="speciesCount?.total ?? 0"
+        :detections-count="jobDetections?.length"
       />
       <JobValidationStatus
         :total="speciesCount?.total ?? 0"

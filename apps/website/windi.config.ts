@@ -144,7 +144,8 @@ export default defineConfig({
         'success-status': '#adff2c',
         'queue-status': '#ffc947',
         'error-status': '#cd1d3c',
-        'cancelled-status': '#cd1d3c'
+        'cancelled-status': '#cd1d3c',
+        'danger-background': '#FFDADA'
       },
       backgroundImage: {
         'hero-data': "url('@/_assets/landing/hero-data.webp')",
