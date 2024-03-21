@@ -359,8 +359,7 @@ const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
 }
 
 const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
-  const slugs = selectedSpeciesSlug.value.filter(slug => slug === specie.slug)
-  return slugs.length > 0
+  return selectedSpeciesSlug.value.find(slug => slug === specie.slug) !== undefined
 }
 
 const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
