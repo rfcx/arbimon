@@ -84,40 +84,7 @@
           </div>
           <!-- Modal body -->
           <div class="grid gap-x-4 w-full sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-            <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2">
-              <ul
-                v-if="speciesList && speciesList.length"
-                class="grid gap-3 grid-cols-1 md:grid-rows-5 md:(grid-cols-2 grid-rows-5)"
-              >
-                <li
-                  v-for="item in speciesForCurrentPage"
-                  :key="'specie-highlighted-' + item.slug"
-                  :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 h-full h-23 md:(flex-row) lg:(flex-row justify-between) bg-echo hover:(border-frequency cursor-pointer)"
-                  @click="selectSpecie(item)"
-                >
-                  <SpecieCard
-                    :slug="item.slug"
-                    :scientific-name="item.scientificName"
-                    :common-name="item.commonName"
-                    :photo-url="item.photoUrl"
-                    :redirect="false"
-                    :text-black="false"
-                  />
-                  <div class="self-center">
-                    <el-tag
-                      class="species-highlights border-none text-md h-6"
-                      effect="dark"
-                      size="large"
-                      :color="item.riskRating.color"
-                      :title="item.riskRating.label"
-                      :style="{ color: item.riskRating.text }"
-                    >
-                      {{ item.riskRating.code }}
-                    </el-tag>
-                  </div>
-                </li>
-              </ul>
+            <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 items-center m-auto">
               <icon-custom-ic-loading
                 v-if="isLoadingSpecies"
                 class="animate-spin w-8 h-8 lg:mx-24 mx-12"
@@ -127,14 +94,47 @@
               >
                 No species in a project.
               </h6>
-              <el-pagination
-                v-else
-                v-model:currentPage="currentPage"
-                class="flex items-center justify-center mb-2"
-                :page-size="PAGE_SIZE"
-                :total="speciesLength"
-                layout="prev, pager, next"
-              />
+              <div v-else>
+                <ul
+                  class="grid gap-3 grid-cols-1 md:grid-rows-5 md:(grid-cols-2 grid-rows-5)"
+                >
+                  <li
+                    v-for="item in speciesForCurrentPage"
+                    :key="'specie-highlighted-' + item.slug"
+                    :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
+                    class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 h-full h-23 md:(flex-row) lg:(flex-row justify-between) bg-echo hover:(border-frequency cursor-pointer)"
+                    @click="selectSpecie(item)"
+                  >
+                    <SpecieCard
+                      :slug="item.slug"
+                      :scientific-name="item.scientificName"
+                      :common-name="item.commonName"
+                      :photo-url="item.photoUrl"
+                      :redirect="false"
+                      :text-black="false"
+                    />
+                    <div class="self-center">
+                      <el-tag
+                        class="species-highlights border-none text-md h-6"
+                        effect="dark"
+                        size="large"
+                        :color="item.riskRating.color"
+                        :title="item.riskRating.label"
+                        :style="{ color: item.riskRating.text }"
+                      >
+                        {{ item.riskRating.code }}
+                      </el-tag>
+                    </div>
+                  </li>
+                </ul>
+                <el-pagination
+                  v-model:currentPage="currentPage"
+                  class="flex items-center justify-center mb-2"
+                  :page-size="PAGE_SIZE"
+                  :total="speciesLength"
+                  layout="prev, pager, next"
+                />
+              </div>
             </div>
             <div
               v-if="preSelectedSpecies.length === 0"
@@ -274,6 +274,7 @@ const fetchProjectsSpecies = async (limit: number, offset: number) => {
 
 // Filtered list of species by search, risk or both
 const speciesListFiltered = computed(() => {
+  if (!hasFetchedAll.value) return []
   if (!searchKeyword.value && searchRisk.value) {
     resetPagination()
     return speciesList.value
