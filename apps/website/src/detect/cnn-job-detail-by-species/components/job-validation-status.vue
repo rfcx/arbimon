@@ -1,25 +1,30 @@
 <template>
   <div
-    class="job-result-validation-status-wrapper border-1 border-box-grey rounded-md px-6 py-4 mt-4"
-    style="width: fit-content;"
+    class="border-2 border-util-gray-04 bg-echo rounded-md px-6 py-4 mt-4"
   >
-    <div class="lg:pr-24">
-      <h3 class="job-result-validation-status-header text-subtle text-sm mb-2">
+    <div class="flex flex-row items-center justify-between">
+      <div class="text-base">
         Validation status
-      </h3>
-      <div
-        id="job-result-validation-status-grid-table"
-        class="grid gap-x-4"
-        style="grid-template-columns: fit-content(4rem) 1fr;"
-      >
-        <span class="font-semibold justify-self-start text-right text-lg">{{ total - (confirmed + rejected + uncertain) }}</span>
-        <span class="text-lg">Unvalidated</span>
-        <span class="font-semibold justify-self-start text-right text-lg">{{ confirmed }}</span>
-        <span class="text-lg">Present</span>
-        <span class="font-semibold justify-self-start text-right text-lg">{{ rejected }}</span>
-        <span class="text-lg">Not present</span>
-        <span class="font-semibold justify-self-start text-right text-lg">{{ uncertain }}</span>
-        <span class="text-lg">Unknown</span>
+      </div>
+      <div class="text-subtle text-sm flex flex-row items-center">
+        <icon-custom-fi-unvalidated class="h-3 w-3 mr-2 mb-0.5" />
+        <span class="mr-4">Unvalidated:</span>
+        <span>{{ total - (confirmed + rejected + uncertain) }}</span>
+      </div>
+      <div class="text-subtle text-sm flex flex-row items-center">
+        <icon-custom-fi-present class="h-3 w-3 mr-2 mb-0.5" />
+        <span class="mr-4">Present:</span>
+        <span>{{ confirmed }}</span>
+      </div>
+      <div class="text-subtle text-sm flex flex-row items-center">
+        <icon-custom-fi-not-present class="h-3 w-3 mr-2 mb-0.5" />
+        <span class="mr-4">Not present:</span>
+        <span>{{ rejected }}</span>
+      </div>
+      <div class="text-subtle text-sm flex flex-row items-center mb-0.5">
+        <icon-custom-fi-unknown class="h-3 w-3 mr-2" />
+        <span class="mr-4">Unknown:</span>
+        <span>{{ uncertain }}</span>
       </div>
     </div>
   </div>

@@ -7,7 +7,7 @@
       <div
         v-for="dt in species.media"
         :key="`job-detection-result-by-species-${dt.id}`"
-        class="inline-block mt-2 mr-4"
+        class="inline-block mt-3 mr-4"
       >
         <DetectionItem
           :id="dt.id"
@@ -15,6 +15,9 @@
           :audio-url="dt.audioUrl"
           :validation="dt.validation"
           :checked="dt.checked"
+          :site="dt.site"
+          :start="dt.start"
+          :score="dt.score"
           @emit-detection="updateSelectedDetections"
         />
       </div>
@@ -62,8 +65,11 @@ import DetectionValidator from '@/detect/cnn-job-detail/components/detection-val
 import type { DetectionMedia, DetectionValidationStatus } from '@/detect/cnn-job-detail/components/types'
 import { apiClientKey } from '@/globals'
 import { getMediaLink } from '~/media'
+import { useStore } from '~/store'
 import { validationStatus } from '~/store/detections-constants'
 import DetectionItem from '../../cnn-job-detail/components/detection-item.vue'
+
+const store = useStore()
 
 const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectDetectionsResponse | undefined, page: number, pageSize: number }>(), {
   isLoading: true,
@@ -145,7 +151,10 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
             fileExtension: 'mp3'
           }),
           id: detection.id,
-          validation: detection.reviewStatus
+          validation: detection.reviewStatus,
+          score: detection.confidence,
+          start: detection.start,
+          site: store.projectFilters?.locationSites.filter((site) => site.idCore === detection.siteId)[0]?.name ?? ''
         }
       })
     }

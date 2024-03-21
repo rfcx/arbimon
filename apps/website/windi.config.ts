@@ -139,7 +139,8 @@ export default defineConfig({
           DEFAULT: '#373639',
           light: '#060508',
           dark: '#040406'
-        }
+        },
+        'danger-background': '#FFDADA'
       },
       backgroundImage: {
         'hero-data': "url('@/_assets/landing/hero-data.webp')",

@@ -1,25 +1,30 @@
 <template>
-  <div class="job-filter-options mt-4">
-    <section-title>
-      <template #title>
-        <div class="flex justify-between items-center">
-          <h2 class="text-lg font-semibold">
-            {{ speciesName || '' }} ({{ speciesCount ?? 0 }})
-          </h2>
-        </div>
-      </template>
-      <template #controls>
-        <JobResultFilterBySpecies />
-      </template>
-    </section-title>
+  <div class="pt-24 mx-auto max-w-screen-xl">
+    <div class="flex flex-row items-center">
+      <h1>Species Validation</h1>
+    </div>
+    <div class="flex items-center font-sm space-x-1 md:space-x-2 rtl:space-x-reverse text-insight pt-6">
+      <span class="font-display">Species:</span>
+      <span class="italic">
+        {{ speciesName || '' }}
+      </span>
+    </div>
+    <div class="flex items-center font-sm space-x-1 md:space-x-2 rtl:space-x-reverse text-insight pt-3">
+      <span class="font-display">Total detections:</span>
+      <span>{{ detectionsCount }}</span>
+    </div>
+    <div class="flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse text-insight pt-10">
+      <span class="font-display">Filters:</span>
+      <JobResultFilterBySpecies />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import JobResultFilterBySpecies from './job-result-filter-by-species.vue'
 
-withDefaults(defineProps<{ speciesName: string | undefined, speciesCount: number | undefined }>(), {
+withDefaults(defineProps<{ speciesName: string | undefined, detectionsCount: number | undefined }>(), {
   speciesName: undefined,
-  speciesCount: undefined
+  detectionsCount: undefined
 })
 </script>

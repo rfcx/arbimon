@@ -4,7 +4,7 @@
       <page-title page-title="Create New CNN Job" />
     </div>
     <div v-if="errors.length > 0">
-      <span class="my-4 bg-rose-200 inline-flex text-echo items-center p-3 border-1 border-rose-600 border-l-3 rounded-lg w-full">
+      <span class="my-4 bg-danger-background inline-flex text-echo items-center p-3 border-1 border-rose-600 border-l-3 rounded-lg w-full">
         <icon-custom-ic-error-message />
         {{ errors.join('; ') }}
       </span>
@@ -79,7 +79,7 @@
             >
               Time of day
             </label>
-            <TimeOfDayPicker @emit-select-time="onSelectQueryHours" />
+            <TimeOfDayPicker @emit-hour-range="onSelectQueryHours" />
           </div>
         </li>
         <li class="pb-8 pl-6">
@@ -95,7 +95,7 @@
           <span
             v-else
             class="text-base"
-          >{{ totalDurationInMinutes }} minutes of recordings</span>
+          >{{ displayFullValue(Math.floor(totalDurationInMinutes)) }} minutes of recordings</span>
         </li>
       </ol>
       <div class="flex flex-row items-center space-x-4">
@@ -139,6 +139,7 @@ import { useRouter } from 'vue-router'
 import type { DetectRecordingQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-recording'
 import type { ClassifierJobCreateConfiguration } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-create'
 import { apiCorePostClassifierJobUpdateStatus } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-update-status'
+import { displayFullValue } from '@rfcx-bio/utils/number'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 
@@ -174,7 +175,7 @@ const recordingQuery: DetectRecordingQueryParams = reactive({
   dateStartLocal: '',
   dateEndLocal: '',
   querySites: '',
-  queryHours: ''
+  queryHours: '0-23'
 })
 
 const project = reactive({
@@ -225,6 +226,8 @@ const onSelectQuerySites = (queryStreams: string | null) => {
   recordingQuery.querySites = queryStreams ?? undefined
 }
 const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
+  if (project.projectId === '-1') return
+
   validated.value = false
   job.queryStart = dateStartLocalIso
   job.queryEnd = dateEndLocalIso

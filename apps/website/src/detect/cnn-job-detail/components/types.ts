@@ -15,6 +15,9 @@ export interface DetectionMedia {
   id: string
   checked?: boolean
   validation: ReviewStatus
+  score?: number
+  site?: string
+  start?: string
 }
 
 export interface DetectionValidationStatus {
