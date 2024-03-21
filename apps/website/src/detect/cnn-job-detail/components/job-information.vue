@@ -4,19 +4,14 @@
       <p class="flex text-3xl font-header text-insight">
         Summary
       </p>
-      <div class="grid grid-cols-2 text-lg py-4 border-b-1 border-util-gray-03">
-        <div class="flex">
+      <div class="grid grid-cols-2 text-lg py-4 border-b-1 border-util-gray-03 items-center">
+        <div class="flex md:col-span-1 <md:col-span-2 items-center">
           <span class="text-util-gray-01">Model:</span>
-          <div class="ml-2 text-insight">
-            <h5>
-              {{ props.summary?.classifier.name ?? 'asian-elephant-edge' }}
-            </h5>
-            <h5>
-              {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
-            </h5>
-          </div>
+          <h5 class="ml-2 text-insight">
+            {{ props.summary?.classifier.name ?? 'asian-elephant-edge' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
+          </h5>
         </div>
-        <div>
+        <div class="md:(col-span-1 mt-1) <md:(col-span-2 mt-4)">
           <h2 class="text-lg">
             <jobInformationStatus
               :variant="props.summary?.status ?? 0"
@@ -26,7 +21,7 @@
         </div>
       </div>
       <div class="grid grid-cols-3 pt-4 text-lg">
-        <div>
+        <div class="lg:(col-span-1) <lg:(col-span-3)">
           <span class="text-util-gray-01">Input</span>
           <div
             v-if="props.isLoadingSummary"
@@ -62,7 +57,7 @@
             </span>
           </div>
         </div>
-        <div>
+        <div class="lg:(col-span-1) <lg:(col-span-3 mt-6)">
           <span class="text-util-gray-01">Validation Status</span>
           <job-result-validation-status
             :is-loading="props.isLoadingSummary"
@@ -70,7 +65,7 @@
             :data="props.summary?.validationStatus"
           />
         </div>
-        <div>
+        <div class="lg:(col-span-1) <lg:(col-span-3 mt-6)">
           <span class="text-util-gray-01">Output</span>
           <div
             v-if="props.isLoadingSummary"
