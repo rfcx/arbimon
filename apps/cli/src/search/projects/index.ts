@@ -76,13 +76,16 @@ export const getProjects = async (
   }
 
   console.info('- getProjects: found', totalCount, 'projects in total')
-  return await Promise.all(projectList.map(async (p) => {
-    const { id } = p
+
+  // Modify projects to prepare for indexing (add species, etc.)
+  const projectDocuments = []
+  for (const project of projectList) {
+    const { id } = project
     const species = await getSpeciesByProjectId(sequelize, id).catch(e => [])
-    return {
-      ...p,
-      expanded_country_names: p.country_codes.map(c => expandCountry(c)).filter(c => c !== ''),
-      expanded_objectives: p.objectives.map(o => {
+    projectDocuments.push({
+      ...project,
+      expanded_country_names: project.country_codes.map(c => expandCountry(c)).filter(c => c !== ''),
+      expanded_objectives: project.objectives.map(o => {
         const foundObjective = masterObjectiveValues.find(masterObjective => masterObjective.slug === o)
         return foundObjective?.description ?? o
       }),
@@ -96,8 +99,10 @@ export const getProjects = async (
           ...rest
         }
       })
-    }
-  }))
+    })
+  }
+
+  return projectDocuments
 }
 
 const getSpeciesByProjectId = async (sequelize: Sequelize, id: number): Promise<ProjectSpecies[]> => {
