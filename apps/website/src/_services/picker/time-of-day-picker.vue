@@ -53,10 +53,10 @@ const selectCustom = () => {
   hourRange.value = hours.custom.value
 }
 
-watch(() => hourRange, (ref) => {
-  showError.value = !isValidHourRange(ref.value)
+watch(() => hourRange.value, (ref) => {
+  showError.value = !isValidHourRange(ref)
   if (!showError.value) {
-    emit('emitHourRange', ref.value)
+    emit('emitHourRange', ref)
   }
 })
 
