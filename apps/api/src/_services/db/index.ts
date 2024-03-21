@@ -23,3 +23,14 @@ export const getSequelize = (verbose = false): Sequelize =>
     isSsl: isSsl === 'true',
     verbose
   })
+
+export const authenticateDatabase = async (): Promise<boolean> => {
+  const sequelize = getSequelize()
+
+  try {
+    await sequelize.authenticate()
+    return true
+  } catch (e) {
+    return false
+  }
+}
