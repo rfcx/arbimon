@@ -122,7 +122,9 @@
                 v-if="isLoadingSpecies"
                 class="animate-spin w-8 h-8 lg:mx-24 mx-12"
               />
-              <h6 v-else-if="!speciesList.length">
+              <h6
+                v-else-if="!speciesList.length"
+              >
                 No species in a project.
               </h6>
               <el-pagination
@@ -132,11 +134,10 @@
                 :page-size="PAGE_SIZE"
                 :total="speciesLength"
                 layout="prev, pager, next"
-                @current-change="handleCurrentChange"
               />
             </div>
             <div
-              v-if="selectedSpecies.length === 0"
+              v-if="preSelectedSpecies.length === 0"
               class="hidden grid-cols-1 xl:grid h-127 border-1 border-dashed rounded-lg"
             >
               <div class="my-auto items-center p-5 text-center">
@@ -153,7 +154,7 @@
               class="hidden grid-cols-1 xl:grid"
             >
               <HighlightedSpeciesSelector
-                :species="selectedSpecies"
+                :species="preSelectedSpecies"
                 @emit-remove-specie="removeSpecieFromList"
               />
             </div>
@@ -211,6 +212,15 @@ watch(() => props.highlightedSpecies, () => {
   fillExistingSpeciesSlug()
 })
 
+const speciesList = ref<HighlightedSpeciesRow[]>([])
+const isLoadingSpecies = ref(false)
+
+watch(() => props.toggleShowModal, async () => {
+  fillExistingSpeciesSlug()
+  speciesList.value = []
+  await fetchProjectsSpecies()
+})
+
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
@@ -219,33 +229,21 @@ const selectedProjectId = computed(() => store.selectedProject?.id)
 const searchKeyword = ref('')
 const searchRisk = ref('')
 const showHaveReachedLimit = ref(false)
-const isLoadingSpecies = ref(false)
-const hasFetchedAll = ref(false)
 
-const selectedSpecies = ref<HighlightedSpeciesRow[]>([])
+const selectedSpeciesSlug = ref<string[]>([])
 
 const PAGE_SIZE = 10
 const currentPage = ref(1)
-const totalProjectsSpecies = ref(0)
 
-const speciesList = ref<HighlightedSpeciesRow[]>([])
-watch(() => props.toggleShowModal, async () => {
-  fillExistingSpeciesSlug()
-  speciesList.value = []
-  await fetchProjectsSpecies(PAGE_SIZE, 0)
-})
+const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
+const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
 
-const handleCurrentChange = async (page: number) => {
-  speciesList.value = []
-  await fetchProjectsSpecies(PAGE_SIZE, (page - 1) * PAGE_SIZE)
-}
-
-const fetchProjectsSpecies = async (limit: number, offset: number) => {
+const fetchProjectsSpecies = async () => {
   isLoadingSpecies.value = true
 
   if (selectedProjectId.value === undefined) return
   const fields: ProjectSpeciesFieldSet = 'dashboard'
-  const projectSpecies = await apiBioGetProjectSpecies(apiClientBio, selectedProjectId.value, { limit, offset, fields })
+  const projectSpecies = await apiBioGetProjectSpecies(apiClientBio, selectedProjectId.value, { fields })
 
   if (projectSpecies === undefined) {
     isLoadingSpecies.value = false
@@ -253,9 +251,6 @@ const fetchProjectsSpecies = async (limit: number, offset: number) => {
   }
 
   const s = projectSpecies as ProjectSpeciesResponse
-  hasFetchedAll.value = s.species.length < limit // check if reaching the end
-  totalProjectsSpecies.value = s.total
-
   s.species.forEach(sp => {
     const { slug, taxonSlug, scientificName, commonName, photoUrl, riskId } = sp as DashboardSpecies
     speciesList.value.push({
@@ -269,9 +264,6 @@ const fetchProjectsSpecies = async (limit: number, offset: number) => {
   })
   isLoadingSpecies.value = false
 }
-
-const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
-const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
 
 // Filtered list of species by search, risk or both
 const speciesListFiltered = computed(() => {
@@ -304,11 +296,15 @@ const speciesListFiltered = computed(() => {
 })
 
 const speciesLength = computed(() => {
-  return totalProjectsSpecies.value !== 0 ? totalProjectsSpecies.value : speciesListFiltered.value.length
+  return speciesListFiltered.value.length
 })
 
 const speciesForCurrentPage = computed(() => {
-  return speciesListFiltered.value
+  return speciesListFiltered.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
+})
+
+const preSelectedSpecies = computed(() => {
+  return speciesList.value.length ? selectedSpeciesSlug.value.map((slug) => speciesList.value.filter((specie) => specie.slug === slug)[0]) ?? [] : []
 })
 
 const existingRiskCode = computed(() => {
@@ -317,11 +313,11 @@ const existingRiskCode = computed(() => {
 
 const newSpeciesToAdd = computed(() => {
   const existingSlugsInDB = props.highlightedSpecies.map(sp => sp.slug)
-  return selectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
+  return preSelectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
 })
 
 const speciesToRemove = computed(() => {
-  const preSelectedSpeciesSlug = selectedSpecies.value.map(sp => sp.slug)
+  const preSelectedSpeciesSlug = preSelectedSpecies.value.map(sp => sp.slug)
   return props.highlightedSpecies.filter(sp => !preSelectedSpeciesSlug.includes(sp.slug))
 })
 
@@ -335,18 +331,18 @@ const resetSearch = (): void => {
 }
 
 const findIndexToRemove = (slug: string): void => {
-  const index = selectedSpecies.value.findIndex(sl => sl.slug === slug)
-  selectedSpecies.value.splice(index, 1)
+  const index = selectedSpeciesSlug.value.findIndex(sl => sl === slug)
+  selectedSpeciesSlug.value.splice(index, 1)
 }
 
 const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
   if (isSpecieSelected(specie)) {
     findIndexToRemove(specie.slug)
-    showHaveReachedLimit.value = selectedSpecies.value.length >= 5
+    showHaveReachedLimit.value = selectedSpeciesSlug.value.length >= 5
   } else {
     // only 5 species might be highlighted
-    if (selectedSpecies.value.length < 5) {
-      selectedSpecies.value.push(specie)
+    if (selectedSpeciesSlug.value.length < 5) {
+      selectedSpeciesSlug.value.push(specie.slug)
     } else {
       showHaveReachedLimit.value = true
     }
@@ -354,7 +350,8 @@ const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
 }
 
 const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
-  return selectedSpecies.value.find(sp => sp.slug === specie.slug) !== undefined
+  const slugs = selectedSpeciesSlug.value.filter(slug => slug === specie.slug)
+  return slugs.length > 0
 }
 
 const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
@@ -363,7 +360,9 @@ const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
 }
 
 const fillExistingSpeciesSlug = (): void => {
-  selectedSpecies.value = props.highlightedSpecies.length ? props.highlightedSpecies : []
+  if (props.highlightedSpecies.length) {
+    selectedSpeciesSlug.value = props.highlightedSpecies.map(sp => sp.slug)
+  } else selectedSpeciesSlug.value = []
 }
 
 const filterByCode = (code: string): void => {
