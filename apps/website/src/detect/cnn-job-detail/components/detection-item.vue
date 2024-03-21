@@ -1,68 +1,94 @@
 <template>
-  <div
-    class="detection-item-container relative w-18 h-18 border-box-gray bg-box-gray"
-    :class="{'border-0': isSelected, 'border-1': !isSelected}"
-  >
+  <div class="w-51">
     <div
-      v-if="spectrogramLoading"
-      class="absolute top-0 bottom-0 left-0 right-0 w-4 h-4 m-auto"
+      class="relative rounded-md bg-echo rounded-md border-1 border-util-gray-02 w-51 h-41"
+      :class="{'border-transparent': isSelected || highlightBorder}"
     >
-      <icon-custom-ic-loading class="animate-spin" />
-    </div>
-    <div
-      v-else-if="spectrogram"
-      class="relative"
-      :class="{'selected': isSelected}"
-      @mouseenter="showCheck = true"
-      @mouseleave="showCheck = false"
-    >
-      <img
-        :src="spectrogram"
-        @click="toggleDetection($event)"
-      >
       <div
-        v-if="(showCheck || isSelected)"
-        class="absolute text-xs top-1 left-1"
-        style="line-height: .5rem"
+        v-if="spectrogramLoading"
+        class="absolute top-0 bottom-0 left-0 right-0 w-4 h-4 m-auto"
       >
-        <input
-          type="checkbox"
-          name=""
-          class="checkbox w-3 h-3 border-white rounded-full bg-transparent outline-none ring-0 focus:(border-transparent ring-0 ring-offset-0 outline-none)"
-          :class="{'checkbox-selected': isSelected}"
-          :checked="isSelected"
+        <icon-custom-ic-loading class="animate-spin w-6 h-6" />
+      </div>
+      <div
+        v-else-if="spectrogram"
+        class="relative"
+        @mouseenter="highlightBorder = true"
+        @mouseleave="highlightBorder = false"
+      >
+        <img
+          :src="spectrogram"
+          class="w-50.9 h-40.5 rounded-md object-cover object-center"
+          :class="{'border-transparent': !isSelected || !highlightBorder, 'rounded-md border-2 border-chirp': isSelected || highlightBorder }"
           @click="toggleDetection($event)"
         >
+        <div
+          class="absolute text-xs top-2.5 left-2.5"
+          style="line-height: .5rem"
+        >
+          <input
+            type="checkbox"
+            class="cursor-pointer w-5 h-5 border-3 border-insight rounded-sm bg-transparent outline-none ring-0 focus:(ring-0 border-insight ring-offset-0 outline-none)"
+            :checked="isSelected"
+            @click="toggleDetection($event)"
+          >
+        </div>
+        <div class="absolute text-xl top-1.5 right-1">
+          <validation-status
+            :value="props.validation ?? 'unreviewed'"
+            :hide-unvalidated="true"
+          />
+        </div>
       </div>
-      <div class="absolute text-xs top-0.5 right-0">
-        <validation-status
-          :value="props.validation ?? 'unreviewed'"
-          :hide-unvalidated="true"
+      <div
+        v-else
+        class="absolute top-0 bottom-0 left-0 right-0 w-4 h-4 m-auto"
+      >
+        <icon-custom-image-slash class="text-insight w-6 h-6" />
+      </div>
+      <div
+        v-if="!spectrogramLoading && spectrogram"
+        class="absolute bottom-3 right-3 cursor-pointer"
+      >
+        <audio-controller
+          :playing="playing"
+          :loading="audioLoading"
+          size="sm"
+          @click="playing ? stop() : play()"
         />
       </div>
+      <div
+        v-if="!spectrogramLoading && spectrogram"
+        class="absolute bottom-2 left-2 cursor-pointer"
+      >
+        <icon-custom-fi-visualizer-redirect class="w-6.3 h-6.3" />
+      </div>
     </div>
-    <div
-      v-else
-      class="absolute top-0 bottom-0 left-0 right-0 w-4 h-4 m-auto"
-    >
-      <icon-custom-image-slash class="text-white" />
-    </div>
-    <div
-      v-if="!spectrogramLoading && spectrogram"
-      class="absolute bottom-2 right-2"
-    >
-      <audio-controller
-        :playing="playing"
-        :loading="audioLoading"
-        size="xs"
-        @click="playing ? stop() : play()"
-      />
+    <div class="flex flex-col pt-2 gap-y-2 text-insight text-[13px]">
+      <div class="flex justify-between text-ellipsis overflow-hidden">
+        <span
+          v-if="props.score"
+          class="whitespace-nowrap"
+        >
+          Score: {{ props.score }}
+        </span>
+        <div class="mx-2 border-l-2 border-util-gray-03" />
+        <div
+          v-if="props.site"
+          class="whitespace-nowrap text-ellipsis overflow-hidden"
+          :title="'Site: ' + props.site"
+        >
+          Site: {{ props.site }}
+        </div>
+      </div>
+      <span v-if="props.start">{{ dateFormatted(props.start ?? '') }}</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
+import dayjs from 'dayjs'
 import { Howl } from 'howler'
 import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
@@ -78,7 +104,10 @@ const props = withDefaults(defineProps<{
   audioUrl: string,
   id: string | null,
   validation: ReviewStatus,
-  checked: boolean | null
+  checked: boolean | null,
+  score: number | undefined,
+  start: string | undefined,
+  site: string | undefined
 }>(), {
   id: null,
   checked: null
@@ -88,7 +117,7 @@ const emit = defineEmits<{(e: 'emitDetection', detectionId: string, event: Detec
 
 const spectrogramLoading = ref(false)
 const audioLoading = ref(false)
-const showCheck = ref(false)
+const highlightBorder = ref(false)
 const isSelected = ref<boolean>(false)
 
 const apiMedia = inject(apiClientMediaKey) as AxiosInstance
@@ -165,11 +194,18 @@ const toggleDetection = (event: MouseEvent) => {
     isCtrlKeyHolding: event.ctrlKey || event.metaKey
   })
 }
+
+const dateFormatted = (date: string) => {
+  if (!date.length) return ''
+  return dayjs(date).format('DD/MM/YYYY HH:mm:ss A')
+}
 </script>
 
 <style lang="scss">
-  .selected {
-    padding: 3px;
-    border-color: transparent;
+  .dark [type=checkbox]:checked {
+    color: #060508 !important;
+    opacity: 0.8;
+    border: 3px solid #FFFEFC !important;
+    background-image: url("data:image/svg+xml,%3Csvg width='13' height='10' viewBox='0 0 13 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.5 1.25L4.625 8.125L1.5 5' stroke='%23ADFF2C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
   }
 </style>
