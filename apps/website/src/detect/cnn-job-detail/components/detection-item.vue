@@ -105,12 +105,15 @@ const props = withDefaults(defineProps<{
   id: string | null,
   validation: ReviewStatus,
   checked: boolean | null,
-  score: number | undefined,
-  start: string | undefined,
-  site: string | undefined
+  score?: number | undefined,
+  start?: string | undefined,
+  site?: string | undefined
 }>(), {
   id: null,
-  checked: null
+  checked: null,
+  score: undefined,
+  start: undefined,
+  site: undefined
 })
 
 const emit = defineEmits<{(e: 'emitDetection', detectionId: string, event: DetectionEvent): void}>()
