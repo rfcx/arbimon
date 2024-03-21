@@ -62,6 +62,7 @@ declare module 'vue' {
     IconCustomFiUnknown: typeof import('~icons/custom-icons/fi-unknown')['default']
     IconCustomFiUnvalidated: typeof import('~icons/custom-icons/fi-unvalidated')['default']
     IconCustomFiUser: typeof import('~icons/custom-icons/fi-user')['default']
+    IconCustomFiVisualizerRedirect: typeof import('~icons/custom-icons/fi-visualizer-redirect')['default']
     IconCustomFiXCircle: typeof import('~icons/custom-icons/fi-x-circle')['default']
     IconCustomFtActualBird: typeof import('~icons/custom-icons/ft-actual-bird')['default']
     IconCustomFtBold: typeof import('~icons/custom-icons/ft-bold')['default']
