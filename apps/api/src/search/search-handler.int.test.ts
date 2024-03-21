@@ -282,6 +282,31 @@ describe('OpenSearch search', async () => {
     const results = JSON.parse(response.body) as SearchResponseProject[]
     expect(results.findIndex(r => r.id === 7689924)).not.toBe(-1)
   })
+
+  test('opensearch response provides correct fields', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: 'Kris'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    const index = results.findIndex(r => r.id === 7689922)
+    expect(index).not.toBe(-1)
+    const result = results[index]
+
+    for (const prop of EXPECTED_PROPS) {
+      expect(result).toHaveProperty(prop)
+    }
+  })
 })
 
 describe('OpenSearch - search projects by species', async () => {
