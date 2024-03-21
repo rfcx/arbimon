@@ -214,11 +214,13 @@ watch(() => props.highlightedSpecies, () => {
 
 const speciesList = ref<HighlightedSpeciesRow[]>([])
 const isLoadingSpecies = ref(false)
+const hasFetchedAll = ref(false)
+const LIMIT = 100
 
 watch(() => props.toggleShowModal, async () => {
   fillExistingSpeciesSlug()
   speciesList.value = []
-  await fetchProjectsSpecies()
+  await fetchProjectsSpecies(LIMIT, 0)
 })
 
 const store = useStore()
@@ -238,12 +240,12 @@ const currentPage = ref(1)
 const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
 const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
 
-const fetchProjectsSpecies = async () => {
+const fetchProjectsSpecies = async (limit: number, offset: number) => {
   isLoadingSpecies.value = true
 
   if (selectedProjectId.value === undefined) return
   const fields: ProjectSpeciesFieldSet = 'dashboard'
-  const projectSpecies = await apiBioGetProjectSpecies(apiClientBio, selectedProjectId.value, { fields })
+  const projectSpecies = await apiBioGetProjectSpecies(apiClientBio, selectedProjectId.value, { limit, offset, fields })
 
   if (projectSpecies === undefined) {
     isLoadingSpecies.value = false
@@ -251,6 +253,7 @@ const fetchProjectsSpecies = async () => {
   }
 
   const s = projectSpecies as ProjectSpeciesResponse
+  hasFetchedAll.value = s.species.length < LIMIT // check if reaching the end
   s.species.forEach(sp => {
     const { slug, taxonSlug, scientificName, commonName, photoUrl, riskId } = sp as DashboardSpecies
     speciesList.value.push({
@@ -263,6 +266,10 @@ const fetchProjectsSpecies = async () => {
     })
   })
   isLoadingSpecies.value = false
+
+  if (!hasFetchedAll.value) {
+    await fetchProjectsSpecies(LIMIT, speciesList.value.length)
+  }
 }
 
 // Filtered list of species by search, risk or both
@@ -304,6 +311,7 @@ const speciesForCurrentPage = computed(() => {
 })
 
 const preSelectedSpecies = computed(() => {
+  if (!hasFetchedAll.value) return []
   return speciesList.value.length ? selectedSpeciesSlug.value.map((slug) => speciesList.value.filter((specie) => specie.slug === slug)[0]) ?? [] : []
 })
 
