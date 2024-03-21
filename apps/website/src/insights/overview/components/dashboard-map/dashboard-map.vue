@@ -21,8 +21,53 @@
   </div>
   <div class="inline-grid w-full mt-4">
     <div>
-      <span v-if="isLoadingDataBySite">Loading...</span>
-      <span v-else-if="isErrorDataBySite">Error</span>
+      <div
+        v-if="isLoadingDataBySite"
+        class="loading-shimmer w-full h-80 rounded"
+        style="width:1280px; height:500px;"
+      >
+      &nbsp;
+      </div>
+      <div
+        v-else-if="isErrorDataBySite"
+        class="flex items-center"
+        style="width:1280px; height:500px;"
+      >
+        <div class="relative w-full max-w-md max-h-full mx-auto">
+          <div class="relative p-5 rounded-lg shadow bg-util-gray-04 border border-util-gray-02">
+            <div class="flex flex-col">
+              <div class="flex items-start justify-between">
+                <div class="flex space-x-2">
+                  <icon-custom-ic-warning />
+                  <span class="font-medium">Error</span>
+                </div>
+                <button
+                  type="button"
+                  title="Cancel"
+                  class="justify-self-end"
+                >
+                  <icon-custom-ic-close-black class="fill-white text-sm" />
+                </button>
+              </div>
+              <div class="mt-2 w-full text-insight mx-8 whitespace-pre-line">
+                <p class="mt-2">
+                  There’s a problem loading the map. <br>
+                  Please refresh this page and try again.
+                </p>
+              </div>
+              <div class="flex flex-row mt-3 gap-x-4 mx-8">
+                <button
+                  type="button"
+                  class="text-md text-frequency font-medium refresh-button"
+                  @click="refreshButton"
+                >
+                  Refresh page
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <map-base-component
         v-else-if="mapDataset"
         :dataset="mapDataset"
@@ -158,4 +203,7 @@ const onEmitTaxonClassFilter = (taxonClassIds: string[]) => {
   selectedTaxons.value = taxonClassIds.map(id => parseInt(id))
 }
 
+const refreshButton = ():void => {
+    window.location.reload()
+}
 </script>
