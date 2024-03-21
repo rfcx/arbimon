@@ -3,17 +3,13 @@
     class="flex flex-col justify-between left-100 w-98 h-86vh bg-moss transition-transform -translate-x-full rounded-lg overflow-scroll"
   >
     <div
-      v-if="isLoading"
+      v-if="isLoadingProfile"
       class="animate-pulse loading-shimmer"
     >
       <div class="flex flex-col">
         <div class="rounded-t-lg bg-moss">
           <div class="flex flex-row justify-between items-center">
-            <div class="flex flex-1 flex-row items-center">
-              <span
-                class="h-5 bg-mirage-gray rounded-full dark:bg-mirage-gray-700 w-36 m-2 ml-1 align-baseline"
-              />
-            </div>
+            <div class="h-5 bg-util-gray-03 rounded w-40 m-2 ml-2 align-baseline" />
             <svg
               class="w-4 h-3.5 m-auto self-end mr-4"
               fill="currentColor"
@@ -26,37 +22,28 @@
           </div>
         </div>
         <div>
-          <div class="w-full h-52 bg-mirage-gray rounded sm:w-96 dark:bg-mirage-gray-700" />
-
+          <div class="w-full h-52 bg-util-gray-03 rounded sm:w-96" />
           <div class="p-4 border-b border-util-gray-03">
-            <div class="h-7 bg-mirage-gray rounded-full dark:bg-mirage-gray-700 w-40 my-2" />
+            <div class="h-6 bg-util-gray-03 rounded w-40 my-2" />
             <div
-              class="flex font-medium text-sm flex-row border-util-gray-01 mt-3 space-x-2 font-display items-center"
+              class="flex font-medium text-sm flex-row rounded border-util-gray-01 mt-3 space-x-2 font-display items-center"
             >
-              <div class="h-4 bg-mirage-gray rounded-full dark:bg-mirage-gray-700 w-60 my-2" />
+              <div class="h-4 bg-util-gray-03 rounded w-11/12 my-2" />
             </div>
-            <router-link
-              v-if="profile?.isPublished"
-              :to="`/p/${profile?.slug}`"
-              class="text-frequency"
-            >
-              <div class="h-11 bg-mirage-gray rounded-full dark:bg-mirage-gray-700 w-full mt-10 bg-mirage-gray" />
-            </router-link>
           </div>
           <div class="p-4">
-            <div class="h-5 bg-mirage-gray rounded-full dark:bg-mirage-gray-700 w-max my-3" />
-            <div class="h-5 bg-mirage-gray rounded-full dark:bg-mirage-gray-700 w-max my-3" />
-            <div class="h-5 bg-mirage-gray rounded-full dark:bg-mirage-gray-700 w-max my-3" />
-            <div class="h-5 bg-mirage-gray rounded-full dark:bg-mirage-gray-700 w-max my-3" />
-          </div>
-          <div class="border-t-1 border-util-gray-03 px-4 mb-4">
-            <h4 class="h-7 bg-mirage-gray rounded-full dark:bg-mirage-gray-700 w-28 mt-4 mb-2">
+            <div class="h-5 bg-util-gray-03 rounded dark:bg-util-gray-03 w-full my-3">
               &nbsp;
-            </h4>
-            <p class="h-4 bg-mirage-gray rounded-full dark:bg-mirage-gray-700 w-full mt-3 mb-2">
+            </div>
+            <div class="h-5 bg-util-gray-03 rounded dark:bg-util-gray-03 w-full my-3">
               &nbsp;
-            </p>
-            <div class="h-5 bg-mirage-gray rounded-full dark:bg-mirage-gray-700 w-max my-3" />
+            </div>
+            <div class="h-5 bg-util-gray-03 rounded dark:bg-util-gray-03 w-full my-3">
+              &nbsp;
+            </div>
+            <div class="h-5 bg-util-gray-03 rounded dark:bg-util-gray-03 w-full my-3">
+              &nbsp;
+            </div>
           </div>
         </div>
       </div>
@@ -273,7 +260,7 @@
 import { type AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
 import type { ComputedRef } from 'vue'
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 
 import { getCountryLabel } from '@/_services/country'
@@ -299,7 +286,7 @@ const isStakeholdersSelected = ref(false)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
-const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'])
+const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'])
 const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId, computed(() => isStakeholdersSelected.value))
 
 const isAboutTabViewMored = ref(false)
@@ -307,8 +294,6 @@ const isAboutTabEditing = ref(false)
 
 const isKeyResultTabViewMored = ref(false)
 const isKeyResultTabEditing = ref(false)
-
-const isLoading = ref()
 
 const shouldShowStakeholdersContent = computed(() => {
   const hasOrganizations = (stakeholders.value?.organizations && stakeholders.value?.organizations.length > 0) ?? false
@@ -369,17 +354,6 @@ const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
     }
   })
 })
-
-const fetchData = async () => {
-  isLoading.value = true
-  // Call API to fetch project data
-  await profileRefetch()
-  await stakeholdersRefetch()
-  isLoading.value = false
-}
-
-onMounted(fetchData)
-watch(() => props.projectId, fetchData)
 
 </script>
 <style lang="scss">
