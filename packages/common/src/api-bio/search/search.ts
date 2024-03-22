@@ -85,7 +85,19 @@ export interface SearchQueryProjectRawResponse {
     // expanded country name and objectives column
     expanded_country_names: string[]
     expanded_objectives: string[]
+
+    species?: ProjectSpecies[]
   }
+}
+
+interface ProjectSpecies {
+  scientific_name: string
+  common_name: string
+  taxon_class: string
+  is_threatened: boolean
+  risk_rating_category?: string
+  risk_rating: string
+  countries: string[]
 }
 
 export interface SearchQueryOrganizationRawResponse {
