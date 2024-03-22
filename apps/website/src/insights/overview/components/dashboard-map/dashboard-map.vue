@@ -39,13 +39,6 @@
                   <icon-custom-ic-warning />
                   <span class="font-medium">Error</span>
                 </div>
-                <button
-                  type="button"
-                  title="Cancel"
-                  class="justify-self-end"
-                >
-                  <icon-custom-ic-close-black class="fill-white text-sm" />
-                </button>
               </div>
               <div class="mt-2 w-full text-insight mx-8 whitespace-pre-line">
                 <p class="mt-2">
