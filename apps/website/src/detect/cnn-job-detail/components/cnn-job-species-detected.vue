@@ -27,6 +27,7 @@
                 'sticky left-0': idx === 0,
                 'cursor-pointer': item.key
               }"
+              @click="sort(item.key)"
             >
               <div
                 class="flex items-center text-xs"
@@ -38,10 +39,12 @@
                   class="ml-2 text-faded"
                 >
                   <icon-fa-chevron-up
-                    class="text-xxs hidden"
+                    class="text-xxs"
+                    :class="{'text-white': sortColumn === item.key && sortDirection === 1 }"
                   />
                   <icon-fa-chevron-down
-                    class="text-xxs hidden"
+                    class="text-xxs"
+                    :class="{'text-white': sortColumn === item.key && sortDirection === -1 }"
                   />
                 </div>
               </div>
