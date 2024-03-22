@@ -2,258 +2,241 @@
   <div
     class="flex flex-col justify-between left-100 w-98 h-86vh bg-moss transition-transform -translate-x-full rounded-lg overflow-scroll"
   >
-    <div
-      v-if="isLoadingProfile"
-      class="animate-pulse loading-shimmer"
-    >
-      <div class="flex flex-col">
-        <div class="rounded-t-lg bg-moss">
-          <div class="flex flex-row justify-between items-center">
-            <div class="h-5 bg-util-gray-03 rounded w-40 m-2 ml-2 align-baseline" />
-            <svg
-              class="w-4 h-3.5 m-auto self-end mr-4"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-              @click="emit('emitCloseProjectInfo')"
-            >
-              <path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z" />
-            </svg>
-          </div>
-        </div>
-        <div>
-          <div class="w-full h-52 bg-util-gray-03 rounded sm:w-96" />
-          <div class="p-4 border-b border-util-gray-03">
-            <div class="h-6 bg-util-gray-03 rounded w-40 my-2" />
-            <div
-              class="flex font-medium text-sm flex-row rounded border-util-gray-01 mt-3 space-x-2 font-display items-center"
-            >
-              <div class="h-4 bg-util-gray-03 rounded w-11/12 my-2" />
-            </div>
-          </div>
-          <div class="p-4">
-            <div class="h-5 bg-util-gray-03 rounded dark:bg-util-gray-03 w-full my-3">
-              &nbsp;
-            </div>
-            <div class="h-5 bg-util-gray-03 rounded dark:bg-util-gray-03 w-full my-3">
-              &nbsp;
-            </div>
-            <div class="h-5 bg-util-gray-03 rounded dark:bg-util-gray-03 w-full my-3">
-              &nbsp;
-            </div>
-            <div class="h-5 bg-util-gray-03 rounded dark:bg-util-gray-03 w-full my-3">
-              &nbsp;
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-else>
-      <div class="flex flex-col">
-        <div class="rounded-t-lg bg-moss">
-          <div class="flex flex-row justify-between items-center">
-            <div class="flex flex-1 flex-row items-center">
-              <span
-                class="text-spoonbill font-medium text-xs ml-4 my-3.5"
-              >{{ getCountryLabel(profile?.countryCodes ?? [], 1) }}</span>
-              <div
-                v-if="countrieFlag"
-                class="align-baseline flex"
-              >
-                <country-flag
-                  :country="countrieFlag"
-                  size="normal"
-                  class="flex ml-2"
-                />
-              </div>
-              <icon-custom-fi-globe
-                v-if="profile?.countryCodes ? profile?.countryCodes.length > 1 : false"
-                class="flex m-2 my-3"
-              />
-            </div>
-            <svg
-              class="w-4 h-3.5 m-auto self-end mr-4"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-              @click="emit('emitCloseProjectInfo')"
-            >
-              <path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z" />
-            </svg>
-          </div>
-        </div>
-        <div>
-          <img
-            v-if="profile?.image"
-            :src="urlWrapper(profile.image)"
-            class="w-full object-cover aspect-auto bg-util-gray-03 h-52"
-          >
+    <div class="flex flex-col">
+      <div class="rounded-t-lg bg-moss">
+        <div class="flex flex-row justify-between items-center">
+          <div
+            v-if="isLoadingProfile"
+            class="h-5 bg-util-gray-03 rounded w-40 m-2 ml-2 align-baseline"
+          />
           <div
             v-else
-            class="w-full h-52 object-contain bg-util-gray-03 flex justify-center items-center"
-          />
-          <div class="p-4 border-b border-util-gray-03">
-            <span class="text-lg font-medium">{{ profile?.name }}</span>
+            class="flex flex-1 flex-row items-center"
+          >
+            <span
+              class="text-spoonbill font-medium text-xs ml-4 my-3.5"
+            >{{ getCountryLabel(profile?.countryCodes ?? [], 1) }}</span>
             <div
-              class="flex font-medium text-sm flex-row border-util-gray-01 mt-3 space-x-2 font-display items-center"
+              v-if="countrieFlag"
+              class="align-baseline flex"
             >
-              <span>
-                Project dates:
-              </span>
-              <span>
-                {{ dateLabel(profile?.dateStart) }}
-              </span>
-              <icon-custom-arrow-right-white class="self-start" />
-              <span>
-                {{ dateLabel(profile?.dateEnd) }}
-              </span>
+              <country-flag
+                :country="countrieFlag"
+                size="normal"
+                class="flex ml-2"
+              />
             </div>
-            <router-link
-              v-if="profile?.isPublished"
-              :to="`/p/${profile?.slug}`"
-              class="text-frequency"
+            <icon-custom-fi-globe
+              v-if="profile?.countryCodes ? profile?.countryCodes.length > 1 : false"
+              class="flex m-2 my-3"
+            />
+          </div>
+          <svg
+            class="w-4 h-3.5 m-auto self-end mr-4"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+            @click="emit('emitCloseProjectInfo')"
+          >
+            <path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z" />
+          </svg>
+        </div>
+      </div>
+      <div v-if="isLoadingProfile">
+        <div class="w-full h-52 bg-util-gray-03 rounded sm:w-96" />
+        <div class="p-4 border-b border-util-gray-03">
+          <div class="h-6 bg-util-gray-03 rounded w-40 my-2" />
+          <div
+            class="flex font-medium text-sm flex-row rounded border-util-gray-01 mt-3 space-x-2 font-display items-center"
+          >
+            <div class="h-4 bg-util-gray-03 rounded w-11/12 my-2" />
+          </div>
+        </div>
+        <div class="p-4">
+          <div
+            v-for="index in 4"
+            :key="index"
+            class="h-5 bg-util-gray-03 rounded dark:bg-util-gray-03 w-full my-3"
+          >
+              &nbsp;
+          </div>
+        </div>
+
+        <div class="h-36 rounded w-11/12 my-2">
+          &nbsp;
+        </div>
+      </div>
+      <div v-else>
+        <img
+          v-if="profile?.image"
+          :src="urlWrapper(profile.image)"
+          class="w-full object-cover aspect-auto bg-util-gray-03 h-52"
+        >
+        <div
+          v-else
+          class="w-full h-52 object-contain bg-util-gray-03 flex justify-center items-center"
+        />
+        <div class="p-4 border-b border-util-gray-03">
+          <span class="text-lg font-medium">{{ profile?.name }}</span>
+          <div
+            class="flex font-medium text-sm flex-row border-util-gray-01 mt-3 space-x-2 font-display items-center"
+          >
+            <span>
+              Project dates:
+            </span>
+            <span>
+              {{ dateLabel(profile?.dateStart) }}
+            </span>
+            <icon-custom-arrow-right-white class="self-start" />
+            <span>
+              {{ dateLabel(profile?.dateEnd) }}
+            </span>
+          </div>
+          <router-link
+            v-if="profile?.isPublished"
+            :to="`/p/${profile?.slug}`"
+            class="text-frequency"
+          >
+            <button
+              class="btn btn-primary w-full mt-10"
+              :class="{'opacity-50 cursor-not-allowed': !profile?.isPublished}"
             >
-              <button
-                class="btn btn-primary w-full mt-10"
-                :class="{'opacity-50 cursor-not-allowed': !profile?.isPublished}"
-              >
-                View project insights
-              </button>
-            </router-link>
-          </div>
-          <div class="p-4">
-            <numeric-metric
-              tooltip-id="deployment-sites"
-              tooltip-text="Number of sites with recorders deployed."
-              title="Project sites:"
-              :value="profile?.metrics?.totalSites ?? 0"
-              icon-name="ft-map-pin-lg"
-              class="flex-1"
-            />
-            <numeric-metric
-              tooltip-id="threatened-species-over-all-species"
-              title="Threatened / total species:"
-              tooltip-text="Number of Near Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
-              :value="profile?.metrics?.threatenedSpecies ?? 0"
-              :total-value="profile?.metrics?.totalSpecies ?? 0"
-              icon-name="ft-actual-bird"
-              class="flex-1"
-            />
-            <numeric-metric
-              tooltip-id="total-detections"
-              title="Total detections:"
-              tooltip-text="Total number of species calls detected."
-              :value="profile?.metrics?.totalDetections ?? 0"
-              icon-name="ft-search-lg"
-              class="flex-1"
-            />
-            <numeric-metric
-              tooltip-id="total-recordings"
-              :tooltip-text="`Total minutes of recordings captured.`"
-              :title="`Minutes of recordings:`"
-              :value="totalRecordingsMin"
-              icon-name="ft-mic-lg"
-              class="flex-1"
-            />
-          </div>
-          <div class="border-t-1 border-util-gray-03 px-4 mb-4">
-            <h4 class="mt-4 font-medium mb-2">
-              Taxonomic groups
-            </h4>
-            <p class="text-xs mb-2">
-              Number of species detected in each taxonomic group.
-            </p>
-            <stack-distribution
-              :dataset="speciesRichnessByTaxon"
-              :known-total-count="`${profile?.metrics?.totalSpecies ?? 0}`"
-              :small-version="true"
-              simple-no-data-text="This project has no species detection"
-              class="my-4 text-xs"
+              View project insights
+            </button>
+          </router-link>
+        </div>
+        <div class="p-4">
+          <numeric-metric
+            tooltip-id="deployment-sites"
+            tooltip-text="Number of sites with recorders deployed."
+            title="Project sites:"
+            :value="profile?.metrics?.totalSites ?? 0"
+            icon-name="ft-map-pin-lg"
+            class="flex-1"
+          />
+          <numeric-metric
+            tooltip-id="threatened-species-over-all-species"
+            title="Threatened / total species:"
+            tooltip-text="Number of Near Threatened, Vulnerable, Endangered, & Critically Endangered species over total species found."
+            :value="profile?.metrics?.threatenedSpecies ?? 0"
+            :total-value="profile?.metrics?.totalSpecies ?? 0"
+            icon-name="ft-actual-bird"
+            class="flex-1"
+          />
+          <numeric-metric
+            tooltip-id="total-detections"
+            title="Total detections:"
+            tooltip-text="Total number of species calls detected."
+            :value="profile?.metrics?.totalDetections ?? 0"
+            icon-name="ft-search-lg"
+            class="flex-1"
+          />
+          <numeric-metric
+            tooltip-id="total-recordings"
+            :tooltip-text="`Total minutes of recordings captured.`"
+            :title="`Minutes of recordings:`"
+            :value="totalRecordingsMin"
+            icon-name="ft-mic-lg"
+            class="flex-1"
+          />
+        </div>
+        <div class="border-t-1 border-util-gray-03 px-4 mb-4">
+          <h4 class="mt-4 font-medium mb-2">
+            Taxonomic groups
+          </h4>
+          <p class="text-xs mb-2">
+            Number of species detected in each taxonomic group.
+          </p>
+          <stack-distribution
+            :dataset="speciesRichnessByTaxon"
+            :known-total-count="`${profile?.metrics?.totalSpecies ?? 0}`"
+            :small-version="true"
+            simple-no-data-text="This project has no species detection"
+            class="my-4 text-xs"
+          />
+        </div>
+      </div>
+    </div>
+    <el-tabs
+      v-if="profile?.isPublished"
+      v-model="activeTab"
+      class="border-t-1 border-util-gray-03"
+    >
+      <el-tab-pane
+        label="About"
+        name="about"
+      >
+        <p
+          v-if="profile?.readme"
+          class="pt-4"
+        >
+          <DashboardMarkdownViewerEditor
+            id="about"
+            v-model:is-view-mored="isAboutTabViewMored"
+            v-model:is-editing="isAboutTabEditing"
+            :editable="false"
+            :raw-markdown-text="profile?.readme"
+            :default-markdown-text="readmeDefault"
+            :is-project-member="false"
+            :is-viewing-as-guest="true"
+          />
+        </p>
+        <div v-else>
+          <no-content-banner />
+        </div>
+      </el-tab-pane>
+      <el-tab-pane
+        label="Key result"
+        name="keyResult"
+      >
+        <p
+          v-if="profile?.keyResult"
+          class="pt-4"
+        >
+          <DashboardMarkdownViewerEditor
+            id="key-result"
+            v-model:is-view-mored="isKeyResultTabViewMored"
+            v-model:is-editing="isKeyResultTabEditing"
+            :editable="false"
+            :raw-markdown-text="profile?.keyResult"
+            :default-markdown-text="keyResultDefault"
+            :is-project-member="false"
+            :is-viewing-as-guest="false"
+          />
+        </p>
+        <div v-else>
+          <no-content-banner />
+        </div>
+      </el-tab-pane>
+      <el-tab-pane
+        label="Stakeholders"
+        name="stakeholders"
+      >
+        <div v-if="shouldShowStakeholdersContent">
+          <div
+            class="grid mt-4"
+            style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
+          >
+            <DashboardProjectStakeholdersViewer
+              :editable="false"
+              :is-project-member="false"
+              :is-external-guest="true"
+              :loading="stakeholdersLoading || stakeholdersRefetching"
+              :organizations="stakeholders?.organizations ?? []"
+              :project-members="stakeholders?.users.filter(u => u.ranking !== -1).sort((a, b) => a.ranking - b.ranking) ?? []"
+              @emit-is-updating="false"
             />
           </div>
         </div>
-      </div>
-      <el-tabs
-        v-if="profile?.isPublished"
-        v-model="activeTab"
-        class="border-t-1 border-util-gray-03"
-      >
-        <el-tab-pane
-          label="About"
-          name="about"
-        >
-          <p
-            v-if="profile?.readme"
-            class="pt-4"
-          >
-            <DashboardMarkdownViewerEditor
-              id="about"
-              v-model:is-view-mored="isAboutTabViewMored"
-              v-model:is-editing="isAboutTabEditing"
-              :editable="false"
-              :raw-markdown-text="profile?.readme"
-              :default-markdown-text="readmeDefault"
-              :is-project-member="false"
-              :is-viewing-as-guest="true"
-            />
-          </p>
-          <div v-else>
-            <no-content-banner />
-          </div>
-        </el-tab-pane>
-        <el-tab-pane
-          label="Key result"
-          name="keyResult"
-        >
-          <p
-            v-if="profile?.keyResult"
-            class="pt-4"
-          >
-            <DashboardMarkdownViewerEditor
-              id="key-result"
-              v-model:is-view-mored="isKeyResultTabViewMored"
-              v-model:is-editing="isKeyResultTabEditing"
-              :editable="false"
-              :raw-markdown-text="profile?.keyResult"
-              :default-markdown-text="keyResultDefault"
-              :is-project-member="false"
-              :is-viewing-as-guest="false"
-            />
-          </p>
-          <div v-else>
-            <no-content-banner />
-          </div>
-        </el-tab-pane>
-        <el-tab-pane
-          label="Stakeholders"
-          name="stakeholders"
-        >
-          <div v-if="shouldShowStakeholdersContent">
-            <div
-              class="grid mt-4"
-              style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
-            >
-              <DashboardProjectStakeholdersViewer
-                :editable="false"
-                :is-project-member="false"
-                :is-external-guest="true"
-                :loading="stakeholdersLoading || stakeholdersRefetching"
-                :organizations="stakeholders?.organizations ?? []"
-                :project-members="stakeholders?.users.filter(u => u.ranking !== -1).sort((a, b) => a.ranking - b.ranking) ?? []"
-                @emit-is-updating="false"
-              />
-            </div>
-          </div>
-          <div v-else>
-            <no-content-banner />
-          </div>
-        </el-tab-pane>
-      </el-tabs>
-      <private-project-tag
-        v-if="!profile?.isPublished"
-        class="justify-self-end"
-      />
-    </div>
+        <div v-else>
+          <no-content-banner />
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+    <private-project-tag
+      v-if="!profile?.isPublished"
+      class="justify-self-end"
+    />
   </div>
 </template>
 <script setup lang="ts">
