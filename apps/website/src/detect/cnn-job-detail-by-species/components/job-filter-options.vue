@@ -1,10 +1,10 @@
 <template>
   <div class="pt-24 mx-auto max-w-screen-xl">
     <div class="flex flex-row items-center">
-      <h1>Species Validation</h1>
+      <h1>Validation</h1>
     </div>
     <div class="flex items-center font-sm space-x-1 md:space-x-2 rtl:space-x-reverse text-insight pt-6">
-      <span class="font-display">Species:</span>
+      <span class="font-display">Class:</span>
       <span class="italic">
         {{ speciesName || '' }}
       </span>
