@@ -26,10 +26,10 @@
         class="flex items-center space-x-4 font-medium animate-pulse"
       >
         <div class="flex max-w-sm items-center space-x-4 font-medium">
-          <div class="tab bg-steel-gray relative block h-5 w-24 rounded-full dark:bg-steel-gray-500" />
+          <div class="tab bg-util-gray-03 relative block h-5 w-24 rounded-full dark:bg-util-gray-03" />
           <div class="flex">
             <div class="dark:focus:ring-frequency/10 mr-3 flex rounded-full text-sm focus:ring-4 md:mr-0">
-              <div class="bg-steel-gray h-8 w-8 rounded-full dark:bg-steel-gray-500" />
+              <div class="bg-util-gray-03 h-8 w-8 rounded-full dark:bg-util-gray-03" />
             </div>
           </div>
         </div>
@@ -133,12 +133,13 @@ const openProfile = async (): Promise<void> => {
   void router.replace({ name: ROUTE_NAMES.accountSettings })
 }
 
-const isLoading = ref(true)
+const isLoading = ref(false)
 
 onMounted(() => {
   auth.isAuthenticated().then((authenticated) => {
-    isLoading.value = !authenticated
+    isLoading.value = true
     if (authenticated) {
+      isLoading.value = !authenticated
       initDropdowns()
     }
   })
