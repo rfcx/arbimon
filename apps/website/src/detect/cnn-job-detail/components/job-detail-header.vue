@@ -1,28 +1,26 @@
 <template>
-  <div class="job-detail-header-wrapper flex justify-between">
+  <div class="flex justify-between">
     <nav
       class="flex justify-between"
       aria-label="Breadcrumb"
     >
-      <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse text-insight">
-        <li class="inline-flex items-center text-sm font-display">
+      <ol class="inline-flex align-top space-x-1 md:space-x-2 rtl:space-x-reverse text-insight">
+        <li class="inline-flex align-top text-sm font-display">
           <router-link
             :to="{ name: ROUTE_NAMES.cnnJobList }"
-            class="inline-flex items-center hover:text-util-gray-02"
+            class="inline-flex align-top hover:text-util-gray-02"
           >
             CNN Jobs
           </router-link>
         </li>
-        <li>
-          <div class="flex items-center text-sm font-display text-insight">
-            <icon-fas-chevron-right class="w-3 h-3 mr-2" />
-            <router-link
-              :to="{ name: ROUTE_NAMES.cnnJobDetail, params: { jobId } }"
-              class="inline-flex items-center hover:text-util-gray-02"
-            >
-              Job {{ jobId }}
-            </router-link>
-          </div>
+        <li class="flex align-top text-sm font-display text-insight">
+          <icon-fas-chevron-right class="w-3 h-3 mr-2 mt-0.8" />
+          <router-link
+            :to="{ name: ROUTE_NAMES.cnnJobDetail, params: { jobId } }"
+            class="inline-flex align-top hover:text-util-gray-02"
+          >
+            Job {{ jobId }}
+          </router-link>
         </li>
       </ol>
     </nav>
