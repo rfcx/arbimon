@@ -23,15 +23,13 @@
     <div>
       <div
         v-if="isLoadingDataBySite"
-        class="loading-shimmer w-full h-80 rounded"
-        style="width:1280px; height:500px;"
+        class="loading-shimmer w-full rounded h-[32rem]"
       >
       &nbsp;
       </div>
       <div
         v-else-if="isErrorDataBySite"
-        class="flex items-center"
-        style="width:1280px; height:500px;"
+        class="flex items-center w-full h-[32rem]"
       >
         <div class="relative w-full max-w-md max-h-full mx-auto">
           <div class="relative p-5 rounded-lg shadow bg-util-gray-04 border border-util-gray-02">
@@ -59,7 +57,7 @@
                 <button
                   type="button"
                   class="text-md text-frequency font-medium refresh-button"
-                  @click="refreshButton"
+                  @click="reloadPage"
                 >
                   Refresh page
                 </button>
@@ -203,7 +201,7 @@ const onEmitTaxonClassFilter = (taxonClassIds: string[]) => {
   selectedTaxons.value = taxonClassIds.map(id => parseInt(id))
 }
 
-const refreshButton = ():void => {
+const reloadPage = ():void => {
     window.location.reload()
 }
 </script>
