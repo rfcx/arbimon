@@ -2,9 +2,15 @@ import { type TCountryCode, getCountryData } from 'countries-list'
 import { type Dayjs } from 'dayjs'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
+import { type ProjectSpecies } from '@rfcx-bio/common/api-bio/search/search'
 import { masterObjectiveValues } from '@rfcx-bio/common/dao/master-data'
 
-import { BASE_SQL, SYNC_BATCH_LIMIT } from '../constants'
+import {
+  BASE_SQL,
+  RISK_RATING_EXPANDED,
+  SPECIES_IN_PROJECT_SQL,
+  SYNC_BATCH_LIMIT
+} from '../constants'
 import { type AbbreviatedProject, type ExpandedProject } from '../types'
 
 export const getProjects = async (
@@ -71,17 +77,46 @@ export const getProjects = async (
   }
 
   console.info('- getProjects: found', totalCount, 'projects in total')
-  return projectList.map(p => {
-    return {
-      ...p,
-      expanded_country_names: p.country_codes.map(c => {
-        const countryData = getCountryData(c as TCountryCode)
-        return countryData?.name ?? ''
-      }).filter(c => c !== ''),
-      expanded_objectives: p.objectives.map(o => {
+
+  // Modify projects to prepare for indexing (add species, etc.)
+  const projectDocuments = []
+  for (const project of projectList) {
+    const { id } = project
+    const species = await getSpeciesByProjectId(sequelize, id).catch(e => [])
+    projectDocuments.push({
+      ...project,
+      expanded_country_names: project.country_codes.map(c => expandCountry(c)).filter(c => c !== ''),
+      expanded_objectives: project.objectives.map(o => {
         const foundObjective = masterObjectiveValues.find(masterObjective => masterObjective.slug === o)
         return foundObjective?.description ?? o
+      }),
+      species: species.map(sp => {
+        const { code, countries = [], ...rest } = sp
+        const { expanded = '', threatened = false } = code !== undefined ? RISK_RATING_EXPANDED[code] : {}
+        return {
+          risk_rating: expanded || '',
+          risk_category: threatened ? 'threatened' : '',
+          countries: countries.map(code => expandCountry(code)),
+          ...rest
+        }
       })
-    }
+    })
+  }
+
+  return projectDocuments
+}
+
+const getSpeciesByProjectId = async (sequelize: Sequelize, id: number): Promise<ProjectSpecies[]> => {
+  return await sequelize.query<ProjectSpecies>(SPECIES_IN_PROJECT_SQL, {
+    raw: true,
+    replacements: {
+      id
+    },
+    type: QueryTypes.SELECT
   })
+}
+
+const expandCountry = (code: string): string => {
+  const countryData = getCountryData(code as TCountryCode)
+  return countryData?.name ?? ''
 }

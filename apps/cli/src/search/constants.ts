@@ -32,6 +32,35 @@ export const BASE_SQL = `
   left join location_project_metric on location_project.id = location_project_metric.location_project_id
   where `
 
+export const SPECIES_IN_PROJECT_SQL = `
+  select 
+    s.scientific_name, 
+    s.common_name, 
+    s.taxon_class_slug as taxon_class, 
+    r.is_threatened, 
+    r.code,
+    array_agg(distinct ls.country_code) as countries
+  from species_in_project s 
+  left join risk_rating_iucn r on r.id = s.risk_rating_id
+  left join detection_by_site_species_hour d on d.taxon_species_id = s.taxon_species_id and d.location_project_id = s.location_project_id
+  left join location_site ls on ls.id = d.location_site_id
+  where s.location_project_id = :id
+  group by s.scientific_name, s.common_name, s.taxon_class_slug, r.is_threatened, r.code`
+
 export const PROJECTS_INDEX_NAME = 'projects'
 export const ORGANIZATIONS_INDEX_NAME = 'organizations'
 export const SYNC_BATCH_LIMIT = 1000
+
+export const RISK_RATING_EXPANDED: Record<string, { expanded: string, threatened: boolean }> = {
+    NL: { expanded: 'Not Listed', threatened: false },
+    NE: { expanded: 'Not Evaluated', threatened: false },
+    DD: { expanded: 'Data Deficient', threatened: false },
+    LC: { expanded: 'Least Concern', threatened: false },
+    NT: { expanded: 'Near Threatened', threatened: true },
+    VU: { expanded: 'Vulnerable', threatened: true },
+    EN: { expanded: 'Endangered', threatened: true },
+    CR: { expanded: 'Critically Endangered', threatened: true },
+    RE: { expanded: 'Regionally Extinct', threatened: false },
+    EW: { expanded: 'Extinct in the Wild', threatened: false },
+    EX: { expanded: 'Extinct', threatened: false }
+}

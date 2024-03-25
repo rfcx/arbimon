@@ -1,4 +1,4 @@
-import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios'
+import axios, { type AxiosRequestConfig, type AxiosResponse, AxiosInstance } from 'axios'
 
 // TODO: Write a generic client & move it to common
 export class ApiCoreClient {
@@ -9,7 +9,7 @@ export class ApiCoreClient {
     return ApiCoreClient.instance
   }
 
-  axiosClient = axios.create({
+  axiosClient: AxiosInstance = axios.create({
     timeout: 30 * 1000 // 30 secs
   })
 
