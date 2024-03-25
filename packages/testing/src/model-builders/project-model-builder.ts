@@ -23,7 +23,8 @@ export const makeIndexRequest = (
   waitForRefresh: boolean | 'wait_for',
   summary = '',
   objectives: string[] = [],
-  countryCodes: string[] = []
+  countryCodes: string[] = [],
+  additionalData?: Record<string, any>
 ): { id: string, index: string, body: SearchQueryProjectRawResponse['_source'], refresh: boolean | 'wait_for' } => {
   return {
     id: project.id.toString(),
@@ -55,7 +56,8 @@ export const makeIndexRequest = (
       recording_min_date: '2023-01-01T00:00:00.000Z',
       recording_max_date: '2023-07-14T12:28:38.943Z',
       detection_min_date: '2023-02-14T12:22:22.948Z',
-      detection_max_date: '2023-06-30T18:33:44.938Z'
+      detection_max_date: '2023-06-30T18:33:44.938Z',
+      ...(additionalData ?? {})
     },
     refresh: waitForRefresh
   }

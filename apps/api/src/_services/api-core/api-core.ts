@@ -16,8 +16,9 @@ import {
   type CoreClassifierJob,
   type CoreClassifierJobClassificationSummary,
   type CoreClassifierJobInformation,
-  type DetectDetectionsQueryParamsCore,
-  type DetectDetectionsResponseCore
+    type CoreClassifierJobTotalDetections, type DetectDetectionsQueryParamsCore,
+  type DetectDetectionsResponseCore,
+    type GetClassifierJobClassificationSummaryQueryParams
 } from './types'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
@@ -106,7 +107,7 @@ export async function updateDetectionReviewFromApi (token: string, classifierJob
   }
 }
 
-export async function getClassifierJobs (token: string, query: { project: string, createdBy?: 'me' | 'all' }): Promise<CoreClassifierJob[]> {
+export async function getClassifierJobs (token: string, query: { projects: string[], createdBy?: 'me' | 'all' }): Promise<CoreClassifierJob[]> {
   try {
     const response = await axios.request<CoreClassifierJob[]>({
       method: 'GET',
@@ -115,8 +116,8 @@ export async function getClassifierJobs (token: string, query: { project: string
         authorization: token
       },
       params: {
-        projects: query?.project ? [query.project] : [],
-        created_by: query?.createdBy ? query?.createdBy : 'all',
+        projects: query.projects,
+        created_by: query.createdBy,
         fields: [
           'id',
           'classifier_id',
@@ -177,17 +178,43 @@ export async function getClassifierJobInformation (token: string, jobId: number)
   }
 }
 
-export async function getClassifierJobTotalDetectionsCount (token: string, jobId: number): Promise<CoreClassifierJobClassificationSummary> {
+export async function getClassifierJobTotalDetectionsCount (token: string, jobId: number): Promise<CoreClassifierJobTotalDetections> {
   try {
     const resp = await axios.request({
       method: 'GET',
-      url: `${CORE_API_BASE_URL}/classifier-jobs/${jobId}/summary`,
+      url: `${CORE_API_BASE_URL}/classifier-jobs/${jobId}/validation`,
       headers: {
         authorization: token
       }
     })
 
     return resp.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getClassifierJobSummaries (token: string, jobId: number, params: GetClassifierJobClassificationSummaryQueryParams): Promise<{ total: number, data: CoreClassifierJobClassificationSummary }> {
+  try {
+    const resp = await axios.request({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifier-jobs/${jobId}/summary`,
+      headers: {
+        authorization: token
+      },
+      params
+    })
+
+    let total = 0
+    const rawHeader = resp.headers?.['total-items']
+    if (rawHeader !== undefined && rawHeader !== null && rawHeader !== '' && !Number.isNaN(Number(rawHeader))) {
+      total = Number(rawHeader)
+    }
+
+    return {
+      total,
+      data: resp.data
+    }
   } catch (e) {
     return unpackAxiosError(e)
   }

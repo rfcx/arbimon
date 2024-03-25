@@ -1,10 +1,10 @@
 <template>
-  <section class="max-w-screen-xl pt-20 pl-115px pr-4">
+  <section class="max-w-screen-xl pt-22 pl-115px pr-4">
     <div>
       <JobDetailHeader :species-name="speciesName" />
       <JobFilterOptions
         :species-name="speciesName"
-        :species-count="speciesCount?.total ?? 0"
+        :detections-count="jobDetections?.length"
       />
       <JobValidationStatus
         :total="speciesCount?.total ?? 0"
@@ -50,7 +50,13 @@ const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(r
 const speciesSlug = computed(() => typeof route.params.speciesSlug === 'string' ? route.params.speciesSlug : '')
 const page = ref(1)
 
-const { data: jobSummary } = useGetJobDetectionSummary(
+const isRefetch = ref<boolean>(true)
+
+const refetchInterval = computed(() => {
+  return isRefetch.value ? 30_000 : false
+})
+
+const { data: jobSummary, refetch: refetchJobSummary } = useGetJobDetectionSummary(
   apiClientBio,
   jobId.value,
   {
@@ -63,11 +69,16 @@ const { data: jobSummary } = useGetJobDetectionSummary(
       'classifier',
       'streams'
     ]
-  }
+  },
+  refetchInterval
 )
 
-watch(jobSummary, (newValue) => {
+const { data: jobResults } = useGetJobValidationResults(apiClientBio, jobId.value, { fields: ['classifications_summary'] }, refetchInterval)
+
+watch(jobSummary, async (newValue) => {
+  isRefetch.value = isRefetchIntervalEnable.value
   if (newValue == null) {
+    await refetchJobSummary()
     return
   }
 
@@ -75,8 +86,6 @@ watch(jobSummary, (newValue) => {
   detectionsResultFilterBySpeciesStore.updateStartEndRanges(newValue.queryStart, newValue.queryEnd, 7)
   detectionsResultFilterBySpeciesStore.updateCustomSitesList(newValue.streams)
 })
-
-const { data: jobResults } = useGetJobValidationResults(apiClientBio, jobId.value, { fields: ['classifications_summary'] })
 
 const speciesName = computed(() => {
   if (speciesSlug.value === '' || jobResults.value == null) {
@@ -129,17 +138,13 @@ const params = computed<DetectDetectionsQueryParams>(() => {
   }
 })
 
-const jobDetectionsRefetchInterval = computed(() => {
-  if (jobSummary.value?.status != null && jobSummary.value.status === CLASSIFIER_JOB_STATUS.RUNNING) {
-    return 30_000
-  }
-
-  return false
+const isRefetchIntervalEnable = computed(() => {
+  return jobSummary.value?.status != null && jobSummary.value.status === CLASSIFIER_JOB_STATUS.RUNNING
 })
 
 const {
   isLoading: isLoadingJobDetections,
   isError: isErrorJobDetections,
   data: jobDetections
-} = useGetJobDetections(apiClientBio, jobId.value, params, computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== ''), jobDetectionsRefetchInterval)
+} = useGetJobDetections(apiClientBio, jobId.value, params, computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== ''), refetchInterval)
 </script>

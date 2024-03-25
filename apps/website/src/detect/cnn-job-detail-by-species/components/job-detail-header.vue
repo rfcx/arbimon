@@ -1,36 +1,36 @@
 <template>
-  <div class="job-detail-by-species-header-wrapper flex justify-between">
-    <el-breadcrumb
-      class="job-detail-breadcrumb"
-      separator="/"
-    >
-      <el-breadcrumb-item :to="{ name: ROUTE_NAMES.cnnJobList }">
-        CNN Jobs
-      </el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ name: ROUTE_NAMES.cnnJobDetail, params: { jobId } }">
-        <span class="text-subtle">{{ jobId }}</span>
-      </el-breadcrumb-item>
-      <el-breadcrumb-item>
-        <span class="text-subtle">{{ speciesName }}</span>
-      </el-breadcrumb-item>
-    </el-breadcrumb>
-    <div class="job-btn-container">
-      <el-button
-        type="info"
-        size="large"
-        class="rounded-md uppercase font-semibold"
-      >
-        JOB DETAIL
-      </el-button>
-      <el-button
-        type="info"
-        size="large"
-        class="rounded-md"
-      >
-        <icon-fa-ellipsis-h />
-      </el-button>
-    </div>
-  </div>
+  <nav
+    class="flex justify-between"
+    aria-label="Breadcrumb"
+  >
+    <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse text-insight">
+      <li class="inline-flex items-center text-sm font-display">
+        <router-link
+          :to="{ name: ROUTE_NAMES.cnnJobList }"
+          class="inline-flex items-center hover:text-util-gray-02"
+        >
+          CNN Jobs
+        </router-link>
+      </li>
+      <li>
+        <div class="flex items-center text-sm font-display text-insight">
+          <icon-fas-chevron-right class="w-3 h-3 mr-2" />
+          <router-link
+            :to="{ name: ROUTE_NAMES.cnnJobDetail, params: { jobId } }"
+            class="inline-flex items-center hover:text-util-gray-02"
+          >
+            Job {{ jobId }}
+          </router-link>
+        </div>
+      </li>
+      <li>
+        <div class="flex items-center text-sm font-display text-insight">
+          <icon-fas-chevron-right class="w-3 h-3 mr-2" />
+          {{ speciesName }}
+        </div>
+      </li>
+    </ol>
+  </nav>
 </template>
 
 <script setup lang="ts">

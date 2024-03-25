@@ -1,6 +1,6 @@
 import { vi } from 'vitest'
 
-import { type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation } from '../types'
+import { type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobTotalDetections } from '../types'
 
 const randomCoreId = (): string => (Math.random() + 1).toString(36).substring(6)
 const randomArbimonId = (): number => Math.floor(Math.random() * 99999)
@@ -63,24 +63,41 @@ export const getClassifierJobInformation = vi.fn(async (): Promise<CoreClassifie
   }
 })
 
-export const getClassifierJobTotalDetectionsCount = vi.fn(async (): Promise<CoreClassifierJobClassificationSummary> => {
+export const getClassifierJobTotalDetectionsCount = vi.fn(async (): Promise<CoreClassifierJobTotalDetections> => {
   return {
     reviewStatus: {
-      total: 5,
-      uncertain: 0,
-      confirmed: 0,
-      rejected: 0
-    },
-    classificationsSummary: [
-      {
-        title: 'Calciformis Cannabis',
-        value: 'calciformis_cannabis_common_song',
-        image: null,
-        total: 2,
-        uncertain: 0,
-        confirmed: 0,
-        rejected: 0
-      }
-    ]
+      total: 18,
+      uncertain: 2,
+      confirmed: 2,
+      rejected: 14
+    }
+  }
+})
+
+export const getClassifierJobSummaries = vi.fn(async (): Promise<{ total: number, data: CoreClassifierJobClassificationSummary }> => {
+  return {
+    total: 92,
+    data: {
+      classificationsSummary: [
+        {
+          title: 'Calciformis Cannabis',
+          value: 'calciformis_cannabis_common_song',
+          image: null,
+          total: 8,
+          uncertain: 2,
+          confirmed: 5,
+          rejected: 0
+        },
+        {
+          title: 'Doodoo Cyphleris',
+          value: 'doodoo_cyphleris_common_song_1',
+          image: null,
+          total: 10,
+          uncertain: 4,
+          confirmed: 3,
+          rejected: 2
+        }
+      ]
+    }
   }
 })

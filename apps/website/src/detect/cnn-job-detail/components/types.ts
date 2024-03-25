@@ -7,6 +7,7 @@ export interface ValidationFilterConfig {
   siteIds: string[]
   sortBy: 'asc' | 'desc'
   range: string
+  minConfidence: number
 }
 
 export interface DetectionMedia {
@@ -15,6 +16,9 @@ export interface DetectionMedia {
   id: string
   checked?: boolean
   validation: ReviewStatus
+  score?: number
+  site?: string
+  start?: string
 }
 
 export interface DetectionValidationStatus {

@@ -190,7 +190,7 @@
             :key="`${s.id}-${s.name}-search`"
             :name="s.name"
             :description="s.description"
-            :image="handleImageUrl(s.image)"
+            :image="s.image"
             @emit-add-to-selected-organization="onAddNewOrganizationFromSearch"
           />
         </div>
@@ -279,6 +279,7 @@ onMounted(() => {
 watch(profileData, () => {
   firstName.value = profileData.value?.firstName ?? store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
   lastName.value = profileData.value?.lastName ?? store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
+  searchOrganizationValue.value = displayedOrganization.value?.name ?? ''
 })
 
 watch(organizationsList, async () => {
@@ -444,10 +445,4 @@ const saveProfilePhoto = async (): Promise<void> => {
     }
   })
 }
-
-const handleImageUrl = (url: string | undefined): string | undefined => {
-  const isValidUrl = /^[^\s]+\.(jpg|jpeg|png)/i.test(url ?? '')
-  return isValidUrl ? url : undefined
-}
-
 </script>

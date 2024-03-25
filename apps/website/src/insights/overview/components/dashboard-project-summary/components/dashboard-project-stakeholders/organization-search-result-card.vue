@@ -8,7 +8,7 @@
         v-if="image"
         class="w-12 h-12 rounded-full shadow"
         :src="image"
-        alt="organization image"
+        @error="replaceByDefault"
       >
       <div
         v-else
@@ -36,4 +36,8 @@
 <script setup lang="ts">
 defineProps<{ id: number, name: string, description?: string, image?: string }>()
 defineEmits<{(event: 'emitAddToSelectedOrganization', value: number): void}>()
+
+const replaceByDefault = (event: Event) => {
+  (event.target as HTMLImageElement).src = new URL('@/_assets/default-stakeholder-image.png', import.meta.url).toString()
+}
 </script>

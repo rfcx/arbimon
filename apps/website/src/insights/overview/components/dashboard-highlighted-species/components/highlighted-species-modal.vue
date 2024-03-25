@@ -65,16 +65,16 @@
                   :key="riskRating.code"
                   @click="filterByCode(existingRiskCode[index].code)"
                 >
-                  <el-tag
-                    class="species-highlights border-none cursor-pointer text-md select-none h-6"
+                  <div
+                    class="species-highlights border-none cursor-pointer text-md select-none h-6 px-2 rounded-sm self-center"
                     :class="searchRisk === existingRiskCode[index].code ? 'tag-selected' : ''"
                     effect="dark"
                     size="large"
-                    :color="riskRating.color"
                     :title="riskRating.label"
+                    :style="{ background: riskRating.color }"
                   >
                     {{ riskRating.code }}
-                  </el-tag>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -84,55 +84,56 @@
           </div>
           <!-- Modal body -->
           <div class="grid gap-x-4 w-full sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-            <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2">
-              <ul
-                v-if="speciesList && speciesList.length"
-                class="grid gap-3 grid-cols-1 md:grid-rows-5 md:(grid-cols-2 grid-rows-5)"
-              >
-                <li
-                  v-for="item in speciesForCurrentPage"
-                  :key="'specie-highlighted-' + item.slug"
-                  :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
-                  class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 h-full h-23 md:(flex-row) lg:(flex-row justify-between) bg-echo hover:(border-frequency cursor-pointer)"
-                  @click="selectSpecie(item)"
-                >
-                  <SpecieCard
-                    :slug="item.slug"
-                    :scientific-name="item.scientificName"
-                    :common-name="item.commonName"
-                    :photo-url="item.photoUrl"
-                    :redirect="false"
-                    :text-black="false"
-                  />
-                  <div class="self-center">
-                    <el-tag
-                      class="species-highlights border-none text-md h-6"
-                      effect="dark"
-                      size="large"
-                      :color="item.riskRating.color"
-                      :title="item.riskRating.label"
-                      :style="{ color: item.riskRating.text }"
-                    >
-                      {{ item.riskRating.code }}
-                    </el-tag>
-                  </div>
-                </li>
-              </ul>
+            <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 items-center m-auto">
               <icon-custom-ic-loading
                 v-if="isLoadingSpecies"
                 class="animate-spin w-8 h-8 lg:mx-24 mx-12"
               />
-              <h6 v-if="!speciesList.length">
+              <h6
+                v-else-if="!speciesList.length"
+              >
                 No species in a project.
               </h6>
-              <el-pagination
-                v-if="speciesList.length"
-                v-model:currentPage="currentPage"
-                class="flex items-center justify-center mb-2"
-                :page-size="PAGE_SIZE"
-                :total="speciesLength"
-                layout="prev, pager, next"
-              />
+              <div v-else>
+                <ul
+                  class="grid gap-3 grid-cols-1 md:grid-rows-5 md:(grid-cols-2 grid-rows-5)"
+                >
+                  <li
+                    v-for="item in speciesForCurrentPage"
+                    :key="'specie-highlighted-' + item.slug"
+                    :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
+                    class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 h-full h-23 md:(flex-row) lg:(flex-row justify-between) bg-echo hover:(border-frequency cursor-pointer)"
+                    @click="selectSpecie(item)"
+                  >
+                    <SpecieCard
+                      :slug="item.slug"
+                      :scientific-name="item.scientificName"
+                      :common-name="item.commonName"
+                      :photo-url="item.photoUrl"
+                      :redirect="false"
+                      :text-black="false"
+                    />
+                    <div class="self-center">
+                      <div
+                        class="species-highlights border-none text-md h-6 px-2 rounded-sm self-center"
+                        effect="dark"
+                        size="large"
+                        :title="item.riskRating.label"
+                        :style="{ color: item.riskRating.text, background: item.riskRating.color }"
+                      >
+                        {{ item.riskRating.code }}
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <el-pagination
+                  v-model:currentPage="currentPage"
+                  class="flex items-center justify-center mb-2"
+                  :page-size="PAGE_SIZE"
+                  :total="speciesLength"
+                  layout="prev, pager, next"
+                />
+              </div>
             </div>
             <div
               v-if="preSelectedSpecies.length === 0"
@@ -161,7 +162,7 @@
           <div class="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
             <div class="grid gap-3 col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-3">
               <div v-if="showHaveReachedLimit">
-                <span class="ml-3 bg-rose-200 inline-flex text-echo items-center p-3 border-1 border-rose-600 border-l-3 rounded-lg">
+                <span class="ml-3 bg-danger-background inline-flex text-echo items-center p-3 border-1 border-rose-600 border-l-3 rounded-lg">
                   <icon-custom-ic-error-message class="<xl:basis-2/12" />
                   You have reached the limit of 5 highlighted species allowed.
                 </span>
@@ -190,16 +191,16 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { type ComputedRef, computed, inject, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 
 import type { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
+import { type ProjectSpeciesFieldSet, type ProjectSpeciesResponse, apiBioGetProjectSpecies } from '@rfcx-bio/common/api-bio/species/project-species-all'
 
 import { apiClientKey } from '@/globals'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { useStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
 import { useDeleteSpecieHighlighted, usePostSpeciesHighlighted } from '../composables/use-post-highlighted-species'
-import { useSpeciesInProject } from '../composables/use-species-in-project'
 import HighlightedSpeciesSelector, { type SpecieRow } from './highlighted-species-selector.vue'
 import SpecieCard from './species-card.vue'
 
@@ -210,8 +211,15 @@ watch(() => props.highlightedSpecies, () => {
   fillExistingSpeciesSlug()
 })
 
-watch(() => props.toggleShowModal, () => {
+const speciesList = ref<HighlightedSpeciesRow[]>([])
+const isLoadingSpecies = ref(false)
+const hasFetchedAll = ref(false)
+const LIMIT = 100
+
+watch(() => props.toggleShowModal, async () => {
   fillExistingSpeciesSlug()
+  speciesList.value = []
+  await fetchProjectsSpecies(LIMIT, 0)
 })
 
 const store = useStore()
@@ -228,31 +236,44 @@ const selectedSpeciesSlug = ref<string[]>([])
 const PAGE_SIZE = 10
 const currentPage = ref(1)
 
-const { isLoading: isLoadingSpecies, data: speciesResp } = useSpeciesInProject(apiClientBio, selectedProjectId, { fields: 'dashboard' })
 const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
 const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
 
-// Full list of species for selected project
-const speciesList: ComputedRef<HighlightedSpeciesRow[]> = computed(() => {
-  if (speciesResp.value === undefined || !speciesResp.value.species.length) {
-    return []
+const fetchProjectsSpecies = async (limit: number, offset: number) => {
+  isLoadingSpecies.value = true
+
+  if (selectedProjectId.value === undefined) return
+  const fields: ProjectSpeciesFieldSet = 'dashboard'
+  const projectSpecies = await apiBioGetProjectSpecies(apiClientBio, selectedProjectId.value, { limit, offset, fields })
+
+  if (projectSpecies === undefined) {
+    isLoadingSpecies.value = false
+    return
   }
 
-  return speciesResp.value.species.map(sp => {
+  const s = projectSpecies as ProjectSpeciesResponse
+  hasFetchedAll.value = s.species.length < LIMIT // check if reaching the end
+  s.species.forEach(sp => {
     const { slug, taxonSlug, scientificName, commonName, photoUrl, riskId } = sp as DashboardSpecies
-    return {
+    speciesList.value.push({
       slug,
       taxonSlug,
       scientificName,
       commonName,
       photoUrl: photoUrl ?? '',
       riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
-    }
+    })
   })
-})
+  isLoadingSpecies.value = false
+
+  if (!hasFetchedAll.value) {
+    await fetchProjectsSpecies(LIMIT, speciesList.value.length)
+  }
+}
 
 // Filtered list of species by search, risk or both
 const speciesListFiltered = computed(() => {
+  if (!hasFetchedAll.value) return []
   if (!searchKeyword.value && searchRisk.value) {
     resetPagination()
     return speciesList.value
@@ -290,6 +311,7 @@ const speciesForCurrentPage = computed(() => {
 })
 
 const preSelectedSpecies = computed(() => {
+  if (!hasFetchedAll.value) return []
   return speciesList.value.length ? selectedSpeciesSlug.value.map((slug) => speciesList.value.filter((specie) => specie.slug === slug)[0]) ?? [] : []
 })
 
@@ -336,8 +358,7 @@ const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
 }
 
 const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
-  const slugs = selectedSpeciesSlug.value.filter(slug => slug === specie.slug)
-  return slugs.length > 0
+  return selectedSpeciesSlug.value.find(slug => slug === specie.slug) !== undefined
 }
 
 const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {

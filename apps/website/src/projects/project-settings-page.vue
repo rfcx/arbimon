@@ -67,7 +67,7 @@
         <button
           :disabled="isSaving || !isUserHasFullAccess"
           class="inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
-          data-tooltip-target="projectSettingsSaveTooltipId"
+          :data-tooltip-target="!isUserHasFullAccess ? 'projectSettingsSaveTooltipId': null"
           data-tooltip-placement="bottom"
           @click.prevent="save"
         >
@@ -295,9 +295,11 @@ const updateSettings = () => {
 
   mutateProjectSettings(update, {
     onSuccess: () => {
-      isSaving.value = false
-      lastUpdated.value = true
-      lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+      if (profileImageForm.value === undefined) {
+        isSaving.value = false
+        lastUpdated.value = true
+        lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+      }
       store.updateProjectName(newName.value)
       dashboardStore.updateProjectObjectives(newObjectives.value)
       dashboardStore.updateProjectSummary(newSummary.value)
@@ -321,7 +323,17 @@ const updateSettings = () => {
   })
   if (profileImageForm.value !== undefined) {
     mutatePatchProfilePhoto(profileImageForm.value, {
-      onSuccess: async () => { }
+      onSuccess: async () => {
+        isSaving.value = false
+        lastUpdated.value = true
+        lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+      },
+      onError: () => {
+        isSaving.value = false
+        hasFailed.value = true
+        lastUpdated.value = false
+        errorMessage.value = 'The photo upload was failed to upload.'
+      }
     })
   }
 }
