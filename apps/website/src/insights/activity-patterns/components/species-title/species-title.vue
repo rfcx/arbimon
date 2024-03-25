@@ -31,15 +31,15 @@
         ({{ species?.scientificName }})
       </div>
     </div>
-    <el-tag
+    <div
       v-if="riskInformation"
-      class="border-none ml-2"
+      class="border-none ml-2 px-2 rounded-sm self-center"
       effect="dark"
-      :color="riskInformation.color"
       :title="riskInformation.label"
+      :style="{ background: riskInformation.color }"
     >
       {{ riskInformation.code }}
-    </el-tag>
+    </div>
   </div>
 </template>
 
