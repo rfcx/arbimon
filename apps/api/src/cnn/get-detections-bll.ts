@@ -1,15 +1,14 @@
 import dayjs from 'dayjs'
 
-import { CLASSIFICATION_STATUS_CORE_ARBIMON_MAP } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { type ArbimonReviewStatus, type CoreRawReviewStatus, ARBIMON_CORE_REVIEW_STATUS_MAP } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type Detection, type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
 
 import { parseLimitOffset } from '@/search/helpers'
 import { getDetections as coreGetDetections } from '~/api-core/api-core'
 import { type CoreGetDetectionsQueryParams } from '~/api-core/types'
 import { BioInvalidQueryParamError, BioMissingQueryParamError, BioPublicError } from '~/errors'
-import { reverseRecord } from '~/record'
 
-const getArbimonReviewStatus = (reviewStatus: null | -1 | 0 | 1): typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP[keyof typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP] => {
+const getArbimonReviewStatus = (reviewStatus: CoreRawReviewStatus): ArbimonReviewStatus => {
   if (reviewStatus === null) {
     return 'unvalidated'
   }
@@ -30,11 +29,11 @@ const getArbimonReviewStatus = (reviewStatus: null | -1 | 0 | 1): typeof CLASSIF
 }
 
 export const getDetections = async (token: string, params: GetDetectionsQueryParams): Promise<Detection[]> => {
-  if (params?.start === undefined || params?.start === null || params?.start === '') {
+  if (params?.start === undefined || params?.start === '' || !dayjs(params?.start).isValid()) {
     throw BioInvalidQueryParamError({ start: params?.start })
   }
 
-  if (params?.end === undefined || params?.end === null || params?.end === '') {
+  if (params?.end === undefined || params?.end === '' || !dayjs(params?.end).isValid()) {
     throw BioInvalidQueryParamError({ end: params?.end })
   }
 
@@ -50,19 +49,17 @@ export const getDetections = async (token: string, params: GetDetectionsQueryPar
     throw BioMissingQueryParamError('classifierJobId')
   }
 
-  const arbimonCoreReviewStatusMap = reverseRecord(CLASSIFICATION_STATUS_CORE_ARBIMON_MAP)
-
   const { limit, offset } = parseLimitOffset(params.limit, params.offset, { defaultLimit: 100 })
   const coreQueryParams: CoreGetDetectionsQueryParams = {
     start: params.start,
     end: params.end,
-    // @ts-expect-error these brackets are needed because axios if off-spec, solvable when upgrading to `axios^1.0`
+    // @ts-expect-error these brackets are needed because axios is off-spec, solvable when upgrading to `axios^1.0`
     streams: params?.['sites[]'] !== undefined ? Array.isArray(params?.['sites[]']) ? params['sites[]'] : [params['sites[]']] : undefined,
     classifications: params.classification == null || params.classification === '' ? undefined : [params.classification],
     classifiers: [Number(params.classifierId)],
     classifier_jobs: [Number(params.classifierJobId)],
     min_confidence: params.confidence === undefined ? undefined : Number(params.confidence),
-    review_statuses: params.reviewStatus === undefined ? undefined : [arbimonCoreReviewStatusMap[params.reviewStatus]],
+    review_statuses: params.reviewStatus === undefined ? undefined : [ARBIMON_CORE_REVIEW_STATUS_MAP[params.reviewStatus]],
     limit,
     offset,
     descending: true,

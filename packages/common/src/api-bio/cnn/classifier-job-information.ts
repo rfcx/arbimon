@@ -2,26 +2,30 @@ import { type AxiosInstance } from 'axios'
 
 import { type ClassifierJob } from './classifier-jobs'
 
-export interface ValidationStatus {
-  unvalidated: number
-  present: number
-  notPresent: number
-  unknown: number
-}
+export const ARBIMON_CORE_REVIEW_STATUS_MAP = {
+  unvalidated: 'unreviewed',
+  notPresent: 'rejected',
+  unknown: 'uncertain',
+  present: 'confirmed'
+} as const
 
 export const REVIEW_STATUS_MAPPING = {
-  unreviewed: null,
-  rejected: -1,
-  uncertain: 0,
-  confirmed: 1
+  unvalidated: null,
+  notPresent: -1,
+  unknown: 0,
+  present: 1
 } as const
 
-export const CLASSIFICATION_STATUS_CORE_ARBIMON_MAP = {
-  unreviewed: 'unvalidated',
-  rejected: 'notPresent',
-  uncertain: 'unknown',
-  confirmed: 'present'
-} as const
+export interface ValidationStatus {
+  unvalidated: number
+  notPresent: number
+  unknown: number
+  present: number
+}
+
+export type CoreRawReviewStatus = typeof REVIEW_STATUS_MAPPING[keyof typeof REVIEW_STATUS_MAPPING]
+export type CoreReviewStatus = typeof ARBIMON_CORE_REVIEW_STATUS_MAP[keyof typeof ARBIMON_CORE_REVIEW_STATUS_MAP]
+export type ArbimonReviewStatus = keyof typeof ARBIMON_CORE_REVIEW_STATUS_MAP
 
 // Response type
 export interface GetClassifierJobInformationResponse extends ClassifierJob {
