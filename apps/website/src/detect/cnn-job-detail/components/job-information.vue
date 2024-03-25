@@ -167,11 +167,6 @@ const queryHours = computed(() => {
   return props.summary.queryHours
 })
 
-// const validationStatus = computed(() => {
-//   const processed = (props.results?.reviewStatus.confirmed ?? 0) + (props.results?.reviewStatus.rejected ?? 0) + (props.results?.reviewStatus.uncertain ?? 0)
-//   return `${processed}/${props.results?.reviewStatus.total ?? 0}`
-// })
-
 /**
  * Returns the progress of the bar calculated from `minutesCompleted` and `minutesTotal`.
  *

@@ -17,7 +17,7 @@ export interface ClassificationsSummaryDataset {
   value: string
   title: string
   image: string | null
-  total: number
+  unvalidated: number
   rejected: number
   uncertain: number
   confirmed: number
@@ -33,7 +33,7 @@ const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection
   },
   unvalidated: {
     defaultDirection: SORT_ASC,
-    sortFunction: (e1, e2) => e1.total - e2.total
+    sortFunction: (e1, e2) => e1.unvalidated - e2.unvalidated
   },
   present: {
     defaultDirection: SORT_DESC,
@@ -59,7 +59,6 @@ export default class ActivityOverviewBySpecies extends Vue {
   sortDirection: SortDirection = SORTABLE_COLUMNS.scientificName.defaultDirection
 
   pageIndex = 1 // 1-based for humans
-  formattedDatasets: ClassificationsSummaryDataset[] = []
 
   get tableHeader (): Header[] {
     return [
@@ -73,10 +72,6 @@ export default class ActivityOverviewBySpecies extends Vue {
 
   get hasTableData (): boolean {
     return this.datasets !== undefined
-  }
-
-  get hasMoreThanOneDatasets (): boolean {
-    return this.datasets.length > 1
   }
 
   get maxPage (): number {
@@ -102,17 +97,8 @@ export default class ActivityOverviewBySpecies extends Vue {
     return 25
   }
 
-  get blankRows (): number {
-    return (this.pageSize - this.pageData.length) * this.pageData.length
-  }
-
-  get totalSpecies (): number {
-    return Math.max(0, this.formattedDatasets.length)
-  }
-
   @Watch('datasets')
   onDataChange (): void {
-    console.info(this.datasets)
     if (this.pageIndex > this.maxPage) this.pageIndex = 1
   }
 
@@ -150,9 +136,5 @@ export default class ActivityOverviewBySpecies extends Vue {
       this.sortColumn = column
       this.sortDirection = SORTABLE_COLUMNS[column].defaultDirection
     }
-  }
-
-  blur (event: Event): void {
-    (event.target as HTMLInputElement).blur()
   }
 }

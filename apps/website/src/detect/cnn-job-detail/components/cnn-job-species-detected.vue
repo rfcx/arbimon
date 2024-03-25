@@ -89,7 +89,7 @@
                 </router-link>
               </td>
               <td class="p-2 text-center text-xs text-insight">
-                {{ row.total }}
+                {{ row.unvalidated }}
               </td>
               <td class="p-2 text-center text-xs text-insight">
                 {{ row.confirmed }}
@@ -127,7 +127,6 @@
             min="1"
             :max="maxPage"
             class="text-center bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
-            @keyup.enter="blur"
           >
           of
           <span class="ml-1.5">{{ maxPage }}</span>

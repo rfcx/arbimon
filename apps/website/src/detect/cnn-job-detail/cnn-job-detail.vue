@@ -126,7 +126,7 @@ const getClassifierJobSpecies = async (keyword?: string) => {
       value: d.value,
       title: d.title,
       image: d.image,
-      total: d.unvalidated,
+      unvalidated: d.unvalidated,
       rejected: d.notPresent,
       uncertain: d.unknown,
       confirmed: d.present
