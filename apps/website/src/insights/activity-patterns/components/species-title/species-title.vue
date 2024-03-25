@@ -34,8 +34,6 @@
     <div
       v-if="riskInformation"
       class="border-none ml-2 px-2 rounded-sm self-center"
-      effect="dark"
-      :title="riskInformation.label"
       :style="{ background: riskInformation.color }"
     >
       {{ riskInformation.code }}
