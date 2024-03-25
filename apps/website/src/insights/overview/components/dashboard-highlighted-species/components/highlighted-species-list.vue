@@ -18,9 +18,6 @@
       <div class="flex items-center">
         <div
           class="species-highlights border-none text-md h-6 px-2 rounded-sm self-center"
-          effect="dark"
-          size="large"
-          :title="item.riskRating.label"
           :style="{ color: item.riskRating.text, background: item.riskRating.color }"
         >
           {{ item.riskRating.code }}

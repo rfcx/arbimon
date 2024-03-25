@@ -68,9 +68,6 @@
                   <div
                     class="species-highlights border-none cursor-pointer text-md select-none h-6 px-2 rounded-sm self-center"
                     :class="searchRisk === existingRiskCode[index].code ? 'tag-selected' : ''"
-                    effect="dark"
-                    size="large"
-                    :title="riskRating.label"
                     :style="{ background: riskRating.color }"
                   >
                     {{ riskRating.code }}
@@ -116,9 +113,6 @@
                     <div class="self-center">
                       <div
                         class="species-highlights border-none text-md h-6 px-2 rounded-sm self-center"
-                        effect="dark"
-                        size="large"
-                        :title="item.riskRating.label"
                         :style="{ color: item.riskRating.text, background: item.riskRating.color }"
                       >
                         {{ item.riskRating.code }}
