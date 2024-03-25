@@ -34,7 +34,8 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     validationStatus: 'all',
     siteIds: [],
     sortBy: 'asc',
-    range: 'all'
+    range: 'all',
+    minConfidence: 0.5
   })
 
   const updateResultFilter = (value: Omit<ValidationFilterConfig, 'classification'> & { classification?: string }): void => {
@@ -43,6 +44,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     filter.value.siteIds = value.siteIds
     filter.value.sortBy = value.sortBy
     filter.value.range = value.range
+    filter.value.minConfidence = value.minConfidence
   }
 
   const updateStartEndRanges = (start: string, end: string, rangeInDays: number): void => {
@@ -67,6 +69,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     filter.value.validationStatus = 'all'
     filter.value.sortBy = 'asc'
     filter.value.range = 'all'
+    filter.value.minConfidence = 0.5
 
     // "drain" all values out of the array
     while (filter.value.siteIds.length > 0) {
@@ -107,7 +110,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     if (customSitesList.value.length === 0) {
       return store.projectFilters?.locationSites.map(ls => {
         return {
-          label: `${ls.name} (${ls.idCore})`,
+          label: ls.name,
           value: ls.idCore.toString()
         }
       }) ?? []
@@ -115,7 +118,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
 
     return customSitesList.value.map(cs => {
       return {
-        label: `${cs.name} (${cs.id})`,
+        label: cs.name,
         value: cs.id
       }
     })

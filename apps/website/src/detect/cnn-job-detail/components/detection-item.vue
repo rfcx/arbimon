@@ -1,5 +1,5 @@
 <template>
-  <div class="w-51">
+  <div class="detection-item w-51">
     <div
       class="relative rounded-md bg-echo rounded-md border-1 border-util-gray-02 w-51 h-41"
       :class="{'border-transparent': isSelected || highlightBorder}"
@@ -205,7 +205,7 @@ const dateFormatted = (date: string) => {
 </script>
 
 <style lang="scss">
-  .dark [type=checkbox]:checked {
+  .dark .detection-item [type=checkbox]:checked {
     color: #060508 !important;
     opacity: 0.8;
     border: 3px solid #FFFEFC !important;

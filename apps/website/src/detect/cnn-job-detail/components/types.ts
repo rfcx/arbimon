@@ -7,6 +7,7 @@ export interface ValidationFilterConfig {
   siteIds: string[]
   sortBy: 'asc' | 'desc'
   range: string
+  minConfidence: number
 }
 
 export interface DetectionMedia {
