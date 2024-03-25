@@ -1,4 +1,4 @@
-import { type CLASSIFICATION_STATUS_CORE_ARBIMON_MAP } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { type CoreRawReviewStatus, type CoreReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type CLASSIFIER_JOB_LABELS } from '@rfcx-bio/common/api-bio/cnn/classifier-jobs'
 import { type REVIEW_STATUS_MAPPING, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 
@@ -55,7 +55,7 @@ export interface GetClassifierJobClassificationSummaryQueryParams {
   keyword?: string
   limit?: number
   offset?: number
-  sort?: 'name' | typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP[keyof typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP]
+  sort?: 'name' | CoreReviewStatus
   order?: 'asc' | 'desc'
 }
 
@@ -101,7 +101,7 @@ export interface CoreGetDetectionsQueryParams {
   classifiers?: number[]
   classifier_jobs?: number[]
   min_confidence?: number
-  review_statuses?: [keyof typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP]
+  review_statuses?: [CoreReviewStatus]
   limit?: number
   offset?: number
   descending?: boolean
@@ -115,5 +115,5 @@ export interface CoreDetection {
   start: string
   end: string
   confidence: number
-  review_status: typeof REVIEW_STATUS_MAPPING[ReviewStatus]
+  review_status: CoreRawReviewStatus
 }
