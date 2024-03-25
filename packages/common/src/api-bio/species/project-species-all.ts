@@ -15,6 +15,8 @@ export interface ProjectSpeciesQueryParams {
   limit?: number
   offset?: number
   fields?: ProjectSpeciesFieldSet
+  keyword?: string
+  riskRatingId?: string
 }
 
 // Response types
