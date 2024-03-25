@@ -6,8 +6,8 @@
       <div class="rounded-t-lg bg-moss">
         <div class="flex flex-row justify-between items-center">
           <div
-            v-if="isLoadingProfile"
-            class="h-5 bg-util-gray-03 rounded w-40 m-2 ml-2 align-baseline"
+            v-if="isLoadingProfile || isRefetchingProfile"
+            class="h-4 dark:bg-util-gray-03 rounded w-40 m-3 ml-4 align-baseline loading-shimmer"
           />
           <div
             v-else
@@ -42,21 +42,17 @@
           </svg>
         </div>
       </div>
-      <div v-if="isLoadingProfile">
-        <div class="w-full h-52 bg-util-gray-03 rounded sm:w-96" />
+      <div v-if="isLoadingProfile || isRefetchingProfile">
+        <div class="w-full h-52 dark:bg-util-gray-03 rounded sm:w-96 loading-shimmer" />
         <div class="p-4 border-b border-util-gray-03">
-          <div class="h-6 bg-util-gray-03 rounded w-40 my-2" />
-          <div
-            class="flex font-medium text-sm flex-row rounded border-util-gray-01 mt-3 space-x-2 font-display items-center"
-          >
-            <div class="h-4 bg-util-gray-03 rounded w-11/12 my-2" />
-          </div>
+          <div class="h-6 dark:bg-util-gray-03 rounded w-40 my-2 loading-shimmer" />
+          <div class="h-4 dark:bg-util-gray-03 rounded w-11/12 my-2 loading-shimmer" />
         </div>
         <div class="p-4">
           <div
             v-for="index in 4"
             :key="index"
-            class="h-5 bg-util-gray-03 rounded dark:bg-util-gray-03 w-full my-3"
+            class="h-5 bg-util-gray-03 rounded dark:bg-util-gray-03 w-full my-3 loading-shimmer"
           >
               &nbsp;
           </div>
@@ -159,6 +155,7 @@
     </div>
     <el-tabs
       v-if="profile?.isPublished"
+      v-show="!isLoadingProfile && !isRefetchingProfile"
       v-model="activeTab"
       class="border-t-1 border-util-gray-03"
     >
@@ -234,7 +231,8 @@
       </el-tab-pane>
     </el-tabs>
     <private-project-tag
-      v-if="!profile?.isPublished"
+      v-else
+      v-show="!isLoadingProfile && !isRefetchingProfile"
       class="justify-self-end"
     />
   </div>
@@ -269,7 +267,7 @@ const isStakeholdersSelected = ref(false)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
-const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'], computed(() => true))
+const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch, isRefetching: isRefetchingProfile } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'], computed(() => true))
 const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId, computed(() => isStakeholdersSelected.value))
 
 const isAboutTabViewMored = ref(false)
