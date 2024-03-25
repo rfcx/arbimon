@@ -1,12 +1,12 @@
 import { type AxiosInstance } from 'axios'
 
-import { type CLASSIFICATION_STATUS_CORE_ARBIMON_MAP } from './classifier-job-information'
+import { type CoreReviewStatus, type ValidationStatus } from './classifier-job-information'
 
 // Request type
 export interface GetClassifierJobSpeciesQueryParams {
   q?: string
   order?: 'asc' | 'desc'
-  sort?: 'name' | typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP[keyof typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP]
+  sort?: 'name' | CoreReviewStatus
   limit?: string
   offset?: string
 }
@@ -16,14 +16,10 @@ export interface GetClassifierJobSpeciesParams {
 }
 
 // Response type
-export interface ClassifierJobSpecies {
+export type ClassifierJobSpecies = ValidationStatus & {
   title: string
   value: string
   image: string | null
-  unvalidated: number
-  notPresent: number
-  unknown: number
-  present: number
 }
 
 export const validSortParams = ['name', 'unvalidated', 'notPresent', 'present', 'unknown']

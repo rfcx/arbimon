@@ -41,6 +41,84 @@ describe('GET /detections', async () => {
     expect(json[0].reviewStatus).toBeTypeOf('string')
   })
 
+  test('empty string start/end can be caught', async () => {
+    // Arrange
+    const app = await makeApp(routesCnn, {
+      projectRole: 'user',
+      userToken: {
+        email: 'whoami@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'GET',
+      url: '/detections',
+      query: {
+        start: '',
+        end: '',
+        classification: 'schlerlus_carolinensis_simple_call_1',
+        classifierId: '27',
+        classifierJobId: '25'
+      }
+    })
+
+    // Assert
+    expect(response.statusCode).toEqual(400)
+  })
+
+  test('start being null can be caught', async () => {
+    // Arrange
+    const app = await makeApp(routesCnn, {
+      projectRole: 'user',
+      userToken: {
+        email: 'whoami@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'GET',
+      url: '/detections',
+      query: {
+        start: 'null',
+        end: 'null',
+        classification: 'schlerlus_carolinensis_simple_call_1',
+        classifierId: '27',
+        classifierJobId: '25'
+      }
+    })
+
+    // Assert
+    expect(response.statusCode).toEqual(400)
+  })
+
+  test('non-date string in start or end can be caught', async () => {
+    // Arrange
+    const app = await makeApp(routesCnn, {
+      projectRole: 'user',
+      userToken: {
+        email: 'whoami@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'GET',
+      url: '/detections',
+      query: {
+        start: 'this is not date bruh',
+        end: 'this too',
+        classification: 'schlerlus_carolinensis_simple_call_1',
+        classifierId: '27',
+        classifierJobId: '25'
+      }
+    })
+
+    // Assert
+    expect(response.statusCode).toEqual(400)
+  })
+
   test('non-rfcx users will get 403', async () => {
     // Arrange
     const app = await makeApp(routesCnn, {

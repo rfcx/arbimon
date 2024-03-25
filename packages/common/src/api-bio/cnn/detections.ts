@@ -1,12 +1,12 @@
 import { type AxiosInstance } from 'axios'
 
-import { type CLASSIFICATION_STATUS_CORE_ARBIMON_MAP } from './classifier-job-information'
+import { type ArbimonReviewStatus } from './classifier-job-information'
 
 // Request types
 export interface GetDetectionsQueryParams {
   start: string
   end: string
-  reviewStatus?: typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP[keyof typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP]
+  reviewStatus?: ArbimonReviewStatus
   /* Core site Ids */
   sites?: string[]
   classifierJobId: number
@@ -27,7 +27,7 @@ export interface Detection {
   end: string
   classifierId: number
   confidence: number
-  reviewStatus: typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP[keyof typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP]
+  reviewStatus: ArbimonReviewStatus
 }
 
 export type GetDetectionsResponse = Detection[]
