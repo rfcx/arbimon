@@ -33,7 +33,7 @@
             @click="toggleDetection($event)"
           >
         </div>
-        <div class="absolute text-xl top-1.5 right-1">
+        <div class="absolute top-2.5 right-3">
           <validation-status
             :value="props.validation ?? 'unreviewed'"
             :hide-unvalidated="true"
