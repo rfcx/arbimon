@@ -27,7 +27,7 @@
         <job-result-validation-status
           :is-loading="props.isLoading"
           :is-error="props.isError"
-          :data="props.data"
+          :data="validationStatus"
         />
       </div>
     </div>
@@ -35,6 +35,8 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import { type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 
 import JobResultDetectionSummary from './job-result-detection-summary.vue'
@@ -46,5 +48,16 @@ const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, d
   isLoading: false,
   isError: false,
   data: undefined
+})
+
+const validationStatus = computed(() => {
+  const validation = props.data?.reviewStatus
+  if (validation === undefined) return
+  return {
+    unvalidated: validation.total,
+    present: validation.confirmed,
+    notPresent: validation.rejected,
+    unknown: validation.uncertain
+  }
 })
 </script>
