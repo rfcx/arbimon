@@ -127,4 +127,46 @@ describe(`GET ${projectSpeciesRoute}`, async () => {
         expect(result.species).toBeDefined()
         dashboardFields.forEach(field => { expect(result.species[0]).toHaveProperty(field) })
     })
+
+    test('search by keyword returns correct results', async () => {
+        // Arrange
+        const app = await makeApp(routesSpecies, { projectRole: 'user' })
+
+        // Act
+        const response = await app.inject({
+            method: GET,
+            url: projectSpeciesRoute.replace(':projectId', TEST_PROJECT_ID ?? ''),
+            query: { fields: 'dashboard', keyword: 'felis' }
+        })
+
+        // Assert
+        expect(response.statusCode).toBe(200)
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
+        expect(result.species).toBeDefined()
+        expect(result.species).toHaveLength(1)
+        expect(result.species[0].scientificName).toBe('Felis catus')
+    })
+
+    test('filters results by IUCN status', async () => {
+        // Arrange
+        const app = await makeApp(routesSpecies, { projectRole: 'user' })
+
+        // Act
+        const response = await app.inject({
+            method: GET,
+            url: projectSpeciesRoute.replace(':projectId', TEST_PROJECT_ID ?? ''),
+            query: { fields: 'dashboard', riskRatingId: '400' }
+        })
+
+        // Assert
+        expect(response.statusCode).toBe(200)
+        const result = JSON.parse(response.body)
+        expect(result).toBeDefined()
+        expect(result).toBeTypeOf('object')
+        expect(result.species).toBeDefined()
+        // No vulnerable species in test project
+        expect(result.species).toHaveLength(0)
+    })
 })
