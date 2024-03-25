@@ -1,6 +1,6 @@
 import { vi } from 'vitest'
 
-import { type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobTotalDetections } from '../types'
+import { type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobTotalDetections, type CoreDetection } from '../types'
 
 const randomCoreId = (): string => (Math.random() + 1).toString(36).substring(6)
 const randomArbimonId = (): number => Math.floor(Math.random() * 99999)
@@ -100,4 +100,45 @@ export const getClassifierJobSummaries = vi.fn(async (): Promise<{ total: number
       ]
     }
   }
+})
+
+export const getDetections = vi.fn(async (): Promise<CoreDetection[]> => {
+  return [
+    {
+      id: '19919234',
+      stream_id: 'kdibkrnfh84k',
+      start: '2022-01-01T00:00:00.000+0700',
+      end: '2022-01-01T00:00:05.000+0700',
+      classifier_id: 19,
+      confidence: 0.984947475,
+      review_status: null
+    },
+    {
+      id: '19919235',
+      stream_id: 'kdibkrnfh84k',
+      start: '2022-01-01T00:00:05.000+0700',
+      end: '2022-01-01T00:00:10.000+0700',
+      classifier_id: 19,
+      confidence: 0.984947475,
+      review_status: -1
+    },
+    {
+      id: '19919236',
+      stream_id: 'kdibkrnfh84k',
+      start: '2022-01-01T00:00:10.000+0700',
+      end: '2022-01-01T00:00:15.000+0700',
+      classifier_id: 19,
+      confidence: 0.984947475,
+      review_status: 0
+    },
+    {
+      id: '19919237',
+      stream_id: 'kdibkrnfh84k',
+      start: '2022-01-01T00:00:15.000+0700',
+      end: '2022-01-01T00:00:20.000+0700',
+      classifier_id: 19,
+      confidence: 0.984947475,
+      review_status: 1
+    }
+  ]
 })
