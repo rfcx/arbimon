@@ -90,14 +90,15 @@ export interface SearchQueryProjectRawResponse {
   }
 }
 
-interface ProjectSpecies {
+export interface ProjectSpecies {
   scientific_name: string
   common_name: string
   taxon_class: string
   is_threatened: boolean
   risk_rating_category?: string
-  risk_rating: string
-  countries: string[]
+  risk_rating?: string
+  code?: string
+  countries?: string[]
 }
 
 export interface SearchQueryOrganizationRawResponse {
