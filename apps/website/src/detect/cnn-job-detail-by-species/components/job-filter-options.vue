@@ -13,7 +13,7 @@
       <span class="font-display">Total detections:</span>
       <span>{{ detectionsCount }}</span>
     </div>
-    <div class="flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse text-insight pt-10">
+    <div class="flex items-center gap-x-3 text-insight pt-10">
       <span class="font-display">Filters:</span>
       <JobResultFilterBySpecies />
     </div>
