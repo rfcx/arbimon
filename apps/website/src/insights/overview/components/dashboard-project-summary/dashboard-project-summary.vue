@@ -71,6 +71,7 @@
             role="tab"
             aria-controls="stakeholders"
             aria-selected="false"
+            @click="stakeholdersTabContent"
           >
             Stakeholders
           </button>
@@ -114,7 +115,7 @@
             id="about"
             v-model:is-view-mored="isAboutTabViewMored"
             v-model:is-editing="isAboutTabEditing"
-            :raw-markdown-text="dashboardContent?.readme"
+            :raw-markdown-text="profile?.readme"
             :default-markdown-text="readmeDefault"
             :editable="canEdit"
             :is-project-member="isProjectMember"
@@ -135,7 +136,7 @@
             id="methods"
             v-model:is-view-mored="isMethodsTabViewMored"
             v-model:is-editing="isMethodsTabEditing"
-            :raw-markdown-text="dashboardContent?.methods"
+            :raw-markdown-text="profile?.methods"
             :default-markdown-text="methodsDefault"
             :editable="canEdit"
             :is-project-member="isProjectMember"
@@ -156,7 +157,7 @@
             id="key-result"
             v-model:is-view-mored="isKeyResultTabViewMored"
             v-model:is-editing="isKeyResultTabEditing"
-            :raw-markdown-text="dashboardContent?.keyResult"
+            :raw-markdown-text="profile?.keyResult"
             :default-markdown-text="keyResultDefault"
             :editable="canEdit"
             :is-project-member="isProjectMember"
@@ -176,6 +177,7 @@
           :editable="canEdit"
           :is-project-member="isProjectMember"
           :is-viewing-as-guest="isViewingAsGuest"
+          :is-selected-tab="selectedStakeholdersTab"
         />
       </div>
 
@@ -190,7 +192,7 @@
             id="resources"
             v-model:is-view-mored="isResourcesTabViewMored"
             v-model:is-editing="isResourcesTabEditing"
-            :raw-markdown-text="dashboardContent?.resources"
+            :raw-markdown-text="profile?.resources"
             :default-markdown-text="resourcesDefault"
             :editable="canEdit"
             :is-project-member="isProjectMember"
@@ -208,14 +210,12 @@ import { type AxiosInstance } from 'axios'
 import { type TabItem, type TabsOptions, Tabs } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
+import type { ProjectProfileUpdateBody } from '@rfcx-bio/common/api-bio/project/project-settings'
+
 import { apiClientKey } from '@/globals'
+import { useGetProjectInfo, useUpdateProjectSettings } from '@/projects/_composables/use-project-profile'
 import { useStore } from '~/store'
-import { useGetDashboardContent } from '../../composables/use-get-dashboard-content'
 import { useMarkdownEditorDefaults } from '../../composables/use-markdown-editor-defaults'
-import { useUpdateDashboardKeyResult } from '../../composables/use-update-dashboard-key-result'
-import { useUpdateDashboardMethods } from '../../composables/use-update-dashboard-methods'
-import { useUpdateDashboardReadme } from '../../composables/use-update-dashboard-readme'
-import { useUpdateDashboardResources } from '../../composables/use-update-dashboard-resources'
 import DashboardMarkdownViewerEditor from './components/dashboard-markdown-viewer-editor.vue'
 import DashboardProjectStakeholders from './components/dashboard-project-stakeholders/dashboard-project-stakeholders.vue'
 
@@ -236,79 +236,86 @@ const isKeyResultTabEditing = ref(false)
 const isResourcesTabViewMored = ref(false)
 const isResourcesTabEditing = ref(false)
 
+const selectedStakeholdersTab = ref(false)
+
 const store = useStore()
 
 const isEnabled = computed(() => {
   return isAboutTabEditing.value !== true || isMethodsTabEditing.value !== true || isKeyResultTabEditing.value !== true || isResourcesTabEditing.value !== true
 })
 
-const { isLoading, data: dashboardContent, refetch: refetchDashboardContent } = useGetDashboardContent(
-  apiClientBio,
-  store.project?.id ?? -1,
-  isEnabled
-)
+const { isLoading, data: profile } = useGetProjectInfo(apiClientBio, computed(() => store.project?.id ?? -1), ['readme', 'keyResults', 'resources', 'methods'], isEnabled)
 
-const { mutate: mutateReadme } = useUpdateDashboardReadme(apiClientBio, store.project?.id ?? -1)
-const { mutate: mutateKeyResult } = useUpdateDashboardKeyResult(apiClientBio, store.project?.id ?? -1)
-const { mutate: mutateResources } = useUpdateDashboardResources(apiClientBio, store.project?.id ?? -1)
-const { mutate: mutateMethods } = useUpdateDashboardMethods(apiClientBio, store.project?.id ?? -1)
+const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.project?.id ?? -1)
 
 const updateReadme = (value: string): void => {
-  mutateReadme(value, {
+  const update: ProjectProfileUpdateBody = {
+    name: profile.value?.name ?? '',
+    readme: value
+  }
+  mutateProjectSettings(update, {
     onSuccess: async () => {
       isAboutTabViewMored.value = value.length !== 0
       isAboutTabEditing.value = false
-      await refetchDashboardContent()
     },
     onError: async () => {
       isAboutTabViewMored.value = true
       isAboutTabEditing.value = true
-      await refetchDashboardContent()
     }
   })
 }
 
 const updateKeyResult = (value: string): void => {
-  mutateKeyResult(value, {
+  const update: ProjectProfileUpdateBody = {
+    name: profile.value?.name ?? '',
+    keyResult: value
+  }
+  mutateProjectSettings(update, {
     onSuccess: async () => {
       isKeyResultTabViewMored.value = value.length !== 0
       isKeyResultTabEditing.value = false
-      await refetchDashboardContent()
     },
     onError: async () => {
       isKeyResultTabViewMored.value = true
       isKeyResultTabEditing.value = true
-      await refetchDashboardContent()
     }
   })
 }
 
 const updateResources = (value: string): void => {
-  mutateResources(value, {
+  const update: ProjectProfileUpdateBody = {
+    name: profile.value?.name ?? '',
+    resources: value
+  }
+  mutateProjectSettings(update, {
     onSuccess: async () => {
       isResourcesTabViewMored.value = value.length !== 0
       isResourcesTabEditing.value = false
-      await refetchDashboardContent()
     },
     onError: async () => {
       isResourcesTabViewMored.value = true
       isResourcesTabEditing.value = true
-      await refetchDashboardContent()
     }
   })
 }
 
+const stakeholdersTabContent = () : void => {
+  selectedStakeholdersTab.value = true
+}
+
 const updateMethods = (value: string): void => {
-  mutateMethods(value, {
+  const update: ProjectProfileUpdateBody = {
+    name: profile.value?.name ?? '',
+    methods: value
+  }
+  mutateProjectSettings(update, {
     onSuccess: async () => {
       isMethodsTabViewMored.value = value.length !== 0
       isMethodsTabEditing.value = false
-      await refetchDashboardContent()
     },
     onError: async () => {
       isMethodsTabViewMored.value = true
       isResourcesTabEditing.value = true
-      await refetchDashboardContent()
     }
   })
 }

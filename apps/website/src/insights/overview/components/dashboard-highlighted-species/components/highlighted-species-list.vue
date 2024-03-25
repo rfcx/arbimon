@@ -16,15 +16,12 @@
         />
       </div>
       <div class="flex items-center">
-        <el-tag
-          class="species-highlights border-none text-md h-6"
-          effect="dark"
-          size="large"
-          :color="item.riskRating.color"
-          :title="item.riskRating.label"
+        <div
+          class="species-highlights border-none text-md h-6 px-2 rounded-sm self-center"
+          :style="{ color: item.riskRating.text, background: item.riskRating.color }"
         >
           {{ item.riskRating.code }}
-        </el-tag>
+        </div>
       </div>
     </li>
   </ul>

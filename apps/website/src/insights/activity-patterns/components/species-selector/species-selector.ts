@@ -3,7 +3,7 @@ import { Vue } from 'vue-class-component'
 import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 import { type RouteLocationNormalized } from 'vue-router'
 
-import { apiBioGetProjectSpeciesLight } from '@rfcx-bio/common/api-bio/species/project-species-all'
+import { apiBioGetProjectSpecies } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import { type SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { apiClientKey, routeNamesKey, storeKey } from '@/globals'
@@ -96,6 +96,7 @@ export default class SpeciesSelector extends Vue {
     const projectId = this.store.project?.id
     if (projectId === undefined) return []
 
-    return await apiBioGetProjectSpeciesLight(this.apiClientBio, projectId).then(res => res?.species) ?? []
+    const projectSpecies = await apiBioGetProjectSpecies(this.apiClientBio, projectId)
+    return projectSpecies?.species as Array<SpeciesInProjectTypes['light']> ?? []
   }
 }

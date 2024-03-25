@@ -79,7 +79,7 @@
                 class="absolute z-index-10 absolute top-1 right-3"
                 :class="{ hidden: !isSearchOrganizationFetching }"
               >
-                <icon-custom-input-loader class="inline w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-frequency" />
+                <icon-custom-ic-loading class="inline w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-frequency" />
                 <span class="sr-only">Loading...</span>
               </div>
             </div>

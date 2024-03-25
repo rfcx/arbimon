@@ -36,7 +36,7 @@
         v-if="loading"
         class="py-2"
       >
-        <icon-fas-spinner class="animate-spin inline w-4 h-4 mr-1" /> Loading...
+        <icon-custom-ic-loading class="animate-spin inline w-4 h-4 mr-1" /> Loading...
       </div>
       <div
         v-else
@@ -68,7 +68,7 @@
         :key="org.id"
         :name="org.name"
         :description="ORGANIZATION_TYPE_NAME[org.type]"
-        :image="org.image ?? undefined"
+        :image="org.image"
         :ranking="1"
       />
     </div>

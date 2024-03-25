@@ -86,6 +86,18 @@ const mappings = {
     },
     expanded_objectives: {
       type: 'search_as_you_type'
+    },
+    species: {
+      type: 'nested',
+      properties: {
+        scientific_name: { type: 'text' },
+        common_name: { type: 'text' },
+        taxon_class: { type: 'text' },
+        risk_rating: { type: 'text' },
+        is_threatened: { type: 'boolean' },
+        risk_category: { type: 'text' },
+        countries: { type: 'text' }
+      }
     }
   }
 } as const

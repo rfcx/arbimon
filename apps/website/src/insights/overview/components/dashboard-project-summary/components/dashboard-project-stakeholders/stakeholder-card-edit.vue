@@ -11,7 +11,7 @@
       v-if="image"
       class="w-12 h-12 mr-3 rounded-full shadow"
       :src="image"
-      alt="user profile image"
+      @error="replaceByDefault"
       @click="toggleSelectMemberCard()"
     >
     <div
@@ -126,6 +126,10 @@ const togglePrimaryContact = (): void => {
 
   isRemovedPrimaryContact.value = !isRemovedPrimaryContact.value
   emit('emitPrimaryContact', props.userId, props.email, isRemovedPrimaryContact.value)
+}
+
+const replaceByDefault = (event: Event) => {
+  (event.target as HTMLImageElement).src = new URL('@/_assets/default-stakeholder-image.png', import.meta.url).toString()
 }
 
 onMounted(() => {

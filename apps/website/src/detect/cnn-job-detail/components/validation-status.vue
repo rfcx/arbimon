@@ -1,20 +1,20 @@
 <template>
-  <div class="ml-0 text-sm">
-    <icon-fa-check
+  <div>
+    <icon-custom-fi-present
       v-if="props.value === 'confirmed'"
-      class="cursor-pointer h-3 text-sky-300 inline mr-2"
+      class="h-4 w-4"
     />
-    <icon-fa-close
+    <icon-custom-fi-not-present
       v-if="props.value === 'rejected'"
-      class="cursor-pointer h-3 text-orange-300 inline mr-2"
+      class="h-4 w-4"
     />
-    <icon-fa-circle
+    <icon-custom-fi-unknown
       v-if="props.value === 'uncertain'"
-      class="cursor-pointer text-lime-300 h-3 inline mr-2"
+      class="h-4 w-4"
     />
-    <icon-fa-circle-thin
+    <icon-custom-fi-unvalidated
       v-if="(props.value === 'unreviewed' && props.hideUnvalidated === false)"
-      class="cursor-pointer text-util-gray-01 h-3 inline mr-2"
+      class="h-4 w-4"
     />
   </div>
 </template>

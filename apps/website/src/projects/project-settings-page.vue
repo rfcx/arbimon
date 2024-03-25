@@ -65,7 +65,7 @@
         <button
           :disabled="isSaving || !store.userIsAdminProjectMember"
           class="inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
-          data-tooltip-target="projectSettingsSaveTooltipId"
+          :data-tooltip-target="!store.userIsAdminProjectMember ? 'projectSettingsSaveTooltipId': null"
           data-tooltip-placement="bottom"
           @click.prevent="save"
         >
@@ -87,7 +87,7 @@
           v-if="isSaving"
           class="inline-flex"
         >
-          <icon-fas-spinner class="animate-spin" />
+          <icon-custom-ic-loading class="animate-spin" />
           <span class="ml-2">
             Saving...
           </span>
@@ -124,8 +124,9 @@ import { type AxiosError, type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-import type { ProjectProfileUpdateBody } from '@rfcx-bio/common/api-bio/project/project-settings'
+import { type ProjectProfileUpdateBody, ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+import { isValidSlug } from '@rfcx-bio/utils/string/slug'
 
 import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientKey } from '@/globals'
@@ -252,6 +253,12 @@ const save = () => {
     errorMessage.value = dateError
     return
   }
+  if (!isValidSlug(newSlug.value ?? '')) {
+    hasFailed.value = true
+    errorMessage.value = 'Failed! URL must be lowercase letters, numbers, and dashes (-).'
+    return
+  }
+
   hasFailed.value = false
   isSaving.value = true
   updateSettings()
@@ -276,9 +283,11 @@ const updateSettings = () => {
 
   mutateProjectSettings(update, {
     onSuccess: () => {
-      isSaving.value = false
-      lastUpdated.value = true
-      lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+      if (profileImageForm.value === undefined) {
+        isSaving.value = false
+        lastUpdated.value = true
+        lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+      }
       store.updateProjectName(newName.value)
       dashboardStore.updateProjectObjectives(newObjectives.value)
       dashboardStore.updateProjectSummary(newSummary.value)
@@ -295,16 +304,24 @@ const updateSettings = () => {
       errorMessage.value = DEFAULT_ERROR_MSG
 
       const error = e as AxiosError<Error>
-      if (error.response?.data !== undefined) {
-        if (error.response.data.message.includes('URL') && error.response.data.message.includes('redundant')) {
-          errorMessage.value = DEFAULT_ERROR_MSG + ' This URL is currently in use. Please try again.'
-        }
+      if (error.response?.data !== undefined && error.response.data.message === ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE) {
+        errorMessage.value = DEFAULT_ERROR_MSG + ' Project URL must be unique.'
       }
     }
   })
   if (profileImageForm.value !== undefined) {
     mutatePatchProfilePhoto(profileImageForm.value, {
-      onSuccess: async () => { }
+      onSuccess: async () => {
+        isSaving.value = false
+        lastUpdated.value = true
+        lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+      },
+      onError: () => {
+        isSaving.value = false
+        hasFailed.value = true
+        lastUpdated.value = false
+        errorMessage.value = 'The photo upload was failed to upload.'
+      }
     })
   }
 }

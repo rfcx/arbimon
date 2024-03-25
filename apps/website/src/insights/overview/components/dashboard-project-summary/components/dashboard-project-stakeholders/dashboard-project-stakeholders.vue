@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { inject, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 
 import { type UpdateDashboardStakeholdersRequestBodyUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 
@@ -39,7 +39,7 @@ import ProjectSummaryEmpty from '../project-summary-empty.vue'
 import DashboardProjectStakeholdersEditor from './dashboard-project-stakeholders-editor.vue'
 import DashboardProjectStakeholdersViewer from './dashboard-project-stakeholders-viewer.vue'
 
-defineProps<{ editable: boolean, isProjectMember: boolean, isViewingAsGuest: boolean }>()
+const props = defineProps<{ editable: boolean, isProjectMember: boolean, isViewingAsGuest: boolean, isSelectedTab: boolean }>()
 
 const isEditing = ref(false)
 const isUpdating = ref(false)
@@ -47,7 +47,7 @@ const store = useStore()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
-const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.project?.id ?? -1)
+const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: refetchStakeholdersData } = useGetDashboardStakeholders(apiClientBio, store.project?.id ?? -1, computed(() => props.isSelectedTab))
 const { mutate: mutateStakeholders } = useUpdateDashboardStakeholders(apiClientBio, store.project?.id ?? -1)
 
 const onFinishedEditing = (ids: number[], selectedProjectMembers: UpdateDashboardStakeholdersRequestBodyUser[]): void => {

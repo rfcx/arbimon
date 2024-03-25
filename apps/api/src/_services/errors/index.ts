@@ -35,7 +35,10 @@ export const BioInvalidPathParamError = (params: Record<string, any>): BioPublic
 export const BioInvalidQueryParamError = (params: Record<string, any>): BioPublicError =>
   new BioPublicError(`Invalid query params: ${Object.entries(params).map(([key, value]) => `${key} with value: ${String(value)}`).join(', ')}`, 400)
 
-// Server errors
+export const BioInvalidBodyError = (params: Record<string, any>): BioPublicError =>
+  new BioPublicError(`Invalid body: ${Object.entries(params).map(([key, value]) => `${key} with value: ${String(value)}`).join(', ')}`, 400)
+
+  // Server errors
 export const ApiServerError = (): BioPublicError =>
   new BioPublicError('Server error', 500)
 // DO NOT ADD MORE SERVER ERRORS -- THE CLIENT DOESN'T NEED DETAILS

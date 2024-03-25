@@ -30,17 +30,19 @@ export const useUpdateProjectImage = (apiClient: AxiosInstance, projectId: numbe
   })
 }
 
-export const useGetProjectInfo = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>, parems: string[]): UseQueryReturnType<ProjectInfoResponse, unknown> => {
+export const useGetProjectInfo = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>, params: string[], enabled: ComputedRef<boolean>): UseQueryReturnType<ProjectInfoResponse, unknown> => {
   return useQuery({
     queryKey: ['get-project-settings'],
-    queryFn: async () => await apiBioGetProjectInfoData(apiClient, projectId.value ?? -1, parems)
+    queryFn: async () => await apiBioGetProjectInfoData(apiClient, projectId.value ?? -1, params),
+    enabled
   })
 }
 
-export const useGetProjectStakeholders = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>): UseQueryReturnType<DashboardStakeholdersResponse, unknown> => {
+export const useGetProjectStakeholders = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>, enabled: ComputedRef<boolean>): UseQueryReturnType<DashboardStakeholdersResponse, unknown> => {
   return useQuery({
     queryKey: ['get-project-stakeholders'],
-    queryFn: async () => await apiBioGetProjectStakeHoldersData(apiClient, projectId.value ?? -1)
+    queryFn: async () => await apiBioGetProjectStakeHoldersData(apiClient, projectId.value ?? -1),
+    enabled
   })
 }
 

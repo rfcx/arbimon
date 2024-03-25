@@ -84,7 +84,7 @@ export default defineConfig({
         spoonbill: '#FFAFAF',
         flamingo: '#FF6868',
         ibis: '#A31A33',
-        palm: '#008059',
+        palm: '#00543B',
         chirp: '#D2FF8A',
         // Neutrals
         insight: '#FFFEFC',
@@ -139,7 +139,8 @@ export default defineConfig({
           DEFAULT: '#373639',
           light: '#060508',
           dark: '#040406'
-        }
+        },
+        'danger-background': '#FFDADA'
       },
       backgroundImage: {
         'hero-data': "url('@/_assets/landing/hero-data.webp')",

@@ -100,7 +100,7 @@ onMounted(() => {
       clusterMinPoints: 10,
       generateId: true,
       clusterMaxZoom: 14, // Max zoom to cluster points on
-      clusterRadius: 100 // Radius of each cluster when clustering points (defaults to 50)
+      clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
     })
 
     setSelectedProject(props.selectedProjectId ?? -1)
@@ -111,7 +111,7 @@ onMounted(() => {
       source: 'projects',
       layout: {
         'icon-image': 'default-marker',
-        'icon-size': 0.65
+        'icon-size': 0.6
       },
       paint: {
         'icon-opacity': [
@@ -129,7 +129,15 @@ onMounted(() => {
       source: 'selected-project',
       layout: {
         'icon-image': 'selected-marker',
-        'icon-size': 0.95
+        'icon-size': 0.6
+      },
+      paint: {
+        'icon-opacity': [
+          'case',
+          ['boolean', ['feature-state', 'hover'], false],
+          0.85,
+          1
+        ]
       }
     })
 

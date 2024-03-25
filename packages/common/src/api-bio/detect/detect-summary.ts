@@ -40,6 +40,11 @@ export const detectSummaryRoute = `${DETECT_SPECIFIC_ROUTE_PREFIX}/summary`
 
 // Service
 // Make the api throws so vue-query can catch when it errors
+
+/**
+ * @deprecated This function will be removed. Please move to use [`apiBioGetClassifierJobInformation`] function inside `cnn` folder instead.
+ * The call signature is cleaner. The response type is the same with new key called `validationStatus`
+ */
 export const apiBioGetDetectSummaryData = async (apiClient: AxiosInstance, jobId: number, query: DetectSummaryQueryParams): Promise<DetectSummaryResponse> => {
   const response = await apiClient.get(detectSpecificRoutePrefix(jobId) + '/summary', { params: query })
   return response.data

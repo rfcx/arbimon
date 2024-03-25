@@ -135,7 +135,7 @@ import FooterBar from '@/_layout/components/landing-footer.vue'
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
-import { useGetProjectSettings } from '../projects/_composables/use-project-profile'
+import { useGetProjectInfo } from '../projects/_composables/use-project-profile'
 import ProjectNav from './components/project-nav.vue'
 import ShareInsight from './components/share-insights/share-insights.vue'
 import type { InsightsPublishStatus } from './components/share-insights/types'
@@ -181,7 +181,7 @@ const isViewingAsGuest = computed(() => route.query.guest === '1' || store.userI
 
 const startShareInsightsNavigation = ref<InsightsPublishStatus>('idle')
 
-const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch } = useGetProjectSettings(apiClientBio, selectedProjectId)
+const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['readme', 'keyResults', 'resources', 'methods', 'countryCodes'], computed(() => true))
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 
 // eslint-disable-next-line regex/invalid

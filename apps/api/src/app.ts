@@ -11,9 +11,11 @@ import { userPlugin } from './_plugins/user'
 import { env } from './_services/env'
 import { routesActivity } from './activity'
 import { routesClassifiers } from './classifiers'
+import { routesCnn } from './cnn'
 import { routesCoreProxy } from './core-proxy'
 import { routesDashboard } from './dashboard'
 import { routesDetect } from './detect'
+import { routesHealthCheck } from './healthcheck'
 import { routesLanding } from './landing'
 import { routesOrganizations } from './organizations'
 import { routesProject } from './projects'
@@ -58,7 +60,9 @@ export const createApp = async (): Promise<FastifyInstance> => {
     routesStatus,
     routesSuper,
     routesSync,
-    routesUserProfile
+    routesUserProfile,
+    routesCnn,
+    routesHealthCheck
   ]
 
   routesRegistrations

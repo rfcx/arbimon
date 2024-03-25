@@ -24,6 +24,7 @@
   <ProjectDateRangeForm
     :initial-date-start="dateStart !== null ? new Date(dateStart) : undefined"
     :initial-date-end="dateEnd !== null ? new Date(dateEnd) : undefined"
+    :on-going="onGoing"
     :is-disabled="isDisabled"
     @emit-select-date-range="onSelectDateRange"
   />
@@ -68,35 +69,34 @@ const value: ComputedRef<ProjectDefault> = computed(() => {
   }
 })
 
+const dateLocalIso = (date: Date) => {
+  return dayjs(date).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+}
+
 onMounted(() => {
   if (props.existingName) {
     name.value = props.existingName
   }
   if (props.dateStart) {
-    const start = dayjs(props.dateStart).format('YYYY-MM-DD') + 'T00:00:00.000Z'
-    startDate.value = start
+    startDate.value = dateLocalIso(props.dateStart)
   }
   if (props.dateEnd) {
-    const end = dayjs(props.dateEnd).format('YYYY-MM-DD') + 'T00:00:00.000Z'
-    endDate.value = end
+    endDate.value = dateLocalIso(props.dateEnd)
   }
   if (endDate.value?.length === 0 && startDate.value?.length !== 0) {
     onGoing.value = true
   }
 })
 
-watch(() => props.dateStart, (dateStartValue) => {
-  if (!dateStartValue) return
-  const start = dayjs(dateStartValue).format('YYYY-MM-DD') + 'T00:00:00.000Z'
-  startDate.value = start
-
+watch(() => props.dateStart, (newValue, oldValue) => {
+  if (!newValue || newValue?.toDateString() === oldValue?.toDateString()) return
+  startDate.value = props.dateStart ? dateLocalIso(props.dateStart) : ''
   onGoing.value = !props.dateEnd
 })
 
 watch(() => props.dateEnd, (dateEndValue) => {
   if (!dateEndValue) return
-  const end = dayjs(dateEndValue).format('YYYY-MM-DD') + 'T00:00:00.000Z'
-  endDate.value = end
+  endDate.value = props.dateEnd ? dateLocalIso(props.dateEnd) : ''
 })
 
 watch(name, () => {
@@ -104,8 +104,8 @@ watch(name, () => {
 })
 
 const onSelectDateRange = (v: { dateStartLocalIso: string, dateEndLocalIso: string, onGoing: boolean }) => {
-  startDate.value = dayjs(v.dateStartLocalIso).format('YYYY-MM-DD') + 'T00:00:00.000Z'
-  endDate.value = dayjs(v.dateEndLocalIso).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+  startDate.value = v.dateStartLocalIso
+  endDate.value = v.dateEndLocalIso
   onGoing.value = v.onGoing
   emit('emitUpdateValue', value.value)
 }

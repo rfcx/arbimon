@@ -31,7 +31,7 @@
       </h3>
       <span
         class="rounded-sm px-2 py-0.5 self-center"
-        :style="{ backgroundColor: selectedRiskUI.color }"
+        :style="{ backgroundColor: selectedRiskUI.color, color: selectedRiskUI.text}"
       >{{ selectedRiskUI?.code }}</span>
     </div>
     <div
