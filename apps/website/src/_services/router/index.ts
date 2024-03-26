@@ -97,6 +97,28 @@ const routes: RouteRecordRaw[] = [
         beforeEnter: [authRequiredGuard, storeMemberGuard]
       },
       {
+        path: 'richness',
+        redirect: to => {
+          const projectSlug = to.params.projectSlug as string
+          return `/p/${projectSlug}/insights/richness`
+        }
+      },
+      {
+        path: 'activity',
+        redirect: to => {
+          const projectSlug = to.params.projectSlug as string
+          return `/p/${projectSlug}/insights/activity`
+        }
+      },
+      {
+        path: 'spotlight/:speciesSlug?',
+        redirect: to => {
+          const projectSlug = to.params.projectSlug as string
+          const speciesSlug = (to.params?.speciesSlug ?? '') as string
+          return `/p/${projectSlug}/insights/spotlight/${speciesSlug}`
+        }
+      },
+      {
         path: 'insights',
         component: PAGES.InsightsRoot,
         children: [
@@ -118,8 +140,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: 'spotlight/:speciesSlug?',
             name: ROUTE_NAMES.activityPatterns,
-            component: PAGES.InsightsActivityPatterns,
-            alias: ['/:projectSlug/spotlight/:speciesSlug?']
+            component: PAGES.InsightsActivityPatterns
           },
           {
             path: 'sync-history',
