@@ -28,8 +28,7 @@ describe('GET /jobs/:jobId/species', async () => {
         limit: '25',
         offset: '0',
         q: '',
-        sort: 'name',
-        order: 'asc'
+        sort: 'name'
       }
     })
 
@@ -72,8 +71,7 @@ describe('GET /jobs/:jobId/species', async () => {
         limit: '25',
         offset: '0',
         q: '',
-        sort: 'name',
-        order: 'asc'
+        sort: 'name'
       }
     })
 
@@ -99,14 +97,67 @@ describe('GET /jobs/:jobId/species', async () => {
         limit: '200',
         offset: '100',
         q: '',
-        sort: 'name',
-        order: 'asc'
+        sort: 'name'
       }
     })
 
     // Assert
     expect(response.statusCode).toEqual(200)
-    expect(spy).toHaveBeenCalledWith('', 37, { limit: 200, offset: 100, keyword: undefined, sort: 'name', order: 'asc' })
+    expect(spy).toHaveBeenCalledWith('', 37, { limit: 200, offset: 100, keyword: undefined, sort: 'name' })
+  })
+
+  test('given sort criteria is parsed correctly', async () => {
+    // Arrange
+    const spy = vi.spyOn(core, 'getClassifierJobSummaries')
+    const app = await makeApp(routesCnn, {
+      projectRole: 'user',
+      userToken: {
+        email: 'nicholaslatifi92@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'GET',
+      url: `/jobs/${jobId}/species`,
+      query: {
+        limit: '200',
+        offset: '100',
+        q: '',
+        sort: 'name,-unvalidated,-present'
+      }
+    })
+
+    // Assert
+    expect(response.statusCode).toEqual(200)
+    expect(spy).toHaveBeenCalledWith('', 37, { limit: 200, offset: 100, keyword: undefined, sort: 'name,-unreviewed,-confirmed' })
+  })
+
+  test('other sort criteria are removed from the final sort results without the order change', async () => {
+    // Arrange
+    const spy = vi.spyOn(core, 'getClassifierJobSummaries')
+    const app = await makeApp(routesCnn, {
+      projectRole: 'user',
+      userToken: {
+        email: 'nicholaslatifi92@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'GET',
+      url: `/jobs/${jobId}/species`,
+      query: {
+        limit: '200',
+        offset: '100',
+        q: '',
+        sort: 'name,-who,-present'
+      }
+    })
+
+    // Assert
+    expect(response.statusCode).toEqual(200)
+    expect(spy).toHaveBeenCalledWith('', 37, { limit: 200, offset: 100, keyword: undefined, sort: 'name,-confirmed' })
   })
 
   test('missing limit will automatically be set at 25', async () => {
@@ -125,14 +176,13 @@ describe('GET /jobs/:jobId/species', async () => {
       url: `/jobs/${jobId}/species`,
       query: {
         offset: '100',
-        sort: 'name',
-        order: 'asc'
+        sort: 'name'
       }
     })
 
     // Assert
     expect(response.statusCode).toEqual(200)
-    expect(spy).toHaveBeenCalledWith('', 37, { limit: 25, offset: 100, keyword: undefined, sort: 'name', order: 'asc' })
+    expect(spy).toHaveBeenCalledWith('', 37, { limit: 25, offset: 100, keyword: undefined, sort: 'name' })
   })
 
   test('there\'s no limit to how high you can set your offset to', async () => {
@@ -153,18 +203,18 @@ describe('GET /jobs/:jobId/species', async () => {
         limit: '100000',
         offset: '1000000',
         q: 'who',
-        sort: 'name',
-        order: 'asc'
+        sort: 'name'
       }
     })
 
     // Assert
     expect(response.statusCode).toEqual(200)
-    expect(spy).toHaveBeenCalledWith('', 37, { limit: 100000, offset: 1000000, keyword: 'who', sort: 'name', order: 'asc' })
+    expect(spy).toHaveBeenCalledWith('', 37, { limit: 100000, offset: 1000000, keyword: 'who', sort: 'name' })
   })
 
-  test('invalid sort params will return 400', async () => {
+  test('invalid sort params will not be passed to core', async () => {
     // Arrange
+    const spy = vi.spyOn(core, 'getClassifierJobSummaries')
     const app = await makeApp(routesCnn, {
       projectRole: 'user',
       userToken: {
@@ -180,17 +230,18 @@ describe('GET /jobs/:jobId/species', async () => {
         limit: '100000',
         offset: '1000000',
         q: 'who2',
-        sort: 'what',
-        order: 'asc'
+        sort: 'what'
       }
     })
 
     // Assert
-    expect(response.statusCode).toEqual(400)
+    expect(response.statusCode).toEqual(200)
+    expect(spy).toHaveBeenCalledWith('', 37, { limit: 100000, offset: 1000000, keyword: 'who2', sort: undefined })
   })
 
-  test('invalid order params will return 400', async () => {
+  test('undefined sort params gets passed to core with undefined', async () => {
     // Arrange
+    const spy = vi.spyOn(core, 'getClassifierJobSummaries')
     const app = await makeApp(routesCnn, {
       projectRole: 'user',
       userToken: {
@@ -205,14 +256,13 @@ describe('GET /jobs/:jobId/species', async () => {
       query: {
         limit: '100000',
         offset: '1000000',
-        q: '',
-        sort: 'what',
-        order: 'where'
+        q: 'who2'
       }
     })
 
     // Assert
-    expect(response.statusCode).toEqual(400)
+    expect(response.statusCode).toEqual(200)
+    expect(spy).toHaveBeenCalledWith('', 37, { limit: 100000, offset: 1000000, keyword: 'who2', sort: undefined })
   })
 
   test('empty string `q` should get converted to undefined when passed to core function', async () => {
@@ -240,6 +290,6 @@ describe('GET /jobs/:jobId/species', async () => {
 
     // Assert
     expect(response.statusCode).toEqual(200)
-    expect(spy).toHaveBeenCalledWith('', 37, { limit: 100000, offset: 1000000, keyword: undefined, sort: 'name', order: 'desc' })
+    expect(spy).toHaveBeenCalledWith('', 37, { limit: 100000, offset: 1000000, keyword: undefined, sort: 'name' })
  })
 })
