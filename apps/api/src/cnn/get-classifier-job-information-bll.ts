@@ -2,11 +2,9 @@ import { type GetClassifierJobInformationResponse } from '@rfcx-bio/common/api-b
 
 import { getClassifierJobInformation as coreGetClassifierJobInformation, getClassifierJobTotalDetectionsCount } from '~/api-core/api-core'
 import { BioInvalidPathParamError } from '~/errors'
-import { getUnvalidatedCount } from '~/maths'
 
 export const getClassifierJobInformation = async (token: string, jobId: string | undefined): Promise<GetClassifierJobInformationResponse> => {
   if (
-    jobId === null ||
     jobId === undefined ||
     jobId === '' ||
     Number.isNaN(Number(jobId))
@@ -23,7 +21,7 @@ export const getClassifierJobInformation = async (token: string, jobId: string |
   return {
     ...classifierJobInfo,
     validationStatus: {
-      unvalidated: getUnvalidatedCount(validationStatusAcrossJob.reviewStatus),
+      unvalidated: validationStatusAcrossJob.reviewStatus.unreviewed,
       present: validationStatusAcrossJob.reviewStatus.confirmed,
       notPresent: validationStatusAcrossJob.reviewStatus.rejected,
       unknown: validationStatusAcrossJob.reviewStatus.uncertain
