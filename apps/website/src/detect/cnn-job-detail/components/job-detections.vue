@@ -42,14 +42,13 @@ import { ref } from 'vue'
 
 import { type DetectDetectionsResponse } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 
-import type { ClassificationsSummaryDataset } from './cnn-job-species-detected'
+import type { ClassificationsSummaryDataset } from './cnn-job-species-detected.vue'
 import CnnJobSpeciesDetected from './cnn-job-species-detected.vue'
 
-withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectDetectionsResponse | undefined, results: ClassificationsSummaryDataset[] | undefined }>(), {
+withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectDetectionsResponse | undefined, results: ClassificationsSummaryDataset[] }>(), {
   isLoading: true,
   isError: false,
-  data: undefined,
-  results: undefined
+  data: undefined
 })
 
 const searchSpeciesKeyword = ref('')

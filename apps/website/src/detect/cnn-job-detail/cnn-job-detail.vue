@@ -13,7 +13,7 @@
       :is-loading="isLoadingDetections"
       :is-error="isErrorDetections"
       :data="detections"
-      :results="resultsData"
+      :results="detectionList ?? []"
       @emit-search="onEmitSearch"
     />
   </section>
@@ -33,7 +33,7 @@ import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterStore } from '~/store'
 import { useGetJobDetections } from '../_composables/use-get-detections'
 import { useGetClassifierJobInformation } from '../_composables/use-get-job-detection-summary'
-import type { ClassificationsSummaryDataset } from './components/cnn-job-species-detected'
+import type { ClassificationsSummaryDataset } from './components/cnn-job-species-detected.vue'
 import JobDetailHeader from './components/job-detail-header.vue'
 import JobDetections from './components/job-detections.vue'
 import JobDetailInformation from './components/job-information.vue'
@@ -73,10 +73,6 @@ watch(jobSummary, async (newValue) => {
 
 onMounted(async () => {
   await getClassifierJobSpecies()
-})
-
-const resultsData = computed(() => {
-  return detectionList.value
 })
 
 const isRefetchIntervalEnable = computed(() => {
