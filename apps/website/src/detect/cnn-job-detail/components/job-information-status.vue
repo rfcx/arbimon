@@ -5,19 +5,19 @@
       class="min-w-4"
     />
     <icon-custom-ic-progress
-      v-if="props.variant === 20"
+      v-else-if="props.variant === 20"
       class="min-w-4"
     />
     <icon-custom-ic-success
-      v-if="props.variant === 30"
+      v-else-if="props.variant === 30"
       class="min-w-4"
     />
     <icon-custom-ic-error
-      v-if="props.variant === 40"
+      v-else-if="props.variant === 40"
       class="min-w-4"
     />
     <icon-custom-ic-cancelled
-      v-if="props.variant === 50"
+      v-else
       class="min-w-4"
     />
     <span class="ml-2 text-base text-insight">{{ classifierStatus.title }}</span>
