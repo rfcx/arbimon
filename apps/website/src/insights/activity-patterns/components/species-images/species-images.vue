@@ -5,12 +5,19 @@
       class="loading-shimmer h-40"
     />
     <no-data-panel v-else-if="speciesPhotos.length === 0" />
-    <el-carousel
+    <div
       v-else
       indicator-position="none"
       :autoplay="false"
+      class="relative group"
     >
-      <el-carousel-item
+      <button
+        class="absolute left-2 top-0 bottom-0 z-20 my-auto w-8 h-8 rounded-full invisible bg-box-gray bg-opacity-30 group-hover:(visible shadow-md) hover:(bg-opacity-50) focus:(border-transparent outline-none)"
+        @click="scrollContent('left')"
+      >
+        <icon-custom-chevron-left class="text-xxs m-auto" />
+      </button>
+      <div
         v-for="(photo, idx) in speciesPhotos"
         :key="'species-images-' + idx"
       >
@@ -37,8 +44,14 @@
             </a>
           </div>
         </div>
-      </el-carousel-item>
-    </el-carousel>
+      </div>
+      <button
+        class="absolute right-2 top-0 bottom-0 z-20 my-auto w-8 h-8 rounded-full invisible bg-box-gray bg-opacity-30 group-hover:(visible shadow-md) hover:(bg-opacity-50) focus:(border-transparent outline-none)"
+        @click="scrollContent('right')"
+      >
+        <icon-custom-chevron-right class="text-xxs m-auto" />
+      </button>
+    </div>
   </div>
 </template>
 
@@ -62,5 +75,19 @@ const licenseCatagory = (imageLicense: TaxonSpeciesPhotoTypes['light']['photoLic
   const freeLicenses = ['CC0', 'Copyrighted free use', 'Public domain']
   if (freeLicenses.includes(imageLicense)) return `no rights reserved (${imageLicense})`
   return `some rights reserved (${imageLicense})`
+}
+
+const SCROLL_STEP = 150
+type ScrollDirection = 'left' | 'right'
+
+const scrollContent = (direction: ScrollDirection = 'left'): void => {
+  const content = document.querySelector('#carousel-container')
+  if (!content) return
+
+  if (direction === 'left') {
+    content.scrollLeft -= SCROLL_STEP
+  } else {
+    content.scrollLeft += SCROLL_STEP
+  }
 }
 </script>
