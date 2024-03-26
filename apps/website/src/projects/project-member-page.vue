@@ -317,11 +317,6 @@ const openUserSearch = async () => {
   if (userSearchResult.value && userSearchResult.value.length !== 0) searchDropdown.value.show()
 }
 
-const openInviteNewUserForm = async (): Promise<void> => {
-  hideNotFoundContainer()
-  new Dropdown(inviteNewUserFormContainer.value, userSearchInput.value, dropdownOptions).show()
-}
-
 const showNotFoundContainer = async (): Promise<void> => {
   notFoundDropdown.value.show()
 }
