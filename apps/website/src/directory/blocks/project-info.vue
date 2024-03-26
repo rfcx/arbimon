@@ -5,14 +5,7 @@
     <div class="flex flex-col">
       <div class="rounded-t-lg bg-moss">
         <div class="flex flex-row justify-between items-center">
-          <div
-            v-if="isLoadingProfile || isRefetchingProfile"
-            class="h-4 dark:bg-util-gray-03 rounded w-40 m-3 ml-4 align-baseline loading-shimmer"
-          />
-          <div
-            v-else
-            class="flex flex-1 flex-row items-center"
-          >
+          <div class="flex flex-1 flex-row items-center">
             <span
               class="text-spoonbill font-medium text-xs ml-4 my-3.5"
             >{{ getCountryLabel(profile?.countryCodes ?? [], 1) }}</span>
@@ -42,27 +35,7 @@
           </svg>
         </div>
       </div>
-      <div v-if="isLoadingProfile || isRefetchingProfile">
-        <div class="w-full h-52 dark:bg-util-gray-03 rounded sm:w-96 loading-shimmer" />
-        <div class="p-4 border-b border-util-gray-03">
-          <div class="h-6 dark:bg-util-gray-03 rounded w-40 my-2 loading-shimmer" />
-          <div class="h-4 dark:bg-util-gray-03 rounded w-11/12 my-2 loading-shimmer" />
-        </div>
-        <div class="p-4">
-          <div
-            v-for="index in 4"
-            :key="index"
-            class="h-5 bg-util-gray-03 rounded dark:bg-util-gray-03 w-full my-3 loading-shimmer"
-          >
-              &nbsp;
-          </div>
-        </div>
-
-        <div class="h-36 rounded w-11/12 my-2">
-          &nbsp;
-        </div>
-      </div>
-      <div v-else>
+      <div>
         <img
           v-if="profile?.image"
           :src="urlWrapper(profile.image)"
@@ -154,25 +127,29 @@
       </div>
     </div>
 
-    <div class="border-t border-util-gray-03">
+    <div
+      v-if="profile?.isPublished"
+      v-show="!isLoadingProfile && !isRefetchingProfile"
+      class="border-t border-util-gray-03"
+    >
       <div class="grid grid-cols-3 border-b-2 border-util-gray-03 h-12 items-center">
         <div
           :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'about' }"
-          class="tab-item font-medium text-center cursor-pointer py-3 hover:text-frequency"
+          class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
           @click="activeTab = 'about'"
         >
           About
         </div>
         <div
           :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'keyResult' }"
-          class="tab-item font-medium text-center cursor-pointer py-3 hover:text-frequency"
+          class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
           @click="activeTab = 'keyResult'"
         >
           Key Result
         </div>
         <div
           :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'stakeholders' }"
-          class="tab-item font-medium text-center cursor-pointer py-3 hover:text-frequency"
+          class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
           @click="activeTab = 'stakeholders'"
         >
           Stakeholders
@@ -181,7 +158,7 @@
 
       <div
         class="tab-content"
-        :class="{ 'active': activeTab === 'about' }"
+        :class="{ 'block': activeTab === 'about' }"
       >
         <p
           v-if="profile?.readme"
@@ -204,7 +181,7 @@
       </div>
       <div
         class="tab-content"
-        :class="{ 'active': activeTab === 'keyResult' }"
+        :class="{ 'block': activeTab === 'keyResult' }"
       >
         <p
           v-if="profile?.keyResult"
@@ -227,7 +204,7 @@
       </div>
       <div
         class="tab-content"
-        :class="{ 'active': activeTab === 'stakeholders' }"
+        :class="{ 'block': activeTab === 'stakeholders' }"
       >
         <div v-if="shouldShowStakeholdersContent">
           <div
@@ -251,8 +228,7 @@
       </div>
     </div>
     <private-project-tag
-      v-else
-      v-show="!isLoadingProfile && !isRefetchingProfile"
+      v-if="!profile?.isPublished"
       class="justify-self-end"
     />
   </div>
@@ -364,16 +340,6 @@ const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
 
 .tab-content {
     display: none;
-}
-
-.tab-content.active {
-    display: block;
-}
-
-.tab-item {
-    overflow: hidden;
-    margin-bottom: -1px;
-    position: relative;
 }
 
 </style>
