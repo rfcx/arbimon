@@ -65,16 +65,13 @@
                   :key="riskRating.code"
                   @click="filterByCode(existingRiskCode[index].code)"
                 >
-                  <el-tag
-                    class="species-highlights border-none cursor-pointer text-md select-none h-6"
+                  <div
+                    class="species-highlights border-none cursor-pointer text-md select-none h-6 px-2 rounded-sm self-center"
                     :class="searchRisk === existingRiskCode[index].code ? 'tag-selected' : ''"
-                    effect="dark"
-                    size="large"
-                    :color="riskRating.color"
-                    :title="riskRating.label"
+                    :style="{ background: riskRating.color }"
                   >
                     {{ riskRating.code }}
-                  </el-tag>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -114,16 +111,12 @@
                       :text-black="false"
                     />
                     <div class="self-center">
-                      <el-tag
-                        class="species-highlights border-none text-md h-6"
-                        effect="dark"
-                        size="large"
-                        :color="item.riskRating.color"
-                        :title="item.riskRating.label"
-                        :style="{ color: item.riskRating.text }"
+                      <div
+                        class="species-highlights border-none text-md h-6 px-2 rounded-sm self-center"
+                        :style="{ color: item.riskRating.text, background: item.riskRating.color }"
                       >
                         {{ item.riskRating.code }}
-                      </el-tag>
+                      </div>
                     </div>
                   </li>
                 </ul>

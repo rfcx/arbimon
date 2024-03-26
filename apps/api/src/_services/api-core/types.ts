@@ -1,8 +1,10 @@
-import { type CLASSIFICATION_STATUS_CORE_ARBIMON_MAP } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { type CoreRawReviewStatus, type CoreReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type CLASSIFIER_JOB_LABELS } from '@rfcx-bio/common/api-bio/cnn/classifier-jobs'
 import { type REVIEW_STATUS_MAPPING, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 
-// Request type
+/**
+ * @deprecated please use the alternative `CoreGetDetectionsQueryParams` interface instead
+ */
 export interface DetectDetectionsQueryParamsCore {
   start: string
   end: string
@@ -24,6 +26,9 @@ export interface DetectDetectionsQueryParamsCore {
 }
 
 // Response type
+/**
+ * @deprecated please use the alternative `CoreDetection` interface instead
+ */
 export type DetectDetectionsResponseCore = Array<{
   id: string
   stream_id: string
@@ -50,7 +55,7 @@ export interface GetClassifierJobClassificationSummaryQueryParams {
   keyword?: string
   limit?: number
   offset?: number
-  sort?: 'name' | typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP[keyof typeof CLASSIFICATION_STATUS_CORE_ARBIMON_MAP]
+  sort?: 'name' | CoreReviewStatus
   order?: 'asc' | 'desc'
 }
 
@@ -86,4 +91,29 @@ export interface CoreClassifierJob {
 export interface CoreClassifierJobInformation extends CoreClassifierJob {
   streams: Array<{ id: string, name: string }>
   totalDistinctClassifications: number
+}
+
+export interface CoreGetDetectionsQueryParams {
+  start: string
+  end: string
+  streams?: string[]
+  classifications?: string[]
+  classifiers?: number[]
+  classifier_jobs?: number[]
+  min_confidence?: number
+  review_statuses?: [CoreReviewStatus]
+  limit?: number
+  offset?: number
+  descending?: boolean
+  fields?: string[]
+}
+
+export interface CoreDetection {
+  id: string
+  stream_id: string
+  classifier_id: number
+  start: string
+  end: string
+  confidence: number
+  review_status: CoreRawReviewStatus
 }

@@ -5,7 +5,14 @@
     <div class="flex flex-col">
       <div class="rounded-t-lg bg-moss">
         <div class="flex flex-row justify-between items-center">
-          <div class="flex flex-1 flex-row items-center">
+          <div
+            v-if="isLoadingProfile || isRefetchingProfile"
+            class="h-4 dark:bg-util-gray-03 rounded w-40 m-3 ml-4 align-baseline loading-shimmer"
+          />
+          <div
+            v-else
+            class="flex flex-1 flex-row items-center"
+          >
             <span
               class="text-spoonbill font-medium text-xs ml-4 my-3.5"
             >{{ getCountryLabel(profile?.countryCodes ?? [], 1) }}</span>
@@ -35,7 +42,27 @@
           </svg>
         </div>
       </div>
-      <div>
+      <div v-if="isLoadingProfile || isRefetchingProfile">
+        <div class="w-full h-52 dark:bg-util-gray-03 rounded sm:w-96 loading-shimmer" />
+        <div class="p-4 border-b border-util-gray-03">
+          <div class="h-6 dark:bg-util-gray-03 rounded w-40 my-2 loading-shimmer" />
+          <div class="h-4 dark:bg-util-gray-03 rounded w-11/12 my-2 loading-shimmer" />
+        </div>
+        <div class="p-4">
+          <div
+            v-for="index in 4"
+            :key="index"
+            class="h-5 bg-util-gray-03 rounded dark:bg-util-gray-03 w-full my-3 loading-shimmer"
+          >
+              &nbsp;
+          </div>
+        </div>
+
+        <div class="h-36 rounded w-11/12 my-2">
+          &nbsp;
+        </div>
+      </div>
+      <div v-else>
         <img
           v-if="profile?.image"
           :src="urlWrapper(profile.image)"
@@ -224,7 +251,8 @@
       </div>
     </div>
     <private-project-tag
-      v-if="!profile?.isPublished"
+      v-else
+      v-show="!isLoadingProfile && !isRefetchingProfile"
       class="justify-self-end"
     />
   </div>
@@ -259,8 +287,7 @@ const isStakeholdersSelected = ref(false)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
-
-const { data: profile, refetch: profileRefetch } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'], computed(() => true))
+const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch, isRefetching: isRefetchingProfile } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'], computed(() => true))
 const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId, computed(() => isStakeholdersSelected.value))
 
 const isAboutTabViewMored = ref(false)

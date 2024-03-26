@@ -1,3 +1,5 @@
+import { Op } from 'sequelize'
+
 import {
   type ProjectSpeciesParams,
   type ProjectSpeciesQueryParams,
@@ -31,15 +33,34 @@ export const projectSpeciesHandler: Handler<ProjectSpeciesResponse, ProjectSpeci
 export const getProjectSpecies = async (locationProjectId: number, params: ProjectSpeciesQueryParams): Promise<ProjectSpeciesResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
-  const { limit = 100, offset = 0, fields = 'light' } = params
+  const { limit = 100, offset = 0, fields = 'light', keyword, riskRatingId } = params
   const attributes = ATTRIBUTES_SPECIES_IN_PROJECT[fields]
 
   if (attributes === undefined) {
     throw BioInvalidQueryParamError({ fields })
   }
 
+  // Allow searching by name
+  const keywordClause =
+      keyword !== undefined
+        ? {
+        [Op.or]: [
+          {
+            scientificName: { [Op.iLike]: `%${String(keyword)}%` }
+          },
+          {
+            commonName: { [Op.iLike]: `%${String(keyword)}%` }
+          }
+        ]
+      }
+      : {}
+
+  const statusClause = riskRatingId !== undefined ? { riskRatingId } : {}
+
+  const where = { locationProjectId, ...keywordClause, ...statusClause }
+
   const result = await models.SpeciesInProject.findAndCountAll({
-    where: { locationProjectId },
+    where,
     attributes,
     order: [['scientificName', 'ASC']],
     limit,

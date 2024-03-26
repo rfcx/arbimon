@@ -279,6 +279,7 @@ onMounted(() => {
 watch(profileData, () => {
   firstName.value = profileData.value?.firstName ?? store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
   lastName.value = profileData.value?.lastName ?? store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
+  searchOrganizationValue.value = displayedOrganization.value?.name ?? ''
 })
 
 watch(organizationsList, async () => {

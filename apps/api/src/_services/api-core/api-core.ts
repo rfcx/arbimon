@@ -16,9 +16,12 @@ import {
   type CoreClassifierJob,
   type CoreClassifierJobClassificationSummary,
   type CoreClassifierJobInformation,
-    type CoreClassifierJobTotalDetections, type DetectDetectionsQueryParamsCore,
+  type CoreClassifierJobTotalDetections,
+  type CoreDetection,
+  type CoreGetDetectionsQueryParams,
+  type DetectDetectionsQueryParamsCore,
   type DetectDetectionsResponseCore,
-    type GetClassifierJobClassificationSummaryQueryParams
+  type GetClassifierJobClassificationSummaryQueryParams
 } from './types'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
@@ -28,6 +31,22 @@ export async function getMedia (logger: FastifyLoggerInstance, url: string): Pro
   return await ApiClient.getInstance(logger).getOrUndefined<ArrayBuffer>(url, { responseType: 'arraybuffer' })
 }
 
+export async function getDetections (token: string, params: CoreGetDetectionsQueryParams): Promise<CoreDetection[]> {
+  const response = await axios.request<CoreDetection[]>({
+    method: 'GET',
+    url: `${CORE_API_BASE_URL}/detections`,
+    headers: {
+      authorization: token
+    },
+    params
+  })
+
+  return response.data
+}
+
+/**
+ * @deprecated this is being deprecated because the route is being deprecated. Please use `getDetections`.
+ */
 export async function getDetectionsFromApi (token: string, params: DetectDetectionsQueryParamsCore): Promise<DetectDetectionsResponseCore> {
   if (params.start === '' || params.end === '') throw new Error('Start and end are required parameters for getting detections')
   return await axios.request<DetectDetectionsResponseCore>({
