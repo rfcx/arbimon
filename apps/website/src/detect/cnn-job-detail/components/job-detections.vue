@@ -1,9 +1,9 @@
 <template>
-  <div class="job-information-wrapper border-1 border-box-grey rounded-md mt-6">
+  <div class="border-1 border-util-gray-01 rounded-md mt-6">
     <div class="p-6">
-      <p class="flex text-3xl font-header text-insight">
+      <h1 class="flex text-insight">
         Detections
-      </p>
+      </h1>
       <form
         class="h-12 w-72 my-6"
       >

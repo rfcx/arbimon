@@ -230,8 +230,6 @@ const sortedTableData = computed((): ClassificationsSummaryDataset[] => {
 const pageData = computed(() : ClassificationsSummaryDataset[] => {
   if (props.datasets === undefined) return []
   const start = (pageIndex.value - 1) * pageSize.value
-  console.info(start)
-  console.info(pageData)
   return sortedTableData.value.slice(start, start + pageSize.value)
 })
 

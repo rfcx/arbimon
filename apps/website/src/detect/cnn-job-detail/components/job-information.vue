@@ -1,9 +1,9 @@
 <template>
-  <div class="job-information-wrapper border-1 border-box-grey rounded-md">
+  <div class="border-1 border-util-gray-01 rounded-md">
     <div class="p-6">
-      <p class="flex text-3xl font-header text-insight">
+      <h1 class="flex text-insight">
         Summary
-      </p>
+      </h1>
       <div class="grid grid-cols-2 text-lg py-4 border-b-1 border-util-gray-03 items-center">
         <div class="flex md:col-span-1 <md:col-span-2 items-center">
           <span class="text-util-gray-01">Model:</span>
@@ -79,7 +79,7 @@
             v-else
             class="flex text-base text-insight mt-4"
           >
-            Total number of detected species: {{ props.summary?.totalDistinctClassifications }}
+            Total number of detected classes: {{ props.summary?.totalDistinctClassifications }}
           </span>
         </div>
       </div>
@@ -147,7 +147,7 @@ const queryStreamsInfoString = computed(() => {
 })
 
 const minOfRecordings = computed(() => {
-  if (props.summary?.minutesTotal === undefined || props.summary?.minutesTotal === 0 || props.summary?.minutesTotal === 1) return '0 min of recordings'
+  if (props.summary?.minutesTotal === undefined || props.summary?.minutesTotal === 0) return '0 min of recordings'
   if (props.summary?.minutesTotal === 1) return '1 min of recordings'
   return `${props.summary?.minutesTotal} mins of recordings`
 })
