@@ -4,6 +4,7 @@
       <h1 class="text-gray-900 dark:text-insight">
         Project settings
       </h1>
+      <GuestBanner v-if="store.userIsGuest" />
       <div class="grid lg:(grid-cols-2 gap-10)">
         <div>
           <h5>
@@ -128,6 +129,7 @@ import { type ProjectProfileUpdateBody, ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UN
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isValidSlug } from '@rfcx-bio/utils/string/slug'
 
+import GuestBanner from '@/_layout/components/guest-banner/guest-banner.vue'
 import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
