@@ -27,6 +27,7 @@ export const useStore = defineStore('root', {
     userIsExternalGuest: (state) => state.project?.role === 'external',
     userIsGuest: (state) => state.project?.role === 'viewer' || state.project?.role === 'external',
     userIsProjectMember: (state) => rolesGreaterOrEqualTo('viewer').includes(state.project?.role ?? 'none'),
+    userIsDataEntryMember: (state) => rolesGreaterOrEqualTo('entry').includes(state.project?.role ?? 'none'),
     userIsFullProjectMember: (state) => rolesGreaterOrEqualTo('user').includes(state.project?.role ?? 'none'),
     userIsAdminProjectMember: (state) => rolesGreaterOrEqualTo('admin').includes(state.project?.role ?? 'none')
   },

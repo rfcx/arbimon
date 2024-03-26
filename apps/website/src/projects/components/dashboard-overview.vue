@@ -55,7 +55,7 @@
         {{ stat.label }}
       </a>
     </div>
-    <div v-if="stat.value === 'recording' && store.userIsProjectMember">
+    <div v-if="stat.value === 'recording' && store.userIsDataEntryMember">
       <a
         class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-util-gray-01 border-b-1 border-frequency"
         :href="stat.link"
@@ -71,7 +71,7 @@
         {{ stat.label }}
       </a>
     </div>
-    <div v-if="stat.value === 'species' && store.userIsProjectMember">
+    <div v-if="stat.value === 'species' && store.userIsDataEntryMember">
       <a
         class="text-base text-display font-medium leading-4 dark:text-frequency cursor-pointer focus:text-cyan-800 focus:bg-util-gray-01 border-b-1 border-frequency"
         :href="stat.link"
