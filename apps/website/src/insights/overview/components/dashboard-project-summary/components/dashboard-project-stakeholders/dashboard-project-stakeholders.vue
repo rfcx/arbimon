@@ -1,5 +1,5 @@
 <template>
-  <template v-if="stakeholders?.organizations.length === 0 && stakeholders?.users.length === 0 && !isEditing">
+  <template v-if="stakeholders?.organizations.length === 0 && stakeholders?.users.filter(u => u.ranking > -1).length === 0 && !isEditing">
     <ProjectSummaryEmpty
       v-if="editable && store.userIsAdminProjectMember"
       @emit-add-content="isEditing = true"
