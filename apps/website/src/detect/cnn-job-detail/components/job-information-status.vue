@@ -50,40 +50,40 @@ const classifierStatus = computed(() => {
   if (props.variant === 0) {
     return {
       title: 'In queue',
-      bgColor: 'bg-queue-status',
-      borderColor: 'border-queue-status'
+      bgColor: 'bg-[#FF9457]',
+      borderColor: 'border-[#FF9457]'
     }
   }
 
   if (props.variant === 20) {
     return {
       title: 'In progress',
-      bgColor: 'bg-progress-status',
-      borderColor: 'border-progress-status'
+      bgColor: 'bg-[#ADFF2C]',
+      borderColor: 'border-[#ADFF2C]'
     }
   }
 
   if (props.variant === 30) {
     return {
       title: 'Success',
-      bgColor: 'bg-success-status',
-      borderColor: 'border-success-status'
+      bgColor: 'bg-[#ADFF2C]',
+      borderColor: 'border-[#ADFF2C]'
     }
   }
 
   if (props.variant === 40) {
     return {
       title: 'Error',
-      bgColor: 'bg-error-status',
-      borderColor: 'border-error-status'
+      bgColor: 'bg-ibis',
+      borderColor: 'border-ibis'
     }
   }
 
   if (props.variant === 50) {
     return {
       title: 'Cancelled',
-      bgColor: 'bg-cancelled-status',
-      borderColor: 'border-cancelled-status'
+      bgColor: 'bg-ibis',
+      borderColor: 'border-ibis'
     }
   }
 
@@ -102,7 +102,7 @@ const progressFormat = (percentage: number) => {
     return '0%'
   }
 
-  if (props.variant === CLASSIFIER_JOB_STATUS.DONE) {
+  if (props.variant === CLASSIFIER_JOB_STATUS.DONE || percentage > 100) {
     return '100%'
   }
   return `${percentage}%`

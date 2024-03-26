@@ -140,11 +140,6 @@ export default defineConfig({
           light: '#060508',
           dark: '#040406'
         },
-        'queue-status': '#FF9457',
-        'progress-status': '#ADFF2C',
-        'success-status': '#ADFF2C',
-        'error-status': '#A31A33',
-        'cancelled-status': '#CC1E3D',
         'danger-background': '#FFDADA'
       },
       backgroundImage: {
