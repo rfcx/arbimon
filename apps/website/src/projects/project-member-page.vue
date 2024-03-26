@@ -68,13 +68,6 @@
               <p class="text-sm font-normal font-sans text-insight leading-tight">
                 We are unable to find this user.
               </p>
-              <button
-                type="button"
-                class="text-frequency text-sm font-medium font-display leading-none"
-                @click="openInviteNewUserForm"
-              >
-                Invite
-              </button>
             </div>
 
             <div
