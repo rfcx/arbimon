@@ -152,106 +152,106 @@
           />
         </div>
       </div>
-    </div>
-    <div
-      v-if="profile?.isPublished"
-      v-show="!isLoadingProfile && !isRefetchingProfile"
-      class="border-t border-util-gray-03"
-    >
-      <div class="grid grid-cols-3 border-b-2 border-util-gray-03 h-12 items-center">
-        <div
-          :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'about' }"
-          class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
-          @click="activeTab = 'about'"
-        >
-          About
-        </div>
-        <div
-          :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'keyResult' }"
-          class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
-          @click="activeTab = 'keyResult'"
-        >
-          Key Result
-        </div>
-        <div
-          :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'stakeholders' }"
-          class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
-          @click="activeTab = 'stakeholders'"
-        >
-          Stakeholders
-        </div>
-      </div>
-
       <div
-        :class="activeTab === 'about' ? 'block' : 'hidden'"
+        v-if="profile?.isPublished"
+        v-show="!isLoadingProfile && !isRefetchingProfile"
+        class="border-t border-util-gray-03"
       >
-        <p
-          v-if="profile?.readme"
-          class="pt-4"
-        >
-          <DashboardMarkdownViewerEditor
-            id="about"
-            v-model:is-view-mored="isAboutTabViewMored"
-            v-model:is-editing="isAboutTabEditing"
-            :editable="false"
-            :raw-markdown-text="profile?.readme"
-            :default-markdown-text="readmeDefault"
-            :is-project-member="false"
-            :is-viewing-as-guest="true"
-          />
-        </p>
-        <div v-else>
-          <no-content-banner />
-        </div>
-      </div>
-      <div
-        :class="activeTab === 'keyResult' ? 'block' : 'hidden'"
-      >
-        <p
-          v-if="profile?.keyResult"
-          class="pt-4"
-        >
-          <DashboardMarkdownViewerEditor
-            id="key-result"
-            v-model:is-view-mored="isKeyResultTabViewMored"
-            v-model:is-editing="isKeyResultTabEditing"
-            :editable="false"
-            :raw-markdown-text="profile?.keyResult"
-            :default-markdown-text="keyResultDefault"
-            :is-project-member="false"
-            :is-viewing-as-guest="false"
-          />
-        </p>
-        <div v-else>
-          <no-content-banner />
-        </div>
-      </div>
-      <div
-        :class="activeTab === 'stakeholders' ? 'block' : 'hidden'"
-      >
-        <div v-if="shouldShowStakeholdersContent">
+        <div class="grid grid-cols-3 border-b-2 border-util-gray-03 h-12 items-center">
           <div
-            class="grid mt-4"
-            style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
+            :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'about' }"
+            class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
+            @click="activeTab = 'about'"
           >
-            <DashboardProjectStakeholdersViewer
-              :editable="false"
-              :is-project-member="false"
-              :is-external-guest="true"
-              :loading="stakeholdersLoading || stakeholdersRefetching"
-              :organizations="stakeholders?.organizations ?? []"
-              :project-members="stakeholders?.users.filter(u => u.ranking !== -1).sort((a, b) => a.ranking - b.ranking) ?? []"
-              @emit-is-updating="false"
-            />
+            About
+          </div>
+          <div
+            :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'keyResult' }"
+            class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
+            @click="activeTab = 'keyResult'"
+          >
+            Key Result
+          </div>
+          <div
+            :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'stakeholders' }"
+            class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
+            @click="activeTab = 'stakeholders'"
+          >
+            Stakeholders
           </div>
         </div>
-        <div v-else>
-          <no-content-banner />
+
+        <div
+          :class="activeTab === 'about' ? 'block' : 'hidden'"
+        >
+          <p
+            v-if="profile?.readme"
+            class="pt-4"
+          >
+            <DashboardMarkdownViewerEditor
+              id="about"
+              v-model:is-view-mored="isAboutTabViewMored"
+              v-model:is-editing="isAboutTabEditing"
+              :editable="false"
+              :raw-markdown-text="profile?.readme"
+              :default-markdown-text="readmeDefault"
+              :is-project-member="false"
+              :is-viewing-as-guest="true"
+            />
+          </p>
+          <div v-else>
+            <no-content-banner />
+          </div>
+        </div>
+        <div
+          :class="activeTab === 'keyResult' ? 'block' : 'hidden'"
+        >
+          <p
+            v-if="profile?.keyResult"
+            class="pt-4"
+          >
+            <DashboardMarkdownViewerEditor
+              id="key-result"
+              v-model:is-view-mored="isKeyResultTabViewMored"
+              v-model:is-editing="isKeyResultTabEditing"
+              :editable="false"
+              :raw-markdown-text="profile?.keyResult"
+              :default-markdown-text="keyResultDefault"
+              :is-project-member="false"
+              :is-viewing-as-guest="false"
+            />
+          </p>
+          <div v-else>
+            <no-content-banner />
+          </div>
+        </div>
+        <div
+          :class="activeTab === 'stakeholders' ? 'block' : 'hidden'"
+        >
+          <div v-if="shouldShowStakeholdersContent">
+            <div
+              class="grid mt-4"
+              style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
+            >
+              <DashboardProjectStakeholdersViewer
+                :editable="false"
+                :is-project-member="false"
+                :is-external-guest="true"
+                :loading="stakeholdersLoading || stakeholdersRefetching"
+                :organizations="stakeholders?.organizations ?? []"
+                :project-members="stakeholders?.users.filter(u => u.ranking !== -1).sort((a, b) => a.ranking - b.ranking) ?? []"
+                @emit-is-updating="false"
+              />
+            </div>
+          </div>
+          <div v-else>
+            <no-content-banner />
+          </div>
         </div>
       </div>
     </div>
     <private-project-tag
-      v-else
+      v-if="!profile?.isPublished"
       v-show="!isLoadingProfile && !isRefetchingProfile"
       class="justify-self-end"
     />
