@@ -4,6 +4,7 @@
       v-if="editable && store.userIsAdminProjectMember"
       @emit-add-content="isEditing = true"
     />
+    <ProjectSummaryEmptyForNonProjectMember v-else />
   </template>
   <template v-else>
     <DashboardProjectStakeholdersViewer
@@ -36,6 +37,7 @@ import { useStore } from '~/store'
 import { useGetDashboardStakeholders } from '../../../../composables/use-get-dashboard-stakeholders'
 import { useUpdateDashboardStakeholders } from '../../../../composables/use-update-stakeholders'
 import ProjectSummaryEmpty from '../project-summary-empty.vue'
+import ProjectSummaryEmptyForNonProjectMember from '../project-summary-empty-for-non-project-member.vue'
 import DashboardProjectStakeholdersEditor from './dashboard-project-stakeholders-editor.vue'
 import DashboardProjectStakeholdersViewer from './dashboard-project-stakeholders-viewer.vue'
 
