@@ -12,6 +12,7 @@ export interface Site {
   countryCode: string | null
   createdAt?: Date
   updatedAt?: Date
+  hidden: boolean
 }
 
 export const ATTRIBUTES_LOCATION_SITE = attributes<Site>()({

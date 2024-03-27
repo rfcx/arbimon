@@ -31,7 +31,8 @@ export const testSites: Site[] = [
     latitude: 18.31307,
     longitude: -65.24878,
     altitude: 30.85246588,
-    countryCode: 'US'
+    countryCode: 'US',
+    hidden: false
   },
   {
     id: 10001002,
@@ -42,7 +43,8 @@ export const testSites: Site[] = [
     latitude: 28.31307,
     longitude: -60.24878,
     altitude: 10.85246588,
-    countryCode: 'US'
+    countryCode: 'US',
+    hidden: false
   }
 ]
 

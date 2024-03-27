@@ -5,7 +5,7 @@ import { type Site } from '../types'
 
 export const MODEL_LOCATION_SITE = 'LocationSite'
 export const TABLE_LOCATION_SITE = 'location_site'
-export const UPDATE_ON_DUPLICATE_LOCATION_SITE: Array<keyof Site> = ['idCore', 'locationProjectId', 'name', 'latitude', 'longitude', 'altitude', 'updatedAt', 'countryCode']
+export const UPDATE_ON_DUPLICATE_LOCATION_SITE: Array<keyof Site> = ['idCore', 'locationProjectId', 'name', 'latitude', 'longitude', 'altitude', 'updatedAt', 'countryCode', 'hidden']
 
 export const LocationSiteModel = defineWithDefaultsAutoPk<Site>(
   MODEL_LOCATION_SITE,
@@ -36,6 +36,11 @@ export const LocationSiteModel = defineWithDefaultsAutoPk<Site>(
       type: DataTypes.STRING(2),
       allowNull: true,
       defaultValue: null
+    },
+    hidden: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   },
   {

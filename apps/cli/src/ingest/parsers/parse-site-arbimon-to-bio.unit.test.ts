@@ -12,7 +12,8 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     longitude: 0,
     altitude: 0,
     countryCode: 'TH',
-    deletedAt: null
+    deletedAt: null,
+    hidden: false
   }
 
   test('succeeds for valid data', async () => {
@@ -32,6 +33,7 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     const { latitude, ...missingLatiude } = VALID_SITE
     const { longitude, ...missingLongitude } = VALID_SITE
     const { altitude, ...missingAltitude } = VALID_SITE
+    const { hidden, ...missingHidden } = VALID_SITE
 
     // Act
     const actualMissing = [
@@ -41,7 +43,8 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
       parseSiteArbimon(missingName),
       parseSiteArbimon(missingLatiude),
       parseSiteArbimon(missingLongitude),
-      parseSiteArbimon(missingAltitude)
+      parseSiteArbimon(missingAltitude),
+      parseSiteArbimon(missingHidden)
     ]
 
     // Assert
@@ -58,6 +61,7 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     const nullLongitude = { ...VALID_SITE, longitude: null }
     const nullAltitude = { ...VALID_SITE, altitude: null }
     const nullCountryCode = { ...VALID_SITE, countryCode: null }
+    const nullHidden = { ...VALID_SITE, hidden: null }
 
     const undefinedIdArbimon = { ...VALID_SITE, idArbimon: undefined }
     const undefinedIdCore = { ...VALID_SITE, idCore: undefined }
@@ -67,6 +71,7 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     const undefinedLongitude = { ...VALID_SITE, longitude: undefined }
     const undefinedAltitude = { ...VALID_SITE, altitude: undefined }
     const undefinedCountryCode = { ...VALID_SITE, countryCode: undefined }
+    const undefinedHidden = { ...VALID_SITE, hidden: undefined }
 
     // Act
     const actualMissing = [
@@ -77,6 +82,7 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
       parseSiteArbimon(nullLatitude),
       parseSiteArbimon(nullLongitude),
       parseSiteArbimon(nullAltitude),
+      parseSiteArbimon(nullHidden),
       parseSiteArbimon(undefinedIdArbimon),
       parseSiteArbimon(undefinedIdCore),
       parseSiteArbimon(undefinedProjectId),
@@ -84,7 +90,8 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
       parseSiteArbimon(undefinedLatitude),
       parseSiteArbimon(undefinedLongitude),
       parseSiteArbimon(undefinedAltitude),
-      parseSiteArbimon(undefinedCountryCode)
+      parseSiteArbimon(undefinedCountryCode),
+      parseSiteArbimon(undefinedHidden)
     ]
 
     const actualNullishProps = [
