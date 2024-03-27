@@ -94,14 +94,14 @@
           <div
             ref="organizationSearchLoading"
             role="status"
-            class="absolute z-index-10 absolute top-3 right-3"
+            class="absolute z-index-10 top-3 right-3"
             :class="{ hidden: !isSearchOrganizationFetching }"
           >
             <icon-custom-ic-loading class="inline w-4 h-4 text-gray-200 animate-spin dark:text-gray-600 fill-frequency" />
             <span class="sr-only">Loading...</span>
           </div>
           <div
-            class="absolute z-index-10 absolute top-6 right-3 cursor-pointer"
+            class="absolute z-index-10 top-6 right-3 cursor-pointer"
             :class="{ hidden: isSearchOrganizationFetching }"
             @click="openOrganizationSearch()"
           >
@@ -205,6 +205,12 @@
             class="animate-spin w-4 h-4 ml-2 inline"
           />
         </button>
+        <alert-dialog
+          v-if="hasFailed"
+          severity="error"
+          :title="DEFAULT_ERROR_MSG"
+          :message="errorMessage"
+        />
       </div>
     </div>
   </section>
@@ -220,6 +226,7 @@ import { useRouter } from 'vue-router'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import image from '@/_assets/cta/frog-hero.webp'
+import alertDialog from '@/_components/alert-dialog.vue'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
@@ -266,6 +273,10 @@ const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResu
 const { mutate: mutateNewOrganization } = useCreateOrganization(apiClientBio)
 
 const selectedOrganizationId = ref(profileData.value?.organizationIdAffiliated)
+
+const DEFAULT_ERROR_MSG = 'Failed!'
+const hasFailed = ref(false)
+const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 
 onMounted(() => {
   firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
@@ -429,7 +440,11 @@ const saveAccountSetting = async (): Promise<void> => {
 
 const saveUserProfile = async (): Promise<void> => {
   mutatePatchUserProfile({ firstName: firstName.value, lastName: lastName.value, organizationIdAffiliated: selectedOrganizationId.value }, {
-    onSuccess: async () => { }
+    onSuccess: async () => { },
+    onError: () => {
+      hasFailed.value = true
+      errorMessage.value = 'Failed to save changes to account settings.'
+    }
   })
 }
 
@@ -442,6 +457,10 @@ const saveProfilePhoto = async (): Promise<void> => {
   mutatePatchProfilePhoto(form, {
     onSuccess: async () => {
       router.go(0)
+    },
+    onError: () => {
+      hasFailed.value = true
+      errorMessage.value = 'The photo upload was failed to upload.'
     }
   })
 }
