@@ -92,4 +92,30 @@ describe('PATCH /profile', async () => {
     expect(profile?.firstName).toBe(profileUpdates.firstName)
     expect(profile?.lastName).toBe(profileUpdates.lastName)
   })
+
+  test('a new user profile record is not created when email contains uppercase characters', async () => {
+    // Arrange
+    const app = await makeApp(routesUserProfile, { userId: defaultUserProfile.id, userToken: defaultUserToken })
+    const uppercaseEmail = 'JAke@rake.com'
+    const profileUpdates = { firstName: 'John', email: uppercaseEmail }
+
+    // Act
+    const response = await app.inject({
+      method: PATCH,
+      url: ROUTE,
+      payload: profileUpdates
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(204)
+
+    // No new user profile is created
+    const uppercaseProfile = await UserProfile.findOne({ where: { email: uppercaseEmail } })
+    expect(uppercaseProfile).toBeNull()
+
+    // The existing user profile is updated
+    const existingProfile = await UserProfile.findOne({ where: { email: defaultUserProfile.email } })
+    expect(existingProfile).toBeDefined()
+    expect(existingProfile?.firstName).toEqual('John')
+  })
 })
