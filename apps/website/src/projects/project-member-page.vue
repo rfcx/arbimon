@@ -428,6 +428,6 @@ font-family: Poppins, Roboto, Noto Sans, FontAwesome
 }
 
 .mainLoginInput:-ms-input-placeholder  {
-font-family: FontAwesome;
+font-family: FontAwesome, Poppins;
 }
 </style>
