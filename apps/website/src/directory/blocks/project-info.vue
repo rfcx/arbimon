@@ -153,15 +153,37 @@
         </div>
       </div>
     </div>
-    <el-tabs
+    <div
       v-if="profile?.isPublished"
       v-show="!isLoadingProfile && !isRefetchingProfile"
-      v-model="activeTab"
-      class="border-t-1 border-util-gray-03"
+      class="border-t border-util-gray-03"
     >
-      <el-tab-pane
-        label="About"
-        name="about"
+      <div class="grid grid-cols-3 border-b-2 border-util-gray-03 h-12 items-center">
+        <div
+          :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'about' }"
+          class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
+          @click="activeTab = 'about'"
+        >
+          About
+        </div>
+        <div
+          :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'keyResult' }"
+          class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
+          @click="activeTab = 'keyResult'"
+        >
+          Key Result
+        </div>
+        <div
+          :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'stakeholders' }"
+          class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
+          @click="activeTab = 'stakeholders'"
+        >
+          Stakeholders
+        </div>
+      </div>
+
+      <div
+        :class="activeTab === 'about' ? 'block' : 'hidden'"
       >
         <p
           v-if="profile?.readme"
@@ -181,10 +203,9 @@
         <div v-else>
           <no-content-banner />
         </div>
-      </el-tab-pane>
-      <el-tab-pane
-        label="Key result"
-        name="keyResult"
+      </div>
+      <div
+        :class="activeTab === 'keyResult' ? 'block' : 'hidden'"
       >
         <p
           v-if="profile?.keyResult"
@@ -204,10 +225,9 @@
         <div v-else>
           <no-content-banner />
         </div>
-      </el-tab-pane>
-      <el-tab-pane
-        label="Stakeholders"
-        name="stakeholders"
+      </div>
+      <div
+        :class="activeTab === 'stakeholders' ? 'block' : 'hidden'"
       >
         <div v-if="shouldShowStakeholdersContent">
           <div
@@ -228,8 +248,8 @@
         <div v-else>
           <no-content-banner />
         </div>
-      </el-tab-pane>
-    </el-tabs>
+      </div>
+    </div>
     <private-project-tag
       v-else
       v-show="!isLoadingProfile && !isRefetchingProfile"
@@ -340,21 +360,6 @@ const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
 <style lang="scss">
 .normal-flag {
   margin: 1px !important
-}
-.el-tabs > .el-tabs__header{
-  margin: 0px;
-}
-.el-tabs > .el-tabs__header >.el-tabs__nav-wrap >.el-tabs__nav-scroll >.el-tabs__nav {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  width: 100%;
-  .el-tabs__item {
-    height: 50px;
-    padding: 0px;
-    border-bottom-width: 3px;
-    --tw-border-opacity: 1;
-    border-color: rgba(75, 75, 75, var(--tw-border-opacity));
-  }
 }
 
 </style>
