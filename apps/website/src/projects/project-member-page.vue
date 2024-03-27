@@ -424,7 +424,7 @@ font-family: Poppins, Roboto, Noto Sans, FontAwesome
 }
 
 .mainLoginInput::-moz-placeholder  {
-font-family: FontAwesome;
+  font-family: FontAwesome, Poppins;
 }
 
 .mainLoginInput:-ms-input-placeholder  {
