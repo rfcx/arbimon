@@ -13,7 +13,7 @@ describe('ingest > parsers > parseSiteArbimonToBio', () => {
     altitude: 0,
     countryCode: 'TH',
     deletedAt: null,
-    hidden: false
+    hidden: 0
   }
 
   test('succeeds for valid data', async () => {
