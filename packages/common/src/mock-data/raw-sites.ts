@@ -131,7 +131,7 @@ export const rawSites: Site[] = [
     longitude: -66.5473,
     altitude: 6.163519308,
     countryCode: 'US',
-    hidden: false
+    hidden: true
   },
   {
     id: 8427,
@@ -623,7 +623,7 @@ export const rawSites: Site[] = [
     longitude: -66.59506,
     altitude: 86.51118017,
     countryCode: 'US',
-    hidden: false
+    hidden: true
   },
   {
     id: 8481,
@@ -3419,7 +3419,7 @@ export const rawSites: Site[] = [
     longitude: -66.71495,
     altitude: 431.7764329,
     countryCode: 'US',
-    hidden: false
+    hidden: true
   },
   {
     id: 8786,

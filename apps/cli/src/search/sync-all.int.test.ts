@@ -50,7 +50,8 @@ beforeEach(async () => {
     latitude: 0,
     longitude: 0,
     altitude: 0,
-    countryCode: 'US'
+    countryCode: 'US',
+    hidden: false
   }
   await LocationSite.create(project1Site)
   const p1s1recordings = Array.from({ length: 20 }, (_, i) => {
@@ -67,7 +68,8 @@ beforeEach(async () => {
     latitude: 0,
     longitude: 0,
     altitude: 0,
-    countryCode: 'US'
+    countryCode: 'US',
+    hidden: false
   }
   await LocationSite.create(project4Site)
   const p4s1recordings = Array.from({ length: 30 }, (_, i) => {

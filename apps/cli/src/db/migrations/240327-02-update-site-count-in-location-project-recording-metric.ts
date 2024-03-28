@@ -3,17 +3,19 @@ import { type MigrationFn } from 'umzug'
 
 import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
 
-const MATERIALIZED_VIEW_NAME = 'location_project_recording_metric'
+const MATERIALIZED_VIEW_NAME_RECORDING = 'location_project_recording_metric'
+const MATERIALIZED_VIEW_NAME_DETECTION = 'location_project_detection_metric'
 const VIEW_NAME = 'location_project_metric'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(`
     DROP VIEW IF EXISTS ${VIEW_NAME};
-    DROP MATERIALIZED VIEW IF EXISTS ${MATERIALIZED_VIEW_NAME};
+    DROP MATERIALIZED VIEW IF EXISTS ${MATERIALIZED_VIEW_NAME_RECORDING};
+    DROP MATERIALIZED VIEW IF EXISTS ${MATERIALIZED_VIEW_NAME_DETECTION};
   `)
 
   await params.context.sequelize.query(`
-    CREATE MATERIALIZED VIEW ${MATERIALIZED_VIEW_NAME} AS
+    CREATE MATERIALIZED VIEW ${MATERIALIZED_VIEW_NAME_RECORDING} AS
       SELECT
         recording_by_site_hour.location_project_id,
         sum(recording_by_site_hour.count) AS recording_minutes_count,
@@ -25,7 +27,22 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
         WHERE location_site.hidden = false
         GROUP BY recording_by_site_hour.location_project_id;
   `)
-  await grant(params.context.sequelize, MATERIALIZED_VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
+  await grant(params.context.sequelize, MATERIALIZED_VIEW_NAME_RECORDING, [GrantPermission.SELECT], DatabaseUser.API)
+
+  await params.context.sequelize.query(`
+    CREATE MATERIALIZED VIEW ${MATERIALIZED_VIEW_NAME_DETECTION} AS
+      SELECT
+        detection_by_site_species_hour.location_project_id,
+        sum(detection_by_site_species_hour.count) as detection_minutes_count,
+        count(distinct detection_by_site_species_hour.taxon_species_id) AS species_count,
+        min(detection_by_site_species_hour.time_precision_hour_local) AS min_date,
+        max(detection_by_site_species_hour.time_precision_hour_local) AS max_date
+      FROM detection_by_site_species_hour
+        LEFT JOIN location_site ON detection_by_site_species_hour.location_site_id = location_site.id
+        WHERE location_site.hidden = false
+        GROUP BY detection_by_site_species_hour.location_project_id;
+  `)
+  await grant(params.context.sequelize, MATERIALIZED_VIEW_NAME_DETECTION, [GrantPermission.SELECT], DatabaseUser.API)
 
   await params.context.sequelize.query(`
     CREATE VIEW ${VIEW_NAME} AS
@@ -43,7 +60,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
         dm.max_date detection_max_date
       FROM location_project p
         LEFT JOIN location_site ON p.id = location_site.location_project_id
-        LEFT JOIN ${MATERIALIZED_VIEW_NAME} rm ON p.id = rm.location_project_id
+        LEFT JOIN ${MATERIALIZED_VIEW_NAME_RECORDING} rm ON p.id = rm.location_project_id
         LEFT JOIN location_project_detection_metric dm ON p.id = dm.location_project_id
         WHERE location_site.hidden = false;
   `)
@@ -53,11 +70,12 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
 export const down: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   await params.context.sequelize.query(`
     DROP VIEW IF EXISTS ${VIEW_NAME};
-    DROP MATERIALIZED VIEW IF EXISTS ${MATERIALIZED_VIEW_NAME};
+    DROP MATERIALIZED VIEW IF EXISTS ${MATERIALIZED_VIEW_NAME_RECORDING};
+    DROP MATERIALIZED VIEW IF EXISTS ${MATERIALIZED_VIEW_NAME_DETECTION};
   `)
 
   await params.context.sequelize.query(`
-    CREATE MATERIALIZED VIEW ${MATERIALIZED_VIEW_NAME} AS
+    CREATE MATERIALIZED VIEW ${MATERIALIZED_VIEW_NAME_RECORDING} AS
       SELECT
         location_project_id,
         sum(count) AS recording_minutes_count,
@@ -67,7 +85,21 @@ export const down: MigrationFn<QueryInterface> = async (params): Promise<void> =
       FROM recording_by_site_hour
         GROUP BY location_project_id;
   `)
-  await grant(params.context.sequelize, MATERIALIZED_VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
+  await grant(params.context.sequelize, MATERIALIZED_VIEW_NAME_RECORDING, [GrantPermission.SELECT], DatabaseUser.API)
+
+  await params.context.sequelize.query(`
+    CREATE MATERIALIZED VIEW ${MATERIALIZED_VIEW_NAME_DETECTION} AS
+      SELECT
+        location_project_id,
+        sum(count) as detection_minutes_count,
+        count(distinct taxon_species_id) AS species_count,
+        min(time_precision_hour_local) AS min_date,
+        max(time_precision_hour_local) AS max_date
+      FROM
+        detection_by_site_species_hour
+      GROUP BY
+        location_project_id;`)
+  await grant(params.context.sequelize, MATERIALIZED_VIEW_NAME_DETECTION, [GrantPermission.SELECT], DatabaseUser.API)
 
   await params.context.sequelize.query(`
     CREATE VIEW ${VIEW_NAME} AS
@@ -84,7 +116,7 @@ export const down: MigrationFn<QueryInterface> = async (params): Promise<void> =
         dm.min_date detection_min_date,
         dm.max_date detection_max_date
       FROM location_project p
-        LEFT JOIN ${MATERIALIZED_VIEW_NAME} rm ON p.id = rm.location_project_id
+        LEFT JOIN ${MATERIALIZED_VIEW_NAME_RECORDING} rm ON p.id = rm.location_project_id
         LEFT JOIN location_project_detection_metric dm ON p.id = dm.location_project_id;
   `)
   await grant(params.context.sequelize, VIEW_NAME, [GrantPermission.SELECT], DatabaseUser.API)
