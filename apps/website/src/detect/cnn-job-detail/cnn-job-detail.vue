@@ -10,9 +10,7 @@
       class="mt-4"
     />
     <job-detections
-      :is-loading="isLoadingDetections"
-      :is-error="isErrorDetections"
-      :data="detections"
+      :is-loading="isLoadingClassifierJob"
       :results="detectionList ?? []"
       @emit-search="onEmitSearch"
       @emit-sort="onEmitSort"
@@ -27,12 +25,10 @@ import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { apiBioGetClassifierJobSpecies } from '@rfcx-bio/common/api-bio/cnn/classifier-job-species'
-import type { DetectDetectionsQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-detections'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterStore } from '~/store'
-import { useGetJobDetections } from '../_composables/use-get-detections'
 import { useGetClassifierJobInformation } from '../_composables/use-get-job-detection-summary'
 import type { ClassificationsSummaryDataset } from './components/cnn-job-species-detected.vue'
 import JobDetailHeader from './components/job-detail-header.vue'
@@ -46,6 +42,7 @@ const detectionsResultFilterStore = useDetectionsResultFilterStore()
 
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
+const isLoadingClassifierJob = ref(false)
 const isRefetch = ref<boolean>(true)
 const detectionList = ref<ClassificationsSummaryDataset[]>()
 
@@ -80,33 +77,7 @@ const isRefetchIntervalEnable = computed(() => {
   return jobSummary.value?.status != null && (jobSummary.value.status === CLASSIFIER_JOB_STATUS.WAITING || jobSummary.value.status === CLASSIFIER_JOB_STATUS.RUNNING)
 })
 
-const classifierId = computed(() => jobSummary.value?.classifierId)
-const enabled = computed(() => jobSummary.value?.classifierId != null)
 const pageLimit = 25
-
-// This query will run after `useGetJobValidationResults`
-const params = computed<DetectDetectionsQueryParams>(() => ({
-  start: detectionsResultFilterStore.selectedStartRange,
-  end: detectionsResultFilterStore.selectedEndRange,
-  sites: detectionsResultFilterStore.filter.siteIds,
-  classifications: detectionsResultFilterStore.filter.classification === 'all' || detectionsResultFilterStore.filter.classification === '' ? undefined : [detectionsResultFilterStore.filter.classification],
-  minConfidence: detectionsResultFilterStore.formattedThreshold,
-  reviewStatuses: detectionsResultFilterStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterStore.filter.validationStatus],
-  classifiers: [classifierId.value ?? -1],
-  descending: detectionsResultFilterStore.filter.sortBy === 'desc',
-  limit: 200,
-  offset: 0,
-  fields: [
-    'id',
-    'stream_id',
-    'classifier_id',
-    'start',
-    'end',
-    'confidence',
-    'review_status',
-    'classification'
-  ]
-}))
 
 const onEmitSearch = debounce(async (keyword: string) => {
   if (keyword === '') {
@@ -122,7 +93,10 @@ const onEmitSort = async (sortKey: string) => {
 }
 
 const getClassifierJobSpecies = async (limit?: number, offset?: number, q?: string, sort?: string) => {
+  isLoadingClassifierJob.value = true
   const response = await apiBioGetClassifierJobSpecies(apiClientBio, jobId.value, { q, sort, limit, offset })
+  isLoadingClassifierJob.value = false
+
   if (response?.data === undefined) return
   detectionList.value = response?.data.map(d => {
     return {
@@ -136,6 +110,4 @@ const getClassifierJobSpecies = async (limit?: number, offset?: number, q?: stri
     }
   })
 }
-
-const { isLoading: isLoadingDetections, isError: isErrorDetections, data: detections } = useGetJobDetections(apiClientBio, jobId.value, params, enabled, refetchInterval)
 </script>
