@@ -14,7 +14,7 @@ export const getSites = async (models: AllModels, locationProjectId: number): Pr
   await models
     .LocationSite
     .findAll({
-      where: { locationProjectId },
+      where: { locationProjectId, hidden: false },
       attributes: ATTRIBUTES_LOCATION_SITE.light,
       order: [['name', 'ASC']]
     })
