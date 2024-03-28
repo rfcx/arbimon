@@ -15,6 +15,7 @@
       :data="detections"
       :results="detectionList ?? []"
       @emit-search="onEmitSearch"
+      @emit-sort="onEmitSort"
     />
   </section>
 </template>
@@ -72,7 +73,7 @@ watch(jobSummary, async (newValue) => {
 })
 
 onMounted(async () => {
-  await getClassifierJobSpecies()
+  await getClassifierJobSpecies(pageLimit, 0)
 })
 
 const isRefetchIntervalEnable = computed(() => {
@@ -81,6 +82,7 @@ const isRefetchIntervalEnable = computed(() => {
 
 const classifierId = computed(() => jobSummary.value?.classifierId)
 const enabled = computed(() => jobSummary.value?.classifierId != null)
+const pageLimit = 25
 
 // This query will run after `useGetJobValidationResults`
 const params = computed<DetectDetectionsQueryParams>(() => ({
@@ -108,14 +110,19 @@ const params = computed<DetectDetectionsQueryParams>(() => ({
 
 const onEmitSearch = debounce(async (keyword: string) => {
   if (keyword === '') {
-    await getClassifierJobSpecies()
+    await getClassifierJobSpecies(pageLimit, 0)
     return
   }
-  await getClassifierJobSpecies(keyword)
+  await getClassifierJobSpecies(pageLimit, 0, keyword)
 }, 500)
 
-const getClassifierJobSpecies = async (keyword?: string) => {
-  const response = await apiBioGetClassifierJobSpecies(apiClientBio, jobId.value, { q: keyword })
+const onEmitSort = async (sortKey: string) => {
+  console.info('onEmitSort', sortKey)
+  await getClassifierJobSpecies(pageLimit, 0, undefined, sortKey)
+}
+
+const getClassifierJobSpecies = async (limit?: number, offset?: number, q?: string, sort?: string) => {
+  const response = await apiBioGetClassifierJobSpecies(apiClientBio, jobId.value, { q, sort, limit, offset })
   if (response?.data === undefined) return
   detectionList.value = response?.data.map(d => {
     return {

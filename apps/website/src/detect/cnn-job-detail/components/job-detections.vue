@@ -32,6 +32,7 @@
       <cnn-job-species-detected
         :datasets="results"
         :loading="isLoading"
+        @emit-sort="onEmitSort"
       />
     </div>
   </div>
@@ -54,7 +55,11 @@ withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectDet
 const searchSpeciesKeyword = ref('')
 const isSearchBoxFocused = ref(false)
 
-defineEmits<{(e: 'emitSearch', keyword: string): void }>()
+const emit = defineEmits<{(e: 'emitSearch', keyword: string): void, (e: 'emitSort', sortKey: string): void }>()
+
+const onEmitSort = async (sortKey: string) => {
+  emit('emitSort', sortKey)
+}
 
 </script>
 
