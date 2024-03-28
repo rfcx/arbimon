@@ -78,7 +78,8 @@ export const getOpensearchProjects = async (query: string, limit: number, offset
       readme: hit._source.readme,
       speciesCount: hit._source.species_count,
       recordingMinutesCount: hit._source.recording_minutes_count,
-      countryCodes: hit._source.country_codes
+      countryCodes: hit._source.country_codes,
+      species: hit._source.species
     }
   })
 
