@@ -122,3 +122,10 @@ export interface CoreDetection {
     image: string | null
   }
 }
+
+export interface CoreGetClassifiersQueryParams {
+  limit?: number
+  offset?: number
+  sort?: string
+  fields?: string[]
+}
