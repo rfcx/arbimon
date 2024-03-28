@@ -205,11 +205,12 @@
             class="animate-spin w-4 h-4 ml-2 inline"
           />
         </button>
-        <alert-dialog
-          v-if="hasFailed"
-          severity="error"
-          :title="DEFAULT_ERROR_MSG"
-          :message="errorMessage"
+        <textSaveChangeStatue
+          v-if="lastUpdated || hasFailed"
+          class="flex"
+          :has-failed="hasFailed"
+          :last-updated-message="lastUpdatedText"
+          :error-message="errorMessage"
         />
       </div>
     </div>
@@ -224,9 +225,10 @@ import { type Ref, computed, inject, nextTick, onMounted, ref, watch } from 'vue
 import { useRouter } from 'vue-router'
 
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import image from '@/_assets/cta/frog-hero.webp'
-import alertDialog from '@/_components/alert-dialog.vue'
+import textSaveChangeStatue from '@/_components/text_save_change_statue.vue'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
@@ -274,9 +276,10 @@ const { mutate: mutateNewOrganization } = useCreateOrganization(apiClientBio)
 
 const selectedOrganizationId = ref(profileData.value?.organizationIdAffiliated)
 
-const DEFAULT_ERROR_MSG = 'Failed!'
 const hasFailed = ref(false)
-const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
+const errorMessage = ref<string>()
+const lastUpdated = ref(false)
+const lastUpdatedText = ref<string>()
 
 onMounted(() => {
   firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
@@ -440,7 +443,12 @@ const saveAccountSetting = async (): Promise<void> => {
 
 const saveUserProfile = async (): Promise<void> => {
   mutatePatchUserProfile({ firstName: firstName.value, lastName: lastName.value, organizationIdAffiliated: selectedOrganizationId.value }, {
-    onSuccess: async () => { },
+    onSuccess: async () => {
+      if (uploadedPhotoUrl.value === undefined) {
+        lastUpdated.value = true
+        lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+      }
+    },
     onError: () => {
       hasFailed.value = true
       errorMessage.value = 'Failed to save changes to account settings.'
@@ -457,6 +465,8 @@ const saveProfilePhoto = async (): Promise<void> => {
   mutatePatchProfilePhoto(form, {
     onSuccess: async () => {
       router.go(0)
+      lastUpdated.value = true
+      lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
     },
     onError: () => {
       hasFailed.value = true
