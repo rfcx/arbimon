@@ -36,7 +36,7 @@ beforeAll(async () => {
   // added 480 minutes of recordings to the table as 2 days, 240 minutes per day
   await RecordingBySiteHour.bulkCreate(Array.from({ length: 48 }, (_, i) => {
     return {
-      timePrecisionHourLocal: dayjs('2022-01-01T00:00:00.000+0700', 'YYYY-MM-DD').add(i, 'hour').toDate(),
+      timePrecisionHourLocal: dayjs('2022-01-01T00:00:00.000+0000').add(i, 'hour').toDate(),
       locationProjectId: projectId,
       locationSiteId: siteId,
       count: 5,
@@ -104,7 +104,7 @@ describe('GET /projects/:projectId/recordings-per-day', async () => {
   test('the response gets updated when there is an update to recording_by_site_hour table', async () => {
     // Arrange
     await RecordingBySiteHour.create({
-      timePrecisionHourLocal: dayjs('2022-05-01T00:00:00.000+0700').toDate(),
+      timePrecisionHourLocal: dayjs('2022-05-01T00:00:00.000+0000').toDate(),
       locationProjectId: projectId,
       locationSiteId: siteId,
       count: 5,
@@ -139,5 +139,34 @@ describe('GET /projects/:projectId/recordings-per-day', async () => {
     expect(json).toHaveProperty('2022-05-01', 12.55)
   })
 
-  test.todo('when the recording is removed, the result will be updated')
+  test('when the recording is removed, the result will be updated', async () => {
+    // Arrange
+    await RecordingBySiteHour.destroy({
+      where: {
+        timePrecisionHourLocal: dayjs('2022-05-01T00:00:00.000+0000').toDate(),
+        locationProjectId: projectId,
+        locationSiteId: siteId
+      }
+    })
+
+    const app = await makeApp(routesCnn, {
+      userToken: {
+        email: 'nicholaslatifi2120@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'GET',
+      url: `/projects/${projectId}/recordings-per-day`
+    })
+
+    // Assert
+    expect(response.statusCode).toEqual(200)
+    const json = response.json()
+    expect(json).toBeTypeOf('object')
+    expect(json).toHaveProperty('2022-01-01', 240)
+    expect(json).toHaveProperty('2022-01-02', 240)
+    expect(json).not.toHaveProperty('2022-05-01')
+  })
 })
