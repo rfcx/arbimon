@@ -1,5 +1,7 @@
 import { vi } from 'vitest'
 
+import { type Classifier } from '@rfcx-bio/common/api-bio/classifiers/classifiers'
+
 import { type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobTotalDetections, type CoreDetection } from '../types'
 
 const randomCoreId = (): string => (Math.random() + 1).toString(36).substring(6)
@@ -142,6 +144,36 @@ export const getDetections = vi.fn(async (): Promise<CoreDetection[]> => {
       classifier_id: 19,
       confidence: 0.984947475,
       review_status: 1
+    }
+  ]
+})
+
+export const getClassifiers = vi.fn(async (): Promise<Classifier[]> => {
+  return [
+    {
+      id: 1,
+      name: 'asia-elephant-edge',
+      version: 5
+    },
+    {
+      id: 2,
+      name: 'asia-elephant-edge',
+      version: 4
+    },
+    {
+      id: 3,
+      name: 'gunshot',
+      version: 1
+    },
+    {
+      id: 4,
+      name: 'pr-parrot',
+      version: 2
+    },
+    {
+      id: 5,
+      name: 'pr-parrot',
+      version: 1
     }
   ]
 })

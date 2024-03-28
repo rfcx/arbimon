@@ -117,3 +117,10 @@ export interface CoreDetection {
   confidence: number
   review_status: CoreRawReviewStatus
 }
+
+export interface CoreGetClassifiersQueryParams {
+  limit?: number
+  offset?: number
+  sort?: string
+  fields?: string[]
+}
