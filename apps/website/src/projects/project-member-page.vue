@@ -69,13 +69,6 @@
               <p class="text-sm font-normal font-sans text-insight leading-tight">
                 We are unable to find this user.
               </p>
-              <button
-                type="button"
-                class="text-frequency text-sm font-medium font-display leading-none"
-                @click="openInviteNewUserForm"
-              >
-                Invite
-              </button>
             </div>
 
             <div
@@ -324,11 +317,6 @@ const openUserSearch = async () => {
   if (userSearchResult.value && userSearchResult.value.length !== 0) searchDropdown.value.show()
 }
 
-const openInviteNewUserForm = async (): Promise<void> => {
-  hideNotFoundContainer()
-  new Dropdown(inviteNewUserFormContainer.value, userSearchInput.value, dropdownOptions).show()
-}
-
 const showNotFoundContainer = async (): Promise<void> => {
   notFoundDropdown.value.show()
 }
@@ -436,10 +424,10 @@ font-family: Poppins, Roboto, Noto Sans, FontAwesome
 }
 
 .mainLoginInput::-moz-placeholder  {
-font-family: FontAwesome;
+  font-family: FontAwesome, Poppins;
 }
 
 .mainLoginInput:-ms-input-placeholder  {
-font-family: FontAwesome;
+font-family: FontAwesome, Poppins;
 }
 </style>

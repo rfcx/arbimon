@@ -6,6 +6,9 @@ import { BioInvalidPathParamError, BioUnauthorizedError } from '~/errors'
 import { assertPathParamsExist, assertQueryParamsExist } from '~/validation'
 import { getDetections } from './detect-bll'
 
+/**
+ * @deprecated we are moving to `GET /detections` endpoint instead and it will be removed later
+ */
 export const detectDetectionsHandler: Handler<DetectDetectionsResponse, DetectDetectionsParams, DetectDetectionsQueryParams> = async (req) => {
   const token = req.headers.authorization
 

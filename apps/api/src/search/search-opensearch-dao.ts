@@ -13,21 +13,48 @@ export const getOpensearchProjects = async (query: string, limit: number, offset
     index: 'projects',
     body: {
       query: {
-        multi_match: {
-          type: 'bool_prefix',
-          query,
-          fields: [
-            'name',
-            'name._2gram',
-            'name._3gram',
-            'expanded_country_names',
-            'expanded_country_names._2gram',
-            'expanded_country_names._3gram',
-            'expanded_objectives',
-            'expanded_objectives._2gram',
-            'expanded_objectives._3gram',
-            'summary',
-            'readme'
+        bool: {
+          should: [
+              {
+                multi_match: {
+                  type: 'bool_prefix',
+                  query,
+                  fields: [
+                    'name',
+                    'name._2gram',
+                    'name._3gram',
+                    'expanded_country_names',
+                    'expanded_country_names._2gram',
+                    'expanded_country_names._3gram',
+                    'expanded_objectives',
+                    'expanded_objectives._2gram',
+                    'expanded_objectives._3gram',
+                    'summary',
+                    'readme'
+                  ]
+                }
+              },
+              // Allow searching for species
+              {
+                nested: {
+                  path: 'species',
+                  query: {
+                    multi_match: {
+                      // Enable complex queries like 'endangered birds in Puerto Rico'
+                      type: 'cross_fields',
+                      query,
+                      fields: [
+                        'species.scientific_name',
+                        'species.common_name',
+                        'species.taxon_class',
+                        'species.risk_rating',
+                        'species.risk_category',
+                        'species.countries'
+                      ]
+                    }
+                  }
+                }
+              }
           ]
         }
       }

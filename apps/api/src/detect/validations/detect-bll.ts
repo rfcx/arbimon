@@ -30,6 +30,9 @@ const getReviewStatus = (input: typeof REVIEW_STATUS_MAPPING[ReviewStatus]): Rev
   throw new Error('Error: unknown review status')
 }
 
+/**
+ * @deprecated we are moving to using the route `GET /detections` instead. This will be removed once it's finished
+ */
 export const getDetections = async (token: string, jobId: number, query: DetectDetectionsQueryParams): Promise<DetectDetectionsResponse> => {
   const detectionsParams: DetectDetectionsQueryParamsCore = {
     start: query.start,
