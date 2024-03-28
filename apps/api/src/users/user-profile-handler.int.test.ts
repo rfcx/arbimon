@@ -4,6 +4,7 @@ import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET, PATCH } from '~/api-helpers/types'
+import * as core from '../_services/api-core/api-core'
 import { routesUserProfile } from './index'
 
 vi.mock('../_services/api-core/api-core', () => {
@@ -23,7 +24,15 @@ const defaultUserToken = {
   lastName: 'Rake'
 }
 
+const socialUserToken = {
+  email: 'somjintana@rfcx.org',
+  idAuth0: 'google-oauth2|106691636597425345169',
+  firstName: 'Somjintana',
+  lastName: 'K'
+}
+
 const defaultUserProfile = { id: 1, ...defaultUserToken }
+const socialUserProfile = { id: 9001, ...socialUserToken }
 
 const { UserProfile } = modelRepositoryWithElevatedPermissions
 
@@ -117,5 +126,49 @@ describe('PATCH /profile', async () => {
     const existingProfile = await UserProfile.findOne({ where: { email: defaultUserProfile.email } })
     expect(existingProfile).toBeDefined()
     expect(existingProfile?.firstName).toEqual('John')
+  })
+
+  test('user with social login doesn\'t update profile on core', async () => {
+    // Arrange
+    const app = await makeApp(routesUserProfile, { userId: socialUserProfile.id, userToken: socialUserToken })
+    const spy = vi.spyOn(core, 'patchUserProfileOnCore')
+
+    const profileUpdates = { email: socialUserToken.email, organizationIdAffiliated: 1 }
+
+    // Act
+    const response = await app.inject({
+      method: PATCH,
+      url: ROUTE,
+      payload: profileUpdates
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(204)
+    expect(spy).not.toHaveBeenCalled()
+
+    const profile = await UserProfile.findOne({ where: { email: socialUserProfile.email } })
+    expect(profile?.organizationIdAffiliated).toBe(1)
+  })
+
+  test('user with auth0 login updates profile on core', async () => {
+    // Arrange
+    const app = await makeApp(routesUserProfile, { userId: defaultUserProfile.id, userToken: defaultUserToken })
+    const spy = vi.spyOn(core, 'patchUserProfileOnCore')
+
+    const profileUpdates = { email: defaultUserToken.email, organizationIdAffiliated: 1 }
+
+    // Act
+    const response = await app.inject({
+      method: PATCH,
+      url: ROUTE,
+      payload: profileUpdates
+    })
+
+    // Assert
+    expect(response.statusCode).toBe(204)
+    expect(spy).toHaveBeenCalled()
+
+    const profile = await UserProfile.findOne({ where: { email: socialUserProfile.email } })
+    expect(profile?.organizationIdAffiliated).toBe(1)
   })
 })
