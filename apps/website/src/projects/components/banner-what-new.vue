@@ -1,7 +1,7 @@
 <template>
   <div
     :class="extraClass"
-    class="w-full m-auto inline-block text-center font-display text-sm items-center justify-center bg-moss border-b-1 border-frequency px-10 py-4 gap-x-3"
+    class="w-full m-auto fixed inline-block text-center font-display text-sm items-center justify-center bg-moss border-b-1 border-frequency px-10 py-4 gap-x-3"
   >
     Check out Arbimon’s new features!
     <a
