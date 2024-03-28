@@ -98,7 +98,7 @@
 import { type Auth0Client } from '@auth0/auth0-spa-js'
 import { initDropdowns } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { onBeforeRouteUpdate, useRouter } from 'vue-router'
 
 import { authClientKey, storeKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
@@ -133,16 +133,20 @@ const openProfile = async (): Promise<void> => {
   void router.replace({ name: ROUTE_NAMES.accountSettings })
 }
 
-const isLoading = ref(false)
+const isLoading = ref<boolean>(false)
+
+onBeforeRouteUpdate((to, from, next) => {
+  isLoading.value = true
+  next(() => {
+    isLoading.value = false
+  })
+})
 
 onMounted(() => {
   auth.isAuthenticated().then((authenticated) => {
-    isLoading.value = true
     if (authenticated) {
-      isLoading.value = !authenticated
       initDropdowns()
     }
   })
 })
-
 </script>
