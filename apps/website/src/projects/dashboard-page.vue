@@ -29,7 +29,15 @@
           <h2>
             Sites
           </h2>
-          <div class="w-full text-black mapboxgl-map">
+          <div
+            v-if="isLoadingSitesRecCountBio"
+            class="w-full bg-util-gray-03 loading-shimmer"
+            :class="`height-[${tabHeight}px]`"
+          />
+          <div
+            v-else
+            class="w-full text-black mapboxgl-map"
+          >
             <map-base-component
               :dataset="mapDataset()"
               data-key="Total recordings"
