@@ -205,7 +205,7 @@
             class="animate-spin w-4 h-4 ml-2 inline"
           />
         </button>
-        <dash-case
+        <SaveStatusText
           v-if="showStatus"
           class="flex"
           :success="isSuccess"
@@ -226,7 +226,7 @@ import { useRouter } from 'vue-router'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import image from '@/_assets/cta/frog-hero.webp'
-import DashCase from '@/_components/dash-case.vue'
+import SaveStatusText from '@/_components/save-status-text.vue'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
