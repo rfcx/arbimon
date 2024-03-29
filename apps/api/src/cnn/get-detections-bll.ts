@@ -70,7 +70,8 @@ export const getDetections = async (token: string, params: GetDetectionsQueryPar
       'start',
       'end',
       'confidence',
-      'review_status'
+      'review_status',
+      'classification'
     ]
   }
 
@@ -83,7 +84,8 @@ export const getDetections = async (token: string, params: GetDetectionsQueryPar
       end: detection.end,
       classifierId: detection.classifier_id,
       confidence: detection.confidence,
-      reviewStatus: getArbimonReviewStatus(detection.review_status)
+      reviewStatus: getArbimonReviewStatus(detection.review_status),
+      classification: detection.classification
     }
   })
 }
