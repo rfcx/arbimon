@@ -97,8 +97,7 @@
         <dash-case
           v-if="(lastUpdated || hasFailed) && !isSaving"
           class="flex p-4"
-          :has-failed="hasFailed"
-          :last-updated-message="lastUpdatedText"
+          :success="!hasFailed"
           :error-message="errorMessage"
         />
       </div>

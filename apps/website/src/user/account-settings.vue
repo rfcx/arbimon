@@ -206,10 +206,9 @@
           />
         </button>
         <dash-case
-          v-if="lastUpdated || hasFailed"
+          v-if="showStatus"
           class="flex"
-          :has-failed="hasFailed"
-          :last-updated-message="lastUpdatedText"
+          :success="isSuccess"
           :error-message="errorMessage"
         />
       </div>
@@ -225,7 +224,6 @@ import { type Ref, computed, inject, nextTick, onMounted, ref, watch } from 'vue
 import { useRouter } from 'vue-router'
 
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import image from '@/_assets/cta/frog-hero.webp'
 import DashCase from '@/_components/dash-case.vue'
@@ -276,10 +274,9 @@ const { mutate: mutateNewOrganization } = useCreateOrganization(apiClientBio)
 
 const selectedOrganizationId = ref(profileData.value?.organizationIdAffiliated)
 
-const hasFailed = ref(false)
+const showStatus = ref(false)
+const isSuccess = ref(false)
 const errorMessage = ref<string>()
-const lastUpdated = ref(false)
-const lastUpdatedText = ref<string>()
 
 onMounted(() => {
   firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
@@ -441,17 +438,21 @@ const saveAccountSetting = async (): Promise<void> => {
   if (uploadedPhotoUrl.value) await saveProfilePhoto()
 }
 
+const displayTextAfterSaveWithSuccessStatus = (success: boolean, errorMsg?: string) => {
+  showStatus.value = true
+  isSuccess.value = success
+  errorMessage.value = errorMsg
+}
+
 const saveUserProfile = async (): Promise<void> => {
   mutatePatchUserProfile({ firstName: firstName.value, lastName: lastName.value, organizationIdAffiliated: selectedOrganizationId.value }, {
     onSuccess: async () => {
       if (uploadedPhotoUrl.value === undefined) {
-        lastUpdated.value = true
-        lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+        displayTextAfterSaveWithSuccessStatus(true)
       }
     },
     onError: () => {
-      hasFailed.value = true
-      errorMessage.value = 'Failed to save changes to account settings.'
+      displayTextAfterSaveWithSuccessStatus(false, 'Failed to save changes to account settings.')
     }
   })
 }
@@ -465,12 +466,10 @@ const saveProfilePhoto = async (): Promise<void> => {
   mutatePatchProfilePhoto(form, {
     onSuccess: async () => {
       router.go(0)
-      lastUpdated.value = true
-      lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+      displayTextAfterSaveWithSuccessStatus(true)
     },
     onError: () => {
-      hasFailed.value = true
-      errorMessage.value = 'The photo upload was failed to upload.'
+      displayTextAfterSaveWithSuccessStatus(false, 'The photo upload was failed to upload.')
     }
   })
 }
