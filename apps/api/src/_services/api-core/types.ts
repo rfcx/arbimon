@@ -117,3 +117,15 @@ export interface CoreDetection {
   confidence: number
   review_status: CoreRawReviewStatus
 }
+
+export interface CoreUpdateDetectionStatusBody {
+  status: CoreReviewStatus
+  classifier: number
+  classification: string
+  classifier_job: number
+}
+
+export interface CoreUpdateDetectionStatusParams {
+  stream_id: string
+  start: string
+}

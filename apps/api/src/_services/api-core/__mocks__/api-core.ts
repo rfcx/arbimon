@@ -145,3 +145,5 @@ export const getDetections = vi.fn(async (): Promise<CoreDetection[]> => {
     }
   ]
 })
+
+export const updateDetectionStatus = vi.fn(async (): Promise<void> => {})
