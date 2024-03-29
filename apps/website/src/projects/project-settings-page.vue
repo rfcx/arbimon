@@ -95,7 +95,7 @@
           </span>
         </div>
         <SaveStatusText
-          v-if="(lastUpdated || hasFailed) && !isSaving"
+          v-if="showStatus && !isSaving"
           class="flex p-4"
           :success="!hasFailed"
           :error-message="errorMessage"
@@ -156,14 +156,14 @@ const newSlug = ref<string | null>(null)
 const newObjectives = ref([''])
 const isSaving = ref(false)
 const DEFAULT_ERROR_MSG = 'Failed!'
-const hasFailed = ref(false)
-const lastUpdated = ref(false)
-const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
-const lastUpdatedText = ref<string>()
 const profileImageForm = ref()
 const uploadedFile = ref()
 const isPublic = ref<boolean>(true)
 const disableText = ref('Contact your project administrator for permission to edit project settings')
+
+const showStatus = ref(false)
+const hasFailed = ref(false)
+const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
 
 const isUserHasFullAccess = computed<boolean>(() => {
   return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
@@ -242,16 +242,20 @@ watch(() => settings.value, () => {
   onGoing.value = dateStart.value?.length !== 0 && dateEnd.value?.length === 0
 })
 
+const displayTextAfterSaveWithSuccessStatus = (success: boolean, errorMsg?: string) => {
+  showStatus.value = true
+  hasFailed.value = !success
+  errorMessage.value = errorMsg ?? ''
+}
+
 const save = () => {
   const dateError = verifyDateFormError(dateStart.value ? dateStart.value : undefined, dateEnd.value ? dateEnd.value : undefined, onGoing.value)
   if (dateError.length > 0) {
-    hasFailed.value = true
-    errorMessage.value = dateError
+    displayTextAfterSaveWithSuccessStatus(false, dateError)
     return
   }
   if (!isValidSlug(newSlug.value ?? '')) {
-    hasFailed.value = true
-    errorMessage.value = 'Failed! URL must be lowercase letters, numbers, and dashes (-).'
+    displayTextAfterSaveWithSuccessStatus(false, 'Failed! URL must be lowercase letters, numbers, and dashes (-).')
     return
   }
 
@@ -281,8 +285,7 @@ const updateSettings = () => {
     onSuccess: () => {
       if (profileImageForm.value === undefined) {
         isSaving.value = false
-        lastUpdated.value = true
-        lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+        displayTextAfterSaveWithSuccessStatus(true)
       }
       store.updateProjectName(newName.value)
       dashboardStore.updateProjectObjectives(newObjectives.value)
@@ -295,9 +298,7 @@ const updateSettings = () => {
     },
     onError: (e) => {
       isSaving.value = false
-      hasFailed.value = true
-      lastUpdated.value = false
-      errorMessage.value = DEFAULT_ERROR_MSG
+      displayTextAfterSaveWithSuccessStatus(false, DEFAULT_ERROR_MSG)
 
       const error = e as AxiosError<Error>
       if (error.response?.data !== undefined && error.response.data.message === ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE) {
@@ -309,14 +310,11 @@ const updateSettings = () => {
     mutatePatchProfilePhoto(profileImageForm.value, {
       onSuccess: async () => {
         isSaving.value = false
-        lastUpdated.value = true
-        lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+        displayTextAfterSaveWithSuccessStatus(true)
       },
       onError: () => {
         isSaving.value = false
-        hasFailed.value = true
-        lastUpdated.value = false
-        errorMessage.value = 'The photo upload was failed to upload.'
+        displayTextAfterSaveWithSuccessStatus(false, 'The photo upload was failed to upload.')
       }
     })
   }
