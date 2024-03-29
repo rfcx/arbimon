@@ -92,7 +92,7 @@ import dayjs from 'dayjs'
 import { Howl } from 'howler'
 import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
-import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { apiCoreGetMedia } from '@rfcx-bio/common/api-core/media/core-media'
 
 import { apiClientMediaKey } from '@/globals'
@@ -102,8 +102,8 @@ import ValidationStatus from './validation-status.vue'
 const props = withDefaults(defineProps<{
   spectrogramUrl: string
   audioUrl: string,
-  id: string | null,
-  validation: ReviewStatus,
+  id: number | null,
+  validation: ArbimonReviewStatus,
   checked: boolean | null,
   score?: number | undefined,
   start?: string | undefined,
@@ -116,7 +116,7 @@ const props = withDefaults(defineProps<{
   site: undefined
 })
 
-const emit = defineEmits<{(e: 'emitDetection', detectionId: string, event: DetectionEvent): void}>()
+const emit = defineEmits<{(e: 'emitDetection', detectionId: number, event: DetectionEvent): void}>()
 
 const spectrogramLoading = ref(false)
 const audioLoading = ref(false)

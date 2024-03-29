@@ -33,19 +33,19 @@
               :class="{'border-frequency': selectedStatus === status.value, 'border-transparent': selectedStatus !== status.value}"
             >
               <icon-custom-fi-unvalidated
-                v-if="status.value === 'unreviewed'"
+                v-if="status.value === 'unvalidated'"
                 class="h-4 w-4"
               />
               <icon-custom-fi-present
-                v-if="status.value === 'confirmed'"
+                v-if="status.value === 'present'"
                 class="h-4 w-4"
               />
               <icon-custom-fi-not-present
-                v-if="status.value === 'rejected'"
+                v-if="status.value === 'notPresent'"
                 class="h-4 w-4"
               />
               <icon-custom-fi-unknown
-                v-if="status.value === 'uncertain'"
+                v-if="status.value === 'unknown'"
                 class="h-4 w-4"
               />
               {{ status.label }}
@@ -184,12 +184,12 @@
 import { Dropdown, initDropdowns } from 'flowbite'
 import { type Ref, computed, onMounted, ref } from 'vue'
 
-import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
-const selectedStatus = ref<ReviewStatus | 'all'>('all')
+const selectedStatus = ref<ArbimonReviewStatus | 'all'>('all')
 const selectedGrouping = ref<string>()
 const selectedSites = ref<string[]>(detectionsResultFilterBySpeciesStore.sitesFilterOptions.map(site => site.value))
 let statusDropdown: Dropdown
@@ -212,7 +212,7 @@ const closeGroupingDropdown = (): void => {
   groupingDropdown.value.hide()
 }
 
-const filterDetectionsByStatus = (status: ReviewStatus | 'all') => {
+const filterDetectionsByStatus = (status: ArbimonReviewStatus | 'all') => {
   detectionsResultFilterBySpeciesStore.filter.validationStatus = status
 }
 
