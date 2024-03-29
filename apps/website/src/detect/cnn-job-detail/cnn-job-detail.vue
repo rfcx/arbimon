@@ -109,7 +109,7 @@ const detectionsQueryParams = computed<GetDetectionsQueryParams>(() => {
   return {
     start: detectionsResultFilterStore.selectedStartRange,
     end: detectionsResultFilterStore.selectedEndRange,
-    reviewStatus: detectionsResultFilterStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterStore.filter.validationStatus],
+    reviewStatus: detectionsResultFilterStore.filter.validationStatus === 'all' ? undefined : detectionsResultFilterStore.filter.validationStatus,
     sites: detectionsResultFilterStore.filter.siteIds,
     classifierJobId: jobId.value,
     confidence: detectionsResultFilterStore.formattedThreshold,
