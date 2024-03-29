@@ -168,7 +168,7 @@ describe('PATCH /profile', async () => {
     expect(response.statusCode).toBe(204)
     expect(spy).toHaveBeenCalled()
 
-    const profile = await UserProfile.findOne({ where: { email: socialUserProfile.email } })
+    const profile = await UserProfile.findOne({ where: { email: defaultUserProfile.email } })
     expect(profile?.organizationIdAffiliated).toBe(1)
   })
 })
