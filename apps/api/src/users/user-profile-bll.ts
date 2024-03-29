@@ -10,8 +10,18 @@ import { type OrganizationTypes, type UserProfile, type UserTypes } from '@rfcx-
 import { patchUserProfileOnCore } from '~/api-core/api-core'
 import { BioNotFoundError } from '~/errors'
 import { fileUrl } from '~/format-helpers/file-url'
+import { resizeImage } from '~/image'
 import { getObject, putObject } from '~/storage'
 import { create, get, getAllOrganizations as daoGetAllOrganizations, getIdByEmail, query, update } from './user-profile-dao'
+
+const CONFIG = {
+  image: {
+    thumbnail: {
+      width: 144,
+      height: 144
+    }
+  }
+}
 
 export const getUsers = async (emailLike: string): Promise<Array<UserTypes['light']>> =>
   await query({ emailLike })
@@ -76,7 +86,11 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
   hash.update(email)
   const hexEmail = hash.digest('hex')
 
-  const imagePath = `users/${hexEmail}/profile-image-${randomBytes(4).toString('hex')}${extname(file.filename)}`
+  const uniqueId = randomBytes(4).toString('hex')
+  const image = await file.toBuffer()
+  const imagePath = `users/${hexEmail}/profile-image-${uniqueId}${extname(file.filename)}`
+  const thumbnailPath = `users/${hexEmail}/profile-image-${uniqueId}.thumbnail${extname(file.filename)}`
+  const thumbnail = await resizeImage(image, CONFIG.image.thumbnail)
   const newProfile = { ...originalProfile, image: imagePath }
 
   const coreProfile = {
@@ -85,7 +99,8 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
     picture: fileUrl(newProfile.image) ?? null
   }
   await patchUserProfileOnCore(token, email, coreProfile)
-  await putObject(imagePath, await file.toBuffer(), file.mimetype, true)
+  await putObject(imagePath, image, file.mimetype, true)
+  await putObject(thumbnailPath, thumbnail, file.mimetype, true)
   await update(email, newProfile)
 }
 
