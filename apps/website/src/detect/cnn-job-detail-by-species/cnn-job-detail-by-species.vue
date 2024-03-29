@@ -5,6 +5,7 @@
       <JobFilterOptions
         :species-name="speciesName"
         :detections-count="jobDetections?.length"
+        :filtered-result="jobDetections?.length"
       />
       <JobValidationStatus
         :total="speciesCount?.total ?? 0"
@@ -122,11 +123,11 @@ const detectionsQueryParams = computed<GetDetectionsQueryParams>(() => {
   return {
     start: detectionsResultFilterBySpeciesStore.selectedStartRange,
     end: detectionsResultFilterBySpeciesStore.selectedEndRange,
-    reviewStatus: detectionsResultFilterBySpeciesStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterBySpeciesStore.filter.validationStatus],
+    reviewStatus: detectionsResultFilterBySpeciesStore.filter.validationStatus === 'all' ? undefined : detectionsResultFilterBySpeciesStore.filter.validationStatus,
     sites: detectionsResultFilterBySpeciesStore.filter.siteIds,
     classifierJobId: jobId.value,
     classification: speciesSlug.value,
-    confidence: detectionsResultFilterBySpeciesStore.formattedThreshold,
+    confidence: detectionsResultFilterBySpeciesStore.filter.minConfidence,
     classifierId: classifierId.value,
     limit: PAGE_SIZE_LIMIT,
     offset: offset.value
