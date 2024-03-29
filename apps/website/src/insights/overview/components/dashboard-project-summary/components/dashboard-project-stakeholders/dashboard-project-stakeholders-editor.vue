@@ -140,9 +140,11 @@
                     class="mt-1"
                   >
                     <span
-                      class="relative text-sm text-red-800 dark:text-flamingo"
+                      class="relative text-sm text-red-800 dark:text-flamingo font-medium"
                       role="alert"
-                    ><span class="font-medium">{{ errorMessage }}</span></span>
+                    >
+                      {{ errorMessage }}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -416,7 +418,6 @@ const createNewOrganization = (): void => {
       createNewOrganizationForm.value?.hide()
     },
     onError: () => {
-      // TODO: Show user some respect and show them error
       hasFailed.value = true
       errorMessage.value = 'Failed to create organization.'
 
