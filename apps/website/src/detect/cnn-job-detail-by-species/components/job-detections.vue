@@ -57,7 +57,8 @@ import { groupBy } from 'lodash-es'
 import { computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { type GetDetectionsResponse } from '@rfcx-bio/common/api-bio/cnn/detections'
 import { apiBioDetectReviewDetection } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
 import { useDetectionsReview } from '@/detect/_composables/use-detections-review'
@@ -71,7 +72,7 @@ import DetectionItem from '../../cnn-job-detail/components/detection-item.vue'
 
 const store = useStore()
 
-const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectDetectionsResponse | undefined, page: number, pageSize: number }>(), {
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: GetDetectionsResponse | undefined, page: number, pageSize: number }>(), {
   isLoading: true,
   isError: false,
   data: undefined
@@ -107,7 +108,7 @@ const filterOptions = computed<DetectionValidationStatus[]>(() => {
     return {
       value: s.value,
       label: s.label,
-      checked: s.value === 'unreviewed'
+      checked: s.value === 'unvalidated'
     } as DetectionValidationStatus
   })
 
@@ -119,7 +120,7 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
     return []
   }
 
-  const groupedDetections: Record<string, DetectDetectionsResponse> = groupBy(props.data ?? [], d => d.classification.value)
+  const groupedDetections: Record<string, GetDetectionsResponse> = groupBy(props.data ?? [], d => d.classification.value)
   const species: Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(groupedDetections).map(slug => {
     return {
       speciesSlug: slug,
@@ -127,7 +128,7 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
       media: groupedDetections[slug].map(detection => {
         return {
           spectrogramUrl: getMediaLink({
-            streamId: detection.siteId,
+            streamId: detection.siteIdCore,
             start: detection.start,
             end: detection.end,
             frequency: 'full',
@@ -142,7 +143,7 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
             fileExtension: 'png'
           }),
           audioUrl: getMediaLink({
-            streamId: detection.siteId,
+            streamId: detection.siteIdCore,
             start: detection.start,
             end: detection.end,
             frequency: 'full',
@@ -154,7 +155,7 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
           validation: detection.reviewStatus,
           score: detection.confidence,
           start: detection.start,
-          site: store.projectFilters?.locationSites.filter((site) => site.idCore === detection.siteId)[0]?.name ?? ''
+          site: store.projectFilters?.locationSites.filter((site) => site.idCore === detection.siteIdCore)[0]?.name ?? ''
         }
       })
     }
@@ -172,21 +173,21 @@ const {
   getSelectedDetectionIds
 } = useDetectionsReview(allSpecies)
 
-const validateDetection = async (validation: ReviewStatus): Promise<void> => {
+const validateDetection = async (validation: ArbimonReviewStatus): Promise<void> => {
   const selectedDetectionIds = getSelectedDetectionIds()
 
   // call review api
   const promises = selectedDetectionIds.map(id => {
     // this will always be a success case
-    const originalDetection = (props.data ?? []).find(d => id === d.id)
+    const originalDetection = (props.data ?? []).find(d => Number(id) === d.id)
 
     return apiBioDetectReviewDetection(apiClientBio, jobId.value, {
       // this is a safe cast because the validation selector always start at 'unreviewed' union
       // and the emitter is emitted when there's a change (watch), which means the change will
       // always be from 'unreviewed' to other type.
-      status: validation as Exclude<ReviewStatus, 'unreviewed'>,
+      status: validation as Exclude<ArbimonReviewStatus, 'unvalidated'>,
       classification: originalDetection?.classification?.value ?? '',
-      streamId: originalDetection?.siteId ?? '',
+      streamId: originalDetection?.siteIdCore ?? '',
       classifier: originalDetection?.classifierId ?? -1,
       start: originalDetection?.start ?? ''
     })

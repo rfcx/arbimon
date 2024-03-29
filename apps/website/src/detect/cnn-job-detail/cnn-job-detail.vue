@@ -33,7 +33,7 @@ import type { AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { DetectDetectionsQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { apiClientKey } from '@/globals'
@@ -105,29 +105,19 @@ const isRefetchIntervalEnable = computed(() => {
 const classifierId = computed(() => jobSummary.value?.classifierId)
 const enabled = computed(() => jobSummary.value?.classifierId != null)
 
-// This query will run after `useGetJobValidationResults`
-const params = computed<DetectDetectionsQueryParams>(() => ({
-  start: detectionsResultFilterStore.selectedStartRange,
-  end: detectionsResultFilterStore.selectedEndRange,
-  sites: detectionsResultFilterStore.filter.siteIds,
-  classifications: detectionsResultFilterStore.filter.classification === 'all' || detectionsResultFilterStore.filter.classification === '' ? undefined : [detectionsResultFilterStore.filter.classification],
-  minConfidence: detectionsResultFilterStore.formattedThreshold,
-  reviewStatuses: detectionsResultFilterStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterStore.filter.validationStatus],
-  classifiers: [classifierId.value ?? -1],
-  descending: detectionsResultFilterStore.filter.sortBy === 'desc',
-  limit: 200,
-  offset: 0,
-  fields: [
-    'id',
-    'stream_id',
-    'classifier_id',
-    'start',
-    'end',
-    'confidence',
-    'review_status',
-    'classification'
-  ]
-}))
+const detectionsQueryParams = computed<GetDetectionsQueryParams>(() => {
+  return {
+    start: detectionsResultFilterStore.selectedStartRange,
+    end: detectionsResultFilterStore.selectedEndRange,
+    reviewStatus: detectionsResultFilterStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterStore.filter.validationStatus],
+    sites: detectionsResultFilterStore.filter.siteIds,
+    classifierJobId: jobId.value,
+    confidence: detectionsResultFilterStore.formattedThreshold,
+    classifierId: classifierId.value,
+    limit: 200,
+    offset: 0
+  } as GetDetectionsQueryParams
+})
 
-const { isLoading: isLoadingDetections, isError: isErrorDetections, data: detections } = useGetJobDetections(apiClientBio, jobId.value, params, enabled, refetchInterval)
+const { isLoading: isLoadingDetections, isError: isErrorDetections, data: detections } = useGetJobDetections(apiClientBio, detectionsQueryParams, enabled, refetchInterval)
 </script>
