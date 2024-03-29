@@ -28,6 +28,11 @@ export interface Detection {
   classifierId: number
   confidence: number
   reviewStatus: ArbimonReviewStatus
+  classification: {
+    title: string
+    value: string
+    image: string | null
+  }
 }
 
 export type GetDetectionsResponse = Detection[]

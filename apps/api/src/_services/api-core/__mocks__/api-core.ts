@@ -114,7 +114,12 @@ export const getDetections = vi.fn(async (): Promise<CoreDetection[]> => {
       end: '2022-01-01T00:00:05.000+0700',
       classifier_id: 19,
       confidence: 0.984947475,
-      review_status: null
+      review_status: null,
+      classification: {
+        title: 'Schelrus Carolinensis simple call 1',
+        value: 'schelrus_carolinensis_simple_call_1',
+        image: null
+      }
     },
     {
       id: '19919235',
@@ -123,7 +128,12 @@ export const getDetections = vi.fn(async (): Promise<CoreDetection[]> => {
       end: '2022-01-01T00:00:10.000+0700',
       classifier_id: 19,
       confidence: 0.984947475,
-      review_status: -1
+      review_status: -1,
+      classification: {
+        title: 'Schelrus Carolinensis simple call 1',
+        value: 'schelrus_carolinensis_simple_call_1',
+        image: null
+      }
     },
     {
       id: '19919236',
@@ -132,7 +142,12 @@ export const getDetections = vi.fn(async (): Promise<CoreDetection[]> => {
       end: '2022-01-01T00:00:15.000+0700',
       classifier_id: 19,
       confidence: 0.984947475,
-      review_status: 0
+      review_status: 0,
+      classification: {
+        title: 'Schelrus Carolinensis simple call 1',
+        value: 'schelrus_carolinensis_simple_call_1',
+        image: null
+      }
     },
     {
       id: '19919237',
@@ -141,7 +156,12 @@ export const getDetections = vi.fn(async (): Promise<CoreDetection[]> => {
       end: '2022-01-01T00:00:20.000+0700',
       classifier_id: 19,
       confidence: 0.984947475,
-      review_status: 1
+      review_status: 1,
+      classification: {
+        title: 'Schelrus Carolinensis simple call 1',
+        value: 'schelrus_carolinensis_simple_call_1',
+        image: null
+      }
     }
   ]
 })

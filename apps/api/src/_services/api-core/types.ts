@@ -116,4 +116,9 @@ export interface CoreDetection {
   end: string
   confidence: number
   review_status: CoreRawReviewStatus
+  classification: {
+    title: string
+    value: string
+    image: string | null
+  }
 }
