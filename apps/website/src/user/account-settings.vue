@@ -205,7 +205,7 @@
             class="animate-spin w-4 h-4 ml-2 inline"
           />
         </button>
-        <textSaveChangeStatue
+        <dash-case
           v-if="lastUpdated || hasFailed"
           class="flex"
           :has-failed="hasFailed"
@@ -228,7 +228,7 @@ import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGAN
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import image from '@/_assets/cta/frog-hero.webp'
-import textSaveChangeStatue from '@/_components/text_save_change_statue.vue'
+import DashCase from '@/_components/dash-case.vue'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'

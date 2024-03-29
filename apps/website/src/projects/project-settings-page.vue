@@ -94,7 +94,7 @@
             Saving...
           </span>
         </div>
-        <textSaveChangeStatue
+        <dash-case
           v-if="(lastUpdated || hasFailed) && !isSaving"
           class="flex p-4"
           :has-failed="hasFailed"
@@ -114,7 +114,7 @@ import { type ProjectProfileUpdateBody, ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UN
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isValidSlug } from '@rfcx-bio/utils/string/slug'
 
-import textSaveChangeStatue from '@/_components/text_save_change_statue.vue'
+import DashCase from '@/_components/dash-case.vue'
 import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
 import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientKey } from '@/globals'
