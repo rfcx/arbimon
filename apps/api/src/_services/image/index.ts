@@ -7,7 +7,7 @@ interface ResizeOptions {
 export const resizeImage = async (file: Buffer, options: ResizeOptions): Promise<Buffer> => {
     const { width, height } = options
     if (width && height) {
-        return sharp(file).resize(width, height).toBuffer()
+        return await sharp(file).resize(width, height).toBuffer()
     }
 
     return file
