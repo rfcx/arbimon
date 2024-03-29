@@ -88,7 +88,6 @@ const onEmitSearch = debounce(async (keyword: string) => {
 }, 500)
 
 const onEmitSort = async (sortKey: string) => {
-  console.info('onEmitSort', sortKey)
   await getClassifierJobSpecies(pageLimit, 0, undefined, sortKey)
 }
 

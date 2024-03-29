@@ -8,7 +8,7 @@
         <div class="flex md:col-span-1 <md:col-span-2 items-center">
           <span class="text-util-gray-01">Model:</span>
           <h5 class="ml-2 text-insight">
-            {{ props.summary?.classifier.name ?? 'asian-elephant-edge' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
+            {{ props.summary?.classifier.name ?? '' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
           </h5>
         </div>
         <div class="md:(col-span-1 mt-1) <md:(col-span-2 mt-4)">

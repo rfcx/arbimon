@@ -93,7 +93,7 @@ const classifierStatus = computed(() => {
 /**
  * Returns the end text of the progress bar
  *
- * - will return `''` for jobs with status `WAITING` regardless of the computed value
+ * - will return `0%` for jobs with status `WAITING` regardless of the computed value
  * - will return `100%` for jobs with status `DONE` regardless of the computed value
  * - will return actual value for other statuses
  */
