@@ -314,6 +314,7 @@ watch(activeTab, async (newValue, oldValue) => {
   if (newValue === oldValue) { return }
   if (activeTab.value === 'stakeholders') {
     isStakeholdersSelected.value = true
+    await stakeholderRefetch()
   } else {
     isStakeholdersSelected.value = false
   }
