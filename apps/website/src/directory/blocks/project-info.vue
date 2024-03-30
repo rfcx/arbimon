@@ -288,7 +288,7 @@ const isStakeholdersSelected = ref(false)
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
 const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch, isRefetching: isRefetchingProfile } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'], computed(() => true))
-const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId, computed(() => isStakeholdersSelected.value))
+const { isLoading: stakeholdersLoading, data: stakeholders, refetch: stakeholderRefetch, isRefetching: stakeholdersRefetching, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId, computed(() => isStakeholdersSelected.value))
 
 const isAboutTabViewMored = ref(false)
 const isAboutTabEditing = ref(false)
@@ -310,9 +310,12 @@ watch(() => props.projectId, async (newValue, oldValue) => {
   await profileRefetch()
 })
 
-watch(activeTab, () => {
+watch(activeTab, async (newValue, oldValue) => {
+  if (newValue === oldValue) { return }
   if (activeTab.value === 'stakeholders') {
     isStakeholdersSelected.value = true
+  } else {
+    isStakeholdersSelected.value = false
   }
 })
 
