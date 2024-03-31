@@ -12,8 +12,9 @@
     <job-detections
       :is-loading="isLoadingClassifierJob"
       :results="detectionList ?? []"
+      :total="total"
       @emit-search="onEmitSearch"
-      @emit-sort="onEmitSort"
+      @emit-sort-paginations="onEmitSortAndPaginations"
     />
   </section>
 </template>
@@ -45,6 +46,7 @@ const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(r
 const isLoadingClassifierJob = ref(false)
 const isRefetch = ref<boolean>(true)
 const detectionList = ref<ClassificationsSummaryDataset[]>()
+const total = ref(0)
 
 const refetchInterval = computed(() => {
   return isRefetch.value ? 30_000 : false
@@ -87,8 +89,12 @@ const onEmitSearch = debounce(async (keyword: string) => {
   await getClassifierJobSpecies(pageLimit, 0, keyword)
 }, 500)
 
-const onEmitSort = async (sortKey: string) => {
-  await getClassifierJobSpecies(pageLimit, 0, undefined, sortKey)
+const onEmitSortAndPaginations = async (sortKey?: string, pageIndex?: number) => {
+  let index = 0
+  if (pageIndex !== null) {
+    index = (pageIndex ?? 0) - 1
+  }
+  await getClassifierJobSpecies(pageLimit, index * pageLimit, undefined, sortKey)
 }
 
 const getClassifierJobSpecies = async (limit?: number, offset?: number, q?: string, sort?: string) => {
@@ -97,6 +103,8 @@ const getClassifierJobSpecies = async (limit?: number, offset?: number, q?: stri
   isLoadingClassifierJob.value = false
 
   if (response?.data === undefined) return
+  total.value = response?.total ?? 0
+  detectionList.value = []
   detectionList.value = response?.data.map(d => {
     return {
       value: d.value,

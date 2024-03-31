@@ -173,14 +173,14 @@ export interface ClassificationsSummaryDataset {
 const SORT_ASC: SortDirection = 1
 const SORT_DESC: SortDirection = -1
 
-const props = withDefaults(defineProps<{ datasets: ClassificationsSummaryDataset[], loading: boolean }>(), {
+const props = withDefaults(defineProps<{ datasets: ClassificationsSummaryDataset[], loading: boolean, total: number }>(), {
 loading: false
 })
 
-const emit = defineEmits<{(e: 'emitSort', sortKey: string): void }>()
+const emit = defineEmits<{(e: 'emitSortPaginations', sortKey?: string, pageIndex?: number): void }>()
 
-const sortColumn = ref<SortableColumn>('name')
-const sortDirection = ref<SortDirection>(SORT_ASC)
+const sortColumn = ref<SortableColumn>()
+const sortDirection = ref<SortDirection>()
 
 const pageIndex = ref(1) // 1-based for humans
 
@@ -196,15 +196,15 @@ const tableHeader: Header[] =
 const hasTableData = ref(props.datasets !== undefined)
 const pageSize = ref(25)
 const maxPage = ref(0)
+const hasSort = ref(false)
 
 const pageData = computed(() : ClassificationsSummaryDataset[] => {
-  if (props.datasets === undefined) return []
-  return props.datasets
+  return props.datasets ?? []
 })
 
 watch(() => props.datasets, () => {
   pageSize.value = props.datasets === undefined ? 0 : 25
-  maxPage.value = Math.ceil(props.datasets.length / pageSize.value)
+  maxPage.value = Math.ceil(props.total / pageSize.value)
 
   if (pageIndex.value > maxPage.value) pageIndex.value = 1
   hasTableData.value = props.datasets !== undefined
@@ -221,10 +221,17 @@ const setPage = (page: number) => {
   if (page > maxPage.value) newPage = 1
 
   pageIndex.value = newPage
+
+  if (hasSort.value) {
+    emit('emitSortPaginations', `${sortDirection.value === SORT_DESC ? '-' : ''}${sortColumn.value}`, pageIndex.value)
+  } else {
+    emit('emitSortPaginations', undefined, pageIndex.value)
+  }
 }
 
 const sort = (column?: SortableColumn) => {
   if (!column) return
+  hasSort.value = true
 
   if (sortColumn.value === column) {
     // Change direction
@@ -236,7 +243,7 @@ const sort = (column?: SortableColumn) => {
     sortColumn.value = column
     sortDirection.value = SORT_ASC
   }
-  emit('emitSort', `${sortDirection.value === SORT_DESC ? '-' : ''}${column}`)
+  emit('emitSortPaginations', `${sortDirection.value === SORT_DESC ? '-' : ''}${column}`, pageIndex.value)
 }
 
 </script>

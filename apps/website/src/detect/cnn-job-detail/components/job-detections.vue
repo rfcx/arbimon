@@ -32,7 +32,8 @@
       <cnn-job-species-detected
         :datasets="results"
         :loading="isLoading"
-        @emit-sort="onEmitSort"
+        :total="total"
+        @emit-sort-paginations="onEmitSortAndPaginations"
       />
     </div>
   </div>
@@ -44,7 +45,7 @@ import { ref } from 'vue'
 import type { ClassificationsSummaryDataset } from './cnn-job-species-detected.vue'
 import CnnJobSpeciesDetected from './cnn-job-species-detected.vue'
 
-withDefaults(defineProps<{ isLoading: boolean, results: ClassificationsSummaryDataset[] }>(), {
+withDefaults(defineProps<{ isLoading: boolean, total: number, results: ClassificationsSummaryDataset[] }>(), {
   isLoading: true,
   isError: false
 })
@@ -52,10 +53,10 @@ withDefaults(defineProps<{ isLoading: boolean, results: ClassificationsSummaryDa
 const searchSpeciesKeyword = ref('')
 const isSearchBoxFocused = ref(false)
 
-const emit = defineEmits<{(e: 'emitSearch', keyword: string): void, (e: 'emitSort', sortKey: string): void }>()
+const emit = defineEmits<{(e: 'emitSearch', keyword: string): void, (e: 'emitSortPaginations', sortKey?: string, pageIndex?: number): void }>()
 
-const onEmitSort = async (sortKey: string) => {
-  emit('emitSort', sortKey)
+const onEmitSortAndPaginations = async (sortKey?: string, pageIndex?: number) => {
+  emit('emitSortPaginations', sortKey, pageIndex)
 }
 
 </script>
