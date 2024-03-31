@@ -1,14 +1,20 @@
 import { type AxiosInstance } from 'axios'
 
 // Request types
-export interface getRecordedMinutesPerDayParams {
+export interface GetRecordedMinutesPerDayParams {
   projectId: string
 }
 
-/**
- * Recorded minutes from the API where the key is date in format `YYYY-MM-DD`, and the value being the number of minutes in the given day. Which day that are not present in the response means that day does not have any recording minutes.
- */
-export type GetRecordedMinutesPerDayResponse = Record<string, number>
+export interface GetRecordedMinutesPerDayQueryParams {
+  sites?: string
+  start?: string
+  end?: string
+}
+
+export type GetRecordedMinutesPerDayResponse = Array<{
+  date: string
+  recordedMinutesCount: number
+}>
 
 // Route
 export const getRecordedMinutesPerDayRoute = '/projects/:projectId/recordings-per-day'
