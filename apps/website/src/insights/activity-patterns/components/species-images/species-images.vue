@@ -63,7 +63,7 @@
 
 <script setup lang="ts">
 
-import { defineProps, ref } from 'vue'
+import { ref } from 'vue'
 
 import type { TaxonSpeciesPhotoTypes } from '@rfcx-bio/common/dao/types'
 
