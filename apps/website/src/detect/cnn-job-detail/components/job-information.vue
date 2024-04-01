@@ -13,7 +13,7 @@
         </div>
         <div class="md:(col-span-1 mt-1) <md:(col-span-2 mt-4)">
           <h2 class="text-lg">
-            <jobInformationStatus
+            <job-information-status
               :variant="props.summary?.status ?? 0"
               :progress="progress"
             />
@@ -97,7 +97,7 @@ import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/
 import { hours } from '~/picker/time-of-day-constants'
 import { useStore } from '~/store'
 import ComponentError from './component-error.vue'
-import jobInformationStatus from './job-information-status.vue'
+import JobInformationStatus from './job-information-status.vue'
 import JobResultValidationStatus from './job-result-validation-status.vue'
 
 const props = withDefaults(defineProps<{ isLoadingSummary: boolean, isErrorSummary: boolean, summary: GetClassifierJobInformationResponse | undefined}>(), {
