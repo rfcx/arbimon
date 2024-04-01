@@ -103,7 +103,7 @@ import { onBeforeRouteUpdate, useRouter } from 'vue-router'
 
 import { apiArbimonLegacyClearSession } from '@rfcx-bio/common/api-arbimon/legacy-logout'
 
-import { apiClientKey, authClientKey, storeKey } from '@/globals'
+import { apiClientArbimonLegacyKey, authClientKey, storeKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { type BiodiversityStore } from '~/store'
 
@@ -113,7 +113,7 @@ const auth = inject(authClientKey) as Auth0Client
 const store = inject(storeKey) as BiodiversityStore
 const router = useRouter()
 
-const apiClientBio = inject(apiClientKey) as AxiosInstance
+const apiClientArbimonLegacy = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
 defineProps<{
   domId: string
@@ -137,7 +137,7 @@ const logout = async (): Promise<void> => {
 }
 
 const legacyClearSession = async (): Promise<void> => {
-  await apiArbimonLegacyClearSession(apiClientBio)
+  await apiArbimonLegacyClearSession(apiClientArbimonLegacy)
 }
 
 const openProfile = async (): Promise<void> => {
