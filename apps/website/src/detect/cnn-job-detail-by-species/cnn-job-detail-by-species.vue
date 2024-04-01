@@ -6,6 +6,8 @@
         :species-name="speciesName"
         :detections-count="jobDetections?.length"
         :filtered-result="jobDetections?.length"
+        :page-size="PAGE_SIZE_LIMIT"
+        @emit-page-size="onEmitPageSize"
       />
       <JobValidationStatus
         :total="speciesCount?.total ?? 0"
@@ -43,7 +45,7 @@ import JobValidationHeader from './components/job-validation-header.vue'
 import JobValidationStatus from './components/job-validation-status.vue'
 
 const route = useRoute()
-const PAGE_SIZE_LIMIT = 100
+const PAGE_SIZE_LIMIT = ref<number>(25)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
@@ -112,7 +114,7 @@ const speciesCount = computed(() => {
 })
 
 const offset = computed<number>(() => {
-  return (page.value - 1) * PAGE_SIZE_LIMIT
+  return (page.value - 1) * PAGE_SIZE_LIMIT.value
 })
 
 const classifierId = computed(() => {
@@ -129,7 +131,7 @@ const detectionsQueryParams = computed<GetDetectionsQueryParams>(() => {
     classification: speciesSlug.value,
     confidence: detectionsResultFilterBySpeciesStore.filter.minConfidence,
     classifierId: classifierId.value,
-    limit: PAGE_SIZE_LIMIT,
+    limit: PAGE_SIZE_LIMIT.value,
     offset: offset.value
   } as GetDetectionsQueryParams
 })
@@ -144,4 +146,8 @@ const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: 
   computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== ''),
   refetchInterval
 )
+
+const onEmitPageSize = (pageSize: number) => {
+  PAGE_SIZE_LIMIT.value = pageSize
+}
 </script>
