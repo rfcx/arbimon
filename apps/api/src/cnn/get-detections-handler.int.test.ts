@@ -38,6 +38,7 @@ describe('GET /detections', async () => {
     expect(json).toHaveProperty('[1].reviewStatus', 'notPresent')
     expect(json).toHaveProperty('[2].reviewStatus', 'unknown')
     expect(json).toHaveProperty('[3].reviewStatus', 'present')
+    expect(json).toHaveProperty('[0].classification')
     expect(json[0].reviewStatus).toBeTypeOf('string')
   })
 

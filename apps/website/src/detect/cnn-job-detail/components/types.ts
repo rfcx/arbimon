@@ -1,8 +1,8 @@
-import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 export interface ValidationFilterConfig {
   threshold: number
-  validationStatus: ReviewStatus | 'all'
+  validationStatus: ArbimonReviewStatus | 'all'
   classification: string
   siteIds: string[]
   sortBy: 'asc' | 'desc'
@@ -13,16 +13,16 @@ export interface ValidationFilterConfig {
 export interface DetectionMedia {
   spectrogramUrl: string
   audioUrl: string
-  id: string
+  id: number
   checked?: boolean
-  validation: ReviewStatus
+  validation: ArbimonReviewStatus
   score?: number
   site?: string
   start?: string
 }
 
 export interface DetectionValidationStatus {
-  value: ReviewStatus
+  value: ArbimonReviewStatus
   label: string
   checked: boolean
 }

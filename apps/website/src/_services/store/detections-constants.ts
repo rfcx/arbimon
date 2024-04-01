@@ -1,8 +1,8 @@
-import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 export interface ValidationResultFilterInner {
   label: string
-  value: ReviewStatus | 'all'
+  value: ArbimonReviewStatus | 'all'
 }
 
 export interface ResultFilterInner {
@@ -19,19 +19,19 @@ export const validationStatus: ValidationResultFilterInner[] = [
   },
   {
     label: 'Not Present',
-    value: 'rejected'
+    value: 'notPresent'
   },
   {
     label: 'Unknown',
-    value: 'uncertain'
+    value: 'unknown'
   },
   {
     label: 'Present',
-    value: 'confirmed'
+    value: 'present'
   },
   {
     label: 'Unvalidated',
-    value: 'unreviewed'
+    value: 'unvalidated'
   }
 ]
 

@@ -46,7 +46,7 @@
 import type { Ref } from 'vue'
 import { ref, watch } from 'vue'
 
-import type { ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 import type { DetectionValidationStatus } from './types'
 import ValidationStatus from './validation-status.vue'
@@ -56,8 +56,8 @@ const props = defineProps<{
   filterOptions: DetectionValidationStatus[]
 }>()
 
-const emit = defineEmits<{(e: 'emitValidation', validation: ReviewStatus): void, (e: 'emitClose'): void}>()
-const selectedFilter: Ref<ReviewStatus> = ref('unreviewed')
+const emit = defineEmits<{(e: 'emitValidation', validation: ArbimonReviewStatus): void, (e: 'emitClose'): void}>()
+const selectedFilter: Ref<ArbimonReviewStatus> = ref('unvalidated')
 
 watch(selectedFilter, () => {
   const value = selectedFilter.value

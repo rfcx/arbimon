@@ -63,6 +63,15 @@
       <li class="mb-2 last:mb-0 mt-0 first:mt-2">
         <button
           type="button"
+          :class="publicationsByYear === 2024 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
+          @click="onPublicationsByYearClick(2024)"
+        >
+          2024
+        </button>
+      </li>
+      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
+        <button
+          type="button"
           :class="publicationsByYear === 2023 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
           @click="onPublicationsByYearClick(2023)"
         >

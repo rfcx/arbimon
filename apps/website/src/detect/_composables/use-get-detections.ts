@@ -2,14 +2,14 @@ import { type UseQueryReturnType, useQuery } from '@tanstack/vue-query'
 import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 
-import { type DetectDetectionsQueryParams, type DetectDetectionsResponse, apiBioGetDetectDetections } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type GetDetectionsQueryParams, type GetDetectionsResponse, apiBioGetDetections } from '@rfcx-bio/common/api-bio/cnn/detections'
 
 export const FETCH_DETECTIONS = 'fetch-detections'
 
-export const useGetJobDetections = (apiClient: AxiosInstance, jobId: number, params: ComputedRef<DetectDetectionsQueryParams>, enabled: ComputedRef<boolean>, refetchInterval: ComputedRef<number | false>): UseQueryReturnType<DetectDetectionsResponse, unknown> => {
+export const useGetJobDetections = (apiClient: AxiosInstance, params: ComputedRef<GetDetectionsQueryParams>, enabled: ComputedRef<boolean>, refetchInterval: ComputedRef<number | false>): UseQueryReturnType<GetDetectionsResponse, unknown> => {
   return useQuery({
     queryKey: [FETCH_DETECTIONS, params],
-    queryFn: async () => await apiBioGetDetectDetections(apiClient, jobId, params.value),
+    queryFn: async () => await apiBioGetDetections(apiClient, params.value),
     enabled,
     refetchInterval
   })
