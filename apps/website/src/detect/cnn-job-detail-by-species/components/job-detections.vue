@@ -33,21 +33,32 @@
     </div>
   </div>
 
-  <div class="w-full flex flex-row-reverse">
-    <div class="job-result-detections-paginator">
+  <div
+    v-if="data?.length"
+    class="w-full flex flex-row justify-end gap-x-3 my-6"
+  >
+    <div class="flex flex-row items-center text-sm gap-x-1">
+      <span class="border-b-1 border-util-gray-02 px-1">{{ page }}</span>
+      <span>of</span>
+      <span class="px-1">UPDATE!</span>
+      <span>pages</span>
+    </div>
+    <div class="flex flex-row gap-x-1">
       <button
-        :class="page - 1 === 0 ? 'not-disabled:btn cursor-not-allowed bg-steel-gray not-disabled:btn-icon' : 'not-disabled:btn not-disabled:btn-icon'"
+        class="btn rounded-sm bg-fog border-fog px-2.5 py-1.5"
+        :class="page - 1 === 0 ? 'not-disabled:cursor-not-allowed bg-steel-gray' : ''"
         :disabled="page - 1 === 0"
         @click="previousPage()"
       >
-        <icon-fas-chevron-left class="w-3 h-3" />
+        <icon-fas-chevron-left class="w-3 h-4" />
       </button>
       <button
-        :class="props.data == null || props.data.length < pageSize ? 'not-disabled:btn not-disabled:btn-icon ml-2 cursor-not-allowed bg-steel-gray' : 'not-disabled:btn not-disabled:btn-icon ml-2'"
+        class="btn rounded-sm bg-fog border-fog px-2.5 py-1.5"
+        :class="props.data == null || props.data.length < pageSize ? 'not-disabled:cursor-not-allowed bg-steel-gray' : ''"
         :disabled="props.data == null || props.data.length < pageSize"
         @click="nextPage()"
       >
-        <icon-fas-chevron-right class="w-3 h-3" />
+        <icon-fas-chevron-right class="w-3 h-4" />
       </button>
     </div>
   </div>
