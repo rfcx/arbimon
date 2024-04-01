@@ -18,16 +18,16 @@ export const validationStatus: ValidationResultFilterInner[] = [
     value: 'all'
   },
   {
+    label: 'Present',
+    value: 'present'
+  },
+  {
     label: 'Not Present',
     value: 'notPresent'
   },
   {
     label: 'Unknown',
     value: 'unknown'
-  },
-  {
-    label: 'Present',
-    value: 'present'
   },
   {
     label: 'Unvalidated',
