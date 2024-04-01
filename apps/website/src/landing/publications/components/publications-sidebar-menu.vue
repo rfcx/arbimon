@@ -60,67 +60,17 @@
       Publications by year
     </h2>
     <ul>
-      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
+      <li
+        v-for="year in years"
+        :key="year"
+        class="mb-2 last:mb-0 mt-0 first:mt-2"
+      >
         <button
           type="button"
-          :class="publicationsByYear === 2024 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
-          @click="onPublicationsByYearClick(2024)"
+          :class="publicationsByYear === year ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
+          @click="onPublicationsByYearClick(year)"
         >
-          2024
-        </button>
-      </li>
-      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
-        <button
-          type="button"
-          :class="publicationsByYear === 2023 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
-          @click="onPublicationsByYearClick(2023)"
-        >
-          2023
-        </button>
-      </li>
-      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
-        <button
-          type="button"
-          :class="publicationsByYear === 2022 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
-          @click="onPublicationsByYearClick(2022)"
-        >
-          2022
-        </button>
-      </li>
-      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
-        <button
-          type="button"
-          :class="publicationsByYear === 2021 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
-          @click="onPublicationsByYearClick(2021)"
-        >
-          2021
-        </button>
-      </li>
-      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
-        <button
-          type="button"
-          :class="publicationsByYear === 2020 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
-          @click="onPublicationsByYearClick(2020)"
-        >
-          2020
-        </button>
-      </li>
-      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
-        <button
-          type="button"
-          :class="publicationsByYear === 2019 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
-          @click="onPublicationsByYearClick(2019)"
-        >
-          2019
-        </button>
-      </li>
-      <li class="mb-2 last:mb-0 mt-0 first:mt-2">
-        <button
-          type="button"
-          :class="publicationsByYear === 2018 ? 'text-white text-base font-normal leading-normal underline underline-offset-4 decoration-frequency text-frequency' : 'text-white text-base font-normal leading-normal'"
-          @click="onPublicationsByYearClick(2018)"
-        >
-          2018
+          {{ year }}
         </button>
       </li>
       <li class="mb-2 last:mb-0 mt-0 first:mt-2">
@@ -156,4 +106,8 @@ const onPublicationsByYearClick = (year: number): void => {
   router.push({ name: ROUTE_NAMES.landingPublications, hash: '#' + year.toString() })
   emits('update:publicationsByYear', year)
 }
+
+const currentYear = new Date().getFullYear()
+const years = Array.from({ length: currentYear - 2017 }, (_, index) => currentYear - index)
+
 </script>
