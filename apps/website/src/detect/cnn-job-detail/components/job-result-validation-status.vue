@@ -19,7 +19,7 @@
       >
         <div class="grid grid-cols-4">
           <span>{{ validationStatusName(key[0]) }}</span>
-          <span class="flex items-center justify-center">{{ validationStatusValue(key[0], key[1]) }}</span>
+          <span class="flex items-center justify-center">{{ key[1] }}</span>
           <span class="flex items-center justify-center">{{ getValidationPercentage(key[1], totalDetection) }}%</span>
         </div>
       </template>
@@ -29,8 +29,7 @@
 
 <script setup lang="ts">
 import numeral from 'numeral'
-import type { Ref } from 'vue'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 import { type ValidationStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
@@ -42,29 +41,15 @@ const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, d
   data: undefined
 })
 
-/**
- * Returns `unreviewed` amount instead of total from
- *
- * `total` - (`uncertain` + `confirmed` + `rejected`)
- */
-const validationStatusValue = (key: string, value: number): number => {
-  return value
-}
-
 const validationStatusName = (key: string): string => {
-  if (key === 'total') {
-    return 'Unreviewed'
+  const validationStatusMap: Record<string, string> = {
+    notPresent: 'Not Present',
+    unknown: 'Unknown',
+    present: 'Present',
+    unvalidated: 'Unvalidated'
   }
-console.info(key)
-  return validationStatusMap.value[key]
+  return validationStatusMap[key]
 }
-
-const validationStatusMap: Ref<Record<string, string>> = ref({
-  notPresent: 'Not Present',
-  unknown: 'Unknown',
-  present: 'Present',
-  unvalidated: 'Unvalidated'
-})
 
 const totalDetection = computed(() => {
   const value = props.data
