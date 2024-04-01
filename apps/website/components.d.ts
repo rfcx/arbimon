@@ -34,6 +34,7 @@ declare module 'vue' {
     IconCustomFiAed: typeof import('~icons/custom-icons/fi-aed')['default']
     IconCustomFiCheckCircle: typeof import('~icons/custom-icons/fi-check-circle')['default']
     IconCustomFiClipboard: typeof import('~icons/custom-icons/fi-clipboard')['default']
+    IconCustomFiClose: typeof import('~icons/custom-icons/fi-close')['default']
     IconCustomFiCloseThin: typeof import('~icons/custom-icons/fi-close-thin')['default']
     IconCustomFiExternalLink: typeof import('~icons/custom-icons/fi-external-link')['default']
     IconCustomFiEye: typeof import('~icons/custom-icons/fi-eye')['default']

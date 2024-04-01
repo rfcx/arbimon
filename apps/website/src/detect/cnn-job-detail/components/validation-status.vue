@@ -23,6 +23,6 @@ import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifie
 
 const props = defineProps<{
   value: ArbimonReviewStatus,
-  hideUnvalidated: boolean
+  hideUnvalidated?: boolean
 }>()
 </script>
