@@ -59,7 +59,7 @@
             <tr class="border-b-1 border-util-gray-01">
               <td class="py-2 pl-4 sticky left-0 z-10">
                 <router-link
-                  :to="{ name: ROUTE_NAMES.cnnJobList }"
+                  :to="{ name: ROUTE_NAMES.cnnJobDetailBySpecies, params: { jobId, speciesSlug: getSpeciesSlug(row.value) }}"
                   class="text-subtle hover:(underline text-white) flex"
                 >
                   <img
@@ -135,7 +135,9 @@
   </div>
 </template>
 <script setup lang="ts">
+import { kebabCase } from 'lodash-es'
 import { computed, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 import { ROUTE_NAMES } from '~/router'
 
@@ -174,6 +176,8 @@ const props = withDefaults(defineProps<{ datasets: ClassificationsSummaryDataset
 })
 
 const emit = defineEmits<{(e: 'emitSortPaginations', sortKey?: string, pageIndex?: number): void }>()
+const route = useRoute()
+const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
 const sortColumn = ref<SortableColumn>()
 const sortDirection = ref<SortDirection>()
@@ -213,6 +217,10 @@ const setPage = (page: number) => {
   } else {
     emit('emitSortPaginations', undefined, pageIndex.value)
   }
+}
+
+const getSpeciesSlug = (scientificName: string): string => {
+    return kebabCase(scientificName)
 }
 
 const sort = (column?: SortableColumn) => {
