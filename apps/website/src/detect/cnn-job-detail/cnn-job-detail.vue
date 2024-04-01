@@ -31,8 +31,8 @@ import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/
 import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterStore } from '~/store'
 import { useGetClassifierJobInformation } from '../_composables/use-get-job-detection-summary'
-import type { ClassificationsSummaryDataset } from './components/cnn-job-species-detected.vue'
 import JobDetailHeader from './components/job-detail-header.vue'
+import type { ClassificationsSummaryDataset } from './components/job-detection-list.vue'
 import JobDetections from './components/job-detections.vue'
 import JobDetailInformation from './components/job-information.vue'
 

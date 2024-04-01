@@ -102,19 +102,6 @@
               </td>
             </tr>
           </template>
-          <tr
-            v-for="blankIndex in pageSize - pageData.length"
-            :key="'blank-row-' + blankIndex"
-          >
-            <td class="p-2">
-              <span>&nbsp;</span>
-            </td>
-          </tr>
-          <tr
-            class="h-2 border-b-1 border-subtle"
-          >
-            <td :colspan="tableHeader.length" />
-          </tr>
         </tbody>
       </table>
     </div>
