@@ -101,11 +101,7 @@ import JobInformationStatus from './job-information-status.vue'
 import JobResultValidationStatus from './job-result-validation-status.vue'
 
 const props = withDefaults(defineProps<{ isLoadingSummary: boolean, isErrorSummary: boolean, summary: GetClassifierJobInformationResponse | undefined}>(), {
-  isLoadingSummary: true,
-  isLoadingResults: true,
-  isErrorResults: false,
-  data: undefined,
-  results: undefined
+  isLoadingSummary: false
 })
 
 const store = useStore()

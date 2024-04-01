@@ -47,6 +47,8 @@ const isLoadingClassifierJob = ref(false)
 const isRefetch = ref<boolean>(true)
 const detectionList = ref<ClassificationsSummaryDataset[]>()
 const total = ref(0)
+const searchKeyword = ref<string| undefined>()
+const sortKeyLabel = ref<string| undefined>()
 
 const refetchInterval = computed(() => {
   return isRefetch.value ? 30_000 : false
@@ -72,21 +74,18 @@ watch(jobSummary, async (newValue) => {
 })
 
 onMounted(async () => {
-  await getClassifierJobSpecies(pageLimit, 0)
+  await getClassifierJobSpecies(PAGE_LIMIT, 0)
 })
 
 const isRefetchIntervalEnable = computed(() => {
   return jobSummary.value?.status != null && (jobSummary.value.status === CLASSIFIER_JOB_STATUS.WAITING || jobSummary.value.status === CLASSIFIER_JOB_STATUS.RUNNING)
 })
 
-const pageLimit = 25
+const PAGE_LIMIT = 25
 
 const onEmitSearch = debounce(async (keyword: string) => {
-  if (keyword === '') {
-    await getClassifierJobSpecies(pageLimit, 0)
-    return
-  }
-  await getClassifierJobSpecies(pageLimit, 0, keyword)
+  searchKeyword.value = keyword === '' ? undefined : keyword
+  await getClassifierJobSpecies(PAGE_LIMIT, 0, keyword, sortKeyLabel.value)
 }, 500)
 
 const onEmitSortAndPaginations = async (sortKey?: string, pageIndex?: number) => {
@@ -94,7 +93,8 @@ const onEmitSortAndPaginations = async (sortKey?: string, pageIndex?: number) =>
   if (pageIndex !== null) {
     index = (pageIndex ?? 0) - 1
   }
-  await getClassifierJobSpecies(pageLimit, index * pageLimit, undefined, sortKey)
+  sortKeyLabel.value = sortKey
+  await getClassifierJobSpecies(PAGE_LIMIT, index * PAGE_LIMIT, searchKeyword.value, sortKey)
 }
 
 const getClassifierJobSpecies = async (limit?: number, offset?: number, q?: string, sort?: string) => {

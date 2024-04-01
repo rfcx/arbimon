@@ -120,13 +120,13 @@
         </div>
         <button
           class="btn btn-icon ml-4 rounded-md bg-fog border-0"
-          @click="previousPage()"
+          @click="setPage(pageIndex - 1)"
         >
           <icon-fas-chevron-left class="w-3 h-3 text-pitch" />
         </button>
         <button
           class="btn btn-icon ml-2 rounded-md bg-fog border-0"
-          @click="nextPage()"
+          @click="setPage(pageIndex + 1)"
         >
           <icon-fas-chevron-right class="w-3 h-3 text-pitch" />
         </button>
@@ -160,17 +160,6 @@ export interface ClassificationsSummaryDataset {
 const SORT_ASC: SortDirection = 1
 const SORT_DESC: SortDirection = -1
 
-const props = withDefaults(defineProps<{ datasets: ClassificationsSummaryDataset[], loading: boolean, total: number }>(), {
-loading: false
-})
-
-const emit = defineEmits<{(e: 'emitSortPaginations', sortKey?: string, pageIndex?: number): void }>()
-
-const sortColumn = ref<SortableColumn>()
-const sortDirection = ref<SortDirection>()
-
-const pageIndex = ref(1) // 1-based for humans
-
 const tableHeader: Header[] =
   [
     { title: 'Class', key: 'name' },
@@ -180,9 +169,19 @@ const tableHeader: Header[] =
     { title: 'Unknown', key: 'unknown' }
   ]
 
-const hasTableData = ref(props.datasets !== undefined)
+const props = withDefaults(defineProps<{ datasets: ClassificationsSummaryDataset[], loading: boolean, total: number }>(), {
+  loading: false
+})
+
+const emit = defineEmits<{(e: 'emitSortPaginations', sortKey?: string, pageIndex?: number): void }>()
+
+const sortColumn = ref<SortableColumn>()
+const sortDirection = ref<SortDirection>()
+
+const hasTableData = ref(props.datasets.length === 0)
 const pageSize = ref(25)
-const maxPage = ref(0)
+const maxPage = ref(1)
+const pageIndex = ref(1)
 const hasSort = ref(false)
 
 const pageData = computed(() : ClassificationsSummaryDataset[] => {
@@ -196,10 +195,6 @@ watch(() => props.datasets, () => {
   if (pageIndex.value > maxPage.value) pageIndex.value = 1
   hasTableData.value = props.datasets !== undefined
 })
-
-const previousPage = () => setPage(pageIndex.value - 1)
-
-const nextPage = () => setPage(pageIndex.value + 1)
 
 const setPage = (page: number) => {
   // Wrap-around
