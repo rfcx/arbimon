@@ -25,19 +25,33 @@
               <icon-custom-fi-close-thin class="cursor-pointer" />
             </button>
           </div>
-          <div class="grid sm:grid-cols-1 md:(grid-cols-2 mr-4) xl:(grid-cols-3 mr-4) ">
-            <el-input
-              v-model="searchKeyword"
-              placeholder="Search species"
-              size="large"
-              class="bg-mock grid col-span-1"
+
+          <div>
+            <form
+              class="grid sm:grid-cols-1 md:(grid-cols-2 mr-4) xl:(grid-cols-3 mr-4)"
             >
-              <template #prefix>
-                <div class="inline-flex items-center">
-                  <icon-fas-search class="text-base text-insight" />
+              <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                  <span class="p-2">
+                    <icon-custom-ic-search
+                      class="w-5 h-5 text-insight stroke-insight"
+                      storke="white"
+                    />
+                  </span>
                 </div>
-              </template>
-            </el-input>
+                <input
+                  id="speciesSearchInput"
+                  v-model="searchKeyword"
+                  name="search"
+                  type="text"
+                  class="input-field text-insight shadow-lg shadow-frequency/10"
+                  placeholder="Search species"
+                  @input="searchSpeciesInputChanged"
+                  @focus="isSearchBoxFocused = true"
+                  @blur="isSearchBoxFocused = false"
+                >
+              </div>
+            </form>
           </div>
           <div class="grid xl:grid-cols-3 items-center gap-x-2 my-1">
             <button
@@ -130,7 +144,7 @@
               </div>
             </div>
             <div
-              v-if="preSelectedSpecies.length === 0"
+              v-if="selectedSpecies.length === 0"
               class="hidden grid-cols-1 xl:grid h-127 border-1 border-dashed rounded-lg"
             >
               <div class="my-auto items-center p-5 text-center">
@@ -147,7 +161,7 @@
               class="hidden grid-cols-1 xl:grid"
             >
               <HighlightedSpeciesSelector
-                :species="preSelectedSpecies"
+                :species="selectedSpecies"
                 @emit-remove-specie="removeSpecieFromList"
               />
             </div>
@@ -185,6 +199,7 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
+import debounce from 'lodash.debounce'
 import { computed, inject, ref, watch } from 'vue'
 
 import type { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
@@ -201,19 +216,17 @@ import SpecieCard from './species-card.vue'
 const props = defineProps<{ highlightedSpecies: HighlightedSpeciesRow[], toggleShowModal: boolean }>()
 const emit = defineEmits<{(e: 'emitClose'): void}>()
 
-watch(() => props.highlightedSpecies, () => {
-  fillExistingSpeciesSlug()
-})
-
 const speciesList = ref<HighlightedSpeciesRow[]>([])
 const isLoadingSpecies = ref(false)
 const hasFetchedAll = ref(false)
-const LIMIT = 100
+const LIMIT = 10
+const highlightedSpeciesSelected : HighlightedSpeciesRow[] = []
 
 watch(() => props.toggleShowModal, async () => {
   fillExistingSpeciesSlug()
   speciesList.value = []
   await fetchProjectsSpecies(LIMIT, 0)
+  props.highlightedSpecies.forEach(s => highlightedSpeciesSelected.push(s))
 })
 
 const store = useStore()
@@ -221,24 +234,26 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const selectedProjectId = computed(() => store.selectedProject?.id)
 
-const searchKeyword = ref('')
-const searchRisk = ref('')
+const searchKeyword = ref<string>()
+const searchRisk = ref<string>()
+const isSearchBoxFocused = ref(false)
 const showHaveReachedLimit = ref(false)
 
-const selectedSpeciesSlug = ref<string[]>([])
+const selectedSpecies = ref<HighlightedSpeciesRow[]>([])
 
 const PAGE_SIZE = 10
 const currentPage = ref(1)
+const total = ref(0)
 
 const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
 const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
 
-const fetchProjectsSpecies = async (limit: number, offset: number) => {
+const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: string, riskRatingId?: string) => {
   isLoadingSpecies.value = true
 
   if (selectedProjectId.value === undefined) return
   const fields: ProjectSpeciesFieldSet = 'dashboard'
-  const projectSpecies = await apiBioGetProjectSpecies(apiClientBio, selectedProjectId.value, { limit, offset, fields })
+  const projectSpecies = await apiBioGetProjectSpecies(apiClientBio, selectedProjectId.value, { limit, offset, fields, keyword, riskRatingId })
 
   if (projectSpecies === undefined) {
     isLoadingSpecies.value = false
@@ -247,6 +262,8 @@ const fetchProjectsSpecies = async (limit: number, offset: number) => {
 
   const s = projectSpecies as ProjectSpeciesResponse
   hasFetchedAll.value = s.species.length < LIMIT // check if reaching the end
+  if (offset === 0) speciesList.value = []
+  total.value = s.total
   s.species.forEach(sp => {
     const { slug, taxonSlug, scientificName, commonName, photoUrl, riskId } = sp as DashboardSpecies
     speciesList.value.push({
@@ -259,54 +276,57 @@ const fetchProjectsSpecies = async (limit: number, offset: number) => {
     })
   })
   isLoadingSpecies.value = false
-
-  if (!hasFetchedAll.value) {
-    await fetchProjectsSpecies(LIMIT, speciesList.value.length)
-  }
 }
 
-// Filtered list of species by search, risk or both
-const speciesListFiltered = computed(() => {
-  if (!hasFetchedAll.value) return []
-  if (!searchKeyword.value && searchRisk.value) {
-    resetPagination()
-    return speciesList.value
-      .filter(({ riskRating }) => {
-        return riskRating.code === searchRisk.value
-      })
-      .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
-  } else if (searchKeyword.value && !searchRisk.value) {
-    resetPagination()
-    return speciesList.value
-      .filter(({ scientificName, commonName }) => {
-        return scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
-          ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false)
-      })
-      .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
-    } else if (searchKeyword.value && searchRisk.value) {
-      resetPagination()
-      return speciesList.value
-        .filter(({ scientificName, commonName, riskRating }) => {
-          console.info(riskRating.code === searchRisk.value)
-          return (scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
-            ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false)) &&
-            riskRating.code === searchRisk.value
-        })
-        .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
-    } else return speciesList.value
+watch(() => currentPage.value, () => {
+  fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
 })
 
+// // Filtered list of species by search, risk or both
+// const speciesListFiltered = computed(() => {
+//   if (!hasFetchedAll.value) return []
+//   if (!searchKeyword.value && searchRisk.value) {
+//     resetPagination()
+//     return speciesList.value
+//       .filter(({ riskRating }) => {
+//         return riskRating.code === searchRisk.value
+//       })
+//       .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
+//   } else if (searchKeyword.value && !searchRisk.value) {
+//     resetPagination()
+//     return speciesList.value
+//       .filter(({ scientificName, commonName }) => {
+//         return scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
+//           ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false)
+//       })
+//       .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
+//     } else if (searchKeyword.value && searchRisk.value) {
+//       resetPagination()
+//       return speciesList.value
+//         .filter(({ scientificName, commonName, riskRating }) => {
+//           console.info(riskRating.code === searchRisk.value)
+//           return (scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
+//             ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false)) &&
+//             riskRating.code === searchRisk.value
+//         })
+//         .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
+//     } else return speciesList.value
+// })
+
+const searchSpeciesInputChanged = debounce(async () => {
+  if (searchKeyword.value === '') {
+    fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, '') // Todo: get data for store
+    return
+  }
+  fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value)
+}, 500)
+
 const speciesLength = computed(() => {
-  return speciesListFiltered.value.length
+  return total.value
 })
 
 const speciesForCurrentPage = computed(() => {
-  return speciesListFiltered.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
-})
-
-const preSelectedSpecies = computed(() => {
-  if (!hasFetchedAll.value) return []
-  return speciesList.value.length ? selectedSpeciesSlug.value.map((slug) => speciesList.value.filter((specie) => specie.slug === slug)[0]) ?? [] : []
+  return speciesList.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
 })
 
 const existingRiskCode = computed(() => {
@@ -314,13 +334,11 @@ const existingRiskCode = computed(() => {
 })
 
 const newSpeciesToAdd = computed(() => {
-  const existingSlugsInDB = props.highlightedSpecies.map(sp => sp.slug)
-  return preSelectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
+  return selectedSpecies.value.filter(s => highlightedSpeciesSelected.filter(sp => s.slug === sp.slug).length === 0)
 })
 
 const speciesToRemove = computed(() => {
-  const preSelectedSpeciesSlug = preSelectedSpecies.value.map(sp => sp.slug)
-  return props.highlightedSpecies.filter(sp => !preSelectedSpeciesSlug.includes(sp.slug))
+  return highlightedSpeciesSelected.filter(sp => !selectedSpecies.value.includes(sp))
 })
 
 const resetPagination = (): void => {
@@ -328,23 +346,23 @@ const resetPagination = (): void => {
 }
 
 const resetSearch = (): void => {
-  searchKeyword.value = ''
-  searchRisk.value = ''
+  searchKeyword.value = undefined
+  searchRisk.value = undefined
 }
 
 const findIndexToRemove = (slug: string): void => {
-  const index = selectedSpeciesSlug.value.findIndex(sl => sl === slug)
-  selectedSpeciesSlug.value.splice(index, 1)
+  const index = selectedSpecies.value.findIndex(s => s.slug === slug)
+  selectedSpecies.value.splice(index, 1)
 }
 
 const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
   if (isSpecieSelected(specie)) {
     findIndexToRemove(specie.slug)
-    showHaveReachedLimit.value = selectedSpeciesSlug.value.length >= 5
+    showHaveReachedLimit.value = selectedSpecies.value.length >= 5
   } else {
     // only 5 species might be highlighted
-    if (selectedSpeciesSlug.value.length < 5) {
-      selectedSpeciesSlug.value.push(specie.slug)
+    if (selectedSpecies.value.length < 5) {
+      selectedSpecies.value.push(specie)
     } else {
       showHaveReachedLimit.value = true
     }
@@ -352,7 +370,7 @@ const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
 }
 
 const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
-  return selectedSpeciesSlug.value.find(slug => slug === specie.slug) !== undefined
+  return selectedSpecies.value.find(s => s.slug === specie.slug) !== undefined
 }
 
 const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
@@ -362,8 +380,8 @@ const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
 
 const fillExistingSpeciesSlug = (): void => {
   if (props.highlightedSpecies.length) {
-    selectedSpeciesSlug.value = props.highlightedSpecies.map(sp => sp.slug)
-  } else selectedSpeciesSlug.value = []
+    selectedSpecies.value = props.highlightedSpecies
+  } else selectedSpecies.value = []
 }
 
 const filterByCode = (code: string): void => {
@@ -396,14 +414,10 @@ const addHighlightedSpecies = async (): Promise<void> => {
 }
 </script>
 <style lang="scss">
-.el-input__wrapper {
-  border-radius: 8px;
-  border: 1px solid #F9F6F2;
-  background: #060508;
+#speciesSearchInput {
+  padding-inline-start: 2rem;
 }
-.el-input__inner {
-  padding-left: 2px !important;
-}
+
 .tag-selected {
   border: 2px solid #ADFF2C;
   border-style: solid !important;
