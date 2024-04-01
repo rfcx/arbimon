@@ -137,7 +137,7 @@
 
     <div
       id="markdown-editor-save-edit"
-      class="text-right"
+      class="text-right flex flex-row-reverse justify-start items-center"
     >
       <button
         type="button"
@@ -146,6 +146,13 @@
       >
         Save changes
       </button>
+      <span
+        v-if="hasFailed"
+        class="p-4 text-sm text-red-800 dark:text-flamingo"
+        role="alert"
+      >
+        <span class="font-medium"> Failed. {{ errorMessage }}</span>
+      </span>
     </div>
 
     <!-- insert link modal -->
@@ -293,9 +300,27 @@ const closeModal = (): void => {
   linkToSet.value = ''
 }
 
-const closeEditorView = (): void => {
-  emit('onEditorClose')
+const errorMessage = ref('')
+const hasFailed = ref(false)
+
+const closeEditorView = async (): Promise<void> => {
+  try {
+    const response = await fetch('')
+    const data = await response.json()
+
+    if (!response.ok) {
+      throw new Error(data.errorMessage)
+    } else {
+      hasFailed.value = false
+      errorMessage.value = ''
+      emit('onEditorClose')
+    }
+  } catch (error: any) {
+    errorMessage.value = error.message
+    hasFailed.value = true
+  }
 }
+
 </script>
 
 <style lang="scss">
