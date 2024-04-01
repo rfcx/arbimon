@@ -9,28 +9,22 @@
       v-else
       indicator-position="none"
       :autoplay="false"
-      class="relative group"
+      class="overflow-hidden relative group"
     >
-      <button
-        class="absolute left-2 top-0 bottom-0 z-20 my-auto w-8 h-8 rounded-full invisible bg-box-gray bg-opacity-30 group-hover:(visible shadow-md) hover:(bg-opacity-50) focus:(border-transparent outline-none)"
-        @click="scrollContent('left')"
-      >
-        <icon-custom-chevron-left class="text-xxs m-auto" />
-      </button>
       <div
-        class="relative overflow-hidden rounded-md"
+        ref="carousel"
+        class="w-full flex transition-transform duration-300 ease-in-out"
       >
         <div
           v-for="(photo, idx) in speciesPhotos"
-          id="carousel-container"
           :key="'species-images-' + idx"
-          class="scroll-snap-align-start"
+          class="inline-block w-full"
+          :class="{ 'hidden': idx !== currentIdx }"
         >
-          <div class="relative">
+          <div class="relative overflow-hidden rounded-md">
             <div
-              class="bg-cover bg-center bg-dark-500 opacity-60 h-75 w-full"
-              style="filter: blur(2px)"
-              :style="{ backgroundImage: 'url(' + handleImageUrl(photo.photoUrl) + ')'}"
+              class="bg-cover bg-center bg-dark-500 opacity-60 h-75 w-full blur-[2px]"
+              :style="{ backgroundImage: 'url(' + handleImageUrl(photo.photoUrl) + ')' }"
             />
             <img
               :src="handleImageUrl(photo.photoUrl)"
@@ -50,23 +44,30 @@
             </div>
           </div>
         </div>
+        <button
+          class="absolute left-2 top-0 bottom-0 z-20 my-auto w-8 h-8 rounded-full invisible bg-box-gray bg-opacity-30 group-hover:(visible shadow-md) hover:(bg-opacity-50) focus:(border-transparent outline-none)"
+          @click="prevSlide"
+        >
+          <icon-custom-chevron-left class="text-xxs m-auto" />
+        </button>
+        <button
+          class="absolute right-2 top-0 bottom-0 z-20 my-auto w-8 h-8 rounded-full invisible bg-box-gray bg-opacity-30 group-hover:(visible shadow-md) hover:(bg-opacity-50) focus:(border-transparent outline-none)"
+          @click="nextSlide"
+        >
+          <icon-custom-chevron-right class="text-xxs m-auto" />
+        </button>
       </div>
-      <button
-        class="absolute right-2 top-0 bottom-0 z-20 my-auto w-8 h-8 rounded-full invisible bg-box-gray bg-opacity-30 group-hover:(visible shadow-md) hover:(bg-opacity-50) focus:(border-transparent outline-none)"
-        @click="scrollContent('right')"
-      >
-        <icon-custom-chevron-right class="text-xxs m-auto" />
-      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+
+import { defineProps, ref } from 'vue'
+
 import type { TaxonSpeciesPhotoTypes } from '@rfcx-bio/common/dao/types'
 
-withDefaults(defineProps<{ speciesPhotos: Array<TaxonSpeciesPhotoTypes['light']>, loading: boolean }>(), {
-  loading: false
-})
+const { speciesPhotos, loading } = defineProps<{ speciesPhotos: Array<TaxonSpeciesPhotoTypes['light']>, loading: boolean}>()
 
 const handleImageUrl = (url: string): string => {
   const isValidUrl = /^https:\/\/./i.test(url)
@@ -83,16 +84,23 @@ const licenseCatagory = (imageLicense: TaxonSpeciesPhotoTypes['light']['photoLic
   return `some rights reserved (${imageLicense})`
 }
 
-type ScrollDirection = 'left' | 'right'
+const carousel = ref<HTMLDivElement | null>(null)
+const currentIdx = ref(0)
 
-const scrollContent = (direction: ScrollDirection = 'left'): void => {
-  const content = document.querySelector<HTMLDivElement>('#carousel-container')
-  if (!content) return
+const nextSlide = () => {
+  currentIdx.value = (currentIdx.value + 1) % speciesPhotos.length
+  updateCarousel()
+}
 
-  if (direction === 'left') {
-    content.scrollLeft -= content.offsetWidth
-  } else {
-    content.scrollLeft += content.offsetWidth
+const prevSlide = () => {
+  currentIdx.value = (currentIdx.value - 1 + speciesPhotos.length) % speciesPhotos.length
+  updateCarousel()
+}
+
+const updateCarousel = () => {
+  if (carousel.value) {
+    const offset = -currentIdx.value * carousel.value.clientWidth
+    carousel.value.style.transform = `translateX(${offset}px)`
   }
 }
 </script>
