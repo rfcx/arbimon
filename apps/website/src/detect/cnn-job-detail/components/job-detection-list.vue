@@ -169,7 +169,7 @@ const tableHeader: Header[] =
     { title: 'Unknown', key: 'unknown' }
   ]
 
-const props = withDefaults(defineProps<{ datasets: ClassificationsSummaryDataset[], loading: boolean, total: number }>(), {
+const props = withDefaults(defineProps<{ datasets: ClassificationsSummaryDataset[], loading: boolean, total: number, index: number}>(), {
   loading: false
 })
 
@@ -194,6 +194,10 @@ watch(() => props.datasets, () => {
 
   if (pageIndex.value > maxPage.value) pageIndex.value = 1
   hasTableData.value = props.datasets !== undefined
+})
+
+watch(() => props.index, () => {
+  pageIndex.value = props.index
 })
 
 const setPage = (page: number) => {

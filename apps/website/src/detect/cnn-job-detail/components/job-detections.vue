@@ -23,7 +23,7 @@
             type="text"
             class="input-field text-insight shadow-lg shadow-frequency/10"
             placeholder="Search for species, sounds..."
-            @input="$emit('emitSearch', searchSpeciesKeyword)"
+            @input="searchKeywordChange()"
             @focus="isSearchBoxFocused = true"
             @blur="isSearchBoxFocused = false"
           >
@@ -33,6 +33,7 @@
         :datasets="results"
         :loading="isLoading"
         :total="total"
+        :index="pageNo"
         @emit-sort-paginations="onEmitSortAndPaginations"
       />
     </div>
@@ -52,10 +53,19 @@ withDefaults(defineProps<{ isLoading: boolean, total: number, results: Classific
 
 const searchSpeciesKeyword = ref('')
 const isSearchBoxFocused = ref(false)
+const sortKeyLabel = ref<string| undefined>()
+const pageNo = ref(1)
 
 const emit = defineEmits<{(e: 'emitSearch', keyword: string): void, (e: 'emitSortPaginations', sortKey?: string, pageIndex?: number): void }>()
 
+const searchKeywordChange = async () => {
+  pageNo.value = 1
+  emit('emitSearch', searchSpeciesKeyword.value)
+}
+
 const onEmitSortAndPaginations = async (sortKey?: string, pageIndex?: number) => {
+  sortKeyLabel.value = sortKey
+  pageNo.value = pageIndex ?? 1
   emit('emitSortPaginations', sortKey, pageIndex)
 }
 
