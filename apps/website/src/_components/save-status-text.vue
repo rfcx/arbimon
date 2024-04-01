@@ -20,7 +20,7 @@
     class="pt-4 text-sm text-red-800 dark:text-flamingo"
     role="alert"
   >
-    <span class="font-medium">{{ errorMessage }}</span>
+    <span class="font-medium">{{ errorMessage ?? 'Failed!' }}</span>
   </span>
 </template>
 

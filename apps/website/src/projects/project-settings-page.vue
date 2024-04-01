@@ -163,7 +163,7 @@ const disableText = ref('Contact your project administrator for permission to ed
 
 const showStatus = ref(false)
 const hasFailed = ref(false)
-const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
+const errorMessage = ref<string>()
 
 const isUserHasFullAccess = computed<boolean>(() => {
   return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
@@ -245,7 +245,7 @@ watch(() => settings.value, () => {
 const displayTextAfterSaveWithSuccessStatus = (success: boolean, errorMsg?: string) => {
   showStatus.value = true
   hasFailed.value = !success
-  errorMessage.value = errorMsg ?? ''
+  errorMessage.value = errorMsg
 }
 
 const save = () => {
