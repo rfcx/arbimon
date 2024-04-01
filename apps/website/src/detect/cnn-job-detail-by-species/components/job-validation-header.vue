@@ -16,7 +16,7 @@
       </div>
       <div class="flex items-center gap-x-3 text-insight pt-10">
         <span class="text-2xl font-display">Filters:</span>
-        <JobResultFilterBySpecies
+        <JobValidationFilters
           @emit-min-confidence="toggleMinConfidence"
         />
         <div>
@@ -47,7 +47,7 @@
 import { ref } from 'vue'
 
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
-import JobResultFilterBySpecies from './job-result-filter-by-species.vue'
+import JobValidationFilters from './job-validation-filters.vue'
 
 withDefaults(defineProps<{ speciesName: string | undefined, detectionsCount: number | undefined, filteredResult: number | undefined }>(), {
   speciesName: undefined,

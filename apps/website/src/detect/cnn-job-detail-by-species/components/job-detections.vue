@@ -1,27 +1,36 @@
 <template>
-  <div class="job-result-detections mt-4">
-    <template
-      v-for="species in allSpecies"
-      :key="'job-detections-' + species.speciesSlug"
-    >
-      <div
-        v-for="dt in species.media"
-        :key="`job-detection-result-by-species-${dt.id}`"
-        class="inline-block mt-3 mr-4"
+  <div class="flex flex-col gap-y-4 mt-4">
+    <DetectionValidator
+      v-if="validationCount && isOpen"
+      :detection-count="validationCount"
+      :filter-options="filterOptions"
+      @emit-validation="validateDetection"
+      @emit-close="closeValidator"
+    />
+    <div>
+      <template
+        v-for="species in allSpecies"
+        :key="'job-detections-' + species.speciesSlug"
       >
-        <DetectionItem
-          :id="dt.id"
-          :spectrogram-url="dt.spectrogramUrl"
-          :audio-url="dt.audioUrl"
-          :validation="dt.validation"
-          :checked="dt.checked"
-          :site="dt.site"
-          :start="dt.start"
-          :score="dt.score"
-          @emit-detection="updateSelectedDetections"
-        />
-      </div>
-    </template>
+        <div
+          v-for="dt in species.media"
+          :key="`job-detection-result-by-species-${dt.id}`"
+          class="inline-block mt-3 mr-4"
+        >
+          <DetectionItem
+            :id="dt.id"
+            :spectrogram-url="dt.spectrogramUrl"
+            :audio-url="dt.audioUrl"
+            :validation="dt.validation"
+            :checked="dt.checked"
+            :site="dt.site"
+            :start="dt.start"
+            :score="dt.score"
+            @emit-detection="updateSelectedDetections"
+          />
+        </div>
+      </template>
+    </div>
   </div>
 
   <div class="w-full flex flex-row-reverse">
@@ -42,13 +51,6 @@
       </button>
     </div>
   </div>
-  <DetectionValidator
-    v-if="validationCount && isOpen"
-    :detection-count="validationCount"
-    :filter-options="filterOptions"
-    @emit-validation="validateDetection"
-    @emit-close="closeValidator"
-  />
 </template>
 
 <script setup lang="ts">

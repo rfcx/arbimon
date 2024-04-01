@@ -30,26 +30,14 @@
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
-              :class="{'border-frequency': selectedStatus === status.value, 'border-transparent': selectedStatus !== status.value}"
+              :class="{'border-chirp': selectedStatus === status.value, 'border-transparent': selectedStatus !== status.value}"
             >
               <div
-                class="flex flex-row gap-x-2 items-center h-10 pl-5"
+                class="flex flex-row gap-x-3 items-center h-10 pl-5"
               >
-                <icon-custom-fi-unvalidated
-                  v-if="status.value === 'unvalidated'"
-                  class="h-4 w-4"
-                />
-                <icon-custom-fi-present
-                  v-if="status.value === 'present'"
-                  class="h-4 w-4"
-                />
-                <icon-custom-fi-not-present
-                  v-if="status.value === 'notPresent'"
-                  class="h-4 w-4"
-                />
-                <icon-custom-fi-unknown
-                  v-if="status.value === 'unknown'"
-                  class="h-4 w-4"
+                <ValidationStatus
+                  v-if="status.value !== 'all'"
+                  :value="formatStatus(status.value)"
                 />
                 {{ status.label }}
               </div>
@@ -171,7 +159,7 @@
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
-              :class="{'border-frequency': selectedGrouping === 'minConfidence', 'border-transparent': selectedGrouping !== 'minConfidence'}"
+              :class="{'border-chirp': selectedGrouping === 'minConfidence', 'border-transparent': selectedGrouping !== 'minConfidence'}"
             >
               <div
                 class="flex flex-row gap-x-2 items-center h-10 pl-5"
@@ -199,6 +187,7 @@ import { type Ref, computed, onMounted, ref } from 'vue'
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
+import ValidationStatus from './../../cnn-job-detail/components/validation-status.vue'
 
 const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void}>()
 
@@ -236,6 +225,10 @@ const groupingDetections = (groupBy: string | undefined) => {
 
 const filterDetectionsBySite = () => {
   detectionsResultFilterBySpeciesStore.filter.siteIds = selectedSites.value
+}
+
+const formatStatus = (status: ArbimonReviewStatus | 'all') => {
+  return status as ArbimonReviewStatus
 }
 
 const selectedSitesTitle = computed(() => {
