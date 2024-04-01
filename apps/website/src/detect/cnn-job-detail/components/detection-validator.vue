@@ -1,50 +1,77 @@
 <template>
-  <div class="fixed right-4 bottom-0 mx-auto flex">
-    <div
-      id="toast-undo"
-      class="flex items-center space-x-4 p-5 w-144 min-w-full justify-between text-insight bg-steel-grey rounded-md shadow"
-      role="alert"
-    >
-      <div class="text-base flex items-center">
-        <button
-          @click="close()"
-        >
-          <icon-fa-close class="cursor-pointer h-8 inline mr-2" />
-        </button>
-        {{ props.detectionCount }} selected
+  <div
+    id="toast-undo"
+    class="flex flex-row items-center space-x-4 justify-between mt-3 text-insight bg-steel-grey rounded-md shadow"
+    role="alert"
+  >
+    <div class="flex items-center gap-x-4 text-base">
+      <div class="text-opacity-50">
+        Mark as:
       </div>
-      <div class="flex items-center ml-auto ml-0 text-sm">
-        <div class="text-opacity-50">
-          Mark as
+      <button
+        id="validationDropdownBtn"
+        data-dropdown-toggle="validationDropdownHover"
+        class="flex flex-row items-center justify-between bg-transparent border-1 border-frequency rounded-full text-insight px-5 py-2 w-48"
+        type="button"
+      >
+        <div class="flex flex-row items-center gap-x-2">
+          <ValidationStatus :value="formatStatus(selectedFilter)" />
+          <span>{{ props.filterOptions.find(o => o.value === selectedFilter)?.label ?? 'Validation' }}</span>
         </div>
-        <el-select
-          v-model="selectedFilter"
-          filterable
-          class="el-select bg-steel-grey rounded-xl pl-2 border-box-grey focus:(border-box-grey ring-0 outline-none) min-w-40"
-          size="large"
+        <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />
+      </button>
+      <div
+        id="validationDropdownHover"
+        class="z-10 hidden rounded-lg p-3 bg-moss w-52 flex flex-col gap-y-3"
+      >
+        <ul
+          aria-labelledby="validationDropdownBtn"
+          class="flex flex-col gap-y-1"
         >
-          <el-option
+          <li
             v-for="option in props.filterOptions"
-            :key="'cj-filter-' + option.value"
-            :value="option.value"
-            class="my-1 flex items-center text-sm"
-            :label="option.label"
+            :key="option.value"
+            class="bg-moss hover:text-util-gray-01"
+            @click="selectedFilter = option.value"
           >
-            <validation-status
-              :value="option.value"
-              :hide-unvalidated="false"
-            />
-            {{ option.label }}
-          </el-option>
-        </el-select>
+            <div
+              class="border-1 rounded-full cursor-pointer bg-moss"
+              :class="{'border-chirp': selectedFilter === option.value, 'border-transparent': selectedFilter !== option.value}"
+            >
+              <div
+                class="flex flex-row gap-x-2 items-center h-10 pl-5"
+              >
+                <ValidationStatus :value="formatStatus(option.value)" />
+                {{ option.label }}
+              </div>
+            </div>
+          </li>
+        </ul>
+        <button
+          class="btn btn-primary py-2 h-10 whitespace-nowrap"
+          @click="validateDetections()"
+        >
+          Apply
+        </button>
       </div>
+    </div>
+
+    <div class="text-base flex gap-x-5 items-center">
+      {{ props.detectionCount }} selected
+      <button
+        class="btn border-1 border-util-gray-03 text-spoonbill bg-spoonbill bg-opacity-10 rounded-lg py-1 px-2 flex items-center gap-x-3"
+        @click="close()"
+      >
+        <span>Clear</span>
+        <span><icon-custom-fi-close class="inline w-4 h-4 text-spoonbill" /></span>
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Ref } from 'vue'
-import { ref, watch } from 'vue'
+import { Dropdown, initDropdowns } from 'flowbite'
+import { type Ref, onMounted, ref } from 'vue'
 
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
@@ -59,20 +86,31 @@ const props = defineProps<{
 const emit = defineEmits<{(e: 'emitValidation', validation: ArbimonReviewStatus): void, (e: 'emitClose'): void}>()
 const selectedFilter: Ref<ArbimonReviewStatus> = ref('unvalidated')
 
-watch(selectedFilter, () => {
+let validationDropdown: Dropdown
+const validationDropdownHover = ref<HTMLElement | null>(null)
+
+const formatStatus = (status: ArbimonReviewStatus | 'all') => {
+  return status as ArbimonReviewStatus
+}
+
+const validateDetections = () => {
   const value = selectedFilter.value
   emit('emitValidation', value)
-})
+}
 
 const close = () => {
+  validationDropdown.hide()
   emit('emitClose')
 }
+
+onMounted(() => {
+  initDropdowns()
+  validationDropdownHover.value = document.getElementById('validationDropdownHover')
+  validationDropdown = new Dropdown(
+    document.getElementById('validationDropdownHover'),
+    document.getElementById('validationDropdownBtn')
+  )
+})
 </script>
 
-<style lang="scss">
-.el-select {
-  .el-input__inner {
-    font-size: 0.875rem;
-  }
-}
-</style>
+<style lang="scss"></style>

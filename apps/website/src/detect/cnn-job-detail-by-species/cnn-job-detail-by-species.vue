@@ -2,7 +2,7 @@
   <section class="max-w-screen-xl pt-22 pl-115px pr-4">
     <div>
       <JobDetailHeader :species-name="speciesName" />
-      <JobFilterOptions
+      <JobValidationHeader
         :species-name="speciesName"
         :detections-count="jobDetections?.length"
         :filtered-result="jobDetections?.length"
@@ -39,7 +39,7 @@ import { useGetJobDetectionSummary } from '../_composables/use-get-job-detection
 import { useGetJobValidationResults } from '../_composables/use-get-job-validation-results'
 import JobDetailHeader from './components/job-detail-header.vue'
 import JobDetections from './components/job-detections.vue'
-import JobFilterOptions from './components/job-filter-options.vue'
+import JobValidationHeader from './components/job-validation-header.vue'
 import JobValidationStatus from './components/job-validation-status.vue'
 
 const route = useRoute()
