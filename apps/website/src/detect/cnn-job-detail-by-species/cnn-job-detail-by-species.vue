@@ -21,6 +21,7 @@
         :is-error="isErrorJobDetections"
         :data="jobDetections"
         :page-size="PAGE_SIZE_LIMIT"
+        :max-page="page"
       />
     </div>
   </section>
@@ -46,7 +47,7 @@ import JobValidationHeader from './components/job-validation-header.vue'
 import JobValidationStatus from './components/job-validation-status.vue'
 
 const route = useRoute()
-const PAGE_SIZE_LIMIT = ref<number>(5)
+const PAGE_SIZE_LIMIT = ref<number>(25)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
