@@ -6,6 +6,11 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { getSiteIdsFromQuerySiteNames } from '@/detect/jobs/detect-recording-bll'
 import { getSequelize } from '~/db'
 
+export interface RecordingsPerDay {
+  date: string
+  recordedMinutesCount: number
+}
+
 const getWhereClause = (sequelize: Sequelize, mainConditions: string[], startEndClause: string[]): Literal => {
   let mainConditionSql = mainConditions.join(' and ')
 
@@ -16,7 +21,7 @@ const getWhereClause = (sequelize: Sequelize, mainConditions: string[], startEnd
   return sequelize.literal(mainConditionSql)
 }
 
-export const getRecordedMinutesPerDay = async (projectId: number, start?: Date, end?: Date, sites?: string): Promise<Array<{ date: string, recordedMinutesCount: number }>> => {
+export const getRecordedMinutesPerDay = async (projectId: number, start?: Date, end?: Date, sites?: string): Promise<RecordingsPerDay[]> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
   const siteIds = await getSiteIdsFromQuerySiteNames(models, projectId, sites ?? '')
@@ -52,5 +57,5 @@ export const getRecordedMinutesPerDay = async (projectId: number, start?: Date, 
   })
 
   // INFO: this does not look pretty but the `raw` flag will take care of all this.
-  return recordings as unknown as Array<{ date: string, recordedMinutesCount: number }>
+  return recordings as unknown as RecordingsPerDay[]
 }
