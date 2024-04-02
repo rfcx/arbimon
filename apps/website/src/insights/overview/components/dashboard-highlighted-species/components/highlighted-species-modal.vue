@@ -134,13 +134,31 @@
                     </div>
                   </li>
                 </ul>
-                <el-pagination
-                  v-model:currentPage="currentPage"
-                  class="flex items-center justify-center mb-2"
-                  :page-size="PAGE_SIZE"
-                  :total="speciesLength"
-                  layout="prev, pager, next"
-                />
+                <div class="flex justify-end items-center mt-4">
+                  <div>
+                    <input
+                      v-model.number="currentPage"
+                      type="number"
+                      min="1"
+                      :max="maxPage"
+                      class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+                    >
+                    of
+                    <span class="ml-1.5">{{ maxPage }}</span>
+                  </div>
+                  <button
+                    class="btn btn-icon ml-4"
+                    @click="setPage(currentPage - 1)"
+                  >
+                    <icon-fas-chevron-left class="w-3 h-3" />
+                  </button>
+                  <button
+                    class="btn btn-icon ml-2"
+                    @click="setPage(currentPage + 1)"
+                  >
+                    <icon-fas-chevron-right class="w-3 h-3" />
+                  </button>
+                </div>
               </div>
             </div>
             <div
@@ -223,8 +241,12 @@ const LIMIT = 10
 const highlightedSpeciesSelected : HighlightedSpeciesRow[] = []
 
 watch(() => props.toggleShowModal, async () => {
+  resetSearch()
+  resetPagination()
+  highlightedSpeciesSelected.length = 0
   fillExistingSpeciesSlug()
   speciesList.value = []
+
   await fetchProjectsSpecies(LIMIT, 0)
   props.highlightedSpecies.forEach(s => highlightedSpeciesSelected.push(s))
 })
@@ -314,6 +336,7 @@ watch(() => currentPage.value, () => {
 // })
 
 const searchSpeciesInputChanged = debounce(async () => {
+  resetPagination()
   if (searchKeyword.value === '') {
     fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, '') // Todo: get data for store
     return
@@ -321,9 +344,18 @@ const searchSpeciesInputChanged = debounce(async () => {
   fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value)
 }, 500)
 
-const speciesLength = computed(() => {
-  return total.value
+const maxPage = computed((): number => {
+    return Math.ceil(total.value / PAGE_SIZE)
 })
+
+const setPage = (page: number) => {
+    // Wrap-around
+    let newPage = page
+    if (page < 1) newPage = maxPage.value
+    if (page > maxPage.value) newPage = 1
+
+    currentPage.value = newPage
+}
 
 const speciesForCurrentPage = computed(() => {
   return speciesList.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
@@ -416,10 +448,5 @@ const addHighlightedSpecies = async (): Promise<void> => {
 <style lang="scss">
 #speciesSearchInput {
   padding-inline-start: 2rem;
-}
-
-.tag-selected {
-  border: 2px solid #ADFF2C;
-  border-style: solid !important;
 }
 </style>
