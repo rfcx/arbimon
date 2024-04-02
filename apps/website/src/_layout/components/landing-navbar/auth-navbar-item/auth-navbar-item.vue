@@ -122,22 +122,18 @@ defineProps<{
 const userImage = computed<string>(() => store.user?.picture ?? '') // TODO 156 - Add a default picture
 
 const signup = async (): Promise<void> => {
-  await legacyClearSession()
+  await apiArbimonLegacyClearSession(apiClientArbimonLegacy)
   await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, screen_hint: 'signup' })
 }
 
 const login = async (): Promise<void> => {
-  await legacyClearSession()
+  await apiArbimonLegacyClearSession(apiClientArbimonLegacy)
   await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, prompt: 'login' })
 }
 
 const logout = async (): Promise<void> => {
   // Auth0 logout forces a full refresh (redirect to auth.rfcx.org for SSO purposes)
   await auth.logout({ returnTo: `${ARBIMON_BASE_URL}/legacy-logout` })
-}
-
-const legacyClearSession = async (): Promise<void> => {
-  await apiArbimonLegacyClearSession(apiClientArbimonLegacy)
 }
 
 const openProfile = async (): Promise<void> => {
