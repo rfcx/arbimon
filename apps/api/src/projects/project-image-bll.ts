@@ -9,7 +9,9 @@ import { createProjectProfile, getProjectProfile, updateProjectProfile } from '.
 export const PROJECT_IMAGE_CONFIG = {
   thumbnail: {
     width: 72,
-    height: 72
+    height: 72,
+    // 7 days
+    cacheControl: 'max-age=604800, s-maxage=604800'
   }
 }
 
@@ -20,10 +22,11 @@ export const patchProjectProfileImage = async (locationProjectId: number, file: 
   await putObject(originalPath, original, file.mimetype, true)
 
   // generate thumbnail
+  const config = PROJECT_IMAGE_CONFIG.thumbnail
   const thumbnailPath = `projects/${locationProjectId}/project-profile-image-${fileId}.thumbnail${extname(file.filename)}`
-  const thumbnail = await resizeImage(original, PROJECT_IMAGE_CONFIG.thumbnail)
+  const thumbnail = await resizeImage(original, config)
   // save to S3
-  await putObject(thumbnailPath, thumbnail, file.mimetype, true)
+  await putObject(thumbnailPath, thumbnail, file.mimetype, true, { CacheControl: config.cacheControl })
 
   if (await getProjectProfile(locationProjectId) === undefined) {
     await createProjectProfile({ locationProjectId, image: originalPath })

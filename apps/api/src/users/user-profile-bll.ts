@@ -4,6 +4,7 @@ import { createHash, randomBytes } from 'node:crypto'
 import { extname } from 'node:path'
 import { URL } from 'node:url'
 
+import { buildThumbnailPath, isS3image } from '@rfcx-bio/common/api-bio/_helpers'
 import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
 import { type OrganizationTypes, type UserProfile, type UserTypes } from '@rfcx-bio/common/dao/types'
 
@@ -18,7 +19,9 @@ export const USER_CONFIG = {
   image: {
     thumbnail: {
       width: 144,
-      height: 144
+      height: 144,
+      // 7 days
+      cacheControl: 'max-age=604800, s-maxage=604800'
     }
   }
 }
@@ -33,11 +36,14 @@ export const getUserProfile = async (id: number): Promise<Omit<UserProfile, 'id'
     throw BioNotFoundError()
   }
 
+  const image = profile.image
+  const imageUrl = image && isS3image(image) ? buildThumbnailPath(image) : image
+
   return {
     firstName: profile.firstName,
     lastName: profile.lastName,
     email: profile.email,
-    image: fileUrl(profile.image),
+    image: fileUrl(imageUrl),
     organizationIdAffiliated: profile.organizationIdAffiliated
   }
 }
@@ -89,8 +95,9 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
   const uniqueId = randomBytes(4).toString('hex')
   const image = await file.toBuffer()
   const imagePath = `users/${hexEmail}/profile-image-${uniqueId}${extname(file.filename)}`
+  const config = USER_CONFIG.image.thumbnail
   const thumbnailPath = `users/${hexEmail}/profile-image-${uniqueId}.thumbnail${extname(file.filename)}`
-  const thumbnail = await resizeImage(image, USER_CONFIG.image.thumbnail)
+  const thumbnail = await resizeImage(image, config)
   const newProfile = { ...originalProfile, image: imagePath }
 
   const coreProfile = {

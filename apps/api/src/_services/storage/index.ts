@@ -3,6 +3,7 @@ import { type Readable } from 'node:stream'
 
 import { BioPublicError } from '~/errors'
 import { env } from '../env'
+import {PutObjectRequest} from "@aws-sdk/client-s3/dist-types/models/models_0";
 
 const {
   AWS_S3_ENDPOINT: endpoint,
@@ -59,7 +60,7 @@ export const getObject = async (key: string): Promise<ArrayBuffer> => {
   })
 }
 
-export const putObject = async (key: string, body: Buffer, mimetype: string, isPublic: boolean): Promise<void> => {
+export const putObject = async (key: string, body: Buffer, mimetype: string, isPublic: boolean, options?: Partial<PutObjectRequest>): Promise<void> => {
   const client = getS3Client()
 
   const command = new PutObjectCommand({
@@ -67,7 +68,8 @@ export const putObject = async (key: string, body: Buffer, mimetype: string, isP
     Key: key,
     Body: body,
     ContentType: mimetype,
-    ACL: isPublic ? 'public-read' : undefined
+    ACL: isPublic ? 'public-read' : undefined,
+    ...(options ?? {})
   })
 
   await client.send(command)
