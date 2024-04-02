@@ -9,7 +9,7 @@ export interface UseDetectionsReview {
   isOpen: Ref<boolean>
   closeValidator: () => void
   updateSelectedDetections: (detectionId: number, event: DetectionEvent) => void
-  updateValidatedDetections: (selectedDetectionIds: number[], validation: ArbimonReviewStatus, responses: Array<PromiseSettledResult<string>>) => void
+  updateValidatedDetections: (selectedDetectionIds: number[], validation: ArbimonReviewStatus, responses: Array<PromiseSettledResult<void>>) => void
   getSelectedDetectionIds: () => number[]
 }
 
@@ -117,7 +117,7 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
     return combinedDetections
   }
 
-  const updateValidatedDetections = (selectedDetectionIds: number[], validation: ArbimonReviewStatus, responses: Array<PromiseSettledResult<string>>): void => {
+  const updateValidatedDetections = (selectedDetectionIds: number[], validation: ArbimonReviewStatus, responses: Array<PromiseSettledResult<void>>): void => {
     allSpecies.value.forEach(species => {
       species.media.forEach((det: DetectionMedia) => {
         // only update status to success review update

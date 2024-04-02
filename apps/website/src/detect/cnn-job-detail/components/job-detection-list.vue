@@ -59,7 +59,7 @@
             <tr class="border-b-1 border-util-gray-01">
               <td class="py-2 pl-4 sticky left-0 z-10">
                 <router-link
-                  :to="{ name: ROUTE_NAMES.cnnJobDetailBySpecies, params: { jobId, speciesSlug: getSpeciesSlug(row.value) }}"
+                  :to="{ name: ROUTE_NAMES.cnnJobDetailBySpecies, params: { jobId, speciesSlug: row.value }}"
                   class="text-subtle hover:(underline text-white) flex"
                 >
                   <img
@@ -105,8 +105,11 @@
         </tbody>
       </table>
     </div>
-    <div class="flex justify-end mt-3">
-      <div class="flex justify-end">
+    <div
+      v-if="props.datasets?.length"
+      class="w-full flex flex-row justify-end mt-3"
+    >
+      <div class="flex flex-row items-center text-sm gap-x-1">
         <div class="text-sm">
           <input
             v-model.number="pageIndex"
@@ -115,27 +118,29 @@
             :max="maxPage"
             class="text-center bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
           >
-          of
-          <span class="ml-1.5">{{ maxPage }}</span>
+          <span>of</span>
+          <span class="px-1.5 text-sm">{{ maxPage }}</span>
+          <span>pages</span>
         </div>
-        <button
-          class="btn btn-icon ml-4 rounded-md bg-fog border-0"
-          @click="setPage(pageIndex - 1)"
-        >
-          <icon-fas-chevron-left class="w-3 h-3 text-pitch" />
-        </button>
-        <button
-          class="btn btn-icon ml-2 rounded-md bg-fog border-0"
-          @click="setPage(pageIndex + 1)"
-        >
-          <icon-fas-chevron-right class="w-3 h-3 text-pitch" />
-        </button>
       </div>
+      <button
+        class="btn btn-icon ml-4 rounded-md bg-fog border-0 disabled:hover:btn-disabled disabled:btn-disabled"
+        :disabled="pageIndex - 1 === 0"
+        @click="setPage(pageIndex - 1)"
+      >
+        <icon-fas-chevron-left class="w-3 h-3 text-pitch" />
+      </button>
+      <button
+        class="btn btn-icon ml-2 rounded-md bg-fog border-0 disabled:hover:btn-disabled disabled:btn-disabled"
+        :disabled="props.datasets == null || props.datasets.length < pageSize"
+        @click="setPage(pageIndex + 1)"
+      >
+        <icon-fas-chevron-right class="w-3 h-3 text-pitch" />
+      </button>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { kebabCase } from 'lodash-es'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -217,10 +222,6 @@ const setPage = (page: number) => {
   } else {
     emit('emitSortPaginations', undefined, pageIndex.value)
   }
-}
-
-const getSpeciesSlug = (scientificName: string): string => {
-  return kebabCase(scientificName)
 }
 
 const sort = (column?: SortableColumn) => {

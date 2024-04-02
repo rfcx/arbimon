@@ -39,11 +39,6 @@
         <span class="pt-1">Cancel job</span>
         <icon-fa-trash class="h-4 w-4 ml-2" />
       </button>
-      <button
-        class="btn btn-secondary py-3.5"
-      >
-        <icon-custom-fi-menu class="h-4 w-4" />
-      </button>
     </div>
   </div>
 </template>

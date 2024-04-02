@@ -3,7 +3,7 @@
     <div>
       <JobDetailHeader :species-name="speciesName" />
       <JobValidationHeader
-        :species-name="speciesName"
+        :species-name="getSpeciesSlug(speciesSlug)"
         :detections-count="jobDetections?.length"
         :filtered-result="jobDetections?.length"
         :page-size="PAGE_SIZE_LIMIT"
@@ -28,6 +28,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
+import { kebabCase } from 'lodash-es'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -45,7 +46,7 @@ import JobValidationHeader from './components/job-validation-header.vue'
 import JobValidationStatus from './components/job-validation-status.vue'
 
 const route = useRoute()
-const PAGE_SIZE_LIMIT = ref<number>(25)
+const PAGE_SIZE_LIMIT = ref<number>(5)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
@@ -58,6 +59,10 @@ const isRefetch = ref<boolean>(true)
 const refetchInterval = computed(() => {
   return isRefetch.value ? 30_000 : false
 })
+
+const getSpeciesSlug = (scientificName: string): string => {
+  return kebabCase(scientificName)
+}
 
 const { data: jobSummary, refetch: refetchJobSummary } = useGetJobDetectionSummary(
   apiClientBio,
