@@ -8,6 +8,7 @@ import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
 import { type OrganizationTypes, type UserProfile, type UserTypes } from '@rfcx-bio/common/dao/types'
 
 import { patchUserProfileOnCore } from '~/api-core/api-core'
+import { type Auth0UserToken } from '~/auth0/types'
 import { BioNotFoundError } from '~/errors'
 import { fileUrl } from '~/format-helpers/file-url'
 import { getObject, putObject } from '~/storage'
@@ -32,7 +33,8 @@ export const getUserProfile = async (id: number): Promise<Omit<UserProfile, 'id'
   }
 }
 
-export const patchUserProfile = async (token: string, email: string, id: number, data: Partial<Omit<UserProfile, 'id' | 'idAuth0' | 'image' | 'createdAt' | 'updatedAt'>>): Promise<void> => {
+export const patchUserProfile = async (token: string, authToken: Auth0UserToken, id: number, data: Partial<Omit<UserProfile, 'id' | 'idAuth0' | 'image' | 'createdAt' | 'updatedAt'>>): Promise<void> => {
+  const { email, idAuth0 } = authToken
   const originalProfile = await getUserProfile(id)
   const newProfile = { ...originalProfile, ...data }
 
@@ -41,7 +43,10 @@ export const patchUserProfile = async (token: string, email: string, id: number,
     lastname: newProfile.lastName,
     picture: fileUrl(newProfile.image) ?? null
   }
-  await patchUserProfileOnCore(token, email, coreProfile)
+
+  if (isAuth0(idAuth0)) {
+    await patchUserProfileOnCore(token, email, coreProfile)
+  }
   await update(email, newProfile)
 }
 
@@ -100,4 +105,9 @@ export const getAllOrganizations = async (): Promise<Array<OrganizationTypes['li
     throw BioNotFoundError()
   }
   return organizations
+}
+
+const isAuth0 = (id: string): boolean => {
+  const prefix = id.split('|')[0]
+  return prefix === 'auth0'
 }
