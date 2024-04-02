@@ -113,7 +113,6 @@ const nextPage = (): void => {
   if (props.data == null || props.data.length < props.pageSize) {
     return
   }
-  console.info('update:page', pageIndex.value + 1)
   emit('update:page', pageIndex.value + 1)
 }
 
@@ -121,7 +120,6 @@ const previousPage = (): void => {
   if (pageIndex.value - 1 === 0) {
     return
   }
-
   emit('update:page', pageIndex.value - 1)
 }
 
