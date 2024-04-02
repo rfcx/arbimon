@@ -48,7 +48,7 @@
         >
       </div>
       <span>of</span>
-      <span class="px-1.5 text-sm">{{ page }}</span>
+      <span class="px-1.5 text-sm">UPDATE!</span>
       <span>pages</span>
     </div>
     <div class="flex flex-row gap-x-1">
@@ -73,7 +73,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { groupBy } from 'lodash-es'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
@@ -94,7 +94,7 @@ const route = useRoute()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
-const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: GetDetectionsResponse | undefined, page: number, pageSize: number }>(), {
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: GetDetectionsResponse | undefined, page: number, pageSize: number, maxPage: number }>(), {
   isLoading: true,
   isError: false,
   data: undefined
@@ -105,11 +105,15 @@ const emit = defineEmits<{(e: 'update:page', value: number): void}>()
 const pageIndex = ref(props.page ?? 1)
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
+watch(() => props.page, () => {
+  pageIndex.value = props.page
+})
+
 const nextPage = (): void => {
   if (props.data == null || props.data.length < props.pageSize) {
     return
   }
-
+  console.info('update:page', pageIndex.value + 1)
   emit('update:page', pageIndex.value + 1)
 }
 
