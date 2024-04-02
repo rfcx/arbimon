@@ -47,8 +47,7 @@ import type { ClassificationsSummaryDataset } from './job-detection-list.vue'
 import CnnJobSpeciesDetected from './job-detection-list.vue'
 
 withDefaults(defineProps<{ isLoading: boolean, total: number, results: ClassificationsSummaryDataset[] }>(), {
-  isLoading: true,
-  isError: false
+  isLoading: true
 })
 
 const searchSpeciesKeyword = ref('')

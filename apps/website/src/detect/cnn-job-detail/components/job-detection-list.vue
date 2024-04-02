@@ -220,7 +220,7 @@ const setPage = (page: number) => {
 }
 
 const getSpeciesSlug = (scientificName: string): string => {
-    return kebabCase(scientificName)
+  return kebabCase(scientificName)
 }
 
 const sort = (column?: SortableColumn) => {

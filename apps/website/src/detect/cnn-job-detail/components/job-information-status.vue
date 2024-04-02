@@ -87,7 +87,7 @@ const classifierStatus = computed(() => {
     }
   }
 
-  return { title: '', bgColor: '' }
+  return { title: '', bgColor: '', borderColor: '' }
 })
 
 /**
