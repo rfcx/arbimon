@@ -47,7 +47,8 @@ import { groupBy } from 'lodash-es'
 import { computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { type GetDetectionsResponse } from '@rfcx-bio/common/api-bio/cnn/detections'
 import { apiBioDetectReviewDetection } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
 import { useDetectionsReview } from '@/detect/_composables/use-detections-review'
@@ -66,7 +67,7 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const route = useRoute()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
-const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectDetectionsResponse | undefined }>(), {
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: GetDetectionsResponse | undefined }>(), {
   isLoading: true,
   isError: false,
   data: undefined
@@ -81,7 +82,7 @@ const filterOptions = computed<DetectionValidationStatus[]>(() => {
     return {
       value: s.value,
       label: s.label,
-      checked: s.value === 'unreviewed'
+      checked: s.value === 'unvalidated'
     } as DetectionValidationStatus
   })
 
@@ -93,7 +94,7 @@ const allSpecies = computed(() => {
     return []
   }
 
-  const groupedDetections: Record<string, DetectDetectionsResponse> = groupBy(props.data ?? [], d => d.classification.value)
+  const groupedDetections: Record<string, GetDetectionsResponse> = groupBy(props.data ?? [], d => d.classification.value)
   const species: Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(groupedDetections).map(slug => {
     return {
       speciesSlug: slug,
@@ -101,7 +102,7 @@ const allSpecies = computed(() => {
       media: groupedDetections[slug].map(detection => {
         return {
           spectrogramUrl: getMediaLink({
-            streamId: detection.siteId,
+            streamId: detection.siteIdCore,
             start: detection.start,
             end: detection.end,
             frequency: 'full',
@@ -116,7 +117,7 @@ const allSpecies = computed(() => {
             fileExtension: 'png'
           }),
           audioUrl: getMediaLink({
-            streamId: detection.siteId,
+            streamId: detection.siteIdCore,
             start: detection.start,
             end: detection.end,
             frequency: 'full',
@@ -147,7 +148,7 @@ const displaySpecies = (media: DetectionMedia[]) => {
   return media.slice(0, Math.min(media.length, MAX_DISPLAY_PER_EACH_SPECIES))
 }
 
-const validateDetection = async (validation: ReviewStatus): Promise<void> => {
+const validateDetection = async (validation: ArbimonReviewStatus): Promise<void> => {
   // TODO: pause query before running this script?
   // The reason to pause is that maybe the detections ping could alter with
   // the array and causes inconsistencies
@@ -158,15 +159,15 @@ const validateDetection = async (validation: ReviewStatus): Promise<void> => {
   // call review api
   const promises = selectedDetectionIds.map(id => {
     // this will always be a success case
-    const originalDetection = (props.data ?? []).find(d => id === d.id)
+    const originalDetection = (props.data ?? []).find(d => Number(id) === d.id)
 
     return apiBioDetectReviewDetection(apiClientBio, jobId.value, {
       // this is a safe cast because the validation selector always start at 'unreviewed' union
       // and the emitter is emitted when there's a change (watch), which means the change will
       // always be from 'unreviewed' to other type.
-      status: validation as Exclude<ReviewStatus, 'unreviewed'>,
+      status: validation as Exclude<ArbimonReviewStatus, 'unvalidated'>,
       classification: originalDetection?.classification?.value ?? '',
-      streamId: originalDetection?.siteId ?? '',
+      streamId: originalDetection?.siteIdCore ?? '',
       classifier: originalDetection?.classifierId ?? -1,
       start: originalDetection?.start ?? ''
     })

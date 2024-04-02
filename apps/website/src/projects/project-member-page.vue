@@ -197,6 +197,7 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import { type DropdownOptions, Dropdown, initTooltips } from 'flowbite'
+import debounce from 'lodash.debounce'
 import { type Ref, computed, inject, onMounted, ref } from 'vue'
 
 import type { UserTypes } from '@rfcx-bio/common/dao/types'
@@ -276,7 +277,7 @@ const roles = [
 ]
 
 const { data: users, refetch: usersRefetch } = useGetProjectMembers(apiClientBio, selectedProjectId)
-const { data: searchedUsers, refetch: searchUsersRefetch } = useSearchUsers(apiClientBio, userSearchValue)
+const { data: searchedUsers, refetch: searchUsersRefetch } = useSearchUsers(apiClientBio, userSearchValue, computed(() => userSearchValue.value !== ''))
 const { mutate: mutatePatchUserRole } = useUpdateProjectMember(apiClientBio, store.project?.id ?? -1)
 const { mutate: mutatePostProjectMember } = useAddProjectMember(apiClientBio, store.project?.id ?? -1)
 const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProjectMember } = useDeleteProjectMember(apiClientBio, store.project?.id ?? -1)
@@ -311,14 +312,15 @@ const hideNotFoundContainer = async (): Promise<void> => {
   notFoundDropdown.value.hide()
 }
 
-const searchUserInputChanged = async () => {
-  if (userSearchValue.value.length > 2) await searchUsersRefetch()
+const searchUserInputChanged = debounce(async () => {
+  await searchUsersRefetch()
+
   if (userSearchResult.value && userSearchResult.value.length) {
     showNotFoundContainer()
     hideNotFoundContainer()
     searchDropdown.value.show()
   } else showNotFoundContainer()
-}
+}, 500)
 
 const inviteNewUser = (): void => {
   if (!newUser.value.firstName.length || !newUser.value.lastName.length || !newUser.value.email.length) {
@@ -327,7 +329,6 @@ const inviteNewUser = (): void => {
   }
   addNewUserError.value = false
   new Dropdown(inviteNewUserFormContainer.value, userSearchInput.value, dropdownOptions).hide()
-  console.info('inviteNewUser', newUser.value)
   // TODO: 1. add a new user 2. refetch data
 }
 
@@ -410,10 +411,10 @@ font-family: Poppins, Roboto, Noto Sans, FontAwesome
 }
 
 .mainLoginInput::-moz-placeholder  {
-font-family: FontAwesome;
+  font-family: FontAwesome, Poppins;
 }
 
 .mainLoginInput:-ms-input-placeholder  {
-font-family: FontAwesome;
+font-family: FontAwesome, Poppins;
 }
 </style>

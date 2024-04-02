@@ -1,28 +1,28 @@
 <template>
   <div>
     <icon-custom-fi-present
-      v-if="props.value === 'confirmed'"
+      v-if="props.value === 'present'"
       class="h-4 w-4"
     />
     <icon-custom-fi-not-present
-      v-if="props.value === 'rejected'"
+      v-if="props.value === 'notPresent'"
       class="h-4 w-4"
     />
     <icon-custom-fi-unknown
-      v-if="props.value === 'uncertain'"
+      v-if="props.value === 'unknown'"
       class="h-4 w-4"
     />
     <icon-custom-fi-unvalidated
-      v-if="(props.value === 'unreviewed' && props.hideUnvalidated === false)"
+      v-if="(props.value === 'unvalidated' && props.hideUnvalidated === false)"
       class="h-4 w-4"
     />
   </div>
 </template>
 <script setup lang="ts">
-import type { ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 const props = defineProps<{
-  value: ReviewStatus,
-  hideUnvalidated: boolean
+  value: ArbimonReviewStatus,
+  hideUnvalidated?: boolean
 }>()
 </script>

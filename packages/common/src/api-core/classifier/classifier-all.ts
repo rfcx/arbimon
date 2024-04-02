@@ -11,6 +11,9 @@ export interface ClassifierAllParams {
 // Response types
 export type ClassifierAllResponse = Classifier[]
 
+/**
+ * @deprecated core callings from the frontend will be moved to call by arbimon's backend
+ */
 export interface Classifier {
   id: number
   name: string
@@ -19,5 +22,8 @@ export interface Classifier {
 }
 
 // Service
+/**
+ * @deprecated please use `apiBioGetClassifiers`
+ */
 export const apiCoreGetClassifierAll = async (apiClient: AxiosInstance, params: ClassifierAllParams = {}): Promise<ClassifierAllResponse | undefined> =>
   await apiGetOrUndefined(apiClient, '/classifiers', { params })

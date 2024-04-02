@@ -126,7 +126,7 @@
                     required
                   >
                 </div>
-                <div class="flex w-full flex-row justify-end">
+                <div class="flex w-full flex-wrap justify-end">
                   <button
                     type="submit"
                     class="btn btn-primary px-3 py-2 disabled:hover:btn-disabled disabled:btn-disabled"
@@ -135,6 +135,17 @@
                   >
                     Create organization
                   </button>
+                  <div
+                    v-if="hasFailed"
+                    class="mt-1"
+                  >
+                    <span
+                      class="relative text-sm text-red-800 dark:text-flamingo font-medium"
+                      role="alert"
+                    >
+                      {{ errorMessage }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -392,6 +403,9 @@ watch(() => dropdownStatus.value, (value) => {
   }
 })
 
+const hasFailed = ref(false)
+const errorMessage = ref('')
+
 const createNewOrganization = (): void => {
   createNewOrganizationLoading.value = true
   mutateNewOrganization({ name: searchOrganizationValue.value, type: newOrganizationType.value, url: newOrganizationUrl.value }, {
@@ -404,7 +418,9 @@ const createNewOrganization = (): void => {
       createNewOrganizationForm.value?.hide()
     },
     onError: () => {
-      // TODO: Show user some respect and show them error
+      hasFailed.value = true
+      errorMessage.value = 'Failed to create organization.'
+
       dropdownStatus.value = 'idle'
       createNewOrganizationLoading.value = false
       createNewOrganizationForm.value?.hide()

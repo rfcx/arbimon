@@ -46,6 +46,7 @@ export type DetectDetectionsResponseCore = Array<{
 
 export interface CoreClassifierJobSummary {
   total: number
+  unreviewed: number
   rejected: number
   uncertain: number
   confirmed: number
@@ -55,8 +56,7 @@ export interface GetClassifierJobClassificationSummaryQueryParams {
   keyword?: string
   limit?: number
   offset?: number
-  sort?: 'name' | CoreReviewStatus
-  order?: 'asc' | 'desc'
+  sort?: string
 }
 
 export interface CoreClassifierJobClassificationSummary {
@@ -116,4 +116,28 @@ export interface CoreDetection {
   end: string
   confidence: number
   review_status: CoreRawReviewStatus
+  classification: {
+    title: string
+    value: string
+    image: string | null
+  }
+}
+
+export interface CoreGetClassifiersQueryParams {
+  limit?: number
+  offset?: number
+  sort?: string
+  fields?: string[]
+}
+
+export interface CoreUpdateDetectionStatusBody {
+  status: CoreReviewStatus
+  classifier: number
+  classification: string
+  classifier_job: number
+}
+
+export interface CoreUpdateDetectionStatusParams {
+  stream_id: string
+  start: string
 }

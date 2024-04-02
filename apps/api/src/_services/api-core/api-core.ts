@@ -2,6 +2,7 @@ import axios from 'axios'
 import { type FastifyLoggerInstance } from 'fastify'
 
 import { type ClassifierQueryParams, type ClassifierResponse } from '@rfcx-bio/common/api-bio/classifiers/classifier'
+import { type Classifier } from '@rfcx-bio/common/api-bio/classifiers/classifiers'
 import { type DetectSummaryQueryParams, type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { type DetectValidationResultsQueryParams, type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 import { type DetectReviewDetectionBody, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
@@ -18,7 +19,10 @@ import {
   type CoreClassifierJobInformation,
   type CoreClassifierJobTotalDetections,
   type CoreDetection,
+  type CoreGetClassifiersQueryParams,
   type CoreGetDetectionsQueryParams,
+  type CoreUpdateDetectionStatusBody,
+  type CoreUpdateDetectionStatusParams,
   type DetectDetectionsQueryParamsCore,
   type DetectDetectionsResponseCore,
   type GetClassifierJobClassificationSummaryQueryParams
@@ -104,6 +108,24 @@ export async function deleteProject (id: string, token: string): Promise<void> {
   if (response.status !== 204) throw new Error('Delete project failed: expected 204 status from Core')
 }
 
+export async function updateDetectionStatus (token: string, data: CoreUpdateDetectionStatusBody, params: CoreUpdateDetectionStatusParams): Promise<void> {
+  try {
+    await axios.request({
+      method: 'POST',
+      url: `${CORE_API_BASE_URL}/streams/${params.stream_id}/detections/${params.start}/review`,
+      headers: {
+        authorization: token
+      },
+      data
+    })
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+/**
+ * @deprecated because the endpoint is being deprecated.
+ */
 export async function updateDetectionReviewFromApi (token: string, classifierJobId: number, data: DetectReviewDetectionBody): Promise<DetectReviewDetectionResponse> {
   try {
     const resp = await axios.request<DetectReviewDetectionResponse>({
@@ -271,6 +293,30 @@ export async function getClassifierJobResultsFromApi (token: string, jobId: numb
         authorization: token
       },
       params: query
+    })
+
+    return resp.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getClassifiers (token: string, params: CoreGetClassifiersQueryParams): Promise<Classifier[]> {
+  try {
+    const resp = await axios.request({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifiers`,
+      params: {
+        ...params,
+        fields: [
+          'id',
+          'name',
+          'version'
+        ]
+      },
+      headers: {
+        authorization: token
+      }
     })
 
     return resp.data

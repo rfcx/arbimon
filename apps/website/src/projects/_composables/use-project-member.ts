@@ -12,10 +12,11 @@ export const useGetProjectMembers = (apiClient: AxiosInstance, projectId: Comput
   })
 }
 
-export const useSearchUsers = (apiClient: AxiosInstance, q: Ref<string>): UseQueryReturnType<UsersLightResponse, UsersRequestQueryParams> => {
+export const useSearchUsers = (apiClient: AxiosInstance, q: Ref<string>, enabled: ComputedRef<boolean>): UseQueryReturnType<UsersLightResponse, UsersRequestQueryParams> => {
   return useQuery({
     queryKey: ['get-search-users'],
-    queryFn: async () => await apiGetUsers(apiClient, { q: q.value })
+    queryFn: async () => await apiGetUsers(apiClient, { q: q.value === '' ? undefined : q.value }),
+    enabled
   })
 }
 
