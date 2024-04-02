@@ -20,7 +20,7 @@
             <button
               type="button"
               data-modal-toggle="species-highlighted-modal"
-              @click="resetSearch();resetPagination();$emit('emitClose')"
+              @click="$emit('emitClose')"
             >
               <icon-custom-fi-close-thin class="cursor-pointer" />
             </button>
@@ -337,10 +337,6 @@ watch(() => currentPage.value, () => {
 
 const searchSpeciesInputChanged = debounce(async () => {
   resetPagination()
-  if (searchKeyword.value === '') {
-    fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, '') // Todo: get data for store
-    return
-  }
   fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value)
 }, 500)
 
