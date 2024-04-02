@@ -24,6 +24,6 @@ import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 
 const store = useStore()
-const selectedProject = computed(() => store.selectedProject)
+const selectedProject = computed(() => store.project)
 
 </script>

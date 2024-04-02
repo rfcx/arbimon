@@ -109,13 +109,13 @@ const columnCount = computed(() => {
 })
 
 const mapInitialBounds = computed<LngLatBoundsLike>(() => {
-  if (store.selectedProject == null) {
+  if (store.project == null) {
     return [DEFAULT_LONGITUDE, DEFAULT_LATITUDE]
   }
 
   return [
-    [store.selectedProject.longitudeWest, store.selectedProject.latitudeSouth],
-    [store.selectedProject.longitudeEast, store.selectedProject.latitudeNorth]
+    [store.project.longitudeWest, store.project.latitudeSouth],
+    [store.project.longitudeEast, store.project.latitudeNorth]
   ]
 })
 

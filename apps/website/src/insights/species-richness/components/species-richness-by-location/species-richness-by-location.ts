@@ -54,7 +54,7 @@ export default class SpeciesRichnessByLocation extends Vue {
   }
 
   get mapInitialBounds (): LngLatBoundsLike | null {
-    const project = this.store.selectedProject
+    const project = this.store.project
     if (!project) return null
     return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
   }

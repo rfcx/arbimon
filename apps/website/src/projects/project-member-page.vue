@@ -7,7 +7,6 @@
       <div class="grid lg:(grid-cols-2 gap-10)">
         <div class="flex flex-col gap-y-10">
           <div
-            v-if="isProjectMember && !isViewingAsGuest && !projectUserPermissionsStore.isMemberGuest"
             class="flex flex-row justify-end"
           >
             <input
@@ -16,14 +15,14 @@
               class="mainLoginInput block text-sm bg-pitch border-white rounded-md border-r-0 rounded-r-none w-60 h-9 placeholder:text-insight placeholder-gray-100 focus:(border-frequency ring-frequency border border-r-2 rounded)"
               type="text"
               placeholder="&#61442; Search by user email"
-              :data-tooltip-target="!isUserHasFullAccess ? 'userSearchInputTooltipId' : null"
+              :data-tooltip-target="!store.userIsFullProjectMember ? 'userSearchInputTooltipId' : null"
               data-tooltip-placement="bottom"
-              :disabled="!isUserHasFullAccess"
+              :disabled="!store.userIsAdminProjectMember"
               @input="searchUserInputChanged"
               @click="openUserSearch()"
             >
             <div
-              v-if="!isUserHasFullAccess"
+              v-if="!store.userIsAdminProjectMember"
               id="userSearchInputTooltipId"
               role="tooltip"
               class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -37,7 +36,7 @@
             <div>
               <button
                 class="inline-flex py-2 px-3 text-sm btn bg-moss border items-center justify-center text-white rounded-md border-l-1 rounded-l-none group dark:hover:bg-util-gray-04 dark:focus:ring-util-gray-04 disabled:(cursor-not-allowed bg-util-gray-04 text-util-gray-02 btn-border btn-border-l-1)"
-                :disabled="!isUserHasFullAccess"
+                :disabled="!store.userIsAdminProjectMember"
                 @click="addSelectedUser()"
               >
                 Add member
@@ -45,7 +44,7 @@
                   class="h-2 w-2 ml-2 text-insight focus:border-none focus:border-transparent ring-moss outline-none group-disabled:text-util-gray-03"
                 />
                 <div
-                  v-if="!isUserHasFullAccess"
+                  v-if="!store.userIsAdminProjectMember"
                   id="addProjectMemberTooltipId"
                   role="tooltip"
                   class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -152,9 +151,7 @@
               :key="`${user.email}`"
               :user="user"
               :roles="roles"
-              :editable="isUserHasFullAccess"
-              :is-project-member="isProjectMember"
-              :is-viewing-as-guest="isViewingAsGuest"
+              :editable="store.userIsAdminProjectMember"
               :is-deleting="isDeletingProject"
               :is-error="isErrorDeleteProject"
               :is-success="isSuccessDeleteProject"
@@ -202,7 +199,6 @@ import { type AxiosInstance } from 'axios'
 import { type DropdownOptions, Dropdown, initTooltips } from 'flowbite'
 import debounce from 'lodash.debounce'
 import { type Ref, computed, inject, onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
 
 import type { UserTypes } from '@rfcx-bio/common/dao/types'
 import { type ProjectRole } from '@rfcx-bio/common/roles'
@@ -210,20 +206,14 @@ import { type ProjectRole } from '@rfcx-bio/common/roles'
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientKey } from '@/globals'
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useStore } from '~/store'
 import { useAddProjectMember, useDeleteProjectMember, useGetProjectMembers, useSearchUsers, useUpdateProjectMember } from './_composables/use-project-member'
 import ProjectMember from './components/project-member.vue'
 import ProjectUserSearch from './components/project-user-search.vue'
 
-const route = useRoute()
 const store = useStore()
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
-const selectedProjectId = computed(() => store.selectedProject?.id)
-const isProjectMember = computed(() => projectUserPermissionsStore.isMember)
-const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
-})
+const selectedProjectId = computed(() => store.project?.id)
 
 const searchDropdown = ref() as Ref<Dropdown>
 const notFoundDropdown = ref() as Ref<Dropdown>
@@ -288,9 +278,9 @@ const roles = [
 
 const { data: users, refetch: usersRefetch } = useGetProjectMembers(apiClientBio, selectedProjectId)
 const { data: searchedUsers, refetch: searchUsersRefetch } = useSearchUsers(apiClientBio, userSearchValue, computed(() => userSearchValue.value !== ''))
-const { mutate: mutatePatchUserRole } = useUpdateProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
-const { mutate: mutatePostProjectMember } = useAddProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
-const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProjectMember } = useDeleteProjectMember(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutatePatchUserRole } = useUpdateProjectMember(apiClientBio, store.project?.id ?? -1)
+const { mutate: mutatePostProjectMember } = useAddProjectMember(apiClientBio, store.project?.id ?? -1)
+const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProjectMember } = useDeleteProjectMember(apiClientBio, store.project?.id ?? -1)
 
 const userSearchResult = computed(() => {
   return searchedUsers.value
@@ -302,10 +292,6 @@ const userSort = computed(() => {
     if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) return 1
     return 0
   }))
-})
-
-const isUserHasFullAccess = computed<boolean>(() => {
-  return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
 })
 
 onMounted(() => {

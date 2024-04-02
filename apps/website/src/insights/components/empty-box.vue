@@ -10,7 +10,7 @@
       </span>
     </div>
     <a
-      v-if="!projectUserPermissionsStore.isExternalGuest && !projectUserPermissionsStore.isMemberGuest"
+      v-if="store.userIsFullProjectMember"
       target="_blank"
       class="text-frequency cursor-pointer font-display flex-shrink-0"
       @click="toggleAnalysisSelector(true)"
@@ -28,9 +28,9 @@
 import { ref } from 'vue'
 
 import CreateAnalysis from '@/projects/components/create-analysis.vue'
-import { useProjectUserPermissionsStore } from '~/store'
+import { useStore } from '~/store'
 
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
+const store = useStore()
 const hasOpenedAnalysisSelector = ref(false)
 
 function toggleAnalysisSelector (isOpened: boolean): void {
