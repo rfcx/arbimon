@@ -28,6 +28,7 @@
         :style="{ width: bar.width + '%', backgroundColor: bar.color, zIndex: bars.length - idx }"
       >
         <div
+          v-if="!viewOnly"
           class="opacity-50 h-4 w-full"
           :class="bar.id !== selectedId ? 'bg-pitch' : ''"
           :style="{ zIndex: bars.length - idx}"
@@ -113,7 +114,9 @@ const props = withDefaults(defineProps<{
 defineEmits(['emitSelectItem'])
 
 const totalCount = computed<number>(() => {
-  return Number(props.knownTotalCount) ?? sum(props.dataset.map(({ count }) => count))
+  const knowTotal = Number(props.knownTotalCount) ?? 0
+  const sumCount = sum(props.dataset.map(({ count }) => Number(count))) // sum of all data: count is string, convert to number to avoid concatenation
+  return knowTotal === sumCount ? knowTotal : sumCount // ideally, they should be the same value. but if not, use the sum (to avoid total count mismatch)
 })
 
 const hasData = computed<boolean>(() => {
@@ -134,7 +137,7 @@ const bars = computed<Bar[]>(() => {
   const outputs: Bar[] = []
 
   inputs.forEach(({ id, name, count, color, text }) => {
-    const percentage = count / totalCount.value * 100
+    const percentage = totalCount.value === 0 ? 0 : count / totalCount.value * 100
     width += percentage
 
     outputs.push({
