@@ -75,13 +75,13 @@
                 class="p-2 space-y-3"
               >
                 <li
-                  v-for="(riskRating, index) in existingRiskCode"
+                  v-for="(riskRating, index) in existingRisk"
                   :key="riskRating.code"
-                  @click="filterByCode(existingRiskCode[index].code)"
+                  @click="filterByCode(existingRisk[index])"
                 >
                   <div
                     class="species-highlights border-none cursor-pointer text-md select-none h-6 px-2 rounded-sm self-center"
-                    :class="searchRisk === existingRiskCode[index].code ? 'tag-selected' : ''"
+                    :class="searchRisk === existingRisk[index].id ? 'tag-selected' : ''"
                     :style="{ background: riskRating.color }"
                   >
                     {{ riskRating.code }}
@@ -224,6 +224,7 @@ import type { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common
 import { type ProjectSpeciesFieldSet, type ProjectSpeciesResponse, apiBioGetProjectSpecies } from '@rfcx-bio/common/api-bio/species/project-species-all'
 
 import { apiClientKey } from '@/globals'
+import { type RiskRatingUi } from '~/risk-ratings'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { useStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
@@ -304,37 +305,6 @@ watch(() => currentPage.value, () => {
   fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
 })
 
-// // Filtered list of species by search, risk or both
-// const speciesListFiltered = computed(() => {
-//   if (!hasFetchedAll.value) return []
-//   if (!searchKeyword.value && searchRisk.value) {
-//     resetPagination()
-//     return speciesList.value
-//       .filter(({ riskRating }) => {
-//         return riskRating.code === searchRisk.value
-//       })
-//       .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
-//   } else if (searchKeyword.value && !searchRisk.value) {
-//     resetPagination()
-//     return speciesList.value
-//       .filter(({ scientificName, commonName }) => {
-//         return scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
-//           ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false)
-//       })
-//       .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
-//     } else if (searchKeyword.value && searchRisk.value) {
-//       resetPagination()
-//       return speciesList.value
-//         .filter(({ scientificName, commonName, riskRating }) => {
-//           console.info(riskRating.code === searchRisk.value)
-//           return (scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
-//             ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false)) &&
-//             riskRating.code === searchRisk.value
-//         })
-//         .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
-//     } else return speciesList.value
-// })
-
 const searchSpeciesInputChanged = debounce(async () => {
   resetPagination()
   fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value)
@@ -357,8 +327,21 @@ const speciesForCurrentPage = computed(() => {
   return speciesList.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
 })
 
-const existingRiskCode = computed(() => {
-  return speciesList.value.length ? speciesList.value.map(specie => specie.riskRating).filter((value, index, self) => self.findIndex(({ code }) => code === value.code) === index) : []
+const existingRisk = computed(() => {
+  // TODO should get risk list from API
+  return [
+    RISKS_BY_ID[DEFAULT_RISK_RATING_ID],
+    RISKS_BY_ID[0],
+    RISKS_BY_ID[100],
+    RISKS_BY_ID[200],
+    RISKS_BY_ID[300],
+    RISKS_BY_ID[400],
+    RISKS_BY_ID[500],
+    RISKS_BY_ID[600],
+    RISKS_BY_ID[700],
+    RISKS_BY_ID[800],
+    RISKS_BY_ID[900]
+  ]
 })
 
 const newSpeciesToAdd = computed(() => {
@@ -412,10 +395,11 @@ const fillExistingSpeciesSlug = (): void => {
   } else selectedSpecies.value = []
 }
 
-const filterByCode = (code: string): void => {
-  if (searchRisk.value === code) {
-    searchRisk.value = ''
-  } else searchRisk.value = code
+const filterByCode = (risk: RiskRatingUi): void => {
+  if (searchRisk.value === risk.id) {
+    searchRisk.value = undefined
+  } else searchRisk.value = risk.id
+  fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, risk.id)
 }
 
 const saveHighlightedSpecies = async (): Promise<void> => {
