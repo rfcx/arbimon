@@ -6,7 +6,7 @@ import { resizeImage } from '~/image'
 import { putObject } from '~/storage'
 import { createProjectProfile, getProjectProfile, updateProjectProfile } from './dao/project-profile-dao'
 
-const CONFIG = {
+export const PROJECT_IMAGE_CONFIG = {
   thumbnail: {
     width: 72,
     height: 72
@@ -21,7 +21,7 @@ export const patchProjectProfileImage = async (locationProjectId: number, file: 
 
   // generate thumbnail
   const thumbnailPath = `projects/${locationProjectId}/project-profile-image-${fileId}.thumbnail${extname(file.filename)}`
-  const thumbnail = await resizeImage(original, CONFIG.thumbnail)
+  const thumbnail = await resizeImage(original, PROJECT_IMAGE_CONFIG.thumbnail)
   // save to S3
   await putObject(thumbnailPath, thumbnail, file.mimetype, true)
 

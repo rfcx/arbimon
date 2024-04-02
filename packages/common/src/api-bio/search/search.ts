@@ -67,6 +67,7 @@ export interface SearchQueryProjectRawResponse {
     date_end: string | null
     objectives: string[]
     image: string
+    thumbnail?: string
 
     // from `location_project_country` materialized view
     country_codes: string[]

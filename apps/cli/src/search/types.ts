@@ -7,6 +7,7 @@ export interface AbbreviatedProject {
   name: string
   objectives: string[]
   country_codes: string[]
+  image: string
 }
 
 export interface ExpandedProject extends AbbreviatedProject {

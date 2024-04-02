@@ -14,7 +14,7 @@ import { resizeImage } from '~/image'
 import { getObject, putObject } from '~/storage'
 import { create, get, getAllOrganizations as daoGetAllOrganizations, getIdByEmail, query, update } from './user-profile-dao'
 
-const CONFIG = {
+export const USER_CONFIG = {
   image: {
     thumbnail: {
       width: 144,
@@ -90,7 +90,7 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
   const image = await file.toBuffer()
   const imagePath = `users/${hexEmail}/profile-image-${uniqueId}${extname(file.filename)}`
   const thumbnailPath = `users/${hexEmail}/profile-image-${uniqueId}.thumbnail${extname(file.filename)}`
-  const thumbnail = await resizeImage(image, CONFIG.image.thumbnail)
+  const thumbnail = await resizeImage(image, USER_CONFIG.image.thumbnail)
   const newProfile = { ...originalProfile, image: imagePath }
 
   const coreProfile = {

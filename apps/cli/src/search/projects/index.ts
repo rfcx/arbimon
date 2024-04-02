@@ -12,6 +12,7 @@ import {
   SYNC_BATCH_LIMIT
 } from '../constants'
 import { type AbbreviatedProject, type ExpandedProject } from '../types'
+import {buildThumbnailPath, isS3image} from "@rfcx-bio/common/api-bio/_helpers";
 
 export const getProjects = async (
   sequelize: Sequelize,
@@ -81,7 +82,7 @@ export const getProjects = async (
   // Modify projects to prepare for indexing (add species, etc.)
   const projectDocuments = []
   for (const project of projectList) {
-    const { id } = project
+    const { id, image } = project
     const species = await getSpeciesByProjectId(sequelize, id).catch(e => [])
     projectDocuments.push({
       ...project,
@@ -90,6 +91,7 @@ export const getProjects = async (
         const foundObjective = masterObjectiveValues.find(masterObjective => masterObjective.slug === o)
         return foundObjective?.description ?? o
       }),
+      thumbnail: isS3image(image) as boolean ? buildThumbnailPath(image) : '',
       species: species.map(sp => {
         const { code, countries = [], ...rest } = sp
         const { expanded = '', threatened = false } = code !== undefined ? RISK_RATING_EXPANDED[code] : {}
