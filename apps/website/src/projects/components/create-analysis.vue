@@ -53,7 +53,7 @@ import AnalysisCardComponent from './analysis-card.vue'
 defineEmits<{(e: 'emitClose'): void}>()
 
 const store = useStore()
-const selectedProject = computed(() => store.selectedProject)
+const selectedProject = computed(() => store.project)
 const isAnalysisSelected = ref(false)
 const analysisUrl = ref('')
 

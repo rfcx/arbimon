@@ -53,7 +53,7 @@ export default class SpeciesRichnessPage extends Vue {
   }
 
   async onDatasetChange (): Promise<void> {
-    const projectId = this.store.selectedProject?.id
+    const projectId = this.store.project?.id
     if (projectId === undefined) return
 
     this.loading = true

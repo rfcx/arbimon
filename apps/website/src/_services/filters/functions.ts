@@ -17,13 +17,13 @@ export function filterToQuery ({ startDate, endDate, sites, otherFilters }: Comp
 }
 
 export function getExportGroupName (prefix: string, exportDatetime: string = getExportDateTime()): string {
-  const project = useStore().selectedProject
+  const project = useStore().project
   const projectName = project?.name?.replaceAll(' ', '-') ?? 'None'
   return `${projectName}--${prefix.replaceAll(' ', '-')}--${exportDatetime}`
 }
 
 export function getExportFilterName (startDate: Dayjs, endDate: Dayjs, prefix: string, datasetIndex: number, dateGroup?: string, sites?: SiteGroup[], taxonFilter?: string[]): string {
-  const project = useStore().selectedProject
+  const project = useStore().project
 
   const projectName = project?.name?.replaceAll(' ', '-') ?? 'None'
   const siteName = sites ? `--${getSiteName(sites).replaceAll(' ', '_')}` : ''

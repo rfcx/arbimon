@@ -5,7 +5,7 @@
   <p v-else>
     Last generated based on validated Arbimon data at:<br>
     {{ formatDateFull(props.syncUpdated) }}
-    <span v-if="isProjectMember">
+    <span v-if="store.userIsProjectMember">
       ・ <router-link
         :to="syncHistoryRoute"
         class="inline hover:(underline text-insight cursor-pointer)"
@@ -32,7 +32,5 @@ const syncHistoryRoute = computed(() => ({
   name: 'sync_history',
   params: { projectSlug: props.projectSlug }
 }))
-
-const isProjectMember = computed(() => store?.selectedProject?.isMyProject)
 
 </script>

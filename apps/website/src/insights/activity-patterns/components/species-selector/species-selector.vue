@@ -184,7 +184,7 @@ const onClickSpeciesInput = (): void => {
 }
 
 const getAllSpecies = async (): Promise<Array<SpeciesInProjectTypes['light']>> => {
-  const projectId = store.selectedProject?.id
+  const projectId = store.project?.id
 
   if (projectId === undefined) {
     return []

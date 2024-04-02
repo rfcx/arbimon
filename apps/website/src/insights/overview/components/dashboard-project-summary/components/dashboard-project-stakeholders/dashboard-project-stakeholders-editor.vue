@@ -25,7 +25,7 @@
         </div>
       </div>
       <router-link
-        :to="{name: ROUTE_NAMES.projectMember, params: { projectSlug: store.selectedProject?.slug }}"
+        :to="{name: ROUTE_NAMES.projectMember, params: { projectSlug: store.project?.slug }}"
         class="text-frequency text-sm font-medium font-display leading-none"
       >
         <icon-custom-fi-external-link class="w-4 h-4 inline-flex" /> Manage project members

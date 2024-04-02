@@ -2,7 +2,7 @@
   <!-- <draft-banner
     current-mode="Draft"
     :sync-updated="store.projectFilters?.latestSync?.updatedAt ?? null"
-    :project-slug="store.selectedProject?.slug"
+    :project-slug="store.project?.slug"
   /> -->
   <species-richness-introduction
     :filters="filters"

@@ -92,7 +92,7 @@ import { useStore } from '~/store'
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const store = useStore()
-const selectedProjectId = computed(() => store.selectedProject?.id)
+const selectedProjectId = computed(() => store.project?.id)
 
 const props = defineProps<{ isOpen: boolean }>()
 const emit = defineEmits<{(event: 'emit-close-modal'): void, (event: 'emit-share-insight-successful'): void}>()
