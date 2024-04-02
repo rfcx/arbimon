@@ -447,7 +447,7 @@ const displayTextAfterSaveWithSuccessStatus = (success: boolean, errorMsg?: stri
 const saveUserProfile = async (): Promise<void> => {
   mutatePatchUserProfile({ firstName: firstName.value, lastName: lastName.value, organizationIdAffiliated: selectedOrganizationId.value }, {
     onSuccess: async () => {
-      if (uploadedPhotoUrl.value === undefined) {
+      if (uploadedPhotoUrl.value === '') {
         displayTextAfterSaveWithSuccessStatus(true)
       }
     },
