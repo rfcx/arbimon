@@ -1,9 +1,12 @@
-import { Op } from 'sequelize'
+import { Op, QueryTypes } from 'sequelize'
 
 import {
+  type ProjectRiskRatingsParams,
+  type ProjectRiskRatingsResponse,
   type ProjectSpeciesParams,
   type ProjectSpeciesQueryParams,
-  type ProjectSpeciesResponse
+  type ProjectSpeciesResponse,
+  type RiskRating
 } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { ATTRIBUTES_SPECIES_IN_PROJECT } from '@rfcx-bio/common/dao/types/species-in-project'
@@ -28,6 +31,20 @@ export const projectSpeciesHandler: Handler<ProjectSpeciesResponse, ProjectSpeci
   return {
     ...speciesInProject
   }
+}
+
+export const projectRiskRatingsHandler: Handler<ProjectRiskRatingsResponse, ProjectRiskRatingsParams> = async (req) => {
+  // Inputs & validation
+  const { projectId } = req.params
+  assertPathParamsExist({ projectId })
+
+  const projectIdInteger = Number(projectId)
+  if (Number.isNaN(projectIdInteger)) {
+    throw BioInvalidPathParamError({ projectId })
+  }
+
+  const riskRatings = await getProjectRiskRatings(projectIdInteger)
+  return { riskRatings }
 }
 
 export const getProjectSpecies = async (locationProjectId: number, params: ProjectSpeciesQueryParams): Promise<ProjectSpeciesResponse> => {
@@ -84,4 +101,24 @@ export const getProjectSpecies = async (locationProjectId: number, params: Proje
   }
 
   return { species, total }
+}
+
+export const getProjectRiskRatings = async (locationProjectId: number): Promise<RiskRating[]> => {
+  const sequelize = getSequelize()
+
+  const sql = `
+  select 
+    distinct (r.code), r.id
+  from species_in_project s 
+  left join risk_rating_iucn r on r.id = s.risk_rating_id
+  where s.location_project_id = :id
+  order by r.id
+  `
+  return await sequelize.query<RiskRating>(sql, {
+    raw: true,
+    replacements: {
+      id: locationProjectId
+    },
+    type: QueryTypes.SELECT
+  })
 }

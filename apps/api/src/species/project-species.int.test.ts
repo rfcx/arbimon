@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { projectSpeciesRoute } from '@rfcx-bio/common/api-bio/species/project-species-all'
+import { projectRiskRatingsRoute, projectSpeciesRoute } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET } from '~/api-helpers/types'
@@ -168,5 +168,26 @@ describe(`GET ${projectSpeciesRoute}`, async () => {
         expect(result.species).toBeDefined()
         // No vulnerable species in test project
         expect(result.species).toHaveLength(0)
+    })
+})
+
+describe(`GET ${projectRiskRatingsRoute}`, async () => {
+    test('returns correct results', async () => {
+        // Arrange
+        const app = await makeApp(routesSpecies, { projectRole: 'user' })
+
+        // Act
+        const response = await app.inject({
+            method: GET,
+            url: projectRiskRatingsRoute.replace(':projectId', TEST_PROJECT_ID ?? '')
+        })
+
+        // Assert
+        expect(response.statusCode).toBe(200)
+        const result = JSON.parse(response.body)
+        expect(result.riskRatings).toBeDefined()
+        expect(result.riskRatings).toHaveLength(1)
+        expect(result.riskRatings[0].id).toBe(-1)
+        expect(result.riskRatings[0].code).toBe('NL')
     })
 })
