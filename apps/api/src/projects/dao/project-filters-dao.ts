@@ -1,5 +1,6 @@
 import { type BindOrReplacements, type Sequelize, QueryTypes } from 'sequelize'
 
+import { type GetProjectFiltersQueryParams } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { type SitesRecCountAndDates } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { type Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
 import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
@@ -10,14 +11,15 @@ import { getSequelize } from '~/db'
 
 const sequelize = getSequelize()
 
-export const getSites = async (models: AllModels, locationProjectId: number): Promise<Site[]> =>
-  await models
+export const getSites = async (models: AllModels, locationProjectId: number, params: GetProjectFiltersQueryParams): Promise<Site[]> => {
+  return await models
     .LocationSite
     .findAll({
-      where: { locationProjectId, hidden: false },
+      where: { locationProjectId, ...params?.hidden !== undefined && { hidden: params.hidden } },
       attributes: ATTRIBUTES_LOCATION_SITE.light,
       order: [['name', 'ASC']]
     })
+}
 
 // TODO: Filter to get only classes that exist in the project
 export const getTaxonClasses = async (models: AllModels, locationProjectId: number): Promise<TaxonClass[]> =>

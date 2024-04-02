@@ -1,4 +1,4 @@
-import { type ProjectFiltersParams, type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
+import { type GetProjectFiltersQueryParams, type ProjectFiltersParams, type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { type ProjectRecordingCountParams, type SitesRecCountAndDates } from '@rfcx-bio/common/api-bio/project/project-recordings'
 
 import { getProjectFilters, getProjectRecordingCountBySite } from '@/projects/project-filters-bll'
@@ -10,13 +10,14 @@ export const projectFiltersHandler: Handler<ProjectFiltersResponse, ProjectFilte
   try {
     // Inputs & validation
     const { projectId } = req.params
+    const query = req.query as GetProjectFiltersQueryParams
     assertPathParamsExist({ projectId })
 
     const projectIdInteger = Number(projectId)
     if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
     // Response
-    return await getProjectFilters(projectIdInteger)
+    return await getProjectFilters(projectIdInteger, query)
   } catch (err) {
     // Error handling
     req.log.error(err)
