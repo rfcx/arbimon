@@ -1,9 +1,9 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { type PutObjectRequest } from '@aws-sdk/client-s3/dist-types/models/models_0'
 import { type Readable } from 'node:stream'
 
 import { BioPublicError } from '~/errors'
 import { env } from '../env'
-import {PutObjectRequest} from "@aws-sdk/client-s3/dist-types/models/models_0";
 
 const {
   AWS_S3_ENDPOINT: endpoint,
