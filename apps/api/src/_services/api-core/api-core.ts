@@ -19,7 +19,10 @@ import {
   type CoreClassifierJobInformation,
   type CoreClassifierJobTotalDetections,
   type CoreDetection,
-    type CoreGetClassifiersQueryParams, type CoreGetDetectionsQueryParams,
+  type CoreGetClassifiersQueryParams,
+  type CoreGetDetectionsQueryParams,
+  type CoreUpdateDetectionStatusBody,
+  type CoreUpdateDetectionStatusParams,
   type DetectDetectionsQueryParamsCore,
   type DetectDetectionsResponseCore,
   type GetClassifierJobClassificationSummaryQueryParams
@@ -105,6 +108,24 @@ export async function deleteProject (id: string, token: string): Promise<void> {
   if (response.status !== 204) throw new Error('Delete project failed: expected 204 status from Core')
 }
 
+export async function updateDetectionStatus (token: string, data: CoreUpdateDetectionStatusBody, params: CoreUpdateDetectionStatusParams): Promise<void> {
+  try {
+    await axios.request({
+      method: 'POST',
+      url: `${CORE_API_BASE_URL}/streams/${params.stream_id}/detections/${params.start}/review`,
+      headers: {
+        authorization: token
+      },
+      data
+    })
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+/**
+ * @deprecated because the endpoint is being deprecated.
+ */
 export async function updateDetectionReviewFromApi (token: string, classifierJobId: number, data: DetectReviewDetectionBody): Promise<DetectReviewDetectionResponse> {
   try {
     const resp = await axios.request<DetectReviewDetectionResponse>({
