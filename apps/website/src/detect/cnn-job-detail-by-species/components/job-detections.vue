@@ -1,54 +1,67 @@
 <template>
-  <div class="job-result-detections mt-4">
-    <template
-      v-for="species in allSpecies"
-      :key="'job-detections-' + species.speciesSlug"
-    >
-      <div
-        v-for="dt in species.media"
-        :key="`job-detection-result-by-species-${dt.id}`"
-        class="inline-block mt-3 mr-4"
+  <div class="flex flex-col gap-y-4 mt-4">
+    <DetectionValidator
+      v-if="validationCount && isOpen"
+      :detection-count="validationCount"
+      :filter-options="filterOptions"
+      @emit-validation="validateDetection"
+      @emit-close="closeValidator"
+    />
+    <div>
+      <template
+        v-for="species in allSpecies"
+        :key="'job-detections-' + species.speciesSlug"
       >
-        <DetectionItem
-          :id="dt.id"
-          :spectrogram-url="dt.spectrogramUrl"
-          :audio-url="dt.audioUrl"
-          :validation="dt.validation"
-          :checked="dt.checked"
-          :site="dt.site"
-          :start="dt.start"
-          :score="dt.score"
-          @emit-detection="updateSelectedDetections"
-        />
-      </div>
-    </template>
+        <div
+          v-for="dt in species.media"
+          :key="`job-detection-result-by-species-${dt.id}`"
+          class="inline-block mt-3 mr-4"
+        >
+          <DetectionItem
+            :id="dt.id"
+            :spectrogram-url="dt.spectrogramUrl"
+            :audio-url="dt.audioUrl"
+            :validation="dt.validation"
+            :checked="dt.checked"
+            :site="dt.site"
+            :start="dt.start"
+            :score="dt.score"
+            @emit-detection="updateSelectedDetections"
+          />
+        </div>
+      </template>
+    </div>
   </div>
 
-  <div class="w-full flex flex-row-reverse">
-    <div class="job-result-detections-paginator">
+  <div
+    v-if="data?.length"
+    class="w-full flex flex-row justify-end gap-x-3 my-6"
+  >
+    <div class="flex flex-row items-center text-sm gap-x-1">
+      <span class="border-b-1 border-util-gray-02 px-1">{{ page }}</span>
+      <span>of</span>
+      <span class="px-1">UPDATE!</span>
+      <span>pages</span>
+    </div>
+    <div class="flex flex-row gap-x-1">
       <button
-        :class="page - 1 === 0 ? 'not-disabled:btn cursor-not-allowed bg-steel-gray not-disabled:btn-icon' : 'not-disabled:btn not-disabled:btn-icon'"
+        class="btn rounded-sm bg-fog border-fog px-2.5 py-1.5"
+        :class="page - 1 === 0 ? 'not-disabled:cursor-not-allowed bg-steel-gray' : ''"
         :disabled="page - 1 === 0"
         @click="previousPage()"
       >
-        <icon-fas-chevron-left class="w-3 h-3" />
+        <icon-fas-chevron-left class="w-3 h-4" />
       </button>
       <button
-        :class="props.data == null || props.data.length < pageSize ? 'not-disabled:btn not-disabled:btn-icon ml-2 cursor-not-allowed bg-steel-gray' : 'not-disabled:btn not-disabled:btn-icon ml-2'"
+        class="btn rounded-sm bg-fog border-fog px-2.5 py-1.5"
+        :class="props.data == null || props.data.length < pageSize ? 'not-disabled:cursor-not-allowed bg-steel-gray' : ''"
         :disabled="props.data == null || props.data.length < pageSize"
         @click="nextPage()"
       >
-        <icon-fas-chevron-right class="w-3 h-3" />
+        <icon-fas-chevron-right class="w-3 h-4" />
       </button>
     </div>
   </div>
-  <DetectionValidator
-    v-if="validationCount && isOpen"
-    :detection-count="validationCount"
-    :filter-options="filterOptions"
-    @emit-validation="validateDetection"
-    @emit-close="closeValidator"
-  />
 </template>
 
 <script setup lang="ts">
@@ -57,7 +70,8 @@ import { groupBy } from 'lodash-es'
 import { computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { type GetDetectionsResponse } from '@rfcx-bio/common/api-bio/cnn/detections'
 import { apiBioDetectReviewDetection } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
 import { useDetectionsReview } from '@/detect/_composables/use-detections-review'
@@ -71,7 +85,7 @@ import DetectionItem from '../../cnn-job-detail/components/detection-item.vue'
 
 const store = useStore()
 
-const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectDetectionsResponse | undefined, page: number, pageSize: number }>(), {
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: GetDetectionsResponse | undefined, page: number, pageSize: number }>(), {
   isLoading: true,
   isError: false,
   data: undefined
@@ -107,7 +121,7 @@ const filterOptions = computed<DetectionValidationStatus[]>(() => {
     return {
       value: s.value,
       label: s.label,
-      checked: s.value === 'unreviewed'
+      checked: s.value === 'unvalidated'
     } as DetectionValidationStatus
   })
 
@@ -119,7 +133,7 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
     return []
   }
 
-  const groupedDetections: Record<string, DetectDetectionsResponse> = groupBy(props.data ?? [], d => d.classification.value)
+  const groupedDetections: Record<string, GetDetectionsResponse> = groupBy(props.data ?? [], d => d.classification.value)
   const species: Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(groupedDetections).map(slug => {
     return {
       speciesSlug: slug,
@@ -127,7 +141,7 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
       media: groupedDetections[slug].map(detection => {
         return {
           spectrogramUrl: getMediaLink({
-            streamId: detection.siteId,
+            streamId: detection.siteIdCore,
             start: detection.start,
             end: detection.end,
             frequency: 'full',
@@ -142,7 +156,7 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
             fileExtension: 'png'
           }),
           audioUrl: getMediaLink({
-            streamId: detection.siteId,
+            streamId: detection.siteIdCore,
             start: detection.start,
             end: detection.end,
             frequency: 'full',
@@ -154,7 +168,7 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
           validation: detection.reviewStatus,
           score: detection.confidence,
           start: detection.start,
-          site: store.projectFilters?.locationSites.filter((site) => site.idCore === detection.siteId)[0]?.name ?? ''
+          site: store.projectFilters?.locationSites.filter((site) => site.idCore === detection.siteIdCore)[0]?.name ?? ''
         }
       })
     }
@@ -172,21 +186,21 @@ const {
   getSelectedDetectionIds
 } = useDetectionsReview(allSpecies)
 
-const validateDetection = async (validation: ReviewStatus): Promise<void> => {
+const validateDetection = async (validation: ArbimonReviewStatus): Promise<void> => {
   const selectedDetectionIds = getSelectedDetectionIds()
 
   // call review api
   const promises = selectedDetectionIds.map(id => {
     // this will always be a success case
-    const originalDetection = (props.data ?? []).find(d => id === d.id)
+    const originalDetection = (props.data ?? []).find(d => Number(id) === d.id)
 
     return apiBioDetectReviewDetection(apiClientBio, jobId.value, {
       // this is a safe cast because the validation selector always start at 'unreviewed' union
       // and the emitter is emitted when there's a change (watch), which means the change will
       // always be from 'unreviewed' to other type.
-      status: validation as Exclude<ReviewStatus, 'unreviewed'>,
+      status: validation as Exclude<ArbimonReviewStatus, 'unvalidated'>,
       classification: originalDetection?.classification?.value ?? '',
-      streamId: originalDetection?.siteId ?? '',
+      streamId: originalDetection?.siteIdCore ?? '',
       classifier: originalDetection?.classifierId ?? -1,
       start: originalDetection?.start ?? ''
     })

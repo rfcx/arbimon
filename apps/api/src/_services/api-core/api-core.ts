@@ -2,6 +2,7 @@ import axios from 'axios'
 import { type FastifyLoggerInstance } from 'fastify'
 
 import { type ClassifierQueryParams, type ClassifierResponse } from '@rfcx-bio/common/api-bio/classifiers/classifier'
+import { type Classifier } from '@rfcx-bio/common/api-bio/classifiers/classifiers'
 import { type DetectSummaryQueryParams, type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { type DetectValidationResultsQueryParams, type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 import { type DetectReviewDetectionBody, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
@@ -18,9 +19,11 @@ import {
   type CoreClassifierJobInformation,
   type CoreClassifierJobTotalDetections,
   type CoreDetection,
+  type CoreGetClassifiersQueryParams,
   type CoreGetDetectionsQueryParams,
-    type CoreUpdateDetectionStatusBody,
-  type CoreUpdateDetectionStatusParams, type DetectDetectionsQueryParamsCore,
+  type CoreUpdateDetectionStatusBody,
+  type CoreUpdateDetectionStatusParams,
+  type DetectDetectionsQueryParamsCore,
   type DetectDetectionsResponseCore,
   type GetClassifierJobClassificationSummaryQueryParams
 } from './types'
@@ -290,6 +293,30 @@ export async function getClassifierJobResultsFromApi (token: string, jobId: numb
         authorization: token
       },
       params: query
+    })
+
+    return resp.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getClassifiers (token: string, params: CoreGetClassifiersQueryParams): Promise<Classifier[]> {
+  try {
+    const resp = await axios.request({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifiers`,
+      params: {
+        ...params,
+        fields: [
+          'id',
+          'name',
+          'version'
+        ]
+      },
+      headers: {
+        authorization: token
+      }
     })
 
     return resp.data

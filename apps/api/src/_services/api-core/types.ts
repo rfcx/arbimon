@@ -116,6 +116,18 @@ export interface CoreDetection {
   end: string
   confidence: number
   review_status: CoreRawReviewStatus
+  classification: {
+    title: string
+    value: string
+    image: string | null
+  }
+}
+
+export interface CoreGetClassifiersQueryParams {
+  limit?: number
+  offset?: number
+  sort?: string
+  fields?: string[]
 }
 
 export interface CoreUpdateDetectionStatusBody {

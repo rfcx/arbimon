@@ -1,7 +1,7 @@
 <template>
   <div class="default-scroll-start smooth">
     <BannerWhatNew
-      :extra-class="`ml-6`"
+      :extra-class="`ml-6 fixed z-20`"
     />
     <div class="bg-gray-50 dark:bg-pitch grid px-4 pl-18">
       <section
@@ -36,7 +36,7 @@
           />
           <div
             v-else
-            class="w-full text-black mapboxgl-map"
+            class="w-full text-black mapboxgl-map z-10"
           >
             <map-base-component
               :dataset="mapDataset()"
