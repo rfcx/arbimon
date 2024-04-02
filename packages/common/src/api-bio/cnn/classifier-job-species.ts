@@ -25,8 +25,8 @@ export interface GetClassifierJobSpeciesQueryParams {
    * ```
    */
   sort?: string
-  limit?: string
-  offset?: string
+  limit?: number
+  offset?: number
 }
 
 export interface GetClassifierJobSpeciesParams {
