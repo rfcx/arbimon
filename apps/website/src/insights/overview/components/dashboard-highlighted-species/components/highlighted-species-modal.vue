@@ -110,7 +110,7 @@
                   class="grid gap-3 grid-cols-1 md:grid-rows-5 md:(grid-cols-2 grid-rows-5)"
                 >
                   <li
-                    v-for="item in speciesForCurrentPage"
+                    v-for="item in speciesList"
                     :key="'specie-highlighted-' + item.slug"
                     :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
                     class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 h-full h-23 md:(flex-row) lg:(flex-row justify-between) bg-echo hover:(border-frequency cursor-pointer)"
@@ -226,7 +226,7 @@ import { type ProjectSpeciesFieldSet, type ProjectSpeciesResponse, apiBioGetProj
 import { apiClientKey } from '@/globals'
 import { type RiskRatingUi } from '~/risk-ratings'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
-import { useStore } from '~/store'
+import { useHighlightedSpeciesStore, useStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
 import { useDeleteSpecieHighlighted, usePostSpeciesHighlighted } from '../composables/use-post-highlighted-species'
 import HighlightedSpeciesSelector, { type SpecieRow } from './highlighted-species-selector.vue'
@@ -240,6 +240,7 @@ const isLoadingSpecies = ref(false)
 const hasFetchedAll = ref(false)
 const LIMIT = 10
 const highlightedSpeciesSelected : HighlightedSpeciesRow[] = []
+const pdStore = useHighlightedSpeciesStore()
 
 watch(() => props.toggleShowModal, async () => {
   resetSearch()
@@ -282,10 +283,9 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
     isLoadingSpecies.value = false
     return
   }
-
   const s = projectSpecies as ProjectSpeciesResponse
   hasFetchedAll.value = s.species.length < LIMIT // check if reaching the end
-  if (offset === 0) speciesList.value = []
+  speciesList.value = []
   total.value = s.total
   s.species.forEach(sp => {
     const { slug, taxonSlug, scientificName, commonName, photoUrl, riskId } = sp as DashboardSpecies
@@ -298,11 +298,12 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
       riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
     })
   })
+  pdStore.updateSpecies(speciesList.value, offset)
   isLoadingSpecies.value = false
 }
 
 watch(() => currentPage.value, () => {
-  fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
+    fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
 })
 
 const searchSpeciesInputChanged = debounce(async () => {
@@ -322,10 +323,6 @@ const setPage = (page: number) => {
 
     currentPage.value = newPage
 }
-
-const speciesForCurrentPage = computed(() => {
-  return speciesList.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
-})
 
 const existingRisk = computed(() => {
   // TODO should get risk list from API
