@@ -21,7 +21,7 @@
         :is-error="isErrorJobDetections"
         :data="jobDetections"
         :page-size="PAGE_SIZE_LIMIT"
-        :max-page="page"
+        :max-page="Math.ceil(Number(totalDetections)/PAGE_SIZE_LIMIT)"
       />
     </div>
   </section>
