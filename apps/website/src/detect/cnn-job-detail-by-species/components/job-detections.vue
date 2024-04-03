@@ -32,9 +32,20 @@
       </template>
     </div>
   </div>
-
   <div
-    v-if="data?.length"
+    v-if="props.data && !props.data.length && !props.isLoading"
+    class="w-full mx-auto text-center mt-35 xl:mt-45"
+  >
+    <span>No detections found.</span>
+  </div>
+  <div
+    v-if="props.isLoading"
+    class="w-full flex justify-center mt-35 xl:mt-45"
+  >
+    <icon-custom-ic-loading class="animate-spin w-8 h-8 lg:mx-24 text-center" />
+  </div>
+  <div
+    v-if="props.data?.length"
     class="w-full flex flex-row justify-end my-6"
   >
     <div class="flex flex-row items-center text-sm gap-x-1">
