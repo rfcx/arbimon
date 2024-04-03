@@ -126,7 +126,6 @@ const signup = async (): Promise<void> => {
 }
 
 const login = async (): Promise<void> => {
-  // await apiArbimonLegacyClearSession(apiClientArbimonLegacy)
   await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, prompt: 'login' })
 }
 
