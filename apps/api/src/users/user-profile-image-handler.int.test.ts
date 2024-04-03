@@ -2,7 +2,7 @@ import formAutoContent from 'form-auto-content'
 import { createReadStream } from 'fs'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
-import { buildThumbnailPath } from '@rfcx-bio/common/api-bio/_helpers'
+import { buildVariantPath } from '@rfcx-bio/common/api-bio/_helpers'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
@@ -87,7 +87,7 @@ describe('PATCH /profile-image', async () => {
     expect(response.statusCode).toBe(204)
     const profile = await UserProfile.findOne({ where: { email: defaultUserProfile.email } })
     const originalImage = profile?.image ?? ''
-    const thumbnailImage = buildThumbnailPath(originalImage)
+    const thumbnailImage = buildVariantPath(originalImage, 'thumbnail')
     const fileAsArrayBuffer = await getObject(thumbnailImage)
     expect(fileAsArrayBuffer).toBeDefined()
   })
@@ -111,7 +111,7 @@ describe('PATCH /profile-image', async () => {
     expect(response.statusCode).toBe(204)
     const profile = await UserProfile.findOne({ where: { email: defaultUserProfile.email } })
     const originalImage = profile?.image ?? ''
-    const thumbnailImage = buildThumbnailPath(originalImage)
+    const thumbnailImage = buildVariantPath(originalImage, 'thumbnail')
     const fileAsArrayBuffer = await getObject(thumbnailImage)
     expect(fileAsArrayBuffer).toBeDefined()
     const imageMetadata = await getMetadata(fileAsArrayBuffer)

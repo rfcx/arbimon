@@ -2,7 +2,6 @@ import { type TCountryCode, getCountryData } from 'countries-list'
 import { type Dayjs } from 'dayjs'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
-import { buildThumbnailPath, isS3image } from '@rfcx-bio/common/api-bio/_helpers'
 import { type ProjectSpecies } from '@rfcx-bio/common/api-bio/search/search'
 import { masterObjectiveValues } from '@rfcx-bio/common/dao/master-data'
 
@@ -13,6 +12,7 @@ import {
   SYNC_BATCH_LIMIT
 } from '../constants'
 import { type AbbreviatedProject, type ExpandedProject } from '../types'
+import {buildVariantPath} from "@rfcx-bio/common/api-bio/_helpers";
 
 export const getProjects = async (
   sequelize: Sequelize,
@@ -91,7 +91,7 @@ export const getProjects = async (
         const foundObjective = masterObjectiveValues.find(masterObjective => masterObjective.slug === o)
         return foundObjective?.description ?? o
       }),
-      thumbnail: isS3image(image) ? buildThumbnailPath(image) : '',
+      thumbnail: buildVariantPath(image, 'thumbnail') ?? '',
       species: species.map(sp => {
         const { code, countries = [], ...rest } = sp
         const { expanded = '', threatened = false } = code !== undefined ? RISK_RATING_EXPANDED[code] : {}

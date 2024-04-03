@@ -4,7 +4,6 @@ import { createHash, randomBytes } from 'node:crypto'
 import { extname } from 'node:path'
 import { URL } from 'node:url'
 
-import { buildThumbnailPath, isS3image } from '@rfcx-bio/common/api-bio/_helpers'
 import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
 import { type OrganizationTypes, type UserProfile, type UserTypes } from '@rfcx-bio/common/dao/types'
 
@@ -22,6 +21,10 @@ export const USER_CONFIG = {
       height: 144,
       // 7 days
       cacheControl: 'max-age=604800, s-maxage=604800'
+    },
+    original: {
+      // 7 days
+      cacheControl: 'max-age=604800, s-maxage=604800'
     }
   }
 }
@@ -36,14 +39,11 @@ export const getUserProfile = async (id: number): Promise<Omit<UserProfile, 'id'
     throw BioNotFoundError()
   }
 
-  const image = profile.image
-  const imageUrl = image && isS3image(image) ? buildThumbnailPath(image) : image
-
   return {
     firstName: profile.firstName,
     lastName: profile.lastName,
     email: profile.email,
-    image: fileUrl(imageUrl),
+    image: fileUrl(profile.image),
     organizationIdAffiliated: profile.organizationIdAffiliated
   }
 }
@@ -94,10 +94,10 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
 
   const uniqueId = randomBytes(4).toString('hex')
   const image = await file.toBuffer()
+  const { thumbnail: thumbnailConfig, original: originalConfig } = USER_CONFIG.image
   const imagePath = `users/${hexEmail}/profile-image-${uniqueId}${extname(file.filename)}`
-  const config = USER_CONFIG.image.thumbnail
   const thumbnailPath = `users/${hexEmail}/profile-image-${uniqueId}.thumbnail${extname(file.filename)}`
-  const thumbnail = await resizeImage(image, config)
+  const thumbnail = await resizeImage(image, thumbnailConfig)
   const newProfile = { ...originalProfile, image: imagePath }
 
   const coreProfile = {
@@ -106,8 +106,8 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
     picture: fileUrl(newProfile.image) ?? null
   }
   await patchUserProfileOnCore(token, email, coreProfile)
-  await putObject(imagePath, image, file.mimetype, true)
-  await putObject(thumbnailPath, thumbnail, file.mimetype, true)
+  await putObject(imagePath, image, file.mimetype, true, { CacheControl: originalConfig.cacheControl })
+  await putObject(thumbnailPath, thumbnail, file.mimetype, true, { CacheControl: thumbnailConfig.cacheControl })
   await update(email, newProfile)
 }
 

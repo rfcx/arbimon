@@ -2,6 +2,8 @@ import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3
 import { type PutObjectRequest } from '@aws-sdk/client-s3/dist-types/models/models_0'
 import { type Readable } from 'node:stream'
 
+import { type ImageVariant, buildVariantPath } from '@rfcx-bio/common/api-bio/_helpers'
+
 import { BioPublicError } from '~/errors'
 import { env } from '../env'
 
@@ -33,11 +35,12 @@ const getS3Client = (): S3Client => {
   return s3
 }
 
-export const getObjectPublicUrl = (key: string): string => {
+export const getObjectPublicUrl = (key: string, variant?: ImageVariant): string => {
+  const fileKey: string = variant !== undefined ? buildVariantPath(key, variant) : key
   if (endpoint !== undefined) {
-    return `${endpoint.endsWith('/') ? endpoint : endpoint + '/'}${bucketName}/${key}`
+    return `${endpoint.endsWith('/') ? endpoint : endpoint + '/'}${bucketName}/${fileKey}`
   }
-  return `https://${bucketName}.s3.amazonaws.com/${key}`
+  return `https://${bucketName}.s3.amazonaws.com/${fileKey}`
 }
 
 export const getObject = async (key: string): Promise<ArrayBuffer> => {
@@ -71,6 +74,5 @@ export const putObject = async (key: string, body: Buffer, mimetype: string, isP
     ACL: isPublic ? 'public-read' : undefined,
     ...(options ?? {})
   })
-
   await client.send(command)
 }

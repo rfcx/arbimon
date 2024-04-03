@@ -1,10 +1,11 @@
 import path from 'path'
 
-export const isS3image = (imagePath: string): boolean => {
-    return imagePath.includes('s3.amazonaws.com')
-}
+export type ImageVariant = 'original' | 'thumbnail'
+export const buildVariantPath = (imagePath: string, variant: ImageVariant): string => {
+    if (variant !== 'original') {
+        const extension = path.extname(imagePath)
+        return imagePath.replace(extension, `.${variant}${extension}`)
+    }
 
-export const buildThumbnailPath = (imagePath: string): string => {
-    const extension = path.extname(imagePath)
-    return imagePath.replace(extension, `.thumbnail${extension}`)
+    return imagePath
 }

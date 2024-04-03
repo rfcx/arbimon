@@ -2,7 +2,7 @@ import formAutoContent from 'form-auto-content'
 import { createReadStream } from 'fs'
 import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
 
-import { buildThumbnailPath } from '@rfcx-bio/common/api-bio/_helpers'
+import { buildVariantPath } from '@rfcx-bio/common/api-bio/_helpers'
 import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
 import { type Project } from '@rfcx-bio/common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
@@ -135,7 +135,7 @@ describe(`PATCH ${projectProfileImageRoute}`, async () => {
     expect(response.statusCode).toBe(204)
     const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
     const originalImage = profile?.image ?? ''
-    const thumbnailImage = buildThumbnailPath(originalImage)
+    const thumbnailImage = buildVariantPath(originalImage, 'thumbnail')
     const fileAsArrayBuffer = await getObject(thumbnailImage)
     expect(fileAsArrayBuffer).toBeDefined()
   })
@@ -157,7 +157,7 @@ describe(`PATCH ${projectProfileImageRoute}`, async () => {
     expect(response.statusCode).toBe(204)
     const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
     const originalImage = profile?.image ?? ''
-    const thumbnailImage = buildThumbnailPath(originalImage)
+    const thumbnailImage = buildVariantPath(originalImage, 'thumbnail')
     const fileAsArrayBuffer = await getObject(thumbnailImage)
     const imageMetadata = await getMetadata(fileAsArrayBuffer)
     const config = PROJECT_IMAGE_CONFIG.thumbnail

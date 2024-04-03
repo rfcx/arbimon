@@ -1,4 +1,4 @@
-import sharp, { Metadata } from 'sharp'
+import sharp, { type Metadata } from 'sharp'
 
 interface ResizeOptions {
     height: number
