@@ -11,7 +11,7 @@ jobs:
     name: 'Prepare'
     uses: rfcx/cicd/.github/workflows/notify-prepare.yaml@master
     with:
-      repo: biodiversity-analytics
+      repo: arbimon
       workflow-id: ci-nightly.yaml
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -37,12 +37,12 @@ jobs:
     needs: [prepare, build, test]
     uses: rfcx/cicd/.github/workflows/notify-send.yaml@master
     with:
-      repo: biodiversity-analytics
+      repo: arbimon
       branch-name: ${{ needs.prepare.outputs.branch-name }}
       workflow-id: ci-nightly.yaml
       previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
       status: ${{ needs.build.result == 'success' && needs.test.result == 'success' && 'success' || 'failure' }}
-      notification-title: 'CI: Bio Integration Test'
+      notification-title: 'CI: Arbimon Integration Test'
       notification-footer: "Build: ${{ needs.build.outputs.build-outcome || 'n/a' }} | Migrate+Seed: ${{ needs.test.outputs.migrate-seed-outcome || 'n/a' }} | Test: ${{ needs.test.outputs.test-outcome || 'n/a' }}"
       always: true
     secrets:

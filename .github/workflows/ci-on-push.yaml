@@ -20,10 +20,9 @@ jobs:
     needs: [build]
     uses: rfcx/cicd/.github/workflows/notify.yaml@master
     with:
-      repo: biodiversity-analytics
-      workflow-id: ci-on-push.yml
+      workflow-id: ci-on-push.yaml
       status: ${{ needs.build.result }}
-      notification-title: 'CI: Bio Build-Lint-Test'
+      notification-title: 'CI: Arbimon Build-Lint-Test'
       notification-footer: "Build: ${{ needs.build.outputs.build-outcome || 'n/a' }} | Lint: ${{ needs.build.outputs.lint-outcome || 'n/a' }} | Unit Test: ${{ needs.build.outputs.test-outcome || 'n/a' }}"
     secrets:
       slack-webhook: ${{ secrets.SLACK_ALERT_ARBIMON_WEBHOOK }}
