@@ -22,6 +22,7 @@
         :data="jobDetections"
         :page-size="PAGE_SIZE_LIMIT"
         :max-page="Math.ceil(Number(totalDetections)/PAGE_SIZE_LIMIT)"
+        @emit-validation-result="refetchJobResults()"
       />
     </div>
   </section>
@@ -79,7 +80,7 @@ const { data: jobSummary, refetch: refetchJobSummary } = useGetJobDetectionSumma
   refetchInterval
 )
 
-const { data: jobResults } = useGetJobValidationResults(apiClientBio, jobId.value, { fields: ['classifications_summary'] }, refetchInterval)
+const { data: jobResults, refetch: refetchJobResults } = useGetJobValidationResults(apiClientBio, jobId.value, { fields: ['classifications_summary'] }, refetchInterval)
 
 watch(jobSummary, async (newValue) => {
   isRefetch.value = isRefetchIntervalEnable.value

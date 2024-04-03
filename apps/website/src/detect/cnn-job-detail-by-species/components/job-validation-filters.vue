@@ -61,7 +61,7 @@
         type="button"
       >
         <div class="whitespace-nowrap text-ellipsis overflow-hidden">
-          {{ selectedSitesTitle ?? 'All sites' }}
+          {{ selectedSitesTitle }}
         </div>
         <span>
           <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />

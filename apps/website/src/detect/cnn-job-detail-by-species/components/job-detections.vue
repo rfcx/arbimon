@@ -111,7 +111,7 @@ const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, d
   data: undefined
 })
 
-const emit = defineEmits<{(e: 'update:page', value: number): void}>()
+const emit = defineEmits<{(e: 'update:page', value: number): void, (e: 'emitValidationResult'): void}>()
 
 const pageIndex = ref(props.page ?? 1)
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
@@ -228,5 +228,6 @@ const validateDetection = async (validation: ArbimonReviewStatus): Promise<void>
 
   const responses = await Promise.allSettled(promises)
   updateValidatedDetections(selectedDetectionIds, validation, responses)
+  emit('emitValidationResult')
 }
 </script>
