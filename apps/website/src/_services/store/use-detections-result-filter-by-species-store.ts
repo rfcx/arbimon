@@ -8,7 +8,7 @@ import { chunkDates } from '@rfcx-bio/utils/dates'
 
 import { type ValidationFilterConfig } from '@/detect/cnn-job-detail/components/types'
 import { type ResultFilterInner, type ValidationResultFilterInner, sortByOptions, validationStatus } from './detections-constants'
-import { useStoreOutsideSetup } from './index'
+// import { useStoreOutsideSetup } from './index'
 
 /**
  * Very similar store for separate species page, this is used to sync between the modal settings and
@@ -16,7 +16,7 @@ import { useStoreOutsideSetup } from './index'
  * that this store does not have options to select classifier outputs. Because it's already selected.
  */
 export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-filter-by-species', () => {
-  const store = useStoreOutsideSetup()
+  // const store = useStoreOutsideSetup()
   const route = useRoute()
 
   const customSitesList = ref<DetectSummaryResponse['streams']>([])
@@ -107,14 +107,14 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   })
 
   const sitesFilterOptions = computed<ResultFilterInner[]>(() => {
-    if (customSitesList.value.length === 0) {
-      return store.projectFilters?.locationSites.map(ls => {
-        return {
-          label: ls.name,
-          value: ls.idCore.toString()
-        }
-      }) ?? []
-    }
+    // if (customSitesList.value.length === 0) {
+    //   return store.projectFilters?.locationSites.map(ls => {
+    //     return {
+    //       label: ls.name,
+    //       value: ls.idCore.toString()
+    //     }
+    //   }) ?? []
+    // }
 
     return customSitesList.value.map(cs => {
       return {
