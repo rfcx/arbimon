@@ -2,6 +2,7 @@ import { type TCountryCode, getCountryData } from 'countries-list'
 import { type Dayjs } from 'dayjs'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
+import { buildVariantPath } from '@rfcx-bio/common/api-bio/_helpers'
 import { type ProjectSpecies } from '@rfcx-bio/common/api-bio/search/search'
 import { masterObjectiveValues } from '@rfcx-bio/common/dao/master-data'
 
@@ -12,7 +13,6 @@ import {
   SYNC_BATCH_LIMIT
 } from '../constants'
 import { type AbbreviatedProject, type ExpandedProject } from '../types'
-import {buildVariantPath} from "@rfcx-bio/common/api-bio/_helpers";
 
 export const getProjects = async (
   sequelize: Sequelize,
