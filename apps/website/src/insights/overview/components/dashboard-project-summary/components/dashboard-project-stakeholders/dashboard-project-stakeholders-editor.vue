@@ -421,9 +421,8 @@ const createNewOrganization = (): void => {
       hasFailed.value = true
       errorMessage.value = 'Failed to create organization.'
 
-      dropdownStatus.value = 'idle'
+      dropdownStatus.value = 'create-org'
       createNewOrganizationLoading.value = false
-      createNewOrganizationForm.value?.hide()
     }
   })
 }
