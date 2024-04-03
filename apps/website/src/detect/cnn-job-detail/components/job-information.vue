@@ -34,7 +34,7 @@
           <div
             v-else
             id="cnn-job-information-input"
-            class="grid grid-rows-4 gap-y-4 mt-4 text-base text-insight"
+            class="grid grid-rows-4 gap-y-4 mt-4 text-base text-insight mr-4"
           >
             <icon-custom-ft-map-pin-lg-frequency class="block m-auto" />
             <span

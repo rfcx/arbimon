@@ -24,7 +24,7 @@
         </li>
       </ol>
     </nav>
-    <div class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+    <div class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse hidden">
       <button
         v-if="isCancelJobEnable"
         class="btn btn-secondary py-2 flex flex-row justify-center items-center"
