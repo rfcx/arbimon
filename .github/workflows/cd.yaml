@@ -26,6 +26,7 @@ jobs:
     outputs:
       namespace: ${{ steps.configuration.outputs.namespace }}
       release-date: ${{ steps.configuration.outputs.release-date }}
+      short-sha: ${{ steps.configuration.outputs.short-sha }}
     steps:
       - name: 'Output branch name'
         id: branch
@@ -43,6 +44,7 @@ jobs:
           fi
 
           echo "release-date=$( date +"%s" ) >> $GITHUB_OUTPUT"
+          echo "short-sha=$(echo ${GITHUB_SHA} | cut -c1-8) >> $GITHUB_OUTPUT"
 
   build:
     name: 'Build'
