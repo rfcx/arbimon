@@ -224,14 +224,17 @@ _Note: The feature toggle value can be override following the override env file 
 In some cases you wanted to test out the functionality with the [core api](https://github.com/rfcx/rfcx-api).
 
 ### Tools required from core
+
 - `psql`
 
   make sure `psql` is installed in your machine. You can install just `libpq` to make this work.
+
   ```
   brew install libpq
   ```
 
   make sure you have linked it to your shell by putting this inside your shell configuration file
+
   ```bash
   export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
   ```
@@ -240,11 +243,13 @@ In some cases you wanted to test out the functionality with the [core api](https
 
 - `yarn`
   You can install yarn with homebrew
+
   ```
   brew install yarn
   ```
 
   Or with npm
+
   ```
   npm i -g yarn
   ```
@@ -258,23 +263,27 @@ In some cases you wanted to test out the functionality with the [core api](https
 ### Core preparation
 
 - Startup core by cloning rfcx-api to your machine
+
   ```
   git clone git@github.com:rfcx/rfcx-api ./rfcx-api
   cd rfcx-api
   ```
 
 - Setup environment variables for core
+
   ```
   cp ./common/config/env-vars.js.sample ./common/config/env-vars.js
   ```
 
 - Make sure you have `AUTH0_CLIENT_ID` and `AUTH0_CLIENT_SECRET` environment variable from the core team. So your api can be accessed and validated.
 - Get one of the backend team to add you onto the seed script, or you can add yourself by.
+
   - In the file `./core/_cli/seeds/02-users.sql`. Add yourself into the database with the email that you will be using during the development. You can use any id and guid but make sure the email matches.
   - In the file `./core/_cli/seeds/07-user-organization-roles.sql`. Add yourself into the organization with an id of `aaaaaaaaaaa6` and role_id of `1`.
   - In the file `./core/_cli/seeds/08-user-project-roles.sql`. Add yourself into Puerto rico project (id `zy5jbxx4cs9f`) with role_id of `1`.
 
 - Install dependencies, start core's database and perform reset-migrate-seed by running
+
   ```
   yarn serve-db:core
   ```

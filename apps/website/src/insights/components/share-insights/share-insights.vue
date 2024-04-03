@@ -34,7 +34,7 @@ defineProps<{ modelValue: InsightsPublishStatus }>()
 const emit = defineEmits<{(event: 'update:modelValue', value: InsightsPublishStatus): void, (event: 'emit-share-insights-successful'): void, (event: 'emit-hide-insights-successful'): void}>()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
-const selectedProjectId = computed(() => store.selectedProject?.id)
+const selectedProjectId = computed(() => store.project?.id)
 const { mutate: mutateInsightsPublishStatus } = useUpdateInsightsPublishStatus(apiClientBio, selectedProjectId)
 
 const closeModal = (): void => {

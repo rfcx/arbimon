@@ -9,10 +9,10 @@ import { apiClientKey, storeKey } from '@/globals'
 import { downloadCsvReports } from '@/insights/species-richness/csv'
 import { type ColoredFilter, filterToQuery } from '~/filters'
 import { INFO_TOPICS } from '~/info/info-page'
-import { type BiodiversityStore, useProjectUserPermissionsStore } from '~/store'
+import { type BiodiversityStore, useStore } from '~/store'
 
 const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
+const store = useStore()
 
 export default class SpeciesRichnessIntroduction extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
@@ -28,7 +28,7 @@ export default class SpeciesRichnessIntroduction extends Vue {
   }
 
   get isProjectMember (): boolean {
-    return projectUserPermissionsStore.isMember
+    return store.userIsProjectMember
   }
 
   get isViewingAsGuest (): boolean {
@@ -37,7 +37,7 @@ export default class SpeciesRichnessIntroduction extends Vue {
 
   // TODO ??? - I think Vue 3 composition API would let us simply import the function (instead of proxying it)
   async exportCsvReports (): Promise<void> {
-    const projectId = this.store.selectedProject?.id
+    const projectId = this.store.project?.id
     if (projectId === undefined) return
 
     this.loading = true

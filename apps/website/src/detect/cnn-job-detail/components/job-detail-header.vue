@@ -24,7 +24,7 @@
         </li>
       </ol>
     </nav>
-    <div class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+    <div class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse hidden">
       <button
         v-if="isCancelJobEnable"
         class="btn btn-secondary py-2 flex flex-row justify-center items-center"
@@ -38,11 +38,6 @@
       >
         <span class="pt-1">Cancel job</span>
         <icon-fa-trash class="h-4 w-4 ml-2" />
-      </button>
-      <button
-        class="btn btn-secondary py-3.5"
-      >
-        <icon-custom-fi-menu class="h-4 w-4" />
       </button>
     </div>
   </div>

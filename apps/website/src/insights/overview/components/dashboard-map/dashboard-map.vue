@@ -117,7 +117,7 @@ const store = useStore()
 const MAP_KEY = 'speciesRichness'
 
 // Services
-const selectedProjectId = computed(() => store.selectedProject?.id ?? -1)
+const selectedProjectId = computed(() => store.project?.id ?? -1)
 const { isLoading: isLoadingDataBySite, isError: isErrorDataBySite, data: dataBySite } = useGetDashboardDataBySite(apiClientBio, selectedProjectId)
 
 // UI
@@ -170,7 +170,7 @@ const mapDataset: ComputedRef<MapDataSet> = computed(() => {
 })
 
 const mapInitialBounds: ComputedRef<LngLatBoundsLike | null> = computed(() => {
-  const project = store.selectedProject
+  const project = store.project
   if (!project) return null
   return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
 })

@@ -9,7 +9,7 @@ export const userProfileHandler: Handler<UserProfileResponse> = async (req) => {
 }
 
 export const patchUserProfileHandler: Handler<string, unknown, unknown, UpdateUserProfileRequestBody> = async (req, rep) => {
-  await patchUserProfile(req.headers.authorization as string, (req.userToken as Auth0UserToken).email, req.userId as number, req.body)
+  await patchUserProfile(req.headers.authorization as string, req.userToken as Auth0UserToken, req.userId as number, req.body)
 
   rep.statusCode = 204
   return ''

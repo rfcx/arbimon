@@ -96,10 +96,12 @@
 
 <script setup lang="ts">
 import { type Auth0Client } from '@auth0/auth0-spa-js'
+// import { type AxiosInstance } from 'axios'
 import { initDropdowns } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
-import { onBeforeRouteUpdate, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
+// import { apiArbimonLegacyClearSession } from '@rfcx-bio/common/api-arbimon/legacy-logout'
 import { authClientKey, storeKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { type BiodiversityStore } from '~/store'
@@ -110,6 +112,8 @@ const auth = inject(authClientKey) as Auth0Client
 const store = inject(storeKey) as BiodiversityStore
 const router = useRouter()
 
+// const apiClientArbimonLegacy = inject(apiClientArbimonLegacyKey) as AxiosInstance
+
 defineProps<{
   domId: string
 }>()
@@ -117,10 +121,12 @@ defineProps<{
 const userImage = computed<string>(() => store.user?.picture ?? '') // TODO 156 - Add a default picture
 
 const signup = async (): Promise<void> => {
+  // await apiArbimonLegacyClearSession(apiClientArbimonLegacy)
   await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, screen_hint: 'signup' })
 }
 
 const login = async (): Promise<void> => {
+  // await apiArbimonLegacyClearSession(apiClientArbimonLegacy)
   await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, prompt: 'login' })
 }
 
@@ -133,20 +139,15 @@ const openProfile = async (): Promise<void> => {
   void router.replace({ name: ROUTE_NAMES.accountSettings })
 }
 
-const isLoading = ref<boolean>(false)
-
-onBeforeRouteUpdate((to, from, next) => {
-  isLoading.value = true
-  next(() => {
-    isLoading.value = false
-  })
-})
+const isLoading = ref<boolean>(true)
 
 onMounted(() => {
   auth.isAuthenticated().then((authenticated) => {
     if (authenticated) {
       initDropdowns()
     }
+  }).finally(() => {
+    isLoading.value = false
   })
 })
 </script>

@@ -3,9 +3,11 @@
     <div>
       <JobDetailHeader :species-name="speciesName" />
       <JobValidationHeader
-        :species-name="speciesName"
+        :species-name="getSpeciesSlug(speciesSlug)"
         :detections-count="jobDetections?.length"
         :filtered-result="jobDetections?.length"
+        :page-size="PAGE_SIZE_LIMIT"
+        @emit-page-size="onEmitPageSize"
       />
       <JobValidationStatus
         :total="speciesCount?.total ?? 0"
@@ -19,6 +21,7 @@
         :is-error="isErrorJobDetections"
         :data="jobDetections"
         :page-size="PAGE_SIZE_LIMIT"
+        :max-page="page"
       />
     </div>
   </section>
@@ -26,6 +29,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
+import { kebabCase } from 'lodash-es'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -43,7 +47,7 @@ import JobValidationHeader from './components/job-validation-header.vue'
 import JobValidationStatus from './components/job-validation-status.vue'
 
 const route = useRoute()
-const PAGE_SIZE_LIMIT = 100
+const PAGE_SIZE_LIMIT = ref<number>(25)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
@@ -56,6 +60,10 @@ const isRefetch = ref<boolean>(true)
 const refetchInterval = computed(() => {
   return isRefetch.value ? 30_000 : false
 })
+
+const getSpeciesSlug = (scientificName: string): string => {
+  return kebabCase(scientificName)
+}
 
 const { data: jobSummary, refetch: refetchJobSummary } = useGetJobDetectionSummary(
   apiClientBio,
@@ -112,7 +120,7 @@ const speciesCount = computed(() => {
 })
 
 const offset = computed<number>(() => {
-  return (page.value - 1) * PAGE_SIZE_LIMIT
+  return (page.value - 1) * PAGE_SIZE_LIMIT.value
 })
 
 const classifierId = computed(() => {
@@ -129,7 +137,7 @@ const detectionsQueryParams = computed<GetDetectionsQueryParams>(() => {
     classification: speciesSlug.value,
     confidence: detectionsResultFilterBySpeciesStore.filter.minConfidence,
     classifierId: classifierId.value,
-    limit: PAGE_SIZE_LIMIT,
+    limit: PAGE_SIZE_LIMIT.value,
     offset: offset.value
   } as GetDetectionsQueryParams
 })
@@ -144,4 +152,8 @@ const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: 
   computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== ''),
   refetchInterval
 )
+
+const onEmitPageSize = (pageSize: number) => {
+  PAGE_SIZE_LIMIT.value = pageSize
+}
 </script>

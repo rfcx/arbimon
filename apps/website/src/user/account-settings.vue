@@ -282,6 +282,7 @@ onMounted(() => {
   firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
   lastName.value = store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
   email.value = store.user?.email ?? ''
+  searchOrganizationValue.value = displayedOrganization.value?.name ?? ''
   searchDropdown.value = new Dropdown(organizationSearchResultContainer.value, organizationSearchInput.value, dropdownOptions)
   notFoundDropdown.value = new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, dropdownOptions)
   createNewOrganizationForm.value = new Dropdown(createNewOrganizationFormContainer.value, organizationSearchInput.value, dropdownOptions)
@@ -447,7 +448,7 @@ const displayTextAfterSaveWithSuccessStatus = (success: boolean, errorMsg?: stri
 const saveUserProfile = async (): Promise<void> => {
   mutatePatchUserProfile({ firstName: firstName.value, lastName: lastName.value, organizationIdAffiliated: selectedOrganizationId.value }, {
     onSuccess: async () => {
-      if (uploadedPhotoUrl.value === undefined) {
+      if (uploadedPhotoUrl.value === '') {
         displayTextAfterSaveWithSuccessStatus(true)
       }
     },

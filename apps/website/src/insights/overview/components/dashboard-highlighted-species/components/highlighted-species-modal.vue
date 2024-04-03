@@ -256,7 +256,7 @@ watch(() => props.toggleShowModal, async () => {
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
-const selectedProjectId = computed(() => store.selectedProject?.id)
+const selectedProjectId = computed(() => store.project?.id)
 
 const searchKeyword = ref<string>()
 const searchRisk = ref<string>()

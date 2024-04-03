@@ -33,21 +33,38 @@
     </div>
   </div>
 
-  <div class="w-full flex flex-row-reverse">
-    <div class="job-result-detections-paginator">
+  <div
+    v-if="data?.length"
+    class="w-full flex flex-row justify-end my-6"
+  >
+    <div class="flex flex-row items-center text-sm gap-x-1">
+      <div class="text-sm">
+        <input
+          v-model.number="pageIndex"
+          type="number"
+          min="1"
+          :max="5"
+          class="text-center bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+        >
+      </div>
+      <span>of</span>
+      <span class="px-1.5 text-sm">UPDATE!</span>
+      <span>pages</span>
+    </div>
+    <div class="flex flex-row gap-x-1">
       <button
-        :class="page - 1 === 0 ? 'not-disabled:btn cursor-not-allowed bg-steel-gray not-disabled:btn-icon' : 'not-disabled:btn not-disabled:btn-icon'"
+        class="btn btn-icon ml-4 rounded-md bg-fog border-0 disabled:hover:btn-disabled disabled:btn-disabled"
         :disabled="page - 1 === 0"
         @click="previousPage()"
       >
-        <icon-fas-chevron-left class="w-3 h-3" />
+        <icon-fas-chevron-left class="w-3 h-3 text-pitch" />
       </button>
       <button
-        :class="props.data == null || props.data.length < pageSize ? 'not-disabled:btn not-disabled:btn-icon ml-2 cursor-not-allowed bg-steel-gray' : 'not-disabled:btn not-disabled:btn-icon ml-2'"
+        class="btn btn-icon ml-2 rounded-md bg-fog border-0 disabled:hover:btn-disabled disabled:btn-disabled"
         :disabled="props.data == null || props.data.length < pageSize"
         @click="nextPage()"
       >
-        <icon-fas-chevron-right class="w-3 h-3" />
+        <icon-fas-chevron-right class="w-3 h-3 text-pitch" />
       </button>
     </div>
   </div>
@@ -56,14 +73,14 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { groupBy } from 'lodash-es'
-import { computed, inject } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type GetDetectionsResponse } from '@rfcx-bio/common/api-bio/cnn/detections'
-import { apiBioDetectReviewDetection } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
 import { useDetectionsReview } from '@/detect/_composables/use-detections-review'
+import { useUpdateDetectionStatus } from '@/detect/_composables/use-update-detection-status'
 import DetectionValidator from '@/detect/cnn-job-detail/components/detection-validator.vue'
 import type { DetectionMedia, DetectionValidationStatus } from '@/detect/cnn-job-detail/components/types'
 import { apiClientKey } from '@/globals'
@@ -73,8 +90,11 @@ import { validationStatus } from '~/store/detections-constants'
 import DetectionItem from '../../cnn-job-detail/components/detection-item.vue'
 
 const store = useStore()
+const route = useRoute()
 
-const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: GetDetectionsResponse | undefined, page: number, pageSize: number }>(), {
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: GetDetectionsResponse | undefined, page: number, pageSize: number, maxPage: number }>(), {
   isLoading: true,
   isError: false,
   data: undefined
@@ -82,25 +102,25 @@ const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, d
 
 const emit = defineEmits<{(e: 'update:page', value: number): void}>()
 
-const route = useRoute()
-
-const apiClientBio = inject(apiClientKey) as AxiosInstance
+const pageIndex = ref(props.page ?? 1)
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
+
+watch(() => props.page, () => {
+  pageIndex.value = props.page
+})
 
 const nextPage = (): void => {
   if (props.data == null || props.data.length < props.pageSize) {
     return
   }
-
-  emit('update:page', props.page + 1)
+  emit('update:page', pageIndex.value + 1)
 }
 
 const previousPage = (): void => {
-  if (props.page - 1 === 0) {
+  if (pageIndex.value - 1 === 0) {
     return
   }
-
-  emit('update:page', props.page - 1)
+  emit('update:page', pageIndex.value - 1)
 }
 
 const filterOptions = computed<DetectionValidationStatus[]>(() => {
@@ -175,23 +195,23 @@ const {
   getSelectedDetectionIds
 } = useDetectionsReview(allSpecies)
 
+const { mutate: mutateUpdateDetectionStatus } = useUpdateDetectionStatus(apiClientBio)
+
 const validateDetection = async (validation: ArbimonReviewStatus): Promise<void> => {
   const selectedDetectionIds = getSelectedDetectionIds()
 
-  // call review api
   const promises = selectedDetectionIds.map(id => {
-    // this will always be a success case
     const originalDetection = (props.data ?? []).find(d => Number(id) === d.id)
-
-    return apiBioDetectReviewDetection(apiClientBio, jobId.value, {
-      // this is a safe cast because the validation selector always start at 'unreviewed' union
-      // and the emitter is emitted when there's a change (watch), which means the change will
-      // always be from 'unreviewed' to other type.
+    return mutateUpdateDetectionStatus({
+      jobId: jobId.value,
+      siteIdCore: originalDetection?.siteIdCore ?? '',
+      start: originalDetection?.start ?? '',
       status: validation as Exclude<ArbimonReviewStatus, 'unvalidated'>,
-      classification: originalDetection?.classification?.value ?? '',
-      streamId: originalDetection?.siteIdCore ?? '',
-      classifier: originalDetection?.classifierId ?? -1,
-      start: originalDetection?.start ?? ''
+      classificationValue: originalDetection?.classification?.value ?? '',
+      classifierId: originalDetection?.classifierId ?? -1
+    }, {
+      onSuccess: () => {},
+      onError: () => {}
     })
   })
 
