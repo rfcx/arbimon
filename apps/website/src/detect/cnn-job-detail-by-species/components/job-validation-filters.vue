@@ -60,7 +60,9 @@
         class="flex flex-row items-center justify-between bg-transparent border-1 border-frequency rounded-full text-insight px-5 py-2 w-41"
         type="button"
       >
-        <span>{{ selectedSitesTitle }}</span>
+        <div class="whitespace-nowrap text-ellipsis overflow-hidden">
+          {{ selectedSitesTitle }}
+        </div>
         <span>
           <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />
         </span>
