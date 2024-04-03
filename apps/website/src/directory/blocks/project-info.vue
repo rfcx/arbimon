@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="projectInfoView"
     class="flex flex-col justify-between left-100 w-98 h-86vh bg-moss transition-transform -translate-x-full rounded-lg overflow-scroll"
   >
     <div class="flex flex-col">
@@ -282,6 +283,8 @@ const props = defineProps<{ projectId: number }>()
 const emit = defineEmits<{(e: 'emitCloseProjectInfo'): void }>()
 const activeTab = ref('about')
 
+const projectInfoView = ref<HTMLElement | null>(null)
+
 const { readme: readmeDefault, keyResult: keyResultDefault } = useMarkdownEditorDefaults()
 const isStakeholdersSelected = ref(false)
 
@@ -305,7 +308,7 @@ const shouldShowStakeholdersContent = computed(() => {
 watch(() => props.projectId, async (newValue, oldValue) => {
   if (newValue === oldValue) { return }
   // reset the scroll position & active tab
-  window.scrollTo(0, 0)
+  if (projectInfoView.value) { projectInfoView.value.scrollTop = 0 }
   activeTab.value = 'about'
   await profileRefetch()
 })
