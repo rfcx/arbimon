@@ -103,7 +103,7 @@ import { onMounted, ref } from 'vue'
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import JobValidationFilters from './job-validation-filters.vue'
 
-const props = withDefaults(defineProps<{ speciesName: string | undefined, detectionsCount: number | undefined, filteredResult: number | undefined, pageSize: number }>(), {
+const props = withDefaults(defineProps<{ speciesName: string | undefined, detectionsCount: string | undefined, filteredResult: number | undefined, pageSize: number }>(), {
   speciesName: undefined,
   detectionsCount: undefined
 })

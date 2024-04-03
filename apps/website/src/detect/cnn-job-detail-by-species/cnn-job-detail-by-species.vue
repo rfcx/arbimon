@@ -1,10 +1,10 @@
 <template>
   <section class="max-w-screen-xl pt-22 pl-115px pr-4">
     <div>
-      <JobDetailHeader :species-name="speciesName" />
+      <JobDetailHeader :species-name="speciesClass" />
       <JobValidationHeader
-        :species-name="getSpeciesSlug(speciesSlug)"
-        :detections-count="jobDetections?.length"
+        :species-name="speciesClass"
+        :detections-count="totalDetections"
         :filtered-result="jobDetections?.length"
         :page-size="PAGE_SIZE_LIMIT"
         @emit-page-size="onEmitPageSize"
@@ -29,10 +29,10 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { kebabCase } from 'lodash-es'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { apiBioGetClassifierJobSpecies } from '@rfcx-bio/common/api-bio/cnn/classifier-job-species'
 import { type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
@@ -53,6 +53,7 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 const speciesSlug = computed(() => typeof route.params.speciesSlug === 'string' ? route.params.speciesSlug : '')
+const totalDetections = ref('')
 const page = ref(1)
 
 const isRefetch = ref<boolean>(true)
@@ -60,10 +61,6 @@ const isRefetch = ref<boolean>(true)
 const refetchInterval = computed(() => {
   return isRefetch.value ? 30_000 : false
 })
-
-const getSpeciesSlug = (scientificName: string): string => {
-  return kebabCase(scientificName)
-}
 
 const { data: jobSummary, refetch: refetchJobSummary } = useGetJobDetectionSummary(
   apiClientBio,
@@ -96,18 +93,18 @@ watch(jobSummary, async (newValue) => {
   detectionsResultFilterBySpeciesStore.updateCustomSitesList(newValue.streams)
 })
 
-const speciesName = computed(() => {
+const speciesClass = computed(() => {
   if (speciesSlug.value === '' || jobResults.value == null) {
-    return ''
+    return speciesSlug.value
   }
 
   const found = jobResults.value.classificationsSummary.find(c => c.value === speciesSlug.value)
 
   if (found == null) {
-    return ''
+    return speciesSlug.value
   }
-
-  return `${found.title} (${found.value})`
+  getClassifierJobSpecies(found.title)
+  return `${found.title}`
 })
 
 const speciesCount = computed(() => {
@@ -155,5 +152,13 @@ const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: 
 
 const onEmitPageSize = (pageSize: number) => {
   PAGE_SIZE_LIMIT.value = pageSize
+}
+
+const getClassifierJobSpecies = async (q: string): Promise<void> => {
+  const response = await apiBioGetClassifierJobSpecies(apiClientBio, jobId.value, { q })
+
+  if (response?.data === undefined) return
+  const species = response?.data[0]
+  totalDetections.value = (species.unvalidated + species.notPresent + species.unknown + species.present).toString()
 }
 </script>
