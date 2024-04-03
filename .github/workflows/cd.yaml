@@ -24,7 +24,7 @@ jobs:
     name: 'Prepare'
     uses: rfcx/cicd/.github/workflows/notify-prepare.yaml@master
     with:
-      repo: biodiversity-analytics 
+      repo: arbimon
       workflow-id: cd.yaml
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -123,13 +123,13 @@ jobs:
     needs: [prepare, build, deploy]
     uses: rfcx/cicd/.github/workflows/notify-send.yaml@master
     with:
-      repo: biodiversity-analytics 
+      repo: arbimon
       branch-name: ${{ needs.prepare.outputs.branch-name }}
       workflow-id: cd.yaml
       previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
       status: ${{ needs.deploy.result }}
       always: true
-      notification-title: 'CD: APIs'
+      notification-title: 'CD: Arbimon'
       notification-footer: "Build: ${{ needs.build.result || 'n/a' }} | Deploy: ${{ needs.deploy.result || 'n/a' }}"
       notification-success-statement: '{0} deployed the build!'
     secrets:
