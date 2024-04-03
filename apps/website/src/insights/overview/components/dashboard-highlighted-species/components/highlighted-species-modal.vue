@@ -103,7 +103,7 @@
               <h6
                 v-else-if="!speciesList.length"
               >
-                No species in a project.
+                No species found.
               </h6>
               <div v-else>
                 <ul
