@@ -97,7 +97,7 @@
           <div class="grid gap-x-4 w-full sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
             <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 items-center m-auto">
               <icon-custom-ic-loading
-                v-if="isLoadingSpecies"
+                v-if="isLoadingSpecies && speciesWithPage.length === 0"
                 class="animate-spin w-8 h-8 lg:mx-24 mx-12"
               />
               <h6
@@ -242,17 +242,6 @@ const LIMIT = 10
 const highlightedSpeciesSelected : HighlightedSpeciesRow[] = []
 const pdStore = useHighlightedSpeciesStore()
 
-watch(() => props.toggleShowModal, async () => {
-  resetSearch()
-  resetPagination()
-  highlightedSpeciesSelected.length = 0
-  fillExistingSpeciesSlug()
-  speciesList.value = []
-
-  await fetchProjectsSpecies(LIMIT, 0)
-  props.highlightedSpecies.forEach(s => highlightedSpeciesSelected.push(s))
-})
-
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
@@ -269,8 +258,23 @@ const PAGE_SIZE = 10
 const currentPage = ref(1)
 const total = ref(0)
 
+const speciesWithPage = computed(() => pdStore.getSpeciesByPage(currentPage.value))
+
 const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
 const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
+
+watch(() => props.toggleShowModal, async () => {
+  currentPage.value = 1
+  resetSearch()
+  highlightedSpeciesSelected.length = 0
+  fillExistingSpeciesSlug()
+  speciesList.value = []
+
+  pdStore.updateselectedProjectId(selectedProjectId.value ?? -1)
+  getSpeciesWithPage()
+  await fetchProjectsSpecies(LIMIT, 0)
+  props.highlightedSpecies.forEach(s => highlightedSpeciesSelected.push(s))
+})
 
 const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: string, riskRatingId?: string) => {
   isLoadingSpecies.value = true
@@ -284,9 +288,10 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
     return
   }
   const s = projectSpecies as ProjectSpeciesResponse
+  total.value = s.total
+  if (speciesWithPage.value.length !== 0) return
   hasFetchedAll.value = s.species.length < LIMIT // check if reaching the end
   speciesList.value = []
-  total.value = s.total
   s.species.forEach(sp => {
     const { slug, taxonSlug, scientificName, commonName, photoUrl, riskId } = sp as DashboardSpecies
     speciesList.value.push({
@@ -303,11 +308,19 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
 }
 
 watch(() => currentPage.value, () => {
-    fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
+  getSpeciesWithPage()
 })
 
+const getSpeciesWithPage = () => {
+  if (speciesWithPage.value.length === 0) {
+    fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
+  } else {
+    speciesList.value = speciesWithPage.value
+  }
+}
+
 const searchSpeciesInputChanged = debounce(async () => {
-  resetPagination()
+  currentPage.value = 1
   fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value)
 }, 500)
 
@@ -325,7 +338,6 @@ const setPage = (page: number) => {
 }
 
 const existingRisk = computed(() => {
-  // TODO should get risk list from API
   return [
     RISKS_BY_ID[DEFAULT_RISK_RATING_ID],
     RISKS_BY_ID[0],
@@ -348,10 +360,6 @@ const newSpeciesToAdd = computed(() => {
 const speciesToRemove = computed(() => {
   return highlightedSpeciesSelected.filter(sp => !selectedSpecies.value.includes(sp))
 })
-
-const resetPagination = (): void => {
-  currentPage.value = 1
-}
 
 const resetSearch = (): void => {
   searchKeyword.value = undefined
