@@ -1,22 +1,12 @@
 name: 'CI On Push'
 on:
   workflow_dispatch:
+  pull_request:
   push:
-    # ignore branches using the CD workflow
-    branches-ignore:
-      - master
-      - staging
+    branches:
+      - develop
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
-
-  prepare:
-    name: 'Prepare'
-    uses: rfcx/cicd/.github/workflows/notify-prepare.yaml@master
-    with:
-      repo: biodiversity-analytics
-      workflow-id: ci-on-push.yaml
-    secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
 
   build:
     name: 'Build'
@@ -26,14 +16,12 @@ jobs:
 
   notify:
     name: 'Notify'
-    if: ${{ always() }}
-    needs: [prepare, build]
-    uses: rfcx/cicd/.github/workflows/notify-send.yaml@master
+    if: ${{ github.event_name != 'pull_request' }}
+    needs: [build]
+    uses: rfcx/cicd/.github/workflows/notify.yaml@master
     with:
       repo: biodiversity-analytics
-      branch-name: ${{ needs.prepare.outputs.branch-name }}
       workflow-id: ci-on-push.yml
-      previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
       status: ${{ needs.build.result }}
       notification-title: 'CI: Bio Build-Lint-Test'
       notification-footer: "Build: ${{ needs.build.outputs.build-outcome || 'n/a' }} | Lint: ${{ needs.build.outputs.lint-outcome || 'n/a' }} | Unit Test: ${{ needs.build.outputs.test-outcome || 'n/a' }}"
