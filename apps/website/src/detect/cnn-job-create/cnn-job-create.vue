@@ -167,7 +167,7 @@ const job: ClassifierJobCreateConfiguration = reactive({
   queryStreams: null,
   queryStart: null,
   queryEnd: null,
-  queryHours: null
+  queryHours: '0-23'
 })
 
 const recordingQuery: DetectRecordingQueryParams = reactive({
