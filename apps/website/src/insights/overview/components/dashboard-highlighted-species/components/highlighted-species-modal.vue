@@ -101,7 +101,7 @@
                 class="animate-spin w-8 h-8 lg:mx-24 mx-12"
               />
               <h6
-                v-else-if="!speciesList.length"
+                v-else-if="!speciesForCurrentPage.length"
               >
                 No species found.
               </h6>
@@ -110,7 +110,7 @@
                   class="grid gap-3 grid-cols-1 md:grid-rows-5 md:(grid-cols-2 grid-rows-5)"
                 >
                   <li
-                    v-for="item in speciesList"
+                    v-for="item in speciesForCurrentPage"
                     :key="'specie-highlighted-' + item.slug"
                     :class="isSpecieSelected(item) ? 'border-frequency' : 'border-transparent'"
                     class="flex flex-row justify-center border-1 items-center rounded-lg space-x-3 p-4 h-full h-23 md:(flex-row) lg:(flex-row justify-between) bg-echo hover:(border-frequency cursor-pointer)"
@@ -235,9 +235,8 @@ import SpecieCard from './species-card.vue'
 const props = defineProps<{ highlightedSpecies: HighlightedSpeciesRow[], toggleShowModal: boolean }>()
 const emit = defineEmits<{(e: 'emitClose'): void}>()
 
-const speciesList = ref<HighlightedSpeciesRow[]>([])
+const speciesForCurrentPage = ref<HighlightedSpeciesRow[]>([])
 const isLoadingSpecies = ref(false)
-const hasFetchedAll = ref(false)
 const LIMIT = 10
 const highlightedSpeciesSelected : HighlightedSpeciesRow[] = []
 const pdStore = useHighlightedSpeciesStore()
@@ -264,17 +263,22 @@ const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSp
 const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
 
 watch(() => props.toggleShowModal, async () => {
-  currentPage.value = 1
-  resetSearch()
-  highlightedSpeciesSelected.length = 0
-  fillExistingSpeciesSlug()
-  speciesList.value = []
+  setDefaultDisplay()
 
   pdStore.updateselectedProjectId(selectedProjectId.value ?? -1)
   getSpeciesWithPage()
   await fetchProjectsSpecies(LIMIT, 0)
   props.highlightedSpecies.forEach(s => highlightedSpeciesSelected.push(s))
 })
+
+const setDefaultDisplay = () => {
+  currentPage.value = 1
+  searchKeyword.value = undefined
+  searchRisk.value = undefined
+  highlightedSpeciesSelected.length = 0
+  selectedSpecies.value = props.highlightedSpecies
+  speciesForCurrentPage.value = []
+}
 
 const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: string, riskRatingId?: string) => {
   isLoadingSpecies.value = true
@@ -290,11 +294,10 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
   const s = projectSpecies as ProjectSpeciesResponse
   total.value = s.total
   if (speciesWithPage.value.length !== 0) return
-  hasFetchedAll.value = s.species.length < LIMIT // check if reaching the end
-  speciesList.value = []
+  speciesForCurrentPage.value = []
   s.species.forEach(sp => {
     const { slug, taxonSlug, scientificName, commonName, photoUrl, riskId } = sp as DashboardSpecies
-    speciesList.value.push({
+    speciesForCurrentPage.value.push({
       slug,
       taxonSlug,
       scientificName,
@@ -303,7 +306,7 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
       riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
     })
   })
-  pdStore.updateSpecies(speciesList.value, offset)
+  pdStore.updateSpecies(speciesForCurrentPage.value, offset)
   isLoadingSpecies.value = false
 }
 
@@ -315,7 +318,7 @@ const getSpeciesWithPage = () => {
   if (speciesWithPage.value.length === 0) {
     fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
   } else {
-    speciesList.value = speciesWithPage.value
+    speciesForCurrentPage.value = speciesWithPage.value
   }
 }
 
@@ -361,11 +364,6 @@ const speciesToRemove = computed(() => {
   return highlightedSpeciesSelected.filter(sp => !selectedSpecies.value.includes(sp))
 })
 
-const resetSearch = (): void => {
-  searchKeyword.value = undefined
-  searchRisk.value = undefined
-}
-
 const findIndexToRemove = (slug: string): void => {
   const index = selectedSpecies.value.findIndex(s => s.slug === slug)
   selectedSpecies.value.splice(index, 1)
@@ -392,12 +390,6 @@ const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
 const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
   showHaveReachedLimit.value = false
   findIndexToRemove(specie.slug)
-}
-
-const fillExistingSpeciesSlug = (): void => {
-  if (props.highlightedSpecies.length) {
-    selectedSpecies.value = props.highlightedSpecies
-  } else selectedSpecies.value = []
 }
 
 const filterByCode = (risk: RiskRatingUi): void => {
