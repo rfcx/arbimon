@@ -282,6 +282,7 @@ onMounted(() => {
   firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
   lastName.value = store.user?.family_name ?? store.user?.user_metadata?.family_name ?? ''
   email.value = store.user?.email ?? ''
+  searchOrganizationValue.value = displayedOrganization.value?.name ?? ''
   searchDropdown.value = new Dropdown(organizationSearchResultContainer.value, organizationSearchInput.value, dropdownOptions)
   notFoundDropdown.value = new Dropdown(organizationSearchResultNotFoundContainer.value, organizationSearchInput.value, dropdownOptions)
   createNewOrganizationForm.value = new Dropdown(createNewOrganizationFormContainer.value, organizationSearchInput.value, dropdownOptions)
