@@ -20,10 +20,8 @@
               :key="'species-table-header-' + item.title"
               class="font-bold capitalize select-none px-4"
               :class="{
-                'text-left': idx < 2,
                 'w-52 lg:w-66': idx < 1,
-                'w-20': idx === 1,
-                'w-36': idx > 1,
+                'w-18': idx > 0,
                 'sticky left-0': idx === 0,
                 'cursor-pointer': item.key
               }"
@@ -31,7 +29,7 @@
             >
               <div
                 class="flex items-center text-xs"
-                :class="{ 'justify-center': idx >= 2 }"
+                :class="{ 'justify-center': idx >= 1 }"
               >
                 {{ item.title }}
                 <div
