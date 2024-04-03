@@ -59,7 +59,7 @@
         >
       </div>
       <span>of</span>
-      <span class="px-1.5 text-sm">UPDATE!</span>
+      <span class="px-1.5 text-sm">{{ maxPage }}</span>
       <span>pages</span>
     </div>
     <div class="flex flex-row gap-x-1">
