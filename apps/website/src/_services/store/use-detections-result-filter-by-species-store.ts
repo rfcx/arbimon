@@ -35,7 +35,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     siteIds: [],
     sortBy: 'asc',
     range: 'all',
-    minConfidence: 0.5
+    minConfidence: 0.1
   })
 
   const updateResultFilter = (value: Omit<ValidationFilterConfig, 'classification'> & { classification?: string }): void => {
@@ -69,7 +69,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     filter.value.validationStatus = 'all'
     filter.value.sortBy = 'asc'
     filter.value.range = 'all'
-    filter.value.minConfidence = 0.5
+    filter.value.minConfidence = 0.1
 
     // "drain" all values out of the array
     while (filter.value.siteIds.length > 0) {

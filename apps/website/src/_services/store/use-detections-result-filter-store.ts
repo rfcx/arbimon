@@ -48,7 +48,7 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
     siteIds: [],
     sortBy: 'asc',
     range: 'all',
-    minConfidence: 0.5
+    minConfidence: 0.1
   })
 
   const customSitesList = ref<DetectSummaryResponse['streams']>([])
