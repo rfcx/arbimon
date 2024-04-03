@@ -257,7 +257,7 @@ const PAGE_SIZE = 10
 const currentPage = ref(1)
 const total = ref(0)
 
-const speciesWithPage = computed(() => pdStore.getSpeciesByPage(currentPage.value))
+const speciesWithPage = computed(() => pdStore.getSpeciesByPage(currentPage.value, PAGE_SIZE))
 
 const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
 const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
@@ -293,7 +293,7 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
   }
   const s = projectSpecies as ProjectSpeciesResponse
   total.value = s.total
-  if (speciesWithPage.value.length !== 0) return
+  if (speciesWithPage.value.length !== 0 && keyword === undefined && riskRatingId === undefined) return
   speciesForCurrentPage.value = []
   s.species.forEach(sp => {
     const { slug, taxonSlug, scientificName, commonName, photoUrl, riskId } = sp as DashboardSpecies
@@ -306,7 +306,9 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
       riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
     })
   })
-  pdStore.updateSpecies(speciesForCurrentPage.value, offset)
+  if (keyword === undefined && riskRatingId === undefined) {
+    pdStore.updateSpecies(speciesForCurrentPage.value, offset)
+  }
   isLoadingSpecies.value = false
 }
 
@@ -324,7 +326,7 @@ const getSpeciesWithPage = () => {
 
 const searchSpeciesInputChanged = debounce(async () => {
   currentPage.value = 1
-  fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value)
+  fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
 }, 500)
 
 const maxPage = computed((): number => {
