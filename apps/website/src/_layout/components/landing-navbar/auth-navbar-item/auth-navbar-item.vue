@@ -98,7 +98,7 @@
 import { type Auth0Client } from '@auth0/auth0-spa-js'
 import { type AxiosInstance } from 'axios'
 import { initDropdowns } from 'flowbite'
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, inject, nextTick, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { apiArbimonLegacyClearSession } from '@rfcx-bio/common/api-arbimon/legacy-logout'
@@ -142,13 +142,12 @@ const openProfile = async (): Promise<void> => {
 
 const isLoading = ref<boolean>(true)
 
-onMounted(() => {
-  auth.isAuthenticated().then((authenticated) => {
-    if (authenticated) {
-      initDropdowns()
-    }
-  }).finally(() => {
-    isLoading.value = false
-  })
+onMounted(async () => {
+  const authenticated = await auth.isAuthenticated()
+  isLoading.value = false
+  await nextTick()
+  if (authenticated) {
+    initDropdowns()
+  }
 })
 </script>
