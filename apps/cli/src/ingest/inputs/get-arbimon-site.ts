@@ -2,7 +2,7 @@ import { type Sequelize, QueryTypes } from 'sequelize'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { type SiteArbimonRow } from '../parsers/parse-site-arbimon-to-bio'
+import { type SiteArbimon } from '../parsers/parse-site-arbimon-to-bio'
 import { type SyncQueryParams } from './sync-query-params'
 
 export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
@@ -19,15 +19,15 @@ export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syn
       s.alt AS altitude,
       s.country_code AS countryCode,
       s.updated_at AS updatedAt,
-      s.deleted_at AS deletedAt
+      s.deleted_at AS deletedAt,
+      s.hidden
     FROM sites s
     WHERE (s.updated_at > $syncUntilDate OR (s.updated_at = $syncUntilDate AND s.site_id > $syncUntilId))
-      AND s.hidden = 0
     ORDER BY s.updated_at, s.site_id
     LIMIT $syncBatchLimit;
     `
 
-  const results = await sequelize.query<SiteArbimonRow>(sql, {
+  const results = await sequelize.query<SiteArbimon>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
@@ -54,13 +54,14 @@ export const getArbimonProjectSites = async (sequelize: Sequelize, projectId: nu
       s.alt AS altitude,
       s.country_code AS countryCode,
       s.updated_at AS updatedAt,
-      s.deleted_at AS deletedAt
+      s.deleted_at AS deletedAt,
+      s.hidden
     FROM sites s
-    WHERE s.project_id = $projectId and s.deleted_at is null AND s.hidden = 0
+    WHERE s.project_id = $projectId and s.deleted_at is null
     ORDER BY s.updated_at, s.site_id;
     `
 
-  const results = await sequelize.query<SiteArbimonRow>(sql, {
+  const results = await sequelize.query<SiteArbimon>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {

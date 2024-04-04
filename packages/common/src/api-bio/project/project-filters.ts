@@ -2,7 +2,7 @@ import { type AxiosInstance } from 'axios'
 
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
-import { type Site, type TaxonClass } from '../../dao/types'
+import { type MapableSite, type TaxonClass } from '../../dao/types'
 import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 import { type Sync } from '../sync/sync-history'
 
@@ -11,7 +11,7 @@ export type ProjectFiltersParams = ProjectRouteParamsSerialized
 
 // Response types
 export interface ProjectFiltersResponse {
-  locationSites: Site[]
+  locationSites: MapableSite[]
   taxonClasses: TaxonClass[]
   dateStartInclusiveUtc?: string
   dateEndInclusiveUtc?: string

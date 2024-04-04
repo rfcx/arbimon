@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash-es'
 import { type LocationQuery } from 'vue-router'
 
 import { type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
-import { type Site, type TaxonClass } from '@rfcx-bio/common/dao/types'
+import { type MapableSite, type TaxonClass } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { type FilterPropertyEquals, type SiteGroup } from '..'
@@ -59,7 +59,7 @@ function parseTaxons (queryTaxons: string | undefined, allTaxons: TaxonClass[] |
   return (allTaxons ?? []).filter(taxon => taxons.includes(taxon.id)).map(item => { return { propertyName: 'taxon', value: item.id } })
 }
 
-function parseSiteGroups (querySites: string | undefined, allSites: Site[] | undefined): SiteGroup[] | undefined {
+function parseSiteGroups (querySites: string | undefined, allSites: MapableSite[] | undefined): SiteGroup[] | undefined {
   if (querySites === undefined) return undefined
   const siteGroup: SiteGroup[] = []
   const querySitesArr = querySites.split(',')
