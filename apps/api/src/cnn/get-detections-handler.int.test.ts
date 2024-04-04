@@ -272,7 +272,8 @@ describe('GET /detections', async () => {
         'start',
         'end',
         'confidence',
-        'review_status'
+        'review_status',
+        'classification'
       ]
     })
   })
@@ -323,7 +324,8 @@ describe('GET /detections', async () => {
         'start',
         'end',
         'confidence',
-        'review_status'
+        'review_status',
+        'classification'
       ]
     })
   })
@@ -373,7 +375,8 @@ describe('GET /detections', async () => {
         'start',
         'end',
         'confidence',
-        'review_status'
+        'review_status',
+        'classification'
       ]
     })
   })
@@ -425,7 +428,8 @@ describe('GET /detections', async () => {
         'start',
         'end',
         'confidence',
-        'review_status'
+        'review_status',
+        'classification'
       ]
     })
   })
