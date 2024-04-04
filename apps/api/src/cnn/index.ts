@@ -30,12 +30,6 @@ export const routesCnn: RouteRegistration[] = [
     handler: getClassifierJobInformationHandler
   },
   {
-    method: PATCH,
-    url: getClassifierJobInformationRoute,
-    preHandler: [requireRfcxEmail],
-    handler: getClassifierJobInformationHandler
-  },
-  {
     method: GET,
     url: getClassifierJobSpeciesRoute,
     preHandler: [requireRfcxEmail],
