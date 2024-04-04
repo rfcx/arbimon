@@ -80,9 +80,9 @@
                   @click="filterByCode(existingRisk[index])"
                 >
                   <div
-                    class="species-highlights border-none cursor-pointer text-md select-none h-6 px-2 rounded-sm self-center"
+                    class="species-highlights border-none cursor-pointer text-md text-center select-none h-6 px-2 rounded-sm self-center"
                     :class="searchRisk === existingRisk[index].id ? 'tag-selected' : ''"
-                    :style="{ background: riskRating.color }"
+                    :style="{ color: riskRating.text, background: riskRating.color }"
                   >
                     {{ riskRating.code }}
                   </div>
@@ -97,7 +97,7 @@
           <div class="grid gap-x-4 w-full sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
             <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 items-center m-auto">
               <icon-custom-ic-loading
-                v-if="isLoadingSpecies && speciesWithPage.length === 0"
+                v-if="isLoadingSpecies"
                 class="animate-spin w-8 h-8 lg:mx-24 mx-12"
               />
               <h6
@@ -281,7 +281,13 @@ const setDefaultDisplay = () => {
 }
 
 const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: string, riskRatingId?: string) => {
-  isLoadingSpecies.value = true
+  if (keyword !== undefined || riskRatingId !== undefined) {
+    isLoadingSpecies.value = true
+  } else {
+    if (speciesWithPage.value.length === 0) {
+      isLoadingSpecies.value = true
+    }
+  }
 
   if (selectedProjectId.value === undefined) return
   const fields: ProjectSpeciesFieldSet = 'dashboard'
@@ -317,7 +323,7 @@ watch(() => currentPage.value, () => {
 })
 
 const getSpeciesWithPage = () => {
-  if (speciesWithPage.value.length === 0) {
+  if (speciesWithPage.value.length === 0 || searchKeyword.value !== undefined || searchRisk.value !== undefined) {
     fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
   } else {
     speciesForCurrentPage.value = speciesWithPage.value
@@ -326,7 +332,8 @@ const getSpeciesWithPage = () => {
 
 const searchSpeciesInputChanged = debounce(async () => {
   currentPage.value = 1
-  fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
+  searchKeyword.value = searchKeyword.value === '' ? undefined : searchKeyword.value
+  getSpeciesWithPage()
 }, 500)
 
 const maxPage = computed((): number => {
@@ -344,6 +351,7 @@ const setPage = (page: number) => {
 
 const existingRisk = computed(() => {
   return [
+    { id: '-2', code: '-', label: 'Not selected', color: '#F9F6F2', text: '#060508' },
     RISKS_BY_ID[DEFAULT_RISK_RATING_ID],
     RISKS_BY_ID[0],
     RISKS_BY_ID[100],
@@ -395,6 +403,14 @@ const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
 }
 
 const filterByCode = (risk: RiskRatingUi): void => {
+  currentPage.value = 1
+  if (risk.id === existingRisk.value[0].id) {
+    searchRisk.value = undefined
+    isLoadingSpecies.value = true
+    getSpeciesWithPage()
+    return
+  }
+
   if (searchRisk.value === risk.id) {
     searchRisk.value = undefined
   } else searchRisk.value = risk.id
