@@ -6,7 +6,7 @@ import { getRecordedMinutesPerDayRoute } from '@rfcx-bio/common/api-bio/cnn/reco
 import { updateDetectionStatusRoute } from '@rfcx-bio/common/api-bio/cnn/reviews'
 
 import { requireRfcxEmail } from '@/_hooks/require-rfcx-user'
-import { type RouteRegistration, GET, POST } from '~/api-helpers/types'
+import { type RouteRegistration, GET, PATCH, POST } from '~/api-helpers/types'
 import { getClassifierJobInformationHandler } from './get-classifier-job-information-handler'
 import { getClassifierJobSpeciesHandler } from './get-classifier-job-species-handler'
 import { getClassifierJobsHandler } from './get-classifier-jobs-handler'
@@ -24,6 +24,12 @@ export const routesCnn: RouteRegistration[] = [
   },
   {
     method: GET,
+    url: getClassifierJobInformationRoute,
+    preHandler: [requireRfcxEmail],
+    handler: getClassifierJobInformationHandler
+  },
+  {
+    method: PATCH,
     url: getClassifierJobInformationRoute,
     preHandler: [requireRfcxEmail],
     handler: getClassifierJobInformationHandler
