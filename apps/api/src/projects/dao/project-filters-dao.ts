@@ -3,21 +3,22 @@ import { type BindOrReplacements, type Sequelize, Op, QueryTypes } from 'sequeli
 import { type SitesRecCountAndDates } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { type Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
 import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
-import { type Site, type TaxonClass, ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS } from '@rfcx-bio/common/dao/types'
+import { type MapableSite, type TaxonClass, ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS } from '@rfcx-bio/common/dao/types'
 
 import dayjs from '@/../../../packages/utils/node_modules/dayjs'
 import { getSequelize } from '~/db'
 
 const sequelize = getSequelize()
 
-export const getSites = async (models: AllModels, locationProjectId: number): Promise<Site[]> =>
+export const getSites = async (models: AllModels, locationProjectId: number): Promise<MapableSite[]> =>
   await models
     .LocationSite
     .findAll({
-      where: { locationProjectId, hidden: false, latitude: { [Op.not]: null } },
+      where: { locationProjectId, hidden: false, latitude: { [Op.not]: null }, longitude: { [Op.not]: null } },
       attributes: ATTRIBUTES_LOCATION_SITE.light,
-      order: [['name', 'ASC']]
-    })
+      order: [['name', 'ASC']],
+      raw: true
+    }) as MapableSite[]
 
 // TODO: Filter to get only classes that exist in the project
 export const getTaxonClasses = async (models: AllModels, locationProjectId: number): Promise<TaxonClass[]> =>

@@ -15,8 +15,10 @@ export interface Site {
   hidden?: boolean
 }
 
+export type MapableSite = Required<Pick<Site, 'latitude' | 'longitude'>> & Omit<Site, 'latitude' | 'longitude'>
+
 export const ATTRIBUTES_LOCATION_SITE = attributes<Site>()({
   light: ['id', 'idCore', 'name', 'latitude', 'longitude', 'altitude', 'countryCode']
 })
 
-export type SiteTypes = AttributeTypes< Site, typeof ATTRIBUTES_LOCATION_SITE>
+export type SiteTypes = AttributeTypes<Site, typeof ATTRIBUTES_LOCATION_SITE>

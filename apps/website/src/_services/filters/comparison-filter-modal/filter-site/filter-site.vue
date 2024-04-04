@@ -79,7 +79,7 @@
 import { initDropdowns } from 'flowbite'
 import { computed, onMounted, ref } from 'vue'
 
-import { type Site } from '@rfcx-bio/common/dao/types'
+import { type MapableSite } from '@rfcx-bio/common/dao/types'
 
 import { type SiteGroup } from '~/filters'
 import { useStore } from '~/store'
@@ -104,7 +104,7 @@ onMounted(() => {
 })
 
 // keyword
-const filteredSites = computed((): Site[] => {
+const filteredSites = computed((): MapableSite[] => {
   const prefix = keyword.value.toLocaleLowerCase()
   return (store.projectFilters?.locationSites ?? []).filter(site => site.name.toLocaleLowerCase().startsWith(prefix))
 })
@@ -114,7 +114,7 @@ const filteredSiteGroupWithKeyword = computed((): SiteGroup | undefined => {
   return { label: `${keyword.value}*`, value: filteredSites.value }
 })
 
-const onSelectedSite = (site: Site) => {
+const onSelectedSite = (site: MapableSite) => {
   const sg = { label: site.name, value: [site] }
   onSelectedSiteGroup(sg)
 }
