@@ -20,15 +20,6 @@ export async function filterDetections (models: AllModels, filter: FilterDataset
   })
 }
 
-export async function filterSpeciesDetection (models: AllModels, filter: FilterDatasetForSql): Promise<DetectionBySiteSpeciesHour[]> {
-  const where: Where<DetectionBySiteSpeciesHour> = whereInDataset(filter)
-
-  return await models.DetectionBySiteSpeciesHour.findAll({
-    where,
-    raw: true
-  })
-}
-
 export async function getRecordedMinutesCount (models: AllModels, filter: FilterDatasetForSql): Promise<number> {
   const where: Where<RecordingBySiteHour> = whereRecordingBySiteHour(filter)
   return await models.RecordingBySiteHour.sum('count', { where }) ?? 0
@@ -82,7 +73,7 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
   return mapValues(summariesBySite, (siteSummaries, siteIdString) => {
     const siteId: number = Number(siteIdString)
     const matchedSite = sites.find(s => s.id === siteId)
-    const siteTotalRecordedMinutes = summariesRecordingBySite[siteId] !== undefined ? summariesRecordingBySite[siteId] : 0
+    const siteTotalRecordedMinutes = summariesRecordingBySite[siteId] ?? 0
     const siteSpeciesSummaries = siteSummaries.filter(r => r.taxonSpeciesId === filter.taxonSpeciesId)
     const siteDetectionMinutesCount = calculateDetectionMinutesCount(siteSpeciesSummaries)
     const siteDetectionFrequency = siteTotalRecordedMinutes === 0 ? 0 : siteDetectionMinutesCount / siteTotalRecordedMinutes
