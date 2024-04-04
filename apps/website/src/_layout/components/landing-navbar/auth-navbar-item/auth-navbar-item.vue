@@ -122,12 +122,12 @@ defineProps<{
 const userImage = computed<string>(() => store.user?.picture ?? '') // TODO 156 - Add a default picture
 
 const signup = async (): Promise<void> => {
-  await apiArbimonLegacyClearSession(apiClientArbimonLegacy)
+  await apiArbimonLegacyClearSession(apiClientArbimonLegacy).catch(() => {})
   await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, screen_hint: 'signup' })
 }
 
 const login = async (): Promise<void> => {
-  await apiArbimonLegacyClearSession(apiClientArbimonLegacy)
+  await apiArbimonLegacyClearSession(apiClientArbimonLegacy).catch(() => {})
   await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, prompt: 'login' })
 }
 
@@ -143,7 +143,9 @@ const openProfile = async (): Promise<void> => {
 const isLoading = ref<boolean>(true)
 
 onMounted(async () => {
+  console.info('auth-navbar-item mounted', store.user)
   const authenticated = await auth.isAuthenticated()
+  console.info('authenticated', authenticated)
   isLoading.value = false
   await nextTick()
   if (authenticated) {
