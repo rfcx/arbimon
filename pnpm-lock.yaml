@@ -319,8 +319,8 @@ importers:
         specifier: ^3.0.0
         version: 3.1.1
       zod:
-        specifier: ^3.16.1
-        version: 3.17.3
+        specifier: ^3.22.4
+        version: 3.22.4
     devDependencies:
       '@types/mysql':
         specifier: ^2.15.19
@@ -14238,7 +14238,7 @@ packages:
       tslib: 2.4.0
       tsutils: 3.21.0(typescript@4.5.5)
       typescript: 4.5.5
-      zod: 3.17.3
+      zod: 3.22.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -15449,5 +15449,5 @@ packages:
     resolution: {integrity: sha512-q9iCCXBWndfYNMGCN7S970+e3ILAPzmX78Skblx7+SGlo6x6SXW0GJ5mJzigYsq2mkHCGqEUhe0QGDEDZauw8g==}
     dev: true
 
-  /zod@3.17.3:
-    resolution: {integrity: sha512-4oKP5zvG6GGbMlqBkI5FESOAweldEhSOZ6LI6cG+JzUT7ofj1ZOC0PJudpQOpT1iqOFpYYtX5Pw0+o403y4bcg==}
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}

@@ -2,7 +2,7 @@ import { type Sequelize, QueryTypes } from 'sequelize'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
-import { type SiteArbimonRow } from '../parsers/parse-site-arbimon-to-bio'
+import { type SiteArbimon } from '../parsers/parse-site-arbimon-to-bio'
 import { type SyncQueryParams } from './sync-query-params'
 
 export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
@@ -27,7 +27,7 @@ export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syn
     LIMIT $syncBatchLimit;
     `
 
-  const results = await sequelize.query<SiteArbimonRow>(sql, {
+  const results = await sequelize.query<SiteArbimon>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
@@ -61,7 +61,7 @@ export const getArbimonProjectSites = async (sequelize: Sequelize, projectId: nu
     ORDER BY s.updated_at, s.site_id;
     `
 
-  const results = await sequelize.query<SiteArbimonRow>(sql, {
+  const results = await sequelize.query<SiteArbimon>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
