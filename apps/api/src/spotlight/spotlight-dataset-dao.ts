@@ -1,4 +1,5 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
+import { Op } from 'sequelize'
 
 import { type SpotlightDetectionDataBySite, type SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
@@ -65,7 +66,7 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
   const siteIds = Object.keys(summariesBySite)
 
   const sites = await models.LocationSite.findAll({
-    where: { id: siteIds },
+    where: { id: siteIds, hidden: false, latitude: { [Op.not]: null } },
     raw: true
   })
 
