@@ -5,6 +5,8 @@ import { makeApp } from '@rfcx-bio/testing/handlers'
 import * as core from '../_services/api-core/api-core'
 import { routesClassifiers } from './index'
 
+vi.mock('../_services/api-core/api-core')
+
 describe('GET /classifiers', async () => {
   test('get the data successfully', async () => {
     // Arrange
