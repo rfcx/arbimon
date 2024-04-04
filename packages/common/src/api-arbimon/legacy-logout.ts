@@ -1,5 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
 export const apiArbimonLegacyClearSession = async (apiClient: AxiosInstance): Promise<void> => {
-  await apiClient.get('/legacy-logout?redirect=false')
+  const response = await apiClient.get('/legacy-logout?redirect=false')
+  return response.data
 }
