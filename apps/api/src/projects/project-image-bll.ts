@@ -8,8 +8,8 @@ import { createProjectProfile, getProjectProfile, updateProjectProfile } from '.
 
 export const PROJECT_IMAGE_CONFIG = {
   thumbnail: {
-    width: 72,
-    height: 72,
+    width: 144,
+    height: 144,
     // 7 days
     cacheControl: 'max-age=604800, s-maxage=604800'
   },
