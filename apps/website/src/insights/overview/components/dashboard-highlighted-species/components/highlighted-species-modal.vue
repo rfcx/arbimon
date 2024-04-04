@@ -256,6 +256,7 @@ const selectedSpecies = ref<HighlightedSpeciesRow[]>([])
 const PAGE_SIZE = 10
 const currentPage = ref(1)
 const total = ref(0)
+const alltTotal = ref(0)
 
 const speciesWithPage = computed(() => pdStore.getSpeciesByPage(currentPage.value, PAGE_SIZE))
 
@@ -313,6 +314,7 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
     })
   })
   if (keyword === undefined && riskRatingId === undefined) {
+    alltTotal.value = s.total
     pdStore.updateSpecies(speciesForCurrentPage.value, offset)
   }
   isLoadingSpecies.value = false
@@ -326,6 +328,8 @@ const getSpeciesWithPage = () => {
   if (speciesWithPage.value.length === 0 || searchKeyword.value !== undefined || searchRisk.value !== undefined) {
     fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
   } else {
+    total.value = alltTotal.value
+    isLoadingSpecies.value = false
     speciesForCurrentPage.value = speciesWithPage.value
   }
 }
