@@ -31,7 +31,7 @@
               class="grid sm:grid-cols-1 md:(grid-cols-2 mr-4) xl:(grid-cols-3 mr-4)"
             >
               <div class="relative">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <div class="absolute inset-y-0 start-2 flex items-center ps-3 pointer-events-none">
                   <span class="p-2">
                     <icon-custom-ic-search
                       class="w-5 h-5 text-insight stroke-insight"
@@ -57,31 +57,58 @@
             <button
               id="dropdownButton"
               data-dropdown-toggle="dropdown"
-              class="bg-echo text-frequency w-30 text-xs rounded-full flex col-span-2 flex-row items-center py-1 px-2"
+              class="bg-echo text-frequency w-36 text-xs rounded-full flex col-span-2 flex-row items-center py-2 px-4 justify-between"
               type="button"
             >
-              IUCN status
-              <span class="pl-3">
+              IUCN status {{ searchRisk ? ': ' + existingRisk.find(r => r.id === searchRisk)?.code : '' }}
+              <span>
                 <icon-fa-chevron-down class="w-3 h-3 fa-chevron-down" />
                 <icon-fa-chevron-up class="w-3 h-3 fa-chevron-up hidden" />
               </span>
             </button>
             <div
               id="dropdown"
-              class="z-10 hidden bg-echo divide-y divide-util-gray-02 rounded-lg shadow w-15"
+              class="z-10 hidden bg-echo divide-y divide-util-gray-02 rounded-lg shadow w-50 p-3"
             >
+              <div
+                class="border-b border-fog/40 cursor-pointer"
+                @click="clearSearchRisk"
+              >
+                <div class="flex p-2 rounded items-center hover:bg-util-gray-04/60">
+                  <div class="flex">
+                    <input
+                      id="all"
+                      :aria-describedby="`class-checkbox-text-all`"
+                      type="radio"
+                      value="all"
+                      class="w-4 h-4 text-frequency border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency"
+                      :checked="searchRisk === undefined"
+                      @click="clearSearchRisk"
+                    >
+                  </div>
+                  <div class="ml-2">
+                    <label
+                      :for="`class-checkbox-text-all`"
+                      class="cursor-pointer"
+                    >
+                      All status
+                    </label>
+                  </div>
+                </div>
+              </div>
               <ul
                 aria-labelledby="dropdownButton"
-                class="p-2 space-y-3"
+                class="pt-3 gap-2 grid grid-cols-4"
               >
                 <li
                   v-for="(riskRating, index) in existingRisk"
                   :key="riskRating.code"
+                  class="items-center"
                   @click="filterByCode(existingRisk[index])"
                 >
                   <div
-                    class="species-highlights border-none cursor-pointer text-md text-center select-none h-6 px-2 rounded-sm self-center"
-                    :class="searchRisk === existingRisk[index].id ? 'tag-selected' : ''"
+                    class="h-6 cursor-pointer text-md text-center select-none px-2 rounded-sm self-center"
+                    :class="searchRisk === existingRisk[index].id ? 'border-1 border-frequency' : ''"
                     :style="{ color: riskRating.text, background: riskRating.color }"
                   >
                     {{ riskRating.code }}
@@ -355,7 +382,6 @@ const setPage = (page: number) => {
 
 const existingRisk = computed(() => {
   return [
-    { id: '-2', code: '-', label: 'Not selected', color: '#F9F6F2', text: '#060508' },
     RISKS_BY_ID[DEFAULT_RISK_RATING_ID],
     RISKS_BY_ID[0],
     RISKS_BY_ID[100],
@@ -406,14 +432,15 @@ const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
   findIndexToRemove(specie.slug)
 }
 
+const clearSearchRisk = (): void => {
+  currentPage.value = 1
+  searchRisk.value = undefined
+  isLoadingSpecies.value = true
+  getSpeciesWithPage()
+}
+
 const filterByCode = (risk: RiskRatingUi): void => {
   currentPage.value = 1
-  if (risk.id === existingRisk.value[0].id) {
-    searchRisk.value = undefined
-    isLoadingSpecies.value = true
-    getSpeciesWithPage()
-    return
-  }
 
   if (searchRisk.value === risk.id) {
     searchRisk.value = undefined
