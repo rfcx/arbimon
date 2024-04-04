@@ -1,4 +1,4 @@
-import { type GetProjectFiltersQueryParams, type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
+import { type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { type SitesRecCountAndDates } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 
@@ -7,7 +7,7 @@ import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 import { getProjectById } from './dao/projects-dao'
 
-export const getProjectFilters = async (locationProjectId: number, params: GetProjectFiltersQueryParams): Promise<ProjectFiltersResponse> => {
+export const getProjectFilters = async (locationProjectId: number, params: { hidden?: boolean }): Promise<ProjectFiltersResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 

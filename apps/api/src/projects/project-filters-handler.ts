@@ -6,18 +6,17 @@ import { ApiServerError, BioInvalidPathParamError } from '~/errors'
 import { type Handler } from '../_services/api-helpers/types'
 import { assertPathParamsExist } from '../_services/validation'
 
-export const projectFiltersHandler: Handler<ProjectFiltersResponse, ProjectFiltersParams> = async (req) => {
+export const projectFiltersHandler: Handler<ProjectFiltersResponse, ProjectFiltersParams, GetProjectFiltersQueryParams> = async (req) => {
   try {
     // Inputs & validation
     const { projectId } = req.params
-    const query = req.query as GetProjectFiltersQueryParams
     assertPathParamsExist({ projectId })
 
     const projectIdInteger = Number(projectId)
     if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
     // Response
-    return await getProjectFilters(projectIdInteger, query)
+    return await getProjectFilters(projectIdInteger, req.query)
   } catch (err) {
     // Error handling
     req.log.error(err)
