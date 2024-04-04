@@ -10,12 +10,12 @@ const SiteArbimonSchema = z.object({
   idCore: z.string(),
   projectIdArbimon: z.number(),
   name: z.string(),
-  latitude: z.number(),
-  longitude: z.number(),
+  latitude: z.number().nullable(),
+  longitude: z.number().nullable(),
   countryCode: z.string().nullable(),
-  altitude: z.number(),
+  altitude: z.number().nullable(),
   deletedAt: z.coerce.date().nullable(),
-  hidden: z.number()
+  hidden: z.coerce.boolean()
 })
 
 export type SiteArbimon = z.infer<typeof SiteArbimonSchema>
@@ -37,6 +37,9 @@ export const transformArbimonSites = async (sites: SiteArbimon[], sequelize: Seq
   return sites.map(site => ({
     ...site,
     locationProjectId: bioProjects[site.projectIdArbimon],
-    hidden: site.hidden === 1
+    latitude: site.latitude ?? undefined,
+    longitude: site.longitude ?? undefined,
+    altitude: site.altitude ?? undefined,
+    countryCode: site.countryCode ?? undefined
   }))
 }

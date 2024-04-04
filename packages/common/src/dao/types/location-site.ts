@@ -6,10 +6,10 @@ export interface Site {
   idArbimon: number
   locationProjectId: number
   name: string
-  latitude: number
-  longitude: number
-  altitude: number
-  countryCode: string | null
+  latitude?: number
+  longitude?: number
+  altitude?: number
+  countryCode?: string
   createdAt?: Date
   updatedAt?: Date
   hidden?: boolean
