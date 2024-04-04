@@ -419,7 +419,7 @@ const createNewOrganization = (): void => {
     },
     onError: () => {
       hasFailed.value = true
-      errorMessage.value = 'Failed to create organization.'
+      errorMessage.value = "Please enter the organization's URL."
 
       dropdownStatus.value = 'create-org'
       createNewOrganizationLoading.value = false
