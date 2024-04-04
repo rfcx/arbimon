@@ -62,6 +62,10 @@ const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSum
 
 watch(jobSummary, async (newValue) => {
   isRefetch.value = isRefetchIntervalEnable.value
+  if (!isRefetch.value && detectionList.value === undefined) {
+    await getClassifierJobSpecies(PAGE_LIMIT, 0)
+  }
+
   if (newValue == null) {
     await refetchJobSummary()
     return
