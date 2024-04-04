@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 
 import { type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
-import { type Site, type TaxonClass } from '@rfcx-bio/common/dao/types'
+import { type MapableSite, type TaxonClass } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { fromQuery, toQuery } from '@/_services/filters/comparison-list/query-string'
@@ -9,10 +9,10 @@ import { FilterImpl } from '../classes'
 import { type FilterPropertyEquals, type SiteGroup } from '../types'
 
 function singleSiteGroup (id: number, name: string): SiteGroup {
-  return { label: name, value: [{ id, name }] as Site[] }
+  return { label: name, value: [{ id, name }] as MapableSite[] }
 }
 function wildcardSiteGroup (count: number, startingId: number, prefix: string): SiteGroup {
-  return { label: prefix + '*', value: Array.from(Array(count).keys()).map(i => ({ id: startingId + i, name: `${prefix}${i}` })) as Site[] }
+  return { label: prefix + '*', value: Array.from(Array(count).keys()).map(i => ({ id: startingId + i, name: `${prefix}${i}` })) as MapableSite[] }
 }
 function taxon (value: number): FilterPropertyEquals {
   return { propertyName: 'taxon', value }
@@ -143,10 +143,10 @@ describe('comparison-list > query-string > toQuery', () => {
 })
 
 describe('comparison-list > query-string > fromQuery', () => {
-  const SITE_1 = { id: 201, name: 'GH_1' }
+  const SITE_1 = { id: 201, name: 'GH_1', latitude: 1, longitude: 1 }
   const TAXON_BIRD = { id: 200, slug: 'bird' }
   const projectFilters: ProjectFiltersResponse = {
-    locationSites: [{ id: 101, name: 'DEF_1' }, { id: 102, name: 'DEF_2' }, { id: 103, name: 'DEF_3' }, SITE_1] as Site[],
+    locationSites: [{ id: 101, name: 'DEF_1', latitude: 1, longitude: 1 }, { id: 102, name: 'DEF_2', latitude: 1, longitude: 1 }, { id: 103, name: 'DEF_3', latitude: 1, longitude: 1 }, SITE_1] as MapableSite[],
     taxonClasses: [TAXON_BIRD, { id: 300, slug: 'mammal' }] as TaxonClass[],
     dateStartInclusiveUtc: '2021-01-01T00:00:00.000Z',
     dateEndInclusiveUtc: '2023-01-01T00:00:00.000Z'

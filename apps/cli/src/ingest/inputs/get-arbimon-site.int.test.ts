@@ -15,12 +15,12 @@ const SQL_INSERT_PROJECT = `
 `
 
 const SQL_INSERT_SITE = `
-  INSERT INTO sites (project_id, site_id, created_at, updated_at, name, site_type_id, lat, lon, alt, published, token_created_on, external_id, timezone, country_code, deleted_at)
-  VALUES ($projectId, $siteId, $createdAt, $updatedAt, $name, $siteTypeId, $lat, $lon, $alt, $published, $tokenCreatedOn, $externalId, $timezone, $countryCode, $deletedAt);
+  INSERT INTO sites (project_id, site_id, created_at, updated_at, name, site_type_id, lat, lon, alt, published, token_created_on, external_id, timezone, country_code, deleted_at, hidden)
+  VALUES ($projectId, $siteId, $createdAt, $updatedAt, $name, $siteTypeId, $lat, $lon, $alt, $published, $tokenCreatedOn, $externalId, $timezone, $countryCode, $deletedAt, $hidden);
 `
 
 const DEFAULT_PROJECT = { projectId: 1920, createdAt: '2021-03-18T11:00:00.000Z', updatedAt: '2021-03-18T11:00:00.000Z', deletedAt: null, name: 'RFCx 1', url: 'rfcx-1', description: 'A test project for testing', projectTypeId: 1, isPrivate: 1, isEnabled: 1, currentPlan: 846, storageUsage: 0.0, processingUsage: 0.0, patternMatchingEnabled: 1, citizenScientistEnabled: 0, cnnEnabled: 0, aedEnabled: 0, clusteringEnabled: 0, externalId: '807cuoi3cvw0', featured: 0, image: null, reportsEnabled: 1 }
-const DEFAULT_SITE = { projectId: 1920, siteId: 123, createdAt: '2022-01-01 01:00:00', updatedAt: '2022-01-06 01:00:00', name: 'Site 3', siteTypeId: 2, lat: 16.742010693566815, lon: 100.1923308193772, alt: 0.0, published: 0, tokenCreatedOn: null, externalId: 'cydwrzz91cbz', timezone: 'Asia/Bangkok', countryCode: 'TH', deletedAt: null }
+const DEFAULT_SITE = { projectId: 1920, siteId: 123, createdAt: '2022-01-01 01:00:00', updatedAt: '2022-01-06 01:00:00', name: 'Site 3', siteTypeId: 2, lat: 16.742010693566815, lon: 100.1923308193772, alt: 0.0, published: 0, tokenCreatedOn: null, externalId: 'cydwrzz91cbz', timezone: 'Asia/Bangkok', countryCode: 'TH', deletedAt: null, hidden: 0 }
 
 const deleteProjectData = async (): Promise<void> => {
   await arbimonSequelize.query('DELETE FROM projects')
@@ -215,5 +215,18 @@ describe('ingest > inputs > getArbimonProjectSites', async () => {
 
     // Assert
     expect(actual).toHaveLength(0)
+  })
+
+  test('can get hidden project sites', async () => {
+    // Arrange
+    const TEST_SITE_ID = [123, 124]
+    await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, siteId: 124, createdAt: '2024-03-27 01:00:00', updatedAt: '2024-03-27 02:00:00', hidden: 1 } })
+
+    // Act
+    const actual = await getArbimonProjectSites(arbimonSequelize, DEFAULT_PROJECT.projectId) as unknown as SiteArbimon[]
+
+    // Assert
+    expect(actual).toHaveLength(2)
+    actual.forEach(site => { expect(TEST_SITE_ID).includes(site.idArbimon) })
   })
 })
