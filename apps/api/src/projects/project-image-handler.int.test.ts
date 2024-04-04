@@ -2,12 +2,15 @@ import formAutoContent from 'form-auto-content'
 import { createReadStream } from 'fs'
 import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
 
+import { buildVariantPath } from '@rfcx-bio/common/api-bio/_helpers'
 import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
 import { type Project } from '@rfcx-bio/common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
+import { PROJECT_IMAGE_CONFIG } from '@/projects/project-image-bll'
 import { PATCH } from '~/api-helpers/types'
+import { getMetadata } from '~/image'
 import { getObject } from '~/storage'
 import { routesProject } from './index'
 
@@ -113,5 +116,52 @@ describe(`PATCH ${projectProfileImageRoute}`, async () => {
 
     // Assert
     expect(response.statusCode).toBe(403)
+  })
+
+  test('generates and saves a thumbnail image', async () => {
+    // Arrange
+    const existingImage = 'xyz.jpg'
+    await LocationProjectProfile.create({ locationProjectId: defaultProject.id, image: existingImage, summary: '', readme: '', methods: '', keyResult: '', resources: '', objectives: [], dateStart: null, dateEnd: null })
+    const app = await makeApp(routesProject, { projectRole: 'admin' })
+    const url = projectProfileImageRoute.replace(':projectId', defaultProject.id.toString())
+    const form = formAutoContent({
+      file: createReadStream(localImageUrl)
+    })
+
+    // Act
+    const response = await app.inject({ method: PATCH, url, ...form })
+
+    // Assert
+    expect(response.statusCode).toBe(204)
+    const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
+    const originalImage = profile?.image ?? ''
+    const thumbnailImage = buildVariantPath(originalImage, 'thumbnail')
+    const fileAsArrayBuffer = await getObject(thumbnailImage)
+    expect(fileAsArrayBuffer).toBeDefined()
+  })
+
+  test('thumbnail image has correct dimensions', async () => {
+    // Arrange
+    const existingImage = 'xyz.jpg'
+    await LocationProjectProfile.create({ locationProjectId: defaultProject.id, image: existingImage, summary: '', readme: '', methods: '', keyResult: '', resources: '', objectives: [], dateStart: null, dateEnd: null })
+    const app = await makeApp(routesProject, { projectRole: 'admin' })
+    const url = projectProfileImageRoute.replace(':projectId', defaultProject.id.toString())
+    const form = formAutoContent({
+      file: createReadStream(localImageUrl)
+    })
+
+    // Act
+    const response = await app.inject({ method: PATCH, url, ...form })
+
+    // Assert
+    expect(response.statusCode).toBe(204)
+    const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
+    const originalImage = profile?.image ?? ''
+    const thumbnailImage = buildVariantPath(originalImage, 'thumbnail')
+    const fileAsArrayBuffer = await getObject(thumbnailImage)
+    const imageMetadata = await getMetadata(fileAsArrayBuffer)
+    const config = PROJECT_IMAGE_CONFIG.thumbnail
+    expect(imageMetadata?.width).toEqual(config.width)
+    expect(imageMetadata?.height).toEqual(config.height)
   })
 })

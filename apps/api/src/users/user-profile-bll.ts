@@ -11,8 +11,24 @@ import { patchUserProfileOnCore } from '~/api-core/api-core'
 import { type Auth0UserToken } from '~/auth0/types'
 import { BioNotFoundError } from '~/errors'
 import { fileUrl } from '~/format-helpers/file-url'
+import { resizeImage } from '~/image'
 import { getObject, putObject } from '~/storage'
 import { create, get, getAllOrganizations as daoGetAllOrganizations, getIdByEmail, query, update } from './user-profile-dao'
+
+export const USER_CONFIG = {
+  image: {
+    thumbnail: {
+      width: 144,
+      height: 144,
+      // 7 days
+      cacheControl: 'max-age=604800, s-maxage=604800'
+    },
+    original: {
+      // 7 days
+      cacheControl: 'max-age=604800, s-maxage=604800'
+    }
+  }
+}
 
 export const getUsers = async (emailLike: string): Promise<Array<UserTypes['light']>> =>
   await query({ emailLike })
@@ -81,7 +97,12 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
   hash.update(email)
   const hexEmail = hash.digest('hex')
 
-  const imagePath = `users/${hexEmail}/profile-image-${randomBytes(4).toString('hex')}${extname(file.filename)}`
+  const uniqueId = randomBytes(4).toString('hex')
+  const image = await file.toBuffer()
+  const { thumbnail: thumbnailConfig, original: originalConfig } = USER_CONFIG.image
+  const imagePath = `users/${hexEmail}/profile-image-${uniqueId}${extname(file.filename)}`
+  const thumbnailPath = `users/${hexEmail}/profile-image-${uniqueId}.thumbnail${extname(file.filename)}`
+  const thumbnail = await resizeImage(image, thumbnailConfig)
   const newProfile = { ...originalProfile, image: imagePath }
 
   const coreProfile = {
@@ -90,7 +111,8 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
     picture: fileUrl(newProfile.image) ?? null
   }
   await patchUserProfileOnCore(token, email, coreProfile)
-  await putObject(imagePath, await file.toBuffer(), file.mimetype, true)
+  await putObject(imagePath, image, file.mimetype, true, { CacheControl: originalConfig.cacheControl })
+  await putObject(thumbnailPath, thumbnail, file.mimetype, true, { CacheControl: thumbnailConfig.cacheControl })
   await update(email, newProfile)
 }
 

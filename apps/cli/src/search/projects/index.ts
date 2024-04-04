@@ -2,6 +2,7 @@ import { type TCountryCode, getCountryData } from 'countries-list'
 import { type Dayjs } from 'dayjs'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
+import { buildVariantPath } from '@rfcx-bio/common/api-bio/_helpers'
 import { type ProjectSpecies } from '@rfcx-bio/common/api-bio/search/search'
 import { masterObjectiveValues } from '@rfcx-bio/common/dao/master-data'
 
@@ -81,7 +82,7 @@ export const getProjects = async (
   // Modify projects to prepare for indexing (add species, etc.)
   const projectDocuments = []
   for (const project of projectList) {
-    const { id } = project
+    const { id, image } = project
     const species = await getSpeciesByProjectId(sequelize, id).catch(e => [])
     projectDocuments.push({
       ...project,
@@ -90,6 +91,7 @@ export const getProjects = async (
         const foundObjective = masterObjectiveValues.find(masterObjective => masterObjective.slug === o)
         return foundObjective?.description ?? o
       }),
+      thumbnail: buildVariantPath(image, 'thumbnail') ?? '',
       species: species.map(sp => {
         const { code, countries = [], ...rest } = sp
         const { expanded = '', threatened = false } = code !== undefined ? RISK_RATING_EXPANDED[code] : {}
