@@ -1,4 +1,4 @@
-import { type GetProjectFiltersQueryParams, type ProjectFiltersParams, type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
+import { type ProjectFiltersParams, type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { type ProjectRecordingCountParams, type SitesRecCountAndDates } from '@rfcx-bio/common/api-bio/project/project-recordings'
 
 import { getProjectFilters, getProjectRecordingCountBySite } from '@/projects/project-filters-bll'
@@ -6,7 +6,7 @@ import { ApiServerError, BioInvalidPathParamError } from '~/errors'
 import { type Handler } from '../_services/api-helpers/types'
 import { assertPathParamsExist } from '../_services/validation'
 
-export const projectFiltersHandler: Handler<ProjectFiltersResponse, ProjectFiltersParams, GetProjectFiltersQueryParams> = async (req) => {
+export const projectFiltersHandler: Handler<ProjectFiltersResponse, ProjectFiltersParams> = async (req) => {
   try {
     // Inputs & validation
     const { projectId } = req.params
@@ -16,7 +16,7 @@ export const projectFiltersHandler: Handler<ProjectFiltersResponse, ProjectFilte
     if (Number.isNaN(projectIdInteger)) throw BioInvalidPathParamError({ projectId })
 
     // Response
-    return await getProjectFilters(projectIdInteger, req.query)
+    return await getProjectFilters(projectIdInteger)
   } catch (err) {
     // Error handling
     req.log.error(err)
