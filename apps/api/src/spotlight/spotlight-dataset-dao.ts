@@ -57,7 +57,7 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
   const siteIds = Object.keys(summariesBySite)
 
   const sites = await models.LocationSite.findAll({
-    where: { id: siteIds, hidden: false, latitude: { [Op.not]: null } },
+    where: { id: siteIds, hidden: false, latitude: { [Op.not]: null }, longitude: { [Op.not]: null } },
     raw: true
   })
 
