@@ -46,6 +46,21 @@ describe('ingest > outputs > sites', () => {
     expect(sites).toHaveLength(arbimonSites.length)
   })
 
+  test('can write site with null lat/lng', async () => {
+    // Arrange
+    const newArbimonSite = { ...DEFAULT_ARB_SITE, latitude: null, longitude: null }
+
+    // Act
+    await writeSitesToBio([newArbimonSite], biodiversitySequelize)
+
+    // Assert
+    const newSite = await ModelRepository.getInstance(biodiversitySequelize).LocationSite
+      .findOne({ where: { idArbimon: newArbimonSite.idArbimon } })
+    expect(newSite).not.toBeNull()
+    expect(newSite?.latitude).toBeNull()
+    expect(newSite?.longitude).toBeNull()
+  })
+
   test('can update site name, core id, latitude, longitude, hidden', async () => {
     // Arrange
     await writeSitesToBio([DEFAULT_ARB_SITE], biodiversitySequelize)
