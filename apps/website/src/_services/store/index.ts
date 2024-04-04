@@ -72,7 +72,7 @@ export const useStore = defineStore('root', {
       const authClient = await useAuth0Client()
       const apiClientBio = getApiClient(import.meta.env.VITE_API_BASE_URL, this.user ? async () => await getIdToken(authClient) : undefined)
 
-      this.projectFilters = await apiBioGetProjectFilters(apiClientBio, this.selectedProject.id, { hidden: false })
+      this.projectFilters = await apiBioGetProjectFilters(apiClientBio, this.selectedProject.id)
     },
     async setCurrentVersion (version: string) {
       this.currentVersion = version

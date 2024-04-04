@@ -7,12 +7,12 @@ import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
 import { getProjectById } from './dao/projects-dao'
 
-export const getProjectFilters = async (locationProjectId: number, params: { hidden?: boolean }): Promise<ProjectFiltersResponse> => {
+export const getProjectFilters = async (locationProjectId: number): Promise<ProjectFiltersResponse> => {
   const sequelize = getSequelize()
   const models = ModelRepository.getInstance(sequelize)
 
   const [locationSites, taxonClasses, [dateStartInclusiveUtc, dateEndInclusiveUtc], latestSync] = await Promise.all([
-    getSites(models, locationProjectId, params),
+    getSites(models, locationProjectId),
     getTaxonClasses(models, locationProjectId),
     getTimeBounds(models, locationProjectId),
     getLatestSync(models, sequelize, locationProjectId)

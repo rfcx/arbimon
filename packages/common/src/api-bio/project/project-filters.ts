@@ -9,10 +9,6 @@ import { type Sync } from '../sync/sync-history'
 // Request types
 export type ProjectFiltersParams = ProjectRouteParamsSerialized
 
-export interface GetProjectFiltersQueryParams {
-  hidden?: boolean
-}
-
 // Response types
 export interface ProjectFiltersResponse {
   locationSites: Site[]
@@ -26,5 +22,5 @@ export interface ProjectFiltersResponse {
 export const projectFiltersRoute = `${PROJECT_SPECIFIC_ROUTE_PREFIX}/filters`
 
 // Service
-export const apiBioGetProjectFilters = async (apiClient: AxiosInstance, projectId: number, params: GetProjectFiltersQueryParams): Promise<ProjectFiltersResponse | undefined> =>
-  await apiGetOrUndefined(apiClient, projectFiltersRoute.replace(':projectId', projectId.toString()), { params })
+export const apiBioGetProjectFilters = async (apiClient: AxiosInstance, projectId: number): Promise<ProjectFiltersResponse | undefined> =>
+  await apiGetOrUndefined(apiClient, projectFiltersRoute.replace(':projectId', projectId.toString()))

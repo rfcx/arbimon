@@ -1,4 +1,4 @@
-import { type BindOrReplacements, type Sequelize, QueryTypes } from 'sequelize'
+import { type BindOrReplacements, type Sequelize, Op, QueryTypes } from 'sequelize'
 
 import { type SitesRecCountAndDates } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { type Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
@@ -10,11 +10,11 @@ import { getSequelize } from '~/db'
 
 const sequelize = getSequelize()
 
-export const getSites = async (models: AllModels, locationProjectId: number, params: { hidden?: boolean }): Promise<Site[]> =>
+export const getSites = async (models: AllModels, locationProjectId: number): Promise<Site[]> =>
   await models
     .LocationSite
     .findAll({
-      where: { locationProjectId, ...params?.hidden !== undefined && { hidden: params.hidden } },
+      where: { locationProjectId, hidden: false, latitude: { [Op.not]: null } },
       attributes: ATTRIBUTES_LOCATION_SITE.light,
       order: [['name', 'ASC']]
     })
