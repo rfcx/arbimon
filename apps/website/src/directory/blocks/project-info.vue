@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="projectInfoView"
     class="flex flex-col justify-between left-100 w-98 h-86vh bg-moss transition-transform -translate-x-full rounded-lg overflow-scroll"
   >
     <div class="flex flex-col">
@@ -152,86 +153,106 @@
           />
         </div>
       </div>
-    </div>
-    <el-tabs
-      v-if="profile?.isPublished"
-      v-show="!isLoadingProfile && !isRefetchingProfile"
-      v-model="activeTab"
-      class="border-t-1 border-util-gray-03"
-    >
-      <el-tab-pane
-        label="About"
-        name="about"
+      <div
+        v-if="profile?.isPublished"
+        v-show="!isLoadingProfile && !isRefetchingProfile"
+        class="border-t border-util-gray-03"
       >
-        <p
-          v-if="profile?.readme"
-          class="pt-4"
-        >
-          <DashboardMarkdownViewerEditor
-            id="about"
-            v-model:is-view-mored="isAboutTabViewMored"
-            v-model:is-editing="isAboutTabEditing"
-            :editable="false"
-            :raw-markdown-text="profile?.readme"
-            :default-markdown-text="readmeDefault"
-            :is-project-member="false"
-            :is-viewing-as-guest="true"
-          />
-        </p>
-        <div v-else>
-          <no-content-banner />
-        </div>
-      </el-tab-pane>
-      <el-tab-pane
-        label="Key result"
-        name="keyResult"
-      >
-        <p
-          v-if="profile?.keyResult"
-          class="pt-4"
-        >
-          <DashboardMarkdownViewerEditor
-            id="key-result"
-            v-model:is-view-mored="isKeyResultTabViewMored"
-            v-model:is-editing="isKeyResultTabEditing"
-            :editable="false"
-            :raw-markdown-text="profile?.keyResult"
-            :default-markdown-text="keyResultDefault"
-            :is-project-member="false"
-            :is-viewing-as-guest="false"
-          />
-        </p>
-        <div v-else>
-          <no-content-banner />
-        </div>
-      </el-tab-pane>
-      <el-tab-pane
-        label="Stakeholders"
-        name="stakeholders"
-      >
-        <div v-if="shouldShowStakeholdersContent">
+        <div class="grid grid-cols-3 border-b-2 border-util-gray-03 h-12 items-center">
           <div
-            class="grid mt-4"
-            style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
+            :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'about' }"
+            class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
+            @click="activeTab = 'about'"
           >
-            <DashboardProjectStakeholdersViewer
-              :editable="false"
-              :is-project-member="false"
-              :is-external-guest="true"
-              :loading="stakeholdersLoading || stakeholdersRefetching"
-              :organizations="stakeholders?.organizations ?? []"
-              :project-members="stakeholders?.users.filter(u => u.ranking !== -1).sort((a, b) => a.ranking - b.ranking) ?? []"
-              @emit-is-updating="false"
-            />
+            About
+          </div>
+          <div
+            :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'keyResult' }"
+            class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
+            @click="activeTab = 'keyResult'"
+          >
+            Key Result
+          </div>
+          <div
+            :class="{ 'text-frequency border-b-2 border-frequency': activeTab === 'stakeholders' }"
+            class="relative overflow-hidden mb-[-1px] font-medium text-center cursor-pointer py-3 hover:text-frequency"
+            @click="activeTab = 'stakeholders'"
+          >
+            Stakeholders
           </div>
         </div>
-        <div v-else>
-          <no-content-banner />
+
+        <div
+          :class="activeTab === 'about' ? 'block' : 'hidden'"
+        >
+          <p
+            v-if="profile?.readme"
+            class="pt-4"
+          >
+            <DashboardMarkdownViewerEditor
+              id="about"
+              v-model:is-view-mored="isAboutTabViewMored"
+              v-model:is-editing="isAboutTabEditing"
+              :editable="false"
+              :raw-markdown-text="profile?.readme"
+              :default-markdown-text="readmeDefault"
+              :is-project-member="false"
+              :is-viewing-as-guest="true"
+            />
+          </p>
+          <div v-else>
+            <no-content-banner />
+          </div>
         </div>
-      </el-tab-pane>
-    </el-tabs>
+        <div
+          :class="activeTab === 'keyResult' ? 'block' : 'hidden'"
+        >
+          <p
+            v-if="profile?.keyResult"
+            class="pt-4"
+          >
+            <DashboardMarkdownViewerEditor
+              id="key-result"
+              v-model:is-view-mored="isKeyResultTabViewMored"
+              v-model:is-editing="isKeyResultTabEditing"
+              :editable="false"
+              :raw-markdown-text="profile?.keyResult"
+              :default-markdown-text="keyResultDefault"
+              :is-project-member="false"
+              :is-viewing-as-guest="false"
+            />
+          </p>
+          <div v-else>
+            <no-content-banner />
+          </div>
+        </div>
+        <div
+          :class="activeTab === 'stakeholders' ? 'block' : 'hidden'"
+        >
+          <div v-if="shouldShowStakeholdersContent">
+            <div
+              class="grid mt-4"
+              style="grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr))"
+            >
+              <DashboardProjectStakeholdersViewer
+                :editable="false"
+                :is-project-member="false"
+                :is-external-guest="true"
+                :loading="stakeholdersLoading || stakeholdersRefetching"
+                :organizations="stakeholders?.organizations ?? []"
+                :project-members="stakeholders?.users.filter(u => u.ranking !== -1).sort((a, b) => a.ranking - b.ranking) ?? []"
+                @emit-is-updating="false"
+              />
+            </div>
+          </div>
+          <div v-else>
+            <no-content-banner />
+          </div>
+        </div>
+      </div>
+    </div>
     <private-project-tag
-      v-else
+      v-if="!profile?.isPublished"
       v-show="!isLoadingProfile && !isRefetchingProfile"
       class="justify-self-end"
     />
@@ -262,13 +283,15 @@ const props = defineProps<{ projectId: number }>()
 const emit = defineEmits<{(e: 'emitCloseProjectInfo'): void }>()
 const activeTab = ref('about')
 
+const projectInfoView = ref<HTMLElement | null>(null)
+
 const { readme: readmeDefault, keyResult: keyResultDefault } = useMarkdownEditorDefaults()
 const isStakeholdersSelected = ref(false)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
 const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch, isRefetching: isRefetchingProfile } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'], computed(() => true))
-const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId, computed(() => isStakeholdersSelected.value))
+const { isLoading: stakeholdersLoading, data: stakeholders, refetch: stakeholderRefetch, isRefetching: stakeholdersRefetching, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId, computed(() => isStakeholdersSelected.value))
 
 const isAboutTabViewMored = ref(false)
 const isAboutTabEditing = ref(false)
@@ -282,19 +305,21 @@ const shouldShowStakeholdersContent = computed(() => {
   return (hasUsers || hasOrganizations) && !stakeholderError.value
 })
 
-watch(() => props.projectId, async () => {
-  if (activeTab.value === 'stakeholders') {
-    isStakeholdersSelected.value = true
-    await stakeholdersRefetch()
-  } else {
-    isStakeholdersSelected.value = false
-  }
+watch(() => props.projectId, async (newValue, oldValue) => {
+  if (newValue === oldValue) { return }
+  // reset the scroll position & active tab
+  if (projectInfoView.value) { projectInfoView.value.scrollTop = 0 }
+  activeTab.value = 'about'
   await profileRefetch()
 })
 
-watch(activeTab, () => {
+watch(activeTab, async (newValue, oldValue) => {
+  if (newValue === oldValue) { return }
   if (activeTab.value === 'stakeholders') {
     isStakeholdersSelected.value = true
+    await stakeholderRefetch()
+  } else {
+    isStakeholdersSelected.value = false
   }
 })
 
@@ -340,21 +365,6 @@ const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
 <style lang="scss">
 .normal-flag {
   margin: 1px !important
-}
-.el-tabs > .el-tabs__header{
-  margin: 0px;
-}
-.el-tabs > .el-tabs__header >.el-tabs__nav-wrap >.el-tabs__nav-scroll >.el-tabs__nav {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  width: 100%;
-  .el-tabs__item {
-    height: 50px;
-    padding: 0px;
-    border-bottom-width: 3px;
-    --tw-border-opacity: 1;
-    border-color: rgba(75, 75, 75, var(--tw-border-opacity));
-  }
 }
 
 </style>

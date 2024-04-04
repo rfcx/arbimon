@@ -1,14 +1,32 @@
 import { type AxiosInstance } from 'axios'
 
-import { type CoreReviewStatus, type ValidationStatus } from './classifier-job-information'
+import { type ValidationStatus, ARBIMON_CORE_REVIEW_STATUS_MAP } from './classifier-job-information'
 
 // Request type
 export interface GetClassifierJobSpeciesQueryParams {
   q?: string
-  order?: 'asc' | 'desc'
-  sort?: 'name' | CoreReviewStatus
-  limit?: string
-  offset?: string
+  /**
+   * Comma separated string of columns to sort like `name,unvalidated`.
+   * Append negative sign in the front of the text to denote descending
+   * sort by that column. For example
+   *
+   * `name,-unvalidated`
+   *
+   * means sort first by `name` ascendingly, then sort second by `unvalidated` descendingly.
+   *
+   * Possible column names for sorting:
+   *
+   * ```
+   * - name
+   * - unvalidated
+   * - notPresent
+   * - present
+   * - unknown
+   * ```
+   */
+  sort?: string
+  limit?: number
+  offset?: number
 }
 
 export interface GetClassifierJobSpeciesParams {
@@ -22,7 +40,7 @@ export type ClassifierJobSpecies = ValidationStatus & {
   image: string | null
 }
 
-export const validSortParams = ['name', 'unvalidated', 'notPresent', 'present', 'unknown']
+export const validSortColumns: string[] = Object.keys(ARBIMON_CORE_REVIEW_STATUS_MAP as Record<string, string>).concat('name')
 
 export const xTotalSpeciesCountHeaderName = 'x-total-species-count'
 export type GetClassifierJobSpeciesResponse = ClassifierJobSpecies[]
@@ -31,7 +49,11 @@ export type GetClassifierJobSpeciesResponse = ClassifierJobSpecies[]
 export const getClassifierJobSpeciesRoute = '/jobs/:jobId/species'
 
 // Service
-export const apiBioGetClassifierJobSpecies = async (apiClient: AxiosInstance, jobId: number, params: GetClassifierJobSpeciesQueryParams): Promise<{ total: number, data: GetClassifierJobSpeciesResponse }> => {
+export const apiBioGetClassifierJobSpecies = async (
+  apiClient: AxiosInstance,
+  jobId: number,
+  params: GetClassifierJobSpeciesQueryParams
+): Promise<{ total: number, data: GetClassifierJobSpeciesResponse }> => {
   const response = await apiClient.get(`/jobs/${jobId}/species`, { params })
 
   let totalCount = 0

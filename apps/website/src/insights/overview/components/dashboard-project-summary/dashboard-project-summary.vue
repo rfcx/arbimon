@@ -244,9 +244,9 @@ const isEnabled = computed(() => {
   return isAboutTabEditing.value !== true || isMethodsTabEditing.value !== true || isKeyResultTabEditing.value !== true || isResourcesTabEditing.value !== true
 })
 
-const { isLoading, data: profile } = useGetProjectInfo(apiClientBio, computed(() => store.selectedProject?.id ?? -1), ['readme', 'keyResults', 'resources', 'methods'], isEnabled)
+const { isLoading, data: profile } = useGetProjectInfo(apiClientBio, computed(() => store.project?.id ?? -1), ['readme', 'keyResults', 'resources', 'methods'], isEnabled)
 
-const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.project?.id ?? -1)
 
 const updateReadme = (value: string): void => {
   const update: ProjectProfileUpdateBody = {

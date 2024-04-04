@@ -47,7 +47,21 @@ export const create = async (data: Omit<UserProfile, 'id' | 'createdAt' | 'updat
 }
 
 export const update = async (email: string, data: Omit<UserProfile, 'id' | 'idAuth0' | 'createdAt' | 'updatedAt'>): Promise<void> => {
-  await UserProfileModel.upsert({ ...data, email })
+  // Check for existing user with this email, do a case-insensitive search
+  const user = await UserProfileModel.findOne({
+    where: sequelize.where(
+        sequelize.fn('lower', sequelize.col('email')),
+        sequelize.fn('lower', email)
+    )
+  })
+
+  if (user) {
+    const { email, ...rest } = data
+    user.set(rest)
+    await user.save()
+  } else {
+    await UserProfileModel.create({ ...data, email })
+  }
 }
 
 // TODO: Move to organizations DAO

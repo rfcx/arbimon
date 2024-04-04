@@ -1,11 +1,11 @@
 import { type AxiosInstance } from 'axios'
 
 import { type DetectRouteParamsSerialized, DETECT_SPECIFIC_ROUTE_PREFIX, detectSpecificRoutePrefix } from '../_helpers/detect-specific-route'
-import { type ReviewStatus } from './detect-detections'
+import { type ArbimonReviewStatus } from '../cnn/classifier-job-information'
 
 // Request body
 export interface DetectReviewDetectionBody {
-  status: Exclude<ReviewStatus, 'unreviewed'>
+  status: Exclude<ArbimonReviewStatus, 'unvalidated'>
   classification: string
   streamId: string
   classifier: number

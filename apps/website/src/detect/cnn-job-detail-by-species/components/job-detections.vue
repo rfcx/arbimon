@@ -1,66 +1,97 @@
 <template>
-  <div class="job-result-detections mt-4">
-    <template
-      v-for="species in allSpecies"
-      :key="'job-detections-' + species.speciesSlug"
-    >
-      <div
-        v-for="dt in species.media"
-        :key="`job-detection-result-by-species-${dt.id}`"
-        class="inline-block mt-3 mr-4"
+  <div class="flex flex-col gap-y-4 mt-4">
+    <DetectionValidator
+      v-if="validationCount && isOpen"
+      :detection-count="validationCount"
+      :filter-options="filterOptions"
+      @emit-validation="validateDetection"
+      @emit-close="closeValidator"
+    />
+    <div>
+      <template
+        v-for="species in allSpecies"
+        :key="'job-detections-' + species.speciesSlug"
       >
-        <DetectionItem
-          :id="dt.id"
-          :spectrogram-url="dt.spectrogramUrl"
-          :audio-url="dt.audioUrl"
-          :validation="dt.validation"
-          :checked="dt.checked"
-          :site="dt.site"
-          :start="dt.start"
-          :score="dt.score"
-          @emit-detection="updateSelectedDetections"
-        />
-      </div>
-    </template>
+        <div
+          v-for="dt in species.media"
+          :key="`job-detection-result-by-species-${dt.id}`"
+          class="inline-block mt-3 mr-4"
+        >
+          <DetectionItem
+            :id="dt.id"
+            :spectrogram-url="dt.spectrogramUrl"
+            :audio-url="dt.audioUrl"
+            :validation="dt.validation"
+            :checked="dt.checked"
+            :site="dt.site"
+            :start="dt.start"
+            :score="dt.score"
+            @emit-detection="updateSelectedDetections"
+          />
+        </div>
+      </template>
+    </div>
   </div>
-
-  <div class="w-full flex flex-row-reverse">
-    <div class="job-result-detections-paginator">
+  <div
+    v-if="props.data && !props.data.length && !props.isLoading"
+    class="w-full mx-auto text-center mt-35 xl:mt-45"
+  >
+    <span>No detections found.</span>
+  </div>
+  <div
+    v-if="props.isLoading"
+    class="w-full flex justify-center mt-35 xl:mt-45"
+  >
+    <icon-custom-ic-loading class="animate-spin w-8 h-8 lg:mx-24 text-center" />
+  </div>
+  <div
+    v-if="props.data?.length"
+    class="w-full flex flex-row justify-end my-6"
+  >
+    <div class="flex flex-row items-center text-sm gap-x-1">
+      <div class="text-sm">
+        <input
+          v-model.number="pageIndex"
+          type="number"
+          min="1"
+          :max="5"
+          class="text-center bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+        >
+      </div>
+      <span>of</span>
+      <span class="px-1.5 text-sm">{{ maxPage }}</span>
+      <span>pages</span>
+    </div>
+    <div class="flex flex-row gap-x-1">
       <button
-        :class="page - 1 === 0 ? 'not-disabled:btn cursor-not-allowed bg-steel-gray not-disabled:btn-icon' : 'not-disabled:btn not-disabled:btn-icon'"
+        class="btn btn-icon ml-4 rounded-md bg-fog border-0 disabled:hover:btn-disabled disabled:btn-disabled"
         :disabled="page - 1 === 0"
         @click="previousPage()"
       >
-        <icon-fas-chevron-left class="w-3 h-3" />
+        <icon-fas-chevron-left class="w-3 h-3 text-pitch" />
       </button>
       <button
-        :class="props.data == null || props.data.length < pageSize ? 'not-disabled:btn not-disabled:btn-icon ml-2 cursor-not-allowed bg-steel-gray' : 'not-disabled:btn not-disabled:btn-icon ml-2'"
+        class="btn btn-icon ml-2 rounded-md bg-fog border-0 disabled:hover:btn-disabled disabled:btn-disabled"
         :disabled="props.data == null || props.data.length < pageSize"
         @click="nextPage()"
       >
-        <icon-fas-chevron-right class="w-3 h-3" />
+        <icon-fas-chevron-right class="w-3 h-3 text-pitch" />
       </button>
     </div>
   </div>
-  <DetectionValidator
-    v-if="validationCount && isOpen"
-    :detection-count="validationCount"
-    :filter-options="filterOptions"
-    @emit-validation="validateDetection"
-    @emit-close="closeValidator"
-  />
 </template>
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { groupBy } from 'lodash-es'
-import { computed, inject } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { type DetectDetectionsResponse, type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
-import { apiBioDetectReviewDetection } from '@rfcx-bio/common/api-bio/detect/review-detections'
+import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { type GetDetectionsResponse } from '@rfcx-bio/common/api-bio/cnn/detections'
 
 import { useDetectionsReview } from '@/detect/_composables/use-detections-review'
+import { useUpdateDetectionStatus } from '@/detect/_composables/use-update-detection-status'
 import DetectionValidator from '@/detect/cnn-job-detail/components/detection-validator.vue'
 import type { DetectionMedia, DetectionValidationStatus } from '@/detect/cnn-job-detail/components/types'
 import { apiClientKey } from '@/globals'
@@ -70,34 +101,37 @@ import { validationStatus } from '~/store/detections-constants'
 import DetectionItem from '../../cnn-job-detail/components/detection-item.vue'
 
 const store = useStore()
+const route = useRoute()
 
-const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectDetectionsResponse | undefined, page: number, pageSize: number }>(), {
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: GetDetectionsResponse | undefined, page: number, pageSize: number, maxPage: number }>(), {
   isLoading: true,
   isError: false,
   data: undefined
 })
 
-const emit = defineEmits<{(e: 'update:page', value: number): void}>()
+const emit = defineEmits<{(e: 'update:page', value: number): void, (e: 'emitValidationResult'): void}>()
 
-const route = useRoute()
-
-const apiClientBio = inject(apiClientKey) as AxiosInstance
+const pageIndex = ref(props.page ?? 1)
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
+
+watch(() => props.page, () => {
+  pageIndex.value = props.page
+})
 
 const nextPage = (): void => {
   if (props.data == null || props.data.length < props.pageSize) {
     return
   }
-
-  emit('update:page', props.page + 1)
+  emit('update:page', pageIndex.value + 1)
 }
 
 const previousPage = (): void => {
-  if (props.page - 1 === 0) {
+  if (pageIndex.value - 1 === 0) {
     return
   }
-
-  emit('update:page', props.page - 1)
+  emit('update:page', pageIndex.value - 1)
 }
 
 const filterOptions = computed<DetectionValidationStatus[]>(() => {
@@ -107,7 +141,7 @@ const filterOptions = computed<DetectionValidationStatus[]>(() => {
     return {
       value: s.value,
       label: s.label,
-      checked: s.value === 'unreviewed'
+      checked: s.value === 'unvalidated'
     } as DetectionValidationStatus
   })
 
@@ -119,7 +153,7 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
     return []
   }
 
-  const groupedDetections: Record<string, DetectDetectionsResponse> = groupBy(props.data ?? [], d => d.classification.value)
+  const groupedDetections: Record<string, GetDetectionsResponse> = groupBy(props.data ?? [], d => d.classification.value)
   const species: Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(groupedDetections).map(slug => {
     return {
       speciesSlug: slug,
@@ -127,7 +161,7 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
       media: groupedDetections[slug].map(detection => {
         return {
           spectrogramUrl: getMediaLink({
-            streamId: detection.siteId,
+            streamId: detection.siteIdCore,
             start: detection.start,
             end: detection.end,
             frequency: 'full',
@@ -142,7 +176,7 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
             fileExtension: 'png'
           }),
           audioUrl: getMediaLink({
-            streamId: detection.siteId,
+            streamId: detection.siteIdCore,
             start: detection.start,
             end: detection.end,
             frequency: 'full',
@@ -154,7 +188,7 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
           validation: detection.reviewStatus,
           score: detection.confidence,
           start: detection.start,
-          site: store.projectFilters?.locationSites.filter((site) => site.idCore === detection.siteId)[0]?.name ?? ''
+          site: store.projectFilters?.locationSites.filter((site) => site.idCore === detection.siteIdCore)[0]?.name ?? ''
         }
       })
     }
@@ -172,27 +206,28 @@ const {
   getSelectedDetectionIds
 } = useDetectionsReview(allSpecies)
 
-const validateDetection = async (validation: ReviewStatus): Promise<void> => {
+const { mutate: mutateUpdateDetectionStatus } = useUpdateDetectionStatus(apiClientBio)
+
+const validateDetection = async (validation: ArbimonReviewStatus): Promise<void> => {
   const selectedDetectionIds = getSelectedDetectionIds()
 
-  // call review api
   const promises = selectedDetectionIds.map(id => {
-    // this will always be a success case
-    const originalDetection = (props.data ?? []).find(d => id === d.id)
-
-    return apiBioDetectReviewDetection(apiClientBio, jobId.value, {
-      // this is a safe cast because the validation selector always start at 'unreviewed' union
-      // and the emitter is emitted when there's a change (watch), which means the change will
-      // always be from 'unreviewed' to other type.
-      status: validation as Exclude<ReviewStatus, 'unreviewed'>,
-      classification: originalDetection?.classification?.value ?? '',
-      streamId: originalDetection?.siteId ?? '',
-      classifier: originalDetection?.classifierId ?? -1,
-      start: originalDetection?.start ?? ''
+    const originalDetection = (props.data ?? []).find(d => Number(id) === d.id)
+    return mutateUpdateDetectionStatus({
+      jobId: jobId.value,
+      siteIdCore: originalDetection?.siteIdCore ?? '',
+      start: originalDetection?.start ?? '',
+      status: validation as Exclude<ArbimonReviewStatus, 'unvalidated'>,
+      classificationValue: originalDetection?.classification?.value ?? '',
+      classifierId: originalDetection?.classifierId ?? -1
+    }, {
+      onSuccess: () => {},
+      onError: () => {}
     })
   })
 
   const responses = await Promise.allSettled(promises)
   updateValidatedDetections(selectedDetectionIds, validation, responses)
+  emit('emitValidationResult')
 }
 </script>

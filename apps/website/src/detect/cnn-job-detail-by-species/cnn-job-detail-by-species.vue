@@ -1,10 +1,13 @@
 <template>
   <section class="max-w-screen-xl pt-22 pl-115px pr-4">
     <div>
-      <JobDetailHeader :species-name="speciesName" />
-      <JobFilterOptions
-        :species-name="speciesName"
-        :detections-count="jobDetections?.length"
+      <JobDetailHeader :species-name="speciesClass" />
+      <JobValidationHeader
+        :species-name="speciesClass"
+        :detections-count="totalDetections"
+        :filtered-result="jobDetections?.length"
+        :page-size="PAGE_SIZE_LIMIT"
+        @emit-page-size="onEmitPageSize"
       />
       <JobValidationStatus
         :total="speciesCount?.total ?? 0"
@@ -18,6 +21,8 @@
         :is-error="isErrorJobDetections"
         :data="jobDetections"
         :page-size="PAGE_SIZE_LIMIT"
+        :max-page="Math.ceil(Number(totalDetections)/PAGE_SIZE_LIMIT)"
+        @emit-validation-result="refetchJobResults()"
       />
     </div>
   </section>
@@ -28,7 +33,8 @@ import type { AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { DetectDetectionsQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { apiBioGetClassifierJobSpecies } from '@rfcx-bio/common/api-bio/cnn/classifier-job-species'
+import { type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { apiClientKey } from '@/globals'
@@ -38,16 +44,17 @@ import { useGetJobDetectionSummary } from '../_composables/use-get-job-detection
 import { useGetJobValidationResults } from '../_composables/use-get-job-validation-results'
 import JobDetailHeader from './components/job-detail-header.vue'
 import JobDetections from './components/job-detections.vue'
-import JobFilterOptions from './components/job-filter-options.vue'
+import JobValidationHeader from './components/job-validation-header.vue'
 import JobValidationStatus from './components/job-validation-status.vue'
 
 const route = useRoute()
-const PAGE_SIZE_LIMIT = 100
+const PAGE_SIZE_LIMIT = ref<number>(25)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 const speciesSlug = computed(() => typeof route.params.speciesSlug === 'string' ? route.params.speciesSlug : '')
+const totalDetections = ref('')
 const page = ref(1)
 
 const isRefetch = ref<boolean>(true)
@@ -73,7 +80,7 @@ const { data: jobSummary, refetch: refetchJobSummary } = useGetJobDetectionSumma
   refetchInterval
 )
 
-const { data: jobResults } = useGetJobValidationResults(apiClientBio, jobId.value, { fields: ['classifications_summary'] }, refetchInterval)
+const { data: jobResults, refetch: refetchJobResults } = useGetJobValidationResults(apiClientBio, jobId.value, { fields: ['classifications_summary'] }, refetchInterval)
 
 watch(jobSummary, async (newValue) => {
   isRefetch.value = isRefetchIntervalEnable.value
@@ -87,18 +94,18 @@ watch(jobSummary, async (newValue) => {
   detectionsResultFilterBySpeciesStore.updateCustomSitesList(newValue.streams)
 })
 
-const speciesName = computed(() => {
+const speciesClass = computed(() => {
   if (speciesSlug.value === '' || jobResults.value == null) {
-    return ''
+    return speciesSlug.value
   }
 
   const found = jobResults.value.classificationsSummary.find(c => c.value === speciesSlug.value)
 
   if (found == null) {
-    return ''
+    return speciesSlug.value
   }
-
-  return `${found.title} (${found.value})`
+  getClassifierJobSpecies(found.title)
+  return `${found.title}`
 })
 
 const speciesCount = computed(() => {
@@ -111,40 +118,48 @@ const speciesCount = computed(() => {
 })
 
 const offset = computed<number>(() => {
-  return (page.value - 1) * PAGE_SIZE_LIMIT
+  return (page.value - 1) * PAGE_SIZE_LIMIT.value
 })
 
-const params = computed<DetectDetectionsQueryParams>(() => {
+const classifierId = computed(() => {
+  return jobSummary.value?.classifierId
+})
+
+const detectionsQueryParams = computed<GetDetectionsQueryParams>(() => {
   return {
     start: detectionsResultFilterBySpeciesStore.selectedStartRange,
     end: detectionsResultFilterBySpeciesStore.selectedEndRange,
-    classifications: [speciesSlug.value],
+    reviewStatus: detectionsResultFilterBySpeciesStore.filter.validationStatus === 'all' ? undefined : detectionsResultFilterBySpeciesStore.filter.validationStatus,
     sites: detectionsResultFilterBySpeciesStore.filter.siteIds,
-    reviewStatuses: detectionsResultFilterBySpeciesStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterBySpeciesStore.filter.validationStatus],
-    minConfidence: detectionsResultFilterBySpeciesStore.formattedThreshold,
-    descending: detectionsResultFilterBySpeciesStore.filter.sortBy === 'desc',
-    limit: PAGE_SIZE_LIMIT,
-    offset: offset.value,
-    fields: [
-      'id',
-      'stream_id',
-      'classifier_id',
-      'start',
-      'end',
-      'confidence',
-      'review_status',
-      'classification'
-    ]
-  }
+    classifierJobId: jobId.value,
+    classification: speciesSlug.value,
+    confidence: detectionsResultFilterBySpeciesStore.filter.minConfidence,
+    classifierId: classifierId.value,
+    limit: PAGE_SIZE_LIMIT.value,
+    offset: offset.value
+  } as GetDetectionsQueryParams
 })
 
 const isRefetchIntervalEnable = computed(() => {
   return jobSummary.value?.status != null && jobSummary.value.status === CLASSIFIER_JOB_STATUS.RUNNING
 })
 
-const {
-  isLoading: isLoadingJobDetections,
-  isError: isErrorJobDetections,
-  data: jobDetections
-} = useGetJobDetections(apiClientBio, jobId.value, params, computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== ''), refetchInterval)
+const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: jobDetections } = useGetJobDetections(
+  apiClientBio,
+  detectionsQueryParams,
+  computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== ''),
+  refetchInterval
+)
+
+const onEmitPageSize = (pageSize: number) => {
+  PAGE_SIZE_LIMIT.value = pageSize
+}
+
+const getClassifierJobSpecies = async (q: string): Promise<void> => {
+  const response = await apiBioGetClassifierJobSpecies(apiClientBio, jobId.value, { q })
+
+  if (response?.data === undefined) return
+  const species = response?.data[0]
+  totalDetections.value = (species.unvalidated + species.notPresent + species.unknown + species.present).toString()
+}
 </script>

@@ -73,12 +73,14 @@ export const getOpensearchProjects = async (query: string, limit: number, offset
       slug: hit._source.slug,
       status: hit._source.status,
       image: fileUrl(hit._source.image) ?? '',
+      thumbnail: fileUrl(hit._source.thumbnail) ?? '',
       objectives: hit._source.objectives,
       summary: hit._source.summary,
       readme: hit._source.readme,
       speciesCount: hit._source.species_count,
       recordingMinutesCount: hit._source.recording_minutes_count,
-      countryCodes: hit._source.country_codes
+      countryCodes: hit._source.country_codes,
+      species: hit._source.species
     }
   })
 

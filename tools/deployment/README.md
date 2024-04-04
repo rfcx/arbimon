@@ -3,7 +3,7 @@
 Overview:
 
 - Biodiversity Analytics is built and deployed by a Github Actions [workflow](../.github/workflows/build-deploy.yml) -- this workflow deploys both `api` (node/fastify) and `website` (nginx/vue)
-- The workflow is triggered by pushes to master/staging/develop; runs can be found [here](https://github.com/rfcx/biodiversity-analytics/actions)
+- The workflow is triggered by pushes to master/staging/develop; runs can be found [here](https://github.com/rfcx/arbimon/actions)
 - Build is done inside a Docker container (see [`Dockerfile`](./Dockerfile))
 - Deployment is made to Kubernetes (configuration folders `production`, `staging` and `testing` correspond to the Kubernetes namespace)
 - Notifications are posted on Slack `#alerts-deployment` and `#alerts-deployment-production`

@@ -25,30 +25,22 @@
           <li
             v-for="status in detectionsResultFilterBySpeciesStore.validationStatusFilterOptions"
             :key="status.value"
-            class="bg-moss px-2 hover:text-util-gray-01"
+            class="bg-moss hover:text-util-gray-01"
             @click="selectedStatus = status.value"
           >
             <div
-              class="flex flex-row gap-x-2 items-center border-1 rounded-md cursor-pointer bg-moss h-10 px-2"
-              :class="{'border-frequency': selectedStatus === status.value, 'border-transparent': selectedStatus !== status.value}"
+              class="border-1 rounded-full cursor-pointer bg-moss"
+              :class="{'border-chirp': selectedStatus === status.value, 'border-transparent': selectedStatus !== status.value}"
             >
-              <icon-custom-fi-unvalidated
-                v-if="status.value === 'unreviewed'"
-                class="h-4 w-4"
-              />
-              <icon-custom-fi-present
-                v-if="status.value === 'confirmed'"
-                class="h-4 w-4"
-              />
-              <icon-custom-fi-not-present
-                v-if="status.value === 'rejected'"
-                class="h-4 w-4"
-              />
-              <icon-custom-fi-unknown
-                v-if="status.value === 'uncertain'"
-                class="h-4 w-4"
-              />
-              {{ status.label }}
+              <div
+                class="flex flex-row gap-x-3 items-center h-10 pl-5"
+              >
+                <ValidationStatus
+                  v-if="status.value !== 'all'"
+                  :value="formatStatus(status.value)"
+                />
+                {{ status.label }}
+              </div>
             </div>
           </li>
         </ul>
@@ -68,7 +60,9 @@
         class="flex flex-row items-center justify-between bg-transparent border-1 border-frequency rounded-full text-insight px-5 py-2 w-41"
         type="button"
       >
-        <span>{{ selectedSitesTitle }}</span>
+        <div class="whitespace-nowrap text-ellipsis overflow-hidden">
+          {{ selectedSitesTitle }}
+        </div>
         <span>
           <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />
         </span>
@@ -153,7 +147,7 @@
         id="groupingDropdownHover"
         class="z-10 hidden rounded-lg p-3 bg-moss w-68 flex flex-col gap-y-3"
       >
-        <div class="text-insight flex whitespace-nowrap px-2">
+        <div class="text-insight flex whitespace-nowrap pl-5">
           Groupings
         </div>
         <div class="border-b-1 border-util-gray-03" />
@@ -162,11 +156,19 @@
           class="flex flex-col gap-y-1"
         >
           <li
-            class="bg-moss px-2 border-1 rounded-md cursor-pointer hover:text-util-gray-01"
-            :class="{'border-frequency': selectedGrouping === 'minConfidence', 'border-transparent': selectedGrouping !== 'minConfidence'}"
+            class="bg-moss hover:text-util-gray-01"
             @click="selectedGrouping = 'minConfidence'"
           >
-            Minimum Confidence
+            <div
+              class="border-1 rounded-full cursor-pointer bg-moss"
+              :class="{'border-chirp': selectedGrouping === 'minConfidence', 'border-transparent': selectedGrouping !== 'minConfidence'}"
+            >
+              <div
+                class="flex flex-row gap-x-2 items-center h-10 pl-5"
+              >
+                Minimum Confidence
+              </div>
+            </div>
           </li>
         </ul>
         <button
@@ -184,12 +186,15 @@
 import { Dropdown, initDropdowns } from 'flowbite'
 import { type Ref, computed, onMounted, ref } from 'vue'
 
-import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
+import ValidationStatus from './../../cnn-job-detail/components/validation-status.vue'
+
+const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void}>()
 
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
-const selectedStatus = ref<ReviewStatus | 'all'>('all')
+const selectedStatus = ref<ArbimonReviewStatus | 'all'>('all')
 const selectedGrouping = ref<string>()
 const selectedSites = ref<string[]>(detectionsResultFilterBySpeciesStore.sitesFilterOptions.map(site => site.value))
 let statusDropdown: Dropdown
@@ -212,17 +217,20 @@ const closeGroupingDropdown = (): void => {
   groupingDropdown.value.hide()
 }
 
-const filterDetectionsByStatus = (status: ReviewStatus | 'all') => {
+const filterDetectionsByStatus = (status: ArbimonReviewStatus | 'all') => {
   detectionsResultFilterBySpeciesStore.filter.validationStatus = status
 }
 
 const groupingDetections = (groupBy: string | undefined) => {
-  console.info('grouping detections', groupBy)
-  detectionsResultFilterBySpeciesStore.filter.minConfidence = 0.5
+  emit('emitMinConfidence', groupBy === 'minConfidence')
 }
 
 const filterDetectionsBySite = () => {
   detectionsResultFilterBySpeciesStore.filter.siteIds = selectedSites.value
+}
+
+const formatStatus = (status: ArbimonReviewStatus | 'all') => {
+  return status as ArbimonReviewStatus
 }
 
 const selectedSitesTitle = computed(() => {

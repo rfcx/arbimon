@@ -150,14 +150,13 @@ import SiteInput from '@/_services/picker/site-input.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
 import { apiClientCoreKey, apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useStore } from '~/store'
 import { useClassifiers } from '../_composables/use-classifiers'
 import { useDetectRecording } from '../_composables/use-detect-recording'
 import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 
 const router = useRouter()
 const store = useStore()
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const errorText = 'Error - there’s a problem loading the models. Please refresh this page and try again.'
 
@@ -168,7 +167,7 @@ const job: ClassifierJobCreateConfiguration = reactive({
   queryStreams: null,
   queryStart: null,
   queryEnd: null,
-  queryHours: null
+  queryHours: '0-23'
 })
 
 const recordingQuery: DetectRecordingQueryParams = reactive({
@@ -185,15 +184,15 @@ const project = reactive({
 const hasProjectPermission = ref(false)
 
 onMounted(() => {
-  job.projectIdCore = store.selectedProject?.idCore ?? null
-  project.projectId = store.selectedProject?.id.toString() ?? '-1'
-  hasProjectPermission.value = projectUserPermissionsStore.isMember
+  job.projectIdCore = store.project?.idCore ?? null
+  project.projectId = store.project?.id.toString() ?? '-1'
+  hasProjectPermission.value = store.userIsProjectMember
 })
 
-watch(() => store.selectedProject, () => {
-  job.projectIdCore = store.selectedProject?.idCore ?? null
-  project.projectId = store.selectedProject?.id.toString() ?? '-1'
-  hasProjectPermission.value = projectUserPermissionsStore.isMember
+watch(() => store.project, () => {
+  job.projectIdCore = store.project?.idCore ?? null
+  project.projectId = store.project?.id.toString() ?? '-1'
+  hasProjectPermission.value = store.userIsProjectMember
 })
 
 // Internal data

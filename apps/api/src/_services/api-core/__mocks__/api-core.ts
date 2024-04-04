@@ -1,5 +1,7 @@
 import { vi } from 'vitest'
 
+import { type Classifier } from '@rfcx-bio/common/api-bio/classifiers/classifiers'
+
 import { type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobTotalDetections, type CoreDetection } from '../types'
 
 const randomCoreId = (): string => (Math.random() + 1).toString(36).substring(6)
@@ -67,9 +69,10 @@ export const getClassifierJobTotalDetectionsCount = vi.fn(async (): Promise<Core
   return {
     reviewStatus: {
       total: 18,
+      unreviewed: 2,
       uncertain: 2,
       confirmed: 2,
-      rejected: 14
+      rejected: 12
     }
   }
 })
@@ -84,6 +87,7 @@ export const getClassifierJobSummaries = vi.fn(async (): Promise<{ total: number
           value: 'calciformis_cannabis_common_song',
           image: null,
           total: 8,
+          unreviewed: 1,
           uncertain: 2,
           confirmed: 5,
           rejected: 0
@@ -93,6 +97,7 @@ export const getClassifierJobSummaries = vi.fn(async (): Promise<{ total: number
           value: 'doodoo_cyphleris_common_song_1',
           image: null,
           total: 10,
+          unreviewed: 1,
           uncertain: 4,
           confirmed: 3,
           rejected: 2
@@ -111,7 +116,12 @@ export const getDetections = vi.fn(async (): Promise<CoreDetection[]> => {
       end: '2022-01-01T00:00:05.000+0700',
       classifier_id: 19,
       confidence: 0.984947475,
-      review_status: null
+      review_status: null,
+      classification: {
+        title: 'Schelrus Carolinensis simple call 1',
+        value: 'schelrus_carolinensis_simple_call_1',
+        image: null
+      }
     },
     {
       id: '19919235',
@@ -120,7 +130,12 @@ export const getDetections = vi.fn(async (): Promise<CoreDetection[]> => {
       end: '2022-01-01T00:00:10.000+0700',
       classifier_id: 19,
       confidence: 0.984947475,
-      review_status: -1
+      review_status: -1,
+      classification: {
+        title: 'Schelrus Carolinensis simple call 1',
+        value: 'schelrus_carolinensis_simple_call_1',
+        image: null
+      }
     },
     {
       id: '19919236',
@@ -129,7 +144,12 @@ export const getDetections = vi.fn(async (): Promise<CoreDetection[]> => {
       end: '2022-01-01T00:00:15.000+0700',
       classifier_id: 19,
       confidence: 0.984947475,
-      review_status: 0
+      review_status: 0,
+      classification: {
+        title: 'Schelrus Carolinensis simple call 1',
+        value: 'schelrus_carolinensis_simple_call_1',
+        image: null
+      }
     },
     {
       id: '19919237',
@@ -138,7 +158,44 @@ export const getDetections = vi.fn(async (): Promise<CoreDetection[]> => {
       end: '2022-01-01T00:00:20.000+0700',
       classifier_id: 19,
       confidence: 0.984947475,
-      review_status: 1
+      review_status: 1,
+      classification: {
+        title: 'Schelrus Carolinensis simple call 1',
+        value: 'schelrus_carolinensis_simple_call_1',
+        image: null
+      }
     }
   ]
 })
+
+export const getClassifiers = vi.fn(async (): Promise<Classifier[]> => {
+  return [
+    {
+      id: 1,
+      name: 'asia-elephant-edge',
+      version: 5
+    },
+    {
+      id: 2,
+      name: 'asia-elephant-edge',
+      version: 4
+    },
+    {
+      id: 3,
+      name: 'gunshot',
+      version: 1
+    },
+    {
+      id: 4,
+      name: 'pr-parrot',
+      version: 2
+    },
+    {
+      id: 5,
+      name: 'pr-parrot',
+      version: 1
+    }
+  ]
+})
+
+export const updateDetectionStatus = vi.fn(async (): Promise<void> => {})

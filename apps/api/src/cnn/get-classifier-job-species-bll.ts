@@ -1,23 +1,13 @@
-import { type ClassifierJobSpecies, type GetClassifierJobSpeciesQueryParams, validSortParams } from '@rfcx-bio/common/api-bio/cnn/classifier-job-species'
+import { type ClassifierJobSpecies, type GetClassifierJobSpeciesQueryParams, validSortColumns } from '@rfcx-bio/common/api-bio/cnn/classifier-job-species'
+import { SortCondition } from '@rfcx-bio/common/ordering'
 
 import { parseLimitOffset } from '@/search/helpers'
 import { getClassifierJobSummaries } from '~/api-core/api-core'
-import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
-import { getUnvalidatedCount } from '~/maths'
+import { BioInvalidPathParamError } from '~/errors'
 
 export const getClassifierJobSpecies = async (token: string, jobId: string | undefined, params: GetClassifierJobSpeciesQueryParams): Promise<{ total: number, data: ClassifierJobSpecies[] }> => {
-  if (jobId === undefined || jobId === null || jobId === '' || Number.isNaN(Number(jobId))) {
+  if (jobId === undefined || jobId === '' || Number.isNaN(Number(jobId))) {
     throw BioInvalidPathParamError({ jobId })
-  }
-
-  if (params?.sort !== undefined && !validSortParams.includes(params.sort)) {
-    throw BioInvalidQueryParamError({ sort: params?.sort })
-  }
-
-  if (
-    params?.order !== undefined && !['asc', 'desc'].includes(params.order)
-  ) {
-    throw BioInvalidQueryParamError({ order: params.order })
   }
 
   // Empty string in ilike clause will return nothing
@@ -25,13 +15,21 @@ export const getClassifierJobSpecies = async (token: string, jobId: string | und
     params.q = undefined
   }
 
+  const conditions = new SortCondition(params?.sort ?? '')
+
+  conditions.keep(validSortColumns)
+
+  conditions.rename('unvalidated', 'unreviewed')
+  conditions.rename('notPresent', 'rejected')
+  conditions.rename('unknown', 'uncertain')
+  conditions.rename('present', 'confirmed')
+
   const { limit, offset } = parseLimitOffset(params.limit, params.offset, { defaultLimit: 25 })
   const summaries = await getClassifierJobSummaries(token, Number(jobId), {
     keyword: params?.q,
     limit,
     offset,
-    sort: params?.sort,
-    order: params?.order
+    sort: conditions.toString() === '' ? undefined : conditions.toString()
   })
 
   return {
@@ -41,7 +39,7 @@ export const getClassifierJobSpecies = async (token: string, jobId: string | und
         title: c.title,
         value: c.value,
         image: c.image,
-        unvalidated: getUnvalidatedCount(c),
+        unvalidated: c.unreviewed,
         notPresent: c.rejected,
         unknown: c.uncertain,
         present: c.confirmed
