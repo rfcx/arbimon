@@ -122,13 +122,20 @@
           </div>
           <!-- Modal body -->
           <div class="grid gap-x-4 w-full sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-            <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 items-center m-auto">
+            <div
+              v-if="isLoadingSpecies"
+              class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 items-center m-auto"
+            >
               <icon-custom-ic-loading
-                v-if="isLoadingSpecies"
                 class="animate-spin w-8 h-8 lg:mx-24 mx-12"
               />
+            </div>
+            <div
+              v-else
+              class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 items-center"
+            >
               <h6
-                v-else-if="!speciesForCurrentPage.length"
+                v-if="!speciesForCurrentPage.length"
               >
                 No species found.
               </h6>
