@@ -104,7 +104,7 @@
                   v-for="(riskRating, index) in existingRisk"
                   :key="riskRating.code"
                   class="items-center"
-                  @click="filterByCode(existingRisk[index])"
+                  @click="filterByCode(existingRisk[index].id)"
                 >
                   <div
                     class="h-6 cursor-pointer text-md text-center select-none px-2 rounded-sm self-center"
@@ -251,7 +251,6 @@ import type { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common
 import { type ProjectSpeciesFieldSet, type ProjectSpeciesResponse, apiBioGetProjectSpecies } from '@rfcx-bio/common/api-bio/species/project-species-all'
 
 import { apiClientKey } from '@/globals'
-import { type RiskRatingUi } from '~/risk-ratings'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { useHighlightedSpeciesStore, useStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
@@ -273,7 +272,7 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => store.project?.id)
 
 const searchKeyword = ref<string>()
-const searchRisk = ref<string>()
+const searchRisk = ref<number>()
 const isSearchBoxFocused = ref(false)
 const showHaveReachedLimit = ref(false)
 
@@ -349,7 +348,7 @@ watch(() => currentPage.value, () => {
 
 const getSpeciesWithPage = () => {
   if (speciesFromStore.value.length === 0 || searchKeyword.value !== undefined || searchRisk.value !== undefined) {
-    fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
+    fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value?.toString())
   } else {
     total.value = pdStore.totalSpecies
     isLoadingSpecies.value = false
@@ -377,19 +376,16 @@ const setPage = (page: number) => {
 }
 
 const existingRisk = computed(() => {
-  return [
-    RISKS_BY_ID[DEFAULT_RISK_RATING_ID],
-    RISKS_BY_ID[0],
-    RISKS_BY_ID[100],
-    RISKS_BY_ID[200],
-    RISKS_BY_ID[300],
-    RISKS_BY_ID[400],
-    RISKS_BY_ID[500],
-    RISKS_BY_ID[600],
-    RISKS_BY_ID[700],
-    RISKS_BY_ID[800],
-    RISKS_BY_ID[900]
-  ]
+  const allSpeciesRiskID = Object.keys(RISKS_BY_ID).map(Number)
+  return allSpeciesRiskID.map((id: number) => {
+      return {
+        id,
+        name: RISKS_BY_ID[id].label,
+        color: RISKS_BY_ID[id].color,
+        code: RISKS_BY_ID[id].code,
+        text: RISKS_BY_ID[id].text
+      }
+    })
 })
 
 const newSpeciesToAdd = computed(() => {
@@ -435,13 +431,13 @@ const clearSearchRisk = (): void => {
   getSpeciesWithPage()
 }
 
-const filterByCode = (risk: RiskRatingUi): void => {
+const filterByCode = (riskId: number): void => {
   currentPage.value = 1
 
-  if (searchRisk.value === risk.id) {
+  if (searchRisk.value === riskId) {
     searchRisk.value = undefined
-  } else searchRisk.value = risk.id
-  fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, risk.id)
+  } else searchRisk.value = riskId
+  fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, riskId.toString())
 }
 
 const saveHighlightedSpecies = async (): Promise<void> => {
