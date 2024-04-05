@@ -120,6 +120,7 @@
             :editable="canEdit"
             :is-project-member="isProjectMember"
             :is-viewing-as-guest="isViewingAsGuest"
+            @on-error="errorMessage"
             @on-editor-close="updateReadme"
           />
         </div>
@@ -141,6 +142,7 @@
             :editable="canEdit"
             :is-project-member="isProjectMember"
             :is-viewing-as-guest="isViewingAsGuest"
+            @on-error="errorMessage"
             @on-editor-close="updateMethods"
           />
         </div>
@@ -162,6 +164,7 @@
             :editable="canEdit"
             :is-project-member="isProjectMember"
             :is-viewing-as-guest="isViewingAsGuest"
+            @on-error="errorMessage"
             @on-editor-close="updateKeyResult"
           />
         </div>
@@ -197,6 +200,7 @@
             :editable="canEdit"
             :is-project-member="isProjectMember"
             :is-viewing-as-guest="isViewingAsGuest"
+            @on-error="errorMessage"
             @on-editor-close="updateResources"
           />
         </div>
@@ -379,4 +383,7 @@ onMounted(() => {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const t = new Tabs(document.getElementById('project-summary-tab'), tabs, options)
 })
+
+const errorMessage = ref('')
+
 </script>
