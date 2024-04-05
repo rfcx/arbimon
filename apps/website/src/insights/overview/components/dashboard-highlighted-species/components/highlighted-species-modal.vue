@@ -264,7 +264,6 @@ const emit = defineEmits<{(e: 'emitClose'): void}>()
 
 const speciesForCurrentPage = ref<HighlightedSpeciesRow[]>([])
 const isLoadingSpecies = ref(false)
-const LIMIT = 10
 const highlightedSpeciesSelected : HighlightedSpeciesRow[] = []
 const pdStore = useHighlightedSpeciesStore()
 
@@ -283,7 +282,6 @@ const selectedSpecies = ref<HighlightedSpeciesRow[]>([])
 const PAGE_SIZE = 10
 const currentPage = ref(1)
 const total = ref(0)
-const alltTotal = ref(0)
 
 const speciesWithPage = computed(() => pdStore.getSpeciesByPage(currentPage.value, PAGE_SIZE))
 
@@ -295,7 +293,6 @@ watch(() => props.toggleShowModal, async () => {
 
   pdStore.updateselectedProjectId(selectedProjectId.value ?? -1)
   getSpeciesWithPage()
-  await fetchProjectsSpecies(LIMIT, 0)
   props.highlightedSpecies.forEach(s => highlightedSpeciesSelected.push(s))
 })
 
@@ -340,11 +337,10 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
       riskRating: RISKS_BY_ID[riskId ?? DEFAULT_RISK_RATING_ID]
     })
   })
-  if (keyword === undefined && riskRatingId === undefined) {
-    alltTotal.value = s.total
-    pdStore.updateSpecies(speciesForCurrentPage.value, offset)
-  }
   isLoadingSpecies.value = false
+  if (keyword === undefined && riskRatingId === undefined) {
+    pdStore.updateSpecies(speciesForCurrentPage.value, offset, s.total)
+  }
 }
 
 watch(() => currentPage.value, () => {
@@ -355,7 +351,7 @@ const getSpeciesWithPage = () => {
   if (speciesWithPage.value.length === 0 || searchKeyword.value !== undefined || searchRisk.value !== undefined) {
     fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
   } else {
-    total.value = alltTotal.value
+    total.value = pdStore.totalSpecies
     isLoadingSpecies.value = false
     speciesForCurrentPage.value = speciesWithPage.value
   }
