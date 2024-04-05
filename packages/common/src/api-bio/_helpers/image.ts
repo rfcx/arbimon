@@ -9,3 +9,12 @@ export const buildVariantPath = (imagePath: string, variant: ImageVariant): stri
 
     return imagePath
 }
+
+export const isS3Image = (pathOrUrl: string): boolean => {
+    if (pathOrUrl.startsWith('http://') || pathOrUrl.startsWith('https://') || pathOrUrl.startsWith('static://')) {
+        return false
+    }
+
+    // Assume it's a storage path
+    return true
+}
