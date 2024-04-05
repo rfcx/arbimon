@@ -1,6 +1,6 @@
 import { type Sequelize, Op } from 'sequelize'
 
-import { isS3Image } from '@rfcx-bio/common/api-bio/_helpers'
+import {buildVariantPath, isS3Image} from '@rfcx-bio/common/api-bio/_helpers'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { resizeImage } from '@rfcx-bio/common/image'
 import { type StorageClient } from '@rfcx-bio/common/storage'
@@ -32,9 +32,9 @@ export const generateProjectThumbnails = async (sequelize: Sequelize, storage: S
         const { image = '' } = project
 
         if (isS3Image(image)) {
-            const thumbnailUrl = storage.getObjectPublicUrl(image, 'thumbnail')
+            const thumbnailPath = buildVariantPath(image, 'thumbnail')
             // check if thumbnail exists - get object
-            const thumbnailExists = await storage.objectExists(thumbnailUrl)
+            const thumbnailExists = await storage.objectExists(thumbnailPath)
             if (!thumbnailExists) {
                 // get image
                 const original = await storage.getObject(image)
@@ -44,7 +44,7 @@ export const generateProjectThumbnails = async (sequelize: Sequelize, storage: S
                 const { width, height, cacheControl } = PROJECT_IMAGE_CONFIG.thumbnail
                 const thumbnail = await resizeImage(original, { width, height })
                 // save thumbnail
-                await storage.putObject(thumbnailUrl, thumbnail, mimetype, true, { CacheControl: cacheControl })
+                await storage.putObject(thumbnailPath, thumbnail, mimetype, true, { CacheControl: cacheControl })
             }
         }
     }

@@ -2,8 +2,7 @@ import { type TCountryCode, getCountryData } from 'countries-list'
 import { type Dayjs } from 'dayjs'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
-// TODO
-// import fileUrl
+import { buildVariantPath, isS3Image } from '@rfcx-bio/common/api-bio/_helpers'
 import { type ProjectSpecies } from '@rfcx-bio/common/api-bio/search/search'
 import { masterObjectiveValues } from '@rfcx-bio/common/dao/master-data'
 
@@ -92,9 +91,8 @@ export const getProjects = async (
         const foundObjective = masterObjectiveValues.find(masterObjective => masterObjective.slug === o)
         return foundObjective?.description ?? o
       }),
-      // TODO uncomment
-      // thumbnail: fileUrl(image, 'thumbnail') ?? '',
-      thumbnail: image,
+      // TODO re-check again
+      thumbnail: isS3Image(image) ? buildVariantPath(image, 'thumbnail') : '',
       species: species.map(sp => {
         const { code, countries = [], ...rest } = sp
         const { expanded = '', threatened = false } = code !== undefined ? RISK_RATING_EXPANDED[code] : {}
