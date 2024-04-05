@@ -308,7 +308,7 @@ const generateChart = (rezoom = true) => {
 }
 
 const updateDataSourcesAndLayers = () => {
-  const [rawNonZero, rawZero] = partition(props.dataset.data, d => d.values[props.dataKey] === true || (typeof d.values[props.dataKey] === 'number' && Number(d.values[props.dataKey]) > 0))
+  const [rawNonZero, rawZero] = partition(props.dataset.data, d => d.values['Total recordings'] === true || (typeof d.values['Total recordings'] === 'number' && Number(d.values['Total recordings']) > 0))
   if (props.mapStatisticsStyle !== MAPBOX_STYLE_HEATMAP) {
     updateDataSourceAndLayer(DATA_LAYER_ZERO_ID, rawZero, { ...styleToPaint.value(props.styleZero) })
     updateDataSourceAndLayer(DATA_LAYER_NONZERO_ID, rawNonZero, { ...styleToPaint.value(props.styleNonZero) })
