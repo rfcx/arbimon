@@ -136,6 +136,7 @@
             >
               <h6
                 v-if="!speciesForCurrentPage.length"
+                class="text-center"
               >
                 No species found.
               </h6>
