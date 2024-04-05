@@ -1,4 +1,7 @@
-import { getClassifierJobInformationRoute, updateClassifierJobStatusRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import {
+  getClassifierJobInformationRoute,
+  updateClassifierJobRoute
+} from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { getClassifierJobSpeciesRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-job-species'
 import { getClassifierJobsRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-jobs'
 import { getDetectionsRoute } from '@rfcx-bio/common/api-bio/cnn/detections'
@@ -12,7 +15,7 @@ import { getClassifierJobSpeciesHandler } from './get-classifier-job-species-han
 import { getClassifierJobsHandler } from './get-classifier-jobs-handler'
 import { getDetectionsHandler } from './get-detections-handler'
 import { getRecordedMinutesPerDayHandler } from './get-recorded-minutes-per-day-handler'
-import { updateClassifierJobStatusHandler } from './update-classifier-job-status-handler'
+import { updateClassifierJobHandler } from './update-classifier-job-handler'
 import { updateDetectionStatusHandler } from './update-detection-status-handler'
 
 export const routesCnn: RouteRegistration[] = [
@@ -54,8 +57,8 @@ export const routesCnn: RouteRegistration[] = [
   },
   {
     method: PATCH,
-    url: updateClassifierJobStatusRoute,
+    url: updateClassifierJobRoute,
     preHandler: [requireRfcxEmail],
-    handler: updateClassifierJobStatusHandler
+    handler: updateClassifierJobHandler
   }
 ]

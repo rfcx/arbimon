@@ -3,7 +3,10 @@ import { type FastifyLoggerInstance } from 'fastify'
 
 import { type ClassifierQueryParams, type ClassifierResponse } from '@rfcx-bio/common/api-bio/classifiers/classifier'
 import { type Classifier } from '@rfcx-bio/common/api-bio/classifiers/classifiers'
-import { type EligibleUpdateClassifierJobStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import {
+  type EligibleUpdateClassifierJobStatus,
+  UpdateClassifierJobBody
+} from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type DetectSummaryQueryParams, type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { type DetectValidationResultsQueryParams, type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 import { type DetectReviewDetectionBody, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
@@ -376,7 +379,7 @@ export async function checkUserPermissionForEditingDashboardContent (token: stri
   }
 }
 
-export async function updateClassifierJobStatus (token: string, classifierJobId: number, classifierJobStatus: EligibleUpdateClassifierJobStatus): Promise<void> {
+export async function updateClassifierJob (token: string, classifierJobId: number, data: UpdateClassifierJobBody): Promise<void> {
   try {
     await axios.request({
       method: 'PATCH',
@@ -384,9 +387,7 @@ export async function updateClassifierJobStatus (token: string, classifierJobId:
       headers: {
         authorization: token
       },
-      data: {
-        status: classifierJobStatus
-      }
+      data
     })
   } catch (e) {
     return unpackAxiosError(e)

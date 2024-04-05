@@ -42,15 +42,15 @@ export interface GetClassifierJobInformationParams {
   jobId: string
 }
 
-export type UpdateClassifierJobStatusParams = GetClassifierJobInformationParams
+export type UpdateClassifierJobParams = GetClassifierJobInformationParams
 
-export interface UpdateClassifierJobStatusBody {
+export interface UpdateClassifierJobBody {
   status: EligibleUpdateClassifierJobStatus
 }
 
 // Route
 export const getClassifierJobInformationRoute = '/jobs/:jobId'
-export const updateClassifierJobStatusRoute = getClassifierJobInformationRoute
+export const updateClassifierJobRoute = getClassifierJobInformationRoute
 
 // Service
 export const apiBioGetClassifierJobInformation = async (apiClient: AxiosInstance, jobId: number): Promise<GetClassifierJobInformationResponse> => {
@@ -58,8 +58,6 @@ export const apiBioGetClassifierJobInformation = async (apiClient: AxiosInstance
   return response.data
 }
 
-export const apiBioUpdateClassifierJobStatus = async (apiClient: AxiosInstance, jobId: number, status: EligibleUpdateClassifierJobStatus): Promise<void> => {
-  await apiClient.patch(`/jobs/${jobId}`, {
-    status
-  })
+export const apiBioUpdateClassifierJob = async (apiClient: AxiosInstance, jobId: number, body: UpdateClassifierJobBody): Promise<void> => {
+  await apiClient.patch(`/jobs/${jobId}`, body)
 }
