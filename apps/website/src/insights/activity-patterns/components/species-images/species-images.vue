@@ -46,12 +46,14 @@
         </div>
         <button
           class="absolute left-2 top-0 bottom-0 z-20 my-auto w-8 h-8 rounded-full invisible bg-box-gray bg-opacity-30 group-hover:(visible shadow-md) hover:(bg-opacity-50) focus:(border-transparent outline-none)"
+          :class="{ 'opacity-30': speciesPhotos.length === 1 }"
           @click="prevSlide"
         >
           <icon-custom-chevron-left class="text-xxs m-auto" />
         </button>
         <button
           class="absolute right-2 top-0 bottom-0 z-20 my-auto w-8 h-8 rounded-full invisible bg-box-gray bg-opacity-30 group-hover:(visible shadow-md) hover:(bg-opacity-50) focus:(border-transparent outline-none)"
+          :class="{ 'opacity-30': speciesPhotos.length === 1 }"
           @click="nextSlide"
         >
           <icon-custom-chevron-right class="text-xxs m-auto" />
