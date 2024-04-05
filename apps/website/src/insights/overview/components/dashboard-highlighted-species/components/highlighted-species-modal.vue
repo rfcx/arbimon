@@ -342,7 +342,7 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
   }
 }
 
-watch(() => currentPage.value, () => {
+watch(currentPage, () => {
   getSpeciesWithPage()
 })
 
