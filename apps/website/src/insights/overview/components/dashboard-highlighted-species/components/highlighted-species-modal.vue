@@ -283,7 +283,7 @@ const PAGE_SIZE = 10
 const currentPage = ref(1)
 const total = ref(0)
 
-const speciesWithPage = computed(() => pdStore.getSpeciesByPage(currentPage.value, PAGE_SIZE))
+const speciesFromStore = computed(() => pdStore.getSpeciesByPage(currentPage.value, PAGE_SIZE))
 
 const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
 const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
@@ -309,7 +309,7 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
   if (keyword !== undefined || riskRatingId !== undefined) {
     isLoadingSpecies.value = true
   } else {
-    if (speciesWithPage.value.length === 0) {
+    if (speciesFromStore.value.length === 0) {
       isLoadingSpecies.value = true
     }
   }
@@ -324,7 +324,7 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
   }
   const s = projectSpecies as ProjectSpeciesResponse
   total.value = s.total
-  if (speciesWithPage.value.length !== 0 && keyword === undefined && riskRatingId === undefined) return
+  if (speciesFromStore.value.length !== 0 && keyword === undefined && riskRatingId === undefined) return
   speciesForCurrentPage.value = []
   s.species.forEach(sp => {
     const { slug, taxonSlug, scientificName, commonName, photoUrl, riskId } = sp as DashboardSpecies
@@ -348,12 +348,12 @@ watch(() => currentPage.value, () => {
 })
 
 const getSpeciesWithPage = () => {
-  if (speciesWithPage.value.length === 0 || searchKeyword.value !== undefined || searchRisk.value !== undefined) {
+  if (speciesFromStore.value.length === 0 || searchKeyword.value !== undefined || searchRisk.value !== undefined) {
     fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value)
   } else {
     total.value = pdStore.totalSpecies
     isLoadingSpecies.value = false
-    speciesForCurrentPage.value = speciesWithPage.value
+    speciesForCurrentPage.value = speciesFromStore.value
   }
 }
 
