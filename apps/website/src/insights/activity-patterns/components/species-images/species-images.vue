@@ -89,18 +89,9 @@ const currentIdx = ref(0)
 
 const nextSlide = () => {
   currentIdx.value = (currentIdx.value + 1) % speciesPhotos.length
-  updateCarousel()
 }
 
 const prevSlide = () => {
   currentIdx.value = (currentIdx.value - 1 + speciesPhotos.length) % speciesPhotos.length
-  updateCarousel()
-}
-
-const updateCarousel = () => {
-  if (carousel.value) {
-    const offset = -currentIdx.value * carousel.value.clientWidth
-    carousel.value.style.transform = `translateX(${offset}px)`
-  }
 }
 </script>
