@@ -23,23 +23,12 @@
         <div class="flex items-center lg:order-2">
           <div
             v-if="isLoading"
-            class="flex items-center space-x-4 font-medium animate-pulse"
+            class="flex items-center space-x-4 font-medium <lg:hidden"
           >
-            <div
-              role="status"
-              class="flex items-center space-x-4 font-medium animate-pulse"
-            >
-              <div class="flex max-w-sm items-center space-x-4 font-medium">
-                <div class="tab bg-util-gray-03 relative block h-5 w-24 rounded-full dark:bg-util-gray-03" />
-                <div class="flex">
-                  <div class="dark:focus:ring-frequency/10 mr-3 flex rounded-full text-sm focus:ring-4 md:mr-0">
-                    <div class="bg-util-gray-03 h-8 w-8 rounded-full dark:bg-util-gray-03" />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div class="tab bg-util-gray-03 relative block h-5 w-24 rounded-full dark:bg-util-gray-03 loading-shimmer" />
+            <div class="bg-util-gray-03 h-8 w-8 rounded-full dark:bg-util-gray-03 loading-shimmer" />
           </div>
-          <client-only v-if="!toggles?.legacyLogin">
+          <client-only v-else-if="!toggles?.legacyLogin">
             <auth-navbar-item
               dom-id="navbar-auth-desktop"
               class="<lg:hidden"
