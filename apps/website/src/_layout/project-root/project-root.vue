@@ -1,5 +1,5 @@
 <template>
-  <landing-navbar v-if="isViewingAsGuest" />
+  <landing-navbar v-if="shouldShowNavbar" />
   <sidebar v-else />
   <div
     v-if="store.project"
@@ -25,6 +25,7 @@ import Sidebar from '../components/side-bar/side-bar.vue'
 const store = useStore()
 const route = useRoute()
 
-const isViewingAsGuest = computed(() => route.query.guest === '1' || store.userIsExternalGuest)
+// view as guest, or does not have a permission to view the project
+const shouldShowNavbar = computed(() => route.query.guest === '1' || store.userIsExternalGuest || store.project === undefined)
 
 </script>
