@@ -40,7 +40,7 @@
           >
             <map-base-component
               :dataset="mapDataset()"
-              data-key="refactorThis"
+              :data-key="MAP_KEY"
               :loading="false"
               :get-popup-html="getPopupHtml"
               map-export-name="dashboard-sites"
@@ -144,7 +144,7 @@ const { isLoading: isLoadingSitesRecCountBio, data: projectSitesRecCount } = use
 
 const BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 
-const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
+const MAP_KEY = 'total_recordings_per_site'
 const isShowLabels = true
 const mapGroundStyle: MapboxGroundStyle = MAPBOX_STYLE_SATELLITE_STREETS
 const mapStatisticsStyle: MapboxStatisticsStyle = MAPBOX_STYLE_CIRCLE
@@ -176,7 +176,12 @@ const analyses = computed(() => [
   { value: 'rfm', title: 'Random Forest Models', iconName: 'fi-rfm', count: rfmCount.value, isLoading: isLoadingRFMCount.value || isLoadingSpDetected.value, label: 'Models completed', speciesTitle: 'Species analyzed', speciesDetected: rfmSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` }
 ])
 
-const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`
+const getPopupHtml = (data: MapSiteData, dataKey: string): string => {
+  return `<div class="font-sans"><strong>Site name: </strong>${data.siteName} <br>
+    <strong>Total recordings: </strong>${data.values[`${dataKey}`]} <br>
+    <strong>Days with recordings: </strong>${data.values['Days with recordings']}</div>
+  `
+}
 const hasOpenedAnalysisSelector = ref(false)
 
 function color (): string {
@@ -194,17 +199,16 @@ function mapDataset (): MapDataSet {
     sites: store.projectFilters?.locationSites ?? [],
     data: (store.projectFilters?.locationSites ?? [])
       .map(({ id, name: siteName, latitude, longitude }) => ({
-        siteName: 'Site Name',
+        siteName,
         isExpand: true,
         latitude,
         longitude,
         values: {
-          [MAP_KEY_THAT_SHOULD_NOT_EXIST]: siteName,
-          'Total recordings': findTotalRecordings(id),
+          [MAP_KEY]: findTotalRecordings(id),
           'Days with recordings': findDaysWithRecordings(id)
         }
       })),
-    maxValues: { [MAP_KEY_THAT_SHOULD_NOT_EXIST]: 0 }
+    maxValues: { [MAP_KEY]: maxRecordings.value }
   }
 }
 
@@ -222,6 +226,8 @@ function findDaysWithRecordings (id: number): number {
   else return site.days
 }
 
+const maxRecordings = computed(() => projectSitesRecCount.value?.map(site => site.recordings).reduce((acc, curr) => Math.max(acc, curr), 0) ?? 0)
+
 function mapInitialBounds (): LngLatBoundsLike | undefined {
   const project = store.project
   if (project === undefined) return undefined
@@ -229,7 +235,7 @@ function mapInitialBounds (): LngLatBoundsLike | undefined {
 }
 
 function circleFormatter (): MapBaseFormatter {
-  return new CircleFormatterNormalizedWithMin({ maxValueRaw: 2 })
+  return new CircleFormatterNormalizedWithMin({ maxValueRaw: maxRecordings.value })
 }
 
 function toggleAnalysisSelector (isOpened: boolean): void {
