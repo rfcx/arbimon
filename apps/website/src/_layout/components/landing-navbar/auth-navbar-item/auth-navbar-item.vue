@@ -18,26 +18,6 @@
   </div>
   <div v-else>
     <div
-      v-if="isLoading"
-      class="flex items-center space-x-4 font-medium animate-pulse"
-    >
-      <div
-        role="status"
-        class="flex items-center space-x-4 font-medium animate-pulse"
-      >
-        <div class="flex max-w-sm items-center space-x-4 font-medium">
-          <div class="tab bg-util-gray-03 relative block h-5 w-24 rounded-full dark:bg-util-gray-03" />
-          <div class="flex">
-            <div class="dark:focus:ring-frequency/10 mr-3 flex rounded-full text-sm focus:ring-4 md:mr-0">
-              <div class="bg-util-gray-03 h-8 w-8 rounded-full dark:bg-util-gray-03" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div
-      v-else
       class="flex items-center space-x-4 font-medium"
     >
       <router-link
@@ -98,7 +78,7 @@
 import { type Auth0Client } from '@auth0/auth0-spa-js'
 import { type AxiosInstance } from 'axios'
 import { initDropdowns } from 'flowbite'
-import { computed, inject, nextTick, onMounted, ref } from 'vue'
+import { computed, inject, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { apiArbimonLegacyClearSession } from '@rfcx-bio/common/api-arbimon/legacy-logout'
@@ -140,16 +120,7 @@ const openProfile = async (): Promise<void> => {
   void router.replace({ name: ROUTE_NAMES.accountSettings })
 }
 
-const isLoading = ref<boolean>(true)
-
-onMounted(async () => {
-  console.info('auth-navbar-item mounted', store.user)
-  const authenticated = await auth.isAuthenticated()
-  console.info('authenticated', authenticated)
-  isLoading.value = false
-  await nextTick()
-  if (authenticated) {
-    initDropdowns()
-  }
+onMounted(() => {
+  initDropdowns()
 })
 </script>
