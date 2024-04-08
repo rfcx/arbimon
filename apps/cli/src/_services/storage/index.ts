@@ -1,6 +1,6 @@
 import { StorageClient } from '@rfcx-bio/common/storage'
 
-import {optionalEnv, requireEnv} from '~/env'
+import { optionalEnv, requireEnv } from '~/env'
 
 const {
     AWS_S3_ENDPOINT: endpoint
