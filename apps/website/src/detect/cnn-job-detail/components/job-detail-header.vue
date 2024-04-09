@@ -27,13 +27,6 @@
     <div class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse hidden">
       <button
         v-if="isCancelJobEnable"
-        class="btn btn-secondary py-2 flex flex-row justify-center items-center"
-      >
-        <icon-custom-fi-pause class="h-4 w-4 mr-2" />
-        <span class="pt-1">Pause job</span>
-      </button>
-      <button
-        v-if="isCancelJobEnable"
         class="btn btn-danger py-2 flex flex-row justify-center items-center"
       >
         <span class="pt-1">Cancel job</span>
