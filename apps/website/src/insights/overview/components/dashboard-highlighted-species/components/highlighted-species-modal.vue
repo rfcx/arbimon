@@ -291,7 +291,6 @@ const currentPage = ref(1)
 const total = ref(0)
 
 const speciesFromStore = computed(() => pdStore.getSpeciesByPage(currentPage.value, PAGE_SIZE))
-const checkReachedLimit = computed(() => selectedSpecies.value.length >= 5)
 
 const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
 const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
@@ -409,7 +408,7 @@ const speciesToRemove = computed(() => {
 const findIndexToRemove = (slug: string): void => {
   const index = selectedSpecies.value.findIndex(s => s.slug === slug)
   selectedSpecies.value.splice(index, 1)
-  showHaveReachedLimit.value = checkReachedLimit.value
+  showHaveReachedLimit.value = selectedSpecies.value.length >= 5
 }
 
 const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
@@ -420,7 +419,7 @@ const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
     if (selectedSpecies.value.length < 5) {
       selectedSpecies.value.push(specie)
     } else {
-      showHaveReachedLimit.value = checkReachedLimit.value
+      showHaveReachedLimit.value = selectedSpecies.value.length >= 5
     }
   }
 }
