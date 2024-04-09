@@ -91,7 +91,6 @@ export const getProjects = async (
         const foundObjective = masterObjectiveValues.find(masterObjective => masterObjective.slug === o)
         return foundObjective?.description ?? o
       }),
-      // TODO re-check again
       thumbnail: isS3Image(image) ? buildVariantPath(image, 'thumbnail') : '',
       species: species.map(sp => {
         const { code, countries = [], ...rest } = sp
