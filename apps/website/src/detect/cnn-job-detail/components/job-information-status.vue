@@ -22,7 +22,7 @@
     />
     <span class="ml-2 text-base text-insight">{{ classifierStatus.title }}</span>
     <div
-      class="w-52 ml-4 bg-pitch rounded-full h-3 border-1"
+      class="w-52 lg:w-68 ml-4 bg-pitch rounded-full h-3 border-1 "
       :class="`${classifierStatus.borderColor}`"
     >
       <div
