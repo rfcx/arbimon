@@ -3,6 +3,3 @@
 
 # Generated JSON files
 src/**/*.json
-
-# Env
-.env
