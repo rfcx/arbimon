@@ -444,12 +444,9 @@ const filterByCode = (riskId: number): void => {
 }
 
 const saveHighlightedSpecies = async (): Promise<void> => {
-  if (!speciesToRemove.value.length && !newSpeciesToAdd.value.length) {
-    emit('emitClose')
-  } else {
-    if (speciesToRemove.value.length) await deleteHighlightedSpecies()
-    if (newSpeciesToAdd.value.length) await addHighlightedSpecies()
-  }
+  if (speciesToRemove.value.length) await deleteHighlightedSpecies()
+  if (newSpeciesToAdd.value.length) await addHighlightedSpecies()
+  if (!speciesToRemove.value.length && !newSpeciesToAdd.value.length) emit('emitClose')
 }
 
 const deleteHighlightedSpecies = async (): Promise<void> => {
