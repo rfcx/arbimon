@@ -215,7 +215,7 @@
             >
               <HighlightedSpeciesSelector
                 :species="selectedSpecies"
-                @emit-remove-specie="removeSpecieFromList"
+                @emit-remove-specie="findIndexToRemove"
               />
             </div>
           </div>
@@ -263,7 +263,7 @@ import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
 import { useHighlightedSpeciesStore, useStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
 import { useDeleteSpecieHighlighted, usePostSpeciesHighlighted } from '../composables/use-post-highlighted-species'
-import HighlightedSpeciesSelector, { type SpecieRow } from './highlighted-species-selector.vue'
+import HighlightedSpeciesSelector from './highlighted-species-selector.vue'
 import SpecieCard from './species-card.vue'
 
 const props = defineProps<{ highlightedSpecies: HighlightedSpeciesRow[], toggleShowModal: boolean }>()
@@ -356,6 +356,7 @@ watch(currentPage, () => {
 })
 
 const getSpeciesWithPage = () => {
+  isLoadingSpecies.value = true
   if (speciesFromStore.value.length === 0 || searchKeyword.value !== undefined || searchRisk.value !== undefined) {
     fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value?.toString())
   } else {
@@ -408,6 +409,7 @@ const speciesToRemove = computed(() => {
 const findIndexToRemove = (slug: string): void => {
   const index = selectedSpecies.value.findIndex(s => s.slug === slug)
   selectedSpecies.value.splice(index, 1)
+  showHaveReachedLimit.value = checkReachedLimit.value
 }
 
 const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
@@ -427,15 +429,9 @@ const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
   return selectedSpecies.value.find(s => s.slug === specie.slug) !== undefined
 }
 
-const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
-  findIndexToRemove(specie.slug)
-  showHaveReachedLimit.value = checkReachedLimit.value
-}
-
 const clearSearchRisk = (): void => {
   currentPage.value = 1
   searchRisk.value = undefined
-  isLoadingSpecies.value = true
   getSpeciesWithPage()
 }
 

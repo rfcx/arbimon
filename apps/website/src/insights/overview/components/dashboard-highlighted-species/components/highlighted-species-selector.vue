@@ -47,7 +47,7 @@ export type SpecieRow = {
 }
 
 const props = defineProps<{ species: HighlightedSpeciesRow[] | undefined }>()
-const emit = defineEmits<{(e: 'emitRemoveSpecie', specie: SpecieRow): void }>()
+const emit = defineEmits<{(e: 'emitRemoveSpecie', slug: string): void }>()
 
 const speciesList = computed(() => {
   if (!props.species || !props.species.length) {
@@ -65,7 +65,7 @@ const speciesList = computed(() => {
 })
 
 const removeSpecie = (specie: SpecieRow): void => {
-  emit('emitRemoveSpecie', specie)
+  emit('emitRemoveSpecie', specie.slug)
 }
 
 </script>
