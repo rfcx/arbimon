@@ -6,3 +6,5 @@ export const PROJECT_IMAGE_CONFIG = {
         ACL: 'public-read'
     }
 }
+
+export const BATCH_LIMIT = 1000

@@ -60,21 +60,27 @@ afterAll(async () => {
 
 describe('Generate thumbnails', async () => {
     test('generates and saves thumbnail images', async () => {
+        // Arrange
+        const initialThumbnailExists = await storage.objectExists(p1PathThumbnail)
+
         // Act
         await generateProjectThumbnails(sequelize, storage)
 
         // Assert
         const thumbnail = await storage.getObject(p1PathThumbnail)
+        expect(initialThumbnailExists).toBe(false)
         expect(thumbnail).toBeDefined()
     })
 
     test('generates thumbnails only for eligible projects', async () => {
-        vi.spyOn(storage, 'putObject')
+        // Arrange
+        const putObject = vi.spyOn(storage, 'putObject')
+
         // Act
         await generateProjectThumbnails(sequelize, storage)
 
         // Assert
-        expect(storage.putObject).toBeCalledTimes(1)
+        expect(putObject).toBeCalledTimes(1)
     })
 
     test('generated thumbnails have correct dimensions', async () => {

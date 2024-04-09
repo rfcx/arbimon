@@ -1,4 +1,4 @@
-import { PROJECT_IMAGE_CONFIG } from 'images/config'
+import { BATCH_LIMIT, PROJECT_IMAGE_CONFIG } from 'images/config'
 import { type Sequelize, Op } from 'sequelize'
 
 import { buildVariantPath, isS3Image } from '@rfcx-bio/common/api-bio/_helpers'
@@ -13,18 +13,30 @@ import { type GetObjectResponse, type StorageClient } from '@rfcx-bio/common/sto
  * @param storage - Storage instance
  */
 export const generateProjectThumbnails = async (sequelize: Sequelize, storage: StorageClient): Promise<void> => {
+    let offset = 0
+    let responseCount = 1
+    const projects = []
+
     // Get projects with image
     const models = ModelRepository.getInstance(sequelize)
-    // TODO add batching
-    const projects = await models.LocationProjectProfile.findAll({
-        where: {
-            image: {
-                [Op.not]: null
-            }
-        },
-        attributes: ['image'],
-        raw: true
-    })
+    while (responseCount !== 0) {
+        const response = await models.LocationProjectProfile.findAll({
+            where: {
+                image: {
+                    [Op.not]: null
+                }
+            },
+            limit: BATCH_LIMIT,
+            offset,
+            attributes: ['image'],
+            raw: true
+        })
+
+        offset += BATCH_LIMIT
+        responseCount = response.length
+        projects.push(...response)
+    }
+
     // Go through projects
     for (const project of projects) {
         const { image = '' } = project
