@@ -23,6 +23,21 @@ const p1PathThumbnail = 'projects/879483/project-profile-image-12asdf.thumbnail.
 const p2Path = 'projects/878483/project-profile-image-12asdf.jpg'
 const p2PathThumbnail = 'projects/878483/project-profile-image-12asdf.thumbnail.jpg'
 const p3Path = 'static://project/others.png'
+const genericLocationProjectProfile = {
+    summary: '',
+    readme: '',
+    methods: '',
+    keyResult: '',
+    resources: '',
+    objectives: [],
+    dateStart: null,
+    dateEnd: null
+}
+const genericS3FileSettings = {
+    CacheControl: 'max-age=604800, s-maxage=604800',
+    ACL: 'public-read',
+    ContentType: 'image/jpg'
+}
 
 beforeAll(async () => {
     const p1 = makeProject(879483, 'Lemurs in Madagascar')
@@ -36,15 +51,27 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     // P1 has S3 profile image
-    await storage.putObject(p1Path, genericFile, { CacheControl: 'max-age=604800, s-maxage=604800', ACL: 'public-read', ContentType: 'image/jpg' })
+    await storage.putObject(p1Path, genericFile, genericS3FileSettings)
 
     // P2 has S3 profile image + thumbnail
-    await storage.putObject(p2Path, genericFile, { CacheControl: 'max-age=604800, s-maxage=604800', ACL: 'public-read', ContentType: 'image/jpg' })
-    await storage.putObject(p2PathThumbnail, genericFile, { CacheControl: 'max-age=604800, s-maxage=604800', ACL: 'public-read', ContentType: 'image/jpg' })
+    await storage.putObject(p2Path, genericFile, genericS3FileSettings)
+    await storage.putObject(p2PathThumbnail, genericFile, genericS3FileSettings)
 
-    await LocationProjectProfile.create({ locationProjectId: 879483, image: p1Path, summary: '', readme: '', methods: '', keyResult: '', resources: '', objectives: [], dateStart: null, dateEnd: null })
-    await LocationProjectProfile.create({ locationProjectId: 878483, image: p2Path, summary: '', readme: '', methods: '', keyResult: '', resources: '', objectives: [], dateStart: null, dateEnd: null })
-    await LocationProjectProfile.create({ locationProjectId: 877483, image: p3Path, summary: '', readme: '', methods: '', keyResult: '', resources: '', objectives: [], dateStart: null, dateEnd: null }) // no S3 image
+    await LocationProjectProfile.create({
+        locationProjectId: 879483,
+        image: p1Path,
+        ...genericLocationProjectProfile
+    })
+    await LocationProjectProfile.create({
+        locationProjectId: 878483,
+        image: p2Path,
+        ...genericLocationProjectProfile
+    })
+    await LocationProjectProfile.create({
+        locationProjectId: 877483,
+        image: p3Path,
+        ...genericLocationProjectProfile
+    }) // no S3 image
 })
 
 afterEach(async () => {
@@ -70,6 +97,9 @@ describe('Generate thumbnails', async () => {
         const thumbnail = await storage.getObject(p1PathThumbnail)
         expect(initialThumbnailExists).toBe(false)
         expect(thumbnail).toBeDefined()
+        expect(thumbnail).toBeInstanceOf(Buffer)
+        const imageMetadata = await getMetadata(thumbnail as Buffer)
+        expect(imageMetadata.format).toBe('jpeg')
     })
 
     test('generates thumbnails only for eligible projects', async () => {
