@@ -18,11 +18,11 @@ const { LocationProject, LocationProjectProfile } = ModelRepository.getInstance(
 const localImageUrl = '../website/src/_assets/default-species-image.jpg'
 const genericFile = fs.readFileSync(localImageUrl)
 const projectIds = [879483, 878483, 877483]
-const p1Path = 'projects/879483/project-profile-image-12asdf.jpg'
-const p1PathThumbnail = 'projects/879483/project-profile-image-12asdf.thumbnail.jpg'
-const p2Path = 'projects/878483/project-profile-image-12asdf.jpg'
-const p2PathThumbnail = 'projects/878483/project-profile-image-12asdf.thumbnail.jpg'
-const p3Path = 'static://project/others.png'
+const p1OriginalPath = 'projects/879483/project-profile-image-12asdf.jpg'
+const p1ThumbnailPath = 'projects/879483/project-profile-image-12asdf.thumbnail.jpg'
+const p2OriginalPath = 'projects/878483/project-profile-image-12asdf.jpg'
+const p2ThumbnailPath = 'projects/878483/project-profile-image-12asdf.thumbnail.jpg'
+const p3OriginalPath = 'static://project/others.png'
 const genericLocationProjectProfile = {
     summary: '',
     readme: '',
@@ -51,34 +51,34 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     // P1 has S3 profile image
-    await storage.putObject(p1Path, genericFile, genericS3FileSettings)
+    await storage.putObject(p1OriginalPath, genericFile, genericS3FileSettings)
 
     // P2 has S3 profile image + thumbnail
-    await storage.putObject(p2Path, genericFile, genericS3FileSettings)
-    await storage.putObject(p2PathThumbnail, genericFile, genericS3FileSettings)
+    await storage.putObject(p2OriginalPath, genericFile, genericS3FileSettings)
+    await storage.putObject(p2ThumbnailPath, genericFile, genericS3FileSettings)
 
     await LocationProjectProfile.create({
         locationProjectId: 879483,
-        image: p1Path,
+        image: p1OriginalPath,
         ...genericLocationProjectProfile
     })
     await LocationProjectProfile.create({
         locationProjectId: 878483,
-        image: p2Path,
+        image: p2OriginalPath,
         ...genericLocationProjectProfile
     })
     await LocationProjectProfile.create({
         locationProjectId: 877483,
-        image: p3Path,
+        image: p3OriginalPath,
         ...genericLocationProjectProfile
     }) // no S3 image
 })
 
 afterEach(async () => {
-    await storage.deleteObject(p1Path)
-    await storage.deleteObject(p2Path)
-    await storage.deleteObject(p1PathThumbnail)
-    await storage.deleteObject(p2PathThumbnail)
+    await storage.deleteObject(p1OriginalPath)
+    await storage.deleteObject(p2OriginalPath)
+    await storage.deleteObject(p1ThumbnailPath)
+    await storage.deleteObject(p2ThumbnailPath)
     await LocationProjectProfile.destroy({ where: { locationProjectId: { [Op.in]: projectIds } } })
 })
 afterAll(async () => {
@@ -88,13 +88,13 @@ afterAll(async () => {
 describe('Generate thumbnails', async () => {
     test('generates and saves thumbnail images', async () => {
         // Arrange
-        const initialThumbnailExists = await storage.objectExists(p1PathThumbnail)
+        const initialThumbnailExists = await storage.objectExists(p1ThumbnailPath)
 
         // Act
         await generateProjectThumbnails(sequelize, storage)
 
         // Assert
-        const thumbnail = await storage.getObject(p1PathThumbnail)
+        const thumbnail = await storage.getObject(p1ThumbnailPath)
         expect(initialThumbnailExists).toBe(false)
         expect(thumbnail).toBeDefined()
         expect(thumbnail).toBeInstanceOf(Buffer)
@@ -118,7 +118,7 @@ describe('Generate thumbnails', async () => {
         await generateProjectThumbnails(sequelize, storage)
 
         // Assert
-        const thumbnail = await storage.getObject(p1PathThumbnail) as Buffer
+        const thumbnail = await storage.getObject(p1ThumbnailPath) as Buffer
         expect(thumbnail).toBeDefined()
         const imageMetadata = await getMetadata(thumbnail)
         const config = PROJECT_IMAGE_CONFIG.thumbnail
