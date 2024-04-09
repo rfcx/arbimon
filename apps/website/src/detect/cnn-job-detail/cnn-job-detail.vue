@@ -1,5 +1,5 @@
 <template>
-  <section class="max-w-screen-xl pt-22 pl-115px pr-4">
+  <section class="max-w-screen-4xl pt-22 pl-115px pr-4 w-11/12">
     <job-detail-header
       :is-cancel-job-enable="isRefetchIntervalEnable"
       :is-canceling="isLoadingPostStatus"
