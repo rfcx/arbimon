@@ -1,5 +1,5 @@
 <template>
-  <section class="max-w-screen-xl py-20 pl-115px pr-4">
+  <section class="max-w-screen-4xl py-20 pl-115px pr-4">
     <div class="text-frequency">
       <page-title page-title="Create New CNN Job" />
     </div>
@@ -55,7 +55,7 @@
               Sites
             </label>
             <site-input
-              class="mt-2"
+              class="mt-2 w-10/12"
               :initial-sites="projectFilters?.locationSites"
               @emit-select-sites="onSelectQuerySites"
             />
@@ -72,7 +72,7 @@
               @emit-select-date-range="onSelectQueryDates"
             />
           </div>
-          <div class="mb-3 mt-5">
+          <div class="mb-3 mt-5 flex flex-col">
             <label
               for="time"
               class="block mb-2 text-base"
