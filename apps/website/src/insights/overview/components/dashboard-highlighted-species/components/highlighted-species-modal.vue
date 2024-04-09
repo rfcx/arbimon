@@ -291,6 +291,7 @@ const currentPage = ref(1)
 const total = ref(0)
 
 const speciesFromStore = computed(() => pdStore.getSpeciesByPage(currentPage.value, PAGE_SIZE))
+const checkReachedLimit = computed(() => selectedSpecies.value.length >= 5)
 
 const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
 const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
@@ -298,7 +299,7 @@ const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDel
 watch(() => props.toggleShowModal, async () => {
   setDefaultDisplay()
 
-  pdStore.updateselectedProjectId(selectedProjectId.value ?? -1)
+  pdStore.updateSelectedProjectId(selectedProjectId.value ?? -1)
   getSpeciesWithPage()
   props.highlightedSpecies.forEach(s => highlightedSpeciesSelected.push(s))
 })
@@ -412,13 +413,12 @@ const findIndexToRemove = (slug: string): void => {
 const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
   if (isSpecieSelected(specie)) {
     findIndexToRemove(specie.slug)
-    showHaveReachedLimit.value = selectedSpecies.value.length >= 5
   } else {
     // only 5 species might be highlighted
     if (selectedSpecies.value.length < 5) {
       selectedSpecies.value.push(specie)
     } else {
-      showHaveReachedLimit.value = true
+      showHaveReachedLimit.value = checkReachedLimit.value
     }
   }
 }
@@ -428,8 +428,8 @@ const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
 }
 
 const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
-  showHaveReachedLimit.value = false
   findIndexToRemove(specie.slug)
+  showHaveReachedLimit.value = checkReachedLimit.value
 }
 
 const clearSearchRisk = (): void => {
@@ -451,6 +451,7 @@ const filterByCode = (riskId: number): void => {
 const saveHighlightedSpecies = async (): Promise<void> => {
   if (speciesToRemove.value.length) await deleteHighlightedSpecies()
   if (newSpeciesToAdd.value.length) await addHighlightedSpecies()
+  if (!speciesToRemove.value.length && !newSpeciesToAdd.value.length) emit('emitClose')
 }
 
 const deleteHighlightedSpecies = async (): Promise<void> => {

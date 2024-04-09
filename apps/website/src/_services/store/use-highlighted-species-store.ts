@@ -26,7 +26,7 @@ export const useHighlightedSpeciesStore = defineStore('highlighted-species-store
     return allSpecies.value.filter(s => (s.index >= (page - 1) * limit) && s.index < (page * limit)).map(i => i.species)
   }
 
-  const updateselectedProjectId = (id: number): void => {
+  const updateSelectedProjectId = (id: number): void => {
     if (selectedProjectId.value !== id) {
       allSpecies.value = []
       selectedProjectId.value = id
@@ -37,6 +37,6 @@ export const useHighlightedSpeciesStore = defineStore('highlighted-species-store
     totalSpecies,
     updateSpecies,
     getSpeciesByPage,
-    updateselectedProjectId
+    updateSelectedProjectId
   }
 })
