@@ -1,9 +1,10 @@
 import {
     type GetObjectCommandOutput,
+    DeleteObjectCommand,
     GetObjectCommand,
     HeadObjectCommand,
     PutObjectCommand,
-    S3Client, DeleteObjectCommand
+    S3Client
 } from '@aws-sdk/client-s3'
 import type { PutObjectRequest } from '@aws-sdk/client-s3/dist-types/models/models_0'
 import type { Readable } from 'node:stream'
@@ -60,7 +61,6 @@ export class StorageClient {
             await this.client.send(command)
             return true
         } catch (e) {
-            // TODO check for 404 specifically
             return false
         }
     }

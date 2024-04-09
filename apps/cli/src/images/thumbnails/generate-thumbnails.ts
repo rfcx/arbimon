@@ -1,4 +1,4 @@
-import { BATCH_LIMIT, PROJECT_IMAGE_CONFIG } from 'images/config'
+import { BATCH_LIMIT, PROJECT_IMAGE_CONFIG, VERBOSE } from 'images/config'
 import { type Sequelize, Op } from 'sequelize'
 
 import { buildVariantPath, isS3Image } from '@rfcx-bio/common/api-bio/_helpers'
@@ -13,7 +13,7 @@ import { type GetObjectResponse, type StorageClient } from '@rfcx-bio/common/sto
  * @param storage {StorageClient} - Storage instance
  * @param verbose {boolean} - logging flag
  */
-export const generateProjectThumbnails = async (sequelize: Sequelize, storage: StorageClient, verbose: boolean = false): Promise<void> => {
+export const generateProjectThumbnails = async (sequelize: Sequelize, storage: StorageClient, verbose: boolean = VERBOSE): Promise<void> => {
     let offset = 0
     let responseCount = 1
     const projects = []
