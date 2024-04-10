@@ -1,34 +1,71 @@
 import { describe, expect, test, vi } from 'vitest'
 
+import { updateClassifierJobRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
+import { PATCH } from '~/api-helpers/types'
 import { routesCnn } from './index'
-import { updateClassifierJobRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 vi.mock('../_services/api-core/api-core')
 
+const jobId = 22
+const url = `/jobs/${jobId}`
+
 describe(`PATCH ${updateClassifierJobRoute}`, async () => {
-    test('updates the data successfully and returns 204', async () => {
+    test('exists', async () => {
         // Arrange
-        // const app = await makeApp(routesCnn, {
-        //     projectRole: 'user'
-        // })
-        //
-        // // Act
-        // const response = await app.inject({
-        //     method: 'PATCH',
-        //     url: '/detections/review',
-        //     payload: {
-        //         status: 'notPresent',
-        //         classifierId: 12,
-        //         classificationValue: 'scheluris_carolinensis_simple_call_2',
-        //         jobId: 225,
-        //         start: '2022-01-05T12:00:00.000+0000',
-        //         siteIdCore: 'kd9583ig385o'
-        //     }
-        // })
-        //
-        // // Assert
-        // expect(response.statusCode).toEqual(204)
+        const app = await makeApp(routesCnn, {
+            projectRole: 'user',
+            userToken: {
+                email: 'whoami@rfcx.org'
+            }
+        })
+
+        // Act
+        const routes = [...app.routes.keys()]
+
+        // Assert
+        expect(routes).toContain(updateClassifierJobRoute)
+    })
+    test('returns successfully', async () => {
+        // Arrange
+        const app = await makeApp(routesCnn, {
+            projectRole: 'user',
+            userToken: {
+                email: 'whoami@rfcx.org'
+            }
+        })
+
+        // Act
+        const response = await app.inject({
+            method: PATCH,
+            url,
+            payload: {
+                status: 50
+            }
+        })
+
+        // Assert
+        expect(response.statusCode).toBe(204)
+    })
+    test('returns an error when an invalid status is sent', async () => {
+        // Arrange
+        const app = await makeApp(routesCnn, {
+            projectRole: 'user',
+            userToken: {
+                email: 'whoami@rfcx.org'
+            }
+        })
+
+        // Act
+        const response = await app.inject({
+            method: PATCH,
+            url,
+            payload: {
+                status: 20
+            }
+        })
+
+        expect(response.statusCode).toBe(400)
     })
 })
