@@ -39,6 +39,7 @@ export const getClassifierJobSpecies = async (token: string, jobId: string | und
         title: c.title,
         value: c.value,
         image: c.image,
+        total: c.total,
         unvalidated: c.unreviewed,
         notPresent: c.rejected,
         unknown: c.uncertain,

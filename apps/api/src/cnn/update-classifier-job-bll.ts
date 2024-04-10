@@ -7,7 +7,7 @@ import { BioInvalidBodyError } from '~/errors'
 
 export const updateClassifierJob = async (token: string, jobId: string, body: UpdateClassifierJobBody): Promise<any> => {
   const { status } = body
-    if (status === 20 || status === 60) {
+    if (Number(status) === 20 || Number(status) === 60) {
       throw BioInvalidBodyError({ status })
     }
 
