@@ -9,8 +9,8 @@ on:
         - 'sync-daily'
         - 'sync-incremental'
         - 'export-csv'
-        - 'opensearch-full-reindex'
-        - 'recreate-opensearch-indexes'
+        - 'opensearch-sync-all'
+        - 'opensearch-recreate-indexes'
         required: true
       environment:
         description: Environment (namespace)
@@ -47,11 +47,11 @@ jobs:
                 "JOB_NAME": "biodiversity-cli-export-csv",
                 "NODE_COMMAND": "apps/cli/lib/export/export-csv.js"
               },
-              "opensearch-full-reindex": {
-                "JOB_NAME": "biodiversity-cli-opensearch-full-reindex",
+              "opensearch-sync-all": {
+                "JOB_NAME": "biodiversity-cli-opensearch-full-reindex-user",
                 "NODE_COMMAND": "apps/cli/lib/search/sync-all.js"
               },
-              "recreate-opensearch-indexes": {
+              "opensearch-recreate-indexes": {
                 "JOB_NAME": "biodiversity-cli-recreate-opensearch-indexes",
                 "NODE_COMMAND": "apps/cli/lib/search/recreate-indexes.js"
               }
