@@ -79,6 +79,20 @@ export const getProjects = async (
 
   console.info('- getProjects: found', totalCount, 'projects in total')
 
+  // Do not query project's species information if we're going to get those projects
+  // just to remove them anyway. We care for environment even in our codeblock.
+  if (status === 'non-eligible' || constraint?.type === 'deleted') {
+    return projectList.map(p => {
+      return {
+        ...p,
+        expanded_country_names: [],
+        expanded_objectives: [],
+        thumbnail: '',
+        species: []
+      }
+    })
+  }
+
   // Modify projects to prepare for indexing (add species, etc.)
   const projectDocuments = []
   for (const project of projectList) {
