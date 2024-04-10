@@ -4,8 +4,8 @@ metadata:
   name: biodiversity-cli-opensearch-sync-incremental
   namespace: staging
 spec:
-  # every 15 minutes for testing
-  schedule: '*/15 * * * *'
+  # every 15 minutes with 2 minutes offset, not running between 4AM GMT
+  schedule: '2,17,32,47 0-3,5-23 * * *'
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
