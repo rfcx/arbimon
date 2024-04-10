@@ -2,6 +2,7 @@ import { type TCountryCode, getCountryData } from 'countries-list'
 import { type Dayjs } from 'dayjs'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
+import { buildVariantPath } from '@rfcx-bio/common/api-bio/_helpers'
 import { type ProjectSpecies } from '@rfcx-bio/common/api-bio/search/search'
 import { masterObjectiveValues } from '@rfcx-bio/common/dao/master-data'
 
@@ -78,10 +79,24 @@ export const getProjects = async (
 
   console.info('- getProjects: found', totalCount, 'projects in total')
 
+  // Do not query project's species information if we're going to get those projects
+  // just to remove them anyway. We care for environment even in our codeblock.
+  if (status === 'non-eligible' || constraint?.type === 'deleted') {
+    return projectList.map(p => {
+      return {
+        ...p,
+        expanded_country_names: [],
+        expanded_objectives: [],
+        thumbnail: '',
+        species: []
+      }
+    })
+  }
+
   // Modify projects to prepare for indexing (add species, etc.)
   const projectDocuments = []
   for (const project of projectList) {
-    const { id } = project
+    const { id, image } = project
     const species = await getSpeciesByProjectId(sequelize, id).catch(e => [])
     projectDocuments.push({
       ...project,
@@ -90,6 +105,7 @@ export const getProjects = async (
         const foundObjective = masterObjectiveValues.find(masterObjective => masterObjective.slug === o)
         return foundObjective?.description ?? o
       }),
+      thumbnail: buildVariantPath(image, 'thumbnail') ?? '',
       species: species.map(sp => {
         const { code, countries = [], ...rest } = sp
         const { expanded = '', threatened = false } = code !== undefined ? RISK_RATING_EXPANDED[code] : {}

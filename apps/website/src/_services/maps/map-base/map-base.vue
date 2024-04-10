@@ -287,9 +287,7 @@ const setupMapPopup = () => {
 const getPopup = (datum: MapSiteData): string => {
   const value = props.getPopupHtml(datum, props.dataKey)
   if ((datum?.isExpand) ?? false) {
-    return `<div class="font-sans"><strong>${datum.siteName}${value ? ': ' : ''}</strong>${datum.values['Site name']} <br>
-      <strong>Total recordings${value ? ': ' : ''}</strong>${datum.values['Total recordings']} <br>
-      <strong>Days with recordings${value ? ': ' : ''}</strong>${datum.values['Days with recordings']}</div>`
+    return value
   } else return `<div class="font-sans"><strong>${datum.siteName}${value ? ': ' : ''}</strong>${value}</div>`
 }
 
@@ -326,7 +324,7 @@ const updateDataSourceAndLayer = (id: string, mapData: MapSiteData[], paint: Any
       geometry: { type: 'Point', coordinates: [datum.longitude, datum.latitude] },
       properties: {
         title: datum.siteName,
-        radius: (datum.isExpand ?? false) ? 5 : props.mapBaseFormatter.getRadius(Number(datum.values[props.dataKey])),
+        radius: props.mapBaseFormatter.getRadius(Number(datum.values[props.dataKey])),
         popup: getPopup(datum)
       }
     }))

@@ -75,57 +75,48 @@
 </template>
 
 <script setup lang="ts">
-import { useQueryClient } from '@tanstack/vue-query'
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
-import { computed, inject, onBeforeUnmount, onMounted, reactive, watch } from 'vue'
+import { computed, inject, reactive, ref, watch } from 'vue'
 
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
-import { apiClientCoreKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
-import { FETCH_CLASSIFIER_JOBS_KEY, useClassifierJobs } from '../_composables/use-classifier-jobs'
+import { useClassifierJobs } from '../_composables/use-classifier-jobs'
 import type { Job, JobFilterItem } from '../types'
 import JobFilter from './components/job-filter.vue'
 import JobItemRow from './components/job-item-row.vue'
 
-const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
+const apiClient = inject(apiClientKey) as AxiosInstance
 
 const store = useStore()
-const params = reactive({
-  created_by: 'all',
-  projects: [store.project?.idCore ?? ''],
-  fields: [
-    'id',
-    'classifier_id',
-    'project_id',
-    'minutes_completed',
-    'minutes_total',
-    'created_by_id',
-    'completed_at',
-    'created_at',
-    'status',
-    'classifier',
-    'query_streams',
-    'query_start',
-    'query_end',
-    'query_hours'
-  ]
+
+const params = reactive<{projectId: string, createdBy: 'all' | 'me'}>({
+  projectId: store.project?.idCore ?? '',
+  createdBy: 'all'
 })
 
 watch(() => store.project, () => {
-  params.projects = [store.project?.idCore ?? '']
+  params.projectId = store.project?.idCore ?? ''
 })
 
-const { isLoading: isLoadingClassifierJobs, isError: isErrorClassifierJobs, data: classifierJobs } = useClassifierJobs(apiClientCore, params)
+const refetchInterval = ref<number | false>(false)
+
+const { isLoading: isLoadingClassifierJobs, isError: isErrorClassifierJobs, data: classifierJobs } = useClassifierJobs(apiClient, params, refetchInterval)
 
 const filterOptions: JobFilterItem[] = [
   { value: 'me', label: 'My jobs', checked: false },
   { value: 'all', label: 'All jobs', checked: true }
 ]
 
-const jobs = computed((): Job[] => classifierJobs.value?.items?.map(cj => ({
+const getProgress = (minutesComplete: number, minutesTotal: number): number => {
+  if (minutesTotal === null || minutesTotal === 0) return 0.0
+  return Math.round((minutesComplete / minutesTotal) * 100 * 10) / 10
+}
+
+const jobs = computed((): Job[] => classifierJobs.value?.map(cj => ({
   id: cj.id,
   modelName: cj.classifier.name,
   input: {
@@ -141,29 +132,13 @@ const jobs = computed((): Job[] => classifierJobs.value?.items?.map(cj => ({
   createdAt: dayjs(cj.createdAt)
 })) ?? [])
 
-const getProgress = (minutesComplete: number, minutesTotal: number): number => {
-  if (minutesTotal === null || minutesTotal === 0) return 0.0
-  return Math.round((minutesComplete / minutesTotal) * 100 * 10) / 10
-}
+watch(jobs, () => {
+  const hasRunningJobs = jobs.value.some(job => job.progress.status === CLASSIFIER_JOB_STATUS.WAITING || job.progress.status === CLASSIFIER_JOB_STATUS.RUNNING)
+  refetchInterval.value = hasRunningJobs ? 1 * 60 * 1000 : false
+})
 
 const onFilterChange = (filter: string): void => {
-  params.created_by = filter === 'me' ? 'me' : 'all'
+  params.createdBy = filter === 'me' ? 'me' : 'all'
 }
-
-const queryClient = useQueryClient()
-const pollingJob = setInterval(() => {
-  queryClient.invalidateQueries({ queryKey: [FETCH_CLASSIFIER_JOBS_KEY] })
-}, 1 * 60 * 1000) // 1 minute
-const pollJob = () => pollingJob
-
-onMounted(() => {
-  if (jobs.value.some(job => job.progress.status === CLASSIFIER_JOB_STATUS.WAITING || job.progress.status === CLASSIFIER_JOB_STATUS.RUNNING)) {
-    pollJob()
-  }
-})
-
-onBeforeUnmount(() => {
-  clearInterval(pollingJob)
-})
 
 </script>

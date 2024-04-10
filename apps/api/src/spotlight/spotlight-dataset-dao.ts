@@ -1,4 +1,5 @@
 import { groupBy, mapValues, sum } from 'lodash-es'
+import { Op } from 'sequelize'
 
 import { type SpotlightDetectionDataBySite, type SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
 import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
@@ -11,15 +12,6 @@ import { getSequelize } from '~/db'
 import { dayjs } from '../_services/dayjs-initialized'
 
 export async function filterDetections (models: AllModels, filter: FilterDatasetForSql): Promise<DetectionBySiteSpeciesHour[]> {
-  const where: Where<DetectionBySiteSpeciesHour> = whereInDataset(filter)
-
-  return await models.DetectionBySiteSpeciesHour.findAll({
-    where,
-    raw: true
-  })
-}
-
-export async function filterSpeciesDetection (models: AllModels, filter: FilterDatasetForSql): Promise<DetectionBySiteSpeciesHour[]> {
   const where: Where<DetectionBySiteSpeciesHour> = whereInDataset(filter)
 
   return await models.DetectionBySiteSpeciesHour.findAll({
@@ -65,7 +57,7 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
   const siteIds = Object.keys(summariesBySite)
 
   const sites = await models.LocationSite.findAll({
-    where: { id: siteIds },
+    where: { id: siteIds, hidden: false, latitude: { [Op.not]: null }, longitude: { [Op.not]: null } },
     raw: true
   })
 
@@ -81,7 +73,7 @@ export async function getDetectionsByLocationSite (models: AllModels, totalDetec
   return mapValues(summariesBySite, (siteSummaries, siteIdString) => {
     const siteId: number = Number(siteIdString)
     const matchedSite = sites.find(s => s.id === siteId)
-    const siteTotalRecordedMinutes = summariesRecordingBySite[siteId] !== undefined ? summariesRecordingBySite[siteId] : 0
+    const siteTotalRecordedMinutes = summariesRecordingBySite[siteId] ?? 0
     const siteSpeciesSummaries = siteSummaries.filter(r => r.taxonSpeciesId === filter.taxonSpeciesId)
     const siteDetectionMinutesCount = calculateDetectionMinutesCount(siteSpeciesSummaries)
     const siteDetectionFrequency = siteTotalRecordedMinutes === 0 ? 0 : siteDetectionMinutesCount / siteTotalRecordedMinutes
