@@ -20,55 +20,96 @@
             <button
               type="button"
               data-modal-toggle="species-highlighted-modal"
-              @click="resetSearch();resetPagination();$emit('emitClose')"
+              @click="$emit('emitClose')"
             >
               <icon-custom-fi-close-thin class="cursor-pointer" />
             </button>
           </div>
-          <div class="grid sm:grid-cols-1 md:(grid-cols-2 mr-4) xl:(grid-cols-3 mr-4) ">
-            <el-input
-              v-model="searchKeyword"
-              placeholder="Search species"
-              size="large"
-              class="bg-mock grid col-span-1"
+
+          <div>
+            <form
+              class="grid sm:grid-cols-1 md:(grid-cols-2 mr-4) xl:(grid-cols-3 mr-4)"
             >
-              <template #prefix>
-                <div class="inline-flex items-center">
-                  <icon-fas-search class="text-base text-insight" />
+              <div class="relative">
+                <div class="absolute inset-y-0 start-2 flex items-center ps-3 pointer-events-none">
+                  <span class="p-2">
+                    <icon-custom-ic-search
+                      class="w-5 h-5 text-insight stroke-insight"
+                      storke="white"
+                    />
+                  </span>
                 </div>
-              </template>
-            </el-input>
+                <input
+                  id="speciesSearchInput"
+                  v-model="searchKeyword"
+                  name="search"
+                  type="text"
+                  class="input-field text-insight shadow-lg shadow-frequency/10"
+                  placeholder="Search species"
+                  @input="searchSpeciesInputChanged"
+                  @focus="isSearchBoxFocused = true"
+                  @blur="isSearchBoxFocused = false"
+                >
+              </div>
+            </form>
           </div>
           <div class="grid xl:grid-cols-3 items-center gap-x-2 my-1">
             <button
               id="dropdownButton"
               data-dropdown-toggle="dropdown"
-              class="bg-echo text-frequency w-30 text-xs rounded-full flex col-span-2 flex-row items-center py-1 px-2"
+              class="bg-echo text-frequency w-36 text-xs rounded-full flex col-span-2 flex-row items-center py-2 px-4 justify-between"
               type="button"
             >
-              IUCN status
-              <span class="pl-3">
+              IUCN status {{ searchRisk ? ': ' + existingRisk.find(r => r.id === searchRisk)?.code : '' }}
+              <span>
                 <icon-fa-chevron-down class="w-3 h-3 fa-chevron-down" />
                 <icon-fa-chevron-up class="w-3 h-3 fa-chevron-up hidden" />
               </span>
             </button>
             <div
               id="dropdown"
-              class="z-10 hidden bg-echo divide-y divide-util-gray-02 rounded-lg shadow w-15"
+              class="z-10 hidden bg-echo divide-y divide-util-gray-02 rounded-lg shadow w-50 p-3"
             >
+              <div
+                class="border-b border-fog/40 cursor-pointer"
+                @click="clearSearchRisk"
+              >
+                <div class="flex p-2 rounded items-center hover:bg-util-gray-04/60">
+                  <div class="flex">
+                    <input
+                      id="all"
+                      :aria-describedby="`class-checkbox-text-all`"
+                      type="radio"
+                      value="all"
+                      class="w-4 h-4 text-frequency border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency"
+                      :checked="searchRisk === undefined"
+                      @click="clearSearchRisk"
+                    >
+                  </div>
+                  <div class="ml-2">
+                    <label
+                      :for="`class-checkbox-text-all`"
+                      class="cursor-pointer"
+                    >
+                      All status
+                    </label>
+                  </div>
+                </div>
+              </div>
               <ul
                 aria-labelledby="dropdownButton"
-                class="p-2 space-y-3"
+                class="pt-3 gap-2 grid grid-cols-4"
               >
                 <li
-                  v-for="(riskRating, index) in existingRiskCode"
+                  v-for="(riskRating, index) in existingRisk"
                   :key="riskRating.code"
-                  @click="filterByCode(existingRiskCode[index].code)"
+                  class="items-center"
+                  @click="filterByCode(existingRisk[index].id)"
                 >
                   <div
-                    class="species-highlights border-none cursor-pointer text-md select-none h-6 px-2 rounded-sm self-center"
-                    :class="searchRisk === existingRiskCode[index].code ? 'tag-selected' : ''"
-                    :style="{ background: riskRating.color }"
+                    class="h-6 cursor-pointer text-md text-center select-none px-2 rounded-sm self-center"
+                    :class="searchRisk === existingRisk[index].id ? 'border-1 border-frequency' : ''"
+                    :style="{ color: riskRating.text, background: riskRating.color }"
                   >
                     {{ riskRating.code }}
                   </div>
@@ -81,15 +122,23 @@
           </div>
           <!-- Modal body -->
           <div class="grid gap-x-4 w-full sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-            <div class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 items-center m-auto">
+            <div
+              v-if="isLoadingSpecies"
+              class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 items-center m-auto"
+            >
               <icon-custom-ic-loading
-                v-if="isLoadingSpecies"
                 class="animate-spin w-8 h-8 lg:mx-24 mx-12"
               />
+            </div>
+            <div
+              v-else
+              class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 items-center"
+            >
               <h6
-                v-else-if="!speciesList.length"
+                v-if="!speciesForCurrentPage.length"
+                class="text-center"
               >
-                No species in a project.
+                No species found.
               </h6>
               <div v-else>
                 <ul
@@ -120,17 +169,35 @@
                     </div>
                   </li>
                 </ul>
-                <el-pagination
-                  v-model:currentPage="currentPage"
-                  class="flex items-center justify-center mb-2"
-                  :page-size="PAGE_SIZE"
-                  :total="speciesLength"
-                  layout="prev, pager, next"
-                />
+                <div class="flex justify-end items-center mt-4">
+                  <div>
+                    <input
+                      v-model.number="currentPage"
+                      type="number"
+                      min="1"
+                      :max="maxPage"
+                      class="text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+                    >
+                    of
+                    <span class="ml-1.5">{{ maxPage }}</span>
+                  </div>
+                  <button
+                    class="btn btn-icon ml-4"
+                    @click="setPage(currentPage - 1)"
+                  >
+                    <icon-fas-chevron-left class="w-3 h-3" />
+                  </button>
+                  <button
+                    class="btn btn-icon ml-2"
+                    @click="setPage(currentPage + 1)"
+                  >
+                    <icon-fas-chevron-right class="w-3 h-3" />
+                  </button>
+                </div>
               </div>
             </div>
             <div
-              v-if="preSelectedSpecies.length === 0"
+              v-if="selectedSpecies.length === 0"
               class="hidden grid-cols-1 xl:grid h-127 border-1 border-dashed rounded-lg"
             >
               <div class="my-auto items-center p-5 text-center">
@@ -147,8 +214,8 @@
               class="hidden grid-cols-1 xl:grid"
             >
               <HighlightedSpeciesSelector
-                :species="preSelectedSpecies"
-                @emit-remove-specie="removeSpecieFromList"
+                :species="selectedSpecies"
+                @emit-remove-specie="findIndexToRemove"
               />
             </div>
           </div>
@@ -185,6 +252,7 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
+import debounce from 'lodash.debounce'
 import { computed, inject, ref, watch } from 'vue'
 
 import type { DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
@@ -192,64 +260,82 @@ import { type ProjectSpeciesFieldSet, type ProjectSpeciesResponse, apiBioGetProj
 
 import { apiClientKey } from '@/globals'
 import { DEFAULT_RISK_RATING_ID, RISKS_BY_ID } from '~/risk-ratings'
-import { useStore } from '~/store'
+import { useHighlightedSpeciesStore, useStore } from '~/store'
 import { type HighlightedSpeciesRow } from '../../../types/highlighted-species'
 import { useDeleteSpecieHighlighted, usePostSpeciesHighlighted } from '../composables/use-post-highlighted-species'
-import HighlightedSpeciesSelector, { type SpecieRow } from './highlighted-species-selector.vue'
+import HighlightedSpeciesSelector from './highlighted-species-selector.vue'
 import SpecieCard from './species-card.vue'
 
 const props = defineProps<{ highlightedSpecies: HighlightedSpeciesRow[], toggleShowModal: boolean }>()
 const emit = defineEmits<{(e: 'emitClose'): void}>()
 
-watch(() => props.highlightedSpecies, () => {
-  fillExistingSpeciesSlug()
-})
-
-const speciesList = ref<HighlightedSpeciesRow[]>([])
+const speciesForCurrentPage = ref<HighlightedSpeciesRow[]>([])
 const isLoadingSpecies = ref(false)
-const hasFetchedAll = ref(false)
-const LIMIT = 100
-
-watch(() => props.toggleShowModal, async () => {
-  fillExistingSpeciesSlug()
-  speciesList.value = []
-  await fetchProjectsSpecies(LIMIT, 0)
-})
+const highlightedSpeciesSelected : HighlightedSpeciesRow[] = []
+const pdStore = useHighlightedSpeciesStore()
 
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const selectedProjectId = computed(() => store.project?.id)
 
-const searchKeyword = ref('')
-const searchRisk = ref('')
+const searchKeyword = ref<string>()
+const searchRisk = ref<number>()
+const isSearchBoxFocused = ref(false)
 const showHaveReachedLimit = ref(false)
 
-const selectedSpeciesSlug = ref<string[]>([])
+const selectedSpecies = ref<HighlightedSpeciesRow[]>([])
 
 const PAGE_SIZE = 10
 const currentPage = ref(1)
+const total = ref(0)
+
+const speciesFromStore = computed(() => pdStore.getSpeciesByPage(currentPage.value, PAGE_SIZE))
 
 const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
 const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
 
-const fetchProjectsSpecies = async (limit: number, offset: number) => {
-  isLoadingSpecies.value = true
+watch(() => props.toggleShowModal, async () => {
+  setDefaultDisplay()
+
+  pdStore.updateSelectedProjectId(selectedProjectId.value ?? -1)
+  getSpeciesWithPage()
+  props.highlightedSpecies.forEach(s => highlightedSpeciesSelected.push(s))
+})
+
+const setDefaultDisplay = () => {
+  currentPage.value = 1
+  searchKeyword.value = undefined
+  searchRisk.value = undefined
+  highlightedSpeciesSelected.length = 0
+  selectedSpecies.value = props.highlightedSpecies
+  speciesForCurrentPage.value = []
+}
+
+const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: string, riskRatingId?: string) => {
+  if (keyword !== undefined || riskRatingId !== undefined) {
+    isLoadingSpecies.value = true
+  } else {
+    if (speciesFromStore.value.length === 0) {
+      isLoadingSpecies.value = true
+    }
+  }
 
   if (selectedProjectId.value === undefined) return
   const fields: ProjectSpeciesFieldSet = 'dashboard'
-  const projectSpecies = await apiBioGetProjectSpecies(apiClientBio, selectedProjectId.value, { limit, offset, fields })
+  const projectSpecies = await apiBioGetProjectSpecies(apiClientBio, selectedProjectId.value, { limit, offset, fields, keyword, riskRatingId })
 
   if (projectSpecies === undefined) {
     isLoadingSpecies.value = false
     return
   }
-
   const s = projectSpecies as ProjectSpeciesResponse
-  hasFetchedAll.value = s.species.length < LIMIT // check if reaching the end
+  total.value = s.total
+  if (speciesFromStore.value.length !== 0 && keyword === undefined && riskRatingId === undefined) return
+  speciesForCurrentPage.value = []
   s.species.forEach(sp => {
     const { slug, taxonSlug, scientificName, commonName, photoUrl, riskId } = sp as DashboardSpecies
-    speciesList.value.push({
+    speciesForCurrentPage.value.push({
       slug,
       taxonSlug,
       scientificName,
@@ -259,122 +345,108 @@ const fetchProjectsSpecies = async (limit: number, offset: number) => {
     })
   })
   isLoadingSpecies.value = false
-
-  if (!hasFetchedAll.value) {
-    await fetchProjectsSpecies(LIMIT, speciesList.value.length)
+  if (keyword === undefined && riskRatingId === undefined) {
+    pdStore.updateSpecies(speciesForCurrentPage.value, offset, s.total)
   }
 }
 
-// Filtered list of species by search, risk or both
-const speciesListFiltered = computed(() => {
-  if (!hasFetchedAll.value) return []
-  if (!searchKeyword.value && searchRisk.value) {
-    resetPagination()
-    return speciesList.value
-      .filter(({ riskRating }) => {
-        return riskRating.code === searchRisk.value
-      })
-      .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
-  } else if (searchKeyword.value && !searchRisk.value) {
-    resetPagination()
-    return speciesList.value
-      .filter(({ scientificName, commonName }) => {
-        return scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
-          ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false)
-      })
-      .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
-    } else if (searchKeyword.value && searchRisk.value) {
-      resetPagination()
-      return speciesList.value
-        .filter(({ scientificName, commonName, riskRating }) => {
-          console.info(riskRating.code === searchRisk.value)
-          return (scientificName.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase())) ||
-            ((commonName?.toLowerCase().split(/[-_ ]+/).some(w => w.startsWith(searchKeyword.value.toLowerCase()))) ?? false)) &&
-            riskRating.code === searchRisk.value
-        })
-        .sort((a, b) => a.scientificName.localeCompare(b.scientificName))
-    } else return speciesList.value
+watch(currentPage, () => {
+  getSpeciesWithPage()
 })
 
-const speciesLength = computed(() => {
-  return speciesListFiltered.value.length
+const getSpeciesWithPage = () => {
+  isLoadingSpecies.value = true
+  if (speciesFromStore.value.length === 0 || searchKeyword.value !== undefined || searchRisk.value !== undefined) {
+    fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value?.toString())
+  } else {
+    total.value = pdStore.totalSpecies
+    isLoadingSpecies.value = false
+    speciesForCurrentPage.value = speciesFromStore.value
+  }
+}
+
+const searchSpeciesInputChanged = debounce(async () => {
+  currentPage.value = 1
+  searchKeyword.value = searchKeyword.value === '' ? undefined : searchKeyword.value
+  getSpeciesWithPage()
+}, 500)
+
+const maxPage = computed((): number => {
+    return Math.ceil(total.value / PAGE_SIZE)
 })
 
-const speciesForCurrentPage = computed(() => {
-  return speciesListFiltered.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE)
-})
+const setPage = (page: number) => {
+    // Wrap-around
+    let newPage = page
+    if (page < 1) newPage = maxPage.value
+    if (page > maxPage.value) newPage = 1
 
-const preSelectedSpecies = computed(() => {
-  if (!hasFetchedAll.value) return []
-  return speciesList.value.length ? selectedSpeciesSlug.value.map((slug) => speciesList.value.filter((specie) => specie.slug === slug)[0]) ?? [] : []
-})
+    currentPage.value = newPage
+}
 
-const existingRiskCode = computed(() => {
-  return speciesList.value.length ? speciesList.value.map(specie => specie.riskRating).filter((value, index, self) => self.findIndex(({ code }) => code === value.code) === index) : []
+const existingRisk = computed(() => {
+  const allSpeciesRiskID = Object.keys(RISKS_BY_ID).map(Number)
+  return allSpeciesRiskID.map((id: number) => {
+      return {
+        id,
+        name: RISKS_BY_ID[id].label,
+        color: RISKS_BY_ID[id].color,
+        code: RISKS_BY_ID[id].code,
+        text: RISKS_BY_ID[id].text
+      }
+    })
 })
 
 const newSpeciesToAdd = computed(() => {
-  const existingSlugsInDB = props.highlightedSpecies.map(sp => sp.slug)
-  return preSelectedSpecies.value.filter(sp => !existingSlugsInDB.includes(sp.slug))
+  return selectedSpecies.value.filter(s => highlightedSpeciesSelected.filter(sp => s.slug === sp.slug).length === 0)
 })
 
 const speciesToRemove = computed(() => {
-  const preSelectedSpeciesSlug = preSelectedSpecies.value.map(sp => sp.slug)
-  return props.highlightedSpecies.filter(sp => !preSelectedSpeciesSlug.includes(sp.slug))
+  return highlightedSpeciesSelected.filter(sp => !selectedSpecies.value.includes(sp))
 })
 
-const resetPagination = (): void => {
-  currentPage.value = 1
-}
-
-const resetSearch = (): void => {
-  searchKeyword.value = ''
-  searchRisk.value = ''
-}
-
 const findIndexToRemove = (slug: string): void => {
-  const index = selectedSpeciesSlug.value.findIndex(sl => sl === slug)
-  selectedSpeciesSlug.value.splice(index, 1)
+  const index = selectedSpecies.value.findIndex(s => s.slug === slug)
+  selectedSpecies.value.splice(index, 1)
+  showHaveReachedLimit.value = selectedSpecies.value.length >= 5
 }
 
 const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
   if (isSpecieSelected(specie)) {
     findIndexToRemove(specie.slug)
-    showHaveReachedLimit.value = selectedSpeciesSlug.value.length >= 5
   } else {
     // only 5 species might be highlighted
-    if (selectedSpeciesSlug.value.length < 5) {
-      selectedSpeciesSlug.value.push(specie.slug)
+    if (selectedSpecies.value.length < 5) {
+      selectedSpecies.value.push(specie)
     } else {
-      showHaveReachedLimit.value = true
+      showHaveReachedLimit.value = selectedSpecies.value.length >= 5
     }
   }
 }
 
 const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
-  return selectedSpeciesSlug.value.find(slug => slug === specie.slug) !== undefined
+  return selectedSpecies.value.find(s => s.slug === specie.slug) !== undefined
 }
 
-const removeSpecieFromList = async (specie: SpecieRow): Promise<void> => {
-  showHaveReachedLimit.value = false
-  findIndexToRemove(specie.slug)
+const clearSearchRisk = (): void => {
+  currentPage.value = 1
+  searchRisk.value = undefined
+  getSpeciesWithPage()
 }
 
-const fillExistingSpeciesSlug = (): void => {
-  if (props.highlightedSpecies.length) {
-    selectedSpeciesSlug.value = props.highlightedSpecies.map(sp => sp.slug)
-  } else selectedSpeciesSlug.value = []
-}
+const filterByCode = (riskId: number): void => {
+  currentPage.value = 1
 
-const filterByCode = (code: string): void => {
-  if (searchRisk.value === code) {
-    searchRisk.value = ''
-  } else searchRisk.value = code
+  if (searchRisk.value === riskId) {
+    searchRisk.value = undefined
+  } else searchRisk.value = riskId
+  fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, riskId.toString())
 }
 
 const saveHighlightedSpecies = async (): Promise<void> => {
   if (speciesToRemove.value.length) await deleteHighlightedSpecies()
   if (newSpeciesToAdd.value.length) await addHighlightedSpecies()
+  if (!speciesToRemove.value.length && !newSpeciesToAdd.value.length) emit('emitClose')
 }
 
 const deleteHighlightedSpecies = async (): Promise<void> => {
@@ -396,16 +468,7 @@ const addHighlightedSpecies = async (): Promise<void> => {
 }
 </script>
 <style lang="scss">
-.el-input__wrapper {
-  border-radius: 8px;
-  border: 1px solid #F9F6F2;
-  background: #060508;
-}
-.el-input__inner {
-  padding-left: 2px !important;
-}
-.tag-selected {
-  border: 2px solid #ADFF2C;
-  border-style: solid !important;
+#speciesSearchInput {
+  padding-inline-start: 2rem;
 }
 </style>
