@@ -1,20 +1,20 @@
 <template>
   <div
     ref="dropdown"
-    class="dropdown relative w-[300px]"
+    class="dropdown relative w-64"
   >
     <div
-      class="species-input bg-steel-gray rounded my-6 focus:(border-box-gray ring-0 outline-none) min-w-64"
+      class="bg-moss rounded my-6 focus:(border-echo ring-0 outline-none) min-w-64"
       @click="toggleDropdown"
     >
-      <div class="flex flex-row justify-between items-center border-1 border-util-gray-03 gap-x-2 bg-steel-gray rounded my-6 p-3 focus:border-box-gray focus:ring-0 focus:outline-none min-w-64 h-[40px]">
+      <div class="flex flex-row justify-between items-center border-1 border-util-gray-03 gap-x-2 bg-moss rounded my-6 p-3 focus:bg-util-gray-04 focus:ring-0 focus:outline-none min-w-64 h-10">
         <span>{{ props.filterOptions.find(idx => idx.value === selectedFilter)?.label }}</span>
         <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-util-gray-02 " />
       </div>
     </div>
     <ul
       v-show="isOpen"
-      class="dropdown-menu absolute bg-steel-gray rounded mt-[-10px] py-1 w-full z-10"
+      class="dropdown-menu absolute bg-moss rounded mt-[-10px] py-1 w-full z-10"
     >
       <li
         v-for="option in props.filterOptions"
