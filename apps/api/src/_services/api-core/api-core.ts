@@ -8,6 +8,7 @@ import { type DetectValidationResultsQueryParams, type DetectValidationResultsRe
 import { type DetectReviewDetectionBody, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
 import { type CoreProject, type CoreProjectLight } from '@rfcx-bio/common/api-core/project/permission'
 import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
+import { type WithTotalCount, formatTotalCount } from '@rfcx-bio/common/total-count'
 
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { ApiClient } from '../api-helpers/api-client'
@@ -35,7 +36,7 @@ export async function getMedia (logger: FastifyLoggerInstance, url: string): Pro
   return await ApiClient.getInstance(logger).getOrUndefined<ArrayBuffer>(url, { responseType: 'arraybuffer' })
 }
 
-export async function getDetections (token: string, params: CoreGetDetectionsQueryParams): Promise<CoreDetection[]> {
+export async function getDetections (token: string, params: CoreGetDetectionsQueryParams): Promise<WithTotalCount<CoreDetection[]>> {
   const response = await axios.request<CoreDetection[]>({
     method: 'GET',
     url: `${CORE_API_BASE_URL}/detections`,
@@ -45,7 +46,10 @@ export async function getDetections (token: string, params: CoreGetDetectionsQue
     params
   })
 
-  return response.data
+  return {
+    total: formatTotalCount(response.headers?.['total-items']),
+    data: response.data
+  }
 }
 
 /**
