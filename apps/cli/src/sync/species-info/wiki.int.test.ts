@@ -10,7 +10,7 @@ import { getWikiSummary } from '@/sync/_refactor/input-wiki'
 import { syncOnlyMissingWikiSpeciesInfo, syncWikiSpeciesInfo } from './wiki'
 
 const biodiversitySequelize = getSequelize()
-const { TaxonSpecies, TaxonSpeciesPhoto, TaxonSpeciesWiki } = ModelRepository.getInstance(biodiversitySequelize)
+const { TaxonSpecies, TaxonSpeciesIucn, TaxonSpeciesPhoto, TaxonSpeciesWiki } = ModelRepository.getInstance(biodiversitySequelize)
 
 const BIRDS_ID = rawTaxonClasses[3].id
 
@@ -52,6 +52,7 @@ afterEach(async () => {
   const species = await TaxonSpecies.findAll({ attributes: ['id'], where: { slug: [DEFAULT_SPECIES.slug, TEST_SPECIES.slug] } })
   await TaxonSpeciesWiki.destroy({ where: { taxonSpeciesId: { [Op.in]: species.map(s => s.id) } } })
   await TaxonSpeciesPhoto.destroy({ where: { taxonSpeciesId: { [Op.in]: species.map(s => s.id) } } })
+  await TaxonSpeciesIucn.destroy({ where: { taxonSpeciesId: { [Op.in]: species.map(s => s.id) } } })
   await TaxonSpecies.destroy({ where: { slug: [DEFAULT_SPECIES.slug, TEST_SPECIES.slug] } })
 })
 
@@ -74,15 +75,15 @@ test('`sp` based (unknown species) are not being queried', async () => {
   // Arrange
   await TaxonSpecies.create(TEST_SPECIES)
   await TaxonSpecies.create(DEFAULT_SPECIES)
-  ;(getWikiSummary as any).mockResolvedValueOnce({ ...DEFAULT_WIKI_INFO, credit: '' })
+  ;(getWikiSummary as any).mockResolvedValue({ ...DEFAULT_WIKI_INFO, credit: '' })
 
   // Act
   await syncOnlyMissingWikiSpeciesInfo(biodiversitySequelize)
 
   // Assert
-  const testSpecies = await TaxonSpecies.findOne({ where: { slug: 'sp22' } })
-  expect(testSpecies).not.toEqual(null)
+  const testSpecies = await TaxonSpecies.findOne({ where: { slug: 'sp21' } })
+  expect(testSpecies).not.toBe(null)
 
   const testSpeciesWiki = await TaxonSpeciesWiki.findOne({ where: { taxonSpeciesId: testSpecies?.get('id') } })
-  expect(testSpeciesWiki).toEqual(null)
+  expect(testSpeciesWiki).toBe(null)
 })
