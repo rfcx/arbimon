@@ -9,6 +9,8 @@ import {
 import type { PutObjectRequest } from '@aws-sdk/client-s3/dist-types/models/models_0'
 import type { Readable } from 'node:stream'
 
+import { type ImageVariant, buildVariantPath } from '../api-bio/_helpers'
+
 interface S3Credentials {
     accessKeyId: string
     secretAccessKey: string
@@ -135,5 +137,14 @@ export class StorageClient {
             Key: key
         })
         await this.client.send(command)
+    }
+
+    public getObjectPublicUrl (key: string, variant?: ImageVariant): string {
+        const { endpoint, bucketName } = this.credentials
+        const fileKey: string = variant !== undefined ? buildVariantPath(key, variant) : key
+        if (endpoint !== undefined) {
+            return `${endpoint.endsWith('/') ? endpoint : endpoint + '/'}${bucketName}/${fileKey}`
+        }
+        return `https://${bucketName}.s3.amazonaws.com/${fileKey}`
     }
 }
