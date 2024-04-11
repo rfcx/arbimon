@@ -254,9 +254,6 @@ importers:
       sequelize:
         specifier: 7.0.0-alpha.5
         version: 7.0.0-alpha.5(mysql2@2.3.3)(pg-hstore@2.3.4)(pg@8.7.3)(sqlite3@5.0.8)
-      sharp:
-        specifier: ^0.33.3
-        version: 0.33.3
     devDependencies:
       form-auto-content:
         specifier: ^3.2.1
