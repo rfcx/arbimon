@@ -1,5 +1,5 @@
 <template>
-  <section class="max-w-screen-4xl w-10/12 pt-22 pl-115px pr-4">
+  <section class="pt-22 pl-115px pr-40 4xl:(pr-16)">
     <div>
       <JobDetailHeader :species-name="speciesClass" />
       <JobValidationHeader

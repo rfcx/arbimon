@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="pt-24 mx-auto max-w-screen-4xl">
+    <div class="pt-24 mx-auto">
       <div class="flex flex-row items-center">
         <h1>Validation</h1>
       </div>
