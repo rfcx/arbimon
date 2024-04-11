@@ -19,7 +19,7 @@
       <li
         v-for="option in props.filterOptions"
         :key="'cj-filter-' + option.value"
-        class="px-4 py-2 cursor-pointer"
+        class="px-4 py-2 cursor-pointer hover:(bg-util-gray-03 rounded)"
         :class="{ 'text-frequency font-medium': option.value === selectedFilter }"
         @click="selectFilter(option.value)"
       >
