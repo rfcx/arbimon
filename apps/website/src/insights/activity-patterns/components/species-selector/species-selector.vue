@@ -190,7 +190,7 @@ const getAllSpecies = async (): Promise<Array<SpeciesInProjectTypes['light']>> =
     return []
   }
 
-  const response = await apiBioGetProjectSpecies(apiClientBio, projectId)
+  const response = await apiBioGetProjectSpecies(apiClientBio, projectId, { limit: 1000, offset: 0 })
 
   if (response == null) {
     return []
