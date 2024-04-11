@@ -3,9 +3,7 @@ import { type FastifyLoggerInstance } from 'fastify'
 
 import { type ClassifierQueryParams, type ClassifierResponse } from '@rfcx-bio/common/api-bio/classifiers/classifier'
 import { type Classifier } from '@rfcx-bio/common/api-bio/classifiers/classifiers'
-import {
-  type UpdateClassifierJobBody
-} from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { type UpdateClassifierJobBody } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type DetectSummaryQueryParams, type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { type DetectValidationResultsQueryParams, type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 import { type DetectReviewDetectionBody, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
