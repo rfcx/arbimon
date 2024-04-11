@@ -9,8 +9,10 @@ import { getWikiSummary } from '@/sync/_refactor/input-wiki'
 import { writeWikiSpeciesDataToPostgres, writeWikiSpeciesPhotoDataToPostgres } from '@/sync/_refactor/output-bio-db/taxon-species-wiki'
 
 export const syncOnlyMissingWikiSpeciesInfo = async (sequelize: Sequelize): Promise<void> => {
+  const unknownSpeciesRegexp = /^sp\d+$/g
+
   const sql = `
-    SELECT DISTINCT ts.id, ts.scientific_name
+    SELECT DISTINCT ts.id, ts.scientific_name, ts.slug
     FROM taxon_species ts
     LEFT JOIN taxon_species_wiki tsw ON ts.id = tsw.taxon_species_id
     WHERE tsw.taxon_species_id IS NULL OR DATE_PART('month',AGE(CURRENT_TIMESTAMP, tsw.updated_at)) >= 1 
@@ -18,8 +20,10 @@ export const syncOnlyMissingWikiSpeciesInfo = async (sequelize: Sequelize): Prom
   `
   // Lookups
   const speciesNameAndIds = await sequelize
-    .query<{ id: number, scientific_name: string }>(sql, { type: QueryTypes.SELECT, raw: true })
-    .then(allSpecies => allSpecies)
+    .query<{ id: number, scientific_name: string, slug: string }>(sql, { type: QueryTypes.SELECT, raw: true })
+    .then(allSpecies => {
+      return allSpecies.filter(s => !unknownSpeciesRegexp.test(s.slug))
+    })
 
   let offset = 0
   const batchSize = 1000
