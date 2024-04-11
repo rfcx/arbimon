@@ -182,8 +182,8 @@ const emit = defineEmits<{(e: 'emitSortPaginations', sortKey?: string, pageIndex
 const route = useRoute()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
-const sortColumn = ref<SortableColumn>()
-const sortDirection = ref<SortDirection>()
+const sortColumn = ref<SortableColumn>('name')
+const sortDirection = ref<SortDirection>(1)
 
 const hasTableData = ref(props.datasets.length === 0)
 const pageSize = ref(25)
