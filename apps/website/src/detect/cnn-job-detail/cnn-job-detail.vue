@@ -48,7 +48,7 @@ const isRefetch = ref<boolean>(true)
 const detectionList = ref<ClassificationsSummaryDataset[]>()
 const total = ref(0)
 const searchKeyword = ref<string| undefined>()
-const sortKeyLabel = ref<string| undefined>()
+const sortKeyLabel = ref<string| undefined>('name')
 
 const refetchInterval = computed(() => {
   return isRefetch.value ? 30_000 : false
@@ -63,7 +63,7 @@ const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSum
 watch(jobSummary, async (newValue) => {
   isRefetch.value = isRefetchIntervalEnable.value
   if (!isRefetch.value && detectionList.value === undefined) {
-    await getClassifierJobSpecies(PAGE_LIMIT, 0)
+    await getClassifierJobSpecies(PAGE_LIMIT, 0, searchKeyword.value, sortKeyLabel.value)
   }
 
   if (newValue == null) {
@@ -78,7 +78,7 @@ watch(jobSummary, async (newValue) => {
 })
 
 onMounted(async () => {
-  await getClassifierJobSpecies(PAGE_LIMIT, 0)
+  await getClassifierJobSpecies(PAGE_LIMIT, 0, searchKeyword.value, sortKeyLabel.value)
 })
 
 const isRefetchIntervalEnable = computed(() => {

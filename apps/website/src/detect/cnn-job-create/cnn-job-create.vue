@@ -119,16 +119,6 @@
         <span v-if="isErrorPostJob">Error saving job :(</span>
       </div>
     </form>
-    <el-alert
-      v-if="false"
-      title="Debugging"
-      type="info"
-      class="my-4"
-      effect="dark"
-      show-icon
-    >
-      <pre>{{ JSON.stringify(job, null, 2).replace(/, /g, ',\r\n  ') }}</pre>
-    </el-alert>
   </section>
 </template>
 <script setup lang="ts">

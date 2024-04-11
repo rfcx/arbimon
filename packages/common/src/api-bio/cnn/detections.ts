@@ -1,5 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
+import { type WithTotalCount, formatTotalCount } from '../../total-count'
 import { type ArbimonReviewStatus } from './classifier-job-information'
 
 // Request types
@@ -7,10 +8,10 @@ export interface GetDetectionsQueryParams {
   start: string
   end: string
   reviewStatus?: ArbimonReviewStatus
-  /* Core site Ids */
+  /** Core site Ids */
   sites?: string[]
   classifierJobId: number
-  /* the `value` field of the classification e.g. `calironensis_cabaris_simple_song_1` */
+  /** the `value` field of the classification e.g. `calironensis_cabaris_simple_song_1` */
   classification?: string
   confidence?: number
   classifierId: number
@@ -21,7 +22,7 @@ export interface GetDetectionsQueryParams {
 // Response types
 export interface Detection {
   id: number
-  /* Core siteId */
+  /** Core siteId */
   siteIdCore: string
   start: string
   end: string
@@ -35,13 +36,18 @@ export interface Detection {
   }
 }
 
+export const xTotalDetectionsCountHeaderName = 'x-total-detections-count'
+
 export type GetDetectionsResponse = Detection[]
 
 // Route
 export const getDetectionsRoute = '/detections'
 
 // Service
-export const apiBioGetDetections = async (apiClient: AxiosInstance, params: GetDetectionsQueryParams): Promise<GetDetectionsResponse> => {
+export const apiBioGetDetections = async (apiClient: AxiosInstance, params: GetDetectionsQueryParams): Promise<WithTotalCount<GetDetectionsResponse>> => {
   const response = await apiClient.get(getDetectionsRoute, { params })
-  return response.data
+  return {
+    total: formatTotalCount(response.headers?.[xTotalDetectionsCountHeaderName]),
+    data: response.data
+  }
 }

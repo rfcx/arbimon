@@ -11,6 +11,7 @@ import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 import { useDashboardStore } from './use-dashboard-store'
 import { useDetectionsResultFilterBySpeciesStore } from './use-detections-result-filter-by-species-store'
 import { useDetectionsResultFilterStore } from './use-detections-result-filter-store'
+import { useHighlightedSpeciesStore } from './use-highlighted-species-store'
 import { useProjectDirectoryStore } from './use-project-directory-store'
 import { useSuperStore } from './use-super-admin-store'
 
@@ -95,6 +96,7 @@ export {
   useDashboardStore,
   useDetectionsResultFilterBySpeciesStore,
   useDetectionsResultFilterStore,
+  useHighlightedSpeciesStore,
   useProjectDirectoryStore,
   useSuperStore
 }

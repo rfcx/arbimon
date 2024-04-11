@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from 'vitest'
 
+import { xTotalDetectionsCountHeaderName } from '@rfcx-bio/common/api-bio/cnn/detections'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import * as core from '../_services/api-core/api-core'
@@ -32,6 +33,7 @@ describe('GET /detections', async () => {
 
     // Assert
     expect(response.statusCode).toEqual(200)
+    expect(response.headers?.[xTotalDetectionsCountHeaderName]).toEqual(8)
     const json = response.json()
     expect(json).toHaveLength(4)
     expect(json).toHaveProperty('[0].reviewStatus', 'unvalidated')
