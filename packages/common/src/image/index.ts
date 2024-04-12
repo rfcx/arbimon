@@ -13,7 +13,7 @@ export const resizeImage = async (file: Buffer, options: ResizeOptions): Promise
     return file
 }
 
-export const getMetadata = async (file: Buffer | ArrayBuffer): Promise<Metadata> => {
+export const getMetadata = async (file: Buffer): Promise<Metadata> => {
     const image = sharp(file)
     return await image.metadata()
 }

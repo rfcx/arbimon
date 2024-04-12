@@ -5,18 +5,20 @@ import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vite
 import { buildVariantPath } from '@rfcx-bio/common/api-bio/_helpers'
 import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
 import { type Project } from '@rfcx-bio/common/dao/types'
+import { getMetadata } from '@rfcx-bio/common/image'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { PROJECT_IMAGE_CONFIG } from '@/projects/project-image-bll'
 import { PATCH } from '~/api-helpers/types'
-import { getMetadata } from '~/image'
-import { getObject } from '~/storage'
+import { getS3Client } from '~/storage'
 import { routesProject } from './index'
 
 vi.mock('~/api-core/api-core')
 
 const { LocationProject, LocationProjectProfile } = modelRepositoryWithElevatedPermissions
+
+const storageClient = getS3Client()
 
 const defaultProject: Project = {
   id: 50010,
@@ -64,8 +66,8 @@ describe(`PATCH ${projectProfileImageRoute}`, async () => {
     expect(response.statusCode).toBe(204)
     const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
     expect(profile?.image).not.toBe(existingImage)
-    const fileAsArrayBuffer = await getObject(profile?.image ?? '')
-    expect(fileAsArrayBuffer.byteLength).toBeGreaterThan(1000)
+    const file = await storageClient.getObject(profile?.image ?? '') as Buffer
+    expect(file.byteLength).toBeGreaterThan(1000)
   })
 
   test('creates new profile and sets image', async () => {
@@ -136,8 +138,8 @@ describe(`PATCH ${projectProfileImageRoute}`, async () => {
     const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
     const originalImage = profile?.image ?? ''
     const thumbnailImage = buildVariantPath(originalImage, 'thumbnail')
-    const fileAsArrayBuffer = await getObject(thumbnailImage)
-    expect(fileAsArrayBuffer).toBeDefined()
+    const file = await storageClient.getObject(thumbnailImage)
+    expect(file).toBeDefined()
   })
 
   test('thumbnail image has correct dimensions', async () => {
@@ -158,8 +160,8 @@ describe(`PATCH ${projectProfileImageRoute}`, async () => {
     const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
     const originalImage = profile?.image ?? ''
     const thumbnailImage = buildVariantPath(originalImage, 'thumbnail')
-    const fileAsArrayBuffer = await getObject(thumbnailImage)
-    const imageMetadata = await getMetadata(fileAsArrayBuffer)
+    const file = await storageClient.getObject(thumbnailImage) as Buffer
+    const imageMetadata = await getMetadata(file)
     const config = PROJECT_IMAGE_CONFIG.thumbnail
     expect(imageMetadata?.width).toEqual(config.width)
     expect(imageMetadata?.height).toEqual(config.height)

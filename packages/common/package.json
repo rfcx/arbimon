@@ -38,6 +38,7 @@
     "test:unit": "vitest .unit.test."
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.363.0",
     "@opensearch-project/opensearch": "^2.5.0",
     "@rfcx-bio/utils": "workspace:^0.0.1",
     "@types/pg": "^8.6.4",
@@ -46,6 +47,7 @@
     "lodash-es": "^4.17.21",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "7.0.0-alpha.5"
+    "sequelize": "7.0.0-alpha.5",
+    "sharp": "^0.33.3"
   }
 }

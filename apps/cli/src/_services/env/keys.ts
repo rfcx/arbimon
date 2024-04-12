@@ -54,6 +54,7 @@ export const envGetters = {
   AWS_S3_BUCKET_ACCESS_KEY_ID: stringGetter,
   AWS_S3_BUCKET_SECRET_ACCESS_KEY: stringGetter,
   AWS_S3_BUCKET_NAME: stringGetter,
+  AWS_S3_ENDPOINT: stringGetter,
 
   AWS_OSS_REGION: stringGetter,
   AWS_OSS_ACCESS_KEY_ID: stringGetter,
