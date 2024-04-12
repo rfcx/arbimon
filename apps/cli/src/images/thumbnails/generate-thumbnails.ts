@@ -17,6 +17,8 @@ import { BATCH_LIMIT, PROJECT_IMAGE_CONFIG, VERBOSE } from '../config'
 export const generateProjectThumbnails = async (sequelize: Sequelize, storage: StorageClient, verbose: boolean = VERBOSE): Promise<void> => {
     let offset = 0
     let responseCount = 1
+    let totalCount = 0
+    let thumbnailCount = 0
     const projects = []
 
     // Get projects with image
@@ -36,6 +38,7 @@ export const generateProjectThumbnails = async (sequelize: Sequelize, storage: S
             })
 
             responseCount = response?.length
+            totalCount += responseCount
             projects.push(...response)
         } catch (e) {
             if (verbose) {
@@ -44,6 +47,10 @@ export const generateProjectThumbnails = async (sequelize: Sequelize, storage: S
         } finally {
             offset += BATCH_LIMIT
         }
+    }
+
+    if (verbose) {
+        console.info(`Fetched ${totalCount} projects with images`)
     }
 
     // Go through projects
@@ -66,6 +73,7 @@ export const generateProjectThumbnails = async (sequelize: Sequelize, storage: S
                     const thumbnail = await resizeImage(original, { width, height })
                     // Save thumbnail to storage
                     await storage.putObject(thumbnailPath, thumbnail, { ACL, CacheControl, ContentType })
+                    thumbnailCount += 1
                 }
             }
         } catch (e) {
@@ -73,5 +81,9 @@ export const generateProjectThumbnails = async (sequelize: Sequelize, storage: S
                 console.info(`Error generating project thumbnail from ${project?.image}`, e)
             }
         }
+    }
+
+    if (verbose) {
+        console.info(`Thumbnail generation end - generated ${thumbnailCount} thumbnail images in total.`)
     }
 }
