@@ -11,6 +11,7 @@ on:
         - 'export-csv'
         - 'opensearch-sync-all'
         - 'opensearch-recreate-indexes'
+        - 'generate-missing-image-variations'
         required: true
       environment:
         description: Environment (namespace)
@@ -54,6 +55,10 @@ jobs:
               "opensearch-recreate-indexes": {
                 "JOB_NAME": "biodiversity-cli-recreate-opensearch-indexes",
                 "NODE_COMMAND": "apps/cli/lib/search/recreate-indexes.js"
+              },
+              "generate-missing-image-variations": {
+                "JOB_NAME": "biodiversity-cli-generate-missing-image-variations",
+                "NODE_COMMAND": "apps/cli/lib/images/generate-missing-image-variations.js"
               }
             }
 
