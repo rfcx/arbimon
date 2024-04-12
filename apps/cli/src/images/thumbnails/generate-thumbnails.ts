@@ -1,10 +1,11 @@
-import { BATCH_LIMIT, PROJECT_IMAGE_CONFIG, VERBOSE } from 'images/config'
 import { type Sequelize, Op } from 'sequelize'
 
 import { buildVariantPath, isS3Image } from '@rfcx-bio/common/api-bio/_helpers'
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { resizeImage } from '@rfcx-bio/common/image'
 import { type GetObjectResponse, type StorageClient } from '@rfcx-bio/common/storage'
+
+import { BATCH_LIMIT, PROJECT_IMAGE_CONFIG, VERBOSE } from '../config'
 
 /**
  * Generates thumbnails from original project images
