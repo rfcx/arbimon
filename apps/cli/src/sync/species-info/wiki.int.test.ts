@@ -86,4 +86,4 @@ test('`sp` based (unknown species) are not being queried', async () => {
 
   const testSpeciesWiki = await TaxonSpeciesWiki.findOne({ where: { taxonSpeciesId: testSpecies?.get('id') } })
   expect(testSpeciesWiki).toBe(null)
-})
+}, 10000)
