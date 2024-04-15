@@ -30,7 +30,7 @@
             Sites
           </h2>
           <div
-            v-if="!isLoadingSitesRecCountBio"
+            v-if="isLoadingSitesRecCountBio"
             class="w-full bg-util-gray-03 loading-shimmer h-90"
           />
           <div
