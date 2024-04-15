@@ -191,7 +191,7 @@ const { isLoading: isLoadingDetectRecording, isError: isErrorDetectRecording, da
 
 // External data
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientCore)
+const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientBio)
 const { isPending: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
 // Current projects
