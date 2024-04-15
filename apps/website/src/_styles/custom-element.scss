@@ -38,6 +38,7 @@
 .el-input .el-input__inner {
   border-radius: 0.25rem;
   background: transparent !important;
+  border: 0px !important;
 
   &:focus-visible {
     box-shadow: none;
@@ -53,10 +54,12 @@
 
 .el-input .el-input__prefix {
   left: 12px;
+  padding-left: 12px;
 }
 
 .el-input .el-input__suffix {
   right: 12px;
+  padding-right: 12px;
 }
 
 .el-slider__bar {
