@@ -3,7 +3,7 @@
     v-if="textShorten"
     :data-tooltip-target="tooltipId"
     data-tooltip-style="light"
-    class="ml-1 w-6"
+    class="w-6"
     :class="extraClass"
   >
     {{ textShorten }}
