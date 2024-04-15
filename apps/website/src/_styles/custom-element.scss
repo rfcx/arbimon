@@ -36,9 +36,8 @@
 }
 
 .el-input .el-input__inner {
-  border-radius: 0.25rem;
-  background: transparent !important;
   border: 0px !important;
+  background: transparent !important;
 
   &:focus-visible {
     box-shadow: none;
