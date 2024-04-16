@@ -6,18 +6,18 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { toCsv } from '@rfcx-bio/utils/file'
 
 import { requireEnv } from '~/env'
-import { getSequelize } from '../db/connections'
-import { createGetCommand, createPutCommand } from './export-csv/create-command'
-import { getOccurencesByMonth } from './export-csv/get-occurences-by-month'
-import { getProjects } from './export-csv/get-projects'
-import { getRecordingsByMonth } from './export-csv/get-recordings-by-month'
-import { getSites } from './export-csv/get-sites'
-import { getSpecies } from './export-csv/get-species'
+import { getSequelize } from '../../db/connections'
+import { createGetCommand, createPutCommand } from './create-command'
+import { getOccurencesByMonth } from './get-occurences-by-month'
+import { getProjects } from './get-projects'
+import { getRecordingsByMonth } from './get-recordings-by-month'
+import { getSites } from './get-sites'
+import { getSpecies } from './get-species'
 
 const ONE_WEEK_IN_SECONDS = 86400 * 7
 
 const main = async (): Promise<void> => {
-  console.info('CSV Export start')
+  console.info('Global CSV Export start')
 
   const startTime = dayjs().utc()
 
@@ -123,11 +123,11 @@ const main = async (): Promise<void> => {
       username: 'Arbimon job notifier'
     })
 
-    console.info('CSV Export end: successful')
+    console.info('Global CSV Export end: successful')
   } catch (e) {
     console.error(e)
     process.exitCode = 1
-    console.info('CSV Export end: failed while querying and saving the data')
+    console.info('Global CSV Export end: failed while querying and saving the data')
     await web.chat.postMessage({
       channel: bioEnvironment === 'production' ? '#arbimon-vision' : '#arbimon-dev',
       text: '❌ export-csv job failed to run. Please contact Engineering team for more info.',
