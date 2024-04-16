@@ -6,9 +6,9 @@ import { syncArbimonSpeciesCalls } from './sync-arbimon-species-call'
 import { deleteArbimonDetectionBySiteSpeciesHour, resyncArbimonDetectionBySiteSpeciesHourBatch } from './sync-arbimon-x-detection-by-site-species-hour'
 import { getBiodiversityProjectId } from './sync-config'
 
-export const syncProjectData = async (projectId: number, arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<void> => {
+export const syncProject = async (projectId: number, arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<void> => {
   try {
-    console.info('RE-SYNC project - started')
+    console.info('SYNC - project started')
 
     await syncArbimonSites(projectId, arbimonSequelize, biodiversitySequelize)
     console.info('> Sites: up to date')
@@ -27,7 +27,7 @@ export const syncProjectData = async (projectId: number, arbimonSequelize: Seque
     await resyncArbimonDetectionBySiteSpeciesHourBatch(projectId, arbimonSequelize, biodiversitySequelize)
     console.info('> Detections: up to date')
   } catch (e) {
-    console.error('SYNC - Incremental failed', e)
+    console.error('SYNC - project failed', e)
     process.exitCode = 1
   }
 }
