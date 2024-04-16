@@ -36,7 +36,10 @@
           v-if="isCanceling"
           class="h-4 w-4 animate-spin"
         />
-        <span v-else>
+        <span
+          v-else
+          class="flex flex-row justify-center items-center"
+        >
           <span class="pt-1">Cancel job</span>
           <icon-fa-trash class="h-4 w-4 ml-2" />
         </span>
