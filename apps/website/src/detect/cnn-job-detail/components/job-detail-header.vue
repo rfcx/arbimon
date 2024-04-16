@@ -24,10 +24,11 @@
         </li>
       </ol>
     </nav>
-    <div class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse hidden">
+    <div class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
       <button
         v-if="isCancelJobEnable"
         class="btn btn-danger py-2 flex flex-row justify-center items-center"
+        @click="emit('emitCancelJob')"
       >
         <span class="pt-1">Cancel job</span>
         <icon-fa-trash class="h-4 w-4 ml-2" />
@@ -48,4 +49,7 @@ const jobId = computed(() => route.params.jobId)
 withDefaults(defineProps<{ isCancelJobEnable: boolean }>(), {
   isCancelJobEnable: true
 })
+
+const emit = defineEmits<{(e: 'emitCancelJob'): void }>()
+
 </script>

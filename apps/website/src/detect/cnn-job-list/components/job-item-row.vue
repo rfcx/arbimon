@@ -67,8 +67,8 @@ const props = defineProps<{
 
 const { formatDateLocal } = useDateFormat()
 
-const apiClientCore = inject(apiClientKey) as AxiosInstance
-const { isPending: isLoadingPostStatus, mutate: mutatePostStatus } = usePostClassifierJobStatus(apiClientCore, props.job.id)
+const apiClient = inject(apiClientKey) as AxiosInstance
+const { isPending: isLoadingPostStatus, mutate: mutatePostStatus } = usePostClassifierJobStatus(apiClient, props.job.id)
 
 const canCancelJob = computed(() => props.job.progress.status === CLASSIFIER_JOB_STATUS.WAITING)
 
