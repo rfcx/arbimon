@@ -312,6 +312,9 @@ importers:
       pg-hstore:
         specifier: ^2.3.4
         version: 2.3.4
+      quick-lru:
+        specifier: ^7.0.0
+        version: 7.0.0
       sequelize:
         specifier: 7.0.0-alpha.5
         version: 7.0.0-alpha.5(mysql2@2.3.3)(pg-hstore@2.3.4)(pg@8.7.3)(sqlite3@5.0.8)

@@ -79,31 +79,17 @@ const main = async (): Promise<void> => {
 
     console.info('STEP: Generating signed S3 url')
     const [
-      projectsS3GetCommand,
-      sitesS3GetCommand,
-      speciesS3GetCommand,
-      occurencesS3GetCommand,
-      recordingsS3GetCommand
-    ] = await Promise.all([
-      createGetCommand(projectsS3Filename, bucketName),
-      createGetCommand(sitesS3Filename, bucketName),
-      createGetCommand(speciesS3Filename, bucketName),
-      createGetCommand(occurencesS3Filename, bucketName),
-      createGetCommand(recordingsS3Filename, bucketName)
-    ])
-
-    const [
       projectsS3Url,
       sitesS3Url,
       speciesS3Url,
       occurencesS3Url,
       recordingsS3Url
     ] = await Promise.all([
-      getSignedUrl(s3, projectsS3GetCommand, { expiresIn: ONE_WEEK_IN_SECONDS }),
-      getSignedUrl(s3, sitesS3GetCommand, { expiresIn: ONE_WEEK_IN_SECONDS }),
-      getSignedUrl(s3, speciesS3GetCommand, { expiresIn: ONE_WEEK_IN_SECONDS }),
-      getSignedUrl(s3, occurencesS3GetCommand, { expiresIn: ONE_WEEK_IN_SECONDS }),
-      getSignedUrl(s3, recordingsS3GetCommand, { expiresIn: ONE_WEEK_IN_SECONDS })
+      getSignedUrl(s3, createGetCommand(projectsS3Filename, bucketName), { expiresIn: ONE_WEEK_IN_SECONDS }),
+      getSignedUrl(s3, createGetCommand(sitesS3Filename, bucketName), { expiresIn: ONE_WEEK_IN_SECONDS }),
+      getSignedUrl(s3, createGetCommand(speciesS3Filename, bucketName), { expiresIn: ONE_WEEK_IN_SECONDS }),
+      getSignedUrl(s3, createGetCommand(occurencesS3Filename, bucketName), { expiresIn: ONE_WEEK_IN_SECONDS }),
+      getSignedUrl(s3, createGetCommand(recordingsS3Filename, bucketName), { expiresIn: ONE_WEEK_IN_SECONDS })
     ])
 
     console.info('STEP: Notifying in slack channel')
