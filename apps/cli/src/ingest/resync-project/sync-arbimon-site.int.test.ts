@@ -7,7 +7,7 @@ import { type Project } from '@rfcx-bio/common/dao/types'
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'
 import { deleteOutputProjects } from '../_testing/helper'
-import { syncArbimonSitesBatch } from './sync-arbimon-site'
+import { syncArbimonSites } from './sync-arbimon-site'
 
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 const biodiversitySequelize = getSequelize()
@@ -45,7 +45,7 @@ describe('ingest > resync > site', () => {
 
   test('can sync multiple sites', async () => {
     // Act
-    await syncArbimonSitesBatch(DEFAULT_ARB_PROJECT.projectId, arbimonSequelize, biodiversitySequelize, false)
+    await syncArbimonSites(DEFAULT_ARB_PROJECT.projectId, arbimonSequelize, biodiversitySequelize, false)
 
     // Assert
     const sitesInDB = await LocationSite.findAll({ where: { idArbimon: { [Op.in]: DEFAULT_ARB_SITES.map(s => s.siteId) } } })
