@@ -14,11 +14,11 @@
       class="grid gap-x-4 gap-y-2 text-base text-insight"
     >
       <template
-        v-for="key in Object.entries(props.data ?? {})"
+        v-for="key in validationStatusData"
         :key="'validation-status-' + key[0]"
       >
         <div class="grid grid-cols-4">
-          <span>{{ validationStatusName(key[0]) }}</span>
+          <span>{{ key[0] }}</span>
           <span class="flex items-center justify-center">{{ key[1] }}</span>
           <span class="flex items-center justify-center">{{ getValidationPercentage(key[1], totalDetection) }}%</span>
         </div>
@@ -41,6 +41,10 @@ const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, d
   data: undefined
 })
 
+const validationStatusData = computed(() => {
+  return Object.entries(props.data ?? {}).filter(([key]) => key !== 'total').map(([key, value]) => [validationStatusName(key), value])
+})
+
 const validationStatusName = (key: string): string => {
   const validationStatusMap: Record<string, string> = {
     notPresent: 'Not Present',
@@ -57,7 +61,7 @@ const totalDetection = computed(() => {
 })
 
 const getValidationPercentage = (x: number, total: number): string => {
-   return numeral(total === 0 ? 0 : x / total * 100).format('0,0')
+   return numeral(total === 0 ? 0 : x / total * 100).format('0,0', Math.floor)
 }
 
 </script>
