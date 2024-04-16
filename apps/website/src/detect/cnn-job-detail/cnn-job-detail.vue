@@ -2,6 +2,7 @@
   <section class="max-w-screen-xl pt-22 pl-115px pr-4">
     <job-detail-header
       :is-cancel-job-enable="isRefetchIntervalEnable"
+      :is-canceling="isLoadingPostStatus"
       @emit-cancel-job="onEmitCancelJob"
     />
     <job-detail-information
