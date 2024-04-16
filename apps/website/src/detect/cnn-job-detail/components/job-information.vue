@@ -12,7 +12,7 @@
           </h5>
         </div>
         <div
-          v-if="!props.isLoadingSummary"
+          v-if="props.isLoadingSummary"
           class="mr-2 my-4 loading-shimmer w-full rounded-lg pt-4 max-w-64"
         />
         <div
