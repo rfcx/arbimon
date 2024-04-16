@@ -11,7 +11,14 @@
             {{ props.summary?.classifier.name ?? '' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
           </h5>
         </div>
-        <div class="md:(col-span-1 mt-1) <md:(col-span-2 mt-4)">
+        <div
+          v-if="!props.isLoadingSummary"
+          class="mr-2 my-4 loading-shimmer w-full rounded-lg pt-4 max-w-64"
+        />
+        <div
+          v-else
+          class="md:(col-span-1 mt-1) <md:(col-span-2 mt-4)"
+        >
           <h2 class="text-lg">
             <job-information-status
               :variant="props.summary?.status ?? 0"
