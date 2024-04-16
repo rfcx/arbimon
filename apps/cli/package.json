@@ -46,6 +46,7 @@
     "@aws-sdk/s3-request-presigner": "^3.363.0",
     "@opensearch-project/opensearch": "^2.5.0",
     "@rfcx-bio/common": "workspace:^0.0.1",
+    "@rfcx-bio/node-common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
     "@slack/web-api": "^6.8.1",
     "axios": "^0.27.2",

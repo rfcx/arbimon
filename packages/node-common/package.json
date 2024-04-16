@@ -1,0 +1,44 @@
+{
+  "name": "@rfcx-bio/node-common",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Biodiversity shared code on node",
+  "keywords": [
+    "biodiversity",
+    "analytics",
+    "rfcx",
+    "rainforest",
+    "connection"
+  ],
+  "homepage": "https://github.com/rfcx/arbimon#readme",
+  "bugs": {
+    "url": "https://github.com/rfcx/arbimon/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/arbimon.git"
+  },
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "files": [
+    "lib/**/*.js"
+  ],
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json",
+    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./.eslintcache\"",
+    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "lint-profile:eslint": "cross-env TIMING=1 eslint .",
+    "lint:eslint": "eslint . --cache",
+    "lint:prettier": "prettier . --check",
+    "pack-api": "node --loader ts-node/esm ./create-lib-package.ts && cd lib && pnpm pack --pack-destination ../../../apps/api",
+    "test": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:test:* -- --run\"",
+    "test:unit": "vitest .unit.test."
+  },
+  "dependencies": {
+    "@rfcx-bio/utils": "workspace:^0.0.1",
+    "kubernetes-client": "^9.0.0"
+  }
+}
