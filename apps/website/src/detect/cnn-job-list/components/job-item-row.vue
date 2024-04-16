@@ -52,7 +52,7 @@ import { computed, inject } from 'vue'
 
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
-import { apiClientCoreKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import useDateFormat from '~/hooks/use-date-format'
 import { ROUTE_NAMES } from '~/router'
 import { FETCH_CLASSIFIER_JOBS_KEY } from '../../_composables/use-classifier-jobs'
@@ -67,7 +67,7 @@ const props = defineProps<{
 
 const { formatDateLocal } = useDateFormat()
 
-const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
+const apiClientCore = inject(apiClientKey) as AxiosInstance
 const { isPending: isLoadingPostStatus, mutate: mutatePostStatus } = usePostClassifierJobStatus(apiClientCore, props.job.id)
 
 const canCancelJob = computed(() => props.job.progress.status === CLASSIFIER_JOB_STATUS.WAITING)
