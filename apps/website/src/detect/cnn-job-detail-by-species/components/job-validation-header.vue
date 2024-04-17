@@ -10,10 +10,6 @@
           {{ speciesName || '' }}
         </span>
       </div>
-      <div class="flex items-center font-sm space-x-1 md:space-x-2 rtl:space-x-reverse text-insight pt-3">
-        <span class="font-display">Total detections:</span>
-        <span>{{ detectionsCount }}</span>
-      </div>
       <div class="flex items-center justify-between text-insight pt-10">
         <div class="flex items-center gap-x-3">
           <span class="text-2xl font-display">Filters:</span>
@@ -22,7 +18,7 @@
           />
           <div>
             <span>Results:</span>
-            <span class="ml-1">{{ filteredResult }}</span>
+            <span class="ml-1">{{ filteredResult }} / {{ detectionsCount }}</span>
           </div>
         </div>
         <div class="flex flex-row items-center gap-x-3">
