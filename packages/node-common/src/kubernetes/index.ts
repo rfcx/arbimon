@@ -1,6 +1,8 @@
-import { type ApiRoot, Client1_13 } from 'kubernetes-client'
+import kubernetes, { type ApiRoot } from 'kubernetes-client'
 
-const getClient = (): ApiRoot => new Client1_13({ version: '1.13' })
+const { Client1_13: Client } = kubernetes
+
+const getClient = (): ApiRoot => new Client({ version: '1.13' })
 
 export const createJob = async (job: unknown): Promise<void> => {
   const client = getClient()
