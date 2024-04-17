@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-22 pl-115px pr-40 4xl:(pr-16)">
+  <section class="pt-20 pl-6 pr-10 md:(pl-10) xl:(pl-24)">
     <div class="text-frequency">
       <page-title page-title="Create New CNN Job" />
     </div>
