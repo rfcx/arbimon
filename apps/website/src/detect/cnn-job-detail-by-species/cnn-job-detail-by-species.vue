@@ -5,7 +5,7 @@
       <JobValidationHeader
         :species-name="speciesClass"
         :detections-count="totalDetections"
-        :filtered-result="jobDetections?.length"
+        :filtered-result="jobDetectionResponse?.total"
         :page-size="PAGE_SIZE_LIMIT"
         @emit-page-size="onEmitPageSize"
       />
@@ -19,7 +19,7 @@
         v-model:page="page"
         :is-loading="isLoadingJobDetections"
         :is-error="isErrorJobDetections"
-        :data="jobDetections"
+        :data="jobDetectionResponse?.data"
         :page-size="PAGE_SIZE_LIMIT"
         :max-page="Math.ceil(Number(totalDetections)/PAGE_SIZE_LIMIT)"
         @emit-validation-result="refetchJobResults()"
@@ -144,7 +144,7 @@ const isRefetchIntervalEnable = computed(() => {
   return jobSummary.value?.status != null && jobSummary.value.status === CLASSIFIER_JOB_STATUS.RUNNING
 })
 
-const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: jobDetections } = useGetJobDetections(
+const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: jobDetectionResponse } = useGetJobDetections(
   apiClientBio,
   detectionsQueryParams,
   computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== ''),
