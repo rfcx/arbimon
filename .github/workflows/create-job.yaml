@@ -8,9 +8,10 @@ on:
         options:
         - 'sync-daily'
         - 'sync-incremental'
-        - 'export-csv'
-        - 'opensearch-full-reindex'
-        - 'recreate-opensearch-indexes'
+        - 'export-global-csv'
+        - 'opensearch-sync-all'
+        - 'opensearch-recreate-indexes'
+        - 'generate-missing-image-variations'
         required: true
       environment:
         description: Environment (namespace)
@@ -43,17 +44,21 @@ jobs:
                 "JOB_NAME": "biodiversity-cli-sync-incremental-user",
                 "NODE_COMMAND": "apps/cli/lib/sync/incrementally.js"
               },
-              "export-csv": {
-                "JOB_NAME": "biodiversity-cli-export-csv",
-                "NODE_COMMAND": "apps/cli/lib/export/export-csv.js"
+              "export-global-csv": {
+                "JOB_NAME": "biodiversity-cli-export-global-csv",
+                "NODE_COMMAND": "apps/cli/lib/export/global-csv/index.js"
               },
-              "opensearch-full-reindex": {
-                "JOB_NAME": "biodiversity-cli-opensearch-full-reindex",
+              "opensearch-sync-all": {
+                "JOB_NAME": "biodiversity-cli-opensearch-full-reindex-user",
                 "NODE_COMMAND": "apps/cli/lib/search/sync-all.js"
               },
-              "recreate-opensearch-indexes": {
-                "JOB_NAME": "biodiversity-cli-recreate-opensearch-indexes",
+              "opensearch-recreate-indexes": {
+                "JOB_NAME": "biodiversity-cli-opensearch-recreate-indexes",
                 "NODE_COMMAND": "apps/cli/lib/search/recreate-indexes.js"
+              },
+              "generate-missing-image-variations": {
+                "JOB_NAME": "biodiversity-cli-generate-missing-image-variations",
+                "NODE_COMMAND": "apps/cli/lib/images/generate-missing-image-variations.js"
               }
             }
 

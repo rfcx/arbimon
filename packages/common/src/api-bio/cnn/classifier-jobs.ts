@@ -5,7 +5,8 @@ export const CLASSIFIER_JOB_LABELS = {
   20: 'running',
   30: 'done',
   40: 'error',
-  50: 'cancelled'
+  50: 'cancelled',
+  60: 'awaiting-cancellation'
 } as const
 
 // Response type

@@ -7,10 +7,10 @@ import { truncateEllipsis } from '@rfcx-bio/utils/string'
 import { getSequelize } from '@/db/connections'
 import { rawTaxonClasses } from '@/db/seeders/_data/taxon-class'
 import { getWikiSummary } from '@/sync/_refactor/input-wiki'
-import { syncWikiSpeciesInfo } from './wiki'
+import { syncOnlyMissingWikiSpeciesInfo, syncWikiSpeciesInfo } from './wiki'
 
 const biodiversitySequelize = getSequelize()
-const { TaxonSpecies, TaxonSpeciesPhoto, TaxonSpeciesWiki } = ModelRepository.getInstance(biodiversitySequelize)
+const { TaxonSpecies, TaxonSpeciesIucn, TaxonSpeciesPhoto, TaxonSpeciesWiki } = ModelRepository.getInstance(biodiversitySequelize)
 
 const BIRDS_ID = rawTaxonClasses[3].id
 
@@ -26,6 +26,14 @@ const DEFAULT_SPECIES = {
   taxonClassId: BIRDS_ID,
   scientificName: 'Bogus Malogus'
 }
+
+const TEST_SPECIES = {
+  idArbimon: 43845,
+  slug: 'sp21',
+  taxonClassId: BIRDS_ID,
+  scientificName: 'sp21'
+}
+
 const DEFAULT_WIKI_INFO = {
   title: 'Bogus Malogus',
   content: 'Random description',
@@ -41,10 +49,11 @@ const DEFAULT_WIKI_INFO = {
 }
 
 afterEach(async () => {
-  const species = await TaxonSpecies.findAll({ attributes: ['id'], where: { slug: DEFAULT_SPECIES.slug } })
+  const species = await TaxonSpecies.findAll({ attributes: ['id'], where: { slug: [DEFAULT_SPECIES.slug, TEST_SPECIES.slug] } })
   await TaxonSpeciesWiki.destroy({ where: { taxonSpeciesId: { [Op.in]: species.map(s => s.id) } } })
   await TaxonSpeciesPhoto.destroy({ where: { taxonSpeciesId: { [Op.in]: species.map(s => s.id) } } })
-  await TaxonSpecies.destroy({ where: { slug: DEFAULT_SPECIES.slug } })
+  await TaxonSpeciesIucn.destroy({ where: { taxonSpeciesId: { [Op.in]: species.map(s => s.id) } } })
+  await TaxonSpecies.destroy({ where: { slug: [DEFAULT_SPECIES.slug, TEST_SPECIES.slug] } })
 })
 
 test('truncate long author field', async () => {
@@ -61,3 +70,20 @@ test('truncate long author field', async () => {
   expect(photos).toHaveLength(1)
   expect(photos[0].photoAuthor).toEqual(truncateEllipsis(longCredit, 1023))
 })
+
+test('`sp` based (unknown species) are not being queried', async () => {
+  // Arrange
+  await TaxonSpecies.create(TEST_SPECIES)
+  await TaxonSpecies.create(DEFAULT_SPECIES)
+  ;(getWikiSummary as any).mockResolvedValue({ ...DEFAULT_WIKI_INFO, credit: '' })
+
+  // Act
+  await syncOnlyMissingWikiSpeciesInfo(biodiversitySequelize)
+
+  // Assert
+  const testSpecies = await TaxonSpecies.findOne({ where: { slug: 'sp21' } })
+  expect(testSpecies).not.toBe(null)
+
+  const testSpeciesWiki = await TaxonSpeciesWiki.findOne({ where: { taxonSpeciesId: testSpecies?.get('id') } })
+  expect(testSpeciesWiki).toBe(null)
+}, 10000)

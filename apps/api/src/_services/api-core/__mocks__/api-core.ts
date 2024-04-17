@@ -1,6 +1,7 @@
 import { vi } from 'vitest'
 
 import { type Classifier } from '@rfcx-bio/common/api-bio/classifiers/classifiers'
+import { type WithTotalCount } from '@rfcx-bio/common/total-count'
 
 import { type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobTotalDetections, type CoreDetection } from '../types'
 
@@ -107,65 +108,68 @@ export const getClassifierJobSummaries = vi.fn(async (): Promise<{ total: number
   }
 })
 
-export const getDetections = vi.fn(async (): Promise<CoreDetection[]> => {
-  return [
-    {
-      id: '19919234',
-      stream_id: 'kdibkrnfh84k',
-      start: '2022-01-01T00:00:00.000+0700',
-      end: '2022-01-01T00:00:05.000+0700',
-      classifier_id: 19,
-      confidence: 0.984947475,
-      review_status: null,
-      classification: {
-        title: 'Schelrus Carolinensis simple call 1',
-        value: 'schelrus_carolinensis_simple_call_1',
-        image: null
+export const getDetections = vi.fn(async (): Promise<WithTotalCount<CoreDetection[]>> => {
+  return {
+    total: 8,
+    data: [
+      {
+        id: '19919234',
+        stream_id: 'kdibkrnfh84k',
+        start: '2022-01-01T00:00:00.000+0700',
+        end: '2022-01-01T00:00:05.000+0700',
+        classifier_id: 19,
+        confidence: 0.984947475,
+        review_status: null,
+        classification: {
+          title: 'Schelrus Carolinensis simple call 1',
+          value: 'schelrus_carolinensis_simple_call_1',
+          image: null
+        }
+      },
+      {
+        id: '19919235',
+        stream_id: 'kdibkrnfh84k',
+        start: '2022-01-01T00:00:05.000+0700',
+        end: '2022-01-01T00:00:10.000+0700',
+        classifier_id: 19,
+        confidence: 0.984947475,
+        review_status: -1,
+        classification: {
+          title: 'Schelrus Carolinensis simple call 1',
+          value: 'schelrus_carolinensis_simple_call_1',
+          image: null
+        }
+      },
+      {
+        id: '19919236',
+        stream_id: 'kdibkrnfh84k',
+        start: '2022-01-01T00:00:10.000+0700',
+        end: '2022-01-01T00:00:15.000+0700',
+        classifier_id: 19,
+        confidence: 0.984947475,
+        review_status: 0,
+        classification: {
+          title: 'Schelrus Carolinensis simple call 1',
+          value: 'schelrus_carolinensis_simple_call_1',
+          image: null
+        }
+      },
+      {
+        id: '19919237',
+        stream_id: 'kdibkrnfh84k',
+        start: '2022-01-01T00:00:15.000+0700',
+        end: '2022-01-01T00:00:20.000+0700',
+        classifier_id: 19,
+        confidence: 0.984947475,
+        review_status: 1,
+        classification: {
+          title: 'Schelrus Carolinensis simple call 1',
+          value: 'schelrus_carolinensis_simple_call_1',
+          image: null
+        }
       }
-    },
-    {
-      id: '19919235',
-      stream_id: 'kdibkrnfh84k',
-      start: '2022-01-01T00:00:05.000+0700',
-      end: '2022-01-01T00:00:10.000+0700',
-      classifier_id: 19,
-      confidence: 0.984947475,
-      review_status: -1,
-      classification: {
-        title: 'Schelrus Carolinensis simple call 1',
-        value: 'schelrus_carolinensis_simple_call_1',
-        image: null
-      }
-    },
-    {
-      id: '19919236',
-      stream_id: 'kdibkrnfh84k',
-      start: '2022-01-01T00:00:10.000+0700',
-      end: '2022-01-01T00:00:15.000+0700',
-      classifier_id: 19,
-      confidence: 0.984947475,
-      review_status: 0,
-      classification: {
-        title: 'Schelrus Carolinensis simple call 1',
-        value: 'schelrus_carolinensis_simple_call_1',
-        image: null
-      }
-    },
-    {
-      id: '19919237',
-      stream_id: 'kdibkrnfh84k',
-      start: '2022-01-01T00:00:15.000+0700',
-      end: '2022-01-01T00:00:20.000+0700',
-      classifier_id: 19,
-      confidence: 0.984947475,
-      review_status: 1,
-      classification: {
-        title: 'Schelrus Carolinensis simple call 1',
-        value: 'schelrus_carolinensis_simple_call_1',
-        image: null
-      }
-    }
-  ]
+    ]
+  }
 })
 
 export const getClassifiers = vi.fn(async (): Promise<Classifier[]> => {
@@ -199,3 +203,5 @@ export const getClassifiers = vi.fn(async (): Promise<Classifier[]> => {
 })
 
 export const updateDetectionStatus = vi.fn(async (): Promise<void> => {})
+
+export const updateClassifierJob = vi.fn(async (): Promise<void> => {})

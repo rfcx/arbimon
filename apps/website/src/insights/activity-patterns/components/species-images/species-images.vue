@@ -4,7 +4,12 @@
       v-if="loading"
       class="loading-shimmer h-40"
     />
-    <no-data-panel v-else-if="speciesPhotos.length === 0" />
+    <div
+      v-else-if="speciesPhotos.length === 0"
+      class="flex justify-center items-center text-subtle border-2 border-faded min-h-10"
+    >
+      image not available
+    </div>
     <div
       v-else
       indicator-position="none"

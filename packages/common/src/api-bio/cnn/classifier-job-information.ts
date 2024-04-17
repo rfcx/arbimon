@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
-import { type ClassifierJob } from './classifier-jobs'
+import { type CLASSIFIER_JOB_LABELS, type ClassifierJob } from './classifier-jobs'
 
 export const ARBIMON_CORE_REVIEW_STATUS_MAP = {
   unvalidated: 'unreviewed',
@@ -17,6 +17,7 @@ export const REVIEW_STATUS_MAPPING = {
 } as const
 
 export interface ValidationStatus {
+  total: number
   unvalidated: number
   notPresent: number
   unknown: number
@@ -26,6 +27,8 @@ export interface ValidationStatus {
 export type CoreRawReviewStatus = typeof REVIEW_STATUS_MAPPING[keyof typeof REVIEW_STATUS_MAPPING]
 export type CoreReviewStatus = typeof ARBIMON_CORE_REVIEW_STATUS_MAP[keyof typeof ARBIMON_CORE_REVIEW_STATUS_MAP]
 export type ArbimonReviewStatus = keyof typeof ARBIMON_CORE_REVIEW_STATUS_MAP
+
+export type EligibleUpdateClassifierJobStatus = Exclude<keyof typeof CLASSIFIER_JOB_LABELS, 20 | 60>
 
 // Response type
 export interface GetClassifierJobInformationResponse extends ClassifierJob {
@@ -39,11 +42,22 @@ export interface GetClassifierJobInformationParams {
   jobId: string
 }
 
+export type UpdateClassifierJobParams = GetClassifierJobInformationParams
+
+export interface UpdateClassifierJobBody {
+  status: EligibleUpdateClassifierJobStatus
+}
+
 // Route
 export const getClassifierJobInformationRoute = '/jobs/:jobId'
+export const updateClassifierJobRoute = getClassifierJobInformationRoute
 
 // Service
 export const apiBioGetClassifierJobInformation = async (apiClient: AxiosInstance, jobId: number): Promise<GetClassifierJobInformationResponse> => {
   const response = await apiClient.get(`/jobs/${jobId}`)
   return response.data
+}
+
+export const apiBioUpdateClassifierJob = async (apiClient: AxiosInstance, jobId: number, body: UpdateClassifierJobBody): Promise<void> => {
+  await apiClient.patch(`/jobs/${jobId}`, body)
 }

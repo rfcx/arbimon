@@ -2,6 +2,8 @@
   <section class="max-w-screen-xl pt-22 pl-115px pr-4">
     <job-detail-header
       :is-cancel-job-enable="isRefetchIntervalEnable"
+      :is-canceling="isLoadingPostStatus"
+      @emit-cancel-job="onEmitCancelJob"
     />
     <job-detail-information
       :is-loading-summary="isLoadingJobSummary"
@@ -31,6 +33,7 @@ import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/
 import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterStore } from '~/store'
 import { useGetClassifierJobInformation } from '../_composables/use-get-job-detection-summary'
+import { usePostClassifierJobStatus } from '../_composables/use-post-classifier-job-status'
 import JobDetailHeader from './components/job-detail-header.vue'
 import type { ClassificationsSummaryDataset } from './components/job-detection-list.vue'
 import JobDetections from './components/job-detections.vue'
@@ -48,7 +51,7 @@ const isRefetch = ref<boolean>(true)
 const detectionList = ref<ClassificationsSummaryDataset[]>()
 const total = ref(0)
 const searchKeyword = ref<string| undefined>()
-const sortKeyLabel = ref<string| undefined>()
+const sortKeyLabel = ref<string| undefined>('name')
 
 const refetchInterval = computed(() => {
   return isRefetch.value ? 30_000 : false
@@ -60,10 +63,12 @@ const { isLoading: isLoadingJobSummary, isError: isErrorJobSummary, data: jobSum
   refetchInterval
 )
 
+const { isPending: isLoadingPostStatus, mutate: mutatePostStatus } = usePostClassifierJobStatus(apiClientBio, jobId.value)
+
 watch(jobSummary, async (newValue) => {
   isRefetch.value = isRefetchIntervalEnable.value
   if (!isRefetch.value && detectionList.value === undefined) {
-    await getClassifierJobSpecies(PAGE_LIMIT, 0)
+    await getClassifierJobSpecies(PAGE_LIMIT, 0, searchKeyword.value, sortKeyLabel.value)
   }
 
   if (newValue == null) {
@@ -78,7 +83,7 @@ watch(jobSummary, async (newValue) => {
 })
 
 onMounted(async () => {
-  await getClassifierJobSpecies(PAGE_LIMIT, 0)
+  await getClassifierJobSpecies(PAGE_LIMIT, 0, searchKeyword.value, sortKeyLabel.value)
 })
 
 const isRefetchIntervalEnable = computed(() => {
@@ -119,6 +124,13 @@ const getClassifierJobSpecies = async (limit?: number, offset?: number, q?: stri
       uncertain: d.unknown,
       confirmed: d.present
     }
+  })
+}
+
+const onEmitCancelJob = async () => {
+  mutatePostStatus({ status: CLASSIFIER_JOB_STATUS.CANCELLED }, {
+    onSuccess: () => refetchJobSummary(),
+    onError: () => { /* TODO: add error */ }
   })
 }
 </script>

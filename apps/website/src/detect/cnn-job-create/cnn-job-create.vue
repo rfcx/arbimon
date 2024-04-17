@@ -119,16 +119,6 @@
         <span v-if="isErrorPostJob">Error saving job :(</span>
       </div>
     </form>
-    <el-alert
-      v-if="false"
-      title="Debugging"
-      type="info"
-      class="my-4"
-      effect="dark"
-      show-icon
-    >
-      <pre>{{ JSON.stringify(job, null, 2).replace(/, /g, ',\r\n  ') }}</pre>
-    </el-alert>
   </section>
 </template>
 <script setup lang="ts">
@@ -201,7 +191,7 @@ const { isLoading: isLoadingDetectRecording, isError: isErrorDetectRecording, da
 
 // External data
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientCore)
+const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientBio)
 const { isPending: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
 // Current projects

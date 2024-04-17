@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test } from 'vitest'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
-import { getArbimonProjectSites, getArbimonSites } from '@/ingest/inputs/get-arbimon-site'
+import { getArbimonSites, getArbimonSitesByProject } from '@/ingest/inputs/get-arbimon-site'
 import { type SiteArbimon } from '../parsers/parse-site-arbimon-to-bio'
 import { type SyncQueryParams } from './sync-query-params'
 
@@ -200,7 +200,7 @@ describe('ingest > inputs > getArbimonProjectSites', async () => {
     await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, siteId: TEST_SITE_ID[2], createdAt: '2022-01-03 01:00:00', updatedAt: '2022-01-04 01:00:00' } })
 
     // Act
-    const actual = await getArbimonProjectSites(arbimonSequelize, DEFAULT_PROJECT.projectId) as unknown as SiteArbimon[]
+    const actual = await getArbimonSitesByProject(arbimonSequelize, DEFAULT_PROJECT.projectId) as unknown as SiteArbimon[]
 
     // Assert
     expect(actual).toHaveLength(3)
@@ -211,7 +211,7 @@ describe('ingest > inputs > getArbimonProjectSites', async () => {
     // Arrange
     await arbimonSequelize.query('DELETE FROM sites')
     // Act
-    const actual = await getArbimonProjectSites(arbimonSequelize, DEFAULT_PROJECT.projectId) as unknown as SiteArbimon[]
+    const actual = await getArbimonSitesByProject(arbimonSequelize, DEFAULT_PROJECT.projectId) as unknown as SiteArbimon[]
 
     // Assert
     expect(actual).toHaveLength(0)
@@ -223,7 +223,7 @@ describe('ingest > inputs > getArbimonProjectSites', async () => {
     await arbimonSequelize.query(SQL_INSERT_SITE, { bind: { ...DEFAULT_SITE, siteId: 124, createdAt: '2024-03-27 01:00:00', updatedAt: '2024-03-27 02:00:00', hidden: 1 } })
 
     // Act
-    const actual = await getArbimonProjectSites(arbimonSequelize, DEFAULT_PROJECT.projectId) as unknown as SiteArbimon[]
+    const actual = await getArbimonSitesByProject(arbimonSequelize, DEFAULT_PROJECT.projectId) as unknown as SiteArbimon[]
 
     // Assert
     expect(actual).toHaveLength(2)

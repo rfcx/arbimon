@@ -3,7 +3,7 @@ import { type Sequelize } from 'sequelize'
 
 import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
 
-import { getArbimonProjectSites } from '../inputs/get-arbimon-site'
+import { getArbimonSitesByProject } from '../inputs/get-arbimon-site'
 import { writeSitesToBio } from '../outputs/sites'
 import { writeSyncError } from '../outputs/sync-error'
 import { writeSyncLogByProject } from '../outputs/sync-log-by-project'
@@ -17,11 +17,11 @@ const SYNC_CONFIG: SyncConfig = {
   syncBatchLimit: 20000 // do not use for the sites resync
 }
 
-export const syncArbimonSitesBatch = async (projectId: number, arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, verbose: boolean = true): Promise<void> => {
+export const syncArbimonSites = async (projectId: number, arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, verbose: boolean = true): Promise<void> => {
   // Getter
-  const rawArbimonSites = await getArbimonProjectSites(arbimonSequelize, projectId)
+  const rawArbimonSites = await getArbimonSitesByProject(arbimonSequelize, projectId)
   if (verbose) {
-    console.info('- syncArbimonSitesBatch: found %d sites', rawArbimonSites.length)
+    console.info('- syncArbimonSites: found %d sites', rawArbimonSites.length)
   }
   if (rawArbimonSites.length === 0) return
 
@@ -69,8 +69,4 @@ export const syncArbimonSitesBatch = async (projectId: number, arbimonSequelize:
     await transaction.rollback()
     throw error
   }
-}
-
-export const syncArbimonSites = async (projectId: number, arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<void> => {
-  await syncArbimonSitesBatch(projectId, arbimonSequelize, biodiversitySequelize)
 }

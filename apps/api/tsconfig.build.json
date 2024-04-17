@@ -9,6 +9,7 @@
     "paths": {
       "@rfcx-bio/utils/*": ["../../../packages/utils/src/*"],
       "@rfcx-bio/common/*": ["../../../packages/common/src/*"],
+      "@rfcx-bio/node-common/*": ["../../../packages/node-common/src/*"],
       "@rfcx-bio/testing/*": ["../../../packages/testing/src/*"],
       "~/*": ["./_services/*"],
       "@/*": ["./*"]
@@ -23,6 +24,7 @@
   "references": [
     { "path": "../../packages/utils/tsconfig.build.json" },
     { "path": "../../packages/common/tsconfig.build.json" },
+    { "path": "../../packages/node-common/tsconfig.build.json" },
     { "path": "../../packages/testing/tsconfig.build.json" }
   ]
 }

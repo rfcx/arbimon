@@ -24,8 +24,7 @@ export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syn
     FROM sites s
     WHERE (s.updated_at > $syncUntilDate OR (s.updated_at = $syncUntilDate AND s.site_id > $syncUntilId))
     ORDER BY s.updated_at, s.site_id
-    LIMIT $syncBatchLimit;
-    `
+    LIMIT $syncBatchLimit`
 
   const results = await sequelize.query<SiteArbimon>(sql, {
     type: QueryTypes.SELECT,
@@ -43,7 +42,7 @@ export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syn
   }))
 }
 
-export const getArbimonProjectSites = async (sequelize: Sequelize, projectId: number): Promise<unknown[]> => {
+export const getArbimonSitesByProject = async (sequelize: Sequelize, projectId: number): Promise<unknown[]> => {
   const sql = `
       SELECT s.site_id AS idArbimon,
       s.external_id AS idCore,
@@ -57,9 +56,8 @@ export const getArbimonProjectSites = async (sequelize: Sequelize, projectId: nu
       s.deleted_at AS deletedAt,
       s.hidden
     FROM sites s
-    WHERE s.project_id = $projectId and s.deleted_at is null
-    ORDER BY s.updated_at, s.site_id;
-    `
+    WHERE s.project_id = $projectId AND s.deleted_at is null
+    ORDER BY s.updated_at, s.site_id`
 
   const results = await sequelize.query<SiteArbimon>(sql, {
     type: QueryTypes.SELECT,
