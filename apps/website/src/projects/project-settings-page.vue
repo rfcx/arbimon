@@ -7,9 +7,9 @@
       <ReadOnlyBanner v-if="!store.userIsAdminProjectMember" />
       <div class="grid gap-10">
         <div>
-          <h5>
+          <h4>
             Project information
-          </h5>
+          </h4>
           <project-form
             :existing-name="selectedProject?.name"
             :date-start="settings?.dateStart ? new Date(settings?.dateStart) : undefined"
@@ -29,9 +29,9 @@
           />
         </div>
         <div>
-          <h5>
+          <h4>
             Insights
-          </h5>
+          </h4>
           <project-slug
             :existing-slug="selectedProject?.slug"
             :is-disabled="!store.userIsAdminProjectMember"

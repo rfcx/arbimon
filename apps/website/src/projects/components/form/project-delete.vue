@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col gap-y-6">
-    <h5>
+    <h4>
       Danger Zone
-    </h5>
+    </h4>
     <div>
       <div class="flex flex-row">
         <span class="font-medium">Delete project</span>

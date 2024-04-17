@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-y-6">
-    <h5>Photo</h5>
     <div class="flex flex-row justify-between gap-y-2">
+    <h4>Photo</h4>
       <div class="flex flex-col">
         <div class="flex flex-row">
           <span class="font-medium">Project thumbnail photo</span>

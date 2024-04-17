@@ -1,8 +1,8 @@
 <template>
   <div class="mt-6 flex flex-col gap-y-[17px]">
-    <h5 v-if="!isCreateProject">
+    <h4 v-if="!isCreateProject">
       Test project
-    </h5>
+    </h4>
     <p>
       Your project's basic information, such as its name, will be listed and searchable on Arbimon.
       Detailed insights can be shared at your discretion. Review our
