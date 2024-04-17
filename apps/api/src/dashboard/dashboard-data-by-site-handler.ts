@@ -3,7 +3,7 @@ import { type DashboardDataBySiteParams, type DashboardDataBySiteResponse } from
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { getDetectionBySite, getRichnessBySite } from './dashboard-data-by-site-dao'
+import { getRichnessBySite } from './dashboard-data-by-site-dao'
 
 export const dashboardDataBySiteHandler: Handler<DashboardDataBySiteResponse, DashboardDataBySiteParams> = async (req) => {
   // Inputs & validation
@@ -15,13 +15,9 @@ export const dashboardDataBySiteHandler: Handler<DashboardDataBySiteResponse, Da
     throw BioInvalidPathParamError({ projectId })
   }
 
-  const [richnessBySite, detectionBySite] = await Promise.all([
-    getRichnessBySite(projectIdInteger),
-    getDetectionBySite(projectIdInteger)
-  ])
+  const richnessBySite = await getRichnessBySite(projectIdInteger)
 
   return {
-    richnessBySite,
-    detectionBySite
+    richnessBySite
   }
 }
