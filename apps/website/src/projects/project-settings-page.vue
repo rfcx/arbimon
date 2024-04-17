@@ -5,7 +5,7 @@
         Project settings
       </h1>
       <ReadOnlyBanner v-if="!store.userIsAdminProjectMember" />
-      <div class="grid lg:(grid-cols-2 gap-10)">
+      <div class="grid gap-10">
         <div>
           <h5>
             Project information
@@ -37,20 +37,20 @@
             :is-disabled="!store.userIsAdminProjectMember"
             @emit-updated-slug="onEmitSlug"
           />
-          <div class="my-6 h-[1px] w-full bg-util-gray-01" />
+          <hr class="border-util-gray-03 my-6">
           <project-image-form
             :is-disabled="!store.userIsAdminProjectMember"
             :image="settings?.image !== undefined ? urlWrapper(settings?.image) : undefined"
             @emit-project-image="onEmitProjectImage"
           />
-          <div class="my-6 h-[1px] w-full bg-util-gray-01" />
+          <hr class="border-util-gray-03 my-6">
           <project-listed-form
             :is-public="settings?.isPublic"
             :is-disabled="!store.userIsAdminProjectMember || settings?.isPublished"
             :is-create-project="false"
             @emit-project-listed="toggleListedProject"
           />
-          <div class="my-6 h-[1px] w-full bg-util-gray-01" />
+          <hr class="border-util-gray-03 my-6">
           <project-delete
             v-if="store.project?.role === 'owner'"
             :is-deleting="isDeletingProject"
@@ -70,7 +70,7 @@
           data-tooltip-placement="bottom"
           @click.prevent="save"
         >
-          Save changes
+          Save
         </button>
         <div
           v-if="!store.userIsAdminProjectMember"
