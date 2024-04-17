@@ -1,22 +1,34 @@
 <template>
-  <div class="mt-6 flex flex-col gap-y-[17px]">
+  <div class="mt-6 flex flex-col gap-y-4">
     <h4 v-if="!isCreateProject">
       Test project
     </h4>
-    <p>
-      Your project's basic information, such as its name, will be listed and searchable on Arbimon.
-      Detailed insights can be shared at your discretion. Review our
-      <a
-        href=" https://rfcx.org/privacy-policy"
-        class="text-frequency underline"
+    <div class="flex flex-col lg:(flex-row) items-start gap-4">
+      <div class="flex flex-col gap-y-4 w-full lg:w-3/5">
+        <p>
+          Your project's basic information, such as its name, will be listed and searchable on Arbimon.
+          Detailed insights can be shared at your discretion. Review our
+          <a
+            href=" https://rfcx.org/privacy-policy"
+            class="text-frequency underline"
+          >
+            privacy policies
+          </a>
+        </p>
+      </div>
+      <div
+        v-if="!isCreateProject && isDisabled"
+        class="bg-echo flex flex-row items-center px-4 py-3 border-1 rounded-lg border-util-gray-03"
       >
-        privacy policies
-      </a>
-    </p>
-    <span
-      v-if="!isCreateProject && isDisabled"
-      class="text-xs"
-    >Make sure the Project’s Insight is hidden to make it a test project.</span>
+        <icon-custom-alert-triangle class="h-6 w-6 cursor-pointer text-chirp" />
+        <span
+          class="text-sm ml-3 text-insight"
+          role="alert"
+        >
+          Make sure the Project’s Insight is hidden to make it a test project.
+        </span>
+      </div>
+    </div>
     <div class="flex flex-row">
       <input
         id="project-settings-listed-project-checkbox"
