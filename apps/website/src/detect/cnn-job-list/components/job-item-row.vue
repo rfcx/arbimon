@@ -70,7 +70,7 @@ const { formatDateLocal } = useDateFormat()
 const apiClient = inject(apiClientKey) as AxiosInstance
 const { isPending: isLoadingPostStatus, mutate: mutatePostStatus } = usePostClassifierJobStatus(apiClient, props.job.id)
 
-const canCancelJob = computed(() => props.job.progress.status === CLASSIFIER_JOB_STATUS.WAITING)
+const canCancelJob = computed(() => props.job.progress.status === CLASSIFIER_JOB_STATUS.WAITING || props.job.progress.status === CLASSIFIER_JOB_STATUS.RUNNING)
 
 const openErrorMessage = () => {
   ElMessage({
