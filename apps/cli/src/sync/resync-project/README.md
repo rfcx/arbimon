@@ -21,7 +21,7 @@ specific project from the Arbimon DB.
 Run script via Kubernetes
 
 ```sh
-sed -e 's|set-project-id|{ARBIMON_PROJECT_ID}|g' build/production/resync-project/deployment.yaml.sample | kubectl apply -f -
+sed -e 's|SETPROJECTID|{ARBIMON_PROJECT_ID}|g' tools/deployment/cli/job-resync-project.example.yaml | kubectl apply -f -
 ```
 
 Add `ARBIMON_PROJECT_ID` to the command above. After running a script you will see the log with a job name, like: `job.batch/resync-project-job-{PROJECT_ID} created`

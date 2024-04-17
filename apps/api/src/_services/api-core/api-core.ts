@@ -3,6 +3,7 @@ import { type FastifyLoggerInstance } from 'fastify'
 
 import { type ClassifierQueryParams, type ClassifierResponse } from '@rfcx-bio/common/api-bio/classifiers/classifier'
 import { type Classifier } from '@rfcx-bio/common/api-bio/classifiers/classifiers'
+import { type UpdateClassifierJobBody } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type DetectSummaryQueryParams, type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { type DetectValidationResultsQueryParams, type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 import { type DetectReviewDetectionBody, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
@@ -376,6 +377,21 @@ export async function checkUserPermissionForEditingDashboardContent (token: stri
     return false
   } catch (e) {
     return false
+  }
+}
+
+export async function updateClassifierJob (token: string, classifierJobId: number, data: UpdateClassifierJobBody): Promise<void> {
+  try {
+    await axios.request({
+      method: 'PATCH',
+      url: `${CORE_API_BASE_URL}/classifier-jobs/${classifierJobId}`,
+      headers: {
+        authorization: token
+      },
+      data
+    })
+  } catch (e) {
+    return unpackAxiosError(e)
   }
 }
 

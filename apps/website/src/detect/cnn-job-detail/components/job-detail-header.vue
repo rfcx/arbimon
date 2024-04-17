@@ -24,13 +24,25 @@
         </li>
       </ol>
     </nav>
-    <div class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse hidden">
+    <div class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
       <button
         v-if="isCancelJobEnable"
         class="btn btn-danger py-2 flex flex-row justify-center items-center"
+        :class="isCanceling ? 'cursor-not-allowed' : 'cursor-pointer'"
+        :disabled="isCanceling"
+        @click="emit('emitCancelJob')"
       >
-        <span class="pt-1">Cancel job</span>
-        <icon-fa-trash class="h-4 w-4 ml-2" />
+        <icon-custom-ic-loading
+          v-if="isCanceling"
+          class="h-4 w-4 animate-spin"
+        />
+        <span
+          v-else
+          class="flex flex-row justify-center items-center"
+        >
+          <span class="pt-1">Cancel job</span>
+          <icon-fa-trash class="h-4 w-4 ml-2" />
+        </span>
       </button>
     </div>
   </div>
@@ -45,7 +57,11 @@ import { ROUTE_NAMES } from '~/router'
 const route = useRoute()
 const jobId = computed(() => route.params.jobId)
 
-withDefaults(defineProps<{ isCancelJobEnable: boolean }>(), {
-  isCancelJobEnable: true
+withDefaults(defineProps<{ isCancelJobEnable: boolean, isCanceling: boolean }>(), {
+  isCancelJobEnable: true,
+  isCanceling: false
 })
+
+const emit = defineEmits<{(e: 'emitCancelJob'): void }>()
+
 </script>

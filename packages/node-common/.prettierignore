@@ -1,0 +1,17 @@
+# Ignore everything
+# ...except json, md, yml/yaml
+*.*
+!*.json
+!*.md
+!*.yml
+!*.yaml
+
+# Deps & build
+node_modules/
+build/
+dist/
+lib/
+
+# Generated
+pnpm-lock.yaml
+coverage/

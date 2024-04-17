@@ -21,6 +21,7 @@ export const getClassifierJobInformation = async (token: string, jobId: string |
   return {
     ...classifierJobInfo,
     validationStatus: {
+      total: validationStatusAcrossJob.reviewStatus.total,
       unvalidated: validationStatusAcrossJob.reviewStatus.unreviewed,
       present: validationStatusAcrossJob.reviewStatus.confirmed,
       notPresent: validationStatusAcrossJob.reviewStatus.rejected,

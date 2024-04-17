@@ -50,10 +50,11 @@ export const envGetters = {
   BIO_DB_SSL_ENABLED: booleanGetter,
   BIO_DB_USER: stringGetter,
 
-  AWS_S3_BUCKET_REGION: stringGetter,
-  AWS_S3_BUCKET_ACCESS_KEY_ID: stringGetter,
-  AWS_S3_BUCKET_SECRET_ACCESS_KEY: stringGetter,
+  AWS_S3_ACCESS_KEY_ID: stringGetter,
+  AWS_S3_SECRET_ACCESS_KEY: stringGetter,
   AWS_S3_BUCKET_NAME: stringGetter,
+  AWS_S3_BUCKET_REGION: stringGetter,
+  AWS_S3_ENDPOINT: stringGetter,
 
   AWS_OSS_REGION: stringGetter,
   AWS_OSS_ACCESS_KEY_ID: stringGetter,

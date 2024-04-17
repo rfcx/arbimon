@@ -48,6 +48,7 @@
     "@js-temporal/polyfill": "^0.3.0",
     "@opensearch-project/opensearch": "^2.5.0",
     "@rfcx-bio/common": "workspace:^0.0.1",
+    "@rfcx-bio/node-common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
     "axios": "^0.27.2",
     "dayjs": "^1.11.7",
@@ -56,8 +57,7 @@
     "fastify-plugin": "^3.0.1",
     "lodash-es": "^4.17.21",
     "quick-lru": "^7.0.0",
-    "sequelize": "7.0.0-alpha.5",
-    "sharp": "^0.33.3"
+    "sequelize": "7.0.0-alpha.5"
   },
   "devDependencies": {
     "form-auto-content": "^3.2.1",

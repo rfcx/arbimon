@@ -125,7 +125,6 @@ const onSelectDateRange = (v: { dateStartLocalIso: string, dateEndLocalIso: stri
 
 .el-input__wrapper {
   border-radius: 5px;
-  border: 0px;
 }
 
 .el-date-editor.el-input {

@@ -203,3 +203,5 @@ export const getClassifiers = vi.fn(async (): Promise<Classifier[]> => {
 })
 
 export const updateDetectionStatus = vi.fn(async (): Promise<void> => {})
+
+export const updateClassifierJob = vi.fn(async (): Promise<void> => {})

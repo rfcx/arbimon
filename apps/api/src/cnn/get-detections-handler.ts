@@ -5,7 +5,8 @@ import { getDetections } from './get-detections-bll'
 
 export const getDetectionsHandler: Handler<GetDetectionsResponse, unknown, GetDetectionsQueryParams> = async (req, rep) => {
   const detections = await getDetections(req.headers.authorization ?? '', req.query)
-  void rep.header(xTotalDetectionsCountHeaderName, detections.total)
 
+  void rep.header('access-control-expose-headers', xTotalDetectionsCountHeaderName)
+  void rep.header(xTotalDetectionsCountHeaderName, detections.total)
   return detections.data
 }

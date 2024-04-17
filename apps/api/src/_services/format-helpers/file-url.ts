@@ -1,6 +1,8 @@
 import { type ImageVariant } from '@rfcx-bio/common/api-bio/_helpers'
 
-import { getObjectPublicUrl } from '~/storage'
+import { getS3Client } from '~/storage'
+
+const storageClient = getS3Client()
 
 export const fileUrl = (pathOrUrl: string | undefined, variant?: ImageVariant): string | undefined => {
   if (pathOrUrl === undefined || pathOrUrl === null || pathOrUrl.length === 0) {
@@ -12,5 +14,5 @@ export const fileUrl = (pathOrUrl: string | undefined, variant?: ImageVariant): 
   }
 
   // Assume it's a storage path
-  return getObjectPublicUrl(pathOrUrl, variant)
+  return storageClient.getObjectPublicUrl(pathOrUrl, variant)
 }

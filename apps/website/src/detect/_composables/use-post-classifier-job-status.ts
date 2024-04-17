@@ -1,11 +1,11 @@
 import { type UseMutationReturnType, useMutation } from '@tanstack/vue-query'
 import { type AxiosInstance } from 'axios'
 
-import { type ClassifierJobUpdateStatusParams, apiCorePostClassifierJobUpdateStatus } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-update-status'
+import { type UpdateClassifierJobBody, apiBioUpdateClassifierJob } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
-export const usePostClassifierJobStatus = (apiClient: AxiosInstance, jobId: number): UseMutationReturnType<void, unknown, ClassifierJobUpdateStatusParams, unknown> => {
+export const usePostClassifierJobStatus = (apiClient: AxiosInstance, jobId: number): UseMutationReturnType<void, unknown, UpdateClassifierJobBody, unknown> => {
   return useMutation({
     mutationKey: ['post-classifier-job-status'],
-    mutationFn: async (payload: ClassifierJobUpdateStatusParams) => { await apiCorePostClassifierJobUpdateStatus(apiClient, jobId, payload) }
+    mutationFn: async (payload: UpdateClassifierJobBody) => { await apiBioUpdateClassifierJob(apiClient, jobId, payload) }
   })
 }
