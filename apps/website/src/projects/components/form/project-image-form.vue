@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-y-6">
-    <div class="flex flex-row justify-between gap-y-2">
     <h4>Photo</h4>
+    <div class="flex flex-col-reverse md:flex-row justify-between gap-y-4">
       <div class="flex flex-col">
         <div class="flex flex-row">
           <span class="font-medium">Project thumbnail photo</span>
@@ -11,6 +11,13 @@
           />
         </div>
         <p>Recommended size: 380 px by 180 px</p>
+        <button
+          class="btn btn-secondary group mt-4 w-60"
+          type="button"
+          @click="selectPhoto"
+        >
+          Upload file <icon-custom-cloud-upload class="ml-2 group-hover:stroke-pitch inline-flex" />
+        </button>
       </div>
       <div v-if="!isDisabled">
         <input
@@ -20,26 +27,17 @@
           hidden
           @change="uploadPhoto"
         >
-        <button
-          class="btn btn-secondary group"
-          type="button"
-          @click="selectPhoto"
+        <img
+          v-if="projectImage"
+          :src="projectImage"
+          alt="Project photo"
+          class="w-full md:(w-95 h-45) aspect-video object-cover rounded-2xl bg-util-gray-03"
         >
-          Upload file <icon-custom-cloud-upload class="ml-2 group-hover:stroke-pitch inline-flex" />
-        </button>
+        <div
+          v-else
+          class="w-full md:(w-95 h-45) aspect-video object-cover rounded-2xl bg-util-gray-03"
+        />
       </div>
-    </div>
-    <div>
-      <img
-        v-if="projectImage"
-        :src="projectImage"
-        alt="Project photo"
-        class="w-95 h-45 aspect-video object-cover rounded-2xl bg-util-gray-03"
-      >
-      <div
-        v-else
-        class="w-95 h-45 aspect-video object-cover rounded-2xl bg-util-gray-03"
-      />
     </div>
   </div>
 </template>
