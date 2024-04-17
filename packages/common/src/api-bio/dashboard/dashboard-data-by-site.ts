@@ -10,7 +10,6 @@ export type DashboardDataBySiteParams = ProjectRouteParamsSerialized
 // Response types
 export interface DashboardDataBySiteResponse {
   richnessBySite: ApiMap
-  detectionBySite: ApiMap
 }
 
 // Route

@@ -11,12 +11,3 @@ export const getRichnessBySite = async (locationProjectId: number): Promise<ApiM
       attributes: ['name', 'latitude', 'longitude', ['richness', 'value'], 'taxonClassId'],
       raw: true
     }) as unknown as ApiMap
-
-export const getDetectionBySite = async (locationProjectId: number): Promise<ApiMap> =>
-  await ModelRepository.getInstance(getSequelize())
-    .DashboardDetectionBySite
-    .findAll({
-      where: { locationProjectId },
-      attributes: ['name', 'latitude', 'longitude', ['count', 'value']],
-      raw: true
-    }) as unknown as ApiMap
