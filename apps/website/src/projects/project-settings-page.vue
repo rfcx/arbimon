@@ -262,7 +262,7 @@ const updateSettings = () => {
     dateEnd: onGoing.value ? null : dateEnd.value ? dateEnd.value : null
   }
   if (isPublic.value !== settings.value?.isPublic) {
-    update.hidden = isPublic.value
+    update.hidden = !isPublic.value
   }
   if (newSummary.value !== settings.value?.summary) {
     update.summary = newSummary.value
