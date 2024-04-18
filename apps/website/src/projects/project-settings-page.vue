@@ -58,6 +58,7 @@
             :is-success="isSuccessDeleteProject"
             @emit-project-delete="onEmitProjectDelete"
           />
+          <project-backup />
         </div>
       </div>
       <div
@@ -127,6 +128,7 @@ import ProjectListedForm from './components/form/project-listed-form.vue'
 import ProjectObjectiveForm from './components/form/project-objective-form.vue'
 import ProjectSlug from './components/form/project-slug.vue'
 import ProjectSummaryForm from './components/form/project-summary-form.vue'
+import ProjectBackup from './components/project-backup/project-backup.vue'
 import type { ProjectDefault } from './types'
 
 const router = useRouter()
