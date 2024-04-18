@@ -120,7 +120,8 @@
             :editable="canEdit"
             :is-project-member="isProjectMember"
             :is-viewing-as-guest="isViewingAsGuest"
-            @on-error="errorMessage"
+            :error-message="errorMessage"
+            :has-failed="hasFailed"
             @on-editor-close="updateReadme"
           />
         </div>
@@ -142,7 +143,8 @@
             :editable="canEdit"
             :is-project-member="isProjectMember"
             :is-viewing-as-guest="isViewingAsGuest"
-            @on-error="errorMessage"
+            :error-message="errorMessage"
+            :has-failed="hasFailed"
             @on-editor-close="updateMethods"
           />
         </div>
@@ -164,7 +166,8 @@
             :editable="canEdit"
             :is-project-member="isProjectMember"
             :is-viewing-as-guest="isViewingAsGuest"
-            @on-error="errorMessage"
+            :error-message="errorMessage"
+            :has-failed="hasFailed"
             @on-editor-close="updateKeyResult"
           />
         </div>
@@ -200,7 +203,8 @@
             :editable="canEdit"
             :is-project-member="isProjectMember"
             :is-viewing-as-guest="isViewingAsGuest"
-            @on-error="errorMessage"
+            :error-message="errorMessage"
+            :has-failed="hasFailed"
             @on-editor-close="updateResources"
           />
         </div>
@@ -252,6 +256,9 @@ const { isLoading, data: profile } = useGetProjectInfo(apiClientBio, computed(()
 
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.project?.id ?? -1)
 
+const errorMessage = ref('')
+const hasFailed = ref(false)
+
 const updateReadme = (value: string): void => {
   const update: ProjectProfileUpdateBody = {
     name: profile.value?.name ?? '',
@@ -261,8 +268,11 @@ const updateReadme = (value: string): void => {
     onSuccess: async () => {
       isAboutTabViewMored.value = value.length !== 0
       isAboutTabEditing.value = false
+      hasFailed.value = false
     },
-    onError: async () => {
+    onError: async (error: any) => {
+      errorMessage.value = error.message
+      hasFailed.value = true
       isAboutTabViewMored.value = true
       isAboutTabEditing.value = true
     }
@@ -278,8 +288,11 @@ const updateKeyResult = (value: string): void => {
     onSuccess: async () => {
       isKeyResultTabViewMored.value = value.length !== 0
       isKeyResultTabEditing.value = false
+      hasFailed.value = false
     },
-    onError: async () => {
+    onError: async (error: any) => {
+      errorMessage.value = error.message
+      hasFailed.value = true
       isKeyResultTabViewMored.value = true
       isKeyResultTabEditing.value = true
     }
@@ -295,8 +308,11 @@ const updateResources = (value: string): void => {
     onSuccess: async () => {
       isResourcesTabViewMored.value = value.length !== 0
       isResourcesTabEditing.value = false
+      hasFailed.value = false
     },
-    onError: async () => {
+    onError: async (error: any) => {
+      errorMessage.value = error.message
+      hasFailed.value = true
       isResourcesTabViewMored.value = true
       isResourcesTabEditing.value = true
     }
@@ -316,8 +332,11 @@ const updateMethods = (value: string): void => {
     onSuccess: async () => {
       isMethodsTabViewMored.value = value.length !== 0
       isMethodsTabEditing.value = false
+      hasFailed.value = false
     },
-    onError: async () => {
+    onError: async (error: any) => {
+      errorMessage.value = error.message
+      hasFailed.value = true
       isMethodsTabViewMored.value = true
       isResourcesTabEditing.value = true
     }
@@ -383,7 +402,5 @@ onMounted(() => {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const t = new Tabs(document.getElementById('project-summary-tab'), tabs, options)
 })
-
-const errorMessage = ref('')
 
 </script>
