@@ -402,7 +402,7 @@ const newSpeciesToAdd = computed(() => {
 })
 
 const speciesToRemove = computed(() => {
-  return highlightedSpeciesSelected.filter(sp => !selectedSpecies.value.includes(sp))
+  return highlightedSpeciesSelected.filter(sp => selectedSpecies.value.filter(s => s.slug === sp.slug).length === 0)
 })
 
 const findIndexToRemove = (slug: string): void => {
