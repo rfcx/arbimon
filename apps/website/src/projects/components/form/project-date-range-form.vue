@@ -1,7 +1,7 @@
 <template>
   <div
     id="dateRangePicker"
-    class="flex mt-6 items-center gap-4"
+    class="flex mt-6 items-center gap-4 md:flex-row"
   >
     <div class="flex-1">
       <label
@@ -19,7 +19,7 @@
         />
       </div>
     </div>
-    <span class="mt-7">-</span>
+    <span class="mt-7 hidden md:block">-</span>
     <div class="flex-1">
       <label
         class="block mb-2 font-medium text-gray-900 dark:text-insight"
