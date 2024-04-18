@@ -28,12 +28,14 @@
     <div class="flex items-center space-x-2 sm:space-x-3">
       <icon-custom-ft-map-pin-lg
         v-if="stat.value === 'site'"
+        :class="{'mb-10': store.userIsDataEntryMember, '!mb-0': store.userIsFullProjectMember}"
       />
       <icon-custom-ft-mic-lg
         v-if="stat.value === 'recording'"
       />
       <icon-custom-fi-list
         v-if="stat.value === 'playlist'"
+        :class="{'mb-10': store.userIsDataEntryMember, '!mb-0': store.userIsFullProjectMember}"
       />
       <icon-custom-ft-actual-bird
         v-if="stat.value === 'species'"
@@ -41,6 +43,7 @@
       <icon-custom-ic-loading
         v-if="stat.isLoading && stat.count === undefined"
         class="animate-spin h-8 w-8 text-white"
+        :class="{'mb-10': store.userIsDataEntryMember, '!mb-0': store.userIsFullProjectMember}"
       />
       <span
         v-if="stat.count !== undefined"
