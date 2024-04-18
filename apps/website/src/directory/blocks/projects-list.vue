@@ -37,7 +37,7 @@
               v-if="isSearchBoxFocused"
               class="block mt-4 text-xs font-medium text-fog"
             >
-              Search for project names, summary, countries or objectives.
+              Search for project names, species names, IUCN status, summary, countries, or objectives
             </label>
           </form>
         </li>
