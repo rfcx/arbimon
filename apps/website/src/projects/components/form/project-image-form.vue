@@ -12,11 +12,11 @@
         </div>
         <p>Recommended size: 380 px by 180 px</p>
         <button
-          class="btn btn-secondary group mt-4 w-60"
+          class="btn btn-secondary group mt-4 w-42"
           type="button"
           @click="selectPhoto"
         >
-          Upload file <icon-custom-cloud-upload class="ml-2 group-hover:stroke-pitch inline-flex" />
+          Upload file <icon-custom-ic-upload class="ml-2 group-hover:stroke-pitch inline-flex w-4 h-4" />
         </button>
       </div>
       <div v-if="!isDisabled">
