@@ -147,11 +147,11 @@
         Save changes
       </button>
       <span
-        v-if="hasFailed"
+        v-if="props.hasFailed == true"
         class="p-4 text-sm text-red-800 dark:text-flamingo"
         role="alert"
       >
-        <span class="font-medium">{{ errorMessage }}</span>
+        <span class="font-medium">Failed. {{ props.errorMessage }}</span>
       </span>
     </div>
 
@@ -238,8 +238,8 @@ import { Modal } from 'flowbite'
 import { Markdown } from 'tiptap-markdown'
 import { type Ref, onMounted, ref, watch } from 'vue'
 
-const props = defineProps<{ id: string, modelValue: string, characterLimit: number}>()
-const emit = defineEmits<{(e: 'update:modelValue', value: string): void, (e: 'onEditorClose'): void, (e: 'on-error', error: string): void}>()
+const props = defineProps<{ id: string, modelValue: string, characterLimit: number, errorMessage: string, hasFailed: boolean}>()
+const emit = defineEmits<{(e: 'update:modelValue', value: string): void, (e: 'onEditorClose'): void}>()
 const modal = ref() as Ref<Modal>
 const linkToSet = ref('')
 
@@ -287,51 +287,18 @@ const confirmSetLink = (): void => {
   // get link from the modal. If empty string is passed. Unlink the given link
   if (linkToSet.value === '') {
     editor.value?.chain().focus().extendMarkRange('link').unsetLink().run()
-  } else {
-    try {
-      // Otherwise set the highlighted text to the given link. Then reset the link.
-      editor.value?.chain().focus().extendMarkRange('link').setLink({ href: linkToSet.value }).run()
-      closeModal()
-    } catch (error) {
-      handleSaveError(errorMessage.value)
-    }
-}
+  }
+  // Otherwise set the highlighted text to the given link. Then reset the link.
+  editor.value?.chain().focus().extendMarkRange('link').setLink({ href: linkToSet.value }).run()
+  closeModal()
 }
 
 const closeModal = (): void => {
   modal.value.hide()
-  linkToSet.value = ''
-  errorMessage.value = ''
-  hasFailed.value = false
-}
-
-const errorMessage = ref('Failed!')
-const hasFailed = ref(false)
-
-const saveEditor = (): boolean => {
-  const hasContent = editor.value?.isEmpty === false
-  const hasNoError = !hasFailed.value
-  return hasContent && hasNoError
 }
 
 const closeEditorView = (): void => {
-  try {
-    if (saveEditor()) {
       emit('onEditorClose')
-      hasFailed.value = false
-      errorMessage.value = ''
-    } else {
-      handleSaveError(errorMessage.value)
-    }
-  } catch (error) {
-    handleSaveError(errorMessage.value)
-  }
-}
-
-const handleSaveError = (error: string): void => {
-  emit('on-error', error)
-  errorMessage.value = error
-  hasFailed.value = true
 }
 
 </script>
