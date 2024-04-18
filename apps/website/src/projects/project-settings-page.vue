@@ -5,7 +5,7 @@
         Project settings
       </h1>
       <ReadOnlyBanner v-if="!store.userIsAdminProjectMember" />
-      <div class="grid lg:(grid-cols-2 gap-10)">
+      <div class="grid gap-10 lg:grid-cols-2">
         <div>
           <h5>
             Project information
