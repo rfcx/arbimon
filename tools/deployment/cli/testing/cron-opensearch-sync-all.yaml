@@ -4,8 +4,8 @@ metadata:
   name: biodiversity-cli-opensearch-sync-all
   namespace: testing
 spec:
-  # once a day on 03:08 AM UTC
-  schedule: '8 3 * * *'
+  # Daily at 04:18:00 UTC
+  schedule: '18 4 * * *'
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1

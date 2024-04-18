@@ -2,7 +2,7 @@ import { OnClickOutside } from '@vueuse/components'
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
-import { type Site } from '@rfcx-bio/common/dao/types'
+import { type MapableSite } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { storeKey } from '@/globals'
@@ -81,7 +81,7 @@ export default class ComparisonFilterModalComponent extends Vue {
       : undefined
   }
 
-  get filtered (): Site[] {
+  get filtered (): MapableSite[] {
     const prefix = this.inputFilter.toLocaleLowerCase()
     return (this.store.projectFilters?.locationSites ?? [])
       .filter(site => site.name.toLocaleLowerCase().startsWith(prefix))

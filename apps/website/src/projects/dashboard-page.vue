@@ -1,7 +1,7 @@
 <template>
   <div class="default-scroll-start smooth">
     <BannerWhatNew
-      :extra-class="`ml-6`"
+      :extra-class="`ml-6 fixed z-20`"
     />
     <div class="bg-gray-50 dark:bg-pitch grid px-4 pl-18">
       <section
@@ -10,7 +10,7 @@
       >
         <div class="text-gray-900 dark:text-white">
           <h1 class="text-5xl font-header font-normal <sm:text-2xl">
-            {{ store.selectedProject?.name }}
+            {{ store.project?.name }}
           </h1>
         </div>
         <div class="text-gray-900 dark:text-white flex flex-col gap-y-6">
@@ -31,16 +31,15 @@
           </h2>
           <div
             v-if="isLoadingSitesRecCountBio"
-            class="w-full bg-util-gray-03 loading-shimmer"
-            :class="`height-[${tabHeight}px]`"
+            class="w-full bg-util-gray-03 loading-shimmer h-90"
           />
           <div
             v-else
-            class="w-full text-black mapboxgl-map"
+            class="w-full text-black mapboxgl-map z-10"
           >
             <map-base-component
               :dataset="mapDataset()"
-              data-key="Total recordings"
+              :data-key="MAP_KEY"
               :loading="false"
               :get-popup-html="getPopupHtml"
               map-export-name="dashboard-sites"
@@ -62,20 +61,20 @@
               Analyses
             </h2>
             <button
-              v-if="!isViewingAsGuest && !projectUserPermissionsStore.isMemberGuest"
+              v-if="store.userIsFullProjectMember"
               class="btn block btn-primary flex text-xs items-center space-x-3 px-6 py-3 disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
               type="button"
               :title="'Create New Analysis Job'"
-              :data-tooltip-target="!hasPermissionAnalyses ? 'analysesTooltipId' : null"
+              data-tooltip-target="analysesTooltipId"
               data-tooltip-placement="bottom"
-              :disabled="!hasPermissionAnalyses"
+              :disabled="!store.userIsFullProjectMember"
               @click="toggleAnalysisSelector(true)"
             >
               <icon-custom-ic-plus class="h-4 w-4 mb-3px" />
               <span class="font-display text-base">Create new analysis</span>
             </button>
             <div
-              v-if="!hasPermissionAnalyses"
+              v-if="!store.userIsFullProjectMember"
               id="analysesTooltipId"
               role="tooltip"
               class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -108,7 +107,6 @@ import type { AxiosInstance } from 'axios'
 import { initModals } from 'flowbite'
 import { type LngLatBoundsLike } from 'mapbox-gl'
 import { computed, inject, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -121,26 +119,22 @@ import { MapBaseComponent } from '~/maps/map-base'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
 import { type CircleStyle } from '~/maps/utils/circle-style/types'
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useStore } from '~/store'
 import { useAedJobCount, useClusteringJobCount, useClusteringSpeciesDetected } from './_composables/use-aed-count'
 import { usePlaylistCount } from './_composables/use-playlist-count'
 import { usePmSpeciesDetected, usePmTemplateCount } from './_composables/use-pm-count'
 import { useBioProjectSitesRecordingCount } from './_composables/use-recording-count'
 import { useRfmJobCount, useRfmSpeciesDetected } from './_composables/use-rfm-count'
+import { useSiteCount } from './_composables/use-site-count'
 import { useSoundscapeCount } from './_composables/use-soundscape-count'
 import CreateAnalysis from './components/create-analysis.vue'
 import DashboardAnalyses from './components/dashboard-analyses.vue'
 import DashboardOverview from './components/dashboard-overview.vue'
 
 const store = useStore()
-const route = useRoute()
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
-const selectedProject = computed(() => store.selectedProject)
-const selectedProjectId = computed(() => store.selectedProject?.id)
-const selectedProjectSlug = computed(() => store.selectedProject?.slug)
-const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1' || projectUserPermissionsStore.isExternalGuest
-})
+const selectedProject = computed(() => store.project)
+const selectedProjectId = computed(() => store.project?.id)
+const selectedProjectSlug = computed(() => store.project?.slug)
 
 const disableText = ref('Contact your project administrator for permission to manage analyses')
 
@@ -150,7 +144,7 @@ const { isLoading: isLoadingSitesRecCountBio, data: projectSitesRecCount } = use
 
 const BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 
-const MAP_KEY_THAT_SHOULD_NOT_EXIST = 'refactorThis'
+const MAP_KEY = 'total_recordings_per_site'
 const isShowLabels = true
 const mapGroundStyle: MapboxGroundStyle = MAPBOX_STYLE_SATELLITE_STREETS
 const mapStatisticsStyle: MapboxStatisticsStyle = MAPBOX_STYLE_CIRCLE
@@ -158,6 +152,7 @@ const tabHeight = 360
 
 // External data
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+const { isLoading: isLoadingSiteCount, data: siteCount } = useSiteCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingPlaylistCount, data: playlistCount } = usePlaylistCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingRFMCount, data: rfmCount } = useRfmJobCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingSpDetected, data: rfmSpDetected } = useRfmSpeciesDetected(apiClientArbimon, selectedProjectSlug)
@@ -169,7 +164,7 @@ const { isLoading: isLoadingPmtCount, data: pmSpeciesCount } = usePmSpeciesDetec
 const { isLoading: isLoadingPmTemplateCount, data: pmTemplateCount } = usePmTemplateCount(apiClientArbimon, selectedProjectSlug)
 
 const stats = computed(() => [
-  { value: 'site', title: 'Sites created', description: 'Total sites created', count: totalSitesCreated.value, isLoading: isLoadingMetrics.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
+  { value: 'site', title: 'Sites created', description: 'Total sites created', count: siteCount.value, isLoading: isLoadingSiteCount.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
   { value: 'recording', title: 'Minutes of recordings', description: 'Total minutes of recordings captured', count: metrics.value?.totalRecordings ?? 0, isLoading: isLoadingMetrics.value, label: 'Upload new recordings', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/uploads/` },
   { value: 'playlist', title: 'Playlists created', description: 'Number of playlists created', count: playlistCount.value, isLoading: isLoadingPlaylistCount.value, label: 'Create new playlist', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/playlists` },
   { value: 'species', title: 'Species detected', description: 'Number of species detected', count: metrics.value?.totalSpecies ?? 0, isLoading: isLoadingMetrics.value, label: 'Add new species', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/species` }
@@ -182,13 +177,12 @@ const analyses = computed(() => [
   { value: 'rfm', title: 'Random Forest Models', iconName: 'fi-rfm', count: rfmCount.value, isLoading: isLoadingRFMCount.value || isLoadingSpDetected.value, label: 'Models completed', speciesTitle: 'Species analyzed', speciesDetected: rfmSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` }
 ])
 
-const totalSitesCreated = computed(() => store.projectFilters?.locationSites.length ?? 0)
-
-const hasPermissionAnalyses = computed<boolean>(() => {
-  return projectUserPermissionsStore.isMember && !isViewingAsGuest.value && projectUserPermissionsStore.role !== 'entry' && projectUserPermissionsStore.role !== 'user'
-})
-
-const getPopupHtml = (data: MapSiteData, dataKey: string): string => `${data.values[dataKey]}`
+const getPopupHtml = (data: MapSiteData, dataKey: string): string => {
+  return `<div class="font-sans"><strong>Site name: </strong>${data.siteName} <br>
+    <strong>Total recordings: </strong>${data.values[`${dataKey}`]} <br>
+    <strong>Days with recordings: </strong>${data.values['Days with recordings']}</div>
+  `
+}
 const hasOpenedAnalysisSelector = ref(false)
 
 function color (): string {
@@ -206,17 +200,16 @@ function mapDataset (): MapDataSet {
     sites: store.projectFilters?.locationSites ?? [],
     data: (store.projectFilters?.locationSites ?? [])
       .map(({ id, name: siteName, latitude, longitude }) => ({
-        siteName: 'Site Name',
+        siteName,
         isExpand: true,
         latitude,
         longitude,
         values: {
-          'Site name': siteName,
-          'Total recordings': findTotalRecordings(id),
+          [MAP_KEY]: findTotalRecordings(id),
           'Days with recordings': findDaysWithRecordings(id)
         }
       })),
-    maxValues: { [MAP_KEY_THAT_SHOULD_NOT_EXIST]: 0 }
+    maxValues: { [MAP_KEY]: maxRecordings.value }
   }
 }
 
@@ -234,14 +227,16 @@ function findDaysWithRecordings (id: number): number {
   else return site.days
 }
 
+const maxRecordings = computed(() => projectSitesRecCount.value?.map(site => site.recordings).reduce((acc, curr) => Math.max(acc, curr), 0) ?? 0)
+
 function mapInitialBounds (): LngLatBoundsLike | undefined {
-  const project = store.selectedProject
-  if (!project) return undefined
+  const project = store.project
+  if (project === undefined) return undefined
   return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
 }
 
 function circleFormatter (): MapBaseFormatter {
-  return new CircleFormatterNormalizedWithMin({ maxValueRaw: 2 })
+  return new CircleFormatterNormalizedWithMin({ maxValueRaw: maxRecordings.value })
 }
 
 function toggleAnalysisSelector (isOpened: boolean): void {

@@ -2,18 +2,23 @@ import formAutoContent from 'form-auto-content'
 import { createReadStream } from 'fs'
 import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
 
+import { buildVariantPath } from '@rfcx-bio/common/api-bio/_helpers'
 import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
 import { type Project } from '@rfcx-bio/common/dao/types'
+import { getMetadata } from '@rfcx-bio/common/image'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
+import { PROJECT_IMAGE_CONFIG } from '@/projects/project-image-bll'
 import { PATCH } from '~/api-helpers/types'
-import { getObject } from '~/storage'
+import { getS3Client } from '~/storage'
 import { routesProject } from './index'
 
 vi.mock('~/api-core/api-core')
 
 const { LocationProject, LocationProjectProfile } = modelRepositoryWithElevatedPermissions
+
+const storageClient = getS3Client()
 
 const defaultProject: Project = {
   id: 50010,
@@ -61,8 +66,8 @@ describe(`PATCH ${projectProfileImageRoute}`, async () => {
     expect(response.statusCode).toBe(204)
     const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
     expect(profile?.image).not.toBe(existingImage)
-    const fileAsArrayBuffer = await getObject(profile?.image ?? '')
-    expect(fileAsArrayBuffer.byteLength).toBeGreaterThan(1000)
+    const file = await storageClient.getObject(profile?.image ?? '') as Buffer
+    expect(file.byteLength).toBeGreaterThan(1000)
   })
 
   test('creates new profile and sets image', async () => {
@@ -113,5 +118,52 @@ describe(`PATCH ${projectProfileImageRoute}`, async () => {
 
     // Assert
     expect(response.statusCode).toBe(403)
+  })
+
+  test('generates and saves a thumbnail image', async () => {
+    // Arrange
+    const existingImage = 'xyz.jpg'
+    await LocationProjectProfile.create({ locationProjectId: defaultProject.id, image: existingImage, summary: '', readme: '', methods: '', keyResult: '', resources: '', objectives: [], dateStart: null, dateEnd: null })
+    const app = await makeApp(routesProject, { projectRole: 'admin' })
+    const url = projectProfileImageRoute.replace(':projectId', defaultProject.id.toString())
+    const form = formAutoContent({
+      file: createReadStream(localImageUrl)
+    })
+
+    // Act
+    const response = await app.inject({ method: PATCH, url, ...form })
+
+    // Assert
+    expect(response.statusCode).toBe(204)
+    const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
+    const originalImage = profile?.image ?? ''
+    const thumbnailImage = buildVariantPath(originalImage, 'thumbnail')
+    const file = await storageClient.getObject(thumbnailImage)
+    expect(file).toBeDefined()
+  })
+
+  test('thumbnail image has correct dimensions', async () => {
+    // Arrange
+    const existingImage = 'xyz.jpg'
+    await LocationProjectProfile.create({ locationProjectId: defaultProject.id, image: existingImage, summary: '', readme: '', methods: '', keyResult: '', resources: '', objectives: [], dateStart: null, dateEnd: null })
+    const app = await makeApp(routesProject, { projectRole: 'admin' })
+    const url = projectProfileImageRoute.replace(':projectId', defaultProject.id.toString())
+    const form = formAutoContent({
+      file: createReadStream(localImageUrl)
+    })
+
+    // Act
+    const response = await app.inject({ method: PATCH, url, ...form })
+
+    // Assert
+    expect(response.statusCode).toBe(204)
+    const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
+    const originalImage = profile?.image ?? ''
+    const thumbnailImage = buildVariantPath(originalImage, 'thumbnail')
+    const file = await storageClient.getObject(thumbnailImage) as Buffer
+    const imageMetadata = await getMetadata(file)
+    const config = PROJECT_IMAGE_CONFIG.thumbnail
+    expect(imageMetadata?.width).toEqual(config.width)
+    expect(imageMetadata?.height).toEqual(config.height)
   })
 })

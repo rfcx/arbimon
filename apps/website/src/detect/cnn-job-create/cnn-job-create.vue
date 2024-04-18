@@ -1,5 +1,5 @@
 <template>
-  <section class="max-w-screen-xl py-20 pl-115px pr-4">
+  <section class="pt-20 pl-18 pr-6 md:(pl-23 pr-10) xl:(pl-33 pr-20)">
     <div class="text-frequency">
       <page-title page-title="Create New CNN Job" />
     </div>
@@ -72,7 +72,7 @@
               @emit-select-date-range="onSelectQueryDates"
             />
           </div>
-          <div class="mb-3 mt-5">
+          <div class="mb-3 mt-5 flex flex-col">
             <label
               for="time"
               class="block mb-2 text-base"
@@ -119,16 +119,6 @@
         <span v-if="isErrorPostJob">Error saving job :(</span>
       </div>
     </form>
-    <el-alert
-      v-if="false"
-      title="Debugging"
-      type="info"
-      class="my-4"
-      effect="dark"
-      show-icon
-    >
-      <pre>{{ JSON.stringify(job, null, 2).replace(/, /g, ',\r\n  ') }}</pre>
-    </el-alert>
   </section>
 </template>
 <script setup lang="ts">
@@ -150,14 +140,13 @@ import SiteInput from '@/_services/picker/site-input.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
 import { apiClientCoreKey, apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useStore } from '~/store'
 import { useClassifiers } from '../_composables/use-classifiers'
 import { useDetectRecording } from '../_composables/use-detect-recording'
 import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 
 const router = useRouter()
 const store = useStore()
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
 const errorText = 'Error - there’s a problem loading the models. Please refresh this page and try again.'
 
@@ -168,7 +157,7 @@ const job: ClassifierJobCreateConfiguration = reactive({
   queryStreams: null,
   queryStart: null,
   queryEnd: null,
-  queryHours: null
+  queryHours: '0-23'
 })
 
 const recordingQuery: DetectRecordingQueryParams = reactive({
@@ -185,15 +174,15 @@ const project = reactive({
 const hasProjectPermission = ref(false)
 
 onMounted(() => {
-  job.projectIdCore = store.selectedProject?.idCore ?? null
-  project.projectId = store.selectedProject?.id.toString() ?? '-1'
-  hasProjectPermission.value = projectUserPermissionsStore.isMember
+  job.projectIdCore = store.project?.idCore ?? null
+  project.projectId = store.project?.id.toString() ?? '-1'
+  hasProjectPermission.value = store.userIsProjectMember
 })
 
-watch(() => store.selectedProject, () => {
-  job.projectIdCore = store.selectedProject?.idCore ?? null
-  project.projectId = store.selectedProject?.id.toString() ?? '-1'
-  hasProjectPermission.value = projectUserPermissionsStore.isMember
+watch(() => store.project, () => {
+  job.projectIdCore = store.project?.idCore ?? null
+  project.projectId = store.project?.id.toString() ?? '-1'
+  hasProjectPermission.value = store.userIsProjectMember
 })
 
 // Internal data
@@ -202,7 +191,7 @@ const { isLoading: isLoadingDetectRecording, isError: isErrorDetectRecording, da
 
 // External data
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientCore)
+const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientBio)
 const { isPending: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
 
 // Current projects

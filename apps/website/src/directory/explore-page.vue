@@ -165,7 +165,7 @@ const fetchSearch = async (keyword: string, limit: number, offset: number): Prom
       slug: p.slug,
       objectives: p.objectives,
       summary: p.summary,
-      imageUrl: p.image,
+      imageUrl: p.thumbnail ?? p.image,
       latitudeAvg: p.avgLatitude,
       longitudeAvg: p.avgLongitude,
       noOfRecordings: p.recordingMinutesCount,

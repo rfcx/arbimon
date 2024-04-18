@@ -1,73 +1,67 @@
 <template>
-  <div class="job-result-validation-status-wrapper">
-    <h3 class="job-result-validation-status-header text-subtle text-sm mb-2">
-      Validation status
-    </h3>
+  <div class="job-result-validation-status-wrapper mt-4">
     <div
       v-if="props.isLoading"
-      class="loading-shimmer mx-2 rounded-lg"
+      class="m-2 loading-shimmer w-full rounded-lg py-15 max-w-64"
     />
     <ComponentError
       v-else-if="props.isError"
-      class="py-8"
+      class="mx-2"
     />
     <div
       v-else
       id="job-result-validation-status-grid-table"
-      class="grid gap-x-4"
-      style="grid-template-columns: fit-content(4rem) 1fr;"
+      class="grid gap-x-4 gap-y-2 text-base text-insight"
     >
       <template
-        v-for="key in Object.entries(props.data?.reviewStatus ?? {})"
+        v-for="key in validationStatusData"
         :key="'validation-status-' + key[0]"
       >
-        <span class="font-medium justify-self-start text-right text-lg">{{ validationStatusValue(key[0], key[1]) }}</span>
-        <span class="text-lg">{{ validationStatusName(key[0]) }}</span>
+        <div class="grid grid-cols-4">
+          <span>{{ key[0] }}</span>
+          <span class="flex items-center justify-center">{{ key[1] }}</span>
+          <span class="flex items-center justify-center">{{ getValidationPercentage(key[1], totalDetection) }}%</span>
+        </div>
       </template>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Ref } from 'vue'
-import { ref } from 'vue'
+import numeral from 'numeral'
+import { computed } from 'vue'
 
-import { type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
+import { type ValidationStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 import ComponentError from './component-error.vue'
 
-const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: DetectValidationResultsResponse | undefined }>(), {
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: ValidationStatus | undefined }>(), {
   isLoading: true,
   isError: false,
   data: undefined
 })
 
-/**
- * Returns `unreviewed` amount instead of total from
- *
- * `total` - (`uncertain` + `confirmed` + `rejected`)
- */
-const validationStatusValue = (key: string, value: number): number => {
-  if (key === 'total') {
-    const sum = (props.data?.reviewStatus.uncertain ?? 0) + (props.data?.reviewStatus.confirmed ?? 0) + (props.data?.reviewStatus.rejected ?? 0)
-    return (props.data?.reviewStatus.total ?? 0) - sum
-  }
-
-  return value
-}
+const validationStatusData = computed(() => {
+  return Object.entries(props.data ?? {}).filter(([key]) => key !== 'total').map(([key, value]) => [validationStatusName(key), value])
+})
 
 const validationStatusName = (key: string): string => {
-  if (key === 'total') {
-    return 'Unreviewed'
+  const validationStatusMap: Record<string, string> = {
+    notPresent: 'Not Present',
+    unknown: 'Unknown',
+    present: 'Present',
+    unvalidated: 'Unvalidated'
   }
-
-  return validationStatusMap.value[key]
+  return validationStatusMap[key]
 }
 
-const validationStatusMap: Ref<Record<string, string>> = ref({
-  rejected: 'Not Present',
-  uncertain: 'Unknown',
-  confirmed: 'Present',
-  total: 'Total'
+const totalDetection = computed(() => {
+  const value = props.data
+  return (value?.notPresent ?? 0) + (value?.present ?? 0) + (value?.unknown ?? 0) + (value?.unvalidated ?? 0)
 })
+
+const getValidationPercentage = (x: number, total: number): string => {
+   return numeral(total === 0 ? 0 : x / total * 100).format('0,0', Math.floor)
+}
+
 </script>

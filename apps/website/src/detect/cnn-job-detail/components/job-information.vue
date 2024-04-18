@@ -1,102 +1,94 @@
 <template>
-  <div class="job-information-wrapper border-1 border-box-grey rounded-md">
-    <div
-      id="job-information-summary-grid"
-      class="grid lg:grid-cols-4 lg:gap-x-4 <lg:gap-y-4 px-6 py-4"
-    >
-      <div
-        v-if="props.isLoadingSummary"
-        class="loading-shimmer mx-2 rounded-lg"
-      />
-      <ComponentError v-else-if="props.isErrorSummary" />
-      <div v-else>
-        <span class="text-subtle">Model</span>
-        <h2 class="text-lg">
-          {{ props.summary?.classifier.name ?? '' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
-        </h2>
-      </div>
-
-      <div
-        v-if="props.isLoadingSummary"
-        class="loading-shimmer mx-2 rounded-lg"
-      />
-      <ComponentError v-else-if="props.isErrorSummary" />
-      <div v-else>
-        <span class="text-subtle">Input</span>
+  <div class="border-1 border-util-gray-01 rounded-md">
+    <div class="p-6">
+      <h1 class="flex text-insight">
+        Summary
+      </h1>
+      <div class="grid grid-cols-2 text-lg py-4 border-b-1 border-util-gray-03 items-center">
+        <div class="flex md:col-span-1 <md:col-span-2 items-center">
+          <span class="text-util-gray-01">Model:</span>
+          <h5 class="ml-2 text-insight">
+            {{ props.summary?.classifier.name ?? '' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
+          </h5>
+        </div>
         <div
-          id="cnn-job-information-input"
-          class="grid grid-rows-3 gap-y-1"
+          v-if="props.isLoadingSummary"
+          class="mr-2 my-4 loading-shimmer w-full rounded-lg pt-4 max-w-64"
+        />
+        <div
+          v-else
+          class="md:(col-span-1 mt-1) <md:(col-span-2 mt-4)"
         >
-          <icon-fa-map-marker class="block m-auto" />
-          <h2
-            class="text-lg truncate"
-            :title="queryStreamsInfoString"
-          >
-            {{ queryStreamsInfoString }}
-          </h2>
-          <icon-fa-calendar class="block m-auto" />
           <h2 class="text-lg">
-            {{ queryStart }} - {{ queryEnd }}
-          </h2>
-          <icon-fas-clock class="block m-auto" />
-          <h2 class="text-lg">
-            {{ queryHours }}
+            <job-information-status
+              :variant="props.summary?.status ?? 0"
+              :progress="progress"
+            />
           </h2>
         </div>
       </div>
-
-      <div
-        v-if="props.isLoadingSummary"
-        class="loading-shimmer mx-2 rounded-lg"
-      />
-      <ComponentError v-else-if="props.isErrorSummary" />
-      <div v-else>
-        <span class="text-subtle">Status</span>
-        <div
-          id="cnn-job-information-status"
-          class="grid grid-rows-3"
-        >
-          <div class="my-auto w-6">
-            <jobInformationStatus :variant="props.summary?.status ?? 0" />
-          </div>
-          <h2 class="text-lg">
-            {{ CLASSIFIER_JOB_LABELS[props.summary?.status ?? 0] }}
-          </h2>
-          <el-progress
-            id="job-information-status-progress-bar"
-            class="col-span-2"
-            color="#232436"
-            :stroke-width="12"
-            :percentage="progress"
-            :format="progressFormat"
+      <div class="grid grid-cols-3 pt-4 text-lg">
+        <div class="lg:(col-span-1) <lg:(col-span-3)">
+          <span class="text-util-gray-01">Input</span>
+          <div
+            v-if="props.isLoadingSummary"
+            class="mx-2 mt-4 loading-shimmer w-full rounded-lg py-15 max-w-64"
           />
-          <!-- TODO: we're droppping this UI out for now as we don't have good ways of looking up this data -->
-          <!-- <div class="flex flex-row col-span-2"> -->
-          <!--   <icon-fa-calendar class="block mr-2" /> -->
-          <!--   <h3 class="text-md text-subtle"> -->
-          <!--     Jun 29, 2022 13:24 - Tomaz -->
-          <!--   </h3> -->
-          <!-- </div> -->
+          <ComponentError
+            v-else-if="props.isErrorSummary"
+            class="mx-2 mt-4"
+          />
+          <div
+            v-else
+            id="cnn-job-information-input"
+            class="grid grid-rows-4 gap-y-4 mt-4 text-base text-insight mr-4"
+          >
+            <icon-custom-ft-map-pin-lg-frequency class="block m-auto" />
+            <span
+              class="truncate ml-2"
+              :title="queryStreamsInfoString"
+            >
+              {{ queryStreamsInfoString }}
+            </span>
+            <icon-custom-ic-calendar-frequency class="block m-auto" />
+            <span class="ml-2">
+              {{ queryStart }} - {{ queryEnd }}
+            </span>
+            <icon-custom-ic-clock-frequency class="block m-auto" />
+            <span class="ml-2">
+              {{ queryHours }}
+            </span>
+            <icon-custom-ft-mic-lg-frequency class="block m-auto" />
+            <span class="ml-2">
+              {{ minOfRecordings }}
+            </span>
+          </div>
         </div>
-      </div>
-
-      <div
-        v-if="props.isLoadingResults"
-        class="loading-shimmer mx-2 rounded-lg"
-      />
-      <ComponentError v-else-if="props.isErrorResults" />
-      <div>
-        <span class="text-subtle">Validation Status</span>
-        <h2 class="text-lg">
-          {{ validationStatus }}
-        </h2>
-        <!-- TODO: we're droppping this UI out for now as we don't have good ways of looking up this data -->
-        <!-- <div class="flex flex-row mt-2"> -->
-        <!--   <icon-fa-calendar class="block mr-2" /> -->
-        <!--   <h3 class="text-md text-subtle"> -->
-        <!--     Rreviewed 3 hours ago by Gabriel -->
-        <!--   </h3> -->
-        <!-- </div> -->
+        <div class="lg:(col-span-1) <lg:(col-span-3 mt-6)">
+          <span class="text-util-gray-01">Validation Status</span>
+          <job-result-validation-status
+            :is-loading="props.isLoadingSummary"
+            :is-error="props.isErrorSummary"
+            :data="props.summary?.validationStatus"
+          />
+        </div>
+        <div class="lg:(col-span-1) <lg:(col-span-3 mt-6)">
+          <span class="text-util-gray-01">Output</span>
+          <div
+            v-if="props.isLoadingSummary"
+            class="m-2 mt-4 loading-shimmer w-full rounded-lg py-4 max-w-64"
+          />
+          <ComponentError
+            v-else-if="props.isErrorSummary"
+            class="mx-2 mt-4"
+          />
+          <span
+            v-else
+            class="flex text-base text-insight mt-4"
+          >
+            Total number of detected classes: {{ props.summary?.totalDistinctClassifications }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -106,20 +98,17 @@
 import dayjs from 'dayjs'
 import { computed } from 'vue'
 
-import type { DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
-import type { DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
-import { CLASSIFIER_JOB_LABELS, CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
+import type { GetClassifierJobInformationResponse } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { hours } from '~/picker/time-of-day-constants'
 import { useStore } from '~/store'
 import ComponentError from './component-error.vue'
-import jobInformationStatus from './job-information-status.vue'
+import JobInformationStatus from './job-information-status.vue'
+import JobResultValidationStatus from './job-result-validation-status.vue'
 
-const props = withDefaults(defineProps<{ isLoadingSummary: boolean, isErrorSummary: boolean, summary: DetectSummaryResponse | undefined, isLoadingResults: boolean, isErrorResults: boolean, results: DetectValidationResultsResponse | undefined }>(), {
-  isLoadingSummary: true,
-  isLoadingResults: true,
-  data: undefined,
-  results: undefined
+const props = withDefaults(defineProps<{ isLoadingSummary: boolean, isErrorSummary: boolean, summary: GetClassifierJobInformationResponse | undefined}>(), {
+  isLoadingSummary: false
 })
 
 const store = useStore()
@@ -160,6 +149,12 @@ const queryStreamsInfoString = computed(() => {
   return `${queryStreams.value} (${sitesCount.value} sites)`
 })
 
+const minOfRecordings = computed(() => {
+  if (props.summary?.minutesTotal === undefined || props.summary?.minutesTotal === 0) return '0 min of recordings'
+  if (props.summary?.minutesTotal === 1) return '1 min of recordings'
+  return `${props.summary?.minutesTotal} mins of recordings`
+})
+
 const queryHours = computed(() => {
   if (props.summary?.queryHours == null) {
     return 'All day'
@@ -173,11 +168,6 @@ const queryHours = computed(() => {
   }
 
   return props.summary.queryHours
-})
-
-const validationStatus = computed(() => {
-  const processed = (props.results?.reviewStatus?.confirmed ?? 0) + (props.results?.reviewStatus?.rejected ?? 0) + (props.results?.reviewStatus?.uncertain ?? 0)
-  return `${processed}/${props.results?.reviewStatus?.total ?? 0}`
 })
 
 /**
@@ -204,23 +194,6 @@ const progress = computed(() => {
   return rounded > 100 ? 100.0 : rounded
 })
 
-/**
- * Returns the end text of the progress bar
- *
- * - will return `''` for jobs with status `WAITING` regardless of the computed value
- * - will return `100%` for jobs with status `DONE` regardless of the computed value
- * - will return actual value for other statuses
- */
-const progressFormat = (percentage: number) => {
-  if (props.summary?.status === CLASSIFIER_JOB_STATUS.WAITING) {
-    return ''
-  }
-
-  if (props.summary?.status === CLASSIFIER_JOB_STATUS.DONE) {
-    return '100%'
-  }
-  return `${percentage}%`
-}
 </script>
 
 <style lang="scss">

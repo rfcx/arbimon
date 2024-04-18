@@ -1,18 +1,13 @@
 <template>
   <div>
-    <!-- <draft-banner
-      current-mode="Draft"
-      :sync-updated="store.projectFilters?.latestSync?.updatedAt ?? null"
-      :project-slug="store.selectedProject?.slug"
-    /> -->
     <page-title
       page-title="Species Spotlight"
       page-subtitle="An in-depth look at the detection and occupancy trends of a single species"
       :topic="infoTopic"
     >
       <export-button
-        :disabled="!hasExportData || !isProjectMember || isViewingAsGuest"
-        :title="isProjectMember && !isViewingAsGuest ? (hasExportData ? '' : 'No data selected') : 'Only available to project members'"
+        :disabled="!hasExportData || !store.userIsProjectMember || isViewingAsGuest"
+        :title="store.userIsProjectMember && !isViewingAsGuest ? (hasExportData ? '' : 'No data selected') : 'Only available to project members'"
         @click="exportDetectionsData()"
       >
         <template #label>
@@ -108,7 +103,7 @@ import ComparisonListComponent from '~/filters/comparison-list/comparison-list.v
 import { INFO_TOPICS } from '~/info/info-page'
 import type { MapDataSet } from '~/maps/types'
 import { ROUTE_NAMES } from '~/router'
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useStore } from '~/store'
 import ActivityPatternsByLocation from './components/activity-patterns-by-location/activity-patterns-by-location.vue'
 import ActivityPatternsByTime from './components/activity-patterns-by-time/activity-patterns-by-time.vue'
 import type { SpotlightTimeDataset } from './components/activity-patterns-by-time/types'
@@ -145,11 +140,6 @@ const speciesInformation: Ref<SpeciesInProjectTypes['light'] | null> = ref(null)
 const speciesCalls: Ref<Array<TaxonSpeciesCallTypes['light']> > = ref([])
 const speciesPhotos: Ref<Array<TaxonSpeciesPhotoTypes['light']>> = ref([])
 const isLocationRedacted: Ref<boolean> = ref(false)
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
-
-const isProjectMember = computed(() => {
-  return projectUserPermissionsStore.isMember
-})
 
 const isViewingAsGuest = computed(() => route.query.guest === '1')
 
@@ -183,7 +173,7 @@ const onFilterChange = async (givenFilters: ColoredFilter[]): Promise<void> => {
 }
 
 const onDatasetChange = async (): Promise<void> => {
-  const projectId = store.selectedProject?.id
+  const projectId = store.project?.id
 
   if (projectId === undefined) {
     return
@@ -234,7 +224,7 @@ const onDatasetChange = async (): Promise<void> => {
 }
 
 const getSpeciesInformation = async (): Promise<void> => {
-  if (store.selectedProject?.id === undefined) {
+  if (store.project?.id === undefined) {
     return
   }
 
@@ -246,7 +236,7 @@ const getSpeciesInformation = async (): Promise<void> => {
   }
 
   try {
-    const data = await apiBioGetProjectSpeciesOne(apiClientBio, store.selectedProject.id, savedSpecies.taxonSpeciesSlug)
+    const data = await apiBioGetProjectSpeciesOne(apiClientBio, store.project.id, savedSpecies.taxonSpeciesSlug)
 
     // Only update if received data matches current filters
     if (species.value?.scientificName === savedSpecies.scientificName) {

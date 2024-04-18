@@ -18,17 +18,19 @@
       <div
         v-for="(bar, idx) in bars"
         :key="'dashboard-richness-percentage-' + bar.name"
-        class="absolute h-6 border-4 border-echo"
+        class="absolute h-6 border border-echo"
         :class="{
           'h-5': smallVersion,
           'h-6': !smallVersion,
           'rounded-l-4xl rounded-r-4xl': idx === bars.length - 1,
           'rounded-l-4xl': idx !== bars.length - 1
         }"
+        style="box-shadow: 0px 0px 0px 3px rgba(20,19,13, 1) inset"
         :style="{ width: bar.width + '%', backgroundColor: bar.color, zIndex: bars.length - idx }"
       >
         <div
-          class="opacity-50 h-4 w-full"
+          v-if="!viewOnly"
+          class="opacity-50 h-6 w-full"
           :class="bar.id !== selectedId ? 'bg-pitch' : ''"
           :style="{ zIndex: bars.length - idx}"
         />
@@ -113,7 +115,9 @@ const props = withDefaults(defineProps<{
 defineEmits(['emitSelectItem'])
 
 const totalCount = computed<number>(() => {
-  return Number(props.knownTotalCount) ?? sum(props.dataset.map(({ count }) => count))
+  const knowTotal = Number(props.knownTotalCount) ?? 0
+  const sumCount = sum(props.dataset.map(({ count }) => Number(count))) // sum of all data. count is string, convert to number to avoid concatenation
+  return knowTotal === sumCount ? knowTotal : sumCount // ideally, they should be the same value. If not, use the sum (to avoid total count mismatch)
 })
 
 const hasData = computed<boolean>(() => {
@@ -135,7 +139,7 @@ const bars = computed<Bar[]>(() => {
 
   inputs.forEach(({ id, name, count, color, text }) => {
     const percentage = count / totalCount.value * 100
-    width += percentage
+    width += percentage + 2 // gap between bars
 
     outputs.push({
       id,
@@ -146,6 +150,14 @@ const bars = computed<Bar[]>(() => {
       color,
       text
     })
+  })
+
+  // find max width
+  const max = Math.max(...outputs.map(o => o.width))
+
+  // reduce width to 100%
+  outputs.forEach(o => {
+    o.width = o.width / max * 100
   })
 
   return outputs

@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from 'vitest'
 
+import { xTotalDetectionsCountHeaderName } from '@rfcx-bio/common/api-bio/cnn/detections'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import * as core from '../_services/api-core/api-core'
@@ -32,12 +33,14 @@ describe('GET /detections', async () => {
 
     // Assert
     expect(response.statusCode).toEqual(200)
+    expect(response.headers?.[xTotalDetectionsCountHeaderName]).toEqual(8)
     const json = response.json()
     expect(json).toHaveLength(4)
     expect(json).toHaveProperty('[0].reviewStatus', 'unvalidated')
     expect(json).toHaveProperty('[1].reviewStatus', 'notPresent')
     expect(json).toHaveProperty('[2].reviewStatus', 'unknown')
     expect(json).toHaveProperty('[3].reviewStatus', 'present')
+    expect(json).toHaveProperty('[0].classification')
     expect(json[0].reviewStatus).toBeTypeOf('string')
   })
 
@@ -271,7 +274,8 @@ describe('GET /detections', async () => {
         'start',
         'end',
         'confidence',
-        'review_status'
+        'review_status',
+        'classification'
       ]
     })
   })
@@ -322,7 +326,8 @@ describe('GET /detections', async () => {
         'start',
         'end',
         'confidence',
-        'review_status'
+        'review_status',
+        'classification'
       ]
     })
   })
@@ -372,7 +377,8 @@ describe('GET /detections', async () => {
         'start',
         'end',
         'confidence',
-        'review_status'
+        'review_status',
+        'classification'
       ]
     })
   })
@@ -424,7 +430,8 @@ describe('GET /detections', async () => {
         'start',
         'end',
         'confidence',
-        'review_status'
+        'review_status',
+        'classification'
       ]
     })
   })

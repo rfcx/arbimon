@@ -105,10 +105,11 @@ const filteredSpecies = computed<Array<SpeciesInProjectTypes['light']>>(() => {
     return allSpecies.value
   }
 
-  const query = currentSpeciesQuery.value.trim().toLowerCase()
-
+  const queries = currentSpeciesQuery.value.trim().toLowerCase().split(' ')
   return allSpecies.value.filter(s => {
-    return s.scientificName.toLowerCase().split(' ').some(w => w.startsWith(query)) || (s.commonName?.toLowerCase().split(' ').some(w => w.startsWith(query)) ?? false)
+    const matchedScientificName = queries.every(q => s.scientificName.toLowerCase().includes(q))
+    const matchedCommonName = queries.every(q => (s.commonName?.toLowerCase() ?? '').includes(q))
+    return matchedScientificName || matchedCommonName
   })
 })
 
@@ -184,13 +185,13 @@ const onClickSpeciesInput = (): void => {
 }
 
 const getAllSpecies = async (): Promise<Array<SpeciesInProjectTypes['light']>> => {
-  const projectId = store.selectedProject?.id
+  const projectId = store.project?.id
 
   if (projectId === undefined) {
     return []
   }
 
-  const response = await apiBioGetProjectSpecies(apiClientBio, projectId)
+  const response = await apiBioGetProjectSpecies(apiClientBio, projectId, { limit: 1000, offset: 0 })
 
   if (response == null) {
     return []

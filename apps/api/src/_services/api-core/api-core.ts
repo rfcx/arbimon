@@ -2,11 +2,14 @@ import axios from 'axios'
 import { type FastifyLoggerInstance } from 'fastify'
 
 import { type ClassifierQueryParams, type ClassifierResponse } from '@rfcx-bio/common/api-bio/classifiers/classifier'
+import { type Classifier } from '@rfcx-bio/common/api-bio/classifiers/classifiers'
+import { type UpdateClassifierJobBody } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type DetectSummaryQueryParams, type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { type DetectValidationResultsQueryParams, type DetectValidationResultsResponse } from '@rfcx-bio/common/api-bio/detect/detect-validation-results'
 import { type DetectReviewDetectionBody, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
 import { type CoreProject, type CoreProjectLight } from '@rfcx-bio/common/api-core/project/permission'
 import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
+import { type WithTotalCount, formatTotalCount } from '@rfcx-bio/common/total-count'
 
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { ApiClient } from '../api-helpers/api-client'
@@ -18,7 +21,10 @@ import {
   type CoreClassifierJobInformation,
   type CoreClassifierJobTotalDetections,
   type CoreDetection,
+  type CoreGetClassifiersQueryParams,
   type CoreGetDetectionsQueryParams,
+  type CoreUpdateDetectionStatusBody,
+  type CoreUpdateDetectionStatusParams,
   type DetectDetectionsQueryParamsCore,
   type DetectDetectionsResponseCore,
   type GetClassifierJobClassificationSummaryQueryParams
@@ -31,7 +37,7 @@ export async function getMedia (logger: FastifyLoggerInstance, url: string): Pro
   return await ApiClient.getInstance(logger).getOrUndefined<ArrayBuffer>(url, { responseType: 'arraybuffer' })
 }
 
-export async function getDetections (token: string, params: CoreGetDetectionsQueryParams): Promise<CoreDetection[]> {
+export async function getDetections (token: string, params: CoreGetDetectionsQueryParams): Promise<WithTotalCount<CoreDetection[]>> {
   const response = await axios.request<CoreDetection[]>({
     method: 'GET',
     url: `${CORE_API_BASE_URL}/detections`,
@@ -41,7 +47,10 @@ export async function getDetections (token: string, params: CoreGetDetectionsQue
     params
   })
 
-  return response.data
+  return {
+    total: formatTotalCount(response.headers?.['total-items']),
+    data: response.data
+  }
 }
 
 /**
@@ -104,6 +113,24 @@ export async function deleteProject (id: string, token: string): Promise<void> {
   if (response.status !== 204) throw new Error('Delete project failed: expected 204 status from Core')
 }
 
+export async function updateDetectionStatus (token: string, data: CoreUpdateDetectionStatusBody, params: CoreUpdateDetectionStatusParams): Promise<void> {
+  try {
+    await axios.request({
+      method: 'POST',
+      url: `${CORE_API_BASE_URL}/streams/${params.stream_id}/detections/${params.start}/review`,
+      headers: {
+        authorization: token
+      },
+      data
+    })
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+/**
+ * @deprecated because the endpoint is being deprecated.
+ */
 export async function updateDetectionReviewFromApi (token: string, classifierJobId: number, data: DetectReviewDetectionBody): Promise<DetectReviewDetectionResponse> {
   try {
     const resp = await axios.request<DetectReviewDetectionResponse>({
@@ -279,6 +306,30 @@ export async function getClassifierJobResultsFromApi (token: string, jobId: numb
   }
 }
 
+export async function getClassifiers (token: string, params: CoreGetClassifiersQueryParams): Promise<Classifier[]> {
+  try {
+    const resp = await axios.request({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifiers`,
+      params: {
+        ...params,
+        fields: [
+          'id',
+          'name',
+          'version'
+        ]
+      },
+      headers: {
+        authorization: token
+      }
+    })
+
+    return resp.data
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
 export async function getClassifierFromApi (token: string, classifierId: number, query: ClassifierQueryParams): Promise<ClassifierResponse> {
   try {
     const resp = await axios.request<ClassifierResponse>({
@@ -326,6 +377,21 @@ export async function checkUserPermissionForEditingDashboardContent (token: stri
     return false
   } catch (e) {
     return false
+  }
+}
+
+export async function updateClassifierJob (token: string, classifierJobId: number, data: UpdateClassifierJobBody): Promise<void> {
+  try {
+    await axios.request({
+      method: 'PATCH',
+      url: `${CORE_API_BASE_URL}/classifier-jobs/${classifierJobId}`,
+      headers: {
+        authorization: token
+      },
+      data
+    })
+  } catch (e) {
+    return unpackAxiosError(e)
   }
 }
 

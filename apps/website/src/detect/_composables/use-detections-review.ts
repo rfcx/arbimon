@@ -1,6 +1,6 @@
 import { type ComputedRef, type Ref, ref, watch } from 'vue'
 
-import { type ReviewStatus } from '@rfcx-bio/common/api-bio/detect/detect-detections'
+import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 import { type DetectionEvent, type DetectionMedia } from '../cnn-job-detail/components/types'
 
@@ -8,9 +8,9 @@ export interface UseDetectionsReview {
   validationCount: Ref<number>
   isOpen: Ref<boolean>
   closeValidator: () => void
-  updateSelectedDetections: (detectionId: string, event: DetectionEvent) => void
-  updateValidatedDetections: (selectedDetectionIds: string[], validation: ReviewStatus, responses: Array<PromiseSettledResult<string>>) => void
-  getSelectedDetectionIds: () => string[]
+  updateSelectedDetections: (detectionId: number, event: DetectionEvent) => void
+  updateValidatedDetections: (selectedDetectionIds: number[], validation: ArbimonReviewStatus, responses: Array<PromiseSettledResult<void>>) => void
+  getSelectedDetectionIds: () => number[]
 }
 
 export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }>>): UseDetectionsReview => {
@@ -18,7 +18,7 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
   const isOpen = ref<boolean>(false)
   const isShiftHolding = ref<boolean>(false)
   const isCtrlHolding = ref<boolean>(false)
-  const currentDetectionId = ref<string | undefined>(undefined)
+  const currentDetectionId = ref<number | undefined>(undefined)
 
   watch(isShiftHolding, (newVal, oldVal) => {
     if (newVal !== oldVal && !isShiftHolding.value) {
@@ -34,7 +34,7 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
     }
   })
 
-  const updateSelectedDetections = (detectionId: string, event: DetectionEvent): void => {
+  const updateSelectedDetections = (detectionId: number, event: DetectionEvent): void => {
     const { isSelected, isShiftKeyHolding, isCtrlKeyHolding } = event
     selectDetection(detectionId, isSelected)
     currentDetectionId.value = detectionId
@@ -61,7 +61,7 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
     isOpen.value = true
   }
 
-  const resetSelection = (skippedId?: string): void => {
+  const resetSelection = (skippedId?: number): void => {
     allSpecies.value.forEach(species => {
       species.media.forEach((det: DetectionMedia) => {
         if (skippedId !== undefined && det.id === skippedId) return
@@ -70,7 +70,7 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
     })
   }
 
-  const selectDetection = (detectionId: string, checked: boolean): void => {
+  const selectDetection = (detectionId: number, checked: boolean): void => {
     allSpecies.value.forEach(species => {
       species.media.forEach((det: DetectionMedia) => {
         if (detectionId === det.id) {
@@ -80,8 +80,8 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
     })
   }
 
-  const getSelectedDetectionIds = (): string[] => {
-    const selectedDetectionIds: string[] = []
+  const getSelectedDetectionIds = (): number[] => {
+    const selectedDetectionIds: number[] = []
     allSpecies.value.forEach(species => {
       species.media.forEach((det: DetectionMedia) => {
         if (det.checked === true) {
@@ -91,7 +91,7 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
     })
 
     // use localeCompare to sort because it's bigint, we could lose precision in the future
-    return selectedDetectionIds.sort((a, b) => a.localeCompare(b))
+    return selectedDetectionIds.sort((a, b) => a.toString().localeCompare(b.toString()))
   }
 
   const getValidationCount = (): number => {
@@ -117,7 +117,7 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
     return combinedDetections
   }
 
-  const updateValidatedDetections = (selectedDetectionIds: string[], validation: ReviewStatus, responses: Array<PromiseSettledResult<string>>): void => {
+  const updateValidatedDetections = (selectedDetectionIds: number[], validation: ArbimonReviewStatus, responses: Array<PromiseSettledResult<void>>): void => {
     allSpecies.value.forEach(species => {
       species.media.forEach((det: DetectionMedia) => {
         // only update status to success review update

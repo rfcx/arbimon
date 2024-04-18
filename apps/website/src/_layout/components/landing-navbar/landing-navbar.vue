@@ -21,7 +21,14 @@
         </div>
         <!-- Right menus -->
         <div class="flex items-center lg:order-2">
-          <client-only v-if="!toggles?.legacyLogin">
+          <div
+            v-if="isLoading"
+            class="flex items-center space-x-4 font-medium <lg:hidden"
+          >
+            <div class="tab bg-util-gray-03 relative block h-5 w-24 rounded-full dark:bg-util-gray-03 loading-shimmer" />
+            <div class="bg-util-gray-03 h-8 w-8 rounded-full dark:bg-util-gray-03 loading-shimmer" />
+          </div>
+          <client-only v-else-if="!toggles?.legacyLogin">
             <auth-navbar-item
               dom-id="navbar-auth-desktop"
               class="<lg:hidden"
@@ -89,7 +96,7 @@
 </template>
 <script setup lang="ts">
 import { initCollapses } from 'flowbite'
-import { inject, onMounted } from 'vue'
+import { inject, onMounted, ref } from 'vue'
 
 import { togglesKey } from '@/globals'
 import { universalLoginUrl } from '@/landing/auth0-arbimon'
@@ -101,8 +108,10 @@ import NavbarMenu from './navbar-menu.vue'
 
 const store = useStore()
 const toggles = inject(togglesKey)
+const isLoading = ref(true)
 
 onMounted(() => {
   initCollapses()
+  isLoading.value = false
 })
 </script>

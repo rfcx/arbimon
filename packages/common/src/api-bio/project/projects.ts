@@ -3,6 +3,7 @@ import { type AxiosInstance } from 'axios'
 import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
 import { type LocationProjectProfile, type LocationProjectTypes, type Project } from '../../dao/types'
+import { type ProjectRole } from '../../roles'
 
 // Request types
 export interface LocationProjectQuery {
@@ -12,14 +13,11 @@ export interface LocationProjectQuery {
 }
 
 // Response types
-export type LocationProjectForUser =
-  LocationProjectTypes['light'] &
-  {
-    isMyProject: boolean // TODO: remove this field & use `ProjectRole` instead
-  }
+export type LocationProjectWithRole = LocationProjectTypes['light'] & {
+  role: ProjectRole
+}
 
-export type LocationProjectWithInfo = LocationProjectTypes['light'] &
-{
+export type LocationProjectWithInfo = LocationProjectTypes['light'] & {
   summary: string
   objectives: string[]
   countries: string[]
@@ -62,7 +60,7 @@ export const projectBySlugRoute = '/projects/:slug'
 export const apiBioGetProjectsGeo = async (apiClient: AxiosInstance): Promise<Array<LocationProjectTypes['geo']>> =>
   await apiClient.get<Array<LocationProjectTypes['geo']>>(projectsGeoRoute, { params: { limit: 5000, offset: 0 } }).then(res => res.data)
 
-export const apiBioGetProjectsDeprecated = async (apiClient: AxiosInstance): Promise<LocationProjectForUser[] | undefined> =>
+export const apiBioGetProjectsDeprecated = async (apiClient: AxiosInstance): Promise<LocationProjectWithRole[] | undefined> =>
   await apiGetOrUndefined(apiClient, projectsDeprecatedRoute)
 
 export const apiBioGetMyProjects = async (apiClient: AxiosInstance, limit?: number, offset?: number, keyword?: string): Promise<MyProjectsResponse | undefined> => {
@@ -71,7 +69,7 @@ export const apiBioGetMyProjects = async (apiClient: AxiosInstance, limit?: numb
   return await apiGetOrUndefined(apiClient, url, { params })
 }
 
-export const apiBioGetProjectBySlug = async (apiClient: AxiosInstance, slug: string): Promise<LocationProjectForUser | undefined> => {
+export const apiBioGetProjectBySlug = async (apiClient: AxiosInstance, slug: string): Promise<LocationProjectWithRole | undefined> => {
   const url = `/projects/${slug}`
   return await apiGetOrUndefined(apiClient, url)
 }

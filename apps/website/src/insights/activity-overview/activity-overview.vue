@@ -1,17 +1,12 @@
 <template>
-  <!-- <draft-banner
-    current-mode="Draft"
-    :sync-updated="store.projectFilters?.latestSync?.updatedAt ?? null"
-    :project-slug="store.selectedProject?.slug"
-  /> -->
   <page-title
     page-title="Activity Overview"
     page-subtitle="Temporal and spatial activity trends for all species"
     :topic="infoTopic"
   >
     <export-button
-      :disabled="!hasData || !isProjectMember || isViewingAsGuest"
-      :title="isProjectMember && !isViewingAsGuest ? (hasData ? '' : 'No data selected') : 'Only available to project members'"
+      :disabled="!hasData || !store.userIsProjectMember || isViewingAsGuest"
+      :title="store.userIsProjectMember && !isViewingAsGuest ? (hasData ? '' : 'No data selected') : 'Only available to project members'"
       @click="exportSpeciesData()"
     >
       <template #label>
@@ -64,7 +59,7 @@ import type { ColoredFilter } from '~/filters'
 import { ComparisonListComponent, filterToQuery } from '~/filters'
 import { INFO_TOPICS } from '~/info/info-page'
 import type { MapDataSet } from '~/maps/types'
-import { useProjectUserPermissionsStore, useStore } from '~/store'
+import { useStore } from '~/store'
 import type { SpeciesDataset } from './components/activity-overview-by-species/activity-overview-by-species'
 
 const DEFAULT_PREFIX = 'Activity-Overview-Raw-Data'
@@ -82,9 +77,7 @@ const tableDatasets = ref<SpeciesDataset[]>([])
 const exportDatasets = ref<ActivityOverviewDataBySpecies[][]>([])
 const isLocationRedacted = ref<boolean>(true)
 const loading = ref<boolean>(true)
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
-const isProjectMember = computed(() => projectUserPermissionsStore.isMember)
 const isViewingAsGuest = computed(() => route.query.guest === '1')
 const hasData = computed(() => exportDatasets.value.length > 0)
 const infoTopic = ref(INFO_TOPICS.activity)
@@ -95,7 +88,7 @@ const onFilterChange = async (newFilters: ColoredFilter[]): Promise<void> => {
 }
 
 const onDatasetChange = async () => {
-  const projectId = store.selectedProject?.id
+  const projectId = store.project?.id
   if (projectId === undefined) return
 
   loading.value = true

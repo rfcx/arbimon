@@ -18,26 +18,6 @@
   </div>
   <div v-else>
     <div
-      v-if="isLoading"
-      class="flex items-center space-x-4 font-medium animate-pulse"
-    >
-      <div
-        role="status"
-        class="flex items-center space-x-4 font-medium animate-pulse"
-      >
-        <div class="flex max-w-sm items-center space-x-4 font-medium">
-          <div class="tab bg-util-gray-03 relative block h-5 w-24 rounded-full dark:bg-util-gray-03" />
-          <div class="flex">
-            <div class="dark:focus:ring-frequency/10 mr-3 flex rounded-full text-sm focus:ring-4 md:mr-0">
-              <div class="bg-util-gray-03 h-8 w-8 rounded-full dark:bg-util-gray-03" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div
-      v-else
       class="flex items-center space-x-4 font-medium"
     >
       <router-link
@@ -96,11 +76,14 @@
 
 <script setup lang="ts">
 import { type Auth0Client } from '@auth0/auth0-spa-js'
+import { type AxiosInstance } from 'axios'
 import { initDropdowns } from 'flowbite'
-import { computed, inject, onMounted, ref } from 'vue'
-import { onBeforeRouteUpdate, useRouter } from 'vue-router'
+import { computed, inject, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
-import { authClientKey, storeKey } from '@/globals'
+import { apiArbimonLegacyClearSession } from '@rfcx-bio/common/api-arbimon/legacy-logout'
+
+import { apiClientArbimonLegacyKey, authClientKey, storeKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { type BiodiversityStore } from '~/store'
 
@@ -110,6 +93,8 @@ const auth = inject(authClientKey) as Auth0Client
 const store = inject(storeKey) as BiodiversityStore
 const router = useRouter()
 
+const apiClientArbimonLegacy = inject(apiClientArbimonLegacyKey) as AxiosInstance
+
 defineProps<{
   domId: string
 }>()
@@ -117,10 +102,12 @@ defineProps<{
 const userImage = computed<string>(() => store.user?.picture ?? '') // TODO 156 - Add a default picture
 
 const signup = async (): Promise<void> => {
+  await apiArbimonLegacyClearSession(apiClientArbimonLegacy).catch(() => {})
   await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, screen_hint: 'signup' })
 }
 
 const login = async (): Promise<void> => {
+  await apiArbimonLegacyClearSession(apiClientArbimonLegacy).catch(() => {})
   await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, prompt: 'login' })
 }
 
@@ -133,20 +120,7 @@ const openProfile = async (): Promise<void> => {
   void router.replace({ name: ROUTE_NAMES.accountSettings })
 }
 
-const isLoading = ref<boolean>(false)
-
-onBeforeRouteUpdate((to, from, next) => {
-  isLoading.value = true
-  next(() => {
-    isLoading.value = false
-  })
-})
-
 onMounted(() => {
-  auth.isAuthenticated().then((authenticated) => {
-    if (authenticated) {
-      initDropdowns()
-    }
-  })
+  initDropdowns()
 })
 </script>

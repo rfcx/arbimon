@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 
 import { type ArbimonReviewStatus, type CoreRawReviewStatus, ARBIMON_CORE_REVIEW_STATUS_MAP } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type Detection, type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
+import { type WithTotalCount } from '@rfcx-bio/common/total-count'
 
 import { parseLimitOffset } from '@/search/helpers'
 import { getDetections as coreGetDetections } from '~/api-core/api-core'
@@ -28,7 +29,7 @@ const getArbimonReviewStatus = (reviewStatus: CoreRawReviewStatus): ArbimonRevie
   return 'unvalidated'
 }
 
-export const getDetections = async (token: string, params: GetDetectionsQueryParams): Promise<Detection[]> => {
+export const getDetections = async (token: string, params: GetDetectionsQueryParams): Promise<WithTotalCount<Detection[]>> => {
   if (params?.start === undefined || params?.start === '' || !dayjs(params?.start).isValid()) {
     throw BioInvalidQueryParamError({ start: params?.start })
   }
@@ -70,20 +71,26 @@ export const getDetections = async (token: string, params: GetDetectionsQueryPar
       'start',
       'end',
       'confidence',
-      'review_status'
+      'review_status',
+      'classification'
     ]
   }
 
   const coreDetections = await coreGetDetections(token, coreQueryParams)
-  return coreDetections.map(detection => {
-    return {
-      id: Number(detection.id),
-      siteIdCore: detection.stream_id,
-      start: detection.start,
-      end: detection.end,
-      classifierId: detection.classifier_id,
-      confidence: detection.confidence,
-      reviewStatus: getArbimonReviewStatus(detection.review_status)
-    }
-  })
+
+  return {
+    total: coreDetections.total,
+    data: coreDetections.data.map(detection => {
+      return {
+        id: Number(detection.id),
+        siteIdCore: detection.stream_id,
+        start: detection.start,
+        end: detection.end,
+        classifierId: detection.classifier_id,
+        confidence: detection.confidence,
+        reviewStatus: getArbimonReviewStatus(detection.review_status),
+        classification: detection.classification
+      }
+    })
+  }
 }

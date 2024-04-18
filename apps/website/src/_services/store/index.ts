@@ -2,7 +2,8 @@ import { type User } from '@auth0/auth0-spa-js'
 import { createPinia, defineStore } from 'pinia'
 
 import { type ProjectFiltersResponse, apiBioGetProjectFilters } from '@rfcx-bio/common/api-bio/project/project-filters'
-import { type LocationProjectForUser, type LocationProjectWithInfo, apiBioGetProjectBySlug } from '@rfcx-bio/common/api-bio/project/projects'
+import { type LocationProjectWithInfo, type LocationProjectWithRole, apiBioGetProjectBySlug } from '@rfcx-bio/common/api-bio/project/projects'
+import { rolesGreaterOrEqualTo } from '@rfcx-bio/common/roles'
 import { getApiClient } from '@rfcx-bio/utils/api'
 
 import { getIdToken, useAuth0Client } from '~/auth-client'
@@ -10,8 +11,8 @@ import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 import { useDashboardStore } from './use-dashboard-store'
 import { useDetectionsResultFilterBySpeciesStore } from './use-detections-result-filter-by-species-store'
 import { useDetectionsResultFilterStore } from './use-detections-result-filter-store'
+import { useHighlightedSpeciesStore } from './use-highlighted-species-store'
 import { useProjectDirectoryStore } from './use-project-directory-store'
-import { useProjectUserPermissionsStore } from './use-project-user-permissions-store'
 import { useSuperStore } from './use-super-admin-store'
 
 export const useStore = defineStore('root', {
@@ -19,11 +20,18 @@ export const useStore = defineStore('root', {
     user: undefined as User | undefined,
     datasetColors: COLORS_BIO_INCLUSIVE,
     myProjects: [] as LocationProjectWithInfo[],
-    selectedProject: undefined as LocationProjectForUser | undefined, // TODO: update this to fetch from the new endpoint (getProjectBySlug)
+    project: undefined as LocationProjectWithRole | undefined,
     projectFilters: undefined as ProjectFiltersResponse | undefined,
     currentVersion: ''
   }),
-  getters: {},
+  getters: {
+    userIsExternalGuest: (state) => state.project?.role === 'external',
+    userIsGuest: (state) => state.project?.role === 'viewer' || state.project?.role === 'external',
+    userIsProjectMember: (state) => rolesGreaterOrEqualTo('viewer').includes(state.project?.role ?? 'none'),
+    userIsDataEntryMember: (state) => rolesGreaterOrEqualTo('entry').includes(state.project?.role ?? 'none'),
+    userIsFullProjectMember: (state) => rolesGreaterOrEqualTo('user').includes(state.project?.role ?? 'none'),
+    userIsAdminProjectMember: (state) => rolesGreaterOrEqualTo('admin').includes(state.project?.role ?? 'none')
+  },
   actions: {
     async updateUser (user: User | undefined = undefined) {
       this.user = user
@@ -45,25 +53,25 @@ export const useStore = defineStore('root', {
       // Temporary hack to get an API Client (this will be extracted in the loading branch)
       const authClient = await useAuth0Client()
       const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, this.user ? async () => await getIdToken(authClient) : undefined)
-      this.selectedProject = await apiBioGetProjectBySlug(apiClient, slug)
+      this.project = await apiBioGetProjectBySlug(apiClient, slug)
     },
-    updateSelectedProject (project?: LocationProjectForUser) {
-      if (this.selectedProject?.id === project?.id) return
+    updateSelectedProject (project?: LocationProjectWithRole) {
+      if (this.project?.id === project?.id) return
 
       // Set project & clear old data immediately
-      this.selectedProject = project
+      this.project = project
       this.projectFilters = undefined
     },
     updateProjectSlug (slug: string) {
-      if (this.selectedProject == null) return
-      this.selectedProject.slug = slug
+      if (this.project == null) return
+      this.project.slug = slug
     },
     updateProjectName (name: string) {
-      if (this.selectedProject == null) return
-      this.selectedProject.name = name
+      if (this.project == null) return
+      this.project.name = name
     },
     async updateProjectFilters () {
-      if (this.selectedProject == null) {
+      if (this.project == null) {
         this.projectFilters = undefined
         return
       }
@@ -72,7 +80,7 @@ export const useStore = defineStore('root', {
       const authClient = await useAuth0Client()
       const apiClientBio = getApiClient(import.meta.env.VITE_API_BASE_URL, this.user ? async () => await getIdToken(authClient) : undefined)
 
-      this.projectFilters = await apiBioGetProjectFilters(apiClientBio, this.selectedProject.id)
+      this.projectFilters = await apiBioGetProjectFilters(apiClientBio, this.project.id)
     },
     async setCurrentVersion (version: string) {
       this.currentVersion = version
@@ -88,7 +96,7 @@ export {
   useDashboardStore,
   useDetectionsResultFilterBySpeciesStore,
   useDetectionsResultFilterStore,
+  useHighlightedSpeciesStore,
   useProjectDirectoryStore,
-  useProjectUserPermissionsStore,
   useSuperStore
 }

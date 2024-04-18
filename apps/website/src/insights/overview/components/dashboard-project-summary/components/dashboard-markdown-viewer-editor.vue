@@ -1,7 +1,7 @@
 <template>
   <template v-if="(rawMarkdownText == null || rawMarkdownText === '') && !isViewMored">
     <project-summary-empty
-      v-if="editable && !projectUserPermissionsStore.isExternalGuest"
+      v-if="editable && store.userIsAdminProjectMember"
       @emit-add-content="editMarkdownContent"
     />
     <ProjectSummaryEmptyForNonProjectMember v-else />
@@ -12,7 +12,7 @@
       class="flex flex-row justify-end pr-6"
     >
       <button
-        v-if="!projectUserPermissionsStore.isMemberGuest && !projectUserPermissionsStore.isExternalGuest"
+        v-if="!store.userIsGuest"
         class="flex flex-row items-center btn btn-primary py-2 px-3 mb-3 disabled:hover:btn-disabled disabled:btn-disabled"
         :data-tooltip-target="!editable ? `${id}EditTextTooltipId` : null"
         data-tooltip-placement="bottom"
@@ -57,7 +57,7 @@
       </button>
     </div>
     <div
-      v-show="isEditing && !projectUserPermissionsStore.isExternalGuest"
+      v-show="isEditing && store.userIsAdminProjectMember"
       id="markdown-editor-apply-template"
       class="flex flex-row justify-start items-center gap-x-3 mb-4"
     >
@@ -72,7 +72,7 @@
       </button>
     </div>
     <MarkdownEditor
-      v-show="isEditing && !projectUserPermissionsStore.isExternalGuest"
+      v-show="isEditing && store.userIsAdminProjectMember"
       :id="id"
       v-model="editableMarkdownText"
       :character-limit="props.characterLimit"
@@ -89,7 +89,7 @@ import { event } from 'vue-gtag'
 
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
-import { useProjectUserPermissionsStore } from '~/store'
+import { useStore } from '~/store'
 import ProjectSummaryEmpty from './project-summary-empty.vue'
 import ProjectSummaryEmptyForNonProjectMember from './project-summary-empty-for-non-project-member.vue'
 
@@ -98,7 +98,7 @@ const DEFAULT_CHARACTER_LIMIT = 10000
 const props = withDefaults(defineProps<{ id: string, editable: boolean, rawMarkdownText: string | undefined, defaultMarkdownText: string, isViewMored: boolean, isEditing: boolean, characterLimit?: number, isProjectMember: boolean, isViewingAsGuest: boolean }>(), { characterLimit: DEFAULT_CHARACTER_LIMIT })
 const emit = defineEmits<{(e: 'on-editor-close', value: string): void, (e: 'update:isViewMored', value: boolean): void, (e: 'update:isEditing', value: boolean): void}>()
 
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
+const store = useStore()
 const markdownViewerRef = ref<{ markdownViewerWrapperComponent: HTMLDivElement | null } | null>(null)
 const editableMarkdownText = ref(props.rawMarkdownText == null || props.rawMarkdownText === '' ? '' : unref(props.rawMarkdownText))
 const disableText = ref('Contact your project administrator for permission to edit text')

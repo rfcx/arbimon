@@ -7,15 +7,6 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
 
-  prepare:
-    name: 'Prepare'
-    uses: rfcx/cicd/.github/workflows/notify-prepare.yaml@master
-    with:
-      repo: biodiversity-analytics
-      workflow-id: ci-nightly.yaml
-    secrets:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
-
   build:
     name: 'Build'
     uses: ./.github/workflows/reusable-build.yaml
@@ -26,7 +17,7 @@ jobs:
 
   test:
     name: 'Test'
-    needs: [prepare, build]
+    needs: [build]
     uses: ./.github/workflows/reusable-int-test.yaml
     with:
       runs-on: ubuntu-20.04
@@ -34,15 +25,12 @@ jobs:
   notify:
     name: 'Notify'
     if: ${{ always() }}
-    needs: [prepare, build, test]
-    uses: rfcx/cicd/.github/workflows/notify-send.yaml@master
+    needs: [build, test]
+    uses: rfcx/cicd/.github/workflows/notify.yaml@master
     with:
-      repo: biodiversity-analytics
-      branch-name: ${{ needs.prepare.outputs.branch-name }}
       workflow-id: ci-nightly.yaml
-      previous-run-id: ${{ needs.prepare.outputs.previous-run-id }}
       status: ${{ needs.build.result == 'success' && needs.test.result == 'success' && 'success' || 'failure' }}
-      notification-title: 'CI: Bio Integration Test'
+      notification-title: 'CI: Arbimon Integration Test'
       notification-footer: "Build: ${{ needs.build.outputs.build-outcome || 'n/a' }} | Migrate+Seed: ${{ needs.test.outputs.migrate-seed-outcome || 'n/a' }} | Test: ${{ needs.test.outputs.test-outcome || 'n/a' }}"
       always: true
     secrets:

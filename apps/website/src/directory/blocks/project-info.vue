@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="projectInfoView"
     class="flex flex-col justify-between left-100 w-98 h-86vh bg-moss transition-transform -translate-x-full rounded-lg overflow-scroll"
   >
     <div class="flex flex-col">
@@ -282,13 +283,15 @@ const props = defineProps<{ projectId: number }>()
 const emit = defineEmits<{(e: 'emitCloseProjectInfo'): void }>()
 const activeTab = ref('about')
 
+const projectInfoView = ref<HTMLElement | null>(null)
+
 const { readme: readmeDefault, keyResult: keyResultDefault } = useMarkdownEditorDefaults()
 const isStakeholdersSelected = ref(false)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
 const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch, isRefetching: isRefetchingProfile } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'], computed(() => true))
-const { isLoading: stakeholdersLoading, data: stakeholders, isRefetching: stakeholdersRefetching, refetch: stakeholdersRefetch, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId, computed(() => isStakeholdersSelected.value))
+const { isLoading: stakeholdersLoading, data: stakeholders, refetch: stakeholderRefetch, isRefetching: stakeholdersRefetching, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId, computed(() => isStakeholdersSelected.value))
 
 const isAboutTabViewMored = ref(false)
 const isAboutTabEditing = ref(false)
@@ -302,19 +305,21 @@ const shouldShowStakeholdersContent = computed(() => {
   return (hasUsers || hasOrganizations) && !stakeholderError.value
 })
 
-watch(() => props.projectId, async () => {
-  if (activeTab.value === 'stakeholders') {
-    isStakeholdersSelected.value = true
-    await stakeholdersRefetch()
-  } else {
-    isStakeholdersSelected.value = false
-  }
+watch(() => props.projectId, async (newValue, oldValue) => {
+  if (newValue === oldValue) { return }
+  // reset the scroll position & active tab
+  if (projectInfoView.value) { projectInfoView.value.scrollTop = 0 }
+  activeTab.value = 'about'
   await profileRefetch()
 })
 
-watch(activeTab, () => {
+watch(activeTab, async (newValue, oldValue) => {
+  if (newValue === oldValue) { return }
   if (activeTab.value === 'stakeholders') {
     isStakeholdersSelected.value = true
+    await stakeholderRefetch()
+  } else {
+    isStakeholdersSelected.value = false
   }
 })
 

@@ -46,6 +46,7 @@
     "@aws-sdk/s3-request-presigner": "^3.363.0",
     "@opensearch-project/opensearch": "^2.5.0",
     "@rfcx-bio/common": "workspace:^0.0.1",
+    "@rfcx-bio/node-common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
     "@slack/web-api": "^6.8.1",
     "axios": "^0.27.2",
@@ -57,9 +58,10 @@
     "mysql2": "^2.3.3",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
+    "quick-lru": "^7.0.0",
     "sequelize": "7.0.0-alpha.5",
     "umzug": "^3.0.0",
-    "zod": "^3.16.1"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/mysql": "^2.15.19",

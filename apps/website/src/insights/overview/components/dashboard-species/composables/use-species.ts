@@ -8,7 +8,7 @@ import { type DashboardSpeciesDataParams, type DashboardSpeciesDataResponse, api
 import { useStoreOutsideSetup } from '~/store'
 
 const store = useStoreOutsideSetup()
-const projectId = computed(() => store.selectedProject?.id)
+const projectId = computed(() => store.project?.id)
 
 const options = {
   // The time in milliseconds after data is considered stale. (before it is refetched)

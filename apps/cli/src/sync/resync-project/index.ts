@@ -1,6 +1,6 @@
 import { getSequelize } from '@/db/connections'
 import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
-import { syncProjectData } from '@/ingest/resync-project/sync-all'
+import { syncProject } from '@/ingest/resync-project/sync-project'
 import { requireEnv } from '~/env'
 
 const { ARBIMON_PROJECT_ID } = requireEnv('ARBIMON_PROJECT_ID')
@@ -16,7 +16,7 @@ const main = async (): Promise<void> => {
     const bioSequelize = getSequelize()
 
     console.info('STEP: Get sites, species calls, recordings, detections')
-    await syncProjectData(arbimonProjectId, arbimonSequelize, bioSequelize)
+    await syncProject(arbimonProjectId, arbimonSequelize, bioSequelize)
 
     console.info('resync-project job end: successful')
   } catch (e) {

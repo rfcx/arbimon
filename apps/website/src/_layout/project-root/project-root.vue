@@ -1,8 +1,8 @@
 <template>
-  <landing-navbar v-if="!projectUserPermissionsStore.isMember || isViewingAsGuest" />
+  <landing-navbar v-if="shouldShowNavbar" />
   <sidebar v-else />
   <div
-    v-if="store.selectedProject"
+    v-if="store.project"
   >
     <router-view />
   </div>
@@ -17,19 +17,15 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { useProjectUserPermissionsStore } from '~/store'
-import { useStore } from '../../_services/store'
+import { useStore } from '~/store'
 import InvalidProjectComponent from '../components/invalid-project/invalid-project.vue'
 import LandingNavbar from '../components/landing-navbar/landing-navbar.vue'
 import Sidebar from '../components/side-bar/side-bar.vue'
-// import { ROUTE_NAMES } from '~/router'
 
 const store = useStore()
 const route = useRoute()
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 
-const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1'
-})
+// view as guest, or does not have a permission to view the project
+const shouldShowNavbar = computed(() => route.query.guest === '1' || store.userIsExternalGuest || store.project === undefined)
 
 </script>

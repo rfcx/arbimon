@@ -13,8 +13,7 @@ const ROUTE = '/projects/:projectId/dashboard-data-by-site'
 const url = `/projects/${PROJECT_ID_BASIC}/dashboard-data-by-site`
 
 const EXPECTED_PROPS = [
-  'richnessBySite',
-  'detectionBySite'
+  'richnessBySite'
 ]
 
 describe('simple tests', () => {

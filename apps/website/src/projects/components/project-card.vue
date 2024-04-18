@@ -21,7 +21,7 @@
         {{ project.name }}
       </h6>
       <div
-        class="mt-3 flex flex-row items-center font-display text-sm mr-2 h-5 whitespace-nowrap text-ellipsis overflow-hidden"
+        class="mt-3 gap-x-1 flex flex-row items-center font-display text-sm mr-2 h-5 whitespace-nowrap text-ellipsis overflow-hidden"
       >
         <span class="text-spoonbill">
           <text-tooltip
@@ -31,7 +31,7 @@
           />
         </span>
         <div
-          class="ml-1 border-l-2 text-ellipsis overflow-hidden"
+          class="pl-1 border-l-2 text-ellipsis overflow-hidden"
         >
           <text-tooltip
             :tooltip-id="project?.name"

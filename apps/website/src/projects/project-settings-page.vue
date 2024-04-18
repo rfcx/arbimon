@@ -4,7 +4,7 @@
       <h1 class="text-gray-900 dark:text-insight">
         Project settings
       </h1>
-      <GuestBanner v-if="isViewingAsGuest" />
+      <ReadOnlyBanner v-if="!store.userIsAdminProjectMember" />
       <div class="grid lg:(grid-cols-2 gap-10)">
         <div>
           <h5>
@@ -14,17 +14,17 @@
             :existing-name="selectedProject?.name"
             :date-start="settings?.dateStart ? new Date(settings?.dateStart) : undefined"
             :date-end="settings?.dateEnd ? new Date(settings?.dateEnd) : undefined"
-            :is-disabled="!isUserHasFullAccess"
+            :is-disabled="!store.userIsAdminProjectMember"
             @emit-update-value="onEmitDefaultValue"
           />
           <project-summary-form
             :existing-summary="settings?.summary"
-            :is-disabled="!isUserHasFullAccess"
+            :is-disabled="!store.userIsAdminProjectMember"
             @emit-project-summary="onEmitSummary"
           />
           <project-objective-form
             :existing-objectives="settings?.objectives"
-            :is-disabled="!isUserHasFullAccess"
+            :is-disabled="!store.userIsAdminProjectMember"
             @emit-project-objectives="onEmitObjectives"
           />
         </div>
@@ -34,25 +34,25 @@
           </h5>
           <project-slug
             :existing-slug="selectedProject?.slug"
-            :is-disabled="!isUserHasFullAccess"
+            :is-disabled="!store.userIsAdminProjectMember"
             @emit-updated-slug="onEmitSlug"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-image-form
-            :is-disabled="!isUserHasFullAccess"
+            :is-disabled="!store.userIsAdminProjectMember"
             :image="settings?.image !== undefined ? urlWrapper(settings?.image) : undefined"
             @emit-project-image="onEmitProjectImage"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-listed-form
             :is-public="settings?.isPublic"
-            :is-disabled="!isUserHasFullAccess || settings?.isPublished"
+            :is-disabled="!store.userIsAdminProjectMember || settings?.isPublished"
             :is-create-project="false"
             @emit-project-listed="toggleListedProject"
           />
           <div class="my-6 h-[1px] w-full bg-util-gray-01" />
           <project-delete
-            v-if="projectUserPermissionsStore.role === 'owner'"
+            v-if="store.project?.role === 'owner'"
             :is-deleting="isDeletingProject"
             :is-error="isErrorDeleteProject"
             :is-success="isSuccessDeleteProject"
@@ -61,20 +61,19 @@
         </div>
       </div>
       <div
-        v-if="projectUserPermissionsStore.isMember && !isViewingAsGuest"
         class="flex flex-row-reverse items-center gap-4"
       >
         <button
-          :disabled="isSaving || !isUserHasFullAccess"
+          :disabled="isSaving || !store.userIsAdminProjectMember"
           class="inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
-          :data-tooltip-target="!isUserHasFullAccess ? 'projectSettingsSaveTooltipId': null"
+          :data-tooltip-target="!store.userIsAdminProjectMember ? 'projectSettingsSaveTooltipId': null"
           data-tooltip-placement="bottom"
           @click.prevent="save"
         >
           Save changes
         </button>
         <div
-          v-if="!isUserHasFullAccess"
+          v-if="!store.userIsAdminProjectMember"
           id="projectSettingsSaveTooltipId"
           role="tooltip"
           class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -94,29 +93,12 @@
             Saving...
           </span>
         </div>
-        <span
-          v-if="lastUpdated && !hasFailed && !isSaving"
-          class="p-4 text-sm inline-flex"
-          role="alert"
-        >
-          <svg
-            class="w-4 h-4 ml-1"
-            aria-hidden="true"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M 20.292969 5.2929688 L 9 16.585938 L 4.7070312 12.292969 L 3.2929688 13.707031 L 9 19.414062 L 21.707031 6.7070312 L 20.292969 5.2929688 z" />
-          </svg>
-          <span class="font-medium ml-2 mt-0.15rem">{{ lastUpdatedText }}</span>
-        </span>
-        <span
-          v-if="hasFailed"
-          class="p-4 text-sm text-red-800 dark:text-flamingo"
-          role="alert"
-        >
-          <span class="font-medium">{{ errorMessage }}</span>
-        </span>
+        <SaveStatusText
+          v-if="showStatus && !isSaving"
+          class="flex p-4"
+          :success="!hasFailed"
+          :error-message="errorMessage"
+        />
       </div>
     </div>
   </section>
@@ -124,17 +106,18 @@
 <script setup lang="ts">
 import { type AxiosError, type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 import { type ProjectProfileUpdateBody, ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isValidSlug } from '@rfcx-bio/utils/string/slug'
 
-import GuestBanner from '@/_layout/components//guest-banner/guest-banner.vue'
+import SaveStatusText from '@/_components/save-status-text.vue'
+import ReadOnlyBanner from '@/_layout/components/guest-banner/guest-banner.vue'
 import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { useDashboardStore, useProjectUserPermissionsStore, useStore } from '~/store'
+import { useDashboardStore, useStore } from '~/store'
 import { useDeleteProject, useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectDelete from './components/form/project-delete.vue'
@@ -147,20 +130,15 @@ import ProjectSummaryForm from './components/form/project-summary-form.vue'
 import type { ProjectDefault } from './types'
 
 const router = useRouter()
-const route = useRoute()
 const store = useStore()
-const projectUserPermissionsStore = useProjectUserPermissionsStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
-const selectedProject = computed(() => store.selectedProject)
-const selectedProjectId = computed(() => store.selectedProject?.id)
-const isViewingAsGuest = computed(() => {
-  return route.query.guest === '1' || projectUserPermissionsStore.isMemberGuest
-})
+const selectedProject = computed(() => store.project)
+const selectedProjectId = computed(() => store.project?.id)
 
 const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId)
-const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.selectedProject?.id ?? -1)
-const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, store.selectedProject?.id ?? -1)
+const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.project?.id ?? -1)
+const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, store.project?.id ?? -1)
 const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProject } = useDeleteProject(apiClientBio)
 
 const newName = ref('')
@@ -172,18 +150,14 @@ const newSlug = ref<string | null>(null)
 const newObjectives = ref([''])
 const isSaving = ref(false)
 const DEFAULT_ERROR_MSG = 'Failed!'
-const hasFailed = ref(false)
-const lastUpdated = ref(false)
-const errorMessage = ref<string>(DEFAULT_ERROR_MSG)
-const lastUpdatedText = ref<string>()
 const profileImageForm = ref()
 const uploadedFile = ref()
 const isPublic = ref<boolean>(true)
 const disableText = ref('Contact your project administrator for permission to edit project settings')
 
-const isUserHasFullAccess = computed<boolean>(() => {
-  return projectUserPermissionsStore.role === 'admin' || projectUserPermissionsStore.role === 'owner'
-})
+const showStatus = ref(false)
+const hasFailed = ref(false)
+const errorMessage = ref<string>()
 
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
@@ -223,9 +197,9 @@ const onEmitSlug = (slug: string) => {
 }
 
 const onEmitProjectDelete = () => {
-  mutateDeleteProject(store.selectedProject?.id ?? -1, {
+  mutateDeleteProject(store.project?.id ?? -1, {
     onSuccess: async () => {
-      store.deleteProject(store.selectedProject?.id)
+      store.deleteProject(store.project?.id)
       await router.push({ name: ROUTE_NAMES.myProjects })
     }
   })
@@ -258,16 +232,20 @@ watch(() => settings.value, () => {
   onGoing.value = dateStart.value?.length !== 0 && dateEnd.value?.length === 0
 })
 
+const displayTextAfterSaveWithSuccessStatus = (success: boolean, errorMsg?: string) => {
+  showStatus.value = true
+  hasFailed.value = !success
+  errorMessage.value = errorMsg
+}
+
 const save = () => {
   const dateError = verifyDateFormError(dateStart.value ? dateStart.value : undefined, dateEnd.value ? dateEnd.value : undefined, onGoing.value)
   if (dateError.length > 0) {
-    hasFailed.value = true
-    errorMessage.value = dateError
+    displayTextAfterSaveWithSuccessStatus(false, dateError)
     return
   }
   if (!isValidSlug(newSlug.value ?? '')) {
-    hasFailed.value = true
-    errorMessage.value = 'Failed! URL must be lowercase letters, numbers, and dashes (-).'
+    displayTextAfterSaveWithSuccessStatus(false, 'Failed! URL must be lowercase letters, numbers, and dashes (-).')
     return
   }
 
@@ -297,8 +275,7 @@ const updateSettings = () => {
     onSuccess: () => {
       if (profileImageForm.value === undefined) {
         isSaving.value = false
-        lastUpdated.value = true
-        lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+        displayTextAfterSaveWithSuccessStatus(true)
       }
       store.updateProjectName(newName.value)
       dashboardStore.updateProjectObjectives(newObjectives.value)
@@ -311,9 +288,7 @@ const updateSettings = () => {
     },
     onError: (e) => {
       isSaving.value = false
-      hasFailed.value = true
-      lastUpdated.value = false
-      errorMessage.value = DEFAULT_ERROR_MSG
+      displayTextAfterSaveWithSuccessStatus(false, DEFAULT_ERROR_MSG)
 
       const error = e as AxiosError<Error>
       if (error.response?.data !== undefined && error.response.data.message === ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE) {
@@ -325,14 +300,11 @@ const updateSettings = () => {
     mutatePatchProfilePhoto(profileImageForm.value, {
       onSuccess: async () => {
         isSaving.value = false
-        lastUpdated.value = true
-        lastUpdatedText.value = `Last saved on ${dayjs(new Date()).format('MMM DD, YYYY')} at ${dayjs(new Date()).format('HH:mm:ss')}`
+        displayTextAfterSaveWithSuccessStatus(true)
       },
       onError: () => {
         isSaving.value = false
-        hasFailed.value = true
-        lastUpdated.value = false
-        errorMessage.value = 'The photo upload was failed to upload.'
+        displayTextAfterSaveWithSuccessStatus(false, 'The photo upload was failed to upload.')
       }
     })
   }
