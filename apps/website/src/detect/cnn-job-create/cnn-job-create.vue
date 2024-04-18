@@ -1,5 +1,5 @@
 <template>
-  <section class="max-w-screen-xl py-20 pl-115px pr-4">
+  <section class="pt-20 pl-18 pr-6 md:(pl-23 pr-10) xl:(pl-33 pr-20)">
     <div class="text-frequency">
       <page-title page-title="Create New CNN Job" />
     </div>
@@ -72,7 +72,7 @@
               @emit-select-date-range="onSelectQueryDates"
             />
           </div>
-          <div class="mb-3 mt-5">
+          <div class="mb-3 mt-5 flex flex-col">
             <label
               for="time"
               class="block mb-2 text-base"

@@ -14,6 +14,7 @@ COPY apps/api/package.json ./apps/api/
 COPY apps/cli/package.json ./apps/cli/
 COPY apps/website/package.json ./apps/website/
 COPY packages/common/package.json ./packages/common/
+COPY packages/node-common/package.json ./packages/node-common/
 COPY packages/utils/package.json ./packages/utils/
 COPY packages/testing/package.json ./packages/testing/
 

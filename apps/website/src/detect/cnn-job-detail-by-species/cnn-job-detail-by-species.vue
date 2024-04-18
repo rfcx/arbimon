@@ -1,11 +1,11 @@
 <template>
-  <section class="max-w-screen-xl pt-22 pl-115px pr-4">
+  <section class="pt-20 pl-18 pr-6 md:(pl-23 pr-10) xl:(pl-33 pr-20)">
     <div>
       <JobDetailHeader :species-name="speciesClass" />
       <JobValidationHeader
         :species-name="speciesClass"
         :detections-count="totalDetections"
-        :filtered-result="jobDetections?.length"
+        :filtered-result="jobDetectionResponse?.total"
         :page-size="PAGE_SIZE_LIMIT"
         @emit-page-size="onEmitPageSize"
       />
@@ -19,7 +19,7 @@
         v-model:page="page"
         :is-loading="isLoadingJobDetections"
         :is-error="isErrorJobDetections"
-        :data="jobDetections"
+        :data="jobDetectionResponse?.data"
         :page-size="PAGE_SIZE_LIMIT"
         :max-page="Math.ceil(Number(totalDetections)/PAGE_SIZE_LIMIT)"
         @emit-validation-result="refetchJobResults()"
@@ -144,7 +144,7 @@ const isRefetchIntervalEnable = computed(() => {
   return jobSummary.value?.status != null && jobSummary.value.status === CLASSIFIER_JOB_STATUS.RUNNING
 })
 
-const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: jobDetections } = useGetJobDetections(
+const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: jobDetectionResponse } = useGetJobDetections(
   apiClientBio,
   detectionsQueryParams,
   computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== ''),

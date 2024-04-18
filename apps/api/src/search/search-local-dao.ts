@@ -59,6 +59,7 @@ export const getProjectsByQuery = async (keyword?: string, limit?: number, offse
         slug: project.slug,
         status: project.status,
         image: fileUrl(profile?.image) ?? '',
+        thumbnail: fileUrl(profile?.image, 'thumbnail') ?? '',
         objectives: profile?.objectives ?? [],
         summary: profile?.summary ?? '',
         readme: profile?.readme ?? '',

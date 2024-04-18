@@ -9,7 +9,7 @@ import { getWikiSummary } from '@/sync/_refactor/input-wiki'
 import { writeWikiSpeciesDataToPostgres, writeWikiSpeciesPhotoDataToPostgres } from '@/sync/_refactor/output-bio-db/taxon-species-wiki'
 
 export const syncOnlyMissingWikiSpeciesInfo = async (sequelize: Sequelize): Promise<void> => {
-  const unknownSpeciesRegexp = /^sp\d+$/g
+  const unknownSpeciesRegexp = /^sp\d+$/
 
   const sql = `
     SELECT DISTINCT ts.id, ts.scientific_name, ts.slug
