@@ -1,7 +1,8 @@
-export interface CreateBackupRequest {
-    userId: number
-}
+import { type Backup, type BackupType } from '@/dao/types/backup'
 
-export interface CreateBackupResponse {
+export interface CreateBackupBody {
+    entity: BackupType
     entityId: number
 }
+
+export type CreateBackupResponse = Backup

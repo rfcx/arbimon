@@ -31,7 +31,8 @@ export const BackupModel = defineWithDefaultsAutoPk<Backup>(
             type: DataTypes.DATE
         },
         expiresAt: {
-            type: DataTypes.DATE
+            type: DataTypes.DATE,
+            allowNull: true // this will be set when the url is created in the cron job
         },
         status: {
             type: DataTypes.STRING

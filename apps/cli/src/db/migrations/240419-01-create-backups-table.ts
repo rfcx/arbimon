@@ -1,16 +1,61 @@
 import {
- type QueryInterface
-  // DataTypes
+    type QueryInterface,
+    DataTypes
 } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-// import { DatabaseUser, grant, GrantPermission } from './_helpers/grants'
-// import { setTimestampDefaults, TIMESTAMP_COLUMNS } from './_helpers/timestamps'
+import { DatabaseUser, grant, GrantPermission } from '@/db/migrations/_helpers/grants'
 
 const TABLE_NAME = 'backup'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
-  // TODO
+    await params.context.createTable(
+        TABLE_NAME,
+        {
+            id: {
+                type: DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true
+            },
+            entity: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            entityId: {
+                type: DataTypes.INTEGER,
+                allowNull: false
+            },
+            requestedBy: {
+                type: DataTypes.INTEGER,
+                references: {
+                    model: 'user_profile',
+                    key: 'id'
+                },
+                allowNull: false
+            },
+            requestedAt: {
+                type: DataTypes.DATE,
+                allowNull: false
+            },
+            expiresAt: {
+                type: DataTypes.DATE,
+                allowNull: true // this will be set when the url is created in the cron job
+            },
+            status: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            url: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            size: {
+                type: DataTypes.INTEGER,
+                allowNull: true
+            }
+        }
+    )
+    await grant(params.context.sequelize, TABLE_NAME, [GrantPermission.SELECT, GrantPermission.INSERT, GrantPermission.UPDATE], DatabaseUser.API)
 }
 
 export const down: MigrationFn<QueryInterface> = async (params): Promise<void> => {

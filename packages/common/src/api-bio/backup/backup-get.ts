@@ -1,10 +1,10 @@
-import { type BackupType } from '@/api-bio/backup/backups'
+import { type Backup, type BackupType } from '@/dao/types/backup'
 
-export interface GetBackupRequestsRequest {
-    type: BackupType
+export interface GetBackupRequestsQuery {
+    entity: BackupType
     entityId: number
+    limit?: number
+    offset?: number
 }
 
-export interface GetBackupRequestsResponse {
-    requests: any
-}
+export type GetBackupRequestsResponse = Backup[]

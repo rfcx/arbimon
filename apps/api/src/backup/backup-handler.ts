@@ -1,17 +1,20 @@
 import type {
-    CreateBackupRequest,
+    CreateBackupBody,
     CreateBackupResponse
 } from '@rfcx-bio/common/api-bio/backup/backup-create'
-import { type GetBackupRequestsRequest, type GetBackupRequestsResponse } from '@rfcx-bio/common/api-bio/backup/backup-get'
-import { type BackupRequestParams } from '@rfcx-bio/common/api-bio/backup/backups'
+import { type GetBackupRequestsQuery, type GetBackupRequestsResponse } from '@rfcx-bio/common/api-bio/backup/backup-get'
+import { type Backup } from '@rfcx-bio/common/dao/types/backup'
 
+import { createBackupRequest } from '@/backup/dao/backup-create-dao'
+import { getBackupRequests } from '@/backup/dao/backup-get-requests'
 import { ALLOWED_BACKUP_TYPES, BackupEntityGetters } from '@/backup/types'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioMissingPathParamError, BioPublicError } from '~/errors'
 
-export const createBackupRequestHandler: Handler<CreateBackupRequest, BackupRequestParams, unknown, CreateBackupResponse> = async (req, res) => {
+export const createBackupRequestHandler: Handler<CreateBackupResponse, unknown, unknown, CreateBackupBody> = async (req, res): Promise<Backup | undefined> => {
     // Validate entity type and id
-    const { entity: entityType, entityId } = req.params
+    const { entity: entityType, entityId } = req.body
+    const { userId } = req
 
     if (entityType === undefined) {
         throw BioMissingPathParamError('entity')
@@ -25,6 +28,10 @@ export const createBackupRequestHandler: Handler<CreateBackupRequest, BackupRequ
         throw BioMissingPathParamError('entityId')
     }
 
+    if (userId === undefined) {
+        throw new BioPublicError('userId is required for creating a backup request', 500)
+    }
+
     // Check if backup entity exists
     const entityGetter = BackupEntityGetters[entityType]
     const entity = await entityGetter(entityId)
@@ -33,15 +40,14 @@ export const createBackupRequestHandler: Handler<CreateBackupRequest, BackupRequ
         throw new BioPublicError(`${String(entityType)} with id ${Number(entityId)} not found`, 404)
     }
 
-    // Create backup request
-
-    // return backup request
+    // Create and return backup request
+    return await createBackupRequest(entityType, entityId, userId)
 }
 
-export const getBackupRequestsHander: Handler<GetBackupRequestsRequest, BackupRequestParams, unknown, GetBackupRequestsResponse> = async (req, res) => {
+export const getBackupRequestsHandler: Handler<GetBackupRequestsResponse, unknown, GetBackupRequestsQuery, unknown> = async (req, res) => {
     // Validate entity information
-    // Validate entity type and id
-    const { entity: entityType, entityId } = req.params
+    const { entity: entityType, entityId, limit = 3, offset = 0 } = req.query
+    const { userId } = req
 
     if (entityType === undefined) {
         throw BioMissingPathParamError('entity')
@@ -55,6 +61,10 @@ export const getBackupRequestsHander: Handler<GetBackupRequestsRequest, BackupRe
         throw BioMissingPathParamError('entityId')
     }
 
+    if (userId === undefined) {
+        throw new BioPublicError('userId is required for retrieving backup requests', 500)
+    }
+
     // Check if backup entity exists
     const entityGetter = BackupEntityGetters[entityType]
     const entity = await entityGetter(entityId)
@@ -63,5 +73,6 @@ export const getBackupRequestsHander: Handler<GetBackupRequestsRequest, BackupRe
         throw new BioPublicError(`${String(entityType)} with id ${Number(entityId)} not found`, 404)
     }
 
-    // get backup requests by entity id
+    // Get backup requests
+    return await getBackupRequests(entityType, entityId, userId, { limit, offset })
 }

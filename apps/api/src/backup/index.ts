@@ -1,6 +1,6 @@
 import { backupsRoute } from '@rfcx-bio/common/api-bio/backup/backups'
 
-import { createBackupRequestHandler, getBackupRequestsHander } from '@/backup/backup-handler'
+import { createBackupRequestHandler, getBackupRequestsHandler } from '@/backup/backup-handler'
 import { type RouteRegistration, GET, POST } from '~/api-helpers/types'
 
 export const routesBackup: RouteRegistration[] = [
@@ -8,7 +8,7 @@ export const routesBackup: RouteRegistration[] = [
         method: GET,
         url: backupsRoute,
         // TODO authorize endpoint
-        handler: getBackupRequestsHander
+        handler: getBackupRequestsHandler
     },
     {
         method: POST,
