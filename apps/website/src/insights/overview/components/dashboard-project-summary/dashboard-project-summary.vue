@@ -214,7 +214,7 @@
 </template>
 
 <script setup lang="ts">
-import { type AxiosInstance } from 'axios'
+import { type AxiosError, type AxiosInstance } from 'axios'
 import { type TabItem, type TabsOptions, Tabs } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
@@ -256,8 +256,8 @@ const { isLoading, data: profile } = useGetProjectInfo(apiClientBio, computed(()
 
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.project?.id ?? -1)
 
-const errorMessage = ref('')
-const hasFailed = ref(false)
+const errorMessage = ref<string>('')
+const hasFailed = ref<boolean>(false)
 
 const updateReadme = (value: string): void => {
   const update: ProjectProfileUpdateBody = {
@@ -270,7 +270,8 @@ const updateReadme = (value: string): void => {
       isAboutTabEditing.value = false
       hasFailed.value = false
     },
-    onError: async (error: any) => {
+    onError: async (e) => {
+      const error = e as AxiosError<Error>
       errorMessage.value = error.message
       hasFailed.value = true
       isAboutTabViewMored.value = true
@@ -290,7 +291,8 @@ const updateKeyResult = (value: string): void => {
       isKeyResultTabEditing.value = false
       hasFailed.value = false
     },
-    onError: async (error: any) => {
+    onError: async (e) => {
+      const error = e as AxiosError<Error>
       errorMessage.value = error.message
       hasFailed.value = true
       isKeyResultTabViewMored.value = true
@@ -310,7 +312,8 @@ const updateResources = (value: string): void => {
       isResourcesTabEditing.value = false
       hasFailed.value = false
     },
-    onError: async (error: any) => {
+    onError: async (e) => {
+      const error = e as AxiosError<Error>
       errorMessage.value = error.message
       hasFailed.value = true
       isResourcesTabViewMored.value = true
@@ -334,7 +337,8 @@ const updateMethods = (value: string): void => {
       isMethodsTabEditing.value = false
       hasFailed.value = false
     },
-    onError: async (error: any) => {
+    onError: async (e) => {
+      const error = e as AxiosError<Error>
       errorMessage.value = error.message
       hasFailed.value = true
       isMethodsTabViewMored.value = true
