@@ -147,7 +147,7 @@
         Save changes
       </button>
       <span
-        v-if="props.hasFailed == true"
+        v-if="props.hasFailed"
         class="p-4 text-sm text-red-800 dark:text-flamingo"
         role="alert"
       >
@@ -238,7 +238,7 @@ import { Modal } from 'flowbite'
 import { Markdown } from 'tiptap-markdown'
 import { type Ref, onMounted, ref, watch } from 'vue'
 
-const props = defineProps<{ id: string, modelValue: string, characterLimit: number, errorMessage: string, hasFailed: boolean}>()
+const props = defineProps<{ id: string, modelValue: string, characterLimit: number, errorMessage?: string, hasFailed?: boolean}>()
 const emit = defineEmits<{(e: 'update:modelValue', value: string): void, (e: 'onEditorClose'): void}>()
 const modal = ref() as Ref<Modal>
 const linkToSet = ref('')
@@ -297,8 +297,24 @@ const closeModal = (): void => {
   modal.value.hide()
 }
 
+const hasFailed = ref(props.hasFailed ?? false)
+const errorMessage = ref(props.errorMessage ?? '')
+
 const closeEditorView = (): void => {
+  try {
+    if (hasFailed.value === false) {
       emit('onEditorClose')
+    } else {
+      handleSaveError(props.errorMessage)
+    }
+  } catch (error) {
+    handleSaveError(props.errorMessage)
+  }
+}
+
+const handleSaveError = (error: string | undefined): void => {
+  errorMessage.value = error ?? ''
+  hasFailed.value = true
 }
 
 </script>

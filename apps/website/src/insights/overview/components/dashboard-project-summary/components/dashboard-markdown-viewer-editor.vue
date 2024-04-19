@@ -97,7 +97,7 @@ import ProjectSummaryEmptyForNonProjectMember from './project-summary-empty-for-
 
 const DEFAULT_CHARACTER_LIMIT = 10000
 
-const props = withDefaults(defineProps<{ id: string, editable: boolean, rawMarkdownText: string | undefined, defaultMarkdownText: string, isViewMored: boolean, isEditing: boolean, characterLimit?: number, isProjectMember: boolean, isViewingAsGuest: boolean, errorMessage: string, hasFailed: boolean }>(), { characterLimit: DEFAULT_CHARACTER_LIMIT })
+const props = withDefaults(defineProps<{ id: string, editable: boolean, rawMarkdownText: string | undefined, defaultMarkdownText: string, isViewMored: boolean, isEditing: boolean, characterLimit?: number, isProjectMember: boolean, isViewingAsGuest: boolean, errorMessage?: string, hasFailed?: boolean }>(), { characterLimit: DEFAULT_CHARACTER_LIMIT, errorMessage: '' })
 const emit = defineEmits<{(e: 'on-editor-close', value: string): void, (e: 'update:isViewMored', value: boolean): void, (e: 'update:isEditing', value: boolean): void}>()
 
 const store = useStore()
