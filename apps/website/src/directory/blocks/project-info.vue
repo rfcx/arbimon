@@ -198,8 +198,6 @@
               :default-markdown-text="readmeDefault"
               :is-project-member="false"
               :is-viewing-as-guest="true"
-              :error-message="''"
-              :has-failed="false"
             />
           </p>
           <div v-else>
@@ -222,8 +220,6 @@
               :default-markdown-text="keyResultDefault"
               :is-project-member="false"
               :is-viewing-as-guest="false"
-              :error-message="''"
-              :has-failed="false"
             />
           </p>
           <div v-else>
