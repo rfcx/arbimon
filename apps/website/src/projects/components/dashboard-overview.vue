@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-1 gap-2 bg-stone-900 border-1 border-insight rounded-2xl shadow py-4 px-6 shadow-lg shadow-frequency/10">
+  <div class="flex flex-col gap-2 bg-stone-900 border-1 border-insight rounded-2xl shadow py-4 px-6 shadow-lg shadow-frequency/10">
     <div class="flex flex-row h-13">
       <h5
         v-if="stat.title"
@@ -28,14 +28,12 @@
     <div class="flex items-center space-x-2 sm:space-x-3">
       <icon-custom-ft-map-pin-lg
         v-if="stat.value === 'site'"
-        :class="{'mb-10': store.userIsDataEntryMember, '!mb-0': store.userIsFullProjectMember}"
       />
       <icon-custom-ft-mic-lg
         v-if="stat.value === 'recording'"
       />
       <icon-custom-fi-list
         v-if="stat.value === 'playlist'"
-        :class="{'mb-10': store.userIsDataEntryMember, '!mb-0': store.userIsFullProjectMember}"
       />
       <icon-custom-ft-actual-bird
         v-if="stat.value === 'species'"
@@ -43,7 +41,6 @@
       <icon-custom-ic-loading
         v-if="stat.isLoading && stat.count === undefined"
         class="animate-spin h-8 w-8 text-white"
-        :class="{'mb-10': store.userIsDataEntryMember, '!mb-0': store.userIsFullProjectMember}"
       />
       <span
         v-if="stat.count !== undefined"
