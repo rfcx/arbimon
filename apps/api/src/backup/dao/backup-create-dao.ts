@@ -1,5 +1,5 @@
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Backup, type BackupType } from '@rfcx-bio/common/dao/types/backup'
+import { type Backup, type BackupType, BackupStatus } from '@rfcx-bio/common/dao/types/backup'
 
 import { getSequelize } from '~/db'
 
@@ -18,11 +18,8 @@ export const createBackupRequest = async (entity: BackupType, entityId: number, 
         entity,
         entityId,
         requestedBy: userId,
-        requestedAt: Date.now(),
-        expiresAt: null,
-        status: 'requested',
-        url: null,
-        size: null
+        requestedAt: new Date(),
+        status: BackupStatus.REQUESTED
     }
 
     return Backup.create(backup)

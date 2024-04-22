@@ -11,12 +11,12 @@ import { getSequelize } from '~/db'
  * @param requestedBy
  * @param options
  */
-export const getBackupRequests = async (entity: BackupType, entityId: number, requestedBy: number, options?: { limit: number, offset: number }): Promise<Backup[]> => {
+export const getBackupRequests = async (entity: BackupType, entityId: number, requestedBy: number, options?: { limit: number, offset: number }): Promise<Backup[] | []> => {
     const { limit = 3, offset = 0 } = options ?? {}
     const sequelize = getSequelize()
     const { Backup } = ModelRepository.getInstance(sequelize)
 
-    return Backup.findAll({
+    const backupRequests = await Backup.findAll({
         where: {
             entity,
             entityId,
@@ -28,4 +28,6 @@ export const getBackupRequests = async (entity: BackupType, entityId: number, re
         order: [['requestedAt', 'DESC']],
         raw: true
     })
+
+    return backupRequests ?? []
 }

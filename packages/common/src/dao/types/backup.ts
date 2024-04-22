@@ -1,4 +1,9 @@
-export type BackupStatus = 'requested' | 'processing' | 'available'
+// export type BackupStatus = 'requested' | 'processing' | 'available'
+export enum BackupStatus {
+    REQUESTED = 'requested',
+    PROCESSING = 'processing',
+    AVAILABLE = 'available'
+}
 export type BackupType = 'project'
 
 export interface Backup {
@@ -7,8 +12,8 @@ export interface Backup {
     entityId: number
     requestedBy: number
     requestedAt: Date
-    expiresAt: Date
+    expiresAt?: Date
     status: BackupStatus
-    url: string
-    size: number // number of MBs
+    url?: string
+    size?: number // number of MBs
 }

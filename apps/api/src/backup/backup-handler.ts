@@ -3,7 +3,6 @@ import type {
     CreateBackupResponse
 } from '@rfcx-bio/common/api-bio/backup/backup-create'
 import { type GetBackupRequestsQuery, type GetBackupRequestsResponse } from '@rfcx-bio/common/api-bio/backup/backup-get'
-import { type Backup } from '@rfcx-bio/common/dao/types/backup'
 
 import { createBackupRequest } from '@/backup/dao/backup-create-dao'
 import { getBackupRequests } from '@/backup/dao/backup-get-requests'
@@ -11,7 +10,7 @@ import { ALLOWED_BACKUP_TYPES, BackupEntityGetters } from '@/backup/types'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioMissingPathParamError, BioPublicError } from '~/errors'
 
-export const createBackupRequestHandler: Handler<CreateBackupResponse, unknown, unknown, CreateBackupBody> = async (req, res): Promise<Backup | undefined> => {
+export const createBackupRequestHandler: Handler<CreateBackupResponse, unknown, unknown, CreateBackupBody> = async (req, res) => {
     // Validate entity type and id
     const { entity: entityType, entityId } = req.body
     const { userId } = req
@@ -41,7 +40,13 @@ export const createBackupRequestHandler: Handler<CreateBackupResponse, unknown, 
     }
 
     // Create and return backup request
-    return await createBackupRequest(entityType, entityId, userId)
+    const backup = await createBackupRequest(entityType, entityId, userId)
+    const success = backup !== undefined
+
+    return {
+        backup,
+        success
+    }
 }
 
 export const getBackupRequestsHandler: Handler<GetBackupRequestsResponse, unknown, GetBackupRequestsQuery, unknown> = async (req, res) => {

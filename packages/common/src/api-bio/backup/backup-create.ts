@@ -5,4 +5,7 @@ export interface CreateBackupBody {
     entityId: number
 }
 
-export type CreateBackupResponse = Backup
+export interface CreateBackupResponse {
+    success: boolean
+    backup: Backup | undefined
+}
