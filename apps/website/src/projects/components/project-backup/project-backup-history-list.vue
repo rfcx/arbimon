@@ -38,7 +38,12 @@
           >Download link</span>
           <span v-else>Not yet available</span>
         </td>
-        <td>{{ getName(item.status, item.expiryDate) }}</td>
+        <td>
+          <backup-status
+            :status="item.status"
+            :expired-date="item.expiryDate"
+          />
+        </td>
         <td id="expired-date-text">
           {{ getExpiredDate(item.status, item.expiryDate ) }}
         </td>
@@ -50,43 +55,33 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
+import BackupStatus from './backup-status.vue'
 import { type BackupHistory } from './types'
+import { hasExpired } from './utils'
 
 defineProps<{
   data: BackupHistory[]
 }>()
 
 const recentBackups = (data: BackupHistory[]): BackupHistory[] => {
-  const sort = (a: BackupHistory, b: BackupHistory) => {
+  const ascSort = (a: BackupHistory, b: BackupHistory) => {
+    return new Date(a.requestDate).getTime() - new Date(b.requestDate).getTime()
+  }
+  const dscSort = (a: BackupHistory, b: BackupHistory) => {
     return new Date(b.requestDate).getTime() - new Date(a.requestDate).getTime()
   }
-  const sortedBackup = data.sort(sort)
-  return sortedBackup.slice(0, 3) // maximum 3 items
+  const backupRecentDSC = data.sort(dscSort)
+  return backupRecentDSC.slice(0, 3) // maximum 3 items
+    .sort(ascSort)
 }
 
 // Date utility
-
-const hasExpired = (date: string): boolean => {
-  return new Date(date) < new Date()
-}
 
 const formattedDate = (date: string, includedTime = false): string => {
   return dayjs(date).format(`YYYY-MM-DD ${includedTime ? 'HH:mm' : ''}`)
 }
 
 // Text utility
-
-// Return the status name based on the status
-const getName = (status: string, expiredDate?: string): string => {
-  const isExpired = expiredDate ? hasExpired(expiredDate) : false
-  switch (status) {
-    case 'available': return isExpired ? 'Expired' : 'Completed'
-    case 'failed': return 'Failed'
-    case 'processing': return 'In progress'
-    case 'requested': return 'Requested'
-    default: return 'unknown'
-  }
-}
 
 // Return the expired date based on the status
 const getExpiredDate = (status: string, expiredDate?: string): string => {
