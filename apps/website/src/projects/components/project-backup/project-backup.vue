@@ -15,11 +15,21 @@
           Request backup <icon-custom-ic-export class="ml-2 inline-flex" />
         </button>
       </div>
-      <project-backup-history :data="[]" />
+      <project-backup-history :data="dataMock" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import ProjectBackupHistory from './project-backup-history.vue'
+import { ref } from 'vue'
+
+import ProjectBackupHistory from './project-backup-history-list.vue'
+import { type BackupHistory } from './types'
+
+const dataMock = ref<BackupHistory[]>([
+  { requestDate: '2021-09-01', link: '#', status: 'available', expiryDate: '2021-09-08T04:00:00z' },
+  { requestDate: '2021-08-25', link: '#', status: 'requested', expiryDate: undefined },
+  { requestDate: '2021-09-01', link: '#', status: 'processing', expiryDate: undefined },
+  { requestDate: '2021-09-18', link: '#', status: 'available', expiryDate: new Date(Date.now() + 30 * 60 * 1000).toISOString() }
+])
 </script>
