@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
-import { defineWithDefaultsAutoPk } from '@/dao/model-factory-helpers/defaults'
-import { type Backup } from '@/dao/types/backup'
+import { defineWithDefaultsAutoPk } from '../model-factory-helpers/defaults'
+import { type Backup } from '../types/backup'
 
 export const MODEL_BACKUP = 'Backup'
 export const TABLE_BACKUP = 'backup'
@@ -17,20 +17,20 @@ export const BackupModel = defineWithDefaultsAutoPk<Backup>(
         entity: {
             type: DataTypes.STRING
         },
-        entityId: {
+        entity_id: {
             type: DataTypes.INTEGER
         },
-        requestedBy: {
+        requested_by: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'user_profile',
                 key: 'id'
             }
         },
-        requestedAt: {
+        requested_at: {
             type: DataTypes.DATE
         },
-        expiresAt: {
+        expires_at: {
             type: DataTypes.DATE,
             allowNull: true // this will be set when the url is created in the cron job
         },
@@ -45,5 +45,9 @@ export const BackupModel = defineWithDefaultsAutoPk<Backup>(
             type: DataTypes.INTEGER,
             allowNull: true
         }
+    },
+    {
+        tableName: TABLE_BACKUP,
+        timestamps: false
     }
 )

@@ -9,10 +9,10 @@ export type BackupType = 'project'
 export interface Backup {
     id: number
     entity: BackupType
-    entityId: number
-    requestedBy: number
-    requestedAt: Date
-    expiresAt?: Date
+    entity_id: number
+    requested_by: number
+    requested_at: Date
+    expires_at?: Date
     status: BackupStatus
     url?: string
     size?: number // number of MBs

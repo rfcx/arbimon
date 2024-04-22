@@ -19,7 +19,7 @@ export const createBackupRequestHandler: Handler<CreateBackupResponse, unknown, 
         throw BioMissingPathParamError('entity')
     }
 
-    if (!(entityType in ALLOWED_BACKUP_TYPES)) {
+    if (!(ALLOWED_BACKUP_TYPES.includes(entityType))) {
         throw BioInvalidPathParamError({ entity: entityType })
     }
 
@@ -43,6 +43,10 @@ export const createBackupRequestHandler: Handler<CreateBackupResponse, unknown, 
     const backup = await createBackupRequest(entityType, entityId, userId)
     const success = backup !== undefined
 
+    if (success) {
+        res.statusCode = 201
+    }
+
     return {
         backup,
         success
@@ -58,7 +62,7 @@ export const getBackupRequestsHandler: Handler<GetBackupRequestsResponse, unknow
         throw BioMissingPathParamError('entity')
     }
 
-    if (!(entityType in ALLOWED_BACKUP_TYPES)) {
+    if (!(ALLOWED_BACKUP_TYPES.includes(entityType))) {
         throw BioInvalidPathParamError({ entity: entityType })
     }
 
@@ -79,5 +83,11 @@ export const getBackupRequestsHandler: Handler<GetBackupRequestsResponse, unknow
     }
 
     // Get backup requests
-    return await getBackupRequests(entityType, entityId, userId, { limit, offset })
+    const requests = await getBackupRequests(entityType, entityId, userId, { limit, offset })
+
+    if (requests.length) {
+        res.statusCode = 200
+    }
+
+    return requests
 }

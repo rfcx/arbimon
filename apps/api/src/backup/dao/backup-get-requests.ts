@@ -19,13 +19,13 @@ export const getBackupRequests = async (entity: BackupType, entityId: number, re
     const backupRequests = await Backup.findAll({
         where: {
             entity,
-            entityId,
-            requestedBy
+            entity_id: entityId,
+            requested_by: requestedBy
         },
         limit,
         offset,
-        attributes: ['requestedAt', 'url', 'status', 'expiresAt'],
-        order: [['requestedAt', 'DESC']],
+        attributes: ['requested_at', 'url', 'status', 'expires_at'],
+        order: [['requested_at', 'DESC']],
         raw: true
     })
 

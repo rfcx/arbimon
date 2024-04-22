@@ -14,11 +14,11 @@ export const createBackupRequest = async (entity: BackupType, entityId: number, 
     const sequelize = getSequelize()
     const { Backup } = ModelRepository.getInstance(sequelize)
 
-    const backup = {
+    const backup: Omit<Backup, 'id' | 'expires_at' | 'size' | 'url'> = {
         entity,
-        entityId,
-        requestedBy: userId,
-        requestedAt: new Date(),
+        entity_id: entityId,
+        requested_by: userId,
+        requested_at: new Date(),
         status: BackupStatus.REQUESTED
     }
 

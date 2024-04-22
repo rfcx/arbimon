@@ -21,11 +21,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            entityId: {
+            entity_id: {
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
-            requestedBy: {
+            requested_by: {
                 type: DataTypes.INTEGER,
                 references: {
                     model: 'user_profile',
@@ -33,11 +33,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
                 },
                 allowNull: false
             },
-            requestedAt: {
+            requested_at: {
                 type: DataTypes.DATE,
                 allowNull: false
             },
-            expiresAt: {
+            expires_at: {
                 type: DataTypes.DATE,
                 allowNull: true // this will be set when the url is created in the cron job
             },
