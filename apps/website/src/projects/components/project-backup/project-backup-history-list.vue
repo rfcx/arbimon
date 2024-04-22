@@ -24,7 +24,7 @@
         class="border-b-1 border-util-gray-03"
       >
         <td class="py-1">
-          {{ item.requestDate }}
+          {{ formattedDate(item.requestDate) }}
         </td>
         <td>
           <a
@@ -64,10 +64,19 @@ const recentBackups = (data: BackupHistory[]): BackupHistory[] => {
   return sortedBackup.slice(0, 3) // maximum 3 items
 }
 
+// Date utility
+
 const hasExpired = (date: string): boolean => {
   return new Date(date) < new Date()
 }
 
+const formattedDate = (date: string, includedTime = false): string => {
+  return dayjs(date).format(`YYYY-MM-DD ${includedTime ? 'HH:mm' : ''}`)
+}
+
+// Text utility
+
+// Return the status name based on the status
 const getName = (status: string, expiredDate?: string): string => {
   const isExpired = expiredDate ? hasExpired(expiredDate) : false
   switch (status) {
@@ -79,12 +88,9 @@ const getName = (status: string, expiredDate?: string): string => {
   }
 }
 
+// Return the expired date based on the status
 const getExpiredDate = (status: string, expiredDate?: string): string => {
   if (['requested', 'processing'].includes(status) || expiredDate === undefined) return 'n/a'
-  return formattedDate(expiredDate)
-}
-
-const formattedDate = (date: string): string => {
-  return dayjs(date).format('YYYY-MM-DD HH:mm')
+  return formattedDate(expiredDate, true)
 }
 </script>
