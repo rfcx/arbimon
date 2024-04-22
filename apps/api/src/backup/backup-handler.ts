@@ -5,7 +5,7 @@ import type {
 import { type GetBackupRequestsQuery, type GetBackupRequestsResponse } from '@rfcx-bio/common/api-bio/backup/backup-get'
 
 import { createBackupRequest } from '@/backup/dao/backup-create-dao'
-import { getBackupRequests } from '@/backup/dao/backup-get-requests'
+import { getBackupRequests, getRequestWithinTimeframe } from '@/backup/dao/backup-get-requests'
 import { ALLOWED_BACKUP_TYPES, BackupEntityGetters } from '@/backup/types'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioMissingPathParamError, BioPublicError } from '~/errors'
@@ -37,6 +37,12 @@ export const createBackupRequestHandler: Handler<CreateBackupResponse, unknown, 
 
     if (entity === undefined || entity === null) {
         throw new BioPublicError(`${String(entityType)} with id ${Number(entityId)} not found`, 404)
+    }
+
+    const existingRequest = await getRequestWithinTimeframe(entityType, entityId, userId)
+
+    if (existingRequest !== null) {
+        throw new BioPublicError(`A backup request for this ${String(entityType)} already exists`, 500)
     }
 
     // Create and return backup request

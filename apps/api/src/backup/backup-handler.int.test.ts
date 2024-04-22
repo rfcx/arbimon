@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import { afterAll, beforeAll, describe, expect, test } from 'vitest'
 
 import { backupsRoute } from '@rfcx-bio/common/api-bio/backup/backups'
@@ -9,23 +10,32 @@ import { makeProject } from '@rfcx-bio/testing/model-builders/project-model-buil
 import { routesBackup } from '@/backup/index'
 import { GET, POST } from '~/api-helpers/types'
 
-const { LocationProject, LocationProjectUserRole } = modelRepositoryWithElevatedPermissions
+const { LocationProject, LocationProjectUserRole, Backup } = modelRepositoryWithElevatedPermissions
 
 const ROUTE = backupsRoute
-const userId = 9001
-const projectId = 2791456
+const ownerId = 9001
+const userId = 9002
+const projectId1 = 2791456
+const projectId2 = 2791457
 
 const BACKUP_GET_PROPS = ['requested_at', 'url', 'status', 'expires_at']
 
 beforeAll(async () => {
-    const project = makeProject(projectId, 'Arctic foxes in Iceland')
-    await LocationProject.create(project)
-    await LocationProjectUserRole.create({ locationProjectId: projectId, userId, roleId: getIdByRole('owner'), ranking: 0 })
+    const project1 = makeProject(projectId1, 'Arctic foxes in Iceland')
+    const project2 = makeProject(projectId2, 'Belugas in Norway')
+    await LocationProject.bulkCreate([project1, project2])
+    await LocationProjectUserRole.create({ locationProjectId: projectId1, userId: ownerId, roleId: getIdByRole('owner'), ranking: 0 })
+    await LocationProjectUserRole.create({ locationProjectId: projectId1, userId, roleId: getIdByRole('user'), ranking: 0 })
+    await LocationProjectUserRole.create({ locationProjectId: projectId2, userId: ownerId, roleId: getIdByRole('owner'), ranking: 0 })
 })
 
 afterAll(async () => {
-    await LocationProject.destroy({ where: { id: projectId }, force: true })
-    await LocationProjectUserRole.destroy({ where: { locationProjectId: projectId, userId }, force: true })
+    await LocationProjectUserRole.destroy({ where: { locationProjectId: projectId1, userId: ownerId }, force: true })
+    await LocationProjectUserRole.destroy({ where: { locationProjectId: projectId1, userId }, force: true })
+    await LocationProjectUserRole.destroy({ where: { locationProjectId: projectId2, userId: ownerId }, force: true })
+    await Backup.destroy({ where: { entity: 'project', entity_id: { [Op.in]: [projectId1, projectId2] } }, force: true })
+    await LocationProject.destroy({ where: { id: projectId1 }, force: true })
+    await LocationProject.destroy({ where: { id: projectId2 }, force: true })
 })
 
 describe(`POST ${backupsRoute}`, async () => {
@@ -42,10 +52,10 @@ describe(`POST ${backupsRoute}`, async () => {
 
     test('creates a project backup request successfully', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: 9001 })
+        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: ownerId })
         const backup = {
             entity: 'project',
-            entityId: 2791456
+            entityId: projectId1
         }
 
         // Act
@@ -58,12 +68,13 @@ describe(`POST ${backupsRoute}`, async () => {
         // Assert
         expect(response.statusCode).toBe(201)
     })
+
     test('created and returned backup request contains the correct information', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: 9001 })
+        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: ownerId })
         const backup = {
             entity: 'project',
-            entityId: 2791456
+            entityId: projectId2
         }
 
         // Act
@@ -78,16 +89,35 @@ describe(`POST ${backupsRoute}`, async () => {
         const result = JSON.parse(response.body)
         expect(result.backup).toBeDefined()
         expect(result.backup.entity).toBe('project')
-        expect(result.backup.entity_id).toBe(2791456)
-        expect(result.backup.requested_by).toBe(9001)
+        expect(result.backup.entity_id).toBe(projectId2)
+        expect(result.backup.requested_by).toBe(ownerId)
+    })
+
+    test('backup cannot be requested within 7 days after the last request', async () => {
+        // Arrange
+        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: ownerId })
+        const backup = {
+            entity: 'project',
+            entityId: projectId1
+        }
+
+        // Act
+        const response = await app.inject({
+            method: POST,
+            url: ROUTE,
+            payload: backup
+        })
+
+        // Assert
+        expect(response.statusCode).toBe(500)
     })
 
     test('returns 400 when an invalid entity type is sent', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: 9001 })
+        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: ownerId })
         const backup = {
             entity: 'asdf',
-            entityId: 2791456
+            entityId: projectId1
         }
 
         // Act
@@ -100,9 +130,10 @@ describe(`POST ${backupsRoute}`, async () => {
         // Assert
         expect(response.statusCode).toBe(400)
     })
+
     test('returns 404 when entity doesn\'t exist', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: 9001 })
+        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: ownerId })
         const backup = {
             entity: 'project',
             entityId: 1002910101
@@ -118,15 +149,31 @@ describe(`POST ${backupsRoute}`, async () => {
         // Assert
         expect(response.statusCode).toBe(404)
     })
+
     test('non-owner user cannot request a backup', async () => {
-        // TODO
+        // Arrange
+        const app = await makeApp(routesBackup, { projectRole: 'user', userId })
+        const backup = {
+            entity: 'project',
+            entityId: projectId1
+        }
+
+        // Act
+        const response = await app.inject({
+            method: POST,
+            url: ROUTE,
+            payload: backup
+        })
+
+        // Assert
+        expect(response.statusCode).toBe(403)
     })
 })
 
 describe(`GET ${backupsRoute}`, async () => {
     test('returns backup requests', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: 9001 })
+        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: ownerId })
 
         // Act
         const response = await app.inject({
@@ -138,9 +185,10 @@ describe(`GET ${backupsRoute}`, async () => {
         // Assert
         expect(response.statusCode).toBe(200)
     })
+
     test('returned backup requests contain the correct data', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: 9001 })
+        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: ownerId })
 
         // Act
         const response = await app.inject({
@@ -157,7 +205,7 @@ describe(`GET ${backupsRoute}`, async () => {
 
     test('throws 400 when an invalid entity type is sent', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: 9001 })
+        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: ownerId })
 
         // Act
         const response = await app.inject({
@@ -172,7 +220,7 @@ describe(`GET ${backupsRoute}`, async () => {
 
     test('throws 404 when entity doesn\'t exist', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: 9001 })
+        const app = await makeApp(routesBackup, { projectRole: 'owner', userId: ownerId })
 
         // Act
         const response = await app.inject({
@@ -186,6 +234,21 @@ describe(`GET ${backupsRoute}`, async () => {
     })
 
     test('non-owner user cannot fetch backup requests', async () => {
-        // TODO
+        // Arrange
+        const app = await makeApp(routesBackup, { projectRole: 'user', userId })
+        const backup = {
+            entity: 'project',
+            entityId: 2791456
+        }
+
+        // Act
+        const response = await app.inject({
+            method: POST,
+            url: ROUTE,
+            payload: backup
+        })
+
+        // Assert
+        expect(response.statusCode).toBe(403)
     })
 })

@@ -22,5 +22,5 @@ export const createBackupRequest = async (entity: BackupType, entityId: number, 
         status: BackupStatus.REQUESTED
     }
 
-    return Backup.create(backup)
+    return await Backup.create(backup)
 }
