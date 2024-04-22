@@ -141,3 +141,12 @@ export interface CoreUpdateDetectionStatusParams {
   stream_id: string
   start: string
 }
+
+export interface CoreCreateClassifierJobBody {
+  classifier_id: number
+  project_id: string
+  query_streams?: string
+  query_start?: string
+  query_end?: string
+  query_hours?: string
+}

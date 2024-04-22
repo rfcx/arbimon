@@ -20,6 +20,7 @@ import {
   type CoreClassifierJobClassificationSummary,
   type CoreClassifierJobInformation,
   type CoreClassifierJobTotalDetections,
+  type CoreCreateClassifierJobBody,
   type CoreDetection,
   type CoreGetClassifiersQueryParams,
   type CoreGetDetectionsQueryParams,
@@ -421,6 +422,23 @@ export async function patchUserProfileOnCore (token: string, email: string, data
       },
       data
     })
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function createClassifierJob (token: string, data: CoreCreateClassifierJobBody): Promise<string | undefined> {
+  try {
+    const response = await axios.request({
+      method: 'POST',
+      url: `${CORE_API_BASE_URL}/classifier-jobs`,
+      headers: {
+        authorization: token
+      },
+      data
+    })
+
+    return response.headers?.location
   } catch (e) {
     return unpackAxiosError(e)
   }
