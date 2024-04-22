@@ -5,7 +5,7 @@
         Project settings
       </h1>
       <ReadOnlyBanner v-if="!store.userIsAdminProjectMember" />
-      <div class="grid lg:(grid-cols-2 gap-10)">
+      <div class="grid gap-10 lg:grid-cols-2">
         <div>
           <h5>
             Project information
@@ -262,7 +262,7 @@ const updateSettings = () => {
     dateEnd: onGoing.value ? null : dateEnd.value ? dateEnd.value : null
   }
   if (isPublic.value !== settings.value?.isPublic) {
-    update.hidden = isPublic.value
+    update.hidden = !isPublic.value
   }
   if (newSummary.value !== settings.value?.summary) {
     update.summary = newSummary.value

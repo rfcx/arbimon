@@ -6,7 +6,7 @@ export const makeProject = (id: number, name: string, status: ProjectStatus = 'p
     id,
     idCore: id.toString(),
     idArbimon: id,
-    slug: name.toLowerCase().replace(' ', '-'),
+    slug: name.toLowerCase().replaceAll(' ', '-'),
     name,
     status,
     statusUpdatedAt: new Date(),

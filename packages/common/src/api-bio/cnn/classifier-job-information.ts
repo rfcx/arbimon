@@ -45,7 +45,8 @@ export interface GetClassifierJobInformationParams {
 export type UpdateClassifierJobParams = GetClassifierJobInformationParams
 
 export interface UpdateClassifierJobBody {
-  status: EligibleUpdateClassifierJobStatus
+  status?: EligibleUpdateClassifierJobStatus
+  minutes_total?: number
 }
 
 // Route
