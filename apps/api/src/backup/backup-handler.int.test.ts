@@ -136,7 +136,7 @@ describe(`POST ${backupsRoute}`, async () => {
         const app = await makeApp(routesBackup, { projectRole: 'owner', userId: ownerId })
         const backup = {
             entity: 'project',
-            entityId: 1002910101
+            entityId: 10029101
         }
 
         // Act
@@ -236,16 +236,12 @@ describe(`GET ${backupsRoute}`, async () => {
     test('non-owner user cannot fetch backup requests', async () => {
         // Arrange
         const app = await makeApp(routesBackup, { projectRole: 'user', userId })
-        const backup = {
-            entity: 'project',
-            entityId: 2791456
-        }
 
         // Act
         const response = await app.inject({
-            method: POST,
+            method: GET,
             url: ROUTE,
-            payload: backup
+            query: { entity: 'project', entityId: '2791456' }
         })
 
         // Assert
