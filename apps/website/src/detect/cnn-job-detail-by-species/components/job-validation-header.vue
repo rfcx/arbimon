@@ -10,8 +10,8 @@
           {{ speciesName || '' }}
         </span>
       </div>
-      <div class="flex items-center justify-between text-insight pt-10">
-        <div class="flex items-center gap-x-3">
+      <div class="grid items-center justify-between text-insight pt-10 w-full sm:flex ">
+        <div class="grid grid-row gap-2 items-center gap-x-3 sm:flex ">
           <span class="text-2xl font-display">Filters:</span>
           <JobValidationFilters
             @emit-min-confidence="toggleMinConfidence"
