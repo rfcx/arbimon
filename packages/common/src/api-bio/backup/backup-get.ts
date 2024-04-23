@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 
-import { type Backup, type BackupType } from '@/dao/types/backup'
+import { type Backup, type BackupType } from '../../dao/types/backup'
 import { backupsRoute } from './backups'
 
 export interface GetBackupRequestsQuery {
