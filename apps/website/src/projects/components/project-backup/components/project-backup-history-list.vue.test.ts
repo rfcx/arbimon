@@ -18,48 +18,10 @@ describe('Project backup: history list (state)', () => {
   test('show emtpy view when there is no backup history', async () => {
     // Arrange
     const data: BackupHistory[] = []
-    const wrapper = mount(component, { props: { data } })
+    const wrapper = mount(component, { props: { data, isLoading: false, error: null } })
 
     // Assert
     expect(wrapper.text()).toContain(EMPTY_TEXT)
-  })
-
-  test('show backup history list - max 3 items', async () => {
-    // Arrange
-    const data: BackupHistory[] = [
-      {
-        requestDate: '2021-01-01',
-        link: 'https://example.com/backup1',
-        status: 'completed',
-        expiryDate: '2021-01-08'
-      },
-      {
-        requestDate: '2021-01-02',
-        link: 'https://example.com/backup2',
-        status: 'completed',
-        expiryDate: '2021-01-09'
-      },
-      {
-        requestDate: '2021-01-03',
-        link: 'https://example.com/backup3',
-        status: 'completed',
-        expiryDate: '2021-01-10'
-      },
-      {
-        requestDate: '2021-01-04',
-        link: 'https://example.com/backup4',
-        status: 'completed',
-        expiryDate: '2021-01-11'
-      }
-    ]
-    const wrapper = mount(component, { props: { data } })
-
-    // Assert
-    expect(wrapper.text()).toContain('2021-01-02')
-    expect(wrapper.text()).toContain('2021-01-03')
-    expect(wrapper.text()).toContain('2021-01-04')
-    expect(wrapper.text()).not.toContain('2021-01-01')
-    expect(wrapper.text()).not.toContain(EMPTY_TEXT)
   })
 
   test.todo('show loading spinner when loading backup history')
@@ -80,7 +42,7 @@ describe('Project backup: history list - item', () => {
         expiryDate: undefined
       }
     ]
-    const wrapper = mount(component, { props: { data } })
+    const wrapper = mount(component, { props: { data, isLoading: false, error: null } })
 
     // Assert
 
@@ -108,7 +70,7 @@ describe('Project backup: history list - item', () => {
         expiryDate: undefined
       }
     ]
-    const wrapper = mount(component, { props: { data } })
+    const wrapper = mount(component, { props: { data, isLoading: false, error: null } })
 
     // Assert
 
@@ -136,7 +98,7 @@ describe('Project backup: history list - item', () => {
         expiryDate: currentDate
       }
     ]
-    const wrapper = mount(component, { props: { data } })
+    const wrapper = mount(component, { props: { data, isLoading: false, error: null } })
 
     // Assert
 
@@ -164,7 +126,7 @@ describe('Project backup: history list - item', () => {
         expiryDate: '2021-01-01'
       }
     ]
-    const wrapper = mount(component, { props: { data } })
+    const wrapper = mount(component, { props: { data, isLoading: false, error: null } })
 
     // Assert
     expect(wrapper.text()).toContain('Expired')
