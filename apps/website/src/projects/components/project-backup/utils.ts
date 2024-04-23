@@ -1,3 +1,3 @@
-export const hasExpired = (date: string): boolean => {
-  return new Date(date) < new Date()
+export const hasExpired = (date: Date): boolean => {
+  return date < new Date()
 }

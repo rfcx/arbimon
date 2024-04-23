@@ -40,16 +40,16 @@
       <tr
         v-for="item in data"
         v-else
-        :key="item.requestDate"
+        :key="item.id"
         class="border-b-1 border-util-gray-03"
       >
         <td class="py-1">
-          {{ formattedDate(item.requestDate) }}
+          {{ formattedDate(item.requestedAt) }}
         </td>
         <td>
           <a
-            v-if="item.status === 'available' && (item.expiryDate ? !hasExpired(item.expiryDate) : true)"
-            :href="item.link"
+            v-if="item.status === 'available' && item.url && (item.expiresAt ? !hasExpired(item.expiresAt) : true)"
+            :href="item.url"
             class="text-frequency"
           >Download link</a>
           <span
@@ -61,11 +61,11 @@
         <td>
           <backup-status
             :status="item.status"
-            :expired-date="item.expiryDate"
+            :expired-date="item.expiresAt"
           />
         </td>
         <td id="expired-date-text">
-          {{ getExpiredDate(item.status, item.expiryDate ) }}
+          {{ getExpiredDate(item.status, item.expiresAt ) }}
         </td>
       </tr>
     </table>
@@ -75,25 +75,26 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
-import { type BackupHistory } from '../types'
+import type { Backup } from '@rfcx-bio/common/dao/types/backup'
+
 import { hasExpired } from '../utils'
 import BackupStatus from './backup-status.vue'
 
 defineProps<{
-  data: BackupHistory[]
+  data: Backup[]
   isLoading: boolean
   error: Error | null
 }>()
 // Date utility
 
-const formattedDate = (date: string, includedTime = false): string => {
+const formattedDate = (date: Date, includedTime = false): string => {
   return dayjs(date).format(`YYYY-MM-DD ${includedTime ? 'HH:mm' : ''}`)
 }
 
 // Text utility
 
 // Return the expired date based on the status
-const getExpiredDate = (status: string, expiredDate?: string): string => {
+const getExpiredDate = (status: string, expiredDate?: Date): string => {
   if (['requested', 'processing'].includes(status) || expiredDate === undefined) return 'n/a'
   return formattedDate(expiredDate, true)
 }

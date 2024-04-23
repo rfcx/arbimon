@@ -14,5 +14,5 @@ export type GetBackupRequestsResponse = Backup[]
 
 export const apiBioGetBackupRequests = async (apiClient: AxiosInstance, query: GetBackupRequestsQuery): Promise<GetBackupRequestsResponse> => {
     const { entity, entityId, limit, offset } = query
-    return await apiClient.get(backupsRoute, { params: { entity, entityId, limit, offset } })
+    return (await apiClient.get(backupsRoute, { params: { entity, entityId, limit, offset } })).data
 }

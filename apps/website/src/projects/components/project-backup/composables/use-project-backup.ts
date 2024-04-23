@@ -2,9 +2,10 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import { type AxiosInstance } from 'axios'
 
 import { type CreateBackupBody, type CreateBackupResponse, apiBioPostBackup } from '@rfcx-bio/common/api-bio/backup/backup-create'
-import { type GetBackupRequestsResponse, apiBioGetBackupRequests } from '@rfcx-bio/common/api-bio/backup/backup-get'
+import { apiBioGetBackupRequests } from '@rfcx-bio/common/api-bio/backup/backup-get'
+import { type Backup } from '@rfcx-bio/common/dao/types/backup'
 
-export const useGetBackup = (apiClient: AxiosInstance, projectId: number): UseQueryReturnType<GetBackupRequestsResponse, Error> => {
+export const useGetBackup = (apiClient: AxiosInstance, projectId: number): UseQueryReturnType<Backup[], Error> => {
   return useQuery({
     queryKey: ['get-backup'],
     queryFn: async () => await apiBioGetBackupRequests(apiClient, { entity: 'project', entityId: projectId, limit: 3, offset: 0 })

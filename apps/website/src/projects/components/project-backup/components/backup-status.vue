@@ -45,11 +45,11 @@ enum BackupStatus {
 
 const props = defineProps<{
   status: string
-  expiredDate?: string
+  expiredDate?: Date
 }>()
 
 // Return the status name based on the status
-const getName = (status: string, expiredDate?: string): string => {
+const getName = (status: string, expiredDate?: Date): string => {
   const isExpired = expiredDate ? hasExpired(expiredDate) : false
   switch (status) {
     case 'available': return isExpired ? BackupStatus.EXPIRED : BackupStatus.COMPLETED

@@ -13,11 +13,18 @@
           class="btn btn-medium mt-6"
           :class="!isAllowedToRequestNewBackup ? 'cursor-not-allowed btn-disabled' : 'btn-secondary'"
           type="button"
-          :disabled="!isAllowedToRequestNewBackup"
+          :disabled="!isAllowedToRequestNewBackup || isPending"
           :title="!isAllowedToRequestNewBackup ? TEXT_BACKUP_LIMIT : ''"
           @click="requestNewBackup"
         >
-          Request backup <icon-custom-ic-export class="ml-2 inline-flex" />
+          <span>Request backup</span>
+          <icon-custom-ic-loading
+            v-if="isPending"
+            class="ml-2 w-4 inline-flex"
+          />
+          <icon-custom-ic-export
+            class="ml-2 inline-flex"
+          />
         </button>
         <span
           v-if="!isAllowedToRequestNewBackup"
@@ -26,14 +33,14 @@
           {{ TEXT_BACKUP_LIMIT }}
         </span>
         <span
-          v-if="createErrorMessage"
+          v-else-if="createErrorMessage"
           class="ml-4 text-xs text-danger"
         >
           {{ createErrorMessage }}
         </span>
       </div>
       <project-backup-history
-        :data="recentBackups(dataMock)"
+        :data="data ?? []"
         :is-loading="isLoading"
         :error="error"
       />
@@ -49,39 +56,20 @@ import { apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 import ProjectBackupHistory from './components/project-backup-history-list.vue'
 import { useCreateBackup, useGetBackup } from './composables/use-project-backup'
-import { type BackupHistory } from './types'
 
 const TIME_TO_EXPIRE = 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
 const TEXT_BACKUP_LIMIT = 'You can request a backup every 7 days'
 
 const store = useStore()
 
-const dataMock = ref<BackupHistory[]>([
-  { requestDate: '2023-04-23', link: '#', status: 'available', expiryDate: '2021-09-08T04:00:00z' },
-  { requestDate: '2021-09-25', link: '#', status: 'requested', expiryDate: undefined },
-  { requestDate: '2021-09-01', link: '#', status: 'processing', expiryDate: undefined }
-])
-
-// filter the recent 3 backups
-const recentBackups = (data: BackupHistory[]): BackupHistory[] => {
-  const ascSort = (a: BackupHistory, b: BackupHistory) => {
-    return new Date(a.requestDate).getTime() - new Date(b.requestDate).getTime()
-  }
-  const dscSort = (a: BackupHistory, b: BackupHistory) => {
-    return new Date(b.requestDate).getTime() - new Date(a.requestDate).getTime()
-  }
-  const backupRecentDSC = data.sort(dscSort)
-  return backupRecentDSC.slice(0, 3) // maximum 3 items
-    .sort(ascSort)
-}
-
 const isAllowedToRequestNewBackup = computed((): boolean => {
-  const requestedDates = dataMock.value
-    .map((item) => item.requestDate)
+  if (!data.value || data.value.length === 0) return true
+  const requestedDates = data.value
+    .map((item) => item.requestedAt)
     .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
-  const recendRequestedDate = requestedDates.length > 0 ? requestedDates[0] : undefined
-  if (!recendRequestedDate) return true
-  const diff = new Date().getTime() - new Date(recendRequestedDate).getTime()
+  const recentRequestedDate = requestedDates.length > 0 ? requestedDates[0] : undefined
+  if (recentRequestedDate === undefined) return true
+  const diff = new Date().getTime() - new Date(recentRequestedDate).getTime()
   return diff > TIME_TO_EXPIRE
 })
 
@@ -92,7 +80,7 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { data, error, isLoading, refetch: refetchList } = useGetBackup(apiClientBio, store.project?.id ?? -1)
 
 // API - POST request backup (loading state, success, error)
-const { mutate } = useCreateBackup(apiClientBio)
+const { mutate, isPending } = useCreateBackup(apiClientBio)
 const createErrorMessage = ref<string | undefined>(undefined)
 
 const requestNewBackup = () => {

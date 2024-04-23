@@ -2,11 +2,25 @@ import { cleanup } from '@testing-library/vue'
 import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, test } from 'vitest'
 
-import { type BackupHistory } from '../types'
+import { type Backup, BackupStatus } from '@rfcx-bio/common/dao/types/backup'
+
 import component from './project-backup-history-list.vue'
 
 const NOT_AVAILABLE_TEXT = 'Not yet available'
 const EMPTY_TEXT = 'Looks like you haven’t set up any backups yet.'
+
+const createNewBackup = (status: BackupStatus, requestedAt: string, expiresAt?: string, link?: string): Backup => ({
+  // dafault values
+  id: 1,
+  entity: 'project',
+  entityId: 1,
+  requestedBy: 1,
+  // custom values
+  requestedAt: new Date(requestedAt),
+  status,
+  url: link,
+  expiresAt: expiresAt ? new Date(expiresAt) : undefined
+})
 
 const currentDate = new Date(Date.now() + 30 * 60 * 1000).toISOString() // 30 minutes from now
 
@@ -17,7 +31,7 @@ describe('Project backup: history list (state)', () => {
 
   test('show emtpy view when there is no backup history', async () => {
     // Arrange
-    const data: BackupHistory[] = []
+    const data: Backup[] = []
     const wrapper = mount(component, { props: { data, isLoading: false, error: null } })
 
     // Assert
@@ -34,13 +48,8 @@ describe('Project backup: history list - item', () => {
   })
   test('requested - show requested status, no expiry date, no link', async () => {
     // Arrange
-    const data: BackupHistory[] = [
-      {
-        requestDate: '2021-01-01',
-        status: 'requested',
-        link: 'https://example.com/backup3',
-        expiryDate: undefined
-      }
+    const data: Backup[] = [
+      createNewBackup(BackupStatus.REQUESTED, '2021-01-01')
     ]
     const wrapper = mount(component, { props: { data, isLoading: false, error: null } })
 
@@ -62,13 +71,8 @@ describe('Project backup: history list - item', () => {
   })
   test('in progress - show in progress status, no expiry date, no link', async () => {
     // Arrange
-    const data: BackupHistory[] = [
-      {
-        requestDate: '2021-01-01',
-        status: 'processing',
-        link: 'https://example.com/backup3',
-        expiryDate: undefined
-      }
+    const data: Backup[] = [
+      createNewBackup(BackupStatus.PROCESSING, '2021-01-01')
     ]
     const wrapper = mount(component, { props: { data, isLoading: false, error: null } })
 
@@ -90,13 +94,8 @@ describe('Project backup: history list - item', () => {
   test('completed - show completed status, expiry date, download link', async () => {
     // Arrange
     const link = 'https://example.com/backup1'
-    const data: BackupHistory[] = [
-      {
-        requestDate: '2021-01-01',
-        status: 'available',
-        link,
-        expiryDate: currentDate
-      }
+    const data: Backup[] = [
+      createNewBackup(BackupStatus.AVAILABLE, '2021-01-01', currentDate, link)
     ]
     const wrapper = mount(component, { props: { data, isLoading: false, error: null } })
 
@@ -118,13 +117,8 @@ describe('Project backup: history list - item', () => {
   })
   test('expired - show expired status, no expiry date, no link', async () => {
     // Arrange
-    const data: BackupHistory[] = [
-      {
-        requestDate: '2021-01-01',
-        status: 'available',
-        link: 'https://example.com/backup1',
-        expiryDate: '2021-01-01'
-      }
+    const data: Backup[] = [
+      createNewBackup(BackupStatus.AVAILABLE, '2021-01-01', '2021-01-01', 'https://example.com/backup1')
     ]
     const wrapper = mount(component, { props: { data, isLoading: false, error: null } })
 
