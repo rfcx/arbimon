@@ -23,8 +23,8 @@ export const getBackupRequests = async (entity: BackupType, entityId: number, re
     const backupRequests = await Backup.findAll({
         where: {
             entity,
-            entity_id: entityId,
-            requested_by: requestedBy
+            entityId,
+            requestedBy
         },
         limit,
         offset,
@@ -51,9 +51,9 @@ export const getRequestWithinTimeframe = async (entity: BackupType, entityId: nu
     return await Backup.findOne({
         where: {
             entity,
-            entity_id: entityId,
-            requested_by: requestedBy,
-            requested_at: {
+            entityId,
+            requestedBy,
+            requestedAt: {
                 [Op.gte]: sequelize.literal(`NOW() - INTERVAL '${timeframe}'`)
             }
         }

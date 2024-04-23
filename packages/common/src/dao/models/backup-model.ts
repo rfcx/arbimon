@@ -17,20 +17,20 @@ export const BackupModel = defineWithDefaultsAutoPk<Backup>(
         entity: {
             type: DataTypes.STRING
         },
-        entity_id: {
+        entityId: {
             type: DataTypes.INTEGER
         },
-        requested_by: {
+        requestedBy: {
             type: DataTypes.INTEGER,
             references: {
                 model: 'user_profile',
                 key: 'id'
             }
         },
-        requested_at: {
+        requestedAt: {
             type: DataTypes.DATE
         },
-        expires_at: {
+        expiresAt: {
             type: DataTypes.DATE,
             allowNull: true // this will be set when the url is created in the cron job
         },
