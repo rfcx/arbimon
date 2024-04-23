@@ -18,7 +18,7 @@ const userId = 9002
 const projectId1 = 2791456
 const projectId2 = 2791457
 
-const BACKUP_GET_PROPS = ['requested_at', 'url', 'status', 'expires_at']
+const BACKUP_GET_PROPS = ['requestedAt', 'url', 'status', 'expiresAt']
 
 beforeAll(async () => {
     const project1 = makeProject(projectId1, 'Arctic foxes in Iceland')
