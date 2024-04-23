@@ -10,7 +10,7 @@
         </p>
         <button
           v-if="!isLoading"
-          class="btn mt-6"
+          class="btn btn-medium mt-6"
           :class="!isAllowedToRequestNewBackup ? 'cursor-not-allowed btn-disabled' : 'btn-secondary'"
           type="button"
           :disabled="!isAllowedToRequestNewBackup"
