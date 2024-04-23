@@ -182,6 +182,6 @@ export default defineConfig({
     'navbar-menu-item': 'mx-2',
     // input
     'input-field': 'p-2 w-full text-base border border-util-gray-03 rounded-md dark:(bg-pitch text-insight placeholder:text-util-gray-01) focus:(border-frequency ring-frequency)',
-    'search-input': 'input-field border-insight'
+    'search-input': 'input-field border-cloud'
   }
 })

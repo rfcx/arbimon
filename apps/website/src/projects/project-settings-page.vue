@@ -50,8 +50,10 @@
             :is-create-project="false"
             @emit-project-listed="toggleListedProject"
           />
-          <hr class="border-util-gray-03 my-6">
-          <project-backup v-if="toggles?.projectBackup === true && store.project?.role === 'owner'" />
+          <template v-if="toggles?.projectBackup === true && store.project?.role === 'owner'">
+            <hr class="border-util-gray-03 my-6">
+            <project-backup />
+          </template>
           <hr class="border-util-gray-03 my-6">
           <project-delete
             v-if="store.project?.role === 'owner'"
