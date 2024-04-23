@@ -6,11 +6,30 @@
         <th class="py-2">
           Request date
         </th>
-        <th>Link</th>
+        <th class="min-w-20">
+          Link
+        </th>
         <th>Status</th>
         <th>Link expiry date</th>
       </tr>
-      <tr v-if="data.length === 0">
+      <tr v-if="isLoading">
+        <td
+          v-for="i in 4"
+          :key="i"
+          class="py-4"
+        >
+          <div class="w-10/12 h-4 loading-shimmer rounded" />
+        </td>
+      </tr>
+      <tr v-else-if="error">
+        <td
+          colspan="4"
+          class="py-4"
+        >
+          {{ error }}
+        </td>
+      </tr>
+      <tr v-else-if="data.length === 0">
         <td
           colspan="4"
           class="py-4"
@@ -20,6 +39,7 @@
       </tr>
       <tr
         v-for="item in data"
+        v-else
         :key="item.requestDate"
         class="border-b-1 border-util-gray-03"
       >
@@ -61,6 +81,8 @@ import BackupStatus from './backup-status.vue'
 
 defineProps<{
   data: BackupHistory[]
+  isLoading: boolean
+  error: Error | null
 }>()
 // Date utility
 

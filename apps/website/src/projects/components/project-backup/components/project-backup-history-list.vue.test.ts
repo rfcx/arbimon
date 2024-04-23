@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, test } from 'vitest'
 
 import component from './project-backup-history-list.vue'
-import { type BackupHistory } from './types'
+import { type BackupHistory } from '../types'
 
 const NOT_AVAILABLE_TEXT = 'Not yet available'
 const EMPTY_TEXT = 'Looks like you haven’t set up any backups yet.'

@@ -16,18 +16,29 @@
           :title="!isAllowedToRequestNewBackup ? 'You can request a backup every 7 days' : ''"
         >
           Request backup <icon-custom-ic-export class="ml-2 inline-flex" />
+          {{ data }}
         </button>
       </div>
-      <project-backup-history :data="recentBackups(dataMock)" />
+      <project-backup-history
+        :data="recentBackups(dataMock)"
+        :is-loading="isLoading"
+        :error="error"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { type AxiosInstance } from 'axios'
+import { computed, inject, ref } from 'vue'
 
+import { apiClientKey } from '@/globals'
+import { useStore } from '~/store'
 import ProjectBackupHistory from './components/project-backup-history-list.vue'
+import { useGetBackup } from './composables/use-project-backup'
 import { type BackupHistory } from './types'
+
+const store = useStore()
 
 const date = new Date(Date.now() + 30 * 60 * 1000).toISOString()
 
@@ -64,5 +75,7 @@ const isAllowedToRequestNewBackup = computed((): boolean => {
 // TODO: add confirm dialog when the user click to request backup
 // TODO: API call to request backup (loading state, success, error)
 // TODO: API call to get backup history (loading state, success, error)
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+const { data, error, isLoading } = useGetBackup(apiClientBio, store.project?.id ?? -1)
 
 </script>
