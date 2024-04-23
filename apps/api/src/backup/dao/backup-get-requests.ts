@@ -28,8 +28,8 @@ export const getBackupRequests = async (entity: BackupType, entityId: number, re
         },
         limit,
         offset,
-        attributes: ['requested_at', 'url', 'status', 'expires_at'],
-        order: [['requested_at', 'DESC']],
+        attributes: ['requestedAt', 'url', 'status', 'expiresAt'],
+        order: [['requestedAt', 'DESC']],
         raw: true
     })
 
