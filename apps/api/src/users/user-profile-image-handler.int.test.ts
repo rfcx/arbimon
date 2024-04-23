@@ -1,6 +1,6 @@
 import formAutoContent from 'form-auto-content'
 import { createReadStream } from 'fs'
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 
 import { buildVariantPath } from '@rfcx-bio/common/api-bio/_helpers'
 import { getMetadata } from '@rfcx-bio/common/image'
@@ -31,19 +31,18 @@ const defaultUserToken = {
   email: 'lucy@rfcx.org',
   idAuth0: 'auth0|65dc9f09a5efc15b78525a84',
   firstName: 'Lucy',
-  lastName: 'D'
+  lastName: 'Dimitrova'
 }
 
-const defaultUserProfile = { id: 1, image: existingImage, ...defaultUserToken }
+const defaultUserProfile = { id: 9006, image: existingImage, ...defaultUserToken }
 
 const { UserProfile } = modelRepositoryWithElevatedPermissions
 
-beforeEach(async () => {
-  await UserProfile.create(defaultUserProfile)
-})
-
 afterEach(async () => {
-  await UserProfile.destroy({ where: { id: defaultUserProfile.id } })
+  const profile = await UserProfile.findOne({ where: { id: defaultUserProfile.id } })
+  if (profile !== null) {
+    await profile.update({ image: existingImage })
+  }
 })
 
 describe('PATCH /profile-image', async () => {
@@ -64,7 +63,8 @@ describe('PATCH /profile-image', async () => {
 
     // Assert
     expect(response.statusCode).toBe(204)
-    const profile = await UserProfile.findOne({ where: { email: defaultUserProfile.email } })
+    const profile = await UserProfile.findOne({ where: { id: defaultUserProfile.id } })
+
     expect(profile?.image).not.toBe(existingImage)
     const file = await storageClient.getObject(profile?.image ?? '') as Buffer
     expect(file.byteLength).toBeGreaterThan(1000)
@@ -94,7 +94,7 @@ describe('PATCH /profile-image', async () => {
     expect(file).toBeDefined()
   })
 
-  test.skip('thumbnail image has correct dimensions', async () => {
+  test('thumbnail image has correct dimensions', async () => {
     // Arrange
     const app = await makeApp(routesUserProfile, { userId: defaultUserProfile.id, userToken: defaultUserToken })
     const form = formAutoContent({

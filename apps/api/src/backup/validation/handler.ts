@@ -30,7 +30,7 @@ export const validationHandler: Middleware<void> = async (req): Promise<void> =>
 
     // Validate entity data
     if (method !== undefined) {
-        const entityData = payload[String(method)]
+        const entityData = payload[String(method)] ?? {}
         await validateRequest(entityData, userId)
     }
 }
@@ -50,7 +50,7 @@ const validateRequest = async (data: EntityData, userId: number): Promise<void> 
         throw BioMissingPathParamError('entityId')
     }
 
-    // Check if backup entity type exists
+    // Check if entity record exists
     const entityGetter = BackupEntityGetters[entityType]
     const entity = await entityGetter(entityId)
 
