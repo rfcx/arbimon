@@ -4,9 +4,9 @@ import { RiskRatingIucnModel } from '@rfcx-bio/common/dao/models/risk-rating-iuc
 import { type TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
 import { getSequentially } from '@rfcx-bio/utils/async'
 
-import { getIucnSpecies } from '@/sync/_refactor/input-iucn/iucn-species'
-import { getIucnSpeciesNarrative } from '@/sync/_refactor/input-iucn/iucn-species-narrative'
-import { writeIucnSpeciesDataToPostgres } from '@/sync/_refactor/output-bio-db/taxon-species-iucn'
+import { getIucnSpecies } from '@/ingest/_refactor/input-iucn/iucn-species'
+import { getIucnSpeciesNarrative } from '@/ingest/_refactor/input-iucn/iucn-species-narrative'
+import { writeIucnSpeciesDataToPostgres } from '@/ingest/_refactor/output-bio-db/taxon-species-iucn'
 
 const DEFAULT_RISK_RATING = -1
 

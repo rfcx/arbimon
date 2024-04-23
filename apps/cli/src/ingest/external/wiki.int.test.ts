@@ -6,7 +6,7 @@ import { truncateEllipsis } from '@rfcx-bio/utils/string'
 
 import { getSequelize } from '@/db/connections'
 import { rawTaxonClasses } from '@/db/seeders/_data/taxon-class'
-import { getWikiSummary } from '@/sync/_refactor/input-wiki'
+import { getWikiSummary } from '@/ingest/_refactor/input-wiki'
 import { syncOnlyMissingWikiSpeciesInfo, syncWikiSpeciesInfo } from './wiki'
 
 const biodiversitySequelize = getSequelize()
@@ -14,7 +14,7 @@ const { TaxonSpecies, TaxonSpeciesIucn, TaxonSpeciesPhoto, TaxonSpeciesWiki } = 
 
 const BIRDS_ID = rawTaxonClasses[3].id
 
-vi.mock('@/sync/_refactor/input-wiki', () => {
+vi.mock('@/ingest/_refactor/input-wiki', () => {
   return {
     getWikiSummary: vi.fn()
   }
