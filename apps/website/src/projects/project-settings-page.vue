@@ -51,6 +51,8 @@
             @emit-project-listed="toggleListedProject"
           />
           <hr class="border-util-gray-03 my-6">
+          <project-backup v-if="toggles?.projectBackup === true && store.project?.role === 'owner'" />
+          <hr class="border-util-gray-03 my-6">
           <project-delete
             v-if="store.project?.role === 'owner'"
             :is-deleting="isDeletingProject"
@@ -58,7 +60,6 @@
             :is-success="isSuccessDeleteProject"
             @emit-project-delete="onEmitProjectDelete"
           />
-          <project-backup v-if="toggles?.projectBackup === true && store.project?.role === 'owner'" />
         </div>
       </div>
       <div
