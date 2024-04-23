@@ -1,3 +1,4 @@
+import { BackupModel, MODEL_BACKUP } from './models/backup-model'
 import { DashboardDetectionByHourModel, MODEL_DASHBOARD_DETECTION_BY_HOUR } from './models/dashboard-detection-by-hour-model'
 import { DashboardRichnessByHourModel, MODEL_DASHBOARD_RICHNESS_BY_HOUR } from './models/dashboard-richness-by-hour-model'
 import { DashboardRichnessByRiskModel, MODEL_DASHBOARD_RICHNESS_BY_RISK } from './models/dashboard-richness-by-risk-model'
@@ -59,6 +60,7 @@ export const modelRegistrations = {
   [MODEL_SYNC_LOG_BY_PROJECT]: [SyncLogByProjectModel, { manyToOne: [MODEL_LOCATION_PROJECT, MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
   [MODEL_SYNC_STATUS]: [SyncStatusModel, { manyToOne: [MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
   [MODEL_USER_PROFILE]: [UserProfileModel, { manyToMany: [{ model: MODEL_LOCATION_PROJECT, through: MODEL_LOCATION_PROJECT_USER_ROLE, foreignKey: 'location_project_id' }] }],
+  [MODEL_BACKUP]: [BackupModel],
 
   // Views
   [MODEL_DASHBOARD_DETECTION_BY_HOUR]: [DashboardDetectionByHourModel],
