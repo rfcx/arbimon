@@ -4,6 +4,7 @@ import fastifyStatic from '@fastify/static'
 import fastify, { type FastifyInstance } from 'fastify'
 import { resolve } from 'path'
 
+import { routesBackup } from '@/backup'
 import { AUTH0_DEFAULT_CONFIG } from '~/auth0/config'
 import { authenticatePlugin } from './_plugins/authenticate'
 import { projectRolePlugin } from './_plugins/project-role'
@@ -62,7 +63,8 @@ export const createApp = async (): Promise<FastifyInstance> => {
     routesSync,
     routesUserProfile,
     routesCnn,
-    routesHealthCheck
+    routesHealthCheck,
+    routesBackup
   ]
 
   routesRegistrations

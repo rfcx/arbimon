@@ -4,10 +4,15 @@
       <button
         id="statusDropdownBtn"
         data-dropdown-toggle="statusDropdownHover"
-        class="flex flex-row items-center justify-between bg-transparent border-1 border-frequency rounded-full text-insight px-5 py-2 w-41"
+        class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-insight px-5 py-2 w-41 hover:bg-moss"
         type="button"
+        :class="{ '!w-max !border-solid': selectedStatus != 'all' }"
       >
-        <span>Validation</span>
+        <span
+          :class="{ 'px-2': selectedStatus != 'all' }"
+        >
+          {{ selectedStatusText }}
+        </span>
         <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />
       </button>
       <div
@@ -57,8 +62,9 @@
       <button
         id="sitesDropdownButtonCNN"
         data-dropdown-toggle="sitesDropdownCNN"
-        class="flex flex-row items-center justify-between bg-transparent border-1 border-frequency rounded-full text-insight px-5 py-2 w-41"
+        class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-insight px-5 py-2 w-41 hover:bg-moss"
         type="button"
+        :class="{ 'border-solid': selectedSites.length > 0}"
       >
         <div class="whitespace-nowrap text-ellipsis overflow-hidden">
           {{ selectedSitesTitle }}
@@ -136,11 +142,16 @@
       <button
         id="groupingDropdownBtn"
         data-dropdown-toggle="groupingDropdownHover"
-        class="grouping-dropdown flex flex-row items-center justify-between bg-transparent border-1 border-frequency rounded-full text-insight px-5 py-2 w-41"
+        class="grouping-dropdown flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-insight px-5 py-2 w-41 hover:bg-moss"
+        :class="{ '!w-max !border-solid': selectedGrouping != null }"
         style="position: static !important; transform: none !important; inset: none !important; margin: 0px;"
         type="button"
       >
-        <span>Groupings</span>
+        <span
+          :class="{ 'px-2': selectedGrouping === 'minConfidence' }"
+        >
+          {{ selectedGroupingText }}
+        </span>
         <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />
       </button>
       <div
@@ -226,7 +237,8 @@ const groupingDetections = (groupBy: string | undefined) => {
 }
 
 const filterDetectionsBySite = () => {
-  detectionsResultFilterBySpeciesStore.filter.siteIds = selectedSites.value
+  const siteIdx = selectedSites.value.includes('all') ? [] : selectedSites.value
+  detectionsResultFilterBySpeciesStore.filter.siteIds = siteIdx
 }
 
 const formatStatus = (status: ArbimonReviewStatus | 'all') => {
@@ -236,18 +248,12 @@ const formatStatus = (status: ArbimonReviewStatus | 'all') => {
 const selectedSitesTitle = computed(() => {
   if (selectedSites.value.length === 0) {
     return 'All sites'
-  }
-
-  if (selectedSites.value.length === detectionsResultFilterBySpeciesStore.sitesFilterOptions.length) {
-    return 'All sites'
-  }
-
-  if (selectedSites.value.length === 1) {
+  } else if (selectedSites.value.length === 1) {
     const taxonClass = detectionsResultFilterBySpeciesStore.sitesFilterOptions.find(site => site.value === selectedSites.value[0])
     return taxonClass?.label
+  } else {
+    return `${selectedSites.value.length} sites`
   }
-
-  return `${selectedSites.value.length} sites`
 })
 
 const onSelectSite = (site: string) => {
@@ -263,6 +269,23 @@ const onSelectSite = (site: string) => {
 const onSelectAllSites = () => {
   selectedSites.value = detectionsResultFilterBySpeciesStore.sitesFilterOptions.map(site => site.value)
 }
+
+const selectedStatusText = computed(() => {
+  if (selectedStatus.value === 'all') {
+    return 'Validation'
+  } else {
+    const selectedOption = detectionsResultFilterBySpeciesStore.validationStatusFilterOptions.find(option => option.value === selectedStatus.value)
+    return selectedOption ? 'Validation: ' + selectedOption.label : 'Validation'
+  }
+})
+
+const selectedGroupingText = computed(() => {
+  if (selectedGrouping.value === 'minConfidence') {
+    return 'Grouping: Minimum confidence'
+  } else {
+    return 'Groupings'
+  }
+})
 
 onMounted(() => {
   initDropdowns()

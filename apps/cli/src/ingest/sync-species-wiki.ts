@@ -1,5 +1,5 @@
 import { getSequelize } from '../db/connections'
-import { syncOnlyMissingWikiSpeciesInfo } from './species-info/wiki'
+import { syncOnlyMissingWikiSpeciesInfo } from './external/wiki'
 
 const main = async (): Promise<void> => {
   const sequelize = getSequelize()

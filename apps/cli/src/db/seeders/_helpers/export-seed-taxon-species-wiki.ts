@@ -2,7 +2,7 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { attributesExceptIdAndDates } from '@rfcx-bio/common/dao/query-helpers/attributes'
 
 import { getSequelize } from '@/db/connections'
-import { toTaxonSpeciesWikiSeed } from '@/sync/_refactor/output-seed-data/to-taxon-species-wiki-seed'
+import { toTaxonSpeciesWikiSeed } from '@/ingest/_refactor/output-seed-data/to-taxon-species-wiki-seed'
 
 const main = async (): Promise<void> => {
   const models = ModelRepository.getInstance(getSequelize())

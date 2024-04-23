@@ -5,8 +5,8 @@ import { getSequentially } from '@rfcx-bio/utils/async'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 import { truncateEllipsis } from '@rfcx-bio/utils/string'
 
-import { getWikiSummary } from '@/sync/_refactor/input-wiki'
-import { writeWikiSpeciesDataToPostgres, writeWikiSpeciesPhotoDataToPostgres } from '@/sync/_refactor/output-bio-db/taxon-species-wiki'
+import { getWikiSummary } from '@/ingest/_refactor/input-wiki'
+import { writeWikiSpeciesDataToPostgres, writeWikiSpeciesPhotoDataToPostgres } from '@/ingest/_refactor/output-bio-db/taxon-species-wiki'
 
 export const syncOnlyMissingWikiSpeciesInfo = async (sequelize: Sequelize): Promise<void> => {
   const unknownSpeciesRegexp = /^sp\d+$/

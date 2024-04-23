@@ -20,9 +20,9 @@
               :key="'species-table-header-' + item.title"
               class="font-bold capitalize select-none px-4"
               :class="{
-                'w-52 lg:w-66': idx < 1,
-                'w-18': idx > 0,
-                'sticky left-0': idx === 0,
+                'w-72 lg:w-66': idx < 1,
+                'w-24': idx > 0,
+                'left-0': idx === 0,
                 'cursor-pointer': item.key
               }"
               @click="sort(item.key)"
@@ -55,14 +55,14 @@
             :key="'species-table-row-' + row.scientificName + idx"
           >
             <tr class="border-b-1 border-util-gray-01">
-              <td class="py-2 pl-4 sticky left-0 z-10">
+              <td class="py-2 pl-4 left-0 z-10">
                 <router-link
                   :to="{ name: ROUTE_NAMES.cnnJobDetailBySpecies, params: { jobId, speciesSlug: row.value }}"
                   class="text-subtle hover:(underline text-white) flex"
                 >
                   <img
                     v-if="row.image"
-                    class="h-8 w-8 self-center rounded-full"
+                    class="h-8 w-8 self-center rounded-full hidden md:block"
                     :src="row.image"
                   >
                   <div
