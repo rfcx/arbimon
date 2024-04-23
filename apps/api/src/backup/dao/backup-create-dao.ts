@@ -16,9 +16,9 @@ export const createBackupRequest = async (entity: BackupType, entityId: number, 
 
     const backup: Omit<Backup, 'id' | 'expires_at' | 'size' | 'url'> = {
         entity,
-        entity_id: entityId,
-        requested_by: userId,
-        requested_at: new Date(),
+        entityId,
+        requestedBy: userId,
+        requestedAt: new Date(),
         status: BackupStatus.REQUESTED
     }
 

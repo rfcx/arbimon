@@ -33,7 +33,7 @@ afterAll(async () => {
     await LocationProjectUserRole.destroy({ where: { locationProjectId: projectId1, userId: ownerId }, force: true })
     await LocationProjectUserRole.destroy({ where: { locationProjectId: projectId1, userId }, force: true })
     await LocationProjectUserRole.destroy({ where: { locationProjectId: projectId2, userId: ownerId }, force: true })
-    await Backup.destroy({ where: { entity: 'project', entity_id: { [Op.in]: [projectId1, projectId2] } }, force: true })
+    await Backup.destroy({ where: { entity: 'project', entityId: { [Op.in]: [projectId1, projectId2] } }, force: true })
     await LocationProject.destroy({ where: { id: projectId1 }, force: true })
     await LocationProject.destroy({ where: { id: projectId2 }, force: true })
 })
@@ -89,8 +89,8 @@ describe(`POST ${backupsRoute}`, async () => {
         const result = JSON.parse(response.body)
         expect(result.backup).toBeDefined()
         expect(result.backup.entity).toBe('project')
-        expect(result.backup.entity_id).toBe(projectId2)
-        expect(result.backup.requested_by).toBe(ownerId)
+        expect(result.backup.entityId).toBe(projectId2)
+        expect(result.backup.requestedBy).toBe(ownerId)
     })
 
     test('backup cannot be requested within 7 days after the last request', async () => {

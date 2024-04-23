@@ -44,6 +44,13 @@ export const rawUsers: UserProfile[] = [
     idAuth0: 'google-oauth2|116355329881579447082',
     firstName: 'Sirirak',
     lastName: 'Phetnit'
+  },
+  {
+    id: 9006,
+    email: 'lucy@rfcx.org',
+    idAuth0: 'auth0|65dc9f09a5efc15b78525a84',
+    firstName: 'Lucy',
+    lastName: 'Dimitrova'
   }
 ]
 
@@ -64,8 +71,8 @@ export const rawUsersWithRolesToProjects: LocationProjectAndRoles[] = [
       { userId: 9001, roleId: 3 }, // nui as guest
       { userId: 9005, roleId: 1 }, // turk as admin
       { userId: 9003, roleId: 1 }, // tree as admin
-      { userId: 9004, roleId: 1 } // tree as admin
-
+      { userId: 9004, roleId: 1 }, // tree as admin
+      { userId: 9006, roleId: 4 } // lucy as owner
     ]
   }
 ]
