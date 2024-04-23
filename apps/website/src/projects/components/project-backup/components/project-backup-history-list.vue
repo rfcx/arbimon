@@ -19,7 +19,7 @@
         </td>
       </tr>
       <tr
-        v-for="item in recentBackups(data)"
+        v-for="item in data"
         :key="item.requestDate"
         class="border-b-1 border-util-gray-03"
       >
@@ -55,26 +55,13 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
+import { type BackupHistory } from '../types'
+import { hasExpired } from '../utils'
 import BackupStatus from './backup-status.vue'
-import { type BackupHistory } from './types'
-import { hasExpired } from './utils'
 
 defineProps<{
   data: BackupHistory[]
 }>()
-
-const recentBackups = (data: BackupHistory[]): BackupHistory[] => {
-  const ascSort = (a: BackupHistory, b: BackupHistory) => {
-    return new Date(a.requestDate).getTime() - new Date(b.requestDate).getTime()
-  }
-  const dscSort = (a: BackupHistory, b: BackupHistory) => {
-    return new Date(b.requestDate).getTime() - new Date(a.requestDate).getTime()
-  }
-  const backupRecentDSC = data.sort(dscSort)
-  return backupRecentDSC.slice(0, 3) // maximum 3 items
-    .sort(ascSort)
-}
-
 // Date utility
 
 const formattedDate = (date: string, includedTime = false): string => {

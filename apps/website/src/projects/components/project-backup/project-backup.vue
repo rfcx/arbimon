@@ -18,7 +18,7 @@
           Request backup <icon-custom-ic-export class="ml-2 inline-flex" />
         </button>
       </div>
-      <project-backup-history :data="dataMock" />
+      <project-backup-history :data="recentBackups(dataMock)" />
     </div>
   </div>
 </template>
@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-import ProjectBackupHistory from './project-backup-history-list.vue'
+import ProjectBackupHistory from './components/project-backup-history-list.vue'
 import { type BackupHistory } from './types'
 
 const date = new Date(Date.now() + 30 * 60 * 1000).toISOString()
@@ -38,6 +38,19 @@ const dataMock = ref<BackupHistory[]>([
   { requestDate: date, link: '#', status: 'available', expiryDate: date }
 ])
 
+// filter the recent 3 backups
+const recentBackups = (data: BackupHistory[]): BackupHistory[] => {
+  const ascSort = (a: BackupHistory, b: BackupHistory) => {
+    return new Date(a.requestDate).getTime() - new Date(b.requestDate).getTime()
+  }
+  const dscSort = (a: BackupHistory, b: BackupHistory) => {
+    return new Date(b.requestDate).getTime() - new Date(a.requestDate).getTime()
+  }
+  const backupRecentDSC = data.sort(dscSort)
+  return backupRecentDSC.slice(0, 3) // maximum 3 items
+    .sort(ascSort)
+}
+
 const isAllowedToRequestNewBackup = computed((): boolean => {
   const requestedDates = dataMock.value
     .map((item) => item.requestDate)
@@ -47,4 +60,9 @@ const isAllowedToRequestNewBackup = computed((): boolean => {
   const diff = new Date().getTime() - new Date(recendRequestedDate).getTime()
   return diff > 7 * 24 * 60 * 60 * 1000 // 7 days
 })
+
+// TODO: add confirm dialog when the user click to request backup
+// TODO: API call to request backup (loading state, success, error)
+// TODO: API call to get backup history (loading state, success, error)
+
 </script>

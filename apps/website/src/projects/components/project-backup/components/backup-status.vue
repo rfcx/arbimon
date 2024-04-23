@@ -33,12 +33,12 @@
 
 import { computed } from 'vue'
 
-import { hasExpired } from './utils'
+import { hasExpired } from '../utils'
 
 enum BackupStatus {
   REQUESTED = 'Requested',
   FAILED = 'Failed',
-  PROCESSING = 'in progress',
+  PROCESSING = 'In progress',
   COMPLETED = 'Completed',
   EXPIRED = 'Expired'
 }
