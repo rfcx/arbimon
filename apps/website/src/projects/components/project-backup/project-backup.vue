@@ -52,15 +52,20 @@
 import { type AxiosInstance } from 'axios'
 import { computed, inject, ref } from 'vue'
 
-import { apiClientKey } from '@/globals'
+import { apiClientKey, togglesKey } from '@/globals'
 import { useStore } from '~/store'
 import ProjectBackupHistory from './components/project-backup-history-list.vue'
 import { useCreateBackup, useGetBackup } from './composables/use-project-backup'
 
-const TIME_TO_EXPIRE = 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
 const TEXT_BACKUP_LIMIT = 'You can request a backup every 7 days'
 
 const store = useStore()
+const toggles = inject(togglesKey)
+
+const timeFrameLimit = computed(() => {
+  const hours = toggles?.projectBackupTesting === true ? 0.25 : 7 * 24
+  return hours * 60 * 60 * 1000 // hours to milliseconds
+})
 
 const isAllowedToRequestNewBackup = computed((): boolean => {
   if (!data.value || data.value.length === 0) return true
@@ -70,7 +75,7 @@ const isAllowedToRequestNewBackup = computed((): boolean => {
   const recentRequestedDate = requestedDates.length > 0 ? requestedDates[0] : undefined
   if (recentRequestedDate === undefined) return true
   const diff = new Date().getTime() - new Date(recentRequestedDate).getTime()
-  return diff > TIME_TO_EXPIRE
+  return diff > timeFrameLimit.value
 })
 
 // TODO: add confirm dialog when the user click to request backup
