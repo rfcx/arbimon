@@ -58,7 +58,7 @@
             :is-success="isSuccessDeleteProject"
             @emit-project-delete="onEmitProjectDelete"
           />
-          <project-backup />
+          <project-backup v-if="toggles?.projectBackup === true && store.project?.role === 'owner'" />
         </div>
       </div>
       <div
@@ -116,7 +116,7 @@ import { isValidSlug } from '@rfcx-bio/utils/string/slug'
 import SaveStatusText from '@/_components/save-status-text.vue'
 import ReadOnlyBanner from '@/_layout/components/guest-banner/guest-banner.vue'
 import { urlWrapper } from '@/_services/images/url-wrapper'
-import { apiClientKey } from '@/globals'
+import { apiClientKey, togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
 import { useDeleteProject, useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
@@ -135,6 +135,7 @@ const router = useRouter()
 const store = useStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
+const toggles = inject(togglesKey)
 const selectedProject = computed(() => store.project)
 const selectedProjectId = computed(() => store.project?.id)
 
