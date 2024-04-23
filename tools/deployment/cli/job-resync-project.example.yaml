@@ -1,3 +1,9 @@
+#
+# To start a project resync job, run the following replacing 123 for the Arbimon project id.
+#
+# sed -e 's|SETPROJECTID|123|g' tools/deployment/cli/job-resync-project.example.yaml | kubectl apply -f -
+#
+
 apiVersion: batch/v1
 kind: Job
 metadata:

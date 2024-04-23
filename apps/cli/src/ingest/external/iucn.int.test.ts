@@ -5,8 +5,8 @@ import { type TaxonSpecies } from '@rfcx-bio/common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { rawRiskRatings } from '@/db/seeders/_data/risk-rating'
-import { getIucnSpecies } from '@/sync/_refactor/input-iucn/iucn-species'
-import { getIucnSpeciesNarrative } from '@/sync/_refactor/input-iucn/iucn-species-narrative'
+import { getIucnSpecies } from '@/ingest/_refactor/input-iucn/iucn-species'
+import { getIucnSpeciesNarrative } from '@/ingest/_refactor/input-iucn/iucn-species-narrative'
 import { syncOnlyMissingIUCNSpeciesInfo } from './iucn'
 
 // Inputs to the sync from the IUCN API
@@ -35,12 +35,12 @@ const IUCN_NARRATIVE_SPECIES_2 = {
   sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Actitis%20macularius'
 }
 
-vi.mock('@/sync/_refactor/input-iucn/iucn-species', () => {
+vi.mock('@/ingest/_refactor/input-iucn/iucn-species', () => {
   return {
     getIucnSpecies: vi.fn(async (scientificName: string) => await Promise.resolve([IUCN_SPECIES_1, IUCN_SPECIES_2].find(s => s.scientific_name === scientificName)))
   }
 })
-vi.mock('@/sync/_refactor/input-iucn/iucn-species-narrative', () => {
+vi.mock('@/ingest/_refactor/input-iucn/iucn-species-narrative', () => {
   return {
     getIucnSpeciesNarrative: vi.fn(async (scientificName: string) => await Promise.resolve([IUCN_NARRATIVE_SPECIES_1, IUCN_NARRATIVE_SPECIES_2].find(s => s.scientific_name === scientificName)))
   }

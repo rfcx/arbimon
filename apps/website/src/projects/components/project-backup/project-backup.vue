@@ -18,7 +18,6 @@
           @click="requestNewBackup"
         >
           Request backup <icon-custom-ic-export class="ml-2 inline-flex" />
-          {{ data }}
         </button>
         <span
           v-if="!isAllowedToRequestNewBackup"

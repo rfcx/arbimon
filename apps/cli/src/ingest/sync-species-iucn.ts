@@ -1,5 +1,5 @@
 import { getSequelize } from '../db/connections'
-import { syncOnlyMissingIUCNSpeciesInfo } from './species-info/iucn'
+import { syncOnlyMissingIUCNSpeciesInfo } from './external/iucn'
 
 const main = async (): Promise<void> => {
   const sequelize = getSequelize()
