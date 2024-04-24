@@ -89,7 +89,7 @@
                   value="all"
                   class="w-4 h-4 text-frequency border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency"
                   :checked="selectedSites.length === detectionsResultFilterBySpeciesStore.sitesFilterOptions.length"
-                  @click="onSelectAllSites; filterDetectionsBySite(); closeSitesDropdown()"
+                  @click="onSelectAllSites(); filterDetectionsBySite(); closeSitesDropdown()"
                 >
               </div>
               <div class="ml-2">
