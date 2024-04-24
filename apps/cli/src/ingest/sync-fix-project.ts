@@ -11,7 +11,6 @@ const main = async (): Promise<void> => {
     const arbimonSequelize = getArbimonSequelize()
     const bioSequelize = getSequelize()
 
-    console.info('STEP: Get sites, species calls, recordings, detections')
     await syncFixProject(projectId, arbimonSequelize, bioSequelize)
 
     console.info('Sync fix project job end: successful')
