@@ -32,7 +32,7 @@
             v-for="option in props.filterOptions"
             :key="option.value"
             class="bg-moss hover:text-util-gray-01"
-            @click="selectedFilter = option.value; validateDetections()"
+            @click="selectedFilter = option.value"
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
@@ -47,16 +47,17 @@
             </div>
           </li>
         </ul>
+        <button
+          class="btn btn-primary py-2 h-10 whitespace-nowrap"
+          @click="validateDetections()"
+        >
+          Apply
+        </button>
       </div>
     </div>
 
     <div class="text-base flex gap-x-5 items-center">
-      <span v-if="props.detectionCount === 1">
-        {{ props.detectionCount }} recording selected
-      </span>
-      <span v-else>
-        {{ props.detectionCount }} recordings selected
-      </span>
+      {{ props.detectionCount }} selected
       <button
         class="btn border-1 border-util-gray-03 text-spoonbill bg-spoonbill bg-opacity-10 rounded-lg py-1 px-2 flex items-center gap-x-3"
         @click="close()"
