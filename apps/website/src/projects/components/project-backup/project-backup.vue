@@ -15,13 +15,9 @@
           type="button"
           :disabled="!isAllowedToRequestNewBackup || isPending"
           :title="!isAllowedToRequestNewBackup ? TEXT_BACKUP_LIMIT : ''"
-          @click="requestNewBackup"
+          @click="isModalOpen = true"
         >
           <span>Request backup</span>
-          <icon-custom-ic-loading
-            v-if="isPending"
-            class="ml-2 w-4 inline-flex"
-          />
           <icon-custom-ic-export
             class="ml-2 inline-flex"
           />
@@ -32,12 +28,6 @@
         >
           {{ TEXT_BACKUP_LIMIT }}
         </span>
-        <span
-          v-else-if="createErrorMessage"
-          class="ml-4 text-xs text-danger"
-        >
-          {{ createErrorMessage }}
-        </span>
       </div>
       <project-backup-history
         :data="data ?? []"
@@ -45,6 +35,14 @@
         :error="error"
       />
     </div>
+    <project-backup-modal
+      :is-open="isModalOpen"
+      :is-loading="isPending"
+      :has-requested="hasRequested"
+      :error-message="createErrorMessage"
+      @emit-request-backup="requestNewBackup"
+      @emit-close="closeModal"
+    />
   </div>
 </template>
 
@@ -54,6 +52,7 @@ import { computed, inject, ref } from 'vue'
 
 import { apiClientKey, togglesKey } from '@/globals'
 import { useStore } from '~/store'
+import ProjectBackupModal from './components/backup-modal.vue'
 import ProjectBackupHistory from './components/project-backup-history-list.vue'
 import { useCreateBackup, useGetBackup } from './composables/use-project-backup'
 
@@ -78,7 +77,14 @@ const isAllowedToRequestNewBackup = computed((): boolean => {
   return diff > timeFrameLimit.value
 })
 
-// TODO: add confirm dialog when the user click to request backup
+// Modal
+const isModalOpen = ref(false)
+const hasRequested = ref(false)
+
+const closeModal = () => {
+  isModalOpen.value = false
+  hasRequested.value = false
+}
 
 // API - GET backup history (loading state, success, error)
 const apiClientBio = inject(apiClientKey) as AxiosInstance
@@ -89,9 +95,16 @@ const { mutate, isPending } = useCreateBackup(apiClientBio)
 const createErrorMessage = ref<string | undefined>(undefined)
 
 const requestNewBackup = () => {
+  createErrorMessage.value = undefined
   mutate({ entityId: store.project?.id ?? -1, entity: 'project' }, {
-    onSuccess: () => { refetchList() },
-    onError: (error) => { createErrorMessage.value = error.message }
+    onSuccess: () => {
+      hasRequested.value = true
+      refetchList()
+    },
+    onError: (error) => {
+      hasRequested.value = false
+      createErrorMessage.value = error.message
+    }
   })
 }
 </script>

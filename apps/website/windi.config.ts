@@ -115,7 +115,7 @@ export default defineConfig({
         },
         danger: {
           DEFAULT: '#D46767',
-          light: '#e5a4a4',
+          light: '#F5D2D8',
           dark: '#7f3e3e'
         },
         warning: {

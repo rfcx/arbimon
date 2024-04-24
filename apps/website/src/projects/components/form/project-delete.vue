@@ -68,7 +68,7 @@
                 </div>
                 <div
                   v-if="isError"
-                  class="bg-spoonbill mt-6 flex flex-row items-center p-2 border-l-3 rounded-lg border-l-ibis"
+                  class="bg-danger-light mt-6 flex flex-row items-center p-2 border-l-3 rounded-lg border-l-ibis"
                 >
                   <icon-custom-alert-triangle class="h-6 w-6 cursor-pointer text-ibis" />
                   <span
