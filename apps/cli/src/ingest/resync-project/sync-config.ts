@@ -21,3 +21,13 @@ export const getBiodiversityProjectId = async (arbimonProjectId: number, sequeli
   })
   return bioProjectId.id
 }
+
+export const getArbimonProjectId = async (locationProjectId: number, sequelize: Sequelize): Promise<number> => {
+  const project = await ModelRepository.getInstance(sequelize).LocationProject.findOne({
+    where: { id: locationProjectId },
+    attributes: ['idArbimon'],
+    raw: true
+  })
+  if (project === null) throw Error('Project not found')
+  return project.idArbimon
+}

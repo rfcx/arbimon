@@ -42,7 +42,7 @@ export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syn
   }))
 }
 
-export const getArbimonSitesByProject = async (sequelize: Sequelize, projectId: number): Promise<unknown[]> => {
+export const getArbimonSitesByProject = async (sequelize: Sequelize, projectId: number): Promise<SiteArbimon[]> => {
   const sql = `
       SELECT s.site_id AS idArbimon,
       s.external_id AS idCore,
@@ -57,7 +57,7 @@ export const getArbimonSitesByProject = async (sequelize: Sequelize, projectId: 
       s.hidden
     FROM sites s
     WHERE s.project_id = $projectId AND s.deleted_at is null
-    ORDER BY s.updated_at, s.site_id`
+    ORDER BY s.site_id`
 
   const results = await sequelize.query<SiteArbimon>(sql, {
     type: QueryTypes.SELECT,
@@ -67,8 +67,5 @@ export const getArbimonSitesByProject = async (sequelize: Sequelize, projectId: 
     }
   })
 
-  return results.map(row => ({
-    ...row,
-    deletedAt: sequelize.getDialect() === 'mysql' && row.deletedAt !== null ? row.deletedAt.toISOString() : row.deletedAt
-  }))
+  return results
 }
