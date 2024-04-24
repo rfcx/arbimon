@@ -165,8 +165,10 @@ const showStatus = ref(false)
 const hasFailed = ref(false)
 const errorMessage = ref<string>()
 
-const lastModified = ref<Date>(new Date())
-const lastSaved = ref<Date>(new Date())
+const date = Math.floor(Date.now() / 1000)
+
+const lastModified = ref<number>(date)
+const lastSaved = ref<number>(date)
 
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
@@ -327,11 +329,11 @@ const updateSettings = () => {
 }
 
 const updateLastModified = () => {
-  lastModified.value = new Date()
+  lastModified.value = Math.floor(Date.now() / 1000)
 }
 
 const updateLastSaved = () => {
-  lastSaved.value = new Date()
+  lastSaved.value = Math.floor(Date.now() / 1000)
 }
 
 onBeforeRouteLeave(() => {
