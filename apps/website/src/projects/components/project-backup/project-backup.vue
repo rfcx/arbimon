@@ -84,6 +84,7 @@ const hasRequested = ref(false)
 const closeModal = () => {
   isModalOpen.value = false
   hasRequested.value = false
+  createErrorMessage.value = undefined
 }
 
 // API - GET backup history (loading state, success, error)
