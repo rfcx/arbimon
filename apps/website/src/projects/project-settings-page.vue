@@ -5,6 +5,46 @@
         Project settings
       </h1>
       <ReadOnlyBanner v-if="!store.userIsAdminProjectMember" />
+      <div
+        class="flex flex-row-reverse items-center gap-4"
+      >
+        <button
+          :disabled="isSaving || !store.userIsAdminProjectMember"
+          class="inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
+          :data-tooltip-target="!store.userIsAdminProjectMember ? 'projectSettingsSaveTooltipId': null"
+          data-tooltip-placement="bottom"
+          @click.prevent="save"
+        >
+          Save
+        </button>
+        <div
+          v-if="!store.userIsAdminProjectMember"
+          id="projectSettingsSaveTooltipId"
+          role="tooltip"
+          class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+        >
+          {{ disableText }}
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
+        <div
+          v-if="isSaving"
+          class="inline-flex"
+        >
+          <icon-custom-ic-loading class="animate-spin" />
+          <span class="ml-2">
+            Saving...
+          </span>
+        </div>
+        <SaveStatusText
+          v-if="showStatus && !isSaving"
+          class="flex p-4"
+          :success="!hasFailed"
+          :error-message="errorMessage"
+        />
+      </div>
       <div class="grid gap-10">
         <div>
           <h4>
@@ -64,53 +104,13 @@
           />
         </div>
       </div>
-      <div
-        class="flex flex-row-reverse items-center gap-4"
-      >
-        <button
-          :disabled="isSaving || !store.userIsAdminProjectMember"
-          class="inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
-          :data-tooltip-target="!store.userIsAdminProjectMember ? 'projectSettingsSaveTooltipId': null"
-          data-tooltip-placement="bottom"
-          @click.prevent="save"
-        >
-          Save
-        </button>
-        <div
-          v-if="!store.userIsAdminProjectMember"
-          id="projectSettingsSaveTooltipId"
-          role="tooltip"
-          class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
-        >
-          {{ disableText }}
-          <div
-            class="tooltip-arrow"
-            data-popper-arrow
-          />
-        </div>
-        <div
-          v-if="isSaving"
-          class="inline-flex"
-        >
-          <icon-custom-ic-loading class="animate-spin" />
-          <span class="ml-2">
-            Saving...
-          </span>
-        </div>
-        <SaveStatusText
-          v-if="showStatus && !isSaving"
-          class="flex p-4"
-          :success="!hasFailed"
-          :error-message="errorMessage"
-        />
-      </div>
     </div>
   </section>
 </template>
 <script setup lang="ts">
 import { type AxiosError, type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
 
 import { type ProjectProfileUpdateBody, ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
@@ -165,20 +165,26 @@ const showStatus = ref(false)
 const hasFailed = ref(false)
 const errorMessage = ref<string>()
 
+const lastModified = ref<Date>(new Date())
+const lastSaved = ref<Date>(new Date())
+
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
   newName.value = value.name
   dateStart.value = value.startDate
   dateEnd.value = value.endDate
   onGoing.value = value.onGoing
+  updateLastModified()
 }
 
 const onEmitSummary = (value: string) => {
   newSummary.value = value
+  updateLastModified()
 }
 
 const onEmitObjectives = (value: string[]) => {
   newObjectives.value = value
+  updateLastModified()
 }
 
 const onEmitProjectImage = (file: File) => {
@@ -196,10 +202,12 @@ const onEmitProjectImage = (file: File) => {
     profileImageForm.value = form
   })
   readerBuffer.readAsArrayBuffer(file)
+  updateLastModified()
 }
 
 const onEmitSlug = (slug: string) => {
   newSlug.value = slug
+  updateLastModified()
 }
 
 const onEmitProjectDelete = () => {
@@ -281,6 +289,7 @@ const updateSettings = () => {
     onSuccess: () => {
       if (profileImageForm.value === undefined) {
         isSaving.value = false
+        updateLastSaved()
         displayTextAfterSaveWithSuccessStatus(true)
       }
       store.updateProjectName(newName.value)
@@ -306,6 +315,7 @@ const updateSettings = () => {
     mutatePatchProfilePhoto(profileImageForm.value, {
       onSuccess: async () => {
         isSaving.value = false
+        updateLastSaved()
         displayTextAfterSaveWithSuccessStatus(true)
       },
       onError: () => {
@@ -315,5 +325,21 @@ const updateSettings = () => {
     })
   }
 }
+
+const updateLastModified = () => {
+  lastModified.value = new Date()
+}
+
+const updateLastSaved = () => {
+  lastSaved.value = new Date()
+}
+
+onBeforeRouteLeave(() => {
+  if (lastModified.value > lastSaved.value) {
+    const answer = window.confirm('Are you sure you want to leave the page? You have unsaved changes.')
+    return answer
+  }
+  return true
+})
 
 </script>
