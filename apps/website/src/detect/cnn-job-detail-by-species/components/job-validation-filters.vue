@@ -31,8 +31,7 @@
             v-for="status in detectionsResultFilterBySpeciesStore.validationStatusFilterOptions"
             :key="status.value"
             class="bg-moss hover:text-util-gray-01"
-            :class="{'hidden' : status.value === 'all'}"
-            @click="selectedStatus = status.value; filterDetectionsByStatus(selectedStatus); closeStatusDropdown()"
+            @click="selectedStatus = status.value"
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
@@ -50,6 +49,12 @@
             </div>
           </li>
         </ul>
+        <button
+          class="btn btn-primary py-2 h-10 whitespace-nowrap"
+          @click="filterDetectionsByStatus(selectedStatus); closeStatusDropdown()"
+        >
+          Apply filter
+        </button>
       </div>
     </div>
 
@@ -59,7 +64,7 @@
         data-dropdown-toggle="sitesDropdownCNN"
         class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-insight px-5 py-2 w-41 hover:bg-moss"
         type="button"
-        :class="{ '!border-solid': selectedSites.length != 0}"
+        :class="{ 'border-solid': selectedSites.length > 0}"
       >
         <div class="whitespace-nowrap text-ellipsis overflow-hidden">
           {{ selectedSitesTitle }}
@@ -89,7 +94,7 @@
                   value="all"
                   class="w-4 h-4 text-frequency border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency"
                   :checked="selectedSites.length === detectionsResultFilterBySpeciesStore.sitesFilterOptions.length"
-                  @click="onSelectAllSites; filterDetectionsBySite(); closeSitesDropdown()"
+                  @click="onSelectAllSites"
                 >
               </div>
               <div class="ml-2">
@@ -102,7 +107,7 @@
           <li
             v-for="site in detectionsResultFilterBySpeciesStore.sitesFilterOptions"
             :key="site.value"
-            @click="onSelectSite(site.value); filterDetectionsBySite(); closeSitesDropdown()"
+            @click="onSelectSite(site.value)"
           >
             <div class="flex p-2 rounded items-center hover:text-util-gray-01">
               <div class="flex">
@@ -114,7 +119,6 @@
                   :value="site.value"
                   class="w-4 h-4 text-frequency border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency"
                   :checked="selectedSites.includes(site.value)"
-                  @click="filterDetectionsBySite(); closeSitesDropdown()"
                 >
               </div>
               <div class="ml-2">
@@ -125,6 +129,12 @@
             </div>
           </li>
         </ul>
+        <button
+          class="btn btn-primary py-2 h-10 whitespace-nowrap"
+          @click="filterDetectionsBySite(); closeSitesDropdown()"
+        >
+          Apply filter
+        </button>
       </div>
     </div>
 
@@ -158,7 +168,7 @@
         >
           <li
             class="bg-moss hover:text-util-gray-01"
-            @click="selectedGrouping = 'minConfidence'; groupingDetections(selectedGrouping); closeGroupingDropdown()"
+            @click="selectedGrouping = 'minConfidence'"
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
@@ -172,6 +182,12 @@
             </div>
           </li>
         </ul>
+        <button
+          class="btn btn-primary py-2 whitespace-nowrap h-10"
+          @click="groupingDetections(selectedGrouping); closeGroupingDropdown()"
+        >
+          Apply filter
+        </button>
       </div>
     </div>
   </div>
