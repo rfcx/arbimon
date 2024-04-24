@@ -1,28 +1,24 @@
 import { getSequelize } from '@/db/connections'
 import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
-import { syncProject } from '@/ingest/resync-project/sync-project'
+import { syncFixProject } from '@/ingest/resync-project/sync-fix-project'
 import { requireEnv } from '~/env'
 
-const { ARBIMON_PROJECT_ID } = requireEnv('ARBIMON_PROJECT_ID')
+const { PROJECT_ID: projectId } = requireEnv('PROJECT_ID')
 
 const main = async (): Promise<void> => {
-  console.info('resync-project job start', ARBIMON_PROJECT_ID)
-  if (ARBIMON_PROJECT_ID === undefined) {
-      return
-  }
-  const arbimonProjectId = Number(ARBIMON_PROJECT_ID)
+  console.info('Sync fix project job start', projectId)
   try {
     const arbimonSequelize = getArbimonSequelize()
     const bioSequelize = getSequelize()
 
     console.info('STEP: Get sites, species calls, recordings, detections')
-    await syncProject(arbimonProjectId, arbimonSequelize, bioSequelize)
+    await syncFixProject(projectId, arbimonSequelize, bioSequelize)
 
-    console.info('resync-project job end: successful')
+    console.info('Sync fix project job end: successful')
   } catch (e) {
     console.error(e)
     process.exitCode = 1
-    console.info('resync-project job end: failed')
+    console.info('Sync fix project job end: failed')
   }
 }
 
