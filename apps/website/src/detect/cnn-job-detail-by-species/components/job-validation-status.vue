@@ -1,8 +1,8 @@
 <template>
   <div
-    class="bg-moss border-1 border-util-gray-02 rounded-lg px-6 py-4 mt-4"
+    class="flex flex-col bg-moss border-1 border-util-gray-02 rounded-lg px-6 py-4 mt-4"
   >
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-2 items-center justify-between text-insight text-base font-medium lg:flex lg:flex-row">
+    <div class="flex flex-wrap flex-wrap gap-2 items-center justify-start text-insight text-base font-medium lg:flex-row lg:justify-between">
       <div>Validation status</div>
       <div class="flex flex-row items-center gap-x-4">
         <div class="flex flex-row items-center gap-x-2">
