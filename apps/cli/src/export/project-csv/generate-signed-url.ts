@@ -2,7 +2,7 @@ import { type S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { parse } from 'path'
 
-const ONE_WEEK_IN_SECONDS = 86400 * 7
+export const ONE_WEEK_IN_SECONDS = 86400 * 7
 
 export const generateSignedUrl = async (s3: S3Client, bucket: string, path: string): Promise<string> => {
   const parsedPath = parse(path)
