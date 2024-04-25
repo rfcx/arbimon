@@ -25,7 +25,7 @@ export const syncJob = (name: string, projectIdArbimon: number): unknown => ({
                       command: [
                         'node',
                         '--experimental-specifier-resolution=node',
-                        'apps/cli/lib/sync/resync-project/index.js'
+                        'apps/cli/lib/ingest/sync-fix-project-full.js'
                       ]
                   }
               ],

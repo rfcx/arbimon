@@ -38,11 +38,11 @@ jobs:
             {
               "sync-daily": {
                 "JOB_NAME": "biodiversity-cli-sync-daily-user",
-                "NODE_COMMAND": "apps/cli/lib/sync/daily.js"
+                "NODE_COMMAND": "apps/cli/lib/ingest/daily.js"
               },
               "sync-incremental": {
                 "JOB_NAME": "biodiversity-cli-sync-incremental-user",
-                "NODE_COMMAND": "apps/cli/lib/sync/incrementally.js"
+                "NODE_COMMAND": "apps/cli/lib/ingest/incrementally.js"
               },
               "export-global-csv": {
                 "JOB_NAME": "biodiversity-cli-export-global-csv",

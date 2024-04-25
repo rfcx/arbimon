@@ -11,13 +11,6 @@ import { parseArray } from '../parsers/parse-array'
 import { type SiteArbimon, parseSiteArbimon } from '../parsers/parse-site-arbimon-to-bio'
 import { getSites } from './get-sites'
 import { getSyncStatus } from './get-sync-status'
-import { type SyncConfig } from './sync-config'
-
-const SYNC_CONFIG: SyncConfig = {
-  syncSourceId: masterSources.Arbimon.id,
-  syncDataTypeId: masterSyncDataTypes.Site.id,
-  syncBatchLimit: 20000 // do not use for the sites resync
-}
 
 export const syncFixArbimonSites = async (project: Pick<Project, 'id' | 'idArbimon'>, arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize, verbose: boolean = true): Promise<void> => {
   // Get status
@@ -74,13 +67,13 @@ export const syncFixArbimonSites = async (project: Pick<Project, 'id' | 'idArbim
     const error = {
       externalId: `${idArbimon}`,
       error: 'ValidationError: ' + JSON.stringify(e[1].error.issues),
-      syncSourceId: SYNC_CONFIG.syncSourceId,
-      syncDataTypeId: SYNC_CONFIG.syncDataTypeId
+      syncSourceId: syncStatus.syncSourceId,
+      syncDataTypeId: syncStatus.syncDataTypeId
     }
     await writeSyncError(error, biodiversitySequelize)
   }))
   await Promise.all(writeErrors.map(async e => {
-    const error = { ...e, syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId }
+    const error = { ...e, syncSourceId: syncStatus.syncSourceId, syncDataTypeId: syncStatus.syncDataTypeId }
     await writeSyncError(error, biodiversitySequelize)
   }))
 
@@ -90,8 +83,8 @@ export const syncFixArbimonSites = async (project: Pick<Project, 'id' | 'idArbim
   }
   const log = {
     locationProjectId: project.id,
-    syncSourceId: SYNC_CONFIG.syncSourceId,
-    syncDataTypeId: SYNC_CONFIG.syncDataTypeId,
+    syncSourceId: syncStatus.syncSourceId,
+    syncDataTypeId: syncStatus.syncDataTypeId,
     delta: writtenSites.length
   }
   await writeSyncLogByProject(log, biodiversitySequelize)
