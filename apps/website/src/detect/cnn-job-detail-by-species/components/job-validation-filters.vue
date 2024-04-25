@@ -16,7 +16,7 @@
         <icon-custom-fi-close-thin
           v-if="selectedStatus !== 'all'"
           class="w-4 h-4 ml-2 cursor-pointer"
-          @click="selectedStatus = 'all'; filterDetectionsByStatus(selectedStatus)"
+          @click="onSelectStatus('all')"
         />
         <icon-fa-chevron-down
           v-else
@@ -40,7 +40,7 @@
             :key="status.value"
             class="bg-moss hover:text-util-gray-01"
             :class="{'hidden' : status.value === 'all'}"
-            @click="selectedStatus = status.value; filterDetectionsByStatus(selectedStatus); closeStatusDropdown()"
+            @click="onSelectStatus(status.value)"
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
@@ -251,6 +251,12 @@ const filterDetectionsBySite = () => {
 
 const formatStatus = (status: ArbimonReviewStatus | 'all') => {
   return status as ArbimonReviewStatus
+}
+
+const onSelectStatus = (status: ArbimonReviewStatus | 'all') => {
+  selectedStatus.value = status
+  filterDetectionsByStatus(selectedStatus.value)
+  closeStatusDropdown()
 }
 
 const selectedSitesTitle = computed(() => {
