@@ -287,6 +287,7 @@ const confirmSetLink = (): void => {
   // get link from the modal. If empty string is passed. Unlink the given link
   if (linkToSet.value === '') {
     editor.value?.chain().focus().extendMarkRange('link').unsetLink().run()
+    return
   }
   // Otherwise set the highlighted text to the given link. Then reset the link.
   editor.value?.chain().focus().extendMarkRange('link').setLink({ href: linkToSet.value }).run()
@@ -295,6 +296,7 @@ const confirmSetLink = (): void => {
 
 const closeModal = (): void => {
   modal.value.hide()
+  linkToSet.value = ''
 }
 
 const hasFailed = ref(props.hasFailed ?? false)
