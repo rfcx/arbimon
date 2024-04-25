@@ -2,7 +2,7 @@
   <div
     class="bg-moss border-1 border-util-gray-02 rounded-lg px-6 py-4 mt-4"
   >
-    <div class="grid grid-cols-3 gap-2 items-center justify-between text-insight text-base font-medium sm:flex sm:flex-row">
+    <div class="grid grid-cols-3 gap-2 items-center justify-between text-insight text-base font-medium md:flex md:flex-row">
       <div>Validation status</div>
       <div class="flex flex-row items-center gap-x-4">
         <div class="flex flex-row items-center gap-x-2">
