@@ -16,7 +16,7 @@
           <JobValidationFilters
             @emit-min-confidence="toggleMinConfidence"
           />
-          <div>
+          <div class="w-36">
             <span>Results:</span>
             <span class="ml-1">{{ filteredResult }} / {{ detectionsCount }}</span>
           </div>
