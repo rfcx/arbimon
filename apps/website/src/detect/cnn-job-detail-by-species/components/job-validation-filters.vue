@@ -6,14 +6,22 @@
         data-dropdown-toggle="statusDropdownHover"
         class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-insight px-5 py-2 w-41 hover:bg-moss"
         type="button"
-        :class="{ '!w-max !border-solid': selectedStatus != 'all' }"
+        :class="{ '!w-max !border-solid': selectedStatus !== 'all' }"
       >
         <span
-          :class="{ 'px-2': selectedStatus != 'all' }"
+          :class="{ 'px-2': selectedStatus !== 'all' }"
         >
           {{ selectedStatusText }}
         </span>
-        <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />
+        <icon-custom-fi-close-thin
+          v-if="selectedStatus !== 'all'"
+          class="w-4 h-4 ml-2 cursor-pointer"
+          @click="onSelectStatus('all')"
+        />
+        <icon-fa-chevron-down
+          v-else
+          class="w-2.5 h-2.5 fa-chevron-down text-insight"
+        />
       </button>
       <div
         id="statusDropdownHover"
@@ -32,7 +40,7 @@
             :key="status.value"
             class="bg-moss hover:text-util-gray-01"
             :class="{'hidden' : status.value === 'all'}"
-            @click="selectedStatus = status.value; filterDetectionsByStatus(selectedStatus); closeStatusDropdown()"
+            @click="onSelectStatus(status.value)"
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
@@ -59,13 +67,21 @@
         data-dropdown-toggle="sitesDropdownCNN"
         class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-insight px-5 py-2 w-41 hover:bg-moss"
         type="button"
-        :class="{ '!border-solid': selectedSites.length != 0 }"
+        :class="{ '!border-solid': selectedSites.length !== 0 }"
       >
         <div class="whitespace-nowrap text-ellipsis overflow-hidden">
           {{ selectedSitesTitle }}
         </div>
         <span>
-          <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />
+          <icon-custom-fi-close-thin
+            v-if="selectedSites.length !== 0"
+            class="w-4 h-4 ml-2 cursor-pointer"
+            @click="selectedSites = []; filterDetectionsBySite()"
+          />
+          <icon-fa-chevron-down
+            v-else
+            class="w-2.5 h-2.5 fa-chevron-down text-insight"
+          />
         </span>
       </button>
       <div
@@ -142,7 +158,15 @@
         >
           {{ selectedGroupingText }}
         </span>
-        <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />
+        <icon-custom-fi-close-thin
+          v-if="selectedGrouping"
+          class="w-4 h-4 ml-2 cursor-pointer"
+          @click="selectedGrouping = undefined; groupingDetections(selectedGrouping); closeGroupingDropdown()"
+        />
+        <icon-fa-chevron-down
+          v-else
+          class="w-2.5 h-2.5 fa-chevron-down text-insight"
+        />
       </button>
       <div
         id="groupingDropdownHover"
@@ -229,6 +253,12 @@ const formatStatus = (status: ArbimonReviewStatus | 'all') => {
   return status as ArbimonReviewStatus
 }
 
+const onSelectStatus = (status: ArbimonReviewStatus | 'all') => {
+  selectedStatus.value = status
+  filterDetectionsByStatus(selectedStatus.value)
+  closeStatusDropdown()
+}
+
 const selectedSitesTitle = computed(() => {
   if (selectedSites.value.length === 0) {
     return 'All sites'
@@ -290,5 +320,3 @@ onMounted(() => {
   )
 })
 </script>
-
-<style lang="scss"></style>
