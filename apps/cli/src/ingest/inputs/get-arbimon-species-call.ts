@@ -51,7 +51,7 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDa
   }))
 }
 
-export const getArbimonProjectSpeciesCalls = async (sequelize: Sequelize, projectId: number): Promise<unknown[]> => {
+export const getArbimonProjectSpeciesCalls = async (sequelize: Sequelize, projectId: number): Promise<SpeciesCallArbimonRow[]> => {
   const sql = `
     SELECT t.species_id AS taxonSpeciesId,
       t.project_id AS callProjectId,
@@ -73,20 +73,13 @@ export const getArbimonProjectSpeciesCalls = async (sequelize: Sequelize, projec
       JOIN songtypes st ON t.songtype_id = st.songtype_id
     WHERE t.project_id = $projectId
       AND r.datetime_utc is not null
-    ORDER BY t.date_created, t.template_id
-    ;
+    ORDER BY t.template_id
   `
-  const results = await sequelize.query<SpeciesCallArbimonRow>(sql, {
+  return await sequelize.query<SpeciesCallArbimonRow>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
       projectId
     }
   })
-
-  return results.map(row => ({
-    ...row,
-    updatedAt: sequelize.getDialect() === 'mysql' ? row.updatedAt.toISOString() : row.updatedAt,
-    callRecordedAt: sequelize.getDialect() === 'mysql' ? row.callRecordedAt.toISOString() : row.callRecordedAt
-  }))
 }

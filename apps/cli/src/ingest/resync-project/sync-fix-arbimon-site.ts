@@ -18,7 +18,7 @@ export const syncFixArbimonSites = async (project: Pick<Project, 'id' | 'idArbim
 
   // Getter
   const rawSourceSites = await getArbimonSitesByProject(arbimonSequelize, project.idArbimon)
-  const rawTargetSites = (await getSites(biodiversitySequelize, project.id))
+  const rawTargetSites = await getSites(biodiversitySequelize, project.id)
   if (verbose) {
     console.info('- syncFixArbimonSites: found %d sites in Legacy', rawSourceSites.length)
     console.info('- syncFixArbimonSites: found %d sites in Bio', rawTargetSites.length)
