@@ -10,7 +10,7 @@
       <div class="relative flex-1">
         <el-date-picker
           v-model="dateStart"
-          class="w-full border text-fog border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+          class="w-full border text-fog border-util-gray-03 rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
           type="date"
           :disabled="isDisabled"
           placeholder="Choose date"
@@ -30,7 +30,7 @@
       >
         <el-date-picker
           v-model="dateEnd"
-          class="w-full border text-fog border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+          class="w-full border text-fog border-util-gray-03 rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
           type="date"
           :disabled="isDisabled || onGoing"
           placeholder="Choose date"

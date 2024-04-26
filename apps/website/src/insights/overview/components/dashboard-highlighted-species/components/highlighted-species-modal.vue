@@ -27,7 +27,7 @@
           </div>
 
           <div>
-            <form
+            <div
               class="grid sm:grid-cols-1 md:(grid-cols-2 mr-4) xl:(grid-cols-3 mr-4)"
             >
               <div class="relative">
@@ -44,14 +44,14 @@
                   v-model="searchKeyword"
                   name="search"
                   type="text"
-                  class="input-field text-insight shadow-lg shadow-frequency/10"
+                  class="search-input text-insight shadow-lg shadow-frequency/10"
                   placeholder="Search species"
                   @input="searchSpeciesInputChanged"
                   @focus="isSearchBoxFocused = true"
                   @blur="isSearchBoxFocused = false"
                 >
               </div>
-            </form>
+            </div>
           </div>
           <div class="grid xl:grid-cols-3 items-center gap-x-2 my-1">
             <button

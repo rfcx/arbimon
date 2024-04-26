@@ -20,7 +20,7 @@
         name="slug"
         type="text"
         :disabled="isDisabled"
-        class="w-full border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
+        class="w-full border border-util-gray-03 rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
         required
         :maxlength="PROJECT_SLUG_MAX_LENGTH"
       >
