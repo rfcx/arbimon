@@ -1,3 +1,9 @@
+#
+# To start a project resync job, run the following replacing 123 for the Arbimon project id.
+#
+# sed -e 's|SETPROJECTID|123|g' tools/deployment/cli/job-resync-project.example.yaml | kubectl apply -f -
+#
+
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -8,7 +14,7 @@ spec:
     spec:
       containers:
         - name: job-resync-project
-          command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/sync/resync-project/index.js"]
+          command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/ingest/sync-fix-project-full.js"]
           image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:latest
           imagePullPolicy: IfNotPresent
           envFrom:

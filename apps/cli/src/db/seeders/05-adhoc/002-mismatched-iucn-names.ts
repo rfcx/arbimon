@@ -5,7 +5,7 @@ import { RiskRatingIucnModel } from '@rfcx-bio/common/dao/models/risk-rating-iuc
 import { TaxonSpeciesIucnModel } from '@rfcx-bio/common/dao/models/taxon-species-iucn-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
 
-import { syncIucnSpeciesInfo } from '@/sync/species-info/iucn'
+import { syncIucnSpeciesInfo } from '@/ingest/external/iucn'
 
 const mismatchedNames: Record<string, string> = {
   // Arbimon name : IUCN name

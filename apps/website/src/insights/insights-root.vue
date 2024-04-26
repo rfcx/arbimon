@@ -145,7 +145,7 @@ import { useGetDashboardMetrics } from './overview/composables/use-get-dashboard
 
 const items = [
   {
-    title: 'Overview',
+    title: 'Highlights',
     route: {
       name: ROUTE_NAMES.overview
     }

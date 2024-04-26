@@ -6,14 +6,22 @@
         data-dropdown-toggle="statusDropdownHover"
         class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-insight px-5 py-2 w-41 hover:bg-moss"
         type="button"
-        :class="{ '!w-max !border-solid': selectedStatus != 'all' }"
+        :class="{ '!w-max !border-solid': selectedStatus !== 'all' }"
       >
         <span
-          :class="{ 'px-2': selectedStatus != 'all' }"
+          :class="{ 'px-2': selectedStatus !== 'all' }"
         >
           {{ selectedStatusText }}
         </span>
-        <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />
+        <icon-custom-fi-close-thin
+          v-if="selectedStatus !== 'all'"
+          class="w-4 h-4 ml-2 cursor-pointer"
+          @click="onSelectStatus('all')"
+        />
+        <icon-fa-chevron-down
+          v-else
+          class="w-2.5 h-2.5 fa-chevron-down text-insight"
+        />
       </button>
       <div
         id="statusDropdownHover"
@@ -31,7 +39,8 @@
             v-for="status in detectionsResultFilterBySpeciesStore.validationStatusFilterOptions"
             :key="status.value"
             class="bg-moss hover:text-util-gray-01"
-            @click="selectedStatus = status.value"
+            :class="{'hidden' : status.value === 'all'}"
+            @click="onSelectStatus(status.value)"
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
@@ -49,12 +58,6 @@
             </div>
           </li>
         </ul>
-        <button
-          class="btn btn-primary py-2 h-10 whitespace-nowrap"
-          @click="filterDetectionsByStatus(selectedStatus); closeStatusDropdown()"
-        >
-          Apply filter
-        </button>
       </div>
     </div>
 
@@ -64,13 +67,21 @@
         data-dropdown-toggle="sitesDropdownCNN"
         class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-insight px-5 py-2 w-41 hover:bg-moss"
         type="button"
-        :class="{ 'border-solid': selectedSites.length > 0}"
+        :class="{ '!border-solid': selectedSites.length !== 0 }"
       >
         <div class="whitespace-nowrap text-ellipsis overflow-hidden">
           {{ selectedSitesTitle }}
         </div>
         <span>
-          <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />
+          <icon-custom-fi-close-thin
+            v-if="selectedSites.length !== 0"
+            class="w-4 h-4 ml-2 cursor-pointer"
+            @click="selectedSites = []; filterDetectionsBySite()"
+          />
+          <icon-fa-chevron-down
+            v-else
+            class="w-2.5 h-2.5 fa-chevron-down text-insight"
+          />
         </span>
       </button>
       <div
@@ -94,7 +105,7 @@
                   value="all"
                   class="w-4 h-4 text-frequency border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency"
                   :checked="selectedSites.length === detectionsResultFilterBySpeciesStore.sitesFilterOptions.length"
-                  @click="onSelectAllSites"
+                  @click="onSelectAllSites(); filterDetectionsBySite(); closeSitesDropdown()"
                 >
               </div>
               <div class="ml-2">
@@ -107,7 +118,7 @@
           <li
             v-for="site in detectionsResultFilterBySpeciesStore.sitesFilterOptions"
             :key="site.value"
-            @click="onSelectSite(site.value)"
+            @click="onSelectSite(site.value); filterDetectionsBySite(); closeSitesDropdown()"
           >
             <div class="flex p-2 rounded items-center hover:text-util-gray-01">
               <div class="flex">
@@ -119,6 +130,7 @@
                   :value="site.value"
                   class="w-4 h-4 text-frequency border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency"
                   :checked="selectedSites.includes(site.value)"
+                  @click="filterDetectionsBySite(); closeSitesDropdown()"
                 >
               </div>
               <div class="ml-2">
@@ -129,12 +141,6 @@
             </div>
           </li>
         </ul>
-        <button
-          class="btn btn-primary py-2 h-10 whitespace-nowrap"
-          @click="filterDetectionsBySite(); closeSitesDropdown()"
-        >
-          Apply filter
-        </button>
       </div>
     </div>
 
@@ -152,7 +158,15 @@
         >
           {{ selectedGroupingText }}
         </span>
-        <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />
+        <icon-custom-fi-close-thin
+          v-if="selectedGrouping"
+          class="w-4 h-4 ml-2 cursor-pointer"
+          @click="selectedGrouping = undefined; groupingDetections(selectedGrouping); closeGroupingDropdown()"
+        />
+        <icon-fa-chevron-down
+          v-else
+          class="w-2.5 h-2.5 fa-chevron-down text-insight"
+        />
       </button>
       <div
         id="groupingDropdownHover"
@@ -168,7 +182,7 @@
         >
           <li
             class="bg-moss hover:text-util-gray-01"
-            @click="selectedGrouping = 'minConfidence'"
+            @click="selectedGrouping = 'minConfidence'; groupingDetections(selectedGrouping); closeGroupingDropdown()"
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
@@ -182,12 +196,6 @@
             </div>
           </li>
         </ul>
-        <button
-          class="btn btn-primary py-2 whitespace-nowrap h-10"
-          @click="groupingDetections(selectedGrouping); closeGroupingDropdown()"
-        >
-          Apply filter
-        </button>
       </div>
     </div>
   </div>
@@ -243,6 +251,12 @@ const filterDetectionsBySite = () => {
 
 const formatStatus = (status: ArbimonReviewStatus | 'all') => {
   return status as ArbimonReviewStatus
+}
+
+const onSelectStatus = (status: ArbimonReviewStatus | 'all') => {
+  selectedStatus.value = status
+  filterDetectionsByStatus(selectedStatus.value)
+  closeStatusDropdown()
 }
 
 const selectedSitesTitle = computed(() => {
@@ -306,5 +320,3 @@ onMounted(() => {
   )
 })
 </script>
-
-<style lang="scss"></style>

@@ -9,7 +9,7 @@
         v-model="searchKeyword"
         name="search"
         type="text"
-        class="input-field text-insight shadow-lg shadow-frequency/10"
+        class="search-input text-insight shadow-lg shadow-frequency/10"
         placeholder="Search for projects"
         autocomplete="off"
       >

@@ -69,6 +69,7 @@ export const envGetters = {
   SLACK_TOKEN: stringGetter,
 
   ARBIMON_PROJECT_ID: numberGetter,
+  PROJECT_ID: numberGetter,
 
   CORE_API_BASE_URL: stringGetter,
   ARBIMON_BASE_URL: stringGetter,

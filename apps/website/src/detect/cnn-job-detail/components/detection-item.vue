@@ -24,7 +24,7 @@
         >
         <div
           class="absolute text-xs top-2.5 left-2.5"
-          style="line-height: .5rem"
+          style="line-height: 1.8rem; width:1.8rem; text-align: center;"
         >
           <input
             type="checkbox"
@@ -210,5 +210,9 @@ const dateFormatted = (date: string) => {
     opacity: 0.8;
     border: 3px solid #FFFEFC !important;
     background-image: url("data:image/svg+xml,%3Csvg width='13' height='10' viewBox='0 0 13 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.5 1.25L4.625 8.125L1.5 5' stroke='%23ADFF2C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  }
+  .relative:hover .absolute.text-xs.top-2\.5.left-2\.5{
+    background-color: #4B4B4B80 !important;
+    border-radius: 5px;
   }
 </style>

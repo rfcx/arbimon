@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-y-4 mt-4">
     <DetectionValidator
-      v-if="validationCount && isOpen"
+      :class="validationCount && isOpen ? 'block' : 'invisible'"
       :detection-count="validationCount"
       :filter-options="filterOptions"
       @emit-validation="validateDetection"

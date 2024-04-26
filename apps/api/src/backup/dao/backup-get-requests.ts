@@ -4,6 +4,9 @@ import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type Backup, type BackupType } from '@rfcx-bio/common/dao/types/backup'
 
 import { getSequelize } from '~/db'
+import { env } from '~/env'
+
+const { BACKUP_TIMEFRAME_LIMIT } = env
 
 const DEFAULT_TIMEFRAME = '7d'
 
@@ -28,8 +31,8 @@ export const getBackupRequests = async (entity: BackupType, entityId: number, re
         },
         limit,
         offset,
-        attributes: ['requested_at', 'url', 'status', 'expires_at'],
-        order: [['requested_at', 'DESC']],
+        attributes: ['requestedAt', 'url', 'status', 'expiresAt'],
+        order: [['requestedAt', 'DESC']],
         raw: true
     })
 
@@ -44,7 +47,7 @@ export const getBackupRequests = async (entity: BackupType, entityId: number, re
  * @param requestedBy
  * @param timeframe
  */
-export const getRequestWithinTimeframe = async (entity: BackupType, entityId: number, requestedBy: number, timeframe: string = DEFAULT_TIMEFRAME): Promise<Backup | null> => {
+export const getRequestWithinTimeframe = async (entity: BackupType, entityId: number, requestedBy: number, timeframe: string = BACKUP_TIMEFRAME_LIMIT ?? DEFAULT_TIMEFRAME): Promise<Backup | null> => {
     const sequelize = getSequelize()
     const { Backup } = ModelRepository.getInstance(sequelize)
 

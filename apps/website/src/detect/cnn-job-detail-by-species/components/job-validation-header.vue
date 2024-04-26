@@ -10,13 +10,13 @@
           {{ speciesName || '' }}
         </span>
       </div>
-      <div class="flex items-center justify-between text-insight pt-10">
-        <div class="flex items-center gap-x-3">
+      <div class="flex flex-wrap items-center justify-between text-insight pt-10 w-full gap-2 lg:flex-row ">
+        <div class="flex flex-wrap gap-2 items-center gap-x-3 lg:flex-row ">
           <span class="text-2xl font-display">Filters:</span>
           <JobValidationFilters
             @emit-min-confidence="toggleMinConfidence"
           />
-          <div>
+          <div class="w-36">
             <span>Results:</span>
             <span class="ml-1">{{ filteredResult }} / {{ detectionsCount }}</span>
           </div>

@@ -4,7 +4,7 @@
       <h1 class="flex text-insight">
         Detections
       </h1>
-      <form
+      <div
         class="h-12 w-72 my-6"
       >
         <div class="relative">
@@ -21,14 +21,14 @@
             v-model="searchSpeciesKeyword"
             name="search"
             type="text"
-            class="input-field text-insight shadow-lg shadow-frequency/10"
+            class="search-input text-insight shadow-lg shadow-frequency/10"
             placeholder="Search for species, sounds..."
             @input="searchKeywordChange()"
             @focus="isSearchBoxFocused = true"
             @blur="isSearchBoxFocused = false"
           >
         </div>
-      </form>
+      </div>
       <cnn-job-species-detected
         :datasets="results"
         :loading="isLoading"
