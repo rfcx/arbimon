@@ -37,7 +37,7 @@
   >
     <numeric-metric-with-icons
       tooltip-id="total-sites"
-      tooltip-text="Number of sites with recordings."
+      tooltip-text="Number of sites with recordings and coordinates"
       title="Total sites"
       :value="metrics?.totalSites ?? 0"
       icon-name="ft-map-pin-lg"
