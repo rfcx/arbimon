@@ -3,12 +3,12 @@ import { type Sequelize, QueryTypes } from 'sequelize'
 export interface ExportedRecording {
   recording_id: number
   site_id: number
-  path: string
+  uri: string
 }
 
 export const getRecordings = async (projectId: number, sequelize: Sequelize): Promise<ExportedRecording[]> => {
   const sql = `
-    select recording_id, site_id, uri path
+    select recording_id, site_id, uri
     from recordings
     where site_id in (select site_id from sites where project_id = $projectId)
     order by recording_id asc

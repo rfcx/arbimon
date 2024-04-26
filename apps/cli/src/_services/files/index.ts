@@ -1,21 +1,22 @@
 import archiver from 'archiver'
 import fs from 'fs'
 
-export const createZip = (zipPath: string, files: ZipFiles[]): void => {
+export const createZip = async (zipPath: string, files: ZipFile[]): Promise<void> => {
     const output = fs.createWriteStream(zipPath)
     const archive = archiver('zip', {
-        // TODO fix compression level
+        // TODO set compression level
         zlib: { level: 0 }
     })
-    archive.pipe(output)
-    for (const file of files) {
-        const { name, content } = file
+    for (const { name, content } of files) {
         archive.append(content, { name })
     }
-    archive.finalize()
+    archive.pipe(output)
+    output.end()
+
+    await archive.finalize()
 }
 
 export interface ZipFile {
     name: string
-    content: string | string[] | File | Buffer | ArrayBuffer
+    content: string | Buffer
 }

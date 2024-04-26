@@ -1,6 +1,7 @@
 import { type Sequelize, QueryTypes } from 'sequelize'
 
-export const getSpecies = async (sequelize: Sequelize, projectId: number): Promise<Record<string, any>> => {
+export const getSpecies = async (projectId: number, sequelize: Sequelize): Promise<Record<string, any>> => {
+    // Can be customized to get the necessary data if requirements change
     const sql = `
         select
             *

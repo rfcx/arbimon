@@ -9,7 +9,7 @@ const main = async (): Promise<void> => {
         const sequelize = getSequelize()
         const storage = getStorageClient()
 
-        // Process project backups
+        // Process project backup requests
         await backupProjects(sequelize, storage)
     } catch (e) {
         console.error(e)

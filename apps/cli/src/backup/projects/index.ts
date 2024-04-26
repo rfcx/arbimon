@@ -4,8 +4,7 @@ import {
     type Sequelize
 } from 'sequelize'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Backup, BackupStatus } from '@rfcx-bio/common/dao/types/backup'
+import { BackupStatus } from '@rfcx-bio/common/dao/types/backup'
 import type { StorageClient } from '@rfcx-bio/common/storage'
 
 import {
@@ -13,9 +12,15 @@ import {
     VERBOSE
 } from '@/backup/projects/config'
 import { generateCsv } from '@/backup/projects/export'
+import { type ProjectBackupRequest, getPendingRequests, updateRequest } from '@/backup/projects/requests'
 import { generateSignedUrl } from '@/export/project-csv/generate-signed-url'
 import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
 import { type ZipFile, createZip } from '~/files'
+
+const EXPORT_ITEMS = {
+    BIO: ['species'],
+    ARBIMON: ['sites', 'recordings', 'playlists', 'playlist_recordings', 'templates', 'recording_validations', 'pattern_matchings', 'pattern_matching_rois', 'pattern_matching_validations', 'soundscapes']
+}
 
 /**
  * Processes backup requests and creates backup for projects
@@ -25,19 +30,19 @@ import { type ZipFile, createZip } from '~/files'
  * @param verbose
  */
 export const backupProjects = async (sequelize: Sequelize, storage: StorageClient, verbose: boolean = VERBOSE): Promise<any> => {
-    const arbimonSequelize = getArbimonSequelize()
     let offset = 0
     let responseCount = 1
     let totalCount = 0
     const processedCount = 0
     const requests = []
-    // const request: ProjectBackupRequest = {
+    // TEST DATA
+    // const requests = [{
     //     id: 123,
-    //     projectId: 1209,
+    //     projectId: 2,
     //     arbimonProjectId: 1209,
-    //     slug: 'test-slug',
-    //     email: 'test'
-    // }
+    //     slug: 'bci-panama',
+    //     email: 'lucy@rfcx.org'
+    // }]
 
     // Fetch pending backup requests
     while (responseCount !== 0) {
@@ -60,43 +65,19 @@ export const backupProjects = async (sequelize: Sequelize, storage: StorageClien
     }
 
     for (const request of requests) {
-        const { id, projectId, arbimonProjectId, slug, email } = request
+        const { id, email, ...projectData } = request
         try {
             // Change status to processing
             await updateRequest(sequelize, id, { status: BackupStatus.PROCESSING })
 
-            const zipFiles: ZipFile[] = []
-            const client: S3Client = storage.getClient()
-            const bucket = storage.getBucket()
-
-            // Create csv files
-            console.info('STEP: Get sites')
-            const sites = await generateCsv('sites', arbimonProjectId, arbimonSequelize)
-            zipFiles.push(sites)
-
-            console.info('STEP: Get species')
-            const species = await generateCsv('species', projectId, sequelize)
-            zipFiles.push(species)
-
-            console.info('STEP: Get recordings')
-            const recordings = await generateCsv('recordings', arbimonProjectId, arbimonSequelize, true, { client, bucket })
-            zipFiles.push(recordings)
-
-            console.info('STEP: Get playlists')
-            const playlists = await generateCsv('playlists', arbimonProjectId, arbimonSequelize)
-            zipFiles.push(playlists)
-
-            console.info('STEP: Get playlist recordings')
-            // TODO
-
-            // Create zip with csv files
+            // Create export zip
             const now = new Date()
             const formattedDate = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
-            const zipName = `${slug}_${formattedDate}_export.zip`
-            createZip(zipName, zipFiles)
+            const zipName = await createExport(sequelize, storage, projectData, formattedDate)
 
+            // Read file and upload to S3
             const file = fs.readFileSync('./' + zipName)
-            const key = `exports/${projectId}/${formattedDate}/${zipName}`
+            const key = `exports/${projectData.projectId}/${formattedDate}/${zipName}`
             const expiresAt = new Date()
             expiresAt.setDate(now.getDate() + 7) // in 7 days
 
@@ -104,14 +85,16 @@ export const backupProjects = async (sequelize: Sequelize, storage: StorageClien
             await storage.putObject(key, file)
 
             // Update status, expiresAt, size, url
+            const client = storage.getClient()
+            const bucket = storage.getBucket()
             const url = await generateSignedUrl(client, bucket, key)
-            const size = (await fs.promises.stat(zipName)).size / (1024 * 1024) // in MB
+            const size = (await fs.promises.stat('./' + zipName)).size / (1024 * 1024) // in MB
             await updateRequest(sequelize, id, { status: BackupStatus.AVAILABLE, expiresAt, size, url })
 
             // TODO - send email to user
         } catch (e) {
             if (verbose) {
-                console.info(`Error processing backup request with id ${id} for projectId ${projectId}`, e)
+                console.info(`Error processing backup request with id ${id}`, e)
             }
         }
     }
@@ -121,50 +104,36 @@ export const backupProjects = async (sequelize: Sequelize, storage: StorageClien
     }
 }
 
-const getPendingRequests = async (sequelize: Sequelize, offset: number, limit: number = BATCH_LIMIT): Promise<ProjectBackupRequest[]> => {
-    const sql = `
-        select
-            backup.id as id,
-            location_project.id as projectId,
-            location_project.slug as slug,
-            location_project.id_arbimon as arbimonProjectId,
-            user_profile.email as email
-        from
-            backup join location_project on backup.entity_id = location_project.id
-            left join user_profile on backup.requested_by = user_profile.id
-        where backup.status = 'requested'
-        limit :limit
-        offset :offset
-        // order by? requested_at
-    `
+const createExport = async (sequelize: Sequelize, storage: StorageClient, projectData: Omit<ProjectBackupRequest, 'id' | 'email' >, timestamp: string): Promise<string> => {
+    const { projectId, arbimonProjectId, slug } = projectData
+    const arbimonSequelize = getArbimonSequelize()
+    const zipFiles: ZipFile[] = []
+    const client: S3Client = storage.getClient()
+    const bucket = storage.getBucket()
 
-    return await sequelize.query<ProjectBackupRequest>(sql, {
-        type: QueryTypes.SELECT,
-        raw: true,
-        replacements: {
-            limit,
-            offset
+    // Create csv files
+    // Export data from bio database
+    for (const item of EXPORT_ITEMS.BIO) {
+        try {
+            const file = await generateCsv(item, projectId, sequelize, { client, bucket })
+            zipFiles.push(file)
+        } catch (e) {
+            console.info(`Error exporting ${item}: `, e)
         }
-    })
-}
-
-const updateRequest = async (sequelize: Sequelize, id: number, updates: Partial<Backup>): Promise<void> => {
-    const { Backup } = ModelRepository.getInstance(sequelize)
-    const request = await Backup.findOne({
-        where: {
-            id
-        }
-    })
-
-    if (request !== null) {
-        await request.update(updates)
     }
-}
 
-interface ProjectBackupRequest {
-    id: number
-    projectId: number
-    slug: string
-    arbimonProjectId: number
-    email: string
+    // Export data from arbimon database
+    for (const item of EXPORT_ITEMS.ARBIMON) {
+        try {
+            const file = await generateCsv(item, arbimonProjectId, arbimonSequelize, { client, bucket })
+            zipFiles.push(file)
+        } catch (e) {
+            console.info(`Error exporting ${item}: `, e)
+        }
+    }
+
+    // Create zip with csv files
+    const zipName = `${slug}_${timestamp}_export.zip`
+    await createZip(zipName, zipFiles)
+    return zipName
 }
