@@ -7,13 +7,18 @@ export const createZip = async (zipPath: string, files: ZipFile[]): Promise<void
         // TODO set compression level
         zlib: { level: 0 }
     })
+
+    archive.pipe(output)
     for (const { name, content } of files) {
         archive.append(content, { name })
     }
-    archive.pipe(output)
     output.end()
 
     await archive.finalize()
+
+    return new Promise((resolve, reject) => {
+        output.on('end', () => { resolve() })
+    })
 }
 
 export interface ZipFile {
