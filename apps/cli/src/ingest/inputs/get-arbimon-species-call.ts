@@ -28,11 +28,13 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDa
       JOIN sites s ON r.site_id = s.site_id
       JOIN projects p ON s.project_id = p.project_id
       JOIN songtypes st ON t.songtype_id = st.songtype_id
-    WHERE t.deleted=0 AND r.datetime_utc IS NOT NULL
+    WHERE t.deleted = 0 
+      AND t.source_project_id IS NULL
+      AND r.datetime_utc IS NOT NULL
       AND t.date_created > $syncUntilDate OR (t.date_created = $syncUntilDate AND t.template_id > $syncUntilId)
+      AND s.deleted_at IS NULL
     ORDER BY t.date_created, t.template_id
     LIMIT $syncBatchLimit
-    ;
   `
   const results = await sequelize.query<SpeciesCallArbimonRow>(sql, {
     type: QueryTypes.SELECT,
@@ -72,7 +74,10 @@ export const getArbimonProjectSpeciesCalls = async (sequelize: Sequelize, projec
       JOIN projects p ON s.project_id = p.project_id
       JOIN songtypes st ON t.songtype_id = st.songtype_id
     WHERE t.project_id = $projectId
+      AND t.deleted = 0
+      AND t.source_project_id is null
       AND r.datetime_utc is not null
+      AND s.deleted_at is null
     ORDER BY t.template_id
   `
   return await sequelize.query<SpeciesCallArbimonRow>(sql, {
