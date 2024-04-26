@@ -7,7 +7,7 @@ import { type Backup, BackupStatus } from '@rfcx-bio/common/dao/types/backup'
 import component from './project-backup-history-list.vue'
 
 const NOT_AVAILABLE_TEXT = 'Not yet available'
-const EMPTY_TEXT = 'Looks like you haven’t set up any backups yet.'
+const EMPTY_TEXT = 'Looks like you haven\'t requested a backup recently.'
 
 const createNewBackup = (status: BackupStatus, requestedAt: string, expiresAt?: string, link?: string): Backup => ({
   // dafault values

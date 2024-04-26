@@ -34,7 +34,7 @@
           colspan="4"
           class="py-4"
         >
-          Looks like you haven’t set up any backups yet.
+          Looks like you haven't requested a backup recently.
         </td>
       </tr>
       <tr

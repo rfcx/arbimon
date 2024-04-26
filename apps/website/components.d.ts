@@ -64,6 +64,7 @@ declare module 'vue' {
     IconCustomIcCancelled: typeof import('~icons/custom-icons/ic-cancelled')['default']
     IconCustomIcCircle: typeof import('~icons/custom-icons/ic-circle')['default']
     IconCustomIcClockFrequency: typeof import('~icons/custom-icons/ic-clock-frequency')['default']
+    IconCustomIcClose: typeof import('~icons/custom-icons/ic-close')['default']
     IconCustomIcCloseBlack: typeof import('~icons/custom-icons/ic-close-black')['default']
     IconCustomIcEdit: typeof import('~icons/custom-icons/ic-edit')['default']
     IconCustomIcError: typeof import('~icons/custom-icons/ic-error')['default']

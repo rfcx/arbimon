@@ -34,7 +34,7 @@
             <div>
               <h3>Request project backup</h3>
               <p class="mt-2">
-                This process can take up to a week, depending on how large your project is. You're allowed to request a backup every 7 days.
+                This process can take up to 24 hours, depending on how large your project is. You're allowed to request a backup every 7 days.
               </p>
             </div>
             <div
