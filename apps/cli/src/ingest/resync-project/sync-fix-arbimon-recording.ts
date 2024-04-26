@@ -141,9 +141,9 @@ const compare = (source: ArbimonRecordingByHour[], target: RecordingBySiteHourWi
 
 // -1 => a comes before b, 0 => a equals b
 const compareElementBySiteHour = (a: ArbimonRecordingByHour, b: RecordingBySiteHourWithArbimonSiteId): -1 | 0 | 1 => {
-  if (a.siteIdArbimon > b.siteIdArbimon || a.timePrecisionHourLocal > b.timePrecisionHourLocal) {
+  if (a.siteIdArbimon > b.siteIdArbimon || (a.siteIdArbimon === b.siteIdArbimon && a.timePrecisionHourLocal > b.timePrecisionHourLocal)) {
     return 1
-  } else if (a.siteIdArbimon < b.siteIdArbimon || a.timePrecisionHourLocal < b.timePrecisionHourLocal) {
+  } else if (a.siteIdArbimon < b.siteIdArbimon || (a.siteIdArbimon === b.siteIdArbimon && a.timePrecisionHourLocal < b.timePrecisionHourLocal)) {
     return -1
   }
   return 0
