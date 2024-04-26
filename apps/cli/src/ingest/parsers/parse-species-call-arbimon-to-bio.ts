@@ -34,11 +34,11 @@ const SpeciesCallArbimonSchema = z.object({
   callSiteId: z.number(),
   siteIdCore: z.string().length(12),
   callType: z.string(),
-  callRecordedAt: z.string(),
+  callRecordedAt: z.coerce.date(),
   callTimezone: z.string(),
   start: z.number(),
   end: z.number(),
-  updatedAt: z.string(),
+  updatedAt: z.coerce.date(),
   projectSlugArbimon: z.string(),
   recordingId: z.number(),
   idArbimon: z.number(),
@@ -69,7 +69,7 @@ SpeciesCallArbimonSchema.safeParse(speciesCallsArbimon)
 
 export const transformTemplateArbimonToSpeciesCallBio = (speciesCall: SpeciesCallBio): Omit<TaxonSpeciesCall, 'id'> => ({ ...speciesCall })
 
-export const mapSpeciesCallArbimonWithBioFk = async (speciesCalls: SpeciesCallArbimon[], sequelize: Sequelize): Promise<any[]> => {
+export const mapSpeciesCallArbimonWithBioFk = async (speciesCalls: SpeciesCallArbimon[], sequelize: Sequelize): Promise<Array<Omit<TaxonSpeciesCall, 'id'>>> => {
   const models = ModelRepository.getInstance(sequelize)
 
   const speciesIdArbimonToBio = await models.TaxonSpecies.findAll()

@@ -3,6 +3,7 @@ import { type Sequelize } from 'sequelize'
 import { getArbimonProjectId } from './sync-config'
 import { syncFixArbimonRecordings } from './sync-fix-arbimon-recording'
 import { syncFixArbimonSites } from './sync-fix-arbimon-site'
+import { syncFixArbimonSpeciesCalls } from './sync-fix-arbimon-species-call'
 
 export const syncFixProject = async (projectId: number, arbimonSequelize: Sequelize, biodiversitySequelize: Sequelize): Promise<void> => {
   try {
@@ -16,6 +17,9 @@ export const syncFixProject = async (projectId: number, arbimonSequelize: Sequel
 
     await syncFixArbimonRecordings(project, arbimonSequelize, biodiversitySequelize)
     console.info('> Recordings: up to date')
+
+    await syncFixArbimonSpeciesCalls(project, arbimonSequelize, biodiversitySequelize)
+    console.info('> Species Calls: up to date')
   } catch (e) {
     console.error('SYNC - Fix project failed', e)
     process.exitCode = 1
