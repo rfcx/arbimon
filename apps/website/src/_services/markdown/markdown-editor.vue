@@ -303,15 +303,11 @@ const hasFailed = ref(props.hasFailed ?? false)
 const errorMessage = ref(props.errorMessage ?? '')
 
 const closeEditorView = (): void => {
-  try {
     if (hasFailed.value === false) {
       emit('onEditorClose')
     } else {
       handleSaveError(props.errorMessage)
     }
-  } catch (error) {
-    handleSaveError(props.errorMessage)
-  }
 }
 
 const handleSaveError = (error: string | undefined): void => {
