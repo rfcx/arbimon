@@ -5,61 +5,6 @@
         Project settings
       </h1>
       <ReadOnlyBanner v-if="!store.userIsAdminProjectMember" />
-      <div class="grid gap-10 lg:grid-cols-2">
-        <div>
-          <h5>
-            Project information
-          </h5>
-          <project-form
-            :existing-name="selectedProject?.name"
-            :date-start="settings?.dateStart ? new Date(settings?.dateStart) : undefined"
-            :date-end="settings?.dateEnd ? new Date(settings?.dateEnd) : undefined"
-            :is-disabled="!store.userIsAdminProjectMember"
-            @emit-update-value="onEmitDefaultValue"
-          />
-          <project-summary-form
-            :existing-summary="settings?.summary"
-            :is-disabled="!store.userIsAdminProjectMember"
-            @emit-project-summary="onEmitSummary"
-          />
-          <project-objective-form
-            :existing-objectives="settings?.objectives"
-            :is-disabled="!store.userIsAdminProjectMember"
-            @emit-project-objectives="onEmitObjectives"
-          />
-        </div>
-        <div>
-          <h5>
-            Insights
-          </h5>
-          <project-slug
-            :existing-slug="selectedProject?.slug"
-            :is-disabled="!store.userIsAdminProjectMember"
-            @emit-updated-slug="onEmitSlug"
-          />
-          <div class="my-6 h-[1px] w-full bg-util-gray-01" />
-          <project-image-form
-            :is-disabled="!store.userIsAdminProjectMember"
-            :image="settings?.image !== undefined ? urlWrapper(settings?.image) : undefined"
-            @emit-project-image="onEmitProjectImage"
-          />
-          <div class="my-6 h-[1px] w-full bg-util-gray-01" />
-          <project-listed-form
-            :is-public="settings?.isPublic"
-            :is-disabled="!store.userIsAdminProjectMember || settings?.isPublished"
-            :is-create-project="false"
-            @emit-project-listed="toggleListedProject"
-          />
-          <div class="my-6 h-[1px] w-full bg-util-gray-01" />
-          <project-delete
-            v-if="store.project?.role === 'owner'"
-            :is-deleting="isDeletingProject"
-            :is-error="isErrorDeleteProject"
-            :is-success="isSuccessDeleteProject"
-            @emit-project-delete="onEmitProjectDelete"
-          />
-        </div>
-      </div>
       <div
         class="flex flex-row-reverse items-center gap-4"
       >
@@ -70,7 +15,7 @@
           data-tooltip-placement="bottom"
           @click.prevent="save"
         >
-          Save changes
+          Save
         </button>
         <div
           v-if="!store.userIsAdminProjectMember"
@@ -100,13 +45,72 @@
           :error-message="errorMessage"
         />
       </div>
+      <div class="grid gap-10">
+        <div>
+          <h4>
+            Project information
+          </h4>
+          <project-form
+            :existing-name="selectedProject?.name"
+            :date-start="settings?.dateStart ? new Date(settings?.dateStart) : undefined"
+            :date-end="settings?.dateEnd ? new Date(settings?.dateEnd) : undefined"
+            :is-disabled="!store.userIsAdminProjectMember"
+            @emit-update-value="onEmitDefaultValue"
+          />
+          <project-summary-form
+            :existing-summary="settings?.summary"
+            :is-disabled="!store.userIsAdminProjectMember"
+            @emit-project-summary="onEmitSummary"
+          />
+          <project-objective-form
+            :existing-objectives="settings?.objectives"
+            :is-disabled="!store.userIsAdminProjectMember"
+            @emit-project-objectives="onEmitObjectives"
+          />
+        </div>
+        <div>
+          <h4>
+            Insights
+          </h4>
+          <project-slug
+            :existing-slug="selectedProject?.slug"
+            :is-disabled="!store.userIsAdminProjectMember"
+            @emit-updated-slug="onEmitSlug"
+          />
+          <hr class="border-util-gray-03 my-6">
+          <project-image-form
+            :is-disabled="!store.userIsAdminProjectMember"
+            :image="settings?.image !== undefined ? urlWrapper(settings?.image) : undefined"
+            @emit-project-image="onEmitProjectImage"
+          />
+          <hr class="border-util-gray-03 my-6">
+          <project-listed-form
+            :is-public="settings?.isPublic"
+            :is-disabled="!store.userIsAdminProjectMember || settings?.isPublished"
+            :is-create-project="false"
+            @emit-project-listed="toggleListedProject"
+          />
+          <template v-if="toggles?.projectBackup === true && store.project?.role === 'owner'">
+            <hr class="border-util-gray-03 my-6">
+            <project-backup />
+          </template>
+          <hr class="border-util-gray-03 my-6">
+          <project-delete
+            v-if="store.project?.role === 'owner'"
+            :is-deleting="isDeletingProject"
+            :is-error="isErrorDeleteProject"
+            :is-success="isSuccessDeleteProject"
+            @emit-project-delete="onEmitProjectDelete"
+          />
+        </div>
+      </div>
     </div>
   </section>
 </template>
 <script setup lang="ts">
 import { type AxiosError, type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
 
 import { type ProjectProfileUpdateBody, ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
@@ -115,7 +119,7 @@ import { isValidSlug } from '@rfcx-bio/utils/string/slug'
 import SaveStatusText from '@/_components/save-status-text.vue'
 import ReadOnlyBanner from '@/_layout/components/guest-banner/guest-banner.vue'
 import { urlWrapper } from '@/_services/images/url-wrapper'
-import { apiClientKey } from '@/globals'
+import { apiClientKey, togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
 import { useDeleteProject, useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
@@ -127,12 +131,14 @@ import ProjectListedForm from './components/form/project-listed-form.vue'
 import ProjectObjectiveForm from './components/form/project-objective-form.vue'
 import ProjectSlug from './components/form/project-slug.vue'
 import ProjectSummaryForm from './components/form/project-summary-form.vue'
+import ProjectBackup from './components/project-backup/project-backup.vue'
 import type { ProjectDefault } from './types'
 
 const router = useRouter()
 const store = useStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
+const toggles = inject(togglesKey)
 const selectedProject = computed(() => store.project)
 const selectedProjectId = computed(() => store.project?.id)
 
@@ -159,20 +165,28 @@ const showStatus = ref(false)
 const hasFailed = ref(false)
 const errorMessage = ref<string>()
 
+const date = Math.floor(Date.now() / 1000)
+
+const lastModified = ref<number>(date)
+const lastSaved = ref<number>(date)
+
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
   newName.value = value.name
   dateStart.value = value.startDate
   dateEnd.value = value.endDate
   onGoing.value = value.onGoing
+  updateLastModified()
 }
 
 const onEmitSummary = (value: string) => {
   newSummary.value = value
+  updateLastModified()
 }
 
 const onEmitObjectives = (value: string[]) => {
   newObjectives.value = value
+  updateLastModified()
 }
 
 const onEmitProjectImage = (file: File) => {
@@ -190,10 +204,12 @@ const onEmitProjectImage = (file: File) => {
     profileImageForm.value = form
   })
   readerBuffer.readAsArrayBuffer(file)
+  updateLastModified()
 }
 
 const onEmitSlug = (slug: string) => {
   newSlug.value = slug
+  updateLastModified()
 }
 
 const onEmitProjectDelete = () => {
@@ -275,6 +291,7 @@ const updateSettings = () => {
     onSuccess: () => {
       if (profileImageForm.value === undefined) {
         isSaving.value = false
+        updateLastSaved()
         displayTextAfterSaveWithSuccessStatus(true)
       }
       store.updateProjectName(newName.value)
@@ -300,6 +317,7 @@ const updateSettings = () => {
     mutatePatchProfilePhoto(profileImageForm.value, {
       onSuccess: async () => {
         isSaving.value = false
+        updateLastSaved()
         displayTextAfterSaveWithSuccessStatus(true)
       },
       onError: () => {
@@ -309,5 +327,21 @@ const updateSettings = () => {
     })
   }
 }
+
+const updateLastModified = () => {
+  lastModified.value = Math.floor(Date.now() / 1000)
+}
+
+const updateLastSaved = () => {
+  lastSaved.value = Math.floor(Date.now() / 1000)
+}
+
+onBeforeRouteLeave(() => {
+  if (lastModified.value > lastSaved.value) {
+    const answer = window.confirm('Are you sure you want to leave the page? You have unsaved changes.')
+    return answer
+  }
+  return true
+})
 
 </script>

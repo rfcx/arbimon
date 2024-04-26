@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col gap-y-6">
-    <h5>
+    <h4>
       Danger Zone
-    </h5>
+    </h4>
     <div>
       <div class="flex flex-row">
         <span class="font-medium">Delete project</span>
@@ -68,9 +68,9 @@
                 </div>
                 <div
                   v-if="isError"
-                  class="bg-spoonbill mt-6 flex flex-row items-center p-2 border-l-3 rounded-lg border-l-ibis"
+                  class="bg-danger-light mt-6 flex flex-row items-center p-2 border-l-3 rounded-lg border-l-ibis"
                 >
-                  <icon-custom-alert-triangle class="h-6 w-6 cursor-pointer" />
+                  <icon-custom-alert-triangle class="h-6 w-6 cursor-pointer text-ibis" />
                   <span
                     class="text-sm ml-2 text-util-gray-04 font-medium"
                     role="alert"

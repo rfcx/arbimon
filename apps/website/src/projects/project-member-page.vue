@@ -84,7 +84,7 @@
                     v-model="newUser.firstName"
                     name="firstName"
                     type="text"
-                    class="w-full mt-1 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
+                    class="w-full mt-1 border border-util-gray-03 rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
                     required
                   >
                 </div>
@@ -97,7 +97,7 @@
                     v-model="newUser.lastName"
                     name="lastName"
                     type="text"
-                    class="w-full mt-1 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
+                    class="w-full mt-1 border border-util-gray-03 rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
                     required
                   >
                 </div>
@@ -110,7 +110,7 @@
                     v-model="newUser.email"
                     name="email"
                     type="text"
-                    class="w-full mt-1 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
+                    class="w-full mt-1 border border-util-gray-03 rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70"
                   >
                 </div>
               </div>
@@ -133,7 +133,7 @@
 
             <div
               ref="userSearchResultContainer"
-              class="z-10 w-[15rem] hidden px-0 mx-auto max-w-screen-md text-insight bg-echo border-cloud border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow overflow-y-scroll"
+              class="z-10 w-[15rem] hidden px-0 mx-auto max-w-screen-md text-insight bg-echo border-util-gray-03 border-b-0 border-l border-r rounded-b-lg divide-y divide-gray-100 shadow overflow-y-scroll"
               :class="{'border-b-1 rounded-t-lg border-t-1': userSearchValue && !userSearchResult, 'border-b-1 border-t-1 rounded-t-lg max-h-66': userSearchResult}"
             >
               <ProjectUserSearch

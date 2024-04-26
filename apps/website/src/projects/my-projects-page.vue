@@ -23,7 +23,7 @@
             </router-link>
           </div>
           <div>
-            <form
+            <div
               class="w-80"
             >
               <div class="relative">
@@ -40,14 +40,14 @@
                   v-model="projectSearchValue"
                   name="search"
                   type="text"
-                  class="input-field text-insight shadow-lg shadow-frequency/10"
+                  class="search-input text-insight shadow-lg shadow-frequency/10"
                   placeholder="Search projects by name"
                   @input="searchProjectInputChanged"
                   @focus="isSearchBoxFocused = true"
                   @blur="isSearchBoxFocused = false"
                 >
               </div>
-            </form>
+            </div>
           </div>
         </div>
         <div>

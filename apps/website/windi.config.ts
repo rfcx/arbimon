@@ -115,7 +115,7 @@ export default defineConfig({
         },
         danger: {
           DEFAULT: '#D46767',
-          light: '#e5a4a4',
+          light: '#F5D2D8',
           dark: '#7f3e3e'
         },
         warning: {
@@ -170,6 +170,8 @@ export default defineConfig({
     'tab-active': '!text-insight !dark:text-frequency lg:!border-b-0 lg:!border-b-frequency',
     // button
     btn: 'px-6 py-3 text-base text-center text-pitch rounded-full font-display',
+    'btn-medium': 'py-2',
+    'btn-small': 'py-1',
     'btn-primary': 'bg-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:bg-frequency dark:hover:bg-chirp dark:focus:ring-chirp',
     'btn-secondary': 'rounded-full text-frequency border border-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:text-frequency dark:hover:bg-chirp dark:border-frequency dark:hover:text-pitch dark:hover:border-chirp dark:focus:ring-chirp',
     'btn-disabled': 'cursor-not-allowed bg-util-gray-04 text-util-gray-02 border-transparent',
@@ -181,6 +183,7 @@ export default defineConfig({
     'navbar-item': 'box-content text-insight flex items-center justify-center hover:text-frequency h-9',
     'navbar-menu-item': 'mx-2',
     // input
-    'input-field': 'p-2 w-full text-base border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)'
+    'input-field': 'p-2 w-full text-base border border-util-gray-03 rounded-md dark:(bg-pitch text-insight placeholder:text-util-gray-01) focus:(border-frequency ring-frequency)',
+    'search-input': 'input-field border-cloud'
   }
 })

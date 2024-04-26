@@ -7,7 +7,9 @@ const featureTogglesRaw = {
   // showActivityLineChart: import.meta.env.VITE_TOGGLE_SHOW_ACTIVITY_LINE_CHART
   heatmapConfig: import.meta.env.VITE_TOGGLE_HEATMAP_CONFIG,
   explore: import.meta.env.VITE_TOGGLE_EXPLORE,
-  legacyLogin: import.meta.env.VITE_TOGGLE_LEGACY_LOGIN
+  legacyLogin: import.meta.env.VITE_TOGGLE_LEGACY_LOGIN,
+  projectBackup: import.meta.env.VITE_TOGGLE_PROJECT_BACKUP,
+  projectBackupTesting: import.meta.env.VITE_TOGGLE_PROJECT_BACKUP_TESTING
   /* STOP: Declare toggles here */
 }
 

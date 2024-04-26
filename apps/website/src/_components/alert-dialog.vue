@@ -21,7 +21,7 @@
       />
       <icon-custom-alert-triangle
         v-else-if=" severity === 'error' "
-        class="h-6 w-6 cursor-pointer item-center"
+        class="h-6 w-6 cursor-pointer item-center text-ibis"
       />
       <div
         class="ms-3 text-sm px-2"
