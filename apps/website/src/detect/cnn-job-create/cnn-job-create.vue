@@ -126,9 +126,8 @@ import type { AxiosInstance } from 'axios'
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+import type { CreateClassifierJobBody } from '@rfcx-bio/common/api-bio/cnn/create-classifier-job'
 import type { DetectRecordingQueryParams } from '@rfcx-bio/common/api-bio/detect/detect-recording'
-import type { ClassifierJobCreateConfiguration } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-create'
-import { apiCorePostClassifierJobUpdateStatus } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-update-status'
 import { displayFullValue } from '@rfcx-bio/utils/number'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
@@ -138,7 +137,7 @@ import DatePicker from '@/_services/picker/date-picker.vue'
 import type { DateRange } from '@/_services/picker/date-range-picker-interface'
 import SiteInput from '@/_services/picker/site-input.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
-import { apiClientCoreKey, apiClientKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useClassifiers } from '../_composables/use-classifiers'
@@ -151,13 +150,14 @@ const store = useStore()
 const errorText = 'Error - there’s a problem loading the models. Please refresh this page and try again.'
 
 // Fields
-const job: ClassifierJobCreateConfiguration = reactive({
+const job: CreateClassifierJobBody = reactive({
   classifierId: -1,
-  projectIdCore: null,
-  queryStreams: null,
-  queryStart: null,
-  queryEnd: null,
-  queryHours: '0-23'
+  projectId: -1,
+  queryStreams: undefined,
+  queryStart: '',
+  queryEnd: '',
+  queryHours: '0-23',
+  minutesTotal: 0
 })
 
 const recordingQuery: DetectRecordingQueryParams = reactive({
@@ -174,13 +174,13 @@ const project = reactive({
 const hasProjectPermission = ref(false)
 
 onMounted(() => {
-  job.projectIdCore = store.project?.idCore ?? null
+  job.projectId = store.project?.id ?? -1
   project.projectId = store.project?.id.toString() ?? '-1'
   hasProjectPermission.value = store.userIsProjectMember
 })
 
 watch(() => store.project, () => {
-  job.projectIdCore = store.project?.idCore ?? null
+  job.projectId = store.project?.id ?? -1
   project.projectId = store.project?.id.toString() ?? '-1'
   hasProjectPermission.value = store.userIsProjectMember
 })
@@ -190,9 +190,8 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { isLoading: isLoadingDetectRecording, isError: isErrorDetectRecording, data: recordingData } = useDetectRecording(apiClientBio, project, recordingQuery)
 
 // External data
-const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientBio)
-const { isPending: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientCore)
+const { isPending: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientBio)
 
 // Current projects
 const projectFilters = computed(() => store.projectFilters)
@@ -211,7 +210,7 @@ const onSelectClassifier = (classifierId: number) => {
 }
 const onSelectQuerySites = (queryStreams: string | null) => {
   validated.value = false
-  job.queryStreams = queryStreams
+  job.queryStreams = queryStreams ?? undefined
   recordingQuery.querySites = queryStreams ?? undefined
 }
 const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
@@ -233,7 +232,7 @@ const onSelectQueryHours = (queryHours: string) => {
 // Validation
 const validated = ref(false)
 
-const errorProject = computed(() => job.projectIdCore !== null && job.projectIdCore !== '' ? undefined : 'No project selected or project is invalid')
+const errorProject = computed(() => job.projectId !== undefined && job.projectId !== -1 ? undefined : 'No project selected or project is invalid')
 const errorPermission = computed(() => hasProjectPermission.value ? undefined : 'You do not have permission to create jobs for this project')
 const errorClassifier = computed(() => job.classifierId > 0 ? undefined : 'Please select a classifier')
 const errorHours = computed(() => isValidQueryHours(job.queryHours ?? '') ? undefined : 'Time of day must be in range of 0 - 23 following by , or - to split hours')
@@ -253,9 +252,8 @@ const createJob = async (): Promise<void> => {
   if (errors.value.length > 0) { return }
 
   // Save
-  mutatePostJob(job, {
-    onSuccess: async (response) => {
-      await apiCorePostClassifierJobUpdateStatus(apiClientCore, response.jobId, { minutes_total: totalDurationInMinutes.value })
+  mutatePostJob({ ...job, minutesTotal: totalDurationInMinutes.value }, {
+    onSuccess: async () => {
       router.push({ name: ROUTE_NAMES.cnnJobList })
     }
   })
