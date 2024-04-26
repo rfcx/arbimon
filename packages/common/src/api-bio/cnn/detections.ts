@@ -7,7 +7,7 @@ import { type ArbimonReviewStatus } from './classifier-job-information'
 export interface GetDetectionsQueryParams {
   start: string
   end: string
-  reviewStatus?: ArbimonReviewStatus
+  reviewStatus?: ArbimonReviewStatus[]
   /** Core site Ids */
   sites?: string[]
   classifierJobId: number

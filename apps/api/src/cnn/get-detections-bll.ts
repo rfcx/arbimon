@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 
-import { type ArbimonReviewStatus, type CoreRawReviewStatus, ARBIMON_CORE_REVIEW_STATUS_MAP } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { type ArbimonReviewStatus, type CoreRawReviewStatus, ARBIMON_CORE_REVIEW_STATUS_MAP, CoreReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type Detection, type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
 import { type WithTotalCount } from '@rfcx-bio/common/total-count'
 
@@ -27,6 +27,26 @@ const getArbimonReviewStatus = (reviewStatus: CoreRawReviewStatus): ArbimonRevie
   }
 
   return 'unvalidated'
+}
+
+const convertReviewStatusQueryParameter = (reviewStatuses: ArbimonReviewStatus[] | ArbimonReviewStatus | undefined): CoreReviewStatus[] | undefined => {
+  if (reviewStatuses === undefined) {
+    return undefined
+  }
+
+  if (Array.isArray(reviewStatuses)) {
+    const convertedReviewStatusArray = reviewStatuses
+      .map(r => ARBIMON_CORE_REVIEW_STATUS_MAP[r])
+      .filter(r => r !== undefined)
+
+    if (convertedReviewStatusArray.length === 0) {
+      return undefined
+    }
+
+    return convertedReviewStatusArray
+  } else {
+    return [ARBIMON_CORE_REVIEW_STATUS_MAP[reviewStatuses]]
+  }
 }
 
 export const getDetections = async (token: string, params: GetDetectionsQueryParams): Promise<WithTotalCount<Detection[]>> => {
@@ -60,7 +80,8 @@ export const getDetections = async (token: string, params: GetDetectionsQueryPar
     classifiers: [Number(params.classifierId)],
     classifier_jobs: [Number(params.classifierJobId)],
     min_confidence: params.confidence === undefined ? undefined : Number(params.confidence),
-    review_statuses: params.reviewStatus === undefined ? undefined : [ARBIMON_CORE_REVIEW_STATUS_MAP[params.reviewStatus]],
+    // @ts-expect-error these brackets are needed because axios is off-spec, solvable when upgrading to `axios^1.0`
+    review_statuses: convertReviewStatusQueryParameter(params?.['reviewStatus[]']),
     limit,
     offset,
     descending: true,

@@ -435,4 +435,166 @@ describe('GET /detections', async () => {
       ]
     })
   })
+
+  test('review status can be parsed in as an array', async () => {
+    // Arrange
+    const spy = vi.spyOn(core, 'getDetections')
+    const app = await makeApp(routesCnn, {
+      projectRole: 'user',
+      userToken: {
+        email: 'whoami@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'GET',
+      url: '/detections',
+      query: {
+        start: '2021-12-31T23:55:00.000+0700',
+        end: '2022-01-01T01:00:00.000+0700',
+        classifierId: '27',
+        classifierJobId: '25',
+        'reviewStatus[]': ['notPresent', 'unvalidated'],
+        'sites[]': ['kdibkrnfh84k', 'iehmdkifu485'],
+        limit: '500',
+        offset: '250'
+      }
+    })
+
+    // Assert
+    expect(response.statusCode).toEqual(200)
+    expect(spy).toHaveBeenCalledOnce()
+    expect(spy).toHaveBeenCalledWith('', {
+      start: '2021-12-31T23:55:00.000+0700',
+      end: '2022-01-01T01:00:00.000+0700',
+      streams: ['kdibkrnfh84k', 'iehmdkifu485'],
+      classifications: undefined,
+      classifiers: [27],
+      classifier_jobs: [25],
+      min_confidence: undefined,
+      review_statuses: ['rejected', 'unreviewed'],
+      limit: 500,
+      offset: 250,
+      descending: true,
+      fields: [
+        'id',
+        'stream_id',
+        'classifier_id',
+        'start',
+        'end',
+        'confidence',
+        'review_status',
+        'classification'
+      ]
+    })
+  })
+
+  test('incorrect review status will be filtered out', async () => {
+    // Arrange
+    const spy = vi.spyOn(core, 'getDetections')
+    const app = await makeApp(routesCnn, {
+      projectRole: 'user',
+      userToken: {
+        email: 'whoami@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'GET',
+      url: '/detections',
+      query: {
+        start: '2021-12-31T23:55:00.000+0700',
+        end: '2022-01-01T01:00:00.000+0700',
+        classifierId: '27',
+        classifierJobId: '25',
+        'reviewStatus[]': ['notPresent', 'who'],
+        'sites[]': ['kdibkrnfh84k', 'iehmdkifu485'],
+        limit: '500',
+        offset: '250'
+      }
+    })
+
+    // Assert
+    expect(response.statusCode).toEqual(200)
+    expect(spy).toHaveBeenCalledOnce()
+    expect(spy).toHaveBeenCalledWith('', {
+      start: '2021-12-31T23:55:00.000+0700',
+      end: '2022-01-01T01:00:00.000+0700',
+      streams: ['kdibkrnfh84k', 'iehmdkifu485'],
+      classifications: undefined,
+      classifiers: [27],
+      classifier_jobs: [25],
+      min_confidence: undefined,
+      review_statuses: ['rejected'],
+      limit: 500,
+      offset: 250,
+      descending: true,
+      fields: [
+        'id',
+        'stream_id',
+        'classifier_id',
+        'start',
+        'end',
+        'confidence',
+        'review_status',
+        'classification'
+      ]
+    })
+  })
+
+  test('if only invalid review status are passed in, core will receive undefined', async () => {
+    // Arrange
+    const spy = vi.spyOn(core, 'getDetections')
+    const app = await makeApp(routesCnn, {
+      projectRole: 'user',
+      userToken: {
+        email: 'whoami@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'GET',
+      url: '/detections',
+      query: {
+        start: '2021-12-31T23:55:00.000+0700',
+        end: '2022-01-01T01:00:00.000+0700',
+        classifierId: '27',
+        classifierJobId: '25',
+        'reviewStatus[]': ['wrong', 'wrong2'],
+        'sites[]': ['kdibkrnfh84k', 'iehmdkifu485'],
+        limit: '500',
+        offset: '250'
+      }
+    })
+
+    // Assert
+    expect(response.statusCode).toEqual(200)
+    expect(spy).toHaveBeenCalledOnce()
+    expect(spy).toHaveBeenCalledWith('', {
+      start: '2021-12-31T23:55:00.000+0700',
+      end: '2022-01-01T01:00:00.000+0700',
+      streams: ['kdibkrnfh84k', 'iehmdkifu485'],
+      classifications: undefined,
+      classifiers: [27],
+      classifier_jobs: [25],
+      min_confidence: undefined,
+      review_statuses: undefined,
+      limit: 500,
+      offset: 250,
+      descending: true,
+      fields: [
+        'id',
+        'stream_id',
+        'classifier_id',
+        'start',
+        'end',
+        'confidence',
+        'review_status',
+        'classification'
+      ]
+    })
+  })
 })

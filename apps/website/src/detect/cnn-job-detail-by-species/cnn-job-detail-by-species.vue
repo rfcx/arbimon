@@ -129,7 +129,7 @@ const detectionsQueryParams = computed<GetDetectionsQueryParams>(() => {
   return {
     start: detectionsResultFilterBySpeciesStore.selectedStartRange,
     end: detectionsResultFilterBySpeciesStore.selectedEndRange,
-    reviewStatus: detectionsResultFilterBySpeciesStore.filter.validationStatus === 'all' ? undefined : detectionsResultFilterBySpeciesStore.filter.validationStatus,
+    reviewStatus: detectionsResultFilterBySpeciesStore.filter.validationStatus === 'all' ? undefined : [detectionsResultFilterBySpeciesStore.filter.validationStatus],
     sites: detectionsResultFilterBySpeciesStore.filter.siteIds,
     classifierJobId: jobId.value,
     classification: speciesSlug.value,
