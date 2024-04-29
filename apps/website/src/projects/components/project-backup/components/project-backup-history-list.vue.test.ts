@@ -102,7 +102,7 @@ describe('Project backup: history list - item', () => {
     // Assert
 
     // status = completed
-    expect(wrapper.text()).toContain('Completed')
+    expect(wrapper.text()).toContain('Success')
 
     // request date = 2021-01-01
     expect(wrapper.text()).toContain('2021-01-01')
