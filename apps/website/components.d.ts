@@ -23,6 +23,7 @@ declare module 'vue' {
     IconCustomFiCheckCircle: typeof import('~icons/custom-icons/fi-check-circle')['default']
     IconCustomFiClipboard: typeof import('~icons/custom-icons/fi-clipboard')['default']
     IconCustomFiClose: typeof import('~icons/custom-icons/fi-close')['default']
+    IconCustomFiCloseFrequency: typeof import('~icons/custom-icons/fi-close-frequency')['default']
     IconCustomFiCloseThin: typeof import('~icons/custom-icons/fi-close-thin')['default']
     IconCustomFiExternalLink: typeof import('~icons/custom-icons/fi-external-link')['default']
     IconCustomFiEye: typeof import('~icons/custom-icons/fi-eye')['default']
