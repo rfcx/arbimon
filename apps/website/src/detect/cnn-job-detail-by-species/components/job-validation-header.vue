@@ -15,6 +15,7 @@
           <span class="text-2xl font-medium">Filters:</span>
           <JobValidationFilters
             @emit-min-confidence="toggleMinConfidence"
+            @emit-filter-changed="emit('emitFilterChanged')"
           />
           <div class="w-36">
             <span>Results:</span>
@@ -98,7 +99,7 @@ const props = withDefaults(defineProps<{ speciesName: string | undefined, detect
   detectionsCount: undefined
 })
 
-const emit = defineEmits<{(e: 'emitPageSize', value: number): void, (e: 'emitClose'): void}>()
+const emit = defineEmits<{(e: 'emitPageSize', value: number): void, (e: 'emitClose'): void, (e: 'emitFilterChanged'): void}>()
 
 const selectedPageSize = ref<number>(props.pageSize)
 let itemsPerPageDropdown: Dropdown

@@ -8,6 +8,7 @@
         :filtered-result="jobDetectionResponse?.total"
         :page-size="pageSizeLimit"
         @emit-page-size="onEmitPageSize"
+        @emit-filter-changed="onEmitFilterChanged"
       />
       <JobValidationStatus
         :total="speciesCount?.total ?? 0"
@@ -161,6 +162,11 @@ const getClassifierJobSpecies = async (q: string): Promise<void> => {
   if (response?.data === undefined) return
   const species = response?.data[0]
   totalDetections.value = (species.unvalidated + species.notPresent + species.unknown + species.present).toString()
+}
+
+const onEmitFilterChanged = () => {
+  page.value = 1
+  refetchJobResults()
 }
 
 </script>
