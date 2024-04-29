@@ -97,16 +97,21 @@ export interface CoreGetDetectionsQueryParams {
   start: string
   end: string
   streams?: string[]
+  projects?: string[]
   classifications?: string[]
   classifiers?: number[]
   classifier_jobs?: number[]
   min_confidence?: number
-  review_statuses?: [CoreReviewStatus]
+  review_statuses?: CoreReviewStatus[]
   limit?: number
   offset?: number
   descending?: boolean
   fields?: string[]
 }
+
+export type CoreGetDetectionsSummaryQueryParams = Omit<CoreGetDetectionsQueryParams, 'limit' | 'offset' | 'descending' | 'fields'>
+
+export type CoreDetectionsSummary = Omit<CoreClassifierJobSummary, 'total'>
 
 export interface CoreDetection {
   id: string

@@ -22,8 +22,10 @@ import {
   type CoreClassifierJobTotalDetections,
   type CoreCreateClassifierJobBody,
   type CoreDetection,
+  type CoreDetectionsSummary,
   type CoreGetClassifiersQueryParams,
   type CoreGetDetectionsQueryParams,
+  type CoreGetDetectionsSummaryQueryParams,
   type CoreUpdateDetectionStatusBody,
   type CoreUpdateDetectionStatusParams,
   type DetectDetectionsQueryParamsCore,
@@ -51,6 +53,23 @@ export async function getDetections (token: string, params: CoreGetDetectionsQue
   return {
     total: formatTotalCount(response.headers?.['total-items']),
     data: response.data
+  }
+}
+
+export async function getDetectionsSummary (token: string, params: CoreGetDetectionsSummaryQueryParams): Promise<CoreDetectionsSummary> {
+  try {
+    const response = await axios.request<CoreDetectionsSummary>({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/detections/summary`,
+      headers: {
+        authorization: token
+      },
+      params
+    })
+
+    return response.data
+  } catch (e) {
+    return unpackAxiosError(e)
   }
 }
 

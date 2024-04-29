@@ -3,7 +3,7 @@ import { vi } from 'vitest'
 import { type Classifier } from '@rfcx-bio/common/api-bio/classifiers/classifiers'
 import { type WithTotalCount } from '@rfcx-bio/common/total-count'
 
-import { type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobTotalDetections, type CoreDetection } from '../types'
+import { CoreDetectionsSummary, type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobTotalDetections, type CoreDetection } from '../types'
 
 const randomCoreId = (): string => (Math.random() + 1).toString(36).substring(6)
 const randomArbimonId = (): number => Math.floor(Math.random() * 99999)
@@ -208,4 +208,13 @@ export const updateClassifierJob = vi.fn(async (): Promise<void> => {})
 
 export const createClassifierJob = vi.fn(async (): Promise<string> => {
   return '/classifier-jobs/121'
+})
+
+export const getDetectionsSummary = vi.fn(async (): Promise<CoreDetectionsSummary> => {
+  return {
+    unreviewed: 30,
+    rejected: 0,
+    uncertain: 12,
+    confirmed: 8
+  }
 })
