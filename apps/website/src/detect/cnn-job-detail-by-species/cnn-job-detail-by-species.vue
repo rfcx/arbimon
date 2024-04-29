@@ -21,7 +21,7 @@
         :is-error="isErrorJobDetections"
         :data="jobDetectionResponse?.data"
         :page-size="pageSizeLimit"
-        :max-page="Math.ceil(Number(totalDetections)/pageSizeLimit)"
+        :max-page="jobDetectionResponse?.total ? Math.ceil(Number(jobDetectionResponse.total)/pageSizeLimit) : 1"
         @emit-validation-result="refetchJobResults()"
       />
     </div>
