@@ -4,7 +4,7 @@
       <button
         id="statusDropdownBtn"
         data-dropdown-toggle="statusDropdownHover"
-        class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-insight px-5 py-2 w-41 hover:bg-moss"
+        class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 w-41 hover:bg-moss"
         type="button"
         :class="{ '!w-max !border-solid': selectedStatus !== 'all' }"
       >
@@ -13,14 +13,14 @@
         >
           {{ selectedStatusText }}
         </span>
-        <icon-custom-fi-close-thin
+        <icon-custom-fi-close-frequency
           v-if="selectedStatus !== 'all'"
           class="w-4 h-4 ml-2 cursor-pointer"
           @click="onSelectStatus('all')"
         />
         <icon-fa-chevron-down
           v-else
-          class="w-2.5 h-2.5 fa-chevron-down text-insight"
+          class="w-2.5 h-2.5 fa-chevron-down text-frequency"
         />
       </button>
       <div
@@ -65,7 +65,7 @@
       <button
         id="sitesDropdownButtonCNN"
         data-dropdown-toggle="sitesDropdownCNN"
-        class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-insight px-5 py-2 w-41 hover:bg-moss"
+        class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 w-41 hover:bg-moss"
         type="button"
         :class="{ '!border-solid': selectedSites.length !== 0 }"
       >
@@ -73,14 +73,14 @@
           {{ selectedSitesTitle }}
         </div>
         <span>
-          <icon-custom-fi-close-thin
+          <icon-custom-fi-close-frequency
             v-if="selectedSites.length !== 0"
             class="w-4 h-4 ml-2 cursor-pointer"
             @click="selectedSites = []; filterDetectionsBySite()"
           />
           <icon-fa-chevron-down
             v-else
-            class="w-2.5 h-2.5 fa-chevron-down text-insight"
+            class="w-2.5 h-2.5 fa-chevron-down text-frequency"
           />
         </span>
       </button>
@@ -148,7 +148,7 @@
       <button
         id="groupingDropdownBtn"
         data-dropdown-toggle="groupingDropdownHover"
-        class="grouping-dropdown flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-insight px-5 py-2 w-41 hover:bg-moss"
+        class="grouping-dropdown flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 w-41 hover:bg-moss"
         :class="{ '!w-max !border-solid': selectedGrouping != null }"
         style="position: static !important; transform: none !important; inset: none !important; margin: 0px;"
         type="button"
@@ -158,14 +158,14 @@
         >
           {{ selectedGroupingText }}
         </span>
-        <icon-custom-fi-close-thin
+        <icon-custom-fi-close-frequency
           v-if="selectedGrouping"
           class="w-4 h-4 ml-2 cursor-pointer"
           @click="selectedGrouping = undefined; groupingDetections(selectedGrouping); closeGroupingDropdown()"
         />
         <icon-fa-chevron-down
           v-else
-          class="w-2.5 h-2.5 fa-chevron-down text-insight"
+          class="w-2.5 h-2.5 fa-chevron-down text-frequency"
         />
       </button>
       <div
