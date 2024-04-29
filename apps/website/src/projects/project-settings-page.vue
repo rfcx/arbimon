@@ -153,7 +153,7 @@ const dateEnd = ref<string | null>(null)
 const onGoing = ref(false)
 const newSummary = ref('')
 const newSlug = ref<string | null>(null)
-const newObjectives = ref([''])
+const newObjectives = ref<string[]>()
 const isSaving = ref(false)
 const DEFAULT_ERROR_MSG = 'Failed!'
 const profileImageForm = ref()
@@ -226,7 +226,7 @@ const toggleListedProject = (value: boolean) => {
 }
 
 watch(() => selectedProject.value, () => {
-  if (!selectedProject.value) return
+  if (selectedProject.value === undefined) return
   newName.value = selectedProject.value.name
 })
 
@@ -265,6 +265,11 @@ const save = () => {
     return
   }
 
+  if (newObjectives.value === undefined || newObjectives.value.length === 0) {
+    displayTextAfterSaveWithSuccessStatus(false, 'Please select at least one objective.')
+    return
+  }
+
   hasFailed.value = false
   isSaving.value = true
   updateSettings()
@@ -295,7 +300,7 @@ const updateSettings = () => {
         displayTextAfterSaveWithSuccessStatus(true)
       }
       store.updateProjectName(newName.value)
-      dashboardStore.updateProjectObjectives(newObjectives.value)
+      dashboardStore.updateProjectObjectives(newObjectives.value ?? [''])
       dashboardStore.updateProjectSummary(newSummary.value)
       if (newSlug.value !== null) {
         store.updateProjectSlug(newSlug.value)
