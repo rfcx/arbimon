@@ -6,7 +6,7 @@
         :species-name="speciesClass"
         :detections-count="totalDetections"
         :filtered-result="jobDetectionResponse?.total"
-        :page-size="PAGE_SIZE_LIMIT"
+        :page-size="pageSizeLimit"
         @emit-page-size="onEmitPageSize"
       />
       <JobValidationStatus
@@ -20,8 +20,8 @@
         :is-loading="isLoadingJobDetections"
         :is-error="isErrorJobDetections"
         :data="jobDetectionResponse?.data"
-        :page-size="PAGE_SIZE_LIMIT"
-        :max-page="Math.ceil(Number(totalDetections)/PAGE_SIZE_LIMIT)"
+        :page-size="pageSizeLimit"
+        :max-page="Math.ceil(Number(totalDetections)/pageSizeLimit)"
         @emit-validation-result="refetchJobResults()"
       />
     </div>
@@ -48,7 +48,7 @@ import JobValidationHeader from './components/job-validation-header.vue'
 import JobValidationStatus from './components/job-validation-status.vue'
 
 const route = useRoute()
-const PAGE_SIZE_LIMIT = ref<number>(25)
+const pageSizeLimit = ref<number>(25)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
@@ -118,7 +118,7 @@ const speciesCount = computed(() => {
 })
 
 const offset = computed<number>(() => {
-  return (page.value - 1) * PAGE_SIZE_LIMIT.value
+  return (page.value - 1) * pageSizeLimit.value
 })
 
 const classifierId = computed(() => {
@@ -135,7 +135,7 @@ const detectionsQueryParams = computed<GetDetectionsQueryParams>(() => {
     classification: speciesSlug.value,
     confidence: detectionsResultFilterBySpeciesStore.filter.minConfidence,
     classifierId: classifierId.value,
-    limit: PAGE_SIZE_LIMIT.value,
+    limit: pageSizeLimit.value,
     offset: offset.value
   } as GetDetectionsQueryParams
 })
@@ -152,7 +152,7 @@ const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: 
 )
 
 const onEmitPageSize = (pageSize: number) => {
-  PAGE_SIZE_LIMIT.value = pageSize
+  pageSizeLimit.value = pageSize
 }
 
 const getClassifierJobSpecies = async (q: string): Promise<void> => {
@@ -162,4 +162,5 @@ const getClassifierJobSpecies = async (q: string): Promise<void> => {
   const species = response?.data[0]
   totalDetections.value = (species.unvalidated + species.notPresent + species.unknown + species.present).toString()
 }
+
 </script>
