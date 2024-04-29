@@ -68,11 +68,7 @@ const isSelected = (id: number) => {
 }
 
 const onSelectObjective = (objective: ProjectObjective) => {
-  if (isSelected(objective.id)) { // remove from list
-    selectedObjectives.value = selectedObjectives.value.filter((obj) => obj.id !== objective.id)
-  } else { // add to list
-    selectedObjectives.value = [...selectedObjectives.value, objective]
-  }
+  selectedObjectives.value = [objective]
 }
 
 // use when user types in other reason
