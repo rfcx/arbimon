@@ -74,5 +74,15 @@ export const rawUsersWithRolesToProjects: LocationProjectAndRoles[] = [
       { userId: 9004, roleId: 1 }, // tree as admin
       { userId: 9006, roleId: 4 } // lucy as owner
     ]
+  },
+  {
+    slug: 'the-rooftop',
+    users: [
+      { userId: 9001, roleId: 1 }, // nui as admin
+      { userId: 9005, roleId: 1 }, // turk as admin
+      { userId: 9003, roleId: 1 }, // tree as admin
+      { userId: 9004, roleId: 1 }, // tree as admin
+      { userId: 9006, roleId: 1 } // lucy as admin
+    ]
   }
 ]

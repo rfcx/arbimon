@@ -69,6 +69,22 @@ const dataBci = {
   image: ''
 }
 
+const dataRooftop = {
+  latitudeNorth: 9.17229,
+  latitudeSouth: 9.14041,
+  longitudeEast: -79.81971,
+  longitudeWest: -79.86858,
+  summary: '',
+  readme: '',
+  keyResult: '',
+  resources: '',
+  methods: '',
+  objectives: [],
+  dateStart: null,
+  dateEnd: null,
+  image: ''
+}
+
 const dataMadre = {
   latitudeNorth: -12.560,
   latitudeSouth: -12.93793901,
@@ -131,6 +147,15 @@ export const rawEnvToProjectAndProfile: Record<BioEnvironment, ProjectAndProfile
       status: 'hidden',
       statusUpdatedAt: new Date(),
       ...dataFakeProject
+    },
+    {
+      idCore: '3dvrocmagfiw',
+      idArbimon: 1919,
+      slug: 'the-rooftop',
+      name: 'The Rooftop',
+      status: 'unlisted',
+      statusUpdatedAt: new Date(),
+      ...dataRooftop
     }
   ],
   testing: [
