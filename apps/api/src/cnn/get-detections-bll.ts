@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 
-import { type ArbimonReviewStatus, type CoreRawReviewStatus, ARBIMON_CORE_REVIEW_STATUS_MAP, CoreReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { type ArbimonReviewStatus, type CoreRawReviewStatus, type CoreReviewStatus, ARBIMON_CORE_REVIEW_STATUS_MAP } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type Detection, type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
 import { type WithTotalCount } from '@rfcx-bio/common/total-count'
 
@@ -9,7 +9,7 @@ import { getDetections as coreGetDetections } from '~/api-core/api-core'
 import { type CoreGetDetectionsQueryParams } from '~/api-core/types'
 import { BioInvalidQueryParamError, BioMissingQueryParamError, BioPublicError } from '~/errors'
 
-const getArbimonReviewStatus = (reviewStatus: CoreRawReviewStatus): ArbimonReviewStatus => {
+export const getArbimonReviewStatus = (reviewStatus: CoreRawReviewStatus): ArbimonReviewStatus => {
   if (reviewStatus === null) {
     return 'unvalidated'
   }
@@ -29,7 +29,7 @@ const getArbimonReviewStatus = (reviewStatus: CoreRawReviewStatus): ArbimonRevie
   return 'unvalidated'
 }
 
-const convertReviewStatusQueryParameter = (reviewStatuses: ArbimonReviewStatus[] | ArbimonReviewStatus | undefined): CoreReviewStatus[] | undefined => {
+export const convertReviewStatusQueryParameter = (reviewStatuses: ArbimonReviewStatus[] | ArbimonReviewStatus | undefined): CoreReviewStatus[] | undefined => {
   if (reviewStatuses === undefined) {
     return undefined
   }

@@ -6,6 +6,7 @@ import { getClassifierJobSpeciesRoute } from '@rfcx-bio/common/api-bio/cnn/class
 import { getClassifierJobsRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-jobs'
 import { createClassifierJobRoute } from '@rfcx-bio/common/api-bio/cnn/create-classifier-job'
 import { getDetectionsRoute } from '@rfcx-bio/common/api-bio/cnn/detections'
+import { getDetectionsSummaryRoute } from '@rfcx-bio/common/api-bio/cnn/detections-summary'
 import { getRecordedMinutesPerDayRoute } from '@rfcx-bio/common/api-bio/cnn/recorded-minutes-per-day'
 import { updateDetectionStatusRoute } from '@rfcx-bio/common/api-bio/cnn/reviews'
 
@@ -16,6 +17,7 @@ import { getClassifierJobInformationHandler } from './get-classifier-job-informa
 import { getClassifierJobSpeciesHandler } from './get-classifier-job-species-handler'
 import { getClassifierJobsHandler } from './get-classifier-jobs-handler'
 import { getDetectionsHandler } from './get-detections-handler'
+import { getDetectionsSummaryHandler } from './get-detections-summary-handler'
 import { getRecordedMinutesPerDayHandler } from './get-recorded-minutes-per-day-handler'
 import { updateClassifierJobHandler } from './update-classifier-job-handler'
 import { updateDetectionStatusHandler } from './update-detection-status-handler'
@@ -51,6 +53,12 @@ export const routesCnn: RouteRegistration[] = [
     url: getDetectionsRoute,
     preHandler: [requireRfcxEmail],
     handler: getDetectionsHandler
+  },
+  {
+    method: GET,
+    url: getDetectionsSummaryRoute,
+    preHandler: [requireRfcxEmail],
+    handler: getDetectionsSummaryHandler
   },
   {
     method: GET,
