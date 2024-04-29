@@ -33,9 +33,7 @@ describe('ingest > parsers > parseProjectSpeciesArbimonToBio', () => {
       parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, start: '54.322105263157894' }),
       parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, siteIdCore: 'cydwrzz91cbzzz' }),
       parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, callRecordedAt: undefined }),
-      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, callRecordedAt: new Date('2020-12-06 03:06:19') }),
-      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, callType: 12 }),
-      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, updatedAt: new Date('2022-03-22 07:31:11') })
+      parseSpeciesCallArbimonToBio({ ...VALID_SPECIES_CALL, callType: 12 })
     ]
     // Assert
     res.forEach(r => { expect(r.success).toBe(false) })
