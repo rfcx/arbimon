@@ -6,6 +6,7 @@
       :filter-options="filterOptions"
       @emit-validation="validateDetection"
       @emit-close="closeValidator"
+      @reset-checkboxes="resetCheckboxes"
     />
     <div>
       <template
@@ -238,5 +239,13 @@ const validateDetection = async (validation: ArbimonReviewStatus): Promise<void>
   const responses = await Promise.allSettled(promises)
   updateValidatedDetections(selectedDetectionIds, validation, responses)
   emit('emitValidationResult')
+}
+
+const resetCheckboxes = () => {
+  allSpecies.value.forEach((species) => {
+    species.media.forEach((dt) => {
+      dt.checked = false
+    })
+  })
 }
 </script>

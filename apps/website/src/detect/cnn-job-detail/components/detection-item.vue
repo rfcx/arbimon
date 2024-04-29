@@ -121,7 +121,7 @@ const emit = defineEmits<{(e: 'emitDetection', detectionId: number, event: Detec
 const spectrogramLoading = ref(false)
 const audioLoading = ref(false)
 const highlightBorder = ref(false)
-const isSelected = ref<boolean>(false)
+const isSelected = ref<boolean>(props.checked ?? false)
 
 const apiMedia = inject(apiClientMediaKey) as AxiosInstance
 
@@ -202,6 +202,10 @@ const dateFormatted = (date: string) => {
   if (!date.length) return ''
   return dayjs(date).format('DD/MM/YYYY HH:mm:ss A')
 }
+
+watch(() => props.checked, () => {
+  isSelected.value = props.checked ?? false
+})
 </script>
 
 <style lang="scss">
