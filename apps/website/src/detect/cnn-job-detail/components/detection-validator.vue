@@ -82,7 +82,7 @@ const props = defineProps<{
   filterOptions: DetectionValidationStatus[]
 }>()
 
-const emit = defineEmits<{(e: 'emitValidation', validation: ArbimonReviewStatus): void, (e: 'emitClose'): void, (e: 'resetCheckboxes'): void}>()
+const emit = defineEmits<{(e: 'emitValidation', validation: ArbimonReviewStatus): void, (e: 'emitClose'): void}>()
 const selectedFilter: Ref<ArbimonReviewStatus> = ref('unvalidated')
 
 let validationDropdown: Dropdown
@@ -100,7 +100,6 @@ const validateDetections = () => {
 const close = () => {
   validationDropdown.hide()
   emit('emitClose')
-  emit('resetCheckboxes')
 }
 
 onMounted(() => {
