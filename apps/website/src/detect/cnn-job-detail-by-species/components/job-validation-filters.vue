@@ -210,7 +210,7 @@ import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifie
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import ValidationStatus from './../../cnn-job-detail/components/validation-status.vue'
 
-const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void}>()
+const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void, (e: 'emitFilterChanged'): void}>()
 
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
 const selectedStatus = ref<ArbimonReviewStatus | 'all'>('all')
@@ -238,15 +238,18 @@ const closeGroupingDropdown = (): void => {
 
 const filterDetectionsByStatus = (status: ArbimonReviewStatus | 'all') => {
   detectionsResultFilterBySpeciesStore.filter.validationStatus = status
+  emit('emitFilterChanged')
 }
 
 const groupingDetections = (groupBy: string | undefined) => {
   emit('emitMinConfidence', groupBy === 'minConfidence')
+  emit('emitFilterChanged')
 }
 
 const filterDetectionsBySite = () => {
   const siteIdx = selectedSites.value.includes('all') ? [] : selectedSites.value
   detectionsResultFilterBySpeciesStore.filter.siteIds = siteIdx
+  emit('emitFilterChanged')
 }
 
 const formatStatus = (status: ArbimonReviewStatus | 'all') => {
