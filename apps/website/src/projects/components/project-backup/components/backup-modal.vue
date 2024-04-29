@@ -11,7 +11,7 @@
         <div class="flex flex-col">
           <div class="flex items-start justify-between">
             <div
-              class="rounded-full bg-insight p-3 border-util-gray-04"
+              class="rounded-full bg-insight p-2.5 border-util-gray-04"
               :style="{borderWidth: '8px'}"
             >
               <icon-custom-ic-export
@@ -32,7 +32,9 @@
             class="mt-6 w-full text-cloud"
           >
             <div>
-              <h3>Request project backup</h3>
+              <h3 class="font-header">
+                Request project backup
+              </h3>
               <p class="mt-2">
                 This process can take up to 24 hours, depending on how large your project is. You're allowed to request a backup every 7 days.
               </p>
@@ -55,7 +57,9 @@
             class="mt-6 w-full text-cloud"
           >
             <div>
-              <h3>Backup requested</h3>
+              <h3 class="font-header">
+                Backup requested
+              </h3>
               <p class="mt-2">
                 Your request has been received. You'll get an email notification when your backup is ready to download.
               </p>
@@ -121,7 +125,10 @@ onMounted(() => {
     placement: 'top-center',
     backdrop: 'dynamic',
     backdropClasses: 'bg-pitch bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
-    closable: true
+    closable: true,
+    onHide: () => {
+      emit('emitClose')
+    }
   })
 })
 
