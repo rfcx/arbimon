@@ -134,6 +134,7 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
 
   const closeValidator = (): void => {
     isOpen.value = false
+    resetSelection()
   }
 
   return {
