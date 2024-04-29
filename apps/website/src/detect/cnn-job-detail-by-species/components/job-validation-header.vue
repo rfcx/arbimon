@@ -89,7 +89,7 @@
 
 <script setup lang="ts">
 import { Dropdown, initDropdowns } from 'flowbite'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import JobValidationFilters from './job-validation-filters.vue'
@@ -151,6 +151,11 @@ onMounted(() => {
     document.getElementById('itemsPerPageBtn')
   )
 })
+
+watch(() => detectionsResultFilterBySpeciesStore.filter.minConfidence, (newValue) => {
+  currentValue.value = newValue
+})
+
 </script>
 <style lang="scss" scoped>
 /* Chrome, Safari, Edge, Opera */
