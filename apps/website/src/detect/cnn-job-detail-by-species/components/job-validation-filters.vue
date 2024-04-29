@@ -118,7 +118,7 @@
           <li
             v-for="site in detectionsResultFilterBySpeciesStore.sitesFilterOptions"
             :key="site.value"
-            @click="onSelectSite(site.value); filterDetectionsBySite(); closeSitesDropdown()"
+            @click="onSelectSite(site.value); filterDetectionsBySite()"
           >
             <div class="flex p-2 rounded items-center hover:text-util-gray-01">
               <div class="flex">
@@ -130,7 +130,7 @@
                   :value="site.value"
                   class="w-4 h-4 text-frequency border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency"
                   :checked="selectedSites.includes(site.value)"
-                  @click="filterDetectionsBySite(); closeSitesDropdown()"
+                  @click="filterDetectionsBySite()"
                 >
               </div>
               <div class="ml-2">
