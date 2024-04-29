@@ -54,7 +54,7 @@
           v-model.number="pageIndex"
           type="number"
           min="1"
-          :max="5"
+          :max="maxPage"
           class="text-center bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
         >
       </div>
