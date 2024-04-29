@@ -161,7 +161,7 @@
         <icon-custom-fi-close-frequency
           v-if="selectedGrouping"
           class="w-4 h-4 ml-2 cursor-pointer"
-          @click="selectedGrouping = undefined; groupingDetections(selectedGrouping); closeGroupingDropdown()"
+          @click="onClearGroupings"
         />
         <icon-fa-chevron-down
           v-else
@@ -285,6 +285,13 @@ const onSelectSite = (site: string) => {
 
 const onSelectAllSites = () => {
   selectedSites.value = detectionsResultFilterBySpeciesStore.sitesFilterOptions.map(site => site.value)
+}
+
+const onClearGroupings = () => {
+  selectedGrouping.value = undefined
+  detectionsResultFilterBySpeciesStore.filter.minConfidence = 0.1
+  groupingDetections(selectedGrouping.value)
+  closeGroupingDropdown()
 }
 
 const selectedStatusText = computed(() => {
