@@ -1,4 +1,4 @@
-export const syncJob = (name: string, projectIdArbimon: number): unknown => ({
+export const syncJob = (name: string, projectId: number): unknown => ({
   apiVersion: 'batch/v1',
   kind: 'Job',
   metadata: {
@@ -20,12 +20,12 @@ export const syncJob = (name: string, projectIdArbimon: number): unknown => ({
                           }
                       ],
                       env: {
-                        ARBIMON_PROJECT_ID: projectIdArbimon.toString() // TODO not sure on format
+                        PROJECT_ID: projectId.toString()
                       },
                       command: [
                         'node',
                         '--experimental-specifier-resolution=node',
-                        'apps/cli/lib/ingest/sync-fix-project-full.js'
+                        'apps/cli/lib/ingest/sync-fix-project.js'
                       ]
                   }
               ],
