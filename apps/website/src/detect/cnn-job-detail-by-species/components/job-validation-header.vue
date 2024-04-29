@@ -12,7 +12,7 @@
       </div>
       <div class="flex flex-wrap items-center justify-between text-insight pt-10 w-full gap-2 lg:flex-row ">
         <div class="flex flex-wrap gap-2 items-center gap-x-3 lg:flex-row ">
-          <span class="text-2xl font-display">Filters:</span>
+          <span class="text-2xl font-medium">Filters:</span>
           <JobValidationFilters
             @emit-min-confidence="toggleMinConfidence"
           />
@@ -49,7 +49,7 @@
                   v-for="size in pageSizeOptions"
                   :key="size.value"
                   class="bg-moss hover:text-util-gray-01"
-                  @click="selectedPageSize = size.value"
+                  @click="selectItemsPerPage(size.value)"
                 >
                   <div
                     class="border-1 rounded-full cursor-pointer bg-moss"
@@ -63,12 +63,6 @@
                   </div>
                 </li>
               </ul>
-              <button
-                class="btn btn-primary py-2 h-10 whitespace-nowrap"
-                @click="$emit('emitPageSize', selectedPageSize); closeItemsPerPageDropdown()"
-              >
-                Apply
-              </button>
             </div>
           </div>
         </div>
@@ -104,7 +98,7 @@ const props = withDefaults(defineProps<{ speciesName: string | undefined, detect
   detectionsCount: undefined
 })
 
-defineEmits<{(e: 'emitPageSize', value: number): void, (e: 'emitClose'): void}>()
+const emit = defineEmits<{(e: 'emitPageSize', value: number): void, (e: 'emitClose'): void}>()
 
 const selectedPageSize = ref<number>(props.pageSize)
 let itemsPerPageDropdown: Dropdown
@@ -134,16 +128,18 @@ const toggleMinConfidence = (isSelected: boolean) => {
   isMinConfidenceOpen.value = isSelected
 }
 
-const closeItemsPerPageDropdown = (): void => {
-  itemsPerPageDropdown.hide()
-}
-
 const onValueChange = (value: number) => {
   if (value < 0 || value > 1) {
     currentValue.value = detectionsResultFilterBySpeciesStore.filter.minConfidence
     return
   }
   detectionsResultFilterBySpeciesStore.filter.minConfidence = value
+}
+
+const selectItemsPerPage = (size: number): void => {
+  selectedPageSize.value = size
+  emit('emitPageSize', size)
+  itemsPerPageDropdown.hide()
 }
 
 onMounted(() => {
