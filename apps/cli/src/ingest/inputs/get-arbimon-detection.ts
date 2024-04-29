@@ -1,5 +1,7 @@
+import { countBy } from 'lodash-es'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
+import { type SyncStatus } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { type SyncQueryParams } from './sync-query-params'
@@ -17,6 +19,15 @@ export interface DetectionArbimonQuery {
   presentAed: number
   updatedAt: Date
 }
+
+export interface ArbimonDetectionBySiteSpeciesHour {
+  siteIdArbimon: number
+  speciesIdArbimon: number
+  timePrecisionHourLocal: Date
+  countsByMinute: Record<number, number>
+}
+
+type ArbimonDetectionBySiteSpeciesHourRaw = Omit<ArbimonDetectionBySiteSpeciesHour, 'countsByMinute'> & { minutes: string }
 
 export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
   // Do not process query if the date is not valid
@@ -103,5 +114,43 @@ export const getArbimonProjectDetection = async (sequelize: Sequelize, projectId
     ...row,
     datetime: isMySql ? row.datetime.toISOString() : row.datetime,
     updatedAt: isMySql ? row.updatedAt.toISOString() : row.updatedAt
+  }))
+}
+
+export const getArbimonProjectDetectionBySiteSpeciesHours = async (sequelize: Sequelize, projectId: number, syncStatus: Pick<SyncStatus, 'syncUntilDate' | 'syncUntilId'>, limit: number, offset: number): Promise<ArbimonDetectionBySiteSpeciesHour[]> => {
+  const sql = `
+    SELECT /*+ MAX_EXECUTION_TIME(840000) */ r.site_id siteIdArbimon, rv.species_id speciesIdArbimon,
+      FROM_UNIXTIME(UNIX_TIMESTAMP(r.datetime) - MOD(UNIX_TIMESTAMP(r.datetime),3600)) timePrecisionHourLocal, 
+      GROUP_CONCAT(MOD(UNIX_TIMESTAMP(r.datetime), 3600) DIV 60) minutes
+    FROM recording_validations rv
+      JOIN recordings r ON rv.recording_id = r.recording_id
+      JOIN sites s ON s.site_id = r.site_id
+    WHERE s.project_id = $projectId
+      AND s.deleted_at is null
+      AND r.datetime is not null
+      AND (rv.present = 1 OR rv.present_review > 0 OR rv.present_aed > 0)
+    GROUP BY 1, 2, 3 ORDER BY 1, 2, 3
+    LIMIT $limit OFFSET $offset
+  `
+  // AND r.upload_time < $syncUntilDate OR (r.upload_time = $syncUntilDate AND r.recording_id <= $syncUntilId)
+  // AND r.duration is not null
+
+  const isMySql = sequelize.getDialect() === 'mysql'
+
+  const results = await sequelize.query<ArbimonDetectionBySiteSpeciesHourRaw>(sql, {
+    type: QueryTypes.SELECT,
+    raw: true,
+    bind: {
+      projectId,
+      syncUntilDate: isMySql ? syncStatus.syncUntilDate : syncStatus.syncUntilDate.toISOString(),
+      syncUntilId: syncStatus.syncUntilId,
+      offset,
+      limit
+    }
+  })
+
+  return results.map(({ minutes, ...row }) => ({
+    ...row,
+    countsByMinute: countBy(minutes.split(',').map(s => Number(s)))
   }))
 }

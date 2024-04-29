@@ -22,19 +22,14 @@ export interface ArbimonRecordingDeletedQuery {
   deletedAt: Date
 }
 
-interface ArbimonRecordingByHourRaw {
-  siteIdArbimon: number
-  datetimeHour: Date
-  minutes: string
-  duration: number
-}
-
 export interface ArbimonRecordingByHour {
   siteIdArbimon: number
   timePrecisionHourLocal: Date
   countsByMinute: Record<number, number>
   totalDurationInMinutes: number
 }
+
+type ArbimonRecordingByHourRaw = Omit<ArbimonRecordingByHour, 'countsByMinute' | 'totalDurationInMinutes'> & { minutes: string, duration: number }
 
 export const getArbimonRecording = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<unknown[]> => {
   // Do not process query if the date is not valid
@@ -145,7 +140,7 @@ export const getArbimonProjectRecording = async (sequelize: Sequelize, projectId
 export const getArbimonProjectRecordingsBySiteHour = async (sequelize: Sequelize, projectId: number, syncStatus: Pick<SyncStatus, 'syncUntilDate' | 'syncUntilId'>, limit: number, offset: number): Promise<ArbimonRecordingByHour[]> => {
   const sql = `
     SELECT /*+ MAX_EXECUTION_TIME(840000) */ r.site_id siteIdArbimon,
-      FROM_UNIXTIME(UNIX_TIMESTAMP(r.datetime) - MOD(UNIX_TIMESTAMP(r.datetime),3600)) datetimeHour, 
+      FROM_UNIXTIME(UNIX_TIMESTAMP(r.datetime) - MOD(UNIX_TIMESTAMP(r.datetime),3600)) timePrecisionHourLocal, 
       GROUP_CONCAT(MOD(UNIX_TIMESTAMP(r.datetime), 3600) DIV 60) minutes,
       SUM(duration) duration
     FROM recordings r JOIN sites s ON s.site_id = r.site_id
@@ -172,10 +167,9 @@ export const getArbimonProjectRecordingsBySiteHour = async (sequelize: Sequelize
     }
   })
 
-  return results.map(row => ({
-    siteIdArbimon: row.siteIdArbimon,
-    timePrecisionHourLocal: row.datetimeHour,
-    countsByMinute: countBy(row.minutes.split(',').map(s => Number(s))),
-    totalDurationInMinutes: row.duration / 60
+  return results.map(({ minutes, duration, ...row }) => ({
+    ...row,
+    countsByMinute: countBy(minutes.split(',').map(s => Number(s))),
+    totalDurationInMinutes: duration / 60
   }))
 }

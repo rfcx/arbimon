@@ -242,15 +242,3 @@ const writeDeletions = async (deletions: RecordingBySiteHour[], sequelize: Seque
   }
   return [successfulItems, failedToInsertItems]
 }
-
-// const siteIdCache = new QuickLRU<number, number | null>({ maxSize: 1000 })
-
-// const lookupLocationSiteId = async (idArbimon: number, sequelize: Sequelize): Promise<number | undefined> => {
-//   const hit = siteIdCache.get(idArbimon)
-//   if (hit === undefined) {
-//     const id = await ModelRepository.getInstance(sequelize).LocationSite.findOne({ where: { idArbimon } }).then(s => s?.id ?? null)
-//     siteIdCache.set(idArbimon, id)
-//     return id ?? undefined
-//   }
-//   return hit ?? undefined
-// }
