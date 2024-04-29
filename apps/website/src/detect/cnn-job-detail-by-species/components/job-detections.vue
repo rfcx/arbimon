@@ -120,6 +120,15 @@ watch(() => props.page, () => {
   pageIndex.value = props.page
 })
 
+watch(() => pageIndex.value, () => {
+  if (pageIndex.value > props.maxPage) {
+    pageIndex.value = props.maxPage
+  } else if (pageIndex.value < 1) {
+    pageIndex.value = 1
+  }
+  emit('update:page', pageIndex.value)
+})
+
 const nextPage = (): void => {
   if (props.data == null || props.data.length < props.pageSize) {
     return
