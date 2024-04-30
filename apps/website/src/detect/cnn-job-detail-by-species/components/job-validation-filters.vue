@@ -215,7 +215,7 @@ const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void, (e: 'e
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
 const selectedStatus = ref<ArbimonReviewStatus | 'all'>('all')
 const selectedGrouping = ref<string>()
-const selectedSites = ref<string[]>(detectionsResultFilterBySpeciesStore.sitesFilterOptions.map(site => site.value))
+const selectedSites = ref<string[]>([])
 let statusDropdown: Dropdown
 const sitesDropdown = ref() as Ref<Dropdown>
 const groupingDropdown = ref() as Ref<Dropdown>
