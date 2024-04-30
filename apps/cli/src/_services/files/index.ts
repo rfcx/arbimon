@@ -5,7 +5,6 @@ export const createZip = async (zipPath: string, files: ZipFile[]): Promise<void
     await new Promise<void>((resolve, reject) => {
         const output = fs.createWriteStream(zipPath)
         const archive = archiver('zip', {
-            // TODO set compression level
             zlib: { level: 9 }
         })
 
