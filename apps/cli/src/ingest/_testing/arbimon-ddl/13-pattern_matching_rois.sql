@@ -1,0 +1,22 @@
+create table pattern_matching_rois (
+  pattern_matching_roi_id int not null,
+  pattern_matching_id int not null,
+  recording_id bigint not null,
+  species_id int not null,
+  songtype_id int not null,
+  x1 double not null,
+  y1 double not null,
+  x2 double not null,
+  y2 double not null,
+  uri text not null,
+  score double null,
+  validated tinyint(1) null,
+  cs_val_present int default 0 not null,
+  cs_val_not_present int default 0 not null,
+  consensus_validated tinyint(1) null,
+  expert_validated tinyint(1) null,
+  expert_validation_user_id int null,
+  denorm_site_id int null,
+  denorm_recording_datetime datetime null,
+  denorm_recording_date date null
+);

@@ -3,11 +3,7 @@ import type { Sequelize } from 'sequelize'
 
 import { toCsv } from '@rfcx-bio/utils/file'
 
-import {
-    getPatternMatchingRois,
-    getPatternMatchings,
-    getPatternMatchingValidations
-} from '@/backup/projects/export/pattern_matchings'
+import { getPatternMatchingRois, getPatternMatchings, getPatternMatchingValidations } from '@/backup/projects/export/pattern_matchings'
 import { getPlaylistRecordings, getPlaylists } from '@/backup/projects/export/playlists'
 import { getSoundscapes } from '@/backup/projects/export/soundscapes'
 import { getSpecies } from '@/backup/projects/export/species'

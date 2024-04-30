@@ -5,14 +5,12 @@ export const getRecordingValidations = async (projectId: number, sequelize: Sequ
     const sql = `
         select *
         from recording_validations
-        where project_id = :id
+        where project_id = $projectId
     `
 
     return await sequelize.query(sql, {
         type: QueryTypes.SELECT,
-        replacements: {
-            id: projectId
-        },
+        bind: { projectId },
         raw: true
     })
 }

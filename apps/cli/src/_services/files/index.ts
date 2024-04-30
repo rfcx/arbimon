@@ -2,22 +2,28 @@ import archiver from 'archiver'
 import fs from 'fs'
 
 export const createZip = async (zipPath: string, files: ZipFile[]): Promise<void> => {
-    const output = fs.createWriteStream(zipPath)
-    const archive = archiver('zip', {
-        // TODO set compression level
-        zlib: { level: 0 }
-    })
+    await new Promise<void>((resolve, reject) => {
+        const output = fs.createWriteStream(zipPath)
+        const archive = archiver('zip', {
+            // TODO set compression level
+            zlib: { level: 9 }
+        })
 
-    archive.pipe(output)
-    for (const { name, content } of files) {
-        archive.append(content, { name })
-    }
-    output.end()
+        output.on('end', () => { console.info('Data has been drained') })
+        output.on('close', () => {
+            console.info(`Created: "${zipPath}", total bytes: ${archive.pointer()}.`)
+            resolve()
+        })
 
-    await archive.finalize()
+        archive.on('error', (err) => {
+            reject(err)
+        })
 
-    return new Promise((resolve, reject) => {
-        output.on('end', () => { resolve() })
+        archive.pipe(output)
+        for (const { name, content } of files) {
+            archive.append(content, { name })
+        }
+        archive.finalize().catch(reject)
     })
 }
 

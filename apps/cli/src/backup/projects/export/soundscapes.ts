@@ -5,13 +5,11 @@ export const getSoundscapes = async (projectId: number, sequelize: Sequelize): P
     const sql = `
         select *
         from soundscapes
-        where project_id = :id
+        where project_id = $projectId
     `
     return await sequelize.query(sql, {
         type: QueryTypes.SELECT,
-        replacements: {
-            id: projectId
-        },
+        bind: { projectId },
         raw: true
     })
 }

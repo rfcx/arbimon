@@ -5,14 +5,12 @@ export const getPlaylists = async (projectId: number, sequelize: Sequelize): Pro
     const sql = `
         select *
         from playlists
-        where project_id = :id
+        where project_id = $projectId
         order by playlist_id asc
     `
     return await sequelize.query(sql, {
         type: QueryTypes.SELECT,
-        replacements: {
-            id: projectId
-        },
+        bind: { projectId },
         raw: true
     })
 }
@@ -22,13 +20,11 @@ export const getPlaylistRecordings = async (projectId: number, sequelize: Sequel
     const sql = `
         select * 
         from playlist_recordings
-        where playlist_id in (select playlist_id from playlists where project_id = :id)
+        where playlist_id in (select playlist_id from playlists where project_id = $projectId)
     `
     return await sequelize.query(sql, {
         type: QueryTypes.SELECT,
-        replacements: {
-            id: projectId
-        },
+        bind: { projectId },
         raw: true
     })
 }

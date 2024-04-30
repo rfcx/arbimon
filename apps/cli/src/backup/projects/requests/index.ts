@@ -13,40 +13,32 @@ export interface ProjectBackupRequest {
     email: string
 }
 
-export const getPendingRequests = async (sequelize: Sequelize, offset: number, limit: number = BATCH_LIMIT): Promise<ProjectBackupRequest[]> => {
+export const getPendingRequests = async (sequelize: Sequelize, limit: number = BATCH_LIMIT): Promise<ProjectBackupRequest[]> => {
     const sql = `
         select
-            backup.id as id,
-            location_project.id as projectId,
-            location_project.slug as slug,
-            location_project.id_arbimon as arbimonProjectId,
-            user_profile.email as email
+            b.id,
+            p.id as "projectId",
+            p.slug as slug,
+            p.id_arbimon as "arbimonProjectId",
+            u.email as email
         from
-            backup join location_project on backup.entity_id = location_project.id
-            left join user_profile on backup.requested_by = user_profile.id
-        where backup.status = 'requested'
-        limit :limit
-        offset :offset
-        order by backup.requested_at
+            backup b join location_project p on b.entity_id = p.id
+            left join user_profile u on b.requested_by = u.id
+        where b.status = 'requested'
+        order by b.requested_at
+        limit $limit
     `
 
     return await sequelize.query<ProjectBackupRequest>(sql, {
         type: QueryTypes.SELECT,
         raw: true,
-        replacements: {
-            limit,
-            offset
-        }
+        bind: { limit }
     })
 }
 
 export const updateRequest = async (sequelize: Sequelize, id: number, updates: Partial<Backup>): Promise<void> => {
     const { Backup } = ModelRepository.getInstance(sequelize)
-    const request = await Backup.findOne({
-        where: {
-            id
-        }
-    })
+    const request = await Backup.findByPk(id)
 
     if (request !== null) {
         await request.update(updates)

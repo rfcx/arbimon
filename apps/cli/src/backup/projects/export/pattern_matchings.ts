@@ -5,14 +5,12 @@ export const getPatternMatchings = async (projectId: number, sequelize: Sequeliz
     const sql = `
         select *
         from pattern_matchings
-        where project_id = :id
+        where project_id = $projectId
     `
 
     return await sequelize.query(sql, {
         type: QueryTypes.SELECT,
-        replacements: {
-            id: projectId
-        },
+        bind: { projectId },
         raw: true
     })
 }
@@ -22,14 +20,12 @@ export const getPatternMatchingRois = async (projectId: number, sequelize: Seque
     const sql = `
         select *
         from pattern_matching_rois
-        where pattern_matching_id in (select pattern_matching_id from pattern_matchings where project_id = :id)
+        where pattern_matching_id in (select pattern_matching_id from pattern_matchings where project_id = $projectId)
     `
 
     return await sequelize.query(sql, {
         type: QueryTypes.SELECT,
-        replacements: {
-            id: projectId
-        },
+        bind: { projectId },
         raw: true
     })
 }
@@ -41,14 +37,12 @@ export const getPatternMatchingValidations = async (projectId: number, sequelize
         from pattern_matching_validations
         where pattern_matching_roi_id in 
             (select pattern_matching_roi_id from pattern_matching_rois where pattern_matching_id in 
-                (select pattern_matching_id from pattern_matchings where project_id = :id ))
+                (select pattern_matching_id from pattern_matchings where project_id = $projectId ))
     `
 
     return await sequelize.query(sql, {
         type: QueryTypes.SELECT,
-        replacements: {
-            id: projectId
-        },
+        bind: { projectId },
         raw: true
     })
 }

@@ -6,12 +6,7 @@ import { buildVariantPath, isS3Image } from '@rfcx-bio/common/api-bio/_helpers'
 import { type ProjectSpecies } from '@rfcx-bio/common/api-bio/search/search'
 import { masterObjectiveValues } from '@rfcx-bio/common/dao/master-data'
 
-import {
-  BASE_SQL,
-  RISK_RATING_EXPANDED,
-  SPECIES_IN_PROJECT_SQL,
-  SYNC_BATCH_LIMIT
-} from '../constants'
+import { BASE_SQL, RISK_RATING_EXPANDED, SPECIES_IN_PROJECT_SQL, SYNC_BATCH_LIMIT } from '../constants'
 import { type AbbreviatedProject, type ExpandedProject } from '../types'
 
 export const getProjects = async (
