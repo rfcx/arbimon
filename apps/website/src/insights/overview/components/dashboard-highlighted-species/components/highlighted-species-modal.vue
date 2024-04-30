@@ -22,7 +22,7 @@
               data-modal-toggle="species-highlighted-modal"
               @click="$emit('emitClose')"
             >
-              <icon-custom-fi-close-thin class="cursor-pointer" />
+              <icon-custom-fi-close-thin class="cursor-pointer text-insight" />
             </button>
           </div>
 

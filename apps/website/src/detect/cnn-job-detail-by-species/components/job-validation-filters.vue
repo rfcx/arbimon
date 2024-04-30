@@ -13,9 +13,9 @@
         >
           {{ selectedStatusText }}
         </span>
-        <icon-custom-fi-close-frequency
+        <icon-custom-fi-close-thin
           v-if="selectedStatus !== 'all'"
-          class="w-4 h-4 ml-2 cursor-pointer"
+          class="w-4 h-4 ml-2 cursor-pointer text-frequency"
           @click="onSelectStatus('all')"
         />
         <icon-fa-chevron-down
@@ -73,9 +73,9 @@
           {{ selectedSitesTitle }}
         </div>
         <span>
-          <icon-custom-fi-close-frequency
+          <icon-custom-fi-close-thin
             v-if="selectedSites.length !== 0"
-            class="w-4 h-4 ml-2 cursor-pointer"
+            class="w-4 h-4 ml-2 cursor-pointer text-frequency"
             @click="selectedSites = []; filterDetectionsBySite()"
           />
           <icon-fa-chevron-down
@@ -158,9 +158,9 @@
         >
           {{ selectedGroupingText }}
         </span>
-        <icon-custom-fi-close-frequency
+        <icon-custom-fi-close-thin
           v-if="selectedGrouping"
-          class="w-4 h-4 ml-2 cursor-pointer"
+          class="w-4 h-4 ml-2 cursor-pointer text-frequency"
           @click="onClearGroupings"
         />
         <icon-fa-chevron-down
