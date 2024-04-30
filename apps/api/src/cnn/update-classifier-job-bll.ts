@@ -1,6 +1,4 @@
-import {
-  type UpdateClassifierJobBody
-} from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { type UpdateClassifierJobBody } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 import { updateClassifierJob as coreUpdateClassifierJob } from '~/api-core/api-core'
 import { BioInvalidBodyError } from '~/errors'

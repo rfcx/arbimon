@@ -1,7 +1,4 @@
-import type {
-    CreateBackupBody,
-    CreateBackupResponse
-} from '@rfcx-bio/common/api-bio/backup/backup-create'
+import type { CreateBackupBody, CreateBackupResponse } from '@rfcx-bio/common/api-bio/backup/backup-create'
 import { type GetBackupRequestsQuery, type GetBackupRequestsResponse } from '@rfcx-bio/common/api-bio/backup/backup-get'
 
 import { createBackupRequest } from '@/backup/dao/backup-create-dao'
