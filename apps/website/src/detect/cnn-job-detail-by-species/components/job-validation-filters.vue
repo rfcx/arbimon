@@ -18,7 +18,7 @@
         <icon-custom-fi-close-thin
           v-if="selectedStatuses.length !== 0"
           class="w-4 h-4 ml-2 cursor-pointer text-frequency"
-          @click="onSelectStatus('all')"
+          @click="onClearStatus()"
         />
         <icon-fa-chevron-down
           v-else
@@ -204,13 +204,13 @@
 
 <script setup lang="ts">
 import { Dropdown, initDropdowns } from 'flowbite'
+import { debounce } from 'lodash-es'
 import { type Ref, computed, onMounted, ref } from 'vue'
 
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import ValidationStatus from './../../cnn-job-detail/components/validation-status.vue'
-import { debounce } from 'lodash-es'
 
 const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void, (e: 'emitFilterChanged'): void}>()
 
@@ -244,21 +244,25 @@ const groupingDetections = (groupBy: string | undefined) => {
   emit('emitFilterChanged')
 }
 
-const filterDetectionsBySite =  debounce(() => {
+const filterDetectionsBySite = debounce(() => {
   const siteIdx = selectedSites.value.includes('all') ? [] : selectedSites.value
   detectionsResultFilterBySpeciesStore.filter.siteIds = siteIdx
   emit('emitFilterChanged')
 }, 600)
 
-const onSelectStatus = (status: ArbimonReviewStatus | 'all') => {
-  if (status === 'all') {
-    selectedStatuses.value = []
-  } else if (selectedStatuses.value.includes(status)) {
+const onSelectStatus = (status: ArbimonReviewStatus) => {
+  if (selectedStatuses.value.includes(status)) {
     selectedStatuses.value = selectedStatuses.value.filter((s) => s !== status)
   } else {
     selectedStatuses.value = [...selectedStatuses.value, status]
   }
   filterDetectionsByStatus(selectedStatuses.value)
+}
+
+const onClearStatus = () => {
+  selectedStatuses.value = []
+  filterDetectionsByStatus(selectedStatuses.value)
+  statusDropdown.hide()
 }
 
 const selectedSitesTitle = computed(() => {
