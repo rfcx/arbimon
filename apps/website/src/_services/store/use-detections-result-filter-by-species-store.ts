@@ -91,19 +91,20 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   })
 
   const selectedStartRange = computed<string>(() => {
+    const timeStartOfDay = 'T00:00:00Z'
     if (filter.value.range === 'all') {
-      return startRange.value
+      return startRange.value + timeStartOfDay
     }
-
-    return dayjs(filter.value.range.split('|')[0]).format('YYYY-MM-DD')
+    return dayjs(filter.value.range.split('|')[0]).format('YYYY-MM-DD') + timeStartOfDay
   })
 
   const selectedEndRange = computed<string>(() => {
+    const timeEndOfDay = 'T23:59:59Z'
     if (filter.value.range === 'all') {
-      return endRange.value
+      return endRange.value + timeEndOfDay
     }
 
-    return dayjs(filter.value.range.split('|')[1]).format('YYYY-MM-DD')
+    return dayjs(filter.value.range.split('|')[1]).format('YYYY-MM-DD') + timeEndOfDay
   })
 
   const sitesFilterOptions = computed<ResultFilterInner[]>(() => {
