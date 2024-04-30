@@ -91,6 +91,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   })
 
   const selectedStartRange = computed<string>(() => {
+    if (startRange.value === '' || endRange.value === '') { return '' }
     const timeStartOfDay = 'T00:00:00Z'
     if (filter.value.range === 'all') {
       return startRange.value + timeStartOfDay
@@ -99,6 +100,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   })
 
   const selectedEndRange = computed<string>(() => {
+    if (startRange.value === '' || endRange.value === '') { return '' }
     const timeEndOfDay = 'T23:59:59Z'
     if (filter.value.range === 'all') {
       return endRange.value + timeEndOfDay
