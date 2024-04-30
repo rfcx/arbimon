@@ -1,7 +1,4 @@
-import {
-    type QueryInterface,
-    DataTypes
-} from 'sequelize'
+import { type QueryInterface, DataTypes } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
 import { DatabaseUser, grant, GrantPermission } from '@/db/migrations/_helpers/grants'
@@ -18,7 +15,7 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
                 autoIncrement: true
             },
             entity: {
-                type: DataTypes.STRING,
+                type: DataTypes.STRING(16),
                 allowNull: false
             },
             entity_id: {
@@ -42,11 +39,11 @@ export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => 
                 allowNull: true // this will be set when the url is created in the cron job
             },
             status: {
-                type: DataTypes.STRING,
+                type: DataTypes.STRING(16),
                 allowNull: false
             },
             url: {
-                type: DataTypes.STRING,
+                type: DataTypes.STRING(2000),
                 allowNull: true
             },
             size: {

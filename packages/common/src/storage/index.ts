@@ -147,4 +147,13 @@ export class StorageClient {
         }
         return `https://${bucketName}.s3.amazonaws.com/${fileKey}`
     }
+
+    public getClient (): S3Client {
+        return this.client
+    }
+
+    public getBucket (): string {
+        const { bucketName } = this.credentials
+        return bucketName
+    }
 }

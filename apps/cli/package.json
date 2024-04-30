@@ -49,6 +49,7 @@
     "@rfcx-bio/node-common": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
     "@slack/web-api": "^6.8.1",
+    "archiver": "^7.0.1",
     "axios": "^0.27.2",
     "cheerio": "1.0.0-rc.12",
     "countries-list": "^3.0.6",
@@ -64,6 +65,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/archiver": "^6.0.2",
     "@types/mysql": "^2.15.19",
     "@types/object-hash": "^2.2.1",
     "@types/validator": "^13.7.0",
