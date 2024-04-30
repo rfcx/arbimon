@@ -1,0 +1,25 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: biodiversity-cli-backup
+  namespace: staging
+spec:
+  # Every 5 minutes for testing
+  schedule: '*/5 * * * *'
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: biodiversity-cli-backup
+            command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/backup/process-backup-requests.js"]
+            image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:latest
+            imagePullPolicy: IfNotPresent
+            envFrom:
+              - secretRef:
+                  name: biodiversity-cli-secrets
+              - configMapRef:
+                  name: biodiversity-cli-config
+          restartPolicy: Never
