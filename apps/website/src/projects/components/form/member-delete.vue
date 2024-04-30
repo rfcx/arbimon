@@ -31,7 +31,7 @@
               title="Cancel"
               @click="closeModal"
             >
-              <icon-custom-fi-close-thin class="h-6 w-6 cursor-pointer" />
+              <icon-custom-fi-close-thin class="h-6 w-6 cursor-pointer text-insight" />
             </button>
           </div>
           <div class="mt-6 w-full text-cloud">
