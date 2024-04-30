@@ -2,7 +2,7 @@ import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifie
 
 export interface ValidationFilterConfig {
   threshold: number
-  validationStatus: ArbimonReviewStatus | 'all'
+  validationStatuses: ArbimonReviewStatus[]
   classification: string
   siteIds: string[]
   sortBy: 'asc' | 'desc'

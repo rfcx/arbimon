@@ -145,7 +145,7 @@ const previousPage = (): void => {
 
 const filterOptions = computed<DetectionValidationStatus[]>(() => {
   // removes the `All` setting
-  const filtered: DetectionValidationStatus[] = validationStatus.filter(v => v.value !== 'all')
+  const filtered: DetectionValidationStatus[] = validationStatus
   .map(s => {
     return {
       value: s.value,

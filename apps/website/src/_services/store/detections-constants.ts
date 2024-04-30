@@ -2,7 +2,7 @@ import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifie
 
 export interface ValidationResultFilterInner {
   label: string
-  value: ArbimonReviewStatus | 'all'
+  value: ArbimonReviewStatus
 }
 
 export interface ResultFilterInner {
@@ -13,10 +13,6 @@ export interface ResultFilterInner {
 export type ResultFilterList = Array<{ label: string, items: ResultFilterInner[] }>
 
 export const validationStatus: ValidationResultFilterInner[] = [
-  {
-    label: 'All',
-    value: 'all'
-  },
   {
     label: 'Present',
     value: 'present'

@@ -31,7 +31,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
 
   const filter = ref<Omit<ValidationFilterConfig, 'classification'> & { classification?: string }>({
     threshold: 50,
-    validationStatus: 'all',
+    validationStatuses: [],
     siteIds: [],
     sortBy: 'asc',
     range: 'all',
@@ -40,7 +40,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
 
   const updateResultFilter = (value: Omit<ValidationFilterConfig, 'classification'> & { classification?: string }): void => {
     filter.value.threshold = value.threshold
-    filter.value.validationStatus = value.validationStatus
+    filter.value.validationStatuses = value.validationStatuses
     filter.value.siteIds = value.siteIds
     filter.value.sortBy = value.sortBy
     filter.value.range = value.range
@@ -66,7 +66,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   // reset all settings when job change.
   watch(() => route.params.jobId, () => {
     filter.value.threshold = 50
-    filter.value.validationStatus = 'all'
+    filter.value.validationStatuses = []
     filter.value.sortBy = 'asc'
     filter.value.range = 'all'
     filter.value.minConfidence = 0.1
