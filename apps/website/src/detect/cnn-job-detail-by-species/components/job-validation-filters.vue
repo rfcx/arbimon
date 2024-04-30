@@ -6,15 +6,17 @@
         data-dropdown-toggle="statusDropdownHover"
         class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 w-41 hover:bg-moss"
         type="button"
-        :class="{ '!w-max !border-solid': selectedStatus !== 'all' }"
+        :class="{ '!w-max !border-solid': selectedStatuses.length !== 0 }"
+        :title="selectedStatusText"
       >
         <span
-          :class="{ 'px-2': selectedStatus !== 'all' }"
+          :class="{ 'px-2': selectedStatuses.length !== 0 }"
+          class="whitespace-nowrap overflow-hidden max-w-80 text-ellipsis"
         >
           {{ selectedStatusText }}
         </span>
         <icon-custom-fi-close-thin
-          v-if="selectedStatus !== 'all'"
+          v-if="selectedStatuses.length !== 0"
           class="w-4 h-4 ml-2 cursor-pointer text-frequency"
           @click="onSelectStatus('all')"
         />
@@ -39,19 +41,17 @@
             v-for="status in detectionsResultFilterBySpeciesStore.validationStatusFilterOptions"
             :key="status.value"
             class="bg-moss hover:text-util-gray-01"
-            :class="{'hidden' : status.value === 'all'}"
             @click="onSelectStatus(status.value)"
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
-              :class="{'border-chirp': selectedStatus === status.value, 'border-transparent': selectedStatus !== status.value}"
+              :class="{'border-chirp': selectedStatuses.includes(status.value), 'border-transparent': selectedStatuses.includes(status.value) === false}"
             >
               <div
                 class="flex flex-row gap-x-3 items-center h-10 pl-5"
               >
                 <ValidationStatus
-                  v-if="status.value !== 'all'"
-                  :value="formatStatus(status.value)"
+                  :value="status.value"
                 />
                 {{ status.label }}
               </div>
@@ -68,6 +68,7 @@
         class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 w-41 hover:bg-moss"
         type="button"
         :class="{ '!border-solid': selectedSites.length !== 0 }"
+        :title="selectedSitesTitle"
       >
         <div class="whitespace-nowrap text-ellipsis overflow-hidden">
           {{ selectedSitesTitle }}
@@ -209,11 +210,12 @@ import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifie
 
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import ValidationStatus from './../../cnn-job-detail/components/validation-status.vue'
+import { debounce } from 'lodash-es'
 
 const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void, (e: 'emitFilterChanged'): void}>()
 
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
-const selectedStatus = ref<ArbimonReviewStatus | 'all'>('all')
+const selectedStatuses = ref<ArbimonReviewStatus[]>([])
 const selectedGrouping = ref<string>()
 const selectedSites = ref<string[]>([])
 let statusDropdown: Dropdown
@@ -224,10 +226,6 @@ const statusDropdownHover = ref<HTMLElement | null>(null)
 const sitesDropdownCNN = ref<HTMLElement | null>(null)
 const groupingDropdownHover = ref<HTMLElement | null>(null)
 
-const closeStatusDropdown = (): void => {
-  statusDropdown.hide()
-}
-
 const closeSitesDropdown = (): void => {
   sitesDropdown.value.hide()
 }
@@ -236,40 +234,41 @@ const closeGroupingDropdown = (): void => {
   groupingDropdown.value.hide()
 }
 
-const filterDetectionsByStatus = (status: ArbimonReviewStatus | 'all') => {
-  detectionsResultFilterBySpeciesStore.filter.validationStatus = status
+const filterDetectionsByStatus = debounce((statuses: ArbimonReviewStatus[]) => {
+  detectionsResultFilterBySpeciesStore.filter.validationStatuses = statuses
   emit('emitFilterChanged')
-}
+}, 600)
 
 const groupingDetections = (groupBy: string | undefined) => {
   emit('emitMinConfidence', groupBy === 'minConfidence')
   emit('emitFilterChanged')
 }
 
-const filterDetectionsBySite = () => {
+const filterDetectionsBySite =  debounce(() => {
   const siteIdx = selectedSites.value.includes('all') ? [] : selectedSites.value
   detectionsResultFilterBySpeciesStore.filter.siteIds = siteIdx
   emit('emitFilterChanged')
-}
-
-const formatStatus = (status: ArbimonReviewStatus | 'all') => {
-  return status as ArbimonReviewStatus
-}
+}, 600)
 
 const onSelectStatus = (status: ArbimonReviewStatus | 'all') => {
-  selectedStatus.value = status
-  filterDetectionsByStatus(selectedStatus.value)
-  closeStatusDropdown()
+  if (status === 'all') {
+    selectedStatuses.value = []
+  } else if (selectedStatuses.value.includes(status)) {
+    selectedStatuses.value = selectedStatuses.value.filter((s) => s !== status)
+  } else {
+    selectedStatuses.value = [...selectedStatuses.value, status]
+  }
+  filterDetectionsByStatus(selectedStatuses.value)
 }
 
 const selectedSitesTitle = computed(() => {
   if (selectedSites.value.length === 0) {
-    return 'All sites'
+    return 'Sites'
   } else if (selectedSites.value.length === 1) {
     const taxonClass = detectionsResultFilterBySpeciesStore.sitesFilterOptions.find(site => site.value === selectedSites.value[0])
-    return taxonClass?.label
+    return 'Sites: ' + taxonClass?.label
   } else {
-    return `${selectedSites.value.length} sites`
+    return `Sites: ${selectedSites.value.length} sites`
   }
 })
 
@@ -295,11 +294,13 @@ const onClearGroupings = () => {
 }
 
 const selectedStatusText = computed(() => {
-  if (selectedStatus.value === 'all') {
+  if (selectedStatuses.value.length === 0) {
     return 'Validation'
   } else {
-    const selectedOption = detectionsResultFilterBySpeciesStore.validationStatusFilterOptions.find(option => option.value === selectedStatus.value)
-    return selectedOption ? 'Validation: ' + selectedOption.label : 'Validation'
+    const selectedOptions = selectedStatuses.value.map((status) => {
+      return detectionsResultFilterBySpeciesStore.validationStatusFilterOptions.find((option) => option.value === status)?.label
+    }).reduce((acc, curr) => acc + ', ' + curr)
+    return selectedOptions ? 'Validation: ' + selectedOptions : 'Validation'
   }
 })
 

@@ -43,7 +43,7 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
 
   const filter = ref<ValidationFilterConfig>({
     threshold: 50,
-    validationStatus: 'all',
+    validationStatuses: [],
     classification: 'all',
     siteIds: [],
     sortBy: 'asc',
@@ -59,7 +59,7 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
 
   const updateResultFilter = (value: ValidationFilterConfig): void => {
     filter.value.threshold = value.threshold
-    filter.value.validationStatus = value.validationStatus
+    filter.value.validationStatuses = value.validationStatuses
     filter.value.classification = value.classification
     filter.value.siteIds = value.siteIds
     filter.value.sortBy = value.sortBy
@@ -77,7 +77,7 @@ export const useDetectionsResultFilterStore = defineStore('cnn-result-filter', (
   // reset all settings when job change.
   watch(() => route.params.jobId, () => {
     filter.value.threshold = 50
-    filter.value.validationStatus = 'all'
+    filter.value.validationStatuses = []
     filter.value.classification = 'all'
     filter.value.sortBy = 'asc'
     filter.value.range = 'all'
