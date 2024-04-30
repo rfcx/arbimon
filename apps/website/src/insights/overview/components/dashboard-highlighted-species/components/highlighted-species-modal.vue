@@ -269,38 +269,40 @@ import SpecieCard from './species-card.vue'
 const props = defineProps<{ highlightedSpecies: HighlightedSpeciesRow[], toggleShowModal: boolean }>()
 const emit = defineEmits<{(e: 'emitClose'): void}>()
 
-const speciesForCurrentPage = ref<HighlightedSpeciesRow[]>([])
-const isLoadingSpecies = ref(false)
-const highlightedSpeciesSelected : HighlightedSpeciesRow[] = []
-const pdStore = useHighlightedSpeciesStore()
-
 const store = useStore()
-const apiClientBio = inject(apiClientKey) as AxiosInstance
-
+const pdStore = useHighlightedSpeciesStore()
 const selectedProjectId = computed(() => store.project?.id)
+const speciesFromStore = computed(() => pdStore.getSpeciesByPage(currentPage.value, PAGE_SIZE))
+
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
+const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
+const isLoadingSpecies = ref(false)
 
 const searchKeyword = ref<string>()
 const searchRisk = ref<number>()
 const isSearchBoxFocused = ref(false)
-const showHaveReachedLimit = ref(false)
 
+const speciesForCurrentPage = ref<HighlightedSpeciesRow[]>([])
+const highlightedSpeciesSelected : HighlightedSpeciesRow[] = []
 const selectedSpecies = ref<HighlightedSpeciesRow[]>([])
 
+const showHaveReachedLimit = ref(false)
 const PAGE_SIZE = 10
 const currentPage = ref(1)
 const total = ref(0)
 
-const speciesFromStore = computed(() => pdStore.getSpeciesByPage(currentPage.value, PAGE_SIZE))
-
-const { isPending: isLoadingPostSpecies, mutate: mutatePostSpecies } = usePostSpeciesHighlighted(apiClientBio, selectedProjectId)
-const { isPending: isLoadingDeleteSpecies, mutate: mutateDeleteSpecie } = useDeleteSpecieHighlighted(apiClientBio, selectedProjectId)
-
+// default state, starting points
 watch(() => props.toggleShowModal, async () => {
   setDefaultDisplay()
 
   pdStore.updateSelectedProjectId(selectedProjectId.value ?? -1)
   getSpeciesWithPage()
   props.highlightedSpecies.forEach(s => highlightedSpeciesSelected.push(s))
+})
+
+watch(currentPage, () => {
+  getSpeciesWithPage()
 })
 
 const setDefaultDisplay = () => {
@@ -312,6 +314,30 @@ const setDefaultDisplay = () => {
   speciesForCurrentPage.value = []
 }
 
+const clearSearchRisk = (): void => {
+  currentPage.value = 1
+  searchRisk.value = undefined
+  getSpeciesWithPage()
+}
+
+const maxPage = computed((): number => {
+    return Math.ceil(total.value / PAGE_SIZE)
+})
+
+const existingRisk = computed(() => {
+  const allSpeciesRiskID = Object.keys(RISKS_BY_ID).map(Number)
+  return allSpeciesRiskID.map((id: number) => {
+      return {
+        id,
+        name: RISKS_BY_ID[id].label,
+        color: RISKS_BY_ID[id].color,
+        code: RISKS_BY_ID[id].code,
+        text: RISKS_BY_ID[id].text
+      }
+    })
+})
+
+// APIs calls
 const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: string, riskRatingId?: string) => {
   if (keyword !== undefined || riskRatingId !== undefined) {
     isLoadingSpecies.value = true
@@ -350,67 +376,7 @@ const fetchProjectsSpecies = async (limit: number, offset: number, keyword?: str
   }
 }
 
-watch(currentPage, () => {
-  getSpeciesWithPage()
-})
-
-const getSpeciesWithPage = () => {
-  isLoadingSpecies.value = true
-  if (speciesFromStore.value.length === 0 || searchKeyword.value !== undefined || searchRisk.value !== undefined) {
-    fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value?.toString())
-  } else {
-    total.value = pdStore.totalSpecies
-    isLoadingSpecies.value = false
-    speciesForCurrentPage.value = speciesFromStore.value
-  }
-}
-
-const searchSpeciesInputChanged = debounce(async () => {
-  currentPage.value = 1
-  searchKeyword.value = searchKeyword.value === '' ? undefined : searchKeyword.value
-  getSpeciesWithPage()
-}, 500)
-
-const maxPage = computed((): number => {
-    return Math.ceil(total.value / PAGE_SIZE)
-})
-
-const setPage = (page: number) => {
-    // Wrap-around
-    let newPage = page
-    if (page < 1) newPage = maxPage.value
-    if (page > maxPage.value) newPage = 1
-
-    currentPage.value = newPage
-}
-
-const existingRisk = computed(() => {
-  const allSpeciesRiskID = Object.keys(RISKS_BY_ID).map(Number)
-  return allSpeciesRiskID.map((id: number) => {
-      return {
-        id,
-        name: RISKS_BY_ID[id].label,
-        color: RISKS_BY_ID[id].color,
-        code: RISKS_BY_ID[id].code,
-        text: RISKS_BY_ID[id].text
-      }
-    })
-})
-
-const newSpeciesToAdd = computed(() => {
-  return selectedSpecies.value.filter(s => highlightedSpeciesSelected.filter(sp => s.slug === sp.slug).length === 0)
-})
-
-const speciesToRemove = computed(() => {
-  return highlightedSpeciesSelected.filter(sp => selectedSpecies.value.filter(s => s.slug === sp.slug).length === 0)
-})
-
-const findIndexToRemove = (slug: string): void => {
-  const index = selectedSpecies.value.findIndex(s => s.slug === slug)
-  selectedSpecies.value.splice(index, 1)
-  showHaveReachedLimit.value = selectedSpecies.value.length >= 5
-}
-
+// add & remove species logic
 const selectSpecie = async (specie: HighlightedSpeciesRow): Promise<void> => {
   if (isSpecieSelected(specie)) {
     findIndexToRemove(specie.slug)
@@ -428,19 +394,18 @@ const isSpecieSelected = (specie: HighlightedSpeciesRow): boolean => {
   return selectedSpecies.value.find(s => s.slug === specie.slug) !== undefined
 }
 
-const clearSearchRisk = (): void => {
-  currentPage.value = 1
-  searchRisk.value = undefined
-  getSpeciesWithPage()
-}
+const newSpeciesToAdd = computed(() => {
+  return selectedSpecies.value.filter(s => highlightedSpeciesSelected.filter(sp => s.slug === sp.slug).length === 0)
+})
 
-const filterByCode = (riskId: number): void => {
-  currentPage.value = 1
+const speciesToRemove = computed(() => {
+  return highlightedSpeciesSelected.filter(sp => selectedSpecies.value.filter(s => s.slug === sp.slug).length === 0)
+})
 
-  if (searchRisk.value === riskId) {
-    searchRisk.value = undefined
-  } else searchRisk.value = riskId
-  fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, riskId.toString())
+const findIndexToRemove = (slug: string): void => {
+  const index = selectedSpecies.value.findIndex(s => s.slug === slug)
+  selectedSpecies.value.splice(index, 1)
+  showHaveReachedLimit.value = selectedSpecies.value.length >= 5
 }
 
 const saveHighlightedSpecies = async (): Promise<void> => {
@@ -466,6 +431,43 @@ const addHighlightedSpecies = async (): Promise<void> => {
     }
   })
 }
+
+// search logic
+const searchSpeciesInputChanged = debounce(async () => {
+  currentPage.value = 1
+  searchKeyword.value = searchKeyword.value === '' ? undefined : searchKeyword.value
+  getSpeciesWithPage()
+}, 500)
+
+const filterByCode = (riskId: number): void => {
+  currentPage.value = 1
+
+  if (searchRisk.value === riskId) {
+    searchRisk.value = undefined
+  } else searchRisk.value = riskId
+  fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, riskId.toString())
+}
+
+// pagination logic
+const getSpeciesWithPage = () => {
+  isLoadingSpecies.value = true
+  if (speciesFromStore.value.length === 0 || searchKeyword.value !== undefined || searchRisk.value !== undefined) {
+    fetchProjectsSpecies(PAGE_SIZE, (currentPage.value - 1) * PAGE_SIZE, searchKeyword.value, searchRisk.value?.toString())
+  } else {
+    total.value = pdStore.totalSpecies
+    isLoadingSpecies.value = false
+    speciesForCurrentPage.value = speciesFromStore.value
+  }
+}
+
+const setPage = (page: number) => {
+    let newPage = page
+    if (page < 1) newPage = maxPage.value
+    if (page > maxPage.value) newPage = 1
+
+    currentPage.value = newPage
+}
+
 </script>
 <style lang="scss">
 #speciesSearchInput {
