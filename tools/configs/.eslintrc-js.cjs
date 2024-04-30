@@ -7,13 +7,14 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     sourceType: 'module'
   },
-  plugins: ['simple-import-sort', 'unicorn', 'unused-imports'],
+  plugins: ['import-newlines', 'simple-import-sort', 'unicorn', 'unused-imports'],
   rules: {
     // Disable rules
     // none
 
     // Add/override rules
     'import/newline-after-import': 'error',
+    'import-newlines/enforce': ['error', { items: 99, semi: false }],
     'no-console': ['error', { allow: ['info', 'warn', 'error'] }], // only intentional logs (info/warn/error); disallow console.log
     'no-debugger': 'error',
     'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0, maxEOF: 0 }],
