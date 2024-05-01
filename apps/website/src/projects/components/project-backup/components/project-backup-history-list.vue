@@ -1,9 +1,8 @@
 <template>
   <div class="w-full xl:w-2/4">
-    <h6 class="text-secondary">Previous backup requests:</h6>
-    <table class="p-4 mt-2 w-full text-left">
+    <table class="p-4 w-full text-left">
       <tr class="border-b-1 border-util-gray-03 text-secondary">
-        <th class="py-2">
+        <th class="pb-2">
           Request date
         </th>
         <th class="min-w-20">
