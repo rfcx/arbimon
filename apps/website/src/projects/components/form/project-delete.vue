@@ -5,7 +5,7 @@
     </h4>
     <div>
       <div class="flex flex-row">
-        <span class="font-medium">Delete project</span>
+        <span class="font-medium text-secondary">Delete project</span>
         <icon-i-info
           tooltip-id="project-delete"
           :tooltip-text="'Delete this project permanently.'"

@@ -3,7 +3,7 @@
     <div class="flex flex-row">
       <label
         for="slug"
-        class="block mb-2 font-medium text-gray-900 dark:text-insight"
+        class="block mb-2 font-medium text-gray-900 text-secondary"
       >Insight URL*</label>
       <icon-i-info
         tooltip-id="project-slug"
@@ -11,7 +11,7 @@
       />
     </div>
     <div class="flex flex-row items-center">
-      <p class="mr-4">
+      <p class="mr-4 text-secondary">
         {{ projectBasePath }}
       </p>
       <input
@@ -20,7 +20,7 @@
         name="slug"
         type="text"
         :disabled="isDisabled"
-        class="w-full border border-util-gray-03 rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
+        class="w-full border border-util-gray-03 rounded-md dark:(bg-pitch text-fog placeholder:text-placeholder) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
         required
         :maxlength="PROJECT_SLUG_MAX_LENGTH"
       >

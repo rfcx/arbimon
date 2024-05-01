@@ -5,12 +5,12 @@
   >
     <div class="flex-1">
       <label
-        class="block mb-2 font-medium text-gray-900 dark:text-insight"
+        class="block mb-2 font-medium text-gray-900 dark:text-secondary"
       >Project start date</label>
       <div class="relative flex-1">
         <el-date-picker
           v-model="dateStart"
-          class="w-full border text-fog border-util-gray-03 rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+          class="w-full border text-secondary border-util-gray-03 rounded-md dark:(bg-pitch text-secondary placeholder:text-placeholder) focus:(border-frequency ring-frequency)"
           type="date"
           :disabled="isDisabled"
           placeholder="Choose date"
@@ -22,7 +22,7 @@
     <span class="mt-7 hidden md:block">-</span>
     <div class="flex-1">
       <label
-        class="block mb-2 font-medium text-gray-900 dark:text-insight"
+        class="block mb-2 font-medium text-gray-900 dark:text-secondary"
       >Project end date</label>
       <div
         class="relative flex-1"
@@ -30,7 +30,7 @@
       >
         <el-date-picker
           v-model="dateEnd"
-          class="w-full border text-fog border-util-gray-03 rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+          class="w-full border text-secondary border-util-gray-03 rounded-md dark:(bg-pitch text-secondary placeholder:text-placeholder) focus:(border-frequency ring-frequency)"
           type="date"
           :disabled="isDisabled || onGoing"
           placeholder="Choose date"
@@ -50,7 +50,7 @@
       @click="onSelectOnGoing()"
     >
     <label
-      class="font-light ml-2 cursor-pointer"
+      class="font-light ml-2 cursor-pointer text-secondary"
       @click="onSelectOnGoing()"
     >This is an on-going project</label>
   </div>
