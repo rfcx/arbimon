@@ -26,7 +26,7 @@
         :data="jobDetectionResponse?.data"
         :page-size="pageSizeLimit"
         :max-page="Math.ceil(Number(jobDetectionResponse?.total)/pageSizeLimit)"
-        @emit-validation-result="refetchJobResults()"
+        @emit-validation-result="onEmitValidateResult"
       />
     </div>
   </section>
@@ -113,15 +113,6 @@ const speciesClass = computed(() => {
   return `${found.title}`
 })
 
-const speciesCount = computed(() => {
-  if (jobResults.value == null) {
-    return undefined
-  }
-
-  const species = jobResults.value.classificationsSummary.find(cs => cs.value === speciesSlug.value)
-  return species
-})
-
 const offset = computed<number>(() => {
   return (page.value - 1) * pageSizeLimit.value
 })
@@ -171,7 +162,7 @@ const detectionsSummaryQueryParams = computed<GetDetectionsSummaryQueryParams>((
   } as GetDetectionsSummaryQueryParams
 })
 
-const { isLoading: isLoadingDetectionSummary, isRefetching: isRefetchingDetectionSummary, data: detectionsSummary } = useGetDetectionsSummary(
+const { isLoading: isLoadingDetectionSummary, isRefetching: isRefetchingDetectionSummary, data: detectionsSummary, refetch: refetchDetectionSummary } = useGetDetectionsSummary(
   apiClientBio,
   detectionsSummaryQueryParams,
   computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '')
@@ -192,6 +183,12 @@ const getClassifierJobSpecies = async (q: string): Promise<void> => {
 const onEmitFilterChanged = () => {
   page.value = 1
   refetchJobResults()
+}
+
+const onEmitValidateResult = async () => {
+  setTimeout(async () => {
+    await refetchDetectionSummary()
+  }, 500) // workaround to wait for the detection summary to be updated in the database
 }
 
 </script>

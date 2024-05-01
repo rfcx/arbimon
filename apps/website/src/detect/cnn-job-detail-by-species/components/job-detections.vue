@@ -222,9 +222,9 @@ const { mutate: mutateUpdateDetectionStatus } = useUpdateDetectionStatus(apiClie
 const validateDetection = async (validation: ArbimonReviewStatus): Promise<void> => {
   const selectedDetectionIds = getSelectedDetectionIds()
 
-  const promises = selectedDetectionIds.map(id => {
+  const promises = selectedDetectionIds.map(async id => {
     const originalDetection = (props.data ?? []).find(d => Number(id) === d.id)
-    return mutateUpdateDetectionStatus({
+    return await mutateUpdateDetectionStatus({
       jobId: jobId.value,
       siteIdCore: originalDetection?.siteIdCore ?? '',
       start: originalDetection?.start ?? '',
