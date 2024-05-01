@@ -22,9 +22,9 @@ describe('Projects backup', async () => {
         if (user === null || project === null) throw Error('User & project required')
         const backup = { entityId: project.id, entity: 'project' as BackupType, status: BackupStatus.REQUESTED, requestedBy: user.id, requestedAt: new Date() }
         await Backup.create(backup)
-        const date = dayjs().format('YYYY-M-D')
+        const date = dayjs().format('YYYY-MM-DD')
         const expectedName = `${project.slug}_${date}_export.zip`
-        const expectedKey = `exports/${project.id}/${date}/${expectedName}`
+        const expectedKey = `exports/${project.id}/${expectedName}`
 
         // Act
         await backupProjects(sequelize, arbimonSequelize, storage)
