@@ -1,43 +1,123 @@
 <template>
-  <div class="mb-1 text-subtle">
-    {{ statusLabel }}
+  <div
+    class="flex flex-row items-center"
+    :class="{ 'flex-col gap-1 !items-start': props.isCompact }"
+  >
+    <div class="flex items-center mr-6">
+      <icon-custom-ic-circle
+        v-if="props.status === 0"
+        class="min-w-4"
+      />
+      <icon-custom-ic-progress
+        v-else-if="props.status === 20"
+        class="min-w-4"
+      />
+      <icon-custom-ic-success
+        v-else-if="props.status === 30"
+        class="min-w-4"
+      />
+      <icon-custom-ic-error
+        v-else-if="props.status === 40"
+        class="min-w-4"
+      />
+      <icon-custom-ic-cancelled
+        v-else
+        class="min-w-4"
+      />
+      <span
+        class="ml-2 text-insight"
+      >
+        {{ classifierStatus.title }}
+      </span>
+    </div>
+    <div
+      class="flex items-center"
+      :class="{ 'hidden': props.isCompact && props.status !== CLASSIFIER_JOB_STATUS.RUNNING }"
+    >
+      <div
+        class=" rounded-full h-3 border-1"
+        :class="[classifierStatus.borderColor, { 'w-52 lg:w-68': !isCompact, 'w-20 lg:w-24': isCompact }]"
+      >
+        <div
+          class="h-2.5 rounded-full"
+          :style="`width: ${progressPercentage}%;`"
+          :class="classifierStatus.bgColor"
+        />
+      </div>
+      <span class="ml-2 ">{{ Math.min(props.current, 100) }}%</span>
+    </div>
   </div>
-  <el-progress
-    v-if="isRunning"
-    class="min-w-20 max-w-36"
-    :stroke-width="6"
-    :percentage="jobProgress.value"
-  />
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { CLASSIFIER_JOB_LABELS, CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
-
-import type { JobProgress } from '../../types'
+import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 const props = defineProps<{
-  jobProgress: JobProgress
+  status: number,
+  current: number,
+  total: number,
+  isCompact?: boolean
 }>()
 
-const statusCode = computed(() => props.jobProgress.status)
-const isRunning = computed(() => statusCode.value === CLASSIFIER_JOB_STATUS.RUNNING && props.jobProgress.value > 0)
-const statusLabel = computed(() => {
-  if (!Object.keys(CLASSIFIER_JOB_LABELS).map(Number).includes(statusCode.value)) {
-    return 'Unknown'
+const statusCode = computed(() => props.status)
+
+const progressPercentage = computed(() => {
+  if (props.total === 0) return 0
+  return Math.min((props.current / props.total) * 100, 100)
+})
+
+const classifierStatus = computed(() => {
+  if (statusCode.value === CLASSIFIER_JOB_STATUS.WAITING) {
+    return {
+      title: 'Queued',
+      bgColor: 'bg-[#FF9457]',
+      borderColor: 'border-[#FF9457]'
+    }
   }
 
-  if (statusCode.value === CLASSIFIER_JOB_STATUS.RUNNING && props.jobProgress.value === 0) {
-    return 'Preparing'
+  if (statusCode.value === CLASSIFIER_JOB_STATUS.RUNNING) {
+    return {
+      title: 'In progress',
+      bgColor: 'bg-[#ADFF2C]',
+      borderColor: 'border-[#ADFF2C]'
+    }
   }
 
-  return CLASSIFIER_JOB_LABELS[statusCode.value]
+  if (statusCode.value === CLASSIFIER_JOB_STATUS.DONE) {
+    return {
+      title: 'Success',
+      bgColor: 'bg-[#ADFF2C]',
+      borderColor: 'border-[#ADFF2C]'
+    }
+  }
+
+  if (statusCode.value === CLASSIFIER_JOB_STATUS.ERROR) {
+    return {
+      title: 'Error',
+      bgColor: 'bg-ibis',
+      borderColor: 'border-ibis'
+    }
+  }
+
+  if (statusCode.value === CLASSIFIER_JOB_STATUS.CANCELLED) {
+    return {
+      title: 'Cancelled',
+      bgColor: 'bg-ibis',
+      borderColor: 'border-ibis'
+    }
+  }
+
+  if (statusCode.value === CLASSIFIER_JOB_STATUS.AWAITING_CANCELLATION) {
+    return {
+      title: 'Cancelling',
+      bgColor: 'bg-ibis',
+      borderColor: 'border-ibis'
+    }
+  }
+
+  return { title: '', bgColor: '', borderColor: '' }
 })
 
 </script>
-<style lang="scss">
-.el-progress__text {
-  font-size: 0.875rem !important;
-}
-</style>
