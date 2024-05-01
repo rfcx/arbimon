@@ -10,7 +10,9 @@ export interface ProjectBackupRequest {
     projectId: number
     slug: string
     arbimonProjectId: number
-    email: string
+    projectName: string
+    userEmail: string
+    userName: string
 }
 
 export const getPendingRequests = async (sequelize: Sequelize, limit: number = BATCH_LIMIT): Promise<ProjectBackupRequest[]> => {
@@ -20,7 +22,9 @@ export const getPendingRequests = async (sequelize: Sequelize, limit: number = B
             p.id as "projectId",
             p.slug as slug,
             p.id_arbimon as "arbimonProjectId",
-            u.email as email
+            p.name as "projectName",
+            u.email as "userEmail",
+            concat(u.first_name, ' ', u.last_name) "userName"
         from
             backup b join location_project p on b.entity_id = p.id
             left join user_profile u on b.requested_by = u.id

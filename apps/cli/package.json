@@ -44,6 +44,7 @@
     "@aws-sdk/client-s3": "^3.363.0",
     "@aws-sdk/credential-provider-node": "^3.496.0",
     "@aws-sdk/s3-request-presigner": "^3.363.0",
+    "@mailchimp/mailchimp_transactional": "^1.0.59",
     "@opensearch-project/opensearch": "^2.5.0",
     "@rfcx-bio/common": "workspace:^0.0.1",
     "@rfcx-bio/node-common": "workspace:^0.0.1",
@@ -66,6 +67,7 @@
   },
   "devDependencies": {
     "@types/archiver": "^6.0.2",
+    "@types/mailchimp__mailchimp_transactional": "^1.0.10",
     "@types/mysql": "^2.15.19",
     "@types/object-hash": "^2.2.1",
     "@types/validator": "^13.7.0",

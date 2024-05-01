@@ -60,6 +60,8 @@ export const envGetters = {
   AWS_OSS_ACCESS_KEY_ID: stringGetter,
   AWS_OSS_SECRET_ACCESS_KEY: stringGetter,
 
+  MAILCHIMP_TRANSACTIONAL_API_KEY: stringGetter,
+
   OPENSEARCH_HOST: stringGetter,
   OPENSEARCH_PORT: numberGetter,
   OPENSEARCH_SSL_ENABLED: booleanGetter,
