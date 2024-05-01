@@ -13,6 +13,7 @@ const main = async (): Promise<void> => {
 
         // Process project backup requests
         await backupProjects(sequelize, arbimonSequelize, storage)
+        console.info('Backup processing end: success')
     } catch (e) {
         console.error(e)
         process.exitCode = 1
