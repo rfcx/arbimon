@@ -36,9 +36,9 @@ export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Seq
     }
 
     for (const request of requests) {
-        const { id, email, ...projectData } = request
+        const { id, userEmail, userName, ...projectData } = request
         if (verbose) {
-            console.info(`- Backup ${id} started`)
+            console.info(`- Backup ${id} started for ${projectData.slug}`)
         }
         try {
             // Change status to processing
@@ -66,9 +66,11 @@ export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Seq
             await updateRequest(sequelize, id, { status: BackupStatus.AVAILABLE, expiresAt, size, url })
 
             // Send email to user
-            await mailClient.send(email, 'project-backup', { url })
+            const to = { email: userEmail, name: userName }
+            const content = { url, projectName: projectData.projectName }
+            await mailClient.send(to, 'project-backup', content)
             if (verbose) {
-                console.info(`  - Mail sent to ${email}`)
+                console.info(`  - Mail sent to ${to.email}`)
             }
 
             successCount++
@@ -84,7 +86,7 @@ export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Seq
     }
 }
 
-const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, projectData: Omit<ProjectBackupRequest, 'id' | 'email' >): Promise<{ zipName: string, totalBytes: number }> => {
+const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, projectData: Omit<ProjectBackupRequest, 'id' | 'userEmail' | 'userName' >): Promise<{ zipName: string, totalBytes: number }> => {
     const { projectId, arbimonProjectId, slug } = projectData
     const zipFiles: ZipFile[] = []
     const client: S3Client = storage.getClient()

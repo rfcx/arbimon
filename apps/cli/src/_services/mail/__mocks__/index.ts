@@ -3,5 +3,5 @@ export const getMailClient = (): MailClient => {
 }
 
 export class MailClient {
-  public async send (_to: string, _template: string, _content: Record<string, unknown>): Promise<void> { }
+  public async send (_to: { email: string, name: string }, _template: string, _content: Record<string, unknown>): Promise<void> { }
 }
