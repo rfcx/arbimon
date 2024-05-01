@@ -19,12 +19,12 @@
           v-else
           class="md:(col-span-1 mt-1) <md:(col-span-2 mt-4)"
         >
-          <h2 class="text-lg">
+          <div class="text-lg">
             <job-information-status
               :variant="props.summary?.status ?? 0"
               :progress="progress"
             />
-          </h2>
+          </div>
         </div>
       </div>
       <div class="grid grid-cols-3 pt-4 text-lg">

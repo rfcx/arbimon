@@ -1,43 +1,81 @@
 <template>
-  <div class="mb-1 text-subtle">
-    {{ statusLabel }}
+  <div class="flex items-center">
+    <div
+      class="w-52 lg:w-68 bg-pitch rounded-full h-3 border-1"
+      :class="classifierStatus.borderColor"
+    >
+      <div
+        class="h-2.5 rounded-full"
+        :style="`width: ${progressPercentage}%;`"
+        :class="classifierStatus.bgColor"
+      />
+    </div>
+    <span class="ml-2 ">{{ Math.min(props.current, 100) }}%</span>
   </div>
-  <el-progress
-    v-if="isRunning"
-    class="min-w-20 max-w-36"
-    :stroke-width="6"
-    :percentage="jobProgress.value"
-  />
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { CLASSIFIER_JOB_LABELS, CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
-
-import type { JobProgress } from '../../types'
+import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 const props = defineProps<{
-  jobProgress: JobProgress
+  status: number,
+  current: number,
+  total: number
 }>()
 
-const statusCode = computed(() => props.jobProgress.status)
-const isRunning = computed(() => statusCode.value === CLASSIFIER_JOB_STATUS.RUNNING && props.jobProgress.value > 0)
-const statusLabel = computed(() => {
-  if (!Object.keys(CLASSIFIER_JOB_LABELS).map(Number).includes(statusCode.value)) {
-    return 'Unknown'
+const statusCode = computed(() => props.status)
+
+const progressPercentage = computed(() => {
+  if (props.total === 0) return 0
+  return Math.min((props.current / props.total) * 100, 100)
+})
+
+const classifierStatus = computed(() => {
+  if (statusCode.value === CLASSIFIER_JOB_STATUS.WAITING) {
+    return {
+      bgColor: 'bg-[#FF9457]',
+      borderColor: 'border-[#FF9457]'
+    }
   }
 
-  if (statusCode.value === CLASSIFIER_JOB_STATUS.RUNNING && props.jobProgress.value === 0) {
-    return 'Preparing'
+  if (statusCode.value === CLASSIFIER_JOB_STATUS.RUNNING) {
+    return {
+      bgColor: 'bg-[#ADFF2C]',
+      borderColor: 'border-[#ADFF2C]'
+    }
   }
 
-  return CLASSIFIER_JOB_LABELS[statusCode.value]
+  if (statusCode.value === CLASSIFIER_JOB_STATUS.DONE) {
+    return {
+      bgColor: 'bg-[#ADFF2C]',
+      borderColor: 'border-[#ADFF2C]'
+    }
+  }
+
+  if (statusCode.value === CLASSIFIER_JOB_STATUS.ERROR) {
+    return {
+      bgColor: 'bg-ibis',
+      borderColor: 'border-ibis'
+    }
+  }
+
+  if (statusCode.value === CLASSIFIER_JOB_STATUS.CANCELLED) {
+    return {
+      bgColor: 'bg-ibis',
+      borderColor: 'border-ibis'
+    }
+  }
+
+  if (statusCode.value === CLASSIFIER_JOB_STATUS.AWAITING_CANCELLATION) {
+    return {
+      bgColor: 'bg-ibis',
+      borderColor: 'border-ibis'
+    }
+  }
+
+  return { bgColor: '', borderColor: '' }
 })
 
 </script>
-<style lang="scss">
-.el-progress__text {
-  font-size: 0.875rem !important;
-}
-</style>

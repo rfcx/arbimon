@@ -1,44 +1,44 @@
 <template>
   <div class="flex items-center">
-    <icon-custom-ic-circle
-      v-if="props.variant === 0"
-      class="min-w-4"
-    />
-    <icon-custom-ic-progress
-      v-else-if="props.variant === 20"
-      class="min-w-4"
-    />
-    <icon-custom-ic-success
-      v-else-if="props.variant === 30"
-      class="min-w-4"
-    />
-    <icon-custom-ic-error
-      v-else-if="props.variant === 40"
-      class="min-w-4"
-    />
-    <icon-custom-ic-cancelled
-      v-else
-      class="min-w-4"
-    />
-    <span class="ml-2 text-base text-insight">{{ classifierStatus.title }}</span>
-    <div
-      class="w-52 lg:w-68 ml-4 bg-pitch rounded-full h-3 border-1 "
-      :class="`${classifierStatus.borderColor}`"
-    >
-      <div
-        class="h-2.5 rounded-full"
-        :style="`width: ${progressFormat(progress)};`"
-        :class="`${classifierStatus.bgColor}`"
+    <div class="flex items-center mr-8">
+      <icon-custom-ic-circle
+        v-if="props.variant === 0"
+        class="min-w-4"
+      />
+      <icon-custom-ic-progress
+        v-else-if="props.variant === 20"
+        class="min-w-4"
+      />
+      <icon-custom-ic-success
+        v-else-if="props.variant === 30"
+        class="min-w-4"
+      />
+      <icon-custom-ic-error
+        v-else-if="props.variant === 40"
+        class="min-w-4"
+      />
+      <icon-custom-ic-cancelled
+        v-else
+        class="min-w-4"
+      />
+      <span class="ml-2 text-base text-insight">{{ classifierStatus.title }}</span>
+    </div>
+    <div class="flex items-center">
+      <job-progress
+        :status="props.variant"
+        :current="progress"
+        :total="100"
       />
     </div>
-    <span class="ml-2 text-base text-insight">{{ progressFormat(progress) }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { type ClassifierJobStatusNumber, CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
+import { type ClassifierJobStatusNumber } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
+
+import jobProgress from '@/detect/cnn-job-list/components/job-progress.vue'
 
 /** Queued, Processing, Done, Error, Cancelled respectively */
 const props = withDefaults(defineProps<{ variant: ClassifierJobStatusNumber, progress: number }>(), {
@@ -49,62 +49,41 @@ const props = withDefaults(defineProps<{ variant: ClassifierJobStatusNumber, pro
 const classifierStatus = computed(() => {
   if (props.variant === 0) {
     return {
-      title: 'In queue',
-      bgColor: 'bg-[#FF9457]',
-      borderColor: 'border-[#FF9457]'
+      title: 'Queued'
     }
   }
 
   if (props.variant === 20) {
     return {
-      title: 'In progress',
-      bgColor: 'bg-[#ADFF2C]',
-      borderColor: 'border-[#ADFF2C]'
+      title: 'In progress'
     }
   }
 
   if (props.variant === 30) {
     return {
-      title: 'Success',
-      bgColor: 'bg-[#ADFF2C]',
-      borderColor: 'border-[#ADFF2C]'
+      title: 'Success'
     }
   }
 
   if (props.variant === 40) {
     return {
-      title: 'Error',
-      bgColor: 'bg-ibis',
-      borderColor: 'border-ibis'
+      title: 'Error'
     }
   }
 
   if (props.variant === 50) {
     return {
-      title: 'Cancelled',
-      bgColor: 'bg-ibis',
-      borderColor: 'border-ibis'
+      title: 'Cancelled'
     }
   }
 
-  return { title: '', bgColor: '', borderColor: '' }
+  if (props.variant === 60) {
+    return {
+      title: 'Cancelling'
+    }
+  }
+
+  return { title: '' }
 })
 
-/**
- * Returns the end text of the progress bar
- *
- * - will return `0%` for jobs with status `WAITING` regardless of the computed value
- * - will return `100%` for jobs with status `DONE` regardless of the computed value
- * - will return actual value for other statuses
- */
-const progressFormat = (percentage: number) => {
-  if (props.variant === CLASSIFIER_JOB_STATUS.WAITING) {
-    return '0%'
-  }
-
-  if (props.variant === CLASSIFIER_JOB_STATUS.DONE || percentage > 100) {
-    return '100%'
-  }
-  return `${percentage}%`
-}
 </script>
