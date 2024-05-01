@@ -11,7 +11,7 @@
       >
         <span
           :class="{ 'px-2': selectedStatuses.length !== 0 }"
-          class="whitespace-nowrap overflow-hidden max-w-80 text-ellipsis"
+          class="whitespace-nowrap overflow-hidden max-w-42 3xl:max-w-64 text-ellipsis"
         >
           {{ selectedStatusText }}
         </span>
@@ -70,7 +70,7 @@
         :class="{ '!border-solid': selectedSites.length !== 0 }"
         :title="selectedSitesTitle"
       >
-        <div class="whitespace-nowrap text-ellipsis overflow-hidden">
+        <div class="whitespace-nowrap overflow-hidden max-w-42 2xl:max-w-64 text-ellipsis">
           {{ selectedSitesTitle }}
         </div>
         <span>
@@ -155,6 +155,7 @@
         type="button"
       >
         <span
+          class="whitespace-nowrap overflow-hidden max-w-42 3xl:max-w-64 text-ellipsis"
           :class="{ 'px-2': selectedGrouping === 'minConfidence' }"
         >
           {{ selectedGroupingText }}
