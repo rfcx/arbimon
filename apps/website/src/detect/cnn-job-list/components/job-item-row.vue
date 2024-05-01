@@ -24,15 +24,13 @@
       <span>{{ formatDateLocal(props.job.createdAt) }}</span>
     </td>
     <td class="w-1/10 px-6 py-4 align-text-top">
-      <div class="mb-1 text-subtle">
-        {{ statusLabel }}
-      </div>
       <job-progress
-        v-if="isRunning"
         :status="props.job.progress.status"
         :current="props.job.progress.value"
         :total="100"
-        class="min-w-12 max-w-24 mr-0"
+        :progressBarWidth="'5rem'"
+        :progressBarTextSize="'14'"
+        :isCompact="true"
       />
     </td>
     <td class="w-1/10 px-6 py-4  align-text-top">
@@ -57,7 +55,7 @@ import type { AxiosInstance } from 'axios'
 import { ElMessage } from 'element-plus'
 import { computed, inject } from 'vue'
 
-import { CLASSIFIER_JOB_LABELS, CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
+import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { apiClientKey } from '@/globals'
 import useDateFormat from '~/hooks/use-date-format'
@@ -94,19 +92,5 @@ const cancelJob = async (): Promise<void> => {
     onError: () => openErrorMessage()
   })
 }
-
-const statusLabel = computed(() => {
-  if (!Object.keys(CLASSIFIER_JOB_LABELS).map(Number).includes(props.job.progress.status)) {
-    return 'Unknown'
-  }
-
-  if (props.job.progress.status === CLASSIFIER_JOB_STATUS.RUNNING && props.job.progress.value === 0) {
-    return 'In progress'
-  }
-
-  return CLASSIFIER_JOB_LABELS[props.job.progress.status]
-})
-
-const isRunning = computed(() => props.job.progress.status === CLASSIFIER_JOB_STATUS.RUNNING && props.job.progress.value > 0)
 
 </script>

@@ -20,9 +20,10 @@
           class="md:(col-span-1 mt-1) <md:(col-span-2 mt-4)"
         >
           <div class="text-lg">
-            <job-information-status
-              :variant="props.summary?.status ?? 0"
-              :progress="progress"
+            <job-progress
+              :status="props.summary?.status ?? 0"
+              :current="progress"
+              :total="100"
             />
           </div>
         </div>
@@ -104,8 +105,8 @@ import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/
 import { hours } from '~/picker/time-of-day-constants'
 import { useStore } from '~/store'
 import ComponentError from './component-error.vue'
-import JobInformationStatus from './job-information-status.vue'
 import JobResultValidationStatus from './job-result-validation-status.vue'
+import jobProgress from '@/detect/cnn-job-list/components/job-progress.vue'
 
 const props = withDefaults(defineProps<{ isLoadingSummary: boolean, isErrorSummary: boolean, summary: GetClassifierJobInformationResponse | undefined}>(), {
   isLoadingSummary: false
