@@ -25,8 +25,7 @@
         class="min-w-4"
       />
       <span
-        class="ml-2 text-insight w-full "
-        :style="`font-size: ${props.progressBarTextSize}px;`"
+        class="ml-2 text-insight"
       >
         {{ classifierStatus.title }}
       </span>
@@ -36,9 +35,8 @@
       :class="{ 'hidden': props.isCompact && props.status !== CLASSIFIER_JOB_STATUS.RUNNING }"
     >
       <div
-        class="w-52 lg:w-68 bg-pitch rounded-full h-3 border-1"
-        :style="{ width: props.progressBarWidth }"
-        :class="classifierStatus.borderColor"
+        class=" rounded-full h-3 border-1"
+        :class="[classifierStatus.borderColor, { 'w-52 lg:w-68': !isCompact, 'w-20 lg:w-xx': isCompact }]"
       >
         <div
           class="h-2.5 rounded-full"
@@ -60,8 +58,6 @@ const props = defineProps<{
   status: number,
   current: number,
   total: number,
-  progressBarWidth?: string,
-  progressBarTextSize?: string,
   isCompact?: boolean
 }>()
 

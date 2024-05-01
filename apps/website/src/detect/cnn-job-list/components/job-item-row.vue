@@ -28,8 +28,6 @@
         :status="props.job.progress.status"
         :current="props.job.progress.value"
         :total="100"
-        :progress-bar-width="'5rem'"
-        :progress-bar-text-size="'14'"
         :is-compact="true"
       />
     </td>
