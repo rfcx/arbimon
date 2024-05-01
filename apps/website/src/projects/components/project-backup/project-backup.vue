@@ -6,7 +6,7 @@
     <div class="flex flex-col xl:flex-row gap-6 justify-between">
       <div class="w-full xl:w-2/4">
         <p>
-          You can request a comprehensive backup—including all raw recordings, job results, metadata, and Insights visuals—every 7 days. Once requested, your download link will be ready within 24 hours. Remember, download links expire after 7 days, so be sure to save your backup promptly.
+          You can request a backup every 7 days, containing all sites, recordings (+ links to raw files), PM results, validations, soundscapes in CSV format. Once requested, your download link will be ready within 24 hours. Remember, download links expire after 7 days (including links within the backup), so be sure to save your backup promptly.
         </p>
         <button
           v-if="!isLoading"
