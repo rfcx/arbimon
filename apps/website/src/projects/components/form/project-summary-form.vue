@@ -2,7 +2,7 @@
   <div class="mt-6 flex flex-row">
     <label
       for="summary"
-      class="block mb-2 font-medium text-gray-900 dark:text-insight"
+      class="block mb-2 font-medium text-gray-900 text-secondary"
     >Project blurb</label>
     <icon-i-info
       tooltip-id="summary_tooltip"

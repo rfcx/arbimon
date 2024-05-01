@@ -72,7 +72,9 @@ export default defineConfig({
       textColor: {
         primary: '#fff',
         warning: '#FFCD00',
-        danger: '#D46767'
+        danger: '#D46767',
+        secondary: '#E9E6E1',
+        placeholder: '#D3D2CF'
       },
       colors: {
         // Primary

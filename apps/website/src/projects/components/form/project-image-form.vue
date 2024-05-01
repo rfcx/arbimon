@@ -1,16 +1,16 @@
 <template>
   <div class="flex flex-col gap-y-6">
     <h4>Photo</h4>
-    <div class="flex flex-col-reverse md:flex-row justify-between gap-y-4">
+    <div class="flex flex-col md:flex-row justify-between gap-y-4">
       <div class="flex flex-col">
         <div class="flex flex-row">
-          <span class="font-medium">Project thumbnail photo</span>
+          <span class="font-medium text-secondary">Project thumbnail photo</span>
           <icon-i-info
             tooltip-id="project-settings-project-image"
             :tooltip-text="'Upload your project photo.'"
           />
         </div>
-        <p>Recommended size: 380 px by 180 px</p>
+        <p class="text-secondary">Recommended size: 380 px by 180 px</p>
         <button
           class="btn btn-secondary group mt-4 w-42 btn-medium"
           type="button"

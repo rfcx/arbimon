@@ -3,7 +3,7 @@
     <div class="flex flex-row">
       <label
         for="name"
-        class="block mb-2 font-medium text-gray-900 dark:text-insight"
+        class="block mb-2 font-medium text-gray-900 dark:text-secondary"
       >Project Name*</label>
       <icon-i-info
         tooltip-id="project-name"
@@ -16,7 +16,7 @@
       name="name"
       type="text"
       :disabled="isDisabled"
-      class="w-full border border-util-gray-03 rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
+      class="w-full text-secondary border border-util-gray-03 rounded-md dark:(bg-pitch text-fog placeholder:text-placeholder) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
       placeholder="Brown bears in Eastern Finland"
       required
     >
