@@ -1,5 +1,5 @@
 import { type S3Client } from '@aws-sdk/client-s3'
-import fs from 'fs'
+import { readFile, stat, unlink } from 'fs/promises'
 import { type Sequelize } from 'sequelize'
 
 import { BackupStatus } from '@rfcx-bio/common/dao/types/backup'
@@ -45,16 +45,17 @@ export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Seq
             const zipName = await createExport(sequelize, arbimonSequelize, storage, projectData)
 
             // Read file and upload to S3
-            const file = fs.readFileSync('./' + zipName)
+            const file = await readFile('./' + zipName)
             const key = `exports/${projectData.projectId}/${zipName}`
             const expiresAt = dayjs().add(7, 'day').toDate()
 
             // Upload to export folder in S3
             await storage.putObject(key, file)
+            const url = await generateSignedUrl(storage.getClient(), storage.getBucket(), key)
+            const size = (await stat('./' + zipName)).size // bytes
+            await unlink('./' + zipName)
 
             // Update status, expiresAt, size, url
-            const url = await generateSignedUrl(storage.getClient(), storage.getBucket(), key)
-            const size = (await fs.promises.stat('./' + zipName)).size // bytes
             await updateRequest(sequelize, id, { status: BackupStatus.AVAILABLE, expiresAt, size, url })
 
             // Send email to user
@@ -101,6 +102,7 @@ const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, s
     }
 
     // Create zip with csv files
+    // TODO: create file in temporary folder and return filename and path
     const formattedDate = dayjs().format('YYYY-MM-DD')
     const zipName = `${slug}_${formattedDate}_export.zip`
     await createZip(zipName, zipFiles)
