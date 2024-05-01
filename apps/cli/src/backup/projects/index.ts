@@ -4,13 +4,14 @@ import { type Sequelize } from 'sequelize'
 
 import { BackupStatus } from '@rfcx-bio/common/dao/types/backup'
 import type { StorageClient } from '@rfcx-bio/common/storage'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { VERBOSE } from '@/backup/projects/config'
 import { generateCsv } from '@/backup/projects/export'
 import { type ProjectBackupRequest, getPendingRequests, updateRequest } from '@/backup/projects/requests'
 import { generateSignedUrl } from '@/export/project-csv/generate-signed-url'
 import { type ZipFile, createZip } from '~/files'
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
+import { type MailClient } from '~/mail'
 
 const EXPORT_ITEMS = {
     BIO: ['species'],
@@ -24,7 +25,7 @@ const EXPORT_ITEMS = {
  * @param storage
  * @param verbose
  */
-export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, verbose: boolean = VERBOSE): Promise<any> => {
+export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, mailClient: MailClient, verbose: boolean = VERBOSE): Promise<any> => {
     let successCount = 0
 
     // Fetch pending backup requests
@@ -56,7 +57,9 @@ export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Seq
             const size = (await fs.promises.stat('./' + zipName)).size // bytes
             await updateRequest(sequelize, id, { status: BackupStatus.AVAILABLE, expiresAt, size, url })
 
-            // TODO - send email to user
+            // Send email to user
+            await mailClient.send(email, 'project-backup', { url })
+
             successCount++
         } catch (e) {
             if (verbose) {
