@@ -24,7 +24,7 @@
         :can-edit="store.userIsAdminProjectMember"
         :is-project-member="store.userIsProjectMember"
         :is-viewing-as-guest="isViewingAsGuest"
-        :is-loading="isLoadingSpecies"
+        :is-loading="isLoadingSpecies || isRefetchingSpecies"
         @emit-refetch="refetchSpeciesRichnessByRisk"
       />
       <div class="mt-6">
@@ -81,7 +81,7 @@ const dashboardStore = useDashboardStore()
 const isViewingAsGuest = computed(() => route.query.guest === '1' || store.userIsExternalGuest)
 const selectedProjectId = computed(() => store.project?.id)
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
-const { isLoading: isLoadingSpecies, isError: isErrorSpecies, refetch: refetchData, data: species } = useSpeciesRichnessByRisk(apiClientBio)
+const { isLoading: isLoadingSpecies, isError: isErrorSpecies, refetch: refetchData, data: species, isRefetching: isRefetchingSpecies } = useSpeciesRichnessByRisk(apiClientBio)
 
 const speciesRichnessByTaxon: ComputedRef<HorizontalStack[]> = computed(() => {
   return (species.value?.richnessByTaxon ?? []).map(([taxonId, count]) => {
