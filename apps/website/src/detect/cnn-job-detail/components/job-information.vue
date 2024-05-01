@@ -43,22 +43,22 @@
             id="cnn-job-information-input"
             class="grid grid-rows-4 gap-y-4 mt-4 text-base text-insight mr-4"
           >
-            <icon-custom-ft-map-pin-lg-frequency class="block m-auto" />
+            <icon-custom-ft-map-pin class="block m-auto text-cloud" />
             <span
               class="truncate ml-2"
               :title="queryStreamsInfoString"
             >
               {{ queryStreamsInfoString }}
             </span>
-            <icon-custom-ic-calendar-frequency class="block m-auto" />
+            <icon-custom-ic-calendar class="block m-auto text-cloud" />
             <span class="ml-2">
               {{ queryStart }} - {{ queryEnd }}
             </span>
-            <icon-custom-ic-clock-frequency class="block m-auto" />
+            <icon-custom-ic-clock class="block m-auto text-cloud" />
             <span class="ml-2">
               {{ queryHours }}
             </span>
-            <icon-custom-ft-mic-lg-frequency class="block m-auto" />
+            <icon-custom-ft-mic class="block m-auto text-cloud" />
             <span class="ml-2">
               {{ minOfRecordings }}
             </span>
