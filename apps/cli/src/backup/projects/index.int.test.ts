@@ -6,12 +6,14 @@ import { type BackupType, BackupStatus } from '@rfcx-bio/common/dao/types/backup
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
+import { getMailClient } from '~/mail'
 import { getStorageClient } from '~/storage'
 import { backupProjects } from './index'
 
 const sequelize = getSequelize()
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
 const storage = getStorageClient()
+const mailClient = getMailClient()
 
 describe('Projects backup', async () => {
     test('generates and zips files', async () => {
@@ -27,7 +29,7 @@ describe('Projects backup', async () => {
         const expectedKey = `exports/${project.id}/${expectedName}`
 
         // Act
-        await backupProjects(sequelize, arbimonSequelize, storage)
+        await backupProjects(sequelize, arbimonSequelize, storage, mailClient)
 
         // Assert
         const exists = await storage.objectExists(expectedKey)
