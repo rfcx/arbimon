@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="flex flex-row items-center"
     :class="{ 'flex-col gap-1 !items-start': props.isCompact }"
   >
@@ -24,27 +24,27 @@
         v-else
         class="min-w-4"
       />
-      <span 
-          class="ml-2 text-insight w-full "
-          :style="`font-size: ${props.progressBarTextSize}px;`"
+      <span
+        class="ml-2 text-insight w-full "
+        :style="`font-size: ${props.progressBarTextSize}px;`"
       >
         {{ classifierStatus.title }}
       </span>
-      </div>
-    <div 
-      class="flex items-center" 
+    </div>
+    <div
+      class="flex items-center"
       :class="{ 'hidden': props.isCompact && props.status !== CLASSIFIER_JOB_STATUS.RUNNING }"
     >
       <div
         class="w-52 lg:w-68 bg-pitch rounded-full h-3 border-1"
         :style="{ width: props.progressBarWidth }"
         :class="classifierStatus.borderColor"
-       >
-      <div
-        class="h-2.5 rounded-full"
-        :style="`width: ${progressPercentage}%;`"
-        :class="classifierStatus.bgColor"
-      />
+      >
+        <div
+          class="h-2.5 rounded-full"
+          :style="`width: ${progressPercentage}%;`"
+          :class="classifierStatus.bgColor"
+        />
       </div>
       <span class="ml-2 ">{{ Math.min(props.current, 100) }}%</span>
     </div>

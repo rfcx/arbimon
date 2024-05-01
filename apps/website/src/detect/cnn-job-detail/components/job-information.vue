@@ -44,23 +44,40 @@
             id="cnn-job-information-input"
             class="grid grid-rows-4 gap-y-4 mt-4 text-base text-insight mr-4"
           >
-            <div title="Sites"><icon-custom-ft-map-pin class="block m-auto text-cloud"/></div>
+            <div title="Sites">
+              <icon-custom-ft-map-pin class="block m-auto text-cloud" />
+            </div>
             <span
               class="truncate ml-2"
               title="Sites"
             >
               {{ queryStreamsInfoString }}
             </span>
-            <div title="Date"><icon-custom-ic-calendar class="block m-auto text-cloud"/></div>
-            <span class="ml-2" title="Date">
+            <div title="Date">
+              <icon-custom-ic-calendar class="block m-auto text-cloud" />
+            </div>
+            <span
+              class="ml-2"
+              title="Date"
+            >
               {{ queryStart }} - {{ queryEnd }}
             </span>
-            <div title="Time of day"><icon-custom-ic-clock class="block m-auto text-cloud"/></div>
-            <span class="ml-2" title="Time of day">
+            <div title="Time of day">
+              <icon-custom-ic-clock class="block m-auto text-cloud" />
+            </div>
+            <span
+              class="ml-2"
+              title="Time of day"
+            >
               {{ queryHours }}
             </span>
-            <div title="Minutes of recordings"><icon-custom-ft-mic class="block m-auto text-cloud"/></div>
-            <span class="ml-2" title="Minutes of recordings">
+            <div title="Minutes of recordings">
+              <icon-custom-ft-mic class="block m-auto text-cloud" />
+            </div>
+            <span
+              class="ml-2"
+              title="Minutes of recordings"
+            >
               {{ minOfRecordings }}
             </span>
           </div>
@@ -102,11 +119,11 @@ import { computed } from 'vue'
 import type { GetClassifierJobInformationResponse } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
+import jobProgress from '@/detect/cnn-job-list/components/job-progress.vue'
 import { hours } from '~/picker/time-of-day-constants'
 import { useStore } from '~/store'
 import ComponentError from './component-error.vue'
 import JobResultValidationStatus from './job-result-validation-status.vue'
-import jobProgress from '@/detect/cnn-job-list/components/job-progress.vue'
 
 const props = withDefaults(defineProps<{ isLoadingSummary: boolean, isErrorSummary: boolean, summary: GetClassifierJobInformationResponse | undefined}>(), {
   isLoadingSummary: false

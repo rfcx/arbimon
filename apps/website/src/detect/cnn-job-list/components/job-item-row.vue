@@ -28,9 +28,9 @@
         :status="props.job.progress.status"
         :current="props.job.progress.value"
         :total="100"
-        :progressBarWidth="'5rem'"
-        :progressBarTextSize="'14'"
-        :isCompact="true"
+        :progress-bar-width="'5rem'"
+        :progress-bar-text-size="'14'"
+        :is-compact="true"
       />
     </td>
     <td class="w-1/10 px-6 py-4  align-text-top">
