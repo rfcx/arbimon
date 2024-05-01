@@ -12,11 +12,16 @@
     >
       <span>No content</span>
     </div>
-    <div
-      v-if="isLoading"
-      class="flex justify-center"
-    >
-      <icon-custom-ic-loading class="animate-spin w-8 h-8 lg:mx-24" />
+    <div v-if="isLoading">
+      <li v-for="n in 2" :key="n" class="flex flex-row justify-between">
+        <div class="flex flex-row items-center gap-x-2 h-21 basis-11/12">
+          <div class="h-14 w-14 aspect-square object-cover rounded bg-util-gray-03 loading-shimmer"></div>
+          <div class="md:overflow-hidden basis-3/4">
+            <div class="bg-util-gray-03 loading-shimmer h-4"></div>
+            <div class="bg-util-gray-03 loading-shimmer h-3 mt-2"></div>
+          </div>
+        </div>
+      </li>
     </div>
     <HighlightedSpeciesList
       v-if="speciesList && speciesList.length > 0 && !isLoading"
