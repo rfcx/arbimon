@@ -1,7 +1,7 @@
 <template>
   <div
     id="toast-undo"
-    class="flex flex-row items-center space-x-4 justify-between mt-3 text-insight bg-steel-grey rounded-md shadow"
+    class="flex flex-row items-center space-x-4 justify-between text-insight bg-pitch shadow sticky z-5 top-0 py-3"
     role="alert"
   >
     <div class="flex items-center gap-x-4 text-base">
