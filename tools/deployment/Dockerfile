@@ -1,9 +1,9 @@
 # Install pnpm
-FROM node:18-alpine as node-pnpm
+FROM node:18-alpine AS node-pnpm
 RUN npm i -g pnpm@8
 
 # Install deps
-FROM node-pnpm as with-deps
+FROM node-pnpm AS with-deps
 RUN mkdir -p /app
 WORKDIR /app
 
@@ -23,7 +23,7 @@ RUN pnpm i --frozen-lockfile
 RUN pnpm prepare
 
 # Build
-FROM with-deps as build
+FROM with-deps AS build
 WORKDIR /app
 
 COPY tsconfig*.json ./
@@ -50,7 +50,7 @@ RUN pnpm --filter=api use-packed
 ENV NODE_ENV=production
 
 # API
-FROM build as biodiversity-api
+FROM build AS biodiversity-api
 WORKDIR /app/apps/api
 ENV FASTIFY_PORT=8080
 ENV FASTIFY_ADDRESS=0.0.0.0
@@ -58,10 +58,10 @@ EXPOSE 8080
 CMD ["node", "--experimental-specifier-resolution=node", "--no-warnings", "lib/index.js"]
 
 # CLI
-FROM build as biodiversity-cli
+FROM build AS biodiversity-cli
 
 # Website
-FROM nginx:1.21-alpine as biodiversity-website
+FROM nginx:1.21-alpine AS biodiversity-website
 COPY --from=build /app/apps/website/dist /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY tools/deployment/website/nginx/nginx.conf /etc/nginx/conf.d/default.conf
