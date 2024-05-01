@@ -36,6 +36,10 @@
         :index="pageNo"
         @emit-sort-paginations="onEmitSortAndPaginations"
       />
+
+      <div v-if="results.length === 0 && (searchSpeciesKeyword !== '')" class="p-10 text-center">
+        <span class="font-bold">No Results Found.</span> <span>Your search did not return any matches.</span>
+      </div>
     </div>
   </div>
 </template>
