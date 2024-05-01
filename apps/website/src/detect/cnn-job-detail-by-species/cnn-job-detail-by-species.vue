@@ -3,6 +3,7 @@
     <div>
       <JobDetailHeader :species-name="speciesClass" />
       <JobValidationHeader
+        :is-loading="isLoadingDetectionSummary || isRefetchingDetectionSummary"
         :species-name="speciesClass"
         :detections-count="totalDetections"
         :filtered-result="jobDetectionResponse?.total"
@@ -11,10 +12,11 @@
         @emit-filter-changed="onEmitFilterChanged"
       />
       <JobValidationStatus
-        :total="speciesCount?.total ?? 0"
-        :uncertain="speciesCount?.uncertain ?? 0"
-        :rejected="speciesCount?.rejected ?? 0"
-        :confirmed="speciesCount?.confirmed ?? 0"
+        :is-loading="isLoadingDetectionSummary || isRefetchingDetectionSummary"
+        :unvalidated="detectionsSummary?.unvalidated ?? -1"
+        :uncertain="detectionsSummary?.unknown ?? -1"
+        :rejected="detectionsSummary?.notPresent ?? -1"
+        :confirmed="detectionsSummary?.present ?? -1"
       />
       <JobDetections
         v-model:page="page"
@@ -36,11 +38,12 @@ import { useRoute } from 'vue-router'
 
 import { apiBioGetClassifierJobSpecies } from '@rfcx-bio/common/api-bio/cnn/classifier-job-species'
 import { type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
+import type { GetDetectionsSummaryQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections-summary'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
-import { useGetJobDetections } from '../_composables/use-get-detections'
+import { useGetDetectionsSummary, useGetJobDetections } from '../_composables/use-get-detections'
 import { useGetJobDetectionSummary } from '../_composables/use-get-job-detection-summary'
 import { useGetJobValidationResults } from '../_composables/use-get-job-validation-results'
 import JobDetailHeader from './components/job-detail-header.vue'
@@ -150,6 +153,27 @@ const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: 
   detectionsQueryParams,
   computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== ''),
   refetchInterval
+)
+
+// summary of detections for the species in the job
+
+const detectionsSummaryQueryParams = computed<GetDetectionsSummaryQueryParams>(() => {
+  return {
+    start: detectionsResultFilterBySpeciesStore.selectedStartRange,
+    end: detectionsResultFilterBySpeciesStore.selectedEndRange,
+    reviewStatus: detectionsResultFilterBySpeciesStore.filter.validationStatuses,
+    sites: detectionsResultFilterBySpeciesStore.filter.siteIds,
+    classifierJobId: jobId.value,
+    classification: speciesSlug.value,
+    classifierId: classifierId.value,
+    confidence: detectionsResultFilterBySpeciesStore.filter.minConfidence
+  } as GetDetectionsSummaryQueryParams
+})
+
+const { isLoading: isLoadingDetectionSummary, isRefetching: isRefetchingDetectionSummary, data: detectionsSummary } = useGetDetectionsSummary(
+  apiClientBio,
+  detectionsSummaryQueryParams,
+  computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '')
 )
 
 const onEmitPageSize = (pageSize: number) => {
