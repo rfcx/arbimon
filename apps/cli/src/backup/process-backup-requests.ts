@@ -2,6 +2,7 @@ import { getSequelize } from '@/db/connections'
 import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
 import { getStorageClient } from '~/storage'
 import { backupProjects } from './projects'
+import { getMailClient } from '~/mail'
 
 const main = async (): Promise<void> => {
     console.info('Backup processing start...')
@@ -10,9 +11,10 @@ const main = async (): Promise<void> => {
         const sequelize = getSequelize()
         const arbimonSequelize = getArbimonSequelize()
         const storage = getStorageClient()
+        const mailClient = getMailClient()
 
         // Process project backup requests
-        await backupProjects(sequelize, arbimonSequelize, storage)
+        await backupProjects(sequelize, arbimonSequelize, storage, mailClient)
         console.info('Backup processing end: success')
     } catch (e) {
         console.error(e)
