@@ -4,7 +4,7 @@
       Test project
     </h4>
     <div class="flex flex-col lg:(flex-row) items-start gap-4">
-      <div class="flex flex-col gap-y-4 w-full lg:w-4/6">
+      <div class="flex flex-col gap-y-6 w-full lg:w-2/4">
         <p class="text-secondary">
           Your project's basic information, such as its name, will be listed and searchable on Arbimon.
           Detailed insights can be shared at your discretion. Review our
@@ -22,7 +22,7 @@
       >
         <icon-custom-alert-triangle class="h-6 w-6 cursor-pointer text-chirp" />
         <span
-          class="text-sm ml-3 text-insight"
+          class="ml-3 text-insight"
           role="alert"
         >
           Make sure the Project’s Insight is hidden to make it a test project.
