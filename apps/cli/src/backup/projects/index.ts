@@ -1,15 +1,17 @@
 import { type S3Client } from '@aws-sdk/client-s3'
-import fs from 'fs'
+import { readFile, stat, unlink } from 'fs/promises'
 import { type Sequelize } from 'sequelize'
 
 import { BackupStatus } from '@rfcx-bio/common/dao/types/backup'
 import type { StorageClient } from '@rfcx-bio/common/storage'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { VERBOSE } from '@/backup/projects/config'
 import { generateCsv } from '@/backup/projects/export'
 import { type ProjectBackupRequest, getPendingRequests, updateRequest } from '@/backup/projects/requests'
 import { generateSignedUrl } from '@/export/project-csv/generate-signed-url'
 import { type ZipFile, createZip } from '~/files'
+import { type MailClient } from '~/mail'
 
 const EXPORT_ITEMS = {
     BIO: ['species'],
@@ -23,16 +25,8 @@ const EXPORT_ITEMS = {
  * @param storage
  * @param verbose
  */
-export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, verbose: boolean = VERBOSE): Promise<any> => {
-    const processedCount = 0
-    // TEST DATA
-    // const requests = [{
-    //     id: 123,
-    //     projectId: 2,
-    //     arbimonProjectId: 1209,
-    //     slug: 'bci-panama',
-    //     email: 'lucy@rfcx.org'
-    // }]
+export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, mailClient: MailClient, verbose: boolean = VERBOSE): Promise<any> => {
+    let successCount = 0
 
     // Fetch pending backup requests
     const requests = await getPendingRequests(sequelize)
@@ -43,32 +37,41 @@ export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Seq
 
     for (const request of requests) {
         const { id, email, ...projectData } = request
+        if (verbose) {
+            console.info(`- Backup ${id} started`)
+        }
         try {
             // Change status to processing
             await updateRequest(sequelize, id, { status: BackupStatus.PROCESSING })
 
             // Create export zip
-            const now = new Date()
-            const formattedDate = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
-            const zipName = await createExport(sequelize, arbimonSequelize, storage, projectData, formattedDate)
+            const { zipName, totalBytes } = await createExport(sequelize, arbimonSequelize, storage, projectData)
+            if (verbose) {
+                console.info(`  - Created ${zipName}, total ${totalBytes} bytes`)
+            }
 
-            // Read file and upload to S3
-            const file = fs.readFileSync('./' + zipName)
-            const key = `exports/${projectData.projectId}/${formattedDate}/${zipName}`
-            const expiresAt = new Date()
-            expiresAt.setDate(now.getDate() + 7) // in 7 days
-
-            // Upload to export folder in S3
+            // Upload to S3
+            const file = await readFile('./' + zipName)
+            const key = `exports/${projectData.projectId}/${zipName}`
+            const expiresAt = dayjs().add(7, 'day').toDate()
             await storage.putObject(key, file)
+            const url = await generateSignedUrl(storage.getClient(), storage.getBucket(), key)
+            const size = (await stat('./' + zipName)).size // bytes
+            await unlink('./' + zipName)
+            if (verbose) {
+                console.info(`  - Uploaded to ${key}, total ${size} bytes`)
+            }
 
             // Update status, expiresAt, size, url
-            const client = storage.getClient()
-            const bucket = storage.getBucket()
-            const url = await generateSignedUrl(client, bucket, key)
-            const size = (await fs.promises.stat('./' + zipName)).size // bytes
             await updateRequest(sequelize, id, { status: BackupStatus.AVAILABLE, expiresAt, size, url })
 
-            // TODO - send email to user
+            // Send email to user
+            await mailClient.send(email, 'project-backup', { url })
+            if (verbose) {
+                console.info(`  - Mail sent to ${email}`)
+            }
+
+            successCount++
         } catch (e) {
             if (verbose) {
                 console.info(`Error processing backup request with id ${id}`, e)
@@ -77,11 +80,11 @@ export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Seq
     }
 
     if (verbose) {
-        console.info(`Project backup end - processed ${processedCount} backup requests in total.`)
+        console.info(`Processed ${successCount}/${requests.length} backup requests successfully`)
     }
 }
 
-const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, projectData: Omit<ProjectBackupRequest, 'id' | 'email' >, timestamp: string): Promise<string> => {
+const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, projectData: Omit<ProjectBackupRequest, 'id' | 'email' >): Promise<{ zipName: string, totalBytes: number }> => {
     const { projectId, arbimonProjectId, slug } = projectData
     const zipFiles: ZipFile[] = []
     const client: S3Client = storage.getClient()
@@ -94,7 +97,7 @@ const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, s
             const file = await generateCsv(item, projectId, sequelize, { client, bucket })
             zipFiles.push(file)
         } catch (e) {
-            console.info(`Error exporting ${item}: `, e)
+            console.error(`Error exporting ${item}: `, e)
         }
     }
 
@@ -104,12 +107,14 @@ const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, s
             const file = await generateCsv(item, arbimonProjectId, arbimonSequelize, { client, bucket })
             zipFiles.push(file)
         } catch (e) {
-            console.info(`Error exporting ${item}: `, e)
+            console.error(`Error exporting ${item}: `, e)
         }
     }
 
     // Create zip with csv files
-    const zipName = `${slug}_${timestamp}_export.zip`
-    await createZip(zipName, zipFiles)
-    return zipName
+    // TODO: create file in temporary folder and return filename and path
+    const formattedDate = dayjs().format('YYYY-MM-DD')
+    const zipName = `${slug}_${formattedDate}_export.zip`
+    const { totalBytes } = await createZip(zipName, zipFiles)
+    return { zipName, totalBytes }
 }

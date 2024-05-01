@@ -48,7 +48,7 @@
               <icon-custom-ft-map-pin class="block m-auto text-cloud" />
             </div>
             <span
-              class="truncate ml-2"
+              class="truncate"
               title="Sites"
             >
               {{ queryStreamsInfoString }}

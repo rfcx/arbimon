@@ -2,7 +2,7 @@
   <div class="flex flex-row">
     <label
       for="name"
-      class="block font-medium text-gray-900 dark:text-insight"
+      class="block font-medium text-secondary"
     >Project objectives*</label>
     <icon-i-info
       tooltip-id="project-objectives"

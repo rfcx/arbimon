@@ -1,8 +1,8 @@
 <template>
   <div class="w-full xl:w-2/4">
-    <h6>Previous backup requests:</h6>
+    <h6 class="text-secondary">Previous backup requests:</h6>
     <table class="p-4 mt-2 w-full text-left">
-      <tr class="border-b-1 border-util-gray-03">
+      <tr class="border-b-1 border-util-gray-03 text-secondary">
         <th class="py-2">
           Request date
         </th>
@@ -24,7 +24,7 @@
       <tr v-else-if="error">
         <td
           colspan="4"
-          class="py-4"
+          class="py-4 text-secondary"
         >
           {{ error }}
         </td>
@@ -32,7 +32,7 @@
       <tr v-else-if="data.length === 0">
         <td
           colspan="4"
-          class="py-4"
+          class="py-4 text-secondary"
         >
           Looks like you haven't requested a backup recently.
         </td>
@@ -41,7 +41,7 @@
         v-for="item in data"
         v-else
         :key="item.id"
-        class="border-b-1 border-util-gray-03"
+        class="border-b-1 border-util-gray-03 text-secondary"
       >
         <td class="py-1">
           {{ formattedDate(item.requestedAt) }}

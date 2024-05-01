@@ -19,8 +19,8 @@
       >
         <div class="grid grid-cols-4">
           <span>{{ key[0] }}</span>
-          <span class="flex items-center justify-center">{{ key[1] }}</span>
-          <span class="flex items-center justify-center">{{ getValidationPercentage(key[1], totalDetection) }}%</span>
+          <span class="justify-self-end">{{ key[1] }}</span>
+          <span class="justify-self-end">{{ getValidationPercentage(key[1], totalDetection) }}%</span>
         </div>
       </template>
     </div>
