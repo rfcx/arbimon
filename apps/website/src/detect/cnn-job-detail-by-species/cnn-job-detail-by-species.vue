@@ -3,7 +3,8 @@
     <div>
       <JobDetailHeader :species-name="speciesClass" />
       <JobValidationHeader
-        :is-loading="isLoadingDetectionSummary || isRefetchingDetectionSummary"
+        :is-loading="false"
+        :is-loading-filter="isLoadingDetectionSummary || isRefetchingDetectionSummary || isLoadingJobDetections"
         :species-name="speciesClass"
         :detections-count="totalDetections"
         :filtered-result="jobDetectionResponse?.total"

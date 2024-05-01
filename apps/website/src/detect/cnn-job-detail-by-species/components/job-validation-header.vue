@@ -19,7 +19,7 @@
           />
           <div class="flex flex-row inline-flex gap-2 max-w-36 items-center">
             <span>Results:</span>
-            <StatusNumber :is-loading="isLoading" :value="filteredResult ?? -1"/>
+            <StatusNumber :is-loading="isLoadingFilter" :value="filteredResult ?? -1"/>
             <span> / </span>
             <StatusNumber :is-loading="isLoading" :value="Number(detectionsCount) ?? -1"/>
           </div>
@@ -97,10 +97,11 @@ import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import JobValidationFilters from './job-validation-filters.vue'
 import StatusNumber from './job-validation-status-number.vue'
 
-const props = withDefaults(defineProps<{ speciesName: string | undefined, detectionsCount: string | undefined, filteredResult: number | undefined, pageSize: number, isLoading: boolean }>(), {
+const props = withDefaults(defineProps<{ speciesName: string | undefined, detectionsCount: string | undefined, filteredResult: number | undefined, pageSize: number, isLoading: boolean, isLoadingFilter: boolean }>(), {
   speciesName: undefined,
   detectionsCount: undefined,
-  isLoading: false
+  isLoading: false, // loading classification header & total detections of the selected species
+  isLoadingFilter: false // loading filtered results
 })
 
 const emit = defineEmits<{(e: 'emitPageSize', value: number): void, (e: 'emitClose'): void, (e: 'emitFilterChanged'): void}>()
