@@ -61,7 +61,7 @@ const totalDetection = computed(() => {
 })
 
 const getValidationPercentage = (x: number, total: number): string => {
-   return numeral(total === 0 ? 0 : x / total * 100).format('0,0', Math.floor)
+   return numeral(total === 0 ? 0 : x / total * 100).format('0.00', Math.floor)
 }
 
 </script>
