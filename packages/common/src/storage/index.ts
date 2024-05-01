@@ -1,11 +1,4 @@
-import {
-    type GetObjectCommandOutput,
-    DeleteObjectCommand,
-    GetObjectCommand,
-    HeadObjectCommand,
-    PutObjectCommand,
-    S3Client
-} from '@aws-sdk/client-s3'
+import { type GetObjectCommandOutput, DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import type { PutObjectRequest } from '@aws-sdk/client-s3/dist-types/models/models_0'
 import type { Readable } from 'node:stream'
 
@@ -146,5 +139,14 @@ export class StorageClient {
             return `${endpoint.endsWith('/') ? endpoint : endpoint + '/'}${bucketName}/${fileKey}`
         }
         return `https://${bucketName}.s3.amazonaws.com/${fileKey}`
+    }
+
+    public getClient (): S3Client {
+        return this.client
+    }
+
+    public getBucket (): string {
+        const { bucketName } = this.credentials
+        return bucketName
     }
 }

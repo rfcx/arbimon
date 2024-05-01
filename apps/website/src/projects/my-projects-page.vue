@@ -5,7 +5,6 @@
     :infinite-scroll-distance="40"
     :infinite-scroll-disabled="isLoading || hasFetchedAll"
   >
-    <BannerWhatNew />
     <section class="pt-8 bg-white dark:bg-pitch mx-8">
       <div class="py-8 mx-auto max-w-screen-xl">
         <div class="mt-6 flex flex-row justify-between">
@@ -134,7 +133,6 @@ import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vu
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
-import BannerWhatNew from './components/banner-what-new.vue'
 import ProjectCard from './components/project-card.vue'
 
 const store = useStore()

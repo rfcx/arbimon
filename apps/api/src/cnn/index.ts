@@ -1,7 +1,4 @@
-import {
-  getClassifierJobInformationRoute,
-  updateClassifierJobRoute
-} from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { getClassifierJobInformationRoute, updateClassifierJobRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { getClassifierJobSpeciesRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-job-species'
 import { getClassifierJobsRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-jobs'
 import { createClassifierJobRoute } from '@rfcx-bio/common/api-bio/cnn/create-classifier-job'

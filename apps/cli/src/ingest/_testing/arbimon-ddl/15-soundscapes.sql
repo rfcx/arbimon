@@ -1,0 +1,23 @@
+create table soundscapes (
+  soundscape_id int not null,
+  name varchar(255) not null,
+  project_id int not null,
+  user_id int not null,
+  soundscape_aggregation_type_id int not null,
+  bin_size int not null,
+  uri text null,
+  min_t int not null,
+  max_t int not null,
+  min_f int not null,
+  max_f int not null,
+  min_value int not null,
+  max_value int not null,
+  visual_max_value int null,
+  visual_palette int default 1 not null,
+  date_created datetime not null,
+  playlist_id int not null,
+  frequency int default 0 null,
+  threshold float default 0 null,
+  threshold_type varchar(32) default 'absolute' not null,
+  normalized tinyint(1) default 0 not null
+);

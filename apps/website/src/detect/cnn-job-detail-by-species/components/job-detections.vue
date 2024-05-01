@@ -145,7 +145,7 @@ const previousPage = (): void => {
 
 const filterOptions = computed<DetectionValidationStatus[]>(() => {
   // removes the `All` setting
-  const filtered: DetectionValidationStatus[] = validationStatus.filter(v => v.value !== 'all')
+  const filtered: DetectionValidationStatus[] = validationStatus
   .map(s => {
     return {
       value: s.value,
@@ -162,12 +162,14 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
     return []
   }
 
-  const groupedDetections: Record<string, GetDetectionsResponse> = groupBy(props.data ?? [], d => d.classification.value)
-  const species: Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(groupedDetections).map(slug => {
+  // TODO: refactor this as there isn't a need to group the detections by classification anymore (UI has changed + api was broken)
+  // workaround for now => groupBy classifierId instead (workaround for the broken api)
+  const groupedDetections: Record<string, GetDetectionsResponse> = groupBy(props.data ?? [], d => d.classifierId)
+  const species: Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(groupedDetections).map(id => {
     return {
-      speciesSlug: slug,
-      speciesName: groupedDetections[slug][0].classification.title,
-      media: groupedDetections[slug].map(detection => {
+      speciesSlug: '',
+      speciesName: '',
+      media: groupedDetections[id].map(detection => {
         return {
           spectrogramUrl: getMediaLink({
             streamId: detection.siteIdCore,

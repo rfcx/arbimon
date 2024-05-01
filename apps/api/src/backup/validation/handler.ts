@@ -3,13 +3,7 @@ import { type ProjectPermission, hasPermission } from '@rfcx-bio/common/roles'
 import { ALLOWED_BACKUP_TYPES, BackupEntityGetters } from '@/backup/types'
 import { getUserRoleForProject } from '@/projects/dao/project-member-dao'
 import type { Middleware } from '~/api-helpers/types'
-import {
-    BioForbiddenError,
-    BioInvalidPathParamError,
-    BioMissingPathParamError,
-    BioPublicError,
-    BioUnauthorizedError
-} from '~/errors'
+import { BioForbiddenError, BioInvalidPathParamError, BioMissingPathParamError, BioPublicError, BioUnauthorizedError } from '~/errors'
 
 const DEFAULT_PERMISSION: ProjectPermission = 'delete-project'
 interface EntityData {
