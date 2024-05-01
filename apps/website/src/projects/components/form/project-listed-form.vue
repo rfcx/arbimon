@@ -4,7 +4,7 @@
       Test project
     </h4>
     <div class="flex flex-col lg:(flex-row) items-start gap-4">
-      <div class="flex flex-col gap-y-4 w-full lg:w-3/5">
+      <div class="flex flex-col gap-y-4 w-full lg:w-4/6">
         <p>
           Your project's basic information, such as its name, will be listed and searchable on Arbimon.
           Detailed insights can be shared at your discretion. Review our
