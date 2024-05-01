@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 
 import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
 import { type BackupType, BackupStatus } from '@rfcx-bio/common/dao/types/backup'
@@ -9,6 +9,8 @@ import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'
 import { getMailClient } from '~/mail'
 import { getStorageClient } from '~/storage'
 import { backupProjects } from './index'
+
+vi.mock('~/mail')
 
 const sequelize = getSequelize()
 const arbimonSequelize = await getPopulatedArbimonInMemorySequelize()
@@ -29,7 +31,7 @@ describe('Projects backup', async () => {
         const expectedKey = `exports/${project.id}/${expectedName}`
 
         // Act
-        await backupProjects(sequelize, arbimonSequelize, storage, mailClient)
+        await backupProjects(sequelize, arbimonSequelize, storage, mailClient, false)
 
         // Assert
         const exists = await storage.objectExists(expectedKey)
