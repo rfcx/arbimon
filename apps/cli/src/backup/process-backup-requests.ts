@@ -1,8 +1,8 @@
 import { getSequelize } from '@/db/connections'
 import { getArbimonSequelize } from '@/ingest/_connections/arbimon'
+import { getMailClient } from '~/mail'
 import { getStorageClient } from '~/storage'
 import { backupProjects } from './projects'
-import { getMailClient } from '~/mail'
 
 const main = async (): Promise<void> => {
     console.info('Backup processing start...')
