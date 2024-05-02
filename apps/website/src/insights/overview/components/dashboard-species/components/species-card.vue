@@ -4,7 +4,9 @@
       v-if="errorLoadImage"
       class="flex bg-util-gray-04 justify-center items-center text-center rounded object-cover aspect-square min-h-16 h-16 md:(h-30 w-30) mx-auto"
     >
-      <div class="text-util-gray-02">image not available</div>
+      <div class="text-util-gray-02">
+        image not available
+      </div>
     </div>
     <img
       v-else
