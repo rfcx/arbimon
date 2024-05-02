@@ -32,10 +32,7 @@ export class StorageClient {
     private readonly credentials: S3Credentials
 
     constructor (credentials: S3Credentials) {
-        const { accessKeyId, secretAccessKey, region, endpoint, bucketName } = credentials
-        if (accessKeyId === undefined || secretAccessKey === undefined || region === undefined || bucketName === undefined) {
-            throw new Error('Insufficient S3 credentials - please check if access key, secret, region or bucket is correct')
-        }
+        const { accessKeyId, secretAccessKey, region, endpoint } = credentials
         const endpointOptions = endpoint !== undefined && endpoint !== '' ? { endpoint, forcePathStyle: true } : {}
         this.client = new S3Client({
             ...endpointOptions,
@@ -109,7 +106,7 @@ export class StorageClient {
      *
      * @param key {string} - path to object
      * @param body {Buffer} - file/buffer to store
-     * @param options {Partial<PutObjectRequest>} - additional options
+     * @param options {PutObjectOptions} - additional options
      */
     public async putObject (key: string, body: Buffer, options?: PutObjectOptions): Promise<void> {
         const { bucketName } = this.credentials

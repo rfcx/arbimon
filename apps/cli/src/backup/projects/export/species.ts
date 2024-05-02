@@ -3,7 +3,7 @@ import { type Sequelize, QueryTypes } from 'sequelize'
 export const getSpecies = async (projectId: number, sequelize: Sequelize): Promise<object[]> => {
     // Can be customized to get the necessary data if requirements change
     const sql = `
-        select s.species_id, s.scientific_name, sf.family, t.taxon, st.songtype 
+        select s.species_id, s.scientific_name, sf.family, t.taxon, st.songtype_id, st.songtype 
         from project_classes pc 
             join species s on s.species_id = pc.species_id 
             join songtypes st on pc.songtype_id = st.songtype_id 

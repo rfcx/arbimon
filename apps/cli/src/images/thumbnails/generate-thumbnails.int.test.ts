@@ -35,7 +35,7 @@ const genericLocationProjectProfile = {
 }
 const genericS3FileSettings = {
     CacheControl: 'max-age=604800, s-maxage=604800',
-    ACL: 'public-read',
+    ACL: 'public-read' as 'public-read',
     ContentType: 'image/jpg'
 }
 
