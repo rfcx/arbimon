@@ -15,7 +15,7 @@
         <div
           v-for="dt in species.media"
           :key="`job-detection-result-by-species-${dt.id}`"
-          class="inline-block mt-3 mr-4"
+          class="inline-block my-3 mr-4"
         >
           <DetectionItem
             :id="dt.id"
