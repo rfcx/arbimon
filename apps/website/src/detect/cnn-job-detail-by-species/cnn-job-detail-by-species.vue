@@ -3,6 +3,8 @@
     <div>
       <JobDetailHeader :species-name="speciesClass" />
       <JobValidationHeader
+        :is-loading="false"
+        :is-loading-filter="isLoadingDetectionSummary || isRefetchingDetectionSummary || isLoadingJobDetections"
         :species-name="speciesClass"
         :detections-count="totalDetections"
         :filtered-result="jobDetectionResponse?.total"
@@ -11,10 +13,11 @@
         @emit-filter-changed="onEmitFilterChanged"
       />
       <JobValidationStatus
-        :total="speciesCount?.total ?? 0"
-        :uncertain="speciesCount?.uncertain ?? 0"
-        :rejected="speciesCount?.rejected ?? 0"
-        :confirmed="speciesCount?.confirmed ?? 0"
+        :is-loading="isLoadingDetectionSummary || isRefetchingDetectionSummary"
+        :unvalidated="detectionsSummary?.unvalidated ?? -1"
+        :uncertain="detectionsSummary?.unknown ?? -1"
+        :rejected="detectionsSummary?.notPresent ?? -1"
+        :confirmed="detectionsSummary?.present ?? -1"
       />
       <JobDetections
         v-model:page="page"
@@ -23,7 +26,7 @@
         :data="jobDetectionResponse?.data"
         :page-size="pageSizeLimit"
         :max-page="Math.ceil(Number(jobDetectionResponse?.total)/pageSizeLimit)"
-        @emit-validation-result="refetchJobResults()"
+        @emit-validation-result="onEmitValidateResult"
       />
     </div>
   </section>
@@ -36,11 +39,12 @@ import { useRoute } from 'vue-router'
 
 import { apiBioGetClassifierJobSpecies } from '@rfcx-bio/common/api-bio/cnn/classifier-job-species'
 import { type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
+import type { GetDetectionsSummaryQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections-summary'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
-import { useGetJobDetections } from '../_composables/use-get-detections'
+import { useGetDetectionsSummary, useGetJobDetections } from '../_composables/use-get-detections'
 import { useGetJobDetectionSummary } from '../_composables/use-get-job-detection-summary'
 import { useGetJobValidationResults } from '../_composables/use-get-job-validation-results'
 import JobDetailHeader from './components/job-detail-header.vue'
@@ -109,15 +113,6 @@ const speciesClass = computed(() => {
   return `${found.title}`
 })
 
-const speciesCount = computed(() => {
-  if (jobResults.value == null) {
-    return undefined
-  }
-
-  const species = jobResults.value.classificationsSummary.find(cs => cs.value === speciesSlug.value)
-  return species
-})
-
 const offset = computed<number>(() => {
   return (page.value - 1) * pageSizeLimit.value
 })
@@ -152,6 +147,27 @@ const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: 
   refetchInterval
 )
 
+// summary of detections for the species in the job
+
+const detectionsSummaryQueryParams = computed<GetDetectionsSummaryQueryParams>(() => {
+  return {
+    start: detectionsResultFilterBySpeciesStore.selectedStartRange,
+    end: detectionsResultFilterBySpeciesStore.selectedEndRange,
+    reviewStatus: detectionsResultFilterBySpeciesStore.filter.validationStatuses,
+    sites: detectionsResultFilterBySpeciesStore.filter.siteIds,
+    classifierJobId: jobId.value,
+    classification: speciesSlug.value,
+    classifierId: classifierId.value,
+    confidence: detectionsResultFilterBySpeciesStore.filter.minConfidence
+  } as GetDetectionsSummaryQueryParams
+})
+
+const { isLoading: isLoadingDetectionSummary, isRefetching: isRefetchingDetectionSummary, data: detectionsSummary, refetch: refetchDetectionSummary } = useGetDetectionsSummary(
+  apiClientBio,
+  detectionsSummaryQueryParams,
+  computed(() => jobSummary.value?.id != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '')
+)
+
 const onEmitPageSize = (pageSize: number) => {
   pageSizeLimit.value = pageSize
 }
@@ -167,6 +183,12 @@ const getClassifierJobSpecies = async (q: string): Promise<void> => {
 const onEmitFilterChanged = () => {
   page.value = 1
   refetchJobResults()
+}
+
+const onEmitValidateResult = async () => {
+  setTimeout(async () => {
+    await refetchDetectionSummary()
+  }, 500) // workaround to wait for the detection summary to be updated in the database
 }
 
 </script>
