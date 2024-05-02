@@ -12,17 +12,15 @@
       </div>
       <div class="flex flex-wrap items-center justify-between text-insight pt-10 w-full gap-2 lg:flex-row ">
         <div class="flex flex-wrap gap-2 items-center gap-x-3 lg:flex-row ">
-          <span class="text-2xl font-medium">Filters:</span>
           <JobValidationFilters
-            @emit-min-confidence="toggleMinConfidence"
             @emit-filter-changed="emit('emitFilterChanged')"
           />
-          <div class="w-36">
+          <div class="w-36 self-start mt-2.5">
             <span>Results:</span>
             <span class="ml-1">{{ filteredResult }} / {{ detectionsCount }}</span>
           </div>
         </div>
-        <div class="flex flex-row items-center gap-x-3">
+        <div class="flex flex-row items-center gap-x-3 self-start mt-1">
           <span>Items per page:</span>
           <div>
             <button
@@ -69,21 +67,6 @@
         </div>
       </div>
     </div>
-    <div
-      v-if="isMinConfidenceOpen"
-      class="flex flex-row items-center gap-x-2 pt-3"
-    >
-      <span class="text-sm">Minimum Confidence:</span>
-      <input
-        id="minConfidenceCnn"
-        v-model.number="currentValue"
-        type="number"
-        min="0"
-        max="1"
-        class="w-12 text-center text-sm text-pitch bg-util-gray-01 rounded-md outline-none focus:(outline-none ring-util-gray-01) px-1 py-0.5 mr-1 input-hide-arrows"
-        @change="onValueChange(currentValue)"
-      >
-    </div>
   </div>
 </template>
 
@@ -91,7 +74,6 @@
 import { Dropdown, initDropdowns } from 'flowbite'
 import { onMounted, ref, watch } from 'vue'
 
-import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import JobValidationFilters from './job-validation-filters.vue'
 
 const props = withDefaults(defineProps<{ speciesName: string | undefined, detectionsCount: string | undefined, filteredResult: number | undefined, pageSize: number }>(), {
@@ -120,23 +102,6 @@ const pageSizeOptions = ref([
   }
 ])
 
-const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
-
-const isMinConfidenceOpen = ref<boolean>(false)
- const currentValue = ref<number>(detectionsResultFilterBySpeciesStore.filter.minConfidence)
-
-const toggleMinConfidence = (isSelected: boolean) => {
-  isMinConfidenceOpen.value = isSelected
-}
-
-const onValueChange = (value: number) => {
-  if (value < 0 || value > 1) {
-    currentValue.value = detectionsResultFilterBySpeciesStore.filter.minConfidence
-    return
-  }
-  detectionsResultFilterBySpeciesStore.filter.minConfidence = value
-}
-
 const selectItemsPerPage = (size: number): void => {
   selectedPageSize.value = size
   emit('emitPageSize', size)
@@ -150,10 +115,6 @@ onMounted(() => {
     document.getElementById('itemsPerPageHover'),
     document.getElementById('itemsPerPageBtn')
   )
-})
-
-watch(() => detectionsResultFilterBySpeciesStore.filter.minConfidence, (newValue) => {
-  currentValue.value = newValue
 })
 
 </script>
