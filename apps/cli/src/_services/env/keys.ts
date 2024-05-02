@@ -15,12 +15,12 @@ import { type BioEnvironment, type Protection, BIO_ENVIRONMENT_VALUES, PROTECTIO
 type Getter<T> = (env: Record<string, string>, key: string) => T | undefined
 
 const stringGetter: Getter<string> = (env, key): string | undefined => {
-  const raw = env[key]
+  const raw = env[key] ?? ''
   return raw.length > 0 ? raw : undefined
 }
 
 const numberGetter: Getter<number> = (env, key): number | undefined => {
-  const raw = env[key]
+  const raw = env[key] ?? ''
   return raw.length > 0 ? Number(raw) : undefined
 }
 
