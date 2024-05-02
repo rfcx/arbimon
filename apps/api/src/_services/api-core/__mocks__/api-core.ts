@@ -3,7 +3,7 @@ import { vi } from 'vitest'
 import { type Classifier } from '@rfcx-bio/common/api-bio/classifiers/classifiers'
 import { type WithTotalCount } from '@rfcx-bio/common/total-count'
 
-import { type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobTotalDetections, type CoreDetection, type CoreDetectionsSummary } from '../types'
+import { type CoreClassificationLite, type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobSummary, type CoreClassifierJobTotalDetections, type CoreDetection, type CoreDetectionsSummary } from '../types'
 
 const randomCoreId = (): string => (Math.random() + 1).toString(36).substring(6)
 const randomArbimonId = (): number => Math.floor(Math.random() * 99999)
@@ -216,5 +216,18 @@ export const getDetectionsSummary = vi.fn(async (): Promise<CoreDetectionsSummar
     rejected: 0,
     uncertain: 12,
     confirmed: 8
+  }
+})
+
+export const getClassifierJobSummaryByClassification = vi.fn(async (): Promise<CoreClassifierJobSummary & CoreClassificationLite> => {
+  return {
+    value: 'sciurus_carolinensis_simple_call_2',
+    title: 'Sciurus carolinensis, Simple call 2',
+    image: null,
+    total: 1732,
+    unreviewed: 1730,
+    uncertain: 2,
+    rejected: 0,
+    confirmed: 0
   }
 })
