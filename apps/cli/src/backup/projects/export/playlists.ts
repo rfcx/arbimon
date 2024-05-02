@@ -1,6 +1,6 @@
 import { type Sequelize, QueryTypes } from 'sequelize'
 
-export const getPlaylists = async (projectId: number, sequelize: Sequelize): Promise<Record<string, any>> => {
+export const getPlaylists = async (projectId: number, sequelize: Sequelize): Promise<object[]> => {
     // Can be customized to get the necessary data if requirements change
     const sql = `
         select *
@@ -15,7 +15,7 @@ export const getPlaylists = async (projectId: number, sequelize: Sequelize): Pro
     })
 }
 
-export const getPlaylistRecordings = async (projectId: number, sequelize: Sequelize): Promise<Record<string, any>> => {
+export const getPlaylistRecordings = async (projectId: number, sequelize: Sequelize): Promise<object[]> => {
     // Can be customized to get the necessary data if requirements change
     const sql = `
         select * 
