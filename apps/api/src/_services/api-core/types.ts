@@ -59,8 +59,14 @@ export interface GetClassifierJobClassificationSummaryQueryParams {
   sort?: string
 }
 
+export interface CoreClassificationLite {
+  title: string
+  value: string
+  image: string | null
+}
+
 export interface CoreClassifierJobClassificationSummary {
-  classificationsSummary: Array<CoreClassifierJobSummary & { title: string, value: string, image: string | null }>
+  classificationsSummary: Array<CoreClassifierJobSummary & CoreClassificationLite>
 }
 
 export interface CoreClassifierJobTotalDetections {
@@ -121,11 +127,7 @@ export interface CoreDetection {
   end: string
   confidence: number
   review_status: CoreRawReviewStatus
-  classification: {
-    title: string
-    value: string
-    image: string | null
-  }
+  classification: CoreClassificationLite
 }
 
 export interface CoreGetClassifiersQueryParams {

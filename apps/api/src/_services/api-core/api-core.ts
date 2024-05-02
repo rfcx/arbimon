@@ -15,7 +15,7 @@ import { isValidToken } from '~/api-helpers/is-valid-token'
 import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
-import { type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobTotalDetections, type CoreCreateClassifierJobBody, type CoreDetection, type CoreDetectionsSummary, type CoreGetClassifiersQueryParams, type CoreGetDetectionsQueryParams, type CoreGetDetectionsSummaryQueryParams, type CoreUpdateDetectionStatusBody, type CoreUpdateDetectionStatusParams, type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore, type GetClassifierJobClassificationSummaryQueryParams } from './types'
+import { type CoreClassificationLite, type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobSummary, type CoreClassifierJobTotalDetections, type CoreCreateClassifierJobBody, type CoreDetection, type CoreDetectionsSummary, type CoreGetClassifiersQueryParams, type CoreGetDetectionsQueryParams, type CoreGetDetectionsSummaryQueryParams, type CoreUpdateDetectionStatusBody, type CoreUpdateDetectionStatusParams, type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore, type GetClassifierJobClassificationSummaryQueryParams } from './types'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 
@@ -265,6 +265,22 @@ export async function getClassifierJobSummaries (token: string, jobId: number, p
       total,
       data: resp.data
     }
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getClassifierJobSummaryByClassification (token: string, jobId: number, value: string): Promise<CoreClassifierJobSummary & CoreClassificationLite> {
+  try {
+    const resp = await axios.request({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifier-jobs/${jobId}/summary/${value}`,
+      headers: {
+        authorization: token
+      }
+    })
+
+    return resp.data
   } catch (e) {
     return unpackAxiosError(e)
   }

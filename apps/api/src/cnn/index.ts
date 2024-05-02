@@ -1,3 +1,4 @@
+import { getClassifierJobInfoByClassificationRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-job-classification'
 import { getClassifierJobInformationRoute, updateClassifierJobRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { getClassifierJobSpeciesRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-job-species'
 import { getClassifierJobsRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-jobs'
@@ -10,6 +11,7 @@ import { updateDetectionStatusRoute } from '@rfcx-bio/common/api-bio/cnn/reviews
 import { requireRfcxEmail } from '@/_hooks/require-rfcx-user'
 import { type RouteRegistration, GET, PATCH, POST } from '~/api-helpers/types'
 import { createClassifierJobHandler } from './create-classifier-job-handler'
+import { getClassifierJobInfoByClassificationHandler } from './get-classifier-job-info-by-classification-handler'
 import { getClassifierJobInformationHandler } from './get-classifier-job-information-handler'
 import { getClassifierJobSpeciesHandler } from './get-classifier-job-species-handler'
 import { getClassifierJobsHandler } from './get-classifier-jobs-handler'
@@ -38,6 +40,12 @@ export const routesCnn: RouteRegistration[] = [
     url: getClassifierJobInformationRoute,
     preHandler: [requireRfcxEmail],
     handler: getClassifierJobInformationHandler
+  },
+  {
+    method: GET,
+    url: getClassifierJobInfoByClassificationRoute,
+    preHandler: [requireRfcxEmail],
+    handler: getClassifierJobInfoByClassificationHandler
   },
   {
     method: GET,
