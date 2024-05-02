@@ -1,9 +1,6 @@
 <!-- eslint-disable vue/no-unused-vars -->
 <!-- eslint-disable vue/require-v-for-key -->
 <template>
-  <h2 class="mb-6">
-    Overview
-  </h2>
   <div
     v-if="loading || metrics == null"
     class="flex gap-4 columns-2 md:columns-4"
