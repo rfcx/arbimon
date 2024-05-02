@@ -180,7 +180,7 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
             filetype: 'spec',
             monochrome: true,
             dimension: {
-              width: 120,
+              width: 300,
               height: 120
             },
             contrast: 120,
