@@ -19,12 +19,13 @@
           v-else
           class="md:(col-span-1 mt-1) <md:(col-span-2 mt-4)"
         >
-          <h2 class="text-lg">
-            <job-information-status
-              :variant="props.summary?.status ?? 0"
-              :progress="progress"
+          <div class="text-lg">
+            <job-progress
+              :status="props.summary?.status ?? 0"
+              :current="progress"
+              :total="100"
             />
-          </h2>
+          </div>
         </div>
       </div>
       <div class="grid grid-cols-3 pt-4 text-lg">
@@ -43,23 +44,37 @@
             id="cnn-job-information-input"
             class="grid grid-rows-4 gap-y-4 mt-4 text-base text-insight mr-4"
           >
-            <div title="Sites" class="flex items-center w-4"><icon-custom-ft-map-pin class="block m-auto text-cloud"/></div>
+            <div title="Sites" class="flex items-center w-4">
+              <icon-custom-ft-map-pin class="block m-auto text-cloud" />
+            </div>
             <span
               class="truncate"
               title="Sites"
             >
               {{ queryStreamsInfoString }}
             </span>
-            <div title="Date" class="flex items-center w-3.5"><icon-custom-ic-calendar class="block m-auto text-cloud"/></div>
-            <span title="Date">
+            <div title="Date" class="flex items-center w-3.5">
+              <icon-custom-ic-calendar class="block m-auto text-cloud" />
+            </div>
+            <span
+              title="Date"
+            >
               {{ queryStart }} - {{ queryEnd }}
             </span>
-            <div title="Time of day" class="flex items-center w-4.5"><icon-custom-ic-clock class="block m-auto text-cloud"/></div>
-            <span title="Time of day">
+            <div title="Time of day" class="flex items-center w-4.5">
+              <icon-custom-ic-clock class="block m-auto text-cloud" />
+            </div>
+            <span
+              title="Time of day"
+            >
               {{ queryHours }}
             </span>
-            <div title="Minutes of recordings" class="flex items-center w-4"><icon-custom-ft-mic class="block m-auto text-cloud"/></div>
-            <span title="Minutes of recordings">
+            <div title="Minutes of recordings" class="flex items-center w-4">
+              <icon-custom-ft-mic class="block m-auto text-cloud" />
+            </div>
+            <span
+              title="Minutes of recordings"
+            >
               {{ minOfRecordings }}
             </span>
           </div>
@@ -101,10 +116,10 @@ import { computed } from 'vue'
 import type { GetClassifierJobInformationResponse } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
+import jobProgress from '@/detect/cnn-job-list/components/job-progress.vue'
 import { hours } from '~/picker/time-of-day-constants'
 import { useStore } from '~/store'
 import ComponentError from './component-error.vue'
-import JobInformationStatus from './job-information-status.vue'
 import JobResultValidationStatus from './job-result-validation-status.vue'
 
 const props = withDefaults(defineProps<{ isLoadingSummary: boolean, isErrorSummary: boolean, summary: GetClassifierJobInformationResponse | undefined}>(), {

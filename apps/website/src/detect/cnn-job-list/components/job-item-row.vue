@@ -25,7 +25,10 @@
     </td>
     <td class="w-1/10 px-6 py-4 align-text-top">
       <job-progress
-        :job-progress="props.job.progress"
+        :status="props.job.progress.status"
+        :current="props.job.progress.value"
+        :total="100"
+        :is-compact="true"
       />
     </td>
     <td class="w-1/10 px-6 py-4  align-text-top">
@@ -87,4 +90,5 @@ const cancelJob = async (): Promise<void> => {
     onError: () => openErrorMessage()
   })
 }
+
 </script>
