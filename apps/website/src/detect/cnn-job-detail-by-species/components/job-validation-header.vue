@@ -15,9 +15,17 @@
           <JobValidationFilters
             @emit-filter-changed="emit('emitFilterChanged')"
           />
-          <div class="w-36 self-start mt-2.5">
+          <div class="flex flex-row inline-flex gap-2 max-w-36 items-center">
             <span>Results:</span>
-            <span class="ml-1">{{ filteredResult }} / {{ detectionsCount }}</span>
+            <StatusNumber
+              :is-loading="isLoadingFilter"
+              :value="filteredResult ?? -1"
+            />
+            <span> / </span>
+            <StatusNumber
+              :is-loading="isLoading"
+              :value="Number(detectionsCount) ?? -1"
+            />
           </div>
         </div>
         <div class="flex flex-row items-center gap-x-3 self-start mt-1">
@@ -75,10 +83,13 @@ import { Dropdown, initDropdowns } from 'flowbite'
 import { onMounted, ref } from 'vue'
 
 import JobValidationFilters from './job-validation-filters.vue'
+import StatusNumber from './job-validation-status-number.vue'
 
-const props = withDefaults(defineProps<{ speciesName: string | undefined, detectionsCount: string | undefined, filteredResult: number | undefined, pageSize: number }>(), {
+const props = withDefaults(defineProps<{ speciesName: string | undefined, detectionsCount: string | undefined, filteredResult: number | undefined, pageSize: number, isLoading: boolean, isLoadingFilter: boolean }>(), {
   speciesName: undefined,
-  detectionsCount: undefined
+  detectionsCount: undefined,
+  isLoading: false, // loading classification header & total detections of the selected species
+  isLoadingFilter: false // loading filtered results
 })
 
 const emit = defineEmits<{(e: 'emitPageSize', value: number): void, (e: 'emitClose'): void, (e: 'emitFilterChanged'): void}>()

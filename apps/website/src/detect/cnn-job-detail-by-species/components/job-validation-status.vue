@@ -9,36 +9,51 @@
           <icon-custom-fi-unvalidated class="h-4 w-4" />
           <span>Unvalidated:</span>
         </div>
-        <span class="row-span-1">{{ total - (confirmed + rejected + uncertain) }}</span>
+        <status-number
+          :is-loading="isLoading"
+          :value="unvalidated"
+        />
       </div>
       <div class="flex flex-row items-center gap-x-4">
         <div class="flex flex-row items-center gap-x-2">
           <icon-custom-fi-present class="h-4 w-4" />
           <span>Present:</span>
         </div>
-        <span>{{ confirmed }}</span>
+        <status-number
+          :is-loading="isLoading"
+          :value="confirmed"
+        />
       </div>
       <div class="flex flex-row items-center gap-x-4">
         <div class="flex flex-row items-center gap-x-2">
           <icon-custom-fi-not-present class="h-4 w-4" />
           <span>Not present:</span>
         </div>
-        <span>{{ rejected }}</span>
+        <status-number
+          :is-loading="isLoading"
+          :value="rejected"
+        />
       </div>
       <div class="flex flex-row items-center gap-x-4">
         <div class="flex flex-row items-center gap-x-2">
           <icon-custom-fi-unknown class="h-4 w-4" />
           <span>Unknown:</span>
         </div>
-        <span>{{ uncertain }}</span>
+        <status-number
+          :is-loading="isLoading"
+          :value="uncertain"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import StatusNumber from './job-validation-status-number.vue'
+
 defineProps<{
-  total: number
+  isLoading: boolean
+  unvalidated: number
   rejected: number
   uncertain: number
   confirmed: number
