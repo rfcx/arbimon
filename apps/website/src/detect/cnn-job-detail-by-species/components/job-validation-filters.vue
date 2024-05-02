@@ -248,7 +248,6 @@ const statusDropdownHover = ref<HTMLElement | null>(null)
 const sitesDropdownCNN = ref<HTMLElement | null>(null)
 const groupingDropdownHover = ref<HTMLElement | null>(null)
 
-
 watch(() => detectionsResultFilterBySpeciesStore.filter.minConfidence, (newValue) => {
   currentValue.value = newValue
 })

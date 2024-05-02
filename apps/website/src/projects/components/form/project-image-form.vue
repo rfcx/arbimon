@@ -10,7 +10,9 @@
             :tooltip-text="'Upload your project photo.'"
           />
         </div>
-        <p class="text-secondary">Recommended size: 380 px by 180 px</p>
+        <p class="text-secondary">
+          Recommended size: 380 px by 180 px
+        </p>
         <button
           class="btn btn-secondary group mt-4 w-42 btn-medium"
           type="button"

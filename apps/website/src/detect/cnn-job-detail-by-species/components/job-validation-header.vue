@@ -72,7 +72,7 @@
 
 <script setup lang="ts">
 import { Dropdown, initDropdowns } from 'flowbite'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import JobValidationFilters from './job-validation-filters.vue'
 
