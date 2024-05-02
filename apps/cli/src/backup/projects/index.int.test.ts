@@ -31,7 +31,7 @@ describe('Projects backup', async () => {
         const expectedKey = `exports/${project.id}/${expectedName}`
 
         // Act
-        await backupProjects(sequelize, arbimonSequelize, storage, mailClient, false)
+        await backupProjects(sequelize, arbimonSequelize, storage, storage, mailClient, false)
 
         // Assert
         const exists = await storage.objectExists(expectedKey)

@@ -25,4 +25,6 @@ data:
 
   AWS_S3_BUCKET_REGION: eu-west-1
   AWS_S3_BUCKET_NAME: arbimon-staging
+  AWS_S3_LEGACY_BUCKET_NAME: arbimon2
+  AWS_S3_LEGACY_BUCKET_REGION: us-east-1
   AWS_OSS_REGION: eu-west-1

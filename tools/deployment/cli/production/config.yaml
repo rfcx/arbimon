@@ -23,6 +23,8 @@ data:
   ARBIMON_BASE_URL: https://arbimon.rfcx.org
   MEDIA_API_BASE_URL: https://media-api.rfcx.org
 
-  AWS_S3_BUCKET_REGION: eu-west-1
   AWS_S3_BUCKET_NAME: arbimon
+  AWS_S3_BUCKET_REGION: eu-west-1
+  AWS_S3_LEGACY_BUCKET_NAME: arbimon2
+  AWS_S3_LEGACY_BUCKET_REGION: us-east-1
   AWS_OSS_REGION: eu-west-1
