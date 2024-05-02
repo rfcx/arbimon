@@ -19,9 +19,15 @@
           />
           <div class="flex flex-row inline-flex gap-2 max-w-36 items-center">
             <span>Results:</span>
-            <StatusNumber :is-loading="isLoadingFilter" :value="filteredResult ?? -1"/>
+            <StatusNumber
+              :is-loading="isLoadingFilter"
+              :value="filteredResult ?? -1"
+            />
             <span> / </span>
-            <StatusNumber :is-loading="isLoading" :value="Number(detectionsCount) ?? -1"/>
+            <StatusNumber
+              :is-loading="isLoading"
+              :value="Number(detectionsCount) ?? -1"
+            />
           </div>
         </div>
         <div class="flex flex-row items-center gap-x-3">

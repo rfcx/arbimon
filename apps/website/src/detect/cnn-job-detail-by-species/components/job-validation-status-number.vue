@@ -1,5 +1,8 @@
 <template>
-  <div class="loading-shimmer-light w-10 h-4 rounded" v-if="isLoading"></div>
+  <div
+    v-if="isLoading"
+    class="loading-shimmer-light w-10 h-4 rounded"
+  />
   <span v-else>{{ getNumber(value) }}</span>
 </template>
 
@@ -10,6 +13,6 @@ const props = defineProps<{
 }>()
 
 const getNumber = (value: number) => {
-  return props.isLoading || value === -1 ? 'N/A' : value
+  return props.isLoading === true || value === -1 ? 'N/A' : value
 }
 </script>

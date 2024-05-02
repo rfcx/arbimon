@@ -10,7 +10,7 @@
           <span>Unvalidated:</span>
         </div>
         <status-number
-          :isLoading="isLoading"
+          :is-loading="isLoading"
           :value="unvalidated"
         />
       </div>
@@ -20,7 +20,7 @@
           <span>Present:</span>
         </div>
         <status-number
-          :isLoading="isLoading"
+          :is-loading="isLoading"
           :value="confirmed"
         />
       </div>
@@ -30,7 +30,7 @@
           <span>Not present:</span>
         </div>
         <status-number
-          :isLoading="isLoading"
+          :is-loading="isLoading"
           :value="rejected"
         />
       </div>
@@ -40,7 +40,7 @@
           <span>Unknown:</span>
         </div>
         <status-number
-          :isLoading="isLoading"
+          :is-loading="isLoading"
           :value="uncertain"
         />
       </div>
@@ -50,6 +50,7 @@
 
 <script setup lang="ts">
 import StatusNumber from './job-validation-status-number.vue'
+
 defineProps<{
   isLoading: boolean
   unvalidated: number
