@@ -1,6 +1,7 @@
 import { type GetObjectCommandOutput, DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import type { PutObjectRequest } from '@aws-sdk/client-s3/dist-types/models/models_0'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import type { Readable } from 'node:stream'
+import { parse } from 'path'
 
 import { type ImageVariant, buildVariantPath } from '../api-bio/_helpers'
 
@@ -15,6 +16,12 @@ interface S3Credentials {
 export interface GetObjectResponse {
     file: Buffer
     metadata: Partial<GetObjectCommandOutput>
+}
+
+export interface PutObjectOptions {
+    ACL?: 'public-read'
+    CacheControl?: string
+    ContentType?: string
 }
 
 /**
@@ -104,16 +111,15 @@ export class StorageClient {
      * @param body {Buffer} - file/buffer to store
      * @param options {Partial<PutObjectRequest>} - additional options
      */
-    public async putObject (key: string, body: Buffer, options?: Partial<PutObjectRequest>): Promise<void> {
+    public async putObject (key: string, body: Buffer, options?: PutObjectOptions): Promise<void> {
         const { bucketName } = this.credentials
-        const { ContentType, ACL, ...rest } = options ?? {}
+        const { ContentType, ACL } = options ?? {}
         const command = new PutObjectCommand({
             Bucket: bucketName,
             Key: key,
             Body: body,
             ContentType,
-            ACL,
-            ...(rest ?? {})
+            ACL
         })
         await this.client.send(command)
     }
@@ -141,12 +147,15 @@ export class StorageClient {
         return `https://${bucketName}.s3.amazonaws.com/${fileKey}`
     }
 
-    public getClient (): S3Client {
-        return this.client
-    }
-
-    public getBucket (): string {
-        const { bucketName } = this.credentials
-        return bucketName
+    public async getObjectSignedUrl (key: string, expiresIn: number = ONE_WEEK_IN_SECONDS): Promise<string> {
+        const parsedPath = parse(key)
+        const command = new GetObjectCommand({
+            Bucket: this.credentials.bucketName,
+            Key: key,
+            ResponseContentDisposition: `attachment; filename=${parsedPath.base}`
+        })
+        return await getSignedUrl(this.client, command, { expiresIn })
     }
 }
+
+export const ONE_WEEK_IN_SECONDS = 86400 * 7

@@ -1,6 +1,6 @@
 import { type Sequelize, QueryTypes } from 'sequelize'
 
-export const getPatternMatchings = async (projectId: number, sequelize: Sequelize): Promise<Record<string, any>> => {
+export const getPatternMatchings = async (projectId: number, sequelize: Sequelize): Promise<object[]> => {
     // Can be customized to get the necessary data if requirements change
     const sql = `
         select *
@@ -15,7 +15,7 @@ export const getPatternMatchings = async (projectId: number, sequelize: Sequeliz
     })
 }
 
-export const getPatternMatchingRois = async (projectId: number, sequelize: Sequelize): Promise<Record<string, any>> => {
+export const getPatternMatchingRois = async (projectId: number, sequelize: Sequelize): Promise<object[]> => {
     // Can be customized to get the necessary data if requirements change
     const sql = `
         select *
@@ -30,7 +30,7 @@ export const getPatternMatchingRois = async (projectId: number, sequelize: Seque
     })
 }
 
-export const getPatternMatchingValidations = async (projectId: number, sequelize: Sequelize): Promise<Record<string, any>> => {
+export const getPatternMatchingValidations = async (projectId: number, sequelize: Sequelize): Promise<object[]> => {
     // Can be customized to get the necessary data if requirements change
     const sql = `
         select *

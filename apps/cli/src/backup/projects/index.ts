@@ -1,5 +1,4 @@
-import { type S3Client } from '@aws-sdk/client-s3'
-import { readFile, stat, unlink } from 'fs/promises'
+import { readFile, unlink } from 'fs/promises'
 import { type Sequelize } from 'sequelize'
 
 import { BackupStatus } from '@rfcx-bio/common/dao/types/backup'
@@ -9,13 +8,12 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { VERBOSE } from '@/backup/projects/config'
 import { generateCsv } from '@/backup/projects/export'
 import { type ProjectBackupRequest, getPendingRequests, updateRequest } from '@/backup/projects/requests'
-import { generateSignedUrl } from '@/export/project-csv/generate-signed-url'
 import { type ZipFile, createZip } from '~/files'
 import { type MailClient } from '~/mail'
 
 const EXPORT_ITEMS = {
-    BIO: ['species'],
-    ARBIMON: ['sites', 'recordings', 'playlists', 'playlist_recordings', 'templates', 'recording_validations', 'pattern_matchings', 'pattern_matching_rois', 'pattern_matching_validations', 'soundscapes']
+    BIO: [] as string[],
+    ARBIMON: ['sites', 'recordings', 'playlists', 'playlist_recordings', 'species', 'templates', 'recording_validations', 'pattern_matchings', 'pattern_matching_rois', 'pattern_matching_validations', 'soundscapes']
 }
 
 /**
@@ -25,7 +23,7 @@ const EXPORT_ITEMS = {
  * @param storage
  * @param verbose
  */
-export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, mailClient: MailClient, verbose: boolean = VERBOSE): Promise<any> => {
+export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, legacyStorage: StorageClient, mailClient: MailClient, verbose: boolean = VERBOSE): Promise<any> => {
     let successCount = 0
 
     // Fetch pending backup requests
@@ -45,7 +43,7 @@ export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Seq
             await updateRequest(sequelize, id, { status: BackupStatus.PROCESSING })
 
             // Create export zip
-            const { zipName, totalBytes } = await createExport(sequelize, arbimonSequelize, storage, projectData)
+            const { zipName, totalBytes } = await createExport(sequelize, arbimonSequelize, storage, legacyStorage, projectData)
             if (verbose) {
                 console.info(`  - Created ${zipName}, total ${totalBytes} bytes`)
             }
@@ -53,17 +51,16 @@ export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Seq
             // Upload to S3
             const file = await readFile('./' + zipName)
             const key = `exports/${projectData.projectId}/${zipName}`
-            const expiresAt = dayjs().add(7, 'day').toDate()
             await storage.putObject(key, file)
-            const url = await generateSignedUrl(storage.getClient(), storage.getBucket(), key)
-            const size = (await stat('./' + zipName)).size // bytes
             await unlink('./' + zipName)
             if (verbose) {
-                console.info(`  - Uploaded to ${key}, total ${size} bytes`)
+                console.info(`  - Uploaded to ${key}`)
             }
 
-            // Update status, expiresAt, size, url
-            await updateRequest(sequelize, id, { status: BackupStatus.AVAILABLE, expiresAt, size, url })
+            // Update url and change status to available
+            const expiresAt = dayjs().add(7, 'day').toDate()
+            const url = await storage.getObjectSignedUrl(key)
+            await updateRequest(sequelize, id, { status: BackupStatus.AVAILABLE, expiresAt, size: totalBytes, url })
 
             // Send email to user
             const to = { email: userEmail, name: userName }
@@ -86,17 +83,15 @@ export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Seq
     }
 }
 
-const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, projectData: Omit<ProjectBackupRequest, 'id' | 'userEmail' | 'userName' >): Promise<{ zipName: string, totalBytes: number }> => {
+const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, legacyStorage: StorageClient, projectData: Omit<ProjectBackupRequest, 'id' | 'userEmail' | 'userName' >): Promise<{ zipName: string, totalBytes: number }> => {
     const { projectId, arbimonProjectId, slug } = projectData
     const zipFiles: ZipFile[] = []
-    const client: S3Client = storage.getClient()
-    const bucket = storage.getBucket()
 
     // Create csv files
     // Export data from bio database
     for (const item of EXPORT_ITEMS.BIO) {
         try {
-            const file = await generateCsv(item, projectId, sequelize, { client, bucket })
+            const file = await generateCsv(item, projectId, sequelize, storage, legacyStorage)
             zipFiles.push(file)
         } catch (e) {
             console.error(`Error exporting ${item}: `, e)
@@ -106,7 +101,7 @@ const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, s
     // Export data from arbimon database
     for (const item of EXPORT_ITEMS.ARBIMON) {
         try {
-            const file = await generateCsv(item, arbimonProjectId, arbimonSequelize, { client, bucket })
+            const file = await generateCsv(item, arbimonProjectId, arbimonSequelize, storage, legacyStorage)
             zipFiles.push(file)
         } catch (e) {
             console.error(`Error exporting ${item}: `, e)

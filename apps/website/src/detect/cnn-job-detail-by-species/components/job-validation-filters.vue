@@ -1,204 +1,225 @@
 <template>
-  <div class="flex flex-row items-center gap-x-3">
-    <div>
-      <button
-        id="statusDropdownBtn"
-        data-dropdown-toggle="statusDropdownHover"
-        class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 w-41 hover:bg-moss"
-        type="button"
-        :class="{ '!w-max !border-solid': selectedStatuses.length !== 0 }"
-        :title="selectedStatusText"
-      >
-        <span
-          :class="{ 'px-2': selectedStatuses.length !== 0 }"
-          class="whitespace-nowrap overflow-hidden max-w-42 3xl:max-w-64 text-ellipsis"
-        >
-          {{ selectedStatusText }}
-        </span>
-        <icon-custom-fi-close-thin
-          v-if="selectedStatuses.length !== 0"
-          class="w-4 h-4 ml-2 cursor-pointer text-frequency"
-          @click="onClearStatus()"
-        />
-        <icon-fa-chevron-down
-          v-else
-          class="w-2.5 h-2.5 fa-chevron-down text-frequency"
-        />
-      </button>
-      <div
-        id="statusDropdownHover"
-        class="z-10 hidden rounded-lg p-3 bg-moss w-52 flex flex-col gap-y-3"
-      >
-        <div class="text-insight flex justify-center whitespace-nowrap px-2">
-          Validations status
-        </div>
-        <div class="border-b-1 border-util-gray-03" />
-        <ul
-          aria-labelledby="statusDropdownBtn"
-          class="flex flex-col gap-y-1"
-        >
-          <li
-            v-for="status in detectionsResultFilterBySpeciesStore.validationStatusFilterOptions"
-            :key="status.value"
-            class="bg-moss hover:text-util-gray-01"
-            @click="onSelectStatus(status.value)"
+  <div class="grid">
+    <div class="flex">
+      <span class="flex items-center text-2xl font-medium mr-3">Filters:</span>
+      <div class="flex flex-row items-center gap-x-3">
+        <div>
+          <button
+            id="statusDropdownBtn"
+            data-dropdown-toggle="statusDropdownHover"
+            class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 w-41 hover:bg-moss"
+            type="button"
+            :class="{ '!w-max !border-solid': selectedStatuses.length !== 0 }"
+            :title="selectedStatusText"
           >
-            <div
-              class="border-1 rounded-full cursor-pointer bg-moss"
-              :class="{'border-chirp': selectedStatuses.includes(status.value), 'border-transparent': selectedStatuses.includes(status.value) === false}"
+            <span
+              :class="{ 'px-2': selectedStatuses.length !== 0 }"
+              class="whitespace-nowrap overflow-hidden max-w-42 3xl:max-w-64 text-ellipsis"
             >
-              <div
-                class="flex flex-row gap-x-3 items-center h-10 pl-5"
-              >
-                <ValidationStatus
-                  :value="status.value"
-                />
-                {{ status.label }}
-              </div>
+              {{ selectedStatusText }}
+            </span>
+            <icon-custom-fi-close-thin
+              v-if="selectedStatuses.length !== 0"
+              class="w-4 h-4 ml-2 cursor-pointer text-frequency"
+              @click="onClearStatus()"
+            />
+            <icon-fa-chevron-down
+              v-else
+              class="w-2.5 h-2.5 fa-chevron-down text-frequency"
+            />
+          </button>
+          <div
+            id="statusDropdownHover"
+            class="z-10 hidden rounded-lg p-3 bg-moss w-52 flex flex-col gap-y-3"
+          >
+            <div class="text-insight flex justify-center whitespace-nowrap px-2">
+              Validations status
             </div>
-          </li>
-        </ul>
+            <div class="border-b-1 border-util-gray-03" />
+            <ul
+              aria-labelledby="statusDropdownBtn"
+              class="flex flex-col gap-y-1"
+            >
+              <li
+                v-for="status in detectionsResultFilterBySpeciesStore.validationStatusFilterOptions"
+                :key="status.value"
+                class="bg-moss hover:text-util-gray-01"
+                @click="onSelectStatus(status.value)"
+              >
+                <div
+                  class="border-1 rounded-full cursor-pointer bg-moss"
+                  :class="{'border-chirp': selectedStatuses.includes(status.value), 'border-transparent': selectedStatuses.includes(status.value) === false}"
+                >
+                  <div
+                    class="flex flex-row gap-x-3 items-center h-10 pl-5"
+                  >
+                    <ValidationStatus
+                      :value="status.value"
+                    />
+                    {{ status.label }}
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div>
+          <button
+            id="sitesDropdownButtonCNN"
+            data-dropdown-toggle="sitesDropdownCNN"
+            class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 w-41 hover:bg-moss"
+            type="button"
+            :class="{ '!border-solid': selectedSites.length !== 0 }"
+            :title="selectedSitesTitle"
+          >
+            <div class="whitespace-nowrap overflow-hidden max-w-42 2xl:max-w-64 text-ellipsis">
+              {{ selectedSitesTitle }}
+            </div>
+            <span>
+              <icon-custom-fi-close-thin
+                v-if="selectedSites.length !== 0"
+                class="w-4 h-4 ml-2 cursor-pointer text-frequency"
+                @click="selectedSites = []; filterDetectionsBySite()"
+              />
+              <icon-fa-chevron-down
+                v-else
+                class="w-2.5 h-2.5 fa-chevron-down text-frequency"
+              />
+            </span>
+          </button>
+          <div
+            id="sitesDropdownCNN"
+            class="z-10 hidden rounded-lg p-3 bg-moss w-52 flex flex-col gap-y-3 max-h-75"
+          >
+            <ul
+              aria-labelledby="sitesDropdownButtonCNN"
+              class="flex flex-col gap-y-1 overflow-scroll"
+            >
+              <li
+                class="border-b border-util-gray-03"
+                @click="onSelectAllSites"
+              >
+                <div class="flex p-2 rounded items-center hover:text-util-gray-01">
+                  <div class="flex">
+                    <input
+                      id="all"
+                      :aria-describedby="`class-checkbox-text-all`"
+                      type="radio"
+                      value="all"
+                      class="w-4 h-4 text-frequency border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency"
+                      :checked="selectedSites.length === detectionsResultFilterBySpeciesStore.sitesFilterOptions.length"
+                      @click="onSelectAllSites(); filterDetectionsBySite(); closeSitesDropdown()"
+                    >
+                  </div>
+                  <div class="ml-2">
+                    <label :for="`class-checkbox-text-all`">
+                      All sites
+                    </label>
+                  </div>
+                </div>
+              </li>
+              <li
+                v-for="site in detectionsResultFilterBySpeciesStore.sitesFilterOptions"
+                :key="site.value"
+                @click="onSelectSite(site.value); filterDetectionsBySite()"
+              >
+                <div class="flex p-2 rounded items-center hover:text-util-gray-01">
+                  <div class="flex">
+                    <input
+                      :id="site.value"
+                      v-model="selectedSites"
+                      :aria-describedby="`site-checkbox-text-${site.value}`"
+                      type="checkbox"
+                      :value="site.value"
+                      class="w-4 h-4 text-frequency border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency"
+                      :checked="selectedSites.includes(site.value)"
+                      @click="filterDetectionsBySite()"
+                    >
+                  </div>
+                  <div class="ml-2">
+                    <label :for="`site-checkbox-text-${site.value}`">
+                      {{ site.label }}
+                    </label>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div>
+          <button
+            id="groupingDropdownBtn"
+            data-dropdown-toggle="groupingDropdownHover"
+            class="grouping-dropdown flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 w-41 hover:bg-moss"
+            :class="{ '!w-max !border-solid': selectedGrouping != null }"
+            style="position: static !important; transform: none !important; inset: none !important; margin: 0px;"
+            type="button"
+          >
+            <span
+              class="whitespace-nowrap overflow-hidden max-w-42 3xl:max-w-64 text-ellipsis"
+              :class="{ 'px-2': selectedGrouping === 'minConfidence' }"
+            >
+              {{ selectedGroupingText }}
+            </span>
+            <icon-custom-fi-close-thin
+              v-if="selectedGrouping"
+              class="w-4 h-4 ml-2 cursor-pointer text-frequency"
+              @click="onClearGroupings"
+            />
+            <icon-fa-chevron-down
+              v-else
+              class="w-2.5 h-2.5 fa-chevron-down text-frequency"
+            />
+          </button>
+          <div
+            id="groupingDropdownHover"
+            class="z-10 hidden rounded-lg p-3 bg-moss w-68 flex flex-col gap-y-3"
+          >
+            <div class="text-insight flex whitespace-nowrap pl-5">
+              Groupings
+            </div>
+            <div class="border-b-1 border-util-gray-03" />
+            <ul
+              aria-labelledby="groupingDropdownBtn"
+              class="flex flex-col gap-y-1"
+            >
+              <li
+                class="bg-moss hover:text-util-gray-01"
+                @click="selectedGrouping = 'minConfidence'; groupingDetections(selectedGrouping); closeGroupingDropdown()"
+              >
+                <div
+                  class="border-1 rounded-full cursor-pointer bg-moss"
+                  :class="{'border-chirp': selectedGrouping === 'minConfidence', 'border-transparent': selectedGrouping !== 'minConfidence'}"
+                >
+                  <div
+                    class="flex flex-row gap-x-2 items-center h-10 pl-5"
+                  >
+                    Minimum Confidence
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div>
-      <button
-        id="sitesDropdownButtonCNN"
-        data-dropdown-toggle="sitesDropdownCNN"
-        class="flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 w-41 hover:bg-moss"
-        type="button"
-        :class="{ '!border-solid': selectedSites.length !== 0 }"
-        :title="selectedSitesTitle"
+    <div
+      v-if="selectedGrouping === 'minConfidence'"
+      class="flex flex-row items-center gap-x-2 pt-3"
+    >
+      <span class="text-sm">Minimum Confidence:</span>
+      <input
+        id="minConfidenceCnn"
+        v-model.number="currentValue"
+        type="number"
+        min="0"
+        max="1"
+        class="w-12 text-center text-sm text-pitch bg-util-gray-01 rounded-md outline-none focus:(outline-none ring-util-gray-01) px-1 py-0.5 mr-1 input-hide-arrows"
+        @change="onValueChange(currentValue)"
       >
-        <div class="whitespace-nowrap overflow-hidden max-w-42 2xl:max-w-64 text-ellipsis">
-          {{ selectedSitesTitle }}
-        </div>
-        <span>
-          <icon-custom-fi-close-thin
-            v-if="selectedSites.length !== 0"
-            class="w-4 h-4 ml-2 cursor-pointer text-frequency"
-            @click="selectedSites = []; filterDetectionsBySite()"
-          />
-          <icon-fa-chevron-down
-            v-else
-            class="w-2.5 h-2.5 fa-chevron-down text-frequency"
-          />
-        </span>
-      </button>
-      <div
-        id="sitesDropdownCNN"
-        class="z-10 hidden rounded-lg p-3 bg-moss w-52 flex flex-col gap-y-3 max-h-75"
-      >
-        <ul
-          aria-labelledby="sitesDropdownButtonCNN"
-          class="flex flex-col gap-y-1 overflow-scroll"
-        >
-          <li
-            class="border-b border-util-gray-03"
-            @click="onSelectAllSites"
-          >
-            <div class="flex p-2 rounded items-center hover:text-util-gray-01">
-              <div class="flex">
-                <input
-                  id="all"
-                  :aria-describedby="`class-checkbox-text-all`"
-                  type="radio"
-                  value="all"
-                  class="w-4 h-4 text-frequency border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency"
-                  :checked="selectedSites.length === detectionsResultFilterBySpeciesStore.sitesFilterOptions.length"
-                  @click="onSelectAllSites(); filterDetectionsBySite(); closeSitesDropdown()"
-                >
-              </div>
-              <div class="ml-2">
-                <label :for="`class-checkbox-text-all`">
-                  All sites
-                </label>
-              </div>
-            </div>
-          </li>
-          <li
-            v-for="site in detectionsResultFilterBySpeciesStore.sitesFilterOptions"
-            :key="site.value"
-            @click="onSelectSite(site.value); filterDetectionsBySite()"
-          >
-            <div class="flex p-2 rounded items-center hover:text-util-gray-01">
-              <div class="flex">
-                <input
-                  :id="site.value"
-                  v-model="selectedSites"
-                  :aria-describedby="`site-checkbox-text-${site.value}`"
-                  type="checkbox"
-                  :value="site.value"
-                  class="w-4 h-4 text-frequency border-insight bg-moss rounded ring-1 ring-insight focus:ring-frequency"
-                  :checked="selectedSites.includes(site.value)"
-                  @click="filterDetectionsBySite()"
-                >
-              </div>
-              <div class="ml-2">
-                <label :for="`site-checkbox-text-${site.value}`">
-                  {{ site.label }}
-                </label>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div>
-      <button
-        id="groupingDropdownBtn"
-        data-dropdown-toggle="groupingDropdownHover"
-        class="grouping-dropdown flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 w-41 hover:bg-moss"
-        :class="{ '!w-max !border-solid': selectedGrouping != null }"
-        style="position: static !important; transform: none !important; inset: none !important; margin: 0px;"
-        type="button"
-      >
-        <span
-          class="whitespace-nowrap overflow-hidden max-w-42 3xl:max-w-64 text-ellipsis"
-          :class="{ 'px-2': selectedGrouping === 'minConfidence' }"
-        >
-          {{ selectedGroupingText }}
-        </span>
-        <icon-custom-fi-close-thin
-          v-if="selectedGrouping"
-          class="w-4 h-4 ml-2 cursor-pointer text-frequency"
-          @click="onClearGroupings"
-        />
-        <icon-fa-chevron-down
-          v-else
-          class="w-2.5 h-2.5 fa-chevron-down text-frequency"
-        />
-      </button>
-      <div
-        id="groupingDropdownHover"
-        class="z-10 hidden rounded-lg p-3 bg-moss w-68 flex flex-col gap-y-3"
-      >
-        <div class="text-insight flex whitespace-nowrap pl-5">
-          Groupings
-        </div>
-        <div class="border-b-1 border-util-gray-03" />
-        <ul
-          aria-labelledby="groupingDropdownBtn"
-          class="flex flex-col gap-y-1"
-        >
-          <li
-            class="bg-moss hover:text-util-gray-01"
-            @click="selectedGrouping = 'minConfidence'; groupingDetections(selectedGrouping); closeGroupingDropdown()"
-          >
-            <div
-              class="border-1 rounded-full cursor-pointer bg-moss"
-              :class="{'border-chirp': selectedGrouping === 'minConfidence', 'border-transparent': selectedGrouping !== 'minConfidence'}"
-            >
-              <div
-                class="flex flex-row gap-x-2 items-center h-10 pl-5"
-              >
-                Minimum Confidence
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
     </div>
   </div>
 </template>
@@ -206,7 +227,7 @@
 <script setup lang="ts">
 import { Dropdown, initDropdowns } from 'flowbite'
 import { debounce } from 'lodash-es'
-import { type Ref, computed, onMounted, ref } from 'vue'
+import { type Ref, computed, onMounted, ref, watch } from 'vue'
 
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
@@ -226,6 +247,21 @@ const groupingDropdown = ref() as Ref<Dropdown>
 const statusDropdownHover = ref<HTMLElement | null>(null)
 const sitesDropdownCNN = ref<HTMLElement | null>(null)
 const groupingDropdownHover = ref<HTMLElement | null>(null)
+
+
+watch(() => detectionsResultFilterBySpeciesStore.filter.minConfidence, (newValue) => {
+  currentValue.value = newValue
+})
+
+const currentValue = ref<number>(detectionsResultFilterBySpeciesStore.filter.minConfidence)
+
+const onValueChange = (value: number) => {
+  if (value < 0 || value > 1) {
+    currentValue.value = detectionsResultFilterBySpeciesStore.filter.minConfidence
+    return
+  }
+  detectionsResultFilterBySpeciesStore.filter.minConfidence = value
+}
 
 const closeSitesDropdown = (): void => {
   sitesDropdown.value.hide()
