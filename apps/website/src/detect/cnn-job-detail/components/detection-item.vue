@@ -18,7 +18,7 @@
       >
         <img
           :src="spectrogram"
-          class="w-71.9 h-28 rounded-md object-cover object-center"
+          class="w-72 h-28 rounded-md object-cover object-center"
           :class="{'border-transparent': !isSelected || !highlightBorder, 'rounded-md border-2 border-chirp': isSelected || highlightBorder }"
           @click="toggleDetection($event)"
         >
@@ -65,7 +65,7 @@
       </div>
     </div>
     <div class="flex flex-col pt-2 gap-y-2 text-insight text-[13px]">
-      <div class="flex justify-between text-ellipsis overflow-hidden">
+      <div class="flex text-ellipsis overflow-hidden">
         <span
           v-if="props.score"
           class="whitespace-nowrap"
