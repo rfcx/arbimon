@@ -67,11 +67,11 @@ const sortKeyLabel = ref<string| undefined>()
 const pageNo = ref(1)
 
 const errorMessages = computed(() => [
-  { value: 'jobNotComplete', title: 'Hmm, it looks like we couldn\'t find anything...', description: 'The results you requested are currently in progress and are not yet available. Please check back later or contact support if you require further assistance.'},
-  { value: 'jobCancelled', title: '', description: 'This job has been cancelled.'},
-  { value: 'jobError', title: '', description: 'This job has been error.'},
-  { value: 'jobFinished', title: 'Hmm, it looks like we couldn\'t find anything...', description: 'We couldn\'t find any detections in your dataset using the current model. Consider switching to a different model or uploading a new dataset. For further assistance or to explore more options, please contact support.'},
-  { value: 'filterApplied', title: 'No results found.', description: 'Your search did not return any matches.'}
+  { value: 'jobNotComplete', title: 'Hmm, it looks like we couldn\'t find anything...', description: 'The results you requested are currently in progress and are not yet available. Please check back later or contact support if you require further assistance.' },
+  { value: 'jobCancelled', title: '', description: 'This job has been cancelled.' },
+  { value: 'jobError', title: '', description: 'This job has been error.' },
+  { value: 'jobFinished', title: 'Hmm, it looks like we couldn\'t find anything...', description: 'We couldn\'t find any detections in your dataset using the current model. Consider switching to a different model or uploading a new dataset. For further assistance or to explore more options, please contact support.' },
+  { value: 'filterApplied', title: 'No results found.', description: 'Your search did not return any matches.' }
 ])
 
 const setError = computed(() => {
@@ -84,12 +84,12 @@ const setError = computed(() => {
     statueError = 'jobError'
   } else if (props.results.length === 0 && props.jobStatus === CLASSIFIER_JOB_STATUS.DONE && searchSpeciesKeyword.value === '') {
     statueError = 'jobFinished'
-  } else if (props.results.length === 0 && searchSpeciesKeyword.value !== ''){
+  } else if (props.results.length === 0 && searchSpeciesKeyword.value !== '') {
     statueError = 'filterApplied'
   } else {
     statueError = ''
   }
-  return errorMessages.value.find( e => e.value === statueError)
+  return errorMessages.value.find(e => e.value === statueError)
 })
 
 const searchKeywordChange = async () => {
