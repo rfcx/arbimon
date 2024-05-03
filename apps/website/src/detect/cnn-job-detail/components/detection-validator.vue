@@ -51,11 +51,8 @@
     </div>
 
     <div class="text-base flex gap-x-5 items-center">
-      <span v-if="props.detectionCount === 1">
-        {{ props.detectionCount }} recording selected
-      </span>
-      <span v-else>
-        {{ props.detectionCount }} recordings selected
+      <span>
+        {{ props.detectionCount }} selected
       </span>
       <button
         class="btn border-1 border-util-gray-03 text-spoonbill bg-spoonbill bg-opacity-10 rounded-lg py-1 px-2 flex items-center gap-x-3"
