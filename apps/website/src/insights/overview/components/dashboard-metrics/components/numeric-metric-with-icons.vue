@@ -17,7 +17,7 @@
       <div
         :id="tooltipId"
         role="tooltip"
-        class="absolute w-50 z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+        class="absolute w-50 z-50 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
       >
         {{ tooltipText }}
         <div
