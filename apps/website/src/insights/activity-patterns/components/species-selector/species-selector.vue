@@ -17,7 +17,7 @@
           @click="onClickSpeciesInput"
         >
         <span
-          class="italic absolute left-3 pointer-events-none text-sm"
+          class="italic absolute left-4 pointer-events-none text-sm"
           :class="{'hidden': currentSpeciesQuery !== '','text-util-gray-03': hasFocusInput}"
         >{{ allSpecies.find(s => s.taxonSpeciesSlug === selectedSpeciesSlug)?.scientificName }}</span>
         <span class="absolute right-4 cursor-pointer pointer-events-none">
