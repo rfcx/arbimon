@@ -90,7 +90,7 @@
             :is-create-project="false"
             @emit-project-listed="toggleListedProject"
           />
-          <template v-if="toggles?.projectBackup === true && store.project?.role === 'owner'">
+          <template v-if="toggles?.projectBackup === true && store.userIsAdminProjectMember">
             <hr class="border-util-gray-03 my-6">
             <project-backup />
           </template>
