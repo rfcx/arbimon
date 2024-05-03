@@ -36,7 +36,7 @@
     >
       <div
         class=" rounded-full h-3 border-1"
-        :class="[classifierStatus.borderColor, { 'w-52 lg:w-68': !isCompact, 'w-20 lg:w-24': isCompact }]"
+        :class="[classifierStatus.borderColor, { 'w-52 md:w-32 lg:w-64': !isCompact, 'w-20 lg:w-24': isCompact }]"
       >
         <div
           class="h-2.5 rounded-full"
