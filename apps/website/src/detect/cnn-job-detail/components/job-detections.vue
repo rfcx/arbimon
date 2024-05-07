@@ -66,7 +66,7 @@ const isSearchBoxFocused = ref(false)
 const sortKeyLabel = ref<string| undefined>()
 const pageNo = ref(1)
 
-const ERROR_CASES =  [
+const ERROR_CASES = [
   { value: 'jobNotComplete', title: 'Hmm, it looks like we couldn\'t find anything...', description: 'The results you requested are currently in progress and are not yet available. Please check back later or contact support if you require further assistance.' },
   { value: 'jobCancelled', title: '', description: 'This job has been cancelled.' },
   { value: 'jobError', title: '', description: 'This job has been error.' },
