@@ -130,6 +130,29 @@ export interface CoreDetection {
   classification: CoreClassificationLite
 }
 
+export interface CoreBestDetectionQueryParams {
+  start?: string
+  end?: string
+  streams?: string[]
+  by_date?: boolean
+  review_statuses?: CoreReviewStatus
+  n_per_stream?: number
+  limit?: number
+  offset?: number
+}
+
+export interface CoreBestDetection {
+  stream_id: string
+  start: string
+  end: string
+  confidence: number
+  classification: CoreClassificationLite
+  bestDetection: {
+    daily_ranking: number
+    stream_ranking: number
+  }
+}
+
 export interface CoreGetClassifiersQueryParams {
   limit?: number
   offset?: number
