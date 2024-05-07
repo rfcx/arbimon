@@ -36,9 +36,8 @@ export interface Detection {
   }
 }
 
-export const xTotalDetectionsCountHeaderName = 'x-total-detections-count'
-
 export type GetDetectionsResponse = Detection[]
+export const xTotalDetectionsCountHeaderName = 'x-total-detections-count'
 
 // Route
 export const getDetectionsRoute = '/detections'
