@@ -24,7 +24,7 @@
             <span> / </span>
             <StatusNumber
               :is-loading="isLoading"
-              :value="Number(detectionsCount) ?? -1"
+              :value="detectionsCount ?? -1"
             />
           </div>
         </div>
@@ -85,7 +85,7 @@ import { onMounted, ref } from 'vue'
 import JobValidationFilters from './job-validation-filters.vue'
 import StatusNumber from './job-validation-status-number.vue'
 
-const props = withDefaults(defineProps<{ speciesName: string | undefined, detectionsCount: string | undefined, filteredResult: number | undefined, pageSize: number, isLoading: boolean, isLoadingFilter: boolean }>(), {
+const props = withDefaults(defineProps<{ speciesName: string | undefined, detectionsCount: number | undefined, filteredResult: number | undefined, pageSize: number, isLoading: boolean, isLoadingFilter: boolean }>(), {
   speciesName: undefined,
   detectionsCount: undefined,
   isLoading: false, // loading classification header & total detections of the selected species
