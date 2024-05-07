@@ -15,6 +15,7 @@
       :is-loading="isLoadingClassifierJob"
       :results="detectionList ?? []"
       :total="total"
+      :job-status="jobSummary?.status ?? 0"
       @emit-search="onEmitSearch"
       @emit-sort-paginations="onEmitSortAndPaginations"
     />
