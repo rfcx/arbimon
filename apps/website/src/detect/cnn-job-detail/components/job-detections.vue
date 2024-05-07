@@ -38,11 +38,11 @@
       />
 
       <div
-        v-if="setError && !isLoading"
+        v-if="errorStatus && !isLoading"
         class="p-10 text-center"
       >
-        <span v-if="setError.title !== ''" class="font-display flex justify-center mb-4 text-3xl" >{{ setError.title }}</span>
-        <span class="text-xl">{{ setError.description }}</span>
+        <h2 v-if="errorStatus.title !== ''" class="font-display flex justify-center mb-4" >{{ errorStatus.title }}</h2>
+        <h3>{{ errorStatus.description }}</h3>
       </div>
     </div>
   </div>
@@ -66,15 +66,15 @@ const isSearchBoxFocused = ref(false)
 const sortKeyLabel = ref<string| undefined>()
 const pageNo = ref(1)
 
-const errorMessages = computed(() => [
+const ERROR_CASES =  [
   { value: 'jobNotComplete', title: 'Hmm, it looks like we couldn\'t find anything...', description: 'The results you requested are currently in progress and are not yet available. Please check back later or contact support if you require further assistance.' },
   { value: 'jobCancelled', title: '', description: 'This job has been cancelled.' },
   { value: 'jobError', title: '', description: 'This job has been error.' },
   { value: 'jobFinished', title: 'Hmm, it looks like we couldn\'t find anything...', description: 'We couldn\'t find any detections in your dataset using the current model. Consider switching to a different model or uploading a new dataset. For further assistance or to explore more options, please contact support.' },
   { value: 'filterApplied', title: 'No results found.', description: 'Your search did not return any matches.' }
-])
+]
 
-const setError = computed(() => {
+const errorStatus = computed(() => {
   let statueError = ''
   if (props.jobStatus === CLASSIFIER_JOB_STATUS.WAITING || props.jobStatus === CLASSIFIER_JOB_STATUS.RUNNING) {
     statueError = 'jobNotComplete'
@@ -89,7 +89,7 @@ const setError = computed(() => {
   } else {
     statueError = ''
   }
-  return errorMessages.value.find(e => e.value === statueError)
+  return ERROR_CASES.find(e => e.value === statueError)
 })
 
 const searchKeywordChange = async () => {
