@@ -5,7 +5,7 @@ import { getUserRoleForProject } from '@/projects/dao/project-member-dao'
 import type { Middleware } from '~/api-helpers/types'
 import { BioForbiddenError, BioInvalidPathParamError, BioMissingPathParamError, BioPublicError, BioUnauthorizedError } from '~/errors'
 
-const DEFAULT_PERMISSION: ProjectPermission = 'delete-project'
+const DEFAULT_PERMISSION: ProjectPermission = 'backup-project'
 interface EntityData {
     entity?: string
     entityId?: number
