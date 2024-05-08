@@ -1,7 +1,7 @@
 <template>
-  <div class="detection-item w-72">
+  <div class="detection-item w-full aspect-[2.5/1]">
     <div
-      class="relative rounded-md bg-echo rounded-md border-1 border-util-gray-02 w-72 h-28.5"
+      class="relative rounded-md bg-echo rounded-md border-1 border-util-gray-02 aspect-[2.5/1] h-30"
       :class="{'border-transparent': isSelected || highlightBorder}"
     >
       <div
@@ -18,7 +18,7 @@
       >
         <img
           :src="spectrogram"
-          class="w-72 h-28 rounded-md object-cover object-center"
+          class="w-72 h-30 rounded-md object-cover object-center"
           :class="{'border-transparent': !isSelected || !highlightBorder, 'rounded-md border-2 border-chirp': isSelected || highlightBorder }"
           @click="toggleDetection($event)"
         >
