@@ -139,14 +139,10 @@ export interface CoreBestDetectionQueryParams {
   n_per_stream?: number
   limit?: number
   offset?: number
+  fields?: string[]
 }
 
-export interface CoreBestDetection {
-  stream_id: string
-  start: string
-  end: string
-  confidence: number
-  classification: CoreClassificationLite
+export type CoreBestDetection = CoreDetection & {
   bestDetection: {
     daily_ranking: number
     stream_ranking: number

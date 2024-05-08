@@ -11,7 +11,7 @@ export interface GetBestDetectionsParams {
 }
 
 // Response types
-export type BestDetection = Pick<Detection, 'siteIdCore' | 'start' | 'end' | 'confidence' | 'classification'> & {
+export type BestDetection = Pick<Detection, 'id' | 'siteIdCore' | 'start' | 'end' | 'confidence' | 'classifierId' | 'reviewStatus' | 'classification'> & {
   dailyRanking: number
   streamRanking: number
 }

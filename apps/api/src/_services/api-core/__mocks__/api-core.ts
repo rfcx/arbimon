@@ -3,7 +3,7 @@ import { vi } from 'vitest'
 import { type Classifier } from '@rfcx-bio/common/api-bio/classifiers/classifiers'
 import { type WithTotalCount } from '@rfcx-bio/common/total-count'
 
-import { type CoreClassificationLite, type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobSummary, type CoreClassifierJobTotalDetections, type CoreDetection, type CoreDetectionsSummary } from '../types'
+import { type CoreBestDetection, type CoreClassificationLite, type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobSummary, type CoreClassifierJobTotalDetections, type CoreDetection, type CoreDetectionsSummary } from '../types'
 
 const randomCoreId = (): string => (Math.random() + 1).toString(36).substring(6)
 const randomArbimonId = (): number => Math.floor(Math.random() * 99999)
@@ -230,4 +230,30 @@ export const getClassifierJobSummaryByClassification = vi.fn(async (): Promise<C
     rejected: 0,
     confirmed: 0
   }
+})
+
+export const getBestDetections = vi.fn(async (): Promise<WithTotalCount<CoreBestDetection[]>> => {
+  return {
+    total: 280,
+    data: [
+    {
+      id: '592123',
+      stream_id: 'kdmfigkritu0',
+      classifier_id: 39,
+      start: '2024-03-18T12:25:00.000Z',
+      end: '2024-03-18T12:30:00.000Z',
+      confidence: 0.99234,
+      review_status: null,
+      classification: {
+        value: 'paryrus_supaman_simple_call_2',
+        title: 'Paryrus Supaman, Simple call 2',
+        image: null
+      },
+      bestDetection: {
+        daily_ranking: 1,
+        stream_ranking: 1
+      }
+    }
+  ]
+}
 })
