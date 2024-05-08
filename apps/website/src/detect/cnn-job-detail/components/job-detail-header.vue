@@ -26,8 +26,16 @@
     </nav>
     <div class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
       <button
+        v-if="toggles?.cnnExport === true"
+        class="flex flex-row justify-center items-center gap-2 btn btn-secondary btn-medium"
+        @click="hasOpenedExportModal = true"
+      >
+        <icon-custom-ic-export class="h-4 w-4" />
+        <span>Export job</span>
+      </button>
+      <button
         v-if="isCancelJobEnable"
-        class="btn btn-danger py-2 flex flex-row justify-center items-center"
+        class="btn btn-danger btn-medium flex flex-row justify-center items-center"
         :class="isCanceling ? 'cursor-not-allowed' : 'cursor-pointer'"
         :disabled="isCanceling"
         @click="emit('emitCancelJob')"
@@ -40,21 +48,30 @@
           v-else
           class="flex flex-row justify-center items-center"
         >
-          <span class="pt-1">Cancel job</span>
+          <span>Cancel job</span>
           <icon-fa-trash class="h-4 w-4 ml-2" />
         </span>
       </button>
     </div>
   </div>
+  <export-modal
+    v-if="toggles?.cnnExport === true"
+    :is-open="hasOpenedExportModal"
+    :emit-close="hasOpenedExportModal=false"
+  />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+import ExportModal from '../../cnn-job-export/job-export-modal.vue'
 
 const route = useRoute()
+const toggles = inject(togglesKey)
+
 const jobId = computed(() => route.params.jobId)
 
 withDefaults(defineProps<{ isCancelJobEnable: boolean, isCanceling: boolean }>(), {
@@ -63,5 +80,7 @@ withDefaults(defineProps<{ isCancelJobEnable: boolean, isCanceling: boolean }>()
 })
 
 const emit = defineEmits<{(e: 'emitCancelJob'): void }>()
+
+const hasOpenedExportModal = ref(false)
 
 </script>
