@@ -42,7 +42,9 @@
         class="p-10 text-center"
       >
         <h2 v-if="errorStatus.title !== ''" class="font-display flex justify-center mb-4" >{{ errorStatus.title }}</h2>
-        <h3>{{ errorStatus.description }}</h3>
+        <div class="flex justify-center">
+          <h4 class="max-w-[80%]">{{ errorStatus.description }}</h4>
+        </div>
       </div>
     </div>
   </div>
