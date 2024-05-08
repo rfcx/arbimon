@@ -1,6 +1,7 @@
 import { RANKING_PRIMARY } from '@rfcx-bio/common/roles'
 
 import { createProject as createProjectInCore, getProject as getProjectInCore } from '~/api-core/api-core'
+import { updateProjectSlugLegacy } from '~/api-legacy-arbimon'
 import { createProject as createProjectLocal } from './dao/project-create-dao'
 import { create as createProjectMember } from './dao/project-member-dao'
 import { createProjectProfile } from './dao/project-profile-dao'
@@ -22,6 +23,9 @@ export const createProject = async (request: ProjectCreateRequestParsed, userId:
   // Pre-populate insights table with the same data (will get updated from Core after sync)
   const project = { idCore, idArbimon, name: request.name }
   const { id, slug } = await createProjectLocal(project, request.hidden ?? false)
+
+  // Update slug in Legacy
+  await updateProjectSlugLegacy(token, idCore, slug)
 
   // Create project profile
   const { objectives, dateStart, dateEnd } = request
