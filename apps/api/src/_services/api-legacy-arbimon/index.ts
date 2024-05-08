@@ -58,5 +58,5 @@ export async function updateProjectSlugLegacy (token: string, idCore: string, sl
   const data = {
     url: slug
   }
-  await patch(`/projects/${idCore}`, token, data)
+  await patch(`/integration/projects/${idCore}`, token, data)
 }
