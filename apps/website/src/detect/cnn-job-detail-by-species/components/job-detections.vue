@@ -115,7 +115,7 @@ const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, d
 const emit = defineEmits<{(e: 'update:page', value: number): void, (e: 'emitValidationResult'): void}>()
 
 const pageIndex = ref(props.page ?? 1)
-const index = useDebounce(pageIndex, 500)
+const index = useDebounce(pageIndex, 1000)
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
 watch(() => props.page, () => {
