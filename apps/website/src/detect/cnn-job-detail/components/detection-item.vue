@@ -1,7 +1,7 @@
 <template>
-  <div class="detection-item w-full aspect-[2.5/1]">
+  <div class="detection-item aspect-[2.5/1]">
     <div
-      class="relative rounded-md bg-echo rounded-md border-1 border-util-gray-02 aspect-[2.5/1] h-30"
+      class="relative rounded-md bg-echo rounded-md border-1 border-util-gray-02 w-72 h-30"
       :class="{'border-transparent': isSelected || highlightBorder}"
     >
       <div
