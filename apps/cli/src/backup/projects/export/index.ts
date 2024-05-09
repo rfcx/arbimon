@@ -86,7 +86,7 @@ export const generateCsvs = async (item: string, projectId: number, sequelize: S
         }
 
         // Only one batch of data was found
-        if (currentBatch === 1) {
+        if (zipFiles.length === 1) {
             return [{ name: `${item}.csv`, content: zipFiles[0].content }]
         } else {
             return zipFiles
