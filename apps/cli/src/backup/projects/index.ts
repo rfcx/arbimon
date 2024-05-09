@@ -6,21 +6,24 @@ import type { StorageClient } from '@rfcx-bio/common/storage'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { VERBOSE } from '@/backup/projects/config'
-import { generateCsv } from '@/backup/projects/export'
+import { generateCsvs } from '@/backup/projects/export'
 import { type ProjectBackupRequest, getPendingRequests, updateRequest } from '@/backup/projects/requests'
 import { type ZipFile, createZip } from '~/files'
 import { type MailClient } from '~/mail'
 
-const EXPORT_ITEMS = {
+export const EXPORT_ITEMS = {
     BIO: [] as string[],
-    ARBIMON: ['sites', 'recordings', 'playlists', 'playlist_recordings', 'species', 'templates', 'recording_validations', 'pattern_matchings', 'pattern_matching_rois', 'pattern_matching_validations', 'soundscapes']
+    ARBIMON: ['sites', 'recordings', 'playlists', 'playlist_recordings', 'species', 'templates', 'recording_validations', 'pattern_matchings', 'pattern_matching_rois', 'pattern_matching_validations', 'soundscapes', 'classifications']
 }
 
 /**
  * Processes backup requests and creates backup for projects
  *
  * @param sequelize
+ * @param arbimonSequelize
  * @param storage
+ * @param legacyStorage
+ * @param mailClient
  * @param verbose
  */
 export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, legacyStorage: StorageClient, mailClient: MailClient, verbose: boolean = VERBOSE): Promise<any> => {
@@ -91,8 +94,8 @@ const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, s
     // Export data from bio database
     for (const item of EXPORT_ITEMS.BIO) {
         try {
-            const file = await generateCsv(item, projectId, sequelize, storage, legacyStorage)
-            zipFiles.push(file)
+            const files = await generateCsvs(item, projectId, sequelize, storage, legacyStorage)
+            zipFiles.push(...files)
         } catch (e) {
             console.error(`Error exporting ${item}: `, e)
         }
@@ -101,8 +104,8 @@ const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, s
     // Export data from arbimon database
     for (const item of EXPORT_ITEMS.ARBIMON) {
         try {
-            const file = await generateCsv(item, arbimonProjectId, arbimonSequelize, storage, legacyStorage)
-            zipFiles.push(file)
+            const files = await generateCsvs(item, arbimonProjectId, arbimonSequelize, storage, legacyStorage)
+            zipFiles.push(...files)
         } catch (e) {
             console.error(`Error exporting ${item}: `, e)
         }
