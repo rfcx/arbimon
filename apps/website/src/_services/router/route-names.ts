@@ -36,7 +36,8 @@ export const ROUTE_NAMES = {
   adminMember: 'admin_member',
   callback: 'callback',
   info: 'info',
-  error: 'error'
+  error: 'error',
+  superSyncHistory: 'super_sync_history'
 } as const
 
 export type RouteNames = typeof ROUTE_NAMES

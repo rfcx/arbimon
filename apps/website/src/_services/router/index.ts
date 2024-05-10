@@ -220,6 +220,11 @@ const routes: RouteRecordRaw[] = [
         path: ':projectId/members',
         name: ROUTE_NAMES.adminMember,
         component: PAGES.AdminMember
+      },
+      {
+        path: ':projectId/sync-history',
+        name: ROUTE_NAMES.superSyncHistory,
+        component: PAGES.superSyncHistory
       }
     ]
   },

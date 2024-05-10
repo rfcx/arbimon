@@ -69,6 +69,14 @@
                   Manage members
                 </router-link>
               </td>
+              <td>
+                <router-link
+                  :to=" { name: ROUTE_NAMES.superSyncHistory, params: { projectId: project.id } }"
+                  class="text-frequency text-sm"
+                >
+                  Syncing
+                </router-link>
+              </td>
             </tr>
           </tbody>
         </table>
