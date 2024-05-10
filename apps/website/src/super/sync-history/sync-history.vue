@@ -43,6 +43,21 @@
             </th>
           </tr>
         </thead>
+        <tfoot>
+          <tr>
+            <td
+              colspan="4"
+              class="py-3"
+            >
+              <div
+                v-if="errorMessage"
+                class="text-ibis dark:text-flamingo text-sm px-2"
+              >
+                {{ errorMessage }}
+              </div>
+            </td>
+          </tr>
+        </tfoot>
         <tbody>
           <tr
             v-for="sync in syncHistoryData?.syncs"
@@ -69,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { type AxiosError, type AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -101,19 +116,13 @@ watch(error, (newError) => {
 })
 
 const handleSyncNow = async () => {
-  try {
-    await mutateSync({}, {
+    mutateSync({}, {
       onSuccess: async () => {
         await refetchSyncHistory()
       },
       onError: (error: Error) => {
-        errorMessage.value = `Failed (${error.response?.status} ${error.response?.statusText})`
+        errorMessage.value = `Failed ( code: ${error.response?.status} ${error.response?.statusText} )`
       }
     })
-  } catch (e) {
-    const error = e as AxiosError<Error>
-    errorMessage.value = `Failed (${error.response?.status} ${error.response?.statusText})`
   }
-}
-
 </script>
