@@ -89,10 +89,10 @@ import { computed, inject, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { apiClientKey } from '@/globals'
+import { type Error } from '@/super/error'
 import { ROUTE_NAMES } from '~/router'
 import { useSuperStore } from '~/store'
-import { type Error } from '../../error'
-import { useFetchProjectSyncHistory, useStartProjectSync } from './_composables/use-sync.ts'
+import { useFetchProjectSyncHistory, useStartProjectSync } from './_composables/use-sync'
 
 const route = useRoute()
 const store = useSuperStore()
@@ -116,7 +116,7 @@ watch(error, (newError) => {
 })
 
 const handleSyncNow = async () => {
-    mutateSync({}, {
+    mutateSync(project.value.id.toString(), {
       onSuccess: async () => {
         await refetchSyncHistory()
       },
