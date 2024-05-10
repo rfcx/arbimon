@@ -31,7 +31,7 @@ export const useStore = defineStore('root', {
     userIsDataEntryMember: (state) => rolesGreaterOrEqualTo('entry').includes(state.project?.role ?? 'none'),
     userIsFullProjectMember: (state) => rolesGreaterOrEqualTo('user').includes(state.project?.role ?? 'none'),
     userIsAdminProjectMember: (state) => rolesGreaterOrEqualTo('admin').includes(state.project?.role ?? 'none'),
-    userIsExpertMember: (state) => rolesGreaterOrEqualTo('expert').includes(state.project?.role ?? 'none'),
+    userIsExpertMember: (state) => rolesGreaterOrEqualTo('expert').includes(state.project?.role ?? 'none')
   },
   actions: {
     async updateUser (user: User | undefined = undefined) {
