@@ -7,7 +7,7 @@
       @emit-validation="validateDetection"
       @emit-close="closeValidator"
     />
-    <div>
+    <div class="4xl:pl-28">
       <template
         v-for="species in allSpecies"
         :key="'job-detections-' + species.speciesSlug"
