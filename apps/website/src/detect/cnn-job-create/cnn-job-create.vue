@@ -108,9 +108,9 @@
           </button>
         </router-link>
         <button
-          :disabled="isLoadingPostJob || errors.length > 0"
+          :disabled="isLoadingPostJob || errors.length > 0 || !store.userIsExpertMember"
           title="Create"
-          class="px-3 py-0 btn btn-primary h-40px w-106px"
+          class="px-3 py-0 btn btn-primary h-40px w-106px disabled:(cursor-not-allowed opacity-50)"
           @click.prevent="createJob"
         >
           <span v-if="isLoadingPostJob">Saving</span>
