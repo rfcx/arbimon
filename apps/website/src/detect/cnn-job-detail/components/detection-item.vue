@@ -1,8 +1,8 @@
 <template>
   <div class="detection-item aspect-[2.5/1]">
     <div
-      class="relative rounded-md bg-echo rounded-md border-1 border-util-gray-02 w-72 h-30"
-      :class="{'border-transparent': isSelected || highlightBorder}"
+      class="relative rounded-md bg-echo border-1 border-util-gray-02 w-72 h-30"
+      :class="{'border-transparent': (isSelected || highlightBorder) && store.userIsExpertMember}"
     >
       <div
         v-if="spectrogramLoading"
@@ -19,10 +19,11 @@
         <img
           :src="spectrogram"
           class="w-72 h-30 rounded-md object-cover object-center"
-          :class="{'border-transparent': !isSelected || !highlightBorder, 'rounded-md border-2 border-chirp': isSelected || highlightBorder }"
+          :class="{'border-transparent': (!isSelected || !highlightBorder) && store.userIsExpertMember, 'rounded-md border-2 border-chirp': (isSelected || highlightBorder) && store.userIsExpertMember }"
           @click="toggleDetection($event)"
         >
         <div
+          v-if="store.userIsExpertMember"
           class="absolute text-xs top-2.5 left-2.5"
           style="line-height: 1.8rem; width:1.8rem; text-align: center;"
         >
@@ -96,6 +97,7 @@ import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifie
 import { apiCoreGetMedia } from '@rfcx-bio/common/api-core/media/core-media'
 
 import { apiClientMediaKey } from '@/globals'
+import { useStore } from '~/store'
 import type { DetectionEvent } from './types'
 import ValidationStatus from './validation-status.vue'
 
@@ -117,6 +119,7 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{(e: 'emitDetection', detectionId: number, event: DetectionEvent): void}>()
+const store = useStore()
 
 const spectrogramLoading = ref(false)
 const audioLoading = ref(false)
@@ -189,6 +192,7 @@ const stop = () => {
 }
 
 const toggleDetection = (event: MouseEvent) => {
+  if (!store.userIsExpertMember) return
   isSelected.value = !isSelected.value
   if (props.id === null) return
   emit('emitDetection', props.id, {
