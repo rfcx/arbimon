@@ -15,7 +15,7 @@ import { isValidToken } from '~/api-helpers/is-valid-token'
 import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
-import { CoreGetBestDetectionsSummaryQueryParams, CoreGetBestDetectionsSummaryResponse, type CoreBestDetection, type CoreBestDetectionQueryParams, type CoreClassificationLite, type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobSummary, type CoreClassifierJobTotalDetections, type CoreCreateClassifierJobBody, type CoreDetection, type CoreDetectionsSummary, type CoreGetClassifiersQueryParams, type CoreGetDetectionsQueryParams, type CoreGetDetectionsSummaryQueryParams, type CoreUpdateDetectionStatusBody, type CoreUpdateDetectionStatusParams, type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore, type GetClassifierJobClassificationSummaryQueryParams } from './types'
+import { type CoreBestDetection, type CoreBestDetectionQueryParams, type CoreClassificationLite, type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobSummary, type CoreClassifierJobTotalDetections, type CoreCreateClassifierJobBody, type CoreDetection, type CoreDetectionsSummary, type CoreGetBestDetectionsSummaryQueryParams, type CoreGetClassifiersQueryParams, type CoreGetDetectionsQueryParams, type CoreGetDetectionsSummaryQueryParams, type CoreUpdateDetectionStatusBody, type CoreUpdateDetectionStatusParams, type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore, type GetClassifierJobClassificationSummaryQueryParams } from './types'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 
@@ -71,7 +71,8 @@ export async function getBestDetectionsSummary (token: string, classifierJobId: 
       url: `${CORE_API_BASE_URL}/classifier-jobs/${classifierJobId}/best-detections/summary`,
       headers: {
         authorization: token
-      }
+      },
+      params
     })
 
     return response.data
