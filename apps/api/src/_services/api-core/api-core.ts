@@ -15,7 +15,7 @@ import { isValidToken } from '~/api-helpers/is-valid-token'
 import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
-import { type CoreBestDetection, type CoreBestDetectionQueryParams, type CoreClassificationLite, type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobSummary, type CoreClassifierJobTotalDetections, type CoreCreateClassifierJobBody, type CoreDetection, type CoreDetectionsSummary, type CoreGetClassifiersQueryParams, type CoreGetDetectionsQueryParams, type CoreGetDetectionsSummaryQueryParams, type CoreUpdateDetectionStatusBody, type CoreUpdateDetectionStatusParams, type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore, type GetClassifierJobClassificationSummaryQueryParams } from './types'
+import { CoreGetBestDetectionsSummaryQueryParams, CoreGetBestDetectionsSummaryResponse, type CoreBestDetection, type CoreBestDetectionQueryParams, type CoreClassificationLite, type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobSummary, type CoreClassifierJobTotalDetections, type CoreCreateClassifierJobBody, type CoreDetection, type CoreDetectionsSummary, type CoreGetClassifiersQueryParams, type CoreGetDetectionsQueryParams, type CoreGetDetectionsSummaryQueryParams, type CoreUpdateDetectionStatusBody, type CoreUpdateDetectionStatusParams, type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore, type GetClassifierJobClassificationSummaryQueryParams } from './types'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 
@@ -59,6 +59,22 @@ export async function getBestDetections (token: string, classifierJobId: number,
       total: formatTotalCount(response.headers?.['total-items']),
       data: response.data
     }
+  } catch (e) {
+    return unpackAxiosError(e)
+  }
+}
+
+export async function getBestDetectionsSummary (token: string, classifierJobId: number, params: CoreGetBestDetectionsSummaryQueryParams): Promise<CoreDetectionsSummary> {
+  try {
+    const response = await axios.request<CoreDetectionsSummary>({
+      method: 'GET',
+      url: `${CORE_API_BASE_URL}/classifier-jobs/${classifierJobId}/best-detections/summary`,
+      headers: {
+        authorization: token
+      }
+    })
+
+    return response.data
   } catch (e) {
     return unpackAxiosError(e)
   }

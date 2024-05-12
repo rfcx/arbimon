@@ -1,4 +1,5 @@
 import { getBestDetectionsRoute } from '@rfcx-bio/common/api-bio/cnn/best-detections'
+import { getBestDetectionsSummaryRoute } from '@rfcx-bio/common/api-bio/cnn/best-detections-summary'
 import { getClassifierJobInfoByClassificationRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-job-classification'
 import { getClassifierJobInformationRoute, updateClassifierJobRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { getClassifierJobSpeciesRoute } from '@rfcx-bio/common/api-bio/cnn/classifier-job-species'
@@ -13,6 +14,7 @@ import { requireRfcxEmail } from '@/_hooks/require-rfcx-user'
 import { type RouteRegistration, GET, PATCH, POST } from '~/api-helpers/types'
 import { createClassifierJobHandler } from './create-classifier-job-handler'
 import { getBestDetectionsHandler } from './get-best-detections-handler'
+import { getBestDetectionsSummaryHandler } from './get-best-detections-summary-handler'
 import { getClassifierJobInfoByClassificationHandler } from './get-classifier-job-info-by-classification-handler'
 import { getClassifierJobInformationHandler } from './get-classifier-job-information-handler'
 import { getClassifierJobSpeciesHandler } from './get-classifier-job-species-handler'
@@ -72,6 +74,12 @@ export const routesCnn: RouteRegistration[] = [
     url: getBestDetectionsRoute,
     preHandler: [requireRfcxEmail],
     handler: getBestDetectionsHandler
+  },
+  {
+    method: GET,
+    url: getBestDetectionsSummaryRoute,
+    preHandler: [requireRfcxEmail],
+    handler: getBestDetectionsSummaryHandler
   },
   {
     method: GET,

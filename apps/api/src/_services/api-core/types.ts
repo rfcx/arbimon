@@ -115,6 +115,8 @@ export interface CoreGetDetectionsQueryParams {
   fields?: string[]
 }
 
+export type CoreGetBestDetectionsSummaryQueryParams = Omit<CoreBestDetectionQueryParams, 'limit' | 'offset' | 'fields'>
+
 export type CoreGetDetectionsSummaryQueryParams = Omit<CoreGetDetectionsQueryParams, 'limit' | 'offset' | 'descending' | 'fields'>
 
 export type CoreDetectionsSummary = Omit<CoreClassifierJobSummary, 'total'>
