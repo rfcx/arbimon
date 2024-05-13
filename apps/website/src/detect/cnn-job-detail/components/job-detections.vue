@@ -41,12 +41,18 @@
         v-if="errorStatus && !isLoading"
         class="p-10 text-center"
       >
-        <h2 v-if="errorStatus.title !== ''" class="font-display flex justify-center mb-4" >{{ errorStatus.title }}</h2>
+        <h2
+          v-if="errorStatus.title !== ''"
+          class="font-display flex justify-center mb-4"
+        >
+          {{ errorStatus.title }}
+        </h2>
         <div class="grid content-center">
           <h4
-            v-for="(textError,lineNumber) of errorStatus.description.split('\n')" 
-            v-bind:key="lineNumber" >
-            {{ textError }}<br/>
+            v-for="(textError,lineNumber) of errorStatus.description.split('\n')"
+            :key="lineNumber"
+          >
+            {{ textError }}<br>
           </h4>
         </div>
       </div>
