@@ -36,7 +36,7 @@ ARG release_commit
 ARG release_date
 
 ENV NODE_ENV=production
-ENV NODE_OPTIONS=--max_old_space_size=4096
+ENV NODE_OPTIONS=--max_old_space_size=8192
 ENV VITE_RELEASE_COMMIT=${release_commit}
 ENV VITE_RELEASE_DATE=${release_date}
 
