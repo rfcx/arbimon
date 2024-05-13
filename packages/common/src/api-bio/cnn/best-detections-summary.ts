@@ -3,7 +3,7 @@ import { type GetBestDetectionsQueryParams } from './best-detections'
 import { type ValidationStatus } from './classifier-job-information'
 
 // Request types
-export type GetBestDetectionsSummaryQueryParams = Omit<GetBestDetectionsQueryParams, 'limit' | 'offset' | 'fields'>
+export type GetBestDetectionsSummaryQueryParams = Partial<Omit<GetBestDetectionsQueryParams, 'limit' | 'offset' | 'fields'>>
 
 export interface GetBestDetectionsSummaryParams {
   jobId: string
