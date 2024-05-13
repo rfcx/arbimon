@@ -62,27 +62,27 @@ import dayjs from 'dayjs'
 import { computed, ref, watch } from 'vue'
 
 const props = defineProps<{
-  initialDateStart?: Date,
-  initialDateEnd?: Date,
+  initialDateStart?: string,
+  initialDateEnd?: string,
   onGoing?: boolean,
   isDisabled?: boolean
 }>()
 
 const emit = defineEmits<{(e: 'emitSelectDateRange', value: DateRange & {onGoing: boolean }): void}>()
 
-const dateLocalIso = (date: Date) => {
-  return dayjs(date).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+const dateLocalIso = (date: string) => {
+  return dayjs(date).format('YYYY-MM-DD')
 }
 
-const dateStart = ref<string>(props.initialDateStart !== undefined ? dateLocalIso(props.initialDateStart) : '')
-const dateEnd = ref<string>(props.initialDateEnd !== undefined ? dateLocalIso(props.initialDateEnd) : '')
+const dateStart = ref<string>(props.initialDateStart !== undefined ? props.initialDateStart : '')
+const dateEnd = ref<string>(props.initialDateEnd !== undefined ? props.initialDateEnd : '')
 const onGoing = ref<boolean>(props.onGoing || false)
 
 const value = computed(() => {
   const isValidDate = (date: string) => date !== '' && date !== null && new Date(date).toString() !== 'Invalid Date'
   return {
-    dateStartLocalIso: isValidDate(dateStart.value) ? dateLocalIso(new Date(dateStart.value)) : '',
-    dateEndLocalIso: isValidDate(dateEnd.value) ? dateLocalIso(new Date(dateEnd.value)) : '',
+    dateStartLocalIso: isValidDate(dateStart.value) ? dateLocalIso(dateStart.value) : '',
+    dateEndLocalIso: isValidDate(dateEnd.value) ? dateLocalIso(dateEnd.value) : '',
     onGoing: onGoing.value
   }
 })
@@ -113,13 +113,13 @@ const onSelectOnGoing = () => {
 }
 
 watch(() => props.initialDateEnd, (newValue, oldValue) => {
-  if (newValue?.toDateString() === oldValue?.toDateString()) return
-  dateEnd.value = newValue !== undefined ? dateLocalIso(newValue) : ''
+  if (newValue === oldValue) return
+  dateEnd.value = newValue !== undefined ? newValue : ''
 })
 
 watch(() => props.initialDateStart, (newValue, oldValue) => {
-  if (newValue?.toDateString() === oldValue?.toDateString()) return
-  dateStart.value = newValue !== undefined ? dateLocalIso(newValue) : ''
+  if (newValue === oldValue) return
+  dateStart.value = newValue !== undefined ? newValue : ''
 })
 
 watch(() => props.onGoing, (newValue) => {
