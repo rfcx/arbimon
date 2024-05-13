@@ -52,8 +52,8 @@
           </h4>
           <project-form
             :existing-name="selectedProject?.name"
-            :date-start="settings?.dateStart ? new Date(settings?.dateStart) : undefined"
-            :date-end="settings?.dateEnd ? new Date(settings?.dateEnd) : undefined"
+            :date-start="settings?.dateStart ? settings?.dateStart : undefined"
+            :date-end="settings?.dateEnd ? settings?.dateEnd : undefined"
             :is-disabled="!store.userIsAdminProjectMember"
             @emit-update-value="onEmitDefaultValue"
           />
