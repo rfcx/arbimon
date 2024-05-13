@@ -52,7 +52,7 @@
             </div>
             <span
               class="truncate"
-              title="Sites"
+              :title="queryStreamsInfoString"
             >
               {{ queryStreamsInfoString }}
             </span>
@@ -63,7 +63,7 @@
               <icon-custom-ic-calendar class="block m-auto text-cloud" />
             </div>
             <span
-              title="Date"
+              :title="queryStart + ' - ' + queryEnd"
             >
               {{ queryStart }} - {{ queryEnd }}
             </span>
@@ -74,7 +74,7 @@
               <icon-custom-ic-clock class="block m-auto text-cloud" />
             </div>
             <span
-              title="Time of day"
+              :title="queryHours"
             >
               {{ queryHours }}
             </span>
@@ -85,7 +85,7 @@
               <icon-custom-ft-mic class="block m-auto text-cloud" />
             </div>
             <span
-              title="Minutes of recordings"
+              :title="minOfRecordings"
             >
               {{ minOfRecordings }}
             </span>
