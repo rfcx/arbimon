@@ -71,6 +71,7 @@ export const generateCsvs = async (item: string, projectId: number, sequelize: S
                 console.info(`Fetched ${batchRecords} records between ${offset} and ${offset + BATCH_SIZE}`)
             }
         } catch (e) {
+            batchRecords = 0
             console.info(`Error fetching batch #${currentBatch} between ${offset} and ${offset + BATCH_SIZE}`, e)
         } finally {
             offset += BATCH_SIZE
