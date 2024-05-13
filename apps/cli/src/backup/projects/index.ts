@@ -46,7 +46,7 @@ export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Seq
             await updateRequest(sequelize, id, { status: BackupStatus.PROCESSING })
 
             // Create export zip
-            const { zipName, totalBytes } = await createExport(sequelize, arbimonSequelize, storage, legacyStorage, projectData)
+            const { zipName, totalBytes } = await createExport(sequelize, arbimonSequelize, storage, legacyStorage, projectData, verbose)
             if (verbose) {
                 console.info(`  - Created ${zipName}, total ${totalBytes} bytes`)
             }
@@ -86,7 +86,7 @@ export const backupProjects = async (sequelize: Sequelize, arbimonSequelize: Seq
     }
 }
 
-const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, legacyStorage: StorageClient, projectData: Omit<ProjectBackupRequest, 'id' | 'userEmail' | 'userName' >): Promise<{ zipName: string, totalBytes: number }> => {
+const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, storage: StorageClient, legacyStorage: StorageClient, projectData: Omit<ProjectBackupRequest, 'id' | 'userEmail' | 'userName' >, verbose?: boolean): Promise<{ zipName: string, totalBytes: number }> => {
     const { projectId, arbimonProjectId, slug } = projectData
     const zipFiles: ZipFile[] = []
 
@@ -94,7 +94,7 @@ const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, s
     // Export data from bio database
     for (const item of EXPORT_ITEMS.BIO) {
         try {
-            const files = await generateCsvs(item, projectId, sequelize, storage, legacyStorage)
+            const files = await generateCsvs(item, projectId, sequelize, storage, legacyStorage, verbose)
             zipFiles.push(...files)
         } catch (e) {
             console.error(`Error exporting ${item}: `, e)
@@ -104,7 +104,7 @@ const createExport = async (sequelize: Sequelize, arbimonSequelize: Sequelize, s
     // Export data from arbimon database
     for (const item of EXPORT_ITEMS.ARBIMON) {
         try {
-            const files = await generateCsvs(item, arbimonProjectId, arbimonSequelize, storage, legacyStorage)
+            const files = await generateCsvs(item, arbimonProjectId, arbimonSequelize, storage, legacyStorage, verbose)
             zipFiles.push(...files)
         } catch (e) {
             console.error(`Error exporting ${item}: `, e)
