@@ -228,16 +228,26 @@
 </template>
 
 <script setup lang="ts">
+import type { AxiosInstance } from 'axios'
 import { Dropdown, initDropdowns } from 'flowbite'
 import { debounce } from 'lodash-es'
-import { type Ref, computed, onMounted, ref, watch } from 'vue'
+import { type Ref, computed, inject, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
+import { useGetBestDetections } from '@/detect/_composables/use-get-best-detections'
+import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import ValidationStatus from './../../cnn-job-detail/components/validation-status.vue'
 
 const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void, (e: 'emitFilterChanged'): void}>()
+
+const route = useRoute()
+const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
+
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+const { isLoading: isLoadingBestDetections, isError: isErrorBestDetections, data: recordingData } = useGetBestDetections(apiClientBio, jobId.value, { nPerStream: 2, byDate: true }, computed(() => 30_000))
 
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
 const selectedStatuses = ref<ArbimonReviewStatus[]>([])
