@@ -159,7 +159,8 @@
           >
             <span
               class="whitespace-nowrap overflow-hidden max-w-42 3xl:max-w-64 text-ellipsis"
-              :class="{ 'px-2': selectedGrouping === 'minConfidence' }"
+              :class="{ 'px-2': selectedGrouping }"
+              :title="selectedGroupingText"
             >
               {{ selectedGroupingText }}
             </span>
@@ -186,17 +187,19 @@
               class="flex flex-col gap-y-1"
             >
               <li
+                v-for="(item, index) in itemsSelectGrouping"
+                :key="item.title"
                 class="bg-moss hover:text-util-gray-01"
-                @click="selectedGrouping = 'minConfidence'; groupingDetections(selectedGrouping); closeGroupingDropdown()"
+                @click="selectedGrouping = item.value; groupingDetections(selectedGrouping); closeGroupingDropdown()"
               >
                 <div
                   class="border-1 rounded-full cursor-pointer bg-moss"
-                  :class="{'border-chirp': selectedGrouping === 'minConfidence', 'border-transparent': selectedGrouping !== 'minConfidence'}"
+                  :class="{'border-chirp': selectedGrouping === item.value, 'border-transparent': selectedGrouping !== item.value}"
                 >
                   <div
                     class="flex flex-row gap-x-2 items-center h-10 pl-5"
                   >
-                    Minimum Confidence
+                    {{ item.title }}
                   </div>
                 </div>
               </li>
@@ -247,6 +250,21 @@ const groupingDropdown = ref() as Ref<Dropdown>
 const statusDropdownHover = ref<HTMLElement | null>(null)
 const sitesDropdownCNN = ref<HTMLElement | null>(null)
 const groupingDropdownHover = ref<HTMLElement | null>(null)
+
+const itemsSelectGrouping = [
+  {
+    title: 'Top score per site',
+    value: 'topScorePerSite'
+  },
+  {
+    title: 'Top score per site per day',
+    value: 'topScorePerSitePerDay'
+  },
+  {
+    title: 'Minimum Confidence',
+    value: 'minConfidence'
+  }
+]
 
 watch(() => detectionsResultFilterBySpeciesStore.filter.minConfidence, (newValue) => {
   currentValue.value = newValue
@@ -345,8 +363,8 @@ const selectedStatusText = computed(() => {
 })
 
 const selectedGroupingText = computed(() => {
-  if (selectedGrouping.value === 'minConfidence') {
-    return 'Grouping: Minimum confidence'
+  if (selectedGrouping.value) {
+    return 'Grouping: ' + itemsSelectGrouping.find( i => i.value === selectedGrouping.value)?.title
   } else {
     return 'Groupings'
   }
