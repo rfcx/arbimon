@@ -5,7 +5,8 @@
       <router-link :to="{ name: ROUTE_NAMES.cnnJobCreate }">
         <button
           v-if="store.userIsExpertMember"
-          class="btn btn-primary">
+          class="btn btn-primary"
+        >
           Create
         </button>
       </router-link>
