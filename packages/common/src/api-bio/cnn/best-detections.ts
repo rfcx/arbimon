@@ -4,7 +4,7 @@ import { type WithTotalCount, formatTotalCount } from '../../total-count'
 import { type Detection, type GetDetectionsQueryParams } from './detections'
 
 // Request types
-export type GetBestDetectionsQueryParams = Pick<GetDetectionsQueryParams, 'start' | 'end' | 'sites' | 'reviewStatus' | 'limit' | 'offset'> & { nPerStream: number, byDate: boolean }
+export type GetBestDetectionsQueryParams = Partial<Pick<GetDetectionsQueryParams, 'start' | 'end' | 'sites' | 'reviewStatus' | 'limit' | 'offset'>> & { nPerStream?: number, byDate?: boolean }
 
 export interface GetBestDetectionsParams {
   jobId: string
