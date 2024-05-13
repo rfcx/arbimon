@@ -50,6 +50,12 @@
               class="py-3"
             >
               <div
+                v-if="successMessage"
+                class="text-frequency text-sm px-2"
+              >
+                {{ successMessage }}
+              </div>
+              <div
                 v-if="errorMessage"
                 class="text-ibis dark:text-flamingo text-sm px-2"
               >
@@ -89,7 +95,6 @@ import { computed, inject, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { apiClientKey } from '@/globals'
-import { type Error } from '@/super/error'
 import { ROUTE_NAMES } from '~/router'
 import { useSuperStore } from '~/store'
 import { useFetchProjectSyncHistory, useStartProjectSync } from './_composables/use-sync'
@@ -101,6 +106,7 @@ const router = useRouter()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const errorMessage = ref('')
+const successMessage = ref('')
 
 const project = computed(() => {
   return store.project ?? { id: Number(route.params.projectId), name: route.params.projectSlug }
@@ -119,9 +125,10 @@ const handleSyncNow = async () => {
     mutateSync(project.value.id.toString(), {
       onSuccess: async () => {
         await refetchSyncHistory()
+        successMessage.value = 'The sync job has been scheduled. Check back again in 15 mins'
       },
-      onError: (error: Error) => {
-        errorMessage.value = `Failed ( code: ${error.response?.status} ${error.response?.statusText} )`
+      onError: () => {
+        errorMessage.value = 'Failed to schedule sync job. Please try again later.'
       }
     })
   }
