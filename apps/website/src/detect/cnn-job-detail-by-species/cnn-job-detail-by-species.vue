@@ -142,7 +142,7 @@ const bestDetectionsQueryParams = computed<GetBestDetectionsQueryParams>(() => {
     offset: offset.value
   }
 })
-const { isLoading: isLoadingBestDetections, isError: isErrorBestDetections, data: bestDetectionsData, refetch: refetchBestDetectionsData, isRefetching: isRefetchBestDetections } = useGetBestDetections(apiClientBio, jobId.value, bestDetectionsQueryParams, computed(() => 30_000), computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite'))
+const { isLoading: isLoadingBestDetections, isError: isErrorBestDetections, data: bestDetectionsData, refetch: refetchBestDetectionsData, isRefetching: isRefetchBestDetections } = useGetBestDetections(apiClientBio, jobId.value, bestDetectionsQueryParams, computed(() => false), computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite'))
 
 const bestDetectionsSummaryQueryParams = computed<GetBestDetectionsSummaryQueryParams>(() => {
   return {

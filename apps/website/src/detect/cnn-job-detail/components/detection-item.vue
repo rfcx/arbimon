@@ -65,7 +65,16 @@
         <icon-custom-fi-visualizer-redirect class="w-6.3 h-6.3" />
       </div>
     </div>
-    <div class="flex flex-col pt-2 gap-y-2 text-insight text-[13px]">
+    <div v-if="isBestDetections">
+      <div 
+        v-if="selectedGrouping === 'topScorePerSitePerDay'"
+        class="flex flex-col pt-2 gap-y-2 text-insight text-[13px]"
+      >
+        <span v-if="props.start" class="flex">{{ dateFormattedFull(props.start ?? '') }}</span>
+        <span v-if="props.start" class="flex">{{ timeFormattedFull(props.start ?? '') }}</span>
+      </div>
+    </div>
+    <div v-else class="flex flex-col pt-2 gap-y-2 text-insight text-[13px]">
       <div class="flex text-ellipsis overflow-hidden">
         <span
           v-if="props.score"
@@ -91,7 +100,7 @@
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
 import { Howl } from 'howler'
-import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { apiCoreGetMedia } from '@rfcx-bio/common/api-core/media/core-media'
@@ -109,7 +118,8 @@ const props = withDefaults(defineProps<{
   checked: boolean | null,
   score?: number | undefined,
   start?: string | undefined,
-  site?: string | undefined
+  site?: string | undefined,
+  selectedGrouping?: string | undefined
 }>(), {
   id: null,
   checked: null,
@@ -131,6 +141,10 @@ const apiMedia = inject(apiClientMediaKey) as AxiosInstance
 const audio = ref<Howl | null>(null)
 const spectrogram = ref<string | null>(null)
 const playing = ref(false)
+const isBestDetections= computed(() => {
+  if (!props.selectedGrouping) return false
+  return props.selectedGrouping === 'topScorePerSitePerDay' || props.selectedGrouping === 'topScorePerSite'
+})
 
 onMounted(async () => {
   spectrogramLoading.value = true
@@ -205,6 +219,16 @@ const toggleDetection = (event: MouseEvent) => {
 const dateFormatted = (date: string) => {
   if (!date.length) return ''
   return dayjs(date).format('DD/MM/YYYY HH:mm:ss A')
+}
+
+const dateFormattedFull = (date: string) => {
+  if (!date.length) return ''
+  return dayjs(date).format('MMMM DD, YYYY')
+}
+
+const timeFormattedFull = (date: string) => {
+  if (!date.length) return ''
+  return dayjs(date).format('HH:mm:ss A')
 }
 </script>
 

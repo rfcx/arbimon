@@ -28,6 +28,7 @@
               :site="dt.site"
               :start="dt.start"
               :score="dt.score"
+              :selected-grouping="selectedGrouping"
               @emit-detection="updateSelectedDetections"
             />
           </div>
