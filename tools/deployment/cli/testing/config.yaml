@@ -25,4 +25,5 @@ data:
 
   AWS_S3_BUCKET_REGION: eu-west-1
   AWS_S3_BUCKET_NAME: arbimon-development
+  AWS_S3_CORE_BUCKET_NAME: rfcx-streams-staging
   AWS_OSS_REGION: eu-west-1

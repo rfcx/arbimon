@@ -60,7 +60,7 @@ export const generateCsvs = async (item: string, projectId: number, sequelize: S
             }
 
             const records = await fetchData(projectId, sequelize, { limit: BATCH_SIZE, offset })
-            const mappedData = signedUrls === true ? await mapPathToSignedUrl(records as Array<object & { path: string }>, storage, legacyStorage) : records
+            const mappedData = signedUrls === true ? await mapPathToSignedUrl(records, storage, legacyStorage) : records
             const content = await toCsv(mappedData)
 
             zipFiles.push({ name: `${item}_${currentBatch}.csv`, content })

@@ -55,6 +55,7 @@ export const envGetters = {
   AWS_S3_BUCKET_NAME: stringGetter,
   AWS_S3_BUCKET_REGION: stringGetter,
   AWS_S3_ENDPOINT: stringGetter,
+  AWS_S3_CORE_BUCKET_NAME: stringGetter,
   AWS_S3_LEGACY_BUCKET_NAME: stringGetter,
   AWS_S3_LEGACY_BUCKET_REGION: stringGetter,
 
