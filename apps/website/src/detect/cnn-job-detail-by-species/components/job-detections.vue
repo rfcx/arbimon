@@ -7,13 +7,13 @@
       @emit-validation="validateDetection"
       @emit-close="closeValidator"
     />
-    <div class="4xl:pl-28">
+    <div v-if="!props.isLoading" class="4xl:pl-28">
       <template
         v-for="species in allSpecies"
         :key="'job-detections-' + species.speciesSlug"
       >
         <h4 v-if="isBestDetections" class="flex mb-1">{{ species.siteName }}</h4>
-        <div :class="{'flex mb-3' : isBestDetections}">
+        <div :class="{'mb-3' : isBestDetections}">
           <div
             v-for="dt in species.media"
             :key="`job-detection-result-by-species-${dt.id}`"
@@ -48,7 +48,7 @@
     <icon-custom-ic-loading class="animate-spin w-8 h-8 lg:mx-24 text-center" />
   </div>
   <div
-    v-if="allSpecies?.length"
+    v-if="allSpecies?.length && !props.isLoading"
     class="w-full flex flex-row justify-end my-6"
   >
     <div class="flex flex-row items-center text-sm gap-x-1">

@@ -21,7 +21,7 @@
       />
       <JobDetections
         v-model:page="page"
-        :is-loading="isLoadingJobDetections || isLoadingBestDetections"
+        :is-loading="isLoadingJobDetections || isLoadingBestDetections || isRefetchBestDetections"
         :is-error="isErrorJobDetections || isErrorBestDetections"
         :data-best-detections="bestDetectionsData?.data"
         :data="jobDetectionResponse?.data"
@@ -62,6 +62,7 @@ const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(r
 const speciesSlug = computed(() => typeof route.params.speciesSlug === 'string' ? route.params.speciesSlug : '')
 const page = ref(1)
 const selectedGrouping = ref<string>()
+const numberOfBestScores = ref<number>(5)
 
 const refetchInterval = computed(() => {
   return isRefetchIntervalEnable.value ? 30_000 : false
@@ -134,13 +135,13 @@ const { isLoading: isLoadingDetectionSummary, isRefetching: isRefetchingDetectio
 
 const bestDetectionsQueryParams = computed<GetBestDetectionsQueryParams>(() => {
   return {
-    nPerStream:  2,
+    nPerStream: numberOfBestScores.value,
     byDate: selectedGrouping.value === 'topScorePerSitePerDay',
     limit: pageSizeLimit.value,
     offset: offset.value
   }
 })
-const { isLoading: isLoadingBestDetections, isError: isErrorBestDetections, data: bestDetectionsData } = useGetBestDetections(apiClientBio, jobId.value, bestDetectionsQueryParams, computed(() => 30_000), computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite' ))
+const { isLoading: isLoadingBestDetections, isError: isErrorBestDetections, data: bestDetectionsData, refetch: refetchBestDetectionsData, isRefetching: isRefetchBestDetections } = useGetBestDetections(apiClientBio, jobId.value, bestDetectionsQueryParams, computed(() => 30_000), computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite' ))
 
 const maxPage = computed<number>(() => {
   if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
@@ -154,11 +155,14 @@ const onEmitPageSize = (pageSize: number) => {
   pageSizeLimit.value = pageSize
 }
 
-const onEmitFilterChanged = async (groupType: string | undefined) => {
+const onEmitFilterChanged = async (groupType: string | undefined, displayBestScores: number) => {
   selectedGrouping.value = groupType
+  numberOfBestScores.value = displayBestScores
   page.value = 1
 
-  if (selectedGrouping.value !== 'topScorePerSitePerDay' && selectedGrouping.value !== 'topScorePerSite') {
+  if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
+    await refetchBestDetectionsData()
+  } else {
     await refetchDetectionSummary()
   }
 }

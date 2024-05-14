@@ -210,6 +210,26 @@
     </div>
 
     <div
+      v-if="isBestDetections"
+      class="flex flew-row items-center pt-4 gap-x-2">
+      <span class="text-md">
+        Display top
+      </span>
+      <input
+        id="topDisplayBestScores"
+        v-model.number="displayBestScores"
+        type="number"
+        min="1"
+        max="10"
+        class="bg-transparent border-0 border-b-1 border-b-subtle focus:border-b-subtle focus:ring-subtle mr-1 px-1 py-0.5 text-center"
+        @change="onDisplayBestScoresChange(displayBestScores)"
+      >
+      <span class="text-md">
+        Region of Interests with the best scores
+      </span>
+    </div>
+
+    <div
       v-if="selectedGrouping === 'minConfidence'"
       class="flex flex-row items-center gap-x-2 pt-3"
     >
@@ -239,7 +259,7 @@ import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifie
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import ValidationStatus from './../../cnn-job-detail/components/validation-status.vue'
 
-const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void, (e: 'emitFilterChanged', groupType: string | undefined): void}>()
+const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void, (e: 'emitFilterChanged', groupType: string | undefined, displayBestScores: number): void}>()
 
 const route = useRoute()
 
@@ -275,6 +295,8 @@ watch(() => detectionsResultFilterBySpeciesStore.filter.minConfidence, (newValue
 })
 
 const currentValue = ref<number>(detectionsResultFilterBySpeciesStore.filter.minConfidence)
+const displayBestScores = ref<number>(5)
+const isBestDetections= computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite')
 
 const onValueChange = (value: number) => {
   if (value < 0 || value > 1) {
@@ -283,6 +305,10 @@ const onValueChange = (value: number) => {
   }
   detectionsResultFilterBySpeciesStore.filter.minConfidence = value
 }
+
+const onDisplayBestScoresChange = debounce((value: number) => {
+  emit('emitFilterChanged', selectedGrouping.value, value)
+}, 600)
 
 const closeSitesDropdown = (): void => {
   sitesDropdown.value.hide()
@@ -294,18 +320,18 @@ const closeGroupingDropdown = (): void => {
 
 const filterDetectionsByStatus = debounce((statuses: ArbimonReviewStatus[]) => {
   detectionsResultFilterBySpeciesStore.filter.validationStatuses = statuses
-  emit('emitFilterChanged', selectedGrouping.value)
+  emit('emitFilterChanged', selectedGrouping.value, displayBestScores.value)
 }, 600)
 
 const groupingDetections = async (groupBy: string | undefined) => {
   emit('emitMinConfidence', groupBy === 'minConfidence')
-  emit('emitFilterChanged', selectedGrouping.value)
+  emit('emitFilterChanged', selectedGrouping.value, displayBestScores.value)
 }
 
 const filterDetectionsBySite = debounce(() => {
   const siteIdx = selectedSites.value.includes('all') ? [] : selectedSites.value
   detectionsResultFilterBySpeciesStore.filter.siteIds = siteIdx
-  emit('emitFilterChanged', selectedGrouping.value)
+  emit('emitFilterChanged', selectedGrouping.value, displayBestScores.value)
 }, 600)
 
 const onSelectStatus = (status: ArbimonReviewStatus) => {

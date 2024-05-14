@@ -92,7 +92,7 @@ const props = withDefaults(defineProps<{ speciesName: string | undefined, detect
   isLoadingFilter: false // loading filtered results
 })
 
-const emit = defineEmits<{(e: 'emitPageSize', value: number): void, (e: 'emitClose'): void, (e: 'emitFilterChanged', groupType: string | undefined): void}>()
+const emit = defineEmits<{(e: 'emitPageSize', value: number): void, (e: 'emitClose'): void, (e: 'emitFilterChanged', groupType: string | undefined, displayBestScores: number): void}>()
 
 const selectedPageSize = ref<number>(props.pageSize)
 let itemsPerPageDropdown: Dropdown
@@ -113,8 +113,8 @@ const pageSizeOptions = ref([
   }
 ])
 
-const onEmitFilterChanged = (groupType: string | undefined) => {
-  emit('emitFilterChanged', groupType)
+const onEmitFilterChanged = (groupType: string | undefined, displayBestScores: number) => {
+  emit('emitFilterChanged', groupType, displayBestScores)
 }
 
 const selectItemsPerPage = (size: number): void => {
