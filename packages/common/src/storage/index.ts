@@ -9,7 +9,7 @@ interface S3Credentials {
     accessKeyId: string
     secretAccessKey: string
     region: string
-    bucketName: string
+    defaultBucketName: string
     endpoint?: string
 }
 
@@ -29,7 +29,8 @@ export interface PutObjectOptions {
  */
 export class StorageClient {
     private readonly client: S3Client
-    private readonly credentials: S3Credentials
+    private readonly defaultBucket: string
+    private readonly endpoint?: string
 
     constructor (credentials: S3Credentials) {
         const { accessKeyId, secretAccessKey, region, endpoint } = credentials
@@ -42,19 +43,20 @@ export class StorageClient {
                 secretAccessKey
             }
         })
-        this.credentials = credentials
+        this.defaultBucket = credentials.defaultBucketName
+        this.endpoint = endpoint
     }
 
     /**
      * Checks if an object exists in storage (HeadObject operation)
      *
      * @param key {string} - path to object
+     * @param bucket {string} - specific bucket name else the default bucket
      */
-    public async objectExists (key: string): Promise<boolean> {
+    public async objectExists (key: string, bucket?: string): Promise<boolean> {
         try {
-            const { bucketName } = this.credentials
             const command = new HeadObjectCommand({
-                Bucket: bucketName,
+                Bucket: bucket ?? this.defaultBucket,
                 Key: key
             })
             await this.client.send(command)
@@ -69,12 +71,11 @@ export class StorageClient {
      *
      * @param key {string} - path to object
      * @param metadata {boolean} - flag for returning file metadata; default is false
+     * @param bucket {string} - specific bucket name else the default bucket
      */
-    public async getObject (key: string, metadata: boolean = false): Promise<Buffer | GetObjectResponse> {
-        const { bucketName } = this.credentials
-
+    public async getObject (key: string, metadata: boolean = false, bucket?: string): Promise<Buffer | GetObjectResponse> {
         const command = new GetObjectCommand({
-            Bucket: bucketName,
+            Bucket: bucket ?? this.defaultBucket,
             Key: key
         })
 
@@ -107,12 +108,12 @@ export class StorageClient {
      * @param key {string} - path to object
      * @param body {Buffer} - file/buffer to store
      * @param options {PutObjectOptions} - additional options
+     * @param bucket {string} - specific bucket name else the default bucket
      */
-    public async putObject (key: string, body: Buffer, options?: PutObjectOptions): Promise<void> {
-        const { bucketName } = this.credentials
+    public async putObject (key: string, body: Buffer, options?: PutObjectOptions, bucket?: string): Promise<void> {
         const { ContentType, ACL } = options ?? {}
         const command = new PutObjectCommand({
-            Bucket: bucketName,
+            Bucket: bucket ?? this.defaultBucket,
             Key: key,
             Body: body,
             ContentType,
@@ -125,29 +126,43 @@ export class StorageClient {
      * Removes object from storage (S3)
      *
      * @param key {string} - path to object to be removed
+     * @param bucket {string} - specific bucket name else the default bucket
      */
-    public async deleteObject (key: string): Promise<void> {
-        const { bucketName } = this.credentials
+    public async deleteObject (key: string, bucket?: string): Promise<void> {
         const command = new DeleteObjectCommand({
-            Bucket: bucketName,
+            Bucket: bucket ?? this.defaultBucket,
             Key: key
         })
         await this.client.send(command)
     }
 
-    public getObjectPublicUrl (key: string, variant?: ImageVariant): string {
-        const { endpoint, bucketName } = this.credentials
+    /**
+     * Get the public URL for an object (only works for objects with ACL `public-read`)
+     *
+     * @param key {string} - path to object
+     * @param variant {ImageVariant} - (for images) get a variant (e.g. 'thumbnail'); default is undefined ('original')
+     * @param bucket {string} - specific bucket name else the default bucket
+     */
+    public getObjectPublicUrl (key: string, variant?: ImageVariant, bucket?: string): string {
+        const bucketName = bucket ?? this.defaultBucket
         const fileKey: string = variant !== undefined ? buildVariantPath(key, variant) : key
-        if (endpoint !== undefined) {
-            return `${endpoint.endsWith('/') ? endpoint : endpoint + '/'}${bucketName}/${fileKey}`
+        if (this.endpoint !== undefined) {
+            return `${this.endpoint.endsWith('/') ? this.endpoint : this.endpoint + '/'}${bucketName}/${fileKey}`
         }
         return `https://${bucketName}.s3.amazonaws.com/${fileKey}`
     }
 
-    public async getObjectSignedUrl (key: string, expiresIn: number = ONE_WEEK_IN_SECONDS): Promise<string> {
+    /**
+     * Generate a signed URL for an object
+     *
+     * @param key {string} - path to object
+     * @param bucket {string} - specific bucket name else the default bucket
+     * @param expiresIn {number} - number of seconds the link will be valid for; default is one week
+     */
+    public async getObjectSignedUrl (key: string, bucket?: string, expiresIn: number = ONE_WEEK_IN_SECONDS): Promise<string> {
         const parsedPath = parse(key)
         const command = new GetObjectCommand({
-            Bucket: this.credentials.bucketName,
+            Bucket: bucket ?? this.defaultBucket,
             Key: key,
             ResponseContentDisposition: `attachment; filename=${parsedPath.base}`
         })
