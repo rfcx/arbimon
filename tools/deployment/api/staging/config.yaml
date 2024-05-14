@@ -18,7 +18,7 @@ data:
   AWS_S3_BUCKET_REGION: eu-west-1
   AWS_OSS_REGION: eu-west-1
   ARBIMON_LEGACY_API_BASE_URL: https://staging.arbimon.org/legacy-api
-  CORE_API_BASE_URL: https://staging-api.rfcx.org
+  CORE_API_BASE_URL: http://core-api-service.staging.svc.cluster.local/
   OPENSEARCH_ENABLED: "true"
   SUPER_USER_EMAILS: support@rfcx.org,scientist-super@rfcx.org
   BACKUP_TIMEFRAME_LIMIT: "5m"
