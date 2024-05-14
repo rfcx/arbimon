@@ -17,6 +17,6 @@ export const getBestDetectionsSummaryRoute = '/jobs/:jobId/best-detections/summa
 
 // Service
 export const apiBioGetBestDetectionsSummary = async (apiClient: AxiosInstance, jobId: number, params: GetBestDetectionsSummaryQueryParams): Promise<GetBestDetectionsSummaryResponse> => {
-  const response = await apiClient.get(`/jobs/${jobId}`, { params })
+  const response = await apiClient.get(`/jobs/${jobId}/best-detections/summary`, { params })
   return response.data
 }

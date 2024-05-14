@@ -13,11 +13,11 @@
         @emit-filter-changed="onEmitFilterChanged"
       />
       <JobValidationStatus
-        :is-loading="isLoadingDetectionSummary || isRefetchingDetectionSummary"
-        :unvalidated="detectionsSummary?.unvalidated ?? -1"
-        :uncertain="detectionsSummary?.unknown ?? -1"
-        :rejected="detectionsSummary?.notPresent ?? -1"
-        :confirmed="detectionsSummary?.present ?? -1"
+        :is-loading="isLoadingDetectionSummary || isRefetchingDetectionSummary || isLoadingBestDetectionsSummary || isRefetchBestDetectionsSummary"
+        :unvalidated="isBestDetections ? bestDetectionsSummary?.unvalidated ?? -1 : detectionsSummary?.unvalidated ?? -1"
+        :uncertain="isBestDetections ? bestDetectionsSummary?.unknown ?? -1 : detectionsSummary?.unknown ?? -1"
+        :rejected="isBestDetections ? bestDetectionsSummary?.notPresent ?? -1 : detectionsSummary?.notPresent ?? -1"
+        :confirmed="isBestDetections ? bestDetectionsSummary?.present ?? -1 : detectionsSummary?.present ?? -1"
       />
       <JobDetections
         v-model:page="page"
@@ -39,12 +39,13 @@ import type { AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { type GetBestDetectionsSummaryQueryParams } from '@rfcx-bio/common/api-bio/cnn/best-detections-summary'
 import { type GetBestDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/best-detections'
 import { type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
 import type { GetDetectionsSummaryQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections-summary'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
-import { useGetBestDetections } from '@/detect/_composables/use-get-best-detections'
+import { useGetBestDetections, useGetBestDetectionsSummary } from '@/detect/_composables/use-get-best-detections'
 import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import { useGetClassifierJobInfo, useGetDetectionsSummary, useGetJobDetections } from '../_composables/use-get-detections'
@@ -141,7 +142,16 @@ const bestDetectionsQueryParams = computed<GetBestDetectionsQueryParams>(() => {
     offset: offset.value
   }
 })
-const { isLoading: isLoadingBestDetections, isError: isErrorBestDetections, data: bestDetectionsData, refetch: refetchBestDetectionsData, isRefetching: isRefetchBestDetections } = useGetBestDetections(apiClientBio, jobId.value, bestDetectionsQueryParams, computed(() => 30_000), computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite' ))
+const { isLoading: isLoadingBestDetections, isError: isErrorBestDetections, data: bestDetectionsData, refetch: refetchBestDetectionsData, isRefetching: isRefetchBestDetections } = useGetBestDetections(apiClientBio, jobId.value, bestDetectionsQueryParams, computed(() => 30_000), computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite'))
+
+const bestDetectionsSummaryQueryParams = computed<GetBestDetectionsSummaryQueryParams>(() => {
+  return {
+    nPerStream: numberOfBestScores.value,
+    byDate: selectedGrouping.value === 'topScorePerSitePerDay',
+  }
+})
+const { isLoading: isLoadingBestDetectionsSummary, data: bestDetectionsSummary, refetch: refetchBestDetectionsSummary, isRefetching: isRefetchBestDetectionsSummary } = useGetBestDetectionsSummary(apiClientBio, jobId.value, bestDetectionsSummaryQueryParams, computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite'))
+const isBestDetections= computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite')
 
 const maxPage = computed<number>(() => {
   if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
@@ -170,6 +180,7 @@ const onEmitFilterChanged = async (groupType: string | undefined, displayBestSco
 
   if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
     await refetchBestDetectionsData()
+    await refetchBestDetectionsSummary()
   } else {
     await refetchDetectionSummary()
   }
