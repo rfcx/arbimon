@@ -9,6 +9,7 @@ import { projectRoleRoute } from '@rfcx-bio/common/api-bio/project/project-role'
 import { projectDataRoute } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { myProjectsRoute, projectBySlugRoute, projectsDeprecatedRoute, projectsGeoRoute } from '@rfcx-bio/common/api-bio/project/projects'
 
+import { logBody } from '@/_hooks/log-body'
 import { requireAuthorized } from '@/_hooks/require-authenticated'
 import { requireProjectPermission } from '@/_hooks/require-permission'
 import { type RouteRegistration, DELETE, GET, PATCH, POST } from '../_services/api-helpers/types'
@@ -110,7 +111,7 @@ export const routesProject: RouteRegistration[] = [
   {
     method: PATCH,
     url: projectDataRoute + '/profile',
-    preHandler: [requireProjectPermission('update-profile')],
+    preHandler: [requireProjectPermission('update-profile'), logBody],
     handler: projectProfileUpdateHandler
   },
   {
