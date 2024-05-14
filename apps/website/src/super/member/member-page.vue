@@ -2,12 +2,12 @@
   <div class="px-4 sm:px-6 py-8 lg:(pt-6 px-20) bg-white dark:bg-pitch">
     <div class="mx-auto max-w-screen-xl pt-4 md:pt-10">
       <div class="flex flex-row gap-x-2 text-xs font-medium items-center">
-        <router-link :to="{ name: ROUTE_NAMES.adminProject }">
+        <router-link :to="{ name: ROUTE_NAMES.superProject }">
           Projects
         </router-link>
         <icon-fa-chevron-right class="self-center text-xxs" />
         <router-link
-          :to="{ name: ROUTE_NAMES.adminMember, params: { projectId: project.id } }"
+          :to="{ name: ROUTE_NAMES.superMember, params: { projectId: project.id } }"
           class="font-bold"
         >
           {{ project.name ?? project.id }}
