@@ -7,6 +7,7 @@ import { resolve } from 'path'
 import { routesBackup } from '@/backup'
 import { AUTH0_DEFAULT_CONFIG } from '~/auth0/config'
 import { authenticatePlugin } from './_plugins/authenticate'
+import { logBodyPlugin } from './_plugins/log-body'
 import { projectRolePlugin } from './_plugins/project-role'
 import { userPlugin } from './_plugins/user'
 import { env } from './_services/env'
@@ -43,6 +44,7 @@ export const createApp = async (): Promise<FastifyInstance> => {
   await app.register(authenticatePlugin, AUTH0_DEFAULT_CONFIG) // decorates `userToken`
   await app.register(userPlugin, { getUserIdCallback: findOrCreateUserId }) // decorates `userId`
   await app.register(projectRolePlugin) // decorates `projectRole`
+  await app.register(logBodyPlugin)
 
   // Register routes
   const routesRegistrations = [
