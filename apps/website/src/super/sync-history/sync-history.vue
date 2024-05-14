@@ -14,7 +14,7 @@
         </router-link>
       </div>
 
-      <div class="flex items-center justify-between mb-10">
+      <div class="flex items-center justify-between mb-8">
         <h2 class="mt-2">
           Syncing History
         </h2>
@@ -25,26 +25,26 @@
             :disabled="isSyncing"
             @click="handleSyncNow"
           >
-            {{ syncButtonText }}
+            Sync now
           </button>
-          <div class="mr-3">
-            <div
-              v-if="successMessage"
-              class="text-frequency text-sm"
-            >
-              {{ successMessage }}
-            </div>
-            <div
-              v-else-if="errorMessage"
-              class="text-ibis dark:text-flamingo text-sm"
-            >
-              {{ errorMessage }}
-            </div>
-          </div>
         </div>
       </div>
 
       <table class="w-full text-left rtl:text-right table-auto md:table-fixed">
+        <caption class="text-right mb-2">
+          <div
+            v-if="successMessage"
+            class="text-frequency text-sm"
+          >
+            {{ successMessage }}
+          </div>
+          <div
+            v-else-if="errorMessage"
+            class="text-ibis dark:text-flamingo text-sm"
+          >
+            {{ errorMessage }}
+          </div>
+        </caption>
         <thead class="border-y-1 border-util-gray-03 text-fog text-sm">
           <tr>
             <th class="<sm:hidden">
@@ -62,6 +62,16 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="error">
+            <td
+              colspan="4"
+              class="text-center pt-10"
+            >
+              <div>
+                <span>{{ errorMessage }}</span>
+              </div>
+            </td>
+          </tr>
           <tr
             v-for="sync in syncHistoryData?.syncs"
             :key="sync.id"
@@ -117,15 +127,7 @@ watch(error, (newError) => {
   if (newError?.response?.status === 401) {
     router.push({ name: ROUTE_NAMES.error })
   }
-  errorMessage.value = 'Failed to schedule sync job. Please try again later.'
-})
-
-const syncButtonText = computed(() => {
-  if (isSyncing.value) {
-    return 'Syncing...'
-  } else {
-    return 'Sync now'
-  }
+  errorMessage.value = 'Failed to load sync history. Please try again later.'
 })
 
 const handleSyncNow = async () => {
