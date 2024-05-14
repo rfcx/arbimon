@@ -34,10 +34,10 @@ export const ROUTE_NAMES = {
   super: 'super',
   superProject: 'super_project',
   superMember: 'super_member',
+  superSyncHistory: 'super_sync_history',
   callback: 'callback',
   info: 'info',
-  error: 'error',
-  superSyncHistory: 'super_sync_history'
+  error: 'error'
 } as const
 
 export type RouteNames = typeof ROUTE_NAMES
