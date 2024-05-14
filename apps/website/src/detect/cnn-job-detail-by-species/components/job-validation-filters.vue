@@ -152,13 +152,13 @@
           <button
             id="groupingDropdownBtn"
             data-dropdown-toggle="groupingDropdownHover"
-            class="grouping-dropdown flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 w-41 hover:bg-moss"
-            :class="{ '!w-max !border-solid': selectedGrouping != null }"
+            class="grouping-dropdown flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 min-w-41 hover:bg-moss"
+            :class="{ '!border-solid': selectedGrouping != null }"
             style="position: static !important; transform: none !important; inset: none !important; margin: 0px;"
             type="button"
           >
             <span
-              class="whitespace-nowrap overflow-hidden max-w-42 3xl:max-w-64 text-ellipsis"
+              class="whitespace-nowrap overflow-hidden text-ellipsis"
               :class="{ 'px-2': selectedGrouping }"
               :title="selectedGroupingText"
             >
