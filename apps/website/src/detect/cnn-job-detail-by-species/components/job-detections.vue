@@ -12,8 +12,8 @@
         v-for="species in allSpecies"
         :key="'job-detections-' + species.speciesSlug"
       >
-        <span class="flex">{{ species.siteName }}</span>
-        <div :class="{'flex' : isBestDetections}">
+        <h4 v-if="isBestDetections" class="flex mb-1">{{ species.siteName }}</h4>
+        <div :class="{'flex mb-3' : isBestDetections}">
           <div
             v-for="dt in species.media"
             :key="`job-detection-result-by-species-${dt.id}`"
