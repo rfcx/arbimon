@@ -25,7 +25,7 @@
             :disabled="isSyncing"
             @click="handleSyncNow"
           >
-            Sync now
+            {{ syncButtonText }}
           </button>
           <div class="mr-3">
             <div
@@ -120,22 +120,31 @@ watch(error, (newError) => {
   errorMessage.value = 'Failed to schedule sync job. Please try again later.'
 })
 
+const syncButtonText = computed(() => {
+  if (isSyncing.value) {
+    return 'Syncing...'
+  } else {
+    return 'Sync now'
+  }
+})
+
 const handleSyncNow = async () => {
   errorMessage.value = ''
   successMessage.value = ''
   isSyncing.value = true
-    await mutateSync(project.value.id.toString(), {
-      onSuccess: async () => {
-        await refetchSyncHistory()
-        successMessage.value = 'The sync job has been scheduled. Check back again in 15 mins'
-        setTimeout(() => {
-          isSyncing.value = false
-        }, 15 * 60 * 1000)
-      },
-      onError: () => {
-        errorMessage.value = 'Failed to schedule sync job. Please try again later.'
+
+  await mutateSync(project.value.id.toString(), {
+    onSuccess: async () => {
+      await refetchSyncHistory()
+      successMessage.value = 'The sync job has been scheduled. Check back again in 15 mins'
+      setTimeout(() => {
         isSyncing.value = false
-      }
-    })
+      }, 15 * 60 * 1000)
+    },
+    onError: () => {
+      errorMessage.value = 'Failed to schedule sync job. Please try again later.'
+      isSyncing.value = false
+    }
+  })
 }
 </script>
