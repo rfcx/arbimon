@@ -7,7 +7,7 @@
         :is-loading-filter="isLoadingDetectionSummary || isRefetchingDetectionSummary || isLoadingJobDetections"
         :species-name="jobResultsSummary?.title"
         :detections-count="jobResultsSummary?.total"
-        :filtered-result="jobDetectionResponse?.total"
+        :filtered-result="filteredResult"
         :page-size="pageSizeLimit"
         @emit-page-size="onEmitPageSize"
         @emit-filter-changed="onEmitFilterChanged"
@@ -148,6 +148,14 @@ const maxPage = computed<number>(() => {
     return Math.ceil(Number(bestDetectionsData.value?.total)/pageSizeLimit.value)
   } else {
     return Math.ceil(Number(jobDetectionResponse.value?.total)/pageSizeLimit.value)
+  }
+})
+
+const filteredResult = computed<number>(() => {
+  if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
+    return bestDetectionsData.value?.total ?? -1
+  } else {
+    return jobDetectionResponse.value?.total ?? -1
   }
 })
 
