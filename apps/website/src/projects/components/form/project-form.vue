@@ -22,8 +22,8 @@
     >
   </div>
   <ProjectDateRangeForm
-    :initial-date-start="dateStart !== null ? new Date(dateStart) : undefined"
-    :initial-date-end="dateEnd !== null ? new Date(dateEnd) : undefined"
+    :initial-date-start="dateStart !== null ? dateStart : undefined"
+    :initial-date-end="dateEnd !== null ? dateEnd : undefined"
     :on-going="onGoing"
     :is-disabled="isDisabled"
     @emit-select-date-range="onSelectDateRange"
@@ -34,16 +34,14 @@
 import type { ComputedRef } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
 
-import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
-
 import type { ProjectDefault } from '../../types'
 import IconIInfo from '../icon-i-info.vue'
 import ProjectDateRangeForm from './project-date-range-form.vue'
 
 const props = withDefaults(defineProps<{
   existingName?: string
-  dateStart?: Date | null
-  dateEnd?: Date | null
+  dateStart?: string | null
+  dateEnd?: string | null
   isDisabled?: boolean
 }>(), {
   existingName: '',
@@ -69,19 +67,15 @@ const value: ComputedRef<ProjectDefault> = computed(() => {
   }
 })
 
-const dateLocalIso = (date: Date) => {
-  return dayjs(date).format('YYYY-MM-DD') + 'T00:00:00.000Z'
-}
-
 onMounted(() => {
   if (props.existingName) {
     name.value = props.existingName
   }
   if (props.dateStart) {
-    startDate.value = dateLocalIso(props.dateStart)
+    startDate.value = props.dateStart
   }
   if (props.dateEnd) {
-    endDate.value = dateLocalIso(props.dateEnd)
+    endDate.value = props.dateEnd
   }
   if (endDate.value?.length === 0 && startDate.value?.length !== 0) {
     onGoing.value = true
@@ -89,14 +83,14 @@ onMounted(() => {
 })
 
 watch(() => props.dateStart, (newValue, oldValue) => {
-  if (!newValue || newValue?.toDateString() === oldValue?.toDateString()) return
-  startDate.value = props.dateStart ? dateLocalIso(props.dateStart) : ''
+  if (!newValue || newValue === oldValue) return
+  startDate.value = props.dateStart ? props.dateStart : ''
   onGoing.value = !props.dateEnd
 })
 
 watch(() => props.dateEnd, (dateEndValue) => {
   if (!dateEndValue) return
-  endDate.value = props.dateEnd ? dateLocalIso(props.dateEnd) : ''
+  endDate.value = props.dateEnd ? props.dateEnd : ''
 })
 
 watch(name, () => {

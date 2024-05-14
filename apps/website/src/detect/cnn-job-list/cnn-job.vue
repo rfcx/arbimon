@@ -3,7 +3,10 @@
     <div class="flex items-center justify-between">
       <page-title page-title="CNN Jobs" />
       <router-link :to="{ name: ROUTE_NAMES.cnnJobCreate }">
-        <button class="btn btn-primary">
+        <button
+          v-if="store.userIsExpertMember"
+          class="btn btn-primary"
+        >
           Create
         </button>
       </router-link>
@@ -25,6 +28,7 @@
       <span>No jobs found.</span>
       &nbsp;
       <router-link
+        v-if="store.userIsExpertMember"
         :to="{ name: ROUTE_NAMES.cnnJobCreate }"
         class="font-bold underline"
       >

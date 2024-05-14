@@ -115,6 +115,8 @@ export interface CoreGetDetectionsQueryParams {
   fields?: string[]
 }
 
+export type CoreGetBestDetectionsSummaryQueryParams = Omit<CoreBestDetectionQueryParams, 'limit' | 'offset' | 'fields'>
+
 export type CoreGetDetectionsSummaryQueryParams = Omit<CoreGetDetectionsQueryParams, 'limit' | 'offset' | 'descending' | 'fields'>
 
 export type CoreDetectionsSummary = Omit<CoreClassifierJobSummary, 'total'>
@@ -128,6 +130,25 @@ export interface CoreDetection {
   confidence: number
   review_status: CoreRawReviewStatus
   classification: CoreClassificationLite
+}
+
+export interface CoreBestDetectionQueryParams {
+  start?: string
+  end?: string
+  streams?: string[]
+  by_date?: boolean
+  review_statuses?: CoreReviewStatus
+  n_per_stream?: number
+  limit?: number
+  offset?: number
+  fields?: string[]
+}
+
+export type CoreBestDetection = CoreDetection & {
+  bestDetection: {
+    daily_ranking: number
+    stream_ranking: number
+  }
 }
 
 export interface CoreGetClassifiersQueryParams {

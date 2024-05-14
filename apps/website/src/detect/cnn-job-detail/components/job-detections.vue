@@ -38,31 +38,71 @@
       />
 
       <div
-        v-if="results.length === 0 && (searchSpeciesKeyword !== '')"
+        v-if="errorStatus && !isLoading"
         class="p-10 text-center"
       >
-        <span class="font-bold">No Results Found.</span> <span>Your search did not return any matches.</span>
+        <h2
+          v-if="errorStatus.title !== ''"
+          class="font-display flex justify-center mb-4"
+        >
+          {{ errorStatus.title }}
+        </h2>
+        <div class="grid content-center">
+          <h4
+            v-for="(textError,lineNumber) of errorStatus.description.split('\n')"
+            :key="lineNumber"
+          >
+            {{ textError }}<br>
+          </h4>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+
+import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
 import type { ClassificationsSummaryDataset } from './job-detection-list.vue'
 import CnnJobSpeciesDetected from './job-detection-list.vue'
 
-withDefaults(defineProps<{ isLoading: boolean, total: number, results: ClassificationsSummaryDataset[] }>(), {
+const props = withDefaults(defineProps<{ isLoading: boolean, total: number, results: ClassificationsSummaryDataset[], jobStatus: number }>(), {
   isLoading: true
 })
+const emit = defineEmits<{(e: 'emitSearch', keyword: string): void, (e: 'emitSortPaginations', sortKey?: string, pageIndex?: number): void }>()
 
 const searchSpeciesKeyword = ref('')
 const isSearchBoxFocused = ref(false)
 const sortKeyLabel = ref<string| undefined>()
 const pageNo = ref(1)
 
-const emit = defineEmits<{(e: 'emitSearch', keyword: string): void, (e: 'emitSortPaginations', sortKey?: string, pageIndex?: number): void }>()
+const ERROR_CASES = [
+  { value: 'jobNotComplete', title: 'Hmm, it looks like we couldn\'t find anything...', description: 'The results you requested are currently in progress and are not yet available. \nPlease check back later or contact support if you require further assistance.' },
+  { value: 'jobCancelled', title: '', description: 'This job has been cancelled.' },
+  { value: 'jobError', title: '', description: 'This job has been error.' },
+  { value: 'jobFinished', title: 'Hmm, it looks like we couldn\'t find anything...', description: 'We couldn\'t find any detections in your dataset using the current model. \nConsider switching to a different model or uploading a new dataset. \nFor further assistance or to explore more options, please contact support.' },
+  { value: 'filterApplied', title: 'No results found.', description: 'Your search did not return any matches.' }
+]
+
+const errorStatus = computed(() => {
+  let statueError = ''
+  if (props.jobStatus === CLASSIFIER_JOB_STATUS.WAITING || props.jobStatus === CLASSIFIER_JOB_STATUS.RUNNING) {
+    statueError = 'jobNotComplete'
+  } else if (props.jobStatus === CLASSIFIER_JOB_STATUS.CANCELLED || props.jobStatus === CLASSIFIER_JOB_STATUS.AWAITING_CANCELLATION) {
+    statueError = 'jobCancelled'
+  } else if (props.jobStatus === CLASSIFIER_JOB_STATUS.ERROR) {
+    statueError = 'jobError'
+  } else if (props.results.length === 0 && props.jobStatus === CLASSIFIER_JOB_STATUS.DONE && searchSpeciesKeyword.value === '') {
+    statueError = 'jobFinished'
+  } else if (props.results.length === 0 && searchSpeciesKeyword.value !== '') {
+    statueError = 'filterApplied'
+  } else {
+    statueError = ''
+  }
+  return ERROR_CASES.find(e => e.value === statueError)
+})
 
 const searchKeywordChange = async () => {
   pageNo.value = 1

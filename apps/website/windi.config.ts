@@ -156,6 +156,9 @@ export default defineConfig({
         'hero-cta-frog-bg': "url('@/_assets/cta/frog-bg.webp')",
         'hero-cta-monkey-bg': "url('@/_assets/cta/monkey-bg.webp')",
         'hero-cta-bird-bg': "url('@/_assets/cta/fauna-1-bg.webp')"
+      },
+      aspectRatio: {
+        '2.5/1': '2.5 / 1'
       }
     },
     animation: {

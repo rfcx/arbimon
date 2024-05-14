@@ -8,7 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ElDatePicker: typeof import('element-plus/lib')['ElDatePicker']
-    ElProgress: typeof import('element-plus/lib')['ElProgress']
     IconCustomAlertCircle: typeof import('~icons/custom-icons/alert-circle')['default']
     IconCustomAlertTriangle: typeof import('~icons/custom-icons/alert-triangle')['default']
     IconCustomArrowRight: typeof import('~icons/custom-icons/arrow-right')['default']
@@ -69,7 +68,6 @@ declare module 'vue' {
     IconCustomIcError: typeof import('~icons/custom-icons/ic-error')['default']
     IconCustomIcErrorMessage: typeof import('~icons/custom-icons/ic-error-message')['default']
     IconCustomIcExport: typeof import('~icons/custom-icons/ic-export')['default']
-    IconCustomIcFail: typeof import('~icons/custom-icons/ic-fail')['default']
     IconCustomIcInfo: typeof import('~icons/custom-icons/ic-info')['default']
     IconCustomIcLoading: typeof import('~icons/custom-icons/ic-loading')['default']
     IconCustomIcPlus: typeof import('~icons/custom-icons/ic-plus')['default']
@@ -103,6 +101,7 @@ declare module 'vue' {
     IconFasInfoCircle: typeof import('~icons/fa-solid/info-circle')['default']
     IconFasTag: typeof import('~icons/fa-solid/tag')['default']
     IconFaTrash: typeof import('~icons/fa/trash')['default']
+    IconIcExport: typeof import('~icons/ic/export')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

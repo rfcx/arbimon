@@ -7,7 +7,7 @@
       @emit-validation="validateDetection"
       @emit-close="closeValidator"
     />
-    <div>
+    <div class="4xl:pl-28">
       <template
         v-for="species in allSpecies"
         :key="'job-detections-' + species.speciesSlug"
@@ -15,7 +15,7 @@
         <div
           v-for="dt in species.media"
           :key="`job-detection-result-by-species-${dt.id}`"
-          class="inline-block my-3 mr-4"
+          class="inline-block my-3 mr-3"
         >
           <DetectionItem
             :id="dt.id"
@@ -82,6 +82,7 @@
 </template>
 
 <script setup lang="ts">
+import { useDebounce } from '@vueuse/core'
 import type { AxiosInstance } from 'axios'
 import { groupBy } from 'lodash-es'
 import { computed, inject, ref, watch } from 'vue'
@@ -114,19 +115,24 @@ const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, d
 const emit = defineEmits<{(e: 'update:page', value: number): void, (e: 'emitValidationResult'): void}>()
 
 const pageIndex = ref(props.page ?? 1)
+const index = useDebounce(pageIndex, 1000)
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 
 watch(() => props.page, () => {
   pageIndex.value = props.page
 })
 
-watch(() => pageIndex.value, () => {
-  if (pageIndex.value > props.maxPage) {
+watch(() => index.value, (value) => {
+  if (value <= props.maxPage && value >= 1) {
+    emit('update:page', index.value)
+  }
+
+  // if the value is out of bounds, reset it
+  if (value > props.maxPage) {
     pageIndex.value = props.maxPage
-  } else if (pageIndex.value < 1) {
+  } else if (value < 1) {
     pageIndex.value = 1
   }
-  emit('update:page', pageIndex.value)
 })
 
 const nextPage = (): void => {

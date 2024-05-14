@@ -136,7 +136,7 @@ export const updateProjectSettings = async (locationProjectId: number, settings:
     await ModelRepository.getInstance(sequelize).LocationProject.update({ slug }, { where: { id: locationProjectId } })
   }
 
-  const dateStartChanges = dateStart === undefined ? {} : { dateStart: dateStart ? dayjs(dateStart).toDate() : null }
-  const dateEndChanges = dateEnd === undefined ? {} : { dateEnd: dateEnd ? dayjs(dateEnd).toDate() : null }
+  const dateStartChanges = dateStart === undefined ? {} : { dateStart: dateStart ? dayjs.utc(dateStart).toDate() : null }
+  const dateEndChanges = dateEnd === undefined ? {} : { dateEnd: dateEnd ? dayjs.utc(dateEnd).toDate() : null }
   await updateProjectProfile({ locationProjectId, ...fields, ...dateStartChanges, ...dateEndChanges })
 }

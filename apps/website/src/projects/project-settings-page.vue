@@ -52,8 +52,8 @@
           </h4>
           <project-form
             :existing-name="selectedProject?.name"
-            :date-start="settings?.dateStart ? new Date(settings?.dateStart) : undefined"
-            :date-end="settings?.dateEnd ? new Date(settings?.dateEnd) : undefined"
+            :date-start="settings?.dateStart ? settings?.dateStart.toString() : undefined"
+            :date-end="settings?.dateEnd ? settings?.dateEnd.toString() : undefined"
             :is-disabled="!store.userIsAdminProjectMember"
             @emit-update-value="onEmitDefaultValue"
           />
@@ -90,7 +90,7 @@
             :is-create-project="false"
             @emit-project-listed="toggleListedProject"
           />
-          <template v-if="toggles?.projectBackup === true && store.project?.role === 'owner'">
+          <template v-if="toggles?.projectBackup === true && store.userIsAdminProjectMember">
             <hr class="border-util-gray-03 my-6">
             <project-backup />
           </template>

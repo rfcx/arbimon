@@ -108,14 +108,27 @@
           </button>
         </router-link>
         <button
-          :disabled="isLoadingPostJob || errors.length > 0"
-          title="Create"
-          class="px-3 py-0 btn btn-primary h-40px w-106px"
+          :disabled="isLoadingPostJob || errors.length > 0 || !store.userIsExpertMember"
+          :data-tooltip-target="!store.userIsExpertMember ? 'createJobTooltipId' : null"
+          data-tooltip-placement="bottom"
+          class="px-3 py-0 btn btn-primary h-40px w-106px disabled:hover:btn-disabled disabled:btn-disabled"
           @click.prevent="createJob"
         >
           <span v-if="isLoadingPostJob">Saving</span>
           <span v-else>Create</span>
         </button>
+        <div
+          v-if="!store.userIsExpertMember"
+          id="createJobTooltipId"
+          role="tooltip"
+          class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+        >
+          {{ disableText }}
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
         <span v-if="isErrorPostJob">Error saving job :(</span>
       </div>
     </form>
@@ -123,6 +136,7 @@
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
+import { initTooltips } from 'flowbite'
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -148,6 +162,7 @@ const router = useRouter()
 const store = useStore()
 
 const errorText = 'Error - there’s a problem loading the models. Please refresh this page and try again.'
+const disableText = 'Contact your project administrator for permission to create a job'
 
 // Fields
 const job: CreateClassifierJobBody = reactive({
@@ -174,6 +189,7 @@ const project = reactive({
 const hasProjectPermission = ref(false)
 
 onMounted(() => {
+  initTooltips()
   job.projectId = store.project?.id ?? -1
   project.projectId = store.project?.id.toString() ?? '-1'
   hasProjectPermission.value = store.userIsProjectMember

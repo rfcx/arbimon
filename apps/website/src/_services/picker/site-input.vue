@@ -2,12 +2,12 @@
   <div class="relative my-6">
     <form
       ref="siteResultForm"
-      class="relative w-full py-1 px-2 h-11 flex flex-row items-center gap-1 flex-wrap border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
+      class="relative w-full p-2 max-h-30 flex flex-row items-center gap-1 flex-wrap border-1 border-frequency rounded-md focus:border-frequency focus:outline-none focus:ring-0"
       @click="openSiteTrigger()"
     >
       <!-- selected sites so far -->
       <ul
-        class="flex flex-row flex-wrap gap-2"
+        class="flex flex-row flex-wrap gap-2 overflow-x-auto max-w-full max-h-26"
       >
         <li
           v-for="site in selectedOptions"
@@ -23,16 +23,19 @@
             <icon-custom-ic-close-black class="w-4 h-4 cursor-pointer" />
           </button>
         </li>
+        <li>
+          <input
+            ref="siteResultInput"
+            v-model="inputFilter"
+            type="text"
+            class="border-transparent px-2 py-1 bg-transparent ring-0 focus:ring-0 focus:border-transparent inline-flex"
+            @keydown.delete="onKeydownDeleteSiteInput"
+            @focus="hasFocusInput = true"
+            @blur="hasFocusInput = false"
+          >
+        </li>
       </ul>
-      <input
-        ref="siteResultInput"
-        v-model="inputFilter"
-        type="text"
-        class="border-transparent px-2 py-1 bg-transparent ring-0 focus:ring-0 focus:border-transparent"
-        @keydown.delete="onKeydownDeleteSiteInput"
-        @focus="hasFocusInput = true"
-        @blur="hasFocusInput = false"
-      >
+
       <span class="absolute right-4 cursor-pointer pointer-events-none">
         <icon-fa-chevron-down
           class="w-3 h-3 fa-chevron-down text-util-gray-03"
@@ -172,6 +175,7 @@ const selectSite = (site: SiteInputOptions) => {
   if (selectedOptions.value.some(s => s.value === site.value)) { return }
 
   selectedOptions.value = [...selectedOptions.value, site]
+  siteResultInput.value?.focus()
 }
 
 const unselectSite = (site: SiteInputOptions) => {

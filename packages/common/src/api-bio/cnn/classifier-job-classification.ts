@@ -1,6 +1,7 @@
 import { type AxiosInstance } from 'axios'
 
 import { type GetClassifierJobInformationResponse } from './classifier-job-information'
+import { type CLASSIFIER_JOB_LABELS } from './classifier-jobs'
 
 // Request types
 export interface GetClassifierJobInfoByClassificationParams {
@@ -12,7 +13,11 @@ export interface GetClassifierJobInfoByClassificationParams {
 export interface GetClassifierJobInfoByClassificationResponse {
   title: string
   total: number
+  classifierId: number
+  status: keyof typeof CLASSIFIER_JOB_LABELS
   streams: GetClassifierJobInformationResponse['streams']
+  queryStart: string
+  queryEnd: string
 }
 
 // Route

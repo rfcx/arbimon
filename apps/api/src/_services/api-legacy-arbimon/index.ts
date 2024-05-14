@@ -12,13 +12,19 @@ async function post<T> (apiPath: string, token: string, data: any): Promise<T> {
   const res = await axios.request<T>({
     method: 'POST',
     url: `${API_BASE_URL}${apiPath}`,
-    headers: {
-      authorization: token
-    },
+    headers: { authorization: token },
     data
   }).catch(e => unpackAxiosError(e))
-
   return res.data
+}
+
+async function patch (apiPath: string, token: string, data: any): Promise<void> {
+  await axios.request({
+    method: 'PATCH',
+    url: `${API_BASE_URL}${apiPath}`,
+    headers: { authorization: token },
+    data
+  }).catch(e => unpackAxiosError(e))
 }
 
 export async function addProjectMemberLegacy (token: string, slug: string, email: string, role: Exclude<ProjectRole, 'none'>): Promise<void> {
@@ -46,4 +52,11 @@ export async function updateProjectMemberLegacy (token: string, slug: string, em
 
 export async function updateProjectLegacy (token: string, slug: string, projectInformation: ProjectProfileLegacyUpdateBody): Promise<{ success: boolean, error?: string }> {
   return await post(`/project/${slug}/info/update`, token, projectInformation)
+}
+
+export async function updateProjectSlugLegacy (token: string, idCore: string, slug: string): Promise<void> {
+  const data = {
+    url: slug
+  }
+  await patch(`/integration/projects/${idCore}`, token, data)
 }
