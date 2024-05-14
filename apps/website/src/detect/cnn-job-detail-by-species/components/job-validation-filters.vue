@@ -242,7 +242,7 @@ import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import ValidationStatus from './../../cnn-job-detail/components/validation-status.vue'
 
-const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void, (e: 'emitFilterChanged'): void}>()
+const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void, (e: 'emitFilterChanged', groupType: string | undefined): void}>()
 
 const route = useRoute()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
@@ -300,7 +300,7 @@ const closeGroupingDropdown = (): void => {
 
 const filterDetectionsByStatus = debounce((statuses: ArbimonReviewStatus[]) => {
   detectionsResultFilterBySpeciesStore.filter.validationStatuses = statuses
-  emit('emitFilterChanged')
+  emit('emitFilterChanged', selectedGrouping.value)
 }, 600)
 
 const groupingDetections = async (groupBy: string | undefined) => {
@@ -309,7 +309,7 @@ const groupingDetections = async (groupBy: string | undefined) => {
   }
 
   emit('emitMinConfidence', groupBy === 'minConfidence')
-  emit('emitFilterChanged')
+  emit('emitFilterChanged', selectedGrouping.value)
 }
 
 const getBestDetections = async() => {
@@ -326,7 +326,7 @@ const getBestDetections = async() => {
 const filterDetectionsBySite = debounce(() => {
   const siteIdx = selectedSites.value.includes('all') ? [] : selectedSites.value
   detectionsResultFilterBySpeciesStore.filter.siteIds = siteIdx
-  emit('emitFilterChanged')
+  emit('emitFilterChanged', selectedGrouping.value)
 }, 600)
 
 const onSelectStatus = (status: ArbimonReviewStatus) => {

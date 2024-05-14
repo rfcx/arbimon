@@ -131,7 +131,8 @@ const onEmitPageSize = (pageSize: number) => {
   pageSizeLimit.value = pageSize
 }
 
-const onEmitFilterChanged = async () => {
+const onEmitFilterChanged = async (groupType: string | undefined) => {
+  console.info(groupType)
   page.value = 1
   await refetchDetectionSummary()
 }
