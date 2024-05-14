@@ -15,15 +15,33 @@
       </div>
 
       <div class="flex items-center justify-between mb-10">
-        <h2 class="mt-2 ">
+        <h2 class="mt-2">
           Syncing History
         </h2>
-        <button
-          class="bg-transparent border-1 border-frequency rounded-full text-frequency h-10 w-32 px-2 py-2"
-          @click="handleSyncNow"
-        >
-          Sync now
-        </button>
+        <div class="flex flex-row-reverse text-right items-center">
+          <button
+            class="bg-transparent border-1 border-frequency rounded-full text-frequency h-10 w-32 px-2 py-2"
+            :class="{ 'cursor-not-allowed opacity-50': isSyncing }"
+            :disabled="isSyncing"
+            @click="handleSyncNow"
+          >
+            Sync now
+          </button>
+          <div class="mr-3">
+            <div
+              v-if="successMessage"
+              class="text-frequency text-sm"
+            >
+              {{ successMessage }}
+            </div>
+            <div
+              v-else-if="errorMessage"
+              class="text-ibis dark:text-flamingo text-sm"
+            >
+              {{ errorMessage }}
+            </div>
+          </div>
+        </div>
       </div>
 
       <table class="w-full text-left rtl:text-right table-auto md:table-fixed">
@@ -43,27 +61,6 @@
             </th>
           </tr>
         </thead>
-        <tfoot>
-          <tr>
-            <td
-              colspan="4"
-              class="py-3"
-            >
-              <div
-                v-if="successMessage"
-                class="text-frequency text-sm px-2"
-              >
-                {{ successMessage }}
-              </div>
-              <div
-                v-if="errorMessage"
-                class="text-ibis dark:text-flamingo text-sm px-2"
-              >
-                {{ errorMessage }}
-              </div>
-            </td>
-          </tr>
-        </tfoot>
         <tbody>
           <tr
             v-for="sync in syncHistoryData?.syncs"
@@ -107,6 +104,7 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const errorMessage = ref('')
 const successMessage = ref('')
+const isSyncing = ref(false)
 
 const project = computed(() => {
   return store.project ?? { id: Number(route.params.projectId), name: route.params.projectSlug }
@@ -119,17 +117,23 @@ watch(error, (newError) => {
   if (newError?.response?.status === 401) {
     router.push({ name: ROUTE_NAMES.error })
   }
+  errorMessage.value = 'Failed to schedule sync job. Please try again later.'
 })
 
 const handleSyncNow = async () => {
-    mutateSync(project.value.id.toString(), {
+  errorMessage.value = ''
+  successMessage.value = ''
+  isSyncing.value = true
+    await mutateSync(project.value.id.toString(), {
       onSuccess: async () => {
         await refetchSyncHistory()
         successMessage.value = 'The sync job has been scheduled. Check back again in 15 mins'
+        isSyncing.value = false
       },
       onError: () => {
         errorMessage.value = 'Failed to schedule sync job. Please try again later.'
+        isSyncing.value = false
       }
     })
-  }
+}
 </script>
