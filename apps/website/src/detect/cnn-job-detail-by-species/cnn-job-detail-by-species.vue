@@ -21,11 +21,13 @@
       />
       <JobDetections
         v-model:page="page"
-        :is-loading="isLoadingJobDetections"
-        :is-error="isErrorJobDetections"
+        :is-loading="isLoadingJobDetections || isLoadingBestDetections"
+        :is-error="isErrorJobDetections || isErrorBestDetections"
+        :data-best-detections="bestDetectionsData?.data"
         :data="jobDetectionResponse?.data"
         :page-size="pageSizeLimit"
-        :max-page="Math.ceil(Number(jobDetectionResponse?.total)/pageSizeLimit)"
+        :selected-grouping="selectedGrouping"
+        :max-page="maxPage"
         @emit-validation-result="onEmitValidateResult"
       />
     </div>
@@ -37,10 +39,12 @@ import type { AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { type GetBestDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/best-detections'
 import { type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
 import type { GetDetectionsSummaryQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections-summary'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
+import { useGetBestDetections } from '@/detect/_composables/use-get-best-detections'
 import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import { useGetClassifierJobInfo, useGetDetectionsSummary, useGetJobDetections } from '../_composables/use-get-detections'
@@ -57,6 +61,7 @@ const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesS
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 const speciesSlug = computed(() => typeof route.params.speciesSlug === 'string' ? route.params.speciesSlug : '')
 const page = ref(1)
+const selectedGrouping = ref<string>()
 
 const refetchInterval = computed(() => {
   return isRefetchIntervalEnable.value ? 30_000 : false
@@ -127,14 +132,35 @@ const { isLoading: isLoadingDetectionSummary, isRefetching: isRefetchingDetectio
   computed(() => jobResultsSummary.value?.classifierId != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '')
 )
 
+const bestDetectionsQueryParams = computed<GetBestDetectionsQueryParams>(() => {
+  return {
+    nPerStream:  2,
+    byDate: selectedGrouping.value === 'topScorePerSitePerDay',
+    limit: pageSizeLimit.value,
+    offset: offset.value
+  }
+})
+const { isLoading: isLoadingBestDetections, isError: isErrorBestDetections, data: bestDetectionsData } = useGetBestDetections(apiClientBio, jobId.value, bestDetectionsQueryParams, computed(() => 30_000), computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite' ))
+
+const maxPage = computed<number>(() => {
+  if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
+    return Math.ceil(Number(bestDetectionsData.value?.total)/pageSizeLimit.value)
+  } else {
+    return Math.ceil(Number(jobDetectionResponse.value?.total)/pageSizeLimit.value)
+  }
+})
+
 const onEmitPageSize = (pageSize: number) => {
   pageSizeLimit.value = pageSize
 }
 
 const onEmitFilterChanged = async (groupType: string | undefined) => {
-  console.info(groupType)
+  selectedGrouping.value = groupType
   page.value = 1
-  await refetchDetectionSummary()
+
+  if (selectedGrouping.value !== 'topScorePerSitePerDay' && selectedGrouping.value !== 'topScorePerSite') {
+    await refetchDetectionSummary()
+  }
 }
 
 const onEmitValidateResult = async () => {

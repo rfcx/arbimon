@@ -228,26 +228,20 @@
 </template>
 
 <script setup lang="ts">
-import type { AxiosInstance } from 'axios'
 import { Dropdown, initDropdowns } from 'flowbite'
-import { debounce, groupBy } from 'lodash-es'
+import { debounce } from 'lodash-es'
 
-import { type Ref, computed, inject, onMounted, ref, watch } from 'vue'
+import { type Ref, computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
-import { apiBioGetBestDetections } from '@rfcx-bio/common/api-bio/cnn/best-detections'
 
-import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import ValidationStatus from './../../cnn-job-detail/components/validation-status.vue'
 
 const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void, (e: 'emitFilterChanged', groupType: string | undefined): void}>()
 
 const route = useRoute()
-const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
-
-const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
 const selectedStatuses = ref<ArbimonReviewStatus[]>([])
@@ -304,23 +298,8 @@ const filterDetectionsByStatus = debounce((statuses: ArbimonReviewStatus[]) => {
 }, 600)
 
 const groupingDetections = async (groupBy: string | undefined) => {
-  if(groupBy === 'topScorePerSite' || groupBy === 'topScorePerSitePerDay') {
-    await getBestDetections()
-  }
-
   emit('emitMinConfidence', groupBy === 'minConfidence')
   emit('emitFilterChanged', selectedGrouping.value)
-}
-
-const getBestDetections = async() => {
-  const response = await apiBioGetBestDetections(apiClientBio, jobId.value, { nPerStream: 2, byDate: selectedGrouping.value === 'topScorePerSitePerDay' })
-  if (response?.data === undefined) return
-
-  const groupedBySite = groupBy(response?.data, 'siteIdCore')
-  const locationSites = Object.keys(groupedBySite)
-
-  console.info(groupedBySite)
-  console.info(locationSites)
 }
 
 const filterDetectionsBySite = debounce(() => {
