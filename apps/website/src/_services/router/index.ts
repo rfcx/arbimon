@@ -206,19 +206,19 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/sa',
-    name: ROUTE_NAMES.admin,
+    name: ROUTE_NAMES.super,
     component: PAGES.Admin,
-    redirect: { name: ROUTE_NAMES.adminProject },
+    redirect: { name: ROUTE_NAMES.superProject },
     beforeEnter: [authRequiredGuard],
     children: [
       {
         path: '',
-        name: ROUTE_NAMES.adminProject,
+        name: ROUTE_NAMES.superProject,
         component: PAGES.AdminProject
       },
       {
         path: ':projectId/members',
-        name: ROUTE_NAMES.adminMember,
+        name: ROUTE_NAMES.superMember,
         component: PAGES.AdminMember
       },
       {
