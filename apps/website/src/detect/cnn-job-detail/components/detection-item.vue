@@ -66,15 +66,24 @@
       </div>
     </div>
     <div v-if="isBestDetections">
-      <div 
+      <div
         v-if="selectedGrouping === 'topScorePerSitePerDay'"
         class="flex flex-col pt-2 gap-y-2 text-insight text-[13px]"
       >
-        <span v-if="props.start" class="flex">{{ dateFormattedFull(props.start ?? '') }}</span>
-        <span v-if="props.start" class="flex">{{ timeFormattedFull(props.start ?? '') }}</span>
+        <span
+          v-if="props.start"
+          class="flex"
+        >{{ dateFormattedFull(props.start ?? '') }}</span>
+        <span
+          v-if="props.start"
+          class="flex"
+        >{{ timeFormattedFull(props.start ?? '') }}</span>
       </div>
     </div>
-    <div v-else class="flex flex-col pt-2 gap-y-2 text-insight text-[13px]">
+    <div
+      v-else
+      class="flex flex-col pt-2 gap-y-2 text-insight text-[13px]"
+    >
       <div class="flex text-ellipsis overflow-hidden">
         <span
           v-if="props.score"
@@ -141,7 +150,7 @@ const apiMedia = inject(apiClientMediaKey) as AxiosInstance
 const audio = ref<Howl | null>(null)
 const spectrogram = ref<string | null>(null)
 const playing = ref(false)
-const isBestDetections= computed(() => {
+const isBestDetections = computed(() => {
   if (!props.selectedGrouping) return false
   return props.selectedGrouping === 'topScorePerSitePerDay' || props.selectedGrouping === 'topScorePerSite'
 })

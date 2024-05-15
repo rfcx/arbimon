@@ -39,8 +39,8 @@ import type { AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { type GetBestDetectionsSummaryQueryParams } from '@rfcx-bio/common/api-bio/cnn/best-detections-summary'
 import { type GetBestDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/best-detections'
+import { type GetBestDetectionsSummaryQueryParams } from '@rfcx-bio/common/api-bio/cnn/best-detections-summary'
 import { type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
 import type { GetDetectionsSummaryQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections-summary'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
@@ -147,17 +147,17 @@ const { isLoading: isLoadingBestDetections, isError: isErrorBestDetections, data
 const bestDetectionsSummaryQueryParams = computed<GetBestDetectionsSummaryQueryParams>(() => {
   return {
     nPerStream: numberOfBestScores.value,
-    byDate: selectedGrouping.value === 'topScorePerSitePerDay',
+    byDate: selectedGrouping.value === 'topScorePerSitePerDay'
   }
 })
 const { isLoading: isLoadingBestDetectionsSummary, data: bestDetectionsSummary, refetch: refetchBestDetectionsSummary, isRefetching: isRefetchBestDetectionsSummary } = useGetBestDetectionsSummary(apiClientBio, jobId.value, bestDetectionsSummaryQueryParams, computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite'))
-const isBestDetections= computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite')
+const isBestDetections = computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite')
 
 const maxPage = computed<number>(() => {
   if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
-    return Math.ceil(Number(bestDetectionsData.value?.total)/pageSizeLimit.value)
+    return Math.ceil(Number(bestDetectionsData.value?.total) / pageSizeLimit.value)
   } else {
-    return Math.ceil(Number(jobDetectionResponse.value?.total)/pageSizeLimit.value)
+    return Math.ceil(Number(jobDetectionResponse.value?.total) / pageSizeLimit.value)
   }
 })
 

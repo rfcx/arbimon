@@ -3,7 +3,7 @@ import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 
 import { type GetBestDetectionsQueryParams, type GetBestDetectionsResponse, apiBioGetBestDetections } from '@rfcx-bio/common/api-bio/cnn/best-detections'
-import { type GetBestDetectionsSummaryResponse, type GetBestDetectionsSummaryQueryParams, apiBioGetBestDetectionsSummary } from '@rfcx-bio/common/api-bio/cnn/best-detections-summary'
+import { type GetBestDetectionsSummaryQueryParams, type GetBestDetectionsSummaryResponse, apiBioGetBestDetectionsSummary } from '@rfcx-bio/common/api-bio/cnn/best-detections-summary'
 import { type WithTotalCount } from '@rfcx-bio/common/total-count'
 
 export const useGetBestDetections = (apiClient: AxiosInstance, jobId: number, params: ComputedRef<GetBestDetectionsQueryParams>, refetchInterval: ComputedRef<number | false>, enabled: ComputedRef<boolean>): UseQueryReturnType<WithTotalCount<GetBestDetectionsResponse> | undefined, unknown> => {

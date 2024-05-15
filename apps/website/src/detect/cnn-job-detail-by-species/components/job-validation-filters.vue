@@ -187,7 +187,7 @@
               class="flex flex-col gap-y-1"
             >
               <li
-                v-for="(item, index) in itemsSelectGrouping"
+                v-for="(item) in itemsSelectGrouping"
                 :key="item.title"
                 class="bg-moss hover:text-util-gray-01"
                 @click="selectedGrouping = item.value; groupingDetections(selectedGrouping); closeGroupingDropdown()"
@@ -211,7 +211,8 @@
 
     <div
       v-if="isBestDetections"
-      class="flex flew-row items-center pt-4 gap-x-2">
+      class="flex flew-row items-center pt-4 gap-x-2"
+    >
       <span class="text-md">
         Display top
       </span>
@@ -250,9 +251,7 @@
 <script setup lang="ts">
 import { Dropdown, initDropdowns } from 'flowbite'
 import { debounce } from 'lodash-es'
-
 import { type Ref, computed, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
 
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
@@ -260,8 +259,6 @@ import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import ValidationStatus from './../../cnn-job-detail/components/validation-status.vue'
 
 const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void, (e: 'emitFilterChanged', groupType: string | undefined, displayBestScores: number): void}>()
-
-const route = useRoute()
 
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
 const selectedStatuses = ref<ArbimonReviewStatus[]>([])
@@ -296,7 +293,7 @@ watch(() => detectionsResultFilterBySpeciesStore.filter.minConfidence, (newValue
 
 const currentValue = ref<number>(detectionsResultFilterBySpeciesStore.filter.minConfidence)
 const displayBestScores = ref<number>(5)
-const isBestDetections= computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite')
+const isBestDetections = computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite')
 
 const onValueChange = (value: number) => {
   if (value < 0 || value > 1) {
@@ -394,7 +391,7 @@ const selectedStatusText = computed(() => {
 
 const selectedGroupingText = computed(() => {
   if (selectedGrouping.value) {
-    return 'Grouping: ' + itemsSelectGrouping.find( i => i.value === selectedGrouping.value)?.title
+    return 'Grouping: ' + itemsSelectGrouping.find(i => i.value === selectedGrouping.value)?.title
   } else {
     return 'Groupings'
   }

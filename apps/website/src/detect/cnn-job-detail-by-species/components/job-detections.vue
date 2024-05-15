@@ -7,12 +7,20 @@
       @emit-validation="validateDetection"
       @emit-close="closeValidator"
     />
-    <div v-if="!props.isLoading" class="4xl:pl-28">
+    <div
+      v-if="!props.isLoading"
+      class="4xl:pl-28"
+    >
       <template
         v-for="species in allSpecies"
         :key="'job-detections-' + species.speciesSlug"
       >
-        <h4 v-if="isBestDetections" class="flex mb-1">{{ species.siteName }}</h4>
+        <h4
+          v-if="isBestDetections"
+          class="flex mb-1"
+        >
+          {{ species.siteName }}
+        </h4>
         <div :class="{'mb-3' : isBestDetections}">
           <div
             v-for="dt in species.media"
@@ -122,7 +130,7 @@ const emit = defineEmits<{(e: 'update:page', value: number): void, (e: 'emitVali
 const pageIndex = ref(props.page ?? 1)
 const index = useDebounce(pageIndex, 1000)
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
-const isBestDetections= computed(() => props.selectedGrouping === 'topScorePerSitePerDay' || props.selectedGrouping === 'topScorePerSite')
+const isBestDetections = computed(() => props.selectedGrouping === 'topScorePerSitePerDay' || props.selectedGrouping === 'topScorePerSite')
 
 watch(() => props.page, () => {
   pageIndex.value = props.page
