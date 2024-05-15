@@ -10,8 +10,7 @@ export const useFetchProjectSyncHistory = (apiClient: AxiosInstance, projectId: 
   return useQuery<SyncHistoryResponse, Error>({
     queryKey: ['get-super-sync-history', projectId],
     queryFn: async () => {
-      if (projectId === undefined) return { syncs: [] }
-      return await apiBioSuperGetSyncHistory(apiClient, projectId) ?? []
+      return await apiBioSuperGetSyncHistory(apiClient, projectId)
     }
   })
 }

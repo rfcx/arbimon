@@ -18,7 +18,7 @@
         <h2 class="mt-2">
           Syncing History
         </h2>
-        <div class="flex flex-row-reverse text-right items-center">
+        <div class="flex flex-col text-right items-end">
           <button
             class="bg-transparent border-1 border-frequency rounded-full text-frequency h-10 w-32 px-2 py-2"
             :class="{ 'cursor-not-allowed opacity-50': isSyncing }"
@@ -27,24 +27,22 @@
           >
             Sync now
           </button>
-        </div>
-      </div>
-
-      <table class="w-full text-left rtl:text-right table-auto md:table-fixed">
-        <caption class="text-right mb-2">
           <div
             v-if="successMessage"
-            class="text-frequency text-sm"
+            class="text-frequency text-sm mt-2"
           >
             {{ successMessage }}
           </div>
           <div
             v-else-if="errorMessage"
-            class="text-ibis dark:text-flamingo text-sm"
+            class="text-ibis dark:text-flamingo text-sm mt-2"
           >
             {{ errorMessage }}
           </div>
-        </caption>
+        </div>
+      </div>
+
+      <table class="w-full text-left rtl:text-right table-auto md:table-fixed">
         <thead class="border-y-1 border-util-gray-03 text-fog text-sm">
           <tr>
             <th class="<sm:hidden">
