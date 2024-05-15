@@ -158,7 +158,7 @@
             type="button"
           >
             <span
-              class="whitespace-nowrap overflow-hidden text-ellipsis"
+              class="whitespace-nowrap overflow-hidden max-w-42 2xl:max-w-80 text-ellipsis"
               :class="{ 'px-2': selectedGrouping }"
               :title="selectedGroupingText"
             >

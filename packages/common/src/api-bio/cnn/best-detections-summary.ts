@@ -1,4 +1,5 @@
-import { type AxiosInstance } from '@/../../utils/node_modules/axios'
+import { type AxiosInstance } from 'axios'
+
 import { type GetBestDetectionsQueryParams } from './best-detections'
 import { type ValidationStatus } from './classifier-job-information'
 
