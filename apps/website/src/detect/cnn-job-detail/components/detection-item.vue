@@ -91,7 +91,7 @@
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
 import { Howl } from 'howler'
-import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { apiCoreGetMedia } from '@rfcx-bio/common/api-core/media/core-media'
@@ -132,10 +132,6 @@ const apiMedia = inject(apiClientMediaKey) as AxiosInstance
 const audio = ref<Howl | null>(null)
 const spectrogram = ref<string | null>(null)
 const playing = ref(false)
-const isBestDetections = computed(() => {
-  if (!props.selectedGrouping) return false
-  return props.selectedGrouping === 'topScorePerSitePerDay' || props.selectedGrouping === 'topScorePerSite'
-})
 
 onMounted(async () => {
   spectrogramLoading.value = true
@@ -212,15 +208,6 @@ const dateFormatted = (date: string) => {
   return dayjs(date).format('DD/MM/YYYY HH:mm:ss A')
 }
 
-const dateFormattedFull = (date: string) => {
-  if (!date.length) return ''
-  return dayjs(date).format('MMMM DD, YYYY')
-}
-
-const timeFormattedFull = (date: string) => {
-  if (!date.length) return ''
-  return dayjs(date).format('HH:mm:ss A')
-}
 </script>
 
 <style lang="scss">

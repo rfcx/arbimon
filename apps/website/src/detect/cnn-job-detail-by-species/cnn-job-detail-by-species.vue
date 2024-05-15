@@ -171,6 +171,10 @@ const filteredResult = computed<number>(() => {
 
 const onEmitPageSize = (pageSize: number) => {
   pageSizeLimit.value = pageSize
+
+  if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
+    refetchBestDetectionsData()
+  }
 }
 
 const onEmitFilterChanged = async (groupType: string | undefined, displayBestScores: number) => {
@@ -185,6 +189,12 @@ const onEmitFilterChanged = async (groupType: string | undefined, displayBestSco
     await refetchDetectionSummary()
   }
 }
+
+watch(() => page.value, async () => {
+  if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
+    await refetchBestDetectionsData()
+  }
+})
 
 const onEmitValidateResult = async () => {
   setTimeout(async () => {
