@@ -87,6 +87,8 @@ const ERROR_CASES = [
 ]
 
 const errorStatus = computed(() => {
+  if(props.results.length !== 0) return
+
   let statueError = ''
   if (props.jobStatus === CLASSIFIER_JOB_STATUS.WAITING || props.jobStatus === CLASSIFIER_JOB_STATUS.RUNNING) {
     statueError = 'jobNotComplete'
