@@ -15,7 +15,7 @@
           <JobValidationFilters
             @emit-filter-changed="onEmitFilterChanged"
           />
-          <div class="flex flex-row gap-2 max-w-36 self-start mt-2.5">
+          <div class="flex flex-row gap-2 max-w-36 self-start mt-2.5 items-center">
             <span>Results:</span>
             <StatusNumber
               :is-loading="isLoadingFilter"
