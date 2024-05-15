@@ -65,25 +65,7 @@
         <icon-custom-fi-visualizer-redirect class="w-6.3 h-6.3" />
       </div>
     </div>
-    <div v-if="isBestDetections">
-      <div
-        v-if="selectedGrouping === 'topScorePerSitePerDay'"
-        class="flex flex-col pt-2 gap-y-2 text-insight text-[13px]"
-      >
-        <span
-          v-if="props.start"
-          class="flex"
-        >{{ dateFormattedFull(props.start ?? '') }}</span>
-        <span
-          v-if="props.start"
-          class="flex"
-        >{{ timeFormattedFull(props.start ?? '') }}</span>
-      </div>
-    </div>
-    <div
-      v-else
-      class="flex flex-col pt-2 gap-y-2 text-insight text-[13px]"
-    >
+    <div class="flex flex-col pt-2 gap-y-2 text-insight text-[13px]">
       <div class="flex text-ellipsis overflow-hidden">
         <span
           v-if="props.score"
