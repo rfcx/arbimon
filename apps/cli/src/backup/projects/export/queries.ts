@@ -73,7 +73,7 @@ export const SOUNDSCAPES = `
 
 export const RFM_MODELS = `
     select model_id, name, date_created, user_id 
-    from models where model_type_id = 4 and m.project_id = $projectId
+    from models where model_type_id = 4 and project_id = $projectId
 `
 
 export const RFM_CLASSIFICATIONS = `
