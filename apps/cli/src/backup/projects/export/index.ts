@@ -5,7 +5,7 @@ import { toCsv } from '@rfcx-bio/utils/file'
 
 import { mapPathToSignedUrl } from '@/export/_common/map-path-to-signed-url'
 import { type ZipFile } from '~/files'
-import { CLASSIFICATIONS, PATTERN_MATCHING_ROIS, PATTERN_MATCHINGS, PLAYLIST_RECORDINGS, PLAYLISTS, RECORDING_VALIDATIONS, RECORDINGS, SITES, SOUNDSCAPES, SPECIES, TEMPLATES } from './queries'
+import { PATTERN_MATCHING_ROIS, PATTERN_MATCHINGS, PLAYLIST_RECORDINGS, PLAYLISTS, RECORDING_VALIDATIONS, RECORDINGS, RFM_CLASSIFICATIONS, RFM_MODELS, SITES, SOUNDSCAPES, SPECIES, TEMPLATES } from './queries'
 
 const BATCH_SIZE = 200000
 
@@ -25,7 +25,8 @@ export const EXPORTS_MAPPER: Record<string, ExportConfig> = {
     pattern_matchings: { sql: PATTERN_MATCHINGS },
     pattern_matching_rois: { sql: PATTERN_MATCHING_ROIS },
     soundscapes: { sql: SOUNDSCAPES, signedUrls: true },
-    classifications: { sql: CLASSIFICATIONS }
+    rfm_models: { sql: RFM_MODELS },
+    rfm_classifications: { sql: RFM_CLASSIFICATIONS }
 }
 
 export const generateCsvs = async (item: string, projectId: number, sequelize: Sequelize, storage: StorageClient, legacyStorage: StorageClient, verbose?: boolean): Promise<ZipFile[]> => {

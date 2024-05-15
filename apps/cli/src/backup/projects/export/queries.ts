@@ -71,8 +71,13 @@ export const SOUNDSCAPES = `
     where project_id = $projectId
 `
 
-export const CLASSIFICATIONS = `
-    select cr.classification_result_id, cr.recording_id, cr.species_id, cr.songtype_id, cr.present
+export const RFM_MODELS = `
+    select model_id, name, date_created, user_id 
+    from models where model_type_id = 4 and m.project_id = $projectId
+`
+
+export const RFM_CLASSIFICATIONS = `
+    select cr.classification_result_id, m.model_id, cr.recording_id, cr.species_id, cr.songtype_id, cr.present
     from classification_results cr
         join job_params_classification jpc on cr.job_id = jpc.job_id 
         join models m on jpc.model_id = m.model_id 
