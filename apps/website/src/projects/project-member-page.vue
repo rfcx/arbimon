@@ -247,22 +247,22 @@ const roles = [
   {
     id: 4,
     name: 'Owner',
-    description: 'Project Owner - can manage and delete project, validate species, manage project settings'
+    description: 'Project Owner - can manage and delete the project, edit project settings, and manage project members'
   },
   {
     id: 1,
     name: 'Admin',
-    description: 'Project Administrator - can view and manage the project, validate species and manage project settings'
+    description: 'Project Administrator - can view and manage the project, edit project settings, and manage project members'
   },
   {
     id: 6,
     name: 'Expert',
-    description: 'Project Member + Species Validator - can view and manage the project and validate species'
+    description: 'Project Member + Species Validator - can view and manage the project, run jobs, and validate species'
   },
   {
     id: 2,
     name: 'User',
-    description: 'Project Member - can view the project, manage project species, manage recordings, view and create playlists and run jobs'
+    description: 'Project Member - can view the project, manage project species, manage recordings, view and create playlists'
   },
   {
     id: 5,
