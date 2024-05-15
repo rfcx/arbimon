@@ -7,27 +7,39 @@
       @emit-validation="validateDetection"
       @emit-close="closeValidator"
     />
-    <div class="4xl:pl-28">
+    <div
+      v-if="!props.isLoading"
+      class="4xl:pl-28"
+    >
       <template
         v-for="species in allSpecies"
         :key="'job-detections-' + species.speciesSlug"
       >
-        <div
-          v-for="dt in species.media"
-          :key="`job-detection-result-by-species-${dt.id}`"
-          class="inline-block my-3 mr-3"
+        <h4
+          v-if="isBestDetections"
+          class="flex mb-1"
         >
-          <DetectionItem
-            :id="dt.id"
-            :spectrogram-url="dt.spectrogramUrl"
-            :audio-url="dt.audioUrl"
-            :validation="dt.validation"
-            :checked="dt.checked"
-            :site="dt.site"
-            :start="dt.start"
-            :score="dt.score"
-            @emit-detection="updateSelectedDetections"
-          />
+          {{ species.siteName }}
+        </h4>
+        <div :class="{'mb-3' : isBestDetections}">
+          <div
+            v-for="dt in species.media"
+            :key="`job-detection-result-by-species-${dt.id}`"
+            class="inline-block my-3 mr-3"
+          >
+            <DetectionItem
+              :id="dt.id"
+              :spectrogram-url="dt.spectrogramUrl"
+              :audio-url="dt.audioUrl"
+              :validation="dt.validation"
+              :checked="dt.checked"
+              :site="dt.site"
+              :start="dt.start"
+              :score="dt.score"
+              :selected-grouping="selectedGrouping"
+              @emit-detection="updateSelectedDetections"
+            />
+          </div>
         </div>
       </template>
     </div>
@@ -45,7 +57,7 @@
     <icon-custom-ic-loading class="animate-spin w-8 h-8 lg:mx-24 text-center" />
   </div>
   <div
-    v-if="props.data?.length"
+    v-if="allSpecies?.length && !props.isLoading"
     class="w-full flex flex-row justify-end my-6"
   >
     <div class="flex flex-row items-center text-sm gap-x-1">
@@ -88,6 +100,7 @@ import { groupBy } from 'lodash-es'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { type GetBestDetectionsResponse } from '@rfcx-bio/common/api-bio/cnn/best-detections'
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type GetDetectionsResponse } from '@rfcx-bio/common/api-bio/cnn/detections'
 
@@ -106,7 +119,7 @@ const route = useRoute()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
-const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: GetDetectionsResponse | undefined, page: number, pageSize: number, maxPage: number }>(), {
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: GetDetectionsResponse | undefined, dataBestDetections: GetBestDetectionsResponse | undefined, page: number, pageSize: number, maxPage: number, selectedGrouping: string | undefined }>(), {
   isLoading: true,
   isError: false,
   data: undefined
@@ -117,6 +130,7 @@ const emit = defineEmits<{(e: 'update:page', value: number): void, (e: 'emitVali
 const pageIndex = ref(props.page ?? 1)
 const index = useDebounce(pageIndex, 1000)
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
+const isBestDetections = computed(() => props.selectedGrouping === 'topScorePerSitePerDay' || props.selectedGrouping === 'topScorePerSite')
 
 watch(() => props.page, () => {
   pageIndex.value = props.page
@@ -163,19 +177,23 @@ const filterOptions = computed<DetectionValidationStatus[]>(() => {
   return filtered
 })
 
-const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }>>(() => {
+const allSpecies = computed<Array<{ siteName: string, speciesSlug: string, speciesName: string, media: DetectionMedia[] }>>(() => {
   if (props.data == null || props.data.length === 0) {
     return []
   }
 
   // TODO: refactor this as there isn't a need to group the detections by classification anymore (UI has changed + api was broken)
   // workaround for now => groupBy classifierId instead (workaround for the broken api)
+
+  const groupedDetectionsBySite: Record<string, GetBestDetectionsResponse> = groupBy(props.dataBestDetections ?? [], d => d.siteIdCore)
   const groupedDetections: Record<string, GetDetectionsResponse> = groupBy(props.data ?? [], d => d.classifierId)
-  const species: Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(groupedDetections).map(id => {
+  const items = isBestDetections.value ? groupedDetectionsBySite : groupedDetections
+  const species: Array<{ siteName: string, speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(items).map(id => {
     return {
+      siteName: store.projectFilters?.locationSites.filter((site) => site.idCore === id)[0]?.name ?? '',
       speciesSlug: '',
       speciesName: '',
-      media: groupedDetections[id].map(detection => {
+      media: items[id].map(detection => {
         return {
           spectrogramUrl: getMediaLink({
             streamId: detection.siteIdCore,
