@@ -1,4 +1,5 @@
-import { type AxiosInstance } from '@/../../utils/node_modules/axios'
+import { type AxiosInstance } from 'axios'
+
 import { type GetBestDetectionsQueryParams } from './best-detections'
 import { type ValidationStatus } from './classifier-job-information'
 
@@ -17,6 +18,6 @@ export const getBestDetectionsSummaryRoute = '/jobs/:jobId/best-detections/summa
 
 // Service
 export const apiBioGetBestDetectionsSummary = async (apiClient: AxiosInstance, jobId: number, params: GetBestDetectionsSummaryQueryParams): Promise<GetBestDetectionsSummaryResponse> => {
-  const response = await apiClient.get(`/jobs/${jobId}`, { params })
+  const response = await apiClient.get(`/jobs/${jobId}/best-detections/summary`, { params })
   return response.data
 }

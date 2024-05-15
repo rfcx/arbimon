@@ -109,7 +109,8 @@ const props = withDefaults(defineProps<{
   checked: boolean | null,
   score?: number | undefined,
   start?: string | undefined,
-  site?: string | undefined
+  site?: string | undefined,
+  selectedGrouping?: string | undefined
 }>(), {
   id: null,
   checked: null,
@@ -206,6 +207,7 @@ const dateFormatted = (date: string) => {
   if (!date.length) return ''
   return dayjs(date).format('DD/MM/YYYY HH:mm:ss A')
 }
+
 </script>
 
 <style lang="scss">
