@@ -5,7 +5,7 @@ import { toCsv } from '@rfcx-bio/utils/file'
 
 import { mapPathToSignedUrl } from '@/export/_common/map-path-to-signed-url'
 import { type ZipFile } from '~/files'
-import { CLASSIFICATIONS, PATTERN_MATCHING_ROIS, PATTERN_MATCHING_VALIDATIONS, PATTERN_MATCHINGS, PLAYLIST_RECORDINGS, PLAYLISTS, RECORDING_VALIDATIONS, RECORDINGS, SITES, SOUNDSCAPES, SPECIES, TEMPLATES } from './queries'
+import { CLASSIFICATIONS, PATTERN_MATCHING_ROIS, PATTERN_MATCHINGS, PLAYLIST_RECORDINGS, PLAYLISTS, RECORDING_VALIDATIONS, RECORDINGS, SITES, SOUNDSCAPES, SPECIES, TEMPLATES } from './queries'
 
 const BATCH_SIZE = 200000
 
@@ -23,8 +23,7 @@ export const EXPORTS_MAPPER: Record<string, ExportConfig> = {
     templates: { sql: TEMPLATES, signedUrls: true },
     recording_validations: { sql: RECORDING_VALIDATIONS },
     pattern_matchings: { sql: PATTERN_MATCHINGS },
-    pattern_matching_rois: { sql: PATTERN_MATCHING_ROIS, signedUrls: true },
-    pattern_matching_validations: { sql: PATTERN_MATCHING_VALIDATIONS },
+    pattern_matching_rois: { sql: PATTERN_MATCHING_ROIS },
     soundscapes: { sql: SOUNDSCAPES, signedUrls: true },
     classifications: { sql: CLASSIFICATIONS }
 }
