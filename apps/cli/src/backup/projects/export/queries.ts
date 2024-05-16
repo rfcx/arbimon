@@ -65,7 +65,7 @@ export const PATTERN_MATCHING_ROIS = `
 export const SOUNDSCAPES = `
     select soundscape_id, s.name, playlist_id, date_created, user_id, sat.identifier aggregation_type, 
         bin_size, frequency, threshold, threshold_type, normalized, min_t min_time_bucket, max_t max_time_bucket, 
-        max_f max_frequency 
+        max_f max_frequency, uri path
     from soundscapes s 
         join soundscape_aggregation_types sat on s.soundscape_aggregation_type_id = sat.soundscape_aggregation_type_id
     where project_id = $projectId
