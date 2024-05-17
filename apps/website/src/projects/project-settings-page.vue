@@ -172,7 +172,7 @@ const lastSaved = ref<number>(date)
 
 const isToggledForBackup = computed(() => {
   const isInternalUser = store.user?.email?.includes('rfcx.org') ?? false
-  return toggles?.projectBackup === true && isInternalUser
+  return toggles?.projectBackup === true || isInternalUser
 })
 
 // update form values
