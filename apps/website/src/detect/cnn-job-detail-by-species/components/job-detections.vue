@@ -4,6 +4,7 @@
       :class="validationCount && isOpen ? 'block' : 'invisible'"
       :detection-count="validationCount"
       :filter-options="filterOptions"
+      :validation="getValidatedDetections()"
       @emit-validation="validateDetection"
       @emit-close="closeValidator"
     />
@@ -234,6 +235,7 @@ const allSpecies = computed<Array<{ siteName: string, speciesSlug: string, speci
 
 const {
   validationCount,
+  getValidatedDetections,
   isOpen,
   closeValidator,
   updateSelectedDetections,

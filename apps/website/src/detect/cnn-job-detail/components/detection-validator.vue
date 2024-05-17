@@ -15,8 +15,8 @@
         type="button"
       >
         <div class="flex flex-row items-center gap-x-2">
-          <ValidationStatus :value="formatStatus(selectedFilter)" />
-          <span>{{ props.filterOptions.find(o => o.value === selectedFilter)?.label ?? 'Validation' }}</span>
+          <ValidationStatus :value="props.validation" />
+          <span>{{ props.filterOptions.find(o => o.value === props.validation)?.label ?? 'Validation' }}</span>
         </div>
         <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />
       </button>
@@ -76,7 +76,8 @@ import ValidationStatus from './validation-status.vue'
 
 const props = defineProps<{
   detectionCount: number | null,
-  filterOptions: DetectionValidationStatus[]
+  filterOptions: DetectionValidationStatus[],
+  validation: ArbimonReviewStatus
 }>()
 
 const emit = defineEmits<{(e: 'emitValidation', validation: ArbimonReviewStatus): void, (e: 'emitClose'): void}>()
@@ -92,11 +93,16 @@ const formatStatus = (status: ArbimonReviewStatus | 'all') => {
 const validateDetections = () => {
   const value = selectedFilter.value
   emit('emitValidation', value)
+  resetValidateDetections()
 }
 
 const close = () => {
   validationDropdown.hide()
   emit('emitClose')
+}
+
+const resetValidateDetections = () => {
+  selectedFilter.value = 'unvalidated'
 }
 
 onMounted(() => {
