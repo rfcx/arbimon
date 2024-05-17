@@ -81,5 +81,6 @@ export const RFM_CLASSIFICATIONS = `
     from classification_results cr
         join job_params_classification jpc on cr.job_id = jpc.job_id 
         join models m on jpc.model_id = m.model_id 
+        join songtypes st on cr.songtype_id = st.songtype_id
     where m.model_type_id = 4 and m.project_id = $projectId
 `
