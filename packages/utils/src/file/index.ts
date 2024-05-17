@@ -1,5 +1,5 @@
 import JSZip from 'jszip'
-import XLSX from 'xlsx'
+import XLSX, { type JSON2SheetOpts } from 'xlsx'
 
 export type JsZipFileData = string | number[] | Uint8Array | ArrayBuffer | Blob | NodeJS.ReadableStream
 
@@ -10,15 +10,15 @@ export interface JsZipFile {
 
 export const withFileName = (filename: string) => (data: JsZipFileData): JsZipFile => ({ filename, data })
 
-export async function toSpreadsheet (jsonData: any, fileType: XLSX.BookType = 'csv', sheetName: string = 'Worksheet'): Promise<string> {
-  const worksheet = XLSX.utils.json_to_sheet(jsonData)
+export async function toSpreadsheet (jsonData: any, fileType: XLSX.BookType = 'csv', sheetName: string = 'Worksheet', options?: JSON2SheetOpts): Promise<string> {
+  const worksheet = XLSX.utils.json_to_sheet(jsonData, options ?? {})
   const workbook = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
   return XLSX.write(workbook, { bookType: fileType, type: 'string' })
 }
 
-export async function toCsv (jsonData: any): Promise<string> {
-  return await toSpreadsheet(jsonData, 'csv')
+export async function toCsv (jsonData: any, options?: JSON2SheetOpts): Promise<string> {
+  return await toSpreadsheet(jsonData, 'csv', 'Worksheet', options)
 }
 
 export function downloadFile (data: string, filename: string, extension: string): void {
