@@ -138,6 +138,8 @@ const bestDetectionsQueryParams = computed<GetBestDetectionsQueryParams>(() => {
   return {
     nPerStream: numberOfBestScores.value,
     byDate: selectedGrouping.value === 'topScorePerSitePerDay',
+    reviewStatus: detectionsResultFilterBySpeciesStore.filter.validationStatuses,
+    sites: detectionsResultFilterBySpeciesStore.filter.siteIds,
     limit: pageSizeLimit.value,
     offset: offset.value
   }
