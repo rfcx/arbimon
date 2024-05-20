@@ -36,7 +36,7 @@
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
-              :class="{'border-chirp': selectedFilter === option.value, 'border-transparent': selectedFilter !== option.value}"
+              :class="{'border-chirp': props.validation === option.value, 'border-transparent': props.validation !== option.value}"
             >
               <div
                 class="flex flex-row gap-x-2 items-center h-10 pl-5"
@@ -81,7 +81,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{(e: 'emitValidation', validation: ArbimonReviewStatus): void, (e: 'emitClose'): void}>()
-const selectedFilter: Ref<ArbimonReviewStatus> = ref('unvalidated')
+const selectedFilter: Ref<ArbimonReviewStatus> = ref(props.validation)
 
 let validationDropdown: Dropdown
 const validationDropdownHover = ref<HTMLElement | null>(null)

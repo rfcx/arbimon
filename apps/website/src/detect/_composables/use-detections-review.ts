@@ -11,7 +11,7 @@ export interface UseDetectionsReview {
   updateSelectedDetections: (detectionId: number, event: DetectionEvent) => void
   updateValidatedDetections: (selectedDetectionIds: number[], validation: ArbimonReviewStatus, responses: Array<PromiseSettledResult<void>>) => void
   getSelectedDetectionIds: () => number[]
-  getValidatedDetections: () => ArbimonReviewStatus
+  getSuggestedValidationStatus: () => ArbimonReviewStatus
 }
 
 export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }>>): UseDetectionsReview => {
@@ -138,7 +138,7 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
     resetSelection()
   }
 
-  const getValidatedDetections = (): ArbimonReviewStatus => {
+  const getSuggestedValidationStatus = (): ArbimonReviewStatus => {
     let status: ArbimonReviewStatus = 'unvalidated'
 
     const selectedDetectionIds = getSelectedDetectionIds()
@@ -159,6 +159,6 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
     updateSelectedDetections,
     updateValidatedDetections,
     getSelectedDetectionIds,
-    getValidatedDetections
+    getSuggestedValidationStatus
   }
 }
