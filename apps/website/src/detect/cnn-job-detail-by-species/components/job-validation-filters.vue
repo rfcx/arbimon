@@ -216,15 +216,19 @@
       <span class="text-md">
         Display top
       </span>
-      <input
-        id="topDisplayBestScores"
-        v-model.number="displayBestScores"
-        type="number"
-        min="1"
-        max="10"
-        class="bg-transparent border-0 border-b-1 border-b-subtle focus:border-b-subtle focus:ring-subtle mr-1 px-1 py-0.5 text-center"
+      <select
+        v-model="displayBestScores"
+        class="py-1 bg-pitch border-0 border-b-1 border-cloud focus:(ring-0 border-cloud outline-none)"
         @change="onDisplayBestScoresChange(displayBestScores)"
       >
+        <option
+          v-for="num in 10"
+          :key="num"
+          :value="num"
+        >
+          {{ num }}
+        </option>
+      </select>
       <span class="text-md">
         Region of Interests with the best scores
       </span>
