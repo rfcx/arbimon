@@ -14,10 +14,10 @@
       />
       <JobValidationStatus
         :is-loading="isLoadingDetectionSummary || isRefetchingDetectionSummary || isLoadingBestDetectionsSummary || isRefetchBestDetectionsSummary"
-        :unvalidated="isBestDetections ? bestDetectionsSummary?.unvalidated ?? -1 : detectionsSummary?.unvalidated ?? -1"
-        :uncertain="isBestDetections ? bestDetectionsSummary?.unknown ?? -1 : detectionsSummary?.unknown ?? -1"
-        :rejected="isBestDetections ? bestDetectionsSummary?.notPresent ?? -1 : detectionsSummary?.notPresent ?? -1"
-        :confirmed="isBestDetections ? bestDetectionsSummary?.present ?? -1 : detectionsSummary?.present ?? -1"
+        :unvalidated="bestPerFilterApplied ? bestDetectionsSummary?.unvalidated ?? -1 : detectionsSummary?.unvalidated ?? -1"
+        :uncertain="bestPerFilterApplied ? bestDetectionsSummary?.unknown ?? -1 : detectionsSummary?.unknown ?? -1"
+        :rejected="bestPerFilterApplied ? bestDetectionsSummary?.notPresent ?? -1 : detectionsSummary?.notPresent ?? -1"
+        :confirmed="bestPerFilterApplied ? bestDetectionsSummary?.present ?? -1 : detectionsSummary?.present ?? -1"
       />
       <JobDetections
         v-model:page="page"
@@ -77,6 +77,7 @@ const classifierId = computed(() => {
 })
 
 const { data: jobResultsSummary, isLoading: isLoadingClassifierInfo } = useGetClassifierJobInfo(apiClientBio, jobId.value, speciesSlug.value)
+const bestPerFilterApplied = computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite')
 
 watch(jobResultsSummary, async (newValue) => {
   if (newValue === null || newValue === undefined) {
@@ -109,7 +110,7 @@ const isRefetchIntervalEnable = computed(() => {
 const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: jobDetectionResponse } = useGetJobDetections(
   apiClientBio,
   detectionsQueryParams,
-  computed(() => jobResultsSummary.value?.classifierId != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== ''),
+  computed(() => jobResultsSummary.value?.classifierId != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '' && !bestPerFilterApplied.value),
   refetchInterval
 )
 
@@ -131,30 +132,33 @@ const detectionsSummaryQueryParams = computed<GetDetectionsSummaryQueryParams>((
 const { isLoading: isLoadingDetectionSummary, isRefetching: isRefetchingDetectionSummary, data: detectionsSummary, refetch: refetchDetectionSummary } = useGetDetectionsSummary(
   apiClientBio,
   detectionsSummaryQueryParams,
-  computed(() => jobResultsSummary.value?.classifierId != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '')
+  computed(() => jobResultsSummary.value?.classifierId != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '' && !bestPerFilterApplied.value)
 )
 
 const bestDetectionsQueryParams = computed<GetBestDetectionsQueryParams>(() => {
   return {
     nPerStream: numberOfBestScores.value,
     byDate: selectedGrouping.value === 'topScorePerSitePerDay',
+    reviewStatus: detectionsResultFilterBySpeciesStore.filter.validationStatuses,
+    sites: detectionsResultFilterBySpeciesStore.filter.siteIds,
     limit: pageSizeLimit.value,
     offset: offset.value
   }
 })
-const { isLoading: isLoadingBestDetections, isError: isErrorBestDetections, data: bestDetectionsData, refetch: refetchBestDetectionsData, isRefetching: isRefetchBestDetections } = useGetBestDetections(apiClientBio, jobId.value, bestDetectionsQueryParams, computed(() => false), computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite'))
+const { isLoading: isLoadingBestDetections, isError: isErrorBestDetections, data: bestDetectionsData, refetch: refetchBestDetectionsData, isRefetching: isRefetchBestDetections } = useGetBestDetections(apiClientBio, jobId.value, bestDetectionsQueryParams, computed(() => false), bestPerFilterApplied)
 
 const bestDetectionsSummaryQueryParams = computed<GetBestDetectionsSummaryQueryParams>(() => {
   return {
     nPerStream: numberOfBestScores.value,
-    byDate: selectedGrouping.value === 'topScorePerSitePerDay'
+    byDate: selectedGrouping.value === 'topScorePerSitePerDay',
+    reviewStatus: detectionsResultFilterBySpeciesStore.filter.validationStatuses,
+    sites: detectionsResultFilterBySpeciesStore.filter.siteIds
   }
 })
-const { isLoading: isLoadingBestDetectionsSummary, data: bestDetectionsSummary, refetch: refetchBestDetectionsSummary, isRefetching: isRefetchBestDetectionsSummary } = useGetBestDetectionsSummary(apiClientBio, jobId.value, bestDetectionsSummaryQueryParams, computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite'))
-const isBestDetections = computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite')
+const { isLoading: isLoadingBestDetectionsSummary, data: bestDetectionsSummary, refetch: refetchBestDetectionsSummary, isRefetching: isRefetchBestDetectionsSummary } = useGetBestDetectionsSummary(apiClientBio, jobId.value, bestDetectionsSummaryQueryParams, bestPerFilterApplied)
 
 const maxPage = computed<number>(() => {
-  if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
+  if (bestPerFilterApplied.value) {
     return Math.ceil(Number(bestDetectionsData.value?.total) / pageSizeLimit.value)
   } else {
     return Math.ceil(Number(jobDetectionResponse.value?.total) / pageSizeLimit.value)
@@ -162,7 +166,7 @@ const maxPage = computed<number>(() => {
 })
 
 const filteredResult = computed<number>(() => {
-  if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
+  if (bestPerFilterApplied.value) {
     return bestDetectionsData.value?.total ?? -1
   } else {
     return jobDetectionResponse.value?.total ?? -1
@@ -172,8 +176,9 @@ const filteredResult = computed<number>(() => {
 const onEmitPageSize = (pageSize: number) => {
   pageSizeLimit.value = pageSize
 
-  if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
+  if (bestPerFilterApplied.value) {
     refetchBestDetectionsData()
+    refetchBestDetectionsSummary()
   }
 }
 
@@ -182,7 +187,7 @@ const onEmitFilterChanged = async (groupType: string | undefined, displayBestSco
   numberOfBestScores.value = displayBestScores
   page.value = 1
 
-  if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
+  if (bestPerFilterApplied.value) {
     await refetchBestDetectionsData()
     await refetchBestDetectionsSummary()
   } else {
@@ -191,8 +196,9 @@ const onEmitFilterChanged = async (groupType: string | undefined, displayBestSco
 }
 
 watch(() => page.value, async () => {
-  if (selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite') {
+  if (bestPerFilterApplied.value) {
     await refetchBestDetectionsData()
+    await refetchBestDetectionsSummary()
   }
 })
 
