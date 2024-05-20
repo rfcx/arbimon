@@ -158,7 +158,7 @@ const bestDetectionsSummaryQueryParams = computed<GetBestDetectionsSummaryQueryP
 const { isLoading: isLoadingBestDetectionsSummary, data: bestDetectionsSummary, refetch: refetchBestDetectionsSummary, isRefetching: isRefetchBestDetectionsSummary } = useGetBestDetectionsSummary(apiClientBio, jobId.value, bestDetectionsSummaryQueryParams, bestPerFilterApplied)
 
 const maxPage = computed<number>(() => {
-  if (bestPerFilterApplied) {
+  if (bestPerFilterApplied.value) {
     return Math.ceil(Number(bestDetectionsData.value?.total) / pageSizeLimit.value)
   } else {
     return Math.ceil(Number(jobDetectionResponse.value?.total) / pageSizeLimit.value)
@@ -166,7 +166,7 @@ const maxPage = computed<number>(() => {
 })
 
 const filteredResult = computed<number>(() => {
-  if (bestPerFilterApplied) {
+  if (bestPerFilterApplied.value) {
     return bestDetectionsData.value?.total ?? -1
   } else {
     return jobDetectionResponse.value?.total ?? -1
@@ -176,7 +176,7 @@ const filteredResult = computed<number>(() => {
 const onEmitPageSize = (pageSize: number) => {
   pageSizeLimit.value = pageSize
 
-  if (bestPerFilterApplied) {
+  if (bestPerFilterApplied.value) {
     refetchBestDetectionsData()
     refetchBestDetectionsSummary()
   }
@@ -187,7 +187,7 @@ const onEmitFilterChanged = async (groupType: string | undefined, displayBestSco
   numberOfBestScores.value = displayBestScores
   page.value = 1
 
-  if (bestPerFilterApplied) {
+  if (bestPerFilterApplied.value) {
     await refetchBestDetectionsData()
     await refetchBestDetectionsSummary()
   } else {
@@ -196,7 +196,7 @@ const onEmitFilterChanged = async (groupType: string | undefined, displayBestSco
 }
 
 watch(() => page.value, async () => {
-  if (bestPerFilterApplied) {
+  if (bestPerFilterApplied.value) {
     await refetchBestDetectionsData()
     await refetchBestDetectionsSummary()
   }
