@@ -9,6 +9,7 @@ import * as coreApi from '~/api-core/api-core'
 import { POST } from '~/api-helpers/types'
 import { routesProject } from './index'
 
+vi.mock('~/api-legacy-arbimon')
 vi.mock('~/api-core/api-core')
 
 const ROUTE = '/projects'
