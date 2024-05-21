@@ -1,60 +1,58 @@
 <template>
-  <div class="border-1 border-util-gray-01 rounded-md mt-6">
-    <div class="p-6">
-      <h1 class="flex text-insight">
-        Detections
-      </h1>
-      <div
-        class="h-12 w-72 my-6"
-      >
-        <div class="relative">
-          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <span class="p-2">
-              <icon-custom-ic-search
-                class="w-5 h-5 text-insight stroke-insight"
-                storke="white"
-              />
-            </span>
-          </div>
-          <input
-            id="searchSpeciesInput"
-            v-model="searchSpeciesKeyword"
-            name="search"
-            type="text"
-            class="search-input text-insight shadow-lg shadow-frequency/10"
-            placeholder="Search for species, sounds..."
-            @input="searchKeywordChange()"
-            @focus="isSearchBoxFocused = true"
-            @blur="isSearchBoxFocused = false"
-          >
+  <div class="mt-6">
+    <h1 class="flex text-insight">
+      Detections
+    </h1>
+    <div
+      class="h-12 w-72 my-6"
+    >
+      <div class="relative">
+        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+          <span class="p-2">
+            <icon-custom-ic-search
+              class="w-5 h-5 text-insight stroke-insight"
+              storke="white"
+            />
+          </span>
         </div>
-      </div>
-      <cnn-job-species-detected
-        :datasets="results"
-        :loading="isLoading"
-        :total="total"
-        :index="pageNo"
-        @emit-sort-paginations="onEmitSortAndPaginations"
-      />
-
-      <div
-        v-if="errorStatus && !isLoading"
-        class="p-10 text-center"
-      >
-        <h2
-          v-if="errorStatus.title !== ''"
-          class="font-display flex justify-center mb-4"
+        <input
+          id="searchSpeciesInput"
+          v-model="searchSpeciesKeyword"
+          name="search"
+          type="text"
+          class="search-input text-insight shadow-lg shadow-frequency/10"
+          placeholder="Search for species, sounds..."
+          @input="searchKeywordChange()"
+          @focus="isSearchBoxFocused = true"
+          @blur="isSearchBoxFocused = false"
         >
-          {{ errorStatus.title }}
-        </h2>
-        <div class="grid content-center">
-          <h4
-            v-for="(textError,lineNumber) of errorStatus.description.split('\n')"
-            :key="lineNumber"
-          >
-            {{ textError }}<br>
-          </h4>
-        </div>
+      </div>
+    </div>
+    <cnn-job-species-detected
+      :datasets="results"
+      :loading="isLoading"
+      :total="total"
+      :index="pageNo"
+      @emit-sort-paginations="onEmitSortAndPaginations"
+    />
+
+    <div
+      v-if="errorStatus && !isLoading"
+      class="p-10 text-center"
+    >
+      <h2
+        v-if="errorStatus.title !== ''"
+        class="font-display flex justify-center mb-4"
+      >
+        {{ errorStatus.title }}
+      </h2>
+      <div class="grid content-center">
+        <h4
+          v-for="(textError,lineNumber) of errorStatus.description.split('\n')"
+          :key="lineNumber"
+        >
+          {{ textError }}<br>
+        </h4>
       </div>
     </div>
   </div>
