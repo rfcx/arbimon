@@ -14,10 +14,10 @@
       />
       <JobValidationStatus
         :is-loading="isLoadingDetectionSummary || isRefetchingDetectionSummary || isLoadingBestDetectionsSummary || isRefetchBestDetectionsSummary"
-        :unvalidated="bestPerFilterApplied ? bestDetectionsSummary?.unvalidated ?? -1 : detectionsSummary?.unvalidated ?? -1"
-        :uncertain="bestPerFilterApplied ? bestDetectionsSummary?.unknown ?? -1 : detectionsSummary?.unknown ?? -1"
-        :rejected="bestPerFilterApplied ? bestDetectionsSummary?.notPresent ?? -1 : detectionsSummary?.notPresent ?? -1"
-        :confirmed="bestPerFilterApplied ? bestDetectionsSummary?.present ?? -1 : detectionsSummary?.present ?? -1"
+        :unvalidated="summary?.unvalidated"
+        :uncertain="summary?.unknown"
+        :rejected="summary?.notPresent"
+        :confirmed="summary?.present"
       />
       <JobDetections
         v-model:page="page"
@@ -41,6 +41,7 @@ import { useRoute } from 'vue-router'
 
 import { type GetBestDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/best-detections'
 import { type GetBestDetectionsSummaryQueryParams } from '@rfcx-bio/common/api-bio/cnn/best-detections-summary'
+import { type ValidationStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
 import type { GetDetectionsSummaryQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections-summary'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
@@ -76,6 +77,7 @@ const classifierId = computed(() => {
   return jobResultsSummary.value?.classifierId
 })
 
+// API: job info (species, query range, etc.)
 const { data: jobResultsSummary, isLoading: isLoadingClassifierInfo } = useGetClassifierJobInfo(apiClientBio, jobId.value, speciesSlug.value)
 const bestPerFilterApplied = computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite')
 
@@ -107,14 +109,16 @@ const isRefetchIntervalEnable = computed(() => {
   return jobResultsSummary.value?.status != null && jobResultsSummary.value.status === CLASSIFIER_JOB_STATUS.RUNNING
 })
 
-const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: jobDetectionResponse } = useGetJobDetections(
+// API: detections for the species in the job
+
+const { isLoading: isLoadingJobDetections, isError: isErrorJobDetections, data: jobDetectionResponse, refetch: refetchJobDetections } = useGetJobDetections(
   apiClientBio,
   detectionsQueryParams,
   computed(() => jobResultsSummary.value?.classifierId != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '' && !bestPerFilterApplied.value),
   refetchInterval
 )
 
-// summary of detections for the species in the job
+// API: summary of detections for the species in the job
 
 const detectionsSummaryQueryParams = computed<GetDetectionsSummaryQueryParams>(() => {
   return {
@@ -173,6 +177,29 @@ const filteredResult = computed<number>(() => {
   }
 })
 
+const summary = computed((): Omit<ValidationStatus, 'total'> => {
+  return {
+    unvalidated: detectionsResultFilterBySpeciesStore.reviewSummary?.unvalidated ?? -1,
+    unknown: detectionsResultFilterBySpeciesStore.reviewSummary?.unknown ?? -1,
+    notPresent: detectionsResultFilterBySpeciesStore.reviewSummary?.notPresent ?? -1,
+    present: detectionsResultFilterBySpeciesStore.reviewSummary?.present ?? -1
+  }
+})
+
+watch(detectionsSummary, async (newValue) => {
+  if (newValue === null || newValue === undefined) {
+    return
+  }
+  detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(newValue)
+})
+
+watch(bestDetectionsSummary, async (newValue) => {
+  if (newValue === null || newValue === undefined) {
+    return
+  }
+  detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(newValue)
+})
+
 const onEmitPageSize = (pageSize: number) => {
   pageSizeLimit.value = pageSize
 
@@ -203,9 +230,16 @@ watch(() => page.value, async () => {
 })
 
 const onEmitValidateResult = async () => {
-  setTimeout(async () => {
-    await refetchDetectionSummary()
-  }, 500) // workaround to wait for the detection summary to be updated in the database
+  // if filter is applied, update the summary review status (from api)
+  if (detectionsResultFilterBySpeciesStore.filter.validationStatuses.length > 0) {
+    setTimeout(async () => {
+      // the refetch will only work for any filter applied
+      await refetchJobDetections()
+      await refetchDetectionSummary()
+      await refetchBestDetectionsData()
+      await refetchBestDetectionsSummary()
+    }, 500) // workaround to wait for the detection summary to be updated in the database
+  }
 }
 
 </script>

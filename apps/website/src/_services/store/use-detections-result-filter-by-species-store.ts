@@ -1,8 +1,11 @@
 import dayjs from 'dayjs'
+import { groupBy } from 'lodash-es'
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { type GetDetectionsSummaryResponse } from '@rfcx-bio/common/api-bio/cnn/detections-summary'
 import { type DetectSummaryResponse } from '@rfcx-bio/common/api-bio/detect/detect-summary'
 import { chunkDates } from '@rfcx-bio/utils/dates'
 
@@ -28,6 +31,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   const startRange = ref('')
   const endRange = ref('')
   const startEndRanges = ref<Array<{ start: string, end: string }>>([])
+  const reviewSummary = ref<Record<ArbimonReviewStatus, number>>()
 
   const filter = ref<Omit<ValidationFilterConfig, 'classification'> & { classification?: string }>({
     threshold: 50,
@@ -75,6 +79,8 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     while (filter.value.siteIds.length > 0) {
       filter.value.siteIds.pop()
     }
+
+    reviewSummary.value = undefined
   })
 
   const validationStatusFilterOptions = computed<ValidationResultFilterInner[]>(() => {
@@ -131,9 +137,44 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     return sortByOptions
   })
 
+  const updateReviewSummaryFromDetectionSummary = (summary: GetDetectionsSummaryResponse): void => {
+    reviewSummary.value = {
+      unvalidated: summary.unvalidated,
+      notPresent: summary.notPresent,
+      unknown: summary.unknown,
+      present: summary.present
+    }
+  }
+
+  const updateReviewSummaryManually = (changes: Array<{ from: ArbimonReviewStatus, to: ArbimonReviewStatus }>): void => {
+    if (reviewSummary.value === undefined) { return }
+
+    const from = groupBy(changes, c => c.from)
+    const to = groupBy(changes, c => c.to)
+    const minuses = Object.keys(from).map(k => { return { status: k, count: from[k].length } })
+    const pluses = Object.keys(to).map(k => { return { status: k, count: to[k].length } })
+    console.info('validation changes', changes, minuses, pluses)
+
+    const calculateNewNumber = (status: ArbimonReviewStatus): number => {
+      return reviewSummary.value === undefined ? 0 : reviewSummary.value[status] + (pluses.find(p => p.status === status)?.count ?? 0) - (minuses.find(m => m.status === status)?.count ?? 0)
+    }
+
+    const hasSelected = (status: ArbimonReviewStatus): boolean => {
+      return filter.value.validationStatuses.length === 0 || (filter.value.validationStatuses.length > 0 && filter.value.validationStatuses.includes(status))
+    }
+
+    reviewSummary.value = {
+      unvalidated: hasSelected('unvalidated') ? calculateNewNumber('unvalidated') : 0,
+      notPresent: hasSelected('notPresent') ? calculateNewNumber('notPresent') : 0,
+      unknown: hasSelected('unknown') ? calculateNewNumber('unknown') : 0,
+      present: hasSelected('present') ? calculateNewNumber('present') : 0
+    }
+  }
+
   return {
     filter,
     updateResultFilter,
+    reviewSummary,
     formatThreshold,
     formattedThreshold,
     validationStatusFilterOptions,
@@ -144,6 +185,8 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     startEndRangeFilterOptions,
     selectedStartRange,
     selectedEndRange,
-    updateStartEndRanges
+    updateStartEndRanges,
+    updateReviewSummaryFromDetectionSummary,
+    updateReviewSummaryManually
   }
 })
