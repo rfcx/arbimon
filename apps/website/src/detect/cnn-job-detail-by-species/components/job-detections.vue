@@ -110,12 +110,13 @@ import DetectionValidator from '@/detect/cnn-job-detail/components/detection-val
 import type { DetectionMedia, DetectionValidationStatus } from '@/detect/cnn-job-detail/components/types'
 import { apiClientKey } from '@/globals'
 import { getMediaLink } from '~/media'
-import { useStore } from '~/store'
+import { useDetectionsResultFilterBySpeciesStore, useStore } from '~/store'
 import { validationStatus } from '~/store/detections-constants'
 import DetectionItem from '../../cnn-job-detail/components/detection-item.vue'
 
 const store = useStore()
 const route = useRoute()
+const detectionFilterStore = useDetectionsResultFilterBySpeciesStore()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
@@ -241,17 +242,17 @@ const {
   closeValidator,
   updateSelectedDetections,
   updateValidatedDetections,
-  getSelectedDetectionIds
+  getSelectedDetections
 } = useDetectionsReview(allSpecies)
 
 const { mutate: mutateUpdateDetectionStatus } = useUpdateDetectionStatus(apiClientBio)
 
 const validateDetection = async (validation: ArbimonReviewStatus): Promise<void> => {
-  const selectedDetectionIds = getSelectedDetectionIds()
+  const selectedDetections = getSelectedDetections()
 
-  const promises = selectedDetectionIds.map(async id => {
+  const promises = selectedDetections.map(async sd => {
     const items = isBestDetections.value ? props.dataBestDetections : props.data
-    const originalDetection = (items ?? []).find(d => Number(id) === d.id)
+    const originalDetection = (items ?? []).find(d => Number(sd.id) === d.id)
     return await mutateUpdateDetectionStatus({
       jobId: jobId.value,
       siteIdCore: originalDetection?.siteIdCore ?? '',
@@ -266,7 +267,15 @@ const validateDetection = async (validation: ArbimonReviewStatus): Promise<void>
   })
 
   const responses = await Promise.allSettled(promises)
-  updateValidatedDetections(selectedDetectionIds, validation, responses)
+  updateValidatedDetections(selectedDetections.map((d) => d.id), validation, responses)
+  const changes = selectedDetections.map((d) => {
+    return {
+      from: d.prevStatus,
+      to: validation
+    }
+  })
+  // update the review summary manually
+  detectionFilterStore.updateReviewSummaryManually(changes)
   emit('emitValidationResult')
 }
 </script>
