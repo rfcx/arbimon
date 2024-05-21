@@ -1,9 +1,9 @@
 <template>
   <div
-    class="flex flex-col bg-moss border-1 border-util-gray-02 rounded-lg px-6 py-4 mt-4"
+    class="flex flex-col px-6 py-4 mt-4 border-b-1 border-util-gray-03"
   >
     <div class="flex flex-wrap flex-wrap gap-2 items-center justify-start text-insight text-base font-medium lg:flex-row lg:justify-between">
-      <div>Validation status</div>
+      <h4>Validation status</h4>
       <div class="flex flex-row items-center gap-x-4">
         <div class="flex flex-row items-center gap-x-2">
           <icon-custom-fi-unvalidated class="h-4 w-4" />
