@@ -45,7 +45,7 @@
     </div>
   </div>
   <div
-    v-if="props.data && !props.data.length && !props.isLoading"
+    v-if="!allSpecies?.length && !props.isLoading"
     class="w-full mx-auto text-center mt-35 xl:mt-45"
   >
     <span>No detections found.</span>
@@ -84,7 +84,7 @@
       </button>
       <button
         class="btn btn-icon ml-2 rounded-md bg-fog border-0 disabled:hover:btn-disabled disabled:btn-disabled"
-        :disabled="props.data == null || props.data.length < pageSize"
+        :disabled="disabledNextPageBtn"
         @click="nextPage()"
       >
         <icon-fas-chevron-right class="w-3 h-3 text-pitch" />
@@ -131,6 +131,13 @@ const pageIndex = ref(props.page ?? 1)
 const index = useDebounce(pageIndex, 1000)
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 const isBestDetections = computed(() => props.selectedGrouping === 'topScorePerSitePerDay' || props.selectedGrouping === 'topScorePerSite')
+const disabledNextPageBtn = computed(() => {
+  if (isBestDetections.value) {
+    return props.dataBestDetections == null || props.dataBestDetections.length < props.pageSize
+  } else {
+    return props.data == null || props.data.length < props.pageSize
+  }
+})
 
 watch(() => props.page, () => {
   pageIndex.value = props.page
@@ -178,10 +185,6 @@ const filterOptions = computed<DetectionValidationStatus[]>(() => {
 })
 
 const allSpecies = computed<Array<{ siteName: string, speciesSlug: string, speciesName: string, media: DetectionMedia[] }>>(() => {
-  if (props.data == null || props.data.length === 0) {
-    return []
-  }
-
   // TODO: refactor this as there isn't a need to group the detections by classification anymore (UI has changed + api was broken)
   // workaround for now => groupBy classifierId instead (workaround for the broken api)
 
