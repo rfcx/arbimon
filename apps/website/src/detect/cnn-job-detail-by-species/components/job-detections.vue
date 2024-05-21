@@ -250,7 +250,8 @@ const validateDetection = async (validation: ArbimonReviewStatus): Promise<void>
   const selectedDetectionIds = getSelectedDetectionIds()
 
   const promises = selectedDetectionIds.map(async id => {
-    const originalDetection = (props.data ?? []).find(d => Number(id) === d.id)
+    const items = isBestDetections.value ? props.dataBestDetections : props.data
+    const originalDetection = (items ?? []).find(d => Number(id) === d.id)
     return await mutateUpdateDetectionStatus({
       jobId: jobId.value,
       siteIdCore: originalDetection?.siteIdCore ?? '',
