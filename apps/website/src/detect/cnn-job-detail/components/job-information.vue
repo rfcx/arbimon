@@ -4,7 +4,7 @@
   </h1>
   <div class="grid grid-cols-2 text-lg py-4 border-b-1 border-util-gray-03 items-center">
     <div class="flex md:col-span-1 <md:col-span-2 items-center">
-      <span class="text-util-gray-01">Model:</span>
+      <span class="text-util-gray-01 font-medium">Model:</span>
       <h5 class="ml-2 text-insight">
         {{ props.summary?.classifier.name ?? '' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
       </h5>
@@ -28,7 +28,7 @@
   </div>
   <div class="grid grid-cols-3 pt-4 text-lg border-b-1 border-util-gray-03 pb-6">
     <div class="lg:(col-span-1) <lg:(col-span-3)">
-      <span class="text-util-gray-01">Input</span>
+      <span class="text-util-gray-01 font-medium">Input</span>
       <div
         v-if="props.isLoadingSummary"
         class="mx-2 mt-4 loading-shimmer w-full rounded-lg py-15 max-w-64"
@@ -90,7 +90,7 @@
       </div>
     </div>
     <div class="lg:(col-span-1) <lg:(col-span-3 mt-6)">
-      <span class="text-util-gray-01">Validation Status</span>
+      <span class="text-util-gray-01 font-medium">Validation Status</span>
       <job-result-validation-status
         :is-loading="props.isLoadingSummary"
         :is-error="props.isErrorSummary"
@@ -98,7 +98,7 @@
       />
     </div>
     <div class="lg:(col-span-1) <lg:(col-span-3 mt-6)">
-      <span class="text-util-gray-01">Output</span>
+      <span class="text-util-gray-01 font-medium">Output</span>
       <div
         v-if="props.isLoadingSummary"
         class="m-2 mt-4 loading-shimmer w-full rounded-lg py-4 max-w-64"
