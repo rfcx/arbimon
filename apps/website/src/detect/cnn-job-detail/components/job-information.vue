@@ -2,7 +2,7 @@
   <h1 class="flex text-insight mt-2">
     Summary
   </h1>
-  <div class="grid grid-cols-2 text-lg py-4 border-b-1 border-util-gray-03 items-center">
+  <div class="grid grid-cols-3 text-lg py-4 border-b-1 border-util-gray-03 items-center">
     <div class="flex md:col-span-1 <md:col-span-2 items-center">
       <span class="text-util-gray-01 font-medium">Model:</span>
       <h5 class="ml-2 text-insight">
@@ -15,7 +15,7 @@
     />
     <div
       v-else
-      class="md:(col-span-1 mt-1) <md:(col-span-2 mt-4)"
+      class="md:(col-span-1 mt-1) <md:(col-span-3 mt-4)"
     >
       <div class="text-lg">
         <job-progress
@@ -25,6 +25,7 @@
         />
       </div>
     </div>
+    <div/>
   </div>
   <div class="grid grid-cols-3 pt-4 text-lg border-b-1 border-util-gray-03 pb-6">
     <div class="lg:(col-span-1) <lg:(col-span-3)">
