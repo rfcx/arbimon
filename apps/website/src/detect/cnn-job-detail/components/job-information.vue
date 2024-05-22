@@ -25,7 +25,7 @@
         />
       </div>
     </div>
-    <div/>
+    <div />
   </div>
   <div class="grid grid-cols-3 pt-4 text-lg border-b-1 border-util-gray-03 pb-6">
     <div class="lg:(col-span-1) <lg:(col-span-3)">
