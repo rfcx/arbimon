@@ -161,22 +161,6 @@ const bestDetectionsSummaryQueryParams = computed<GetBestDetectionsSummaryQueryP
 })
 const { isLoading: isLoadingBestDetectionsSummary, data: bestDetectionsSummary, refetch: refetchBestDetectionsSummary, isRefetching: isRefetchBestDetectionsSummary } = useGetBestDetectionsSummary(apiClientBio, jobId.value, bestDetectionsSummaryQueryParams, bestPerFilterApplied)
 
-const maxPage = computed<number>(() => {
-  if (bestPerFilterApplied.value) {
-    return Math.ceil(Number(bestDetectionsData.value?.total) / pageSizeLimit.value)
-  } else {
-    return Math.ceil(Number(jobDetectionResponse.value?.total) / pageSizeLimit.value)
-  }
-})
-
-const filteredResult = computed<number>(() => {
-  if (bestPerFilterApplied.value) {
-    return bestDetectionsData.value?.total ?? -1
-  } else {
-    return jobDetectionResponse.value?.total ?? -1
-  }
-})
-
 const summary = computed((): Omit<ValidationStatus, 'total'> => {
   return {
     unvalidated: detectionsResultFilterBySpeciesStore.reviewSummary?.unvalidated ?? -1,
@@ -184,6 +168,18 @@ const summary = computed((): Omit<ValidationStatus, 'total'> => {
     notPresent: detectionsResultFilterBySpeciesStore.reviewSummary?.notPresent ?? -1,
     present: detectionsResultFilterBySpeciesStore.reviewSummary?.present ?? -1
   }
+})
+
+const total = computed<number>(() => {
+  return summary.value.unvalidated + summary.value.unknown + summary.value.notPresent + summary.value.present
+})
+
+const maxPage = computed<number>(() => {
+  return Math.ceil(Number(total.value) / pageSizeLimit.value)
+})
+
+const filteredResult = computed<number>(() => {
+  return total.value ?? -1
 })
 
 watch(detectionsSummary, async (newValue) => {
