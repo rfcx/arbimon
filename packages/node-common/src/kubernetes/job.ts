@@ -1,37 +1,77 @@
 export const syncJob = (name: string, projectId: number): unknown => ({
-    apiVersion: 'batch/v1',
-    kind: 'Job',
-    metadata: {
-        name
+  apiVersion: 'batch/v1',
+  kind: 'Job',
+  metadata: {
+    name
+  },
+  spec: {
+    ttlSecondsAfterFinished: 86400,
+    template: {
+      spec: {
+        containers: [
+          {
+            name: 'arbimon-sync-container',
+            image: '887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:latest', // TODO
+            envFrom: [
+              {
+                secretRef: {
+                  name: 'biodiversity-cli-secrets'
+                }
+              }
+            ],
+            env: [
+              { name: 'PROJECT_ID', value: projectId.toString() }
+            ],
+            command: [
+              'node',
+              '--experimental-specifier-resolution=node',
+              'apps/cli/lib/ingest/sync-fix-project.js'
+            ]
+          }
+        ],
+        restartPolicy: 'Never'
+      }
     },
-    spec: {
-        ttlSecondsAfterFinished: 86400,
-        template: {
-            spec: {
-                containers: [
-                    {
-                        name: 'arbimon-sync-container',
-                        image: '887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:latest', // TODO
-                        envFrom: [
-                            {
-                                secretRef: {
-                                    name: 'biodiversity-cli-secrets'
-                                }
-                            }
-                        ],
-                        env: [
-                            { name: 'PROJECT_ID', value: projectId.toString() }
-                        ],
-                        command: [
-                            'node',
-                            '--experimental-specifier-resolution=node',
-                            'apps/cli/lib/ingest/sync-fix-project.js'
-                        ]
-                    }
-                ],
-                restartPolicy: 'Never'
-            }
-        },
-        backoffLimit: 0
-    }
+    backoffLimit: 0
+  }
+})
+
+export const exportDetectionsJob = (name: string, classifierJobId: number): object => ({
+  apiVersion: 'batch/v1',
+  kind: 'Job',
+  metadata: {
+    name
+  },
+  spec: {
+    ttlSecondsAfterFinished: 86400,
+    template: {
+      spec: {
+        containers: [
+          {
+            name: 'arbimon-export-detections',
+            image: '887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:latest',
+            envFrom: [
+              {
+                name: 'CLASSIFIER_JOB_ID',
+                value: classifierJobId.toString()
+              }
+            ],
+            env: [
+              {
+                name: 'CLASSIFIER_JOB_ID',
+                value: classifierJobId.toString()
+              }
+            ],
+            command: [
+              'node',
+              '--experimental-specifier-resolution=node',
+              'apps/cli/lib/export-cnn/export-cnn.js'
+            ]
+          }
+        ],
+        restartPolicy: 'Never'
+      }
+    },
+    backoffLimit: 0
+  }
 })
