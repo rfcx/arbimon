@@ -57,11 +57,11 @@ export const RECORDING_VALIDATIONS = `
 `
 
 export const PATTERN_MATCHINGS = `
-    select pattern_matching_id, name, timestamp, playlist_id, p.name playlist_name, template_id, t.name template_name, parameters, completed
+    select pattern_matching_id, pm.name, timestamp, pm.playlist_id, p.name playlist_name, pm.template_id, t.name template_name, parameters, completed
     from pattern_matchings pm
         join playlists p on pm.playlist_id = p.playlist_id
         join templates t on pm.template_id = t.template_id
-    where project_id = $projectId and deleted = 0
+    where pm.project_id = $projectId and pm.deleted = 0
 `
 
 export const PATTERN_MATCHING_ROIS = `
