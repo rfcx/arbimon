@@ -13,7 +13,7 @@ export const FETCH_CLASSIFIER_JOB_INFO = 'fetch-classifier-job-info'
 
 export const useGetJobDetections = (apiClient: AxiosInstance, params: ComputedRef<GetDetectionsQueryParams>, enabled: ComputedRef<boolean>, refetchInterval: ComputedRef<number | false>): UseQueryReturnType<WithTotalCount<GetDetectionsResponse>, unknown> => {
   return useQuery({
-    queryKey: [FETCH_DETECTIONS, params.value.classifierId, params.value.classifierJobId, params.value.end, params.value.start, params.value.classification],
+    queryKey: [FETCH_DETECTIONS, params],
     queryFn: async () => await apiBioGetDetections(apiClient, params.value),
     enabled,
     refetchInterval
@@ -30,7 +30,7 @@ export const useGetDetectionsSummary = (apiClient: AxiosInstance, params: Comput
 
 export const useGetClassifierJobInfo = (apiClient: AxiosInstance, jobId: number, classifier: string): UseQueryReturnType<GetClassifierJobInfoByClassificationResponse, unknown> => {
   return useQuery({
-    queryKey: [FETCH_CLASSIFIER_JOB_INFO, jobId, classifier],
+    queryKey: [FETCH_CLASSIFIER_JOB_INFO],
     queryFn: async () => await apiBioGetClassifierJobInfoByClassification(apiClient, jobId, classifier)
   })
 }
