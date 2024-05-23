@@ -32,7 +32,7 @@
             v-for="option in props.filterOptions"
             :key="option.value"
             class="bg-moss hover:text-util-gray-01"
-            @click="selectedFilter = option.value; validateDetections()"
+            @click="validateDetections(option.value)"
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import { Dropdown, initDropdowns } from 'flowbite'
-import { type Ref, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
@@ -81,7 +81,6 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{(e: 'emitValidation', validation: ArbimonReviewStatus): void, (e: 'emitClose'): void}>()
-const selectedFilter: Ref<ArbimonReviewStatus> = ref(props.validation)
 
 let validationDropdown: Dropdown
 const validationDropdownHover = ref<HTMLElement | null>(null)
@@ -90,19 +89,13 @@ const formatStatus = (status: ArbimonReviewStatus | 'all') => {
   return status as ArbimonReviewStatus
 }
 
-const validateDetections = () => {
-  const value = selectedFilter.value
+const validateDetections = (value: ArbimonReviewStatus) => {
   emit('emitValidation', value)
-  resetValidateDetections()
 }
 
 const close = () => {
   validationDropdown.hide()
   emit('emitClose')
-}
-
-const resetValidateDetections = () => {
-  selectedFilter.value = 'unvalidated'
 }
 
 onMounted(() => {
