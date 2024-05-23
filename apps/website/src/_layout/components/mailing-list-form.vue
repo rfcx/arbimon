@@ -14,6 +14,8 @@
         type="text"
         name="FNAME"
         placeholder="First name"
+        oninvalid="setCustomValidity('Please enter your first name')"
+        oninput="setCustomValidity('')"
         class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
       >
     </div>
@@ -26,6 +28,8 @@
         type="text"
         name="EMAIL"
         placeholder="Email address"
+        oninvalid="this.setCustomValidity('Please enter your email')"
+        oninput="setCustomValidity('')"
         class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
       >
     </div>
