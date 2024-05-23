@@ -46,7 +46,7 @@
     </div>
   </div>
   <div
-    v-if="props.data && !props.data.length && !props.isLoading"
+    v-if="!allSpecies?.length && !props.isLoading"
     class="w-full mx-auto text-center mt-35 xl:mt-45"
   >
     <span>No detections found.</span>
@@ -85,7 +85,7 @@
       </button>
       <button
         class="btn btn-icon ml-2 rounded-md bg-fog border-0 disabled:hover:btn-disabled disabled:btn-disabled"
-        :disabled="props.data == null || props.data.length < pageSize"
+        :disabled="disabledNextPageBtn"
         @click="nextPage()"
       >
         <icon-fas-chevron-right class="w-3 h-3 text-pitch" />
@@ -111,12 +111,13 @@ import DetectionValidator from '@/detect/cnn-job-detail/components/detection-val
 import type { DetectionMedia, DetectionValidationStatus } from '@/detect/cnn-job-detail/components/types'
 import { apiClientKey } from '@/globals'
 import { getMediaLink } from '~/media'
-import { useStore } from '~/store'
+import { useDetectionsResultFilterBySpeciesStore, useStore } from '~/store'
 import { validationStatus } from '~/store/detections-constants'
 import DetectionItem from '../../cnn-job-detail/components/detection-item.vue'
 
 const store = useStore()
 const route = useRoute()
+const detectionFilterStore = useDetectionsResultFilterBySpeciesStore()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
@@ -132,6 +133,13 @@ const pageIndex = ref(props.page ?? 1)
 const index = useDebounce(pageIndex, 1000)
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 const isBestDetections = computed(() => props.selectedGrouping === 'topScorePerSitePerDay' || props.selectedGrouping === 'topScorePerSite')
+const disabledNextPageBtn = computed(() => {
+  if (isBestDetections.value) {
+    return props.dataBestDetections == null || props.dataBestDetections.length < props.pageSize
+  } else {
+    return props.data == null || props.data.length < props.pageSize
+  }
+})
 
 watch(() => props.page, () => {
   pageIndex.value = props.page
@@ -179,10 +187,6 @@ const filterOptions = computed<DetectionValidationStatus[]>(() => {
 })
 
 const allSpecies = computed<Array<{ siteName: string, speciesSlug: string, speciesName: string, media: DetectionMedia[] }>>(() => {
-  if (props.data == null || props.data.length === 0) {
-    return []
-  }
-
   // TODO: refactor this as there isn't a need to group the detections by classification anymore (UI has changed + api was broken)
   // workaround for now => groupBy classifierId instead (workaround for the broken api)
 
@@ -240,16 +244,17 @@ const {
   closeValidator,
   updateSelectedDetections,
   updateValidatedDetections,
-  getSelectedDetectionIds
+  getSelectedDetections
 } = useDetectionsReview(allSpecies)
 
 const { mutate: mutateUpdateDetectionStatus } = useUpdateDetectionStatus(apiClientBio)
 
 const validateDetection = async (validation: ArbimonReviewStatus): Promise<void> => {
-  const selectedDetectionIds = getSelectedDetectionIds()
+  const selectedDetections = getSelectedDetections()
 
-  const promises = selectedDetectionIds.map(async id => {
-    const originalDetection = (props.data ?? []).find(d => Number(id) === d.id)
+  const promises = selectedDetections.map(async sd => {
+    const items = isBestDetections.value ? props.dataBestDetections : props.data
+    const originalDetection = (items ?? []).find(d => Number(sd.id) === d.id)
     return await mutateUpdateDetectionStatus({
       jobId: jobId.value,
       siteIdCore: originalDetection?.siteIdCore ?? '',
@@ -264,7 +269,15 @@ const validateDetection = async (validation: ArbimonReviewStatus): Promise<void>
   })
 
   const responses = await Promise.allSettled(promises)
-  updateValidatedDetections(selectedDetectionIds, validation, responses)
+  updateValidatedDetections(selectedDetections.map((d) => d.id), validation, responses)
+  const changes = selectedDetections.map((d) => {
+    return {
+      from: d.prevStatus,
+      to: validation
+    }
+  })
+  // update the review summary manually
+  detectionFilterStore.updateReviewSummaryManually(changes)
   emit('emitValidationResult')
 }
 </script>

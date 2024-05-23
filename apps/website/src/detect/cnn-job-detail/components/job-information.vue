@@ -1,122 +1,119 @@
 <template>
-  <div class="border-1 border-util-gray-01 rounded-md">
-    <div class="p-6">
-      <h1 class="flex text-insight">
-        Summary
-      </h1>
-      <div class="grid grid-cols-2 text-lg py-4 border-b-1 border-util-gray-03 items-center">
-        <div class="flex md:col-span-1 <md:col-span-2 items-center">
-          <span class="text-util-gray-01">Model:</span>
-          <h5 class="ml-2 text-insight">
-            {{ props.summary?.classifier.name ?? '' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
-          </h5>
-        </div>
-        <div
-          v-if="props.isLoadingSummary"
-          class="mr-2 my-4 loading-shimmer w-full rounded-lg pt-4 max-w-64"
+  <h1 class="flex text-insight mt-2">
+    Summary
+  </h1>
+  <div class="grid grid-cols-3 text-lg py-4 border-b-1 border-util-gray-03 items-center">
+    <div class="flex md:col-span-1 <md:col-span-2 items-center">
+      <span class="text-util-gray-01 font-medium">Model:</span>
+      <h5 class="ml-2 text-insight">
+        {{ props.summary?.classifier.name ?? '' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
+      </h5>
+    </div>
+    <div
+      v-if="props.isLoadingSummary"
+      class="mr-2 my-4 loading-shimmer w-full rounded-lg pt-4 max-w-64"
+    />
+    <div
+      v-else
+      class="md:(col-span-1 mt-1) <md:(col-span-3 mt-4)"
+    >
+      <div class="text-lg">
+        <job-progress
+          :status="props.summary?.status ?? 0"
+          :current="progress"
+          :total="100"
         />
+      </div>
+    </div>
+    <div />
+  </div>
+  <div class="grid grid-cols-3 pt-4 text-lg border-b-1 border-util-gray-03 pb-6">
+    <div class="lg:(col-span-1) <lg:(col-span-3)">
+      <span class="text-util-gray-01 font-medium">Input</span>
+      <div
+        v-if="props.isLoadingSummary"
+        class="mx-2 mt-4 loading-shimmer w-full rounded-lg py-15 max-w-64"
+      />
+      <ComponentError
+        v-else-if="props.isErrorSummary"
+        class="mx-2 mt-4"
+      />
+      <div
+        v-else
+        id="cnn-job-information-input"
+        class="grid grid-rows-4 gap-y-4 mt-4 text-base text-insight mr-4"
+      >
         <div
-          v-else
-          class="md:(col-span-1 mt-1) <md:(col-span-2 mt-4)"
+          title="Sites"
+          class="flex items-center w-4"
         >
-          <div class="text-lg">
-            <job-progress
-              :status="props.summary?.status ?? 0"
-              :current="progress"
-              :total="100"
-            />
-          </div>
+          <icon-custom-ft-map-pin class="block m-auto text-cloud" />
         </div>
+        <span
+          class="truncate"
+          :title="queryStreamsInfoString"
+        >
+          {{ queryStreamsInfoString }}
+        </span>
+        <div
+          title="Date"
+          class="flex items-center w-3.5"
+        >
+          <icon-custom-ic-calendar class="block m-auto text-cloud" />
+        </div>
+        <span
+          :title="queryStart + ' - ' + queryEnd"
+        >
+          {{ queryStart }} - {{ queryEnd }}
+        </span>
+        <div
+          title="Time of day"
+          class="flex items-center w-4.5"
+        >
+          <icon-custom-ic-clock class="block m-auto text-cloud" />
+        </div>
+        <span
+          :title="queryHours"
+        >
+          {{ queryHours }}
+        </span>
+        <div
+          title="Minutes of recordings"
+          class="flex items-center w-4"
+        >
+          <icon-custom-ft-mic class="block m-auto text-cloud" />
+        </div>
+        <span
+          :title="minOfRecordings"
+        >
+          {{ minOfRecordings }}
+        </span>
       </div>
-      <div class="grid grid-cols-3 pt-4 text-lg">
-        <div class="lg:(col-span-1) <lg:(col-span-3)">
-          <span class="text-util-gray-01">Input</span>
-          <div
-            v-if="props.isLoadingSummary"
-            class="mx-2 mt-4 loading-shimmer w-full rounded-lg py-15 max-w-64"
-          />
-          <ComponentError
-            v-else-if="props.isErrorSummary"
-            class="mx-2 mt-4"
-          />
-          <div
-            v-else
-            id="cnn-job-information-input"
-            class="grid grid-rows-4 gap-y-4 mt-4 text-base text-insight mr-4"
-          >
-            <div
-              title="Sites"
-              class="flex items-center w-4"
-            >
-              <icon-custom-ft-map-pin class="block m-auto text-cloud" />
-            </div>
-            <span
-              class="truncate"
-              :title="queryStreamsInfoString"
-            >
-              {{ queryStreamsInfoString }}
-            </span>
-            <div
-              title="Date"
-              class="flex items-center w-3.5"
-            >
-              <icon-custom-ic-calendar class="block m-auto text-cloud" />
-            </div>
-            <span
-              :title="queryStart + ' - ' + queryEnd"
-            >
-              {{ queryStart }} - {{ queryEnd }}
-            </span>
-            <div
-              title="Time of day"
-              class="flex items-center w-4.5"
-            >
-              <icon-custom-ic-clock class="block m-auto text-cloud" />
-            </div>
-            <span
-              :title="queryHours"
-            >
-              {{ queryHours }}
-            </span>
-            <div
-              title="Minutes of recordings"
-              class="flex items-center w-4"
-            >
-              <icon-custom-ft-mic class="block m-auto text-cloud" />
-            </div>
-            <span
-              :title="minOfRecordings"
-            >
-              {{ minOfRecordings }}
-            </span>
-          </div>
-        </div>
-        <div class="lg:(col-span-1) <lg:(col-span-3 mt-6)">
-          <span class="text-util-gray-01">Validation Status</span>
-          <job-result-validation-status
-            :is-loading="props.isLoadingSummary"
-            :is-error="props.isErrorSummary"
-            :data="props.summary?.validationStatus"
-          />
-        </div>
-        <div class="lg:(col-span-1) <lg:(col-span-3 mt-6)">
-          <span class="text-util-gray-01">Output</span>
-          <div
-            v-if="props.isLoadingSummary"
-            class="m-2 mt-4 loading-shimmer w-full rounded-lg py-4 max-w-64"
-          />
-          <ComponentError
-            v-else-if="props.isErrorSummary"
-            class="mx-2 mt-4"
-          />
-          <span
-            v-else
-            class="flex text-base text-insight mt-4"
-          >
-            Total number of detected classes: {{ props.summary?.totalDistinctClassifications }}
-          </span>
-        </div>
-      </div>
+    </div>
+    <div class="lg:(col-span-1) <lg:(col-span-3 mt-6)">
+      <span class="text-util-gray-01 font-medium">Validation Status</span>
+      <job-result-validation-status
+        :is-loading="props.isLoadingSummary"
+        :is-error="props.isErrorSummary"
+        :data="props.summary?.validationStatus"
+      />
+    </div>
+    <div class="lg:(col-span-1) <lg:(col-span-3 mt-6)">
+      <span class="text-util-gray-01 font-medium">Output</span>
+      <div
+        v-if="props.isLoadingSummary"
+        class="m-2 mt-4 loading-shimmer w-full rounded-lg py-4 max-w-64"
+      />
+      <ComponentError
+        v-else-if="props.isErrorSummary"
+        class="mx-2 mt-4"
+      />
+      <span
+        v-else
+        class="flex text-base text-insight mt-4"
+      >
+        Total number of detected classes: {{ props.summary?.totalDistinctClassifications }}
+      </span>
     </div>
   </div>
 </template>

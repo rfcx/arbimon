@@ -6,3 +6,4 @@ export const updateProjectMemberLegacy = vi.fn(async (): Promise<void> => {})
 export const updateProjectLegacy = vi.fn(async (): Promise<{ success: boolean, error?: string }> => {
   return await Promise.resolve({ success: true })
 })
+export const updateProjectSlugLegacy = vi.fn(async (): Promise<void> => {})
