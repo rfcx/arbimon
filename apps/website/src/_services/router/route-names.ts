@@ -37,7 +37,9 @@ export const ROUTE_NAMES = {
   superSyncHistory: 'super_sync_history',
   callback: 'callback',
   info: 'info',
-  error: 'error'
+  error: 'error',
+  login: 'login',
+  signup: 'signup'
 } as const
 
 export type RouteNames = typeof ROUTE_NAMES

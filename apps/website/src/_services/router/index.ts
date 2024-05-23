@@ -232,6 +232,16 @@ const routes: RouteRecordRaw[] = [
     path: '/:pathMatch(.*)*',
     name: ROUTE_NAMES.error,
     component: PAGES.Error
+  },
+  {
+    path: '/login',
+    name: ROUTE_NAMES.login,
+    component: PAGES.Login
+  },
+  {
+    path: '/signup',
+    name: ROUTE_NAMES.signup,
+    component: PAGES.Signup
   }
 ]
 
