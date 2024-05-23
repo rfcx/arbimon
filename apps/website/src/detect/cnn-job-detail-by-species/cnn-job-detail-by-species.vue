@@ -171,7 +171,8 @@ const summary = computed((): Omit<ValidationStatus, 'total'> => {
 })
 
 const total = computed<number>(() => {
-  return summary.value.unvalidated + summary.value.unknown + summary.value.notPresent + summary.value.present
+  const t = summary.value.unvalidated + summary.value.unknown + summary.value.notPresent + summary.value.present
+  return t < 0 ? -1 : t
 })
 
 const maxPage = computed<number>(() => {
