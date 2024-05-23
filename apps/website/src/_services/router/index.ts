@@ -236,12 +236,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: ROUTE_NAMES.login,
-    component: PAGES.Login
+    component: PAGES.Auth
   },
   {
     path: '/signup',
     name: ROUTE_NAMES.signup,
-    component: PAGES.Signup
+    component: PAGES.Auth
   }
 ]
 
