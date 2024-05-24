@@ -10,7 +10,8 @@ export interface UseDetectionsReview {
   closeValidator: () => void
   updateSelectedDetections: (detectionId: number, event: DetectionEvent) => void
   updateValidatedDetections: (selectedDetectionIds: number[], validation: ArbimonReviewStatus, responses: Array<PromiseSettledResult<void>>) => void
-  getSelectedDetectionIds: () => number[]
+  getSelectedDetections: () => Array<{ id: number, prevStatus: ArbimonReviewStatus }>
+  getSuggestedValidationStatus: () => ArbimonReviewStatus
 }
 
 export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }>>): UseDetectionsReview => {
@@ -43,9 +44,9 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
 
     if (isShiftHolding.value) {
       const combinedDetections = getCombinedDetections()
-      const selectedDetectionIds = getSelectedDetectionIds()
-      const firstInx = combinedDetections.findIndex(d => d.id === selectedDetectionIds[0])
-      const secondInx = combinedDetections.findIndex(d => d.id === selectedDetectionIds[selectedDetectionIds.length - 1])
+      const selectedDetections = getSelectedDetections()
+      const firstInx = combinedDetections.findIndex(d => d.id === selectedDetections[0].id)
+      const secondInx = combinedDetections.findIndex(d => d.id === selectedDetections[selectedDetections.length - 1].id)
       const arrayOfIndx = [firstInx, secondInx].sort((a, b) => a - b)
       const filteredDetections = combinedDetections.filter((_det, index) => index >= arrayOfIndx[0] && index <= arrayOfIndx[1])
       const ids = filteredDetections.map(det => det.id)
@@ -80,18 +81,18 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
     })
   }
 
-  const getSelectedDetectionIds = (): number[] => {
-    const selectedDetectionIds: number[] = []
+  const getSelectedDetections = (): Array<{ id: number, prevStatus: ArbimonReviewStatus }> => {
+    const selectedDetectionIds: Array<{ id: number, prevStatus: ArbimonReviewStatus }> = []
     allSpecies.value.forEach(species => {
       species.media.forEach((det: DetectionMedia) => {
         if (det.checked === true) {
-          selectedDetectionIds.push(det.id)
+          selectedDetectionIds.push({ id: det.id, prevStatus: det.validation })
         }
       })
     })
 
     // use localeCompare to sort because it's bigint, we could lose precision in the future
-    return selectedDetectionIds.sort((a, b) => a.toString().localeCompare(b.toString()))
+    return selectedDetectionIds.sort((a, b) => a.id.toString().localeCompare(b.id.toString()))
   }
 
   const getValidationCount = (): number => {
@@ -137,12 +138,27 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
     resetSelection()
   }
 
+  const getSuggestedValidationStatus = (): ArbimonReviewStatus => {
+    let status: ArbimonReviewStatus = 'unvalidated'
+
+    const selectedDetectionIds = getSelectedDetections()
+    if (selectedDetectionIds.length > 0) {
+      const validatedDetectionsStatus = allSpecies.value.flatMap(species => species.media).find(det => selectedDetectionIds.some(selected => selected.id === det.id))
+      if (validatedDetectionsStatus) {
+        status = validatedDetectionsStatus.validation
+      }
+    }
+
+    return status
+  }
+
   return {
     validationCount,
     isOpen,
     closeValidator,
     updateSelectedDetections,
     updateValidatedDetections,
-    getSelectedDetectionIds
+    getSelectedDetections,
+    getSuggestedValidationStatus
   }
 }

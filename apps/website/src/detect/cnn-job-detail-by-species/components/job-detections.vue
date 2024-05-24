@@ -4,36 +4,49 @@
       :class="validationCount && isOpen ? 'block' : 'invisible'"
       :detection-count="validationCount"
       :filter-options="filterOptions"
+      :validation="getSuggestedValidationStatus()"
       @emit-validation="validateDetection"
       @emit-close="closeValidator"
     />
-    <div class="4xl:pl-28">
+    <div
+      v-if="!props.isLoading"
+      class="4xl:pl-28"
+    >
       <template
         v-for="species in allSpecies"
         :key="'job-detections-' + species.speciesSlug"
       >
-        <div
-          v-for="dt in species.media"
-          :key="`job-detection-result-by-species-${dt.id}`"
-          class="inline-block my-3 mr-3"
+        <h4
+          v-if="isBestDetections"
+          class="flex mb-1"
         >
-          <DetectionItem
-            :id="dt.id"
-            :spectrogram-url="dt.spectrogramUrl"
-            :audio-url="dt.audioUrl"
-            :validation="dt.validation"
-            :checked="dt.checked"
-            :site="dt.site"
-            :start="dt.start"
-            :score="dt.score"
-            @emit-detection="updateSelectedDetections"
-          />
+          {{ species.siteName }}
+        </h4>
+        <div :class="{'mb-3' : isBestDetections}">
+          <div
+            v-for="dt in species.media"
+            :key="`job-detection-result-by-species-${dt.id}`"
+            class="inline-block my-3 mr-3"
+          >
+            <DetectionItem
+              :id="dt.id"
+              :spectrogram-url="dt.spectrogramUrl"
+              :audio-url="dt.audioUrl"
+              :validation="dt.validation"
+              :checked="dt.checked"
+              :site="dt.site"
+              :start="dt.start"
+              :score="dt.score"
+              :selected-grouping="selectedGrouping"
+              @emit-detection="updateSelectedDetections"
+            />
+          </div>
         </div>
       </template>
     </div>
   </div>
   <div
-    v-if="props.data && !props.data.length && !props.isLoading"
+    v-if="!allSpecies?.length && !props.isLoading"
     class="w-full mx-auto text-center mt-35 xl:mt-45"
   >
     <span>No detections found.</span>
@@ -45,7 +58,7 @@
     <icon-custom-ic-loading class="animate-spin w-8 h-8 lg:mx-24 text-center" />
   </div>
   <div
-    v-if="props.data?.length"
+    v-if="allSpecies?.length && !props.isLoading"
     class="w-full flex flex-row justify-end my-6"
   >
     <div class="flex flex-row items-center text-sm gap-x-1">
@@ -72,7 +85,7 @@
       </button>
       <button
         class="btn btn-icon ml-2 rounded-md bg-fog border-0 disabled:hover:btn-disabled disabled:btn-disabled"
-        :disabled="props.data == null || props.data.length < pageSize"
+        :disabled="disabledNextPageBtn"
         @click="nextPage()"
       >
         <icon-fas-chevron-right class="w-3 h-3 text-pitch" />
@@ -88,6 +101,7 @@ import { groupBy } from 'lodash-es'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { type GetBestDetectionsResponse } from '@rfcx-bio/common/api-bio/cnn/best-detections'
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type GetDetectionsResponse } from '@rfcx-bio/common/api-bio/cnn/detections'
 
@@ -97,16 +111,17 @@ import DetectionValidator from '@/detect/cnn-job-detail/components/detection-val
 import type { DetectionMedia, DetectionValidationStatus } from '@/detect/cnn-job-detail/components/types'
 import { apiClientKey } from '@/globals'
 import { getMediaLink } from '~/media'
-import { useStore } from '~/store'
+import { useDetectionsResultFilterBySpeciesStore, useStore } from '~/store'
 import { validationStatus } from '~/store/detections-constants'
 import DetectionItem from '../../cnn-job-detail/components/detection-item.vue'
 
 const store = useStore()
 const route = useRoute()
+const detectionFilterStore = useDetectionsResultFilterBySpeciesStore()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
-const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: GetDetectionsResponse | undefined, page: number, pageSize: number, maxPage: number }>(), {
+const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, data: GetDetectionsResponse | undefined, dataBestDetections: GetBestDetectionsResponse | undefined, page: number, pageSize: number, maxPage: number, selectedGrouping: string | undefined }>(), {
   isLoading: true,
   isError: false,
   data: undefined
@@ -117,6 +132,14 @@ const emit = defineEmits<{(e: 'update:page', value: number): void, (e: 'emitVali
 const pageIndex = ref(props.page ?? 1)
 const index = useDebounce(pageIndex, 1000)
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
+const isBestDetections = computed(() => props.selectedGrouping === 'topScorePerSitePerDay' || props.selectedGrouping === 'topScorePerSite')
+const disabledNextPageBtn = computed(() => {
+  if (isBestDetections.value) {
+    return props.dataBestDetections == null || props.dataBestDetections.length < props.pageSize
+  } else {
+    return props.data == null || props.data.length < props.pageSize
+  }
+})
 
 watch(() => props.page, () => {
   pageIndex.value = props.page
@@ -163,19 +186,19 @@ const filterOptions = computed<DetectionValidationStatus[]>(() => {
   return filtered
 })
 
-const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }>>(() => {
-  if (props.data == null || props.data.length === 0) {
-    return []
-  }
-
+const allSpecies = computed<Array<{ siteName: string, speciesSlug: string, speciesName: string, media: DetectionMedia[] }>>(() => {
   // TODO: refactor this as there isn't a need to group the detections by classification anymore (UI has changed + api was broken)
   // workaround for now => groupBy classifierId instead (workaround for the broken api)
+
+  const groupedDetectionsBySite: Record<string, GetBestDetectionsResponse> = groupBy(props.dataBestDetections ?? [], d => d.siteIdCore)
   const groupedDetections: Record<string, GetDetectionsResponse> = groupBy(props.data ?? [], d => d.classifierId)
-  const species: Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(groupedDetections).map(id => {
+  const items = isBestDetections.value ? groupedDetectionsBySite : groupedDetections
+  const species: Array<{ siteName: string, speciesSlug: string, speciesName: string, media: DetectionMedia[] }> = Object.keys(items).map(id => {
     return {
+      siteName: store.projectFilters?.locationSites.filter((site) => site.idCore === id)[0]?.name ?? '',
       speciesSlug: '',
       speciesName: '',
-      media: groupedDetections[id].map(detection => {
+      media: items[id].map(detection => {
         return {
           spectrogramUrl: getMediaLink({
             streamId: detection.siteIdCore,
@@ -216,20 +239,22 @@ const allSpecies = computed<Array<{ speciesSlug: string, speciesName: string, me
 
 const {
   validationCount,
+  getSuggestedValidationStatus,
   isOpen,
   closeValidator,
   updateSelectedDetections,
   updateValidatedDetections,
-  getSelectedDetectionIds
+  getSelectedDetections
 } = useDetectionsReview(allSpecies)
 
 const { mutate: mutateUpdateDetectionStatus } = useUpdateDetectionStatus(apiClientBio)
 
 const validateDetection = async (validation: ArbimonReviewStatus): Promise<void> => {
-  const selectedDetectionIds = getSelectedDetectionIds()
+  const selectedDetections = getSelectedDetections()
 
-  const promises = selectedDetectionIds.map(async id => {
-    const originalDetection = (props.data ?? []).find(d => Number(id) === d.id)
+  const promises = selectedDetections.map(async sd => {
+    const items = isBestDetections.value ? props.dataBestDetections : props.data
+    const originalDetection = (items ?? []).find(d => Number(sd.id) === d.id)
     return await mutateUpdateDetectionStatus({
       jobId: jobId.value,
       siteIdCore: originalDetection?.siteIdCore ?? '',
@@ -244,7 +269,15 @@ const validateDetection = async (validation: ArbimonReviewStatus): Promise<void>
   })
 
   const responses = await Promise.allSettled(promises)
-  updateValidatedDetections(selectedDetectionIds, validation, responses)
+  updateValidatedDetections(selectedDetections.map((d) => d.id), validation, responses)
+  const changes = selectedDetections.map((d) => {
+    return {
+      from: d.prevStatus,
+      to: validation
+    }
+  })
+  // update the review summary manually
+  detectionFilterStore.updateReviewSummaryManually(changes)
   emit('emitValidationResult')
 }
 </script>

@@ -31,12 +31,15 @@ export const ROUTE_NAMES = {
   userPreferences: 'user_preferences',
   accountSettings: 'account_settings',
   // Other
-  admin: 'admin',
-  adminProject: 'admin_project',
-  adminMember: 'admin_member',
+  super: 'super',
+  superProject: 'super_project',
+  superMember: 'super_member',
+  superSyncHistory: 'super_sync_history',
   callback: 'callback',
   info: 'info',
-  error: 'error'
+  error: 'error',
+  login: 'login',
+  signup: 'signup'
 } as const
 
 export type RouteNames = typeof ROUTE_NAMES

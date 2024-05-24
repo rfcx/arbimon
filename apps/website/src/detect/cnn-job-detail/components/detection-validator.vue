@@ -15,8 +15,8 @@
         type="button"
       >
         <div class="flex flex-row items-center gap-x-2">
-          <ValidationStatus :value="formatStatus(selectedFilter)" />
-          <span>{{ props.filterOptions.find(o => o.value === selectedFilter)?.label ?? 'Validation' }}</span>
+          <ValidationStatus :value="props.validation" />
+          <span>{{ props.filterOptions.find(o => o.value === props.validation)?.label ?? 'Validation' }}</span>
         </div>
         <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-insight" />
       </button>
@@ -32,11 +32,11 @@
             v-for="option in props.filterOptions"
             :key="option.value"
             class="bg-moss hover:text-util-gray-01"
-            @click="selectedFilter = option.value; validateDetections()"
+            @click="validateDetections(option.value)"
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
-              :class="{'border-chirp': selectedFilter === option.value, 'border-transparent': selectedFilter !== option.value}"
+              :class="{'border-chirp': props.validation === option.value, 'border-transparent': props.validation !== option.value}"
             >
               <div
                 class="flex flex-row gap-x-2 items-center h-10 pl-5"
@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import { Dropdown, initDropdowns } from 'flowbite'
-import { type Ref, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
@@ -76,11 +76,11 @@ import ValidationStatus from './validation-status.vue'
 
 const props = defineProps<{
   detectionCount: number | null,
-  filterOptions: DetectionValidationStatus[]
+  filterOptions: DetectionValidationStatus[],
+  validation: ArbimonReviewStatus
 }>()
 
 const emit = defineEmits<{(e: 'emitValidation', validation: ArbimonReviewStatus): void, (e: 'emitClose'): void}>()
-const selectedFilter: Ref<ArbimonReviewStatus> = ref('unvalidated')
 
 let validationDropdown: Dropdown
 const validationDropdownHover = ref<HTMLElement | null>(null)
@@ -89,8 +89,7 @@ const formatStatus = (status: ArbimonReviewStatus | 'all') => {
   return status as ArbimonReviewStatus
 }
 
-const validateDetections = () => {
-  const value = selectedFilter.value
+const validateDetections = (value: ArbimonReviewStatus) => {
   emit('emitValidation', value)
 }
 

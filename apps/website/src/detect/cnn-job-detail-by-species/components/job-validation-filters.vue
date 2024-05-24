@@ -152,14 +152,15 @@
           <button
             id="groupingDropdownBtn"
             data-dropdown-toggle="groupingDropdownHover"
-            class="grouping-dropdown flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 w-41 hover:bg-moss"
-            :class="{ '!w-max !border-solid': selectedGrouping != null }"
+            class="grouping-dropdown flex flex-row items-center justify-between bg-transparent border-dashed border-1 border-frequency rounded-full text-frequency px-5 py-2 min-w-41 hover:bg-moss"
+            :class="{ '!border-solid': selectedGrouping != null }"
             style="position: static !important; transform: none !important; inset: none !important; margin: 0px;"
             type="button"
           >
             <span
-              class="whitespace-nowrap overflow-hidden max-w-42 3xl:max-w-64 text-ellipsis"
-              :class="{ 'px-2': selectedGrouping === 'minConfidence' }"
+              class="whitespace-nowrap overflow-hidden max-w-42 2xl:max-w-80 text-ellipsis"
+              :class="{ 'px-2': selectedGrouping }"
+              :title="selectedGroupingText"
             >
               {{ selectedGroupingText }}
             </span>
@@ -186,17 +187,19 @@
               class="flex flex-col gap-y-1"
             >
               <li
+                v-for="(item) in itemsSelectGrouping"
+                :key="item.title"
                 class="bg-moss hover:text-util-gray-01"
-                @click="selectedGrouping = 'minConfidence'; groupingDetections(selectedGrouping); closeGroupingDropdown()"
+                @click="selectedGrouping = item.value; groupingDetections(selectedGrouping); closeGroupingDropdown()"
               >
                 <div
                   class="border-1 rounded-full cursor-pointer bg-moss"
-                  :class="{'border-chirp': selectedGrouping === 'minConfidence', 'border-transparent': selectedGrouping !== 'minConfidence'}"
+                  :class="{'border-chirp': selectedGrouping === item.value, 'border-transparent': selectedGrouping !== item.value}"
                 >
                   <div
                     class="flex flex-row gap-x-2 items-center h-10 pl-5"
                   >
-                    Minimum Confidence
+                    {{ item.title }}
                   </div>
                 </div>
               </li>
@@ -204,6 +207,33 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div
+      v-if="isBestDetections"
+      class="flex flew-row items-center pt-4 gap-x-2"
+    >
+      <span class="text-md">
+        Display top
+      </span>
+      <div class="border-0 border-b-1 border-cloud w-14">
+        <select
+          v-model="displayBestScores"
+          class="py-1 pl-2 bg-pitch border-0 appearance-none focus:(ring-0 border-cloud outline-none)"
+          @change="onDisplayBestScoresChange(displayBestScores)"
+        >
+          <option
+            v-for="num in 10"
+            :key="num"
+            :value="num"
+          >
+            {{ num }}
+          </option>
+        </select>
+      </div>
+      <span class="text-md">
+        Region of Interests with the best scores
+      </span>
     </div>
 
     <div
@@ -234,7 +264,7 @@ import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifie
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import ValidationStatus from './../../cnn-job-detail/components/validation-status.vue'
 
-const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void, (e: 'emitFilterChanged'): void}>()
+const emit = defineEmits<{(e: 'emitMinConfidence', value: boolean): void, (e: 'emitFilterChanged', groupType: string | undefined, displayBestScores: number): void}>()
 
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
 const selectedStatuses = ref<ArbimonReviewStatus[]>([])
@@ -248,11 +278,28 @@ const statusDropdownHover = ref<HTMLElement | null>(null)
 const sitesDropdownCNN = ref<HTMLElement | null>(null)
 const groupingDropdownHover = ref<HTMLElement | null>(null)
 
+const itemsSelectGrouping = [
+  {
+    title: 'Top score per site',
+    value: 'topScorePerSite'
+  },
+  {
+    title: 'Top score per site per day',
+    value: 'topScorePerSitePerDay'
+  },
+  {
+    title: 'Minimum Confidence',
+    value: 'minConfidence'
+  }
+]
+
 watch(() => detectionsResultFilterBySpeciesStore.filter.minConfidence, (newValue) => {
   currentValue.value = newValue
 })
 
 const currentValue = ref<number>(detectionsResultFilterBySpeciesStore.filter.minConfidence)
+const displayBestScores = ref<number>(5)
+const isBestDetections = computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite')
 
 const onValueChange = (value: number) => {
   if (value < 0 || value > 1) {
@@ -261,6 +308,10 @@ const onValueChange = (value: number) => {
   }
   detectionsResultFilterBySpeciesStore.filter.minConfidence = value
 }
+
+const onDisplayBestScoresChange = debounce((value: number) => {
+  emit('emitFilterChanged', selectedGrouping.value, value)
+}, 600)
 
 const closeSitesDropdown = (): void => {
   sitesDropdown.value.hide()
@@ -272,18 +323,18 @@ const closeGroupingDropdown = (): void => {
 
 const filterDetectionsByStatus = debounce((statuses: ArbimonReviewStatus[]) => {
   detectionsResultFilterBySpeciesStore.filter.validationStatuses = statuses
-  emit('emitFilterChanged')
+  emit('emitFilterChanged', selectedGrouping.value, displayBestScores.value)
 }, 600)
 
-const groupingDetections = (groupBy: string | undefined) => {
+const groupingDetections = async (groupBy: string | undefined) => {
   emit('emitMinConfidence', groupBy === 'minConfidence')
-  emit('emitFilterChanged')
+  emit('emitFilterChanged', selectedGrouping.value, displayBestScores.value)
 }
 
 const filterDetectionsBySite = debounce(() => {
   const siteIdx = selectedSites.value.includes('all') ? [] : selectedSites.value
   detectionsResultFilterBySpeciesStore.filter.siteIds = siteIdx
-  emit('emitFilterChanged')
+  emit('emitFilterChanged', selectedGrouping.value, displayBestScores.value)
 }, 600)
 
 const onSelectStatus = (status: ArbimonReviewStatus) => {
@@ -345,8 +396,8 @@ const selectedStatusText = computed(() => {
 })
 
 const selectedGroupingText = computed(() => {
-  if (selectedGrouping.value === 'minConfidence') {
-    return 'Grouping: Minimum confidence'
+  if (selectedGrouping.value) {
+    return 'Grouping: ' + itemsSelectGrouping.find(i => i.value === selectedGrouping.value)?.title
   } else {
     return 'Groupings'
   }

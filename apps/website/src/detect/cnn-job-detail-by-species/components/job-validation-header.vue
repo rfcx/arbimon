@@ -13,9 +13,9 @@
       <div class="flex flex-wrap items-center justify-between text-insight pt-10 w-full gap-2 lg:flex-row ">
         <div class="flex flex-wrap gap-2 items-center gap-x-3 lg:flex-row ">
           <JobValidationFilters
-            @emit-filter-changed="emit('emitFilterChanged')"
+            @emit-filter-changed="onEmitFilterChanged"
           />
-          <div class="flex flex-row gap-2 max-w-36 self-start mt-2.5">
+          <div class="flex flex-row gap-2 max-w-36 self-start mt-2.5 items-center">
             <span>Results:</span>
             <StatusNumber
               :is-loading="isLoadingFilter"
@@ -92,7 +92,7 @@ const props = withDefaults(defineProps<{ speciesName: string | undefined, detect
   isLoadingFilter: false // loading filtered results
 })
 
-const emit = defineEmits<{(e: 'emitPageSize', value: number): void, (e: 'emitClose'): void, (e: 'emitFilterChanged'): void}>()
+const emit = defineEmits<{(e: 'emitPageSize', value: number): void, (e: 'emitClose'): void, (e: 'emitFilterChanged', groupType: string | undefined, displayBestScores: number): void}>()
 
 const selectedPageSize = ref<number>(props.pageSize)
 let itemsPerPageDropdown: Dropdown
@@ -112,6 +112,10 @@ const pageSizeOptions = ref([
     label: 100
   }
 ])
+
+const onEmitFilterChanged = (groupType: string | undefined, displayBestScores: number) => {
+  emit('emitFilterChanged', groupType, displayBestScores)
+}
 
 const selectItemsPerPage = (size: number): void => {
   selectedPageSize.value = size

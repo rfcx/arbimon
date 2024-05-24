@@ -62,11 +62,19 @@
               </td>
               <td>
                 <router-link
-                  :to=" { name: ROUTE_NAMES.adminMember, params: { projectId: project.id } }"
+                  :to=" { name: ROUTE_NAMES.superMember, params: { projectId: project.id } }"
                   class="text-frequency text-sm"
                   @click="superStore.setSelectedProject(project)"
                 >
                   Manage members
+                </router-link>
+              </td>
+              <td>
+                <router-link
+                  :to=" { name: ROUTE_NAMES.superSyncHistory, params: { projectId: project.id } }"
+                  class="text-frequency text-sm"
+                >
+                  Syncing
                 </router-link>
               </td>
             </tr>

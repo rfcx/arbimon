@@ -13,7 +13,7 @@ import { type MailClient } from '~/mail'
 
 export const EXPORT_ITEMS = {
     BIO: [] as string[],
-    ARBIMON: ['sites', 'recordings', 'playlists', 'playlist_recordings', 'species', 'templates', 'recording_validations', 'pattern_matchings', 'pattern_matching_rois', 'pattern_matching_validations', 'soundscapes', 'classifications']
+    ARBIMON: ['sites', 'recordings', 'playlists', 'playlist_recordings', 'species', 'templates', 'recording_validations', 'pattern_matchings', 'pattern_matching_rois', 'soundscapes', 'rfm_models', 'rfm_classifications']
 }
 
 /**

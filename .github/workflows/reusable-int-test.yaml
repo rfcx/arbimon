@@ -147,6 +147,7 @@ jobs:
           CORE_API_BASE_URL: https://nowhere-api.rfcx.org
           NODE_OPTIONS: '--max_old_space_size=6656'
           AWS_S3_ACCESS_KEY_ID: fake
+          AWS_S3_CORE_BUCKET_NAME: fake
           AWS_S3_SECRET_ACCESS_KEY: fake
           AWS_S3_BUCKET_NAME: 'bucket'
           AWS_S3_BUCKET_REGION: 'eu-west-1'

@@ -90,7 +90,7 @@
             :is-create-project="false"
             @emit-project-listed="toggleListedProject"
           />
-          <template v-if="toggles?.projectBackup === true && store.userIsAdminProjectMember">
+          <template v-if="isToggledForBackup && store.userIsAdminProjectMember">
             <hr class="border-util-gray-03 my-6">
             <project-backup />
           </template>
@@ -169,6 +169,11 @@ const date = Math.floor(Date.now() / 1000)
 
 const lastModified = ref<number>(date)
 const lastSaved = ref<number>(date)
+
+const isToggledForBackup = computed(() => {
+  const isInternalUser = store.user?.email?.includes('rfcx.org') ?? false
+  return toggles?.projectBackup === true || isInternalUser
+})
 
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
