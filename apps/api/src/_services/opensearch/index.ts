@@ -1,6 +1,6 @@
 import { type Client } from '@opensearch-project/opensearch'
 
-import { openSearchClient } from '@rfcx-bio/common/search/connections'
+import { openSearchClient } from '@rfcx-bio/node-common/search/connections'
 
 import { env } from '../env'
 

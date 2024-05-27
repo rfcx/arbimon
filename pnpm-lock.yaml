@@ -542,12 +542,6 @@ importers:
 
   packages/common:
     dependencies:
-      '@aws-sdk/s3-request-presigner':
-        specifier: ^3.567.0
-        version: 3.567.0
-      '@opensearch-project/opensearch':
-        specifier: ^2.5.0
-        version: 2.5.0
       '@rfcx-bio/utils':
         specifier: workspace:^0.0.1
         version: link:../utils
@@ -584,6 +578,9 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.567.0
         version: 3.567.0
+      '@opensearch-project/opensearch':
+        specifier: ^2.5.0
+        version: 2.5.0
       '@rfcx-bio/utils':
         specifier: workspace:^0.0.1
         version: link:../utils
