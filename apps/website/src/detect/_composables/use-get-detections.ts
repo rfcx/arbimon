@@ -22,7 +22,7 @@ export const useGetJobDetections = (apiClient: AxiosInstance, params: ComputedRe
 
 export const useGetDetectionsSummary = (apiClient: AxiosInstance, params: ComputedRef<GetDetectionsSummaryQueryParams>, enabled: ComputedRef<boolean>): UseQueryReturnType<GetDetectionsSummaryResponse, unknown> => {
   return useQuery({
-    queryKey: [FETCH_DETECTIONS_SUMMARY, params],
+    queryKey: [FETCH_DETECTIONS_SUMMARY, params.value.classifierId, params.value.classifierJobId, params.value.end, params.value.start],
     queryFn: async () => await apiBioGetDetectionsSummary(apiClient, params.value),
     enabled
   })

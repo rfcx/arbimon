@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-20 pl-18 pr-6 md:(pl-23 pr-10) xl:(pl-33 pr-20)">
+  <section class="pt-4 pl-20 pr-7">
     <div>
       <JobDetailHeader :species-name="jobResultsSummary?.title" />
       <JobValidationHeader
@@ -171,7 +171,8 @@ const summary = computed((): Omit<ValidationStatus, 'total'> => {
 })
 
 const total = computed<number>(() => {
-  return summary.value.unvalidated + summary.value.unknown + summary.value.notPresent + summary.value.present
+  const t = summary.value.unvalidated + summary.value.unknown + summary.value.notPresent + summary.value.present
+  return t < 0 ? -1 : t
 })
 
 const maxPage = computed<number>(() => {
