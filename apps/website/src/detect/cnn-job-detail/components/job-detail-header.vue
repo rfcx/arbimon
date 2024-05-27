@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between">
+  <div class="flex justify-between items-center">
     <nav
       class="flex justify-between"
       aria-label="Breadcrumb"

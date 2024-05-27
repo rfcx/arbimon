@@ -1,5 +1,5 @@
 <template>
-  <h1 class="flex text-insight mt-2">
+  <h1 class="flex text-insight mt-5">
     Summary
   </h1>
   <div class="grid grid-cols-3 text-lg py-4 border-b-1 border-util-gray-03 items-center">
