@@ -38,8 +38,6 @@
     "test:unit": "vitest .unit.test."
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.567.0",
-    "@aws-sdk/s3-request-presigner": "^3.567.0",
     "@opensearch-project/opensearch": "^2.5.0",
     "@rfcx-bio/utils": "workspace:^0.0.1",
     "@types/pg": "^8.6.4",

@@ -1,6 +1,6 @@
 import { type Sequelize, QueryTypes } from 'sequelize'
 
-import { type StorageClient } from '@rfcx-bio/common/storage'
+import { type StorageClient } from '@rfcx-bio/node-common/storage'
 import { toCsv } from '@rfcx-bio/utils/file'
 
 import { mapPathToSignedUrl } from '@/export/_common/map-path-to-signed-url'
