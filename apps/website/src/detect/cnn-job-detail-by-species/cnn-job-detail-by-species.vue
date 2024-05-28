@@ -90,15 +90,6 @@ watch(jobResultsSummary, async (newValue) => {
   detectionsResultFilterBySpeciesStore.updateCustomSitesList(newValue.streams)
 })
 
-watch(detectionsResultFilterBySpeciesStore.filter, async (newValue) => {
-  if (newValue === null || newValue === undefined) {
-    return
-  }
-
-  await refetchJobDetections()
-  await refetchDetectionSummary()
-})
-
 const detectionsQueryParams = computed<GetDetectionsQueryParams>(() => {
   return {
     start: detectionsResultFilterBySpeciesStore.selectedStartRange,
