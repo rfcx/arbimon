@@ -1,4 +1,4 @@
-export type MailTemplate = 'project-backup'
+export type MailTemplate = 'project-backup' | 'export-detections'
 
 const projectBackupSubject = 'Arbimon project backup ready'
 const projectBackupBody = ({ url, projectName }: { url: string, projectName: string }): string => `
@@ -19,12 +19,22 @@ const projectBackupBody = ({ url, projectName }: { url: string, projectName: str
   </p>
 `
 
+const exportDetectionsSubject = 'Arbimon CNN export detections ready'
+const exportDetectionsBody = ({ url, jobId }: { url: string, jobId: number }): string => `
+  <p style="color: black;">
+    id ${jobId}
+    url <a href="${url}">Download</a>
+  </p>
+`
+
 const bodyMapping: Record<MailTemplate, (content: Record<string, unknown>) => string> = {
-  'project-backup': projectBackupBody as (content: Record<string, unknown>) => string
+  'project-backup': projectBackupBody as (content: Record<string, unknown>) => string,
+  'export-detections': exportDetectionsBody as (content: Record<string, unknown>) => string
 }
 
 const subjectMapping: Record<MailTemplate, string> = {
-  'project-backup': projectBackupSubject
+  'project-backup': projectBackupSubject,
+  'export-detections': exportDetectionsSubject
 }
 
 export const generateBody = (template: MailTemplate, content: Record<string, unknown>): string =>
