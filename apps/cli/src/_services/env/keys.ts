@@ -84,5 +84,9 @@ export const envGetters = {
   IUCN_TOKEN: stringGetter,
 
   WIKI_BASE_URL: stringGetter,
-  WIKI_MEDIA_BASE_URL: stringGetter
+  WIKI_MEDIA_BASE_URL: stringGetter,
+
+  CLASSIFIER_JOB_EXPORT_ID: stringGetter,
+  CLASSIFIER_JOB_EXPORT_RECEIVER_EMAIL: stringGetter,
+  CLASSIFIER_JOB_EXPORT_TYPES: stringGetter
 } as const
