@@ -86,13 +86,12 @@
           </div>
         </div>
         <div class="mx-auto max-w-screen-md text-center mt-35 xl:mt-45">
-          <div>
-            <h5
-              v-if="projects.length === 0 && (projectSearchValue !== '' && projectSearchValue !== undefined) && !hasFailed && !isLoading"
-              class="text-lg mb-8 font-header"
-            >
-              Project not found. Try again.
+          <div v-if="projects.length === 0 && (projectSearchValue !== '' && projectSearchValue !== undefined) && !hasFailed && !isLoading">
+            <h5 class="text-lg font-header">
+              No Results Found.
             </h5>
+            Your search did not return any matches. <br>
+            Please double-check the spelling, or consider using alternative keywords.
           </div>
           <div v-if="projects.length === 0 && !isLoading && !hasFailed && (projectSearchValue === '' || projectSearchValue === undefined)">
             <h2 class="mb-8 text-gray-900 dark:text-insight font-header">
