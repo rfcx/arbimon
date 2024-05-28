@@ -48,6 +48,8 @@ const generateFakeDetections = (start: string, end: string, count: number): Dete
       confidence: Math.random(),
       validation_status: sample(CSV_REVIEW_STATUS) ?? '-'
     }
+  }).sort((a, b) => {
+    return dayjs(a.detection_start).unix() - dayjs(b.detection_start).unix()
   })
 }
 
