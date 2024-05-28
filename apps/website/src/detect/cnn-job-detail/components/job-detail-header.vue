@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center">
+  <div class="flex justify-between items-center" :class="{'py-3': toggles?.cnnExport !== true}">
     <nav
       class="flex justify-between"
       aria-label="Breadcrumb"
