@@ -133,7 +133,7 @@ const detectionsSummaryQueryParams = computed<GetDetectionsSummaryQueryParams>((
   } as GetDetectionsSummaryQueryParams
 })
 
-const { isLoading: isLoadingDetectionSummary, isRefetching: isRefetchingDetectionSummary, data: detectionsSummary, refetch: refetchDetectionSummary, dataUpdatedAt: summaryUpdatedAt } = useGetDetectionsSummary(
+const { isLoading: isLoadingDetectionSummary, isRefetching: isRefetchingDetectionSummary, data: detectionsSummary, refetch: refetchDetectionSummary } = useGetDetectionsSummary(
   apiClientBio,
   detectionsSummaryQueryParams,
   computed(() => jobResultsSummary.value?.classifierId != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '' && !bestPerFilterApplied.value),
