@@ -1,10 +1,11 @@
 import { type AxiosInstance } from 'axios'
 
 // Request types
-export type ExportDetectionsType = 'all-model-detections' | 'results-per-day-recordings' | 'species-detection-non-detection-matrix'
+export const EXPORT_DETECTIONS_TYPES = ['all-model-detections', 'results-per-day-recordings', 'species-detection-non-detection-matrix'] as const
+export type ExportDetectionsType = typeof EXPORT_DETECTIONS_TYPES[number]
 
 export interface ExportDetectionsBody {
-  type: ExportDetectionsType
+  types: ExportDetectionsType
 }
 
 export interface ExportDetectionsParams {
