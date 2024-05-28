@@ -59,13 +59,27 @@
             </li>
           </ul>
         </li>
-        <project-list-item
-          v-for="p in dataWithMetrics"
-          :key="p.id"
-          :project="p"
-          :is-selected="p.id === props.selectedProjectId"
-          @click="emitSelectedProject(p.id)"
-        />
+        <div v-if="dataWithMetrics.length > 0">
+          <project-list-item
+            v-for="p in dataWithMetrics"
+            :key="p.id"
+            :project="p"
+            :is-selected="p.id === props.selectedProjectId"
+            @click="emitSelectedProject(p.id)"
+          />
+        </div>
+        <li
+          v-else
+          class="p-6 inset-0 flex flex-col text-center text-insight items-center justify-center"
+        >
+          <span class="text-base font-header">
+            No Results Found.
+          </span>
+          <span class="text-xs">
+            Your search did not return any matches. <br>
+            Please double-check the spelling, or consider using alternative keywords, such as specific species names or project titles.
+          </span>
+        </li>
         <li
           v-if="isLoading"
           class="p-6 inset-0 flex text-center text-insight items-center justify-center"
