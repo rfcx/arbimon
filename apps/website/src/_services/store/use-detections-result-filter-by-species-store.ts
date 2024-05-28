@@ -51,6 +51,15 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     filter.value.minConfidence = value.minConfidence
   }
 
+  const resetFilter = (): void => {
+    filter.value.threshold = 50
+    filter.value.validationStatuses = []
+    filter.value.siteIds = []
+    filter.value.sortBy = 'asc'
+    filter.value.range = 'all'
+    filter.value.minConfidence = 0.1
+  }
+
   const updateStartEndRanges = (start: string, end: string, rangeInDays: number): void => {
     startRange.value = start
     endRange.value = end
@@ -174,6 +183,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   return {
     filter,
     updateResultFilter,
+    resetFilter,
     reviewSummary,
     formatThreshold,
     formattedThreshold,

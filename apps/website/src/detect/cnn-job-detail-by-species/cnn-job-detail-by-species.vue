@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-4 pl-20 pr-7">
+  <section class="pt-20 pl-18 pr-6 md:(pl-23 pr-10) xl:(pl-33 pr-20)">
     <div>
       <JobDetailHeader :species-name="jobResultsSummary?.title" />
       <JobValidationHeader
@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type GetBestDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/best-detections'
@@ -88,6 +88,15 @@ watch(jobResultsSummary, async (newValue) => {
 
   detectionsResultFilterBySpeciesStore.updateStartEndRanges(newValue.queryStart, newValue.queryEnd, 7)
   detectionsResultFilterBySpeciesStore.updateCustomSitesList(newValue.streams)
+})
+
+watch(detectionsResultFilterBySpeciesStore.filter, async (newValue) => {
+  if (newValue === null || newValue === undefined) {
+    return
+  }
+
+  await refetchJobDetections()
+  await refetchDetectionSummary()
 })
 
 const detectionsQueryParams = computed<GetDetectionsQueryParams>(() => {
@@ -197,12 +206,12 @@ watch(bestDetectionsSummary, async (newValue) => {
   detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(newValue)
 })
 
-const onEmitPageSize = (pageSize: number) => {
+const onEmitPageSize = async (pageSize: number) => {
   pageSizeLimit.value = pageSize
 
   if (bestPerFilterApplied.value) {
-    refetchBestDetectionsData()
-    refetchBestDetectionsSummary()
+    await refetchBestDetectionsData()
+    await refetchBestDetectionsSummary()
   }
 }
 
@@ -231,12 +240,19 @@ const onEmitValidateResult = async () => {
   if (detectionsResultFilterBySpeciesStore.filter.validationStatuses.length > 0) {
     setTimeout(async () => {
       // the refetch will only work for any filter applied
-      await refetchJobDetections()
-      await refetchDetectionSummary()
-      await refetchBestDetectionsData()
-      await refetchBestDetectionsSummary()
+      if (bestPerFilterApplied.value) {
+        await refetchBestDetectionsData()
+        await refetchBestDetectionsSummary()
+      } else {
+        await refetchJobDetections()
+        await refetchDetectionSummary()
+      }
     }, 500) // workaround to wait for the detection summary to be updated in the database
   }
 }
+
+onBeforeUnmount(() => {
+  detectionsResultFilterBySpeciesStore.resetFilter()
+})
 
 </script>
