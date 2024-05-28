@@ -5,7 +5,7 @@ export const EXPORT_DETECTIONS_TYPES = ['all-model-detections', 'results-per-day
 export type ExportDetectionsType = typeof EXPORT_DETECTIONS_TYPES[number]
 
 export interface ExportDetectionsBody {
-  types: ExportDetectionsType
+  types: ExportDetectionsType[]
 }
 
 export interface ExportDetectionsParams {
