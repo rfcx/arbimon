@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type GetBestDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/best-detections'
@@ -250,5 +250,9 @@ const onEmitValidateResult = async () => {
     }, 500) // workaround to wait for the detection summary to be updated in the database
   }
 }
+
+onBeforeUnmount(() => {
+  detectionsResultFilterBySpeciesStore.resetFilter()
+})
 
 </script>
