@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type GetBestDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/best-detections'
@@ -142,10 +142,11 @@ const detectionsSummaryQueryParams = computed<GetDetectionsSummaryQueryParams>((
   } as GetDetectionsSummaryQueryParams
 })
 
-const { isLoading: isLoadingDetectionSummary, isRefetching: isRefetchingDetectionSummary, data: detectionsSummary, refetch: refetchDetectionSummary } = useGetDetectionsSummary(
+const { isLoading: isLoadingDetectionSummary, isRefetching: isRefetchingDetectionSummary, data: detectionsSummary, refetch: refetchDetectionSummary, dataUpdatedAt: summaryUpdatedAt } = useGetDetectionsSummary(
   apiClientBio,
   detectionsSummaryQueryParams,
-  computed(() => jobResultsSummary.value?.classifierId != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '' && !bestPerFilterApplied.value)
+  computed(() => jobResultsSummary.value?.classifierId != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '' && !bestPerFilterApplied.value),
+  refetchInterval
 )
 
 const bestDetectionsQueryParams = computed<GetBestDetectionsQueryParams>(() => {
@@ -192,18 +193,13 @@ const filteredResult = computed<number>(() => {
   return total.value ?? -1
 })
 
-watch(detectionsSummary, async (newValue) => {
-  if (newValue === null || newValue === undefined) {
-    return
+// update the review summary based on the detection summary
+watchEffect(() => {
+  if (bestPerFilterApplied.value) {
+    detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(bestDetectionsSummary.value)
+  } else {
+    detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(detectionsSummary.value)
   }
-  detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(newValue)
-})
-
-watch(bestDetectionsSummary, async (newValue) => {
-  if (newValue === null || newValue === undefined) {
-    return
-  }
-  detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(newValue)
 })
 
 const onEmitPageSize = async (pageSize: number) => {
