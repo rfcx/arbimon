@@ -2,8 +2,8 @@ import formAutoContent from 'form-auto-content'
 import { createReadStream } from 'fs'
 import { afterEach, describe, expect, test, vi } from 'vitest'
 
-import { buildVariantPath } from '@rfcx-bio/common/api-bio/_helpers'
-import { getMetadata } from '@rfcx-bio/common/image'
+import { buildVariantPath } from '@rfcx-bio/node-common/api-bio/_helpers'
+import { getMetadata } from '@rfcx-bio/node-common/image'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 

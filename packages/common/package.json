@@ -45,7 +45,6 @@
     "lodash-es": "^4.17.21",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "7.0.0-alpha.5",
-    "sharp": "^0.33.3"
+    "sequelize": "7.0.0-alpha.5"
   }
 }
