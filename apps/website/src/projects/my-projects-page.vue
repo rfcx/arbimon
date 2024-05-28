@@ -74,13 +74,14 @@
             class="mt-40 lg:mt-60"
           >
             <h3 class="mb-8 text-xl text-gray-900 dark:text-insight font-header">
-              Content not available.
+              It seems the project didn’t load as expected. <br> Please
               <span
                 class="text-frequency cursor-pointer"
                 @click="fetchProjects(0, LIMIT, undefined)"
               >
-                Try again.
+                refresh
               </span>
+              your browser to give it another go.
             </h3>
           </div>
         </div>
