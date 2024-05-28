@@ -4,7 +4,7 @@ import { type Handler } from '~/api-helpers/types'
 import { exportDetections } from './export-detections-bll'
 
 export const exportDetectionsHandler: Handler<string, ExportDetectionsParams, unknown, ExportDetectionsBody> = async (req, rep) => {
-  const email = req.userToken.email
+  const email = req?.userToken?.email ?? ''
 
   await exportDetections(Number(req.params.jobId), req.body.types, email)
   void rep.code(201)
