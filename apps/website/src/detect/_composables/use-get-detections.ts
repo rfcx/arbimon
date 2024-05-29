@@ -1,4 +1,4 @@
-import { type UseQueryReturnType, useQuery } from '@tanstack/vue-query'
+import { type UseQueryDefinedReturnType, type UseQueryReturnType, useQuery } from '@tanstack/vue-query'
 import { type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 
@@ -11,20 +11,22 @@ export const FETCH_DETECTIONS = 'fetch-detections'
 export const FETCH_DETECTIONS_SUMMARY = 'fetch-detections-summary'
 export const FETCH_CLASSIFIER_JOB_INFO = 'fetch-classifier-job-info'
 
-export const useGetJobDetections = (apiClient: AxiosInstance, params: ComputedRef<GetDetectionsQueryParams>, enabled: ComputedRef<boolean>, refetchInterval: ComputedRef<number | false>): UseQueryReturnType<WithTotalCount<GetDetectionsResponse>, unknown> => {
+export const useGetJobDetections = (apiClient: AxiosInstance, params: ComputedRef<GetDetectionsQueryParams>, enabled: ComputedRef<boolean>, refetchInterval: ComputedRef<number | false>): UseQueryDefinedReturnType<WithTotalCount<GetDetectionsResponse>, unknown> => {
   return useQuery({
     queryKey: [FETCH_DETECTIONS, params],
+    initialData: { total: 0, data: [] },
     queryFn: async () => await apiBioGetDetections(apiClient, params.value),
     enabled,
     refetchInterval
   })
 }
 
-export const useGetDetectionsSummary = (apiClient: AxiosInstance, params: ComputedRef<GetDetectionsSummaryQueryParams>, enabled: ComputedRef<boolean>): UseQueryReturnType<GetDetectionsSummaryResponse, unknown> => {
+export const useGetDetectionsSummary = (apiClient: AxiosInstance, params: ComputedRef<GetDetectionsSummaryQueryParams>, enabled: ComputedRef<boolean>, refetchInterval: ComputedRef<number | false>): UseQueryReturnType<GetDetectionsSummaryResponse, unknown> => {
   return useQuery({
-    queryKey: [FETCH_DETECTIONS_SUMMARY, params.value.classifierId, params.value.classifierJobId, params.value.end, params.value.start],
+    queryKey: [FETCH_DETECTIONS_SUMMARY, params],
     queryFn: async () => await apiBioGetDetectionsSummary(apiClient, params.value),
-    enabled
+    enabled,
+    refetchInterval
   })
 }
 

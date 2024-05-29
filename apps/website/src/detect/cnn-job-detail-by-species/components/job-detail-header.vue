@@ -1,36 +1,38 @@
 <template>
-  <nav
-    class="flex justify-between"
-    aria-label="Breadcrumb"
-  >
-    <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse text-insight">
-      <li class="inline-flex items-center text-sm font-display">
-        <router-link
-          :to="{ name: ROUTE_NAMES.cnnJobList }"
-          class="inline-flex items-center hover:text-util-gray-02"
-        >
-          CNN Jobs
-        </router-link>
-      </li>
-      <li>
-        <div class="flex items-center text-sm font-display text-insight">
-          <icon-fas-chevron-right class="w-3 h-3 mr-2" />
+  <div class="flex justify-between items-center py-3">
+    <nav
+      class="flex justify-between"
+      aria-label="Breadcrumb"
+    >
+      <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse text-insight">
+        <li class="inline-flex items-center text-sm font-display">
           <router-link
-            :to="{ name: ROUTE_NAMES.cnnJobDetail, params: { jobId } }"
+            :to="{ name: ROUTE_NAMES.cnnJobList }"
             class="inline-flex items-center hover:text-util-gray-02"
           >
-            Job {{ jobId }}
+            CNN Jobs
           </router-link>
-        </div>
-      </li>
-      <li>
-        <div class="flex items-center text-sm font-display text-insight">
-          <icon-fas-chevron-right class="w-3 h-3 mr-2" />
-          {{ speciesName }}
-        </div>
-      </li>
-    </ol>
-  </nav>
+        </li>
+        <li>
+          <div class="flex items-center text-sm font-display text-insight">
+            <icon-fas-chevron-right class="w-3 h-3 mr-2" />
+            <router-link
+              :to="{ name: ROUTE_NAMES.cnnJobDetail, params: { jobId } }"
+              class="inline-flex items-center hover:text-util-gray-02"
+            >
+              Job {{ jobId }}
+            </router-link>
+          </div>
+        </li>
+        <li>
+          <div class="flex items-center text-sm font-display text-insight">
+            <icon-fas-chevron-right class="w-3 h-3 mr-2" />
+            {{ speciesName }}
+          </div>
+        </li>
+      </ol>
+    </nav>
+  </div>
 </template>
 
 <script setup lang="ts">

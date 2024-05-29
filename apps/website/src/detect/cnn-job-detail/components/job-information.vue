@@ -1,11 +1,11 @@
 <template>
-  <h1 class="flex text-insight mt-2">
+  <h1 class="flex text-insight mt-5">
     Summary
   </h1>
   <div class="grid grid-cols-3 text-lg py-4 border-b-1 border-util-gray-03 items-center">
     <div class="flex md:col-span-1 <md:col-span-2 items-center">
       <span class="text-util-gray-01 font-medium">Model:</span>
-      <h5 class="ml-2 text-insight">
+      <h5 class="break-all mx-2 text-insight">
         {{ props.summary?.classifier.name ?? '' }} {{ props.summary?.classifier.version != null ? `v${props.summary?.classifier.version}` : '' }}
       </h5>
     </div>
