@@ -3,7 +3,21 @@
     ref="projectInfoView"
     class="flex flex-col justify-between left-100 w-98 h-86vh bg-moss transition-transform -translate-x-full rounded-lg overflow-scroll"
   >
-    <div class="flex flex-col">
+    <div
+      v-if="isErrorProfile"
+      class="flex items-center justify-center h-full"
+    >
+      <div class="p-4">
+        <div class="text-s text-center">
+          <span>It seems the project didn’t load as expected. <br>
+            Please refresh your browser to give it another go.</span>
+        </div>
+      </div>
+    </div>
+    <div
+      v-else
+      class="flex flex-col"
+    >
       <div class="rounded-t-lg bg-moss">
         <div class="flex flex-row justify-between items-center">
           <div
@@ -290,7 +304,7 @@ const isStakeholdersSelected = ref(false)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
-const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch, isRefetching: isRefetchingProfile } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'], computed(() => true))
+const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch, isRefetching: isRefetchingProfile, isError: isErrorProfile } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'], computed(() => true))
 const { isLoading: stakeholdersLoading, data: stakeholders, refetch: stakeholderRefetch, isRefetching: stakeholdersRefetching, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId, computed(() => isStakeholdersSelected.value))
 
 const isAboutTabViewMored = ref(false)
