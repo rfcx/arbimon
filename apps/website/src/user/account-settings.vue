@@ -450,8 +450,18 @@ const uploadPhoto = async (e: Event): Promise<void> => {
 }
 
 const saveAccountSetting = async (): Promise<void> => {
+  if (!firstName.value) {
+    displayTextAfterSaveWithSuccessStatus(false, 'Please enter your first name.')
+    return
+  }
+  if (!lastName.value) {
+    displayTextAfterSaveWithSuccessStatus(false, 'Please enter your last name.')
+    return
+  }
   await saveUserProfile()
-  if (uploadedPhotoUrl.value) await saveProfilePhoto()
+  if (uploadedPhotoUrl.value) {
+    await saveProfilePhoto()
+  }
 }
 
 const displayTextAfterSaveWithSuccessStatus = (success: boolean, errorMsg?: string) => {
