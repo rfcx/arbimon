@@ -266,12 +266,17 @@ const save = () => {
     return
   }
   if (!isValidSlug(newSlug.value ?? '')) {
-    displayTextAfterSaveWithSuccessStatus(false, 'Failed! URL must be lowercase letters, numbers, and dashes (-).')
+    displayTextAfterSaveWithSuccessStatus(false, 'Invalid URL Format. Please ensure the URL contains only lowercase letters, numbers, and dashes (-).')
     return
   }
 
   if (newObjectives.value === undefined || newObjectives.value.length === 0) {
-    displayTextAfterSaveWithSuccessStatus(false, 'Please select at least one objective.')
+    displayTextAfterSaveWithSuccessStatus(false, 'Please select at least one project objective to continue.')
+    return
+  }
+
+  if (!newName.value) {
+    displayTextAfterSaveWithSuccessStatus(false, 'Please enter a project name to continue.')
     return
   }
 
@@ -319,7 +324,7 @@ const updateSettings = () => {
 
       const error = e as AxiosError<Error>
       if (error.response?.data !== undefined && error.response.data.message === ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE) {
-        errorMessage.value = DEFAULT_ERROR_MSG + ' Project URL must be unique.'
+        errorMessage.value = 'Duplicate URL Detected.' + ' Each project URL must be unique. Please enter a different URL to proceed.'
       }
     }
   })
