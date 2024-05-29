@@ -52,16 +52,9 @@ export const exportDetectionsJob = (name: string, classifierJobId: number, expor
             image: '887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:latest',
             envFrom: [
               {
-                name: 'CLASSIFIER_JOB_EXPORT_ID',
-                value: classifierJobId.toString()
-              },
-              {
-                name: 'CLASSIFIER_JOB_EXPORT_TYPES',
-                value: exportTypes
-              },
-              {
-                name: 'CLASSIFIER_JOB_EXPORT_RECEIVER_EMAIL',
-                value: userEmail
+                secretRef: {
+                  name: 'biodiversity-cli-secrets'
+                }
               }
             ],
             env: [
