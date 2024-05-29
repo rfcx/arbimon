@@ -13,6 +13,6 @@ describe('POST /jobs/:jobId/detections-export', () => {
     const keys = [...app.routes.keys()]
 
     // Assert
-    expect(keys.includes('/jobs/:jobId/detections-export')).toEqual(true)
+    expect(keys).toContain('/jobs/:jobId/detections-export')
   })
 })
