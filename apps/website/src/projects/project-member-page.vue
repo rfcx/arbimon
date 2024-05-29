@@ -421,7 +421,7 @@ const addSelectedUser = ():void => {
   if (userSearchValue.value === '') return
   const isDuplicate = users.value?.some(user => user.email === userSearchValue.value) ?? false
   if (isDuplicate) {
-    showAlertDialog('error', 'Duplicate', 'The user is already a project member')
+    showAlertDialog('error', 'Duplicate Member Detected.', 'This user is already a part of the project. Please invite another member')
   } else {
   mutatePostProjectMember({
     email: userSearchValue.value,
@@ -432,7 +432,7 @@ const addSelectedUser = ():void => {
       showAlertDialog('success', 'Success', 'New Project member added successfully')
     },
     onError: () => {
-      showAlertDialog('error', 'Error', 'Failed to add project member')
+      showAlertDialog('error', 'Verification Needed.', 'We couldn’t add this user as a project member because their account is unverified. Please ensure the user has verified their account before trying again.')
 }
   })
 }
