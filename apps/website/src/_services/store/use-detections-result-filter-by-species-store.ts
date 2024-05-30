@@ -155,14 +155,13 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   }
 
   const updateReviewSummaryManually = (changes: Array<{ from: ArbimonReviewStatus, to: ArbimonReviewStatus }>): void => {
-    console.info('🍍 update review summary manually', changes)
     if (reviewSummary.value === undefined) { return }
 
     const from = groupBy(changes, c => c.from)
     const to = groupBy(changes, c => c.to)
     const minuses = Object.keys(from).map(k => { return { status: k, count: from[k].length } })
     const pluses = Object.keys(to).map(k => { return { status: k, count: to[k].length } })
-    console.info('validation changes', changes, minuses, pluses)
+    console.info('🍍 validation changes', changes, minuses, pluses)
 
     const calculateNewNumber = (status: ArbimonReviewStatus): number => {
       return reviewSummary.value === undefined ? 0 : reviewSummary.value[status] + (pluses.find(p => p.status === status)?.count ?? 0) - (minuses.find(m => m.status === status)?.count ?? 0)
