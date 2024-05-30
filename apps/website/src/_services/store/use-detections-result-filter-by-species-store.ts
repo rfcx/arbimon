@@ -51,7 +51,23 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     filter.value.minConfidence = value.minConfidence
   }
 
+  const resetFilter = (): void => {
+    filter.value.threshold = 50
+    filter.value.validationStatuses = []
+    filter.value.sortBy = 'asc'
+    filter.value.range = 'all'
+    filter.value.minConfidence = 0.1
+
+    // "drain" all values out of the array
+    while (filter.value.siteIds.length > 0) {
+      filter.value.siteIds.pop()
+    }
+    reviewSummary.value = undefined
+    console.info('🍍 resetting filters', filter.value, reviewSummary.value)
+  }
+
   const updateStartEndRanges = (start: string, end: string, rangeInDays: number): void => {
+    console.info('🍍 update start end ranges', start, end, rangeInDays)
     startRange.value = start
     endRange.value = end
 
@@ -69,18 +85,8 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
 
   // reset all settings when job change.
   watch(() => route.params.jobId, () => {
-    filter.value.threshold = 50
-    filter.value.validationStatuses = []
-    filter.value.sortBy = 'asc'
-    filter.value.range = 'all'
-    filter.value.minConfidence = 0.1
-
-    // "drain" all values out of the array
-    while (filter.value.siteIds.length > 0) {
-      filter.value.siteIds.pop()
-    }
-
-    reviewSummary.value = undefined
+    resetFilter()
+    updateStartEndRanges('', '', 7)
   })
 
   const validationStatusFilterOptions = computed<ValidationResultFilterInner[]>(() => {
@@ -137,7 +143,9 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
     return sortByOptions
   })
 
-  const updateReviewSummaryFromDetectionSummary = (summary: GetDetectionsSummaryResponse): void => {
+  const updateReviewSummaryFromDetectionSummary = (summary: GetDetectionsSummaryResponse | undefined): void => {
+    console.info('🍍 update review summary from detection summary', summary)
+    if (summary === undefined) { reviewSummary.value = undefined; return }
     reviewSummary.value = {
       unvalidated: summary.unvalidated,
       notPresent: summary.notPresent,
@@ -147,6 +155,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   }
 
   const updateReviewSummaryManually = (changes: Array<{ from: ArbimonReviewStatus, to: ArbimonReviewStatus }>): void => {
+    console.info('🍍 update review summary manually', changes)
     if (reviewSummary.value === undefined) { return }
 
     const from = groupBy(changes, c => c.from)
@@ -174,6 +183,7 @@ export const useDetectionsResultFilterBySpeciesStore = defineStore('cnn-result-f
   return {
     filter,
     updateResultFilter,
+    resetFilter,
     reviewSummary,
     formatThreshold,
     formattedThreshold,

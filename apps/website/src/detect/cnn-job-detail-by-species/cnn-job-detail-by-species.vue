@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-4 pl-20 pr-7">
+  <section class="pt-20 pl-18 pr-6 md:(pl-23 pr-10) xl:(pl-33 pr-20)">
     <div>
       <JobDetailHeader :species-name="jobResultsSummary?.title" />
       <JobValidationHeader
@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type GetBestDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/best-detections'
@@ -90,15 +90,6 @@ watch(jobResultsSummary, async (newValue) => {
   detectionsResultFilterBySpeciesStore.updateCustomSitesList(newValue.streams)
 })
 
-watch(detectionsResultFilterBySpeciesStore.filter, async (newValue) => {
-  if (newValue === null || newValue === undefined) {
-    return
-  }
-
-  await refetchJobDetections()
-  await refetchDetectionSummary()
-})
-
 const detectionsQueryParams = computed<GetDetectionsQueryParams>(() => {
   return {
     start: detectionsResultFilterBySpeciesStore.selectedStartRange,
@@ -145,7 +136,8 @@ const detectionsSummaryQueryParams = computed<GetDetectionsSummaryQueryParams>((
 const { isLoading: isLoadingDetectionSummary, isRefetching: isRefetchingDetectionSummary, data: detectionsSummary, refetch: refetchDetectionSummary } = useGetDetectionsSummary(
   apiClientBio,
   detectionsSummaryQueryParams,
-  computed(() => jobResultsSummary.value?.classifierId != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '' && !bestPerFilterApplied.value)
+  computed(() => jobResultsSummary.value?.classifierId != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '' && !bestPerFilterApplied.value),
+  refetchInterval
 )
 
 const bestDetectionsQueryParams = computed<GetBestDetectionsQueryParams>(() => {
@@ -192,18 +184,13 @@ const filteredResult = computed<number>(() => {
   return total.value ?? -1
 })
 
-watch(detectionsSummary, async (newValue) => {
-  if (newValue === null || newValue === undefined) {
-    return
+// update the review summary based on the detection summary
+watchEffect(() => {
+  if (bestPerFilterApplied.value) {
+    detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(bestDetectionsSummary.value)
+  } else {
+    detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(detectionsSummary.value)
   }
-  detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(newValue)
-})
-
-watch(bestDetectionsSummary, async (newValue) => {
-  if (newValue === null || newValue === undefined) {
-    return
-  }
-  detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(newValue)
 })
 
 const onEmitPageSize = async (pageSize: number) => {
@@ -250,5 +237,9 @@ const onEmitValidateResult = async () => {
     }, 500) // workaround to wait for the detection summary to be updated in the database
   }
 }
+
+onBeforeUnmount(() => {
+  detectionsResultFilterBySpeciesStore.resetFilter()
+})
 
 </script>

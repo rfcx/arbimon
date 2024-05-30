@@ -116,7 +116,8 @@ const props = withDefaults(defineProps<{
   checked: null,
   score: undefined,
   start: undefined,
-  site: undefined
+  site: undefined,
+  selectedGrouping: undefined
 })
 
 const emit = defineEmits<{(e: 'emitDetection', detectionId: number, event: DetectionEvent): void}>()

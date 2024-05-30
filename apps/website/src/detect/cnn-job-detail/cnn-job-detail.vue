@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-4 pl-20 pr-7">
+  <section class="pt-20 pl-18 pr-6 md:(pl-23 pr-10) xl:(pl-33 pr-20)">
     <job-detail-header
       :is-cancel-job-enable="isRefetchIntervalEnable"
       :is-canceling="isLoadingPostStatus"
