@@ -22,9 +22,16 @@
         />
         <div
           v-else-if="searchTermAppliedPublications.length === 0"
-          class="text-center font-header text-2xl mt-4"
+          class="flex flex-col text-center"
         >
-          No results
+          <span class="text-base font-header text-center text-2xl mt-4">
+            No Results Found.
+          </span>
+          <span>
+            Your search did not return any matches. <br>
+            Please double-check the spelling, or consider using alternative keywords,<br>
+            such as specific species names or project titles.
+          </span>
         </div>
         <div
           v-for="(publicationYear, idx) in publicationYearsList"
