@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 
 import { type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
-import { type MapableSite, type TaxonClass } from '@rfcx-bio/node-common/dao/types'
+import { type MapableSite, type TaxonClass } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { fromQuery, toQuery } from '@/_services/filters/comparison-list/query-string'

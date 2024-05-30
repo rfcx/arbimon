@@ -3,7 +3,7 @@ import { type AxiosInstance } from 'axios'
 
 import { type CreateBackupBody, type CreateBackupResponse, apiBioPostBackup } from '@rfcx-bio/common/api-bio/backup/backup-create'
 import { apiBioGetBackupRequests } from '@rfcx-bio/common/api-bio/backup/backup-get'
-import { type Backup } from '@rfcx-bio/node-common/dao/types/backup'
+import { type Backup } from '@rfcx-bio/common/dao/types/backup'
 
 export const useGetBackup = (apiClient: AxiosInstance, projectId: number): UseQueryReturnType<Backup[], Error> => {
   return useQuery({

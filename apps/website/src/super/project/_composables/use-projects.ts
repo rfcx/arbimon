@@ -3,7 +3,7 @@ import { type AxiosInstance } from 'axios'
 import { type Ref } from 'vue'
 
 import { apiBioSuperGetProjects } from '@rfcx-bio/common/api-bio/super/projects'
-import { type LocationProjectTypes } from '@rfcx-bio/node-common/dao/types'
+import { type LocationProjectTypes } from '@rfcx-bio/common/dao/types'
 
 import { type Error } from '../../error'
 

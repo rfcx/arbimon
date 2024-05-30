@@ -4,7 +4,7 @@ import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 import { type RouteLocationNormalized } from 'vue-router'
 
 import { apiBioGetProjectSpecies } from '@rfcx-bio/common/api-bio/species/project-species-all'
-import { type SpeciesInProjectTypes } from '@rfcx-bio/node-common/dao/types/species-in-project'
+import { type SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
 
 import { apiClientKey, routeNamesKey, storeKey } from '@/globals'
 import { type RouteNames } from '~/router'

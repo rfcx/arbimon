@@ -4,7 +4,7 @@ import { Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
 
 import { apiBioGetCoreMedia } from '@rfcx-bio/common/api-bio/core-proxy/core-media'
-import { type TaxonSpeciesCallTypes } from '@rfcx-bio/node-common/dao/types'
+import { type TaxonSpeciesCallTypes } from '@rfcx-bio/common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
