@@ -1,6 +1,6 @@
 import { type DashboardContentResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-content'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type LocationProjectProfileContentType } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type LocationProjectProfileContentType } from '@rfcx-bio/node-common/dao/types'
 
 import { checkUserPermissionForEditingDashboardContent } from '~/api-core/api-core'
 import { getSequelize } from '~/db'

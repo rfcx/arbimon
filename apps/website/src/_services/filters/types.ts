@@ -1,6 +1,6 @@
 import { type Dayjs } from 'dayjs'
 
-import { type MapableSite } from '@rfcx-bio/common/dao/types'
+import { type MapableSite } from '@rfcx-bio/node-common/dao/types'
 
 export type FilterableProperty = 'taxon' | 'species'
 

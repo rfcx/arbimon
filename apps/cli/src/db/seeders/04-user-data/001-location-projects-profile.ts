@@ -1,9 +1,9 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
-import { LocationProjectProfileModel } from '@rfcx-bio/common/dao/models/location-project-profile-model'
-import { type LocationProjectProfile } from '@rfcx-bio/common/dao/types'
+import { LocationProjectModel } from '@rfcx-bio/node-common/dao/models/location-project-model'
+import { LocationProjectProfileModel } from '@rfcx-bio/node-common/dao/models/location-project-profile-model'
+import { type LocationProjectProfile } from '@rfcx-bio/node-common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { requireEnv } from '~/env'

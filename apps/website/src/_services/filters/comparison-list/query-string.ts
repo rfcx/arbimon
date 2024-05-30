@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash-es'
 import { type LocationQuery } from 'vue-router'
 
 import { type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
-import { type MapableSite, type TaxonClass } from '@rfcx-bio/common/dao/types'
+import { type MapableSite, type TaxonClass } from '@rfcx-bio/node-common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { type FilterPropertyEquals, type SiteGroup } from '..'

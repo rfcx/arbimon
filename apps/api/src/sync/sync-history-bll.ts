@@ -1,5 +1,5 @@
 import { type SyncHistoryResponse } from '@rfcx-bio/common/api-bio/sync/sync-history'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 
 import { getSyncs } from '@/sync/sync-history-dao'
 import { getSequelize } from '~/db'

@@ -1,5 +1,5 @@
-import { masterObjectiveTypes as masterObjectiveTypesShared } from '@rfcx-bio/common/dao/master-data'
-import { type ProjectObjective as ProjectObjectiveShared } from '@rfcx-bio/common/dao/types'
+import { masterObjectiveTypes as masterObjectiveTypesShared } from '@rfcx-bio/node-common/dao/master-data'
+import { type ProjectObjective as ProjectObjectiveShared } from '@rfcx-bio/node-common/dao/types'
 
 export interface Analysis {
   value: string

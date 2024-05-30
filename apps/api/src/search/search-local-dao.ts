@@ -1,8 +1,8 @@
 import { type Order, type WhereOptions, Op } from 'sequelize'
 
 import { type SearchResponse } from '@rfcx-bio/common/api-bio/search/search'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type Project } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '~/db'
 import { fileUrl } from '~/format-helpers/file-url'

@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv'
 
-import { getSequelizeBase } from '@rfcx-bio/common/dao/connections'
-import { type AllModels, ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { getSequelizeBase } from '@rfcx-bio/node-common/dao/connections'
+import { type AllModels, ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 
 dotenv.config()
 

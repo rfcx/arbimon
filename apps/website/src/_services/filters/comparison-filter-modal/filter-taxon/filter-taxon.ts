@@ -1,7 +1,7 @@
 import { Vue } from 'vue-class-component'
 import { Emit, Inject, Prop } from 'vue-property-decorator'
 
-import { type TaxonClass } from '@rfcx-bio/common/dao/types'
+import { type TaxonClass } from '@rfcx-bio/node-common/dao/types'
 
 import { storeKey } from '@/globals'
 import { type FilterPropertyEquals } from '~/filters'

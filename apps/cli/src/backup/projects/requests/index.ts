@@ -1,7 +1,7 @@
 import { type Sequelize, QueryTypes } from 'sequelize'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import type { Backup } from '@rfcx-bio/common/dao/types/backup'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import type { Backup } from '@rfcx-bio/node-common/dao/types/backup'
 
 import { BATCH_LIMIT } from '@/backup/projects/config'
 

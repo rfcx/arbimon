@@ -1,8 +1,8 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
-import { RecordingBySiteHourModel } from '@rfcx-bio/common/dao/models/recording-by-site-hour-model'
+import { LocationSiteModel } from '@rfcx-bio/node-common/dao/models/location-site-model'
+import { RecordingBySiteHourModel } from '@rfcx-bio/node-common/dao/models/recording-by-site-hour-model'
 import { rawRecordings } from '@rfcx-bio/common/mock-data/raw-recordings'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 

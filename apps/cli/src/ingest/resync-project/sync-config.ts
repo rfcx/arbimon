@@ -1,7 +1,7 @@
 import { type Sequelize } from 'sequelize'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type SyncStatus } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type SyncStatus } from '@rfcx-bio/node-common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 export type SyncConfig = Pick<SyncStatus, 'syncSourceId' | 'syncDataTypeId' | 'syncBatchLimit'>

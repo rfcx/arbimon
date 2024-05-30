@@ -2,7 +2,7 @@ import { cleanup } from '@testing-library/vue'
 import { mount } from '@vue/test-utils'
 import { afterEach, describe, expect, test } from 'vitest'
 
-import { type Backup, BackupStatus } from '@rfcx-bio/common/dao/types/backup'
+import { type Backup, BackupStatus } from '@rfcx-bio/node-common/dao/types/backup'
 
 import component from './project-backup-history-list.vue'
 

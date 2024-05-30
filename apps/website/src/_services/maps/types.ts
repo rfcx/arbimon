@@ -1,7 +1,7 @@
 import type { Dayjs } from 'dayjs'
 import type { AnyPaint, LngLatLike } from 'mapbox-gl'
 
-import type { MapableSite } from '@rfcx-bio/common/dao/types'
+import type { MapableSite } from '@rfcx-bio/node-common/dao/types'
 
 export interface MapDataSet {
   startDate: Dayjs

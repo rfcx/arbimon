@@ -1,8 +1,8 @@
 import { groupBy } from 'lodash-es'
 import { type Sequelize } from 'sequelize'
 
-import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { masterSources, masterSyncDataTypes } from '@rfcx-bio/node-common/dao/master-data'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 
 import { getArbimonProjectDetection } from '../inputs/get-arbimon-detection'
 import { mapDetectionBySiteSpeciesHourArbimonWithPrevSync, writeDetectionBySiteSpeciesHourToBio } from '../outputs/resync-detection-by-site-species-hour'

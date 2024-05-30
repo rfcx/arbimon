@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 
-import { type LocationProjectUserRole, type UserProfile } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectUserRole, type UserProfile } from '@rfcx-bio/node-common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 

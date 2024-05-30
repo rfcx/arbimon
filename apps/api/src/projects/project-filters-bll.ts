@@ -1,6 +1,6 @@
 import { type ProjectFiltersResponse } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { type SitesRecCountAndDates } from '@rfcx-bio/common/api-bio/project/project-recordings'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 
 import { getLatestSync, getSites, getSitesRecordingCountAndDates, getTaxonClasses, getTimeBounds } from '@/projects/dao/project-filters-dao'
 import { getSequelize } from '~/db'

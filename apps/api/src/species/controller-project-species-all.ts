@@ -1,8 +1,8 @@
 import { Op } from 'sequelize'
 
 import { type ProjectSpeciesParams, type ProjectSpeciesQueryParams, type ProjectSpeciesResponse } from '@rfcx-bio/common/api-bio/species/project-species-all'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { ATTRIBUTES_SPECIES_IN_PROJECT } from '@rfcx-bio/common/dao/types/species-in-project'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { ATTRIBUTES_SPECIES_IN_PROJECT } from '@rfcx-bio/node-common/dao/types/species-in-project'
 
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
 import { type Handler } from '../_services/api-helpers/types'

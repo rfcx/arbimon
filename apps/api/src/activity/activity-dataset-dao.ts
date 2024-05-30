@@ -2,7 +2,7 @@ import { sum } from 'lodash-es'
 import { type BindOrReplacements, type Sequelize, QueryTypes } from 'sequelize'
 
 import { type ActivityOverviewDataBySpecies, type ActivityOverviewDetectionDataBySite, type ActivityOverviewDetectionDataByTime, type ActivityOverviewRecordingDataBySite } from '@rfcx-bio/common/api-bio/activity/activity-dataset'
-import { type DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { type DetectionBySiteSpeciesHour } from '@rfcx-bio/node-common/dao/types'
 import { toPrecisionNumber } from '@rfcx-bio/utils/number'
 
 import { type FilterDatasetForSql, datasetFilterWhereRaw } from '~/datasets/dataset-where'

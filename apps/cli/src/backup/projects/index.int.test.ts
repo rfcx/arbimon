@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 import { describe, expect, test, vi } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type BackupType, BackupStatus } from '@rfcx-bio/common/dao/types/backup'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type BackupType, BackupStatus } from '@rfcx-bio/node-common/dao/types/backup'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '@/ingest/_testing/arbimon'

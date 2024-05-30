@@ -1,9 +1,9 @@
 import { type QueryInterface, Op } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { RiskRatingIucnModel } from '@rfcx-bio/common/dao/models/risk-rating-iucn-model'
-import { TaxonSpeciesIucnModel } from '@rfcx-bio/common/dao/models/taxon-species-iucn-model'
-import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
+import { RiskRatingIucnModel } from '@rfcx-bio/node-common/dao/models/risk-rating-iucn-model'
+import { TaxonSpeciesIucnModel } from '@rfcx-bio/node-common/dao/models/taxon-species-iucn-model'
+import { TaxonSpeciesModel } from '@rfcx-bio/node-common/dao/models/taxon-species-model'
 
 import { syncIucnSpeciesInfo } from '@/ingest/external/iucn'
 

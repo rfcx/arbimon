@@ -1,5 +1,5 @@
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { attributesExceptIdAndDates } from '@rfcx-bio/common/dao/query-helpers/attributes'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { attributesExceptIdAndDates } from '@rfcx-bio/node-common/dao/query-helpers/attributes'
 
 import { getSequelize } from '@/db/connections'
 import { toTaxonSpeciesWikiSeed } from '@/ingest/_refactor/output-seed-data/to-taxon-species-wiki-seed'

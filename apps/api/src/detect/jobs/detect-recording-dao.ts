@@ -1,6 +1,6 @@
 import { type BindOrReplacements, type Sequelize, type WhereOperators, QueryTypes } from 'sequelize'
 
-import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
+import { type AllModels } from '@rfcx-bio/node-common/dao/model-repository'
 
 import { type Condition } from '~/datasets/dataset-where'
 import { type DetectRecordingQuery } from './detect-recording-bll'

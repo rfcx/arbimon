@@ -3,7 +3,7 @@ import { type QueryInterface, type Sequelize } from 'sequelize'
 import { type RunnableMigration, SequelizeStorage, Umzug } from 'umzug'
 import { fileURLToPath, pathToFileURL } from 'url'
 
-import { getSequelizeBase } from '@rfcx-bio/common/dao/connections'
+import { getSequelizeBase } from '@rfcx-bio/node-common/dao/connections'
 
 import { TABLE_SEQUELIZE_MIGRATIONS } from '@/db/connections/table-names'
 import { requireEnv } from '~/env'

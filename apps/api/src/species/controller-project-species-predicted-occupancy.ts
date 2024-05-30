@@ -2,7 +2,7 @@ import { type FastifyReply } from 'fastify'
 import { resolve } from 'path'
 
 import { type ProjectSpeciesPredictedOccupancyParams } from '@rfcx-bio/common/api-bio/species/project-species-predicted-occupancy'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { hasPermission } from '@rfcx-bio/common/roles'
 
 import { getSequelize } from '~/db'

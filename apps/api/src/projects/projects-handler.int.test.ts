@@ -2,7 +2,7 @@ import { Op } from 'sequelize'
 import { afterEach, describe, expect, test, vi } from 'vitest'
 
 import { projectsDeprecatedRoute, projectsGeoRoute } from '@rfcx-bio/common/api-bio/project/projects'
-import { type Project } from '@rfcx-bio/common/dao/types'
+import { type Project } from '@rfcx-bio/node-common/dao/types'
 import { myProjectsRoute } from '@rfcx-bio/common/lib/api-bio/project/projects'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'

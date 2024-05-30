@@ -5,7 +5,7 @@ import utc from 'dayjs/plugin/utc'
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE, projectDataRoute } from '@rfcx-bio/common/api-bio/project/project-settings'
-import { type LocationProjectProfile, type Project } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectProfile, type Project } from '@rfcx-bio/node-common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 

@@ -1,8 +1,8 @@
 import { type Sequelize, type Transaction, QueryTypes } from 'sequelize'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { UPDATE_ON_DUPLICATE_LOCATION_SITE } from '@rfcx-bio/common/dao/models/location-site-model'
-import { type Site, type SyncError } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { UPDATE_ON_DUPLICATE_LOCATION_SITE } from '@rfcx-bio/node-common/dao/models/location-site-model'
+import { type Site, type SyncError } from '@rfcx-bio/node-common/dao/types'
 
 import { type SiteArbimon, transformArbimonSites } from '../parsers/parse-site-arbimon-to-bio'
 

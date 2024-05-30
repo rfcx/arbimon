@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 
 import { type ApiMap } from '@rfcx-bio/common/api-bio/_helpers'
-import { type Site } from '@rfcx-bio/common/dao/types'
+import { type Site } from '@rfcx-bio/node-common/dao/types'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET } from '~/api-helpers/types'

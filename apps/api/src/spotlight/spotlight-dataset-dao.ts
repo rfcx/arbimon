@@ -2,9 +2,9 @@ import { groupBy, mapValues, sum } from 'lodash-es'
 import { Op } from 'sequelize'
 
 import { type SpotlightDetectionDataBySite, type SpotlightDetectionDataByTime } from '@rfcx-bio/common/api-bio/spotlight/spotlight-dataset'
-import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
-import { type Where } from '@rfcx-bio/common/dao/query-helpers/types'
-import { type DetectionBySiteSpeciesHour, type RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
+import { type AllModels } from '@rfcx-bio/node-common/dao/model-repository'
+import { type Where } from '@rfcx-bio/node-common/dao/query-helpers/types'
+import { type DetectionBySiteSpeciesHour, type RecordingBySiteHour } from '@rfcx-bio/node-common/dao/types'
 import { groupByNumber } from '@rfcx-bio/utils/lodash-ext'
 
 import { type FilterDatasetForSql, whereInDataset, whereRecordingBySiteHour } from '~/datasets/dataset-where'

@@ -1,4 +1,4 @@
-import { type TaxonSpeciesWiki } from '@rfcx-bio/common/dao/types'
+import { type TaxonSpeciesWiki } from '@rfcx-bio/node-common/dao/types'
 
 export const rawTaxonSpeciesWiki: Array<TaxonSpeciesWiki & { 'TaxonSpecies.slug': string }> = [
   {

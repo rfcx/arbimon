@@ -1,7 +1,7 @@
 import { type WhereValue, Op } from 'sequelize'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type OrganizationTypes, type UserProfile, type UserTypes, ATTRIBUTES_USER } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type OrganizationTypes, type UserProfile, type UserTypes, ATTRIBUTES_USER } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'

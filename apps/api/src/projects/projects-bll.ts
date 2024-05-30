@@ -1,7 +1,7 @@
 import QuickLRU from 'quick-lru'
 
 import { type LocationProjectWithRole, type ProjectsGeoResponse, type ProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
-import { type Project } from '@rfcx-bio/common/dao/types'
+import { type Project } from '@rfcx-bio/node-common/dao/types'
 
 import { BioNotFoundError } from '~/errors'
 import { getUserRoleForProject } from './dao/project-member-dao'

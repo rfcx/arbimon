@@ -1,7 +1,7 @@
 import { keyBy } from 'lodash-es'
 
-import { masterTaxonClasses } from '@rfcx-bio/common/dao/master-data'
-import { type TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { masterTaxonClasses } from '@rfcx-bio/node-common/dao/master-data'
+import { type TaxonSpecies } from '@rfcx-bio/node-common/dao/types'
 
 export const testSpecies: TaxonSpecies[] = [
   {

@@ -1,8 +1,8 @@
 import { type Sequelize } from 'sequelize'
 
-import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project, type SyncError, type TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
+import { masterSources, masterSyncDataTypes } from '@rfcx-bio/node-common/dao/master-data'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type Project, type SyncError, type TaxonSpeciesCall } from '@rfcx-bio/node-common/dao/types'
 
 import { getArbimonProjectSpeciesCalls } from '../inputs/get-arbimon-species-call'
 import { writeSyncError } from '../outputs/sync-error'

@@ -1,10 +1,10 @@
 import { omitBy } from 'lodash-es'
 import { type Sequelize } from 'sequelize'
 
-import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { literalizeCountsByMinute } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
-import { type Project, type RecordingBySiteHour, type SyncError } from '@rfcx-bio/common/dao/types'
+import { masterSources, masterSyncDataTypes } from '@rfcx-bio/node-common/dao/master-data'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { literalizeCountsByMinute } from '@rfcx-bio/node-common/dao/query-helpers/sequelize-literal-integer-array-2d'
+import { type Project, type RecordingBySiteHour, type SyncError } from '@rfcx-bio/node-common/dao/types'
 
 import { type ArbimonRecordingByHour, getArbimonProjectRecordingsBySiteHour } from '../inputs/get-arbimon-recording'
 import { writeSyncError } from '../outputs/sync-error'

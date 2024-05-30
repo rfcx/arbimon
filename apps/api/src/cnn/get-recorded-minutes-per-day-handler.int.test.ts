@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 import { afterAll, beforeAll, describe, expect, test } from 'vitest'
 
-import { literalizeCountsByMinute } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
-import { type Site } from '@rfcx-bio/common/dao/types'
+import { literalizeCountsByMinute } from '@rfcx-bio/node-common/dao/query-helpers/sequelize-literal-integer-array-2d'
+import { type Site } from '@rfcx-bio/node-common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 import { makeProject } from '@rfcx-bio/testing/model-builders/project-model-builder'

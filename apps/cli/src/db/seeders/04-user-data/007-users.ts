@@ -1,7 +1,7 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { UserProfileModel } from '@rfcx-bio/common/dao/models/user-profile-model'
+import { UserProfileModel } from '@rfcx-bio/node-common/dao/models/user-profile-model'
 
 import { rawUsers } from '../_data/users'
 

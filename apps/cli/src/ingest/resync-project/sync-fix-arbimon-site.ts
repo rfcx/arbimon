@@ -1,7 +1,7 @@
 import { type Sequelize } from 'sequelize'
 
-import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
-import { type Project } from '@rfcx-bio/common/dao/types'
+import { masterSources, masterSyncDataTypes } from '@rfcx-bio/node-common/dao/master-data'
+import { type Project } from '@rfcx-bio/node-common/dao/types'
 
 import { getArbimonSitesByProject } from '../inputs/get-arbimon-site'
 import { writeSitesToBio } from '../outputs/sites'

@@ -1,8 +1,8 @@
 import { Op, QueryTypes } from 'sequelize'
 
 import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type LocationProjectUserRole, type OrganizationTypes } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type LocationProjectUserRole, type OrganizationTypes } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'

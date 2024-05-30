@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { maxBy } from 'lodash-es'
 
-import { type OrganizationTypes } from '@rfcx-bio/common/dao/types'
+import { type OrganizationTypes } from '@rfcx-bio/node-common/dao/types'
 
 import { unpackAxiosError } from '~/api-helpers/axios-errors'
 import { create } from './create-organization-dao'

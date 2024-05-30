@@ -1,5 +1,5 @@
 import { type RichnessDatasetResponse } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 
 import { type FilterDataset } from '~/datasets/dataset-types'
 import { toFilterDatasetForSql } from '~/datasets/dataset-where'

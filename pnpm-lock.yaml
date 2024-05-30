@@ -557,15 +557,6 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
-      pg:
-        specifier: ^8.7.1
-        version: 8.7.3
-      pg-hstore:
-        specifier: ^2.3.4
-        version: 2.3.4
-      sequelize:
-        specifier: 7.0.0-alpha.5
-        version: 7.0.0-alpha.5(mysql2@2.3.3)(pg-hstore@2.3.4)(pg@8.7.3)(sqlite3@5.0.8)
 
   packages/node-common:
     dependencies:
@@ -584,9 +575,22 @@ importers:
       kubernetes-client:
         specifier: ^9.0.0
         version: 9.0.0
+      pg:
+        specifier: ^8.7.1
+        version: 8.7.3
+      pg-hstore:
+        specifier: ^2.3.4
+        version: 2.3.4
+      sequelize:
+        specifier: 7.0.0-alpha.5
+        version: 7.0.0-alpha.5(mysql2@2.3.3)(pg-hstore@2.3.4)(pg@8.7.3)(sqlite3@5.0.8)
       sharp:
         specifier: ^0.33.3
         version: 0.33.3
+    devDependencies:
+      '@types/pg':
+        specifier: ^8.6.4
+        version: 8.6.5
 
   packages/testing:
     dependencies:
@@ -599,6 +603,9 @@ importers:
       '@rfcx-bio/common':
         specifier: workspace:^0.0.1
         version: link:../common
+      '@rfcx-bio/node-common':
+        specifier: workspace:^0.0.1
+        version: link:../node-common
       fastify:
         specifier: ^3.23.1
         version: 3.29.0
@@ -4809,7 +4816,6 @@ packages:
       '@types/node': 18.0.0
       pg-protocol: 1.5.0
       pg-types: 2.2.0
-    dev: false
 
   /@types/qs@6.9.7:
     resolution: {integrity: sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==}
@@ -11900,7 +11906,6 @@ packages:
   /pg-int8@1.0.1:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
     engines: {node: '>=4.0.0'}
-    dev: false
 
   /pg-pool@3.5.1(pg@8.7.3):
     resolution: {integrity: sha512-6iCR0wVrro6OOHFsyavV+i6KYL4lVNyYAB9RD18w66xSzN+d8b66HiwuP30Gp1SH5O9T82fckkzsRjlrhD0ioQ==}
@@ -11912,7 +11917,6 @@ packages:
 
   /pg-protocol@1.5.0:
     resolution: {integrity: sha512-muRttij7H8TqRNu/DxrAJQITO4Ac7RmX3Klyr/9mJEOBeIpgnF8f9jAfRz5d3XwQZl5qBjF9gLsUtMPJE0vezQ==}
-    dev: false
 
   /pg-types@2.2.0:
     resolution: {integrity: sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==}
@@ -11923,7 +11927,6 @@ packages:
       postgres-bytea: 1.0.0
       postgres-date: 1.0.7
       postgres-interval: 1.2.0
-    dev: false
 
   /pg@8.7.3:
     resolution: {integrity: sha512-HPmH4GH4H3AOprDJOazoIcpI49XFsHCe8xlrjHkWiapdbHK+HLtbm/GQzXYAZwmPju/kzKhjaSfMACG+8cgJcw==}
@@ -12115,24 +12118,20 @@ packages:
   /postgres-array@2.0.0:
     resolution: {integrity: sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==}
     engines: {node: '>=4'}
-    dev: false
 
   /postgres-bytea@1.0.0:
     resolution: {integrity: sha512-xy3pmLuQqRBZBXDULy7KbaitYqLcmxigw14Q5sj8QBVLqEwXfeybIKVWiqAXTlcvdvb0+xkOtDbfQMOf4lST1w==}
     engines: {node: '>=0.10.0'}
-    dev: false
 
   /postgres-date@1.0.7:
     resolution: {integrity: sha512-suDmjLVQg78nMK2UZ454hAG+OAW+HQPZ6n++TNDUX+L0+uUlLywnoxJKDou51Zm+zTCjrCl0Nq6J9C5hP9vK/Q==}
     engines: {node: '>=0.10.0'}
-    dev: false
 
   /postgres-interval@1.2.0:
     resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==}
     engines: {node: '>=0.10.0'}
     dependencies:
       xtend: 4.0.2
-    dev: false
 
   /potpack@2.0.0:
     resolution: {integrity: sha512-Q+/tYsFU9r7xoOJ+y/ZTtdVQwTWfzjbiXBDMM/JKUux3+QPP02iUuIoeBQ+Ot6oEDlC+/PGjB/5A3K7KKb7hcw==}
@@ -13052,6 +13051,7 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
+    dev: true
 
   /semver@7.5.4:
     resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==}
@@ -13140,7 +13140,7 @@ packages:
       pg-connection-string: 2.5.0
       pg-hstore: 2.3.4
       retry-as-promised: 5.0.0
-      semver: 7.5.1
+      semver: 7.6.0
       sequelize-pool: 7.1.0
       sqlite3: 5.0.8
       toposort-class: 1.0.1

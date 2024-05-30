@@ -4,10 +4,10 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-// import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
-// import { TaxonSpeciesCallModel } from '@rfcx-bio/common/dao/models/taxon-species-call-model'
-// import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-// import { TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
+// import { LocationSiteModel } from '@rfcx-bio/node-common/dao/models/location-site-model'
+// import { TaxonSpeciesCallModel } from '@rfcx-bio/node-common/dao/models/taxon-species-call-model'
+// import { TaxonSpeciesModel } from '@rfcx-bio/node-common/dao/models/taxon-species-model'
+// import { TaxonSpeciesCall } from '@rfcx-bio/node-common/dao/types'
 // import { isDefined } from '@rfcx-bio/utils/predicates'
 
 // import { rawSpeciesCallData } from '../_data/taxon-species-call'

@@ -1,7 +1,7 @@
 import { readFile, unlink } from 'fs/promises'
 import { type Sequelize } from 'sequelize'
 
-import { BackupStatus } from '@rfcx-bio/common/dao/types/backup'
+import { BackupStatus } from '@rfcx-bio/node-common/dao/types/backup'
 import type { StorageClient } from '@rfcx-bio/node-common/storage'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 

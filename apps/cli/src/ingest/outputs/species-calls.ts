@@ -1,7 +1,7 @@
 import { type Sequelize, type Transaction } from 'sequelize'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type SyncError, type TaxonSpeciesCall } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type SyncError, type TaxonSpeciesCall } from '@rfcx-bio/node-common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { type SpeciesCallArbimon, mapSpeciesCallArbimonWithBioFk, transformTemplateArbimonToSpeciesCallBio } from '../parsers/parse-species-call-arbimon-to-bio'

@@ -1,6 +1,6 @@
 import { type Sequelize, Op } from 'sequelize'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { buildVariantPath, isS3Image } from '@rfcx-bio/node-common/api-bio/_helpers'
 import { resizeImage } from '@rfcx-bio/node-common/image'
 import { type GetObjectResponse, type StorageClient } from '@rfcx-bio/node-common/storage'

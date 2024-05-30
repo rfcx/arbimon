@@ -1,5 +1,5 @@
 import { type RichnessByExportReportRow } from '@rfcx-bio/common/api-bio/richness/richness-export'
-import { type TaxonClass } from '@rfcx-bio/common/dao/types'
+import { type TaxonClass } from '@rfcx-bio/node-common/dao/types'
 import { type JsZipFile, toCsv, zipAndDownload } from '@rfcx-bio/utils/file'
 
 import { getCSVDatasetMetadata } from '~/export'

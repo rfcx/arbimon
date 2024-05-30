@@ -1,4 +1,4 @@
-import { type Site } from '@rfcx-bio/common/dao/types'
+import { type Site } from '@rfcx-bio/node-common/dao/types'
 
 import { fakeProject } from './projects'
 

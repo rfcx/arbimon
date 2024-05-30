@@ -1,7 +1,7 @@
 import { type Sequelize } from 'sequelize'
 import { type Literal } from 'sequelize/dist/lib/utils'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 
 import { getSiteIdsFromQuerySiteNames } from '@/detect/jobs/detect-recording-bll'
 import { getSequelize } from '~/db'

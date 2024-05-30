@@ -1,8 +1,8 @@
 import { type Optional, type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
-import { type Site } from '@rfcx-bio/common/dao/types'
+import { LocationSiteModel } from '@rfcx-bio/node-common/dao/models/location-site-model'
+import { type Site } from '@rfcx-bio/node-common/dao/types'
 import { rawSites } from '@rfcx-bio/common/mock-data'
 
 import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
