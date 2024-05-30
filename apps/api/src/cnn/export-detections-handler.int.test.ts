@@ -1,7 +1,9 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 
+import { EXPORT_DETECTIONS_TYPES } from '@rfcx-bio/common/api-bio/cnn/export-detections'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
+import { exportDetections } from './export-detections-bll'
 import { routesCnn } from './index'
 
 describe('POST /jobs/:jobId/detections-export', () => {
@@ -14,5 +16,66 @@ describe('POST /jobs/:jobId/detections-export', () => {
 
     // Assert
     expect(keys).toContain('/jobs/:jobId/detections-export')
+  })
+
+  test('string job id will be rejected', async () => {
+    // Arrange
+    const app = await makeApp(routesCnn, {
+      userToken: {
+        email: 'grindarius@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'POST',
+      url: '/jobs/abc/detections-export'
+    })
+
+    expect(response.statusCode).toEqual(400)
+  })
+
+  test('if no export types are given, all export types are used', async () => {
+    const spy = vi.spyOn({ exportDetections }, 'exportDetections')
+    const app = await makeApp(routesCnn, {
+      userToken: {
+        email: 'grindarius@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'POST',
+      url: '/jobs/121/detections-export',
+      payload: {
+        types: []
+      }
+    })
+
+    // Assert
+    expect(spy).toHaveBeenCalledWith(121, EXPORT_DETECTIONS_TYPES, 'grindarius@rfcx.org')
+    expect(response.statusCode).toEqual(201)
+  })
+
+  test('correctly parses export types', async () => {
+    const spy = vi.spyOn({ exportDetections }, 'exportDetections')
+    const app = await makeApp(routesCnn, {
+      userToken: {
+        email: 'grindarius@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'POST',
+      url: '/jobs/122/detections-export',
+      payload: {
+        types: ['all-model-detections']
+      }
+    })
+
+    // Assert
+    expect(spy).toHaveBeenCalledWith(121, ['all-model-detections'], 'grindarius@rfcx.org')
+    expect(response.statusCode).toEqual(201)
   })
 })
