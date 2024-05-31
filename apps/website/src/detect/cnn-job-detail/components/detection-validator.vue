@@ -11,8 +11,9 @@
       <button
         id="validationDropdownBtn"
         data-dropdown-toggle="validationDropdownHover"
-        class="flex flex-row items-center justify-between bg-transparent border-1 border-frequency rounded-full text-insight px-5 py-2 w-48"
+        class="flex flex-row items-center justify-between bg-transparent border-1 border-frequency rounded-full text-insight px-5 py-2 w-48 disabled:(border-util-gray-01 text-util-gray-01)"
         type="button"
+        :disabled="props.isProcessing"
       >
         <div class="flex flex-row items-center gap-x-2">
           <ValidationStatus :value="props.validation" />
@@ -36,7 +37,7 @@
           >
             <div
               class="border-1 rounded-full cursor-pointer bg-moss"
-              :class="{'border-chirp': props.validation === option.value, 'border-transparent': props.validation !== option.value}"
+              :class="{'cursor-not-allowed text-util-gray-01': props.isProcessing, 'border-chirp': props.validation === option.value, 'border-transparent': props.validation !== option.value}"
             >
               <div
                 class="flex flex-row gap-x-2 items-center h-10 pl-5"
@@ -48,6 +49,10 @@
           </li>
         </ul>
       </div>
+      <icon-custom-ic-loading
+        v-if="props.isProcessing"
+        class="animate-spin w-6 h-6 text-insight"
+      />
     </div>
 
     <div class="text-base flex gap-x-5 items-center">
@@ -77,7 +82,8 @@ import ValidationStatus from './validation-status.vue'
 const props = defineProps<{
   detectionCount: number | null,
   filterOptions: DetectionValidationStatus[],
-  validation: ArbimonReviewStatus
+  validation: ArbimonReviewStatus,
+  isProcessing: boolean
 }>()
 
 const emit = defineEmits<{(e: 'emitValidation', validation: ArbimonReviewStatus): void, (e: 'emitClose'): void}>()
@@ -90,6 +96,7 @@ const formatStatus = (status: ArbimonReviewStatus | 'all') => {
 }
 
 const validateDetections = (value: ArbimonReviewStatus) => {
+  if (props.isProcessing) return
   emit('emitValidation', value)
 }
 

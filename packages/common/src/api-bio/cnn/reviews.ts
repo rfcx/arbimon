@@ -19,5 +19,6 @@ export const updateDetectionStatusRoute = '/detections/review'
 
 // Service
 export const apiBioUpdateDetectionStatus = async (apiClient: AxiosInstance, body: UpdateDetectionStatusBody): Promise<void> => {
+  console.info('VALIDATION: post-detection-status', body.status, body.start)
   await apiClient.post(updateDetectionStatusRoute, body)
 }
