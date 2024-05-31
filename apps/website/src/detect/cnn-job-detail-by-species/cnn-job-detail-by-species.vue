@@ -45,11 +45,10 @@ import { type ValidationStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-j
 import { type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections'
 import type { GetDetectionsSummaryQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections-summary'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
-import { apiArbimonLegacyFindRecording } from '@rfcx-bio/common/api-arbimon/recordings-query'
 
 import { useGetBestDetections, useGetBestDetectionsSummary } from '@/detect/_composables/use-get-best-detections'
-import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
-import { useDetectionsResultFilterBySpeciesStore, useStore } from '~/store'
+import { apiClientKey } from '@/globals'
+import { useDetectionsResultFilterBySpeciesStore } from '~/store'
 import { useGetClassifierJobInfo, useGetDetectionsSummary, useGetJobDetections } from '../_composables/use-get-detections'
 import JobDetailHeader from './components/job-detail-header.vue'
 import JobDetections from './components/job-detections.vue'
@@ -60,7 +59,6 @@ const route = useRoute()
 const pageSizeLimit = ref<number>(25)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
-const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
@@ -84,9 +82,6 @@ const classifierId = computed(() => {
 const { data: jobResultsSummary, isLoading: isLoadingClassifierInfo } = useGetClassifierJobInfo(apiClientBio, jobId.value, speciesSlug.value)
 const bestPerFilterApplied = computed(() => selectedGrouping.value === 'topScorePerSitePerDay' || selectedGrouping.value === 'topScorePerSite')
 
-const store = useStore()
-const selectedProject = computed(() => store.project)
-
 watch(jobResultsSummary, async (newValue) => {
   if (newValue === null || newValue === undefined) {
     return
@@ -94,9 +89,6 @@ watch(jobResultsSummary, async (newValue) => {
 
   detectionsResultFilterBySpeciesStore.updateStartEndRanges(newValue.queryStart, newValue.queryEnd, 7)
   detectionsResultFilterBySpeciesStore.updateCustomSitesList(newValue.streams)
-
-  const response = await apiArbimonLegacyFindRecording(apiClientArbimon, selectedProject.value?.slug ?? '', { start: '2022-12-07T11:51:26.000Z', site_external_id: 'aka1urf6ppyj' })
-
 })
 
 const detectionsQueryParams = computed<GetDetectionsQueryParams>(() => {

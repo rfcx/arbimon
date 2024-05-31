@@ -61,6 +61,7 @@
       <div
         v-if="!spectrogramLoading && spectrogram"
         class="absolute bottom-2 left-2 cursor-pointer"
+        @click="onVisualizerRedirect"
       >
         <icon-custom-fi-visualizer-redirect class="w-6.3 h-6.3" />
       </div>
@@ -91,12 +92,13 @@
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
 import { Howl } from 'howler'
-import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
+import { apiArbimonLegacyFindRecording } from '@rfcx-bio/common/api-arbimon/recordings-query'
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { apiCoreGetMedia } from '@rfcx-bio/common/api-core/media/core-media'
 
-import { apiClientMediaKey } from '@/globals'
+import { apiClientArbimonLegacyKey, apiClientMediaKey } from '@/globals'
 import { useStore } from '~/store'
 import type { DetectionEvent } from './types'
 import ValidationStatus from './validation-status.vue'
@@ -122,6 +124,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{(e: 'emitDetection', detectionId: number, event: DetectionEvent): void}>()
 const store = useStore()
+const selectedProject = computed(() => store.project)
 
 const spectrogramLoading = ref(false)
 const audioLoading = ref(false)
@@ -129,6 +132,7 @@ const highlightBorder = ref(false)
 const isSelected = ref<boolean>(false)
 
 const apiMedia = inject(apiClientMediaKey) as AxiosInstance
+const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
 const audio = ref<Howl | null>(null)
 const spectrogram = ref<string | null>(null)
@@ -191,6 +195,13 @@ const play = async () => {
 
 const stop = () => {
   audio.value?.stop()
+}
+
+const onVisualizerRedirect = async (): Promise<void> => {
+  const response = await apiArbimonLegacyFindRecording(apiClientArbimon, selectedProject.value?.slug ?? '', { start: '2022-12-07T11:51:26.000Z', site_external_id: 'aka1urf6ppyj' })
+  if (response !== null) return
+  // window.location.replace(`${window.location.origin}/project/${selectedProject.value?.slug}/visualizer/rec/${response}`)
+  window.location.replace(`https://staging.arbimon.org/project/${selectedProject.value?.slug}/visualizer/rec/${response}`)
 }
 
 const toggleDetection = (event: MouseEvent) => {
