@@ -3,8 +3,14 @@ import { describe, expect, test, vi } from 'vitest'
 import { EXPORT_DETECTIONS_TYPES } from '@rfcx-bio/common/api-bio/cnn/export-detections'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
-import { exportDetections } from './export-detections-bll'
+import * as bll from './export-detections-bll'
 import { routesCnn } from './index'
+
+vi.mock('@rfcx-bio/node-common/kubernetes', () => {
+  return {
+    createJob: vi.fn(async () => {})
+  }
+})
 
 describe('POST /jobs/:jobId/detections-export', () => {
   test('route exists', async () => {
@@ -36,7 +42,7 @@ describe('POST /jobs/:jobId/detections-export', () => {
   })
 
   test('if no export types are given, all export types are used', async () => {
-    const spy = vi.spyOn({ exportDetections }, 'exportDetections')
+    const spy = vi.spyOn(bll, 'exportDetections')
     const app = await makeApp(routesCnn, {
       userToken: {
         email: 'grindarius@rfcx.org'
@@ -58,7 +64,7 @@ describe('POST /jobs/:jobId/detections-export', () => {
   })
 
   test('correctly parses export types', async () => {
-    const spy = vi.spyOn({ exportDetections }, 'exportDetections')
+    const spy = vi.spyOn(bll, 'exportDetections')
     const app = await makeApp(routesCnn, {
       userToken: {
         email: 'grindarius@rfcx.org'
@@ -75,7 +81,7 @@ describe('POST /jobs/:jobId/detections-export', () => {
     })
 
     // Assert
-    expect(spy).toHaveBeenCalledWith(121, ['all-model-detections'], 'grindarius@rfcx.org')
+    expect(spy).toHaveBeenCalledWith(122, ['all-model-detections'], 'grindarius@rfcx.org')
     expect(response.statusCode).toEqual(201)
   })
 })
