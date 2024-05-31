@@ -10,6 +10,7 @@
       :style="{ height: `${props.mapHeight}px` }"
     />
     <div
+      v-else-if="hasData"
       v-show="hasData"
       class="relative"
     >
@@ -54,6 +55,16 @@
           @emit-config-change="setupHeatmapRadiusValue"
         />
       </div>
+    </div>
+    <div
+      v-else
+      class="flex justify-center items-center text-subtle text-center border-2 border-faded"
+      :style="{ height: `${props.mapHeight}px` }"
+    >
+      <span>
+        It seems the map didn’t load as expected. <br>
+        Kindly refresh your browser to give it another go.
+      </span>
     </div>
   </div>
 </template>
