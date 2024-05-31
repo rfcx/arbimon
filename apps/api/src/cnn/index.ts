@@ -11,7 +11,6 @@ import { exportDetectionsRoute } from '@rfcx-bio/common/api-bio/cnn/export-detec
 import { getRecordedMinutesPerDayRoute } from '@rfcx-bio/common/api-bio/cnn/recorded-minutes-per-day'
 import { updateDetectionStatusRoute } from '@rfcx-bio/common/api-bio/cnn/reviews'
 
-import { requireAuthorized } from '@/_hooks/require-authenticated'
 import { requireRfcxEmail } from '@/_hooks/require-rfcx-user'
 import { type RouteRegistration, GET, PATCH, POST } from '~/api-helpers/types'
 import { createClassifierJobHandler } from './create-classifier-job-handler'
