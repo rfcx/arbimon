@@ -4,8 +4,8 @@ import { readFile } from 'node:fs/promises'
 import { type Sequelize, Op } from 'sequelize'
 
 import { type ExportDetectionsType, EXPORT_DETECTIONS_TYPES } from '@rfcx-bio/common/api-bio/cnn/export-detections'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type StorageClient } from '@rfcx-bio/common/storage'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type StorageClient } from '@rfcx-bio/node-common/storage'
 import { chunkDates } from '@rfcx-bio/utils/dates'
 
 import { type ApiCoreClient } from '~/api-core/api-core-client'
