@@ -112,7 +112,8 @@ const props = withDefaults(defineProps<{
   score?: number | undefined,
   start?: string | undefined,
   site?: string | undefined,
-  selectedGrouping?: string | undefined
+  selectedGrouping?: string | undefined,
+  siteIdCore?: string | undefined
 }>(), {
   id: null,
   checked: null,
@@ -198,10 +199,10 @@ const stop = () => {
 }
 
 const onVisualizerRedirect = async (): Promise<void> => {
-  const response = await apiArbimonLegacyFindRecording(apiClientArbimon, selectedProject.value?.slug ?? '', { start: '2022-12-07T11:51:26.000Z', site_external_id: 'aka1urf6ppyj' })
-  if (response !== null) return
-  // window.location.replace(`${window.location.origin}/project/${selectedProject.value?.slug}/visualizer/rec/${response}`)
-  window.location.replace(`https://staging.arbimon.org/project/${selectedProject.value?.slug}/visualizer/rec/${response}`)
+  if (!props.start || !props.siteIdCore) return
+  const response = await apiArbimonLegacyFindRecording(apiClientArbimon, selectedProject.value?.slug ?? '', { start: props.start, site_external_id: props.siteIdCore })
+  if (response === null) return
+  window.location.replace(`${window.location.origin}/project/${selectedProject.value?.slug}/visualizer/rec/${response}`)
 }
 
 const toggleDetection = (event: MouseEvent) => {
