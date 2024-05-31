@@ -1,8 +1,8 @@
 import { QueryTypes } from 'sequelize'
 
+import { type ProjectRole, getIdByRole, getRoleById } from '@rfcx-bio/common/roles'
 import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { type LocationProjectUserRole, type UserProfile } from '@rfcx-bio/node-common/dao/types'
-import { type ProjectRole, getIdByRole, getRoleById } from '@rfcx-bio/common/roles'
 
 import { getSequelize } from '~/db'
 import { fileUrl } from '~/format-helpers/file-url'

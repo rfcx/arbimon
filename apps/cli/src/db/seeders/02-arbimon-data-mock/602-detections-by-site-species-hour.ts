@@ -1,12 +1,12 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
+import { rawDetections } from '@rfcx-bio/common/mock-data'
 import { DetectionBySiteSpeciesHourModel, UPDATE_ON_DUPLICATE_DETECTION_BY_SITE_SPECIES_HOUR } from '@rfcx-bio/node-common/dao/models/detection-by-site-species-hour-model'
 import { LocationSiteModel } from '@rfcx-bio/node-common/dao/models/location-site-model'
 import { TaxonClassModel } from '@rfcx-bio/node-common/dao/models/taxon-class-model'
 import { TaxonSpeciesModel } from '@rfcx-bio/node-common/dao/models/taxon-species-model'
 import { type DetectionBySiteSpeciesHour } from '@rfcx-bio/node-common/dao/types'
-import { rawDetections } from '@rfcx-bio/common/mock-data'
 
 import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
 
