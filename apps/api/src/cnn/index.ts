@@ -98,7 +98,7 @@ export const routesCnn: RouteRegistration[] = [
   {
     method: POST,
     url: exportDetectionsRoute,
-    preHandler: [requireAuthorized],
+    preHandler: [requireRfcxEmail],
     handler: exportDetectionsHandler
   },
   {
