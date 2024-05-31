@@ -195,6 +195,7 @@ watchEffect(() => {
 
 const onEmitPageSize = async (pageSize: number) => {
   pageSizeLimit.value = pageSize
+  page.value = 1 // reset the page to 1 when the page size is changed
 
   if (bestPerFilterApplied.value) {
     await refetchBestDetectionsData()

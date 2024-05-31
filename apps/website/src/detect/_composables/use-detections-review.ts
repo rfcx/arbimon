@@ -7,11 +7,13 @@ import { type DetectionEvent, type DetectionMedia } from '../cnn-job-detail/comp
 export interface UseDetectionsReview {
   validationCount: Ref<number>
   isOpen: Ref<boolean>
+  isProcessing: Ref<boolean>
   closeValidator: () => void
   updateSelectedDetections: (detectionId: number, event: DetectionEvent) => void
   updateValidatedDetections: (selectedDetectionIds: number[], validation: ArbimonReviewStatus, responses: Array<PromiseSettledResult<void>>) => void
   getSelectedDetections: () => Array<{ id: number, prevStatus: ArbimonReviewStatus }>
   getSuggestedValidationStatus: () => ArbimonReviewStatus
+  updateIsProcessing: (status: boolean) => void
 }
 
 export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug: string, speciesName: string, media: DetectionMedia[] }>>): UseDetectionsReview => {
@@ -19,6 +21,7 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
   const isOpen = ref<boolean>(false)
   const isShiftHolding = ref<boolean>(false)
   const isCtrlHolding = ref<boolean>(false)
+  const isProcessing = ref<boolean>(false)
   const currentDetectionId = ref<number | undefined>(undefined)
 
   watch(isShiftHolding, (newVal, oldVal) => {
@@ -152,13 +155,19 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
     return status
   }
 
+  const updateIsProcessing = (status: boolean): void => {
+    isProcessing.value = status
+  }
+
   return {
     validationCount,
     isOpen,
+    isProcessing,
     closeValidator,
     updateSelectedDetections,
     updateValidatedDetections,
     getSelectedDetections,
-    getSuggestedValidationStatus
+    getSuggestedValidationStatus,
+    updateIsProcessing
   }
 }
