@@ -22,6 +22,8 @@ const {
 const main = async (): Promise<void> => {
   const consola = createConsola({ fancy: false })
   consola.info('Arbimon export detections started on jobId:', jobId)
+  consola.info('receiver email:', userEmail)
+  consola.info('export types:', exportTypes)
 
   try {
     const apiClient = ApiCoreClient.getInstance(clientSecret)

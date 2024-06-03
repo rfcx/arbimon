@@ -74,7 +74,7 @@ export const exportDetectionsJob = (name: string, classifierJobId: number, expor
             command: [
               'node',
               '--experimental-specifier-resolution=node',
-              'apps/cli/lib/export-cnn/export-cnn.js'
+              'apps/cli/lib/export-cnn/index.js'
             ]
           }
         ],
