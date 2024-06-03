@@ -59,6 +59,7 @@ const route = useRoute()
 const pageSizeLimit = ref<number>(25)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
+
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 const speciesSlug = computed(() => typeof route.params.speciesSlug === 'string' ? route.params.speciesSlug : '')
