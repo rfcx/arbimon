@@ -17,7 +17,7 @@ import { ROUTE_NAMES } from '~/router';
             The platform
           </h5>
           <p class="mb-6">
-            Arbimon is an open-source ecoacoustic analysis platform empowering scientists and conservationists with an efficient way to upload, store, and analyze mass amounts of acoustic data, enabling the ability to derive insights about the ecosystem at scale.
+            Arbimon is an ecoacoustic analysis platform empowering scientists and conservationists with an efficient way to upload, store, and analyze mass amounts of acoustic data, enabling the ability to derive insights about the ecosystem at scale.
           </p>
           <a
             v-if="toggles?.legacyLogin"
