@@ -36,12 +36,22 @@
     </div>
     <MarkdownViewer
       v-show="!isEditing"
+      v-if="rawMarkdownText !== null && rawMarkdownText !== ''"
       :id="`${id}-markdown-viewer-component`"
       ref="markdownViewerRef"
       :class="isViewMored === true ? 'z-0' : 'max-h-128 overflow-y-hidden z-0'"
       :expanded="isViewMored"
       :markdown="editableMarkdownText"
     />
+    <div
+      v-else-if="rawMarkdownText == null || rawMarkdownText === '' && !isEditing"
+      class="mt-6"
+    >
+      <p class="text-fog text-center py-6">
+        It seems the section didn’t load as expected. <br>
+        Please refresh your browser to give it another go.
+      </p>
+    </div>
     <div>
       <button
         v-show="!isEditing && isMarkdownTextLong"
