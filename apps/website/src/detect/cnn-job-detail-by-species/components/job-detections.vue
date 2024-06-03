@@ -36,7 +36,7 @@
               :validation="dt.validation"
               :checked="dt.checked"
               :site="dt.site"
-              :site-id-core="dt.siteCoreId"
+              :site-id-core="dt.siteIdCore"
               :start="dt.start"
               :score="dt.score"
               :selected-grouping="selectedGrouping"
@@ -230,7 +230,7 @@ const allSpecies = computed<Array<{ siteName: string, speciesSlug: string, speci
           validation: detection.reviewStatus,
           score: detection.confidence,
           start: detection.start,
-          siteCoreId: detection.siteIdCore,
+          siteIdCore: detection.siteIdCore,
           site: store.projectFilters?.locationSites.filter((site) => site.idCore === detection.siteIdCore)[0]?.name ?? ''
         }
       })

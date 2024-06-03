@@ -125,7 +125,6 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{(e: 'emitDetection', detectionId: number, event: DetectionEvent): void}>()
 const store = useStore()
-const selectedProject = computed(() => store.project)
 
 const spectrogramLoading = ref(false)
 const audioLoading = ref(false)
@@ -200,9 +199,9 @@ const stop = () => {
 
 const onVisualizerRedirect = async (): Promise<void> => {
   if (!props.start || !props.siteIdCore) return
-  const response = await apiArbimonLegacyFindRecording(apiClientArbimon, selectedProject.value?.slug ?? '', { start: props.start, site_external_id: props.siteIdCore })
+  const response = await apiArbimonLegacyFindRecording(apiClientArbimon, store.project?.slug ?? '', { start: props.start, site_external_id: props.siteIdCore })
   if (response === null) return
-  window.location.replace(`${window.location.origin}/project/${selectedProject.value?.slug}/visualizer/rec/${response}`)
+  window.location.assign(`${window.location.origin}/project/${store.project?.slug}/visualizer/rec/${response}`)
 }
 
 const toggleDetection = (event: MouseEvent) => {
