@@ -119,9 +119,18 @@
     }"
   >
     <div
+      v-if="!isErrorMetrics"
       class="max-w-screen-xl mx-auto py-10"
     >
       <router-view />
+    </div>
+    <div v-else>
+      <div class="flex items-center justify-center h-full mt-10 mx-auto py-10">
+        <span class="text-center">
+          It seems the section didn’t load as expected. <br>
+          Please refresh your browser to give it another go.
+        </span>
+      </div>
     </div>
   </div>
   <footer-bar v-if="!store.userIsProjectMember || isViewingAsGuest" />

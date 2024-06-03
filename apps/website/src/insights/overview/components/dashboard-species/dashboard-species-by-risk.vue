@@ -19,8 +19,13 @@
       <p>&nbsp;</p>
     </div> -->
     </div>
-    <div v-else-if="isError">
-      something went wrong
+    <div
+      v-else-if="isError"
+      class="w-full text-center items-center rounded-lg p-4 shadow bg-util-gray-04 border border-util-gray-02 mt-3"
+    >
+      <span>
+        It seems the section didn’t load as expected.Please refresh your browser to give it another go.
+      </span>
     </div>
     <div
       v-else-if="richnessByRisk"
