@@ -17,27 +17,31 @@ export interface GetOrganizationLogoResponse {
 }
 
 export const getOrganizationLogoLink = async (url: string): Promise<string | undefined> => {
-  const response = await axios.get<GetOrganizationLogoResponse>('https://besticon-demo.herokuapp.com/allicons.json', {
-    params: {
-      url
+  try {
+    const response = await axios.get<GetOrganizationLogoResponse>('https://besticon-demo.herokuapp.com/allicons.json', {
+      params: {
+        url
+      }
+    })
+
+    // If the length is only one, we take it immediately.
+    // If the length is not one. We find and take the biggest one
+    if (response.data.icons.length === 0) {
+      return undefined
     }
-  })
 
-  // If the length is only one, we take it immediately.
-  // If the length is not one. We find and take the biggest one
-  if (response.data.icons.length === 0) {
+    if (response.data.icons.length === 1) {
+      return response.data.icons[0].url
+    }
+
+    const biggestImage = maxBy(response.data.icons, (l) => l.height)
+
+    if (biggestImage == null) {
+      return undefined
+    }
+
+    return biggestImage.url
+  } catch (_e) {
     return undefined
   }
-
-  if (response.data.icons.length === 1) {
-    return response.data.icons[0].url
-  }
-
-  const biggestImage = maxBy(response.data.icons, (l) => l.height)
-
-  if (biggestImage == null) {
-    return undefined
-  }
-
-  return biggestImage.url
 }
