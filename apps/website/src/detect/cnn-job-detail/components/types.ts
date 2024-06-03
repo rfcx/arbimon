@@ -18,6 +18,7 @@ export interface DetectionMedia {
   validation: ArbimonReviewStatus
   score?: number
   site?: string
+  siteIdCore?: string
   start?: string
 }
 
