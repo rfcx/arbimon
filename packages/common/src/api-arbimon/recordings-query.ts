@@ -7,7 +7,7 @@ export interface RecordingsQueryParams {
   project_id?: number
 }
 
-export const apiArbimonLegacyFindRecording = async (apiClient: AxiosInstance, slug: string, params: RecordingsQueryParams): Promise<number | undefined> => {
-  const response = await apiClient.get<number>(`/legacy-api/project/${slug}/recordings/query`, { params })
-  return response.data
+export const apiArbimonLegacyFindRecording = async (apiClient: AxiosInstance, slug: string, params: RecordingsQueryParams): Promise<number> => {
+  const response = await apiClient.get(`/legacy-api/project/${slug}/recordings/query`, { params })
+  return Number(response.data)
 }

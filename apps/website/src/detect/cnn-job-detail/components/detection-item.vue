@@ -92,7 +92,7 @@
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
 import { Howl } from 'howler'
-import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { apiArbimonLegacyFindRecording } from '@rfcx-bio/common/api-arbimon/recordings-query'
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
@@ -200,7 +200,7 @@ const stop = () => {
 const onVisualizerRedirect = async (): Promise<void> => {
   if (!props.start || !props.siteIdCore) return
   const response = await apiArbimonLegacyFindRecording(apiClientArbimon, store.project?.slug ?? '', { start: props.start, site_external_id: props.siteIdCore })
-  if (response === null) return
+  if (response == null) return
   window.location.assign(`${window.location.origin}/project/${store.project?.slug}/visualizer/rec/${response}`)
 }
 
