@@ -33,10 +33,20 @@
         </h2>
         <h6>Number of species detected in each taxonomic group.</h6>
         <stack-distribution
+          v-if="!isErrorStackDistribution"
           :dataset="speciesRichnessByTaxon"
           :known-total-count="totalSpecies"
           class="my-6"
+          @error="handleStackDistributionError"
         />
+        <div
+          v-else
+          class="w-full rounded-lg p-4 shadow bg-util-gray-04 border border-util-gray-02 mt-3"
+        >
+          <p class="text-xs">
+            It seems the section didn’t load as expected. Please refresh your browser to give it another go.
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -53,7 +63,7 @@
 
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
-import { type ComputedRef, computed, inject, watch } from 'vue'
+import { type ComputedRef, computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { apiClientKey } from '@/globals'
@@ -122,4 +132,8 @@ watch(() => species.value?.totalSpeciesCount, () => {
   dashboardStore.updateSpeciesCount(`${species.value?.totalSpeciesCount ?? 0}`)
 })
 
+const isErrorStackDistribution = ref(false)
+const handleStackDistributionError = () => {
+  isErrorStackDistribution.value = true
+}
 </script>

@@ -1,5 +1,14 @@
 <template>
-  <div class="my-4 flex gap-2 font-display text-insight text-sm flex-wrap">
+  <div
+    v-if="!isDataAvailable"
+    class="text-insight text-sm"
+  >
+    It seems the section didn’t load as expected. Please refresh your browser to give it another go.
+  </div>
+  <div
+    v-else
+    class="my-4 flex gap-2 font-display text-insight text-sm flex-wrap"
+  >
     <div
       class="flex flex-row items-center font-display text-sm"
     >
@@ -43,21 +52,8 @@
           v-else
         />
       </div>
-      <span
-        v-else
-        class="text-insight text-sm"
-      >
-        Site: No data
-      </span>
     </div>
     <div
-      v-if="profile?.dateStart === null && profile?.dateEnd === null"
-      class="flex flex-row border-l-2 border-util-gray-01 pl-2 space-x-4 items-center"
-    >
-      <span>Project dates: No data</span>
-    </div>
-    <div
-      v-else
       class="flex flex-row border-l-2 border-util-gray-01 pl-2 space-x-2 items-center"
     >
       <span>Project dates:</span>
@@ -137,6 +133,14 @@ const projectObjectivesText = computed(() => {
     return objectiveType?.description ?? obj
   })
   return objectiveDescs?.join(', ')
+})
+
+const isDataAvailable = computed(() => {
+  return (
+    (props.profile?.countryCodes && props.profile.countryCodes.length > 0) ||
+    (props.profile?.dateStart !== null && props.profile?.dateEnd !== null) ||
+    (props.profile.objectives.length > 0)
+  )
 })
 
 </script>

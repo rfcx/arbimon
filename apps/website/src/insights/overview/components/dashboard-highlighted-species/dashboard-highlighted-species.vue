@@ -31,6 +31,12 @@
       v-if="speciesList && speciesList.length > 0 && !isLoading"
       :species="speciesList"
     />
+    <div
+      v-else-if="props.species === undefined && !isLoading"
+      class="w-full rounded-lg p-4 shadow bg-util-gray-04 border border-util-gray-02"
+    >
+      <span>It seems the section didn’t load as expected. Please refresh your browser to give it another go.</span>
+    </div>
     <EmptySpeciesList
       v-if="canEdit && !speciesList.length && !isLoading"
     />
