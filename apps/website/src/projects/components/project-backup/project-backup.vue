@@ -6,7 +6,15 @@
     <div class="flex flex-col xl:flex-row gap-6 justify-between">
       <div class="w-full xl:w-2/4">
         <p class="text-secondary">
-          You can request a backup every 7 days, containing all sites, recordings (+ links to raw files), PM results, validations, soundscapes in CSV format. Once requested, your download link will be ready within 24 hours. Remember, download links expire after 7 days (including links within the backup), so be sure to save your backup promptly.
+          The project backup allows you to download all raw data from your Arbimon project, including CSV files for sites, species, playlists, recordings, validations, and job results (PM, RFM, soundscapes, etc.).
+          You can use the links in recordings.csv to download all recordings. Backups can be requested every 7 days and the link will be ready within 24 hours. Note that download links expire after 7 days,
+          so save your backup promptly. <br>
+          <a
+            class="text-frequency underline"
+            href="https://help.arbimon.org/article/272-exporting-project-backups"
+          >
+            Learn more about project back-ups
+          </a>
         </p>
         <button
           v-if="!isLoading"
