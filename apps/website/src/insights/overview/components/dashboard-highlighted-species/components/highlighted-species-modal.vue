@@ -132,16 +132,27 @@
             </div>
             <div
               v-else
-              class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 items-center"
+              class="grid grid-cols-1 gap-y-4 sm:col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-2 items-center text-center"
             >
-              <h6
-                v-if="!speciesForCurrentPage.length"
-                class="text-center"
-              >
-                No species found.
-              </h6>
+              <div v-if="!speciesForCurrentPage.length">
+                <h6>
+                  No species found.
+                </h6>
+                <span class="text-xs">
+                  Please check your spelling or try different search terms. <br>
+                  If the species isn’t listed in Arbimon’s database, consider reaching out to our support team to request its addition.
+                </span>
+              </div>
               <div v-else>
+                <div
+                  v-if="!speciesForCurrentPage.length"
+                  class="items-center text-center"
+                >
+                  It seems the species didn’t load as expected.<br>
+                  Please refresh your browser to give it another go.
+                </div>
                 <ul
+                  v-else
                   class="grid gap-3 grid-cols-1 md:grid-rows-5 md:(grid-cols-2 grid-rows-5)"
                 >
                   <li
@@ -169,7 +180,10 @@
                     </div>
                   </li>
                 </ul>
-                <div class="flex justify-end items-center mt-4">
+                <div
+                  v-show="speciesForCurrentPage.length"
+                  class="flex justify-end items-center mt-4"
+                >
                   <div>
                     <input
                       v-model.number="currentPage"
@@ -244,6 +258,14 @@
                 />
               </button>
             </div>
+          </div>
+          <div
+            v-if="saveError"
+            class="text-danger text-right"
+          >
+            <p class="text-xs">
+              <span class="font-medium">A Server Error Occurred.</span> We encountered some issues while saving your selected species. Could you please try again?
+            </p>
           </div>
         </div>
       </div>
@@ -408,10 +430,16 @@ const findIndexToRemove = (slug: string): void => {
   showHaveReachedLimit.value = selectedSpecies.value.length >= 5
 }
 
+const saveError = ref(false)
 const saveHighlightedSpecies = async (): Promise<void> => {
-  if (speciesToRemove.value.length) await deleteHighlightedSpecies()
-  if (newSpeciesToAdd.value.length) await addHighlightedSpecies()
-  if (!speciesToRemove.value.length && !newSpeciesToAdd.value.length) emit('emitClose')
+  saveError.value = false
+  try {
+    if (speciesToRemove.value.length) await deleteHighlightedSpecies()
+    if (newSpeciesToAdd.value.length) await addHighlightedSpecies()
+    if (!speciesToRemove.value.length && !newSpeciesToAdd.value.length) emit('emitClose')
+  } catch (error) {
+    saveError.value = true
+  }
 }
 
 const deleteHighlightedSpecies = async (): Promise<void> => {
