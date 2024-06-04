@@ -37,6 +37,7 @@
             action="https://webto.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8"
             method="POST"
             class="space-y-8 p-10 dark:bg-echo rounded-l-2xl bg-gradient-to-br from-bg-moss to-bg-transparent"
+            @submit.prevent="handleSubmit"
           >
             <div v-if="isSubmitted">
               <div
@@ -330,6 +331,18 @@
               >
                 Send us a message
               </button>
+              <div
+                v-if="hasError"
+                class="mt-2"
+              >
+                <p class="text-xs text-flamingo">
+                  <span class="font-medium">
+                    A Server Error Occurred.
+                  </span>
+                  We encountered some issues while deleting the member. <br>
+                  Could you please try again?
+                </p>
+              </div>
             </div>
           </form>
         </div>
@@ -372,5 +385,25 @@ const description = computed(() => {
     return message.value
   }
 })
+
+const hasError = ref(false)
+const handleSubmit = async (event: Event) => {
+  hasError.value = false
+  try {
+    const response = await fetch((event.target as HTMLFormElement).action, {
+      method: 'POST',
+      body: new FormData(event.target as HTMLFormElement),
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+    if (!response.ok) {
+      throw new Error('A Server Error')
+    }
+    window.location.href = returnUrl
+  } catch (error) {
+    hasError.value = true
+  }
+}
 
 </script>
