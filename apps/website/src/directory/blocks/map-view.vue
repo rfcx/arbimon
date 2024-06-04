@@ -1,5 +1,15 @@
 <template>
   <div
+    v-if="hasError"
+    class="flex items-center justify-center h-screen text-center"
+  >
+    <span>
+      It seems the map didn’t load as expected.<br>
+      Please refresh your browser to give it another go.
+    </span>
+  </div>
+  <div
+    v-else
     ref="mapRoot"
     class="w-full h-full"
     :style="{ height: `100vh` }"
@@ -243,9 +253,12 @@ watch(() => props.selectedProjectId, (id) => {
   if (id === undefined) { return }
   goToProject(id)
 })
-
+const hasError = ref(false)
 // TODO: if the props.data updated, the data source of the map should be updated as well
 watch(() => props.data, (newData) => {
+  if (newData.length === 0) {
+    hasError.value = true
+  }
   // adjust map center
   map.easeTo({
     center: mapCenter.value
