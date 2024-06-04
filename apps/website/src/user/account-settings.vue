@@ -1,7 +1,19 @@
 <template>
   <landing-navbar />
   <section class="pt-16 mb-16 bg-white dark:bg-pitch">
-    <div class="block rounded-lg bg-moss py-3 px-4 mx-auto max-w-screen-md dark:bg-moss h-auto">
+    <div
+      v-if="!profileData"
+      class="flex rounded-lg bg-moss py-3 px-4 mx-auto max-w-screen-md dark:bg-moss items-center justify-center h-screen text-center"
+    >
+      <span>
+        It seems the page didn’t load as expected.<br>
+        Please refresh your browser to give it another go.
+      </span>
+    </div>
+    <div
+      v-else
+      class="block rounded-lg bg-moss py-3 px-4 mx-auto max-w-screen-md dark:bg-moss h-auto"
+    >
       <div class="py-2 px-4 mx-auto max-w-screen-md border-b-1 border-white/80">
         <h2 class="tracking-tight font-medium text-gray-900 dark:text-white">
           Account settings
@@ -37,6 +49,21 @@
             >
               Upload photo <icon-custom-cloud-upload class="ml-2 group-hover:stroke-pitch inline-flex" />
             </button>
+            <div
+              v-if="isLargeFile"
+              class="mt-3"
+            >
+              <p class="text-flamingo text-sm">
+                <span
+                  class="text-sm font-medium"
+                  role="alert"
+                >
+                  Upload Error: File Too Large.
+                </span>
+                The image must be smaller than 5MB. <br>
+                Please choose a file that meets this size requirement to continue.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -419,7 +446,7 @@ const createNewOrganization = (): void => {
     },
     onError: () => {
       hasFailed.value = true
-      errorMessage.value = "Please enter the organization's URL."
+      errorMessage.value = 'A Server Error Occurred. We encountered some issues while creating the organization. Could you please try again?'
 
       dropdownStatus.value = 'create-org'
       createNewOrganizationLoading.value = false
@@ -431,9 +458,14 @@ const selectPhoto = async (): Promise<void> => {
   document.getElementById('fileUpload')?.click()
 }
 
+const isLargeFile = ref(false)
 const uploadPhoto = async (e: Event): Promise<void> => {
   const target = e.target as HTMLInputElement
   const file: File = (target.files as FileList)[0]
+  // upload files larger than 5MB
+  if (file.size > 5 * 1024 * 1024) {
+    isLargeFile.value = true
+  }
   uploadedPhotoData.value.name = file.name
   uploadedPhotoData.value.type = file.type
   // the browser has NO ACCESS to the file path for security reasons
@@ -458,9 +490,13 @@ const saveAccountSetting = async (): Promise<void> => {
     displayTextAfterSaveWithSuccessStatus(false, 'Please enter your last name.')
     return
   }
-  await saveUserProfile()
-  if (uploadedPhotoUrl.value) {
-    await saveProfilePhoto()
+  try {
+    await saveUserProfile()
+    if (uploadedPhotoUrl.value) {
+      await saveProfilePhoto()
+    }
+  } catch (error) {
+    displayTextAfterSaveWithSuccessStatus(false, 'A Server Error Occurred. We encountered some issues while saving your changes. Could you please try again?')
   }
 }
 
