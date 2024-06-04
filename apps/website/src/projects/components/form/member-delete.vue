@@ -47,16 +47,20 @@
             <icon-custom-ic-loading class="my-6 mx-auto animate-spin" />
           </div>
           <div
-            v-if="isError"
+            v-if="!isError"
             class="bg-spoonbill mt-6 flex flex-row items-center p-2 border-l-3 rounded-lg border-l-ibis"
           >
-            <icon-custom-alert-triangle class="h-6 w-6 cursor-pointer text-ibis" />
-            <span
-              class="text-sm ml-2 text-util-gray-04 font-medium"
+            <p
               role="alert"
+              class=" ml-2 text-util-gray-04 text-xs"
             >
-              Action failed due to system errors. Please try again.
-            </span>
+              <span
+                class="font-medium"
+              >
+                A Server Error Occurred.
+              </span>
+              We encountered some issues while deleting the member. Could you please try again?
+            </p>
           </div>
           <div class="flex flex-row justify-center items-center mt-8 gap-x-4">
             <button
