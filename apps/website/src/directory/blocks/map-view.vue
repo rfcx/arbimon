@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="hasError"
+    v-if="!props.data"
     class="flex items-center justify-center h-screen text-center"
   >
     <span>
@@ -253,12 +253,9 @@ watch(() => props.selectedProjectId, (id) => {
   if (id === undefined) { return }
   goToProject(id)
 })
-const hasError = ref(false)
+
 // TODO: if the props.data updated, the data source of the map should be updated as well
 watch(() => props.data, (newData) => {
-  if (newData.length === 0) {
-    hasError.value = true
-  }
   // adjust map center
   map.easeTo({
     center: mapCenter.value
