@@ -5,6 +5,15 @@
     tabindex="-1"
     aria-labelledby="drawer-navigation-label"
   >
+    <div
+      v-if="!props.data"
+      class="flex items-center justify-center h-screen text-center text-sm"
+    >
+      <span>
+        It seems the projects didn’t load as expected<br>
+        Please refresh your browser to give it another go.
+      </span>
+    </div>
     <div class="h-full overflow-y">
       <ul v-infinite-scroll="loadMore">
         <li class="p-6 relative sticky top-0 bg-moss border-b-1 border-util-gray-02">
