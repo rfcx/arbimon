@@ -123,7 +123,7 @@ const props = withDefaults(defineProps<{
   selectedGrouping: undefined
 })
 
-const emit = defineEmits<{(e: 'emitDetection', detectionId: number, event: DetectionEvent): void}>()
+const emit = defineEmits<{(e: 'emitDetection', detectionId: number, event: DetectionEvent): void, (e: 'showAlertDialog'): void}>()
 const store = useStore()
 
 const spectrogramLoading = ref(false)
@@ -200,7 +200,10 @@ const stop = () => {
 const onVisualizerRedirect = async (): Promise<void> => {
   if (!props.start || !props.siteIdCore) return
   const response = await apiArbimonLegacyFindRecording(apiClientArbimon, store.project?.slug ?? '', { start: props.start, site_external_id: props.siteIdCore })
-  if (response == null) return
+  if (response == null) {
+    emit('showAlertDialog')
+    return
+  }
   window.location.assign(`${window.location.origin}/project/${store.project?.slug}/visualizer/rec/${response}`)
 }
 

@@ -29,6 +29,13 @@
         :selected-grouping="selectedGrouping"
         :max-page="maxPage"
         @emit-validation-result="onEmitValidateResult"
+        @show-alert-dialog="showAlertDialog"
+      />
+      <alert-dialog
+        v-if="showAlert"
+        severity="error"
+        title="Loading Error"
+        message="Couldn't retrieve the recording ID. Please try again."
       />
     </div>
   </section>
@@ -46,6 +53,7 @@ import { type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/dete
 import type { GetDetectionsSummaryQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections-summary'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
+import alertDialog from '@/_components/alert-dialog.vue'
 import { useGetBestDetections, useGetBestDetectionsSummary } from '@/detect/_composables/use-get-best-detections'
 import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
@@ -243,5 +251,13 @@ const onEmitValidateResult = async () => {
 onBeforeUnmount(() => {
   detectionsResultFilterBySpeciesStore.resetFilter()
 })
+
+const showAlert = ref(false)
+const showAlertDialog = () => {
+  showAlert.value = true
+  setTimeout(() => {
+    showAlert.value = false
+  }, 7000)
+}
 
 </script>

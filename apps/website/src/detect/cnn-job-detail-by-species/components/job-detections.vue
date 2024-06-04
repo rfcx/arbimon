@@ -41,6 +41,7 @@
               :score="dt.score"
               :selected-grouping="selectedGrouping"
               @emit-detection="updateSelectedDetections"
+              @show-alert-dialog="$emit('showAlertDialog')"
             />
           </div>
         </div>
@@ -129,7 +130,7 @@ const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, d
   data: undefined
 })
 
-const emit = defineEmits<{(e: 'update:page', value: number): void, (e: 'emitValidationResult'): void}>()
+const emit = defineEmits<{(e: 'update:page', value: number): void, (e: 'emitValidationResult'): void, (e: 'showAlertDialog'): void}>()
 
 const pageIndex = ref(props.page ?? 1)
 const index = useDebounce(pageIndex, 1000)
