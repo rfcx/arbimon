@@ -70,13 +70,15 @@
                   v-if="isError"
                   class="bg-danger-light mt-6 flex flex-row items-center p-2 border-l-3 rounded-lg border-l-ibis"
                 >
-                  <icon-custom-alert-triangle class="h-6 w-6 cursor-pointer text-ibis" />
-                  <span
-                    class="text-sm ml-2 text-util-gray-04 font-medium"
-                    role="alert"
-                  >
-                    Action failed due to system errors. Please try again.
-                  </span>
+                  <p class="ml-2 text-util-gray-04 text-sm">
+                    <span
+                      class="text-sm font-medium"
+                      role="alert"
+                    >
+                      A Server Error Occurred.
+                    </span>
+                    We encountered some issues while deleting your project. Could you please try again?
+                  </p>
                 </div>
                 <div class="flex flex-row justify-center items-center mt-8 gap-x-4">
                   <button

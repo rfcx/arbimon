@@ -1,6 +1,18 @@
 <template>
-  <section class="bg-white dark:bg-pitch pl-18">
-    <div class="py-10 mx-auto max-w-screen-xl flex flex-col gap-y-6 pr-4">
+  <section class="bg-white dark:bg-pitch pl-18 mx-auto py-10">
+    <div
+      v-if="!settings"
+      class="max-w-screen-xl flex items-center justify-center h-screen text-center"
+    >
+      <span>
+        It seems the page didn’t load as expected.<br>
+        Please refresh your browser to give it another go.
+      </span>
+    </div>
+    <div
+      v-else
+      class="py-10 mx-auto max-w-screen-xl flex flex-col gap-y-6 pr-4"
+    >
       <h1 class="text-gray-900 dark:text-insight">
         Project settings
       </h1>
@@ -163,7 +175,7 @@ const disableText = ref('Contact your project administrator for permission to ed
 
 const showStatus = ref(false)
 const hasFailed = ref(false)
-const errorMessage = ref<string>()
+const errorMessage = ref<string | undefined>('A Server Error Occurred. We encountered some issues while saving your changes. Could you please try again?')
 
 const date = Math.floor(Date.now() / 1000)
 
