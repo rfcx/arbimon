@@ -44,8 +44,35 @@
     >
       Subscribe
     </button>
+    <div
+      v-if="hasError"
+      class="mt-2 text-left items-center"
+    >
+      <p class="text-xs text-flamingo">
+        <span class="font-medium">
+          A Server Error Occurred.
+        </span>
+        We encountered some issues while deleting the member. Could you please try again?
+      </p>
+    </div>
   </form>
 </template>
 <script setup lang="ts">
+import { ref } from 'vue'
+
 import { formMainAudience, tagWebsiteSubscriber } from '@/_services/mailchimp'
+
+const form = document.querySelector('form')
+const hasError = ref(false)
+
+if (form instanceof HTMLFormElement) {
+  hasError.value = false
+  form.addEventListener('submit', (event) => {
+    if (!form.checkValidity()) {
+      event.preventDefault()
+      hasError.value = true
+    }
+  })
+}
+
 </script>
