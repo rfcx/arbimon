@@ -18,6 +18,8 @@ data:
 
   IUCN_BASE_URL: https://apiv3.iucnredlist.org/api/v3
 
+  CORE_API_BASE_URL: https://staging-api.rfcx.org
+
   WIKI_BASE_URL: https://en.wikipedia.org
   WIKI_MEDIA_BASE_URL: https://www.mediawiki.org
   ARBIMON_BASE_URL: https://staging-arbimon.rfcx.org

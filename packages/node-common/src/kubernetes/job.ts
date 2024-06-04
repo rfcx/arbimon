@@ -49,7 +49,7 @@ export const exportDetectionsJob = (name: string, classifierJobId: number, expor
         containers: [
           {
             name: 'arbimon-export-detections',
-            image: '887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:latest',
+            image: '887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:staging',
             envFrom: [
               {
                 secretRef: {
