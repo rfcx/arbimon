@@ -8,7 +8,19 @@
   >
     <div class="relative w-full max-w-4/5 max-h-full">
       <div class="relative p-6 bg-white rounded-lg shadow dark:bg-moss">
-        <div class="flex flex-col gap-y-4">
+        <div
+          v-if="!highlightedSpecies"
+          class="flex items-center justify-center h-screen text-center"
+        >
+          <span>
+            It seems the page didn’t load as expected.<br>
+            Please refresh your browser to give it another go.
+          </span>
+        </div>
+        <div
+          v-else
+          class="flex flex-col gap-y-4"
+        >
           <!-- Modal header -->
           <div class="flex items-center justify-between">
             <div class="flex flex-col gap-y-3">
