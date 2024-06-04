@@ -20,6 +20,21 @@
         >
           Upload file <icon-custom-ic-upload class="ml-2 group-hover:stroke-pitch inline-flex w-4 h-4" />
         </button>
+        <div
+          v-if="isLargeFile"
+          class="mt-3"
+        >
+          <p class="text-flamingo text-sm">
+            <span
+              class="text-sm font-medium"
+              role="alert"
+            >
+              Upload Error: File Too Large.
+            </span>
+            The image must be smaller than 5MB. <br>
+            Please choose a file that meets this size requirement to continue.
+          </p>
+        </div>
       </div>
       <div v-if="!isDisabled">
         <input
@@ -57,6 +72,7 @@ const props = defineProps<{ isDisabled?: boolean, image?: string }>()
 const emit = defineEmits<{(e: 'emitProjectImage', file: File): void}>()
 
 const uploadedPhotoUrl = ref('')
+const isLargeFile = ref(false)
 
 const projectImage = computed(() => {
   return uploadedPhotoUrl.value ? uploadedPhotoUrl.value : props.image
@@ -67,8 +83,14 @@ const selectPhoto = async (): Promise<void> => {
 }
 
 const uploadPhoto = async (e: Event): Promise<void> => {
+  isLargeFile.value = false
   const target = e.target as HTMLInputElement
   const file: File = (target.files as FileList)[0]
+
+  if (file.size > 5 * 1024 * 1024) {
+    isLargeFile.value = true
+  }
+
   const readerUrl = new FileReader()
   readerUrl.addEventListener('load', e => {
     uploadedPhotoUrl.value = e.target?.result as string
