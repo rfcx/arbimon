@@ -102,7 +102,7 @@
             v-for="role in roles.filter(r => r.id !== 4)"
             :key="role.id"
             class="flex flex-row justify-start items-center p-1 m-0 cursor-pointer hover:bg-chirp hover:text-pitch hover:(border-chirp rounded-lg)"
-            @click="$emit('emitChangeUserRole', user.email, getRoleById(role.id)); closeMenu()"
+            @click="handleChangeUserRole(user.email, role.id); closeMenu()"
           >
             <span class="w-8">
               <icon-fa-check
@@ -116,6 +116,12 @@
       </div>
     </div>
   </div>
+  <alert-dialog
+    v-if="showAlert && success == 'error'"
+    severity="error"
+    :title="title"
+    :message="message"
+  />
 </template>
 <script setup lang="ts">
 import { Dropdown, initDropdowns, initTooltips } from 'flowbite'
@@ -124,6 +130,8 @@ import { onMounted, ref } from 'vue'
 import type { ProjectMember } from '@rfcx-bio/common/api-bio/project/project-members'
 import { type ProjectRole, getRoleById } from '@rfcx-bio/common/roles'
 
+import type { AlertDialogType } from '@/_components/alert-dialog.vue'
+import alertDialog from '@/_components/alert-dialog.vue'
 import MemberDelete from '@/projects/components/form/member-delete.vue'
 import { useStore } from '~/store'
 
@@ -136,7 +144,7 @@ interface Role {
 let dropdown: Dropdown
 
 const props = defineProps<{user: ProjectMember, roles: Role[], editable: boolean, isDeleting?: boolean, isError?: boolean, isSuccess?: boolean}>()
-defineEmits<{(e: 'emitChangeUserRole', email: string, role: ProjectRole): void, (e: 'emitDeleteProjectMember', email: string): void}>()
+const emit = defineEmits<{(e: 'emitChangeUserRole', email: string, role: ProjectRole): void, (e: 'emitDeleteProjectMember', email: string): void}>()
 
 const disableDeleteUserText = ref('Contact your project administrator for permission to delete project member')
 const disableChangeUserRoleText = ref('Contact your project administrator for permission to manage project members')
@@ -163,6 +171,32 @@ onMounted(() => {
   )
   } catch (e) { }
 })
+
+const handleChangeUserRole = (email: string, roleId: number): void => {
+  try {
+    const role = getRoleById(roleId)
+    emit('emitChangeUserRole', email, role)
+    closeMenu()
+  } catch (error) {
+    showAlertDialog('error', 'A Server Error Occurred.', 'We encountered some issues while saving your changes. Could you please try again?')
+  }
+}
+
+const success = ref('')
+const title = ref('')
+const message = ref('')
+const showAlert = ref(false)
+
+const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue: string, hideAfter = 7000) => {
+  showAlert.value = true
+  success.value = type
+  title.value = titleValue
+  message.value = messageValue
+  setTimeout(() => {
+    showAlert.value = false
+  }, hideAfter)
+}
+
 </script>
 <style lang="scss">
 button[aria-expanded=true] .fa-chevron-up {
