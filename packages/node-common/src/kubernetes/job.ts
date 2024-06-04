@@ -55,6 +55,11 @@ export const exportDetectionsJob = (name: string, classifierJobId: number, expor
                 secretRef: {
                   name: 'biodiversity-cli-secrets'
                 }
+              },
+              {
+                configMapRef: {
+                  name: 'biodiversity-cli-config'
+                }
               }
             ],
             env: [
