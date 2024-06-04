@@ -4,7 +4,19 @@
       <h1 class="text-gray-900 dark:text-insight">
         Members
       </h1>
-      <div class="grid lg:(grid-cols-2 gap-10)">
+      <div
+        v-if="!users"
+        class="text-left"
+      >
+        <span>
+          It seems the page didn’t load as expected.<br>
+          Please refresh your browser to give it another go.
+        </span>
+      </div>
+      <div
+        v-else
+        class="grid lg:(grid-cols-2 gap-10)"
+      >
         <div class="flex flex-col gap-y-10">
           <div
             class="flex flex-row justify-end"
