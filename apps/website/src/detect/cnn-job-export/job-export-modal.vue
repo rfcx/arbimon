@@ -24,8 +24,8 @@
               Close
             </button>
             <button
-              :disable="isLoadingExportDetections || isErrorExportDetections"
-              class="btn btn-primary btn-medium"
+              :disabled="isLoadingExportDetections || isErrorExportDetections"
+              class="btn btn-primary btn-medium disabled:hover:btn-disabled disabled:btn-disabled"
               @click="requestExport"
             >
               Export
