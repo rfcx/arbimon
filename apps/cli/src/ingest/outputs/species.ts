@@ -1,8 +1,8 @@
 import { type Sequelize } from 'sequelize'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { UPDATE_ON_DUPLICATE_TAXON_SPECIES } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { type SyncError, type TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { UPDATE_ON_DUPLICATE_TAXON_SPECIES } from '@rfcx-bio/node-common/dao/models/taxon-species-model'
+import { type SyncError, type TaxonSpecies } from '@rfcx-bio/node-common/dao/types'
 
 import { type SpeciesArbimon } from '../parsers/parse-species-arbimon-to-bio'
 

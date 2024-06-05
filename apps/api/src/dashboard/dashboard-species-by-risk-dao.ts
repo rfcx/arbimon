@@ -1,5 +1,5 @@
 import { type DashboardSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 
 import { getSequelize } from '~/db'
 

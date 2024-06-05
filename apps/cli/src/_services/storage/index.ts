@@ -1,4 +1,4 @@
-import { StorageClient } from '@rfcx-bio/common/storage'
+import { StorageClient } from '@rfcx-bio/node-common/storage'
 
 import { optionalEnv, requireEnv } from '~/env'
 

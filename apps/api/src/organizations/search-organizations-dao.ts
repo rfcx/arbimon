@@ -1,8 +1,8 @@
 import { Op } from 'sequelize'
 
 import { type SearchOrganizationsResponse } from '@rfcx-bio/common/api-bio/organizations/search-organizations'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Organization } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type Organization } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '~/db'
 

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { type LocationProjectProfileContentType } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectProfileContentType } from '@rfcx-bio/node-common/dao/types'
 
 import { sqlValues } from './sql-values'
 

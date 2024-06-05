@@ -1,8 +1,8 @@
 import { afterAll, beforeEach, describe, expect, test } from 'vitest'
 
-import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type ProjectStatus, type Site, type SyncStatus, type TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { masterSources, masterSyncDataTypes } from '@rfcx-bio/node-common/dao/master-data'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type ProjectStatus, type Site, type SyncStatus, type TaxonSpecies } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'

@@ -1,8 +1,8 @@
 import { type PredictedOccupancyMap, type ProjectSpeciesOneParams, type ProjectSpeciesOneResponse } from '@rfcx-bio/common/api-bio/species/project-species-one'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { LocationProjectSpeciesFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
-import { ATTRIBUTES_TAXON_SPECIES_CALL, ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/types'
 import { hasPermission } from '@rfcx-bio/common/roles'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { LocationProjectSpeciesFileModel } from '@rfcx-bio/node-common/dao/models/location-project-species-file-model'
+import { ATTRIBUTES_TAXON_SPECIES_CALL, ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '@/_services/db'
 import { BioNotFoundError } from '~/errors'

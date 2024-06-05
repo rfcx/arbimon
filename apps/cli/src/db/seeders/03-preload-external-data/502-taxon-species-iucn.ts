@@ -1,9 +1,9 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { TaxonSpeciesIucnModel } from '@rfcx-bio/common/dao/models/taxon-species-iucn-model'
-import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { type TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesIucnModel } from '@rfcx-bio/node-common/dao/models/taxon-species-iucn-model'
+import { TaxonSpeciesModel } from '@rfcx-bio/node-common/dao/models/taxon-species-model'
+import { type TaxonSpeciesIucn } from '@rfcx-bio/node-common/dao/types'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { rawTaxonSpeciesIucn } from '@/db/seeders/_data/taxon-species-iucn'

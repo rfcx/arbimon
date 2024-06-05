@@ -1,9 +1,9 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { literalizeCountsByMinute } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
-import { type DetectionBySiteSpeciesHour, type Project, type RecordingBySiteHour, type Site } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { literalizeCountsByMinute } from '@rfcx-bio/node-common/dao/query-helpers/sequelize-literal-integer-array-2d'
+import { type DetectionBySiteSpeciesHour, type Project, type RecordingBySiteHour, type Site } from '@rfcx-bio/node-common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { taxonSpeciesAndClassForId } from '@/db/seeders/_data/integration/test-taxon-species'

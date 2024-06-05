@@ -1,5 +1,5 @@
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type Project } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '~/db'
 import { uniqueSlug } from '../project-create-util-slug-finder'

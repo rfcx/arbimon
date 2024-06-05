@@ -37,7 +37,18 @@
     "test": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:test:* -- --run\""
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.567.0",
+    "@aws-sdk/s3-request-presigner": "^3.567.0",
+    "@opensearch-project/opensearch": "^2.5.0",
     "@rfcx-bio/utils": "workspace:^0.0.1",
-    "kubernetes-client": "^9.0.0"
+    "kubernetes-client": "^9.0.0",
+    "lodash-es": "^4.17.21",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "7.0.0-alpha.5",
+    "sharp": "^0.33.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.6.4"
   }
 }

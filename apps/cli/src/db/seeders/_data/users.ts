@@ -1,4 +1,4 @@
-import { type UserProfile } from '@rfcx-bio/common/dao/types'
+import { type UserProfile } from '@rfcx-bio/node-common/dao/types'
 
 export interface UserAndRole {
   userId: number

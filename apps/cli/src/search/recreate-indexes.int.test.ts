@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 
 import { makeProject } from '@/../../../packages/testing/src/model-builders/project-model-builder'
 import { getSequelize } from '@/db/connections'

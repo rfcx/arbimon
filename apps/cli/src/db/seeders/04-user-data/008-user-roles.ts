@@ -1,8 +1,8 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
-import { LocationProjectUserRoleModel } from '@rfcx-bio/common/dao/models/location-project-user-role-model'
+import { LocationProjectModel } from '@rfcx-bio/node-common/dao/models/location-project-model'
+import { LocationProjectUserRoleModel } from '@rfcx-bio/node-common/dao/models/location-project-user-role-model'
 
 import { rawUsersWithRolesToProjects } from '../_data/users'
 

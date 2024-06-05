@@ -1,7 +1,7 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 
 import { testSpecies } from '@/db/seeders/_data/integration/test-taxon-species'
 

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { type DataSource } from '@rfcx-bio/common/dao/types'
+import { type DataSource } from '@rfcx-bio/node-common/dao/types'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import { GET } from '~/api-helpers/types'

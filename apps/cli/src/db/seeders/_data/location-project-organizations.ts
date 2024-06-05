@@ -1,4 +1,4 @@
-import { type Organization } from '@rfcx-bio/common/dao/types'
+import { type Organization } from '@rfcx-bio/node-common/dao/types'
 
 import { type BioEnvironment } from '~/env/types'
 

@@ -1,4 +1,4 @@
-import { type TaxonClass } from '@rfcx-bio/common/dao/types'
+import { type TaxonClass } from '@rfcx-bio/node-common/dao/types'
 
 export const rawTaxonClasses: TaxonClass[] = [
   { id: -1, idArbimon: 6, slug: 'others', commonName: 'Others' },

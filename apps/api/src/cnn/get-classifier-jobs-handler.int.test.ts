@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest'
 
-import { type Project } from '@rfcx-bio/common/dao/types'
+import { type Project } from '@rfcx-bio/node-common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 

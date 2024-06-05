@@ -1,4 +1,4 @@
-import type { RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
+import type { RecordingBySiteHour } from '@rfcx-bio/node-common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { sites } from './project-sites'

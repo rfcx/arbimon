@@ -1,4 +1,4 @@
-import { type ImageVariant } from '@rfcx-bio/common/api-bio/_helpers'
+import { type ImageVariant } from '@rfcx-bio/node-common/api-bio/_helpers'
 
 import { getS3Client } from '~/storage'
 

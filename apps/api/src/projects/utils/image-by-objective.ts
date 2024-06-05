@@ -1,4 +1,4 @@
-import { masterObjectiveTypes } from '@rfcx-bio/common/dao/master-data/project-objective'
+import { masterObjectiveTypes } from '@rfcx-bio/node-common/dao/master-data/project-objective'
 
 // Choose an image based on the first objective or take the default image
 export const getImageByObjectives = (objectives?: string[]): string => {
