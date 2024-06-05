@@ -2,6 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
+    "noErrorTruncation": false,
     "rootDir": "../../"
   },
   "include": ["src/**/*.ts", "src/**/*.vue", "*.d.ts"],
