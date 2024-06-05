@@ -10,23 +10,19 @@ import { routesOrganizations } from './index'
 const ROUTE = '/organizations'
 const url = '/organizations'
 
-vi.mock('./create-organization-bll', async () => {
-  const mod = await vi.importActual('./create-organization-bll')
-
-  return {
-    // @ts-expect-error type mismatch but just ignore it.
-    ...mod,
-    getOrganizationLogoLink: vi.fn(async () => {
-      return await Promise.resolve('https://www.bu.ac.th/favicon.ico')
-    })
-  }
-})
-
 const payload = {
   name: 'Bangkok University',
   url: 'https://www.bu.ac.th/th/',
   type: 'research-institution'
 }
+
+vi.mock('../_services/logo', () => {
+  return {
+    getOrganizationLogoLink: vi.fn(async () => {
+      return 'https://bu.ac.th/favicon.ico'
+    })
+  }
+})
 
 const FAKE_TOKEN = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY5OTI0NDk2MCwiaWF0IjoxNjk5MjQ0OTYwfQ.fWvrkz2W9K-AmQUf5g9EvldvYFxDBQ2K9UmO6oNBvlg'
 
@@ -74,6 +70,6 @@ describe(`POST ${ROUTE} (create organization)`, () => {
 
       const data = await Organization.findOne({ where: { id: json.id } })
       expect(data).toBeTruthy()
-    }, 10000)
+    })
   })
 })

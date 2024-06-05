@@ -4,6 +4,7 @@
       :class="validationCount && isOpen ? 'block' : 'invisible'"
       :detection-count="validationCount"
       :filter-options="filterOptions"
+      :is-processing="isProcessing"
       :validation="getSuggestedValidationStatus()"
       @emit-validation="validateDetection"
       @emit-close="closeValidator"
@@ -35,10 +36,12 @@
               :validation="dt.validation"
               :checked="dt.checked"
               :site="dt.site"
+              :site-id-core="dt.siteIdCore"
               :start="dt.start"
               :score="dt.score"
               :selected-grouping="selectedGrouping"
               @emit-detection="updateSelectedDetections"
+              @show-alert-dialog="$emit('showAlertDialog')"
             />
           </div>
         </div>
@@ -104,9 +107,9 @@ import { useRoute } from 'vue-router'
 import { type GetBestDetectionsResponse } from '@rfcx-bio/common/api-bio/cnn/best-detections'
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { type GetDetectionsResponse } from '@rfcx-bio/common/api-bio/cnn/detections'
+import { apiBioUpdateDetectionStatus } from '@rfcx-bio/common/api-bio/cnn/reviews'
 
 import { useDetectionsReview } from '@/detect/_composables/use-detections-review'
-import { useUpdateDetectionStatus } from '@/detect/_composables/use-update-detection-status'
 import DetectionValidator from '@/detect/cnn-job-detail/components/detection-validator.vue'
 import type { DetectionMedia, DetectionValidationStatus } from '@/detect/cnn-job-detail/components/types'
 import { apiClientKey } from '@/globals'
@@ -127,7 +130,7 @@ const props = withDefaults(defineProps<{ isLoading: boolean, isError: boolean, d
   data: undefined
 })
 
-const emit = defineEmits<{(e: 'update:page', value: number): void, (e: 'emitValidationResult'): void}>()
+const emit = defineEmits<{(e: 'update:page', value: number): void, (e: 'emitValidationResult'): void, (e: 'showAlertDialog'): void}>()
 
 const pageIndex = ref(props.page ?? 1)
 const index = useDebounce(pageIndex, 1000)
@@ -228,6 +231,7 @@ const allSpecies = computed<Array<{ siteName: string, speciesSlug: string, speci
           validation: detection.reviewStatus,
           score: detection.confidence,
           start: detection.start,
+          siteIdCore: detection.siteIdCore,
           site: store.projectFilters?.locationSites.filter((site) => site.idCore === detection.siteIdCore)[0]?.name ?? ''
         }
       })
@@ -241,35 +245,38 @@ const {
   validationCount,
   getSuggestedValidationStatus,
   isOpen,
+  isProcessing,
   closeValidator,
   updateSelectedDetections,
   updateValidatedDetections,
+  updateIsProcessing,
   getSelectedDetections
 } = useDetectionsReview(allSpecies)
 
-const { mutate: mutateUpdateDetectionStatus } = useUpdateDetectionStatus(apiClientBio)
-
 const validateDetection = async (validation: ArbimonReviewStatus): Promise<void> => {
   const selectedDetections = getSelectedDetections()
-
+  updateIsProcessing(true)
   const promises = selectedDetections.map(async sd => {
     const items = isBestDetections.value ? props.dataBestDetections : props.data
     const originalDetection = (items ?? []).find(d => Number(sd.id) === d.id)
-    return await mutateUpdateDetectionStatus({
+    return apiBioUpdateDetectionStatus(apiClientBio, {
       jobId: jobId.value,
       siteIdCore: originalDetection?.siteIdCore ?? '',
       start: originalDetection?.start ?? '',
       status: validation as Exclude<ArbimonReviewStatus, 'unvalidated'>,
       classificationValue: originalDetection?.classification?.value ?? '',
       classifierId: originalDetection?.classifierId ?? -1
-    }, {
-      onSuccess: () => {},
-      onError: () => {}
+    }).catch(e => {
+      console.error('VALIDATION: error', e)
+      // TODO: handle error
     })
   })
 
   const responses = await Promise.allSettled(promises)
+  updateIsProcessing(false)
+  console.info('VALIDATION: all done', responses)
   updateValidatedDetections(selectedDetections.map((d) => d.id), validation, responses)
+  // TODO:  #1995 take into account the responses to update the review summary
   const changes = selectedDetections.map((d) => {
     return {
       from: d.prevStatus,

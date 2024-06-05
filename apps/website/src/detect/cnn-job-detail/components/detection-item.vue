@@ -61,6 +61,7 @@
       <div
         v-if="!spectrogramLoading && spectrogram"
         class="absolute bottom-2 left-2 cursor-pointer"
+        @click="onVisualizerRedirect"
       >
         <icon-custom-fi-visualizer-redirect class="w-6.3 h-6.3" />
       </div>
@@ -93,10 +94,11 @@ import dayjs from 'dayjs'
 import { Howl } from 'howler'
 import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
+import { apiArbimonLegacyFindRecording } from '@rfcx-bio/common/api-arbimon/recordings-query'
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { apiCoreGetMedia } from '@rfcx-bio/common/api-core/media/core-media'
 
-import { apiClientMediaKey } from '@/globals'
+import { apiClientArbimonLegacyKey, apiClientMediaKey } from '@/globals'
 import { useStore } from '~/store'
 import type { DetectionEvent } from './types'
 import ValidationStatus from './validation-status.vue'
@@ -110,16 +112,18 @@ const props = withDefaults(defineProps<{
   score?: number | undefined,
   start?: string | undefined,
   site?: string | undefined,
-  selectedGrouping?: string | undefined
+  selectedGrouping?: string | undefined,
+  siteIdCore?: string | undefined
 }>(), {
   id: null,
   checked: null,
   score: undefined,
   start: undefined,
-  site: undefined
+  site: undefined,
+  selectedGrouping: undefined
 })
 
-const emit = defineEmits<{(e: 'emitDetection', detectionId: number, event: DetectionEvent): void}>()
+const emit = defineEmits<{(e: 'emitDetection', detectionId: number, event: DetectionEvent): void, (e: 'showAlertDialog'): void}>()
 const store = useStore()
 
 const spectrogramLoading = ref(false)
@@ -128,6 +132,7 @@ const highlightBorder = ref(false)
 const isSelected = ref<boolean>(false)
 
 const apiMedia = inject(apiClientMediaKey) as AxiosInstance
+const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
 const audio = ref<Howl | null>(null)
 const spectrogram = ref<string | null>(null)
@@ -190,6 +195,16 @@ const play = async () => {
 
 const stop = () => {
   audio.value?.stop()
+}
+
+const onVisualizerRedirect = async (): Promise<void> => {
+  if (!props.start || !props.siteIdCore) return
+  const response = await apiArbimonLegacyFindRecording(apiClientArbimon, store.project?.slug ?? '', { start: props.start, site_external_id: props.siteIdCore })
+  if (response == null) {
+    emit('showAlertDialog')
+    return
+  }
+  window.location.assign(`${window.location.origin}/project/${store.project?.slug}/visualizer/rec/${response}`)
 }
 
 const toggleDetection = (event: MouseEvent) => {

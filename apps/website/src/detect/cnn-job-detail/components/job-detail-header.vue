@@ -1,7 +1,9 @@
 <template>
-  <div class="flex justify-between items-center">
+  <div
+    class="flex justify-between items-start"
+  >
     <nav
-      class="flex justify-between"
+      class="flex justify-between py-3"
       aria-label="Breadcrumb"
     >
       <ol class="inline-flex align-top space-x-1 md:space-x-2 rtl:space-x-reverse text-insight">

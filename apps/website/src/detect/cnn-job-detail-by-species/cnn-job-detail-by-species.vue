@@ -29,6 +29,13 @@
         :selected-grouping="selectedGrouping"
         :max-page="maxPage"
         @emit-validation-result="onEmitValidateResult"
+        @show-alert-dialog="showAlertDialog"
+      />
+      <alert-dialog
+        v-if="showAlert"
+        severity="error"
+        title="Loading Error"
+        message="Couldn't retrieve the recording ID. Please try again."
       />
     </div>
   </section>
@@ -36,7 +43,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { type GetBestDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/best-detections'
@@ -46,6 +53,7 @@ import { type GetDetectionsQueryParams } from '@rfcx-bio/common/api-bio/cnn/dete
 import type { GetDetectionsSummaryQueryParams } from '@rfcx-bio/common/api-bio/cnn/detections-summary'
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
+import alertDialog from '@/_components/alert-dialog.vue'
 import { useGetBestDetections, useGetBestDetectionsSummary } from '@/detect/_composables/use-get-best-detections'
 import { apiClientKey } from '@/globals'
 import { useDetectionsResultFilterBySpeciesStore } from '~/store'
@@ -59,6 +67,7 @@ const route = useRoute()
 const pageSizeLimit = ref<number>(25)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
+
 const detectionsResultFilterBySpeciesStore = useDetectionsResultFilterBySpeciesStore()
 const jobId = computed(() => typeof route.params.jobId === 'string' ? parseInt(route.params.jobId) : -1)
 const speciesSlug = computed(() => typeof route.params.speciesSlug === 'string' ? route.params.speciesSlug : '')
@@ -88,15 +97,6 @@ watch(jobResultsSummary, async (newValue) => {
 
   detectionsResultFilterBySpeciesStore.updateStartEndRanges(newValue.queryStart, newValue.queryEnd, 7)
   detectionsResultFilterBySpeciesStore.updateCustomSitesList(newValue.streams)
-})
-
-watch(detectionsResultFilterBySpeciesStore.filter, async (newValue) => {
-  if (newValue === null || newValue === undefined) {
-    return
-  }
-
-  await refetchJobDetections()
-  await refetchDetectionSummary()
 })
 
 const detectionsQueryParams = computed<GetDetectionsQueryParams>(() => {
@@ -145,7 +145,8 @@ const detectionsSummaryQueryParams = computed<GetDetectionsSummaryQueryParams>((
 const { isLoading: isLoadingDetectionSummary, isRefetching: isRefetchingDetectionSummary, data: detectionsSummary, refetch: refetchDetectionSummary } = useGetDetectionsSummary(
   apiClientBio,
   detectionsSummaryQueryParams,
-  computed(() => jobResultsSummary.value?.classifierId != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '' && !bestPerFilterApplied.value)
+  computed(() => jobResultsSummary.value?.classifierId != null && detectionsResultFilterBySpeciesStore.selectedStartRange !== '' && detectionsResultFilterBySpeciesStore.selectedEndRange !== '' && !bestPerFilterApplied.value),
+  refetchInterval
 )
 
 const bestDetectionsQueryParams = computed<GetBestDetectionsQueryParams>(() => {
@@ -192,22 +193,18 @@ const filteredResult = computed<number>(() => {
   return total.value ?? -1
 })
 
-watch(detectionsSummary, async (newValue) => {
-  if (newValue === null || newValue === undefined) {
-    return
+// update the review summary based on the detection summary
+watchEffect(() => {
+  if (bestPerFilterApplied.value) {
+    detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(bestDetectionsSummary.value)
+  } else {
+    detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(detectionsSummary.value)
   }
-  detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(newValue)
-})
-
-watch(bestDetectionsSummary, async (newValue) => {
-  if (newValue === null || newValue === undefined) {
-    return
-  }
-  detectionsResultFilterBySpeciesStore.updateReviewSummaryFromDetectionSummary(newValue)
 })
 
 const onEmitPageSize = async (pageSize: number) => {
   pageSizeLimit.value = pageSize
+  page.value = 1 // reset the page to 1 when the page size is changed
 
   if (bestPerFilterApplied.value) {
     await refetchBestDetectionsData()
@@ -254,5 +251,13 @@ const onEmitValidateResult = async () => {
 onBeforeUnmount(() => {
   detectionsResultFilterBySpeciesStore.resetFilter()
 })
+
+const showAlert = ref(false)
+const showAlertDialog = () => {
+  showAlert.value = true
+  setTimeout(() => {
+    showAlert.value = false
+  }, 7000)
+}
 
 </script>
