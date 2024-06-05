@@ -37,18 +37,29 @@
 </template>
 
 <script setup lang="ts">
+import { type AxiosError, type AxiosInstance } from 'axios'
 import { Modal } from 'flowbite'
 import type { Ref } from 'vue'
-import { onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 import exportAllModelDetections from '@/_assets/cnn/export-all-model-detections.png'
+import { apiClientKey } from '@/globals'
+import { useExportDetections } from '../_composables/use-export-detections'
 
 const ID = 'cnn-export-modal'
 
 const props = defineProps<{isOpen: boolean}>()
-const emit = defineEmits<{(event: 'emitRequestExport'): void, (event: 'emitClose'): void}>()
+const emit = defineEmits<{(event: 'emitClose'): void}>()
+
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const modal = ref() as Ref<Modal>
+
+const route = useRoute()
+const jobId = computed(() => route.params.jobId)
+
+const { isPending: isLoadingExportDetections, isError: isErrorExportDetections, mutate: mutateExportDetections } = useExportDetections(apiClientBio, Number(jobId.value))
 
 onMounted(() => {
   modal.value = new Modal(document.getElementById(ID), {
@@ -75,9 +86,24 @@ const closeModal = () => {
   emit('emitClose')
 }
 
-const requestExport = () => {
+const requestExport = async () => {
   // TODO: leave open util export is done
-  emit('emitRequestExport')
+  mutateExportDetections({ types: ['all-model-detections'] }, {
+    onSuccess: async () => {
+      modal.value.hide()
+      emit('emitClose')
+    },
+    onError: (e) => {
+      const error = e as AxiosError<Error>
+      console.error(error)
+
+      if (error.response?.data !== undefined && error.response.data?.message.includes('already exists')) {
+        console.error(error.response.data?.message)
+      } else {
+        console.error('error')
+      }
+    }
+  })
 }
 
 </script>
