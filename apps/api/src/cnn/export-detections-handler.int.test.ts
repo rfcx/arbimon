@@ -1,6 +1,7 @@
 import { describe, expect, test, vi } from 'vitest'
 
 import { EXPORT_DETECTIONS_TYPES } from '@rfcx-bio/common/api-bio/cnn/export-detections'
+import * as k8sJob from '@rfcx-bio/node-common/kubernetes/job'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 
 import * as bll from './export-detections-bll'
@@ -83,5 +84,27 @@ describe('POST /jobs/:jobId/detections-export', () => {
     // Assert
     expect(spy).toHaveBeenCalledWith(122, ['all-model-detections'], 'grindarius@rfcx.org')
     expect(response.statusCode).toEqual(201)
+  })
+
+  test('email passed inside will be hashed on to the metadata', async () => {
+    const spy = vi.spyOn(k8sJob, 'exportDetectionsJob')
+    const app = await makeApp(routesCnn, {
+      userToken: {
+        email: 'grindarius@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'POST',
+      url: '/jobs/128/detections-export',
+      payload: {
+        types: ['all-model-detections']
+      }
+    })
+
+    // Assert
+    expect(response.statusCode).toEqual(201)
+    expect(spy.mock.results[0].value).toHaveProperty('metadata.name', 'arbimon-export-detections-128-343f27cb')
   })
 })
