@@ -3,7 +3,7 @@ import { vi } from 'vitest'
 import { type Classifier } from '@rfcx-bio/common/api-bio/classifiers/classifiers'
 import { type WithTotalCount } from '@rfcx-bio/common/total-count'
 
-import { CoreUpdateDetectionsStatusResponse, type CoreBestDetection, type CoreClassificationLite, type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobSummary, type CoreClassifierJobTotalDetections, type CoreDetection, type CoreDetectionsSummary } from '../types'
+import { type CoreBestDetection, type CoreClassificationLite, type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobSummary, type CoreClassifierJobTotalDetections, type CoreDetection, type CoreDetectionsSummary, type CoreUpdateDetectionsStatusResponse } from '../types'
 
 const randomCoreId = (): string => (Math.random() + 1).toString(36).substring(6)
 const randomArbimonId = (): number => Math.floor(Math.random() * 99999)
