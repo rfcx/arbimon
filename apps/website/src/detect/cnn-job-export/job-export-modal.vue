@@ -51,7 +51,7 @@ import { useExportDetections } from '../_composables/use-export-detections'
 const ID = 'cnn-export-modal'
 
 const props = defineProps<{isOpen: boolean}>()
-const emit = defineEmits<{(event: 'emitClose'): void}>()
+const emit = defineEmits<{(event: 'emitClose'): void, (e: 'showAlertDialog', messageValue: string): void}>()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
@@ -99,10 +99,10 @@ const requestExport = async () => {
       console.error(error)
 
       if (error.response?.data !== undefined && error.response.data?.message.includes('already exists')) {
-        console.error(error.response.data?.message)
+        emit('showAlertDialog', 'Your request is still processing. Please try again later.')
         closeModal()
       } else {
-        console.error('error')
+        emit('showAlertDialog', 'There was a system error. Please try again.')
         closeModal()
       }
     }
