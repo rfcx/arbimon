@@ -1,11 +1,11 @@
 import { type ModelCtor, type Sequelize } from 'sequelize'
 
-import { riskRatings, sources, syncTypes, taxonClasses } from '@rfcx-bio/common/dao/master-data'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { UPDATE_ON_DUPLICATE_RISK_RATING_IUCN } from '@rfcx-bio/common/dao/models/risk-rating-iucn-model'
-import { UPDATE_ON_DUPLICATE_SYNC_DATA_TYPE } from '@rfcx-bio/common/dao/models/sync-data-type-model'
-import { UPDATE_ON_DUPLICATE_SYNC_SOURCE } from '@rfcx-bio/common/dao/models/sync-source-model'
-import { UPDATE_ON_DUPLICATE_TAXON_CLASS } from '@rfcx-bio/common/dao/models/taxon-class-model'
+import { riskRatings, sources, syncTypes, taxonClasses } from '@rfcx-bio/node-common/dao/master-data'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { UPDATE_ON_DUPLICATE_RISK_RATING_IUCN } from '@rfcx-bio/node-common/dao/models/risk-rating-iucn-model'
+import { UPDATE_ON_DUPLICATE_SYNC_DATA_TYPE } from '@rfcx-bio/node-common/dao/models/sync-data-type-model'
+import { UPDATE_ON_DUPLICATE_SYNC_SOURCE } from '@rfcx-bio/node-common/dao/models/sync-source-model'
+import { UPDATE_ON_DUPLICATE_TAXON_CLASS } from '@rfcx-bio/node-common/dao/models/taxon-class-model'
 
 export const updateMasterData = async (sequelize: Sequelize): Promise<void> => {
   const models = ModelRepository.getInstance(sequelize)

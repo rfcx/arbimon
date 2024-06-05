@@ -1,8 +1,8 @@
 import { type Sequelize, Op } from 'sequelize'
 import { type SafeParseReturnType, z } from 'zod'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project, type ProjectStatus } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type Project, type ProjectStatus } from '@rfcx-bio/node-common/dao/types'
 
 const ProjectArbimonSchema = z.object({
   idArbimon: z.number(),

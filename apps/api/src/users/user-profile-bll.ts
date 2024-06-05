@@ -5,8 +5,8 @@ import { extname } from 'node:path'
 import { URL } from 'node:url'
 
 import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
-import { type OrganizationTypes, type UserProfile, type UserTypes } from '@rfcx-bio/common/dao/types'
-import { resizeImage } from '@rfcx-bio/common/image'
+import { type OrganizationTypes, type UserProfile, type UserTypes } from '@rfcx-bio/node-common/dao/types'
+import { resizeImage } from '@rfcx-bio/node-common/image'
 
 import { patchUserProfileOnCore } from '~/api-core/api-core'
 import { type Auth0UserToken } from '~/auth0/types'

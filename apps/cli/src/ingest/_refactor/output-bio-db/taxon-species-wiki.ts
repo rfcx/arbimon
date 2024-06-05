@@ -1,8 +1,8 @@
 import { type Sequelize } from 'sequelize'
 
-import { TaxonSpeciesPhotoModel, UPDATE_ON_DUPLICATE_TAXON_SPECIES_PHOTO } from '@rfcx-bio/common/dao/models/taxon-species-photo-model'
-import { TaxonSpeciesWikiModel, UPDATE_ON_DUPLICATE_TAXON_SPECIES_WIKI } from '@rfcx-bio/common/dao/models/taxon-species-wiki-model'
-import { type TaxonSpeciesPhoto, type TaxonSpeciesWiki } from '@rfcx-bio/common/dao/types'
+import { TaxonSpeciesPhotoModel, UPDATE_ON_DUPLICATE_TAXON_SPECIES_PHOTO } from '@rfcx-bio/node-common/dao/models/taxon-species-photo-model'
+import { TaxonSpeciesWikiModel, UPDATE_ON_DUPLICATE_TAXON_SPECIES_WIKI } from '@rfcx-bio/node-common/dao/models/taxon-species-wiki-model'
+import { type TaxonSpeciesPhoto, type TaxonSpeciesWiki } from '@rfcx-bio/node-common/dao/types'
 
 export const writeWikiSpeciesDataToPostgres = async (sequelize: Sequelize, newData: TaxonSpeciesWiki[]): Promise<void> => {
   const updateSpeciesWikiRows = await TaxonSpeciesWikiModel(sequelize)

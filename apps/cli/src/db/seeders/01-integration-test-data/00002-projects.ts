@@ -1,7 +1,7 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { LocationProjectModel } from '@rfcx-bio/common/dao/models/location-project-model'
+import { LocationProjectModel } from '@rfcx-bio/node-common/dao/models/location-project-model'
 
 import { projects } from '../_data/integration/projects'
 

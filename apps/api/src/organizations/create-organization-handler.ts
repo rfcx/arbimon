@@ -1,5 +1,5 @@
 import { type CreateOrganizationRequestBody, type CreateOrganizationResponseBody } from '@rfcx-bio/common/api-bio/organizations/create-organization'
-import { ORGANIZATION_TYPE } from '@rfcx-bio/common/dao/types'
+import { ORGANIZATION_TYPE } from '@rfcx-bio/node-common/dao/types'
 
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'

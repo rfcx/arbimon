@@ -1,7 +1,7 @@
 import { countBy } from 'lodash-es'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
-import { type SyncStatus } from '@rfcx-bio/common/dao/types'
+import { type SyncStatus } from '@rfcx-bio/node-common/dao/types'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { type SyncQueryParams } from './sync-query-params'

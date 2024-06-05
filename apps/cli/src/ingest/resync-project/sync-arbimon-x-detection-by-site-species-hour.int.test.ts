@@ -2,8 +2,8 @@ import dayjs from 'dayjs'
 import { sum } from 'lodash-es'
 import { afterAll, beforeEach, describe, expect, test } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Site, type TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type Site, type TaxonSpecies } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { getPopulatedArbimonInMemorySequelize } from '../_testing/arbimon'

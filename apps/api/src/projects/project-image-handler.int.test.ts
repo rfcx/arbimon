@@ -2,10 +2,10 @@ import formAutoContent from 'form-auto-content'
 import { createReadStream } from 'fs'
 import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from 'vitest'
 
-import { buildVariantPath } from '@rfcx-bio/common/api-bio/_helpers'
 import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
-import { type Project } from '@rfcx-bio/common/dao/types'
-import { getMetadata } from '@rfcx-bio/common/image'
+import { buildVariantPath } from '@rfcx-bio/node-common/api-bio/_helpers'
+import { type Project } from '@rfcx-bio/node-common/dao/types'
+import { getMetadata } from '@rfcx-bio/node-common/image'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 

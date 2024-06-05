@@ -1,4 +1,4 @@
-import { type OrganizationTypes } from '@rfcx-bio/common/dao/types'
+import { type OrganizationTypes } from '@rfcx-bio/node-common/dao/types'
 
 import { getOrganizationLogoLink } from '~/logo'
 import { create } from './create-organization-dao'

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, expect, test } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type TaxonSpecies, type TaxonSpeciesIucn } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type TaxonSpecies, type TaxonSpeciesIucn } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { writeIucnSpeciesDataToPostgres } from './taxon-species-iucn'

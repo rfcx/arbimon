@@ -2,7 +2,7 @@ import { groupBy } from 'lodash-es'
 import { type Sequelize, Op } from 'sequelize'
 import { type SafeParseReturnType, z } from 'zod'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { filterRepeatingDetectionMinutes } from './parse-array'

@@ -1,6 +1,6 @@
 import QuickLRU from 'quick-lru'
 
-import { type StorageClient } from '@rfcx-bio/common/storage'
+import { type StorageClient } from '@rfcx-bio/node-common/storage'
 
 import { requireEnv } from '~/env'
 

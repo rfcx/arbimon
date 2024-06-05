@@ -1,9 +1,9 @@
 import { type Optional, type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type TaxonSpecies } from '@rfcx-bio/common/dao/types'
 import { rawSpecies } from '@rfcx-bio/common/mock-data'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type TaxonSpecies } from '@rfcx-bio/node-common/dao/types'
 
 export const up: MigrationFn<QueryInterface> = async (params): Promise<void> => {
   const models = ModelRepository.getInstance(params.context.sequelize)

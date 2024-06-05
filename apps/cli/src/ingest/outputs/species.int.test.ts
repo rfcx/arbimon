@@ -1,8 +1,8 @@
 import { Op } from 'sequelize'
 import { describe, expect, test } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type TaxonSpecies } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { rawTaxonClasses } from '@/db/seeders/_data/taxon-class'

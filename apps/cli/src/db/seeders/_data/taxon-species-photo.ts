@@ -1,4 +1,4 @@
-import { type TaxonSpeciesPhoto } from '@rfcx-bio/common/dao/types'
+import { type TaxonSpeciesPhoto } from '@rfcx-bio/node-common/dao/types'
 
 export const rawTaxonSpeciesPhoto: Array<TaxonSpeciesPhoto & { 'TaxonSpecies.slug': string }> = [
   {

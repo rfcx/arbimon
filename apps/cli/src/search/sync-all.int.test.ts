@@ -2,9 +2,9 @@ import dayjs from 'dayjs'
 import { Op } from 'sequelize'
 import { afterAll, afterEach, beforeEach, describe, expect, test } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { literalizeCountsByMinute } from '@rfcx-bio/common/dao/query-helpers/sequelize-literal-integer-array-2d'
-import { type RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { literalizeCountsByMinute } from '@rfcx-bio/node-common/dao/query-helpers/sequelize-literal-integer-array-2d'
+import { type RecordingBySiteHour } from '@rfcx-bio/node-common/dao/types'
 
 import { makeProject } from '@/../../../packages/testing/src/model-builders/project-model-builder'
 import { getSequelize } from '@/db/connections'

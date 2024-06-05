@@ -1,7 +1,7 @@
 import { groupBy } from 'lodash-es'
 import { type Sequelize } from 'sequelize'
 
-import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
+import { masterSources, masterSyncDataTypes } from '@rfcx-bio/node-common/dao/master-data'
 
 import { writeSpeciesCallsToBio } from '@/ingest/outputs/species-calls'
 import { getArbimonProjectSpeciesCalls } from '../inputs/get-arbimon-species-call'

@@ -1,9 +1,9 @@
 import { groupBy } from 'lodash-es'
 import { type Sequelize } from 'sequelize'
 
-import { masterSources, masterSyncDataTypes } from '@rfcx-bio/common/dao/master-data'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type SyncStatus } from '@rfcx-bio/common/dao/types'
+import { masterSources, masterSyncDataTypes } from '@rfcx-bio/node-common/dao/master-data'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type SyncStatus } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { getArbimonDetections } from '../inputs/get-arbimon-detection'

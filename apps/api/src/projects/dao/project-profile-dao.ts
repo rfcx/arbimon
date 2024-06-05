@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 
 import type { ProjectInfoFieldType, ProjectInfoResponse, ProjectProfileUpdateBody, ProjectSettingsResponse } from '@rfcx-bio/common/api-bio/project/project-settings'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type LocationProjectProfile } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type LocationProjectProfile } from '@rfcx-bio/node-common/dao/types'
 
 import { getProjectMetrics } from '@/dashboard/dashboard-metrics-dao'
 import { getRichnessByTaxon } from '@/dashboard/dashboard-species-data-dao'

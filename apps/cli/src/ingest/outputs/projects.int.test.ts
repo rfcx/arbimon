@@ -1,8 +1,8 @@
 import { Op } from 'sequelize'
 import { beforeEach, describe, expect, test } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project, type Site, type SyncLogByProject, type TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type Project, type Site, type SyncLogByProject, type TaxonSpecies } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '@/db/connections'
 import { deleteOutputProjects } from '../_testing/helper'
