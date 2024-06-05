@@ -1,6 +1,7 @@
 import { type ComputedRef, type Ref, ref, watch } from 'vue'
 
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
+import { type UpdateDetectionStatusResponseBody } from '@rfcx-bio/common/api-bio/cnn/reviews'
 
 import { type DetectionEvent, type DetectionMedia } from '../cnn-job-detail/components/types'
 
@@ -10,7 +11,7 @@ export interface UseDetectionsReview {
   isProcessing: Ref<boolean>
   closeValidator: () => void
   updateSelectedDetections: (detectionId: number, event: DetectionEvent) => void
-  updateValidatedDetections: (selectedDetectionIds: number[], validation: ArbimonReviewStatus, responses: Array<PromiseSettledResult<void>>) => void
+  updateValidatedDetections: (selectedDetectionIds: number[], validation: ArbimonReviewStatus, responses: Array<PromiseSettledResult<UpdateDetectionStatusResponseBody>>) => void
   getSelectedDetections: () => Array<{ id: number, prevStatus: ArbimonReviewStatus }>
   getSuggestedValidationStatus: () => ArbimonReviewStatus
   updateIsProcessing: (status: boolean) => void
@@ -121,7 +122,7 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
     return combinedDetections
   }
 
-  const updateValidatedDetections = (selectedDetectionIds: number[], validation: ArbimonReviewStatus, responses: Array<PromiseSettledResult<void>>): void => {
+  const updateValidatedDetections = (selectedDetectionIds: number[], validation: ArbimonReviewStatus, responses: Array<PromiseSettledResult<UpdateDetectionStatusResponseBody>>): void => {
     allSpecies.value.forEach(species => {
       species.media.forEach((det: DetectionMedia) => {
         // only update status to success review update
