@@ -24,6 +24,7 @@
               Close
             </button>
             <button
+              :disable="isLoadingExportDetections || isErrorExportDetections"
               class="btn btn-primary btn-medium"
               @click="requestExport"
             >
@@ -99,8 +100,10 @@ const requestExport = async () => {
 
       if (error.response?.data !== undefined && error.response.data?.message.includes('already exists')) {
         console.error(error.response.data?.message)
+        closeModal()
       } else {
         console.error('error')
+        closeModal()
       }
     }
   })
