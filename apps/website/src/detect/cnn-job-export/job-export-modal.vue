@@ -91,13 +91,10 @@ const requestExport = async () => {
   // TODO: leave open util export is done
   mutateExportDetections({ types: ['all-model-detections'] }, {
     onSuccess: async () => {
-      modal.value.hide()
-      emit('emitClose')
+      closeModal()
     },
     onError: (e) => {
       const error = e as AxiosError<Error>
-      console.error(error)
-
       if (error.response?.data !== undefined && error.response.data?.message.includes('already exists')) {
         emit('showAlertDialog', 'Your request is still processing. Please try again later.')
         closeModal()
