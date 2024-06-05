@@ -43,7 +43,7 @@ export const exportDetectionsJob = (name: string, classifierJobId: number, expor
     name
   },
   spec: {
-    ttlSecondsAfterFinished: 86400,
+    ttlSecondsAfterFinished: 43200,
     template: {
       spec: {
         containers: [
