@@ -170,6 +170,8 @@ export interface CoreUpdateDetectionStatusParams {
   start: string
 }
 
+export type CoreUpdateDetectionsStatusResponse = Array<{ id: string, status: CoreReviewStatus }>
+
 export interface CoreCreateClassifierJobBody {
   classifier_id: number
   project_id: string
