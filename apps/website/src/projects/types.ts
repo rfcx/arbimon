@@ -11,6 +11,8 @@ export interface Analysis {
   speciesTitle?: string
   speciesDetected?: number
   link: string
+  error?: boolean
+  speciesDetectedError?: boolean
 }
 
 export interface AnalysisCard {
