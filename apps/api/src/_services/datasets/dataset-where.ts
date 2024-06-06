@@ -1,7 +1,7 @@
 import { type BindOrReplacements, Op } from 'sequelize'
 
-import { type Where } from '@rfcx-bio/common/dao/query-helpers/types'
-import { type DetectionBySiteSpeciesHour, type RecordingBySiteHour } from '@rfcx-bio/common/dao/types'
+import { type Where } from '@rfcx-bio/node-common/dao/query-helpers/types'
+import { type DetectionBySiteSpeciesHour, type RecordingBySiteHour } from '@rfcx-bio/node-common/dao/types'
 
 import { dayjs } from '../dayjs-initialized'
 import { type FilterDataset } from './dataset-types'

@@ -1,6 +1,6 @@
 import { type Sequelize, QueryTypes } from 'sequelize'
 
-import { SOURCES } from '@rfcx-bio/common/dao/types/source'
+import { SOURCES } from '@rfcx-bio/node-common/dao/types/source'
 import { getSequentially } from '@rfcx-bio/utils/async'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 import { truncateEllipsis } from '@rfcx-bio/utils/string'

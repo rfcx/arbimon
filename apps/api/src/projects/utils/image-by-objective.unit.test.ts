@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { masterObjectiveTypes } from '@rfcx-bio/common/dao/master-data/project-objective'
+import { masterObjectiveTypes } from '@rfcx-bio/node-common/dao/master-data/project-objective'
 
 import { getImageByObjectives } from './image-by-objective'
 

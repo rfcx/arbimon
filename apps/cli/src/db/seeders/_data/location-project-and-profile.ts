@@ -1,4 +1,4 @@
-import { type LocationProjectProfile, type Project } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectProfile, type Project } from '@rfcx-bio/node-common/dao/types'
 
 import { type BioEnvironment } from '~/env/types'
 

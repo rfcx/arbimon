@@ -2,7 +2,7 @@ import minMax from 'dayjs/plugin/minMax'
 import { Op } from 'sequelize'
 import { afterEach, beforeEach, describe, expect, it, test } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { makeProject } from '@/../../../packages/testing/src/model-builders/project-model-builder'

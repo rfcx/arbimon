@@ -266,15 +266,13 @@ const validateDetection = async (validation: ArbimonReviewStatus): Promise<void>
       status: validation as Exclude<ArbimonReviewStatus, 'unvalidated'>,
       classificationValue: originalDetection?.classification?.value ?? '',
       classifierId: originalDetection?.classifierId ?? -1
-    }).catch(e => {
-      console.error('VALIDATION: error', e)
-      // TODO: handle error
     })
   })
 
   const responses = await Promise.allSettled(promises)
   updateIsProcessing(false)
   console.info('VALIDATION: all done', responses)
+  // TODO: The error handling must be done somewhere here.
   updateValidatedDetections(selectedDetections.map((d) => d.id), validation, responses)
   // TODO:  #1995 take into account the responses to update the review summary
   const changes = selectedDetections.map((d) => {

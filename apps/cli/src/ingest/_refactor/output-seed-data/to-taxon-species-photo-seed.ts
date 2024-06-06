@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 
-import { type TaxonSpeciesPhoto } from '@rfcx-bio/common/dao/types'
+import { type TaxonSpeciesPhoto } from '@rfcx-bio/node-common/dao/types'
 import { objectToTsFile } from '@rfcx-bio/utils/file/json-to-ts'
 
 import { getSeederDataDirectory } from '~/output'
@@ -11,6 +11,6 @@ export const toTaxonSpeciesPhotoSeed = (data: TaxonSpeciesPhoto[]): void => {
     data,
     'rawTaxonSpeciesPhoto',
     'Array<TaxonSpeciesPhoto & { \'TaxonSpecies.slug\': string }>',
-    'import { TaxonSpeciesPhoto } from \'@rfcx-bio/common/dao/types\''
+    'import { TaxonSpeciesPhoto } from \'@rfcx-bio/node-common/dao/types\''
   )
 }

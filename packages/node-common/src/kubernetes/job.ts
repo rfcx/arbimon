@@ -43,17 +43,22 @@ export const exportDetectionsJob = (name: string, classifierJobId: number, expor
     name
   },
   spec: {
-    ttlSecondsAfterFinished: 86400,
+    ttlSecondsAfterFinished: 43200,
     template: {
       spec: {
         containers: [
           {
             name: 'arbimon-export-detections',
-            image: '887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:latest',
+            image: '887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:staging',
             envFrom: [
               {
                 secretRef: {
                   name: 'biodiversity-cli-secrets'
+                }
+              },
+              {
+                configMapRef: {
+                  name: 'biodiversity-cli-config'
                 }
               }
             ],

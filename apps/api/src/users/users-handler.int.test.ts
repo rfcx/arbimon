@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest'
 
 import { usersRoute } from '@rfcx-bio/common/api-bio/users/profile'
-import { type UserTypes } from '@rfcx-bio/common/dao/types'
+import { type UserTypes } from '@rfcx-bio/node-common/dao/types'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 

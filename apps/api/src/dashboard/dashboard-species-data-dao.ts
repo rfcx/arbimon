@@ -2,9 +2,9 @@ import { Op } from 'sequelize'
 
 import { type ApiStack } from '@rfcx-bio/common/api-bio/_helpers'
 import { type DashboardSpecies, type LocationProjectSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type TaxonSpecies } from '@rfcx-bio/common/dao/types'
-import { type DashboardSpeciesHighlighted } from '@rfcx-bio/common/dao/types/dashboard-species-highlighted'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type TaxonSpecies } from '@rfcx-bio/node-common/dao/types'
+import { type DashboardSpeciesHighlighted } from '@rfcx-bio/node-common/dao/types/dashboard-species-highlighted'
 
 import { getSequelize } from '~/db'
 

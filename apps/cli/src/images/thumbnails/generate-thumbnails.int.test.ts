@@ -2,8 +2,8 @@ import fs from 'fs'
 import { Op } from 'sequelize'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { getMetadata } from '@rfcx-bio/common/image'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { getMetadata } from '@rfcx-bio/node-common/image'
 
 import { makeProject } from '@/../../../packages/testing/src/model-builders/project-model-builder'
 import { getSequelize } from '@/db/connections'

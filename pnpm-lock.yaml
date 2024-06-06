@@ -545,15 +545,6 @@ importers:
 
   packages/common:
     dependencies:
-      '@aws-sdk/client-s3':
-        specifier: ^3.567.0
-        version: 3.567.0
-      '@aws-sdk/s3-request-presigner':
-        specifier: ^3.567.0
-        version: 3.567.0
-      '@opensearch-project/opensearch':
-        specifier: ^2.5.0
-        version: 2.5.0
       '@rfcx-bio/utils':
         specifier: workspace:^0.0.1
         version: link:../utils
@@ -569,6 +560,27 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
+
+  packages/node-common:
+    dependencies:
+      '@aws-sdk/client-s3':
+        specifier: ^3.567.0
+        version: 3.567.0
+      '@aws-sdk/s3-request-presigner':
+        specifier: ^3.567.0
+        version: 3.567.0
+      '@opensearch-project/opensearch':
+        specifier: ^2.5.0
+        version: 2.5.0
+      '@rfcx-bio/utils':
+        specifier: workspace:^0.0.1
+        version: link:../utils
+      kubernetes-client:
+        specifier: ^9.0.0
+        version: 9.0.0
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
       pg:
         specifier: ^8.7.1
         version: 8.7.3
@@ -581,15 +593,10 @@ importers:
       sharp:
         specifier: ^0.33.3
         version: 0.33.3
-
-  packages/node-common:
-    dependencies:
-      '@rfcx-bio/utils':
-        specifier: workspace:^0.0.1
-        version: link:../utils
-      kubernetes-client:
-        specifier: ^9.0.0
-        version: 9.0.0
+    devDependencies:
+      '@types/pg':
+        specifier: ^8.6.4
+        version: 8.6.5
 
   packages/testing:
     dependencies:
@@ -602,6 +609,9 @@ importers:
       '@rfcx-bio/common':
         specifier: workspace:^0.0.1
         version: link:../common
+      '@rfcx-bio/node-common':
+        specifier: workspace:^0.0.1
+        version: link:../node-common
       fastify:
         specifier: ^3.23.1
         version: 3.29.0
@@ -3226,14 +3236,14 @@ packages:
     resolution: {integrity: sha512-aDF3S3rK9Q2gey/WAttUlISduDItz5BU3306M9Eyv6/oS40aMprnopshtlKTykxRNIBEZuRMaZAnbrQ4QtKGyw==}
     hasBin: true
     dependencies:
-      detect-libc: 2.0.1
+      detect-libc: 2.0.3
       https-proxy-agent: 5.0.1
       make-dir: 3.1.0
       node-fetch: 2.6.7
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.5.1
+      semver: 7.6.0
       tar: 6.1.11
     transitivePeerDependencies:
       - encoding
@@ -3303,7 +3313,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@gar/promisify': 1.1.3
-      semver: 7.5.1
+      semver: 7.6.0
     optional: true
 
   /@npmcli/move-file@1.1.2:
@@ -3324,7 +3334,7 @@ packages:
       '@oclif/help': 1.0.1
       '@oclif/parser': 3.8.7
       debug: 4.3.4(supports-color@8.1.1)
-      semver: 7.5.1
+      semver: 7.6.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -4812,7 +4822,6 @@ packages:
       '@types/node': 18.0.0
       pg-protocol: 1.5.0
       pg-types: 2.2.0
-    dev: false
 
   /@types/qs@6.9.7:
     resolution: {integrity: sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==}
@@ -4996,7 +5005,7 @@ packages:
       debug: 4.3.4(supports-color@8.1.1)
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.1
+      semver: 7.6.0
       tsutils: 3.21.0(typescript@4.5.5)
       typescript: 4.5.5
     transitivePeerDependencies:
@@ -5017,7 +5026,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.59.11(typescript@4.5.5)
       eslint: 8.42.0
       eslint-scope: 5.1.1
-      semver: 7.5.1
+      semver: 7.6.0
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -6233,7 +6242,7 @@ packages:
   /builtins@5.0.1:
     resolution: {integrity: sha512-qwVpFEHNfhYJIzNRBvd2C1kyo6jz3ZSMPyyuR47OPdiKWlbYnZNyDWuyR175qDnAJLiCo5fBBqPb3RiXgWlkOQ==}
     dependencies:
-      semver: 7.5.1
+      semver: 7.6.0
     dev: true
 
   /c8@7.11.3:
@@ -7481,14 +7490,9 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /detect-libc@2.0.1:
-    resolution: {integrity: sha512-463v3ZeIrcWtdgIg6vI6XUncguvr2TnGl4SzDXinkt9mSLpBJKXT3mW6xT3VQdDN11+WVs29pgvivTc4Lp8v+w==}
-    engines: {node: '>=8'}
-
   /detect-libc@2.0.3:
     resolution: {integrity: sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==}
     engines: {node: '>=8'}
-    dev: false
 
   /detect-newline@3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
@@ -7627,7 +7631,7 @@ packages:
       '@one-ini/wasm': 0.1.1
       commander: 10.0.1
       minimatch: 9.0.1
-      semver: 7.5.4
+      semver: 7.6.0
     dev: true
 
   /ee-first@1.1.1:
@@ -11359,7 +11363,7 @@ packages:
       nopt: 5.0.0
       npmlog: 6.0.2
       rimraf: 3.0.2
-      semver: 7.5.1
+      semver: 7.6.0
       tar: 6.1.11
       which: 2.0.2
     transitivePeerDependencies:
@@ -11426,7 +11430,7 @@ packages:
     dependencies:
       hosted-git-info: 4.1.0
       is-core-module: 2.12.1
-      semver: 7.5.1
+      semver: 7.6.0
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -11913,7 +11917,6 @@ packages:
   /pg-int8@1.0.1:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
     engines: {node: '>=4.0.0'}
-    dev: false
 
   /pg-pool@3.5.1(pg@8.7.3):
     resolution: {integrity: sha512-6iCR0wVrro6OOHFsyavV+i6KYL4lVNyYAB9RD18w66xSzN+d8b66HiwuP30Gp1SH5O9T82fckkzsRjlrhD0ioQ==}
@@ -11925,7 +11928,6 @@ packages:
 
   /pg-protocol@1.5.0:
     resolution: {integrity: sha512-muRttij7H8TqRNu/DxrAJQITO4Ac7RmX3Klyr/9mJEOBeIpgnF8f9jAfRz5d3XwQZl5qBjF9gLsUtMPJE0vezQ==}
-    dev: false
 
   /pg-types@2.2.0:
     resolution: {integrity: sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==}
@@ -11936,7 +11938,6 @@ packages:
       postgres-bytea: 1.0.0
       postgres-date: 1.0.7
       postgres-interval: 1.2.0
-    dev: false
 
   /pg@8.7.3:
     resolution: {integrity: sha512-HPmH4GH4H3AOprDJOazoIcpI49XFsHCe8xlrjHkWiapdbHK+HLtbm/GQzXYAZwmPju/kzKhjaSfMACG+8cgJcw==}
@@ -12128,24 +12129,20 @@ packages:
   /postgres-array@2.0.0:
     resolution: {integrity: sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==}
     engines: {node: '>=4'}
-    dev: false
 
   /postgres-bytea@1.0.0:
     resolution: {integrity: sha512-xy3pmLuQqRBZBXDULy7KbaitYqLcmxigw14Q5sj8QBVLqEwXfeybIKVWiqAXTlcvdvb0+xkOtDbfQMOf4lST1w==}
     engines: {node: '>=0.10.0'}
-    dev: false
 
   /postgres-date@1.0.7:
     resolution: {integrity: sha512-suDmjLVQg78nMK2UZ454hAG+OAW+HQPZ6n++TNDUX+L0+uUlLywnoxJKDou51Zm+zTCjrCl0Nq6J9C5hP9vK/Q==}
     engines: {node: '>=0.10.0'}
-    dev: false
 
   /postgres-interval@1.2.0:
     resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==}
     engines: {node: '>=0.10.0'}
     dependencies:
       xtend: 4.0.2
-    dev: false
 
   /potpack@2.0.0:
     resolution: {integrity: sha512-Q+/tYsFU9r7xoOJ+y/ZTtdVQwTWfzjbiXBDMM/JKUux3+QPP02iUuIoeBQ+Ot6oEDlC+/PGjB/5A3K7KKb7hcw==}
@@ -13065,6 +13062,7 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
+    dev: true
 
   /semver@7.5.4:
     resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==}
@@ -13080,7 +13078,6 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
-    dev: false
 
   /send@0.17.2:
     resolution: {integrity: sha512-UJYB6wFSJE3G00nEivR5rgWp8c2xXvJ3OPWPhmuteU0IKj8nKbG3DrjiOmLwpnHGYWAVwA69zmTm++YG0Hmwww==}
@@ -13154,7 +13151,7 @@ packages:
       pg-connection-string: 2.5.0
       pg-hstore: 2.3.4
       retry-as-promised: 5.0.0
-      semver: 7.5.1
+      semver: 7.6.0
       sequelize-pool: 7.1.0
       sqlite3: 5.0.8
       toposort-class: 1.0.1
@@ -14662,7 +14659,7 @@ packages:
       is-yarn-global: 0.3.0
       latest-version: 5.1.0
       pupa: 2.1.1
-      semver: 7.5.1
+      semver: 7.6.0
       semver-diff: 3.1.1
       xdg-basedir: 4.0.0
     dev: true

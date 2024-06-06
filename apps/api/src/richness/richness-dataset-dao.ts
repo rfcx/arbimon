@@ -2,7 +2,7 @@ import { keyBy, mapValues } from 'lodash-es'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
 import { type RichnessPresence } from '@rfcx-bio/common/api-bio/richness/richness-dataset'
-import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
+import { type AllModels } from '@rfcx-bio/node-common/dao/model-repository'
 
 import { type FilterDatasetForSql, datasetFilterWhereRaw, whereInDataset } from '~/datasets/dataset-where'
 import { RISK_RATING_PROTECTED_IDS } from '~/security/protected-species'

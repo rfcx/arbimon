@@ -1,4 +1,4 @@
-import { type LocationProjectProfileContentType } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectProfileContentType } from '@rfcx-bio/node-common/dao/types'
 
 /**
  * Accepts a key and value to add to the create table, this function is used so that when doing an insert on another column we can guarantee that there will be no panics

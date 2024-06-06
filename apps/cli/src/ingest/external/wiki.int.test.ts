@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 import { afterEach, expect, test, vi } from 'vitest'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { truncateEllipsis } from '@rfcx-bio/utils/string'
 
 import { getSequelize } from '@/db/connections'

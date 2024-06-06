@@ -2,8 +2,8 @@ import { type BindOrReplacements, type Sequelize, Op, QueryTypes } from 'sequeli
 
 import { type SitesRecCountAndDates } from '@rfcx-bio/common/api-bio/project/project-recordings'
 import { type Sync } from '@rfcx-bio/common/api-bio/sync/sync-history'
-import { type AllModels } from '@rfcx-bio/common/dao/model-repository'
-import { type MapableSite, type TaxonClass, ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS } from '@rfcx-bio/common/dao/types'
+import { type AllModels } from '@rfcx-bio/node-common/dao/model-repository'
+import { type MapableSite, type TaxonClass, ATTRIBUTES_LOCATION_SITE, ATTRIBUTES_TAXON_CLASS } from '@rfcx-bio/node-common/dao/types'
 
 import dayjs from '@/../../../packages/utils/node_modules/dayjs'
 import { getSequelize } from '~/db'

@@ -1,7 +1,7 @@
 import { type Sequelize } from 'sequelize'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type DetectionBySiteSpeciesHour } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type DetectionBySiteSpeciesHour } from '@rfcx-bio/node-common/dao/types'
 
 export type DetectionBySiteSpeciesHourWithArbimonId = DetectionBySiteSpeciesHour & { siteIdArbimon: number, speciesIdArbimon: number }
 

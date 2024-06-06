@@ -1,8 +1,8 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { LocationProjectOrganizationModel } from '@rfcx-bio/common/dao/models/location-project-organization-model'
-import { OrganizationModel } from '@rfcx-bio/common/dao/models/organization-model'
+import { LocationProjectOrganizationModel } from '@rfcx-bio/node-common/dao/models/location-project-organization-model'
+import { OrganizationModel } from '@rfcx-bio/node-common/dao/models/organization-model'
 
 import { requireEnv } from '~/env'
 import { rawEnvToLocationProjectOrganizations } from '../_data/location-project-organizations'

@@ -1,7 +1,7 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { LocationSiteModel } from '@rfcx-bio/common/dao/models/location-site-model'
+import { LocationSiteModel } from '@rfcx-bio/node-common/dao/models/location-site-model'
 
 import { sites } from '../_data/integration/project-sites'
 

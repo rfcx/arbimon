@@ -2,8 +2,8 @@ import { type WhereOptions, Op } from 'sequelize'
 import { type Literal } from 'sequelize/types/lib/utils'
 
 import { type LocationProjectWithRole, type MyProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Project, type ProjectStatus, ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/common/dao/types'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type Project, type ProjectStatus, ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '~/db'
 import { fileUrl } from '~/format-helpers/file-url'

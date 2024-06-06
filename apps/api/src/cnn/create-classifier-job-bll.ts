@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { parse } from 'node:path'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 
 import { type CoreCreateClassifierJobBody } from '~/api-core/types'

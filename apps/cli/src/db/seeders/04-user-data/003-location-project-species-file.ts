@@ -1,9 +1,9 @@
 import { type QueryInterface } from 'sequelize'
 import { type MigrationFn } from 'umzug'
 
-import { LocationProjectSpeciesFileModel } from '@rfcx-bio/common/dao/models/location-project-species-file-model'
-import { TaxonSpeciesModel } from '@rfcx-bio/common/dao/models/taxon-species-model'
-import { type LocationProjectSpeciesFile } from '@rfcx-bio/common/dao/types/location-project-species-file'
+import { LocationProjectSpeciesFileModel } from '@rfcx-bio/node-common/dao/models/location-project-species-file-model'
+import { TaxonSpeciesModel } from '@rfcx-bio/node-common/dao/models/taxon-species-model'
+import { type LocationProjectSpeciesFile } from '@rfcx-bio/node-common/dao/types/location-project-species-file'
 
 import { getPuertoRicoProjectId } from '@/db/_helpers/get-puerto-rico-id'
 import { requireEnv } from '~/env'

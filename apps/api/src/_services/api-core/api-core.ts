@@ -15,7 +15,7 @@ import { isValidToken } from '~/api-helpers/is-valid-token'
 import { ApiClient } from '../api-helpers/api-client'
 import { unpackAxiosError } from '../api-helpers/axios-errors'
 import { env } from '../env'
-import { type CoreBestDetection, type CoreBestDetectionQueryParams, type CoreClassificationLite, type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobSummary, type CoreClassifierJobTotalDetections, type CoreCreateClassifierJobBody, type CoreDetection, type CoreDetectionsSummary, type CoreGetBestDetectionsSummaryQueryParams, type CoreGetClassifiersQueryParams, type CoreGetDetectionsQueryParams, type CoreGetDetectionsSummaryQueryParams, type CoreUpdateDetectionStatusBody, type CoreUpdateDetectionStatusParams, type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore, type GetClassifierJobClassificationSummaryQueryParams } from './types'
+import { type CoreBestDetection, type CoreBestDetectionQueryParams, type CoreClassificationLite, type CoreClassifierJob, type CoreClassifierJobClassificationSummary, type CoreClassifierJobInformation, type CoreClassifierJobSummary, type CoreClassifierJobTotalDetections, type CoreCreateClassifierJobBody, type CoreDetection, type CoreDetectionsSummary, type CoreGetBestDetectionsSummaryQueryParams, type CoreGetClassifiersQueryParams, type CoreGetDetectionsQueryParams, type CoreGetDetectionsSummaryQueryParams, type CoreUpdateDetectionsStatusResponse, type CoreUpdateDetectionStatusBody, type CoreUpdateDetectionStatusParams, type DetectDetectionsQueryParamsCore, type DetectDetectionsResponseCore, type GetClassifierJobClassificationSummaryQueryParams } from './types'
 
 const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 
@@ -158,9 +158,9 @@ export async function deleteProject (id: string, token: string): Promise<void> {
   if (response.status !== 204) throw new Error('Delete project failed: expected 204 status from Core')
 }
 
-export async function updateDetectionStatus (token: string, data: CoreUpdateDetectionStatusBody, params: CoreUpdateDetectionStatusParams): Promise<void> {
+export async function updateDetectionStatus (token: string, data: CoreUpdateDetectionStatusBody, params: CoreUpdateDetectionStatusParams): Promise<CoreUpdateDetectionsStatusResponse> {
   try {
-    await axios.request({
+    const response = await axios.request({
       method: 'POST',
       url: `${CORE_API_BASE_URL}/streams/${params.stream_id}/detections/${params.start}/review`,
       headers: {
@@ -168,6 +168,8 @@ export async function updateDetectionStatus (token: string, data: CoreUpdateDete
       },
       data
     })
+
+    return response.data
   } catch (e) {
     return unpackAxiosError(e)
   }

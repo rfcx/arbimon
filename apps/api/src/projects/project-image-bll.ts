@@ -2,7 +2,7 @@ import { type MultipartFile } from '@fastify/multipart'
 import { randomBytes } from 'crypto'
 import { extname } from 'node:path'
 
-import { resizeImage } from '@rfcx-bio/common/image'
+import { resizeImage } from '@rfcx-bio/node-common/image'
 
 import { getS3Client } from '~/storage'
 import { createProjectProfile, getProjectProfile, updateProjectProfile } from './dao/project-profile-dao'

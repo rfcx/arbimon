@@ -1,6 +1,6 @@
 import { type HighlightedSpecies } from '@rfcx-bio/common/api-bio/dashboard/common'
 import { type DashboardSpeciesDataParams, type DashboardSpeciesDataResponse, type SpeciesHighlightedBody, type SpeciesHighlightedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
-import { type LocationProjectSpecies, type RiskRatingIucn, type TaxonSpecies } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectSpecies, type RiskRatingIucn, type TaxonSpecies } from '@rfcx-bio/node-common/dao/types'
 
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'

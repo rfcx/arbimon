@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
 
-import { ModelRepository } from '@rfcx-bio/common/dao/model-repository'
-import { type Backup, type BackupType } from '@rfcx-bio/common/dao/types/backup'
+import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type Backup, type BackupType } from '@rfcx-bio/node-common/dao/types/backup'
 
 import { getSequelize } from '~/db'
 import { env } from '~/env'

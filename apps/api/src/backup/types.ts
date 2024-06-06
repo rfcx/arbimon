@@ -1,4 +1,4 @@
-import { type Project } from '@rfcx-bio/common/dao/types'
+import { type Project } from '@rfcx-bio/node-common/dao/types'
 
 import { getProjectById } from '@/projects/dao/projects-dao'
 

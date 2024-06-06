@@ -7,7 +7,7 @@ import { routesCnn } from './index'
 vi.mock('../_services/api-core/api-core')
 
 describe('POST /detections/review', async () => {
-  test('update the data successfully, returns 204', async () => {
+  test('update the data successfully, returns 200', async () => {
     // Arrange
     const app = await makeApp(routesCnn, {
       projectRole: 'user'
@@ -28,7 +28,10 @@ describe('POST /detections/review', async () => {
     })
 
     // Assert
-    expect(response.statusCode).toEqual(204)
+    expect(response.statusCode).toEqual(200)
+    const json = response.json()
+    expect(json).toHaveProperty('[0].id', 1221017)
+    expect(json).toHaveProperty('[0].status', 'present')
   })
 
   test('returns 400 when the `start` is not valid date', async () => {
