@@ -151,14 +151,14 @@ const { isLoading: isLoadingSiteCount, data: siteCount } = useSiteCount(apiClien
 const { isLoading: isLoadingSpeciesCount, data: speciesCount } = useSpeciesCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingRecordingCount, data: recordingCount } = useRecordingCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingPlaylistCount, data: playlistCount } = usePlaylistCount(apiClientArbimon, selectedProjectSlug)
-const { isLoading: isLoadingRFMCount, data: rfmCount } = useRfmJobCount(apiClientArbimon, selectedProjectSlug)
-const { isLoading: isLoadingSpDetected, data: rfmSpDetected } = useRfmSpeciesDetected(apiClientArbimon, selectedProjectSlug)
-const { isLoading: isLoadingAedJobCount, data: aedJobCount } = useAedJobCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingRFMCount, data: rfmCount, isError: rfmCountError } = useRfmJobCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingSpDetected, data: rfmSpDetected, isError: rfmSpDetectedError } = useRfmSpeciesDetected(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingAedJobCount, data: aedJobCount, isError: aedJobCountError } = useAedJobCount(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingClusteringJobCount, data: clusteringJobCount } = useClusteringJobCount(apiClientArbimon, selectedProjectSlug)
-const { isLoading: isLoadingClusteringSpDetected, data: clusteringSpDetected } = useClusteringSpeciesDetected(apiClientArbimon, selectedProjectSlug)
-const { isLoading: isLoadingSoundscapeCount, data: soundscapeCount } = useSoundscapeCount(apiClientArbimon, selectedProjectSlug)
-const { isLoading: isLoadingPmtCount, data: pmSpeciesCount } = usePmSpeciesDetected(apiClientArbimon, selectedProjectSlug)
-const { isLoading: isLoadingPmTemplateCount, data: pmTemplateCount } = usePmTemplateCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingClusteringSpDetected, data: clusteringSpDetected, isError: clusteringSpDetectedError } = useClusteringSpeciesDetected(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingSoundscapeCount, data: soundscapeCount, isError: soundscapeCountError } = useSoundscapeCount(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingPmtCount, data: pmSpeciesCount, isError: pmSpeciesError } = usePmSpeciesDetected(apiClientArbimon, selectedProjectSlug)
+const { isLoading: isLoadingPmTemplateCount, data: pmTemplateCount, isError: pmTemplateError } = usePmTemplateCount(apiClientArbimon, selectedProjectSlug)
 
 const stats = computed(() => [
   { value: 'site', title: 'Sites created', description: 'Total sites created', count: siteCount.value, isLoading: isLoadingSiteCount.value, label: 'Create new sites', link: `${BASE_URL}/project/${selectedProject.value?.slug}/audiodata/sites` },
@@ -168,10 +168,10 @@ const stats = computed(() => [
 ])
 
 const analyses = computed(() => [
-  { value: 'pm', title: 'Pattern Matching', iconName: 'fi-pm', count: pmSpeciesCount.value, isLoading: isLoadingPmtCount.value || isLoadingPmTemplateCount.value, label: 'Templates', speciesTitle: 'Species analyzed', speciesDetected: pmTemplateCount.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching` },
-  { value: 'soundscapes', title: 'Soundscapes', iconName: 'fi-soundscape', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Soundscapes completed', link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/soundscapes` },
-  { value: 'aed', title: 'AED & Clustering', iconName: 'fi-aed', count: (aedJobCount.value != null) ? aedJobCount.value : 0 + ((clusteringJobCount.value != null) ? clusteringJobCount.value : 0), isLoading: isLoadingAedJobCount.value || isLoadingClusteringJobCount.value || isLoadingClusteringSpDetected.value, label: 'Jobs completed', speciesTitle: 'Species detected', speciesDetected: clusteringSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering` },
-  { value: 'rfm', title: 'Random Forest Models', iconName: 'fi-rfm', count: rfmCount.value, isLoading: isLoadingRFMCount.value || isLoadingSpDetected.value, label: 'Models completed', speciesTitle: 'Species analyzed', speciesDetected: rfmSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models` }
+  { value: 'pm', title: 'Pattern Matching', iconName: 'fi-pm', count: pmSpeciesCount.value, isLoading: isLoadingPmtCount.value || isLoadingPmTemplateCount.value, label: 'Templates', speciesTitle: 'Species analyzed', speciesDetected: pmTemplateCount.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/patternmatching`, error: pmSpeciesError.value, speciesDetectedError: pmTemplateError.value },
+  { value: 'soundscapes', title: 'Soundscapes', iconName: 'fi-soundscape', count: soundscapeCount.value, isLoading: isLoadingSoundscapeCount.value, label: 'Soundscapes completed', link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/soundscapes`, error: soundscapeCountError.value },
+  { value: 'aed', title: 'AED & Clustering', iconName: 'fi-aed', count: (aedJobCount.value != null) ? aedJobCount.value : 0 + ((clusteringJobCount.value != null) ? clusteringJobCount.value : 0), isLoading: isLoadingAedJobCount.value || isLoadingClusteringJobCount.value || isLoadingClusteringSpDetected.value, label: 'Jobs completed', speciesTitle: 'Species detected', speciesDetected: clusteringSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering`, error: aedJobCountError.value, speciesDetectedError: clusteringSpDetectedError.value },
+  { value: 'rfm', title: 'Random Forest Models', iconName: 'fi-rfm', count: rfmCount.value, isLoading: isLoadingRFMCount.value || isLoadingSpDetected.value, label: 'Models completed', speciesTitle: 'Species analyzed', speciesDetected: rfmSpDetected.value, link: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models`, error: rfmCountError.value, speciesDetectedError: rfmSpDetectedError.value }
 ])
 
 const getPopupHtml = (data: MapSiteData, dataKey: string): string => {

@@ -24,7 +24,8 @@
       </a>
     </div>
     <div class="flex items-center font-body text-xl space-x-2 sm:space-x-3 text-util-gray-01">
-      <span>{{ analysis.count ? analysis.count : 0 }}</span>
+      <span v-if="analysis.error === true">- </span>
+      <span v-else>{{ analysis.count ? analysis.count : 0 }}</span>
       <span>{{ analysis.label }}</span>
       <icon-custom-ic-loading
         v-if="analysis.isLoading && analysis.count === undefined"
@@ -34,7 +35,8 @@
     <div
       class="flex items-center font-body text-xl space-x-2 sm:space-x-3 text-util-gray-01"
     >
-      <span v-if="analysis.speciesTitle">{{ analysis.speciesDetected ? analysis.speciesDetected : 0 }}</span>
+      <span v-if="analysis.speciesDetectedError === true">- </span>
+      <span v-if="analysis.speciesTitle && analysis.speciesDetectedError === false">{{ analysis.speciesDetected ? analysis.speciesDetected : 0 }}</span>
       <span>{{ analysis.speciesTitle }}</span>
     </div>
   </div>
