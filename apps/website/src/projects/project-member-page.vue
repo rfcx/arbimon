@@ -161,19 +161,94 @@
           </div>
         </div>
         <div>
-          <div class="border rounded-lg bg-util-gray-04 border-util-gray-03 shadow divide-y divide-util-gray-03">
-            <h4 class="p-3">
+          <div>
+            <h4 class="p-3 font-medium">
               Roles
             </h4>
-            <div
-              v-for="role in roles"
-              :key="role.id"
-              class="p-3"
-            >
-              <p class="font-semibold">
-                {{ role.name }}
-              </p>
-              <p>{{ role.description }}</p>
+            <div class="grid grid-cols-6 h-12 items-center border-b-1 border-util-gray-03">
+              <div
+                :class="{ 'font-medium text-frequency border-b-2 border-frequency': activeTab === 'owner' }"
+                class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
+                @click="activeTab = 'owner'"
+              >
+                Owner
+              </div>
+              <div
+                :class="{ 'font-medium text-frequency border-b-2 border-frequency': activeTab === 'admin' }"
+                class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
+                @click="activeTab = 'admin'"
+              >
+                Admin
+              </div>
+              <div
+                :class="{ 'font-medium text-frequency border-b-2 border-frequency': activeTab === 'expert' }"
+                class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
+                @click="activeTab = 'expert'"
+              >
+                Expert
+              </div>
+              <div
+                :class="{ 'font-medium text-frequency border-b-2 border-frequency': activeTab === 'user' }"
+                class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
+                @click="activeTab = 'user'"
+              >
+                User
+              </div>
+              <div
+                :class="{ 'font-medium text-frequency border-b-2 border-frequency': activeTab === 'data-entry' }"
+                class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
+                @click="activeTab = 'data-entry'"
+              >
+                Data Entry
+              </div>
+              <div
+                :class="{ 'font-medium text-frequency border-b-2 border-frequency': activeTab === 'guest' }"
+                class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
+                @click="activeTab = 'guest'"
+              >
+                Guest
+              </div>
+            </div>
+            <div :class="activeTab === 'owner' ? 'block' : 'hidden'">
+              <UserRoles
+                id="owner"
+                class="py-3"
+              />
+            </div>
+
+            <div :class="activeTab === 'admin' ? 'block' : 'hidden'">
+              <UserRoles
+                id="admin"
+                class="py-3"
+              />
+            </div>
+
+            <div :class="activeTab === 'expert' ? 'block' : 'hidden'">
+              <UserRoles
+                id="expert"
+                class="py-3"
+              />
+            </div>
+
+            <div :class="activeTab === 'user' ? 'block' : 'hidden'">
+              <UserRoles
+                id="user"
+                class="py-3"
+              />
+            </div>
+
+            <div :class="activeTab === 'data-entry' ? 'block' : 'hidden'">
+              <UserRoles
+                id="data-entry"
+                class="py-3"
+              />
+            </div>
+
+            <div :class="activeTab === 'guest' ? 'block' : 'hidden'">
+              <UserRoles
+                id="guest"
+                class="py-3"
+              />
             </div>
           </div>
         </div>
@@ -210,6 +285,7 @@ import { useStore } from '~/store'
 import { useAddProjectMember, useDeleteProjectMember, useGetProjectMembers, useSearchUsers, useUpdateProjectMember } from './_composables/use-project-member'
 import ProjectMember from './components/project-member.vue'
 import ProjectUserSearch from './components/project-user-search.vue'
+import UserRoles from './user-roles.vue'
 
 const store = useStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
@@ -401,6 +477,8 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
     showAlert.value = false
   }, hideAfter)
 }
+
+const activeTab = ref('owner')
 
 </script>
 
