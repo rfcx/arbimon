@@ -6,15 +6,15 @@
     aria-hidden="true"
     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
   >
-    <div class="relative w-full max-w-136 max-h-full">
+    <div class="relative w-full max-w-160 max-h-full">
       <div class="relative p-6 bg-white rounded-lg shadow dark:bg-moss">
         <div class="flex flex-col gap-4">
           <h2>Export results</h2>
           <span>All model detections export preview:</span>
           <img
-            src="#"
+            :src="exportAllModelDetections"
             alt="Export preview"
-            class="w-full aspect-video object-cover rounded-lg bg-util-gray-03"
+            class="w-full object-cover rounded-lg bg-util-gray-03"
           >
           <div class="flex flex-row items-center gap-x-4 mt-4 justify-between">
             <button
@@ -24,7 +24,8 @@
               Close
             </button>
             <button
-              class="btn btn-primary btn-medium"
+              :disabled="isLoadingExportDetections || isErrorExportDetections"
+              class="btn btn-primary btn-medium disabled:hover:btn-disabled disabled:btn-disabled"
               @click="requestExport"
             >
               Export
@@ -37,16 +38,29 @@
 </template>
 
 <script setup lang="ts">
+import { type AxiosError, type AxiosInstance } from 'axios'
 import { Modal } from 'flowbite'
 import type { Ref } from 'vue'
-import { onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+import exportAllModelDetections from '@/_assets/cnn/export-all-model-detections.png'
+import { apiClientKey } from '@/globals'
+import { useExportDetections } from '../_composables/use-export-detections'
 
 const ID = 'cnn-export-modal'
 
 const props = defineProps<{isOpen: boolean}>()
-const emit = defineEmits<{(event: 'emitRequestExport'): void, (event: 'emitClose'): void}>()
+const emit = defineEmits<{(event: 'emitClose'): void, (e: 'showAlertDialog', messageValue: string): void}>()
+
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const modal = ref() as Ref<Modal>
+
+const route = useRoute()
+const jobId = computed(() => route.params.jobId)
+
+const { isPending: isLoadingExportDetections, isError: isErrorExportDetections, mutate: mutateExportDetections } = useExportDetections(apiClientBio, Number(jobId.value))
 
 onMounted(() => {
   modal.value = new Modal(document.getElementById(ID), {
@@ -73,9 +87,23 @@ const closeModal = () => {
   emit('emitClose')
 }
 
-const requestExport = () => {
+const requestExport = async () => {
   // TODO: leave open util export is done
-  emit('emitRequestExport')
+  mutateExportDetections({ types: ['all-model-detections'] }, {
+    onSuccess: async () => {
+      closeModal()
+    },
+    onError: (e) => {
+      const error = e as AxiosError<Error>
+      if (error.response?.data !== undefined && error.response.data?.message.includes('already exists')) {
+        emit('showAlertDialog', 'Your request is still processing. Please try again later.')
+        closeModal()
+      } else {
+        emit('showAlertDialog', 'There was a system error. Please try again.')
+        closeModal()
+      }
+    }
+  })
 }
 
 </script>
