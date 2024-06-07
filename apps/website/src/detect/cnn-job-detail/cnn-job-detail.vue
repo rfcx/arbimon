@@ -4,6 +4,7 @@
       :is-cancel-job-enable="isRefetchIntervalEnable"
       :is-canceling="isLoadingPostStatus"
       @emit-cancel-job="onEmitCancelJob"
+      @show-alert-dialog="showAlertDialog"
     />
     <job-detail-information
       :is-loading-summary="isLoadingJobSummary"
@@ -18,6 +19,12 @@
       :job-status="jobSummary?.status ?? 0"
       @emit-search="onEmitSearch"
       @emit-sort-paginations="onEmitSortAndPaginations"
+    />
+    <alert-dialog
+      v-if="showAlert"
+      severity="error"
+      title="Error"
+      :message="message"
     />
   </section>
 </template>
@@ -53,6 +60,9 @@ const detectionList = ref<ClassificationsSummaryDataset[]>()
 const total = ref(0)
 const searchKeyword = ref<string| undefined>()
 const sortKeyLabel = ref<string| undefined>('name')
+
+const message = ref('')
+const showAlert = ref(false)
 
 const refetchInterval = computed(() => {
   return isRefetch.value ? 30_000 : false
@@ -133,5 +143,13 @@ const onEmitCancelJob = async () => {
     onSuccess: () => refetchJobSummary(),
     onError: () => { /* TODO: add error */ }
   })
+}
+
+const showAlertDialog = (messageValue: string) => {
+  showAlert.value = true
+  message.value = messageValue
+  setTimeout(() => {
+    showAlert.value = false
+  }, 7000)
 }
 </script>

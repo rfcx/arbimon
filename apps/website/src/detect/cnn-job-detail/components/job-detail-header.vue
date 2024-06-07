@@ -60,6 +60,7 @@
     v-if="toggles?.cnnExport === true"
     :is-open="hasOpenedExportModal"
     :emit-close="hasOpenedExportModal=false"
+    @show-alert-dialog="alertDialog"
   />
 </template>
 
@@ -81,8 +82,11 @@ withDefaults(defineProps<{ isCancelJobEnable: boolean, isCanceling: boolean }>()
   isCanceling: false
 })
 
-const emit = defineEmits<{(e: 'emitCancelJob'): void }>()
+const emit = defineEmits<{(e: 'emitCancelJob'): void, (e: 'showAlertDialog', messageValue: string): void}>()
 
 const hasOpenedExportModal = ref(false)
 
+const alertDialog = (message: string) => {
+  emit('showAlertDialog', message)
+}
 </script>
