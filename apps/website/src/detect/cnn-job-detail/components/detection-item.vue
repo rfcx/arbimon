@@ -86,17 +86,42 @@
       <span v-if="props.start">{{ dateFormatted(props.start ?? '') }}</span>
     </div>
   </div>
+
+  <div
+    class="fixed w-72 h-12 inset-x-0 mx-auto z-50 px-4 py-2 bg-steel-gray-light rounded-md transition-all duration-500"
+    :class="playing ? 'bottom-4' : '-bottom-12'"
+  >
+    <div class="h-full flex items-center content-center">
+      <audio-controller
+        :playing="playing"
+        @click="playing ? stop() : play()"
+      />
+      <div
+        class="relative w-full mx-2"
+        @click="setAudioPlayProgress($event)"
+      >
+        <div
+          class="absolute w-full h-1 bg-white opacity-50 rounded-full cursor-pointer"
+        />
+        <div
+          class="absolute h-1 bg-white rounded-full z-51 cursor-pointer"
+          :style="{ width: playedProgressPercentage + '%' }"
+        />
+      </div>
+      <div>{{ displayPlayedTime }}</div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import dayjs from 'dayjs'
 import { Howl } from 'howler'
-import { inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { apiArbimonLegacyFindRecording } from '@rfcx-bio/common/api-arbimon/recordings-query'
 import { type ArbimonReviewStatus } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 import { apiCoreGetMedia } from '@rfcx-bio/common/api-core/media/core-media'
+import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientArbimonLegacyKey, apiClientMediaKey } from '@/globals'
 import { useStore } from '~/store'
@@ -137,6 +162,8 @@ const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 const audio = ref<Howl | null>(null)
 const spectrogram = ref<string | null>(null)
 const playing = ref(false)
+const playedTime = ref(0)
+const playedProgressPercentage = ref(0)
 
 onMounted(async () => {
   spectrogramLoading.value = true
@@ -174,6 +201,7 @@ const setAudio = (audioBlob: Blob) => {
       },
       onplay: () => {
         playing.value = true
+        requestAnimationFrame(step)
       },
       onstop: () => {
         playing.value = false
@@ -196,6 +224,35 @@ const play = async () => {
 const stop = () => {
   audio.value?.stop()
 }
+
+const step = (): void => {
+  const seek = audio.value?.seek() ?? 0
+  if (audio.value?.playing() ?? false) {
+    playedTime.value = seek
+    playedProgressPercentage.value = (seek / (audio.value?.duration() ?? 0)) * 100
+    requestAnimationFrame(step)
+  }
+}
+
+const setAudioPlayProgress = (event: MouseEvent): void => {
+  const target = event.currentTarget as HTMLDivElement
+  const targetWidth = target.offsetWidth
+  const offsetX = event.offsetX
+  const playedProgress = (offsetX / targetWidth)
+  playedProgressPercentage.value = playedProgress * 100
+  selectedDuration(playedProgress)
+}
+
+const selectedDuration = (progress: number): void => {
+  const selectedTime = (audio.value?.duration() ?? 0) * progress
+  playedTime.value = selectedTime
+  audio.value?.seek(selectedTime)
+  audio.value?.play()
+}
+
+const displayPlayedTime = computed((): string => {
+  return `${dayjs.duration(playedTime.value, 'seconds').format('m:ss')}`
+})
 
 const onVisualizerRedirect = async (): Promise<void> => {
   if (!props.start || !props.siteIdCore) return
