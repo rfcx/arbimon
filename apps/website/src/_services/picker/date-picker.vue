@@ -24,20 +24,33 @@ const emit = defineEmits<{(e: 'emitSelectDateRange', value: DateRange): void}>()
 const props = defineProps<{ initialDates?: DateRange}>()
 
 const DEFAULT_DATE_RANGE: [Date, Date] = [
-  dayjs().startOf('day').add(1, 'day').subtract(20, 'years').toDate(),
+  dayjs().startOf('day').add(1, 'day').subtract(1, 'year').toDate(),
   dayjs().startOf('day').toDate()
 ]
 
 const dateValues = ref<[Date, Date]>(DEFAULT_DATE_RANGE)
 
+const checkDateDifference = (): boolean => {
+  if (!props.initialDates) return false
+  const startDate = dayjs(props.initialDates.dateStartLocalIso);
+  const endDate = dayjs(props.initialDates.dateEndLocalIso);
+
+  // Calculate the difference in years
+  const diffInYears = endDate.diff(startDate, 'year');
+
+  return diffInYears > 1
+}
+
 // Set/reset initial dates (ex: mount, change project)
 watchEffect(() => {
-  dateValues.value = props.initialDates
-    ? [
-      dayjs(props.initialDates.dateStartLocalIso).startOf('day').toDate(),
+  if (!props.initialDates) {
+    dateValues.value = DEFAULT_DATE_RANGE
+  } else {
+    dateValues.value = [
+      checkDateDifference() ? dayjs(props.initialDates.dateEndLocalIso).startOf('day').subtract(1, 'year').toDate() : dayjs(props.initialDates.dateStartLocalIso).startOf('day').toDate(),
       dayjs(props.initialDates.dateEndLocalIso).startOf('day').add(1, 'day').toDate()
     ]
-    : DEFAULT_DATE_RANGE
+  }
 })
 
 // Emit on change
