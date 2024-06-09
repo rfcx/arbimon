@@ -32,11 +32,11 @@ const dateValues = ref<[Date, Date]>(DEFAULT_DATE_RANGE)
 
 const checkDateDifference = (): boolean => {
   if (!props.initialDates) return false
-  const startDate = dayjs(props.initialDates.dateStartLocalIso);
-  const endDate = dayjs(props.initialDates.dateEndLocalIso);
+  const startDate = dayjs(props.initialDates.dateStartLocalIso)
+  const endDate = dayjs(props.initialDates.dateEndLocalIso)
 
   // Calculate the difference in years
-  const diffInYears = endDate.diff(startDate, 'year');
+  const diffInYears = endDate.diff(startDate, 'year')
 
   return diffInYears > 1
 }
