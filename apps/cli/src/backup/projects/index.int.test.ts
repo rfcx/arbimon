@@ -21,7 +21,7 @@ describe('Projects backup', async () => {
     test('generates and zips files', async () => {
         // Arrange
         const { Backup, LocationProject, UserProfile } = ModelRepository.getInstance(sequelize)
-        const project = await LocationProject.findOne()
+        const project = await LocationProject.findOne({ where: { id: 201 } })
         const user = await UserProfile.findOne()
         if (user === null || project === null) throw Error('User & project required')
         const backup = { entityId: project.id, entity: 'project' as BackupType, status: BackupStatus.REQUESTED, requestedBy: user.id, requestedAt: new Date() }
