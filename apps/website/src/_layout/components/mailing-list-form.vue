@@ -1,5 +1,6 @@
 <template>
   <form
+    id="subscriptionForm"
     :action="formMainAudience"
     method="post"
     target="_blank"
@@ -14,7 +15,7 @@
         type="text"
         name="FNAME"
         placeholder="First name"
-        oninvalid="setCustomValidity('Please enter your first name')"
+        oninvalid="this.setCustomValidity('Please enter your first name')"
         oninput="setCustomValidity('')"
         class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
       >
@@ -45,7 +46,7 @@
       Subscribe
     </button>
     <div
-      v-if="hasError"
+      v-if="isError"
       class="mt-2 text-left items-center"
     >
       <p class="text-xs text-flamingo">
@@ -58,21 +59,24 @@
   </form>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import { formMainAudience, tagWebsiteSubscriber } from '@/_services/mailchimp'
 
-const form = document.querySelector('form')
-const hasError = ref(false)
+const isError = ref(false)
 
-if (form instanceof HTMLFormElement) {
-  hasError.value = false
-  form.addEventListener('submit', (event) => {
-    if (!form.checkValidity()) {
-      event.preventDefault()
-      hasError.value = true
-    }
-  })
-}
+onMounted(() => {
+  const form = document.getElementById('subscriptionForm') as HTMLFormElement
+
+  if (form !== null) {
+    isError.value = false
+    form.addEventListener('submit', (event) => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        isError.value = true
+      }
+    })
+  }
+})
 
 </script>

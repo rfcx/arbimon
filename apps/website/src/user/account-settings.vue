@@ -458,14 +458,16 @@ const selectPhoto = async (): Promise<void> => {
   document.getElementById('fileUpload')?.click()
 }
 
-const isLargeFile = ref(false)
+const file = ref<File | null>(null)
+
+const isLargeFile = computed(() => {
+  return file.value ? file.value.size > 5 * 1024 * 1024 : false
+})
+
 const uploadPhoto = async (e: Event): Promise<void> => {
   const target = e.target as HTMLInputElement
   const file: File = (target.files as FileList)[0]
   // upload files larger than 5MB
-  if (file.size > 5 * 1024 * 1024) {
-    isLargeFile.value = true
-  }
   uploadedPhotoData.value.name = file.name
   uploadedPhotoData.value.type = file.type
   // the browser has NO ACCESS to the file path for security reasons

@@ -47,7 +47,7 @@
             <icon-custom-ic-loading class="my-6 mx-auto animate-spin" />
           </div>
           <div
-            v-if="!isError"
+            v-if="isError"
             class="bg-spoonbill mt-6 flex flex-row items-center p-2 border-l-3 rounded-lg border-l-ibis"
           >
             <p

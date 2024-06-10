@@ -4,7 +4,9 @@ export const verifyDateFormError = (startDate: string | undefined, endDate: stri
   // none x none
   if (dateS === undefined && dateE === undefined) return '' // not provided
   // none x date OR date x none
-  if ((dateS === undefined && dateE !== undefined) || (dateS !== undefined && dateE === undefined)) return 'It looks like you missed selecting either the start or end date for your project. Please choose both to continue.'
+  if ((dateS === undefined && dateE !== undefined) || (dateS !== undefined && dateE === undefined)) {
+    return 'It looks like you missed selecting either the start or end date for your project. Please choose both to continue.'
+  }
   // date x null
   if (dateS !== undefined && dateE === null) return '' // on going
   // date x date

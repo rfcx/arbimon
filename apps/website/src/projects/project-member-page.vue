@@ -5,7 +5,7 @@
         Members
       </h1>
       <div
-        v-if="!users"
+        v-if="isErrorUsers"
         class="text-left"
       >
         <span>
@@ -364,7 +364,7 @@ const roles = [
   }
 ]
 
-const { data: users, refetch: usersRefetch } = useGetProjectMembers(apiClientBio, selectedProjectId)
+const { data: users, refetch: usersRefetch, isError: isErrorUsers } = useGetProjectMembers(apiClientBio, selectedProjectId)
 const { data: searchedUsers, refetch: searchUsersRefetch } = useSearchUsers(apiClientBio, userSearchValue, computed(() => userSearchValue.value !== ''))
 const { mutate: mutatePatchUserRole } = useUpdateProjectMember(apiClientBio, store.project?.id ?? -1)
 const { mutate: mutatePostProjectMember } = useAddProjectMember(apiClientBio, store.project?.id ?? -1)

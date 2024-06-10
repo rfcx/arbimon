@@ -72,7 +72,6 @@ const props = defineProps<{ isDisabled?: boolean, image?: string }>()
 const emit = defineEmits<{(e: 'emitProjectImage', file: File): void}>()
 
 const uploadedPhotoUrl = ref('')
-const isLargeFile = ref(false)
 
 const projectImage = computed(() => {
   return uploadedPhotoUrl.value ? uploadedPhotoUrl.value : props.image
@@ -82,14 +81,15 @@ const selectPhoto = async (): Promise<void> => {
   document.getElementById('profileFileUpload')?.click()
 }
 
+const file = ref<File | null>(null)
+
+const isLargeFile = computed(() => {
+  return file.value ? file.value.size > 5 * 1024 * 1024 : false
+})
+
 const uploadPhoto = async (e: Event): Promise<void> => {
-  isLargeFile.value = false
   const target = e.target as HTMLInputElement
   const file: File = (target.files as FileList)[0]
-
-  if (file.size > 5 * 1024 * 1024) {
-    isLargeFile.value = true
-  }
 
   const readerUrl = new FileReader()
   readerUrl.addEventListener('load', e => {
