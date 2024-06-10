@@ -53,7 +53,7 @@ export const generateCsvs = async (item: string, projectId: number, sequelize: S
         try {
             const records = await fetchData(query, projectId, sequelize, { limit: BATCH_SIZE, offset })
             const mappedData = signedUrls === true ? await mapPathToSignedUrl(records as Array<object & { path: string }>, storage, legacyStorage) : records
-            const content = await toCsv(mappedData, { dateNF: 'm/d/yy hh:mm:ss' })
+            const content = await toCsv(mappedData, { dateNF: 'mm/dd/yy hh:mm:ss' })
 
             zipFiles.push({ name: `${item}_${batchNumber}.csv`, content })
             batchRecords = records?.length
