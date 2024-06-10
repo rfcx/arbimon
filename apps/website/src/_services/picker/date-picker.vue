@@ -48,7 +48,7 @@ watchEffect(() => {
   } else {
     dateValues.value = [
       checkDateDifference() ? dayjs(props.initialDates.dateEndLocalIso).startOf('day').subtract(1, 'year').toDate() : dayjs(props.initialDates.dateStartLocalIso).startOf('day').toDate(),
-      dayjs(props.initialDates.dateEndLocalIso).startOf('day').add(1, 'day').toDate()
+      dayjs(props.initialDates.dateEndLocalIso).startOf('day').toDate()
     ]
   }
 })
