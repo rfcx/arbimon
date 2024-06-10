@@ -332,7 +332,7 @@
                 Send us a message
               </button>
               <div
-                v-if="hasError"
+                v-if="isError"
                 class="mt-2"
               >
                 <p class="text-xs text-flamingo">
@@ -352,6 +352,7 @@
   <footer-contact />
 </template>
 <script setup lang="ts">
+import axios from 'axios'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -386,23 +387,19 @@ const description = computed(() => {
   }
 })
 
-const hasError = ref(false)
+const isError = ref(false)
+
 const handleSubmit = async (event: Event) => {
-  hasError.value = false
+  isError.value = false
   try {
-    const response = await fetch((event.target as HTMLFormElement).action, {
-      method: 'POST',
-      body: new FormData(event.target as HTMLFormElement),
+    await axios.post((event.target as HTMLFormElement).action, new FormData(event.target as HTMLFormElement), {
       headers: {
         Accept: 'application/json'
       }
     })
-    if (!response.ok) {
-      throw new Error('A Server Error')
-    }
     window.location.href = returnUrl
   } catch (error) {
-    hasError.value = true
+    isError.value = true
   }
 }
 
