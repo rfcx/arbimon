@@ -167,42 +167,42 @@
             </h4>
             <div class="grid grid-cols-6 h-12 items-center border-b-1 border-util-gray-03">
               <div
-                :class="{ 'font-medium text-frequency border-b-2 border-frequency': activeTab === 'owner' }"
+                :class="[activeTab === 'owner' ? 'font-medium text-frequency border-b-2 border-frequency' : '']"
                 class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'owner'"
               >
                 Owner
               </div>
               <div
-                :class="{ 'font-medium text-frequency border-b-2 border-frequency': activeTab === 'admin' }"
+                :class="[activeTab === 'admin' ? 'font-medium text-frequency border-b-2 border-frequency' : '']"
                 class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'admin'"
               >
                 Admin
               </div>
               <div
-                :class="{ 'font-medium text-frequency border-b-2 border-frequency': activeTab === 'expert' }"
+                :class="[activeTab === 'expert' ? 'font-medium text-frequency border-b-2 border-frequency' : '']"
                 class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'expert'"
               >
                 Expert
               </div>
               <div
-                :class="{ 'font-medium text-frequency border-b-2 border-frequency': activeTab === 'user' }"
+                :class="[activeTab === 'user' ? 'font-medium text-frequency border-b-2 border-frequency' : '']"
                 class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'user'"
               >
                 User
               </div>
               <div
-                :class="{ 'font-medium text-frequency border-b-2 border-frequency': activeTab === 'data-entry' }"
+                :class="[activeTab === 'data-entry' ? 'font-medium text-frequency border-b-2 border-frequency' : '']"
                 class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'data-entry'"
               >
                 Data Entry
               </div>
               <div
-                :class="{ 'font-medium text-frequency border-b-2 border-frequency': activeTab === 'guest' }"
+                :class="[activeTab === 'guest' ? 'font-medium text-frequency border-b-2 border-frequency' : '']"
                 class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'guest'"
               >
