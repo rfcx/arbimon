@@ -1,5 +1,6 @@
 import { type ConsolaInstance } from 'consola'
 import dayjs from 'dayjs'
+import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { type Sequelize, Op } from 'sequelize'
 
@@ -27,6 +28,10 @@ export const exportDetections = async (
 ): Promise<void> => {
   const log = consola.withTag('exportDetections')
   const availableExportTypes: ExportDetectionsType[] = []
+
+  const shasum = createHash('sha1')
+  shasum.update(email)
+  const emailHash = shasum.digest('hex')
 
   // get classifier job information
   const jobIdInt = Number(jobId)
@@ -62,7 +67,8 @@ export const exportDetections = async (
 
   // upload to s3
   const loadedZipFile = await readFile(zipFilePath)
-  const key = `classifier-job-exports/${jobIdInt}/${zipFilename}`
+  // make zip filepath contains email hash to identify whom it comes from
+  const key = `classifier-job-exports/${jobIdInt}-${emailHash.substring(0, 8)}/${zipFilename}`
 
   log.info('Uploading zip file to S3 with key', key)
   await storage.putObject(key, loadedZipFile, { ContentType: 'application/zip' })
