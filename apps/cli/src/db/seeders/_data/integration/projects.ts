@@ -3,7 +3,7 @@ import { type Project } from '@rfcx-bio/node-common/dao/types'
 export const fakeProject: Project = {
   id: 201,
   idCore: '8dcib372gh',
-  idArbimon: 201,
+  idArbimon: 1920,
   slug: 'dci-fake',
   name: 'DCI Fake Project',
   status: 'listed',
