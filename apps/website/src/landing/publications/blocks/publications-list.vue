@@ -67,7 +67,7 @@
 <script setup lang="ts">
 import uFuzzy from '@leeoniya/ufuzzy'
 import { groupBy } from 'lodash-es'
-import { type Ref, computed, ref, watch } from 'vue'
+import { type Ref, computed, ref } from 'vue'
 
 import type { LandingPublicationsResponse } from '@rfcx-bio/common/api-bio/landing/landing-publications'
 
@@ -82,7 +82,6 @@ const uf: Ref<uFuzzy> = ref(new uFuzzy())
 const search = ref('')
 const paperPublishedBy = ref<PaperPublishedBy>(null)
 const publicationsByYear = ref<number | null>(null)
-const isError = ref(false)
 
 const props = withDefaults(defineProps<{ publications: LandingPublicationsResponse | undefined, isLoading: boolean }>(), {
   publications: undefined,
@@ -126,12 +125,8 @@ const publicationYearsList = computed<number[]>(() => {
   return Object.keys(publicationsGroupedByYear.value).map(p => Number(p)).sort((a, b) => b - a)
 })
 
-watch(() => props.publications, (newVal) => {
-  if (newVal === undefined) {
-    isError.value = true
-  } else {
-    isError.value = false
-  }
+const isError = computed(() => {
+  return props.publications === undefined
 })
 
 </script>

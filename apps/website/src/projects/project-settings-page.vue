@@ -1,7 +1,7 @@
 <template>
   <section class="bg-white dark:bg-pitch pl-18 mx-auto py-10">
     <div
-      v-if="!settings"
+      v-if="isErrorSetting"
       class="max-w-screen-xl flex items-center justify-center h-screen text-center"
     >
       <span>
@@ -154,7 +154,7 @@ const toggles = inject(togglesKey)
 const selectedProject = computed(() => store.project)
 const selectedProjectId = computed(() => store.project?.id)
 
-const { data: settings } = useGetProjectSettings(apiClientBio, selectedProjectId)
+const { data: settings, isError: isErrorSetting } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.project?.id ?? -1)
 const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, store.project?.id ?? -1)
 const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProject } = useDeleteProject(apiClientBio)

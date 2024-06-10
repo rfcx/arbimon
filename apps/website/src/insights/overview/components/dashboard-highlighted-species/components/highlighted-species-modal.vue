@@ -446,9 +446,15 @@ const saveError = ref(false)
 const saveHighlightedSpecies = async (): Promise<void> => {
   saveError.value = false
   try {
-    if (speciesToRemove.value.length) await deleteHighlightedSpecies()
-    if (newSpeciesToAdd.value.length) await addHighlightedSpecies()
-    if (!speciesToRemove.value.length && !newSpeciesToAdd.value.length) emit('emitClose')
+    if (speciesToRemove.value.length) {
+      await deleteHighlightedSpecies()
+    }
+    if (newSpeciesToAdd.value.length) {
+      await addHighlightedSpecies()
+    }
+    if (!speciesToRemove.value.length && !newSpeciesToAdd.value.length) {
+      emit('emitClose')
+    }
   } catch (error) {
     saveError.value = true
   }
