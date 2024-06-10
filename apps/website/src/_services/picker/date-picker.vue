@@ -32,13 +32,13 @@ const dateValues = ref<[Date, Date]>(DEFAULT_DATE_RANGE)
 
 const checkDateDifference = (): boolean => {
   if (!props.initialDates) return false
-  const startDate = dayjs(props.initialDates.dateStartLocalIso)
-  const endDate = dayjs(props.initialDates.dateEndLocalIso)
+  const start = new Date(props.initialDates.dateStartLocalIso)
+  const end = new Date(props.initialDates.dateEndLocalIso)
 
-  // Calculate the difference in years
-  const diffInYears = endDate.diff(startDate, 'year')
+  const differenceInMilliseconds = Math.abs(Number(end) - Number(start))
+  const millisecondsInYear = 1000 * 60 * 60 * 24 * 365
 
-  return diffInYears > 1
+  return differenceInMilliseconds > millisecondsInYear
 }
 
 // Set/reset initial dates (ex: mount, change project)

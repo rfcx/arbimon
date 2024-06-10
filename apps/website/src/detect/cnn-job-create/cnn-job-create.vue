@@ -71,6 +71,12 @@
               :initial-dates="projectDateRange"
               @emit-select-date-range="onSelectQueryDates"
             />
+            <span
+              v-if="showDateDifferenceError"
+              class="flex mt-2 text-sm text-red-800 dark:text-flamingo"
+            >
+              The maximum date range is 1 year. Please adjust your selection.
+            </span>
           </div>
           <div class="mb-3 mt-5 flex flex-col">
             <label
@@ -163,6 +169,7 @@ const store = useStore()
 
 const errorText = 'Error - there’s a problem loading the models. Please refresh this page and try again.'
 const disableText = 'Contact your project administrator for permission to create a job'
+const showDateDifferenceError = ref(false)
 
 // Fields
 const job: CreateClassifierJobBody = reactive({
@@ -219,6 +226,17 @@ const projectDateRange = computed(() => {
   return { dateStartLocalIso, dateEndLocalIso }
 })
 
+const checkDateDifference = (dateRange: [string, string]): boolean => {
+  const start = new Date(dateRange[0])
+  const end = new Date(dateRange[1])
+
+  const differenceInMilliseconds = Math.abs(Number(end) - Number(start))
+  const millisecondsInYear = 1000 * 60 * 60 * 24 * 365
+  const millisecondsInDay = 1000 * 60 * 60 * 24
+
+  return differenceInMilliseconds > (millisecondsInYear + millisecondsInDay)
+}
+
 // Set job configuration and set validate to false every time data change
 const onSelectClassifier = (classifierId: number) => {
   validated.value = false
@@ -237,6 +255,7 @@ const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) =
   job.queryEnd = dateEndLocalIso
   recordingQuery.dateStartLocal = dateStartLocalIso
   recordingQuery.dateEndLocal = dateEndLocalIso
+  showDateDifferenceError.value = checkDateDifference([dateStartLocalIso, dateEndLocalIso])
 }
 
 const onSelectQueryHours = (queryHours: string) => {
