@@ -49,7 +49,7 @@ export const TEMPLATES = `
 `
 
 export const RECORDING_VALIDATIONS = `
-    select recording_validation_id, recording_id, rv.species_id, s.scientific_name, rv.songtype_id, st.songtype, user_id, present, present_review, present_aed, rv.created_at, rv.updated_at
+    select recording_validation_id, recording_id, rv.species_id, s.scientific_name, rv.songtype_id, st.songtype, user_id, present as present_visualizer, present_review as present_pm, present_aed, rv.created_at, rv.updated_at
     from recording_validations rv
         join species s on rv.species_id = s.species_id 
         join songtypes st on rv.songtype_id = st.songtype_id
@@ -57,7 +57,7 @@ export const RECORDING_VALIDATIONS = `
 `
 
 export const PATTERN_MATCHINGS = `
-    select pattern_matching_id, pm.name, timestamp, pm.playlist_id, p.name playlist_name, pm.template_id, t.name template_name, parameters, completed
+    select pattern_matching_id, pm.name, timestamp, pm.playlist_id, p.name playlist_name, pm.template_id, t.name template_name, parameters
     from pattern_matchings pm
         join playlists p on pm.playlist_id = p.playlist_id
         join templates t on pm.template_id = t.template_id
@@ -90,7 +90,7 @@ export const RFM_MODELS = `
 `
 
 export const RFM_CLASSIFICATIONS = `
-    select cr.classification_result_id, m.model_id, cr.recording_id, cr.species_id, cr.songtype_id, st.songtype, cr.present
+    select cr.classification_result_id, m.model_id, m.model_name, cr.recording_id, cr.species_id, cr.songtype_id, st.songtype, cr.present
     from classification_results cr
         join job_params_classification jpc on cr.job_id = jpc.job_id 
         join models m on jpc.model_id = m.model_id 
