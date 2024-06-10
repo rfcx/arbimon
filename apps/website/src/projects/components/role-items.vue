@@ -59,7 +59,7 @@ import { ref } from 'vue'
 
 const props = defineProps<{
   role: { id: string },
-  items: { title: string, access: Record<string, string> }[],
+  items: { title: string, access: Record<string, boolean> }[],
   title: string,
   hideIfGuest?: boolean,
   reduceOpacity?: boolean,
@@ -73,8 +73,8 @@ const toggleSection = () => {
   isOpen.value = !isOpen.value
 }
 
-const hasAccess = (item: { title: string, access: Record<string, string> }): boolean => {
-  return props.role.id !== undefined && item.access[props.role.id] === 'allow'
+const hasAccess = (item: { title: string, access: Record<string, boolean> }): boolean => {
+  return props.role.id !== undefined && item.access[props.role.id]
 }
 
 function capitalizeFirstLetter (input: string): string {

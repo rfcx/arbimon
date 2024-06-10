@@ -135,53 +135,53 @@ const roles: Record<string, Role> = {
 const role = computed<Role | undefined>(() => roles[props.id])
 
 const ProjectSettingsItems = [
-  { title: 'Manage memberships', access: { owner: 'allow', admin: 'allow' } },
-  { title: 'Edit project information', access: { owner: 'allow', admin: 'allow' } },
-  { title: 'Delete project', access: { owner: 'allow', admin: 'impervious' } }
+  { title: 'Manage memberships', access: { owner: true, admin: true } },
+  { title: 'Edit project information', access: { owner: true, admin: true } },
+  { title: 'Delete project', access: { owner: true, admin: false } }
 ]
 
 const SiteItems = [
-  { title: 'Create new sites', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'allow', 'data-entry': 'impervious' } },
-  { title: 'Edit site information', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'allow', 'data-entry': 'impervious' } },
-  { title: 'Export sites in csv.', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'allow', 'data-entry': 'allow' } },
-  { title: 'Delete sites', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'impervious', 'data-entry': 'impervious' } }
+  { title: 'Create new sites', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': false } },
+  { title: 'Edit site information', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': false } },
+  { title: 'Export sites in csv.', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': true } },
+  { title: 'Delete sites', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } }
 ]
 
 const SpeciesItems = [
-  { title: 'Add new species', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'allow', 'data-entry': 'allow' } },
-  { title: 'Delete species', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'allow', 'data-entry': 'allow' } }
+  { title: 'Add new species', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': true } },
+  { title: 'Delete species', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': true } }
 ]
 
 const RecordingsItems = [
-  { title: 'Upload new recordings', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'allow', 'data-entry': 'allow' } },
-  { title: 'Delete recordings', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'impervious', 'data-entry': 'allow' } },
-  { title: 'Export recordings', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'allow', 'data-entry': 'allow' } }
+  { title: 'Upload new recordings', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': true } },
+  { title: 'Delete recordings', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': true } },
+  { title: 'Export recordings', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': true } }
 ]
 
 const PlaylistsItems = [
-  { title: 'Create new playlists', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'allow', 'data-entry': 'impervious' } },
-  { title: 'Edit playlist', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'impervious', 'data-entry': 'impervious' } },
-  { title: 'Delete playlist', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'allow', 'data-entry': 'impervious' } },
-  { title: 'Export playlist', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'allow', 'data-entry': 'impervious' } }
+  { title: 'Create new playlists', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': false } },
+  { title: 'Edit playlist', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': false } },
+  { title: 'Delete playlist', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': false } },
+  { title: 'Export playlist', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': false } }
 ]
 
 const JobsItems = [
-  { title: 'Create new jobs', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'impervious', 'data-entry': 'impervious' } },
-  { title: 'Edit jobs', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'impervious', 'data-entry': 'impervious' } },
-  { title: 'Delete jobs', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'impervious', 'data-entry': 'impervious' } },
-  { title: 'Export jobs', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'impervious', 'data-entry': 'impervious' } }
+  { title: 'Create new jobs', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } },
+  { title: 'Edit jobs', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } },
+  { title: 'Delete jobs', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } },
+  { title: 'Export jobs', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } }
 ]
 
 const ValidationsItems = [
-  { title: 'Add new validations', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'impervious', 'data-entry': 'impervious' } },
-  { title: 'Delete validations', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'impervious', 'data-entry': 'impervious' } },
-  { title: 'Export validations', access: { owner: 'allow', admin: 'allow', expert: 'allow', user: 'impervious', 'data-entry': 'impervious' } }
+  { title: 'Add new validations', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } },
+  { title: 'Delete validations', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } },
+  { title: 'Export validations', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } }
 ]
 
 const isRoleInAccess = computed(() => {
   const roleId = role.value?.id
   if (roleId && roleId in ProjectSettingsItems[0].access) {
-    return ProjectSettingsItems.some(item => item.access[roleId as keyof typeof ProjectSettingsItems[0]['access']] === 'allow')
+    return ProjectSettingsItems.some(item => item.access[roleId as keyof typeof ProjectSettingsItems[0]['access']] === true)
   }
   return false
 })
