@@ -87,7 +87,8 @@ export const fetchDetections = async (
         'stream',
         'classification'
       ],
-      descending: false
+      descending: false,
+      min_confidence: 0
     }
   })
 }
