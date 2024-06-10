@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'mt-3': !hideIfGuest || role.id !== 'guest' }">
+  <div :class="!hideIfGuest || role.id !== 'guest' ? 'mt-3' : ''">
     <div
       class="flex flex-col bg-moss gap-y-3 border-gray-200 dark:border-gray-700 p-3 rounded-lg"
       :style="{ opacity: reduceOpacity ? '0.7' : '1' }"
@@ -10,7 +10,7 @@
           @click="toggleSection()"
         >
           <h6
-            v-if="!ifUnavailable"
+            v-if="!isUnavailable"
             class="font-medium"
           >
             {{ title }}
@@ -40,7 +40,7 @@
               {{ item.title }}
             </span>
             <icon-fa-check
-              v-if="getPermission(item.access) === 'allow'"
+              v-if="hasAccess(item)"
               class="text-frequency text-sm"
             />
             <icon-fa-close
@@ -59,23 +59,22 @@ import { ref } from 'vue'
 
 const props = defineProps<{
   role: { id: string },
-  items: { title: string, access: { id: string, permission: string }[] }[],
+  items: { title: string, access: Record<string, string> }[],
   title: string,
   hideIfGuest?: boolean,
   reduceOpacity?: boolean,
-  ifUnavailable?: boolean
+  isUnavailable?: boolean
   closeIfUnavailable?: boolean
 }>()
 
-const isOpen = ref(!props.ifUnavailable)
+const isOpen = ref(!props.isUnavailable)
 
 const toggleSection = () => {
   isOpen.value = !isOpen.value
 }
 
-const getPermission = (accessList: { id: string, permission: string }[]): string => {
-  const access = accessList.find(access => access.id === props.role.id)
-  return access ? access.permission : 'impervious'
+const hasAccess = (item: { title: string, access: Record<string, string> }): boolean => {
+  return props.role.id !== undefined && item.access[props.role.id] === 'allow'
 }
 
 function capitalizeFirstLetter (input: string): string {
