@@ -246,6 +246,7 @@
         v-model.number="currentValue"
         type="number"
         min="0"
+        step="0.1"
         max="1"
         class="w-12 text-center text-sm text-pitch bg-util-gray-01 rounded-md outline-none focus:(outline-none ring-util-gray-01) px-1 py-0.5 mr-1 input-hide-arrows"
         @change="onValueChange(currentValue)"
