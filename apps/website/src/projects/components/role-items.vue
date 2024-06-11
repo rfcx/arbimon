@@ -1,12 +1,13 @@
 <template>
   <div :class="!hideIfGuest || role.id !== 'guest' ? 'mt-3' : ''">
     <div
-      class="flex flex-col bg-moss gap-y-3 border-gray-200 dark:border-gray-700 p-3 rounded-lg"
-      :style="{ opacity: reduceOpacity ? '0.7' : '1' }"
+      class="flex flex-col bg-echo gap-y-3 border-gray-200 dark:border-gray-700 py-3 px-6 rounded-lg"
+      :style="{ opacity: reduceOpacity ? '0.7' : '1'}"
     >
       <div>
         <div
-          class="flex flex-row cursor-pointer h-7 items-center justify-between"
+          class="flex flex-row cursor-pointer py-2 items-center justify-between"
+          :style="{ height: !isOpen ? '20px' : '12px' }"
           @click="toggleSection()"
         >
           <h6
@@ -15,17 +16,45 @@
           >
             {{ title }}
           </h6>
-          <h6 v-else>
+          <h6
+            v-else
+            class="font-medium"
+          >
             {{ title }} (Unavailable to {{ capitalizeFirstLetter(role.id) }})
           </h6>
-          <icon-fa-chevron-down
+          <svg
             v-if="!isOpen"
-            class="w-3 h-3 fa-chevron-down"
-          />
-          <icon-fa-chevron-up
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 15L12 9L6 15"
+              stroke="#FFFEFC"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <svg
             v-else
-            class="w-3 h-3 fa-chevron-up"
-          />
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 9L12 15L18 9"
+              stroke="#FFFEFC"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </div>
         <ul
           v-if="isOpen"
@@ -36,17 +65,48 @@
             :key="index"
             class="my-3 flex flex-row justify-between"
           >
-            <span class="text-sm">
+            <span class="text-sm h-5">
               {{ item.title }}
             </span>
-            <icon-fa-check
+            <svg
               v-if="hasAccess(item)"
-              class="text-frequency text-sm"
-            />
-            <icon-fa-close
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M20 6L9 17L4 12"
+                stroke="#ADFF2C"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <svg
               v-else
-              class="text-ibis"
-            />
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18 6L6 18"
+                stroke="#A31A33"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M6 6L18 18"
+                stroke="#A31A33"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </li>
         </ul>
       </div>

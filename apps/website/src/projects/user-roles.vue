@@ -1,5 +1,5 @@
 <template>
-  <div class="ml-5">
+  <div class="ml-3">
     <h6 class="font-medium my-4 pl-3">
       {{ role?.name }}
     </h6>
@@ -8,106 +8,113 @@
     </p>
 
     <div
-      v-if="isRoleInAccess"
+      v-if="role?.id !== 'guest'"
       class="mt-4 pl-3"
     >
       <h6 class="font-medium">
         Capabilities
       </h6>
     </div>
-
-    <RoleItems
-      v-if="role && (role.id === 'owner' || role.id === 'admin')"
-      :role="role || { id: '' }"
-      :items="ProjectSettingsItems"
-      title="Project Settings"
-      :hide-if-guest="true"
-    />
-
-    <RoleItems
-      v-if="role && role.id !== 'guest'"
-      :role="role || { id: '' }"
-      :items="SiteItems"
-      title="Sites"
-      :hide-if-guest="true"
-    />
-
-    <RoleItems
-      v-if="role && role.id !== 'guest'"
-      :role="role || { id: '' }"
-      :items="SpeciesItems"
-      :hide-if-guest="true"
-      title="Species"
-    />
-
-    <RoleItems
-      v-if="role && role.id !== 'guest'"
-      :role="role || { id: '' }"
-      :items="RecordingsItems"
-      :hide-if-guest="true"
-      title="Recordings"
-    />
-
-    <RoleItems
-      v-if="role && role.id === 'data-entry'"
-      :role="role || { id: '' }"
-      :items="ProjectSettingsItems"
-      title="Project Settings"
-      :hide-if-guest="true"
-      :reduce-opacity="role && role.id === 'data-entry'"
-      :is-unavailable="role && role.id === 'data-entry'"
-    />
-
-    <RoleItems
-      v-if="role && role.id !== 'guest'"
-      :role="role || { id: '' }"
-      :items="PlaylistsItems"
-      title="Playlists"
-      :hide-if-guest="true"
-      :reduce-opacity="role && (role.id === 'data-entry')"
-      :is-unavailable="role && (role.id === 'data-entry')"
-    />
-
-    <RoleItems
-      v-if="role && role.id === 'user'"
-      :role="role || { id: '' }"
-      :items="ProjectSettingsItems"
-      title="Project Settings"
-      :hide-if-guest="true"
-      :reduce-opacity="role && role.id === 'user'"
-      :is-unavailable="role && role.id === 'user'"
-    />
-
-    <RoleItems
-      v-if="role && role.id !== 'guest'"
-      :role="role || { id: '' }"
-      :items="JobsItems"
-      title="Jobs"
-      :hide-if-guest="true"
-      :reduce-opacity="role && (role.id === 'user' || role.id === 'data-entry')"
-      :is-unavailable="role && (role.id === 'user' || role.id === 'data-entry')"
-    />
-
-    <RoleItems
-      v-if="role && role.id !== 'guest'"
-      :role="role || { id: '' }"
-      :items="ValidationsItems"
-      title="Validations"
-      :hide-if-guest="true"
-      :reduce-opacity="role && (role.id === 'user' || role.id === 'data-entry')"
-      :is-unavailable="role && (role.id === 'user' || role.id === 'data-entry')"
-    />
-
-    <RoleItems
-      v-if="role && role.id === 'expert'"
-      :role="role || { id: '' }"
-      :items="ProjectSettingsItems"
-      title="Project Settings"
-      :hide-if-guest="true"
-      :reduce-opacity="role && (role.id === 'expert')"
-      :is-unavailable="role && (role.id === 'expert')"
-    />
   </div>
+  <RoleItems
+    v-if="role && (role.id === 'owner' || role.id === 'admin')"
+    :role="role || { id: '' }"
+    :items="ProjectSettingsItems"
+    title="Project Settings"
+    :hide-if-guest="true"
+  />
+
+  <RoleItems
+    v-if="role && role.id !== 'guest'"
+    :role="role || { id: '' }"
+    :items="SiteItems"
+    title="Sites"
+    :hide-if-guest="true"
+  />
+
+  <RoleItems
+    v-if="role && role.id !== 'guest'"
+    :role="role || { id: '' }"
+    :items="SpeciesItems"
+    :hide-if-guest="true"
+    title="Species"
+  />
+
+  <RoleItems
+    v-if="role && role.id !== 'guest'"
+    :role="role || { id: '' }"
+    :items="RecordingsItems"
+    :hide-if-guest="true"
+    title="Recordings"
+  />
+
+  <RoleItems
+    v-if="role && role.id === 'data-entry'"
+    :role="role || { id: '' }"
+    :items="ProjectSettingsItems"
+    title="Project Settings"
+    :hide-if-guest="true"
+    :reduce-opacity="role && role.id === 'data-entry'"
+    :is-unavailable="role && role.id === 'data-entry'"
+  />
+
+  <RoleItems
+    v-if="role && !(role.id === 'guest' || role.id === 'data-entry')"
+    :role="role || { id: '' }"
+    :items="PlaylistsItems"
+    title="Playlists"
+    :hide-if-guest="true"
+  />
+
+  <RoleItems
+    v-if="role && role.id === 'user'"
+    :role="role || { id: '' }"
+    :items="ProjectSettingsItems"
+    title="Project Settings"
+    :hide-if-guest="true"
+    :reduce-opacity="role && role.id === 'user'"
+    :is-unavailable="role && role.id === 'user'"
+  />
+
+  <RoleItems
+    v-if="role && role.id !== 'guest'"
+    :role="role || { id: '' }"
+    :items="JobsItems"
+    title="Jobs"
+    :hide-if-guest="true"
+    :reduce-opacity="role && (role.id === 'user' || role.id === 'data-entry')"
+    :is-unavailable="role && (role.id === 'user' || role.id === 'data-entry')"
+  />
+
+  <RoleItems
+    v-if="role && role.id !== 'guest'"
+    :role="role || { id: '' }"
+    :items="ValidationsItems"
+    title="Validations"
+    :hide-if-guest="true"
+    :reduce-opacity="role && (role.id === 'user' || role.id === 'data-entry')"
+    :is-unavailable="role && (role.id === 'user' || role.id === 'data-entry')"
+  />
+
+  <RoleItems
+    v-if="role && role.id === 'expert'"
+    :role="role || { id: '' }"
+    :items="ProjectSettingsItems"
+    title="Project Settings"
+    :hide-if-guest="true"
+    :reduce-opacity="role && (role.id === 'expert')"
+    :is-unavailable="role && (role.id === 'expert')"
+  />
+
+  <RoleItems
+    v-if="role && role.id === 'data-entry'"
+    :role="role || { id: '' }"
+    :items="PlaylistsItems"
+    title="Playlists"
+    :hide-if-guest="true"
+    :reduce-opacity="role && role.id === 'data-entry'"
+    :is-unavailable="role && role.id === 'data-entry'"
+  />
 </template>
 
 <script setup lang="ts">
@@ -124,12 +131,12 @@ interface Role {
 }
 
 const roles: Record<string, Role> = {
-  owner: { id: 'owner', name: 'Owner', description: 'Project Owner - can manage and delete the project, edit project settings, and manage project members' },
-  admin: { id: 'admin', name: 'Admin', description: 'Project Administrator - can view and manage the project, edit project settings, and manage project members' },
-  expert: { id: 'expert', name: 'Expert', description: 'Project Member + Species Validator - can view and manage the project, run jobs, and validate species' },
-  user: { id: 'user', name: 'User', description: 'Project Member - can view the project, manage project species, manage recordings, view and create playlists' },
-  'data-entry': { id: 'data-entry', name: 'Data Entry', description: 'Limited Project Member - can view the project, manage project species, and manage recordings' },
-  guest: { id: 'guest', name: 'Guest', description: 'Project Guest - can view the project (and be Citizen Scientist if enabled)' }
+  owner: { id: 'owner', name: 'Owner', description: 'Full access to project settings.' },
+  admin: { id: 'admin', name: 'Admin', description: 'Full access to project settings except deleting the project.' },
+  expert: { id: 'expert', name: 'Expert', description: 'Manage sites, species, recordings, playlists, jobs, and validations' },
+  user: { id: 'user', name: 'User', description: 'Manages sites, species, recordings, and playlists.' },
+  'data-entry': { id: 'data-entry', name: 'Data Entry', description: 'Export sites, manage species and recordings.' },
+  guest: { id: 'guest', name: 'Guest', description: 'Project viewer only.' }
 }
 
 const role = computed<Role | undefined>(() => roles[props.id])
@@ -155,7 +162,7 @@ const SpeciesItems = [
 const RecordingsItems = [
   { title: 'Upload new recordings', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': true } },
   { title: 'Delete recordings', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': true } },
-  { title: 'Export recordings', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': true } }
+  { title: 'Export recordings', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': true } }
 ]
 
 const PlaylistsItems = [
@@ -177,12 +184,4 @@ const ValidationsItems = [
   { title: 'Delete validations', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } },
   { title: 'Export validations', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } }
 ]
-
-const isRoleInAccess = computed(() => {
-  const roleId = role.value?.id
-  if (roleId && roleId in ProjectSettingsItems[0].access) {
-    return ProjectSettingsItems.some(item => item.access[roleId as keyof typeof ProjectSettingsItems[0]['access']] === true)
-  }
-  return false
-})
 </script>

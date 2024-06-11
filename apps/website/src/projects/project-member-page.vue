@@ -162,47 +162,47 @@
         </div>
         <div>
           <div>
-            <h4 class="p-3 font-medium">
+            <h4 class="py-3 font-medium">
               Roles
             </h4>
-            <div class="grid grid-cols-6 h-12 items-center border-b-1 border-util-gray-03">
+            <div class="grid grid-cols-6 gap-4 h-12 items-center border-b-1 border-util-gray-03">
               <div
-                :class="[activeTab === 'owner' ? 'font-medium text-frequency border-b-2 border-frequency' : '']"
+                :class="[activeTab === 'owner' ? 'font-medium text-frequency border-b-2 border-frequency bg-echo rounded-t-md' : '']"
                 class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'owner'"
               >
                 Owner
               </div>
               <div
-                :class="[activeTab === 'admin' ? 'font-medium text-frequency border-b-2 border-frequency' : '']"
+                :class="[activeTab === 'admin' ? 'font-medium text-frequency border-b-2 border-frequency bg-echo rounded-t-md' : '']"
                 class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'admin'"
               >
                 Admin
               </div>
               <div
-                :class="[activeTab === 'expert' ? 'font-medium text-frequency border-b-2 border-frequency' : '']"
+                :class="[activeTab === 'expert' ? 'font-medium text-frequency border-b-2 border-frequency bg-echo rounded-t-md' : '']"
                 class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'expert'"
               >
                 Expert
               </div>
               <div
-                :class="[activeTab === 'user' ? 'font-medium text-frequency border-b-2 border-frequency' : '']"
+                :class="[activeTab === 'user' ? 'font-medium text-frequency border-b-2 border-frequency bg-echo rounded-t-md' : '']"
                 class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'user'"
               >
                 User
               </div>
               <div
-                :class="[activeTab === 'data-entry' ? 'font-medium text-frequency border-b-2 border-frequency' : '']"
+                :class="[activeTab === 'data-entry' ? 'font-medium text-frequency border-b-2 border-frequency bg-echo rounded-t-md' : '']"
                 class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'data-entry'"
               >
                 Data Entry
               </div>
               <div
-                :class="[activeTab === 'guest' ? 'font-medium text-frequency border-b-2 border-frequency' : '']"
+                :class="[activeTab === 'guest' ? 'font-medium text-frequency border-b-2 border-frequency bg-echo rounded-t-md' : '']"
                 class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'guest'"
               >
