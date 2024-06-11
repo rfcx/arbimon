@@ -90,7 +90,7 @@ export const RFM_MODELS = `
 `
 
 export const RFM_CLASSIFICATIONS = `
-    select cr.classification_result_id, m.model_id, m.name as model_name, cr.recording_id, cr.species_id, sp.name as species_name, cr.songtype_id, st.songtype, cr.present
+    select cr.classification_result_id, m.model_id, m.name as model_name, cr.recording_id, cr.species_id, sp.scientific_name as species_name, cr.songtype_id, st.songtype, cr.present
     from classification_results cr
         join job_params_classification jpc on cr.job_id = jpc.job_id 
         join models m on jpc.model_id = m.model_id 
