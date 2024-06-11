@@ -128,6 +128,15 @@ export const useDetectionsReview = (allSpecies: ComputedRef<Array<{ speciesSlug:
         // only update status to success review update
         if (selectedDetectionIds.includes(det.id) && responses.find(r => r.status === 'fulfilled') != null) {
           det.validation = validation
+
+          responses.forEach(r => {
+            if (r.status === 'fulfilled') {
+              const detection = r.value.find(d => d.id === det.id)
+              if (detection) {
+                det.validation = detection.status
+              }
+            }
+          })
         }
       })
     })
