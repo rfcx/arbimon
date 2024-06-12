@@ -67,6 +67,16 @@
   />
 
   <RoleItems
+    v-if="role && role.id !== 'guest'"
+    :role="role || { id: '' }"
+    :items="JobsItems"
+    title="Jobs"
+    :hide-if-guest="true"
+    :reduce-opacity="role && role.id === 'data-entry'"
+    :is-unavailable="role && role.id === 'data-entry'"
+  />
+
+  <RoleItems
     v-if="role && role.id === 'user'"
     :role="role || { id: '' }"
     :items="ProjectSettingsItems"
@@ -74,16 +84,6 @@
     :hide-if-guest="true"
     :reduce-opacity="role && role.id === 'user'"
     :is-unavailable="role && role.id === 'user'"
-  />
-
-  <RoleItems
-    v-if="role && role.id !== 'guest'"
-    :role="role || { id: '' }"
-    :items="JobsItems"
-    title="Jobs"
-    :hide-if-guest="true"
-    :reduce-opacity="role && (role.id === 'user' || role.id === 'data-entry')"
-    :is-unavailable="role && (role.id === 'user' || role.id === 'data-entry')"
   />
 
   <RoleItems
@@ -156,25 +156,24 @@ const SiteItems = [
 
 const SpeciesItems = [
   { title: 'Add new species', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': true } },
-  { title: 'Delete species', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': true } }
+  { title: 'Delete species', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } }
 ]
 
 const RecordingsItems = [
   { title: 'Upload new recordings', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': true } },
-  { title: 'Delete recordings', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': true } },
-  { title: 'Export recordings', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': true } }
+  { title: 'Delete recordings', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } },
+  { title: 'Export recordings', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': true } }
 ]
 
 const PlaylistsItems = [
   { title: 'Create new playlists', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': false } },
   { title: 'Edit playlist', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': false } },
-  { title: 'Delete playlist', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': false } },
-  { title: 'Export playlist', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': false } }
+  { title: 'Delete playlist', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': false } }
 ]
 
 const JobsItems = [
-  { title: 'Create new jobs', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } },
-  { title: 'Edit jobs', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } },
+  { title: 'Create new jobs', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': false } },
+  { title: 'Edit jobs', access: { owner: true, admin: true, expert: true, user: true, 'data-entry': false } },
   { title: 'Delete jobs', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } },
   { title: 'Export jobs', access: { owner: true, admin: true, expert: true, user: false, 'data-entry': false } }
 ]
