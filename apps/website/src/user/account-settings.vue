@@ -2,7 +2,7 @@
   <landing-navbar />
   <section class="pt-16 mb-16 bg-white dark:bg-pitch">
     <div
-      v-if="!profileData"
+      v-if="!profileData && !isLoadingProfileData"
       class="flex rounded-lg bg-moss py-3 px-4 mx-auto max-w-screen-md dark:bg-moss items-center justify-center h-screen text-center"
     >
       <span>
