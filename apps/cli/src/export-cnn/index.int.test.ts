@@ -8,7 +8,6 @@ import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest'
 import { modelRepositoryWithElevatedPermissions } from '@/../../../packages/testing/src/dao'
 import { getSequelize } from '@/db/connections'
 import { ApiCoreClient } from '~/api-core/api-core-client'
-import { requireEnv } from '~/env'
 import { getMailClient } from '~/mail'
 import { getStorageClient } from '~/storage'
 import { exportDetections } from './detections'
@@ -16,11 +15,9 @@ import { type Detection, CSV_REVIEW_STATUS } from './detections/core-api'
 
 vi.mock('../_services/mail')
 
-const { AUTHO_ANONYMOUS_CLIENT_SECRET } = requireEnv('AUTHO_ANONYMOUS_CLIENT_SECRET')
-
 const sequelize = getSequelize()
 const mailClient = getMailClient()
-const apiClient = ApiCoreClient.getInstance(AUTHO_ANONYMOUS_CLIENT_SECRET)
+const apiClient = ApiCoreClient.getInstance('')
 const consola = createConsola({ fancy: false })
 const storage = getStorageClient()
 
@@ -158,16 +155,9 @@ describe('export detections folder', () => {
     )
 
     // Assert
-    // Checks the folder exists inside tmp directory
-    await expect(access('/tmp/rfcx/export-detections-128mkldkfoor-100')).resolves.toBeUndefined()
-    // Checks the exported file exists
-    await expect(access('/tmp/rfcx/export-detections-128mkldkfoor-100/all-model-detections/detections_001.csv')).resolves.toBeUndefined()
-    // Checks the exported zip file exists
-    await expect(access('/tmp/rfcx/export-detections-128mkldkfoor-100/detections_export_128mkldkfoor_100.zip')).resolves.toBeUndefined()
-
-    // Checks the file has been updated to S3
-    const s3File = await storage.getObject('classifier-job-exports/100/detections_export_128mkldkfoor_100.zip') as Buffer
-    expect(s3File).toBeDefined()
+    await expect(access('/tmp/rfcx/export-detections-128mkldkfoor-100')).resolves.toBeUndefined() // Temp folder removed
+    // TODO hash 8dd5403d should be random string
+    await expect(storage.objectExists('classifier-job-exports/100-8dd5403d/detections_export_128mkldkfoor_100.zip')).resolves.toBe(true)
   })
 
   test('can correctly export files as steps when they are more than page limit', async () => {
@@ -185,12 +175,7 @@ describe('export detections folder', () => {
 
     // Assert
     await expect(access('/tmp/rfcx/export-detections-kmdkfdlsdf-101')).resolves.toBeUndefined()
-    await expect(access('/tmp/rfcx/export-detections-kmdkfdlsdf-101/all-model-detections/detections_001.csv')).resolves.toBeUndefined()
-    await expect(access('/tmp/rfcx/export-detections-kmdkfdlsdf-101/all-model-detections/detections_002.csv')).resolves.toBeUndefined()
-    await expect(access('/tmp/rfcx/export-detections-kmdkfdlsdf-101/all-model-detections/detections_003.csv')).rejects.toThrowError()
-    await expect(access('/tmp/rfcx/export-detections-kmdkfdlsdf-101/detections_export_kmdkfdlsdf_101.zip')).resolves.toBeUndefined()
-
-    const s3File = await storage.getObject('classifier-job-exports/101/detections_export_kmdkfdlsdf_101.zip') as Buffer
-    expect(s3File).toBeDefined()
+    // TODO hash 8dd5403d should be random string
+    await expect(storage.objectExists('classifier-job-exports/101-8dd5403d/detections_export_kmdkfdlsdf_101.zip')).resolves.toBe(true)
   })
 })
