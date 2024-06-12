@@ -1,9 +1,9 @@
 <template>
   <div class="ml-3">
-    <h6 class="font-medium my-4 pl-3">
+    <h6 class="font-medium mt-4 mb-2 pl-3">
       {{ role?.name }}
     </h6>
-    <p class="text-sm mb-4 pl-3">
+    <p class="text-sm mb-5 pl-3">
       {{ role?.description }}
     </p>
 
