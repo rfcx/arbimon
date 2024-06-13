@@ -2,7 +2,7 @@
   <landing-navbar />
   <section class="pt-16 mb-16 bg-white dark:bg-pitch">
     <div
-      v-if="!profileData && !isLoadingProfileData"
+      v-if="isErrorProfileData"
       class="flex rounded-lg bg-moss py-3 px-4 mx-auto max-w-screen-md dark:bg-moss items-center justify-center h-screen text-center"
     >
       <span>
@@ -303,7 +303,7 @@ const store = useStore()
 const router = useRouter()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
-const { isLoading: isLoadingProfileData, data: profileData } = useGetProfileData(apiClientBio)
+const { isLoading: isLoadingProfileData, data: profileData, isError: isErrorProfileData } = useGetProfileData(apiClientBio)
 const { isPending: isUpdatingProfilePhoto, mutate: mutatePatchProfilePhoto } = usePatchProfileImage(apiClientBio)
 const { isPending: isUpdatingUserProfile, mutate: mutatePatchUserProfile } = usePatchUserProfile(apiClientBio)
 const { data: organizationsList } = useGetOrganizationsList(apiClientBio)
