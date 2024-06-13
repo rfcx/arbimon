@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import { Modal } from 'flowbite'
 import type { Ref } from 'vue'
-import { defineEmits, defineProps, onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 const props = defineProps<{ jobId: number, isOpen: boolean}>()
 const emit = defineEmits<{(e: 'confirmCancel'): void, (event: 'emitClose'): void }>()
