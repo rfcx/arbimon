@@ -16,20 +16,20 @@
             >Visit our support page</a> for detailed instructions and troubleshooting.
           </span>
           <div class="flex gap-x-6">
-            <button
+            <a
               class="btn block btn-primary flex w-full text-xs justify-center items-center space-x-3 px-6 py-3 mt-6 disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
-              type="button"
+              :href="uploaderApps.mac"
             >
               <span class="font-display text-base">Download for Mac</span>
               <icon-custom-ic-apple-logo class="h-4 w-4 mb-3px" />
-            </button>
-            <button
+            </a>
+            <a
               class="btn block btn-primary flex w-full text-xs justify-center items-center space-x-3 px-6 py-3 mt-6 disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
-              type="button"
+              :href="uploaderApps.windows"
             >
               <span class="font-display text-base">Download for Windows</span>
               <icon-custom-ic-window-logo class="h-4 w-4 mb-3px" />
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -42,4 +42,11 @@
 
 <script setup lang="ts">
 import importRecordings from '@/_assets/import-recordings.png'
+
+const randomString = Math.round(Math.random() * 100000000)
+
+const uploaderApps = {
+    mac: 'https://rf.cx/ingest-app-latest-mac?r=' + randomString,
+    windows: 'https://rf.cx/ingest-app-latest-win?r=' + randomString
+}
 </script>
