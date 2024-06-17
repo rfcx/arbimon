@@ -39,7 +39,9 @@ export const ROUTE_NAMES = {
   info: 'info',
   error: 'error',
   login: 'login',
-  signup: 'signup'
+  signup: 'signup',
+  // Uploader Recordings
+  importRecordings: 'import_recordings'
 } as const
 
 export type RouteNames = typeof ROUTE_NAMES
