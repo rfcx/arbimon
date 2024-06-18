@@ -142,16 +142,16 @@
       <button
         type="button"
         class="bg-frequency text-black text-base font-medium rounded-4xl px-4 py-2"
-        @click="closeEditorView"
+        @click="$emit('onEditorClose')"
       >
         Save changes
       </button>
       <span
-        v-if="props.hasFailed"
+        v-if="props.onSaveErrorMessage !== ''"
         class="p-4 text-sm text-red-800 dark:text-flamingo"
         role="alert"
       >
-        <span class="font-medium">Failed. {{ props.errorMessage }}</span>
+        <span class="font-medium">Failed. {{ props.onSaveErrorMessage }}</span>
       </span>
     </div>
 
@@ -238,7 +238,7 @@ import { Modal } from 'flowbite'
 import { Markdown } from 'tiptap-markdown'
 import { type Ref, onMounted, ref, watch } from 'vue'
 
-const props = defineProps<{ id: string, modelValue: string, characterLimit: number, errorMessage?: string, hasFailed?: boolean}>()
+const props = defineProps<{ id: string, modelValue: string, characterLimit: number, onSaveErrorMessage: string }>()
 const emit = defineEmits<{(e: 'update:modelValue', value: string): void, (e: 'onEditorClose'): void}>()
 const modal = ref() as Ref<Modal>
 const linkToSet = ref('')
@@ -298,23 +298,6 @@ const closeModal = (): void => {
   modal.value.hide()
   linkToSet.value = ''
 }
-
-const hasFailed = ref(props.hasFailed ?? false)
-const errorMessage = ref(props.errorMessage ?? '')
-
-const closeEditorView = (): void => {
-    if (hasFailed.value === false) {
-      emit('onEditorClose')
-    } else {
-      handleSaveError(props.errorMessage)
-    }
-}
-
-const handleSaveError = (error: string | undefined): void => {
-  errorMessage.value = error ?? ''
-  hasFailed.value = true
-}
-
 </script>
 
 <style lang="scss">
