@@ -36,7 +36,7 @@
     </div>
     <MarkdownViewer
       v-show="!isEditing"
-      v-if="rawMarkdownText === undefined && rawMarkdownText !== ''"
+      v-if="rawMarkdownText !== undefined && rawMarkdownText !== ''"
       :id="`${id}-markdown-viewer-component`"
       ref="markdownViewerRef"
       :class="isViewMored === true ? 'z-0' : 'max-h-128 overflow-y-hidden z-0'"
