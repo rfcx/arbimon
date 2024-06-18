@@ -83,7 +83,7 @@ onMounted(() => {
 })
 
 watch(() => props.isOpen, (val) => {
-  if (val === true) {
+  if (val) {
     openModal()
   }
 })
