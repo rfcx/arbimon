@@ -12,9 +12,9 @@
       v-else-if="currentStatus === BackupStatus.COMPLETED"
       class="w-4 fill-frequency text-frequency"
     />
-    <div
+    <icon-custom-alert-triangle
       v-else-if="currentStatus === BackupStatus.EXPIRED"
-      class="w-4 h-4 border-util-gray-03 bg-util-gray-03 border-1 rounded-full"
+      class="w-4 h-4"
     />
     <span>{{ currentStatus }}</span>
   </div>
