@@ -101,7 +101,6 @@ declare module 'vue' {
     IconFasInfoCircle: typeof import('~icons/fa-solid/info-circle')['default']
     IconFasTag: typeof import('~icons/fa-solid/tag')['default']
     IconFaTrash: typeof import('~icons/fa/trash')['default']
-    IconIcExport: typeof import('~icons/ic/export')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
