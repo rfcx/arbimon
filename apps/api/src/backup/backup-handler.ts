@@ -14,10 +14,10 @@ export const createBackupRequestHandler: Handler<CreateBackupResponse, unknown, 
         throw new BioPublicError('userId is required for creating a backup request', 500)
     }
 
-    const existingRequest = await getRequestWithinTimeframe(entityType, entityId, userId)
+    const existingRequest = await getRequestWithinTimeframe(entityType, entityId)
 
     if (existingRequest !== null) {
-        throw new BioPublicError(`A backup request for this ${String(entityType)} already exists`, 500)
+        throw new BioPublicError(`A backup request for this ${entityType} already exists`, 500)
     }
 
     // Create and return backup request
@@ -43,7 +43,7 @@ export const getBackupRequestsHandler: Handler<GetBackupRequestsResponse, unknow
     }
 
     // Get backup requests
-    const requests = await getBackupRequests(entityType, entityId, userId, { limit, offset })
+    const requests = await getBackupRequests(entityType, entityId, { limit, offset })
 
     if (requests.length) {
         res.statusCode = 200

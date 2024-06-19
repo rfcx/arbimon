@@ -15,6 +15,7 @@ const { LocationProject, LocationProjectUserRole, Backup } = modelRepositoryWith
 const ROUTE = backupsRoute
 const ownerId = 9001
 const userId = 9002
+const adminId = 9003
 const projectId1 = 2791456
 const projectId2 = 2791457
 
@@ -26,6 +27,7 @@ beforeAll(async () => {
     await LocationProject.bulkCreate([project1, project2])
     await LocationProjectUserRole.create({ locationProjectId: projectId1, userId: ownerId, roleId: getIdByRole('owner'), ranking: 0 })
     await LocationProjectUserRole.create({ locationProjectId: projectId1, userId, roleId: getIdByRole('user'), ranking: 0 })
+    await LocationProjectUserRole.create({ locationProjectId: projectId1, userId: adminId, roleId: getIdByRole('admin'), ranking: 0 })
     await LocationProjectUserRole.create({ locationProjectId: projectId2, userId: ownerId, roleId: getIdByRole('owner'), ranking: 0 })
 })
 
@@ -96,6 +98,25 @@ describe(`POST ${backupsRoute}`, async () => {
     test('backup cannot be requested within 7 days after the last request', async () => {
         // Arrange
         const app = await makeApp(routesBackup, { userId: ownerId })
+        const backup = {
+            entity: 'project',
+            entityId: projectId1
+        }
+
+        // Act
+        const response = await app.inject({
+            method: POST,
+            url: ROUTE,
+            payload: backup
+        })
+
+        // Assert
+        expect(response.statusCode).toBe(500)
+    })
+
+    test('Can only have 1 on-going backup per project regardless of who has requested the backup', async () => {
+        // Arrange
+        const app = await makeApp(routesBackup, { userId: adminId })
         const backup = {
             entity: 'project',
             entityId: projectId1
