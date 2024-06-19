@@ -52,7 +52,7 @@
             class="text-frequency"
           >Download link</a>
           <span
-            v-else-if="item.status === 'available' && (item.expiresAt ? hasExpired(item.expiresAt) : true)"
+            v-else-if="item.expiresAt && hasExpired(item.expiresAt)"
             class="text-util-gray-02 cursor-not-allowed"
           >Download link</span>
           <span v-else>Not yet available</span>
