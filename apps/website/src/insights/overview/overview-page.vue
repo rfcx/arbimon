@@ -25,6 +25,7 @@
         :is-project-member="store.userIsProjectMember"
         :is-viewing-as-guest="isViewingAsGuest"
         :is-loading="isLoadingSpecies || isRefetchingSpecies"
+        :is-error="isErrorSpecies"
         @emit-refetch="refetchSpeciesRichnessByRisk"
       />
       <div class="mt-6">
