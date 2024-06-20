@@ -41,12 +41,10 @@
 </template>
 
 <script setup lang="ts">
-import importRecordings from '@/_assets/import-recordings.png'
-
-const randomString = Math.round(Math.random() * 100000000)
+import importRecordings from '@/_assets/import-recordings.webp'
 
 const uploaderApps = {
-    mac: 'https://rf.cx/ingest-app-latest-mac?r=' + randomString,
-    windows: 'https://rf.cx/ingest-app-latest-win?r=' + randomString
+    mac: 'https://rf.cx/ingest-app-latest-mac?r=' + (new Date()).getTime(),
+    windows: 'https://rf.cx/ingest-app-latest-win?r=' + (new Date()).getTime()
 }
 </script>
