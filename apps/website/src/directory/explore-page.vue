@@ -40,6 +40,7 @@
       :data="projectResults"
       class="relative left-0 z-30 w-full h-100vh"
       :selected-project-id="selectedProjectId ?? undefined"
+      :is-error="isErrorLoadedProject"
       @emit-selected-project="onEmitSelectedProject"
     />
   </section>
