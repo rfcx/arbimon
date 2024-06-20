@@ -73,6 +73,7 @@
     <HighlightedSpeciesModal
       :highlighted-species="speciesList"
       :toggle-show-modal="toggleShowModal"
+      :is-error="isError"
       @emit-close="closeModal"
     />
   </div>
@@ -91,7 +92,7 @@ import EmptySpeciesList from './components/empty-species-list.vue'
 import HighlightedSpeciesList from './components/highlighted-species-list.vue'
 import HighlightedSpeciesModal from './components/highlighted-species-modal.vue'
 
-const props = defineProps<{ species: DashboardSpecies[] | undefined, canEdit: boolean, isProjectMember: boolean, isViewingAsGuest: boolean, isLoading: boolean }>()
+const props = defineProps<{ species: DashboardSpecies[] | undefined, canEdit: boolean, isProjectMember: boolean, isViewingAsGuest: boolean, isLoading: boolean, isError: boolean }>()
 const emit = defineEmits<{(e: 'emitRefetch'): void }>()
 const modal = ref() as Ref<Modal>
 const toggleShowModal = ref(false)

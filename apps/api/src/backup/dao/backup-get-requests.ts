@@ -18,7 +18,7 @@ const DEFAULT_TIMEFRAME = '7d'
  * @param requestedBy
  * @param options
  */
-export const getBackupRequests = async (entity: BackupType, entityId: number, requestedBy: number, options?: { limit: number, offset: number }): Promise<Backup[] | []> => {
+export const getBackupRequests = async (entity: BackupType, entityId: number, options?: { limit: number, offset: number }): Promise<Backup[] | []> => {
     const { limit = 3, offset = 0 } = options ?? {}
     const sequelize = getSequelize()
     const { Backup } = ModelRepository.getInstance(sequelize)
@@ -26,8 +26,7 @@ export const getBackupRequests = async (entity: BackupType, entityId: number, re
     const backupRequests = await Backup.findAll({
         where: {
             entity,
-            entityId,
-            requestedBy
+            entityId
         },
         limit,
         offset,
@@ -47,7 +46,11 @@ export const getBackupRequests = async (entity: BackupType, entityId: number, re
  * @param requestedBy
  * @param timeframe
  */
-export const getRequestWithinTimeframe = async (entity: BackupType, entityId: number, requestedBy: number, timeframe: string = BACKUP_TIMEFRAME_LIMIT ?? DEFAULT_TIMEFRAME): Promise<Backup | null> => {
+export const getRequestWithinTimeframe = async (
+    entity: BackupType,
+    entityId: number,
+    timeframe: string = BACKUP_TIMEFRAME_LIMIT ?? DEFAULT_TIMEFRAME
+): Promise<Backup | null> => {
     const sequelize = getSequelize()
     const { Backup } = ModelRepository.getInstance(sequelize)
 
@@ -55,7 +58,6 @@ export const getRequestWithinTimeframe = async (entity: BackupType, entityId: nu
         where: {
             entity,
             entityId,
-            requestedBy,
             requestedAt: {
                 [Op.gte]: sequelize.literal(`NOW() - INTERVAL '${timeframe}'`)
             }

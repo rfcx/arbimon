@@ -1,5 +1,5 @@
 import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQuery } from '@tanstack/vue-query'
-import { type AxiosInstance } from 'axios'
+import { type AxiosError, type AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 
 import { type DashboardStakeholdersResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
@@ -14,7 +14,7 @@ export const useGetProjectSettings = (apiClient: AxiosInstance, projectId: Compu
   })
 }
 
-export const useUpdateProjectSettings = (apiClient: AxiosInstance, projectId: number): UseMutationReturnType<ProjectSettingsResponse | undefined, unknown, ProjectProfileUpdateBody, unknown, unknown> => {
+export const useUpdateProjectSettings = (apiClient: AxiosInstance, projectId: number): UseMutationReturnType<ProjectSettingsResponse, AxiosError, ProjectProfileUpdateBody, unknown, unknown> => {
   return useMutation({
     mutationKey: ['update-project-settings'],
     mutationFn: async (settings: ProjectProfileUpdateBody) => {
@@ -30,7 +30,7 @@ export const useUpdateProjectImage = (apiClient: AxiosInstance, projectId: numbe
   })
 }
 
-export const useGetProjectInfo = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>, params: string[], enabled: ComputedRef<boolean>): UseQueryReturnType<ProjectInfoResponse, unknown> => {
+export const useGetProjectInfo = (apiClient: AxiosInstance, projectId: ComputedRef<number | undefined>, params: string[], enabled: ComputedRef<boolean>): UseQueryReturnType<ProjectInfoResponse, AxiosError> => {
   return useQuery({
     queryKey: ['get-project-settings'],
     queryFn: async () => await apiBioGetProjectInfoData(apiClient, projectId.value ?? -1, params),

@@ -40,7 +40,7 @@
         class="btn btn-danger btn-medium flex flex-row justify-center items-center"
         :class="isCanceling ? 'cursor-not-allowed' : 'cursor-pointer'"
         :disabled="isCanceling"
-        @click="emit('emitCancelJob')"
+        @click="hasOpenedCancelModal = true"
       >
         <icon-custom-ic-loading
           v-if="isCanceling"
@@ -62,12 +62,20 @@
     :emit-close="hasOpenedExportModal=false"
     @show-alert-dialog="alertDialog"
   />
+
+  <CancelJobModal
+    :job-id="parsedJobId"
+    :is-open="hasOpenedCancelModal"
+    :emit-close="hasOpenedCancelModal=false"
+    @confirmCancel="emit('emitCancelJob')"
+  />
 </template>
 
 <script setup lang="ts">
 import { computed, inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
+import CancelJobModal from '@/detect/cnn-job-list/components/cancel-job-modal.vue'
 import { togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import ExportModal from '../../cnn-job-export/job-export-modal.vue'
@@ -89,4 +97,11 @@ const hasOpenedExportModal = ref(false)
 const alertDialog = (message: string) => {
   emit('showAlertDialog', message)
 }
+
+const hasOpenedCancelModal = ref(false)
+
+const parsedJobId = computed(() => {
+  const id = route.params.jobId
+  return Array.isArray(id) ? Number(id[0]) : Number(id)
+})
 </script>

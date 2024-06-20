@@ -6,7 +6,7 @@
     aria-labelledby="drawer-navigation-label"
   >
     <div
-      v-if="!props.data"
+      v-if="isError && !isLoading"
       class="flex items-center justify-center h-screen text-center text-sm"
     >
       <span>
@@ -68,17 +68,8 @@
             </li>
           </ul>
         </li>
-        <div v-if="dataWithMetrics.length > 0">
-          <project-list-item
-            v-for="p in dataWithMetrics"
-            :key="p.id"
-            :project="p"
-            :is-selected="p.id === props.selectedProjectId"
-            @click="emitSelectedProject(p.id)"
-          />
-        </div>
         <li
-          v-else
+          v-if="!props.isLoading && noResults"
           class="p-6 inset-0 flex flex-col text-center text-insight items-center justify-center"
         >
           <span class="text-base font-header">
@@ -89,6 +80,15 @@
             Please double-check the spelling, or consider using alternative keywords, such as specific species names or project titles.
           </span>
         </li>
+        <div v-else>
+          <project-list-item
+            v-for="p in dataWithMetrics"
+            :key="p.id"
+            :project="p"
+            :is-selected="p.id === props.selectedProjectId"
+            @click="emitSelectedProject(p.id)"
+          />
+        </div>
         <li
           v-if="isLoading"
           class="p-6 inset-0 flex text-center text-insight items-center justify-center"
@@ -107,7 +107,7 @@ import { useProjectDirectoryStore } from '~/store'
 import ProjectListItem from '../components/project-list-item.vue'
 import type { ProjectLight, ProjectProfileWithMetrics, Tab } from '../data/types'
 
-const props = defineProps<{ data: ProjectLight[], selectedProjectId: number | undefined, selectedTab: Tab, isLoading: boolean, initialSearch: string }>()
+const props = defineProps<{ data: ProjectLight[], selectedProjectId: number | undefined, selectedTab: Tab, isLoading: boolean, initialSearch: string, noResults: boolean, isError: boolean }>()
 const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void, (e: 'emitLoadMore'): void, (e: 'emitSearch', keyword: string): void, (e: 'emitSwapTab', tab: Tab): void
 }>()
 

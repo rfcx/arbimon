@@ -9,7 +9,7 @@
     <div class="relative w-full max-w-4/5 max-h-full">
       <div class="relative p-6 bg-white rounded-lg shadow dark:bg-moss">
         <div
-          v-if="!highlightedSpecies"
+          v-if="isError"
           class="flex items-center justify-center h-screen text-center"
         >
           <span>
@@ -300,7 +300,7 @@ import { useDeleteSpecieHighlighted, usePostSpeciesHighlighted } from '../compos
 import HighlightedSpeciesSelector from './highlighted-species-selector.vue'
 import SpecieCard from './species-card.vue'
 
-const props = defineProps<{ highlightedSpecies: HighlightedSpeciesRow[], toggleShowModal: boolean }>()
+const props = defineProps<{ highlightedSpecies: HighlightedSpeciesRow[], toggleShowModal: boolean, isError: boolean }>()
 const emit = defineEmits<{(e: 'emitClose'): void}>()
 
 const store = useStore()

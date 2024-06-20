@@ -39,19 +39,26 @@
         <button>
           <icon-fa-trash
             class="cursor-pointer"
-            @click="cancelJob"
+            @click="hasOpenedCancelModal = true"
           />
         </button>
       </span>
     </td>
   </tr>
+
+  <CancelJobModal
+    :job-id="props.job.id"
+    :is-open="hasOpenedCancelModal"
+    :emit-close="hasOpenedCancelModal=false"
+    @confirmCancel="cancelJob"
+  />
 </template>
 
 <script setup lang="ts">
 import { useQueryClient } from '@tanstack/vue-query'
 import type { AxiosInstance } from 'axios'
 import { ElMessage } from 'element-plus'
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 
 import { CLASSIFIER_JOB_STATUS } from '@rfcx-bio/common/api-core/classifier-job/classifier-job-status'
 
@@ -61,6 +68,7 @@ import { ROUTE_NAMES } from '~/router'
 import { FETCH_CLASSIFIER_JOBS_KEY } from '../../_composables/use-classifier-jobs'
 import { usePostClassifierJobStatus } from '../../_composables/use-post-classifier-job-status'
 import type { Job } from '../../types'
+import CancelJobModal from './cancel-job-modal.vue'
 import JobInput from './job-input.vue'
 import JobProgress from './job-progress.vue'
 
@@ -87,8 +95,10 @@ const queryClient = useQueryClient()
 const cancelJob = async (): Promise<void> => {
   mutatePostStatus({ status: CLASSIFIER_JOB_STATUS.CANCELLED }, {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [FETCH_CLASSIFIER_JOBS_KEY] }),
-    onError: () => openErrorMessage()
+    onError: openErrorMessage
   })
 }
+
+const hasOpenedCancelModal = ref(false)
 
 </script>

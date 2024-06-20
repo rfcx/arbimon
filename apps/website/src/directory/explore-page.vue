@@ -8,6 +8,8 @@
       :selected-tab="selectedTab"
       :initial-search="searchInputFromQuery"
       :is-loading="isLoading"
+      :no-results="noResults"
+      :is-error="isErrorLoadedProject"
       class="absolute z-40 h-100vh"
       @emit-selected-project="onEmitSelectedProject"
       @emit-search="onEmitSearch"
@@ -38,6 +40,7 @@
       :data="projectResults"
       class="relative left-0 z-30 w-full h-100vh"
       :selected-project-id="selectedProjectId ?? undefined"
+      :is-error="isErrorLoadedProject"
       @emit-selected-project="onEmitSelectedProject"
     />
   </section>
@@ -75,6 +78,7 @@ const selectedTab = ref<Tab>('All')
 const searchInputFromQuery = ref<string>('')
 
 const isLoading = ref(false)
+const isErrorLoadedProject = ref(false)
 /** List of projects (with profile) you got from search results, initial is the first 20 in the list -- to show in the list */
 const projectResults = ref<ProjectLight[]>(pdStore.allProjects)
 
@@ -116,14 +120,19 @@ const onEmitSwapTab = (tab: Tab) => {
 }
 
 const onEmitSearch = debounce(async (keyword: string) => {
+  noResults.value = false
   if (keyword === '') {
     projectResults.value = pdStore.allProjects
     router.push({ name: ROUTE_NAMES.explore })
     return
   }
   const searchResponse = await fetchSearch(keyword, 100, 0)
-  if (searchResponse === undefined) return
-  projectResults.value = searchResponse.data
+  if (searchResponse === undefined || searchResponse.data.length === 0) {
+    noResults.value = true
+  } else {
+    projectResults.value = searchResponse.data
+    noResults.value = false
+  }
   router.push({ name: ROUTE_NAMES.explore, query: { search: keyword } })
 }, 500)
 
@@ -141,16 +150,24 @@ onMounted(async () => {
     searchInputFromQuery.value = route.query.search
   }
   // fetch all projects
-  await fetchAllProjects()
-  projectResults.value = pdStore.allProjects
+  try {
+    await fetchAllProjects()
+    projectResults.value = pdStore.allProjects
+  } catch (error) {
+    isErrorLoadedProject.value = true
+  }
   // fetch first 20 projects with metrics (to show in list) will be in load more
 })
 
 const fetchAllProjects = async () => {
-  const allProjects = await apiBioGetProjectsGeo(apiClientBio)
-  if (allProjects === undefined) return
-  const p = allProjects as ProjectLight[]
-  pdStore.updateAllProjects(p)
+  try {
+    const allProjects = await apiBioGetProjectsGeo(apiClientBio)
+    if (allProjects === undefined) throw new Error('Failed to fetch all projects')
+    const p = allProjects as ProjectLight[]
+    pdStore.updateAllProjects(p)
+  } catch (error) {
+    isErrorLoadedProject.value = true
+  }
 }
 
 const fetchSearch = async (keyword: string, limit: number, offset: number): Promise<{ total: number, data: ProjectProfileWithMetrics[]} | undefined> => {
@@ -186,5 +203,7 @@ watch(() => selectedTab.value, (newVal) => {
     projectResults.value = myProjects.value
   }
 })
+
+const noResults = ref(false)
 
 </script>

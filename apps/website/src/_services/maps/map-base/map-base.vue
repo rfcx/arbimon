@@ -6,11 +6,10 @@
       :style="{ height: `${props.mapHeight}px` }"
     />
     <no-data-panel
-      v-else-if="!hasData"
+      v-else-if="!hasData && !mapErrorSetup"
       :style="{ height: `${props.mapHeight}px` }"
     />
     <div
-      v-else-if="hasData"
       v-show="hasData"
       class="relative"
     >
@@ -57,7 +56,7 @@
       </div>
     </div>
     <div
-      v-else
+      v-if="mapErrorSetup"
       class="flex justify-center items-center text-subtle text-center border-2 border-faded"
       :style="{ height: `${props.mapHeight}px` }"
     >
@@ -133,6 +132,7 @@ const store = useStore()
 const emit = defineEmits<{(e: 'emitMapMoved', mapMoveEvent: MapMoveEvent): void}>()
 
 const mapIsLoading = ref(true)
+const mapErrorSetup = ref(false)
 const isSynchronizingMapPosition = ref(false)
 
 const getPaintStyle = (style: MapboxStatisticsStyle) => {
@@ -162,25 +162,30 @@ const mapConfig: MapboxOptions = {
 }
 
 onMounted(() => {
-  map = createMap(mapConfig)
-    .on('load', () => {
-      mapIsLoading.value = false
-      generateChartNextTick()
-      setupMapPopup()
-    })
-    .on('style.load', () => {
-      styleChange.value = true
-      generateChartNextTick(false)
-    })
-    .on('move', () => {
-      if (!isSynchronizingMapPosition.value) emitMapMoved()
-    })
-    .addControl(new NavigationControl({ showCompass: false }), 'bottom-right')
-  map.scrollZoom.disable()
-  map.dragRotate.disable()
-  map.keyboard.disableRotation()
-  map.touchZoomRotate.disableRotation()
-  map.touchPitch.disable()
+  try {
+    map = createMap(mapConfig)
+      .on('load', () => {
+        mapIsLoading.value = false
+        mapErrorSetup.value = false
+        generateChartNextTick()
+        setupMapPopup()
+      })
+      .on('style.load', () => {
+        styleChange.value = true
+        generateChartNextTick(false)
+      })
+      .on('move', () => {
+        if (!isSynchronizingMapPosition.value) emitMapMoved()
+      })
+      .addControl(new NavigationControl({ showCompass: false }), 'bottom-right')
+    map.scrollZoom.disable()
+    map.dragRotate.disable()
+    map.keyboard.disableRotation()
+    map.touchZoomRotate.disableRotation()
+    map.touchPitch.disable()
+  } catch (e) {
+    mapErrorSetup.value = true
+  }
 })
 
 onUnmounted(() => {

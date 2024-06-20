@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!props.data"
+    v-if="isError"
     class="flex items-center justify-center h-screen text-center"
   >
     <span>
@@ -27,7 +27,8 @@ import type { ProjectLight } from '../data/types'
 
 const props = defineProps<{
   data: ProjectLight[],
-  selectedProjectId?: number
+  selectedProjectId?: number,
+  isError: boolean
 }>()
 
 const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void}>()

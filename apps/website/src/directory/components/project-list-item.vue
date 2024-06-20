@@ -3,7 +3,7 @@
     class="px-6 py-4 flex flex-col md:flex-row gap-4 border-b cursor-pointer border-util-gray-02 hover:bg-echo selected:bg-pitch"
     :class="{'bg-pitch': isSelected}"
   >
-    <div class="w-18 aspect-square h-18">
+    <div class="min-w-18 w-18 aspect-square h-18">
       <img
         v-if="project.imageUrl"
         :src="urlWrapper(project.imageUrl)"

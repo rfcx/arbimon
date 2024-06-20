@@ -102,12 +102,8 @@
         role="tabpanel"
         aria-labelledby="about-tab-content"
       >
-        <icon-custom-ic-loading
-          v-if="isLoading"
-          class="block bg-none w-8 h-8 mx-auto mt-6"
-        />
+        <!-- The loading status is just needed for the "About" section because it's the only section needed to show loading status for. -->
         <div
-          v-else
           class="lg:max-w-4xl relative"
           :class="isAboutTabEditing ? 'mx-auto pl-4 pb-4 pr-4 lg:max-w-4xl relative' : 'mx-auto lg:max-w-4xl relative'"
         >
@@ -115,13 +111,13 @@
             id="about"
             v-model:is-view-mored="isAboutTabViewMored"
             v-model:is-editing="isAboutTabEditing"
+            :status="getProjectInfoStatus"
+            :on-save-error-message="onAboutSaveErrorMessage"
             :raw-markdown-text="profile?.readme"
             :default-markdown-text="readmeDefault"
             :editable="canEdit"
             :is-project-member="isProjectMember"
             :is-viewing-as-guest="isViewingAsGuest"
-            :error-message="errorMessage"
-            :has-failed="hasFailed"
             @on-editor-close="updateReadme"
           />
         </div>
@@ -138,13 +134,13 @@
             id="methods"
             v-model:is-view-mored="isMethodsTabViewMored"
             v-model:is-editing="isMethodsTabEditing"
+            :status="getProjectInfoStatus"
+            :on-save-error-message="onMethodsSaveErrorMessage"
             :raw-markdown-text="profile?.methods"
             :default-markdown-text="methodsDefault"
             :editable="canEdit"
             :is-project-member="isProjectMember"
             :is-viewing-as-guest="isViewingAsGuest"
-            :error-message="errorMessage"
-            :has-failed="hasFailed"
             @on-editor-close="updateMethods"
           />
         </div>
@@ -161,13 +157,13 @@
             id="key-result"
             v-model:is-view-mored="isKeyResultTabViewMored"
             v-model:is-editing="isKeyResultTabEditing"
+            :status="getProjectInfoStatus"
+            :on-save-error-message="onKeyResultSaveErrorMessage"
             :raw-markdown-text="profile?.keyResult"
             :default-markdown-text="keyResultDefault"
             :editable="canEdit"
             :is-project-member="isProjectMember"
             :is-viewing-as-guest="isViewingAsGuest"
-            :error-message="errorMessage"
-            :has-failed="hasFailed"
             @on-editor-close="updateKeyResult"
           />
         </div>
@@ -199,12 +195,12 @@
             v-model:is-view-mored="isResourcesTabViewMored"
             v-model:is-editing="isResourcesTabEditing"
             :raw-markdown-text="profile?.resources"
+            :on-save-error-message="onResourcesSaveErrorMessage"
+            :status="getProjectInfoStatus"
             :default-markdown-text="resourcesDefault"
             :editable="canEdit"
             :is-project-member="isProjectMember"
             :is-viewing-as-guest="isViewingAsGuest"
-            :error-message="errorMessage"
-            :has-failed="hasFailed"
             @on-editor-close="updateResources"
           />
         </div>
@@ -214,7 +210,7 @@
 </template>
 
 <script setup lang="ts">
-import { type AxiosError, type AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 import { type TabItem, type TabsOptions, Tabs } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
@@ -234,15 +230,19 @@ const { readme: readmeDefault, keyResult: keyResultDefault, resources: resources
 
 const isAboutTabViewMored = ref(false)
 const isAboutTabEditing = ref(false)
+const onAboutSaveErrorMessage = ref('')
 
 const isMethodsTabViewMored = ref(false)
 const isMethodsTabEditing = ref(false)
+const onMethodsSaveErrorMessage = ref('')
 
 const isKeyResultTabViewMored = ref(false)
 const isKeyResultTabEditing = ref(false)
+const onKeyResultSaveErrorMessage = ref('')
 
 const isResourcesTabViewMored = ref(false)
 const isResourcesTabEditing = ref(false)
+const onResourcesSaveErrorMessage = ref('')
 
 const selectedStakeholdersTab = ref(false)
 
@@ -252,12 +252,17 @@ const isEnabled = computed(() => {
   return isAboutTabEditing.value !== true || isMethodsTabEditing.value !== true || isKeyResultTabEditing.value !== true || isResourcesTabEditing.value !== true
 })
 
-const { isLoading, data: profile } = useGetProjectInfo(apiClientBio, computed(() => store.project?.id ?? -1), ['readme', 'keyResults', 'resources', 'methods'], isEnabled)
+const {
+  status: getProjectInfoStatus,
+  data: profile
+} = useGetProjectInfo(
+  apiClientBio,
+  computed(() => store.project?.id ?? -1),
+  ['readme', 'keyResults', 'resources', 'methods'],
+  isEnabled
+)
 
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.project?.id ?? -1)
-
-const errorMessage = ref<string>('')
-const hasFailed = ref<boolean>(false)
 
 const updateReadme = (value: string): void => {
   const update: ProjectProfileUpdateBody = {
@@ -268,12 +273,10 @@ const updateReadme = (value: string): void => {
     onSuccess: async () => {
       isAboutTabViewMored.value = value.length !== 0
       isAboutTabEditing.value = false
-      hasFailed.value = false
+      onAboutSaveErrorMessage.value = ''
     },
     onError: async (e) => {
-      const error = e as AxiosError<Error>
-      errorMessage.value = error.message
-      hasFailed.value = true
+      onAboutSaveErrorMessage.value = e.message
       isAboutTabViewMored.value = true
       isAboutTabEditing.value = true
     }
@@ -289,12 +292,10 @@ const updateKeyResult = (value: string): void => {
     onSuccess: async () => {
       isKeyResultTabViewMored.value = value.length !== 0
       isKeyResultTabEditing.value = false
-      hasFailed.value = false
+      onKeyResultSaveErrorMessage.value = ''
     },
     onError: async (e) => {
-      const error = e as AxiosError<Error>
-      errorMessage.value = error.message
-      hasFailed.value = true
+      onKeyResultSaveErrorMessage.value = e.message
       isKeyResultTabViewMored.value = true
       isKeyResultTabEditing.value = true
     }
@@ -310,19 +311,19 @@ const updateResources = (value: string): void => {
     onSuccess: async () => {
       isResourcesTabViewMored.value = value.length !== 0
       isResourcesTabEditing.value = false
-      hasFailed.value = false
+      onResourcesSaveErrorMessage.value = ''
     },
     onError: async (e) => {
-      const error = e as AxiosError<Error>
-      errorMessage.value = error.message
-      hasFailed.value = true
+      console.info('lesgoooo someting wong')
+      console.error(e)
+      onResourcesSaveErrorMessage.value = e.message
       isResourcesTabViewMored.value = true
       isResourcesTabEditing.value = true
     }
   })
 }
 
-const stakeholdersTabContent = () : void => {
+const stakeholdersTabContent = (): void => {
   selectedStakeholdersTab.value = true
 }
 
@@ -335,12 +336,10 @@ const updateMethods = (value: string): void => {
     onSuccess: async () => {
       isMethodsTabViewMored.value = value.length !== 0
       isMethodsTabEditing.value = false
-      hasFailed.value = false
+      onMethodsSaveErrorMessage.value = ''
     },
     onError: async (e) => {
-      const error = e as AxiosError<Error>
-      errorMessage.value = error.message
-      hasFailed.value = true
+      onMethodsSaveErrorMessage.value = e.message
       isMethodsTabViewMored.value = true
       isResourcesTabEditing.value = true
     }

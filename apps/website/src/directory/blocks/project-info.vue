@@ -207,6 +207,8 @@
               id="about"
               v-model:is-view-mored="isAboutTabViewMored"
               v-model:is-editing="isAboutTabEditing"
+              :status="getProjectInfoStatus"
+              on-save-error-message=""
               :editable="false"
               :raw-markdown-text="profile?.readme"
               :default-markdown-text="readmeDefault"
@@ -229,6 +231,8 @@
               id="key-result"
               v-model:is-view-mored="isKeyResultTabViewMored"
               v-model:is-editing="isKeyResultTabEditing"
+              :status="getProjectInfoStatus"
+              on-save-error-message=""
               :editable="false"
               :raw-markdown-text="profile?.keyResult"
               :default-markdown-text="keyResultDefault"
@@ -304,7 +308,7 @@ const isStakeholdersSelected = ref(false)
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const selectedProjectId = computed(() => props.projectId)
-const { isLoading: isLoadingProfile, data: profile, refetch: profileRefetch, isRefetching: isRefetchingProfile, isError: isErrorProfile } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'], computed(() => true))
+const { isLoading: isLoadingProfile, status: getProjectInfoStatus, data: profile, refetch: profileRefetch, isRefetching: isRefetchingProfile, isError: isErrorProfile } = useGetProjectInfo(apiClientBio, selectedProjectId, ['metrics', 'richnessByTaxon', 'readme', 'keyResult', 'countryCodes', 'image'], computed(() => true))
 const { isLoading: stakeholdersLoading, data: stakeholders, refetch: stakeholderRefetch, isRefetching: stakeholdersRefetching, isError: stakeholderError } = useGetProjectStakeholders(apiClientBio, selectedProjectId, computed(() => isStakeholdersSelected.value))
 
 const isAboutTabViewMored = ref(false)
