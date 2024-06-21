@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { describe, expect, test, vi } from 'vitest'
+import yauzl from 'yauzl'
 
 import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { type BackupType, BackupStatus } from '@rfcx-bio/node-common/dao/types/backup'
@@ -42,5 +43,34 @@ describe('Projects backup', async () => {
     // Assert
     const exists = await storage.objectExists(expectedKey)
     expect(exists).toBe(true)
+
+    const entries: string[] = []
+
+    const zipBuffer = await storage.getObject(expectedKey)
+    yauzl.fromBuffer(zipBuffer as Buffer, { lazyEntries: true }, (err, zipfile) => {
+      if (err) {
+        throw err
+      }
+
+      zipfile.readEntry()
+      zipfile.on('entry', (entry) => {
+        entries.push(entry.fileName)
+        zipfile.readEntry()
+      })
+
+      zipfile.on('end', () => {
+        expect(entries).toContain('sites.csv')
+        expect(entries).toContain('species.csv')
+        expect(entries).toContain('recordings.csv')
+        expect(entries).toContain('playlists.csv')
+        expect(entries).toContain('playlist_recordings.csv')
+        expect(entries).toContain('templates.csv')
+        expect(entries).toContain('recording_validations.csv')
+        expect(entries).toContain('pattern_matching_rois.csv')
+        expect(entries).toContain('soundscapes.csv')
+        expect(entries).toContain('rfm_models.csv')
+        expect(entries).toContain('rfm_classifications.csv')
+      })
+    })
   })
 })
