@@ -1,8 +1,9 @@
-// export type BackupStatus = 'requested' | 'processing' | 'available'
+// export type BackupStatus = 'requested' | 'processing' | 'available' | 'error'
 export enum BackupStatus {
     REQUESTED = 'requested',
     PROCESSING = 'processing',
-    AVAILABLE = 'available'
+    AVAILABLE = 'available',
+    ERROR = 'error'
 }
 export type BackupType = 'project'
 
