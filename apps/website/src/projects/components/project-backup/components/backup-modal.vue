@@ -81,7 +81,7 @@
               data-modal-target="backup-confirm-modal"
               data-modal-toggle="backup-confirm-modal"
               type="button"
-              class="rounded-full text-pitch font-medium bg-frequency w-fit px-5 py-3 text-center hover:bg-chirp"
+              class="rounded-full text-pitch font-medium bg-frequency w-fit px-5 py-3 text-center hover:bg-chirp flex flex-row items-center"
               @click="emit('emitRequestBackup')"
             >
               <span>Request backup</span>
