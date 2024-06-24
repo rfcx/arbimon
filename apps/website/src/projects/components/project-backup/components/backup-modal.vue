@@ -81,7 +81,7 @@
               data-modal-target="backup-confirm-modal"
               data-modal-toggle="backup-confirm-modal"
               type="button"
-              class="btn btn-primary btn-medium"
+              class="btn btn-primary btn-medium w-fit"
               @click="emit('emitRequestBackup')"
             >
               <span>Request backup</span>
