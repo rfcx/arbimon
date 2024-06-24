@@ -41,6 +41,12 @@
                 class="flex items-center text-base py-1 px-1 h-9 hover:(bg-util-gray-03 rounded transition duration-300)"
               >
                 <span
+                  v-if="item.iconRaw === 'cloud-upload'"
+                  class="p-0.5 w-[26px]"
+                >
+                  <icon-custom-cloud-upload />
+                </span>
+                <span
                   v-if="item.iconRaw === 'fi-grid'"
                   class="p-0.5"
                 >
@@ -264,12 +270,9 @@ const allItems: Item[] = [
   {
     title: 'Import',
     iconRaw: 'cloud-upload',
-    children: [
-      {
-        title: 'Recordings',
-        legacyPath: '/audiodata/uploads/'
-      }
-    ]
+    route: {
+      name: ROUTE_NAMES.importRecordings
+    }
   },
   {
     title: 'Explore',
