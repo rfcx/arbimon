@@ -98,7 +98,7 @@
             <button
               data-modal-hide="backup-confirm-modal"
               type="button"
-              class="btn btn-primary btn-medium"
+              class="btn btn-primary btn-medium w-fit"
               @click="closeModal"
             >
               <span>Close</span>
