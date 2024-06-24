@@ -7,12 +7,8 @@ import { toCsv } from '@rfcx-bio/utils/file'
 import { mapPathToSignedUrl } from '@/export/_common/map-path-to-signed-url'
 import type { ZipFile } from '~/files'
 import { retry } from '~/retry'
-import { CSV_DATE_FORMAT } from '../config'
+import { BATCH_SIZE, CSV_DATE_FORMAT, LIMIT_SIZE } from '../config'
 import { PATTERN_MATCHING_ROIS, PATTERN_MATCHINGS, PLAYLIST_RECORDINGS, PLAYLISTS, RECORDING_VALIDATIONS, RECORDINGS, RFM_CLASSIFICATIONS, RFM_MODELS, SITES, SOUNDSCAPES, SPECIES, TEMPLATES } from './queries'
-
-const BATCH_SIZE = 200_000
-
-const LIMIT_SIZE = 50_000
 
 interface ExportConfig {
   sql: string
@@ -88,7 +84,7 @@ export const generateCsvs = async (
   const files = chunk(responses, BATCH_SIZE)
 
   if (files.length <= 1) {
-    const content = await toCsv([], { dateNF: CSV_DATE_FORMAT })
+    const content = await toCsv(files[0] !== undefined ? files[0] : [], { dateNF: CSV_DATE_FORMAT })
     zipFiles.push({ name: `${item}.csv`, content })
   } else {
     for (let i = 0; i < files.length; i++) {
