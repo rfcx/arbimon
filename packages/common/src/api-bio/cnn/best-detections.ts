@@ -4,7 +4,7 @@ import { type WithTotalCount, formatTotalCount } from '../../total-count'
 import { type Detection, type GetDetectionsQueryParams } from './detections'
 
 // Request types
-export type GetBestDetectionsQueryParams = Partial<Pick<GetDetectionsQueryParams, 'start' | 'end' | 'sites' | 'reviewStatus' | 'limit' | 'offset'>> & { nPerStream?: number, byDate?: boolean }
+export type GetBestDetectionsQueryParams = Partial<Pick<GetDetectionsQueryParams, 'start' | 'end' | 'sites' | 'reviewStatus' | 'limit' | 'offset'>> & { nPerChunk?: number, byDate?: boolean, classifications?: number[] }
 
 export interface GetBestDetectionsParams {
   jobId: string
@@ -12,8 +12,10 @@ export interface GetBestDetectionsParams {
 
 // Response types
 export type BestDetection = Pick<Detection, 'id' | 'siteIdCore' | 'start' | 'end' | 'confidence' | 'classifierId' | 'reviewStatus' | 'classification'> & {
-  dailyRanking: number
-  streamRanking: number
+  streamRanking?: number
+  streamDailyRanking?: number
+  streamClassificationRanking?: number
+  streamClassificationDailyRanking?: number
 }
 
 export type GetBestDetectionsResponse = BestDetection[]

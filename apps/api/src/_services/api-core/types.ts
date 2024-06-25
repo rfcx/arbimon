@@ -133,12 +133,13 @@ export interface CoreDetection {
 }
 
 export interface CoreBestDetectionQueryParams {
+  streams?: string[]
+  classification_ids?: number[]
+  by_date?: boolean
   start?: string
   end?: string
-  streams?: string[]
-  by_date?: boolean
-  review_statuses?: CoreReviewStatus
-  n_per_stream?: number
+  review_statuses?: CoreReviewStatus[]
+  n_per_chunk?: number
   limit?: number
   offset?: number
   fields?: string[]
@@ -146,8 +147,10 @@ export interface CoreBestDetectionQueryParams {
 
 export type CoreBestDetection = CoreDetection & {
   bestDetection: {
-    daily_ranking: number
-    stream_ranking: number
+    stream_ranking?: number
+    stream_daily_ranking?: number
+    stream_classification_ranking?: number
+    stream_classification_daily_ranking?: number
   }
 }
 

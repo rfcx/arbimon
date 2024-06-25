@@ -38,7 +38,6 @@ describe('GET /jobs/:jobId/best-detections', async () => {
     expect(json).toHaveProperty('[0].end')
     expect(json).toHaveProperty('[0].confidence')
     expect(json).toHaveProperty('[0].classification')
-    expect(json).toHaveProperty('[0].dailyRanking')
     expect(json).toHaveProperty('[0].streamRanking')
   })
 
@@ -89,9 +88,55 @@ describe('GET /jobs/:jobId/best-detections', async () => {
       start: undefined,
       end: undefined,
       streams: undefined,
+      classification_ids: undefined,
       by_date: true,
       review_statuses: ['unreviewed', 'confirmed'],
-      n_per_stream: undefined,
+      n_per_chunk: undefined,
+      limit: undefined,
+      offset: undefined,
+      fields: [
+        'id',
+        'stream_id',
+        'classifier_id',
+        'start',
+        'end',
+        'confidence',
+        'review_status'
+      ]
+    })
+  })
+
+  test('classification ids is parsed correctly', async () => {
+    const spy = vi.spyOn(core, 'getBestDetections')
+
+    // Arrange
+    const app = await makeApp(routesCnn, {
+      userToken: {
+        email: 'liaml98@rfcx.org'
+      }
+    })
+
+    // Act
+    const response = await app.inject({
+      method: 'GET',
+      url: `/jobs/${jobId}/best-detections`,
+      query: {
+        byDate: 'true',
+        'reviewStatus[]': ['unvalidated', 'present'],
+        'classifications[]': ['8425', '8426']
+      }
+    })
+
+    // Assert
+    expect(response.statusCode).toEqual(200)
+    expect(spy).toHaveBeenCalledWith('', jobId, {
+      start: undefined,
+      end: undefined,
+      streams: undefined,
+      classification_ids: [8425, 8426],
+      by_date: true,
+      review_statuses: ['unreviewed', 'confirmed'],
+      n_per_chunk: undefined,
       limit: undefined,
       offset: undefined,
       fields: [

@@ -12,9 +12,10 @@ import { convertReviewStatusQueryParameter, getArbimonReviewStatus } from './get
 interface BestDetectionParamsParsed {
   start?: string
   end?: string
+  classifications?: string[]
   reviewStatus?: ArbimonReviewStatus[]
   sites?: string[]
-  nPerStream?: number
+  nPerChunk?: number
   byDate?: boolean
   limit?: number
   offset?: number
@@ -38,11 +39,13 @@ export const getBestDetections = async (token: string, jobId: number, params: Be
     end: params?.end,
     // @ts-expect-error these are off-spec array parsing
     streams: params?.['sites[]'] !== undefined ? Array.isArray(params?.['sites[]']) ? params['sites[]'] : [params['sites[]']] : undefined,
+    // @ts-expect-error these are off-spec array parsing
+    classification_ids: params?.['classifications[]'] !== undefined ? Array.isArray(params?.['classifications[]']) ? params['classifications[]'].map(c => Number(c)) : [Number(params['classifications[]'])] : undefined,
     // @ts-expect-error type checks are important because there's no type conversions
     by_date: params?.byDate !== undefined ? params.byDate === 'true' : undefined,
     // @ts-expect-error these are off-spec array parsing
     review_statuses: convertReviewStatusQueryParameter(params?.['reviewStatus[]']),
-    n_per_stream: params?.nPerStream !== undefined && !Number.isNaN(Number(params.nPerStream)) ? Number(params.nPerStream) : undefined,
+    n_per_chunk: params?.nPerChunk !== undefined && !Number.isNaN(Number(params.nPerChunk)) ? Number(params.nPerChunk) : undefined,
     limit: params?.limit,
     offset: params?.offset,
     fields: [
@@ -69,8 +72,10 @@ export const getBestDetections = async (token: string, jobId: number, params: Be
         confidence: d.confidence,
         reviewStatus: getArbimonReviewStatus(d.review_status),
         classification: d.classification,
-        dailyRanking: d.bestDetection.daily_ranking,
-        streamRanking: d.bestDetection.stream_ranking
+        streamRanking: d.bestDetection?.stream_ranking,
+        streamDailyRanking: d.bestDetection?.stream_daily_ranking,
+        streamClassificationRanking: d.bestDetection?.stream_classification_ranking,
+        streamClassificationDailyRanking: d.bestDetection?.stream_classification_daily_ranking
       }
     })
   }
