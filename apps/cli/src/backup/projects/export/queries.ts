@@ -115,9 +115,10 @@ export const PATTERN_MATCHINGS = `
     t.name template_name,
     parameters
   from pattern_matchings pm
+    join jobs j on pm.job_id = j.job_id
     join playlists p on pm.playlist_id = p.playlist_id
     join templates t on pm.template_id = t.template_id
-  where pm.project_id = $projectId and pm.deleted = 0
+  where pm.project_id = $projectId and pm.deleted = 0 and j.state = 'completed'
 `
 
 export const PATTERN_MATCHING_ROIS = `
@@ -138,9 +139,10 @@ export const PATTERN_MATCHING_ROIS = `
     validated
   from pattern_matching_rois pmr
     join pattern_matchings pm on pmr.pattern_matching_id = pm.pattern_matching_id
+    join jobs j on pm.job_id = j.job_id
     join species s on pmr.species_id = s.species_id 
     join songtypes st on pmr.songtype_id = st.songtype_id
-  where pmr.pattern_matching_id in (select pattern_matching_id from pattern_matchings where project_id = $projectId and deleted = 0)
+  where pm.project_id = $project_id and pm.deleted = 0 and j.status = 'completed'
 `
 
 export const SOUNDSCAPES = `
