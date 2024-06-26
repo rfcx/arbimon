@@ -177,6 +177,8 @@ export const RFM_MODELS = `
 export const RFM_CLASSIFICATIONS = `
   select
     cr.classification_result_id,
+    j.job_id as job_id,
+    j.name as job_name,
     m.model_id,
     m.name as model_name,
     cr.recording_id,
