@@ -1,4 +1,4 @@
-export type MailTemplate = 'project-backup' | 'export-detections'
+export type MailTemplate = 'project-backup' | 'export-detections' | 'project-backup-failed'
 
 const projectBackupSubject = 'Arbimon project backup ready'
 const projectBackupBody = ({ url, projectName }: { url: string, projectName: string }): string => `
@@ -38,14 +38,27 @@ const exportDetectionsBody = ({ url, jobId }: { url: string, jobId: number }): s
   </p>
 `
 
+const projectBackupFailedSubject = 'Arbimon project backup failed'
+const projectBackupFailedBody = ({ projectName }: { projectName: string }): string => `
+  <p style="color:black;margin-top:0">Hello,</p>
+  <p style="color:black;">
+    There was an issue with your project backup of '${projectName}'. Our engineering team is looking into this and will update you when we have resolved it. We apologize for the inconvenience and thank you for your patience!
+  </p>
+  <p style="color:black;">
+    All the best, <br>Arbimon team
+  </p>
+`
+
 const bodyMapping: Record<MailTemplate, (content: Record<string, unknown>) => string> = {
   'project-backup': projectBackupBody as (content: Record<string, unknown>) => string,
-  'export-detections': exportDetectionsBody as (content: Record<string, unknown>) => string
+  'export-detections': exportDetectionsBody as (content: Record<string, unknown>) => string,
+  'project-backup-failed': projectBackupFailedBody as (content: Record<string, unknown>) => string
 }
 
 const subjectMapping: Record<MailTemplate, string> = {
   'project-backup': projectBackupSubject,
-  'export-detections': exportDetectionsSubject
+  'export-detections': exportDetectionsSubject,
+  'project-backup-failed': projectBackupFailedSubject
 }
 
 export const generateBody = (template: MailTemplate, content: Record<string, unknown>): string =>

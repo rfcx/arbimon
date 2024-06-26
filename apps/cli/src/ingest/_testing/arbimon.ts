@@ -1,5 +1,5 @@
-import { readdirSync, readFileSync } from 'fs'
-import path from 'path'
+import { readdirSync, readFileSync } from 'node:fs'
+import path from 'node:path'
 import { Sequelize } from 'sequelize'
 
 function readAllFiles (folder: string, extension: string): string[] {

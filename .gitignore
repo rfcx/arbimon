@@ -15,6 +15,7 @@ lib
 # Lint
 .eslintcache
 .stylelintcache
+biome.json
 
 # Test
 **/coverage/

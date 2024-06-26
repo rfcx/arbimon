@@ -1,5 +1,6 @@
 import type { CreateBackupBody, CreateBackupResponse } from '@rfcx-bio/common/api-bio/backup/backup-create'
 import { type GetBackupRequestsQuery, type GetBackupRequestsResponse } from '@rfcx-bio/common/api-bio/backup/backup-get'
+import { type Backup } from '@rfcx-bio/common/dao/types/backup'
 
 import { createBackupRequest } from '@/backup/dao/backup-create-dao'
 import { getBackupRequests, getRequestWithinTimeframe } from '@/backup/dao/backup-get-requests'
@@ -43,7 +44,7 @@ export const getBackupRequestsHandler: Handler<GetBackupRequestsResponse, unknow
     }
 
     // Get backup requests
-    const requests = await getBackupRequests(entityType, entityId, { limit, offset })
+    const requests: Backup[] = await getBackupRequests(entityType, entityId, { limit, offset })
 
     if (requests.length) {
         res.statusCode = 200
