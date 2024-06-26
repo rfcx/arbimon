@@ -142,7 +142,7 @@ export const PATTERN_MATCHING_ROIS = `
     join jobs j on pm.job_id = j.job_id
     join species s on pmr.species_id = s.species_id 
     join songtypes st on pmr.songtype_id = st.songtype_id
-  where pm.project_id = $project_id and pm.deleted = 0 and j.status = 'completed'
+  where pm.project_id = $projectId and pm.deleted = 0 and j.state = 'completed'
 `
 
 export const SOUNDSCAPES = `
@@ -196,6 +196,5 @@ export const RFM_CLASSIFICATIONS = `
     m.deleted = 0 and
     m.model_type_id = 4 and
     j.job_type_id = 2 and
-    j.state = 'completed' and
     j.completed = 1
 `
