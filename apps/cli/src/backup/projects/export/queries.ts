@@ -170,15 +170,27 @@ export const SOUNDSCAPES = `
 `
 
 export const RFM_MODELS = `
-  select model_id, name, date_created, user_id 
-  from models where model_type_id = 4 and project_id = $projectId and deleted = 0
+  select
+    m.model_id,
+    m.name,
+    m.date_created,
+    m.user_id,
+    sp.species_id,
+    sp.scientific_name,
+    so.songtype_id,
+    so.songtype
+  from models m
+  inner join model_classes mc on m.model_id = mc.model_id
+  inner join species sp on mc.species_id = sp.species_id
+  inner join songtypes so on mc.songtype_id = so.songtype_id
+  where model_type_id = 4 and project_id = $projectId and deleted = 0
 `
 
 export const RFM_CLASSIFICATIONS = `
   select
     cr.classification_result_id,
     j.job_id as job_id,
-    j.name as job_name,
+    jpc.name as job_name,
     m.model_id,
     m.name as model_name,
     cr.recording_id,
