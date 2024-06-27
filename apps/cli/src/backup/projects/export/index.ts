@@ -8,7 +8,20 @@ import { mapPathToSignedUrl } from '@/export/_common/map-path-to-signed-url'
 import type { ZipFile } from '~/files'
 import { retry } from '~/retry'
 import { BATCH_SIZE, CSV_DATE_FORMAT, LIMIT_SIZE } from '../config'
-import { PATTERN_MATCHING_ROIS, PATTERN_MATCHINGS, PLAYLIST_RECORDINGS, PLAYLISTS, RECORDING_VALIDATIONS, RECORDINGS, RFM_CLASSIFICATIONS, RFM_MODELS, SITES, SOUNDSCAPES, SPECIES, TEMPLATES } from './queries'
+import {
+  PATTERN_MATCHING_ROIS,
+  PATTERN_MATCHINGS,
+  PLAYLIST_RECORDINGS,
+  PLAYLISTS,
+  RECORDING_VALIDATIONS,
+  RECORDINGS,
+  RFM_CLASSIFICATIONS,
+  RFM_MODELS,
+  SITES,
+  SOUNDSCAPES,
+  SPECIES,
+  TEMPLATES
+} from './queries'
 
 interface ExportConfig {
   sql: string
@@ -48,45 +61,47 @@ export const generateCsvs = async (
 
   // Because recordings is a really big table,
   // we have to get all recordings slowly but surely by each site.
-  if (item === 'recordings') {
-    const sites = (await fetchAllRecords(
+  if (item === 'recordings' || item === 'playlist_recordings') {
+    const allRecords = await fetchAllRecordsUsingSubquery<{ site_id: number }>(
       'sites',
-      EXPORTS_MAPPER.sites.sql,
-      sequelize,
+      item,
       { projectId },
+      (t) => ({ siteId: t.site_id }),
+      sequelize,
       storage,
       legacyStorage,
-      EXPORTS_MAPPER.sites.signedUrls,
       verbose
-    )) as Array<{ site_id: number }>
+    )
 
-    const allRecordings: object[] = []
-    for (const site of sites) {
-      const recordings = await fetchAllRecords(
-        item,
-        query,
-        sequelize,
-        { siteId: site.site_id },
-        storage,
-        legacyStorage,
-        signedUrls,
-        verbose
-      )
-
-      allRecordings.push(...recordings)
-    }
-
-    const zipFiles = await convertToCsv(item, allRecordings)
+    const zipFiles = await convertToCsv(item, allRecords)
     if (verbose === true) {
-      console.info(
-        `Fetched ${allRecordings.length} records in ${zipFiles.length} file(s) for ${item}`
-      )
+      console.info(`Fetched ${allRecords.length} records in ${zipFiles.length} file(s) for ${item}`)
     }
 
     return zipFiles
   }
 
-  const responses = await fetchAllRecords(
+  if (item === 'pattern_matching_rois') {
+    const allRecords = await fetchAllRecordsUsingSubquery<{ pattern_matching_id: number }>(
+      'pattern_matchings',
+      item,
+      { projectId },
+      (t) => ({ patternMatchingId: t.pattern_matching_id }),
+      sequelize,
+      storage,
+      legacyStorage,
+      verbose
+    )
+
+    const zipFiles = await convertToCsv(item, allRecords)
+    if (verbose === true) {
+      console.info(`Fetched ${allRecords.length} records in ${zipFiles.length} file(s) for ${item}`)
+    }
+
+    return zipFiles
+  }
+
+  const allRecords = await fetchAllRecords(
     item,
     query,
     sequelize,
@@ -97,12 +112,93 @@ export const generateCsvs = async (
     verbose
   )
 
-  const zipFiles = await convertToCsv(item, responses)
+  const zipFiles = await convertToCsv(item, allRecords)
   if (verbose === true) {
-    console.info(`Fetched ${responses.length} records in ${zipFiles.length} file(s) for ${item}`)
+    console.info(`Fetched ${allRecords.length} records in ${zipFiles.length} file(s) for ${item}`)
   }
 
   return zipFiles
+}
+
+/**
+ * A function to get your final query results using a sub-query. Because if you were to do it directly,
+ * we're not going to get the results because it's to expensive.
+ *
+ * @param item - The first item that you're getting.
+ * @param finalItem - The final item that you're getting.
+ * @param itemParams - The parameters you will use for the first query.
+ * @params finalItemParamsGetter - The function that will take the first item's response
+ * to get results for the `finalItem`.
+ * @param sequelize - The database connection client.
+ * @param storage - The storage client.
+ * @param legacyStorage - The legacy storage client.
+ * @param verbose - Verbose logging.
+ *
+ * @returns An array of objects of all the records inside the database from given SQL statement.
+ * @throws Any database client errors.
+ */
+const fetchAllRecordsUsingSubquery = async <Res extends object>(
+  item: string,
+  finalItem: string,
+  itemParams: Record<string, string | number>,
+  finalItemParamsGetter: (t: Res) => Record<string, string | number>,
+  sequelize: Sequelize,
+  storage: StorageClient,
+  legacyStorage: StorageClient,
+  verbose: boolean | undefined
+): Promise<object[]> => {
+  const itemConfig = EXPORTS_MAPPER[item]
+  const { sql: itemQuery, signedUrls: itemSignedUrl } = itemConfig
+
+  const finalItemConfig = EXPORTS_MAPPER[finalItem]
+  const { sql: finalItemQuery, signedUrls: finalItemSignedUrl } = finalItemConfig
+
+  if (verbose === true) {
+    console.info(`Started fetching for ${finalItem} by using results from ${item}.`)
+  }
+
+  const firstItems = await fetchAllRecords(
+    item,
+    itemQuery,
+    sequelize,
+    itemParams,
+    storage,
+    legacyStorage,
+    itemSignedUrl,
+    verbose
+  )
+
+  if (verbose === true) {
+    console.info(`Successfully queried ${firstItems.length} ${item}. Starting query for ${finalItem}`)
+  }
+
+  const allFinalItems: object[] = []
+  for (const firstItem of firstItems) {
+    const firstItemParams = finalItemParamsGetter(firstItem as Res)
+
+    if (verbose === true) {
+      console.info(`Started querying for ${finalItem} using ${item} with params ${JSON.stringify(firstItemParams)}`)
+    }
+
+    const finalItems = await fetchAllRecords(
+      item,
+      finalItemQuery,
+      sequelize,
+      firstItemParams,
+      storage,
+      legacyStorage,
+      finalItemSignedUrl,
+      verbose
+    )
+
+    allFinalItems.push(...finalItems)
+  }
+
+  if (verbose === true) {
+    console.info(`Successfully queried all ${allFinalItems.length} ${finalItem}.`)
+  }
+
+  return allFinalItems
 }
 
 /**
@@ -137,7 +233,7 @@ const fetchAllRecords = async (
 
   try {
     if (verbose === true) {
-      console.info(`Fetching ${item} between ${offset} and ${offset + LIMIT_SIZE}`)
+      console.info(`Fetching ${item} with params ${JSON.stringify(params)} between ${offset} and ${offset + LIMIT_SIZE}`)
     }
 
     while (responseLength > 0) {
@@ -186,7 +282,7 @@ const fetchAllRecords = async (
 const fetchData = async (
   sql: string,
   sequelize: Sequelize,
-  bind: { limit: number, offset: number } & Record<string, string | number>
+  bind: { limit: number; offset: number } & Record<string, string | number>
 ): Promise<object[]> => {
   return await sequelize.query(sql, {
     type: QueryTypes.SELECT,
