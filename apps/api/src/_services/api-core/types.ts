@@ -134,7 +134,7 @@ export interface CoreDetection {
 
 export interface CoreBestDetectionQueryParams {
   streams?: string[]
-  classification_ids?: number[]
+  classifications?: string[]
   by_date?: boolean
   start?: string
   end?: string

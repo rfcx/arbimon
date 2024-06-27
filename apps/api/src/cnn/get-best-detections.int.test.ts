@@ -88,7 +88,7 @@ describe('GET /jobs/:jobId/best-detections', async () => {
       start: undefined,
       end: undefined,
       streams: undefined,
-      classification_ids: undefined,
+      classifications: undefined,
       by_date: true,
       review_statuses: ['unreviewed', 'confirmed'],
       n_per_chunk: undefined,
@@ -123,7 +123,7 @@ describe('GET /jobs/:jobId/best-detections', async () => {
       query: {
         byDate: 'true',
         'reviewStatus[]': ['unvalidated', 'present'],
-        'classifications[]': ['8425', '8426']
+        'classifications[]': ['scirlus_carolinensis_simple_call_1', 'scirlus_carolinensis_simple_call_2']
       }
     })
 
@@ -133,7 +133,7 @@ describe('GET /jobs/:jobId/best-detections', async () => {
       start: undefined,
       end: undefined,
       streams: undefined,
-      classification_ids: [8425, 8426],
+      classifications: ['scirlus_carolinensis_simple_call_1', 'scirlus_carolinensis_simple_call_2'],
       by_date: true,
       review_statuses: ['unreviewed', 'confirmed'],
       n_per_chunk: undefined,
