@@ -12,6 +12,8 @@ export const SITES = `
   from sites
   where project_id = $projectId and deleted_at is null
   order by site_id asc
+  limit $limit
+  offset $offset
 `
 export const SPECIES = `
   select
@@ -27,6 +29,8 @@ export const SPECIES = `
     join species_families sf on s.family_id = sf.family_id 
     join species_taxons t on s.taxon_id = t.taxon_id 
   where project_id = $projectId
+  limit $limit
+  offset $offset
 `
 
 export const RECORDINGS = `
@@ -45,8 +49,9 @@ export const RECORDINGS = `
     meta,
     uri path
   from recordings
-  where site_id in (select site_id from sites where project_id = $projectId)
-  order by recording_id asc
+  where recordings.site_id = $siteId
+  limit $limit
+  offset $offset
 `
 
 export const PLAYLISTS = `
@@ -59,6 +64,8 @@ export const PLAYLISTS = `
   from playlists
   where project_id = $projectId
   order by playlist_id asc
+  limit $limit
+  offset $offset
 `
 
 export const PLAYLIST_RECORDINGS = `
@@ -70,6 +77,8 @@ export const PLAYLIST_RECORDINGS = `
     join playlists p on pr.playlist_id = p.playlist_id
     join recordings r on pr.recording_id = r.recording_id
   where pr.playlist_id in (select playlist_id from playlists where project_id = $projectId)
+  limit $limit
+  offset $offset
 `
 
 export const TEMPLATES = `
@@ -82,6 +91,8 @@ export const TEMPLATES = `
     join species s on t.species_id = s.species_id 
     join songtypes st on t.songtype_id = st.songtype_id 
   where t.deleted = 0 and p.deleted_at is null and t.project_id = $projectId
+  limit $limit
+  offset $offset
 `
 
 export const RECORDING_VALIDATIONS = `
@@ -102,6 +113,8 @@ export const RECORDING_VALIDATIONS = `
     join species s on rv.species_id = s.species_id 
     join songtypes st on rv.songtype_id = st.songtype_id
   where project_id = $projectId
+  limit $limit
+  offset $offset
 `
 
 export const PATTERN_MATCHINGS = `
@@ -119,6 +132,8 @@ export const PATTERN_MATCHINGS = `
     join playlists p on pm.playlist_id = p.playlist_id
     join templates t on pm.template_id = t.template_id
   where pm.project_id = $projectId and pm.deleted = 0 and j.state = 'completed'
+  limit $limit
+  offset $offset
 `
 
 export const PATTERN_MATCHING_ROIS = `
@@ -143,6 +158,8 @@ export const PATTERN_MATCHING_ROIS = `
     join species s on pmr.species_id = s.species_id 
     join songtypes st on pmr.songtype_id = st.songtype_id
   where pm.project_id = $projectId and pm.deleted = 0 and j.state = 'completed'
+  limit $limit
+  offset $offset
 `
 
 export const SOUNDSCAPES = `
@@ -167,6 +184,8 @@ export const SOUNDSCAPES = `
     join soundscape_aggregation_types sat on s.soundscape_aggregation_type_id = sat.soundscape_aggregation_type_id
     join playlists p on s.playlist_id = p.playlist_id
   where s.project_id = $projectId
+  limit $limit
+  offset $offset
 `
 
 export const RFM_MODELS = `
@@ -184,6 +203,8 @@ export const RFM_MODELS = `
   inner join species sp on mc.species_id = sp.species_id
   inner join songtypes so on mc.songtype_id = so.songtype_id
   where model_type_id = 4 and project_id = $projectId and deleted = 0
+  limit $limit
+  offset $offset
 `
 
 export const RFM_CLASSIFICATIONS = `
@@ -211,4 +232,6 @@ export const RFM_CLASSIFICATIONS = `
     m.model_type_id = 4 and
     j.job_type_id = 2 and
     j.completed = 1
+  limit $limit
+  offset $offset
 `
