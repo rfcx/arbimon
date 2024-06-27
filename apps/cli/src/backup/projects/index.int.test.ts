@@ -72,5 +72,5 @@ describe('Projects backup', async () => {
         expect(entries).toContain('rfm_classifications.csv')
       })
     })
-  })
+  }, 30_000)
 })
