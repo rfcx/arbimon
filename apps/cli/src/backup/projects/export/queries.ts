@@ -78,10 +78,10 @@ export const TEMPLATES = `
     t.x1, t.y1, t.x2, t.y2, t.date_created, p.name source_project_name,
     t.uri path
   from templates t 
-    join projects p on t.source_project_id = p.project_id
+    left join projects p on t.source_project_id = p.project_id
     join species s on t.species_id = s.species_id 
     join songtypes st on t.songtype_id = st.songtype_id 
-  where t.project_id = $projectId
+  where t.deleted = 0 and p.deleted_at is null and t.project_id = $projectId
 `
 
 export const RECORDING_VALIDATIONS = `
@@ -115,9 +115,10 @@ export const PATTERN_MATCHINGS = `
     t.name template_name,
     parameters
   from pattern_matchings pm
+    join jobs j on pm.job_id = j.job_id
     join playlists p on pm.playlist_id = p.playlist_id
     join templates t on pm.template_id = t.template_id
-  where pm.project_id = $projectId and pm.deleted = 0
+  where pm.project_id = $projectId and pm.deleted = 0 and j.state = 'completed'
 `
 
 export const PATTERN_MATCHING_ROIS = `
@@ -138,9 +139,10 @@ export const PATTERN_MATCHING_ROIS = `
     validated
   from pattern_matching_rois pmr
     join pattern_matchings pm on pmr.pattern_matching_id = pm.pattern_matching_id
+    join jobs j on pm.job_id = j.job_id
     join species s on pmr.species_id = s.species_id 
     join songtypes st on pmr.songtype_id = st.songtype_id
-  where pmr.pattern_matching_id in (select pattern_matching_id from pattern_matchings where project_id = $projectId)
+  where pm.project_id = $projectId and pm.deleted = 0 and j.state = 'completed'
 `
 
 export const SOUNDSCAPES = `
@@ -168,13 +170,27 @@ export const SOUNDSCAPES = `
 `
 
 export const RFM_MODELS = `
-  select model_id, name, date_created, user_id 
-  from models where model_type_id = 4 and project_id = $projectId
+  select
+    m.model_id,
+    m.name,
+    m.date_created,
+    m.user_id,
+    sp.species_id,
+    sp.scientific_name,
+    so.songtype_id,
+    so.songtype
+  from models m
+  inner join model_classes mc on m.model_id = mc.model_id
+  inner join species sp on mc.species_id = sp.species_id
+  inner join songtypes so on mc.songtype_id = so.songtype_id
+  where model_type_id = 4 and project_id = $projectId and deleted = 0
 `
 
 export const RFM_CLASSIFICATIONS = `
   select
     cr.classification_result_id,
+    j.job_id as job_id,
+    jpc.name as job_name,
     m.model_id,
     m.name as model_name,
     cr.recording_id,
@@ -184,9 +200,15 @@ export const RFM_CLASSIFICATIONS = `
     st.songtype,
     cr.present
   from classification_results cr
-    join job_params_classification jpc on cr.job_id = jpc.job_id 
-    join models m on jpc.model_id = m.model_id 
-    join songtypes st on cr.songtype_id = st.songtype_id
-    join species sp on cr.species_id = sp.species_id
-  where m.model_type_id = 4 and m.project_id = $projectId
+  join job_params_classification jpc on cr.job_id = jpc.job_id 
+  join jobs j on jpc.job_id = j.job_id
+  join models m on jpc.model_id = m.model_id 
+  join songtypes st on cr.songtype_id = st.songtype_id
+  join species sp on cr.species_id = sp.species_id
+  where
+    m.project_id = $projectId and
+    m.deleted = 0 and
+    m.model_type_id = 4 and
+    j.job_type_id = 2 and
+    j.completed = 1
 `
