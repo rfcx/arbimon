@@ -8,20 +8,7 @@ import { mapPathToSignedUrl } from '@/export/_common/map-path-to-signed-url'
 import type { ZipFile } from '~/files'
 import { retry } from '~/retry'
 import { BATCH_SIZE, CSV_DATE_FORMAT, LIMIT_SIZE } from '../config'
-import {
-  PATTERN_MATCHING_ROIS,
-  PATTERN_MATCHINGS,
-  PLAYLIST_RECORDINGS,
-  PLAYLISTS,
-  RECORDING_VALIDATIONS,
-  RECORDINGS,
-  RFM_CLASSIFICATIONS,
-  RFM_MODELS,
-  SITES,
-  SOUNDSCAPES,
-  SPECIES,
-  TEMPLATES
-} from './queries'
+import { PATTERN_MATCHING_ROIS, PATTERN_MATCHINGS, PLAYLIST_RECORDINGS, PLAYLISTS, RECORDING_VALIDATIONS, RECORDINGS, RFM_CLASSIFICATIONS, RFM_MODELS, SITES, SOUNDSCAPES, SPECIES, TEMPLATES } from './queries'
 
 interface ExportConfig {
   sql: string
@@ -282,7 +269,7 @@ const fetchAllRecords = async (
 const fetchData = async (
   sql: string,
   sequelize: Sequelize,
-  bind: { limit: number; offset: number } & Record<string, string | number>
+  bind: { limit: number, offset: number } & Record<string, string | number>
 ): Promise<object[]> => {
   return await sequelize.query(sql, {
     type: QueryTypes.SELECT,
