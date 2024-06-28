@@ -210,7 +210,7 @@ const fetchAllRecordsUsingSubquery = async <Res extends object>(
     )
 
     for await (const items of finalItemsGenerator) {
-      finalItems.push(items)
+      finalItems.push(...items)
     }
 
     allFinalItems.push(...finalItems)
