@@ -108,7 +108,8 @@ export const generateCsvs = async (
     return zipFiles
   }
 
-  const allRecords = await fetchAllRecords(
+  const records: object[] = []
+  const recordsGenerator = fetchAllRecords(
     item,
     query,
     sequelize,
@@ -119,9 +120,13 @@ export const generateCsvs = async (
     verbose
   )
 
-  const zipFiles = await convertToCsv(item, allRecords)
+  for await (const recordsGroup of recordsGenerator) {
+    records.push(...recordsGroup)
+  }
+
+  const zipFiles = await convertToCsv(item, records)
   if (verbose === true) {
-    console.info(`Fetched ${allRecords.length} records in ${zipFiles.length} file(s) for ${item}`)
+    console.info(`Fetched ${records.length} records in ${zipFiles.length} file(s) for ${item}`)
   }
 
   return zipFiles
@@ -164,7 +169,8 @@ const fetchAllRecordsUsingSubquery = async <Res extends object>(
     console.info(`Started fetching for ${finalItem} by using results from ${item}.`)
   }
 
-  const firstItems = await fetchAllRecords(
+  const firstItems: object[] = []
+  const firstItemsGenerator = fetchAllRecords(
     item,
     itemQuery,
     sequelize,
@@ -174,6 +180,10 @@ const fetchAllRecordsUsingSubquery = async <Res extends object>(
     itemSignedUrl,
     verbose
   )
+
+  for await (const items of firstItemsGenerator) {
+    firstItems.push(...items)
+  }
 
   if (verbose === true) {
     console.info(`Successfully queried ${firstItems.length} ${item}. Starting query for ${finalItem}`)
@@ -187,7 +197,8 @@ const fetchAllRecordsUsingSubquery = async <Res extends object>(
       console.info(`Started querying for ${finalItem} using ${item} with params ${JSON.stringify(firstItemParams)}`)
     }
 
-    const finalItems = await fetchAllRecords(
+    const finalItems: object[] = []
+    const finalItemsGenerator = fetchAllRecords(
       finalItem,
       finalItemQuery,
       sequelize,
@@ -197,6 +208,10 @@ const fetchAllRecordsUsingSubquery = async <Res extends object>(
       finalItemSignedUrl,
       verbose
     )
+
+    for await (const items of finalItemsGenerator) {
+      finalItems.push(items)
+    }
 
     allFinalItems.push(...finalItems)
   }
@@ -223,7 +238,7 @@ const fetchAllRecordsUsingSubquery = async <Res extends object>(
  * @returns An array of objects of all the records inside the database from given SQL statement.
  * @throws Any database client errors.
  */
-const fetchAllRecords = async (
+async function * fetchAllRecords (
   item: string,
   query: string,
   sequelize: Sequelize,
@@ -232,10 +247,9 @@ const fetchAllRecords = async (
   legacyStorage: StorageClient,
   signedUrls: boolean | undefined,
   verbose: boolean | undefined
-): Promise<object[]> => {
-  const responses = []
+): AsyncGenerator<object[], void, unknown> {
   let responseCount = 0
-  let responseLength = 1
+  let responseLength = LIMIT_SIZE
   let offset = 0
 
   try {
@@ -243,7 +257,7 @@ const fetchAllRecords = async (
       console.info(`Fetching ${item} with params ${JSON.stringify(params)} between ${offset} and ${offset + LIMIT_SIZE}`)
     }
 
-    while (responseLength > 0) {
+    while (responseLength === LIMIT_SIZE) {
       const response = await retry(
         fetchData(query, sequelize, { limit: LIMIT_SIZE, offset, ...params })
       )
@@ -256,7 +270,7 @@ const fetchAllRecords = async (
             )
           : response
 
-      responses.push(...mappedResponse)
+      yield mappedResponse
       responseCount += response.length
       responseLength = response.length
       offset += LIMIT_SIZE
@@ -272,8 +286,6 @@ const fetchAllRecords = async (
   if (verbose === true) {
     console.info(`Successfully fetched ${responseCount} ${item}`)
   }
-
-  return responses
 }
 
 /**
