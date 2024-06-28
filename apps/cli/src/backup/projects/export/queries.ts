@@ -76,7 +76,7 @@ export const PLAYLIST_RECORDINGS = `
   from playlist_recordings pr
   join playlists p on pr.playlist_id = p.playlist_id
   join recordings r on pr.recording_id = r.recording_id
-  where r.site_id = $siteId
+  where p.playlist_id = $playlistId
   limit $limit
   offset $offset
 `

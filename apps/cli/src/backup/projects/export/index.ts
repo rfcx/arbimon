@@ -48,12 +48,32 @@ export const generateCsvs = async (
 
   // Because recordings is a really big table,
   // we have to get all recordings slowly but surely by each site.
-  if (item === 'recordings' || item === 'playlist_recordings') {
+  if (item === 'recordings') {
     const allRecords = await fetchAllRecordsUsingSubquery<{ site_id: number }>(
       'sites',
       item,
       { projectId },
       (t) => ({ siteId: t.site_id }),
+      sequelize,
+      storage,
+      legacyStorage,
+      verbose
+    )
+
+    const zipFiles = await convertToCsv(item, allRecords)
+    if (verbose === true) {
+      console.info(`Fetched ${allRecords.length} records in ${zipFiles.length} file(s) for ${item}`)
+    }
+
+    return zipFiles
+  }
+
+  if (item === 'playlist_recordings') {
+    const allRecords = await fetchAllRecordsUsingSubquery<{ playlist_id: number }>(
+      'playlists',
+      item,
+      { projectId },
+      (t) => ({ playlistId: t.playlist_id }),
       sequelize,
       storage,
       legacyStorage,
