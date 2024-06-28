@@ -121,7 +121,9 @@ export const generateCsvs = async (
   )
 
   for await (const recordsGroup of recordsGenerator) {
-    records.push(...recordsGroup)
+    for (const record of recordsGroup) {
+      records.push(record)
+    }
   }
 
   const zipFiles = await convertToCsv(item, records)
@@ -182,7 +184,9 @@ const fetchAllRecordsUsingSubquery = async <Res extends object>(
   )
 
   for await (const items of firstItemsGenerator) {
-    firstItems.push(...items)
+    for (const item of items) {
+      firstItems.push(item)
+    }
   }
 
   if (verbose === true) {
@@ -210,10 +214,14 @@ const fetchAllRecordsUsingSubquery = async <Res extends object>(
     )
 
     for await (const items of finalItemsGenerator) {
-      finalItems.push(...items)
+      for (const item of items) {
+        finalItems.push(item)
+      }
     }
 
-    allFinalItems.push(...finalItems)
+    for (const finalItem of finalItems) {
+      allFinalItems.push(finalItem)
+    }
   }
 
   if (verbose === true) {
