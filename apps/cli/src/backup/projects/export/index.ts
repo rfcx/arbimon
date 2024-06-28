@@ -168,7 +168,7 @@ const fetchAllRecordsUsingSubquery = async <Res extends object>(
     }
 
     const finalItems = await fetchAllRecords(
-      item,
+      finalItem,
       finalItemQuery,
       sequelize,
       firstItemParams,
@@ -250,7 +250,7 @@ const fetchAllRecords = async (
   }
 
   if (verbose === true) {
-    console.info(`Successfully fetched ${responseCount} records`)
+    console.info(`Successfully fetched ${responseCount} ${item}`)
   }
 
   return responses
