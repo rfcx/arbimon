@@ -21,5 +21,5 @@ data:
   CORE_API_BASE_URL: https://api.rfcx.org
   OPENSEARCH_ENABLED: "true"
   SUPER_USER_EMAILS: support@rfcx.org,scientist-super@rfcx.org
-  BACKUP_TIMEFRAME_LIMIT: "7d"
+  BACKUP_TIMEFRAME_LIMIT: "5m"
   KUBERNETES_NAMESPACE: production
