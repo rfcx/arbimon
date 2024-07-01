@@ -193,7 +193,7 @@ const fetchAllRecordsUsingSubquery = async <Res extends object>(
     console.info(`Successfully queried ${firstItems.length} ${item}. Starting query for ${finalItem}`)
   }
 
-  const allFinalItems: object[] = []
+  const finalItems: object[] = []
   for (const firstItem of firstItems) {
     const firstItemParams = finalItemParamsGetter(firstItem as Res)
 
@@ -201,7 +201,6 @@ const fetchAllRecordsUsingSubquery = async <Res extends object>(
       console.info(`Started querying for ${finalItem} using ${item} with params ${JSON.stringify(firstItemParams)}`)
     }
 
-    const finalItems: object[] = []
     const finalItemsGenerator = fetchAllRecords(
       finalItem,
       finalItemQuery,
@@ -218,17 +217,13 @@ const fetchAllRecordsUsingSubquery = async <Res extends object>(
         finalItems.push(item)
       }
     }
-
-    for (const finalItem of finalItems) {
-      allFinalItems.push(finalItem)
-    }
   }
 
   if (verbose === true) {
-    console.info(`Successfully queried all ${allFinalItems.length} ${finalItem}.`)
+    console.info(`Successfully queried all ${finalItems.length} ${finalItem}.`)
   }
 
-  return allFinalItems
+  return finalItems
 }
 
 /**
