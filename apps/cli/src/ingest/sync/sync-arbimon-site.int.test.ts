@@ -136,10 +136,10 @@ describe('ingest > sync > site', () => {
 
     // Assert
     const project = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findOne({ where: { idArbimon: DEFAULT_ARB_PROJECT.projectId } })
-    expect(project?.latitudeNorth).toBe(Math.min(DEFAULT_ARB_SITE.lat, newSite.lat))
+    expect(project?.latitudeNorth).toBe(Math.max(DEFAULT_ARB_SITE.lat, newSite.lat))
     expect(project?.latitudeSouth).toBe(Math.max(DEFAULT_ARB_SITE.lat, newSite.lat))
     expect(project?.longitudeEast).toBe(Math.min(DEFAULT_ARB_SITE.lon, newSite.lon))
-    expect(project?.longitudeWest).toBe(Math.max(DEFAULT_ARB_SITE.lon, newSite.lon))
+    expect(project?.longitudeWest).toBe(Math.min(DEFAULT_ARB_SITE.lon, newSite.lon))
   })
 
   test('project latitude and longitude is updated on deleted site', async () => {

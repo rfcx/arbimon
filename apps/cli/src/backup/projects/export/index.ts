@@ -61,7 +61,7 @@ export const generateCsvs = async (
     let totalRows = 1 // headers as first row
     let rowCount = 1 // headers as first row
     let fileCount = 1
-    let fileName = `${item}_${fileCount}.csv`
+    let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
     const allCSVFiles = [fileName]
     for await (const records of allRecords) {
       if (!allCSVFiles.includes(fileName)) {
@@ -73,7 +73,7 @@ export const generateCsvs = async (
         fileCount++
         totalRows += rowCount
         rowCount = 1
-        fileName = `${item}_${fileCount}.csv`
+        fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
       }
     }
 
@@ -97,7 +97,7 @@ export const generateCsvs = async (
     let totalRows = 1 // headers as first row
     let rowCount = 1 // headers as first row
     let fileCount = 1
-    let fileName = `${item}_${fileCount}.csv`
+    let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
     const allCSVFiles = [fileName]
     for await (const records of allRecords) {
       if (!allCSVFiles.includes(fileName)) {
@@ -109,7 +109,7 @@ export const generateCsvs = async (
         fileCount++
         totalRows += rowCount
         rowCount = 1
-        fileName = `${item}_${fileCount}.csv`
+        fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
       }
     }
 
@@ -133,7 +133,7 @@ export const generateCsvs = async (
     let totalRows = 1 // headers as first row
     let rowCount = 1 // headers as first row
     let fileCount = 1
-    let fileName = `${item}_${fileCount}.csv`
+    let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
     const allCSVFiles = [fileName]
     for await (const records of allRecords) {
       if (!allCSVFiles.includes(fileName)) {
@@ -145,7 +145,7 @@ export const generateCsvs = async (
         fileCount++
         totalRows += rowCount
         rowCount = 1
-        fileName = `${item}_${fileCount}.csv`
+        fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
       }
     }
 
@@ -169,7 +169,7 @@ export const generateCsvs = async (
   let totalRows = 1 // headers as first row
   let rowCount = 1 // headers as first row
   let fileCount = 1
-  let fileName = `${item}_${fileCount}.csv`
+  let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
   const allCSVFiles = [fileName]
   for await (const records of recordsGenerator) {
     if (!allCSVFiles.includes(fileName)) {
@@ -181,7 +181,7 @@ export const generateCsvs = async (
       fileCount++
       totalRows += rowCount
       rowCount = 1
-      fileName = `${item}_${fileCount}.csv`
+      fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
     }
   }
 
