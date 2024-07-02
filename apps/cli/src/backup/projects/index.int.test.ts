@@ -38,7 +38,7 @@ describe('Projects backup', async () => {
     const expectedKey = `exports/${project.id}/${expectedName}`
 
     // Act
-    await backupProjects(sequelize, arbimonSequelize, storage, storage, mailClient, false)
+    await backupProjects(sequelize, arbimonSequelize, storage, storage, mailClient, true)
 
     // Assert
     const exists = await storage.objectExists(expectedKey)
@@ -57,19 +57,18 @@ describe('Projects backup', async () => {
         entries.push(entry.fileName)
         zipfile.readEntry()
       })
-
       zipfile.on('end', () => {
-        expect(entries).toContain('sites.csv')
-        expect(entries).toContain('species.csv')
-        expect(entries).toContain('recordings.csv')
-        expect(entries).toContain('playlists.csv')
-        expect(entries).toContain('playlist_recordings.csv')
-        expect(entries).toContain('templates.csv')
-        expect(entries).toContain('recording_validations.csv')
-        expect(entries).toContain('pattern_matching_rois.csv')
-        expect(entries).toContain('soundscapes.csv')
-        expect(entries).toContain('rfm_models.csv')
-        expect(entries).toContain('rfm_classifications.csv')
+        expect(entries).toContain('sites.0001.csv')
+        expect(entries).toContain('species.0001.csv')
+        expect(entries).toContain('recordings.0001.csv')
+        expect(entries).toContain('playlists.0001.csv')
+        expect(entries).toContain('playlist_recordings.0001.csv')
+        expect(entries).toContain('templates.0001.csv')
+        expect(entries).toContain('recording_validations.0001.csv')
+        expect(entries).toContain('pattern_matching_rois.0001.csv')
+        expect(entries).toContain('soundscapes.0001.csv')
+        expect(entries).toContain('rfm_models.0001.csv')
+        expect(entries).toContain('rfm_classifications.0001.csv')
       })
     })
   }, 30_000)
