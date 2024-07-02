@@ -64,13 +64,16 @@ export const generateCsvs = async (
     let fileName = `${item}_${fileCount}.csv`
     const allCSVFiles = [fileName]
     for await (const records of allRecords) {
-      fileName = `${item}_${fileCount}.csv`
-      rowCount += (await convertToCsv(fileName, records)).updatedRowCount
+      if (!allCSVFiles.includes(fileName)) {
+        allCSVFiles.push(fileName)
+      }
+      await convertToCsv(fileName, records)
+      rowCount += records.length - 1
       if (rowCount >= BATCH_SIZE) {
         fileCount++
         totalRows += rowCount
         rowCount = 1
-        allCSVFiles.push(fileName)
+        fileName = `${item}_${fileCount}.csv`
       }
     }
 
@@ -96,15 +99,17 @@ export const generateCsvs = async (
     let fileCount = 1
     let fileName = `${item}_${fileCount}.csv`
     const allCSVFiles = [fileName]
-    console.info('playlist_recording')
     for await (const records of allRecords) {
-      fileName = `${item}_${fileCount}.csv`
-      rowCount += (await convertToCsv(fileName, records)).updatedRowCount
+      if (!allCSVFiles.includes(fileName)) {
+        allCSVFiles.push(fileName)
+      }
+      await convertToCsv(fileName, records)
+      rowCount += records.length - 1
       if (rowCount >= BATCH_SIZE) {
         fileCount++
         totalRows += rowCount
         rowCount = 1
-        allCSVFiles.push(fileName)
+        fileName = `${item}_${fileCount}.csv`
       }
     }
 
@@ -131,13 +136,16 @@ export const generateCsvs = async (
     let fileName = `${item}_${fileCount}.csv`
     const allCSVFiles = [fileName]
     for await (const records of allRecords) {
-      fileName = `${item}_${fileCount}.csv`
-      rowCount += (await convertToCsv(fileName, records)).updatedRowCount
+      if (!allCSVFiles.includes(fileName)) {
+        allCSVFiles.push(fileName)
+      }
+      await convertToCsv(fileName, records)
+      rowCount += records.length - 1
       if (rowCount >= BATCH_SIZE) {
         fileCount++
         totalRows += rowCount
         rowCount = 1
-        allCSVFiles.push(fileName)
+        fileName = `${item}_${fileCount}.csv`
       }
     }
 
@@ -164,13 +172,16 @@ export const generateCsvs = async (
   let fileName = `${item}_${fileCount}.csv`
   const allCSVFiles = [fileName]
   for await (const records of recordsGenerator) {
-    fileName = `${item}_${fileCount}.csv`
-    rowCount += (await convertToCsv(fileName, records)).updatedRowCount
+    if (!allCSVFiles.includes(fileName)) {
+      allCSVFiles.push(fileName)
+    }
+    await convertToCsv(fileName, records)
+    rowCount += records.length - 1
     if (rowCount >= BATCH_SIZE) {
       fileCount++
       totalRows += rowCount
       rowCount = 1
-      allCSVFiles.push(fileName)
+      fileName = `${item}_${fileCount}.csv`
     }
   }
 
@@ -360,20 +371,18 @@ const fetchData = async (
 /**
  * Converts the data from object format into csv format.
  *
- * @param item - The name of the item to export, e.g. `recordings`.
+ * @param filePath - The path of the csv file to export, e.g. `recordings_1.csv`.
  * @param responses - The array of objects that you wanted to convert to csv format.
  *
- * @returns The `ZipFile` object in an array containing the `name` of the zip file and their content, which is `string` in csv format.
+ * @returns The { updatedRowCount: number } object to know how many
  * @throws Any error that happened during the zip.
  */
-const convertToCsv = async (fileName: string, responses: object[]): Promise<{ updatedRowCount: number }> => {
+const convertToCsv = async (filePath: string, responses: object[]): Promise<void> => {
   const content = await toCsv(responses !== undefined ? responses : [], { dateNF: CSV_DATE_FORMAT })
-  if (fs.existsSync(fileName)) {
+  if (fs.existsSync(filePath)) {
     const onlyValues = content.substring(content.indexOf('\n') + 1) // remove headers
-    fs.appendFileSync(fileName, onlyValues, 'utf-8')
+    fs.appendFileSync(filePath, onlyValues, 'utf-8')
   } else {
-    fs.writeFileSync(fileName, content, 'utf-8')
+    fs.writeFileSync(filePath, content, 'utf-8')
   }
-
-  return { updatedRowCount: responses.length - 1 }
 }
