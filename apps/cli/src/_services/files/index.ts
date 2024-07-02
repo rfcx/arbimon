@@ -5,7 +5,7 @@ export interface CreateZipResult {
   totalBytes: number
 }
 
-export const createZip = async (zipPath: string, files: ZipFile[]): Promise<CreateZipResult> =>
+export const createZip = async (zipPath: string, files: string[]): Promise<CreateZipResult> =>
   await new Promise<CreateZipResult>((resolve, reject) => {
     const output = fs.createWriteStream(zipPath)
     const archive = archiver('zip', {
@@ -21,8 +21,9 @@ export const createZip = async (zipPath: string, files: ZipFile[]): Promise<Crea
     })
 
     archive.pipe(output)
-    for (const { name, content } of files) {
-      archive.append(content, { name })
+    for (const file of files) {
+      const content = fs.readFileSync(file)
+      archive.append(content, { name: file })
     }
     archive.finalize().catch(reject)
   })

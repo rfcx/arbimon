@@ -38,7 +38,7 @@ describe('Projects backup', async () => {
     const expectedKey = `exports/${project.id}/${expectedName}`
 
     // Act
-    await backupProjects(sequelize, arbimonSequelize, storage, storage, mailClient, false)
+    await backupProjects(sequelize, arbimonSequelize, storage, storage, mailClient, true)
 
     // Assert
     const exists = await storage.objectExists(expectedKey)
@@ -57,7 +57,6 @@ describe('Projects backup', async () => {
         entries.push(entry.fileName)
         zipfile.readEntry()
       })
-
       zipfile.on('end', () => {
         expect(entries).toContain('sites.csv')
         expect(entries).toContain('species.csv')

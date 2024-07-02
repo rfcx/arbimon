@@ -1,11 +1,10 @@
-import { chunk } from 'lodash-es'
+import fs from 'fs'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
 import type { StorageClient } from '@rfcx-bio/node-common/storage'
 import { toCsv } from '@rfcx-bio/utils/file'
 
 import { mapPathToSignedUrl } from '@/export/_common/map-path-to-signed-url'
-import type { ZipFile } from '~/files'
 import { retry } from '~/retry'
 import { BATCH_SIZE, CSV_DATE_FORMAT, LIMIT_SIZE } from '../config'
 import { PATTERN_MATCHING_ROIS, PATTERN_MATCHINGS, PLAYLIST_RECORDINGS, PLAYLISTS, RECORDING_VALIDATIONS, RECORDINGS, RFM_CLASSIFICATIONS, RFM_MODELS, SITES, SOUNDSCAPES, SPECIES, TEMPLATES } from './queries'
@@ -37,7 +36,7 @@ export const generateCsvs = async (
   storage: StorageClient,
   legacyStorage: StorageClient,
   verbose?: boolean
-): Promise<ZipFile[]> => {
+): Promise<string[]> => {
   // Get export config
   const config = EXPORTS_MAPPER[item]
   const { sql: query, signedUrls } = config
@@ -49,7 +48,7 @@ export const generateCsvs = async (
   // Because recordings is a really big table,
   // we have to get all recordings slowly but surely by each site.
   if (item === 'recordings') {
-    const allRecords = await fetchAllRecordsUsingSubquery<{ site_id: number }>(
+    const allRecords = fetchAllRecordsUsingSubquery<{ site_id: number }>(
       'sites',
       item,
       { projectId },
@@ -59,17 +58,30 @@ export const generateCsvs = async (
       legacyStorage,
       verbose
     )
-
-    const zipFiles = await convertToCsv(item, allRecords)
-    if (verbose === true) {
-      console.info(`Fetched ${allRecords.length} records in ${zipFiles.length} file(s) for ${item}`)
+    let totalRows = 1 // headers as first row
+    let rowCount = 1 // headers as first row
+    let fileCount = 1
+    let fileName = `${item}_${fileCount}.csv`
+    const allCSVFiles = [fileName]
+    for await (const records of allRecords) {
+      fileName = `${item}_${fileCount}.csv`
+      rowCount += (await convertToCsv(fileName, records)).updatedRowCount
+      if (rowCount >= BATCH_SIZE) {
+        fileCount++
+        totalRows += rowCount
+        rowCount = 1
+        allCSVFiles.push(fileName)
+      }
     }
 
-    return zipFiles
+    if (verbose === true) {
+      console.info(`Fetched ${totalRows} records in ${fileCount} file(s) for ${item}`)
+    }
+    return allCSVFiles
   }
 
   if (item === 'playlist_recordings') {
-    const allRecords = await fetchAllRecordsUsingSubquery<{ playlist_id: number }>(
+    const allRecords = fetchAllRecordsUsingSubquery<{ playlist_id: number }>(
       'playlists',
       item,
       { projectId },
@@ -79,17 +91,31 @@ export const generateCsvs = async (
       legacyStorage,
       verbose
     )
-
-    const zipFiles = await convertToCsv(item, allRecords)
-    if (verbose === true) {
-      console.info(`Fetched ${allRecords.length} records in ${zipFiles.length} file(s) for ${item}`)
+    let totalRows = 1 // headers as first row
+    let rowCount = 1 // headers as first row
+    let fileCount = 1
+    let fileName = `${item}_${fileCount}.csv`
+    const allCSVFiles = [fileName]
+    console.info('playlist_recording')
+    for await (const records of allRecords) {
+      fileName = `${item}_${fileCount}.csv`
+      rowCount += (await convertToCsv(fileName, records)).updatedRowCount
+      if (rowCount >= BATCH_SIZE) {
+        fileCount++
+        totalRows += rowCount
+        rowCount = 1
+        allCSVFiles.push(fileName)
+      }
     }
 
-    return zipFiles
+    if (verbose === true) {
+      console.info(`Fetched ${totalRows} records in ${fileCount} file(s) for ${item}`)
+    }
+    return allCSVFiles
   }
 
   if (item === 'pattern_matching_rois') {
-    const allRecords = await fetchAllRecordsUsingSubquery<{ pattern_matching_id: number }>(
+    const allRecords = fetchAllRecordsUsingSubquery<{ pattern_matching_id: number }>(
       'pattern_matchings',
       item,
       { projectId },
@@ -99,16 +125,28 @@ export const generateCsvs = async (
       legacyStorage,
       verbose
     )
-
-    const zipFiles = await convertToCsv(item, allRecords)
-    if (verbose === true) {
-      console.info(`Fetched ${allRecords.length} records in ${zipFiles.length} file(s) for ${item}`)
+    let totalRows = 1 // headers as first row
+    let rowCount = 1 // headers as first row
+    let fileCount = 1
+    let fileName = `${item}_${fileCount}.csv`
+    const allCSVFiles = [fileName]
+    for await (const records of allRecords) {
+      fileName = `${item}_${fileCount}.csv`
+      rowCount += (await convertToCsv(fileName, records)).updatedRowCount
+      if (rowCount >= BATCH_SIZE) {
+        fileCount++
+        totalRows += rowCount
+        rowCount = 1
+        allCSVFiles.push(fileName)
+      }
     }
 
-    return zipFiles
+    if (verbose === true) {
+      console.info(`Fetched ${totalRows} records in ${fileCount} file(s) for ${item}`)
+    }
+    return allCSVFiles
   }
 
-  const records: object[] = []
   const recordsGenerator = fetchAllRecords(
     item,
     query,
@@ -120,18 +158,26 @@ export const generateCsvs = async (
     verbose
   )
 
-  for await (const recordsGroup of recordsGenerator) {
-    for (const record of recordsGroup) {
-      records.push(record)
+  let totalRows = 1 // headers as first row
+  let rowCount = 1 // headers as first row
+  let fileCount = 1
+  let fileName = `${item}_${fileCount}.csv`
+  const allCSVFiles = [fileName]
+  for await (const records of recordsGenerator) {
+    fileName = `${item}_${fileCount}.csv`
+    rowCount += (await convertToCsv(fileName, records)).updatedRowCount
+    if (rowCount >= BATCH_SIZE) {
+      fileCount++
+      totalRows += rowCount
+      rowCount = 1
+      allCSVFiles.push(fileName)
     }
   }
 
-  const zipFiles = await convertToCsv(item, records)
   if (verbose === true) {
-    console.info(`Fetched ${records.length} records in ${zipFiles.length} file(s) for ${item}`)
+    console.info(`Fetched ${totalRows} records in ${fileCount} file(s) for ${item}`)
   }
-
-  return zipFiles
+  return allCSVFiles
 }
 
 /**
@@ -151,7 +197,7 @@ export const generateCsvs = async (
  * @returns An array of objects of all the records inside the database from given SQL statement.
  * @throws Any database client errors.
  */
-const fetchAllRecordsUsingSubquery = async <Res extends object>(
+async function * fetchAllRecordsUsingSubquery <Res extends object> (
   item: string,
   finalItem: string,
   itemParams: Record<string, string | number>,
@@ -160,70 +206,68 @@ const fetchAllRecordsUsingSubquery = async <Res extends object>(
   storage: StorageClient,
   legacyStorage: StorageClient,
   verbose: boolean | undefined
-): Promise<object[]> => {
-  const itemConfig = EXPORTS_MAPPER[item]
-  const { sql: itemQuery, signedUrls: itemSignedUrl } = itemConfig
+  ): AsyncGenerator<object[], void, unknown> {
+    const itemConfig = EXPORTS_MAPPER[item]
+    const { sql: itemQuery, signedUrls: itemSignedUrl } = itemConfig
 
-  const finalItemConfig = EXPORTS_MAPPER[finalItem]
-  const { sql: finalItemQuery, signedUrls: finalItemSignedUrl } = finalItemConfig
-
-  if (verbose === true) {
-    console.info(`Started fetching for ${finalItem} by using results from ${item}.`)
-  }
-
-  const firstItems: object[] = []
-  const firstItemsGenerator = fetchAllRecords(
-    item,
-    itemQuery,
-    sequelize,
-    itemParams,
-    storage,
-    legacyStorage,
-    itemSignedUrl,
-    verbose
-  )
-
-  for await (const items of firstItemsGenerator) {
-    for (const item of items) {
-      firstItems.push(item)
-    }
-  }
-
-  if (verbose === true) {
-    console.info(`Successfully queried ${firstItems.length} ${item}. Starting query for ${finalItem}`)
-  }
-
-  const finalItems: object[] = []
-  for (const firstItem of firstItems) {
-    const firstItemParams = finalItemParamsGetter(firstItem as Res)
+    const finalItemConfig = EXPORTS_MAPPER[finalItem]
+    const { sql: finalItemQuery, signedUrls: finalItemSignedUrl } = finalItemConfig
 
     if (verbose === true) {
-      console.info(`Started querying for ${finalItem} using ${item} with params ${JSON.stringify(firstItemParams)}`)
+      console.info(`Started fetching for ${finalItem} by using results from ${item}.`)
     }
 
-    const finalItemsGenerator = fetchAllRecords(
-      finalItem,
-      finalItemQuery,
+    const firstItems: object[] = []
+    const firstItemsGenerator = fetchAllRecords(
+      item,
+      itemQuery,
       sequelize,
-      firstItemParams,
+      itemParams,
       storage,
       legacyStorage,
-      finalItemSignedUrl,
+      itemSignedUrl,
       verbose
     )
 
-    for await (const items of finalItemsGenerator) {
+    for await (const items of firstItemsGenerator) {
       for (const item of items) {
-        finalItems.push(item)
+        firstItems.push(item)
       }
     }
-  }
 
-  if (verbose === true) {
-    console.info(`Successfully queried all ${finalItems.length} ${finalItem}.`)
-  }
+    if (verbose === true) {
+      console.info(`Successfully queried ${firstItems.length} ${item}. Starting query for ${finalItem}`)
+    }
 
-  return finalItems
+    const finalItems: object[] = []
+    if (firstItems.length === 0) {
+      yield []
+    }
+    for (const firstItem of firstItems) {
+      const firstItemParams = finalItemParamsGetter(firstItem as Res)
+
+      if (verbose === true) {
+        console.info(`Started querying for ${finalItem} using ${item} with params ${JSON.stringify(firstItemParams)}`)
+      }
+
+      const finalItemsGenerator = fetchAllRecords(
+        finalItem,
+        finalItemQuery,
+        sequelize,
+        firstItemParams,
+        storage,
+        legacyStorage,
+        finalItemSignedUrl,
+        verbose
+      )
+      for await (const items of finalItemsGenerator) {
+        yield items
+      }
+    }
+
+    if (verbose === true) {
+      console.info(`Successfully queried all ${finalItems.length} ${finalItem}.`)
+    }
 }
 
 /**
@@ -322,19 +366,14 @@ const fetchData = async (
  * @returns The `ZipFile` object in an array containing the `name` of the zip file and their content, which is `string` in csv format.
  * @throws Any error that happened during the zip.
  */
-const convertToCsv = async (item: string, responses: object[]): Promise<ZipFile[]> => {
-  const files = chunk(responses, BATCH_SIZE)
-  const zipFiles: ZipFile[] = []
-
-  if (files.length <= 1) {
-    const content = await toCsv(files[0] !== undefined ? files[0] : [], { dateNF: CSV_DATE_FORMAT })
-    zipFiles.push({ name: `${item}.csv`, content })
+const convertToCsv = async (fileName: string, responses: object[]): Promise<{ updatedRowCount: number }> => {
+  const content = await toCsv(responses !== undefined ? responses : [], { dateNF: CSV_DATE_FORMAT })
+  if (fs.existsSync(fileName)) {
+    const onlyValues = content.substring(content.indexOf('\n') + 1) // remove headers
+    fs.appendFileSync(fileName, onlyValues, 'utf-8')
   } else {
-    for (let i = 0; i < files.length; i++) {
-      const content = await toCsv(files[i], { dateNF: CSV_DATE_FORMAT })
-      zipFiles.push({ name: `${item}_${String(i + 1).padStart(3, '0')}.csv`, content })
-    }
+    fs.writeFileSync(fileName, content, 'utf-8')
   }
 
-  return zipFiles
+  return { updatedRowCount: responses.length - 1 }
 }
