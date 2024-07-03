@@ -63,7 +63,6 @@ export async function * generateCsvs (
     let fileCount = 1
     let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
     for await (const records of allRecords) {
-      console.info('here ha 1')
       await convertToCsv(fileName, records)
       rowCount += records.length - 1
       if (rowCount >= BATCH_SIZE) {
@@ -74,7 +73,6 @@ export async function * generateCsvs (
         fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
       }
     }
-    console.info('here ha')
     yield fileName
 
     if (verbose === true) {
