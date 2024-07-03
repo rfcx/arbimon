@@ -10,6 +10,8 @@ import { generateCsvs } from '@/backup/projects/export'
 import { type ProjectBackupRequest, getPendingRequests, updateRequest } from '@/backup/projects/requests'
 import { createZip } from '~/files'
 import type { MailClient } from '~/mail'
+import { getProjectFromName } from './location-project'
+import { getUserFromEmail } from './user-profile'
 
 export const EXPORT_ITEMS = {
   BIO: [] as string[],
@@ -27,6 +29,15 @@ export const EXPORT_ITEMS = {
     'rfm_models',
     'rfm_classifications'
   ]
+}
+
+export interface RequiredProjectInformation {
+  projectId: number
+  slug: string
+  arbimonProjectId: number
+  projectName: string
+  userEmail: string
+  userName: string
 }
 
 /**
@@ -49,83 +60,84 @@ export const backupProjects = async (
 ): Promise<void> => {
   let successCount = 0
 
-  // Fetch pending backup requests
-  const requests = await getPendingRequests(sequelize)
-
-  if (verbose) {
-    console.info(`Found ${requests.length} project backup request(s)`)
+  const projectName = process.argv[2]
+  if (!projectName) {
+    throw Error('Missing project name')
+  }
+  const email = process.argv[3]
+  if (!email) {
+    throw Error('Missing user email')
   }
 
-  for (const request of requests) {
-    const { id, userEmail, userName, ...projectData } = request
+  const project = await getProjectFromName(sequelize, projectName)
+  if (!project) {
+    throw Error('Project not found')
+  }
+  const user = await getUserFromEmail(sequelize, email)
+  if (!user) {
+    throw Error('User not found')
+  }
+
+  const requiredData: RequiredProjectInformation = {
+    projectId: project.id,
+    slug: project.slug,
+    projectName: project.name,
+    arbimonProjectId: project.idArbimon,
+    userEmail: user.email,
+    userName: `${user.firstName} ${user.lastName}`
+  }
+
+  const { userEmail, userName, ...projectData } = requiredData
+
+  try {
+    // Create export zip
+    const { zipName, totalBytes } = await createExport(
+      sequelize,
+      arbimonSequelize,
+      storage,
+      legacyStorage,
+      projectData,
+      verbose
+    )
     if (verbose) {
-      console.info(`- Backup ${id} started for ${projectData.slug}`)
+      console.info(`  - Created ${zipName}, total ${totalBytes} bytes`)
     }
 
-    try {
-      // Change status to processing
-      await updateRequest(sequelize, id, { status: BackupStatus.PROCESSING })
-      // Create export zip
-      const { zipName, totalBytes } = await createExport(
-        sequelize,
-        arbimonSequelize,
-        storage,
-        legacyStorage,
-        projectData,
-        verbose
-      )
-      if (verbose) {
-        console.info(`  - Created ${zipName}, total ${totalBytes} bytes`)
-      }
-
-      // Upload to S3
-      const file = await readFile(`./${zipName}`)
-      const key = `exports/${projectData.projectId}/${zipName}`
-      await storage.putObject(key, file)
-      await unlink(`./${zipName}`)
-      if (verbose) {
-        console.info(`  - Uploaded to ${key}`)
-      }
-
-      // Update url and change status to available
-      const expiresAt = dayjs().add(7, 'day').toDate()
-      const url = await storage.getObjectSignedUrl(key)
-      await updateRequest(sequelize, id, {
-        status: BackupStatus.AVAILABLE,
-        expiresAt,
-        size: totalBytes,
-        url
-      })
-
-      // Send email to user
-      const to = { email: userEmail, name: userName }
-      const content = { url, projectName: projectData.projectName }
-      await mailClient.send(to, 'project-backup', content)
-      if (verbose) {
-        console.info(`  - Mail sent to ${to.email}`)
-      }
-
-      successCount++
-    } catch (e) {
-      await updateRequest(sequelize, id, {
-        status: BackupStatus.ERROR
-      })
-      console.error(`Error processing backup with id ${id}`, e)
-      console.error(`Sending backup error email to ${userEmail} with bcc to 'support@rfcx.org'`)
-
-      await mailClient.send(
-        { email: userEmail, name: userName },
-        'project-backup-failed',
-        { projectName: projectData.projectName },
-        'support@rfcx.org'
-      )
-
-      console.error(`Successfully sent error email to ${userEmail}`)
+    // Upload to S3
+    const file = await readFile(`./${zipName}`)
+    const key = `exports/${projectData.projectId}/${zipName}`
+    await storage.putObject(key, file)
+    await unlink(`./${zipName}`)
+    if (verbose) {
+      console.info(`  - Uploaded to ${key}`)
     }
+
+    const url = await storage.getObjectSignedUrl(key)
+
+    // Send email to user
+    const to = { email: userEmail, name: userName }
+    const content = { url, projectName: projectData.projectName }
+    await mailClient.send(to, 'project-backup', content)
+    if (verbose) {
+      console.info(`  - Mail sent to ${to.email}`)
+    }
+
+    successCount++
+  } catch (e) {
+    console.error(`Error processing backup with ${project.name}`, e)
+    console.error(`Sending backup error email to ${userEmail} with bcc to 'support@rfcx.org'`)
+
+    await mailClient.send(
+      { email: userEmail, name: userName },
+      'project-backup-failed',
+      { projectName: projectData.projectName },
+      'support@rfcx.org'
+    )
+    console.error(`Successfully sent error email to ${userEmail}`)
   }
 
   if (verbose) {
-    console.info(`Processed ${successCount}/${requests.length} backup requests successfully`)
+    console.info(`Processed backup requests successfully`)
   }
 }
 
