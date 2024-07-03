@@ -6,8 +6,8 @@ metadata:
 spec:
   # Daily at 04:56 UTC
   # schedule: '56 4 * * *'
-  # Every hour at minute 8 for testing purposes.
-  schedule: '8 * * * *'
+  # Every 5 minutes for testing purposes.
+  schedule: '*/5 * * * *'
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
   jobTemplate:
