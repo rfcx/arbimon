@@ -29,14 +29,14 @@ export const EXPORTS_MAPPER: Record<string, ExportConfig> = {
   rfm_classifications: { sql: RFM_CLASSIFICATIONS }
 }
 
-export const generateCsvs = async (
+export async function * generateCsvs (
   item: string,
   projectId: number,
   sequelize: Sequelize,
   storage: StorageClient,
   legacyStorage: StorageClient,
   verbose?: boolean
-): Promise<string[]> => {
+): AsyncGenerator<string, void, unknown> {
   // Get export config
   const config = EXPORTS_MAPPER[item]
   const { sql: query, signedUrls } = config
@@ -62,25 +62,24 @@ export const generateCsvs = async (
     let rowCount = 1 // headers as first row
     let fileCount = 1
     let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
-    const allCSVFiles = [fileName]
     for await (const records of allRecords) {
-      if (!allCSVFiles.includes(fileName)) {
-        allCSVFiles.push(fileName)
-      }
+      console.info('here ha 1')
       await convertToCsv(fileName, records)
       rowCount += records.length - 1
       if (rowCount >= BATCH_SIZE) {
         fileCount++
         totalRows += rowCount
         rowCount = 1
+        yield fileName
         fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
       }
     }
+    console.info('here ha')
+    yield fileName
 
     if (verbose === true) {
       console.info(`Fetched ${totalRows} records in ${fileCount} file(s) for ${item}`)
     }
-    return allCSVFiles
   }
 
   if (item === 'playlist_recordings') {
@@ -98,25 +97,22 @@ export const generateCsvs = async (
     let rowCount = 1 // headers as first row
     let fileCount = 1
     let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
-    const allCSVFiles = [fileName]
     for await (const records of allRecords) {
-      if (!allCSVFiles.includes(fileName)) {
-        allCSVFiles.push(fileName)
-      }
       await convertToCsv(fileName, records)
       rowCount += records.length - 1
       if (rowCount >= BATCH_SIZE) {
         fileCount++
         totalRows += rowCount
         rowCount = 1
+        yield fileName
         fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
       }
     }
+    yield fileName
 
     if (verbose === true) {
       console.info(`Fetched ${totalRows} records in ${fileCount} file(s) for ${item}`)
     }
-    return allCSVFiles
   }
 
   if (item === 'pattern_matching_rois') {
@@ -134,17 +130,48 @@ export const generateCsvs = async (
     let rowCount = 1 // headers as first row
     let fileCount = 1
     let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
-    const allCSVFiles = [fileName]
     for await (const records of allRecords) {
-      if (!allCSVFiles.includes(fileName)) {
-        allCSVFiles.push(fileName)
-      }
       await convertToCsv(fileName, records)
       rowCount += records.length - 1
       if (rowCount >= BATCH_SIZE) {
         fileCount++
         totalRows += rowCount
         rowCount = 1
+        yield fileName
+        fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
+      }
+    }
+    yield fileName
+
+    if (verbose === true) {
+      console.info(`Fetched ${totalRows} records in ${fileCount} file(s) for ${item}`)
+    }
+  }
+
+  if (!['recordings', 'playlist_recordings', 'pattern_matching_rois'].includes(item)) {
+    const recordsGenerator = fetchAllRecords(
+      item,
+      query,
+      sequelize,
+      { projectId },
+      storage,
+      legacyStorage,
+      signedUrls,
+      verbose
+    )
+
+    let totalRows = 1 // headers as first row
+    let rowCount = 1 // headers as first row
+    let fileCount = 1
+    let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
+    for await (const records of recordsGenerator) {
+      await convertToCsv(fileName, records)
+      rowCount += records.length - 1
+      if (rowCount >= BATCH_SIZE) {
+        fileCount++
+        totalRows += rowCount
+        rowCount = 1
+        yield fileName
         fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
       }
     }
@@ -152,43 +179,8 @@ export const generateCsvs = async (
     if (verbose === true) {
       console.info(`Fetched ${totalRows} records in ${fileCount} file(s) for ${item}`)
     }
-    return allCSVFiles
+    yield fileName
   }
-
-  const recordsGenerator = fetchAllRecords(
-    item,
-    query,
-    sequelize,
-    { projectId },
-    storage,
-    legacyStorage,
-    signedUrls,
-    verbose
-  )
-
-  let totalRows = 1 // headers as first row
-  let rowCount = 1 // headers as first row
-  let fileCount = 1
-  let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
-  const allCSVFiles = [fileName]
-  for await (const records of recordsGenerator) {
-    if (!allCSVFiles.includes(fileName)) {
-      allCSVFiles.push(fileName)
-    }
-    await convertToCsv(fileName, records)
-    rowCount += records.length - 1
-    if (rowCount >= BATCH_SIZE) {
-      fileCount++
-      totalRows += rowCount
-      rowCount = 1
-      fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
-    }
-  }
-
-  if (verbose === true) {
-    console.info(`Fetched ${totalRows} records in ${fileCount} file(s) for ${item}`)
-  }
-  return allCSVFiles
 }
 
 /**
