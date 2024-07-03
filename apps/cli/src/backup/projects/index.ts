@@ -165,5 +165,9 @@ const createExport = async (
   const formattedDate = dayjs().format('YYYY-MM-DD')
   const zipName = `${slug}_${formattedDate}_export.zip`
   const { totalBytes } = await createZip(zipName, allFilePaths)
+  // Remove csv files after zipped
+  for (const localPath of allFilePaths) {
+    await unlink(`./${localPath}`)
+  }
   return { zipName, totalBytes }
 }
