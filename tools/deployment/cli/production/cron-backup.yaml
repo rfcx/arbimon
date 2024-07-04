@@ -8,6 +8,7 @@ spec:
   # schedule: '56 4 * * *'
   # Every 5 minutes for testing purposes.
   schedule: '*/5 * * * *'
+  concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
   jobTemplate:
