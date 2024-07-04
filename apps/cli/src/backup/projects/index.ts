@@ -10,7 +10,7 @@ import { generateCsvs } from '@/backup/projects/export'
 import { type ProjectBackupRequest, getPendingRequests, updateRequest } from '@/backup/projects/requests'
 import { createZip } from '~/files'
 import type { MailClient } from '~/mail'
-import { getProjectFromName } from './location-project'
+import { getProjectFromSlug } from './location-project'
 import { getUserFromEmail } from './user-profile'
 
 export const EXPORT_ITEMS = {
@@ -60,19 +60,23 @@ export const backupProjects = async (
 ): Promise<void> => {
   let successCount = 0
 
-  const projectName = process.argv[2]
-  if (!projectName) {
-    throw Error('Missing project name')
+  const projectSlug = process.argv[2]
+  if (!projectSlug) {
+    throw Error('Missing project slug')
   }
+  console.info('Receive Project slug: ', projectSlug)
   const email = process.argv[3]
   if (!email) {
     throw Error('Missing user email')
   }
+  console.info('Receive email: ', email)
 
-  const project = await getProjectFromName(sequelize, projectName)
+  console.info('Fetching project: ', projectSlug)
+  const project = await getProjectFromSlug(sequelize, projectSlug)
   if (!project) {
     throw Error('Project not found')
   }
+  console.info('Fetching email: ', email)
   const user = await getUserFromEmail(sequelize, email)
   if (!user) {
     throw Error('User not found')
