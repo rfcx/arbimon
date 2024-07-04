@@ -33,6 +33,7 @@ export const EXPORTS_MAPPER: Record<string, ExportConfig> = {
 export const generateCsvs = async (
   item: string,
   projectId: number,
+  minimum: boolean,
   sequelize: Sequelize,
   storage: StorageClient,
   legacyStorage: StorageClient,
@@ -123,7 +124,7 @@ export const generateCsvs = async (
     return allCSVFiles
   }
 
-  if (item === 'pattern_matching_rois') {
+  if (item === 'pattern_matching_rois' && !minimum) {
     const allRecords = fetchAllRecordsUsingSubquery<{ pattern_matching_id: number }>(
       'pattern_matchings',
       item,
@@ -159,40 +160,43 @@ export const generateCsvs = async (
     return allCSVFiles
   }
 
-  const recordsGenerator = fetchAllRecords(
-    item,
-    query,
-    sequelize,
-    { projectId },
-    storage,
-    legacyStorage,
-    signedUrls,
-    verbose
-  )
+  if (!['recordings', 'playlist_recordings', 'pattern_matching_rois'].includes(item)) {
+    const recordsGenerator = fetchAllRecords(
+      item,
+      query,
+      sequelize,
+      { projectId },
+      storage,
+      legacyStorage,
+      signedUrls,
+      verbose
+    )
 
-  let totalRows = 1 // headers as first row
-  let rowCount = 1 // headers as first row
-  let fileCount = 1
-  let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
-  const allCSVFiles = [fileName]
-  for await (const records of recordsGenerator) {
-    if (!allCSVFiles.includes(fileName)) {
-      allCSVFiles.push(fileName)
+    let totalRows = 1 // headers as first row
+    let rowCount = 1 // headers as first row
+    let fileCount = 1
+    let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
+    const allCSVFiles = [fileName]
+    for await (const records of recordsGenerator) {
+      if (!allCSVFiles.includes(fileName)) {
+        allCSVFiles.push(fileName)
+      }
+      await convertToCsv(fileName, records)
+      rowCount += records.length - 1
+      if (rowCount >= BATCH_SIZE) {
+        fileCount++
+        totalRows += rowCount
+        rowCount = 1
+        fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
+      }
     }
-    await convertToCsv(fileName, records)
-    rowCount += records.length - 1
-    if (rowCount >= BATCH_SIZE) {
-      fileCount++
-      totalRows += rowCount
-      rowCount = 1
-      fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
-    }
-  }
 
-  if (verbose === true) {
-    console.info(`Fetched ${totalRows} records in ${fileCount} file(s) for ${item}`)
+    if (verbose === true) {
+      console.info(`Fetched ${totalRows} records in ${fileCount} file(s) for ${item}`)
+    }
+    return allCSVFiles
   }
-  return allCSVFiles
+  return []
 }
 
 /**

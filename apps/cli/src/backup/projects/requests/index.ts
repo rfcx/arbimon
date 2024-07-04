@@ -13,6 +13,7 @@ export interface ProjectBackupRequest {
   projectName: string
   userEmail: string
   userName: string
+  minimum: boolean
 }
 
 export const getPendingRequests = async (
@@ -27,7 +28,8 @@ export const getPendingRequests = async (
       p.id_arbimon as "arbimonProjectId",
       p.name as "projectName",
       u.email as "userEmail",
-      concat(u.first_name, ' ', u.last_name) "userName"
+      concat(u.first_name, ' ', u.last_name) "userName",
+      b.minimum
     from backup b 
     join location_project p on b.entity_id = p.id
     left join user_profile u on b.requested_by = u.id
