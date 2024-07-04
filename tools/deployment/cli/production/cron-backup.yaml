@@ -19,6 +19,11 @@ spec:
             command: ["node", "--experimental-specifier-resolution=node", "apps/cli/lib/backup/process-backup-requests.js"]
             image: 887044485231.dkr.ecr.eu-west-1.amazonaws.com/biodiversity-cli:latest
             imagePullPolicy: IfNotPresent
+            resources:
+              requests:
+                ephemeral-storage: "40Gi"
+              limits:
+                ephemeral-storage: "50Gi"
             envFrom:
               - secretRef:
                   name: biodiversity-cli-secrets

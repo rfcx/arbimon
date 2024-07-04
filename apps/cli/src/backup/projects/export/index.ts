@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { chunk } from 'lodash-es'
 import { type Sequelize, QueryTypes } from 'sequelize'
 
 import type { StorageClient } from '@rfcx-bio/node-common/storage'
@@ -6,7 +7,7 @@ import { toCsv } from '@rfcx-bio/utils/file'
 
 import { mapPathToSignedUrl } from '@/export/_common/map-path-to-signed-url'
 import { retry } from '~/retry'
-import { BATCH_SIZE, CSV_DATE_FORMAT, LIMIT_SIZE } from '../config'
+import { BATCH_SIZE, CSV_DATE_FORMAT, LIMIT_SIZE, RECORDING_BATCH_SIZE } from '../config'
 import { PATTERN_MATCHING_ROIS, PATTERN_MATCHINGS, PLAYLIST_RECORDINGS, PLAYLISTS, RECORDING_VALIDATIONS, RECORDINGS, RFM_CLASSIFICATIONS, RFM_MODELS, SITES, SOUNDSCAPES, SPECIES, TEMPLATES } from './queries'
 
 interface ExportConfig {
@@ -64,16 +65,19 @@ export const generateCsvs = async (
     let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
     const allCSVFiles = [fileName]
     for await (const records of allRecords) {
-      if (!allCSVFiles.includes(fileName)) {
-        allCSVFiles.push(fileName)
-      }
-      await convertToCsv(fileName, records)
-      rowCount += records.length - 1
-      if (rowCount >= BATCH_SIZE) {
-        fileCount++
-        totalRows += rowCount
-        rowCount = 1
-        fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
+      const recordChunked = chunk(records, RECORDING_BATCH_SIZE)
+      for (const r of recordChunked) {
+        if (!allCSVFiles.includes(fileName)) {
+          allCSVFiles.push(fileName)
+        }
+        await convertToCsv(fileName, r)
+        rowCount += r.length - 1
+        if (rowCount >= RECORDING_BATCH_SIZE) {
+          fileCount++
+          totalRows += rowCount
+          rowCount = 1
+          fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
+        }
       }
     }
 
