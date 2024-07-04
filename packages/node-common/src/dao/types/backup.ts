@@ -17,5 +17,5 @@ export interface Backup {
   status: BackupStatus
   url?: string
   size?: number // number of MBs
-  minimum: boolean
+  minimum?: boolean
 }
