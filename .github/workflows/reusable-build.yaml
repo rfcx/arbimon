@@ -80,7 +80,6 @@ jobs:
         # v4 (4.0.0) @ 7 May 2024 https://github.com/pnpm/action-setup/tags
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2
         with:
-          version: 9
           run_install: |
             - recursive: true
               args: [--frozen-lockfile]
