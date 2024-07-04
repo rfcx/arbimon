@@ -141,12 +141,9 @@ export const PATTERN_MATCHING_ROIS = `
   select
     pattern_matching_roi_id,
     pmr.pattern_matching_id,
-    pm.name pattern_matching_name,
     recording_id,
     pmr.species_id,
-    s.scientific_name,
     pmr.songtype_id,
-    st.songtype,
     x1,
     y1,
     x2,
@@ -156,8 +153,6 @@ export const PATTERN_MATCHING_ROIS = `
   from pattern_matching_rois pmr
   join pattern_matchings pm on pmr.pattern_matching_id = pm.pattern_matching_id
   join jobs j on pm.job_id = j.job_id
-  join species s on pmr.species_id = s.species_id 
-  join songtypes st on pmr.songtype_id = st.songtype_id
   where pm.pattern_matching_id = $patternMatchingId and pm.deleted = 0 and j.state = 'completed'
   limit $limit
   offset $offset
@@ -217,16 +212,12 @@ export const RFM_CLASSIFICATIONS = `
     m.name as model_name,
     cr.recording_id,
     cr.species_id,
-    sp.scientific_name as species_name,
     cr.songtype_id,
-    st.songtype,
     cr.present
   from classification_results cr
   join job_params_classification jpc on cr.job_id = jpc.job_id 
   join jobs j on jpc.job_id = j.job_id
   join models m on jpc.model_id = m.model_id 
-  join songtypes st on cr.songtype_id = st.songtype_id
-  join species sp on cr.species_id = sp.species_id
   where
     m.project_id = $projectId and
     m.deleted = 0 and
