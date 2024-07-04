@@ -137,13 +137,13 @@ const createExport = async (
   projectData: Omit<ProjectBackupRequest, 'id' | 'userEmail' | 'userName'>,
   verbose?: boolean
 ): Promise<{ zipName: string, totalBytes: number }> => {
-  const { projectId, arbimonProjectId, slug } = projectData
+  const { projectId, arbimonProjectId, slug, minimum } = projectData
   const allFilePaths: string[] = []
 
   // Create csv files
   // Export data from bio database
   for (const item of EXPORT_ITEMS.BIO) {
-    const filePaths = await generateCsvs(item, projectId, sequelize, storage, legacyStorage, verbose)
+    const filePaths = await generateCsvs(item, projectId, minimum, sequelize, storage, legacyStorage, verbose)
     allFilePaths.push(...filePaths)
   }
 
@@ -152,6 +152,7 @@ const createExport = async (
     const filePaths = await generateCsvs(
       item,
       arbimonProjectId,
+      minimum,
       arbimonSequelize,
       storage,
       legacyStorage,
