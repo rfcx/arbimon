@@ -1,5 +1,3 @@
-import archiver from 'archiver'
-import fs from 'node:fs'
 import { readFile, unlink } from 'node:fs/promises'
 import type { Sequelize } from 'sequelize'
 
@@ -10,6 +8,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { VERBOSE } from '@/backup/projects/config'
 import { generateCsvs } from '@/backup/projects/export'
 import { type ProjectBackupRequest, getPendingRequests, updateRequest } from '@/backup/projects/requests'
+import { createZip } from '~/files'
 import type { MailClient } from '~/mail'
 
 export const EXPORT_ITEMS = {
@@ -139,30 +138,18 @@ const createExport = async (
   verbose?: boolean
 ): Promise<{ zipName: string, totalBytes: number }> => {
   const { projectId, arbimonProjectId, slug } = projectData
+  const allFilePaths: string[] = []
 
-  const formattedDate = dayjs().format('YYYY-MM-DD')
-  const zipName = `${slug}_${formattedDate}_export.zip`
-  let totalBytes = 0
-  const outputZip = fs.createWriteStream(zipName)
-  const archive = archiver('zip', {
-    zlib: { level: 9 }
-  })
-
-  archive.pipe(outputZip)
   // Create csv files
   // Export data from bio database
   for (const item of EXPORT_ITEMS.BIO) {
-    const filePaths = generateCsvs(item, projectId, sequelize, storage, legacyStorage, verbose)
-    for await (const path of filePaths) {
-      const content = fs.readFileSync(path)
-      archive.append(content, { name: path })
-      await unlink(`./${path}`)
-    }
+    const filePaths = await generateCsvs(item, projectId, sequelize, storage, legacyStorage, verbose)
+    allFilePaths.push(...filePaths)
   }
 
   // Export data from arbimon database
   for (const item of EXPORT_ITEMS.ARBIMON) {
-    const filePaths = generateCsvs(
+    const filePaths = await generateCsvs(
       item,
       arbimonProjectId,
       arbimonSequelize,
@@ -170,14 +157,17 @@ const createExport = async (
       legacyStorage,
       verbose
     )
-    for await (const path of filePaths) {
-      const content = fs.readFileSync(path)
-      archive.append(content, { name: path })
-      await unlink(`./${path}`)
-    }
+    allFilePaths.push(...filePaths)
   }
 
-  await archive.finalize()
-  totalBytes = archive.pointer()
+  // Create zip with csv files
+  // TODO: create file in temporary folder and return filename and path
+  const formattedDate = dayjs().format('YYYY-MM-DD')
+  const zipName = `${slug}_${formattedDate}_export.zip`
+  const { totalBytes } = await createZip(zipName, allFilePaths)
+  // Remove csv files after zipped
+  for (const localPath of allFilePaths) {
+    await unlink(`./${localPath}`)
+  }
   return { zipName, totalBytes }
 }
