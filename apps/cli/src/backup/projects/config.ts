@@ -1,4 +1,4 @@
-export const BATCH_LIMIT = 1000
+export const BATCH_LIMIT = 1
 export const VERBOSE = true
 export const BATCH_SIZE = 200_000
 export const RECORDING_BATCH_SIZE = 10_000

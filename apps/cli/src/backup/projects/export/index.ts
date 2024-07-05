@@ -1,6 +1,8 @@
 import fs from 'fs'
 import { chunk } from 'lodash-es'
 import { type Sequelize, QueryTypes } from 'sequelize'
+import { pipeline, Readable, Transform } from 'stream'
+import { promisify } from 'util'
 
 import type { StorageClient } from '@rfcx-bio/node-common/storage'
 import { toCsv } from '@rfcx-bio/utils/file'
@@ -385,12 +387,30 @@ const fetchData = async (
  * @returns The { updatedRowCount: number } object to know how many
  * @throws Any error that happened during the zip.
  */
+const pipelineAsync = promisify(pipeline)
 const convertToCsv = async (filePath: string, responses: object[]): Promise<void> => {
-  const content = await toCsv(responses !== undefined ? responses : [], { dateNF: CSV_DATE_FORMAT })
+  const responseStream = Readable.from(responses)
+  const csvTransform = new Transform({
+    objectMode: true,
+    async transform (chunk, encoding, callback) {
+      const csvChunk = await toCsv([chunk], { dateNF: CSV_DATE_FORMAT })
+      callback(null, csvChunk.substring(csvChunk.indexOf('\n') + 1))
+    }
+  })
+
+  let writeStream
   if (fs.existsSync(filePath)) {
-    const onlyValues = content.substring(content.indexOf('\n') + 1) // remove headers
-    fs.appendFileSync(filePath, onlyValues, 'utf-8')
+    writeStream = fs.createWriteStream(filePath, { flags: 'a' })
   } else {
-    fs.writeFileSync(filePath, content, 'utf-8')
+    // Write headers for the first chunk
+    const csvHeader = (await toCsv([responses[0]], { dateNF: CSV_DATE_FORMAT })).split('\n')[0] + '\n'
+    writeStream = fs.createWriteStream(filePath, { flags: 'w' })
+    writeStream.write(csvHeader)
+  }
+
+  try {
+    await pipelineAsync(responseStream, csvTransform, writeStream)
+  } catch (err) {
+    console.error('Pipeline failed:', err)
   }
 }
