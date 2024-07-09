@@ -393,7 +393,7 @@ const convertToCsv = async (filePath: string, responses: object[]): Promise<void
   const csvTransform = new Transform({
     objectMode: true,
     async transform (chunk, encoding, callback) {
-      const csvChunk = await toCsv([chunk], { dateNF: CSV_DATE_FORMAT })
+      const csvChunk = await toCsv(chunk ? [chunk]: [], { dateNF: CSV_DATE_FORMAT })
       callback(null, csvChunk.substring(csvChunk.indexOf('\n') + 1))
     }
   })
@@ -403,7 +403,7 @@ const convertToCsv = async (filePath: string, responses: object[]): Promise<void
     writeStream = fs.createWriteStream(filePath, { flags: 'a' })
   } else {
     // Write headers for the first chunk
-    const csvHeader = (await toCsv([responses[0]], { dateNF: CSV_DATE_FORMAT })).split('\n')[0] + '\n'
+    const csvHeader = (await toCsv(responses[0] ? [responses[0]]: [], { dateNF: CSV_DATE_FORMAT })).split('\n')[0] + '\n'
     writeStream = fs.createWriteStream(filePath, { flags: 'w' })
     writeStream.write(csvHeader)
   }
