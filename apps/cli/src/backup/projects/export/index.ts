@@ -404,7 +404,7 @@ const convertToCsv = async (filePath: string, responses: object[]): Promise<void
     writeStream = fs.createWriteStream(filePath, { flags: 'a' })
   } else {
     // Write headers for the first chunk
-    const csvHeader = (await toCsv([responses[0]], { dateNF: CSV_DATE_FORMAT })).split('\n')[0] + '\n'
+    const csvHeader = (await toCsv(responses.at(0) ? [responses[0]] : [], { dateNF: CSV_DATE_FORMAT })).split('\n')[0] + '\n'
     writeStream = fs.createWriteStream(filePath, { flags: 'w' })
     writeStream.write(csvHeader)
   }
