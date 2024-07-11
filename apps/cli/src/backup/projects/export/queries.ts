@@ -12,7 +12,10 @@ export const SITES = `
   from sites
   where project_id = $projectId and deleted_at is null
   order by site_id asc
+  limit $limit
+  offset $offset
 `
+
 export const SPECIES = `
   select
     s.species_id,
@@ -22,11 +25,13 @@ export const SPECIES = `
     st.songtype_id,
     st.songtype 
   from project_classes pc 
-    join species s on s.species_id = pc.species_id 
-    join songtypes st on pc.songtype_id = st.songtype_id 
-    join species_families sf on s.family_id = sf.family_id 
-    join species_taxons t on s.taxon_id = t.taxon_id 
+  join species s on s.species_id = pc.species_id 
+  join songtypes st on pc.songtype_id = st.songtype_id 
+  join species_families sf on s.family_id = sf.family_id 
+  join species_taxons t on s.taxon_id = t.taxon_id 
   where project_id = $projectId
+  limit $limit
+  offset $offset
 `
 
 export const RECORDINGS = `
@@ -45,8 +50,9 @@ export const RECORDINGS = `
     meta,
     uri path
   from recordings
-  where site_id in (select site_id from sites where project_id = $projectId)
-  order by recording_id asc
+  where recordings.site_id = $siteId
+  limit $limit
+  offset $offset
 `
 
 export const PLAYLISTS = `
@@ -59,6 +65,8 @@ export const PLAYLISTS = `
   from playlists
   where project_id = $projectId
   order by playlist_id asc
+  limit $limit
+  offset $offset
 `
 
 export const PLAYLIST_RECORDINGS = `
@@ -67,9 +75,11 @@ export const PLAYLIST_RECORDINGS = `
     p.name playlist_name,
     pr.recording_id
   from playlist_recordings pr
-    join playlists p on pr.playlist_id = p.playlist_id
-    join recordings r on pr.recording_id = r.recording_id
-  where pr.playlist_id in (select playlist_id from playlists where project_id = $projectId)
+  join playlists p on pr.playlist_id = p.playlist_id
+  join recordings r on pr.recording_id = r.recording_id
+  where p.playlist_id = $playlistId
+  limit $limit
+  offset $offset
 `
 
 export const TEMPLATES = `
@@ -78,10 +88,12 @@ export const TEMPLATES = `
     t.x1, t.y1, t.x2, t.y2, t.date_created, p.name source_project_name,
     t.uri path
   from templates t 
-    left join projects p on t.source_project_id = p.project_id
-    join species s on t.species_id = s.species_id 
-    join songtypes st on t.songtype_id = st.songtype_id 
+  left join projects p on t.source_project_id = p.project_id
+  join species s on t.species_id = s.species_id 
+  join songtypes st on t.songtype_id = st.songtype_id 
   where t.deleted = 0 and p.deleted_at is null and t.project_id = $projectId
+  limit $limit
+  offset $offset
 `
 
 export const RECORDING_VALIDATIONS = `
@@ -99,9 +111,11 @@ export const RECORDING_VALIDATIONS = `
     rv.created_at,
     rv.updated_at
   from recording_validations rv
-    join species s on rv.species_id = s.species_id 
-    join songtypes st on rv.songtype_id = st.songtype_id
+  join species s on rv.species_id = s.species_id 
+  join songtypes st on rv.songtype_id = st.songtype_id
   where project_id = $projectId
+  limit $limit
+  offset $offset
 `
 
 export const PATTERN_MATCHINGS = `
@@ -115,22 +129,21 @@ export const PATTERN_MATCHINGS = `
     t.name template_name,
     parameters
   from pattern_matchings pm
-    join jobs j on pm.job_id = j.job_id
-    join playlists p on pm.playlist_id = p.playlist_id
-    join templates t on pm.template_id = t.template_id
+  join jobs j on pm.job_id = j.job_id
+  join playlists p on pm.playlist_id = p.playlist_id
+  join templates t on pm.template_id = t.template_id
   where pm.project_id = $projectId and pm.deleted = 0 and j.state = 'completed'
+  limit $limit
+  offset $offset
 `
 
 export const PATTERN_MATCHING_ROIS = `
   select
     pattern_matching_roi_id,
     pmr.pattern_matching_id,
-    pm.name pattern_matching_name,
     recording_id,
     pmr.species_id,
-    s.scientific_name,
     pmr.songtype_id,
-    st.songtype,
     x1,
     y1,
     x2,
@@ -138,11 +151,11 @@ export const PATTERN_MATCHING_ROIS = `
     score,
     validated
   from pattern_matching_rois pmr
-    join pattern_matchings pm on pmr.pattern_matching_id = pm.pattern_matching_id
-    join jobs j on pm.job_id = j.job_id
-    join species s on pmr.species_id = s.species_id 
-    join songtypes st on pmr.songtype_id = st.songtype_id
-  where pm.project_id = $projectId and pm.deleted = 0 and j.state = 'completed'
+  join pattern_matchings pm on pmr.pattern_matching_id = pm.pattern_matching_id
+  join jobs j on pm.job_id = j.job_id
+  where pm.pattern_matching_id = $patternMatchingId and pm.deleted = 0 and j.state = 'completed'
+  limit $limit
+  offset $offset
 `
 
 export const SOUNDSCAPES = `
@@ -164,9 +177,11 @@ export const SOUNDSCAPES = `
     max_f max_frequency,
     s.uri path
   from soundscapes s 
-    join soundscape_aggregation_types sat on s.soundscape_aggregation_type_id = sat.soundscape_aggregation_type_id
-    join playlists p on s.playlist_id = p.playlist_id
+  join soundscape_aggregation_types sat on s.soundscape_aggregation_type_id = sat.soundscape_aggregation_type_id
+  join playlists p on s.playlist_id = p.playlist_id
   where s.project_id = $projectId
+  limit $limit
+  offset $offset
 `
 
 export const RFM_MODELS = `
@@ -184,6 +199,8 @@ export const RFM_MODELS = `
   inner join species sp on mc.species_id = sp.species_id
   inner join songtypes so on mc.songtype_id = so.songtype_id
   where model_type_id = 4 and project_id = $projectId and deleted = 0
+  limit $limit
+  offset $offset
 `
 
 export const RFM_CLASSIFICATIONS = `
@@ -195,20 +212,18 @@ export const RFM_CLASSIFICATIONS = `
     m.name as model_name,
     cr.recording_id,
     cr.species_id,
-    sp.scientific_name as species_name,
     cr.songtype_id,
-    st.songtype,
     cr.present
   from classification_results cr
   join job_params_classification jpc on cr.job_id = jpc.job_id 
   join jobs j on jpc.job_id = j.job_id
   join models m on jpc.model_id = m.model_id 
-  join songtypes st on cr.songtype_id = st.songtype_id
-  join species sp on cr.species_id = sp.species_id
   where
     m.project_id = $projectId and
     m.deleted = 0 and
     m.model_type_id = 4 and
     j.job_type_id = 2 and
     j.completed = 1
+  limit $limit
+  offset $offset
 `

@@ -19,7 +19,7 @@ const adminId = 9003
 const projectId1 = 2791456
 const projectId2 = 2791457
 
-const BACKUP_GET_PROPS = ['requestedAt', 'url', 'status', 'expiresAt']
+const BACKUP_GET_PROPS = ['requestedAt', 'url', 'status', 'expiresAt', 'minimum']
 
 beforeAll(async () => {
     const project1 = makeProject(projectId1, 'Arctic foxes in Iceland')
@@ -93,6 +93,7 @@ describe(`POST ${backupsRoute}`, async () => {
         expect(result.backup.entity).toBe('project')
         expect(result.backup.entityId).toBe(projectId2)
         expect(result.backup.requestedBy).toBe(ownerId)
+        expect(result.backup.minimum).toBe(true)
     })
 
     test('backup cannot be requested within 7 days after the last request', async () => {
