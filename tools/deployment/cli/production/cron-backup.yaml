@@ -24,7 +24,7 @@ spec:
               requests:
                 memory: '4000Mi'
                 cpu: '1000m'
-                ephemeral-storage: '40Gi'
+                ephemeral-storage: '7Gi'
             envFrom:
               - secretRef:
                   name: biodiversity-cli-secrets
