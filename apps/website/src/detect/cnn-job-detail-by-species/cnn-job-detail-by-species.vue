@@ -155,6 +155,7 @@ const bestDetectionsQueryParams = computed<GetBestDetectionsQueryParams>(() => {
     byDate: selectedGrouping.value === 'topScorePerSitePerDay',
     reviewStatus: detectionsResultFilterBySpeciesStore.filter.validationStatuses,
     sites: detectionsResultFilterBySpeciesStore.filter.siteIds,
+    classifications: [speciesSlug.value],
     limit: pageSizeLimit.value,
     offset: offset.value
   }
@@ -163,8 +164,9 @@ const { isLoading: isLoadingBestDetections, isError: isErrorBestDetections, data
 
 const bestDetectionsSummaryQueryParams = computed<GetBestDetectionsSummaryQueryParams>(() => {
   return {
-    nPerStream: numberOfBestScores.value,
+    nPerChunk: numberOfBestScores.value,
     byDate: selectedGrouping.value === 'topScorePerSitePerDay',
+    classifications: [speciesSlug.value],
     reviewStatus: detectionsResultFilterBySpeciesStore.filter.validationStatuses,
     sites: detectionsResultFilterBySpeciesStore.filter.siteIds
   }

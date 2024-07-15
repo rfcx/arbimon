@@ -28,9 +28,10 @@ export const getBestDetectionsSummary = async (token: string, jobId: number, par
     end: params?.end,
     // @ts-expect-error these are off-spec array parsing
     review_statuses: convertReviewStatusQueryParameter(params?.['reviewStatus[]']),
-    n_per_stream: params?.nPerStream !== undefined && !Number.isNaN(Number(params.nPerStream)) ? Number(params.nPerStream) : undefined,
+    n_per_chunk: params?.nPerChunk !== undefined && !Number.isNaN(Number(params.nPerChunk)) ? Number(params.nPerChunk) : undefined,
     // @ts-expect-error type checks are important because there's no type conversions
-    by_date: params?.byDate !== undefined ? params.byDate === 'true' : undefined
+    by_date: params?.byDate !== undefined ? params.byDate === 'true' : undefined,
+    classifications: params?.classifications
   }
 
   const response = await coreGetBestDetectionsSummary(token, jobId, coreParams)
