@@ -257,7 +257,6 @@ export const getBestDetections = vi.fn(async (): Promise<WithTotalCount<CoreBest
         image: null
       },
       bestDetection: {
-        daily_ranking: 1,
         stream_ranking: 1
       }
     }
