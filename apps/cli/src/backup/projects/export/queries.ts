@@ -156,7 +156,6 @@ where pm.project_id = $projectId and validated is not null
   offset $offset
 `
 
-
 export const SOUNDSCAPES = `
   select
     soundscape_id,
