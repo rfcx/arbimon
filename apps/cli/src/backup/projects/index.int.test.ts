@@ -30,7 +30,8 @@ describe('Projects backup', async () => {
       entity: 'project' as BackupType,
       status: BackupStatus.REQUESTED,
       requestedBy: user.id,
-      requestedAt: new Date()
+      requestedAt: new Date(),
+      minimum: true
     }
     await Backup.create(backup)
     const date = dayjs().format('YYYY-MM-DD')
@@ -83,8 +84,7 @@ describe('Projects backup', async () => {
       entity: 'project' as BackupType,
       status: BackupStatus.REQUESTED,
       requestedBy: user.id,
-      requestedAt: new Date(),
-      minimum: false
+      requestedAt: new Date()
     }
     await Backup.create(backup)
     const date = dayjs().format('YYYY-MM-DD')

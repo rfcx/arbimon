@@ -48,7 +48,7 @@ export const BackupModel = defineWithDefaultsAutoPk<Backup>(
         minimum: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
-            defaultValue: true
+            defaultValue: false
         }
     },
     {

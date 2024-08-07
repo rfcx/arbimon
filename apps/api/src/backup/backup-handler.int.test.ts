@@ -93,7 +93,7 @@ describe(`POST ${backupsRoute}`, async () => {
         expect(result.backup.entity).toBe('project')
         expect(result.backup.entityId).toBe(projectId2)
         expect(result.backup.requestedBy).toBe(ownerId)
-        expect(result.backup.minimum).toBe(true)
+        expect(result.backup.minimum).toBe(false)
     })
 
     test('backup cannot be requested within 7 days after the last request', async () => {
