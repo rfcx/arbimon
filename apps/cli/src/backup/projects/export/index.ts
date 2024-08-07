@@ -127,11 +127,11 @@ export const generateCsvs = async (
   }
 
   if (item === 'pattern_matching_rois' && !minimum) {
-    const allRecords = fetchAllRecordsUsingSubquery<{ pattern_matching_id: number }>(
+    const allRecords = fetchAllRecordsUsingSubquery<{ project_id: number }>(
       'pattern_matchings',
       item,
       { projectId },
-      (t) => ({ patternMatchingId: t.pattern_matching_id }),
+      (t) => ({ projectId: t.project_id }),
       sequelize,
       storage,
       legacyStorage,
