@@ -151,7 +151,7 @@ select
   validated
 from pattern_matching_rois pmr 
 join pattern_matchings pm on pmr.pattern_matching_id = pm.pattern_matching_id
-where pm.project_id = $projectId and validated is not null
+where pm.project_id = $projectId and pm.deleted = 0 and validated is not null
   limit $limit
   offset $offset
 `
