@@ -138,20 +138,20 @@ export const PATTERN_MATCHINGS = `
 `
 
 export const PATTERN_MATCHING_ROIS = `
-select 
-  pmr.pattern_matching_id, 
-  pmr.recording_id, 
-  pmr.species_id, 
-  pmr.songtype_id, 
-  x1, 
-  x2, 
-  y1, 
-  y2, 
-  score, 
-  validated
-from pattern_matching_rois pmr 
-join pattern_matchings pm on pmr.pattern_matching_id = pm.pattern_matching_id
-where pm.project_id = $projectId and pm.deleted = 0 and validated is not null
+  select
+    pmr.pattern_matching_id,
+    pmr.recording_id,
+    pmr.species_id,
+    pmr.songtype_id,
+    x1,
+    x2,
+    y1,
+    y2,
+    score,
+    validated
+  from pattern_matching_rois pmr
+  join pattern_matchings pm on pmr.pattern_matching_id = pm.pattern_matching_id
+  where pm.pattern_matching_id = $patternMatchingId and pm.deleted = 0 and validated is not null
   limit $limit
   offset $offset
 `
