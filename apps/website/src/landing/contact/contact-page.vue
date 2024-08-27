@@ -34,11 +34,15 @@
         </div>
         <div class="basis-3/5 w-full">
           <form
-            action="https://webto.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8"
+            action="https://api.web3forms.com/submit"
             method="POST"
             class="space-y-8 p-10 dark:bg-echo rounded-l-2xl bg-gradient-to-br from-bg-moss to-bg-transparent"
-            @submit.prevent="handleSubmit"
           >
+            <input
+              type="hidden"
+              name="access_key"
+              value="6b662a35-0da1-4d47-b669-4375c564cc93"
+            >
             <div v-if="isSubmitted">
               <div
                 class="flex text-chirp"
@@ -153,7 +157,7 @@
               <select
                 id="inquiry_type"
                 v-model="inquiryType"
-                name="00NEZ000000OYOW"
+                name="Inquiry Type"
                 class="w-full p-2 border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
                 required
               >
@@ -305,25 +309,8 @@
               >
               <input
                 type="hidden"
-                name="orgid"
-                value="00D36000000uBYX"
-              >
-              <input
-                type="hidden"
-                name="retURL"
+                name="redirect"
                 :value="returnUrl"
-              >
-              <input
-                v-if="isTestForm"
-                type="hidden"
-                name="debug"
-                value="1"
-              >
-              <input
-                v-if="isTestForm"
-                type="hidden"
-                name="debugEmail"
-                value="bourhan@rfcx.org"
               >
               <button
                 type="submit"
@@ -352,7 +339,6 @@
   <footer-contact />
 </template>
 <script setup lang="ts">
-import axios from 'axios'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -367,7 +353,6 @@ const productName = ref('Companion app')
 const message = ref('')
 const url = ref('')
 
-const isTestForm = import.meta.env.DEV
 const returnUrl = (typeof window !== 'undefined' ? window.location.origin : 'https://arbimon.org') + '/contact?submitted=true'
 const isSubmitted = route.query.submitted === 'true'
 
@@ -388,19 +373,5 @@ const description = computed(() => {
 })
 
 const isError = ref(false)
-
-const handleSubmit = async (event: Event) => {
-  isError.value = false
-  try {
-    await axios.post((event.target as HTMLFormElement).action, new FormData(event.target as HTMLFormElement), {
-      headers: {
-        Accept: 'application/json'
-      }
-    })
-    window.location.href = returnUrl
-  } catch (error) {
-    isError.value = true
-  }
-}
 
 </script>
