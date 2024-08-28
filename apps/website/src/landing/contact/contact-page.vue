@@ -21,13 +21,13 @@
                 Phone
               </h3>
               <p class="mb-4">
-                +1 (415) 792-9472
+                +1 (325) 666-3050
               </p>
               <h3 class="uppercase mb-1 font-medium">
                 Address
               </h3>
               <p class="mb-4">
-                1708 Spring Green Blvd, Ste 120 #120,<br> Katy, TX 77494, USA
+                77 Van Ness Avenue<br> Suite 101-1717<br> San Francisco CA, 94102
               </p>
             </div>
           </div>
