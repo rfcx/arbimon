@@ -5,7 +5,7 @@
     >
       <input
         type="radio"
-        class="rounded"
+        class="rounded text-frequency"
         :checked="isSelectedAllTaxons"
         @click="selectAllTaxon()"
       >
