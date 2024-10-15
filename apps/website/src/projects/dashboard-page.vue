@@ -1,5 +1,8 @@
 <template>
   <div class="default-scroll-start smooth">
+    <BannerDisplay
+      :extra-class="`ml-6 fixed z-20`"
+    />
     <div class="bg-gray-50 dark:bg-pitch grid px-4 pl-18">
       <section
         class="grid gap-y-20 mx-auto py-20 w-full max-w-screen-xl"
@@ -108,6 +111,7 @@ import { computed, inject, onMounted, ref, watch } from 'vue'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
+import BannerDisplay from '@/projects/components/banner-display.vue'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
