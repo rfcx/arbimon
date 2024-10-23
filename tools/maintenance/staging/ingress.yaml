@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: 'http'
+  name: arbimon-maintenance-ingress
+  namespace: staging
+  labels:
+    app: arbimon-maintenance
+spec:
+  rules:
+  - host: staging.arbimon.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-maintenance-service
+          servicePort: 80
