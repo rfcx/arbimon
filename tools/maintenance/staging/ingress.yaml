@@ -9,15 +9,7 @@ metadata:
     app: arbimon-maintenance
 spec:
   rules:
-  - host: arbimon.rfcx.org
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          serviceName: arbimon-maintenance-service
-          servicePort: 80
-  - host: bio.rfcx.org
+  - host: staging.arbimon.org
     http:
       paths:
       - path: /
