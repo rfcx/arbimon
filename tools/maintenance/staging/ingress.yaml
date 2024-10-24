@@ -17,8 +17,3 @@ spec:
         backend:
           serviceName: arbimon-maintenance-service
           servicePort: 80
-      - path: /.*
-        pathType: Prefix
-        backend:
-          serviceName: arbimon-maintenance-service
-          servicePort: 80
