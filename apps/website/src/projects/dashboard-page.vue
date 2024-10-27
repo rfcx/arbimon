@@ -67,7 +67,7 @@
               :title="'Create New Analysis Job'"
               data-tooltip-target="analysesTooltipId"
               data-tooltip-placement="bottom"
-              :disabled="!store.userIsFullProjectMember"
+              disabled
               @click="toggleAnalysisSelector(true)"
             >
               <icon-custom-ic-plus class="h-4 w-4 mb-3px" />
