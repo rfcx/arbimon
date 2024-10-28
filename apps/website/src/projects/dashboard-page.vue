@@ -78,7 +78,7 @@
               role="tooltip"
               class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
             >
-              Currently disabled due to maintenance.
+              {{ disableText }}
               <div
                 class="tooltip-arrow"
                 data-popper-arrow
@@ -135,7 +135,8 @@ const selectedProject = computed(() => store.project)
 const selectedProjectId = computed(() => store.project?.id)
 const selectedProjectSlug = computed(() => store.project?.slug)
 
-const disableText = ref('Contact your project administrator for permission to manage analyses')
+// const disableText = ref('Contact your project administrator for permission to manage analyses')
+const disableText = ref('Currently disabled due to maintenance.')
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { isLoading: isLoadingSitesRecCountBio, data: projectSitesRecCount } = useBioProjectSitesRecordingCount(apiClientBio, selectedProjectId)
