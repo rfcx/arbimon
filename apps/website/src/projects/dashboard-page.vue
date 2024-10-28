@@ -74,12 +74,11 @@
               <span class="font-display text-base">Create new analysis</span>
             </button>
             <div
-              v-if="!store.userIsFullProjectMember"
               id="analysesTooltipId"
               role="tooltip"
               class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
             >
-              {{ disableText }}
+              Currently disabled due to maintenance.
               <div
                 class="tooltip-arrow"
                 data-popper-arrow
