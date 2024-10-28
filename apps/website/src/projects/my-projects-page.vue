@@ -5,7 +5,6 @@
     :infinite-scroll-distance="40"
     :infinite-scroll-disabled="isLoading || hasFetchedAll"
   >
-    <BannerDisplay />
     <section class="pt-8 bg-white dark:bg-pitch mx-8">
       <div class="py-8 mx-auto max-w-screen-xl">
         <div class="mt-6 flex flex-row justify-between">
@@ -132,7 +131,6 @@ import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/com
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
-import BannerDisplay from '@/projects/components/banner-display.vue'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import ProjectCard from './components/project-card.vue'
