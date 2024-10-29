@@ -30,15 +30,15 @@ export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syn
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
-      syncUntilId,
-      syncBatchLimit
+      syncUntilDate: sequelize.getDialect() === 'sqlite' ? syncUntilDate.toISOString() : String(syncUntilDate),
+      syncUntilId: String(syncUntilId),
+      syncBatchLimit: String(syncBatchLimit)
     }
   })
 
   return results.map(row => ({
     ...row,
-    deletedAt: sequelize.getDialect() === 'mysql' && row.deletedAt !== null ? row.deletedAt.toISOString() : row.deletedAt
+    deletedAt: sequelize.getDialect() === 'sqlite' && row.deletedAt !== null ? row.deletedAt : String(row.deletedAt)
   }))
 }
 
@@ -63,7 +63,7 @@ export const getArbimonSitesByProject = async (sequelize: Sequelize, projectId: 
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      projectId
+      projectId: String(projectId)
     }
   })
 

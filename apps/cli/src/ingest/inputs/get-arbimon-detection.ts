@@ -33,7 +33,7 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
   // Do not process query if the date is not valid
   if (!dayjs(syncUntilDate).isValid()) return []
 
-  const isMySql = sequelize.getDialect() === 'mysql'
+  const isSqlite = sequelize.getDialect() === 'sqlite'
 
   const sql = `
     SELECT
@@ -58,21 +58,21 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      syncUntilDate: isMySql ? syncUntilDate : syncUntilDate.toISOString(),
-      syncUntilId,
-      syncBatchLimit
+      syncUntilDate: isSqlite ? syncUntilDate.toISOString() : String(syncUntilDate),
+      syncUntilId: String(syncUntilId),
+      syncBatchLimit: String(syncBatchLimit)
     }
   })
 
   return results.map(row => ({
     ...row,
-    datetime: isMySql ? row.datetime.toISOString() : row.datetime,
-    updatedAt: isMySql ? row.updatedAt.toISOString() : row.updatedAt
+    datetime: isSqlite ? row.datetime : String(row.datetime),
+    updatedAt: isSqlite ? row.updatedAt : String(row.updatedAt)
   }))
 }
 
 export const getArbimonProjectDetection = async (sequelize: Sequelize, projectId: number, limit: number, offset: number): Promise<unknown[]> => {
-  const isMySql = sequelize.getDialect() === 'mysql'
+  const isSqlite = sequelize.getDialect() === 'sqlite'
 
   const sql = `
     SELECT /*+ MAX_EXECUTION_TIME(840000) */
@@ -104,16 +104,16 @@ export const getArbimonProjectDetection = async (sequelize: Sequelize, projectId
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      projectId,
-      offset,
-      limit
+      projectId: String(projectId),
+      offset: String(offset),
+      limit: String(limit)
     }
   })
 
   return results.map(row => ({
     ...row,
-    datetime: isMySql ? row.datetime.toISOString() : row.datetime,
-    updatedAt: isMySql ? row.updatedAt.toISOString() : row.updatedAt
+    datetime: isSqlite ? row.datetime : String(row.datetime),
+    updatedAt: isSqlite ? row.updatedAt : String(row.updatedAt)
   }))
 }
 
@@ -135,17 +135,17 @@ export const getArbimonProjectDetectionBySiteSpeciesHours = async (sequelize: Se
   // AND r.upload_time < $syncUntilDate OR (r.upload_time = $syncUntilDate AND r.recording_id <= $syncUntilId)
   // AND r.duration is not null
 
-  const isMySql = sequelize.getDialect() === 'mysql'
+  const isSqlite = sequelize.getDialect() === 'sqlite'
 
   const results = await sequelize.query<ArbimonDetectionBySiteSpeciesHourRaw>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
       projectId,
-      syncUntilDate: isMySql ? syncStatus.syncUntilDate : syncStatus.syncUntilDate.toISOString(),
-      syncUntilId: syncStatus.syncUntilId,
-      offset,
-      limit
+      syncUntilDate: isSqlite ? syncStatus.syncUntilDate.toISOString() : String(syncStatus.syncUntilDate),
+      syncUntilId: String(syncStatus.syncUntilId),
+      offset: String(limit),
+      limit: String(limit)
     }
   })
 

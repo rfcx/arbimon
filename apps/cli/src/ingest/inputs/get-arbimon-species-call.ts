@@ -36,20 +36,21 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDa
     ORDER BY t.date_created, t.template_id
     LIMIT $syncBatchLimit
   `
+  const isSqlite = sequelize.getDialect() === 'sqlite'
   const results = await sequelize.query<SpeciesCallArbimonRow>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
-      syncUntilId,
-      syncBatchLimit
+      syncUntilDate: isSqlite ? syncUntilDate.toISOString() : String(syncUntilDate),
+      syncUntilId: String(syncUntilId),
+      syncBatchLimit: String(syncBatchLimit)
     }
   })
 
   return results.map(row => ({
     ...row,
-    updatedAt: sequelize.getDialect() === 'mysql' ? row.updatedAt.toISOString() : row.updatedAt,
-    callRecordedAt: sequelize.getDialect() === 'mysql' ? row.callRecordedAt.toISOString() : row.callRecordedAt
+    updatedAt: isSqlite ? row.updatedAt : String(row.updatedAt),
+    callRecordedAt: isSqlite ? row.callRecordedAt : String(row.callRecordedAt)
   }))
 }
 
@@ -84,7 +85,7 @@ export const getArbimonProjectSpeciesCalls = async (sequelize: Sequelize, projec
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      projectId
+      projectId: String(projectId)
     }
   })
 }
