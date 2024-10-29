@@ -374,7 +374,7 @@ const fetchData = async (
   // temporary fix due to `mysqld_stmt_execute`
   const stringBind = Object.fromEntries(
     Object.entries(bind).map(([key, value]) => [key, String(value)])
-);
+)
   return await sequelize.query(sql, {
     type: QueryTypes.SELECT,
     bind: stringBind,
