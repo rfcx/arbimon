@@ -48,22 +48,22 @@ export const getArbimonRecording = async (sequelize: Sequelize, { syncUntilDate,
     LIMIT $syncBatchLimit
   `
 
-  const isSqlite = sequelize.getDialect() === 'sqlite'
+  const isMySql = sequelize.getDialect() === 'mysql'
 
   const results = await sequelize.query<ArbimonRecordingQuery>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      syncUntilDate: isSqlite ? syncUntilDate.toISOString() : String(syncUntilDate),
-      syncUntilId: String(syncUntilId),
+      syncUntilDate: isMySql ? syncUntilDate : syncUntilDate.toISOString(),
+      syncUntilId,
       syncBatchLimit: String(syncBatchLimit)
     }
   })
 
   return results.map(row => ({
     ...row,
-    datetime: isSqlite ? row.datetime : String(row.datetime),
-    updatedAt: isSqlite ? row.updatedAt : String(row.updatedAt)
+    datetime: isMySql ? row.datetime.toISOString() : row.datetime,
+    updatedAt: isMySql ? row.updatedAt.toISOString() : row.updatedAt
   }))
 }
 
@@ -82,22 +82,22 @@ export const getArbimonRecordingDeleted = async (sequelize: Sequelize, { syncUnt
     LIMIT $syncBatchLimit
   `
 
-  const isSqlite = sequelize.getDialect() === 'sqlite'
+  const isMySql = sequelize.getDialect() === 'mysql'
 
   const results = await sequelize.query<ArbimonRecordingDeletedQuery>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      syncUntilDate: isSqlite ? syncUntilDate.toISOString() : String(syncUntilDate),
-      syncUntilId: String(syncUntilId),
+      syncUntilDate: isMySql ? syncUntilDate : syncUntilDate.toISOString(),
+      syncUntilId,
       syncBatchLimit: String(syncBatchLimit)
     }
   })
 
   return results.map(row => ({
     ...row,
-    datetime: isSqlite ? row.datetime : String(row.datetime),
-    deletedAt: isSqlite ? row.deletedAt : String(row.deletedAt)
+    datetime: isMySql ? row.datetime.toISOString() : row.datetime,
+    deletedAt: isMySql ? row.deletedAt.toISOString() : row.deletedAt
   }))
 }
 
@@ -118,7 +118,7 @@ export const getArbimonProjectRecording = async (sequelize: Sequelize, projectId
     LIMIT $limit OFFSET $offset
   `
 
-  const isSqlite = sequelize.getDialect() === 'sqlite'
+  const isMySql = sequelize.getDialect() === 'mysql'
 
   const results = await sequelize.query<ArbimonRecordingQuery>(sql, {
     type: QueryTypes.SELECT,
@@ -132,8 +132,8 @@ export const getArbimonProjectRecording = async (sequelize: Sequelize, projectId
 
   return results.map(row => ({
     ...row,
-    datetime: isSqlite ? row.datetime : String(row.datetime),
-    updatedAt: isSqlite ? row.updatedAt : String(row.updatedAt)
+    datetime: isMySql ? row.datetime.toISOString() : row.datetime,
+    updatedAt: isMySql ? row.updatedAt.toISOString() : row.updatedAt
   }))
 }
 
@@ -153,15 +153,15 @@ export const getArbimonProjectRecordingsBySiteHour = async (sequelize: Sequelize
   // AND r.upload_time < $syncUntilDate OR (r.upload_time = $syncUntilDate AND r.recording_id <= $syncUntilId)
   // AND r.duration is not null
 
-  const isSqlite = sequelize.getDialect() === 'sqlite'
+  const isMySql = sequelize.getDialect() === 'mysql'
 
   const results = await sequelize.query<ArbimonRecordingByHourRaw>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      projectId,
-      syncUntilDate: isSqlite ? syncStatus.syncUntilDate.toISOString() : String(syncStatus.syncUntilDate),
-      syncUntilId: String(syncStatus.syncUntilId),
+      projectId: String(projectId),
+      syncUntilDate: isMySql ? syncStatus.syncUntilDate : syncStatus.syncUntilDate.toISOString(),
+      syncUntilId: syncStatus.syncUntilId,
       offset: String(offset),
       limit: String(limit)
     }

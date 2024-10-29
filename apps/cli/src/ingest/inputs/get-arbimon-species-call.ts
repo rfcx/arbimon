@@ -36,21 +36,21 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDa
     ORDER BY t.date_created, t.template_id
     LIMIT $syncBatchLimit
   `
-  const isSqlite = sequelize.getDialect() === 'sqlite'
+
   const results = await sequelize.query<SpeciesCallArbimonRow>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      syncUntilDate: isSqlite ? syncUntilDate.toISOString() : String(syncUntilDate),
-      syncUntilId: String(syncUntilId),
+      syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
+      syncUntilId,
       syncBatchLimit: String(syncBatchLimit)
     }
   })
 
   return results.map(row => ({
     ...row,
-    updatedAt: isSqlite ? row.updatedAt : String(row.updatedAt),
-    callRecordedAt: isSqlite ? row.callRecordedAt : String(row.callRecordedAt)
+    updatedAt: sequelize.getDialect() === 'mysql' ? row.updatedAt.toISOString() : row.updatedAt,
+    callRecordedAt: sequelize.getDialect() === 'mysql' ? row.callRecordedAt.toISOString() : row.callRecordedAt
   }))
 }
 
