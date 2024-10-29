@@ -15,9 +15,9 @@ export const getArbimonSpecies = async (sequelize: Sequelize, { syncUntilDate, s
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
-      syncUntilId,
-      syncBatchLimit
+      syncUntilDate: sequelize.getDialect() === 'sqlite' ? syncUntilDate.toISOString() : String(syncUntilDate),
+      syncUntilId: String(syncUntilId),
+      syncBatchLimit: String(syncBatchLimit)
     }
   })
 }
