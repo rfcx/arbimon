@@ -64,13 +64,14 @@
               :title="'Create New Analysis Job'"
               data-tooltip-target="analysesTooltipId"
               data-tooltip-placement="bottom"
-              disabled
+              :disabled="!store.userIsFullProjectMember"
               @click="toggleAnalysisSelector(true)"
             >
               <icon-custom-ic-plus class="h-4 w-4 mb-3px" />
               <span class="font-display text-base">Create new analysis</span>
             </button>
             <div
+              v-if="!store.userIsFullProjectMember"
               id="analysesTooltipId"
               role="tooltip"
               class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -131,8 +132,7 @@ const selectedProject = computed(() => store.project)
 const selectedProjectId = computed(() => store.project?.id)
 const selectedProjectSlug = computed(() => store.project?.slug)
 
-// const disableText = ref('Contact your project administrator for permission to manage analyses')
-const disableText = ref('Currently disabled due to maintenance.')
+const disableText = ref('Contact your project administrator for permission to manage analyses')
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { isLoading: isLoadingSitesRecCountBio, data: projectSitesRecCount } = useBioProjectSitesRecordingCount(apiClientBio, selectedProjectId)
