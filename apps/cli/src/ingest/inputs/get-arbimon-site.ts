@@ -30,15 +30,15 @@ export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syn
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      syncUntilDate: sequelize.getDialect() === 'sqlite' ? syncUntilDate.toISOString() : String(syncUntilDate),
-      syncUntilId: String(syncUntilId),
+      syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
+      syncUntilId,
       syncBatchLimit: String(syncBatchLimit)
     }
   })
 
   return results.map(row => ({
     ...row,
-    deletedAt: sequelize.getDialect() === 'sqlite' && row.deletedAt !== null ? row.deletedAt : String(row.deletedAt)
+    deletedAt: sequelize.getDialect() === 'mysql' && row.deletedAt !== null ? row.deletedAt.toISOString() : row.deletedAt
   }))
 }
 
