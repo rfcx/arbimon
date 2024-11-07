@@ -54,10 +54,10 @@ const props = defineProps<{analysis: AnalysisCard}>()
 const emit = defineEmits<{(event: 'emitSelectedAnalysis', url: string, value: string): void}>()
 const isSelected = ref(false)
 const isReadMore = ref(false)
-const isClickable = ref(props.analysis.title === 'Pattern Matching')
+const isClickable = ref(props.analysis.title === 'Pattern Matching' || props.analysis.title === 'Soundscapes')
 
 watch(() => props.analysis.isSelected, (newValue) => {
-  isClickable.value = props.analysis.title === 'Pattern Matching'
+  isClickable.value = props.analysis.title === 'Pattern Matching' || props.analysis.title === 'Soundscapes'
   isSelected.value = newValue
 }, { deep: true })
 
