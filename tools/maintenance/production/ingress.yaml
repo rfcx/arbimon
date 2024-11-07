@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: 'http'
+  name: arbimon-maintenance-ingress
+  namespace: production
+  labels:
+    app: arbimon-maintenance
+spec:
+  rules:
+  - host: arbimon.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-maintenance-service
+          servicePort: 80
+      - path: /.*
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-maintenance-service
+          servicePort: 80
+  - host: arbimon.rfcx.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-maintenance-service
+          servicePort: 80
+  - host: bio.rfcx.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          serviceName: arbimon-maintenance-service
+          servicePort: 80

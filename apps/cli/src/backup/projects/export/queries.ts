@@ -139,21 +139,19 @@ export const PATTERN_MATCHINGS = `
 
 export const PATTERN_MATCHING_ROIS = `
   select
-    pattern_matching_roi_id,
     pmr.pattern_matching_id,
-    recording_id,
+    pmr.recording_id,
     pmr.species_id,
     pmr.songtype_id,
     x1,
-    y1,
     x2,
+    y1,
     y2,
     score,
     validated
   from pattern_matching_rois pmr
   join pattern_matchings pm on pmr.pattern_matching_id = pm.pattern_matching_id
-  join jobs j on pm.job_id = j.job_id
-  where pm.pattern_matching_id = $patternMatchingId and pm.deleted = 0 and j.state = 'completed'
+  where pm.pattern_matching_id = $patternMatchingId and pm.deleted = 0 and validated is not null
   limit $limit
   offset $offset
 `

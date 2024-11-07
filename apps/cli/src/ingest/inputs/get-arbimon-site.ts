@@ -32,7 +32,7 @@ export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syn
     bind: {
       syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
       syncUntilId,
-      syncBatchLimit
+      syncBatchLimit: String(syncBatchLimit)
     }
   })
 
@@ -63,7 +63,7 @@ export const getArbimonSitesByProject = async (sequelize: Sequelize, projectId: 
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      projectId
+      projectId: String(projectId)
     }
   })
 

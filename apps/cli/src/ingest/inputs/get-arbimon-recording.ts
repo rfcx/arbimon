@@ -56,7 +56,7 @@ export const getArbimonRecording = async (sequelize: Sequelize, { syncUntilDate,
     bind: {
       syncUntilDate: isMySql ? syncUntilDate : syncUntilDate.toISOString(),
       syncUntilId,
-      syncBatchLimit
+      syncBatchLimit: String(syncBatchLimit)
     }
   })
 
@@ -90,7 +90,7 @@ export const getArbimonRecordingDeleted = async (sequelize: Sequelize, { syncUnt
     bind: {
       syncUntilDate: isMySql ? syncUntilDate : syncUntilDate.toISOString(),
       syncUntilId,
-      syncBatchLimit
+      syncBatchLimit: String(syncBatchLimit)
     }
   })
 
@@ -124,9 +124,9 @@ export const getArbimonProjectRecording = async (sequelize: Sequelize, projectId
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      projectId,
-      offset,
-      limit
+      projectId: String(projectId),
+      offset: String(offset),
+      limit: String(limit)
     }
   })
 
@@ -159,11 +159,11 @@ export const getArbimonProjectRecordingsBySiteHour = async (sequelize: Sequelize
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      projectId,
+      projectId: String(projectId),
       syncUntilDate: isMySql ? syncStatus.syncUntilDate : syncStatus.syncUntilDate.toISOString(),
       syncUntilId: syncStatus.syncUntilId,
-      offset,
-      limit
+      offset: String(offset),
+      limit: String(limit)
     }
   })
 

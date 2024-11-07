@@ -24,10 +24,13 @@ spec:
               requests:
                 memory: '4000Mi'
                 cpu: '1000m'
-                ephemeral-storage: '7Gi'
+                ephemeral-storage: '14Gi'
             envFrom:
               - secretRef:
                   name: biodiversity-cli-secrets
               - configMapRef:
                   name: biodiversity-cli-config
           restartPolicy: Never
+        metadata:
+          annotations:
+            "cluster-autoscaler.kubernetes.io/safe-to-evict": "false"

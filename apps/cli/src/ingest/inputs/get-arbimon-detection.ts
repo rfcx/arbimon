@@ -60,7 +60,7 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
     bind: {
       syncUntilDate: isMySql ? syncUntilDate : syncUntilDate.toISOString(),
       syncUntilId,
-      syncBatchLimit
+      syncBatchLimit: String(syncBatchLimit)
     }
   })
 
@@ -104,9 +104,9 @@ export const getArbimonProjectDetection = async (sequelize: Sequelize, projectId
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      projectId,
-      offset,
-      limit
+      projectId: String(projectId),
+      offset: String(offset),
+      limit: String(limit)
     }
   })
 
@@ -141,11 +141,11 @@ export const getArbimonProjectDetectionBySiteSpeciesHours = async (sequelize: Se
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      projectId,
+      projectId: String(projectId),
       syncUntilDate: isMySql ? syncStatus.syncUntilDate : syncStatus.syncUntilDate.toISOString(),
       syncUntilId: syncStatus.syncUntilId,
-      offset,
-      limit
+      offset: String(offset),
+      limit: String(limit)
     }
   })
 

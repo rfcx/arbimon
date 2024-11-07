@@ -36,13 +36,14 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDa
     ORDER BY t.date_created, t.template_id
     LIMIT $syncBatchLimit
   `
+
   const results = await sequelize.query<SpeciesCallArbimonRow>(sql, {
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
       syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
       syncUntilId,
-      syncBatchLimit
+      syncBatchLimit: String(syncBatchLimit)
     }
   })
 
@@ -84,7 +85,7 @@ export const getArbimonProjectSpeciesCalls = async (sequelize: Sequelize, projec
     type: QueryTypes.SELECT,
     raw: true,
     bind: {
-      projectId
+      projectId: String(projectId)
     }
   })
 }

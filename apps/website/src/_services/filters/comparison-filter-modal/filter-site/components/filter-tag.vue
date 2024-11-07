@@ -1,7 +1,7 @@
 <template>
   <span
     :id="`badge-dismiss-${text}`"
-    class="inline-flex items-center px-2 py-1 me-2 text-sm font-medium text-insight bg-util-gray-03 mr-1 rounded"
+    class="inline-flex items-center px-2 py-1 me-2 text-sm font-medium text-insight bg-util-gray-03 mr-1 mt-1 rounded"
   >
     {{ text }}
     <button

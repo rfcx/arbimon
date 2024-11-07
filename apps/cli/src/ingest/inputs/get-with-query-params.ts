@@ -14,7 +14,7 @@ export const getWithQueryParams = async (sequelize: Sequelize, { syncUntilDate, 
     bind: {
       syncUntilDate: sequelize.getDialect() === 'mysql' ? syncUntilDate : syncUntilDate.toISOString(),
       syncUntilId,
-      syncBatchLimit
+      syncBatchLimit: String(syncBatchLimit)
     }
   })
 }

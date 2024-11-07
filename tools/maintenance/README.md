@@ -20,7 +20,7 @@
 
 3. Deploy
    ```
-   kubectl apply -f deployment
+   kubectl apply -f production
    ```
 
 ## Disable maintenance mode
