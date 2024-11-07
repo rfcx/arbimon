@@ -393,6 +393,9 @@ const fetchData = async (
  */
 const pipelineAsync = promisify(pipeline)
 const convertToCsv = async (filePath: string, responses: object[]): Promise<void> => {
+  if (responses.at(0) === undefined) {
+    return
+  }
   const responseStream = Readable.from(responses)
   const csvTransform = new Transform({
     objectMode: true,
