@@ -66,10 +66,13 @@ export const generateCsvs = async (
     let rowCount = 1 // headers as first row
     let fileCount = 1
     let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
-    const allCSVFiles = [fileName]
+    const allCSVFiles: string[] = []
     for await (const records of allRecords) {
       const recordChunked = chunk(records, RECORDING_BATCH_SIZE)
       for (const r of recordChunked) {
+        if (r.at(0) === undefined) {
+          continue
+        }
         if (!allCSVFiles.includes(fileName)) {
           allCSVFiles.push(fileName)
         }
@@ -105,8 +108,11 @@ export const generateCsvs = async (
     let rowCount = 1 // headers as first row
     let fileCount = 1
     let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
-    const allCSVFiles = [fileName]
+    const allCSVFiles: string[] = []
     for await (const records of allRecords) {
+      if (records.at(0) === undefined) {
+        continue
+      }
       if (!allCSVFiles.includes(fileName)) {
         allCSVFiles.push(fileName)
       }
@@ -141,8 +147,11 @@ export const generateCsvs = async (
     let rowCount = 1 // headers as first row
     let fileCount = 1
     let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
-    const allCSVFiles = [fileName]
+    const allCSVFiles: string[] = []
     for await (const records of allRecords) {
+      if (records.at(0) === undefined) {
+        continue
+      }
       if (!allCSVFiles.includes(fileName)) {
         allCSVFiles.push(fileName)
       }
@@ -178,8 +187,11 @@ export const generateCsvs = async (
     let rowCount = 1 // headers as first row
     let fileCount = 1
     let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
-    const allCSVFiles = [fileName]
+    const allCSVFiles: string[] = []
     for await (const records of recordsGenerator) {
+      if (records.at(0) === undefined) {
+        continue
+      }
       if (!allCSVFiles.includes(fileName)) {
         allCSVFiles.push(fileName)
       }
@@ -393,9 +405,6 @@ const fetchData = async (
  */
 const pipelineAsync = promisify(pipeline)
 const convertToCsv = async (filePath: string, responses: object[]): Promise<void> => {
-  if (responses.at(0) === undefined) {
-    return
-  }
   const responseStream = Readable.from(responses)
   const csvTransform = new Transform({
     objectMode: true,
