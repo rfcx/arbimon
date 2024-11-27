@@ -1,13 +1,8 @@
 <template>
   <div
-    class="flex flex-col gap-y-2.5 justify-between bg-moss border-1 rounded-lg shadow p-4 hover:bg-util-gray-03"
-    :class="{
-      'border-frequency' : isSelected,
-      'border-transparent' : !isSelected,
-      'cursor-pointer': isClickable,
-      'cursor-not-allowed opacity-50': !isClickable
-    }"
-    @click="isClickable ? selectedAnalysis() : null"
+    class="flex flex-col gap-y-2.5 justify-between bg-moss border-1 rounded-lg shadow p-4 hover:bg-util-gray-03 cursor-pointer"
+    :class="isSelected ? 'border-frequency' : 'border-transparent'"
+    @click="selectedAnalysis()"
   >
     <h5
       :title="analysis.title"
@@ -54,10 +49,8 @@ const props = defineProps<{analysis: AnalysisCard}>()
 const emit = defineEmits<{(event: 'emitSelectedAnalysis', url: string, value: string): void}>()
 const isSelected = ref(false)
 const isReadMore = ref(false)
-const isClickable = ref(props.analysis.title === 'Pattern Matching' || props.analysis.title === 'Soundscapes')
 
 watch(() => props.analysis.isSelected, (newValue) => {
-  isClickable.value = props.analysis.title === 'Pattern Matching' || props.analysis.title === 'Soundscapes'
   isSelected.value = newValue
 }, { deep: true })
 
