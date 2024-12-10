@@ -8,7 +8,7 @@ import { getSequelize } from '~/db'
 import { fileUrl } from '~/format-helpers/file-url'
 import { getAverageCoordinate } from './helpers'
 
-export const getProjectsByQuery = async (keyword?: string, limit?: number, offset?: number, order?: Order): Promise<{ total: number, data: SearchResponse }> => {
+export const getProjectsByQuery = async (keyword?: string, isPublished?: boolean, limit?: number, offset?: number, order?: Order): Promise<{ total: number, data: SearchResponse }> => {
   const sequelize = getSequelize()
   const { LocationProject, LocationProjectMetric, LocationProjectProfile, LocationProjectCountry } = ModelRepository.getInstance(sequelize)
 
@@ -19,10 +19,15 @@ export const getProjectsByQuery = async (keyword?: string, limit?: number, offse
     }
   }
 
+  if (isPublished === true) {
+    whereOptional.status = 'published'
+  } else {
+    whereOptional.status = { [Op.in]: ['listed', 'published'] }
+  }
+
   const results = await LocationProject.findAll({
     where: {
-      ...whereOptional,
-      status: { [Op.in]: ['listed', 'published'] }
+      ...whereOptional
     },
     order: order !== undefined ? order : sequelize.literal('"status" DESC, "LocationProjectMetric.speciesCount" DESC'),
     limit: limit !== undefined ? limit : 20,
