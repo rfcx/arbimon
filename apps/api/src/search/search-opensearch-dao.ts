@@ -4,7 +4,7 @@ import { fileUrl } from '~/format-helpers/file-url'
 import { getOpenSearchClient } from '~/opensearch'
 import { getAverageCoordinate } from './helpers'
 
-export const getOpensearchProjects = async (query: string, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
+export const getOpensearchProjects = async (query: string, isPublished: boolean, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
   const opensearch = getOpenSearchClient()
 
   const response = await opensearch.search<RawElasticSearchResponseBody<SearchQueryProjectRawResponse>>({
@@ -14,6 +14,13 @@ export const getOpensearchProjects = async (query: string, limit: number, offset
     body: {
       query: {
         bool: {
+          filter: [
+            {
+              term: {
+                status: isPublished
+              }
+            }
+          ],
           should: [
               {
                 multi_match: {
