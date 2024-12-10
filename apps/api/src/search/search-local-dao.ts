@@ -20,7 +20,7 @@ export const getProjectsByQuery = async (keyword?: string, isPublished?: boolean
   }
 
   if (isPublished === true) {
-    whereOptional.status = { [Op.in]: ['published'] }
+    whereOptional.status = 'published'
   } else {
     whereOptional.status = { [Op.in]: ['listed', 'published'] }
   }
