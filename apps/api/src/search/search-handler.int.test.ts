@@ -557,4 +557,24 @@ describe('OpenSearch - search projects by species', async () => {
     const mostRelevant = results[0]
     expect(mostRelevant.id).toBe(7689928)
   })
+
+  test('returns only published projects', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: '',
+        status: 'published'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    expect(results).toHaveLength(2)
+  })
 })

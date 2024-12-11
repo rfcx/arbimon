@@ -14,7 +14,7 @@
       @emit-selected-project="onEmitSelectedProject"
       @emit-search="onEmitSearch"
       @emit-load-more="onEmitLoadMore"
-      @emit-load-published-projects="onEmitLoadPublishedProjects"
+      @emit-filter-published-projects="onEmitFilterPublishedProjects"
       @emit-swap-tab="onEmitSwapTab"
     />
     <project-info
@@ -120,14 +120,14 @@ const onEmitSwapTab = (tab: Tab) => {
   }
 }
 
-const onEmitSearch = debounce(async (keyword: string, isSelectedPublishedProjects: boolean) => {
+const onEmitSearch = debounce(async (keyword: string, status: string) => {
   noResults.value = false
   if (keyword === '') {
     projectResults.value = pdStore.allProjects
     router.push({ name: ROUTE_NAMES.explore })
     return
   }
-  const searchResponse = await fetchSearch(keyword, isSelectedPublishedProjects, 100, 0)
+  const searchResponse = await fetchSearch(keyword, status, 100, 0)
   if (searchResponse === undefined || searchResponse.data.length === 0) {
     noResults.value = true
   } else {
@@ -137,18 +137,18 @@ const onEmitSearch = debounce(async (keyword: string, isSelectedPublishedProject
   router.push({ name: ROUTE_NAMES.explore, query: { search: keyword } })
 }, 500)
 
-const onEmitLoadMore = async (isSelectedPublishedProjects: boolean) => {
+const onEmitLoadMore = async (status: string) => {
   const LIMIT = 20
   const offset = pdStore.allProjectsWithMetrics.length
   const total = pdStore.allProjects.length
   if (offset === total) return
   if (isLoading.value) return
-  await fetchSearch('', isSelectedPublishedProjects, LIMIT, offset)
+  await fetchSearch('', status, LIMIT, offset)
 }
 
-const onEmitLoadPublishedProjects = async (isSelectedPublishedProjects: boolean) => {
+const onEmitFilterPublishedProjects = async (status: string) => {
   if (isLoading.value) return
-  await fetchSearch('', isSelectedPublishedProjects, 20, 0)
+  await fetchSearch('', status, 20, 0)
 }
 
 onMounted(async () => {
@@ -176,10 +176,10 @@ const fetchAllProjects = async () => {
   }
 }
 
-const fetchSearch = async (keyword: string, isPublished: boolean, limit: number, offset: number): Promise<{ total: number, data: ProjectProfileWithMetrics[]} | undefined> => {
+const fetchSearch = async (keyword: string, status: string, limit: number, offset: number): Promise<{ total: number, data: ProjectProfileWithMetrics[]} | undefined> => {
   if (isLoading.value === true) return
   isLoading.value = true
-  const searchResponse = await apiBioSearch(apiClientBio, 'project', keyword, isPublished, limit, offset)
+  const searchResponse = await apiBioSearch(apiClientBio, 'project', keyword, status, limit, offset)
   if (searchResponse === undefined) return
   const projectWithMetrics = (searchResponse.data as SearchResponseProject[]).map((p: SearchResponseProject): ProjectProfileWithMetrics => {
     return {

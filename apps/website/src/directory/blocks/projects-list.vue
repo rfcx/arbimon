@@ -117,7 +117,7 @@ import ProjectListItem from '../components/project-list-item.vue'
 import type { ProjectLight, ProjectProfileWithMetrics, Tab } from '../data/types'
 
 const props = defineProps<{ data: ProjectLight[], selectedProjectId: number | undefined, selectedTab: Tab, isLoading: boolean, initialSearch: string, noResults: boolean, isError: boolean }>()
-const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void, (e: 'emitLoadMore', isSelectedPublishedProjects: boolean): void, (e: 'emitLoadPublishedProjects', isSelectedPublishedProjects: boolean): void, (e: 'emitSearch', keyword: string, isSelectedPublishedProjects: boolean): void, (e: 'emitSwapTab', tab: Tab): void
+const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void, (e: 'emitLoadMore', status: string): void, (e: 'emitFilterPublishedProjects', status: string): void, (e: 'emitSearch', keyword: string, status: string): void, (e: 'emitSwapTab', tab: Tab): void
 }>()
 
 const pdStore = useProjectDirectoryStore()
@@ -142,7 +142,7 @@ const emitSwapTab = (tab: Tab) => {
 const loadMore = () => {
   // hotfix: disable infinite scroll when search keyword is not empty - remove this when explore page supports infinite scroll with search
   if (searchKeyword.value !== '') return
-  emit('emitLoadMore', isSelectedPublishedProjects.value)
+  emit('emitLoadMore', isSelectedPublishedProjects.value ? 'published' : '')
 }
 
 const emitSelectedProject = (projectId: number) => {
@@ -150,12 +150,12 @@ const emitSelectedProject = (projectId: number) => {
 }
 
 const emitSearch = (keyword: string) => {
-  emit('emitSearch', keyword, isSelectedPublishedProjects.value)
+  emit('emitSearch', keyword, isSelectedPublishedProjects.value ? 'published' : '')
 }
 
 const togglePublishedProjects = () => {
   isSelectedPublishedProjects.value = !isSelectedPublishedProjects.value
-  emit('emitLoadPublishedProjects', isSelectedPublishedProjects.value)
+  emit('emitFilterPublishedProjects', isSelectedPublishedProjects.value ? 'published' : '')
 }
 
 watch(() => props.initialSearch, (newVal) => {

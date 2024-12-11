@@ -8,7 +8,7 @@ export type SearchType = typeof SEARCH_TYPE[number]
 export interface SearchRequestQueryParams {
   type?: SearchType
   q?: string
-  isPublished?: boolean
+  status?: string
   limit?: string
   offset?: string
 }
@@ -121,14 +121,14 @@ export const xSearchTotalCountHeaderName = 'x-search-total-count'
 export const searchRoute = '/search'
 export type SearchResponse = Array<SearchResponseProject | SearchResponseOrganization>
 
-export const apiBioSearch = async (apiClient: AxiosInstance, type: SearchType, query: string, isPublished: boolean, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
+export const apiBioSearch = async (apiClient: AxiosInstance, type: SearchType, query: string, status: string, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
   const response = await apiClient.request<SearchResponse>({
     method: 'GET',
     url: searchRoute,
     params: {
       type,
       q: query,
-      isPublished,
+      status,
       limit,
       offset
     }
