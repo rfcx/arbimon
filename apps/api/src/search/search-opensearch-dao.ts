@@ -1,3 +1,5 @@
+import { type Search } from '@opensearch-project/opensearch/api/requestParams'
+
 import { type RawElasticSearchResponseBody, type SearchQueryProjectRawResponse, type SearchResponse, type SearchResponseProject } from '@rfcx-bio/common/api-bio/search/search'
 
 import { fileUrl } from '~/format-helpers/file-url'
@@ -7,20 +9,13 @@ import { getAverageCoordinate } from './helpers'
 export const getOpensearchProjects = async (query: string, isPublished: boolean, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
   const opensearch = getOpenSearchClient()
 
-  const response = await opensearch.search<RawElasticSearchResponseBody<SearchQueryProjectRawResponse>>({
+  const baseOpensearchParam: Search<Record<string, any>> = {
     from: offset,
     size: limit,
     index: 'projects',
     body: {
       query: {
         bool: {
-          filter: [
-            {
-              term: {
-                status: isPublished
-              }
-            }
-          ],
           should: [
               {
                 multi_match: {
@@ -66,7 +61,17 @@ export const getOpensearchProjects = async (query: string, isPublished: boolean,
         }
       }
     }
-  })
+  }
+
+  if (isPublished) {
+    baseOpensearchParam.body?.query.bool.should.push({
+      term: {
+        status: 'published'
+      }
+    })
+  }
+
+  const response = await opensearch.search<RawElasticSearchResponseBody<SearchQueryProjectRawResponse>>(baseOpensearchParam)
 
   const data: SearchResponseProject[] = response.body.hits.hits.map(hit => {
     return {
