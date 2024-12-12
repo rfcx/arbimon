@@ -557,4 +557,63 @@ describe('OpenSearch - search projects by species', async () => {
     const mostRelevant = results[0]
     expect(mostRelevant.id).toBe(7689928)
   })
+
+  test('returns only published projects', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: '',
+        isPublished: 'true'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    expect(results).toHaveLength(6)
+  })
+
+  test('returns only listed and published projects when isPublished is false', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: '',
+        isPublished: 'false'
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    expect(results).toHaveLength(7)
+  })
+
+  test('returns only listed and published projects when isPublished is undefined', async () => {
+    // Arrange
+    const app = await makeApp(routesSearch)
+
+    // Act
+    const response = await app.inject({
+      method: GET,
+      url: searchRoute,
+      query: {
+        type: 'project',
+        q: ''
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body) as SearchResponseProject[]
+    expect(results).toHaveLength(7)
+  })
 })

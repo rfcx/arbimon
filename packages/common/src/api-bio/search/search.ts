@@ -8,7 +8,7 @@ export type SearchType = typeof SEARCH_TYPE[number]
 export interface SearchRequestQueryParams {
   type?: SearchType
   q?: string
-  isPublished?: boolean
+  isPublished?: string
   limit?: string
   offset?: string
 }
