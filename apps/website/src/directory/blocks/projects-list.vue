@@ -15,7 +15,10 @@
       </span>
     </div>
     <div class="h-full overflow-y">
-      <ul v-infinite-scroll="loadMore">
+      <ul
+        v-infinite-scroll="loadMore"
+        :infinite-scroll-distance="20"
+      >
         <li class="p-6 relative sticky top-0 bg-moss border-b-1 border-util-gray-02">
           <form
             class="w-full"
@@ -155,7 +158,8 @@ const emitSearch = (keyword: string) => {
 
 const togglePublishedProjects = () => {
   isSelectedPublishedProjects.value = !isSelectedPublishedProjects.value
-  emit('emitLoadPublishedProjects', isSelectedPublishedProjects.value)
+  if (searchKeyword.value !== '') emitSearch(searchKeyword.value)
+  else emit('emitLoadPublishedProjects', isSelectedPublishedProjects.value)
 }
 
 watch(() => props.initialSearch, (newVal) => {

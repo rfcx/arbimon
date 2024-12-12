@@ -123,6 +123,11 @@ const onEmitSwapTab = (tab: Tab) => {
 const onEmitSearch = debounce(async (keyword: string, isSelectedPublishedProjects: boolean) => {
   noResults.value = false
   if (keyword === '') {
+    if (isSelectedPublishedProjects) {
+      router.push({ name: ROUTE_NAMES.explore })
+      await fetchSearch('', isSelectedPublishedProjects, 20, 0)
+      return
+    }
     projectResults.value = pdStore.allProjects
     router.push({ name: ROUTE_NAMES.explore })
     return
