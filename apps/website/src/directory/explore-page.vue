@@ -144,7 +144,7 @@ const onEmitSearch = debounce(async (keyword: string, isSelectedPublishedProject
 
 const onEmitLoadMore = async (isSelectedPublishedProjects: boolean) => {
   const LIMIT = 20
-  const offset = pdStore.allProjectsWithMetrics.length
+  const offset = pdStore.allProjectsWithMetricsOffset
   const total = pdStore.allProjects.length
   if (offset === total) return
   if (isLoading.value) return
