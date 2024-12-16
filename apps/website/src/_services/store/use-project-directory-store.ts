@@ -27,6 +27,9 @@ export const useProjectDirectoryStore = defineStore('project-directory-store', (
       }
     })
   }
+  const resetAllProjectsWithMetrics = (): void => {
+    allProjectsWithMetrics.value = []
+  }
   const getProjectLightById = (id: number): ProjectLight | undefined => {
     return allProjects.value.find(p => p.id === id)
   }
@@ -41,6 +44,7 @@ export const useProjectDirectoryStore = defineStore('project-directory-store', (
     updateAllProjects,
     allProjectsWithMetrics,
     allProjectsWithMetricsOffset,
+    resetAllProjectsWithMetrics,
     addProjectsWithMetrics,
     getProjectLightById,
     getProjectWithMetricsById,

@@ -153,6 +153,7 @@ const onEmitLoadMore = async (isSelectedPublishedProjects: boolean) => {
 
 const onEmitLoadPublishedProjects = async (isSelectedPublishedProjects: boolean) => {
   if (isLoading.value) return
+  pdStore.resetAllProjectsWithMetrics()
   await fetchSearch('', isSelectedPublishedProjects, 20, 0)
 }
 
