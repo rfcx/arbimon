@@ -16,6 +16,15 @@ export const getOpensearchProjects = async (query: string, isPublished: boolean,
     body: {
       query: {
         bool: {
+          must: isPublished
+            ? [
+              {
+                term: {
+                  status: 'published'
+                }
+              }
+            ]
+            : undefined,
           should: [
               {
                 multi_match: {
@@ -61,14 +70,6 @@ export const getOpensearchProjects = async (query: string, isPublished: boolean,
         }
       }
     }
-  }
-
-  if (isPublished) {
-    baseOpensearchParam.body?.query.bool.should.push({
-      term: {
-        status: 'published'
-      }
-    })
   }
 
   const response = await opensearch.search<RawElasticSearchResponseBody<SearchQueryProjectRawResponse>>(baseOpensearchParam)
