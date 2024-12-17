@@ -11,8 +11,6 @@ import { isProtectedSpecies } from '~/security/protected-species'
 import { type Handler } from '../_services/api-helpers/types'
 import { assertPathParamsExist } from '../_services/validation'
 
-const CORE_API_BASE_URL = env.CORE_API_BASE_URL
-
 // TODO ??? - Move files to S3 & index them in the database
 
 export const projectSpeciesOneHandler: Handler<ProjectSpeciesOneResponse, ProjectSpeciesOneParams> = async (req) => {
@@ -52,9 +50,9 @@ const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug:
 
   if (speciesCalls.length !== 0) {
     speciesCalls.forEach(sc => {
-      sc.callMediaSpecUrl = sc.callMediaSpecUrl.includes('https:') ? sc.callMediaSpecUrl : CORE_API_BASE_URL + sc.callMediaSpecUrl
-      sc.callMediaWavUrl = sc.callMediaWavUrl.includes('https:') ? sc.callMediaWavUrl : CORE_API_BASE_URL + sc.callMediaWavUrl
-      sc.callMediaRedirectUrl = sc.callMediaRedirectUrl.includes('https:') ? sc.callMediaRedirectUrl : CORE_API_BASE_URL + sc.callMediaRedirectUrl
+      sc.callMediaSpecUrl = sc.callMediaSpecUrl.includes('https:') ? sc.callMediaSpecUrl : env.CORE_API_BASE_URL + sc.callMediaSpecUrl
+      sc.callMediaWavUrl = sc.callMediaWavUrl.includes('https:') ? sc.callMediaWavUrl : env.CORE_API_BASE_URL + sc.callMediaWavUrl
+      sc.callMediaRedirectUrl = sc.callMediaRedirectUrl.includes('https:') ? sc.callMediaRedirectUrl : env.CORE_API_BASE_URL + sc.callMediaRedirectUrl
     })
   }
 
