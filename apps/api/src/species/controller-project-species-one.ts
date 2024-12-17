@@ -5,10 +5,13 @@ import { LocationProjectSpeciesFileModel } from '@rfcx-bio/node-common/dao/model
 import { ATTRIBUTES_TAXON_SPECIES_CALL, ATTRIBUTES_TAXON_SPECIES_PHOTO } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '@/_services/db'
+import { env } from '@/_services/env'
 import { BioNotFoundError } from '~/errors'
 import { isProtectedSpecies } from '~/security/protected-species'
 import { type Handler } from '../_services/api-helpers/types'
 import { assertPathParamsExist } from '../_services/validation'
+
+const CORE_API_BASE_URL = env.CORE_API_BASE_URL
 
 // TODO ??? - Move files to S3 & index them in the database
 
@@ -46,6 +49,14 @@ const getProjectSpeciesOne = async (locationProjectId: string, taxonSpeciesSlug:
     where: { callProjectId: locationProjectId, taxonSpeciesId },
     raw: true
   })
+
+  if (speciesCalls.length !== 0) {
+    speciesCalls.forEach(sc => {
+      sc.callMediaSpecUrl = sc.callMediaSpecUrl.includes('https:') ? sc.callMediaSpecUrl : CORE_API_BASE_URL + sc.callMediaSpecUrl
+      sc.callMediaWavUrl = sc.callMediaWavUrl.includes('https:') ? sc.callMediaWavUrl : CORE_API_BASE_URL + sc.callMediaWavUrl
+      sc.callMediaRedirectUrl = sc.callMediaRedirectUrl.includes('https:') ? sc.callMediaRedirectUrl : CORE_API_BASE_URL + sc.callMediaRedirectUrl
+    })
+  }
 
   const isLocationRedacted = isProtectedSpecies(speciesInformation.riskRatingId) && !isProjectMember
   const predictedOccupancyMaps: PredictedOccupancyMap[] = []
