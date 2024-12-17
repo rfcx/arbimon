@@ -112,6 +112,8 @@ const playingAudioIndex = ref(-1)
 const playedTime = ref(0)
 const playedProgressPercentage = ref(0)
 
+const CORE_API_BASE_URL = 'https://api.rfcx.org'
+
 const props = defineProps<{ speciesCalls: Array<TaxonSpeciesCallTypes['light']> }>()
 
 const isEmpty = computed((): boolean => {
@@ -136,7 +138,7 @@ const getSpeciesCallAssets = async (): Promise<void> => {
 }
 
 const getSpectrogramImage = async (): Promise<void> => {
-  const spectrogramList = (await Promise.all(props.speciesCalls.map(async ({ callMediaSpecUrl }) => await apiBioGetCoreMedia(apiClientBio, callMediaSpecUrl)))).filter(isDefined)
+  const spectrogramList = (await Promise.all(props.speciesCalls.map(async ({ callMediaSpecUrl }) => await apiBioGetCoreMedia(apiClientBio, callMediaSpecUrl.includes('https:') ? callMediaSpecUrl : CORE_API_BASE_URL + callMediaSpecUrl)))).filter(isDefined)
   spectrograms.value = spectrogramList.map(data => window.URL.createObjectURL(data))
 }
 
