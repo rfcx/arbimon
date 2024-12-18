@@ -15,7 +15,10 @@
       </span>
     </div>
     <div class="h-full overflow-y">
-      <ul v-infinite-scroll="loadMore">
+      <ul
+        v-infinite-scroll="loadMore"
+        :infinite-scroll-distance="20"
+      >
         <li class="p-6 relative sticky top-0 bg-moss border-b-1 border-util-gray-02">
           <form
             class="w-full"
@@ -48,6 +51,15 @@
             >
               Search for project names, species names, IUCN status, summary, countries, or objectives
             </label>
+            <div class="flex items-center mt-4">
+              <input
+                type="checkbox"
+                class="w-4 h-4 border border-util-gray-01 rounded bg-gray-50 focus:(ring-0 outline-none) dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                :checked="isSelectedPublishedProjects"
+                @click="togglePublishedProjects()"
+              >
+              <label class="font-light text-gray-500 dark:text-util-gray-01 ml-2">Only projects with published insights</label>
+            </div>
           </form>
         </li>
         <li v-if="false">
@@ -108,12 +120,13 @@ import ProjectListItem from '../components/project-list-item.vue'
 import type { ProjectLight, ProjectProfileWithMetrics, Tab } from '../data/types'
 
 const props = defineProps<{ data: ProjectLight[], selectedProjectId: number | undefined, selectedTab: Tab, isLoading: boolean, initialSearch: string, noResults: boolean, isError: boolean }>()
-const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void, (e: 'emitLoadMore'): void, (e: 'emitSearch', keyword: string): void, (e: 'emitSwapTab', tab: Tab): void
+const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void, (e: 'emitLoadMore', isSelectedPublishedProjects: boolean): void, (e: 'emitLoadPublishedProjects', isSelectedPublishedProjects: boolean): void, (e: 'emitSearch', keyword: string, isSelectedPublishedProjects: boolean): void, (e: 'emitSwapTab', tab: Tab): void
 }>()
 
 const pdStore = useProjectDirectoryStore()
 
 const isSearchBoxFocused = ref(false)
+const isSelectedPublishedProjects = ref(false)
 const searchKeyword = ref(props.initialSearch)
 
 const dataWithMetrics = computed((): ProjectProfileWithMetrics[] => {
@@ -132,7 +145,7 @@ const emitSwapTab = (tab: Tab) => {
 const loadMore = () => {
   // hotfix: disable infinite scroll when search keyword is not empty - remove this when explore page supports infinite scroll with search
   if (searchKeyword.value !== '') return
-  emit('emitLoadMore')
+  emit('emitLoadMore', isSelectedPublishedProjects.value)
 }
 
 const emitSelectedProject = (projectId: number) => {
@@ -140,7 +153,13 @@ const emitSelectedProject = (projectId: number) => {
 }
 
 const emitSearch = (keyword: string) => {
-  emit('emitSearch', keyword)
+  emit('emitSearch', keyword, isSelectedPublishedProjects.value)
+}
+
+const togglePublishedProjects = () => {
+  isSelectedPublishedProjects.value = !isSelectedPublishedProjects.value
+  if (searchKeyword.value !== '') emitSearch(searchKeyword.value)
+  else emit('emitLoadPublishedProjects', isSelectedPublishedProjects.value)
 }
 
 watch(() => props.initialSearch, (newVal) => {

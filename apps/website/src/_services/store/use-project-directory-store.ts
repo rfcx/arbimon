@@ -9,20 +9,26 @@ export const useProjectDirectoryStore = defineStore('project-directory-store', (
     allProjects.value = projects
   }
   const allProjectsWithMetrics = ref<ProjectProfileWithMetrics[]>([])
+  const allProjectsWithMetricsOffset = ref<number>(0)
   const addProjectsWithMetrics = (projects: ProjectProfileWithMetrics[]): void => {
     if (allProjectsWithMetrics.value.length === 0) { // if empty, just add
       allProjectsWithMetrics.value = projects
+      allProjectsWithMetricsOffset.value = allProjectsWithMetrics.value.length
       return
     }
 
     projects.forEach(p => {
       const index = allProjectsWithMetrics.value.findIndex(ap => ap.id === p.id)
+      allProjectsWithMetricsOffset.value++
       if (index === -1) {
         allProjectsWithMetrics.value.push(p)
       } else {
         allProjectsWithMetrics.value[index] = p
       }
     })
+  }
+  const resetAllProjectsWithMetrics = (): void => {
+    allProjectsWithMetrics.value = []
   }
   const getProjectLightById = (id: number): ProjectLight | undefined => {
     return allProjects.value.find(p => p.id === id)
@@ -37,6 +43,8 @@ export const useProjectDirectoryStore = defineStore('project-directory-store', (
     allProjects,
     updateAllProjects,
     allProjectsWithMetrics,
+    allProjectsWithMetricsOffset,
+    resetAllProjectsWithMetrics,
     addProjectsWithMetrics,
     getProjectLightById,
     getProjectWithMetricsById,
