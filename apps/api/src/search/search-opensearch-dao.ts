@@ -42,13 +42,6 @@ export const getOpensearchProjects = async (query: string, isPublished: boolean,
                     'expanded_objectives._3gram',
                     'summary',
                     'readme'
-                  ],
-                  sort: [
-                    {
-                      name: {
-                        order: 'asc'
-                      }
-                    }
                   ]
                 }
               },
@@ -75,7 +68,14 @@ export const getOpensearchProjects = async (query: string, isPublished: boolean,
               }
           ]
         }
-      }
+      },
+      sort: [
+        {
+          name: { order: 'asc' },
+          'name._2gram': { order: 'asc' },
+          'name._3gram': { order: 'asc' }
+        }
+      ]
     }
   }
 
