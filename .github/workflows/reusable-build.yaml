@@ -84,8 +84,8 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile]
       
-      - name: 'Verify: Rebuild native modules (important for sqlite3)'
-        run: pnpm rebuild sqlite3
+      - name: Install SQLite3 Separately
+        run: pnpm add sqlite3 --no-save
 
       - name: 'Verify: Build'
         id: build
