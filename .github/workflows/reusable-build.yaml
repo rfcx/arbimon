@@ -83,6 +83,9 @@ jobs:
           run_install: |
             - recursive: true
               args: [--frozen-lockfile]
+      
+      - name: 'Verify: Rebuild native modules (important for sqlite3)'
+        run: pnpm rebuild sqlite3
 
       - name: 'Verify: Build'
         id: build
