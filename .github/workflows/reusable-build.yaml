@@ -47,8 +47,8 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
 
       - name: 'Cache: Dependencies'
-        # v3 (3.3.2) @ 8 Sep 2023 https://github.com/actions/cache/tags
-        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
+        # v4 (4.2.2) @ 27 Feb 2025 https://github.com/actions/cache/tags
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
         with:
           path: ~/.pnpm-store
           key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -56,8 +56,8 @@ jobs:
 
       - name: 'Cache: ESLint'
         if: ${{ inputs.lint }}
-        # v3 (3.3.2) @ 8 Sep 2023 https://github.com/actions/cache/tags
-        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
+        # v3 (4.2.2) @ 27 Feb 2025 https://github.com/actions/cache/tags
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
         with:
           path: |
             .eslintcache
@@ -67,8 +67,8 @@ jobs:
 
       - name: 'Cache: Stylelint'
         if: ${{ inputs.lint }}
-        # v3 (3.3.2) @ 8 Sep 2023 https://github.com/actions/cache/tags
-        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
+        # v3 (4.2.2) @ 27 Feb 2025 https://github.com/actions/cache/tags
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
         with:
           path: |
             .stylelintcache
