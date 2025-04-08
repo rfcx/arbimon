@@ -68,7 +68,7 @@
                     :class="{ 'justify-center': idx >= 2 }"
                   >
                     {{ item.title }}
-                    <div
+                    <!-- <div
                       v-if="item.key"
                       class="ml-2 text-util-gray-02"
                     >
@@ -80,7 +80,7 @@
                         class="text-xxs"
                         :class="{'text-white': sortColumn === item.key && sortDirection === -1 }"
                       />
-                    </div>
+                    </div> -->
                   </div>
                 </th>
               </tr>
@@ -133,8 +133,8 @@
           </table>
         </div>
       </div>
-      <div>
-        MAP
+      <div class="col-span-12 md:col-span-4 w-full overflow-x-auto">
+        <CreateEditSite />
       </div>
     </div>
   </section>
@@ -148,6 +148,7 @@ import { type SiteParams, type SiteResponse } from '@rfcx-bio/common/api-arbimon
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useSites } from './api/use-sites'
+import CreateEditSite from './component/create-edit-site.vue'
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
