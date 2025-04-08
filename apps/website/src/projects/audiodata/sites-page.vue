@@ -44,6 +44,94 @@
             {{ sitesCount() }} {{ sitesCount() > 1 ? "sites" : "site" }}
           </span>
         </div>
+        <div class="bg-echo mt-5">
+          <table class="w-full table-fixed bg-echo">
+            <thead class="h-10 border-b-1 border-util-gray-02">
+              <tr>
+                <th
+                  v-for="(item, idx) in tableHeader"
+                  :key="'species-table-header-' + item.title"
+                  class="font-bold capitalize pt-2 px-1 select-none"
+                  :class="{
+                    'text-left': idx < 2,
+                    'w-32 lg:w-36': idx < 1,
+                    'w-20': tableHeader.length > 2 && idx >= 1,
+                    'sticky left-0': idx === 0,
+                    'sticky left-32 lg:left-36': idx === 1,
+                    'cursor-pointer': item.key
+                  }"
+                  :style="{ 'box-shadow': `inset 0 -3px 0 ${HEADER_COLOR}` }"
+                  @click="sort(item.key)"
+                >
+                  <div
+                    class="flex flex-row"
+                    :class="{ 'justify-center': idx >= 2 }"
+                  >
+                    {{ item.title }}
+                    <div
+                      v-if="item.key"
+                      class="ml-2 text-util-gray-02"
+                    >
+                      <icon-fa-chevron-up
+                        class="text-xxs"
+                        :class="{'text-white': sortColumn === item.key && sortDirection === 1 }"
+                      />
+                      <icon-fa-chevron-down
+                        class="text-xxs"
+                        :class="{'text-white': sortColumn === item.key && sortDirection === -1 }"
+                      />
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="row in pageData"
+                :key="'species-table-row-' + row.name"
+                @click="clickSite(row)"
+              >
+                <td class="p-2 sticky left-0 lg:left-0 z-10">
+                  {{ row.name }}
+                </td>
+                <td class="p-2 sticky left-32 lg:left-36 z-10">
+                  {{ row.rec_count }}
+                </td>
+                <td class="p-2 sticky left-32 lg:left-36 z-10">
+                  {{ row.lat }}
+                </td>
+                <td class="p-2 sticky left-32 lg:left-36 z-10">
+                  {{ row.lon }}
+                </td>
+                <td class="p-2 sticky left-32 lg:left-36 z-10">
+                  {{ row.alt }}
+                </td>
+                <td class="p-2 sticky left-32 lg:left-36 z-10">
+                  {{ row.timezone }}
+                </td>
+                <td class="p-2 sticky left-32 lg:left-36 z-10">
+                  {{ row.updated_at }}
+                </td>
+                <td class="p-2 sticky left-32 lg:left-36 z-10">
+                  {{ row.deployment }}
+                </td>
+              </tr>
+              <tr
+                v-for="blankIndex in pageSize - pageData.length"
+                :key="'blank-row' + blankIndex"
+              >
+                <td class="p-2">
+                  <span>&nbsp;</span>
+                </td>
+              </tr>
+              <tr
+                class="h-2 border-b-1 border-subtle"
+              >
+                <td :colspan="tableHeader.length" />
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div>
         MAP
@@ -55,7 +143,7 @@
 import type { AxiosInstance } from 'axios'
 import { computed, inject } from 'vue'
 
-import { type SiteParams } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { type SiteParams, type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
@@ -80,6 +168,104 @@ const sitesCount = () => {
   return sites.value?.length ?? 0
 }
 
+// Table
+export interface SiteItem {
+  name: string
+  rec_count: number
+  lat: string
+  lon: string
+  alt: string
+  data: boolean[]
+  total: number
+}
+
+type SortableColumn = 'name' | 'rec_count' | 'lat' | 'lon' | 'alt' | 'timezone' | 'updated_at' | 'deployment'
+type SortDirection = 1 | -1
+
+interface Header {
+  title: string
+  key?: SortableColumn
+}
+
+const SORT_ASC: SortDirection = 1
+const SORT_DESC: SortDirection = -1
+const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection, sortFunction: (e1: SiteResponse, e2: SiteResponse) => number }> = {
+  name: {
+    defaultDirection: SORT_ASC,
+    sortFunction: (e1, e2) => e1.name.localeCompare(e2.name)
+  },
+  rec_count: {
+    defaultDirection: SORT_DESC,
+    sortFunction: (e1, e2) => e1.rec_count - e2.rec_count
+  },
+  lat: {
+    defaultDirection: SORT_DESC,
+    sortFunction: (e1, e2) => e1.lat - e2.lat
+  },
+  lon: {
+    defaultDirection: SORT_DESC,
+    sortFunction: (e1, e2) => e1.lon - e2.lon
+  },
+  alt: {
+    defaultDirection: SORT_DESC,
+    sortFunction: (e1, e2) => e1.alt - e2.alt
+  },
+  timezone: {
+    defaultDirection: SORT_ASC,
+    sortFunction: (e1, e2) => e1.name.localeCompare(e2.name)
+  },
+  updated_at: {
+    defaultDirection: SORT_ASC,
+    sortFunction: (e1, e2) => e1.name.localeCompare(e2.name)
+  },
+  deployment: {
+    defaultDirection: SORT_DESC,
+    sortFunction: (e1, e2) => e1.deployment - e2.deployment
+  }
+}
+
+const HEADER_COLOR = '#ffffff80'
+const tableHeader: Header[] =
+  [
+    { title: 'Name', key: 'name' },
+    { title: 'No. of recordings', key: 'rec_count' },
+    { title: 'Latitude', key: 'lat' },
+    { title: 'Longitude', key: 'lon' },
+    { title: 'Elevation', key: 'alt' },
+    { title: 'Current Timezone', key: 'timezone' },
+    { title: 'Updated', key: 'updated_at' },
+    { title: 'Deployed', key: 'deployment' }
+  ]
+
+const pageIndex = 1 // 1-based for humans
+const pageSize = 10
+let sortColumn: SortableColumn = 'name'
+let sortDirection: SortDirection = SORTABLE_COLUMNS.name.defaultDirection
+
+const sort = (column?: SortableColumn) => {
+  if (!column) return
+
+  if (sortColumn === column) {
+    // Change direction
+    sortDirection = sortDirection === SORT_ASC
+      ? SORT_DESC
+      : SORT_ASC
+  } else {
+    // Change column
+    sortColumn = column
+    sortDirection = SORTABLE_COLUMNS[column].defaultDirection
+  }
+}
+
+const sortedTableData = computed((): SiteResponse[] | undefined => {
+  return sites.value
+})
+
+const pageData = computed((): SiteResponse[] => {
+  const start = (pageIndex - 1) * pageSize
+  return sortedTableData.value?.slice(start, start + pageSize) ?? []
+})
+
 // function
 // const deleteSelectedSite = () => { console.info('deleteSelectedSite') }
 // const deleteAllEmptySites = () => { console.info('DeleteAllEmptySites') }
@@ -87,4 +273,6 @@ const exportSites = () => { console.info('exportSites') }
 const editSite = () => { console.info('editSite') }
 const importSite = () => { console.info('importSite') }
 const createSite = () => { console.info('createSite') }
+
+const clickSite = (site: SiteResponse) => { console.info('clickSite', site.name) }
 </script>

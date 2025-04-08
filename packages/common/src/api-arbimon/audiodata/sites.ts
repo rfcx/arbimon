@@ -10,7 +10,7 @@ export interface SiteParams {
 // Response types
 export type SitesResponse = SiteResponse[]
 
-interface SiteResponse {
+export interface SiteResponse {
   alt: number
   country_code: string
   deployment: number
