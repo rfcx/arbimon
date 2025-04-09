@@ -103,7 +103,7 @@
       <button
         class="btn btn-secondary btn-rounded-full btn-small"
         type="button"
-        ng-click="close()"
+        @click="close()"
       >
         Cancel
       </button>
@@ -124,6 +124,8 @@ const props = withDefaults(defineProps<{ creating?: boolean, editing?: boolean, 
   editing: false,
   site: undefined
 })
+
+const emit = defineEmits<{(e: 'emitClose'): void}>()
 
 const siteName = ref('')
 const isDisabled = ref(false)
@@ -151,6 +153,8 @@ onMounted(() => {
 const tempHidden = () => {
   hidden.value = true
 }
+
+const close = () => { emit('emitClose') }
 
 </script>
 

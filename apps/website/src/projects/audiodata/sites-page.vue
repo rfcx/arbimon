@@ -139,6 +139,7 @@
           v-if="creating || editing"
           :editing="editing"
           :site="selectedSite"
+          @emit-close="onClose"
         />
       </div>
     </div>
@@ -285,10 +286,15 @@ const editSite = () => {
   editing.value = true
 }
 const importSite = () => { console.info('importSite') }
+const onClose = () => {
+  creating.value = false
+  editing.value = false
+}
+
 const createSite = () => {
   creating.value = true
   editing.value = false
- }
+}
 
 const clickSite = (site: SiteResponse) => {
   selectedSite.value = site
