@@ -41,11 +41,11 @@
         </div>
         <input
           id="lonInput"
+          v-model="lat"
           class="bg-moss border-gray-600 rounded-lg rounded-l-none border-l-0 w-full"
           style="height: 34px"
           name="lat"
           type="text"
-          ng-model="temp.lat"
           placeholder="Latitude"
           pattern="^-?\d+\.?\d*(\s*)$"
           ng-disabled="temp.hidden === true"
@@ -61,11 +61,11 @@
         </div>
         <input
           id="lonInput"
+          v-model="lon"
           class="bg-moss border-gray-600 rounded-lg rounded-l-none border-l-0 w-full"
           style="height: 34px"
           name="lon"
           type="text"
-          ng-model="temp.lon"
           placeholder="Longitude"
           pattern="^-?\d+\.?\d*(\s*)$"
           ng-disabled="temp.hidden === true"
@@ -81,17 +81,23 @@
         </div>
         <input
           id="lonInput"
+          v-model="alt"
           class="bg-moss border-gray-600 rounded-lg rounded-l-none border-l-0 w-full"
           style="height: 34px"
           name="alt"
           type="text"
-          ng-model="temp.alt"
           placeholder="Elevation (optional)"
           pattern="^-?\d+\.?\d*(\s*)$"
           ng-disabled="temp.hidden === true"
           ng-required="temp.hidden !== true"
         >
       </div>
+    </div>
+    <div
+      v-if="editing"
+      class="mt-5"
+    >
+      Project:
     </div>
     <div class="flex flex-row justify-between mt-5">
       <button
@@ -109,39 +115,42 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+
+import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+
+const props = withDefaults(defineProps<{ creating?: boolean, editing?: boolean, site?: SiteResponse }>(), {
+  creating: false,
+  editing: false,
+  site: undefined
+})
 
 const siteName = ref('')
 const isDisabled = ref(false)
 const checked = ref(false)
 
+const lat = ref('')
+const lon = ref('')
+const alt = ref('')
+const hidden = ref(false)
+
+onMounted(() => {
+  if (props.editing) {
+    lat.value = props.site?.lat.toString() ?? ''
+    lon.value = props.site?.lon.toString() ?? ''
+    alt.value = props.site?.alt.toString() ?? ''
+    siteName.value = props.site?.name ?? ''
+  } else {
+    lat.value = ''
+    lon.value = ''
+    alt.value = ''
+    siteName.value = ''
+  }
+})
+
 const tempHidden = () => {
-  console.info('tempHidden')
+  hidden.value = true
 }
-
-// import { Modal } from 'flowbite'
-// import { type Ref, ref, watch } from 'vue'
-
-// import type { ProjectMember } from '@rfcx-bio/common/api-bio/project/project-members'
-
-// const props = defineProps<{user: ProjectMember, disabledDeleteButton: boolean, isDeleting?: boolean, isError?: boolean, isSuccess?: boolean}>()
-// defineEmits<{(e: 'emitDeleteProjectMember', email: string): void}>()
-
-// const modal = ref() as Ref<Modal | null>
-
-// watch(() => props.isSuccess, (val) => {
-//   if (val === true) closeModal()
-// })
-
-// const openModalToDeleteProjectMember = (): void => {
-//   modal.value = new Modal(document.getElementById('project-member-delete-modal' + props.user.userId), {
-//     placement: 'top-center',
-//     backdrop: 'dynamic',
-//     backdropClasses: 'bg-pitch bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
-//     closable: true
-//   })
-//   modal.value.show()
-// }
 
 </script>
 

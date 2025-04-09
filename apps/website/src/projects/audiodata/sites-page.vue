@@ -5,13 +5,13 @@
         Sites
       </h1>
       <button
-        class="btn btn-primary btn-medium group ml-2"
+        class="btn btn-primary btn-medium group ml-2 btn-small"
         @click="createSite()"
       >
         <span>Create</span>
       </button>
       <button
-        class="btn btn-secondary btn-medium group ml-2"
+        class="btn btn-secondary btn-medium group ml-2 btn-small"
         @click="importSite()"
       >
         <span>Bulk Import Sites</span>
@@ -19,18 +19,19 @@
     </div>
     <div class="grid grid-cols-12 gap-4 mt-8 mx-8">
       <div class="col-span-12 md:col-span-8 w-full overflow-x-auto">
-        <div>
+        <div class="p-1">
           <button
-            class="btn btn-secondary btn-medium group"
+            :disabled="selectedSite == undefined"
+            class="btn btn-secondary btn-medium group btn-small disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
             @click="editSite()"
           >
             <span>Edit Site</span>
           </button>
-          <button class="btn btn-secondary btn-medium group ml-2">
+          <button class="btn btn-secondary btn-medium group ml-2 btn-small">
             <span>Delete</span>
           </button>
           <button
-            class="btn btn-secondary btn-medium group ml-2"
+            class="btn btn-secondary btn-medium group ml-2 btn-small"
             @click="exportSites()"
           >
             <span>Export Sites</span>
@@ -134,14 +135,18 @@
         </div>
       </div>
       <div class="col-span-12 md:col-span-4 w-full overflow-x-auto">
-        <CreateEditSite />
+        <CreateEditSite
+          v-if="creating || editing"
+          :editing="editing"
+          :site="selectedSite"
+        />
       </div>
     </div>
   </section>
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 
 import { type SiteParams, type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 
@@ -168,6 +173,10 @@ const { isLoading: isLoadingSiteCount, data: sites } = useSites(apiClientArbimon
 const sitesCount = () => {
   return sites.value?.length ?? 0
 }
+
+const creating = ref(false)
+const editing = ref(false)
+const selectedSite = ref<SiteResponse | undefined>(undefined)
 
 // Table
 export interface SiteItem {
@@ -271,9 +280,17 @@ const pageData = computed((): SiteResponse[] => {
 // const deleteSelectedSite = () => { console.info('deleteSelectedSite') }
 // const deleteAllEmptySites = () => { console.info('DeleteAllEmptySites') }
 const exportSites = () => { console.info('exportSites') }
-const editSite = () => { console.info('editSite') }
+const editSite = () => {
+  creating.value = false
+  editing.value = true
+}
 const importSite = () => { console.info('importSite') }
-const createSite = () => { console.info('createSite') }
+const createSite = () => {
+  creating.value = true
+  editing.value = false
+ }
 
-const clickSite = (site: SiteResponse) => { console.info('clickSite', site.name) }
+const clickSite = (site: SiteResponse) => {
+  selectedSite.value = site
+}
 </script>
