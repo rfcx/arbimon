@@ -97,7 +97,10 @@
       v-if="editing"
       class="mt-5"
     >
-      Project:
+      <div>Project:</div>
+      <DropdownComponent
+        :itmes="projectsItemList"
+      />
     </div>
     <div class="flex flex-row justify-between mt-5">
       <button
@@ -118,6 +121,13 @@
 import { onMounted, ref } from 'vue'
 
 import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { type LocationProjectWithInfo } from '@rfcx-bio/common/api-bio/project/projects'
+
+import { useStore } from '~/store'
+import DropdownComponent from './dropdown-component.vue'
+import { type DropdownItem } from './dropdown-component.vue'
+
+const store = useStore()
 
 const props = withDefaults(defineProps<{ creating?: boolean, editing?: boolean, site?: SiteResponse }>(), {
   creating: false,
@@ -135,6 +145,8 @@ const lat = ref('')
 const lon = ref('')
 const alt = ref('')
 const hidden = ref(false)
+const projects = ref<LocationProjectWithInfo[]>([])
+const projectsItemList = ref<DropdownItem[]>([])
 
 onMounted(() => {
   if (props.editing) {
@@ -148,6 +160,10 @@ onMounted(() => {
     alt.value = ''
     siteName.value = ''
   }
+  projects.value = store.myProjects
+  projects.value.forEach(p => {
+    projectsItemList.value.push({ value: p.idCore, label: p.name, checked: false })
+  })
 })
 
 const tempHidden = () => {
