@@ -110,7 +110,10 @@
       >
         Cancel
       </button>
-      <button class="btn btn-primary btn-rounded-full btn-small">
+      <button
+        class="btn btn-primary btn-rounded-full btn-small"
+        @click.prevent="create"
+      >
         Save
       </button>
     </div>
@@ -118,11 +121,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import type { AxiosInstance } from 'axios'
+import { inject, onMounted, ref } from 'vue'
 
 import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { apiCorePostCreateSite } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type LocationProjectWithInfo } from '@rfcx-bio/common/api-bio/project/projects'
 
+import { apiClientCoreKey } from '@/globals'
 import { useStore } from '~/store'
 import DropdownComponent from './dropdown-component.vue'
 import { type DropdownItem } from './dropdown-component.vue'
@@ -171,6 +177,28 @@ const tempHidden = () => {
 }
 
 const close = () => { emit('emitClose') }
+
+const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
+
+async function create () {
+  // if (!verifyFields()) return
+  // resetErrorState()
+  // isCreating.value = true
+
+  const site = {
+    name: siteName.value,
+    latitude: lat.value,
+    longitude: lon.value,
+    altitude: alt.value,
+    project_id: 'hu5b46o6fslj', // should edit
+    is_public: false // should edit
+  }
+
+  try {
+    const response = await apiCorePostCreateSite(apiClientCore, site)
+    console.info(response)
+  } catch (e) { }
+}
 
 </script>
 

@@ -40,3 +40,15 @@ export const apiArbimonGetSites = async (apiClient: AxiosInstance, slug: string,
     return response.data
   } else return []
 }
+
+export interface CreateSiteBody {
+  name: string
+  latitude: string
+  longitude: string
+  altitude: string
+  project_id: string
+  is_public: boolean
+}
+
+export const apiCorePostCreateSite = async (apiClient: AxiosInstance, payload: CreateSiteBody): Promise<string | undefined> =>
+  await apiClient.post('/streams', payload, { headers: { 'Content-Type': 'application/json' } }).then(res => res.data)
