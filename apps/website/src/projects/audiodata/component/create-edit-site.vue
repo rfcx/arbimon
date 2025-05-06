@@ -125,7 +125,7 @@ import type { AxiosInstance } from 'axios'
 import { inject, onMounted, ref } from 'vue'
 
 import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
-import { apiCorePostCreateSite } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { apiBioUpdateDashboardContent, apiCorePostCreateSite } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type LocationProjectWithInfo } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { apiClientCoreKey } from '@/globals'
@@ -192,6 +192,15 @@ async function create () {
     altitude: alt.value,
     project_id: 'hu5b46o6fslj', // should edit
     is_public: false // should edit
+  }
+
+  if (props.editing) {
+    try {
+      const response = await apiBioUpdateDashboardContent(apiClientCore, 13794, { name: 'Test-api-edit-66' })
+      console.info(response)
+      return
+    } catch (e) { }
+      return
   }
 
   try {
