@@ -1,65 +1,89 @@
 <template>
   <div
-    ref="dropdown"
-    class="dropdown relative w-64"
+    id="itemInput"
+    ref="itemInput"
+    class="dropdown relative"
   >
     <div
-      class="bg-moss rounded my-6 focus:(border-echo ring-0 outline-none) min-w-64"
-      @click="toggleDropdown"
+      class="flex flex-row justify-between items-center border-1 border-util-gray-03 gap-x-2 bg-moss rounded mt-6 p-3 focus:bg-util-gray-04 focus:ring-0 focus:outline-none h-10"
+      data-dropdown-toggle="resultDropdown"
+      @click="onClickInput"
     >
-      <div class="flex flex-row justify-between items-center border-1 border-util-gray-03 gap-x-2 bg-moss rounded my-6 p-3 focus:bg-util-gray-04 focus:ring-0 focus:outline-none min-w-64 h-10">
-        <span>{{ props.itmes.find(idx => idx.value === selectedFilter)?.label }}</span>
-        <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-util-gray-02 " />
-      </div>
+      <span>{{ projectSelected }}</span>
+      <icon-fa-chevron-down class="w-2.5 h-2.5 fa-chevron-down text-util-gray-02 " />
     </div>
-    <ul
-      v-show="isOpen"
-      class="dropdown-menu absolute bg-moss rounded mt-[-10px] py-1 w-full z-10"
+    <div
+      id="resultDropdown"
+      class="absolute hidden w-full z-40 bg-white rounded-md shadow dark:bg-gray-700 mt-2"
     >
-      <li
-        v-for="option in props.itmes"
-        :key="'cj-filter-' + option.value"
-        class="px-4 py-2 cursor-pointer hover:(bg-util-gray-03 rounded)"
-        :class="{ 'text-frequency font-medium': option.value === selectedFilter }"
-        @click="selectFilter(option.value)"
+      <ul
+        class="overflow-y-auto max-h-80 border-cloud bg-moss rounded-md"
       >
-        {{ option.label }}
-      </li>
-    </ul>
+        <li
+          v-if="props.itmes.length === 0"
+          class="rounded-lg p-4 text-center text-sm"
+        >
+          No data
+        </li>
+        <li
+          v-for="option in props.itmes"
+          v-else
+          :key="'cj-filter-' + option.value"
+          class="px-4 py-2 cursor-pointer hover:(bg-util-gray-03 rounded)"
+          :class="{ 'text-frequency font-medium': option.value === selectedFilter }"
+          @click="selectFilter(option.value)"
+        >
+          {{ option.label }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { Dropdown, initDropdowns } from 'flowbite'
+import type { Ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 export interface DropdownItem {
   value: string
   label: string
-  checked: boolean
 }
 
 const props = defineProps<{
-  itmes: DropdownItem[]
+  itmes: DropdownItem[], selected?: DropdownItem
 }>()
 
 const emit = defineEmits<{(e: 'emitSelect', value: string): void}>()
 
 const selectedFilter = ref('')
-const isOpen = ref(false)
+const dropdown = ref() as Ref<Dropdown>
 
 onMounted(() => {
-  console.info(props.itmes)
-
-  // selectedFilter.value = props.itmes[0].value
+  initDropdowns()
+  dropdown.value = new Dropdown(
+    document.getElementById('resultDropdown'),
+    document.getElementById('itemInput'),
+    { placement: 'bottom-start', triggerType: 'none', offsetDistance: 1 }
+  )
+  selectedFilter.value = props.selected?.value ?? ''
 })
-
-const toggleDropdown = () => {
-  isOpen.value = !isOpen.value
-}
 
 const selectFilter = (value: string) => {
   selectedFilter.value = value
   emit('emitSelect', value)
-  isOpen.value = false
+  dropdown.value.hide()
 }
+
+const onClickInput = (): void => {
+  dropdown.value.show()
+}
+
+const projectSelected = computed(() => {
+  return props.itmes.find(idx => idx.value === selectedFilter.value ?? '')?.label
+})
+
+watch(() => props.selected, (newValue) => {
+  selectedFilter.value = newValue?.value ?? ''
+})
 
 </script>

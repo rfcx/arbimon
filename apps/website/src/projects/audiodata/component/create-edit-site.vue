@@ -100,6 +100,7 @@
       <div>Project:</div>
       <DropdownComponent
         :itmes="projectsItemList"
+        :selected="selectedProject"
       />
     </div>
     <div class="flex flex-row justify-between mt-5">
@@ -155,11 +156,19 @@ const alt = ref('')
 const hidden = ref(false)
 const projects = ref<LocationProjectWithInfo[]>([])
 const projectsItemList = ref<DropdownItem[]>([])
+const selectedProject = ref<DropdownItem>()
 const hasFetchedAll = ref(false)
 const isLoading = ref(false)
 const hasFailed = ref(false)
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const LIMIT = 20
+
+const updateSelectedProject = () => {
+  const selected = store.myProjects.find(p => p.slug === selectedProjectSlug.value)
+  if (selected) {
+    selectedProject.value = { value: selected.idCore, label: selected.name }
+  }
+}
 
 onMounted(() => {
   if (props.editing) {
@@ -180,8 +189,9 @@ onMounted(() => {
   }
   projects.value = store.myProjects
   projects.value.forEach(p => {
-    projectsItemList.value.push({ value: p.idCore, label: p.name, checked: false })
+    projectsItemList.value.push({ value: p.idCore, label: p.name })
   })
+  updateSelectedProject()
 })
 
 const fetchProjects = async (offset:number, limit: number): Promise<void> => {
@@ -199,8 +209,9 @@ const fetchProjects = async (offset:number, limit: number): Promise<void> => {
     store.updateMyProject(myProjectResponse?.data)
     projects.value = store.myProjects
     projects.value.forEach(p => {
-      projectsItemList.value.push({ value: p.idCore, label: p.name, checked: false })
+      projectsItemList.value.push({ value: p.idCore, label: p.name })
     })
+    updateSelectedProject()
     if (!hasFetchedAll.value) {
       loadMoreProject()
     }
