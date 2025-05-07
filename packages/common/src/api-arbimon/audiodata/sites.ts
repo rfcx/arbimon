@@ -54,14 +54,24 @@ export const apiCorePostCreateSite = async (apiClient: AxiosInstance, payload: C
   await apiClient.post('/streams', payload, { headers: { 'Content-Type': 'application/json' } }).then(res => res.data)
 
 export interface EditSiteBody {
-  name?: string
-  latitude?: string
-  longitude?: string
-  altitude?: string
-  project_id?: string
-  is_public?: boolean
+  site_id: number
+  name: string
+  lat: string
+  lon: string
+  alt: string
+  external_id: string
+  project: ProjectBody
 }
-
+export interface ProjectBody {
+  project_id: number
+  name: string
+  url: string
+  external_id: string
+}
 export const apiBioUpdateDashboardContent = async (apiClient: AxiosInstance, externalId: number, value: EditSiteBody): Promise<CreateSiteBody> => {
   return await apiClient.patch(`/internal/arbimon/streams/${externalId}`, value)
+}
+
+export const apiLegacySiteUpdate = async (apiClient: AxiosInstance, slug: string, value: EditSiteBody): Promise<CreateSiteBody> => {
+  return await apiClient.post(`/legacy-api/project/${slug}/sites/update`, { site: value })
 }

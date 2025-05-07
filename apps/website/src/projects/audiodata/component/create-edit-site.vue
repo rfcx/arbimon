@@ -122,19 +122,21 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { inject, onMounted, ref } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 
-import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
-import { apiBioUpdateDashboardContent, apiCorePostCreateSite } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
-import { type LocationProjectWithInfo } from '@rfcx-bio/common/api-bio/project/projects'
+import { type SiteResponse, apiCorePostCreateSite, apiLegacySiteUpdate } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
-import { apiClientCoreKey } from '@/globals'
+import { apiClientArbimonLegacyKey, apiClientCoreKey, apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 import DropdownComponent from './dropdown-component.vue'
 import { type DropdownItem } from './dropdown-component.vue'
 
 const store = useStore()
+const selectedProjectSlug = computed(() => store.project?.slug)
 
+// API
+const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 const props = withDefaults(defineProps<{ creating?: boolean, editing?: boolean, site?: SiteResponse }>(), {
   creating: false,
   editing: false,
@@ -153,6 +155,11 @@ const alt = ref('')
 const hidden = ref(false)
 const projects = ref<LocationProjectWithInfo[]>([])
 const projectsItemList = ref<DropdownItem[]>([])
+const hasFetchedAll = ref(false)
+const isLoading = ref(false)
+const hasFailed = ref(false)
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+const LIMIT = 20
 
 onMounted(() => {
   if (props.editing) {
@@ -166,11 +173,47 @@ onMounted(() => {
     alt.value = ''
     siteName.value = ''
   }
+
+  if (store.myProjects.length === 0) {
+    fetchProjects(0, LIMIT)
+    return
+  }
   projects.value = store.myProjects
   projects.value.forEach(p => {
     projectsItemList.value.push({ value: p.idCore, label: p.name, checked: false })
   })
 })
+
+const fetchProjects = async (offset:number, limit: number): Promise<void> => {
+  isLoading.value = true
+  hasFailed.value = false
+
+  try {
+    const myProjectResponse = await apiBioGetMyProjects(apiClientBio, limit, offset)
+    isLoading.value = false
+    if (myProjectResponse === undefined) {
+      hasFailed.value = true
+      return
+    }
+    hasFetchedAll.value = myProjectResponse.total < myProjectResponse.limit // check if reaching the end
+    store.updateMyProject(myProjectResponse?.data)
+    projects.value = store.myProjects
+    projects.value.forEach(p => {
+      projectsItemList.value.push({ value: p.idCore, label: p.name, checked: false })
+    })
+    if (!hasFetchedAll.value) {
+      loadMoreProject()
+    }
+  } catch (e) {
+    isLoading.value = false
+    hasFailed.value = true
+  }
+}
+
+const loadMoreProject = async (): Promise<void> => {
+  if (hasFetchedAll.value || isLoading.value || hasFailed.value) return
+  fetchProjects(projects.value.length, LIMIT)
+}
 
 const tempHidden = () => {
   hidden.value = true
@@ -194,9 +237,40 @@ async function create () {
     is_public: false // should edit
   }
 
+  // const siteItem = ref<EditSiteBody>()
+
+  // if (siteName.value !== props.site?.name) {
+  //   siteItem.name
+  // }
+  // if (lon.value !== props.site?.lon.toString()) {
+  //   siteItem.lon = lon.value
+  // }
+  // if (lat.value !== props.site?.lat.toString()) {
+  //   siteItem.value.latitude = lat.value
+  // }
+  // if (alt.value !== props.site?.alt.toString()) {
+  //   siteItem.value.altitude = alt.value
+  // }
+
+  const siteItem = {
+    site_id: props.site?.id ?? 0,
+    name: siteName.value,
+    lat: lat.value,
+    lon: lon.value,
+    alt: alt.value,
+    external_id: props.site?.external_id ?? '',
+    project: {
+      project_id: 5846,
+      name: 'CA-380',
+      url: 'ca-380',
+      external_id: 'hu5b46o6fslj'
+    }
+  }
+
   if (props.editing) {
     try {
-      const response = await apiBioUpdateDashboardContent(apiClientCore, 13794, { name: 'Test-api-edit-66' })
+      // const response = await apiBioUpdateDashboardContent(apiClientCore, props.site?.id, { name: 'Test-api-edit-66' })
+      const response = await apiLegacySiteUpdate(apiClientArbimon, selectedProjectSlug.value ?? '', siteItem)
       console.info(response)
       return
     } catch (e) { }
