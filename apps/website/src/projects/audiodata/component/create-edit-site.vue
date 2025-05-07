@@ -123,7 +123,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 
 import { type SiteResponse, apiCorePostCreateSite, apiLegacySiteUpdate } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
@@ -233,6 +233,13 @@ const tempHidden = () => {
 const close = () => { emit('emitClose') }
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
+
+watch(() => props.site, (newValue) => {
+    lat.value = newValue?.lat.toString() ?? ''
+    lon.value = newValue?.lon.toString() ?? ''
+    alt.value = newValue?.alt.toString() ?? ''
+    siteName.value = newValue?.name ?? ''
+})
 
 async function create () {
   // if (!verifyFields()) return
