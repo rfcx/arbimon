@@ -269,6 +269,7 @@ async function create () {
   // if (alt.value !== props.site?.alt.toString()) {
   //   siteItem.value.altitude = alt.value
   // }
+  const selected = store.myProjects.find(p => p.slug === selectedProjectSlug.value)
 
   const siteItem = {
     site_id: props.site?.id ?? 0,
@@ -278,10 +279,10 @@ async function create () {
     alt: alt.value,
     external_id: props.site?.external_id ?? '',
     project: {
-      project_id: 5846,
-      name: 'CA-380',
-      url: 'ca-380',
-      external_id: 'hu5b46o6fslj'
+      project_id: 5846, // Should get project_id from legacy
+      name: selected?.name ?? '',
+      url: selected?.slug ?? '',
+      external_id: selected?.idCore ?? ''
     }
   }
 
