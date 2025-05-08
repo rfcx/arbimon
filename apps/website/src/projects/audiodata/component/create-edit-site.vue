@@ -138,13 +138,12 @@ const selectedProjectSlug = computed(() => store.project?.slug)
 
 // API
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
-const props = withDefaults(defineProps<{ creating?: boolean, editing?: boolean, site?: SiteResponse }>(), {
-  creating: false,
+const props = withDefaults(defineProps<{ editing?: boolean, site?: SiteResponse }>(), {
   editing: false,
   site: undefined
 })
 
-const emit = defineEmits<{(e: 'emitClose'): void}>()
+const emit = defineEmits<{(e: 'emitClose'): void, (e: 'emitReloadSite'): void, }>()
 
 const siteName = ref('')
 const isDisabled = ref(false)
@@ -241,35 +240,34 @@ watch(() => props.site, (newValue) => {
     siteName.value = newValue?.name ?? ''
 })
 
+watch(() => props.editing, (newValue) => {
+  if (newValue) {
+    lat.value = props.site?.lat.toString() ?? ''
+    lon.value = props.site?.lon.toString() ?? ''
+    alt.value = props.site?.alt.toString() ?? ''
+    siteName.value = props.site?.name ?? ''
+  } else {
+    lat.value = ''
+    lon.value = ''
+    alt.value = ''
+    siteName.value = ''
+  }
+})
+
 async function create () {
   // if (!verifyFields()) return
   // resetErrorState()
   // isCreating.value = true
+  const selected = store.myProjects.find(p => p.slug === selectedProjectSlug.value)
 
   const site = {
     name: siteName.value,
     latitude: lat.value,
     longitude: lon.value,
     altitude: alt.value,
-    project_id: 'hu5b46o6fslj', // should edit
+    project_id: selected?.idCore ?? '',
     is_public: false // should edit
   }
-
-  // const siteItem = ref<EditSiteBody>()
-
-  // if (siteName.value !== props.site?.name) {
-  //   siteItem.name
-  // }
-  // if (lon.value !== props.site?.lon.toString()) {
-  //   siteItem.lon = lon.value
-  // }
-  // if (lat.value !== props.site?.lat.toString()) {
-  //   siteItem.value.latitude = lat.value
-  // }
-  // if (alt.value !== props.site?.alt.toString()) {
-  //   siteItem.value.altitude = alt.value
-  // }
-  const selected = store.myProjects.find(p => p.slug === selectedProjectSlug.value)
 
   const siteItem = {
     site_id: props.site?.id ?? 0,
@@ -291,15 +289,15 @@ async function create () {
       // const response = await apiBioUpdateDashboardContent(apiClientCore, props.site?.id, { name: 'Test-api-edit-66' })
       const response = await apiLegacySiteUpdate(apiClientArbimon, selectedProjectSlug.value ?? '', siteItem)
       console.info(response)
-      return
+      emit('emitReloadSite')
     } catch (e) { }
-      return
+  } else {
+    try {
+      const response = await apiCorePostCreateSite(apiClientCore, site)
+      console.info(response)
+      emit('emitReloadSite')
+    } catch (e) { }
   }
-
-  try {
-    const response = await apiCorePostCreateSite(apiClientCore, site)
-    console.info(response)
-  } catch (e) { }
 }
 
 </script>

@@ -140,6 +140,7 @@
           :editing="editing"
           :site="selectedSite"
           @emit-close="onClose"
+          @emit-reload-site="reloadSite"
         />
       </div>
     </div>
@@ -168,7 +169,7 @@ const siteParams = computed<SiteParams>(() => {
     logs: true
   }
 })
-const { isLoading: isLoadingSiteCount, data: sites } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
+const { isLoading: isLoadingSiteCount, data: sites, refetch: siteRefetch } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
 
 // Show on UI
 const sitesCount = () => {
@@ -226,7 +227,7 @@ const SORTABLE_COLUMNS: Record<SortableColumn, { defaultDirection: SortDirection
     sortFunction: (e1, e2) => e1.name.localeCompare(e2.name)
   },
   updated_at: {
-    defaultDirection: SORT_ASC,
+    defaultDirection: SORT_DESC,
     sortFunction: (e1, e2) => e1.name.localeCompare(e2.name)
   },
   deployment: {
@@ -250,8 +251,8 @@ const tableHeader: Header[] =
 
 const pageIndex = 1 // 1-based for humans
 const pageSize = 10
-let sortColumn: SortableColumn = 'name'
-let sortDirection: SortDirection = SORTABLE_COLUMNS.name.defaultDirection
+let sortColumn: SortableColumn = 'updated_at'
+let sortDirection: SortDirection = SORTABLE_COLUMNS.updated_at.defaultDirection
 
 const sort = (column?: SortableColumn) => {
   if (!column) return
@@ -269,7 +270,10 @@ const sort = (column?: SortableColumn) => {
 }
 
 const sortedTableData = computed((): SiteResponse[] | undefined => {
-  return sites.value
+  if (sites.value === undefined) return
+  const arr = sites.value.map(s => s)
+  const sortedDatasets = arr.sort((a, b) => SORTABLE_COLUMNS[sortColumn].sortFunction(a, b) * sortDirection)
+  return sortedDatasets
 })
 
 const pageData = computed((): SiteResponse[] => {
@@ -289,6 +293,12 @@ const importSite = () => { console.info('importSite') }
 const onClose = () => {
   creating.value = false
   editing.value = false
+}
+
+const reloadSite = async (): Promise<void> => {
+  creating.value = false
+  editing.value = false
+  await siteRefetch()
 }
 
 const createSite = () => {
