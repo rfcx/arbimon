@@ -6,7 +6,8 @@
           <th
             v-for="column in columns"
             :key="column.key"
-            class="px-2 cursor-pointer"
+            class="px-2 cursor-pointer truncate whitespace-nowrap overflow-hidden"
+            :style="`max-width: ${column.maxWidth || 100}px`"
             @click="sortBy(column.key)"
           >
             {{ column.label }}
@@ -25,7 +26,8 @@
           <td
             v-for="column in columns"
             :key="column.key"
-            class="px-2"
+            :style="`max-width: ${column.maxWidth || 100}px`"
+            class="px-2 truncate whitespace-nowrap overflow-hidden"
           >
             {{ row[column.key] }}
           </td>
@@ -41,6 +43,7 @@ import { computed, defineProps, onMounted, ref } from 'vue'
 interface Column {
   label: string
   key: string
+  maxWidth: number
 }
 
 interface Row {

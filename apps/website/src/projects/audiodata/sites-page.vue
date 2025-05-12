@@ -96,14 +96,14 @@ const sitesCount = () => {
   return sites.value?.length ?? 0
 }
 const columns = [
-  { label: 'Name', key: 'name' },
-  { label: 'No. of records', key: 'rec_count' },
-  { label: 'Latitude', key: 'lat' },
-  { label: 'Longitude', key: 'lon' },
-  { label: 'Elevation', key: 'alt' },
-  { label: 'Current Timezone', key: 'timezone' },
-  { label: 'Updated', key: 'updated_at' },
-  { label: 'Deployed', key: 'deployment' }
+  { label: 'Name', key: 'name', maxWidth: 110 },
+  { label: 'No. of records', key: 'rec_count', maxWidth: 50 },
+  { label: 'Latitude', key: 'lat', maxWidth: 100 },
+  { label: 'Longitude', key: 'lon', maxWidth: 100 },
+  { label: 'Elevation', key: 'alt', maxWidth: 100 },
+  { label: 'Current Timezone', key: 'timezone', maxWidth: 100 },
+  { label: 'Updated', key: 'updated_at', maxWidth: 110 },
+  { label: 'Deployed', key: 'deployment', maxWidth: 50 }
 ]
 
 const creating = ref(false)
