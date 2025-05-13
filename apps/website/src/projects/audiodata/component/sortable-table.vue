@@ -22,6 +22,7 @@
           v-for="(row, index) in sortedRows"
           :key="index"
           class="border-t border-gray-700 hover:bg-gray-900"
+          @click="handleRowClick(row)"
         >
           <td
             v-for="column in columns"
@@ -38,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, onMounted, ref } from 'vue'
+import { computed, defineEmits, defineProps, onMounted, ref } from 'vue'
 
 interface Column {
   label: string
@@ -46,7 +47,7 @@ interface Column {
   maxWidth: number
 }
 
-interface Row {
+export interface Row {
   [key: string]: any
 }
 
@@ -56,6 +57,8 @@ const props = defineProps<{
   defaultSortKey?: string
   defaultSortOrder?: 'asc' | 'desc'
 }>()
+
+const emit = defineEmits<{(e: 'selectedItem', row: Row): void}>()
 
 const sortKey = ref<string | null>(null)
 const sortOrder = ref<'asc' | 'desc'>('asc')
@@ -83,6 +86,10 @@ const sortedRows = computed(() => {
     return 0
   })
 })
+
+function handleRowClick (row: Row) {
+  emit('selectedItem', row)
+}
 
 onMounted(() => {
   if (props.defaultSortKey) {

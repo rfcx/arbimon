@@ -51,6 +51,7 @@
           :rows="sites ?? []"
           :default-sort-key="'updated_at'"
           :default-sort-order="'desc'"
+          @selectedItem="onSelectedItem"
         />
       </div>
       <div class="col-span-12 md:col-span-4 w-full overflow-x-auto">
@@ -144,6 +145,10 @@ const reloadSite = async (): Promise<void> => {
 const createSite = () => {
   creating.value = true
   editing.value = false
+}
+
+function onSelectedItem (row: Record<string, any>) {
+  selectedSite.value = row as SiteResponse
 }
 
 </script>
