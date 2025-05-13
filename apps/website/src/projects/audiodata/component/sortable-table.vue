@@ -1,12 +1,12 @@
 <template>
-  <div class="text-white bg-black rounded-lg w-full">
-    <table class="table-auto w-full border-collapse text-sm">
-      <thead class="bg-gray-800 text-left">
+  <div class="text-white bg-pitch rounded-lg w-full">
+    <table class="table-auto w-full border-collapse text-sm border-util-gray-03">
+      <thead class="bg-pitch text-left">
         <tr>
           <th
             v-for="column in columns"
             :key="column.key"
-            class="px-2 cursor-pointer truncate whitespace-nowrap overflow-hidden"
+            class="px-2 cursor-pointer"
             :style="`max-width: ${column.maxWidth || 100}px`"
             @click="sortBy(column.key)"
           >
@@ -21,14 +21,14 @@
         <tr
           v-for="(row, index) in sortedRows"
           :key="index"
-          class="border-t border-gray-700 hover:bg-gray-900"
+          class="border-t border-util-gray-03 hover:border-util-gray-03"
           @click="handleRowClick(row)"
         >
           <td
             v-for="column in columns"
             :key="column.key"
             :style="`max-width: ${column.maxWidth || 100}px`"
-            class="px-2 truncate whitespace-nowrap overflow-hidden"
+            class="py-2 pl-2 truncate whitespace-nowrap overflow-hidden"
           >
             {{ row[column.key] }}
           </td>

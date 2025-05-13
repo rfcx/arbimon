@@ -13,7 +13,7 @@ export type SitesResponse = SiteResponse[]
 export interface SiteResponse {
   alt: number
   country_code: string
-  deployment: number
+  deployment: string
   external_id: string
   hidden: number
   id: number

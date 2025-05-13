@@ -51,7 +51,7 @@
           :rows="sites ?? []"
           :default-sort-key="'updated_at'"
           :default-sort-order="'desc'"
-          @selectedItem="onSelectedItem"
+          @selected-item="onSelectedItem"
         />
       </div>
       <div class="col-span-12 md:col-span-4 w-full overflow-x-auto">
@@ -98,13 +98,13 @@ const sitesCount = () => {
 }
 const columns = [
   { label: 'Name', key: 'name', maxWidth: 110 },
-  { label: 'No. of records', key: 'rec_count', maxWidth: 50 },
-  { label: 'Latitude', key: 'lat', maxWidth: 100 },
-  { label: 'Longitude', key: 'lon', maxWidth: 100 },
-  { label: 'Elevation', key: 'alt', maxWidth: 100 },
+  { label: 'No. of records', key: 'rec_count', maxWidth: 60 },
+  { label: 'Latitude', key: 'lat', maxWidth: 60 },
+  { label: 'Longitude', key: 'lon', maxWidth: 60 },
+  { label: 'Elevation', key: 'alt', maxWidth: 60 },
   { label: 'Current Timezone', key: 'timezone', maxWidth: 100 },
   { label: 'Updated', key: 'updated_at', maxWidth: 110 },
-  { label: 'Deployed', key: 'deployment', maxWidth: 50 }
+  { label: 'Deployed', key: 'deployment', maxWidth: 60 }
 ]
 
 const creating = ref(false)
