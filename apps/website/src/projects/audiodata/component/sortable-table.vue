@@ -7,6 +7,7 @@
             v-for="column in columns"
             :key="column.key"
             class="px-2 cursor-pointer"
+            :class="isDecimalKey(column.key) ? 'truncate' : ''"
             :style="`max-width: ${column.maxWidth || 100}px`"
             @click="sortBy(column.key)"
           >
@@ -30,7 +31,7 @@
             :style="`max-width: ${column.maxWidth || 100}px`"
             class="py-2 pl-2 truncate whitespace-nowrap overflow-hidden"
           >
-            {{ row[column.key] }}
+            {{ formatValueByKey(column.key, row[column.key], row) }}
           </td>
         </tr>
       </tbody>
@@ -39,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+import dayjs from 'dayjs'
 import { computed, defineEmits, defineProps, onMounted, ref } from 'vue'
 
 interface Column {
@@ -51,6 +53,10 @@ export interface Row {
   [key: string]: any
 }
 
+const decimalKeys = ['lat', 'lon', 'alt']
+function isDecimalKey (key: string): boolean {
+  return decimalKeys.includes(key)
+}
 const props = defineProps<{
   columns: Column[]
   rows: Row[]
@@ -86,6 +92,65 @@ const sortedRows = computed(() => {
     return 0
   })
 })
+
+function formatValueByKey (key: string, value: any, row: any): string {
+  if (value === null || value === undefined || value === '') return '-'
+  if (key === 'timezone') return getUTCOffset(value)
+  if (key === 'deployment') return value === 0 ? 'no data' : formatDateTime(value, row.timezone)
+  if (key === 'updated_at') return formatDateTime(value, row.timezone)
+
+  if (typeof value !== 'number') return value
+
+  if (key === 'lat' || key === 'lon') {
+    return parseFloat(value.toFixed(3)).toString()
+  }
+
+  if (key === 'alt') {
+    return Math.round(value).toString()
+  }
+
+  return value.toString()
+}
+
+function getUTCOffset (timeZone: string | undefined): string {
+  if (!timeZone || typeof timeZone !== 'string') return ''
+
+  try {
+    const now = new Date()
+    const dtf = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      timeZoneName: 'shortOffset'
+    })
+    const parts = dtf.formatToParts(now)
+    const tzPart = parts.find(part => part.type === 'timeZoneName')
+
+    if (!tzPart) return '-'
+    const gmt = tzPart.value
+    const match = gmt.match(/GMT([+-])(\d{1,2})(?::(\d{2}))?/)
+    if (!match) return '-'
+
+    const sign = match[1]
+    const hour = match[2].padStart(2, '0')
+    const minute = match[3] || '00'
+
+    if (minute === '00') {
+      return `UTC${sign}${hour}`
+    } else {
+      return `UTC${sign}${hour}:${minute}`
+    }
+  } catch {
+    return '-'
+  }
+}
+
+function formatDateTime (dateStr: string, timeZone?: string): string {
+  if (!dateStr) return '-'
+  try {
+    return dayjs(dateStr).tz(timeZone).format('MMM D, YYYY h:mm A')
+  } catch {
+    return dayjs(dateStr).format('MMM D, YYYY h:mm A')
+  }
+}
 
 function handleRowClick (row: Row) {
   emit('selectedItem', row)

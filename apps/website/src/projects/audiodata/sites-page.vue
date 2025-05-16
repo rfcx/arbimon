@@ -97,13 +97,13 @@ const sitesCount = () => {
   return sites.value?.length ?? 0
 }
 const columns = [
-  { label: 'Name', key: 'name', maxWidth: 110 },
-  { label: 'No. of records', key: 'rec_count', maxWidth: 60 },
-  { label: 'Latitude', key: 'lat', maxWidth: 60 },
-  { label: 'Longitude', key: 'lon', maxWidth: 60 },
-  { label: 'Elevation', key: 'alt', maxWidth: 60 },
-  { label: 'Current Timezone', key: 'timezone', maxWidth: 100 },
-  { label: 'Updated', key: 'updated_at', maxWidth: 110 },
+  { label: 'Name', key: 'name', maxWidth: 150 },
+  { label: 'No. of records', key: 'rec_count', maxWidth: 50 },
+  { label: 'Latitude', key: 'lat', maxWidth: 50 },
+  { label: 'Longitude', key: 'lon', maxWidth: 50 },
+  { label: 'Elevation', key: 'alt', maxWidth: 50 },
+  { label: 'Current Timezone', key: 'timezone', maxWidth: 70 },
+  { label: 'Updated', key: 'updated_at', maxWidth: 100 },
   { label: 'Deployed', key: 'deployment', maxWidth: 60 }
 ]
 
