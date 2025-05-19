@@ -147,7 +147,10 @@ const createSite = () => {
   editing.value = false
 }
 
-function onSelectedItem (row: Record<string, any>) {
+function onSelectedItem (row?: Record<string, any>) {
+  if (!row) {
+    selectedSite.value = undefined
+  }
   selectedSite.value = row as SiteResponse
 }
 

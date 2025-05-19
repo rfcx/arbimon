@@ -23,7 +23,8 @@
           v-for="(row, index) in sortedRows"
           :key="index"
           class="border-t border-util-gray-03 hover:border-util-gray-03"
-          @click="handleRowClick(row)"
+          :class="selectedRowIndex === index ? 'bg-[#7F7D78]': ''"
+          @click="handleRowClick(row, index)"
         >
           <td
             v-for="column in columns"
@@ -64,7 +65,7 @@ const props = defineProps<{
   defaultSortOrder?: 'asc' | 'desc'
 }>()
 
-const emit = defineEmits<{(e: 'selectedItem', row: Row): void}>()
+const emit = defineEmits<{(e: 'selectedItem', row?: Row): void}>()
 
 const sortKey = ref<string | null>(null)
 const sortOrder = ref<'asc' | 'desc'>('asc')
@@ -92,6 +93,7 @@ const sortedRows = computed(() => {
     return 0
   })
 })
+const selectedRowIndex = ref<number | null>(null)
 
 function formatValueByKey (key: string, value: any, row: any): string {
   if (value === null || value === undefined || value === '') return '-'
@@ -152,7 +154,13 @@ function formatDateTime (dateStr: string, timeZone?: string): string {
   }
 }
 
-function handleRowClick (row: Row) {
+function handleRowClick (row: Row, index: number) {
+  if (selectedRowIndex.value === index) {
+    selectedRowIndex.value = null
+    emit('selectedItem', undefined)
+    return
+  }
+  selectedRowIndex.value = index
   emit('selectedItem', row)
 }
 
