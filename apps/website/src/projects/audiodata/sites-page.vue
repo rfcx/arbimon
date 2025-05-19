@@ -125,7 +125,15 @@ export interface SiteItem {
 // function
 // const deleteSelectedSite = () => { console.info('deleteSelectedSite') }
 // const deleteAllEmptySites = () => { console.info('DeleteAllEmptySites') }
-const exportSites = () => { console.info('exportSites') }
+const exportSites = () => {
+  const url = `${window.location.origin}/legacy-api/project/${selectedProjectSlug.value}/sites-export.csv`
+  const link = document.createElement('a')
+  link.href = url
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+ }
 const editSite = () => {
   creating.value = false
   editing.value = true
