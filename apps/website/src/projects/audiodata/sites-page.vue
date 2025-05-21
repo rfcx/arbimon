@@ -28,11 +28,38 @@
             <span>Edit Site</span>
           </button>
           <button
-            class="btn btn-secondary btn-medium group ml-2 btn-small"
-            @click="deleteSelectedSite"
+            class="group btn btn-secondary btn-medium group ml-2 btn-small"
+            data-dropdown-toggle="mapDropdown"
           >
-            <span>Delete</span>
+            <span class="inline-flex gap-1 group-hover:fill-blue-500">
+              Delete
+              <icon-custom-el-angle-down class="ml-2 mt-1 group-hover:stroke-pitch inline-flex w-3 h-3" />
+            </span>
           </button>
+          <div
+            id="mapDropdown"
+            class="z-10 hidden bg-moss border-1 border-frequency rounded-lg"
+          >
+            <ul
+              aria-labelledby="mapTypeDropdown"
+              class="p-2 flex flex-col font-medium"
+            >
+              <li
+                key="mapStyle.name"
+                class="bg-moss text-frequency px-3 py-2 flex items-center gap-2 cursor-pointer hover:bg-util-gray-04/60"
+                @click="deleteSelectedSite"
+              >
+                Delete selected site
+              </li>
+              <li
+                key="mapStyle.name"
+                class="bg-moss text-frequency px-3 py-2 flex items-center gap-2 cursor-pointer hover:bg-util-gray-04/60"
+                @click="deleteAllEmptySites"
+              >
+                Delete all empty sites
+              </li>
+            </ul>
+          </div>
           <button
             class="btn btn-secondary btn-medium group ml-2 btn-small"
             @click="exportSites()"
@@ -155,9 +182,19 @@ const handleCancel = () => {
 
 // function
 const deleteSelectedSite = () => {
+  if (selectedSite.value === undefined) return
+
+  sitesSelected.value = [selectedSite.value.name]
+  siteIds.value = [selectedSite.value.id]
+
   showPopup.value = !showPopup.value
-  // checkEmptySites()
 }
+
+const deleteAllEmptySites = () => {
+  checkEmptySites()
+  showPopup.value = !showPopup.value
+}
+
 const exportSites = () => {
   const url = `${window.location.origin}/legacy-api/project/${selectedProjectSlug.value}/sites-export.csv`
   const link = document.createElement('a')
