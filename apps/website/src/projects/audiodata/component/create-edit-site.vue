@@ -171,9 +171,9 @@ const updateSelectedProject = () => {
 
 onMounted(() => {
   if (props.editing) {
-    lat.value = props.site?.lat.toString() ?? ''
-    lon.value = props.site?.lon.toString() ?? ''
-    alt.value = props.site?.alt.toString() ?? ''
+    lat.value = props.site?.lat?.toString() ?? ''
+    lon.value = props.site?.lon?.toString() ?? ''
+    alt.value = props.site?.alt?.toString() ?? ''
     siteName.value = props.site?.name ?? ''
   } else {
     lat.value = ''

@@ -68,10 +68,19 @@ export interface ProjectBody {
   url: string
   external_id: string
 }
+
+export interface TextResponse {
+  message: string
+}
+
 export const apiBioUpdateDashboardContent = async (apiClient: AxiosInstance, externalId: number, value: EditSiteBody): Promise<CreateSiteBody> => {
   return await apiClient.patch(`/internal/arbimon/streams/${externalId}`, value)
 }
 
 export const apiLegacySiteUpdate = async (apiClient: AxiosInstance, slug: string, value: EditSiteBody): Promise<CreateSiteBody> => {
   return await apiClient.post(`/legacy-api/project/${slug}/sites/update`, { site: value })
+}
+
+export const apiLegacySiteDelete = async (apiClient: AxiosInstance, slug: string, sites: string[]): Promise<TextResponse> => {
+  return await apiClient.post(`/legacy-api/project/${slug}/sites/delete`, { sites })
 }

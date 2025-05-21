@@ -27,7 +27,10 @@
           >
             <span>Edit Site</span>
           </button>
-          <button class="btn btn-secondary btn-medium group ml-2 btn-small">
+          <button
+            class="btn btn-secondary btn-medium group ml-2 btn-small"
+            @click="deleteSelectedSite"
+          >
             <span>Delete</span>
           </button>
           <button
@@ -64,18 +67,30 @@
         />
       </div>
     </div>
+    <CustomPopup
+      :visible="showPopup"
+      :is-for-delete-popup="true"
+      :list="sitesSelected"
+      title="Delete selected site"
+      message="Are you sure you would like to delete the following site?"
+      btn-ok-text="Delete"
+      btn-cancel-text="Cancel"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    />
   </section>
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { computed, inject, ref } from 'vue'
 
-import { type SiteParams, type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { type SiteParams, type SiteResponse, apiLegacySiteDelete } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useSites } from './api/use-sites'
 import CreateEditSite from './component/create-edit-site.vue'
+import CustomPopup from './component/custom-popup.vue'
 import SortableTable from './component/sortable-table.vue'
 
 const store = useStore()
@@ -91,6 +106,9 @@ const siteParams = computed<SiteParams>(() => {
   }
 })
 const { isLoading: isLoadingSiteCount, data: sites, refetch: siteRefetch } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
+
+const sitesSelected = ref<string[]>([])
+const siteIds = ref<(string | number)[]>([])
 
 // Show on UI
 const sitesCount = () => {
@@ -122,9 +140,24 @@ export interface SiteItem {
   total: number
 }
 
+const showPopup = ref(false)
+
+async function handleOk () {
+    try {
+      await apiLegacySiteDelete(apiClientArbimon, selectedProjectSlug.value ?? '', siteIds.value)
+      showPopup.value = false
+    } catch (e) { }
+}
+
+const handleCancel = () => {
+  showPopup.value = false
+}
+
 // function
-// const deleteSelectedSite = () => { console.info('deleteSelectedSite') }
-// const deleteAllEmptySites = () => { console.info('DeleteAllEmptySites') }
+const deleteSelectedSite = () => {
+  showPopup.value = !showPopup.value
+  // checkEmptySites()
+}
 const exportSites = () => {
   const url = `${window.location.origin}/legacy-api/project/${selectedProjectSlug.value}/sites-export.csv`
   const link = document.createElement('a')
@@ -160,6 +193,31 @@ function onSelectedItem (row?: Record<string, any>) {
     selectedSite.value = undefined
   }
   selectedSite.value = row as SiteResponse
+}
+
+function checkEmptySites () {
+  const names: string[] = []
+  const ids: (string | number)[] = []
+
+  sites.value?.forEach(site => {
+    if (site.rec_count === 0 && !names.includes(site.name)) {
+      names.push(site.name)
+      ids.push(site.id)
+    }
+  })
+
+  if (!names.length) {
+    console.info('There is no empty site in your project')
+    return
+  }
+
+  if (names.length > 3) {
+    const msg = `& ${names.length - 3} other sites`
+    names.splice(3)
+    names.push(msg)
+  }
+  sitesSelected.value = names
+  siteIds.value = ids
 }
 
 </script>
