@@ -81,6 +81,6 @@ export const apiLegacySiteUpdate = async (apiClient: AxiosInstance, slug: string
   return await apiClient.post(`/legacy-api/project/${slug}/sites/update`, { site: value })
 }
 
-export const apiLegacySiteDelete = async (apiClient: AxiosInstance, slug: string, sites: string[]): Promise<TextResponse> => {
+export const apiLegacySiteDelete = async (apiClient: AxiosInstance, slug: string, sites: number[]): Promise<TextResponse> => {
   return await apiClient.post(`/legacy-api/project/${slug}/sites/delete`, { sites })
 }

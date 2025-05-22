@@ -135,7 +135,7 @@ const siteParams = computed<SiteParams>(() => {
 const { isLoading: isLoadingSiteCount, data: sites, refetch: siteRefetch } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
 
 const sitesSelected = ref<string[]>([])
-const siteIds = ref<(string | number)[]>([])
+const siteIds = ref<(number)[]>([])
 
 // Show on UI
 const sitesCount = () => {
@@ -234,7 +234,7 @@ function onSelectedItem (row?: Record<string, any>) {
 
 function checkEmptySites () {
   const names: string[] = []
-  const ids: (string | number)[] = []
+  const ids: (number)[] = []
 
   sites.value?.forEach(site => {
     if (site.rec_count === 0 && !names.includes(site.name)) {
