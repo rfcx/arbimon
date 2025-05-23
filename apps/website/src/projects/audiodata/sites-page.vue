@@ -12,10 +12,17 @@
       </button>
       <button
         class="btn btn-secondary btn-medium group ml-2 btn-small"
-        @click="importSite()"
+        @click="triggerFileInput"
       >
         <span>Bulk Import Sites</span>
       </button>
+      <input
+        ref="fileInput"
+        type="file"
+        accept=".csv"
+        style="display: none"
+        @change="handleFileUpload"
+      >
     </div>
     <div class="grid grid-cols-12 gap-4 mt-8 mx-8">
       <div class="col-span-12 md:col-span-8 w-full overflow-x-auto">
@@ -109,22 +116,36 @@
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 
-import { type SiteParams, type SiteResponse, apiLegacySiteDelete } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { type CreateSiteBody, type SiteParams, type SiteResponse, apiCorePostCreateSite, apiLegacySiteDelete } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
-import { apiClientArbimonLegacyKey } from '@/globals'
+import { apiClientArbimonLegacyKey, apiClientCoreKey, apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 import { useSites } from './api/use-sites'
 import CreateEditSite from './component/create-edit-site.vue'
 import CustomPopup from './component/custom-popup.vue'
 import SortableTable from './component/sortable-table.vue'
 
+interface Site {
+  name: string;
+  lat: number;
+  lon: number;
+  alt: number;
+}
+
+const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
+
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
 
 // API
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+
+const projects = ref<LocationProjectWithInfo[]>([])
+
 const siteParams = computed<SiteParams>(() => {
   return {
     count: true,
@@ -138,6 +159,13 @@ const sitesSelected = ref<string[]>([])
 const siteIds = ref<(number)[]>([])
 
 // Show on UI
+
+onMounted(() => {
+  if (store.myProjects.length === 0) {
+    fetchProjects(0, LIMIT)
+  }
+})
+
 const sitesCount = () => {
   return sites.value?.length ?? 0
 }
@@ -168,6 +196,10 @@ export interface SiteItem {
 }
 
 const showPopup = ref(false)
+const hasFetchedAll = ref(false)
+const isLoading = ref(false)
+const hasFailed = ref(false)
+const LIMIT = 20
 
 async function handleOk () {
     try {
@@ -195,6 +227,31 @@ const deleteAllEmptySites = () => {
   showPopup.value = !showPopup.value
 }
 
+function toCreateSiteBody (site: Site): CreateSiteBody {
+  const selected = store.myProjects.find(p => p.slug === selectedProjectSlug.value)
+
+  return {
+    name: site.name,
+    latitude: site.lat.toString(),
+    longitude: site.lon.toString(),
+    altitude: site.alt.toString(),
+    project_id: selected?.idCore ?? '',
+    is_public: false // should edit
+  }
+}
+
+async function createSitesFromCsvData (sites: Site[]) {
+  for (const site of sites) {
+    try {
+      const response = await apiCorePostCreateSite(apiClientCore, toCreateSiteBody(site))
+      console.info(response)
+    } catch (error) {
+      console.error(`Error creating site ${site.name}:`, error)
+    }
+  }
+  reloadSite()
+}
+
 const exportSites = () => {
   const url = `${window.location.origin}/legacy-api/project/${selectedProjectSlug.value}/sites-export.csv`
   const link = document.createElement('a')
@@ -208,7 +265,35 @@ const editSite = () => {
   creating.value = false
   editing.value = true
 }
-const importSite = () => { console.info('importSite') }
+
+const fileInput = ref<HTMLInputElement | null>(null)
+const importSites = ref<Site[]>([])
+const errorMessage = ref<string | null>(null)
+
+function triggerFileInput () {
+  fileInput.value?.click()
+}
+
+const handleFileUpload = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  const files = target.files
+
+  if (!files || files.length === 0) return
+
+  const reader = new FileReader()
+
+  reader.onload = () => {
+    const content = reader.result as string
+    const parsed = parseSitesFromCsv(content)
+    if (Array.isArray(parsed)) {
+      importSites.value = parsed
+      errorMessage.value = null
+      createSitesFromCsvData(importSites.value)
+    }
+  }
+
+  reader.readAsText(files[0])
+}
 const onClose = () => {
   creating.value = false
   editing.value = false
@@ -255,6 +340,82 @@ function checkEmptySites () {
   }
   sitesSelected.value = names
   siteIds.value = ids
+}
+
+function parseSitesFromCsv (allText: string): Site[] | false {
+  const allTextLines = allText.split(/\r\n|\n/)
+  const headers = allTextLines[0].split(',')
+
+  if (!headers.includes('name') || !headers.includes('lat') || !headers.includes('lon') || !headers.includes('alt')) {
+    return false
+  }
+
+  const sites: Site[] = []
+  for (let i = 1; i < allTextLines.length; i++) {
+    const data = allTextLines[i].split(',')
+    if (data.length === headers.length) {
+      const site: Partial<Site> = {}
+      for (let j = 0; j < headers.length; j++) {
+        const header = headers[j]
+        const value = data[j]
+
+        if (header === 'lat') {
+          const lat = parseFloat(value)
+          if (lat > 85 || lat < -85) {
+            console.info('Please enter latitude number between -85 to 85')
+            return false
+          }
+          site.lat = lat
+        } else if (header === 'lon') {
+          const lon = parseFloat(value)
+          if (lon > 180 || lon < -180) {
+            console.info('Please enter longitude number between -180 to 180')
+            return false
+          }
+          site.lon = lon
+        } else if (header === 'alt') {
+          site.alt = parseFloat(value)
+        } else if (header === 'name') {
+          site.name = value
+        }
+      }
+
+      if (site.name && site.lat !== undefined && site.lon !== undefined && site.alt !== undefined) {
+        sites.push(site as Site)
+      }
+    }
+  }
+
+  return sites
+}
+
+const fetchProjects = async (offset:number, limit: number): Promise<void> => {
+  isLoading.value = true
+  hasFailed.value = false
+
+  try {
+    const myProjectResponse = await apiBioGetMyProjects(apiClientBio, limit, offset)
+    isLoading.value = false
+    if (myProjectResponse === undefined) {
+      hasFailed.value = true
+      return
+    }
+    hasFetchedAll.value = myProjectResponse.total < myProjectResponse.limit // check if reaching the end
+    store.updateMyProject(myProjectResponse?.data)
+    projects.value = store.myProjects
+
+    if (!hasFetchedAll.value) {
+      loadMoreProject()
+    }
+  } catch (e) {
+    isLoading.value = false
+    hasFailed.value = true
+  }
+}
+
+const loadMoreProject = async (): Promise<void> => {
+  if (hasFetchedAll.value || isLoading.value || hasFailed.value) return
+  fetchProjects(projects.value.length, LIMIT)
 }
 
 </script>
