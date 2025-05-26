@@ -112,6 +112,10 @@
       @ok="handleOk"
       @cancel="handleCancel"
     />
+    <ImportSiteModal
+      ref="importSiteModal"
+      @imported="handleCsvData"
+    />
   </section>
 </template>
 <script setup lang="ts">
@@ -126,6 +130,7 @@ import { useStore } from '~/store'
 import { useSites } from './api/use-sites'
 import CreateEditSite from './component/create-edit-site.vue'
 import CustomPopup from './component/custom-popup.vue'
+import ImportSiteModal from './component/import-site-modal.vue'
 import SortableTable from './component/sortable-table.vue'
 
 interface Site {
@@ -136,6 +141,7 @@ interface Site {
 }
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
+const importSiteModal = ref<InstanceType<typeof ImportSiteModal> | null>(null)
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
@@ -271,7 +277,7 @@ const importSites = ref<Site[]>([])
 const errorMessage = ref<string | null>(null)
 
 function triggerFileInput () {
-  fileInput.value?.click()
+  importSiteModal.value?.open()
 }
 
 const handleFileUpload = (e: Event) => {
@@ -294,6 +300,16 @@ const handleFileUpload = (e: Event) => {
 
   reader.readAsText(files[0])
 }
+
+function handleCsvData (csv: string) {
+    const parsed = parseSitesFromCsv(csv)
+    if (Array.isArray(parsed)) {
+      importSites.value = parsed
+      errorMessage.value = null
+      createSitesFromCsvData(importSites.value)
+    }
+}
+
 const onClose = () => {
   creating.value = false
   editing.value = false
