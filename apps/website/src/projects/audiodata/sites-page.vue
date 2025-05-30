@@ -99,6 +99,13 @@
           @emit-close="onClose"
           @emit-reload-site="reloadSite"
         />
+        <map-view
+          :data="data"
+          class="relative left-0 z-30 w-full h-100vh"
+          :selected-project-id="undefined"
+          :is-error="false"
+          @emit-selected-project="onEmitSelectedProject"
+        />
       </div>
     </div>
     <CustomPopup
@@ -131,6 +138,7 @@ import { useSites } from './api/use-sites'
 import CreateEditSite from './component/create-edit-site.vue'
 import CustomPopup from './component/custom-popup.vue'
 import ImportSiteModal from './component/import-site-modal.vue'
+import MapView from './component/map-view.vue'
 import SortableTable from './component/sortable-table.vue'
 
 interface Site {
@@ -218,6 +226,30 @@ const handleCancel = () => {
   showPopup.value = false
 }
 
+const data = [
+  {
+    id: '1',
+    slug: 'project-a',
+    name: 'Project A',
+    latitudeAvg: 13.7563,
+    longitudeAvg: 100.5018
+  },
+  {
+    id: '2',
+    slug: 'project-b',
+    name: 'Project B',
+    latitudeAvg: 18.7883,
+    longitudeAvg: 98.9853
+  },
+  {
+    id: '3',
+    slug: 'project-c',
+    name: 'Project C',
+    latitudeAvg: 7.9519,
+    longitudeAvg: 98.3381
+  }
+]
+
 // function
 const deleteSelectedSite = () => {
   if (selectedSite.value === undefined) return
@@ -278,6 +310,12 @@ const errorMessage = ref<string | null>(null)
 
 function triggerFileInput () {
   importSiteModal.value?.open()
+}
+
+const onEmitSelectedProject = (locationId: number) => {
+  console.info(locationId)
+  // selectedProjectId.value = locationProjectId
+  // hideProjectList.value = false
 }
 
 const handleFileUpload = (e: Event) => {
