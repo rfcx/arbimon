@@ -100,7 +100,7 @@
           @emit-reload-site="reloadSite"
         />
         <map-view
-          :data="data"
+          :data="markers"
           class="relative left-0 z-30 w-full h-100vh"
           :selected-project-id="undefined"
           :is-error="false"
@@ -168,6 +168,16 @@ const siteParams = computed<SiteParams>(() => {
   }
 })
 const { isLoading: isLoadingSiteCount, data: sites, refetch: siteRefetch } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
+const markers = computed(() => {
+  if (!sites.value) return []
+  return sites.value.map(site => ({
+    id: site.id.toString(),
+    slug: site.external_id,
+    name: site.name,
+    latitudeAvg: site.lat,
+    longitudeAvg: site.lon
+  }))
+})
 
 const sitesSelected = ref<string[]>([])
 const siteIds = ref<(number)[]>([])
@@ -225,30 +235,6 @@ async function handleOk () {
 const handleCancel = () => {
   showPopup.value = false
 }
-
-const data = [
-  {
-    id: '1',
-    slug: 'project-a',
-    name: 'Project A',
-    latitudeAvg: 13.7563,
-    longitudeAvg: 100.5018
-  },
-  {
-    id: '2',
-    slug: 'project-b',
-    name: 'Project B',
-    latitudeAvg: 18.7883,
-    longitudeAvg: 98.9853
-  },
-  {
-    id: '3',
-    slug: 'project-c',
-    name: 'Project C',
-    latitudeAvg: 7.9519,
-    longitudeAvg: 98.3381
-  }
-]
 
 // function
 const deleteSelectedSite = () => {
