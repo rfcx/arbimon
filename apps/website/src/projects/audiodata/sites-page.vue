@@ -86,6 +86,7 @@
           class="mt-5"
           :columns="columns"
           :rows="sites ?? []"
+          :selected-row="selectedSite"
           :default-sort-key="'updated_at'"
           :default-sort-order="'desc'"
           @selected-item="onSelectedItem"
@@ -104,7 +105,7 @@
           class="relative left-0 z-30 w-full h-100vh"
           :selected-project-id="undefined"
           :is-error="false"
-          @emit-selected-project="onEmitSelectedProject"
+          @emit-selected="onEmitSelected"
         />
       </div>
     </div>
@@ -171,7 +172,7 @@ const { isLoading: isLoadingSiteCount, data: sites, refetch: siteRefetch } = use
 const markers = computed(() => {
   if (!sites.value) return []
   return sites.value.map(site => ({
-    id: site.id.toString(),
+    id: site.id,
     slug: site.external_id,
     name: site.name,
     latitudeAvg: site.lat,
@@ -298,10 +299,12 @@ function triggerFileInput () {
   importSiteModal.value?.open()
 }
 
-const onEmitSelectedProject = (locationId: number) => {
-  console.info(locationId)
-  // selectedProjectId.value = locationProjectId
-  // hideProjectList.value = false
+const onEmitSelected = (locationId: number) => {
+  const site = sites.value?.find(s => s.id === locationId)
+
+  if (site !== undefined) {
+    selectedSite.value = site
+  }
 }
 
 const handleFileUpload = (e: Event) => {

@@ -26,7 +26,7 @@ import { createMap } from '~/maps'
 import type { ProjectLight } from '../data/types'
 
 export interface MarkerItem {
-  id: string
+  id: number
   slug: string
   name: string
   latitudeAvg: number
@@ -39,7 +39,7 @@ const props = defineProps<{
   isError: boolean
 }>()
 
-const emit = defineEmits<{(e: 'emitSelectedProject', projectId: number): void}>()
+const emit = defineEmits<{(e: 'emitSelected', locationId: number): void}>()
 
 const hoveredId = ref<number | null>(null)
 const mapHasLoaded = ref(false)
@@ -247,13 +247,13 @@ onMounted(() => {
     const features = map.queryRenderedFeatures(e.point, { layers: ['unclustered-point'] })
     const { id } = features[0]?.properties ?? {}
     goToProject(id)
-    emit('emitSelectedProject', id)
+    emit('emitSelected', id)
   })
 
   map.on('click', 'selected-project', (e) => {
     const features = map.queryRenderedFeatures(e.point, { layers: ['selected-project'] })
     const { id } = features[0]?.properties ?? {}
-    emit('emitSelectedProject', id)
+    emit('emitSelected', id)
   })
 })
 

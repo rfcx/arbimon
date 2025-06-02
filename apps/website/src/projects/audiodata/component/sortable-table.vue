@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { computed, defineEmits, defineProps, onMounted, ref } from 'vue'
+import { computed, defineEmits, defineProps, onMounted, ref, watch } from 'vue'
 
 interface Column {
   label: string
@@ -63,6 +63,7 @@ const props = defineProps<{
   rows: Row[]
   defaultSortKey?: string
   defaultSortOrder?: 'asc' | 'desc'
+  selectedRow?: Row | null
 }>()
 
 const emit = defineEmits<{(e: 'selectedItem', row?: Row): void}>()
@@ -168,6 +169,13 @@ onMounted(() => {
   if (props.defaultSortKey) {
     sortKey.value = props.defaultSortKey
     sortOrder.value = props.defaultSortOrder ?? 'asc'
+  }
+})
+
+watch(() => props.selectedRow, (row) => {
+  if (row != null) {
+    const index = sortedRows.value.findIndex(r => r.id === row.id)
+    selectedRowIndex.value = index
   }
 })
 </script>
