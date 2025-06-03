@@ -23,7 +23,6 @@ import { computed, onMounted, ref, watch } from 'vue'
 import defaultMarkerIcon from '@/_assets/explore/map-marker.png'
 import selectedMarkerIcon from '@/_assets/explore/map-marker-selected.png'
 import { createMap } from '~/maps'
-import type { ProjectLight } from '../data/types'
 
 export interface MarkerItem {
   id: number
@@ -246,7 +245,7 @@ onMounted(() => {
   map.on('click', 'unclustered-point', (e) => {
     const features = map.queryRenderedFeatures(e.point, { layers: ['unclustered-point'] })
     const { id } = features[0]?.properties ?? {}
-    goToProject(id)
+    goToLocation(id)
     emit('emitSelected', id)
   })
 
@@ -260,7 +259,7 @@ onMounted(() => {
 watch(() => props.selectedLocationId, (id) => {
   setSelectedLocation(id ?? -1)
   if (id === undefined) { return }
-  goToProject(id)
+  goToLocation(id)
 })
 
 // TODO: if the props.data updated, the data source of the map should be updated as well
@@ -289,17 +288,19 @@ const setSelectedLocation = (id: number) => {
   }
 }
 
-const goToProject = (id: number) => {
-  const project = props.data.find((datum: ProjectLight) => datum.id === id)
+const goToLocation = (id: number) => {
+  const project = props.data.find((datum: MarkerItem) => datum.id === id)
   const coordinates = [project?.longitudeAvg ?? 0, project?.latitudeAvg ?? 0] as [number, number]
 
   // check if already at coordinates
   const currentCenter = map.getCenter()
   if (currentCenter.lng === coordinates[0] && currentCenter.lat === coordinates[1]) return
 
-  map.easeTo({
-    padding: { top: 0, bottom: 0, left: 500, right: 0 },
-    center: coordinates
+  map.flyTo({
+    center: coordinates,
+    zoom: 12,
+    duration: 3000,
+    essential: true
   })
 }
 </script>
