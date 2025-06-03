@@ -103,7 +103,7 @@
         <map-view
           :data="markers"
           class="relative left-0 z-30 w-full h-100vh"
-          :selected-project-id="undefined"
+          :selected-location-id="locationSelected"
           :is-error="false"
           @emit-selected="onEmitSelected"
         />
@@ -236,6 +236,11 @@ async function handleOk () {
 const handleCancel = () => {
   showPopup.value = false
 }
+
+const locationSelected = computed(() => {
+  if (selectedSite.value === undefined) return undefined
+  return selectedSite.value.id
+})
 
 // function
 const deleteSelectedSite = () => {

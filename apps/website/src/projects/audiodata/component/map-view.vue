@@ -35,7 +35,7 @@ export interface MarkerItem {
 
 const props = defineProps<{
   data: MarkerItem[],
-  selectedProjectId?: number,
+  selectedLocationId?: number,
   isError: boolean
 }>()
 
@@ -122,7 +122,7 @@ onMounted(() => {
       clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
     })
 
-    setSelectedProject(props.selectedProjectId ?? -1)
+    setSelectedLocation(props.selectedProjectId ?? -1)
 
     map.addLayer({
       id: 'unclustered-point',
@@ -143,9 +143,9 @@ onMounted(() => {
     })
 
     map.addLayer({
-      id: 'selected-project',
+      id: 'selected-location',
       type: 'symbol',
-      source: 'selected-project',
+      source: 'selected-location',
       layout: {
         'icon-image': 'selected-marker',
         'icon-size': 0.6
@@ -250,15 +250,15 @@ onMounted(() => {
     emit('emitSelected', id)
   })
 
-  map.on('click', 'selected-project', (e) => {
-    const features = map.queryRenderedFeatures(e.point, { layers: ['selected-project'] })
+  map.on('click', 'selected-location', (e) => {
+    const features = map.queryRenderedFeatures(e.point, { layers: ['selected-location'] })
     const { id } = features[0]?.properties ?? {}
     emit('emitSelected', id)
   })
 })
 
-watch(() => props.selectedProjectId, (id) => {
-  setSelectedProject(id ?? -1)
+watch(() => props.selectedLocationId, (id) => {
+  setSelectedLocation(id ?? -1)
   if (id === undefined) { return }
   goToProject(id)
 })
@@ -277,15 +277,15 @@ watch(() => props.data, (newData) => {
   }
 })
 
-const setSelectedProject = (id: number) => {
-  const selectedProjectGeoJson = toGeoJson(props.data.filter((datum: ProjectLight) => datum.id === id))
-  if (map.getSource('selected-project') === undefined) {
-    map.addSource('selected-project', {
+const setSelectedLocation = (id: number) => {
+  const selectedLocationGeoJson = toGeoJson(props.data.filter((datum: MarkerItem) => datum.id === id))
+  if (map.getSource('selected-location') === undefined) {
+    map.addSource('selected-location', {
     type: 'geojson',
-    data: selectedProjectGeoJson
+    data: selectedLocationGeoJson
   })
   } else {
-    (map.getSource('selected-project') as GeoJSONSource).setData(selectedProjectGeoJson)
+    (map.getSource('selected-location') as GeoJSONSource).setData(selectedLocationGeoJson)
   }
 }
 
