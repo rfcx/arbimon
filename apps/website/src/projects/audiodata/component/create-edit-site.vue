@@ -234,6 +234,7 @@ const close = () => { emit('emitClose') }
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 
 watch(() => props.site, (newValue) => {
+    if (!props.editing) return
     lat.value = newValue?.lat.toString() ?? ''
     lon.value = newValue?.lon.toString() ?? ''
     alt.value = newValue?.alt.toString() ?? ''

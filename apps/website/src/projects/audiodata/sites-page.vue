@@ -93,12 +93,39 @@
       </div>
 
       <div class="w-1/3 sticky top-[4.5rem] self-start">
-        <div class="tabs">
-          Location
-          <div class="border-1 border-util-gray-03" />
+        <div>
+          <div
+            v-if="creating"
+            class="items-center text-frequency inline-flex px-3 py-2 rounded rounded-b-none border-1 border-b-0 border-util-gray-03"
+          >
+            <icon-fa-plus
+              class="h-3 w-3 text-frequency"
+            />
+            <span class="ml-1">New Site</span>
+          </div>
+          <div
+            v-else-if="editing"
+            class="items-center text-frequency inline-flex px-3 py-2 rounded rounded-b-none border-1 border-b-0 border-util-gray-03"
+          >
+            <!-- <icon-fa-plus
+              class="h-3 w-3 text-insight"
+            /> -->
+            <icon-custom-ic-edit class="ml-2 w-4 h-4 self-center text-frequency" />
+            <span class="ml-1">Edit Site</span>
+          </div>
+          <div
+            v-else
+            class="items-center text-frequency inline-flex px-3 py-2 rounded rounded-b-none border-1 border-b-0 border-util-gray-03"
+          >
+            <icon-fa-map
+              class="h-3 w-3 text-frequency"
+            />
+            <span class="ml-1">Location</span>
+          </div>
         </div>
         <CreateEditSite
           v-if="creating || editing"
+          class="mb-3"
           :editing="editing"
           :site="selectedSite"
           @emit-close="onClose"
