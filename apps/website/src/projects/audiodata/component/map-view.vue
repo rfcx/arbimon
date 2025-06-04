@@ -60,7 +60,7 @@ const mapBounds = computed((): [number, number, number, number] => {
 })
 
 const mapConfig = computed((): MapboxOptions => ({
-  style: 'mapbox://styles/mapbox/satellite-streets-v11',
+  style: 'mapbox://styles/mapbox/satellite-v9',
   center: mapCenter.value,
   attributionControl: false,
   container: 'mapRoot',

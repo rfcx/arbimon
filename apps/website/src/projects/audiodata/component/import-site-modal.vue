@@ -5,7 +5,7 @@
   >
     <div class="bg-moss text-white rounded-xl p-6 w-full max-w-xl shadow-lg relative">
       <button
-        class="absolute top-5 right-4"
+        class="absolute right-4"
         type="button"
         data-modal-toggle="project-delete-modal"
         title="Cancel"
@@ -20,7 +20,7 @@
         To import a list of sites, please provide a CSV file in the following format below. You must include a header in your file and coordinates must be in decimal degree format.
       </p>
 
-      <div class="bg-[#ebebeb] text-sm text-moss font-mono rounded-md p-4 overflow-x-auto mb-4 whitespace-pre">
+      <div class="bg-[#ebebeb] text-sm text-moss font-mono rounded-md p-4 overflow-x-auto mb-1 whitespace-pre">
         name,lat,lon,alt<br>
         Site_1,16.09887,100.9392,0<br>
         Site_2,13.13304,110.9452,0<br>
@@ -28,7 +28,13 @@
         Site_4,56.09887,150.9252,0<br>
         Site_5,33.00309,10.7892,0
       </div>
-
+      <a
+        href="data:text/csv;charset=utf-8,name,lat,lon,alt%0ASite_1,16.09887,100.9392,0%0ASite_2,13.13304,110.9452,0"
+        download="import_sites.csv"
+        class="text-frequency hover:(underline text-frequency-500) text-sm mb-4"
+      >
+        Use our bulk import sites file
+      </a>
       <input
         ref="fileInput"
         type="file"

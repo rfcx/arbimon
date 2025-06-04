@@ -1,17 +1,17 @@
 <template>
   <section class="py-10 bg-white dark:bg-pitch pl-18">
-    <div class="flex items-center">
-      <h1 class="text-gray-900 dark:text-insight ml-8">
+    <div class="flex items-center px-8 bg-white dark:bg-pitch">
+      <h1 class="text-gray-900 dark:text-insight">
         Sites
       </h1>
       <button
-        class="btn btn-primary btn-medium group ml-2 btn-small"
+        class="btn btn-primary btn-medium ml-2 btn-small"
         @click="createSite()"
       >
         <span>Create</span>
       </button>
       <button
-        class="btn btn-secondary btn-medium group ml-2 btn-small"
+        class="btn btn-secondary btn-medium ml-2 btn-small"
         @click="triggerFileInput"
       >
         <span>Bulk Import Sites</span>
@@ -20,79 +20,83 @@
         ref="fileInput"
         type="file"
         accept=".csv"
-        style="display: none"
+        class="hidden"
         @change="handleFileUpload"
       >
     </div>
-    <div class="grid grid-cols-12 gap-4 mt-8 mx-8">
-      <div class="col-span-12 md:col-span-8 w-full overflow-x-auto">
-        <div class="p-1">
-          <button
-            :disabled="selectedSite == undefined"
-            class="btn btn-secondary btn-medium group btn-small disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
-            @click="editSite()"
-          >
-            <span>Edit Site</span>
-          </button>
-          <button
-            class="group btn btn-secondary btn-medium group ml-2 btn-small"
-            data-dropdown-toggle="mapDropdown"
-          >
-            <span class="inline-flex gap-1 group-hover:fill-blue-500">
-              Delete
-              <icon-custom-el-angle-down class="ml-2 mt-1 group-hover:stroke-pitch inline-flex w-3 h-3" />
-            </span>
-          </button>
-          <div
-            id="mapDropdown"
-            class="z-10 hidden bg-moss border-1 border-frequency rounded-lg"
-          >
-            <ul
-              aria-labelledby="mapTypeDropdown"
-              class="p-2 flex flex-col font-medium"
+    <div class="flex mx-8 mt-8">
+      <!-- Left: Table (scrollable) -->
+      <div class="w-2/3 overflow-y-auto pr-4">
+        <!-- Content wrapper for scroll height -->
+        <div>
+          <div class="p-1">
+            <button
+              :disabled="selectedSite == undefined"
+              class="btn btn-secondary btn-medium btn-small disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
+              @click="editSite()"
             >
-              <li
-                key="mapStyle.name"
-                class="bg-moss text-frequency px-3 py-2 flex items-center gap-2 cursor-pointer hover:bg-util-gray-04/60"
-                @click="deleteSelectedSite"
-              >
-                Delete selected site
-              </li>
-              <li
-                key="mapStyle.name"
-                class="bg-moss text-frequency px-3 py-2 flex items-center gap-2 cursor-pointer hover:bg-util-gray-04/60"
-                @click="deleteAllEmptySites"
-              >
-                Delete all empty sites
-              </li>
-            </ul>
+              <span>Edit Site</span>
+            </button>
+            <button
+              class="btn btn-secondary btn-medium ml-2 btn-small"
+              data-dropdown-toggle="mapDropdown"
+            >
+              <span class="inline-flex gap-1">
+                Delete
+                <icon-custom-el-angle-down class="ml-2 mt-1 w-3 h-3" />
+              </span>
+            </button>
+            <div
+              id="mapDropdown"
+              class="z-10 hidden bg-moss border border-frequency rounded-lg"
+            >
+              <ul class="p-2 font-medium">
+                <li
+                  class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer"
+                  @click="deleteSelectedSite"
+                >
+                  Delete selected site
+                </li>
+                <li
+                  class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer"
+                  @click="deleteAllEmptySites"
+                >
+                  Delete all empty sites
+                </li>
+              </ul>
+            </div>
+            <button
+              class="btn btn-secondary btn-medium ml-2 btn-small"
+              @click="exportSites()"
+            >
+              <span>Export Sites</span>
+            </button>
           </div>
-          <button
-            class="btn btn-secondary btn-medium group ml-2 btn-small"
-            @click="exportSites()"
+          <div
+            v-show="!isLoadingSiteCount"
+            class="mt-4"
           >
-            <span>Export Sites</span>
-          </button>
+            <span class="text-left reclist-total">
+              {{ sitesCount() }} {{ sitesCount() > 1 ? "sites" : "site" }}
+            </span>
+          </div>
+          <SortableTable
+            class="mt-5"
+            :columns="columns"
+            :rows="sites ?? []"
+            :selected-row="selectedSite"
+            :default-sort-key="'updated_at'"
+            :default-sort-order="'desc'"
+            @selected-item="onSelectedItem"
+          />
         </div>
-        <div
-          v-show="!isLoadingSiteCount"
-          class="mt-4"
-        >
-          <span class="text-left reclist-total">
-            {{ sitesCount() }} {{ sitesCount() > 1 ? "sites" : "site" }}
-          </span>
-        </div>
-        <SortableTable
-          class="mt-5"
-          :columns="columns"
-          :rows="sites ?? []"
-          :selected-row="selectedSite"
-          :default-sort-key="'updated_at'"
-          :default-sort-order="'desc'"
-          @selected-item="onSelectedItem"
-        />
       </div>
-      <div class="col-span-12 md:col-span-4 w-full overflow-x-auto">
+
+      <div class="w-1/3 sticky top-[4.5rem] self-start">
+        <div class="tabs">
+          Location
+          <div class="border-1 border-util-gray-03" />
+        </div>
         <CreateEditSite
           v-if="creating || editing"
           :editing="editing"
@@ -102,7 +106,7 @@
         />
         <map-view
           :data="markers"
-          class="relative left-0 z-30 w-full h-100vh"
+          class="relative w-full"
           :selected-location-id="locationSelected"
           :is-error="false"
           @emit-selected="onEmitSelected"
