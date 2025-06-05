@@ -138,6 +138,7 @@
           :is-error="false"
           @emit-selected="onEmitSelected"
         />
+        <ImageCarousel :images="imageList" />
       </div>
     </div>
     <CustomPopup
@@ -169,6 +170,7 @@ import { useStore } from '~/store'
 import { useSites } from './api/use-sites'
 import CreateEditSite from './component/create-edit-site.vue'
 import CustomPopup from './component/custom-popup.vue'
+import ImageCarousel from './component/image-carousel.vue'
 import ImportSiteModal from './component/import-site-modal.vue'
 import MapView from './component/map-view.vue'
 import SortableTable from './component/sortable-table.vue'
@@ -213,6 +215,11 @@ const markers = computed(() => {
 
 const sitesSelected = ref<string[]>([])
 const siteIds = ref<(number)[]>([])
+
+const imageList = ref([
+  { id: 1, src: 'https://images.squarespace-cdn.com/content/v1/607f89e638219e13eee71b1e/1684821560422-SD5V37BAG28BURTLIXUQ/michael-sum-LEpfefQf4rU-unsplash.jpg', label: 'First Image' },
+  { id: 2, src: 'https://www.purina.in/sites/default/files/2020-12/Understanding%20Your%20Cat%27s%20Body%20LanguageTEASER.jpg', label: 'Second Image' }
+])
 
 // Show on UI
 

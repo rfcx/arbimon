@@ -66,7 +66,7 @@ const mapConfig = computed((): MapboxOptions => ({
   container: 'mapRoot',
   bounds: mapBounds.value,
   preserveDrawingBuffer: true,
-  zoom: 8,
+  zoom: 10,
   maxZoom: 13,
   minZoom: 2
 }))
