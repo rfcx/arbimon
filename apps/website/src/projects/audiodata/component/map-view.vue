@@ -12,7 +12,7 @@
     v-else
     ref="mapRoot"
     class="w-full h-full"
-    :style="{ height: `100vh` }"
+    :style="{ height: `65vh` }"
   />
 </template>
 <script setup lang="ts">

@@ -92,7 +92,7 @@
         </div>
       </div>
 
-      <div class="w-1/3 sticky top-[4.5rem] self-start">
+      <div class="w-1/3 sticky top-[1rem] self-start">
         <div>
           <div
             v-if="creating"
