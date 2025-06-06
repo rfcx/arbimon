@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-interface Image {
+export interface Image {
   id: number | string
   src: string
   label?: string

@@ -167,10 +167,11 @@ import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/com
 
 import { apiClientArbimonLegacyKey, apiClientCoreKey, apiClientDeviceKey, apiClientKey } from '@/globals'
 import { useStore } from '~/store'
-import { useGetAssets, useSites } from './api/use-sites'
+import { apiDeviceGetAssets, useGetAssets, useSites } from './api/use-sites'
 import CreateEditSite from './component/create-edit-site.vue'
 import CustomPopup from './component/custom-popup.vue'
 import ImageCarousel from './component/image-carousel.vue'
+import { type Image } from './component/image-carousel.vue'
 import ImportSiteModal from './component/import-site-modal.vue'
 import MapView from './component/map-view.vue'
 import SortableTable from './component/sortable-table.vue'
@@ -203,7 +204,6 @@ const siteParams = computed<SiteParams>(() => {
   }
 })
 const { isLoading: isLoadingSiteCount, data: sites, refetch: siteRefetch } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
-const { data: assets } = useGetAssets(apiClientDevice, 'utsl3vg5v5u5')
 const markers = computed(() => {
   if (!sites.value) return []
   return sites.value.map(site => ({
@@ -218,10 +218,7 @@ const markers = computed(() => {
 const sitesSelected = ref<string[]>([])
 const siteIds = ref<(number)[]>([])
 
-const imageList = ref([
-  { id: 1, src: 'https://images.squarespace-cdn.com/content/v1/607f89e638219e13eee71b1e/1684821560422-SD5V37BAG28BURTLIXUQ/michael-sum-LEpfefQf4rU-unsplash.jpg', label: 'First Image' },
-  { id: 2, src: 'https://www.purina.in/sites/default/files/2020-12/Understanding%20Your%20Cat%27s%20Body%20LanguageTEASER.jpg', label: 'Second Image' }
-])
+const imageList = ref<Image[]>([])
 
 // Show on UI
 
@@ -229,8 +226,6 @@ onMounted(() => {
   if (store.myProjects.length === 0) {
     fetchProjects(0, LIMIT)
   }
-
-  console.info(assets.value)
 })
 
 const sitesCount = () => {
@@ -346,11 +341,34 @@ function triggerFileInput () {
   importSiteModal.value?.open()
 }
 
-const onEmitSelected = (locationId: number) => {
-  const site = sites.value?.find(s => s.id === locationId)
+const getAssets = async (siteId: string) => {
+  const response = await useGetAssets(apiClientDevice, siteId)
+  if (response === undefined) return
+  imageList.value = []
+  const mappedAssets = await Promise.all(
+  response.map(async (asset) => {
+      const imageBlob = await apiDeviceGetAssets(apiClientDevice, `/assets/${asset.id}`)
+      if (!imageBlob) {
+        return {
+          id: asset.id,
+          src: ''
+        }
+      }
 
+      return {
+        id: asset.id,
+        src: URL.createObjectURL(imageBlob)
+      }
+    })
+    ).then(results => results.filter((item): item is { id: string; src: string; label: string } => item !== null))
+    imageList.value = mappedAssets
+}
+
+const onEmitSelected = async (locationId: number) => {
+  const site = sites.value?.find(s => s.id === locationId)
   if (site !== undefined) {
     selectedSite.value = site
+    await getAssets(site.external_id)
   }
 }
 
@@ -400,11 +418,13 @@ const createSite = () => {
   editing.value = false
 }
 
-function onSelectedItem (row?: Record<string, any>) {
+const onSelectedItem = async (row?: Record<string, any>) => {
   if (!row) {
     selectedSite.value = undefined
   }
+
   selectedSite.value = row as SiteResponse
+  await getAssets(selectedSite.value.external_id)
 }
 
 function checkEmptySites () {
