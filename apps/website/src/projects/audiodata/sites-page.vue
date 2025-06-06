@@ -165,9 +165,9 @@ import { computed, inject, onMounted, ref } from 'vue'
 import { type CreateSiteBody, type SiteParams, type SiteResponse, apiCorePostCreateSite, apiLegacySiteDelete } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
-import { apiClientArbimonLegacyKey, apiClientCoreKey, apiClientKey } from '@/globals'
+import { apiClientArbimonLegacyKey, apiClientCoreKey, apiClientDeviceKey, apiClientKey } from '@/globals'
 import { useStore } from '~/store'
-import { useSites } from './api/use-sites'
+import { useGetAssets, useSites } from './api/use-sites'
 import CreateEditSite from './component/create-edit-site.vue'
 import CustomPopup from './component/custom-popup.vue'
 import ImageCarousel from './component/image-carousel.vue'
@@ -191,6 +191,7 @@ const selectedProjectSlug = computed(() => store.project?.slug)
 // API
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 const apiClientBio = inject(apiClientKey) as AxiosInstance
+const apiClientDevice = inject(apiClientDeviceKey) as AxiosInstance
 
 const projects = ref<LocationProjectWithInfo[]>([])
 
@@ -202,6 +203,7 @@ const siteParams = computed<SiteParams>(() => {
   }
 })
 const { isLoading: isLoadingSiteCount, data: sites, refetch: siteRefetch } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
+const { data: assets } = useGetAssets(apiClientDevice, 'utsl3vg5v5u5')
 const markers = computed(() => {
   if (!sites.value) return []
   return sites.value.map(site => ({
@@ -227,6 +229,8 @@ onMounted(() => {
   if (store.myProjects.length === 0) {
     fetchProjects(0, LIMIT)
   }
+
+  console.info(assets.value)
 })
 
 const sitesCount = () => {

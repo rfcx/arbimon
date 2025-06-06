@@ -1,4 +1,4 @@
-import { type AxiosInstance } from 'axios'
+import type { AxiosInstance } from 'axios'
 
 // Request types
 export interface SiteParams {
@@ -9,6 +9,14 @@ export interface SiteParams {
 
 // Response types
 export type SitesResponse = SiteResponse[]
+
+export interface AssetItem {
+  id: string
+  createdAt: string
+  deletedAt: string | null
+  meta: any
+  mimeType: string
+}
 
 export interface SiteResponse {
   alt: number
@@ -39,6 +47,14 @@ export const apiArbimonGetSites = async (apiClient: AxiosInstance, slug: string,
     })
     return response.data
   } else return []
+}
+
+export const apiArbimonGetAssets = async (apiClient: AxiosInstance, siteId: string): Promise<AssetItem[] | undefined> => {
+  const response = await apiClient.request<AssetItem[]>({
+    method: 'GET',
+    url: `/streams/${siteId}/assets`
+  })
+  return response.data
 }
 
 export interface CreateSiteBody {
