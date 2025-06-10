@@ -157,16 +157,11 @@
       @imported="handleCsvData"
     />
     <alert-dialog
-      v-if="showAlert && success == 'success'"
-      severity="success"
+      v-if="showAlert"
+      :severity="success"
       :title="title"
       :message="message"
     />
-    <alert-dialog
-      v-else-if="showAlert && success == 'error'"
-      severity="error"
-      :title="title"
-      :message="message"
     />
   </section>
 </template>
@@ -556,7 +551,7 @@ const loadMoreProject = async (): Promise<void> => {
   fetchProjects(projects.value.length, LIMIT)
 }
 
-const success = ref('')
+const success = ref<AlertDialogType>('error')
 const title = ref('')
 const message = ref('')
 const showAlert = ref(false)
