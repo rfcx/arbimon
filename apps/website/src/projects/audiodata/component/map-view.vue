@@ -67,7 +67,7 @@ const mapConfig = computed((): MapboxOptions => ({
   bounds: mapBounds.value,
   preserveDrawingBuffer: true,
   zoom: 10,
-  maxZoom: 13,
+  maxZoom: 23,
   minZoom: 2
 }))
 
@@ -121,7 +121,7 @@ onMounted(() => {
       clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
     })
 
-    setSelectedLocation(props.selectedProjectId ?? -1)
+    setSelectedLocation(props.selectedLocationId ?? -1)
 
     map.addLayer({
       id: 'unclustered-point',
@@ -298,7 +298,7 @@ const goToLocation = (id: number) => {
 
   map.flyTo({
     center: coordinates,
-    zoom: 12,
+    zoom: 16,
     duration: 3000,
     essential: true
   })
