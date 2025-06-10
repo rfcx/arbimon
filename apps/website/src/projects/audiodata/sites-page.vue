@@ -156,6 +156,18 @@
       ref="importSiteModal"
       @imported="handleCsvData"
     />
+    <alert-dialog
+      v-if="showAlert && success == 'success'"
+      severity="success"
+      :title="title"
+      :message="message"
+    />
+    <alert-dialog
+      v-else-if="showAlert && success == 'error'"
+      severity="error"
+      :title="title"
+      :message="message"
+    />
   </section>
 </template>
 <script setup lang="ts">
@@ -165,6 +177,8 @@ import { computed, inject, onMounted, ref } from 'vue'
 import { type CreateSiteBody, type SiteParams, type SiteResponse, apiCorePostCreateSite, apiLegacySiteDelete } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
+import type { AlertDialogType } from '@/_components/alert-dialog.vue'
+import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey, apiClientCoreKey, apiClientDeviceKey, apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 import { apiDeviceGetAssets, useGetAssets, useSites } from './api/use-sites'
@@ -402,20 +416,34 @@ function handleCsvData (csv: string) {
     }
 }
 
-const onClose = () => {
+const onClose = (status?: string) => {
   creating.value = false
   editing.value = false
+  if (status !== undefined) {
+    showAlertText(status)
+  }
 }
 
-const reloadSite = async (): Promise<void> => {
+const reloadSite = async (status?: string): Promise<void> => {
   creating.value = false
   editing.value = false
   await siteRefetch()
+  if (status !== undefined) {
+    showAlertText(status)
+  }
 }
 
 const createSite = () => {
   creating.value = true
   editing.value = false
+}
+
+const showAlertText = (status: string) => {
+  if (status === 'error') {
+    showAlertDialog('error', 'Error', 'Failed to create sites')
+  } else {
+    showAlertDialog('success', 'Success', 'New Site created successfully')
+  }
 }
 
 const onSelectedItem = async (row?: Record<string, any>) => {
@@ -526,6 +554,21 @@ const fetchProjects = async (offset:number, limit: number): Promise<void> => {
 const loadMoreProject = async (): Promise<void> => {
   if (hasFetchedAll.value || isLoading.value || hasFailed.value) return
   fetchProjects(projects.value.length, LIMIT)
+}
+
+const success = ref('')
+const title = ref('')
+const message = ref('')
+const showAlert = ref(false)
+
+const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue: string, hideAfter = 7000) => {
+  showAlert.value = true
+  success.value = type
+  title.value = titleValue
+  message.value = messageValue
+  setTimeout(() => {
+    showAlert.value = false
+  }, hideAfter)
 }
 
 </script>

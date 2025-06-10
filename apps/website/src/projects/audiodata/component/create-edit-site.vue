@@ -143,7 +143,7 @@ const props = withDefaults(defineProps<{ editing?: boolean, site?: SiteResponse 
   site: undefined
 })
 
-const emit = defineEmits<{(e: 'emitClose'): void, (e: 'emitReloadSite'): void, }>()
+const emit = defineEmits<{(e: 'emitClose', status?: string): void, (e: 'emitReloadSite', status: string): void, }>()
 
 const siteName = ref('')
 const isDisabled = ref(false)
@@ -290,14 +290,18 @@ async function create () {
       // const response = await apiBioUpdateDashboardContent(apiClientCore, props.site?.id, { name: 'Test-api-edit-66' })
       const response = await apiLegacySiteUpdate(apiClientArbimon, selectedProjectSlug.value ?? '', siteItem)
       console.info(response)
-      emit('emitReloadSite')
-    } catch (e) { }
+      emit('emitReloadSite', 'success')
+    } catch (e) {
+      emit('emitClose', 'error')
+     }
   } else {
     try {
       const response = await apiCorePostCreateSite(apiClientCore, site)
       console.info(response)
-      emit('emitReloadSite')
-    } catch (e) { }
+      emit('emitReloadSite', 'success')
+    } catch (e) {
+      emit('emitClose', 'error')
+     }
   }
 }
 
