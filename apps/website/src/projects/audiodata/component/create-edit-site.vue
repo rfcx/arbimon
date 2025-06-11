@@ -164,7 +164,7 @@ const LIMIT = 20
 
 const updateSelectedProject = () => {
   const selected = store.myProjects.find(p => p.slug === selectedProjectSlug.value)
-  if (selected) {
+  if (selected && selectedProject.value === undefined) {
     selectedProject.value = { value: selected.idCore, label: selected.name }
   }
 }
@@ -256,9 +256,6 @@ watch(() => props.editing, (newValue) => {
 })
 
 async function create () {
-  // if (!verifyFields()) return
-  // resetErrorState()
-  // isCreating.value = true
   const selected = store.myProjects.find(p => p.slug === selectedProjectSlug.value)
 
   const site = {
@@ -266,8 +263,8 @@ async function create () {
     latitude: lat.value,
     longitude: lon.value,
     altitude: alt.value,
-    project_id: selected?.idCore ?? '',
-    is_public: false // should edit
+    project_id: selectedProject.value?.value ?? '',
+    is_public: false
   }
 
   const siteItem = {
@@ -287,7 +284,6 @@ async function create () {
 
   if (props.editing) {
     try {
-      // const response = await apiBioUpdateDashboardContent(apiClientCore, props.site?.id, { name: 'Test-api-edit-66' })
       const response = await apiLegacySiteUpdate(apiClientArbimon, selectedProjectSlug.value ?? '', siteItem)
       console.info(response)
       emit('emitReloadSite', 'success')
