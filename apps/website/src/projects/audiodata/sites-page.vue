@@ -167,7 +167,6 @@
       :title="title"
       :message="message"
     />
-    />
   </section>
 </template>
 <script setup lang="ts">
@@ -252,8 +251,8 @@ const columns = [
   { label: 'Longitude', key: 'lon', maxWidth: 50 },
   { label: 'Elevation', key: 'alt', maxWidth: 50 },
   { label: 'Current Timezone', key: 'timezone', maxWidth: 70 },
-  { label: 'Updated', key: 'updated_at', maxWidth: 100 },
-  { label: 'Deployed', key: 'deployment', maxWidth: 60 }
+  { label: 'Updated', key: 'updated_at', maxWidth: 80 },
+  { label: 'Deployed', key: 'deployment', maxWidth: 80 }
 ]
 
 const creating = ref(false)
