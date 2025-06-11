@@ -6,7 +6,7 @@
           <th
             v-for="column in columns"
             :key="column.key"
-            class="px-2 cursor-pointer"
+            class="px-2 pb-2 cursor-pointer border-b-2 border-b-util-gray-03"
             :class="isDecimalKey(column.key) ? 'truncate' : ''"
             :style="`max-width: ${column.maxWidth || 100}px`"
             @click="sortBy(column.key)"

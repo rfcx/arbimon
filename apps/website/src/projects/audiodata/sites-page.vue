@@ -73,7 +73,7 @@
             </button>
           </div>
           <div
-            v-show="!isLoadingSiteCount"
+            v-show="!isLoadingSite"
             class="mt-4"
           >
             <span class="text-left reclist-total">
@@ -89,6 +89,11 @@
             :default-sort-order="'desc'"
             @selected-item="onSelectedItem"
           />
+          <div v-if="((sites?.length ?? 0) === 0 && !isLoadingSite)" class="text-center pt-10">
+            <h3 class="items-center font-display inline-flex">
+              This project does not have any <icon-fa-map-marker class="h-5 w-5 px-1" /> sites
+            </h3>
+          </div>
         </div>
       </div>
 
@@ -212,7 +217,7 @@ const siteParams = computed<SiteParams>(() => {
     logs: true
   }
 })
-const { isLoading: isLoadingSiteCount, data: sites, refetch: siteRefetch } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
+const { isLoading: isLoadingSite, data: sites, refetch: siteRefetch } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
 const markers = computed(() => {
   if (!sites.value) return []
   return sites.value.map(site => ({
