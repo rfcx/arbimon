@@ -5,16 +5,18 @@
         Sites
       </h1>
       <button
-        class="btn btn-primary btn-medium ml-2 btn-small"
+        class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex"
         @click="createSite()"
       >
         <span>Create</span>
+        <icon-custom-ic-plus-icon class="ml-2 w-4 h-4" />
       </button>
       <button
-        class="btn btn-secondary btn-medium ml-2 btn-small"
+        class="btn btn-secondary btn-medium ml-2 btn-small items-center text-frequency inline-flex hover:text-pitch"
         @click="triggerFileInput"
       >
         <span>Bulk Import Sites</span>
+        <icon-custom-ic-plus-icon class="ml-2 w-4 h-4" />
       </button>
       <input
         ref="fileInput"
@@ -89,7 +91,10 @@
             :default-sort-order="'desc'"
             @selected-item="onSelectedItem"
           />
-          <div v-if="((sites?.length ?? 0) === 0 && !isLoadingSite)" class="text-center pt-10">
+          <div
+            v-if="((sites?.length ?? 0) === 0 && !isLoadingSite)"
+            class="text-center pt-10"
+          >
             <h3 class="items-center font-display inline-flex">
               This project does not have any <icon-fa-map-marker class="h-5 w-5 px-1" /> sites
             </h3>
@@ -103,18 +108,13 @@
             v-if="creating"
             class="items-center text-frequency inline-flex px-3 py-2 rounded rounded-b-none border-1 border-b-0 border-util-gray-03"
           >
-            <icon-fa-plus
-              class="h-3 w-3 text-frequency"
-            />
+            <icon-custom-ic-plus-icon class="w-4 h-4" />
             <span class="ml-1">New Site</span>
           </div>
           <div
             v-else-if="editing"
             class="items-center text-frequency inline-flex px-3 py-2 rounded rounded-b-none border-1 border-b-0 border-util-gray-03"
           >
-            <!-- <icon-fa-plus
-              class="h-3 w-3 text-insight"
-            /> -->
             <icon-custom-ic-edit class="ml-2 w-4 h-4 self-center text-frequency" />
             <span class="ml-1">Edit Site</span>
           </div>
@@ -234,7 +234,6 @@ const siteIds = ref<(number)[]>([])
 const imageList = ref<Image[]>([])
 
 // Show on UI
-
 onMounted(() => {
   if (store.myProjects.length === 0) {
     fetchProjects(0, LIMIT)
@@ -277,10 +276,13 @@ const hasFailed = ref(false)
 const LIMIT = 20
 
 async function handleOk () {
-    try {
-      await apiLegacySiteDelete(apiClientArbimon, selectedProjectSlug.value ?? '', siteIds.value)
-      showPopup.value = false
-    } catch (e) { }
+  try {
+    await apiLegacySiteDelete(apiClientArbimon, selectedProjectSlug.value ?? '', siteIds.value)
+    showPopup.value = false
+    showAlertDialog('success', 'Success', 'Removed')
+  } catch (e) {
+    showAlertDialog('error', 'Error', 'Remove site')
+  }
 }
 
 const handleCancel = () => {
@@ -316,20 +318,21 @@ function toCreateSiteBody (site: Site): CreateSiteBody {
     longitude: site.lon.toString(),
     altitude: site.alt.toString(),
     project_id: selected?.idCore ?? '',
-    is_public: false // should edit
+    is_public: false
   }
 }
 
 async function createSitesFromCsvData (sites: Site[]) {
+  let isError = false
   for (const site of sites) {
     try {
-      const response = await apiCorePostCreateSite(apiClientCore, toCreateSiteBody(site))
-      console.info(response)
+      await apiCorePostCreateSite(apiClientCore, toCreateSiteBody(site))
     } catch (error) {
-      console.error(`Error creating site ${site.name}:`, error)
+      isError = true
     }
   }
   reloadSite()
+  showAlertDialog(isError ? 'error' : 'success', isError ? 'Error' : 'Success', isError ? 'Failed to create sites' : 'New Sites created successfully')
 }
 
 const exportSites = () => {
@@ -340,7 +343,8 @@ const exportSites = () => {
   link.click()
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
- }
+}
+
 const editSite = () => {
   creating.value = false
   editing.value = true
@@ -348,7 +352,6 @@ const editSite = () => {
 
 const fileInput = ref<HTMLInputElement | null>(null)
 const importSites = ref<Site[]>([])
-const errorMessage = ref<string | null>(null)
 
 function triggerFileInput () {
   importSiteModal.value?.open()
@@ -398,7 +401,6 @@ const handleFileUpload = (e: Event) => {
     const parsed = parseSitesFromCsv(content)
     if (Array.isArray(parsed)) {
       importSites.value = parsed
-      errorMessage.value = null
       createSitesFromCsvData(importSites.value)
     }
   }
@@ -410,39 +412,45 @@ function handleCsvData (csv: string) {
     const parsed = parseSitesFromCsv(csv)
     if (Array.isArray(parsed)) {
       importSites.value = parsed
-      errorMessage.value = null
       createSitesFromCsvData(importSites.value)
     }
 }
 
 const onClose = (status?: string) => {
+  let message = 'New Sites created successfully'
+  let messageError = 'Failed to create sites'
+  if (editing.value) {
+    message = 'Site updated'
+    messageError = 'Failed to update site'
+  }
+  if (status !== undefined) {
+    const isError = status === 'error'
+    showAlertDialog(isError ? 'error' : 'success', isError ? 'Error' : 'Success', isError ? messageError : message)
+  }
   creating.value = false
   editing.value = false
-  if (status !== undefined) {
-    showAlertText(status)
-  }
 }
 
 const reloadSite = async (status?: string): Promise<void> => {
+  let message = 'New Sites created successfully'
+  let messageError = 'Failed to create sites'
+  if (editing.value) {
+    message = 'Site updated'
+    messageError = 'Failed to update site'
+  }
+  if (status !== undefined) {
+    const isError = status === 'error'
+    showAlertDialog(isError ? 'error' : 'success', isError ? 'Error' : 'Success', isError ? messageError : message)
+  }
+
   creating.value = false
   editing.value = false
   await siteRefetch()
-  if (status !== undefined) {
-    showAlertText(status)
-  }
 }
 
 const createSite = () => {
   creating.value = true
   editing.value = false
-}
-
-const showAlertText = (status: string) => {
-  if (status === 'error') {
-    showAlertDialog('error', 'Error', 'Failed to create sites')
-  } else {
-    showAlertDialog('success', 'Success', 'New Site created successfully')
-  }
 }
 
 const onSelectedItem = async (row?: Record<string, any>) => {
@@ -466,7 +474,7 @@ function checkEmptySites () {
   })
 
   if (!names.length) {
-    console.info('There is no empty site in your project')
+    showAlertDialog('error', 'Error', 'There is no empty site in your project')
     return
   }
 
@@ -484,6 +492,7 @@ function parseSitesFromCsv (allText: string): Site[] | false {
   const headers = allTextLines[0].split(',')
 
   if (!headers.includes('name') || !headers.includes('lat') || !headers.includes('lon') || !headers.includes('alt')) {
+    showAlertDialog('error', 'Error', 'Wrong format of csv file')
     return false
   }
 
@@ -499,14 +508,14 @@ function parseSitesFromCsv (allText: string): Site[] | false {
         if (header === 'lat') {
           const lat = parseFloat(value)
           if (lat > 85 || lat < -85) {
-            console.info('Please enter latitude number between -85 to 85')
+            showAlertDialog('error', 'Error', 'Please enter latitude number between -85 to 85')
             return false
           }
           site.lat = lat
         } else if (header === 'lon') {
           const lon = parseFloat(value)
           if (lon > 180 || lon < -180) {
-            console.info('Please enter longitude number between -180 to 180')
+            showAlertDialog('error', 'Error', 'Please enter longitude number between -180 to 180')
             return false
           }
           site.lon = lon

@@ -1,5 +1,5 @@
 <template>
-  <div class="border-1 bg-echo border-util-gray-03 p-3 rounded-lg">
+  <div class="border-1 bg-echo border-util-gray-03 p-3 rounded-lg input-item">
     <div>
       <div>Site name:</div>
       <div>
@@ -34,7 +34,7 @@
       <div> Location:</div>
       <div class="input-group my-2 flex flex-row">
         <div
-          class="input-group-addon text-center edit-site-label bg-moss border-gray-600 rounded-lg rounded-r-none w-16"
+          class="input-group-addon flex items-center justify-center edit-site-label border-r-0 bg-moss border-gray-600 rounded-lg rounded-r-none w-16"
           ng-disabled="temp.hidden === true"
         >
           Lat
@@ -42,7 +42,7 @@
         <input
           id="lonInput"
           v-model="lat"
-          class="bg-moss border-gray-600 rounded-lg rounded-l-none border-l-0 w-full"
+          class="bg-moss border-gray-600 rounded-lg rounded-l-none w-full"
           style="height: 34px"
           name="lat"
           type="text"
@@ -54,7 +54,7 @@
       </div>
       <div class="input-group my-2 flex flex-row">
         <div
-          class="input-group-addon text-center edit-site-label bg-moss border-gray-600 rounded-lg rounded-r-none w-16"
+          class="input-group-addon flex items-center justify-center edit-site-label border-r-0 bg-moss border-gray-600 rounded-lg rounded-r-none w-16"
           ng-disabled="temp.hidden === true"
         >
           <p>Lon</p>
@@ -62,7 +62,7 @@
         <input
           id="lonInput"
           v-model="lon"
-          class="bg-moss border-gray-600 rounded-lg rounded-l-none border-l-0 w-full"
+          class="bg-moss border-gray-600 rounded-lg rounded-l-none w-full"
           style="height: 34px"
           name="lon"
           type="text"
@@ -74,7 +74,7 @@
       </div>
       <div class="input-group my-2 flex flex-row">
         <div
-          class="input-group-addon text-center edit-site-label bg-moss border-gray-600 rounded-lg rounded-r-none w-16"
+          class="input-group-addon flex items-center justify-center edit-site-label border-r-0 bg-moss border-gray-600 rounded-lg rounded-r-none w-16"
           ng-disabled="temp.hidden === true"
         >
           El
@@ -82,7 +82,7 @@
         <input
           id="lonInput"
           v-model="alt"
-          class="bg-moss border-gray-600 rounded-lg rounded-l-none border-l-0 w-full"
+          class="bg-moss border-gray-600 rounded-lg rounded-l-none w-full"
           style="height: 34px"
           name="alt"
           type="text"
@@ -304,6 +304,12 @@ async function create () {
 </script>
 
 <style lang="scss">
+.input-item {
+  [type='text']:focus {
+    border-color: #ADFF2C;
+    --tw-ring-color: #ADFF2C;
+  }
+}
 .input-group {
   position: relative;
   display: table;
