@@ -37,9 +37,9 @@ export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId:
 
     return {
       taxonSpeciesId: speciesNameToId[speciesName].id,
-      commonName: iucnSpeciesData?.main_common_name ?? '',
-      riskRatingIucnId: iucnCodeToId[iucnSpeciesData?.category ?? ''] ?? speciesNameToId[speciesName].riskRatingIucnId ?? DEFAULT_RISK_RATING,
-      description: iucnSpeciesNarrativeData?.habitat ?? '',
+      commonName: iucnSpeciesData?.common_names[0].name ?? '',
+      riskRatingIucnId: iucnCodeToId[iucnSpeciesData?.assessments[0].red_list_category_code ?? ''] ?? speciesNameToId[speciesName].riskRatingIucnId ?? DEFAULT_RISK_RATING,
+      description: iucnSpeciesNarrativeData?.documentation?.habitats ?? '',
       descriptionSourceUrl: iucnSpeciesNarrativeData?.sourceUrl ?? ''
     }
   })
