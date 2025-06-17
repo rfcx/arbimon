@@ -8,7 +8,14 @@
           placeholder="Site name"
           class="text-white w-full form-control bg-moss border-gray-600 rounded-lg h-34px mt-2"
           type="text"
+          required
         >
+        <p
+          v-if="siteNameError"
+          class="text-red-500 text-sm mt-1"
+        >
+          Please fill in the site name to create a site.
+        </p>
       </div>
       <div>
         <div class="items-center mt-4">
@@ -17,7 +24,7 @@
             type="checkbox"
             class="w-5 h-5 border-2 rounded dark:bg-echo focus:ring-frequency border-white dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
             :disabled="isDisabled"
-            :checked="checked"
+            :checked="hidden"
             @click="tempHidden()"
           >
           <label
@@ -32,10 +39,16 @@
     </div>
     <div class="mt-5">
       <div> Location:</div>
+      <p
+        v-if="siteLatLonError && hidden !== true"
+        class="text-red-500 text-sm mt-1"
+      >
+        Please enter latitude and longitude, or check 'Exclude this site from Abrimon Insights' to create a site.
+      </p>
       <div class="input-group my-2 flex flex-row">
         <div
           class="input-group-addon flex items-center justify-center edit-site-label border-r-0 bg-moss border-gray-600 rounded-lg rounded-r-none w-16"
-          ng-disabled="temp.hidden === true"
+          :disabled="hidden"
         >
           Lat
         </div>
@@ -48,14 +61,20 @@
           type="text"
           placeholder="Latitude"
           pattern="^-?\d+\.?\d*(\s*)$"
-          ng-disabled="temp.hidden === true"
-          ng-required="temp.hidden !== true"
+          :disabled="hidden === true"
+          :required="hidden !== true"
         >
       </div>
+      <p
+        v-if="(siteLatError || siteLatFormatError) && hidden !== true"
+        class="text-red-500 text-sm mt-1"
+      >
+        {{ siteLatError ? `Please enter latitude or check 'Exclude this site from Abrimon Insights' to create a site.` : `Please enter latitude number between -85 to 85` }}
+      </p>
       <div class="input-group my-2 flex flex-row">
         <div
           class="input-group-addon flex items-center justify-center edit-site-label border-r-0 bg-moss border-gray-600 rounded-lg rounded-r-none w-16"
-          ng-disabled="temp.hidden === true"
+          :disabled="hidden === true"
         >
           <p>Lon</p>
         </div>
@@ -68,14 +87,20 @@
           type="text"
           placeholder="Longitude"
           pattern="^-?\d+\.?\d*(\s*)$"
-          ng-disabled="temp.hidden === true"
-          ng-required="temp.hidden !== true"
+          :disabled="hidden === true"
+          :aria-busy="hidden !== true"
         >
       </div>
+      <p
+        v-if="(siteLonError || siteLonFormatError) && hidden !== true"
+        class="text-red-500 text-sm mt-1"
+      >
+        {{ siteLonError ? `Please enter longitude or check 'Exclude this site from Abrimon Insights' to create a site.` : `Please enter longitude number between -180 to 180` }}
+      </p>
       <div class="input-group my-2 flex flex-row">
         <div
           class="input-group-addon flex items-center justify-center edit-site-label border-r-0 bg-moss border-gray-600 rounded-lg rounded-r-none w-16"
-          ng-disabled="temp.hidden === true"
+          :disabled="hidden === true"
         >
           El
         </div>
@@ -88,8 +113,8 @@
           type="text"
           placeholder="Elevation (optional)"
           pattern="^-?\d+\.?\d*(\s*)$"
-          ng-disabled="temp.hidden === true"
-          ng-required="temp.hidden !== true"
+          :disabled="hidden === true"
+          :required="hidden !== true"
         >
       </div>
     </div>
@@ -147,7 +172,6 @@ const emit = defineEmits<{(e: 'emitClose', status?: string): void, (e: 'emitRelo
 
 const siteName = ref('')
 const isDisabled = ref(false)
-const checked = ref(false)
 
 const lat = ref('')
 const lon = ref('')
@@ -161,6 +185,13 @@ const isLoading = ref(false)
 const hasFailed = ref(false)
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const LIMIT = 20
+
+const siteNameError = ref(false)
+const siteLatError = ref(false)
+const siteLonError = ref(false)
+const siteLatLonError = ref(false)
+const siteLatFormatError = ref(false)
+const siteLonFormatError = ref(false)
 
 const updateSelectedProject = () => {
   const selected = store.myProjects.find(p => p.slug === selectedProjectSlug.value)
@@ -226,7 +257,7 @@ const loadMoreProject = async (): Promise<void> => {
 }
 
 const tempHidden = () => {
-  hidden.value = true
+  hidden.value = !hidden.value
 }
 
 const close = () => { emit('emitClose') }
@@ -256,12 +287,34 @@ watch(() => props.editing, (newValue) => {
 })
 
 async function create () {
+  siteNameError.value = !siteName.value
+  siteLatError.value = !lat.value
+  siteLonError.value = !lon.value
+  if (siteLatError.value && siteLonError.value) {
+    siteLonError.value = false
+    siteLatError.value = false
+    siteLatLonError.value = true
+  } else {
+    siteLatLonError.value = false
+  }
+
+  siteLatFormatError.value = parseFloat(lat.value) > 85 || parseFloat(lat.value) < -85
+  siteLonFormatError.value = parseFloat(lon.value) > 180 || parseFloat(lon.value) < -180
+
+  if (siteLonError.value || siteLatError.value || siteNameError.value || siteLatLonError.value || siteLatFormatError.value || siteLonFormatError.value) {
+    return
+  }
+
+  if (lat.value === '0' && lon.value === '0') {
+    hidden.value = true
+  }
+
   const selected = store.myProjects.find(p => p.slug === selectedProjectSlug.value)
 
   const site = {
     name: siteName.value,
-    latitude: lat.value,
-    longitude: lon.value,
+    latitude: hidden.value ? 0 : parseFloat(lat.value),
+    longitude: hidden.value ? 0 : parseFloat(lon.value),
     altitude: alt.value,
     project_id: selectedProject.value?.value ?? '',
     is_public: false

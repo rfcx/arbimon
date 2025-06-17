@@ -59,8 +59,8 @@ export const apiArbimonGetAssets = async (apiClient: AxiosInstance, siteId: stri
 
 export interface CreateSiteBody {
   name: string
-  latitude: string
-  longitude: string
+  latitude: string | number
+  longitude: string | number
   altitude: string
   project_id: string
   is_public: boolean
