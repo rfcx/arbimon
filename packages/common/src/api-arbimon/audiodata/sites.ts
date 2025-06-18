@@ -59,11 +59,11 @@ export const apiArbimonGetAssets = async (apiClient: AxiosInstance, siteId: stri
 
 export interface CreateSiteBody {
   name: string
-  latitude: string | number
-  longitude: string | number
-  altitude: string
+  lat: string | number
+  lon: string | number
+  alt?: string | number
   project_id: string
-  is_public: boolean
+  hidden: number
 }
 
 export const apiCorePostCreateSite = async (apiClient: AxiosInstance, payload: CreateSiteBody): Promise<string | undefined> =>
@@ -72,11 +72,12 @@ export const apiCorePostCreateSite = async (apiClient: AxiosInstance, payload: C
 export interface EditSiteBody {
   site_id: number
   name: string
-  lat: string
-  lon: string
-  alt: string
+  lat: string | number
+  lon: string | number
+  alt: string | number
   external_id: string
-  project: ProjectBody
+  hidden: number
+  project?: ProjectBody
 }
 export interface ProjectBody {
   project_id: number
@@ -95,6 +96,10 @@ export const apiBioUpdateDashboardContent = async (apiClient: AxiosInstance, ext
 
 export const apiLegacySiteUpdate = async (apiClient: AxiosInstance, slug: string, value: EditSiteBody): Promise<CreateSiteBody> => {
   return await apiClient.post(`/legacy-api/project/${slug}/sites/update`, { site: value })
+}
+
+export const apiLegacySiteCreate = async (apiClient: AxiosInstance, slug: string, payload: CreateSiteBody): Promise<string | undefined> => {
+  return await apiClient.post(`/legacy-api/project/${slug}/sites/create`, { site: payload })
 }
 
 export const apiLegacySiteDelete = async (apiClient: AxiosInstance, slug: string, sites: number[]): Promise<TextResponse> => {

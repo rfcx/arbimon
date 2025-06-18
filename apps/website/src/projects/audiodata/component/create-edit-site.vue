@@ -150,10 +150,10 @@
 import type { AxiosInstance } from 'axios'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 
-import { type SiteResponse, apiCorePostCreateSite, apiLegacySiteUpdate } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { type SiteResponse, apiLegacySiteCreate, apiLegacySiteUpdate } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
-import { apiClientArbimonLegacyKey, apiClientCoreKey, apiClientKey } from '@/globals'
+import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 import DropdownComponent from './dropdown-component.vue'
 import { type DropdownItem } from './dropdown-component.vue'
@@ -262,8 +262,6 @@ const tempHidden = () => {
 
 const close = () => { emit('emitClose') }
 
-const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
-
 watch(() => props.site, (newValue) => {
     if (!props.editing) return
     lat.value = newValue?.lat.toString() ?? ''
@@ -288,21 +286,25 @@ watch(() => props.editing, (newValue) => {
 
 async function create () {
   siteNameError.value = !siteName.value
-  siteLatError.value = !lat.value
-  siteLonError.value = !lon.value
-  if (siteLatError.value && siteLonError.value) {
-    siteLonError.value = false
-    siteLatError.value = false
-    siteLatLonError.value = true
+  if (!hidden.value) {
+    siteLatError.value = !lat.value
+    siteLonError.value = !lon.value
+    if (siteLatError.value && siteLonError.value) {
+      siteLonError.value = false
+      siteLatError.value = false
+      siteLatLonError.value = true
+    } else {
+      siteLatLonError.value = false
+    }
+
+    siteLatFormatError.value = parseFloat(lat.value) > 85 || parseFloat(lat.value) < -85
+    siteLonFormatError.value = parseFloat(lon.value) > 180 || parseFloat(lon.value) < -180
+
+    if (siteLonError.value || siteLatError.value || siteNameError.value || siteLatLonError.value || siteLatFormatError.value || siteLonFormatError.value) {
+      return
+    }
   } else {
-    siteLatLonError.value = false
-  }
-
-  siteLatFormatError.value = parseFloat(lat.value) > 85 || parseFloat(lat.value) < -85
-  siteLonFormatError.value = parseFloat(lon.value) > 180 || parseFloat(lon.value) < -180
-
-  if (siteLonError.value || siteLatError.value || siteNameError.value || siteLatLonError.value || siteLatFormatError.value || siteLonFormatError.value) {
-    return
+    if (siteNameError.value) return
   }
 
   if (lat.value === '0' && lon.value === '0') {
@@ -313,11 +315,11 @@ async function create () {
 
   const site = {
     name: siteName.value,
-    latitude: hidden.value ? 0 : parseFloat(lat.value),
-    longitude: hidden.value ? 0 : parseFloat(lon.value),
-    altitude: alt.value,
+    lat: parseFloat(lat.value),
+    lon: parseFloat(lon.value),
     project_id: selectedProject.value?.value ?? '',
-    is_public: false
+    hidden: hidden.value ? 1 : 0,
+    ...(alt.value !== '' && { alt: parseFloat(alt.value) })
   }
 
   const siteItem = {
@@ -327,6 +329,7 @@ async function create () {
     lon: lon.value,
     alt: alt.value,
     external_id: props.site?.external_id ?? '',
+    hidden: hidden.value ? 1 : 0,
     project: {
       project_id: 5846, // Should get project_id from legacy
       name: selected?.name ?? '',
@@ -345,7 +348,7 @@ async function create () {
      }
   } else {
     try {
-      const response = await apiCorePostCreateSite(apiClientCore, site)
+      const response = await apiLegacySiteCreate(apiClientArbimon, selectedProjectSlug.value ?? '', site)
       console.info(response)
       emit('emitReloadSite', 'success')
     } catch (e) {

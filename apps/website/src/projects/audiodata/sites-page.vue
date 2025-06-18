@@ -194,6 +194,7 @@ interface Site {
   lat: number;
   lon: number;
   alt: number;
+  hidden: number;
 }
 
 const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
@@ -314,11 +315,11 @@ function toCreateSiteBody (site: Site): CreateSiteBody {
 
   return {
     name: site.name,
-    latitude: site.lat.toString(),
-    longitude: site.lon.toString(),
-    altitude: site.alt.toString(),
+    lat: site.lat.toString(),
+    lon: site.lon.toString(),
+    alt: site.alt.toString(),
     project_id: selected?.idCore ?? '',
-    is_public: false
+    hidden: site.hidden
   }
 }
 
