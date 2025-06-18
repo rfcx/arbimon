@@ -33,6 +33,10 @@
             class="py-2 pl-2 truncate whitespace-nowrap overflow-hidden"
           >
             {{ formatValueByKey(column.key, row[column.key], row) }}
+            <icon-custom-fi-eye-off
+              v-if="row.hidden === 1 && column.key === 'name'"
+              class="inline-flex text-util-gray-02 mr-2 w-4 ml-1"
+            />
           </td>
         </tr>
       </tbody>
