@@ -101,6 +101,10 @@ const sortedRows = computed(() => {
 const selectedRowIndex = ref<number | null>(null)
 
 function formatValueByKey (key: string, value: any, row: any): string {
+  if (row.hidden === 1 && (key === 'lat' || key === 'lon' || key === 'alt' || key === 'timezone')) {
+    return '-'
+  }
+
   if (value === null || value === undefined || value === '') return '-'
   if (key === 'timezone') return getUTCOffset(value)
   if (key === 'deployment') return value === 0 ? 'no data' : formatDateTime(value, row.timezone)
