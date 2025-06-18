@@ -6,7 +6,7 @@
         <input
           v-model="siteName"
           placeholder="Site name"
-          class="text-white w-full form-control bg-moss border-gray-600 rounded-lg h-34px mt-2"
+          class="text-white w-full form-control bg-moss border-util-gray-03 rounded-lg h-34px mt-2"
           type="text"
           required
         >
@@ -31,9 +31,31 @@
             class="font-light ml-2 cursor-pointer text-secondary"
             @click="tempHidden()"
           >Exclude this site from Arbimon Insights</label>
-          <icon-custom-ic-info
-            class="inline-block h-4 w-4 cursor-pointer ml-1"
-          />
+          <div
+            ref="popoverWrapper"
+            class="relative inline-block"
+          >
+            <icon-custom-ic-info
+              class="inline-block h-4 w-4 cursor-pointer ml-1"
+              @click="togglePopover"
+            />
+            <transition name="fade">
+              <div
+                v-if="showPopover"
+                class="absolute z-10 w-58 p-3 text-sm text-white bg-moss rounded-lg shadow-lg right-0 mt-2"
+              >
+                Hide test sites or sites for <br>
+                importing external templates. <br>
+                <a
+                  href="https://help.arbimon.org/article/206-adding-a-site"
+                  target="_blank"
+                  class="text-frequency underline cursor-pointer"
+                >
+                  Learn more
+                </a>
+              </div>
+            </transition>
+          </div>
         </div>
       </div>
     </div>
@@ -47,7 +69,7 @@
       </p>
       <div class="input-group my-2 flex flex-row">
         <div
-          class="input-group-addon flex items-center justify-center edit-site-label border-r-0 bg-moss border-gray-600 rounded-lg rounded-r-none w-16"
+          class="input-group-addon flex items-center justify-center edit-site-label border-r-0 bg-moss border-util-gray-03 rounded-lg rounded-r-none w-16"
           :disabled="hidden"
         >
           Lat
@@ -55,7 +77,7 @@
         <input
           id="lonInput"
           v-model="lat"
-          class="bg-moss border-gray-600 rounded-lg rounded-l-none w-full"
+          class="bg-moss border-util-gray-03 rounded-lg rounded-l-none w-full"
           :class="{ 'opacity-50 cursor-not-allowed': hidden === true }"
           style="height: 34px"
           name="lat"
@@ -74,7 +96,7 @@
       </p>
       <div class="input-group my-2 flex flex-row">
         <div
-          class="input-group-addon flex items-center justify-center edit-site-label border-r-0 bg-moss border-gray-600 rounded-lg rounded-r-none w-16"
+          class="input-group-addon flex items-center justify-center edit-site-label border-r-0 bg-moss border-util-gray-03 rounded-lg rounded-r-none w-16"
           :disabled="hidden === true"
         >
           <p>Lon</p>
@@ -82,7 +104,7 @@
         <input
           id="lonInput"
           v-model="lon"
-          class="bg-moss border-gray-600 rounded-lg rounded-l-none w-full"
+          class="bg-moss border-util-gray-03 rounded-lg rounded-l-none w-full"
           :class="{ 'opacity-50 cursor-not-allowed': hidden === true }"
           style="height: 34px"
           name="lon"
@@ -101,7 +123,7 @@
       </p>
       <div class="input-group my-2 flex flex-row">
         <div
-          class="input-group-addon flex items-center justify-center edit-site-label border-r-0 bg-moss border-gray-600 rounded-lg rounded-r-none w-16"
+          class="input-group-addon flex items-center justify-center edit-site-label border-r-0 bg-moss border-util-gray-03 rounded-lg rounded-r-none w-16"
           :disabled="hidden === true"
         >
           El
@@ -109,7 +131,7 @@
         <input
           id="lonInput"
           v-model="alt"
-          class="bg-moss border-gray-600 rounded-lg rounded-l-none w-full"
+          class="bg-moss border-util-gray-03 rounded-lg rounded-l-none w-full"
           :class="{ 'opacity-50 cursor-not-allowed': hidden === true }"
           style="height: 34px"
           name="alt"
@@ -151,7 +173,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { type SiteResponse, apiLegacySiteCreate, apiLegacySiteUpdate } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
@@ -227,6 +249,31 @@ onMounted(() => {
     projectsItemList.value.push({ value: p.idCore, label: p.name })
   })
   updateSelectedProject()
+})
+
+const showPopover = ref(false)
+const popoverWrapper = ref<HTMLElement | null>(null)
+
+function togglePopover () {
+  showPopover.value = !showPopover.value
+}
+
+function closePopover () {
+  showPopover.value = false
+}
+
+function handleClickOutside (event: MouseEvent) {
+  if (popoverWrapper.value && !popoverWrapper.value.contains(event.target as Node)) {
+    closePopover()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
 })
 
 const fetchProjects = async (offset:number, limit: number): Promise<void> => {
@@ -393,5 +440,14 @@ async function create () {
     background-color: #060508;
     border: 1px solid #F9F6F2;
     border-radius: 4px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
