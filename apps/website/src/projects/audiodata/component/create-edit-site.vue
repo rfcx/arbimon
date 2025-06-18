@@ -56,6 +56,7 @@
           id="lonInput"
           v-model="lat"
           class="bg-moss border-gray-600 rounded-lg rounded-l-none w-full"
+          :class="{ 'opacity-50 cursor-not-allowed': hidden === true }"
           style="height: 34px"
           name="lat"
           type="text"
@@ -82,6 +83,7 @@
           id="lonInput"
           v-model="lon"
           class="bg-moss border-gray-600 rounded-lg rounded-l-none w-full"
+          :class="{ 'opacity-50 cursor-not-allowed': hidden === true }"
           style="height: 34px"
           name="lon"
           type="text"
@@ -108,6 +110,7 @@
           id="lonInput"
           v-model="alt"
           class="bg-moss border-gray-600 rounded-lg rounded-l-none w-full"
+          :class="{ 'opacity-50 cursor-not-allowed': hidden === true }"
           style="height: 34px"
           name="alt"
           type="text"
@@ -205,11 +208,13 @@ onMounted(() => {
     lat.value = props.site?.lat?.toString() ?? ''
     lon.value = props.site?.lon?.toString() ?? ''
     alt.value = props.site?.alt?.toString() ?? ''
+    hidden.value = props.site?.hidden === 1
     siteName.value = props.site?.name ?? ''
   } else {
     lat.value = ''
     lon.value = ''
     alt.value = ''
+    hidden.value = false
     siteName.value = ''
   }
 
@@ -275,11 +280,13 @@ watch(() => props.editing, (newValue) => {
     lat.value = props.site?.lat.toString() ?? ''
     lon.value = props.site?.lon.toString() ?? ''
     alt.value = props.site?.alt.toString() ?? ''
+    hidden.value = props.site?.hidden === 1
     siteName.value = props.site?.name ?? ''
   } else {
     lat.value = ''
     lon.value = ''
     alt.value = ''
+    hidden.value = false
     siteName.value = ''
   }
 })
