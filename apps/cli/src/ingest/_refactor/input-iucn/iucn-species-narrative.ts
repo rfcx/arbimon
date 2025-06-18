@@ -16,54 +16,20 @@ interface IucnSpeciesNarrativeResponse {
   assessment_id: number | null
   ssessment_points: boolean | null
   assessment_ranges: boolean | null
-  biogeographical_realms: BiogeographicalRealms[]
   citation: string | null
-  conservation_actions: ConservationActions[]
-  credits: any[]
   criteria: string | null
   documentation: Documentation
-  errata: any[]
-  faos: any[]
-  growth_forms: any[]
   habitats: any[]
   latest: boolean | null
-  lmes: any[]
   locations: any[]
   population_trend: any[]
   possibly_extinct: boolean
   possibly_extinct_in_the_wild: boolean | null
   red_list_category: any[]
-  references: any[]
-  researches: any[]
-  scopes: any[]
   sis_taxon_id: number | null
-  stresses: any[]
-  supplementary_info: any[]
-  systems: any[]
   taxon: any
-  threats: any[]
   url: string
-  use_and_trade: any[]
   year_published: string | null
-}
-
-interface BiogeographicalRealms {
-  code: string | null
-  description: BiogeographicalRealmsDescription
-}
-
-interface BiogeographicalRealmsDescription {
-  en: string | null
-}
-
-interface ConservationActions {
-  code: string | null
-  description: ConservationActionsDescription
-  note: string | null
-}
-
-interface ConservationActionsDescription {
-  en: string | null
 }
 
 interface Documentation {

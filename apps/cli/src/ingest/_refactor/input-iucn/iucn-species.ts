@@ -30,26 +30,10 @@ interface Assessments {
   possibly_extinct: boolean | null
   possibly_extinct_in_the_wild: boolean | null
   red_list_category_code: string | null
-  scopes: Scopes[]
   sis_taxon_id: string | null
   taxon_scientific_name: string | null
   url: string
   year_published: string | null
-}
-
-interface ScopesDescription {
-  en: string | null
-}
-
-interface Scopes {
-  description: ScopesDescription
-  code: string | null
-}
-
-interface SscGroups {
-  name: string | null
-  url: string | null
-  description: string | null
 }
 
 interface CommonName {
@@ -61,11 +45,6 @@ interface CommonName {
 interface IucnSpeciesResponseResult {
   sis_id: number | null
   scientific_name: string | null
-  species_taxa: any[]
-  subpopulation_taxa: any[]
-  infrarank_taxa: any[]
-  kingdom_name: string | null
-  phylum_name: string | null
   class_name: string | null
   order_name: string | null
   family_name: string | null
@@ -75,9 +54,6 @@ interface IucnSpeciesResponseResult {
   infra_name: string | null
   authority: string | null
   species: boolean | null
-  subpopulation: boolean | null
-  infrarank: boolean | null
-  ssc_groups: SscGroups[]
   common_names: CommonName[]
   synonyms: any[]
 }
