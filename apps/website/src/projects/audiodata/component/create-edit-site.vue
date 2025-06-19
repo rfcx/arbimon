@@ -14,7 +14,7 @@
           v-if="siteNameError"
           class="text-red-500 text-sm mt-1"
         >
-          Please fill in the site name to create a site.
+          Please fill in the site name.
         </p>
       </div>
       <div>
@@ -65,7 +65,7 @@
         v-if="siteLatLonError && hidden !== true"
         class="text-red-500 text-sm mt-1"
       >
-        Please enter latitude and longitude, or check 'Exclude this site from Abrimon Insights' to create a site.
+        Please fill in latitude, longitude, or check Exclude this site from Arbimon Insights.
       </p>
       <div class="input-group my-2 flex flex-row">
         <div
@@ -92,7 +92,7 @@
         v-if="(siteLatError || siteLatFormatError) && hidden !== true"
         class="text-red-500 text-sm mt-1"
       >
-        {{ siteLatError ? `Please enter latitude or check 'Exclude this site from Abrimon Insights' to create a site.` : `Please enter latitude number between -85 to 85` }}
+        {{ siteLatError ? `Please fill in latitude or check Exclude this site from Arbimon Insights` : `Please enter latitude number between -85 to 85` }}
       </p>
       <div class="input-group my-2 flex flex-row">
         <div
@@ -119,7 +119,7 @@
         v-if="(siteLonError || siteLonFormatError) && hidden !== true"
         class="text-red-500 text-sm mt-1"
       >
-        {{ siteLonError ? `Please enter longitude or check 'Exclude this site from Abrimon Insights' to create a site.` : `Please enter longitude number between -180 to 180` }}
+        {{ siteLonError ? `Please fill in longitude, or check Exclude this site from Arbimon Insights.` : `Please enter longitude number between -180 to 180` }}
       </p>
       <div class="input-group my-2 flex flex-row">
         <div
