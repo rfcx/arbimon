@@ -316,17 +316,22 @@ const close = () => { emit('emitClose') }
 
 watch(() => props.site, (newValue) => {
     if (!props.editing) return
-    lat.value = newValue?.lat.toString() ?? ''
-    lon.value = newValue?.lon.toString() ?? ''
-    alt.value = newValue?.alt.toString() ?? ''
+    if (!newValue) {
+      emit('emitClose')
+      return
+    }
+    lat.value = newValue?.lat != null ? String(newValue.lat) : ''
+    lon.value = newValue?.lon != null ? String(newValue.lon) : ''
+    alt.value = newValue?.alt != null ? String(newValue.alt) : ''
+    hidden.value = newValue?.hidden === 1
     siteName.value = newValue?.name ?? ''
 })
 
 watch(() => props.editing, (newValue) => {
   if (newValue) {
-    lat.value = props.site?.lat.toString() ?? ''
-    lon.value = props.site?.lon.toString() ?? ''
-    alt.value = props.site?.alt.toString() ?? ''
+    lat.value = props.site?.lat != null ? String(props.site.lat) : ''
+    lon.value = props.site?.lon != null ? String(props.site.lon) : ''
+    alt.value = props.site?.alt != null ? String(props.site.alt) : ''
     hidden.value = props.site?.hidden === 1
     siteName.value = props.site?.name ?? ''
   } else {
