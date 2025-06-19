@@ -193,7 +193,7 @@ const props = withDefaults(defineProps<{ editing?: boolean, site?: SiteResponse 
   site: undefined
 })
 
-const emit = defineEmits<{(e: 'emitClose', status?: string): void, (e: 'emitReloadSite', status: string): void, }>()
+const emit = defineEmits<{(e: 'emitClose', status?: string, error?: string | undefined): void, (e: 'emitReloadSite', status: string): void, }>()
 
 const siteName = ref('')
 const isDisabled = ref(false)
@@ -374,10 +374,10 @@ async function create () {
 
   const site = {
     name: siteName.value,
-    lat: parseFloat(lat.value),
-    lon: parseFloat(lon.value),
     project_id: selectedProject.value?.value ?? '',
     hidden: hidden.value ? 1 : 0,
+    ...(lat.value !== '' && { lat: parseFloat(lat.value) }),
+    ...(lon.value !== '' && { alt: parseFloat(lon.value) }),
     ...(alt.value !== '' && { alt: parseFloat(alt.value) })
   }
 
@@ -408,8 +408,19 @@ async function create () {
   } else {
     try {
       const response = await apiLegacySiteCreate(apiClientArbimon, selectedProjectSlug.value ?? '', site)
-      console.info(response)
-      emit('emitReloadSite', 'success')
+      let responseObj: { error?: string } = {}
+
+      if (typeof response.data === 'string') {
+        responseObj = JSON.parse(response.data)
+      } else if (typeof response.data === 'object' && response.data !== null) {
+        responseObj = response.data
+      }
+
+      if (responseObj.error) {
+        emit('emitClose', 'error', responseObj.error)
+      } else {
+        emit('emitReloadSite', 'success')
+      }
     } catch (e) {
       emit('emitClose', 'error')
      }

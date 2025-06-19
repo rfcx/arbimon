@@ -385,6 +385,7 @@ const onEmitSelected = async (locationId: number) => {
   const site = sites.value?.find(s => s.id === locationId)
   if (site !== undefined) {
     selectedSite.value = site
+    if (site.external_id !== undefined) return
     await getAssets(site.external_id)
   }
 }
@@ -417,12 +418,16 @@ function handleCsvData (csv: string) {
     }
 }
 
-const onClose = (status?: string) => {
+const onClose = (status?: string, error?: string | undefined) => {
   let message = 'New Sites created successfully'
   let messageError = 'Failed to create sites'
   if (editing.value) {
     message = 'Site updated'
     messageError = 'Failed to update site'
+  }
+  if (error) {
+    showAlertDialog('error', 'Error', error)
+    return
   }
   if (status !== undefined) {
     const isError = status === 'error'
@@ -455,11 +460,8 @@ const createSite = () => {
 }
 
 const onSelectedItem = async (row?: Record<string, any>) => {
-  if (!row) {
-    selectedSite.value = undefined
-  }
-
   selectedSite.value = row as SiteResponse
+  if (selectedSite.value?.external_id === undefined) return
   await getAssets(selectedSite.value.external_id)
 }
 

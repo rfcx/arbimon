@@ -59,8 +59,8 @@ export const apiArbimonGetAssets = async (apiClient: AxiosInstance, siteId: stri
 
 export interface CreateSiteBody {
   name: string
-  lat: string | number
-  lon: string | number
+  lat?: string | number
+  lon?: string | number
   alt?: string | number
   project_id: string
   hidden: number
@@ -86,6 +86,9 @@ export interface ProjectBody {
   external_id: string
 }
 
+export interface ResponseData {
+  data: string
+}
 export interface TextResponse {
   message: string
 }
@@ -98,7 +101,7 @@ export const apiLegacySiteUpdate = async (apiClient: AxiosInstance, slug: string
   return await apiClient.post(`/legacy-api/project/${slug}/sites/update`, { site: value })
 }
 
-export const apiLegacySiteCreate = async (apiClient: AxiosInstance, slug: string, payload: CreateSiteBody): Promise<string | undefined> => {
+export const apiLegacySiteCreate = async (apiClient: AxiosInstance, slug: string, payload: CreateSiteBody): Promise<ResponseData> => {
   return await apiClient.post(`/legacy-api/project/${slug}/sites/create`, { site: payload })
 }
 
