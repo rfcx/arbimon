@@ -31,6 +31,7 @@
             :key="column.key"
             :style="`max-width: ${column.maxWidth || 100}px`"
             class="py-2 pl-2 truncate whitespace-nowrap overflow-hidden"
+            :title="formatforTitle(column.key, row[column.key], row)"
           >
             {{ formatValueByKey(column.key, row[column.key], row) }}
             <icon-custom-fi-eye-off
@@ -100,13 +101,13 @@ const sortedRows = computed(() => {
 })
 const selectedRowIndex = ref<number | null>(null)
 
-function formatValueByKey (key: string, value: any, row: any): string {
+function formatValueByKey (key: string, value: any, row: any, forTitle?: boolean): string {
   if (row.hidden === 1 && (key === 'lat' || key === 'lon' || key === 'alt' || key === 'timezone')) {
     return '-'
   }
 
   if (value === null || value === undefined || value === '') return '-'
-  if (key === 'timezone') return getUTCOffset(value)
+  if (key === 'timezone') return forTitle === true ? value : getUTCOffset(value)
   if (key === 'deployment') return value === 0 ? 'no data' : formatDateTime(value, row.timezone)
   if (key === 'updated_at') return formatDateTime(value, row.timezone)
 
@@ -121,6 +122,10 @@ function formatValueByKey (key: string, value: any, row: any): string {
   }
 
   return value.toString()
+}
+
+function formatforTitle (key: string, value: any, row: any): string {
+  return formatValueByKey(key, value, row, true)
 }
 
 function getUTCOffset (timeZone: string | undefined): string {
