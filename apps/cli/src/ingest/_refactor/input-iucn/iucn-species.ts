@@ -61,7 +61,7 @@ interface IucnSpeciesResponseResult {
 export async function getIucnSpecies (scientificName: string): Promise<IucnSpecies | undefined> {
   const endpoint: AxiosRequestConfig = {
     method: 'GET',
-    headers: { Autorization: `${IUCN_API_KEY}` },
+    headers: { Autorization: `Bearer ${IUCN_API_KEY}` },
     url: getSpeciesApiRedirectLink(scientificName)
   }
 

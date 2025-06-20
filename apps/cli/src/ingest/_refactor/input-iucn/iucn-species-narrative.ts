@@ -53,7 +53,7 @@ export async function getIucnSpeciesNarrative (scientificName: string): Promise<
   }
   const endpoint: AxiosRequestConfig = {
     method: 'GET',
-    headers: { Autorization: `${IUCN_API_KEY}` },
+    headers: { Autorization: `Bearer ${IUCN_API_KEY}` },
     url: `${IUCN_BASE_URL}/assessment/${assessmentId}`
   }
 
