@@ -31,48 +31,59 @@
       <div class="w-2/3 overflow-y-auto pr-4">
         <!-- Content wrapper for scroll height -->
         <div>
-          <div class="p-1">
-            <button
-              :disabled="selectedSite == undefined"
-              class="btn btn-secondary btn-medium btn-small disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
-              @click="editSite()"
-            >
-              <span>Edit Site</span>
-            </button>
-            <button
-              class="btn btn-secondary btn-medium ml-2 btn-small"
-              data-dropdown-toggle="mapDropdown"
-            >
-              <span class="inline-flex gap-1">
-                Delete
-                <icon-custom-el-angle-down class="ml-2 mt-1 w-3 h-3" />
-              </span>
-            </button>
-            <div
-              id="mapDropdown"
-              class="z-10 hidden bg-moss border border-frequency rounded-lg"
-            >
-              <ul class="p-2 font-medium">
-                <li
-                  class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer"
-                  @click="deleteSelectedSite"
-                >
-                  Delete selected site
-                </li>
-                <li
-                  class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer"
-                  @click="deleteAllEmptySites"
-                >
-                  Delete all empty sites
-                </li>
-              </ul>
+          <div class="p-1 flex justify-between">
+            <div>
+              <button
+                :disabled="selectedSite == undefined"
+                class="btn btn-secondary btn-medium btn-small disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
+                @click="editSite()"
+              >
+                <span>Edit Site</span>
+              </button>
+              <button
+                class="btn btn-secondary btn-medium ml-2 btn-small"
+                data-dropdown-toggle="mapDropdown"
+              >
+                <span class="inline-flex gap-1">
+                  Delete
+                  <icon-custom-el-angle-down class="ml-2 mt-1 w-3 h-3" />
+                </span>
+              </button>
+              <div
+                id="mapDropdown"
+                class="z-10 hidden bg-moss border border-frequency rounded-lg"
+              >
+                <ul class="p-2 font-medium">
+                  <li
+                    class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer"
+                    @click="deleteSelectedSite"
+                  >
+                    Delete selected site
+                  </li>
+                  <li
+                    class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer"
+                    @click="deleteAllEmptySites"
+                  >
+                    Delete all empty sites
+                  </li>
+                </ul>
+              </div>
+              <button
+                class="btn btn-secondary btn-medium ml-2 btn-small"
+                @click="exportSites()"
+              >
+                <span>Export Sites</span>
+              </button>
             </div>
-            <button
-              class="btn btn-secondary btn-medium ml-2 btn-small"
-              @click="exportSites()"
-            >
-              <span>Export Sites</span>
-            </button>
+            <div class="input-item">
+              <input
+                v-model="searchKeyword"
+                type="text"
+                placeholder="Search by site name"
+                class="rounded px-3 py-2 ml-4 h-[34px] w-72 items-center inline-flex px-3 py-2 rounded border-1 border-util-gray-03 bg-echo"
+                @input="onSearchInput"
+              >
+            </div>
           </div>
           <div
             v-show="!isLoadingSite"
@@ -85,7 +96,7 @@
           <SortableTable
             class="mt-5"
             :columns="columns"
-            :rows="sites ?? []"
+            :rows="filteredSites ?? []"
             :selected-row="selectedSite"
             :default-sort-key="'updated_at'"
             :default-sort-order="'desc'"
@@ -234,6 +245,9 @@ const siteIds = ref<(number)[]>([])
 
 const imageList = ref<Image[]>([])
 
+const searchKeyword = ref('')
+const searchTimeout = ref<number | undefined>(undefined)
+
 // Show on UI
 onMounted(() => {
   if (store.myProjects.length === 0) {
@@ -241,9 +255,6 @@ onMounted(() => {
   }
 })
 
-const sitesCount = () => {
-  return sites.value?.length ?? 0
-}
 const columns = [
   { label: 'Name', key: 'name', maxWidth: 150 },
   { label: 'No. of records', key: 'rec_count', maxWidth: 50 },
@@ -284,6 +295,25 @@ async function handleOk () {
   } catch (e) {
     showAlertDialog('error', 'Error', 'Remove site')
   }
+}
+
+const filteredSites = computed(() => {
+  if (!sites.value) return []
+  if (!searchKeyword.value.trim()) return sites.value
+
+  const keyword = searchKeyword.value.trim().toLowerCase()
+  return sites.value.filter(site => site.name.toLowerCase().includes(keyword))
+})
+
+const onSearchInput = () => {
+  clearTimeout(searchTimeout.value)
+  searchTimeout.value = window.setTimeout(() => {
+    // debounce
+  }, 300)
+}
+
+const sitesCount = () => {
+  return filteredSites.value?.length ?? 0
 }
 
 const handleCancel = () => {
@@ -583,3 +613,13 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
 }
 
 </script>
+
+<style lang="scss">
+.input-item {
+  [type='text']:focus {
+    border-color: #ADFF2C;
+    --tw-ring-color: #ADFF2C;
+  }
+  color: #fff;
+}
+</style>
