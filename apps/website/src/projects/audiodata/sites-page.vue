@@ -75,12 +75,13 @@
                 <span>Export Sites</span>
               </button>
             </div>
-            <div class="input-item">
+            <div class="input-item search form-element">
+              <icon-fa-search class="h-3 w-3 mt-3 fa-search text-insight" />
               <input
                 v-model="searchKeyword"
                 type="text"
                 placeholder="Search by site name"
-                class="rounded px-3 py-2 ml-4 h-[34px] w-72 items-center inline-flex px-3 py-2 rounded border-1 border-util-gray-03 bg-echo"
+                class="form-control placeholder-style rounded px-3 py-2 h-[34px] w-52 items-center inline-flex rounded border-1 border-util-gray-03 bg-echo"
                 @input="onSearchInput"
               >
             </div>
@@ -621,5 +622,23 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
     --tw-ring-color: #ADFF2C;
   }
   color: #fff;
+}
+.placeholder-style::placeholder {
+  color: #fff;
+  font-size: 14px;
+}
+.search .fa-search {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  bottom: 0;
+  color: #D3D2CF;
+}
+.form-element {
+  position: relative;
+}
+
+.form-control {
+    padding: 6px 12px 6px 30px !important;
 }
 </style>
