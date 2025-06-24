@@ -185,12 +185,12 @@
 import type { AxiosInstance } from 'axios'
 import { computed, inject, onMounted, ref } from 'vue'
 
-import { type CreateSiteBody, type SiteParams, type SiteResponse, apiCorePostCreateSite, apiLegacySiteDelete } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { type CreateSiteBody, type SiteParams, type SiteResponse, apiLegacySiteCreate, apiLegacySiteDelete } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
-import { apiClientArbimonLegacyKey, apiClientCoreKey, apiClientDeviceKey, apiClientKey } from '@/globals'
+import { apiClientArbimonLegacyKey, apiClientDeviceKey, apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 import { apiDeviceGetAssets, useGetAssets, useSites } from './api/use-sites'
 import CreateEditSite from './component/create-edit-site.vue'
@@ -209,7 +209,6 @@ interface Site {
   hidden: number;
 }
 
-const apiClientCore = inject(apiClientCoreKey) as AxiosInstance
 const importSiteModal = ref<InstanceType<typeof ImportSiteModal> | null>(null)
 
 const store = useStore()
@@ -347,28 +346,48 @@ const deleteAllEmptySites = () => {
 
 function toCreateSiteBody (site: Site): CreateSiteBody {
   const selected = store.myProjects.find(p => p.slug === selectedProjectSlug.value)
-
   return {
     name: site.name,
     lat: site.lat.toString(),
     lon: site.lon.toString(),
     alt: site.alt.toString(),
     project_id: selected?.idCore ?? '',
-    hidden: site.hidden
+    hidden: site.hidden ?? 0
   }
 }
 
 async function createSitesFromCsvData (sites: Site[]) {
-  let isError = false
-  for (const site of sites) {
-    try {
-      await apiCorePostCreateSite(apiClientCore, toCreateSiteBody(site))
-    } catch (error) {
-      isError = true
-    }
+  try {
+  await createSites(sites)
+    showAlertDialog('success', 'Success', 'All sites created successfully!')
+    reloadSite()
+  } catch (err) {
+    showAlertDialog('error', 'Error', 'Failed to create sites')
   }
-  reloadSite()
-  showAlertDialog(isError ? 'error' : 'success', isError ? 'Error' : 'Success', isError ? 'Failed to create sites' : 'New Sites created successfully')
+}
+
+async function createSites (sites: Site[]): Promise<void[]> {
+  return Promise.all(
+    sites.map(async (site) => {
+      const response = await apiLegacySiteCreate(
+        apiClientArbimon,
+        selectedProjectSlug.value ?? '',
+        toCreateSiteBody(site)
+      )
+
+      let responseObj: { error?: string } = {}
+
+      if (typeof response.data === 'string') {
+        responseObj = JSON.parse(response.data)
+      } else if (typeof response.data === 'object' && response.data !== null) {
+        responseObj = response.data
+      }
+
+      if (responseObj.error) {
+        throw responseObj.error
+      }
+    })
+  )
 }
 
 const exportSites = () => {
@@ -527,7 +546,8 @@ function checkEmptySites () {
 
 function parseSitesFromCsv (allText: string): Site[] | false {
   const allTextLines = allText.split(/\r\n|\n/)
-  const headers = allTextLines[0].split(',')
+  const headersText = allTextLines[0].split(',')
+  const headers = headersText.map(h => h.trim().toLowerCase())
 
   if (!headers.includes('name') || !headers.includes('lat') || !headers.includes('lon') || !headers.includes('alt')) {
     showAlertDialog('error', 'Error', 'Wrong format of csv file')

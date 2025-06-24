@@ -423,7 +423,7 @@ async function create () {
       }
     } catch (e) {
       emit('emitClose', 'error')
-     }
+    }
   }
 }
 
