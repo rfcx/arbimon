@@ -290,8 +290,9 @@ const LIMIT = 20
 
 async function handleOk () {
   try {
-    await apiLegacySiteDelete(apiClientArbimon, selectedProjectSlug.value ?? '', siteIds.value)
     showPopup.value = false
+    await apiLegacySiteDelete(apiClientArbimon, selectedProjectSlug.value ?? '', siteIds.value)
+    reloadSite()
     showAlertDialog('success', 'Success', 'Removed')
   } catch (e) {
     showAlertDialog('error', 'Error', 'Remove site')
@@ -328,7 +329,10 @@ const locationSelected = computed(() => {
 
 // function
 const deleteSelectedSite = () => {
-  if (selectedSite.value === undefined) return
+  if (selectedSite.value === undefined) {
+    showAlertDialog('error', 'Error', 'Please select site to remove')
+    return
+  }
 
   sitesSelected.value = [selectedSite.value.name]
   siteIds.value = [selectedSite.value.id]
