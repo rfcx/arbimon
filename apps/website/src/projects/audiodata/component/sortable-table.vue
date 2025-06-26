@@ -189,6 +189,8 @@ watch(() => props.selectedRow, (row) => {
   if (row != null) {
     const index = sortedRows.value.findIndex(r => r.id === row.id)
     selectedRowIndex.value = index
+  } else {
+    selectedRowIndex.value = null
   }
 })
 </script>

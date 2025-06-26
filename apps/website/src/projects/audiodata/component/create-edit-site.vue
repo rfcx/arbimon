@@ -191,6 +191,7 @@ import { type DropdownItem } from './dropdown-component.vue'
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
+const selectedProjectId = computed(() => store.project?.idArbimon)
 
 // API
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
@@ -404,7 +405,7 @@ async function create () {
     external_id: props.site?.external_id ?? '',
     hidden: hidden.value ? 1 : 0,
     project: {
-      project_id: 5846, // Should get project_id from legacy
+      project_id: selectedProjectId.value ?? 0,
       name: selected?.name ?? '',
       url: selected?.slug ?? '',
       external_id: selected?.idCore ?? ''
@@ -413,8 +414,7 @@ async function create () {
 
   if (props.editing) {
     try {
-      const response = await apiLegacySiteUpdate(apiClientArbimon, selectedProjectSlug.value ?? '', siteItem)
-      console.info(response)
+      await apiLegacySiteUpdate(apiClientArbimon, selectedProjectSlug.value ?? '', siteItem)
       emit('emitReloadSite', 'success')
     } catch (e) {
       emit('emitClose', 'error')

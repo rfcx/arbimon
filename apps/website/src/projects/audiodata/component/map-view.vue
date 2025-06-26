@@ -111,7 +111,7 @@ onMounted(() => {
         map.addImage(name, image)
       })
     })
-    map.addSource('projects', {
+    map.addSource('sites', {
       type: 'geojson',
       data: toGeoJson(props.data),
       cluster: true,
@@ -126,7 +126,7 @@ onMounted(() => {
     map.addLayer({
       id: 'unclustered-point',
       type: 'symbol',
-      source: 'projects',
+      source: 'sites',
       layout: {
         'icon-image': 'default-marker',
         'icon-size': 0.6
@@ -163,7 +163,7 @@ onMounted(() => {
     map.addLayer({
       id: 'clusters',
       type: 'circle',
-      source: 'projects',
+      source: 'sites',
       filter: ['has', 'point_count'],
       paint: {
         'circle-color': '#050608',
@@ -182,7 +182,7 @@ onMounted(() => {
     map.addLayer({
       id: 'cluster-count',
       type: 'symbol',
-      source: 'projects',
+      source: 'sites',
       filter: ['has', 'point_count'],
       layout: {
         'text-field': [
@@ -206,12 +206,12 @@ onMounted(() => {
       const { id } = features[0]?.properties ?? {}
       if (hoveredId.value !== null) {
         map.removeFeatureState(
-          { source: 'projects', id: hoveredId.value }
+          { source: 'sites', id: hoveredId.value }
         )
       }
       hoveredId.value = id
       map.setFeatureState(
-        { source: 'projects', id },
+        { source: 'sites', id },
         { hover: true }
       )
     }
@@ -220,7 +220,7 @@ onMounted(() => {
   map.on('mouseleave', 'unclustered-point', () => {
     if (hoveredId.value !== null) {
       map.removeFeatureState(
-        { source: 'projects', id: hoveredId.value }
+        { source: 'sites', id: hoveredId.value }
       )
     }
     hoveredId.value = null
@@ -230,11 +230,11 @@ onMounted(() => {
     const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
     const clusterId = features[0]?.properties?.cluster_id ?? ''
     if (clusterId === undefined || clusterId === '') return
-    (map.getSource('projects') as GeoJSONSource).getClusterExpansionZoom(clusterId, (err, zoom) => {
+    (map.getSource('sites') as GeoJSONSource).getClusterExpansionZoom(clusterId, (err, zoom) => {
       const coordinates = (features[0]?.geometry as Point).coordinates.slice() as [number, number]
       if (err === null) {
         map.easeTo({
-          padding: { top: 0, bottom: 0, left: 500, right: 0 },
+          padding: { top: 0, bottom: 0, left: 0, right: 0 },
           center: coordinates,
           zoom
         })
@@ -258,21 +258,29 @@ onMounted(() => {
 
 watch(() => props.selectedLocationId, (id) => {
   setSelectedLocation(id ?? -1)
-  if (id === undefined) { return }
+  if (id === null || id === undefined) {
+    // Move to map center when no location is selected
+    map?.flyTo({
+      center: mapCenter.value,
+      zoom: 2,
+      duration: 1000,
+      essential: true
+    })
+    return
+  }
   goToLocation(id)
 })
 
-// TODO: if the props.data updated, the data source of the map should be updated as well
 watch(() => props.data, (newData) => {
   // adjust map center
   map.easeTo({
     center: mapCenter.value
   })
   if (mapHasLoaded.value === false) { return }
-  if (map.getSource('projects') === undefined) {
-    map.addSource('projects', { type: 'geojson', data: toGeoJson(newData) })
+  if (map.getSource('sites') === undefined) {
+    map.addSource('sites', { type: 'geojson', data: toGeoJson(newData) })
   } else {
-    (map.getSource('projects') as GeoJSONSource).setData(toGeoJson(newData))
+    (map.getSource('sites') as GeoJSONSource).setData(toGeoJson(newData))
   }
 })
 

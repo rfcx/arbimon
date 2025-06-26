@@ -506,6 +506,7 @@ const reloadSite = async (status?: string): Promise<void> => {
   creating.value = false
   editing.value = false
   await siteRefetch()
+  selectedSite.value = undefined
 }
 
 const createSite = () => {
