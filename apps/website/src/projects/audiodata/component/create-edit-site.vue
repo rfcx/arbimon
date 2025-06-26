@@ -6,7 +6,7 @@
         <input
           v-model="siteName"
           placeholder="Site name"
-          class="text-white w-full form-control bg-moss border-util-gray-03 rounded-lg h-34px mt-2"
+          class="text-white w-full bg-moss border-util-gray-03 rounded-lg h-34px mt-2"
           type="text"
           required
         >
@@ -142,6 +142,12 @@
           :required="hidden !== true"
         >
       </div>
+      <p
+        v-if="altFormatError && hidden !== true"
+        class="text-red-500 text-sm mt-1"
+      >
+        Please enter a valid elevation number (e.g. 123.45)
+      </p>
     </div>
     <div
       v-if="editing"
@@ -217,6 +223,7 @@ const siteLonError = ref(false)
 const siteLatLonError = ref(false)
 const siteLatFormatError = ref(false)
 const siteLonFormatError = ref(false)
+const altFormatError = ref(false)
 
 const updateSelectedProject = () => {
   const selected = store.myProjects.find(p => p.slug === selectedProjectSlug.value)
@@ -344,6 +351,8 @@ watch(() => props.editing, (newValue) => {
 })
 
 async function create () {
+  const validNumberRegex = /^-?\d+(\.\d+)?$/
+
   siteNameError.value = !siteName.value
   if (!hidden.value) {
     siteLatError.value = !lat.value
@@ -356,10 +365,15 @@ async function create () {
       siteLatLonError.value = false
     }
 
-    siteLatFormatError.value = parseFloat(lat.value) > 85 || parseFloat(lat.value) < -85
-    siteLonFormatError.value = parseFloat(lon.value) > 180 || parseFloat(lon.value) < -180
+    siteLatFormatError.value = !validNumberRegex.test(lat.value) || parseFloat(lat.value) > 85 || parseFloat(lat.value) < -85
 
-    if (siteLonError.value || siteLatError.value || siteNameError.value || siteLatLonError.value || siteLatFormatError.value || siteLonFormatError.value) {
+    siteLonFormatError.value = !validNumberRegex.test(lon.value) || parseFloat(lon.value) > 180 || parseFloat(lon.value) < -180
+
+    if (alt.value !== '') {
+      altFormatError.value = !validNumberRegex.test(alt.value)
+    }
+
+    if (siteLonError.value || siteLatError.value || siteNameError.value || siteLatLonError.value || siteLatFormatError.value || siteLonFormatError.value || altFormatError.value) {
       return
     }
   } else {
