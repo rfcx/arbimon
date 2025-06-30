@@ -32,13 +32,13 @@ export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId:
   const [iucnSpecies, iucnSpeciesNarrative] = await Promise.all([getSequentially(speciesNames, getIucnSpecies), getSequentially(speciesNames, getIucnSpeciesNarrative)])
 
   const newData: TaxonSpeciesIucn[] = speciesNames.map(speciesName => {
+    console.info('speciesName', speciesName)
     const iucnSpeciesData = iucnSpecies[speciesName]
     const iucnSpeciesNarrativeData = iucnSpeciesNarrative[speciesName]
-
-    console.info('speciesName', speciesName)
+    const commonName = iucnSpeciesData?.common_names?.filter(n => n.main === true)
     return {
       taxonSpeciesId: speciesNameToId[speciesName].id,
-      commonName: iucnSpeciesData?.common_names[0]?.name ?? '',
+      commonName: commonName[0]?.name ?? '',
       riskRatingIucnId: iucnCodeToId[iucnSpeciesData?.assessments[0]?.red_list_category_code ?? ''] ?? speciesNameToId[speciesName].riskRatingIucnId ?? DEFAULT_RISK_RATING,
       description: iucnSpeciesNarrativeData?.documentation?.habitats ?? '',
       descriptionSourceUrl: iucnSpeciesNarrativeData?.sourceUrl ?? ''
