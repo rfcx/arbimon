@@ -11,28 +11,62 @@ import { syncOnlyMissingIUCNSpeciesInfo } from './iucn'
 
 // Inputs to the sync from the IUCN API
 const IUCN_SPECIES_1 = {
-  taxonid: 22724209,
+  sis_id: 22724209,
   scientific_name: 'Agelaius xanthomus',
-  main_common_name: 'Yellow-shouldered Blackbird',
-  category: 'EN'
+  genus_name: 'Agelaius',
+  species_name: 'xanthomus',
+  common_names: [{
+    language: 'eng',
+    main: true,
+    name: 'Yellow-shouldered Blackbird'
+  }],
+  assessments: [{
+    assessment_id: 180529449,
+    latest: true,
+    possibly_extinct: false,
+    possibly_extinct_in_the_wild: false,
+    red_list_category_code: 'EN',
+    scopes: [{ description: { en: 'Global' }, code: '1' }],
+    sis_taxon_id: 22724209,
+    taxon_scientific_name: 'Agelaius xanthomus',
+    url: 'https://www.iucnredlist.org/species/22724209/180529449',
+    year_published: '2020'
+  }]
 }
 const IUCN_SPECIES_2 = {
-  taxonid: 22693277,
+  sis_id: 262691229,
   scientific_name: 'Actitis macularius',
-  main_common_name: 'Spotted Sandpiper',
-  category: 'LC'
+  genus_name: 'Actitis',
+  species_name: 'macularius',
+  common_names: [{
+    language: 'eng',
+    main: true,
+    name: 'Spotted Sandpiper'
+  }],
+  assessments: [{
+    assessment_id: 180529449,
+    latest: true,
+    possibly_extinct: false,
+    possibly_extinct_in_the_wild: false,
+    red_list_category_code: 'LC',
+    scopes: [{ description: { en: 'Global' }, code: '1' }],
+    sis_taxon_id: 22693277,
+    taxon_scientific_name: 'Actitis macularius',
+    url: 'https://www.iucnredlist.org/species/22693277/262691229',
+    year_published: '2024'
+  }]
 }
 const IUCN_NARRATIVE_SPECIES_1 = {
-  species_id: 22724209,
-  scientific_name: 'Agelaius xanthomus',
-  habitat: 'The Yellow-shouldered Blackbird occupies a variety of habitats, all typically along the coast where it is most common (Jaramillo and Burke 1999).',
-  sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Agelaius%20xanthomus'
+  assessment_id: 180529449,
+  taxon: { scientific_name: 'Agelaius xanthomus' },
+  documentation: { habitats: 'The Yellow-shouldered Blackbird occupies a variety of habitats, all typically along the coast where it is most common (Jaramillo and Burke 1999).' },
+  sourceUrl: 'https://api.iucnredlist.org/api/v4/taxa/scientific_name?genus_name=Agelaius&species_name=xanthomus'
 }
 const IUCN_NARRATIVE_SPECIES_2 = {
-  species_id: 22693277,
-  scientific_name: 'Actitis macularius',
-  habitat: null,
-  sourceUrl: 'https://apiv3.iucnredlist.org/api/v3/website/Actitis%20macularius'
+  assessment_id: 262691229,
+  taxon: { scientific_name: 'Actitis macularius' },
+  documentation: { habitats: null },
+  sourceUrl: 'https://api.iucnredlist.org/api/v4/taxa/scientific_name?genus_name=Actitis&species_name=macularius'
 }
 
 vi.mock('@/ingest/_refactor/input-iucn/iucn-species', () => {
@@ -42,7 +76,7 @@ vi.mock('@/ingest/_refactor/input-iucn/iucn-species', () => {
 })
 vi.mock('@/ingest/_refactor/input-iucn/iucn-species-narrative', () => {
   return {
-    getIucnSpeciesNarrative: vi.fn(async (scientificName: string) => await Promise.resolve([IUCN_NARRATIVE_SPECIES_1, IUCN_NARRATIVE_SPECIES_2].find(s => s.scientific_name === scientificName)))
+    getIucnSpeciesNarrative: vi.fn(async (scientificName: string) => await Promise.resolve([IUCN_NARRATIVE_SPECIES_1, IUCN_NARRATIVE_SPECIES_2].find(s => s.taxon.scientific_name === scientificName)))
   }
 })
 vi.mock('@rfcx-bio/utils/async', () => {
@@ -114,13 +148,13 @@ test('rows created for 2 matching species', async () => {
   // Assert
   const iucnSpecies1 = await models.TaxonSpeciesIucn.findOne({ where: { taxonSpeciesId: SPECIES_1.id } })
   expect(iucnSpecies1).toBeTruthy()
-  expect(iucnSpecies1?.commonName).toBe(IUCN_SPECIES_1.main_common_name)
-  expect(iucnSpecies1?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId[IUCN_SPECIES_1.category])
-  expect(iucnSpecies1?.description).toBe(IUCN_NARRATIVE_SPECIES_1.habitat)
+  expect(iucnSpecies1?.commonName).toBe(IUCN_SPECIES_1.common_names[0].name)
+  expect(iucnSpecies1?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId[IUCN_SPECIES_1.assessments[0].red_list_category_code])
+  expect(iucnSpecies1?.description).toBe(IUCN_NARRATIVE_SPECIES_1.documentation.habitats)
   const iucnSpecies2 = await models.TaxonSpeciesIucn.findOne({ where: { taxonSpeciesId: SPECIES_2.id } })
   expect(iucnSpecies2).toBeTruthy()
-  expect(iucnSpecies2?.commonName).toBe(IUCN_SPECIES_2.main_common_name)
-  expect(iucnSpecies2?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId[IUCN_SPECIES_2.category])
+  expect(iucnSpecies2?.commonName).toBe(IUCN_SPECIES_2.common_names[0].name)
+  expect(iucnSpecies2?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId[IUCN_SPECIES_2.assessments[0].red_list_category_code])
 })
 
 test('rows created for non-matching species', async () => {
@@ -161,7 +195,7 @@ test('risk rating not updated when IUCN data not found', async () => {
 
   // Assert
   const iucnSpecies1 = await models.TaxonSpeciesIucn.findOne({ where: { taxonSpeciesId: SPECIES_1.id } })
-  expect(iucnSpecies1?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId[IUCN_SPECIES_1.category])
+  expect(iucnSpecies1?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId[IUCN_SPECIES_1.assessments[0].red_list_category_code])
 })
 
 test('risk rating not updated when getting IUCN data is rejected', async () => {
@@ -178,5 +212,5 @@ test('risk rating not updated when getting IUCN data is rejected', async () => {
   // Assert
   expect(catchCall).toHaveBeenCalledOnce()
   const iucnSpecies1 = await models.TaxonSpeciesIucn.findOne({ where: { taxonSpeciesId: SPECIES_1.id } })
-  expect(iucnSpecies1?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId[IUCN_SPECIES_1.category])
+  expect(iucnSpecies1?.riskRatingIucnId).toBe(iucnCategoryToRiskRatingId[IUCN_SPECIES_1.assessments[0].red_list_category_code])
 })

@@ -16,7 +16,7 @@ data:
   ## Config
   BIO_ENVIRONMENT: production
 
-  IUCN_BASE_URL: https://apiv3.iucnredlist.org/api/v3
+  IUCN_BASE_URL: https://api.iucnredlist.org/api/v4
 
   CORE_API_BASE_URL: https://api.rfcx.org
 
