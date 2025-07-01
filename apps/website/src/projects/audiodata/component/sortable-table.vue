@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { computed, defineEmits, defineProps, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 interface Column {
   label: string
@@ -135,7 +135,7 @@ function getUTCOffset (timeZone: string | undefined): string {
     const now = new Date()
     const dtf = new Intl.DateTimeFormat('en-US', {
       timeZone,
-      timeZoneName: 'shortOffset'
+      timeZoneName: 'short'
     })
     const parts = dtf.formatToParts(now)
     const tzPart = parts.find(part => part.type === 'timeZoneName')

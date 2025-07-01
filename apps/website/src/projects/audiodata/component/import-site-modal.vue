@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineExpose, ref } from 'vue'
+import { ref } from 'vue'
 
 const isOpen = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
