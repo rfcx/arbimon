@@ -8,10 +8,10 @@ const main = async (): Promise<void> => {
   try {
     const sequelize = getSequelize()
 
-    console.info('STEP: Sync missing Wiki species')
-    await syncOnlyMissingWikiSpeciesInfo(sequelize)
     console.info('STEP: Sync missing IUCN species')
     await syncOnlyMissingIUCNSpeciesInfo(sequelize)
+    console.info('STEP: Sync missing Wiki species')
+    await syncOnlyMissingWikiSpeciesInfo(sequelize)
 
     console.info('STEP: Refresh mviews')
     await refreshMviews(sequelize)

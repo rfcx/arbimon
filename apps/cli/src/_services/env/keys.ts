@@ -81,7 +81,7 @@ export const envGetters = {
   MEDIA_API_BASE_URL: stringGetter,
 
   IUCN_BASE_URL: stringGetter,
-  IUCN_TOKEN: stringGetter,
+  IUCN_API_KEY: stringGetter,
 
   WIKI_BASE_URL: stringGetter,
   WIKI_MEDIA_BASE_URL: stringGetter,
