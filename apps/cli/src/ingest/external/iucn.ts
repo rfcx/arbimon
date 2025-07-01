@@ -35,7 +35,7 @@ export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId:
     console.info('speciesName', speciesName)
     const iucnSpeciesData = iucnSpecies[speciesName]
     const iucnSpeciesNarrativeData = iucnSpeciesNarrative[speciesName]
-    const commonName = iucnSpeciesData?.common_names?.filter(n => n.main === true)
+    const commonName = iucnSpeciesData?.common_names?.filter(n => n.main === true) ?? ''
     return {
       taxonSpeciesId: speciesNameToId[speciesName].id,
       commonName: commonName[0]?.name ?? '',
