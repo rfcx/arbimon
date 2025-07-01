@@ -50,10 +50,7 @@ export const apiArbimonGetSites = async (apiClient: AxiosInstance, slug: string,
 }
 
 export const apiArbimonGetAssets = async (apiClient: AxiosInstance, siteId: string): Promise<AssetItem[] | undefined> => {
-  const response = await apiClient.request<AssetItem[]>({
-    method: 'GET',
-    url: `/streams/${siteId}/assets`
-  })
+  const response = await apiClient.get(`/streams/${siteId}/assets`)
   return response.data
 }
 
