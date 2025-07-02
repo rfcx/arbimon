@@ -1,5 +1,5 @@
 <template>
-  <section class="py-10 bg-white dark:bg-pitch pl-18">
+  <section class="py-20 bg-white dark:bg-pitch pl-18 site-page">
     <div class="flex items-center px-8 bg-white dark:bg-pitch">
       <h1 class="ml-1 text-gray-900 dark:text-insight">
         Sites
@@ -667,5 +667,13 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
 
 .form-control {
     padding: 6px 12px 6px 30px !important;
+}
+.site-page {
+  .btn:focus {
+    outline: none;
+    box-shadow: none;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-ring-offset-shadow: 0 0 #0000;
+  }
 }
 </style>

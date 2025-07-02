@@ -353,6 +353,9 @@ watch(() => props.editing, (newValue) => {
 
 async function create () {
   const validNumberRegex = /^-?\d+(\.\d+)?$/
+  siteLatFormatError.value = false
+  siteLonFormatError.value = false
+  altFormatError.value = false
 
   siteNameError.value = !siteName.value
   if (!hidden.value) {

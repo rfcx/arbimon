@@ -260,11 +260,9 @@ watch(() => props.selectedLocationId, (id) => {
   setSelectedLocation(id ?? -1)
   if (id === null || id === undefined) {
     // Move to map center when no location is selected
-    map?.flyTo({
+    map.jumpTo({
       center: mapCenter.value,
-      zoom: 2,
-      speed: 1.0,
-      essential: true
+      zoom: 2
     })
     return
   }
@@ -303,12 +301,9 @@ const goToLocation = (id: number) => {
   // check if already at coordinates
   const currentCenter = map.getCenter()
   if (currentCenter.lng === coordinates[0] && currentCenter.lat === coordinates[1]) return
-
-  map.flyTo({
+  map.jumpTo({
     center: coordinates,
-    zoom: 16,
-    speed: 1.0,
-    essential: true
+    zoom: 16
   })
 }
 </script>
