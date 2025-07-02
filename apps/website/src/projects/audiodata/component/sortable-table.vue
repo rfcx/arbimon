@@ -6,15 +6,26 @@
           <th
             v-for="column in columns"
             :key="column.key"
-            class="px-2 pb-2 cursor-pointer border-b-2 border-b-util-gray-03 align-bottom"
-            :class="isDecimalKey(column.key) ? 'truncate' : ''"
             :style="`max-width: ${column.maxWidth || 100}px`"
-            :title="column.label"
+            class="px-2 pb-2 cursor-pointer border-b-2 border-b-util-gray-03 align-bottom"
             @click="sortBy(column.key)"
           >
-            {{ column.label }}
-            <span v-if="sortKey === column.key">
-              {{ sortOrder === 'asc' ? '↑' : '↓' }}
+            <span
+              class="flex items-center max-w-[100px] truncate"
+              :class="isDecimalKey(column.key) ? 'truncate' : ''"
+              :style="`max-width: ${column.maxWidth || 100}px`"
+              :title="column.label"
+            >
+              <span class="truncate">
+                {{ column.label }}
+              </span>
+              <span
+                v-if="sortKey === column.key"
+                class="ml-1 shrink-0 inline-block transform"
+                :class="sortOrder === 'asc' ? 'rotate-270' : 'rotate-90'"
+              >
+                ㄑ
+              </span>
             </span>
           </th>
         </tr>

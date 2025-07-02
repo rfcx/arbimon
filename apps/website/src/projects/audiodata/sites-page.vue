@@ -42,7 +42,7 @@
               </button>
               <button
                 class="btn btn-secondary btn-medium ml-2 btn-small px-3"
-                data-dropdown-toggle="mapDropdown"
+                data-dropdown-toggle="deleteSiteDropdown"
               >
                 <span class="inline-flex gap-1">
                   Delete
@@ -50,7 +50,7 @@
                 </span>
               </button>
               <div
-                id="mapDropdown"
+                id="deleteSiteDropdown"
                 class="z-10 hidden bg-moss border border-frequency rounded-lg"
               >
                 <ul class="p-2 font-medium">
@@ -162,7 +162,7 @@
       :visible="showPopup"
       :is-for-delete-popup="true"
       :list="sitesSelected"
-      title="Delete selected site"
+      :title="allEmptySites ? 'Delete all empty sites' : 'Delete selected site'"
       message="Are you sure you would like to delete the following site?"
       btn-ok-text="Delete"
       btn-cancel-text="Cancel"
@@ -282,6 +282,7 @@ export interface SiteItem {
 }
 
 const showPopup = ref(false)
+const allEmptySites = ref(false)
 const hasFetchedAll = ref(false)
 const isLoading = ref(false)
 const hasFailed = ref(false)
@@ -332,7 +333,7 @@ const deleteSelectedSite = () => {
     showAlertDialog('error', 'Error', 'Please select site to remove')
     return
   }
-
+  allEmptySites.value = false
   sitesSelected.value = [selectedSite.value.name]
   siteIds.value = [selectedSite.value.id]
 
@@ -340,6 +341,7 @@ const deleteSelectedSite = () => {
 }
 
 const deleteAllEmptySites = () => {
+  allEmptySites.value = true
   checkEmptySites()
   showPopup.value = !showPopup.value
 }
