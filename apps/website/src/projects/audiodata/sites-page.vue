@@ -26,9 +26,9 @@
         @change="handleFileUpload"
       >
     </div>
-    <div class="flex mx-8 mt-7">
+    <div class="flex flex-col sm:flex-row gap-6 px-4 sm:px-6 lg:px-8 mt-7">
       <!-- Left: Table (scrollable) -->
-      <div class="w-2/3 overflow-y-auto pr-4">
+      <div class="w-full sm:w-2/3 overflow-y-auto pr-0 sm:pr-4">
         <!-- Content wrapper for scroll height -->
         <div>
           <div class="p-1 flex justify-between">
@@ -114,7 +114,7 @@
         </div>
       </div>
 
-      <div class="w-1/3 sticky top-[1rem] self-start">
+      <div class="w-full sm:w-1/3 sticky top-[1rem] self-start mt-6 sm:mt-0">
         <div>
           <div
             v-if="creating"
