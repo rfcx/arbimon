@@ -263,7 +263,7 @@ watch(() => props.selectedLocationId, (id) => {
     map?.flyTo({
       center: mapCenter.value,
       zoom: 2,
-      duration: 1000,
+      speed: 1.0,
       essential: true
     })
     return
@@ -307,7 +307,7 @@ const goToLocation = (id: number) => {
   map.flyTo({
     center: coordinates,
     zoom: 16,
-    duration: 3000,
+    speed: 1.0,
     essential: true
   })
 }

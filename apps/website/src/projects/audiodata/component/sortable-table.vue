@@ -6,9 +6,10 @@
           <th
             v-for="column in columns"
             :key="column.key"
-            class="px-2 pb-2 cursor-pointer border-b-2 border-b-util-gray-03"
+            class="px-2 pb-2 cursor-pointer border-b-2 border-b-util-gray-03 align-bottom"
             :class="isDecimalKey(column.key) ? 'truncate' : ''"
             :style="`max-width: ${column.maxWidth || 100}px`"
+            :title="column.label"
             @click="sortBy(column.key)"
           >
             {{ column.label }}
@@ -59,7 +60,7 @@ export interface Row {
   [key: string]: any
 }
 
-const decimalKeys = ['lat', 'lon', 'alt']
+const decimalKeys = ['lat', 'lon', 'alt', 'rec_count']
 function isDecimalKey (key: string): boolean {
   return decimalKeys.includes(key)
 }

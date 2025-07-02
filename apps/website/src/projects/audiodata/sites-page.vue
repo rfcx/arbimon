@@ -1,18 +1,18 @@
 <template>
   <section class="py-10 bg-white dark:bg-pitch pl-18">
     <div class="flex items-center px-8 bg-white dark:bg-pitch">
-      <h1 class="text-gray-900 dark:text-insight">
+      <h1 class="ml-1 text-gray-900 dark:text-insight">
         Sites
       </h1>
       <button
-        class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex"
+        class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex px-3"
         @click="createSite()"
       >
         <span>Create</span>
         <icon-custom-ic-plus-icon class="ml-2 w-4 h-4" />
       </button>
       <button
-        class="btn btn-secondary btn-medium ml-2 btn-small items-center text-frequency inline-flex hover:text-pitch"
+        class="btn btn-secondary btn-medium ml-2 btn-small items-center text-frequency inline-flex hover:text-pitch px-3"
         @click="triggerFileInput"
       >
         <span>Bulk Import Sites</span>
@@ -26,7 +26,7 @@
         @change="handleFileUpload"
       >
     </div>
-    <div class="flex mx-8 mt-8">
+    <div class="flex mx-8 mt-7">
       <!-- Left: Table (scrollable) -->
       <div class="w-2/3 overflow-y-auto pr-4">
         <!-- Content wrapper for scroll height -->
@@ -35,13 +35,13 @@
             <div>
               <button
                 :disabled="selectedSite == undefined"
-                class="btn btn-secondary btn-medium btn-small disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
+                class="btn btn-secondary btn-medium btn-small disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled px-3"
                 @click="editSite()"
               >
                 <span>Edit Site</span>
               </button>
               <button
-                class="btn btn-secondary btn-medium ml-2 btn-small"
+                class="btn btn-secondary btn-medium ml-2 btn-small px-3"
                 data-dropdown-toggle="mapDropdown"
               >
                 <span class="inline-flex gap-1">
@@ -69,7 +69,7 @@
                 </ul>
               </div>
               <button
-                class="btn btn-secondary btn-medium ml-2 btn-small"
+                class="btn btn-secondary btn-medium ml-2 btn-small px-3"
                 @click="exportSites()"
               >
                 <span>Export Sites</span>
@@ -81,7 +81,7 @@
                 v-model="searchKeyword"
                 type="text"
                 placeholder="Search by site name"
-                class="form-control placeholder-style rounded px-3 py-2 h-[34px] w-52 items-center inline-flex rounded border-1 border-util-gray-03 bg-echo"
+                class="form-control placeholder-style rounded px-3 py-2 h-[34px] w-59.5 items-center inline-flex rounded border-1 border-util-gray-03 bg-echo"
                 @input="onSearchInput"
               >
             </div>
@@ -90,7 +90,7 @@
             v-show="!isLoadingSite"
             class="mt-4"
           >
-            <span class="text-left reclist-total">
+            <span class="ml-1 font-bold text-left reclist-total">
               {{ sitesCount() }} {{ sitesCount() > 1 ? "sites" : "site" }}
             </span>
           </div>
@@ -257,7 +257,7 @@ onMounted(() => {
 
 const columns = [
   { label: 'Name', key: 'name', maxWidth: 150 },
-  { label: 'No. of records', key: 'rec_count', maxWidth: 50 },
+  { label: 'No. of Recordings', key: 'rec_count', maxWidth: 50 },
   { label: 'Latitude', key: 'lat', maxWidth: 50 },
   { label: 'Longitude', key: 'lon', maxWidth: 50 },
   { label: 'Elevation', key: 'alt', maxWidth: 50 },

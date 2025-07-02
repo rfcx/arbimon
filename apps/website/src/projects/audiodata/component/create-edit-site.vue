@@ -22,7 +22,7 @@
           <input
             id="exclude-site-checkbox"
             type="checkbox"
-            class="w-5 h-5 border-2 rounded dark:bg-echo focus:ring-frequency border-white dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
+            class="site-checkbox w-5 h-5 border-2 rounded dark:bg-echo border-white ring-0 ring-offset-0 ring-offset-transparent focus:ring-0 focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed"
             :disabled="isDisabled"
             :checked="hidden"
             @click="tempHidden()"
@@ -366,10 +366,13 @@ async function create () {
       siteLatLonError.value = false
     }
 
-    siteLatFormatError.value = !validNumberRegex.test(lat.value) || parseFloat(lat.value) > 85 || parseFloat(lat.value) < -85
+    if (lat.value) {
+      siteLatFormatError.value = !validNumberRegex.test(lat.value) || parseFloat(lat.value) > 85 || parseFloat(lat.value) < -85
+    }
 
-    siteLonFormatError.value = !validNumberRegex.test(lon.value) || parseFloat(lon.value) > 180 || parseFloat(lon.value) < -180
-
+    if (lon.value) {
+      siteLonFormatError.value = !validNumberRegex.test(lon.value) || parseFloat(lon.value) > 180 || parseFloat(lon.value) < -180
+    }
     if (alt.value !== '') {
       altFormatError.value = !validNumberRegex.test(alt.value)
     }
@@ -479,5 +482,11 @@ async function create () {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.site-checkbox {
+  --tw-ring-offset-width: 0px !important;
+  --tw-ring-offset-color: transparent;
+  --tw-ring-color: transparent;
 }
 </style>
