@@ -186,6 +186,7 @@ import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/com
 
 import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
 import { useStore } from '~/store'
+import { type SitePayload } from '../sites-page.vue'
 import DropdownComponent from './dropdown-component.vue'
 import { type DropdownItem } from './dropdown-component.vue'
 
@@ -200,7 +201,7 @@ const props = withDefaults(defineProps<{ editing?: boolean, site?: SiteResponse 
   site: undefined
 })
 
-const emit = defineEmits<{(e: 'emitClose', status?: string, error?: string | undefined): void, (e: 'emitReloadSite', status: string): void, }>()
+const emit = defineEmits<{(e: 'emitClose', status?: string, error?: string | undefined): void, (e: 'emitReloadSite', status: string, payload: SitePayload): void, }>()
 
 const siteName = ref('')
 const isDisabled = ref(false)
@@ -398,7 +399,7 @@ async function create () {
     project_id: selectedProject.value?.value ?? '',
     hidden: hidden.value ? 1 : 0,
     ...(lat.value !== '' && { lat: parseFloat(lat.value) }),
-    ...(lon.value !== '' && { alt: parseFloat(lon.value) }),
+    ...(lon.value !== '' && { lon: parseFloat(lon.value) }),
     ...(alt.value !== '' && { alt: parseFloat(alt.value) })
   }
 
@@ -421,7 +422,7 @@ async function create () {
   if (props.editing) {
     try {
       await apiLegacySiteUpdate(apiClientArbimon, selectedProjectSlug.value ?? '', siteItem)
-      emit('emitReloadSite', 'success')
+      emit('emitReloadSite', 'success', { id: siteItem.site_id, name: siteItem.name, lat: siteItem.lat, lon: siteItem.lon })
     } catch (e) {
       emit('emitClose', 'error')
      }
@@ -439,7 +440,7 @@ async function create () {
       if (responseObj.error) {
         emit('emitClose', 'error', responseObj.error)
       } else {
-        emit('emitReloadSite', 'success')
+        emit('emitReloadSite', 'success', { id: null, name: site.name, lat: site.lat, lon: site.lon })
       }
     } catch (e) {
       emit('emitClose', 'error')

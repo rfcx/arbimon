@@ -210,6 +210,13 @@ interface Site {
   hidden: number;
 }
 
+export interface SitePayload {
+  id: number | string | null
+  name: string
+  lat?: number | string
+  lon?: number | string
+}
+
 const importSiteModal = ref<InstanceType<typeof ImportSiteModal> | null>(null)
 
 const store = useStore()
@@ -231,8 +238,7 @@ const siteParams = computed<SiteParams>(() => {
 })
 const { isLoading: isLoadingSite, data: sites, refetch: siteRefetch } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
 const markers = computed(() => {
-  if (!sites.value) return []
-  return sites.value.map(site => ({
+  return (sites.value ?? []).map(site => ({
     id: site.id,
     slug: site.external_id,
     name: site.name,
@@ -496,7 +502,7 @@ const onClose = (status?: string, error?: string | undefined) => {
   editing.value = false
 }
 
-const reloadSite = async (status?: string): Promise<void> => {
+const reloadSite = async (status?: string, site?: SitePayload): Promise<void> => {
   let message = 'New Sites created successfully'
   let messageError = 'Failed to create sites'
   if (editing.value) {
@@ -511,7 +517,13 @@ const reloadSite = async (status?: string): Promise<void> => {
   creating.value = false
   editing.value = false
   await siteRefetch()
-  selectedSite.value = undefined
+
+  if (site !== undefined) {
+    const matchedSite = findSite(site)
+    selectedSite.value = matchedSite
+  } else {
+    selectedSite.value = undefined
+  }
 }
 
 const createSite = () => {
@@ -626,6 +638,21 @@ const fetchProjects = async (offset:number, limit: number): Promise<void> => {
 const loadMoreProject = async (): Promise<void> => {
   if (hasFetchedAll.value || isLoading.value || hasFailed.value) return
   fetchProjects(projects.value.length, LIMIT)
+}
+
+function findSite (payload: SitePayload): SiteResponse | undefined {
+  if (!sites.value) return undefined
+  return sites.value.find(site => {
+    if (payload.id !== null) {
+      return String(site.id) === String(payload.id)
+    }
+
+    return (
+      site.name === payload.name &&
+      site.lat === payload.lat &&
+      site.lon === payload.lon
+    )
+  })
 }
 
 const success = ref<AlertDialogType>('error')

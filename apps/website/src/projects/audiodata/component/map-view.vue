@@ -270,10 +270,13 @@ watch(() => props.selectedLocationId, (id) => {
 })
 
 watch(() => props.data, (newData) => {
-  // adjust map center
-  map.easeTo({
-    center: mapCenter.value
-  })
+  const locationId = props.selectedLocationId
+  if (locationId !== undefined && locationId !== null) {
+    goToLocation(locationId)
+    setSelectedLocation(locationId)
+  } else {
+    map.easeTo({ center: mapCenter.value })
+  }
   if (mapHasLoaded.value === false) { return }
   if (map.getSource('sites') === undefined) {
     map.addSource('sites', { type: 'geojson', data: toGeoJson(newData) })
