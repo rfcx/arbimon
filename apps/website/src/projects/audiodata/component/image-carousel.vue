@@ -2,7 +2,7 @@
   <div>
     <ul class="flex flex-wrap gap-2">
       <li
-        v-for="(image, index) in images"
+        v-for="(image, index) in images.slice(0, 2)"
         :key="image.id"
         class="cursor-pointer p-1 rounded"
         @click="openModal(index)"
@@ -12,6 +12,24 @@
           class="w-[100px] h-[100px] object-cover"
           @error="setErrorImage($event)"
         >
+      </li>
+
+      <li
+        v-if="images.length >= 3"
+        class="cursor-pointer p-1 rounded relative"
+        @click="openModal(images.length > 3 ? 3 : 2)"
+      >
+        <img
+          :src="images[2].src"
+          class="w-[100px] h-[100px] object-cover"
+          @error="setErrorImage($event)"
+        >
+        <span
+          v-if="images.length > 3"
+          class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-60 text-white font-bold text-xl"
+        >
+          +{{ images.length - 3 }}
+        </span>
       </li>
     </ul>
 
@@ -31,7 +49,7 @@
 
           <div class="h-full flex items-center justify-center">
             <img
-              :src="currentImage.src"
+              :src="currentImage?.src"
               class="max-w-full max-h-full"
               @error="setErrorImage($event, true)"
             >
@@ -39,13 +57,15 @@
 
           <!-- Navigation -->
           <button
-            class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl"
+            class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-7xl"
+            style="text-shadow: 2px 2px 6px rgba(0,0,0,0.6);"
             @click="prevImage"
           >
             ‹
           </button>
           <button
-            class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl"
+            class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-7xl"
+            style="text-shadow: 2px 2px 6px rgba(0,0,0,0.6);"
             @click="nextImage"
           >
             ›

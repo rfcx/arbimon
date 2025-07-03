@@ -183,6 +183,7 @@
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
+import { initDropdowns } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
 import { type CreateSiteBody, type SiteParams, type SiteResponse, apiLegacySiteCreate, apiLegacySiteDelete } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
@@ -250,6 +251,8 @@ const searchTimeout = ref<number | undefined>(undefined)
 
 // Show on UI
 onMounted(() => {
+  initDropdowns()
+
   if (store.myProjects.length === 0) {
     fetchProjects(0, LIMIT)
   }
