@@ -178,6 +178,18 @@ const routes: RouteRecordRaw[] = [
         ]
       },
       {
+        path: 'audiodata',
+        component: RouterView,
+        redirect: { name: ROUTE_NAMES.mySites },
+        children: [
+          {
+            path: 'sites',
+            name: ROUTE_NAMES.mySites,
+            component: PAGES.MySites
+          }
+        ]
+      },
+      {
         path: 'import',
         name: ROUTE_NAMES.import,
         component: RouterView,

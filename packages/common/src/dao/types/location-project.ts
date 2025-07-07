@@ -29,7 +29,7 @@ export interface Project {
 }
 
 export const ATTRIBUTES_LOCATION_PROJECT = attributes<Project>()({
-  light: ['id', 'idCore', 'slug', 'name', 'status', 'statusUpdatedAt', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest'],
+  light: ['id', 'idCore', 'idArbimon', 'slug', 'name', 'status', 'statusUpdatedAt', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest'],
   geo: ['id', 'slug', 'name', 'latitudeAvg', 'longitudeAvg']
 })
 

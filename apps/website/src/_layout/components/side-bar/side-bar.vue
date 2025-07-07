@@ -284,7 +284,9 @@ const allItems: Item[] = [
       },
       {
         title: 'Sites',
-        legacyPath: '/audiodata/sites'
+        route: {
+          name: ROUTE_NAMES.mySites
+        }
       },
       {
         title: 'Recordings',
