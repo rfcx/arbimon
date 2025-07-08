@@ -285,6 +285,34 @@ onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
+watch(siteName, (val) => {
+  if (val) {
+    siteNameError.value = false
+  }
+})
+
+watch(lat, (val) => {
+  if (val) {
+    siteLatError.value = false
+    siteLatLonError.value = false
+    siteLatFormatError.value = false
+  }
+})
+
+watch(lon, (val) => {
+  if (val) {
+    siteLonError.value = false
+    siteLatLonError.value = false
+    siteLonFormatError.value = false
+  }
+})
+
+watch(alt, (val) => {
+  if (val) {
+    altFormatError.value = false
+  }
+})
+
 const fetchProjects = async (offset:number, limit: number): Promise<void> => {
   isLoading.value = true
   hasFailed.value = false
