@@ -43,7 +43,8 @@ export const ROUTE_NAMES = {
   // Uploader Recordings
   importRecordings: 'import_recordings',
   // audiodata
-  mySites: 'my-sites'
+  mySites: 'my-sites',
+  myRecordings: 'my-recordings'
 } as const
 
 export type RouteNames = typeof ROUTE_NAMES
