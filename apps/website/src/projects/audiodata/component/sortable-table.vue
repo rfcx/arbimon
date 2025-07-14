@@ -71,6 +71,8 @@ export interface Row {
   [key: string]: any
 }
 
+type FormatType = 'datetime' | 'date' | 'friendly'
+
 const decimalKeys = ['lat', 'lon', 'alt', 'rec_count']
 function isDecimalKey (key: string): boolean {
   return decimalKeys.includes(key)
@@ -122,6 +124,8 @@ function formatValueByKey (key: string, value: any, row: any, forTitle?: boolean
   if (key === 'timezone') return forTitle === true ? value : getUTCOffset(value)
   if (key === 'deployment') return value === 0 ? 'no data' : formatDateTime(value, row.timezone)
   if (key === 'updated_at') return formatDateTime(value, row.timezone)
+  if (key === 'upload_time') return formatDateShort(value, row.timezone)
+  if (key === 'datetime') return formatDateFullInParens(value, row.timezone)
 
   if (typeof value !== 'number') return value
 
@@ -171,14 +175,58 @@ function getUTCOffset (timeZone: string | undefined): string {
   }
 }
 
-function formatDateTime (dateStr: string, timeZone?: string): string {
+/**
+ * Format a date string into one of 3 styles, with timezone and UTC support.
+ * @param dateStr Input date string (ISO, UTC, or local)
+ * @param options Optional config:
+ *  - timeZone: timezone name (default 'Asia/Bangkok')
+ *  - isUTC: true if input is in UTC format
+ *  - format: 'datetime' = 'YYYY-MM-DD HH:mm:ss', 'date' = 'YYYY-MM-DD', 'friendly' = 'MMM D, YYYY h:mm A'
+ *  - wrapInParens: true to wrap output in ( )
+ */
+ function formatDateFlexible (
+  dateStr: string,
+  options?: {
+    timeZone?: string
+    isUTC?: boolean
+    format?: FormatType
+    wrapInParens?: boolean
+  }
+): string {
   if (!dateStr) return '-'
+
+  const {
+    timeZone = 'Asia/Bangkok',
+    isUTC = false,
+    format = 'datetime'
+    } = options || {}
+
   try {
-    return dayjs(dateStr).tz(timeZone).format('MMM D, YYYY h:mm A')
+    const date = isUTC
+      ? dayjs.utc(dateStr).tz(timeZone)
+      : dayjs.tz(dateStr, timeZone)
+
+    const formatStr =
+      format === 'date'
+        ? 'YYYY-MM-DD'
+        : format === 'friendly'
+        ? 'MMM D, YYYY h:mm A'
+        : 'YYYY-MM-DD HH:mm:ss'
+
+    return date.format(formatStr)
   } catch {
-    return dayjs(dateStr).format('MMM D, YYYY h:mm A')
+    return '-'
   }
 }
+
+const formatDateTime = (d: string, tz?: string) =>
+  formatDateFlexible(d, { timeZone: tz, format: 'friendly' })
+
+const formatDateShort = (d: string, tz?: string) =>
+  formatDateFlexible(d, { timeZone: tz, format: 'date' })
+
+const formatDateFullInParens = (d: string, tz?: string) =>
+  formatDateFlexible(d, { timeZone: tz, format: 'datetime' })
 
 function handleRowClick (row: Row, index: number) {
   if (selectedRowIndex.value === index) {

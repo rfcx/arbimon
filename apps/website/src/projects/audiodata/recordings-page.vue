@@ -41,18 +41,28 @@
       <span class="ml-1 font-bold text-left reclist-total">
         {{ recordingsCount() }} {{ recordingsCount() > 1 ? "Recordings" : "Recording" }}
       </span>
+      <SortableTable
+        class="mt-5"
+        :columns="columns"
+        :rows="filteredRecordings ?? []"
+        :selected-row="selectedRecording"
+        :default-sort-key="'updated_at'"
+        :default-sort-order="'desc'"
+        @selected-item="onSelectedItem"
+      />
     </div>
   </section>
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 
-import { type RecordingSearchParams } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type RecordingSearchParams, type RecordingSearchResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useRecordings } from './api/use-recordings'
+import SortableTable from './component/sortable-table.vue'
 
 const requestParams = computed<RecordingSearchParams>(() => ({
   limit: 10,
@@ -70,6 +80,25 @@ const { isLoading: isLoadingRecordings, data: recordings } = useRecordings(apiCl
 
 const recordingsCount = () => {
   return recordings.value?.count ?? 0
+}
+
+const columns = [
+  { label: 'Site', key: 'site', maxWidth: 130 },
+  { label: 'Recorded Time', key: 'datetime', maxWidth: 110 },
+  { label: 'Filename', key: 'filename', maxWidth: 140 },
+  { label: 'Uploaded', key: 'upload_time', maxWidth: 100 },
+  { label: 'Recorder', key: 'recorder', maxWidth: 100 },
+  { label: 'Notes', key: 'comments', maxWidth: 100 }
+]
+const selectedRecording = ref<RecordingSearchResponse | undefined>(undefined)
+
+const filteredRecordings = computed(() => {
+  if (!recordings.value) return []
+  return recordings.value.list
+})
+
+const onSelectedItem = (row?: Record<string, any>) => {
+  console.info('onSelectedItem', row)
 }
 
 const filterRecordings = () => {
