@@ -61,13 +61,13 @@
       type="number"
       min="1"
       :max="totalPages"
-      class="w-16 px-2 py-1 ml-1 bg-black border border-util-gray-03 rounded text-sm"
-      @keydown.enter="goToPage(jumpPage)"
+      class="w-16 px-2 py-1 ml-1 bg-black border border-util-gray-03 rounded text-sm focus:border-util-gray-03 focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
     >
   </div>
 </template>
 
 <script setup lang="ts">
+import debounce from 'lodash.debounce'
 import { computed, ref, watch } from 'vue'
 
 const props = defineProps<{
@@ -85,6 +85,18 @@ const jumpPage = ref(props.currentPage)
 watch(() => props.currentPage, (val) => {
   jumpPage.value = val
 })
+
+watch(jumpPage, (val) => {
+  if (val !== props.currentPage && val >= 1 && val <= props.totalPages) {
+    debouncedGoToPage(val)
+  }
+})
+
+const debouncedGoToPage = debounce((page: number) => {
+  if (page >= 1 && page <= props.totalPages && page !== props.currentPage) {
+    goToPage(page)
+  }
+}, 600)
 
 const goToPage = (page: number) => {
   if (page < 1 || page > props.totalPages) return
