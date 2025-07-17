@@ -38,10 +38,38 @@
       v-show="!isLoadingRecordings"
       class="mt-4 px-8"
     >
-      <span class="ml-1 font-bold text-left reclist-total">
-        {{ recordingsCount }} {{ recordingsCount > 1 ? "Recordings" : "Recording" }}
-      </span>
+      <div class="flex justify-between items-center mb-4">
+        <span class="ml-1 font-bold text-left text-sm reclist-total text-white">
+          {{ recordingsCount }} {{ recordingsCount > 1 ? "Recordings" : "Recording" }}
+        </span>
+
+        <div class="flex items-center">
+          <div class="inline-flex border border-util-gray-03 rounded overflow-hidden">
+            <button
+              v-for="(option) in limitOptions"
+              :key="option"
+              :class="[
+                'px-[10px] py-[5px] text-xs border-l font-bold border-util-gray-03 first:border-l-0',
+                limitPerPage === option
+                  ? 'bg-util-gray-03 text-white'
+                  : 'hover:bg-util-gray-04 text-white',
+              ]"
+              @click="changeLimit(option)"
+            >
+              {{ option }}
+            </button>
+          </div>
+          <button
+            class="ml-3 px-[10px] py-[5px] text-xs text-white border border-util-gray-03 rounded hover:bg-util-gray-04 transition"
+            @click="applyRecordings"
+          >
+            <icon-fa-refresh class="w-[10px]" />
+          </button>
+        </div>
+      </div>
+
       <SortableTable
+        v-show="!isLoadingRecordings && !isRefetchRecordings"
         class="mt-5"
         :columns="columns"
         :rows="filteredRecordings ?? []"
@@ -76,6 +104,7 @@ const limitPerPage = ref(10)
 const currentPage = ref(1)
 
 const offset = computed(() => (currentPage.value - 1) * limitPerPage.value)
+const limitOptions = [10, 25, 50, 100]
 
 const requestParams = computed<RecordingSearchParams>(() => ({
   limit: limitPerPage.value,
@@ -97,7 +126,7 @@ const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
 
-const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, requestParams)
+const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings, isRefetching: isRefetchRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, requestParams)
 
 const recordingsCount = computed(() => { return recordings.value?.count ?? 0 })
 
@@ -115,6 +144,15 @@ const filteredRecordings = computed(() => {
   if (!recordings.value) return []
   return recordings.value.list
 })
+
+const applyRecordings = async () => {
+  await refetchRecordings()
+}
+
+const changeLimit = async (value: number) => {
+  limitPerPage.value = value
+  await refetchRecordings()
+}
 
 const onSelectedItem = (row?: Record<string, any>) => {
   console.info('onSelectedItem', row)
