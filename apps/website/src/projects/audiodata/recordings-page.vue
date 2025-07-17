@@ -76,6 +76,7 @@
         :selected-row="selectedRecording"
         :default-sort-key="'updated_at'"
         :default-sort-order="'desc'"
+        :show-checkbox="true"
         @selected-item="onSelectedItem"
       />
     </div>

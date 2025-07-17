@@ -4,6 +4,17 @@
       <thead class="bg-pitch text-left">
         <tr>
           <th
+            v-if="props.showCheckbox"
+            class="w-4 pb-2 pl-2 cursor-pointer border-b-2 border-b-util-gray-03"
+          >
+            <input
+              type="checkbox"
+              :checked="areAllRowsSelected"
+              class="w-[14px] h-[14px] rounded text-frequency focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
+              @change="toggleSelectAll"
+            >
+          </th>
+          <th
             v-for="column in columns"
             :key="column.key"
             :style="`max-width: ${column.maxWidth || 100}px`"
@@ -38,6 +49,19 @@
           :class="selectedRowIndex === index ? 'bg-[#7F7D78]': ''"
           @click="handleRowClick(row, index)"
         >
+          <td
+            v-if="props.showCheckbox"
+            class="w-4 pl-2"
+          >
+            <input
+              v-model="selectedRows"
+              :checked="isRowSelected(row)"
+              class="w-[14px] h-[14px] rounded text-frequency focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
+              type="checkbox"
+              :value="row"
+              @click.stop
+            >
+          </td>
           <td
             v-for="column in columns"
             :key="column.key"
@@ -83,12 +107,42 @@ const props = defineProps<{
   defaultSortKey?: string
   defaultSortOrder?: 'asc' | 'desc'
   selectedRow?: Row | null
+  showCheckbox?: boolean
 }>()
 
 const emit = defineEmits<{(e: 'selectedItem', row?: Row): void}>()
 
 const sortKey = ref<string | null>(null)
 const sortOrder = ref<'asc' | 'desc'>('asc')
+
+const selectedRows = ref<Row[]>([])
+
+const areAllRowsSelected = computed(() => {
+  return sortedRows.value.length > 0 &&
+    sortedRows.value.every(row =>
+      selectedRows.value.some(selected => selected.id === row.id)
+    )
+})
+
+const toggleSelectAll = () => {
+  const currentPage = sortedRows.value.map(row => row)
+
+  if (areAllRowsSelected.value) {
+    selectedRows.value = selectedRows.value.filter(
+      r => !currentPage.includes(r)
+    )
+  } else {
+    sortedRows.value.forEach(row => {
+      if (!selectedRows.value.some(r => r === row)) {
+        selectedRows.value.push(row)
+      }
+    })
+  }
+}
+
+const isRowSelected = (row: Row): boolean => {
+  return selectedRows.value.some(r => r === row)
+}
 
 const sortBy = (key: string) => {
   if (sortKey.value === key) {
@@ -113,6 +167,7 @@ const sortedRows = computed(() => {
     return 0
   })
 })
+
 const selectedRowIndex = ref<number | null>(null)
 
 function formatValueByKey (key: string, value: any, row: any, forTitle?: boolean): string {
