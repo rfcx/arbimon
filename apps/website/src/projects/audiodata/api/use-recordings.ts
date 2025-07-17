@@ -19,6 +19,8 @@ export const useRecordings = (
         output: ['count', 'date_range', 'list'],
         sortBy: 'r.site_id DESC, r.datetime DESC'
       })
-    }
+    },
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false
   })
 }
