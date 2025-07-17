@@ -36,10 +36,10 @@
     </div>
     <div
       v-show="!isLoadingRecordings"
-      class="mt-4 ml-9"
+      class="mt-4 px-8"
     >
       <span class="ml-1 font-bold text-left reclist-total">
-        {{ recordingsCount() }} {{ recordingsCount() > 1 ? "Recordings" : "Recording" }}
+        {{ recordingsCount }} {{ recordingsCount > 1 ? "Recordings" : "Recording" }}
       </span>
       <SortableTable
         class="mt-5"
@@ -51,6 +51,13 @@
         @selected-item="onSelectedItem"
       />
     </div>
+    <PaginationComponent
+      v-show="!isLoadingRecordings"
+      class="mt-4 px-8"
+      :current-page="currentPage"
+      :total-pages="totalPages"
+      @update:current-page="handlePageChange"
+    />
   </section>
 </template>
 <script setup lang="ts">
@@ -62,25 +69,37 @@ import { type RecordingSearchParams, type RecordingSearchResponse } from '@rfcx-
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useRecordings } from './api/use-recordings'
+import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
 
+const limitPerPage = ref(10)
+const currentPage = ref(1)
+
+const offset = computed(() => (currentPage.value - 1) * limitPerPage.value)
+
 const requestParams = computed<RecordingSearchParams>(() => ({
-  limit: 10,
-  offset: 0,
+  limit: limitPerPage.value,
+  offset: offset.value,
   output: ['count', 'date_range', 'list'],
   sortBy: 'r.site_id DESC, r.datetime DESC'
 }))
+
+const totalPages = computed(() => Math.ceil(recordingsCount.value / limitPerPage.value))
+
+const handlePageChange = async (page: number) => {
+  if (currentPage.value === page) return
+  currentPage.value = page
+  await refetchRecordings()
+}
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
 
-const { isLoading: isLoadingRecordings, data: recordings } = useRecordings(apiClientArbimon, selectedProjectSlug, requestParams)
+const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, requestParams)
 
-const recordingsCount = () => {
-  return recordings.value?.count ?? 0
-}
+const recordingsCount = computed(() => { return recordings.value?.count ?? 0 })
 
 const columns = [
   { label: 'Site', key: 'site', maxWidth: 130 },
