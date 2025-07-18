@@ -59,6 +59,7 @@
     "d3": "^7.1.1",
     "dayjs": "^1.11.7",
     "element-plus": "^2.2.36",
+    "flowbite-datepicker": "v1.2.6",
     "geojson": "^0.5.0",
     "howler": "^2.2.3",
     "jszip": "^3.7.1",
