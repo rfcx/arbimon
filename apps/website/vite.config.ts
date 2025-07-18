@@ -175,7 +175,8 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
   ssr: {
     noExternal: [
       'mapbox-gl',
-      'siriwave'
+      'siriwave',
+      'flowbite-datepicker'
     ]
   },
   assetsInclude: [

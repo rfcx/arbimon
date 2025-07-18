@@ -42,7 +42,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 
 import { type GetRecordedMinutesPerDay, type GetRecordedMinutesPerDayResponse } from '@rfcx-bio/common/api-bio/cnn/recorded-minutes-per-day'
 
-import { type DateRange, type FlowbiteDatePicker, initDatePicker } from '@/_components/date-range-picker'
+import { type DateRange, type FlowbiteDatePicker } from '@/_components/date-range-picker'
 
 const props = defineProps<{
   initialDateStart?: string,
@@ -67,15 +67,18 @@ const endDatePickerInput = ref<HTMLInputElement>()
 let startDatePicker: FlowbiteDatePicker | undefined
 let endDatePicker: FlowbiteDatePicker | undefined
 
-onMounted(() => {
-  if (startDatePickerInput.value) {
-    startDatePicker = initDatePicker(startDatePickerInput.value)
+onMounted(async () => {
+  const { initDatePicker } = await import('@/_components/date-range-picker')
+  if (typeof window !== 'undefined') {
+      if (startDatePickerInput.value) {
+      startDatePicker = initDatePicker(startDatePickerInput.value)
+    }
+    if (endDatePickerInput.value) {
+      endDatePicker = initDatePicker(endDatePickerInput.value)
+    }
+    setDatePickerOptions()
+    addPickerListener()
   }
-  if (endDatePickerInput.value) {
-    endDatePicker = initDatePicker(endDatePickerInput.value)
-  }
-  setDatePickerOptions()
-  addPickerListener()
 })
 
 const startDateConverted = ref<string>(props.initialDateStart !== undefined ? dateToCalendarFormat(props.initialDateStart) : '')
