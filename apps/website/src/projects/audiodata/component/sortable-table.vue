@@ -42,40 +42,68 @@
         </tr>
       </thead>
       <tbody>
-        <tr
+        <template
           v-for="(row, index) in sortedRows"
-          :key="index"
-          class="border-t border-util-gray-03 hover:border-util-gray-03"
-          :class="selectedRowIndex === index ? 'bg-[#7F7D78]': ''"
-          @click="handleRowClick(row, index)"
+          :key="row.id ?? index"
         >
-          <td
-            v-if="props.showCheckbox"
-            class="w-4 pl-2"
+          <tr
+            class="border-t border-util-gray-03 hover:border-util-gray-03 hover:bg-moss cursor-pointer"
+            :class="selectedRowIndex === index ? 'bg-[#7F7D78]' : ''"
+            @click="handleRowClick(row, index)"
           >
-            <input
-              v-model="selectedRows"
-              :checked="isRowSelected(row)"
-              class="w-[14px] h-[14px] rounded text-frequency focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
-              type="checkbox"
-              :value="row"
-              @click.stop
+            <td
+              v-if="props.showCheckbox"
+              class="w-4 pl-2"
             >
-          </td>
-          <td
-            v-for="column in columns"
-            :key="column.key"
-            :style="`max-width: ${column.maxWidth || 100}px`"
-            class="py-2 pl-2 truncate whitespace-nowrap overflow-hidden"
-            :title="formatforTitle(column.key, row[column.key], row)"
-          >
-            {{ formatValueByKey(column.key, row[column.key], row) }}
-            <icon-custom-fi-eye-off
-              v-if="row.hidden === 1 && column.key === 'name'"
-              class="inline-flex text-util-gray-02 mr-2 w-4 ml-1"
-            />
-          </td>
-        </tr>
+              <input
+                v-model="selectedRows"
+                :checked="isRowSelected(row)"
+                class="w-[14px] h-[14px] rounded text-frequency focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
+                type="checkbox"
+                :value="row"
+                @click.stop
+              >
+            </td>
+            <td
+              v-for="column in columns"
+              :key="column.key"
+              :style="`max-width: ${column.maxWidth || 100}px`"
+              class="py-2 pl-2 truncate whitespace-nowrap overflow-hidden"
+              :title="formatforTitle(column.key, row[column.key], row)"
+            >
+              {{ formatValueByKey(column.key, row[column.key], row) }}
+              <icon-custom-fi-eye-off
+                v-if="row.hidden === 1 && column.key === 'name'"
+                class="inline-flex text-util-gray-02 mr-2 w-4 ml-1"
+              />
+            </td>
+          </tr>
+          <tr v-if="selectedRowIndex === index">
+            <td :colspan="columns.length + (props.showCheckbox ? 1 : 0)">
+              <div class="p-4 bg-pitch flex flex-col gap-2">
+                <div class="recording-img">
+                  <div
+                    v-show="isLoaded"
+                    class="loading-shimmer w-[420px] h-[154px]"
+                  />
+                  <!-- :src="'https://staging.arbimon.org/' + row.thumbnail" -->
+                  <img
+                    :src="row.thumbnail"
+                    alt="spectrogram"
+                    class="w-[420px] h-[154px]"
+                    @load="onImageLoad"
+                  >
+                </div>
+                <button
+                  class="btn btn-secondary btn-xs-custom items-center inline-flex w-max hover:bg-opacity-80"
+                  @click="onVisualizerRedirect(row.id)"
+                >
+                  <icon-fa-cubes class="w-[15px] h-[12px] mr-1" /> View in Visualizer
+                </button>
+              </div>
+            </td>
+          </tr>
+        </template>
       </tbody>
     </table>
   </div>
@@ -108,6 +136,7 @@ const props = defineProps<{
   defaultSortOrder?: 'asc' | 'desc'
   selectedRow?: Row | null
   showCheckbox?: boolean
+  projectSlug?: string
 }>()
 
 const emit = defineEmits<{(e: 'selectedItem', row?: Row): void}>()
@@ -116,6 +145,16 @@ const sortKey = ref<string | null>(null)
 const sortOrder = ref<'asc' | 'desc'>('asc')
 
 const selectedRows = ref<Row[]>([])
+  const isLoaded = ref(true)
+
+function onImageLoad () {
+  isLoaded.value = false
+}
+
+const onVisualizerRedirect = (id: number) => {
+  window.location.assign(`${window.location.origin}/project/${props.projectSlug ?? ''}/visualizer/rec/${id}`)
+  // window.location.assign(`https://staging.arbimon.org/project/${props.projectSlug ?? ''}/visualizer/rec/${id}`)
+}
 
 const areAllRowsSelected = computed(() => {
   return sortedRows.value.length > 0 &&
@@ -284,6 +323,7 @@ const formatDateFullInParens = (d: string, tz?: string) =>
   formatDateFlexible(d, { timeZone: tz, format: 'datetime' })
 
 function handleRowClick (row: Row, index: number) {
+  isLoaded.value = true
   if (selectedRowIndex.value === index) {
     selectedRowIndex.value = null
     emit('selectedItem', undefined)
@@ -309,3 +349,16 @@ watch(() => props.selectedRow, (row) => {
   }
 })
 </script>
+
+<style scoped>
+.recording-img {
+  background-color: #D3D2CF;
+  border-color: #D3D2CF;
+  width: 420px;
+  height: 153px;
+}
+
+.btn-xs-custom {
+  @apply px-[5px] py-[1px] text-[12px] leading-[1.5] rounded-full hover:bg-opacity-80;
+}
+</style>
