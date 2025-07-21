@@ -38,6 +38,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
+import numeral from 'numeral'
 import { computed, onMounted, ref, watch } from 'vue'
 
 import { type GetRecordedMinutesPerDay, type GetRecordedMinutesPerDayResponse } from '@rfcx-bio/common/api-bio/cnn/recorded-minutes-per-day'
@@ -70,7 +71,7 @@ let endDatePicker: FlowbiteDatePicker | undefined
 onMounted(async () => {
   const { initDatePicker } = await import('@/_components/date-range-picker')
   if (typeof window !== 'undefined') {
-      if (startDatePickerInput.value) {
+    if (startDatePickerInput.value) {
       startDatePicker = initDatePicker(startDatePickerInput.value)
     }
     if (endDatePickerInput.value) {
@@ -100,24 +101,29 @@ const setDatePickerOptions = () => {
   const beforeShowDay = (date: Date) => {
     const day = date.getDate()
     const dayConverted = dateToCalendarFormat(date)
-    const count = recordedMinutesPerDayConverted.value[dayConverted as string] ?? 0
+    const minutes = recordedMinutesPerDayConverted.value[dayConverted as string] ?? 0
     return {
-      content: `<span>${day}</span><br><span style="font-size:10px;"
-        class="${count > 0 ? 'text-frequency' : 'text-spoonbill'}">${count}</span>`
+      content: `<span>${day}</span><br><span style="font-size:10px; line-height: 1.25rem;"
+        class="${minutes >= 10000 || minutes === 0 ? 'text-insight' : 'text-flamingo'}">${convertMinutestoCount(minutes)}</span>`
     }
   }
   startDatePicker?.setOptions({ beforeShowDay, maxDate: startDateMaxDate.value })
   endDatePicker?.setOptions({ beforeShowDay, minDate: endDateMinDate.value, maxDate: dayjs().format(format) })
 }
 
+const convertMinutestoCount = (minutes: number): string => {
+  const count = numeral(minutes).format(minutes > 999999999 ? '0,0am' : '0,0.[0]a')
+  return minutes > 0 ? count.toString() : '-'
+}
+
 const addPickerListener = () => {
   startDatePicker?.element.addEventListener('changeDate', () => {
     const start = startDatePicker?.getDate()
-    startDateChanged.value = (start instanceof Date) ? dayjs(start).toISOString() : ''
+    startDateChanged.value = (start instanceof Date) ? dayjs(start).format('YYYY-MM-DD') + 'T00:00:00.000Z' : ''
   })
   endDatePicker?.element.addEventListener('changeDate', () => {
     const end = endDatePicker?.getDate()
-    endDateChanged.value = (end instanceof Date) ? dayjs(end).toISOString() : ''
+    endDateChanged.value = (end instanceof Date) ? dayjs(end).format('YYYY-MM-DD') + 'T00:00:00.000Z' : ''
   })
 }
 
@@ -147,19 +153,21 @@ watch(() => [startDateMaxDate, endDateMinDate, recordedMinutesPerDayConverted], 
     background-color: #4B4B4B !important;
   }
 
-  .datepicker-cell {
-    padding: 5px 10px 10px;
-    border: 1px solid transparent !important;
-
-  }
-
   .datepicker-cell:hover {
     background-color: #4B4B4B !important;
   }
 
-  .datepicker-cell:active {
+  .selected, .range-start, .range-end {
     background-color: rgb(173, 255, 44, 0.4) !important;
-    border: 1px solid #ADFF2C;
+    border: 1px solid #ADFF2C !important;
+  }
+
+  .datepicker-cell.\!bg-primary-700 {
+    background-color: rgb(173, 255, 44, 0.4) !important;
+  }
+
+  .datepicker-cell.leading-9 {
+    line-height: 1.6rem !important;
   }
 
 </style>
