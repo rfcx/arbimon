@@ -69,6 +69,7 @@ declare module 'flowbite-datepicker/Datepicker' {
     todayButtonMode?: number
     todayHighlight?: boolean
     updateOnBlur?: boolean
+    rangePicker?: boolean
     weekNumbers?: number | ((date: Date, weekStart: number) => number)
     weekStart?: number
   }

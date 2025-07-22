@@ -11,8 +11,8 @@ const initDatePicker =
     new Datepicker(input, options)
 
 const initDateRangePicker =
-  (input: HTMLInputElement, options?: FlowbiteDateRangePickerOptions): FlowbiteDateRangePicker =>
-    new DateRangePicker(input, options)
+  (element: HTMLElement, options?: FlowbiteDateRangePickerOptions): FlowbiteDateRangePicker =>
+    new DateRangePicker(element, options)
 
 export { initDatePicker, initDateRangePicker }
 

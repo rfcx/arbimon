@@ -1,6 +1,7 @@
 <template>
   <div
-    id="dateRangePicker"
+    id="dateRangePickerId"
+    date-rangepicker
     datepicker-format="'dd-mm-yyyy'"
     class="flex mt-6 items-center gap-4 md:flex-row"
   >
@@ -43,7 +44,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 
 import { type GetRecordedMinutesPerDay, type GetRecordedMinutesPerDayResponse } from '@rfcx-bio/common/api-bio/cnn/recorded-minutes-per-day'
 
-import { type DateRange, type FlowbiteDatePicker } from '@/_components/date-range-picker'
+import { type DateRange, type FlowbiteDateRangePicker } from '@/_components/date-range-picker'
 
 const props = defineProps<{
   initialDateStart?: string,
@@ -65,20 +66,24 @@ const dateToCalendarFormat = (date: string | Date) => {
 const startDatePickerInput = ref<HTMLInputElement>()
 const endDatePickerInput = ref<HTMLInputElement>()
 
-let startDatePicker: FlowbiteDatePicker | undefined
-let endDatePicker: FlowbiteDatePicker | undefined
+let picker: FlowbiteDateRangePicker | undefined
 
 onMounted(async () => {
-  const { initDatePicker } = await import('@/_components/date-range-picker')
+  const { initDateRangePicker } = await import('@/_components/date-range-picker')
   if (typeof window !== 'undefined') {
-    if (startDatePickerInput.value) {
-      startDatePicker = initDatePicker(startDatePickerInput.value)
+    const dateRangePickerEl = document.getElementById('dateRangePickerId')
+    if (startDatePickerInput.value && endDatePickerInput.value && dateRangePickerEl) {
+      picker = initDateRangePicker(dateRangePickerEl, {
+        inputs: [startDatePickerInput.value, endDatePickerInput.value],
+        autohide: true,
+        format: 'dd-mm-yyyy',
+        allowOneSidedRange: false,
+        minDate: startDate.value,
+        maxDate: dayjs().format(format)
+      })
+      addPickerListener()
+      setDatePickerOptions()
     }
-    if (endDatePickerInput.value) {
-      endDatePicker = initDatePicker(endDatePickerInput.value)
-    }
-    setDatePickerOptions()
-    addPickerListener()
   }
 })
 
@@ -94,8 +99,8 @@ const recordedMinutesPerDayConverted = computed(() => {
   return tempObj
 })
 
-const startDateMaxDate = computed(() => endDateConverted.value ?? dayjs().format(format))
-const endDateMinDate = computed(() => startDateConverted.value ?? dayjs().format(format))
+const startDate = computed(() => startDateConverted.value ?? dayjs().format(format))
+const endDate = computed(() => endDateConverted.value ?? dayjs().format(format))
 
 const setDatePickerOptions = () => {
   const beforeShowDay = (date: Date) => {
@@ -103,12 +108,20 @@ const setDatePickerOptions = () => {
     const dayConverted = dateToCalendarFormat(date)
     const minutes = recordedMinutesPerDayConverted.value[dayConverted as string] ?? 0
     return {
-      content: `<span>${day}</span><br><span style="font-size:10px; line-height: 1.25rem;"
-        class="${minutes >= 10000 || minutes === 0 ? 'text-insight' : 'text-flamingo'}">${convertMinutestoCount(minutes)}</span>`
+      content: `<div style="line-height:1.25rem;padding-top:5px">${day}</div>
+        <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px"
+        class="${minutes >= 10000 || minutes === 0 ? 'text-insight' : 'text-flamingo'}">
+        ${convertMinutestoCount(minutes)}</div>`
     }
   }
-  startDatePicker?.setOptions({ beforeShowDay, maxDate: startDateMaxDate.value })
-  endDatePicker?.setOptions({ beforeShowDay, minDate: endDateMinDate.value, maxDate: dayjs().format(format) })
+  picker?.setOptions({ beforeShowDay })
+  const footerElement = document.querySelector('.datepicker-footer')
+  if (footerElement) {
+    const newDiv = document.createElement('div')
+    newDiv.textContent = 'NUMBER BELOW DATES = MINUTES OF RECORDING'
+    newDiv.classList.add('datepicker-footer-text')
+    footerElement.appendChild(newDiv)
+  }
 }
 
 const convertMinutestoCount = (minutes: number): string => {
@@ -117,13 +130,13 @@ const convertMinutestoCount = (minutes: number): string => {
 }
 
 const addPickerListener = () => {
-  startDatePicker?.element.addEventListener('changeDate', () => {
-    const start = startDatePicker?.getDate()
-    startDateChanged.value = (start instanceof Date) ? dayjs(start).format('YYYY-MM-DD') + 'T00:00:00.000Z' : ''
+  startDatePickerInput.value?.addEventListener('changeDate', () => {
+    const dates = picker?.getDates()
+    startDateChanged.value = dates !== undefined && (dates[0] instanceof Date) ? dayjs(dates[0]).format('YYYY-MM-DD') + 'T00:00:00.000Z' : ''
   })
-  endDatePicker?.element.addEventListener('changeDate', () => {
-    const end = endDatePicker?.getDate()
-    endDateChanged.value = (end instanceof Date) ? dayjs(end).format('YYYY-MM-DD') + 'T00:00:00.000Z' : ''
+  endDatePickerInput.value?.addEventListener('changeDate', () => {
+    const dates = picker?.getDates()
+    endDateChanged.value = dates !== undefined && (dates[1] instanceof Date) ? dayjs(dates[1]).format('YYYY-MM-DD') + 'T00:00:00.000Z' : ''
   })
 }
 
@@ -138,7 +151,7 @@ watch(() => emitValue.value, (newValue) => {
   emit('emitSelectDateRange', newValue)
 })
 
-watch(() => [startDateMaxDate, endDateMinDate, recordedMinutesPerDayConverted], () => {
+watch(() => [startDate, endDate, recordedMinutesPerDayConverted], () => {
   setDatePickerOptions()
 })
 
@@ -158,16 +171,25 @@ watch(() => [startDateMaxDate, endDateMinDate, recordedMinutesPerDayConverted], 
   }
 
   .selected, .range-start, .range-end {
-    background-color: rgb(173, 255, 44, 0.4) !important;
+    background-color: rgb(173, 255, 44, 0.15) !important;
     border: 1px solid #ADFF2C !important;
   }
 
-  .datepicker-cell.\!bg-primary-700 {
-    background-color: rgb(173, 255, 44, 0.4) !important;
+  .datepicker-grid.w-64 {
+    width: 22rem;
+  }
+
+  .datepicker-cell.\!bg-primary-700,
+  .datepicker-cell.range {
+    background-color: rgb(173, 255, 44, 0.15) !important;
   }
 
   .datepicker-cell.leading-9 {
     line-height: 1.6rem !important;
+  }
+
+  .datepicker-footer-text {
+    font-size: 14px;
   }
 
 </style>
