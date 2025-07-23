@@ -193,10 +193,10 @@ watch(() => [startDate, endDate, recordedMinutesPerDayConverted], () => {
   }
 
   .rounded-l-lg, .rounded-r-lg {
-    border-top-left-radius: 0.5rem;
-    border-bottom-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
+    border-top-left-radius: 0.2rem !important;
+    border-bottom-left-radius: 0.2rem !important;
+    border-top-right-radius: 0.2rem !important;
+    border-bottom-right-radius: 0.2rem !important;
   }
 
 </style>
