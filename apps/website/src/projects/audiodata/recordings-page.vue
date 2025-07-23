@@ -21,7 +21,7 @@
         </button>
         <button
           class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
-          @click="saveToPlaylist()"
+          @click="showCreatePlaylistModal = true"
         >
           <span>Save to Playlist</span>
         </button>
@@ -88,6 +88,11 @@
       :total-pages="totalPages"
       @update:current-page="handlePageChange"
     />
+    <CreatePlaylistModal
+      v-if="showCreatePlaylistModal"
+      @close="showCreatePlaylistModal = false"
+      @save="saveToPlaylist"
+    />
   </section>
 </template>
 <script setup lang="ts">
@@ -99,6 +104,7 @@ import { type RecordingSearchParams, type RecordingSearchResponse } from '@rfcx-
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useRecordings } from './api/use-recordings'
+import CreatePlaylistModal from './component/create-playlist.vue'
 import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
 
@@ -131,6 +137,7 @@ const selectedProjectSlug = computed(() => store.project?.slug)
 const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings, isRefetching: isRefetchRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, requestParams)
 
 const recordingsCount = computed(() => { return recordings.value?.count ?? 0 })
+const showCreatePlaylistModal = ref(false)
 
 const columns = [
   { label: 'Site', key: 'site', maxWidth: 130 },
@@ -166,8 +173,9 @@ const filterRecordings = () => {
 const exportRecordings = () => {
   console.info('exportRecordings')
 }
-const saveToPlaylist = () => {
-  console.info('saveToPlaylist')
+const saveToPlaylist = (name: string) => {
+  console.info('Saving playlist:', name)
+  showCreatePlaylistModal.value = false
 }
 const deleteRecording = () => {
   console.info('deleteRecording')
