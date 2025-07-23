@@ -76,7 +76,7 @@ onMounted(async () => {
       picker = initDateRangePicker(dateRangePickerEl, {
         inputs: [startDatePickerInput.value, endDatePickerInput.value],
         autohide: true,
-        format: 'dd-mm-yyyy',
+        format: 'dd/mm/yyyy',
         allowOneSidedRange: false,
         minDate: startDate.value,
         maxDate: dayjs().format(format)
@@ -108,9 +108,9 @@ const setDatePickerOptions = () => {
     const dayConverted = dateToCalendarFormat(date)
     const minutes = recordedMinutesPerDayConverted.value[dayConverted as string] ?? 0
     return {
-      content: `<div style="line-height:1.25rem;padding-top:5px">${day}</div>
+      content: `<div style="line-height:1.25rem;padding-top:5px" class="${minutes === 0 ? 'text-util-gray-02' : 'text-insight'}">${day}</div>
         <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px"
-        class="${minutes >= 10000 || minutes === 0 ? 'text-insight' : 'text-flamingo'}">
+        class="${minutes >= 10000 ? 'text-insight' : minutes === 0 ? 'text-util-gray-02' : 'text-flamingo'}">
         ${convertMinutestoCount(minutes)}</div>`
     }
   }
@@ -190,6 +190,13 @@ watch(() => [startDate, endDate, recordedMinutesPerDayConverted], () => {
 
   .datepicker-footer-text {
     font-size: 14px;
+  }
+
+  .rounded-l-lg, .rounded-r-lg {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
   }
 
 </style>
