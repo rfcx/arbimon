@@ -65,6 +65,8 @@ const dateToCalendarFormat = (date: string | Date) => {
 
 const startDatePickerInput = ref<HTMLInputElement>()
 const endDatePickerInput = ref<HTMLInputElement>()
+const startDatePickerInputChanged = ref<boolean>(false)
+const endDatePickerInputChanged = ref<boolean>(false)
 
 let picker: FlowbiteDateRangePicker | undefined
 
@@ -106,10 +108,11 @@ const setDatePickerOptions = () => {
   const beforeShowDay = (date: Date) => {
     const day = date.getDate()
     const dayConverted = dateToCalendarFormat(date)
+    const isFutureDate = dayjs(dayjs(date).format('YYYY-MM-DD') + 'T00:00:00.000Z').toDate() > dayjs().toDate()
     const minutes = recordedMinutesPerDayConverted.value[dayConverted as string] ?? 0
     return {
-      content: `<div style="line-height:1.25rem;padding-top:5px" class="${minutes === 0 ? 'text-util-gray-02' : 'text-insight'}">${day}</div>
-        <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px"
+      content: `<div style="line-height:1.25rem;padding-top:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'}" class="${minutes === 0 ? 'text-util-gray-02' : 'text-insight'}">${day}</div>
+        <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'}"
         class="${minutes >= 10000 ? 'text-insight' : minutes === 0 ? 'text-util-gray-02' : 'text-flamingo'}">
         ${convertMinutestoCount(minutes)}</div>`
     }
@@ -130,13 +133,33 @@ const convertMinutestoCount = (minutes: number): string => {
 }
 
 const addPickerListener = () => {
+  startDatePickerInput.value?.addEventListener('input', () => {
+    startDatePickerInputChanged.value = true
+    endDatePickerInputChanged.value = false
+  })
+  endDatePickerInput.value?.addEventListener('input', () => {
+    startDatePickerInputChanged.value = false
+    endDatePickerInputChanged.value = true
+  })
   startDatePickerInput.value?.addEventListener('changeDate', () => {
     const dates = picker?.getDates()
-    startDateChanged.value = dates !== undefined && (dates[0] instanceof Date) ? dayjs(dates[0]).format('YYYY-MM-DD') + 'T00:00:00.000Z' : ''
+    if (dates === undefined) return
+    if ((dates[0] instanceof Date)) {
+      startDateChanged.value = dayjs(dates[0]).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+    }
+    if (dates[0] === undefined && dates[1] === undefined && endDatePickerInputChanged.value === true) {
+      picker?.setDates(dateToCalendarFormat(startDateChanged.value), '')
+    }
   })
   endDatePickerInput.value?.addEventListener('changeDate', () => {
     const dates = picker?.getDates()
-    endDateChanged.value = dates !== undefined && (dates[1] instanceof Date) ? dayjs(dates[1]).format('YYYY-MM-DD') + 'T00:00:00.000Z' : ''
+    if (dates === undefined) return
+    if ((dates[1] instanceof Date)) {
+      endDateChanged.value = dayjs(dates[1]).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+    }
+    if (dates[0] === undefined && dates[1] === undefined && startDatePickerInputChanged.value === true) {
+      picker?.setDates('', dateToCalendarFormat(endDateChanged.value))
+    }
   })
 }
 
@@ -197,6 +220,10 @@ watch(() => [startDate, endDate, recordedMinutesPerDayConverted], () => {
     border-bottom-left-radius: 0.2rem !important;
     border-top-right-radius: 0.2rem !important;
     border-bottom-right-radius: 0.2rem !important;
+  }
+
+  .datepicker-grid .datepicker-cell:nth-child(n+36) {
+    display: none; /* hides row 6 */
   }
 
 </style>
