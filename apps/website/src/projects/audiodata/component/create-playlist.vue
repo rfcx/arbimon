@@ -9,7 +9,6 @@
         aria-label="Close"
         @click="close"
       >
-        <!-- <i class="icon-close text-xl">×</i> -->
         <icon-custom-fi-close-thin class="h-6 w-6 cursor-pointer text-insight" />
       </button>
 

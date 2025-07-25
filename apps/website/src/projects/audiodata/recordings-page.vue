@@ -27,11 +27,30 @@
         </button>
         <button
           class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
-          @click="deleteRecording()"
+          data-dropdown-toggle="deleteRecordingDropdown"
         >
           <span>Delete</span>
           <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
         </button>
+        <div
+          id="deleteRecordingDropdown"
+          class="z-10 hidden bg-moss border border-frequency rounded-lg"
+        >
+          <ul class="p-2 font-medium">
+            <li
+              class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer"
+              @click="deleteCheckedRecordings"
+            >
+              Checked recordings
+            </li>
+            <li
+              class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer"
+              @click="deleteAllFilteredRecordings"
+            >
+              All filtered recordings
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div
@@ -97,7 +116,8 @@
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, ref } from 'vue'
+import { initDropdowns } from 'flowbite'
+import { computed, inject, onMounted, ref } from 'vue'
 
 import { type RecordingSearchParams, type RecordingSearchResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 
@@ -153,7 +173,9 @@ const filteredRecordings = computed(() => {
   if (!recordings.value) return []
   return recordings.value.list
 })
-
+onMounted(() => {
+  initDropdowns()
+})
 const applyRecordings = async () => {
   await refetchRecordings()
 }
@@ -177,7 +199,10 @@ const saveToPlaylist = (name: string) => {
   console.info('Saving playlist:', name)
   showCreatePlaylistModal.value = false
 }
-const deleteRecording = () => {
+const deleteCheckedRecordings = () => {
+  console.info('deleteCheckedRecordings')
+}
+const deleteAllFilteredRecordings = () => {
   console.info('deleteRecording')
 }
 </script>
