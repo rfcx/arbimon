@@ -12,13 +12,19 @@
           <span>Filters</span>
           <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
         </button>
-        <button
-          class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
-          @click="exportRecordings()"
+        <div
+          ref="exportRef"
+          class="relative"
         >
-          <span>Export</span>
-          <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
-        </button>
+          <button
+            class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
+            @click="exportRecordings()"
+          >
+            <span>Export</span>
+            <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
+          </button>
+          <ExportPanel v-if="showExportPanel" />
+        </div>
         <button
           class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
           @click="showCreatePlaylistModal = true"
@@ -125,6 +131,7 @@ import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useRecordings } from './api/use-recordings'
 import CreatePlaylistModal from './component/create-playlist.vue'
+import ExportPanel from './component/export-panel.vue'
 import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
 
@@ -158,6 +165,7 @@ const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecord
 
 const recordingsCount = computed(() => { return recordings.value?.count ?? 0 })
 const showCreatePlaylistModal = ref(false)
+const showExportPanel = ref(false)
 
 const columns = [
   { label: 'Site', key: 'site', maxWidth: 130 },
@@ -194,6 +202,7 @@ const filterRecordings = () => {
 }
 const exportRecordings = () => {
   console.info('exportRecordings')
+  showExportPanel.value = true
 }
 const saveToPlaylist = (name: string) => {
   console.info('Saving playlist:', name)
