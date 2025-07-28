@@ -112,10 +112,12 @@ const setDatePickerOptions = () => {
     const day = date.getDate()
     const dayConverted = dateToCalendarFormat(date)
     const isFutureDate = dayjs(dayjs(date).format('YYYY-MM-DD') + 'T00:00:00.000Z').toDate() > dayjs().toDate()
+    const currentMonth = dayjs(picker?.datepickers[0].picker.viewDate).month()
+    const isCurrentDate = currentMonth === dayjs(date).month()
     const minutes = recordedMinutesPerDayConverted.value[dayConverted as string] ?? 0
     return {
-      content: `<div style="line-height:1.25rem;padding-top:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'}" class="${minutes === 0 ? 'text-util-gray-02' : 'text-insight'}">${day}</div>
-        <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'}"
+      content: `<div style="line-height:1.25rem;padding-top:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${isCurrentDate ? 'display:block' : 'display: none'}" class="${minutes === 0 ? 'text-util-gray-02' : 'text-insight'}">${day}</div>
+        <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${isCurrentDate ? 'display:block' : 'display: none'}"
         class="${minutes >= 10000 ? 'text-insight' : minutes === 0 ? 'text-util-gray-02' : 'text-flamingo'}">
         ${convertMinutestoCount(minutes)}</div>`
     }
