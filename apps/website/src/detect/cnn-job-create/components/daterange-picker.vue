@@ -81,7 +81,10 @@ onMounted(async () => {
         format: 'dd/mm/yyyy',
         allowOneSidedRange: false,
         minDate: startDate.value,
-        maxDate: dayjs().format(format)
+        maxDate: dayjs().format(format),
+        maxView: 1,
+        nextArrow: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right size-4 rdp-chevron"><path d="m9 18 6-6-6-6"></path></svg>',
+        prevArrow: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left size-4 rdp-chevron"><path d="m15 18-6-6 6-6"></path></svg>'
       })
       addPickerListener()
       setDatePickerOptions()
@@ -199,6 +202,24 @@ watch(() => [startDate, endDate, recordedMinutesPerDayConverted], () => {
   }
 
   .datepicker-grid.w-64 {
+    font-family: Geist, "Geist Fallback";
+    font-feature-settings: normal;
+    font-kerning: auto;
+    font-optical-sizing: auto;
+    font-size: 16px;
+    font-size-adjust: none;
+    font-stretch: 100%;
+    font-style: normal;
+    font-synthesis-weight: none;
+    font-variant-alternates: normal;
+    font-variant-caps: normal;
+    font-variant-east-asian: normal;
+    font-variant-emoji: normal;
+    font-variant-ligatures: normal;
+    font-variant-numeric: normal;
+    font-variant-position: normal;
+    font-variation-settings: normal;
+    font-weight: 400;
     width: 22rem;
   }
 
