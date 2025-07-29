@@ -1,0 +1,125 @@
+<template>
+  <div
+    ref="wrapper"
+    class="relative"
+  >
+    <!-- Selected tags + inline search -->
+    <div
+      class="input-select-multiple flex-wrap"
+      @click="openDropdown"
+    >
+      <template
+        v-for="opt in selectedOptions"
+        :key="opt.value"
+      >
+        <div
+          class="inline-flex items-center justify-center px-[5px] py-[4px] text-[12px] rounded text-cloud bg-util-gray-04 border border-util-gray-04 mt-1 mb-[3px] ml-1 hover:bg-[#0a0a0a] hover:border-[#0a0a0a]"
+          :title="opt.tooltip"
+        >
+          <span class="mr-1 font-bold">{{ opt.label }}</span>
+          <button
+            class="text-white hover:text-gray-200 font-bold opacity-20 hover:bg-echo text-[18px]"
+            @click.stop="removeValue(opt.value)"
+          >
+            ×
+          </button>
+        </div>
+      </template>
+
+      <!-- Inline search input -->
+      <input
+        ref="searchInput"
+        v-model="search"
+        type="text"
+        class="input-select-multiple flex-1 min-w-[50px] border-none outline-none focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
+        :placeholder="!selectedOptions.length ? (placeholder || 'Search or select...') : ''"
+        @focus="isOpen = true"
+      >
+    </div>
+
+    <!-- Dropdown -->
+    <div
+      v-if="isOpen && filteredOptions.length"
+      class="absolute mt-1 w-full border border-util-gray-03 rounded bg-echo text-insight text-sm shadow z-10 max-h-60 overflow-y-auto"
+    >
+      <div
+        v-for="opt in filteredOptions"
+        :key="opt.value"
+        class="px-2 py-1 hover:bg-moss cursor-pointer"
+        @click.stop="selectOption(opt.value)"
+      >
+        {{ opt.label }}
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+
+interface Option {
+  label: string
+  value: string | number
+  tooltip?: string
+}
+
+const props = defineProps<{
+  modelValue:(string | number)[],
+  options: Option[],
+  placeholder?: string
+}>()
+
+const emit = defineEmits<{(e: 'update:modelValue', value: (string | number)[]): void}>()
+
+const selectedValues = computed({
+  get: () => props.modelValue,
+  set: (val) => emit('update:modelValue', val)
+})
+
+const isOpen = ref(false)
+const wrapper = ref<HTMLElement | null>(null)
+const searchInput = ref<HTMLInputElement | null>(null)
+
+const handleClickOutside = (e: MouseEvent) => {
+  if (wrapper.value && !wrapper.value.contains(e.target as Node)) {
+    isOpen.value = false
+  }
+}
+
+onMounted(() => document.addEventListener('click', handleClickOutside))
+onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
+
+// ✅ Search filter
+const search = ref('')
+const filteredOptions = computed(() => {
+  const lower = search.value.toLowerCase()
+  return props.options
+    .filter(opt => !selectedValues.value.includes(opt.value))
+    .filter(opt => opt.label.toLowerCase().includes(lower))
+})
+
+const selectOption = (value: string | number) => {
+  selectedValues.value = [...selectedValues.value, value]
+  search.value = ''
+  nextTick(() => searchInput.value?.focus())
+}
+
+const removeValue = (value: string | number) => {
+  selectedValues.value = selectedValues.value.filter(v => v !== value)
+}
+
+const selectedOptions = computed(() =>
+  props.options.filter(o => selectedValues.value.includes(o.value))
+)
+
+const openDropdown = () => {
+  isOpen.value = true
+  nextTick(() => searchInput.value?.focus())
+}
+</script>
+
+<style scoped>
+.input-select-multiple {
+  @apply bg-echo text-insight w-full rounded text-sm placeholder-insight border border-util-gray-03;
+}
+</style>

@@ -4,10 +4,11 @@
       <h3 class="block text-sm mb-1">
         Recording fields
       </h3>
-      <input
-        placeholder="Filename, Site, ..."
-        class="input-style"
-      >
+      <SelectMultiple
+        v-model="selectedFields"
+        :options="fieldsOptions"
+        placeholder="Choose recording fields"
+      />
     </div>
 
     <div>
@@ -71,7 +72,18 @@
 </template>
 
 <script setup lang="ts">
-// logic
+import { ref } from 'vue'
+
+import SelectMultiple from './select-multiple.vue'
+
+const selectedFields = ref<(string | number)[]>(['filename', 'site', 'day'])
+const fieldsOptions = [
+  { value: 'filename', label: 'Filename', tooltip: 'The recording filename' },
+  { value: 'site', label: 'Site', tooltip: 'The recording site' },
+  { value: 'day', label: 'Day', tooltip: 'The recording day' },
+  { value: 'hour', label: 'Hour', tooltip: 'The recording hour' },
+  { value: 'url', label: 'Url', tooltip: 'The recording URl' }
+]
 </script>
 
 <style lang="scss">
