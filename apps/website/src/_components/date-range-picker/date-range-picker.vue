@@ -8,7 +8,7 @@
     <div class="flex-1">
       <label
         class="block mb-2 font-medium text-gray-900 dark:text-secondary"
-      >Start date</label>
+      >{{ inputLabelStartFormatted }}</label>
       <div class="relative flex-1">
         <input
           ref="startDatePickerInput"
@@ -23,14 +23,18 @@
     <div class="flex-1">
       <label
         class="block mb-2 font-medium text-gray-900 dark:text-secondary"
-      >End date</label>
-      <div class="relative flex-1">
+      >{{ inputLabelEndFormatted }}</label>
+      <div
+        class="relative flex-1"
+      >
         <input
           ref="endDatePickerInput"
           class="w-full border text-secondary border-util-gray-03 rounded-md
             dark:(bg-pitch text-secondary placeholder:text-placeholder) focus:(border-frequency ring-frequency)"
+          :class="{'cursor-not-allowed': onGoing}"
           type="text"
           placeholder="Choose end date"
+          :disabled="onGoing"
         >
       </div>
     </div>
@@ -44,11 +48,14 @@ import { computed, onMounted, ref, watch } from 'vue'
 
 import { type GetRecordedMinutesPerDay, type GetRecordedMinutesPerDayResponse } from '@rfcx-bio/common/api-bio/cnn/recorded-minutes-per-day'
 
-import { type DateRange, type FlowbiteDateRangePicker } from '@/_components/date-range-picker'
+import { type DateRange, type FlowbiteDateRangePicker } from './date-range-picker'
 
 const props = defineProps<{
   initialDateStart?: string,
-  initialDateEnd?: string
+  initialDateEnd?: string,
+  onGoing?: boolean,
+  inputLabelStart?: string,
+  inputLabelEnd?: string,
   recordedMinutesPerDay?: GetRecordedMinutesPerDayResponse
 }>()
 
@@ -67,11 +74,12 @@ const startDatePickerInput = ref<HTMLInputElement>()
 const endDatePickerInput = ref<HTMLInputElement>()
 const startDatePickerInputChanged = ref<boolean>(false)
 const endDatePickerInputChanged = ref<boolean>(false)
+const onGoing = ref<boolean>(props.onGoing || false)
 
 let picker: FlowbiteDateRangePicker | undefined
 
 onMounted(async () => {
-  const { initDateRangePicker } = await import('@/_components/date-range-picker')
+  const { initDateRangePicker } = await import('./date-range-picker')
   if (typeof window !== 'undefined') {
     const dateRangePickerEl = document.getElementById('dateRangePickerId')
     if (startDatePickerInput.value && endDatePickerInput.value && dateRangePickerEl) {
@@ -94,6 +102,8 @@ onMounted(async () => {
 
 const startDateConverted = ref<string>(props.initialDateStart !== undefined ? dateToCalendarFormat(props.initialDateStart) : '')
 const endDateConverted = ref<string>(props.initialDateEnd !== undefined ? dateToCalendarFormat(props.initialDateEnd) : '')
+const inputLabelStartFormatted = ref<string>(props.inputLabelStart !== undefined ? props.inputLabelStart : 'Start date')
+const inputLabelEndFormatted = ref<string>(props.inputLabelEnd !== undefined ? props.inputLabelEnd : 'End date')
 
 const recordedMinutesPerDayConverted = computed(() => {
   const tempObj: Record<string, number> = {}
@@ -112,19 +122,17 @@ const setDatePickerOptions = () => {
     const day = date.getDate()
     const dayConverted = dateToCalendarFormat(date)
     const isFutureDate = dayjs(dayjs(date).format('YYYY-MM-DD') + 'T00:00:00.000Z').toDate() > dayjs().toDate()
-    const currentMonth = dayjs(picker?.datepickers[0].picker.viewDate).month()
-    const isCurrentDate = currentMonth === dayjs(date).month()
     const minutes = recordedMinutesPerDayConverted.value[dayConverted as string] ?? 0
     return {
-      content: `<div style="line-height:1.25rem;padding-top:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${isCurrentDate ? 'display:block' : 'display: none'}" class="${minutes === 0 ? 'text-util-gray-02' : 'text-insight'}">${day}</div>
-        <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${isCurrentDate ? 'display:block' : 'display: none'}"
+      content: `<div style="line-height:1.25rem;padding:5px 0px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};" class="${minutes === 0 ? 'text-util-gray-02' : 'text-insight'}">${day}</div>
+        <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${props.recordedMinutesPerDay !== undefined ? 'display:block' : 'display: none'}"
         class="${minutes >= 10000 ? 'text-insight' : minutes === 0 ? 'text-util-gray-02' : 'text-flamingo'}">
         ${convertMinutestoCount(minutes)}</div>`
     }
   }
   picker?.setOptions({ beforeShowDay })
   const footerElement = document.querySelector('.datepicker-footer')
-  if (footerElement) {
+  if (footerElement && props.recordedMinutesPerDay !== undefined) {
     const newDiv = document.createElement('div')
     newDiv.textContent = 'NUMBER BELOW DATES = MINUTES OF RECORDING'
     newDiv.classList.add('datepicker-footer-text')
@@ -173,6 +181,10 @@ const emitValue = computed(() => {
     dateStartLocalIso: startDateChanged.value,
     dateEndLocalIso: endDateChanged.value
   }
+})
+
+watch(() => props.onGoing, (newValue) => {
+  onGoing.value = newValue
 })
 
 watch(() => emitValue.value, (newValue) => {

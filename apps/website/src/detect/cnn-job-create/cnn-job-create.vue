@@ -156,7 +156,8 @@ import { displayFullValue } from '@rfcx-bio/utils/number'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 
-import { type DateRange } from '@/_components/date-range-picker'
+import { type DateRange } from '@/_components/date-range-picker/date-range-picker'
+import DaterangePicker from '@/_components/date-range-picker/date-range-picker.vue'
 import ClassifierPicker from '@/_services/picker/classifier-picker.vue'
 import SiteInput from '@/_services/picker/site-input.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
@@ -167,7 +168,6 @@ import { useClassifiers } from '../_composables/use-classifiers'
 import { useDetectRecording } from '../_composables/use-detect-recording'
 import { useGetRecordedMinutesPerDay } from '../_composables/use-get-recorded-minutes-per-day'
 import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
-import DaterangePicker from './components/daterange-picker.vue'
 
 const router = useRouter()
 const store = useStore()
