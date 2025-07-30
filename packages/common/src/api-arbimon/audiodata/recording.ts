@@ -13,7 +13,19 @@ export interface RecordingSearchResponse {
     min: string
     max: string
   }
-  list?: any[] // กำหนด type เพิ่มได้ถ้าทราบโครงสร้างของรายการ recordings
+  list?: any[]
+}
+
+export interface ClassesRecordingResponse {
+  id: number
+  project: number
+  songtype: number
+  songtype_name: string
+  species: number
+  species_name: string
+  taxon: string
+  vals_absent: number
+  vals_present: number
 }
 
 export const apiArbimonGetRecordings = async (
@@ -27,8 +39,18 @@ export const apiArbimonGetRecordings = async (
       url: `/legacy-api/project/${slug}/recordings/search`,
       params: {
         ...params,
-        output: params.output // แปลง array เป็น query string แบบ repeat เช่น output=count&output=list
+        output: params.output
       }
+    })
+    return response.data
+  } else return undefined
+}
+
+export const apiArbimonGetClasses = async (apiClient: AxiosInstance, slug: string): Promise<ClassesRecordingResponse[] | undefined> => {
+  if (slug !== undefined) {
+    const response = await apiClient.request<ClassesRecordingResponse[]>({
+      method: 'GET',
+      url: `/legacy-api/project/${slug}/classes?validations=true`
     })
     return response.data
   } else return undefined

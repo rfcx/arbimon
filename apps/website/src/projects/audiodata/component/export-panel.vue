@@ -7,16 +7,17 @@
       <SelectMultiple
         v-model="selectedFields"
         :options="fieldsOptions"
-        placeholder="Choose recording fields"
+        placeholder="filename, site, ..."
       />
     </div>
 
     <div>
       <label class="block text-sm mb-1">Validations by species/song type</label>
-      <input
+      <SelectMultiple
+        v-model="selectedClasses"
+        :options="mapToOptions(classesRecordings ?? [])"
         placeholder="Species - Sound..."
-        class="input-style"
-      >
+      />
     </div>
 
     <div>
@@ -72,9 +73,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import type { AxiosInstance } from 'axios'
+import { computed, inject, ref } from 'vue'
 
+import { type ClassesRecordingResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+
+import { apiClientArbimonLegacyKey } from '@/globals'
+import { useStore } from '~/store'
+import { useGetClasses } from '../api/use-recordings'
 import SelectMultiple from './select-multiple.vue'
+import { type Option } from './select-multiple.vue'
+
+const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+
+const store = useStore()
+const selectedProjectSlug = computed(() => store.project?.slug)
+
+const { data: classesRecordings } = useGetClasses(apiClientArbimon, selectedProjectSlug)
 
 const selectedFields = ref<(string | number)[]>(['filename', 'site', 'day'])
 const fieldsOptions = [
@@ -84,6 +99,19 @@ const fieldsOptions = [
   { value: 'hour', label: 'Hour', tooltip: 'The recording hour' },
   { value: 'url', label: 'Url', tooltip: 'The recording URl' }
 ]
+
+const selectedClasses = ref<(string | number)[]>([])
+function mapToOptions (data: ClassesRecordingResponse[]): Option[] {
+  const baseOptions = data.map(item => ({
+    label: `${item.species_name} - ${item.songtype_name}`,
+    value: item.id,
+    tooltip: `${item.species_name} - ${item.songtype_name}`
+  }))
+  return [
+      { label: 'Select all species', value: 'ALL', isSelectAll: true },
+      ...baseOptions
+    ]
+}
 </script>
 
 <style lang="scss">
