@@ -39,17 +39,30 @@
 
     <div>
       <label class="block text-sm mb-1">Grouping of Detections</label>
-      <select class="input-style">
-        <option
-          disabled
-          selected
-          value=""
+      <div
+        ref="dropdownRef"
+        class="relative w-full"
+      >
+        <div
+          class="input-style border px-3 py-2 rounded cursor-pointer"
+          @click="isOpen = !isOpen"
         >
-          Select group...
-        </option>
-        <option>Group A</option>
-        <option>Group B</option>
-      </select>
+          {{ selectedGrouping || 'Select option' }}
+        </div>
+        <div
+          v-if="isOpen"
+          class="px-2 py-2 absolute left-0 top-full mt-1 w-full bg-echo rounded shadow z-50 border border-util-gray-03"
+        >
+          <div
+            v-for="opt in optionsGrouping"
+            :key="opt"
+            class="px-2 py-1 hover:bg-moss cursor-pointer text-sm rounded font-medium"
+            @click="selectGrouping(opt)"
+          >
+            {{ opt }}
+          </div>
+        </div>
+      </div>
     </div>
 
     <div>
@@ -75,7 +88,7 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 
 import { type ClassesRecordingResponse, type TagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 
@@ -92,6 +105,30 @@ const selectedProjectSlug = computed(() => store.project?.slug)
 
 const { data: classesRecordings } = useGetClasses(apiClientArbimon, selectedProjectSlug)
 const { data: tagsRecording } = useGetTags(apiClientArbimon, selectedProjectSlug)
+
+const optionsGrouping = ['Site', 'Hour', 'Date']
+const selectedGrouping = ref<string | null>(null)
+const isOpen = ref(false)
+const dropdownRef = ref<HTMLElement | null>(null)
+
+function selectGrouping (opt: string) {
+  selectedGrouping.value = opt
+  isOpen.value = false
+}
+
+function handleClickOutside (event: MouseEvent) {
+  if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
+    isOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 const selectedFields = ref<(string | number)[]>(['filename', 'site', 'day'])
 const fieldsOptions = [
@@ -132,6 +169,14 @@ function mapTagToOptions (data: TagResponse[]): Option[] {
 
 <style lang="scss">
 .input-style {
-  @apply bg-echo text-insight w-full rounded px-3 py-2 text-sm placeholder-insight border border-util-gray-03;
+  @apply bg-echo text-insight w-full rounded px-3 py-2 text-sm placeholder-insight border border-util-gray-03 hover:ring-0 hover:ring-offset-0;
+}
+
+.input-style:focus {
+  @apply outline-none shadow-none ring-0 ring-offset-0 border-util-gray-03
+}
+
+.select:focus {
+  @apply outline-none shadow-none ring-0 ring-offset-0 border-util-gray-03
 }
 </style>
