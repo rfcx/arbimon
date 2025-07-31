@@ -123,9 +123,14 @@ const setDatePickerOptions = () => {
     const dayConverted = dateToCalendarFormat(date)
     const isFutureDate = dayjs(dayjs(date).format('YYYY-MM-DD') + 'T00:00:00.000Z').toDate() > dayjs().toDate()
     const minutes = recordedMinutesPerDayConverted.value[dayConverted as string] ?? 0
+    const datepickers = document.querySelectorAll('body > div.datepicker')
+    const isStartHidden = datepickers[0] !== undefined && datepickers[0].classList.contains('hidden')
+    const isEndHidden = datepickers[1] !== undefined && datepickers[1].classList.contains('hidden')
+    const monthInCalendar = document.querySelectorAll('.view-switch')
+    const hideDates = isStartHidden ? (monthInCalendar[1].innerHTML.replace(/[^a-zA-Z]+/g, '') !== dayjs(date).format('MMMM')) : isEndHidden ? monthInCalendar[0].innerHTML.replace(/[^a-zA-Z]+/g, '') !== dayjs(date).format('MMMM') : false
     return {
-      content: `<div style="line-height:1.25rem;${props.recordedMinutesPerDay ? 'padding-top:5px' : 'padding:10px'};${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};" class="${(minutes === 0 && props.recordedMinutesPerDay !== undefined) ? 'text-util-gray-02' : 'text-insight'}">${day}</div>
-        <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${props.recordedMinutesPerDay !== undefined ? 'display:block' : 'display: none'}"
+      content: `<div style="line-height:1.25rem;${props.recordedMinutesPerDay ? 'padding-top:5px' : 'padding:10px'};${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${hideDates ? 'display:none' : 'display:block'}" class="${(minutes === 0 && props.recordedMinutesPerDay !== undefined) ? 'text-util-gray-02' : 'text-insight'}">${day}</div>
+        <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${(props.recordedMinutesPerDay === undefined || hideDates) ? 'display:none' : 'display:block'}"
         class="${minutes >= 10000 ? 'text-insight' : minutes === 0 ? 'text-util-gray-02' : 'text-flamingo'}">
         ${convertMinutestoCount(minutes)}</div>`
     }
