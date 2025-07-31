@@ -105,7 +105,11 @@ function mapToOptions (data: ClassesRecordingResponse[]): Option[] {
   const baseOptions = data.map(item => ({
     label: `${item.species_name} - ${item.songtype_name}`,
     value: item.id,
-    tooltip: `${item.species_name} - ${item.songtype_name}`
+    tooltip: `${item.species_name} - ${item.songtype_name}`,
+    badges: [
+        { icon: 'val-1', value: item.vals_present },
+        { icon: 'val-0', value: item.vals_absent }
+      ]
   }))
   return [
       { label: 'Select all species', value: 'ALL', isSelectAll: true },

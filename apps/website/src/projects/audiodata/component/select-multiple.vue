@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
+interface Badge {
+  icon: string
+  value: number
+}
+
 export interface Option {
   label: string
   value: string | number
   tooltip?: string
   isSelectAll?: boolean
+  badges?:Badge[]
 }
 
 const props = defineProps<{
@@ -148,19 +154,49 @@ const openDropdown = () => {
     <!-- Dropdown -->
     <div
       v-if="isOpen && filteredOptions.length"
-      class="absolute mt-1 w-full border border-util-gray-03 rounded bg-echo text-insight text-sm shadow z-10 max-h-60 overflow-y-auto"
+      class="absolute mt-1 w-full border border-util-gray-03 rounded bg-echo text-insight text-sm font-medium shadow z-10 max-h-60 overflow-y-auto"
     >
       <div
         v-for="opt in filteredOptions"
         :key="opt.value"
-        class="px-2 py-1 cursor-pointer m-2 rounded"
+        class="flex justify-between items-center px-2 py-1 cursor-pointer m-2 rounded"
         :class="{
           'text-[#777] bg-moss cursor-not-allowed': opt.disabled,
           'hover:bg-moss': !opt.disabled
         }"
         @click.stop="!opt.disabled && selectOption(opt.value)"
       >
-        {{ opt.label }}
+        <span
+          class="truncate max-w-[75%]"
+          :title="opt.label"
+        >{{ opt.label }}</span>
+        <span
+          v-if="opt.badges?.length"
+          class="badge px-1 inline-flex flex-shrink-0 items-center gap-1 bg-util-gray-03 rounded-full"
+          :class="{
+            'text-insight': opt.disabled
+          }"
+        >
+          <span
+            v-for="(badge, index) in opt.badges"
+            :key="index"
+            class="inline-flex items-center"
+          >
+            <span
+              v-if="index"
+              class="mr-1 text-xs"
+            >/</span>
+            <icon-fa-check
+              v-if="badge.icon === 'val-1'"
+              class="h-3 w-3 text-[#1F57CC]"
+            />
+            <icon-fa-close
+              v-if="badge.icon === 'val-0'"
+              class="h-2.5 w-2.5 text-[#ffcd00]"
+            />
+            <span class="text-xs ml-1">{{ badge.value }}</span>
+          </span>
+        </span>
       </div>
     </div>
   </div>
