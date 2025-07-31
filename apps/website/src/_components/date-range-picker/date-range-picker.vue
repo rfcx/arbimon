@@ -124,7 +124,7 @@ const setDatePickerOptions = () => {
     const isFutureDate = dayjs(dayjs(date).format('YYYY-MM-DD') + 'T00:00:00.000Z').toDate() > dayjs().toDate()
     const minutes = recordedMinutesPerDayConverted.value[dayConverted as string] ?? 0
     return {
-      content: `<div style="line-height:1.25rem;padding:5px 0px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};" class="${minutes === 0 ? 'text-util-gray-02' : 'text-insight'}">${day}</div>
+      content: `<div style="line-height:1.25rem;${props.recordedMinutesPerDay ? 'padding-top:5px' : 'padding:10px'};${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};" class="${(minutes === 0 && props.recordedMinutesPerDay !== undefined) ? 'text-util-gray-02' : 'text-insight'}">${day}</div>
         <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${props.recordedMinutesPerDay !== undefined ? 'display:block' : 'display: none'}"
         class="${minutes >= 10000 ? 'text-insight' : minutes === 0 ? 'text-util-gray-02' : 'text-flamingo'}">
         ${convertMinutestoCount(minutes)}</div>`
@@ -132,7 +132,7 @@ const setDatePickerOptions = () => {
   }
   picker?.setOptions({ beforeShowDay })
   const footerElement = document.querySelector('.datepicker-footer')
-  if (footerElement && props.recordedMinutesPerDay !== undefined) {
+  if (footerElement && props.recordedMinutesPerDay) {
     const newDiv = document.createElement('div')
     newDiv.textContent = 'NUMBER BELOW DATES = MINUTES OF RECORDING'
     newDiv.classList.add('datepicker-footer-text')
