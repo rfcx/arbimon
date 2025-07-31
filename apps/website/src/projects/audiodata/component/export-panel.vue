@@ -67,10 +67,11 @@
 
     <div>
       <label class="block text-sm mb-1">Species detection matrix</label>
-      <input
+      <SelectMultiple
+        v-model="selectedSpecies"
+        :options="speciesOption ?? []"
         placeholder="Select species..."
-        class="input-style"
-      >
+      />
     </div>
 
     <div class="flex justify-between mt-4">
@@ -165,6 +166,21 @@ function mapTagToOptions (data: TagResponse[]): Option[] {
     count: item.count
   }))
 }
+
+const selectedSpecies = ref<(string | number)[]>([])
+const speciesOption = computed(() => {
+  if (!classesRecordings.value) return
+  const uniqueNames = [...new Set(classesRecordings.value.map(item => item.species_name))]
+  const baseOptions = uniqueNames.map(item => ({
+    label: item,
+    value: item.split(' ').join('_'),
+    tooltip: item
+  }))
+  return [
+      { label: 'Select all species', value: 'ALL', isSelectAll: true },
+      ...baseOptions
+    ]
+})
 </script>
 
 <style lang="scss">
