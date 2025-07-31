@@ -12,6 +12,7 @@ export interface Option {
   tooltip?: string
   isSelectAll?: boolean
   badges?:Badge[]
+  count?: number
 }
 
 const props = defineProps<{
@@ -170,6 +171,12 @@ const openDropdown = () => {
           class="truncate max-w-[75%]"
           :title="opt.label"
         >{{ opt.label }}</span>
+        <span
+          v-if="opt.count"
+          class="badge px-1 inline-flex flex-shrink-0 items-center gap-1 bg-util-gray-03 rounded-full"
+        >
+          <span class="text-xs mx-0.5">{{ opt.count }}</span>
+        </span>
         <span
           v-if="opt.badges?.length"
           class="badge px-1 inline-flex flex-shrink-0 items-center gap-1 bg-util-gray-03 rounded-full"

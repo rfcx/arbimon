@@ -30,10 +30,11 @@
 
     <div>
       <label class="block text-sm mb-1">Tags</label>
-      <input
+      <SelectMultiple
+        v-model="selectedTags"
+        :options="mapTagToOptions(tagsRecording ?? [])"
         placeholder="Tags..."
-        class="input-style"
-      >
+      />
     </div>
 
     <div>
@@ -76,11 +77,11 @@
 import type { AxiosInstance } from 'axios'
 import { computed, inject, ref } from 'vue'
 
-import { type ClassesRecordingResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type ClassesRecordingResponse, type TagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { useGetClasses } from '../api/use-recordings'
+import { useGetClasses, useGetTags } from '../api/use-recordings'
 import SelectMultiple from './select-multiple.vue'
 import { type Option } from './select-multiple.vue'
 
@@ -90,6 +91,7 @@ const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
 
 const { data: classesRecordings } = useGetClasses(apiClientArbimon, selectedProjectSlug)
+const { data: tagsRecording } = useGetTags(apiClientArbimon, selectedProjectSlug)
 
 const selectedFields = ref<(string | number)[]>(['filename', 'site', 'day'])
 const fieldsOptions = [
@@ -115,6 +117,16 @@ function mapToOptions (data: ClassesRecordingResponse[]): Option[] {
       { label: 'Select all species', value: 'ALL', isSelectAll: true },
       ...baseOptions
     ]
+}
+
+const selectedTags = ref<(string | number)[]>([])
+function mapTagToOptions (data: TagResponse[]): Option[] {
+  return data.map(item => ({
+    label: item.tag,
+    value: item.tag_id,
+    tooltip: item.tag,
+    count: item.count
+  }))
 }
 </script>
 

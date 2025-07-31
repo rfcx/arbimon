@@ -55,3 +55,14 @@ export const apiArbimonGetClasses = async (apiClient: AxiosInstance, slug: strin
     return response.data
   } else return undefined
 }
+
+export interface TagResponse {
+  count: number
+  tag: string
+  tag_id: number
+}
+
+export const apiArbimonGetTags = async (apiClient: AxiosInstance, slug: string): Promise<TagResponse[] | undefined> => {
+  const response = await apiClient.get(`/legacy-api/project/${slug}/tags/recording`)
+  return response.data
+}
