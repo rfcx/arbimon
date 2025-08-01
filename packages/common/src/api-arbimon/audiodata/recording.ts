@@ -55,6 +55,23 @@ export const apiArbimonGetClasses = async (apiClient: AxiosInstance, slug: strin
     return response.data
   } else return undefined
 }
+export interface SoundscapeResponse {
+  id: number
+  name: string
+  system: number
+  type: string
+  typeId: number
+}
+
+export const apiArbimonGetSoundscape = async (apiClient: AxiosInstance, slug: string): Promise<SoundscapeResponse[] | undefined> => {
+  if (slug !== undefined) {
+    const response = await apiClient.request<SoundscapeResponse[]>({
+      method: 'GET',
+      url: `/legacy-api/project/${slug}/soundscape-composition/classes?isSystemClass=1`
+    })
+    return response.data
+  } else return undefined
+}
 
 export interface TagResponse {
   count: number

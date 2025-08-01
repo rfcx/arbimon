@@ -2,7 +2,7 @@ import { type UseQueryReturnType, useQuery } from '@tanstack/vue-query'
 import type { AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 
-import { type ClassesRecordingResponse, type RecordingSearchParams, type RecordingSearchResponse, type TagResponse, apiArbimonGetClasses, apiArbimonGetRecordings, apiArbimonGetTags } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type ClassesRecordingResponse, type RecordingSearchParams, type RecordingSearchResponse, type SoundscapeResponse, type TagResponse, apiArbimonGetClasses, apiArbimonGetRecordings, apiArbimonGetSoundscape, apiArbimonGetTags } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 
 export const useRecordings = (
   apiClient: AxiosInstance,
@@ -29,6 +29,13 @@ export const useGetClasses = (apiClient: AxiosInstance, slug: ComputedRef<string
   return useQuery({
     queryKey: ['get-classes', slug],
     queryFn: async () => await apiArbimonGetClasses(apiClient, slug?.value ?? '')
+  })
+}
+
+export const useGetSoundscape = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>): UseQueryReturnType<SoundscapeResponse[] | undefined, unknown> => {
+  return useQuery({
+    queryKey: ['get-soundscape', slug],
+    queryFn: async () => await apiArbimonGetSoundscape(apiClient, slug?.value ?? '')
   })
 }
 

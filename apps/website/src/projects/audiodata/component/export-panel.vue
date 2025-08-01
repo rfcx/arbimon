@@ -22,10 +22,11 @@
 
     <div>
       <label class="block text-sm mb-1">Soundscape Composition</label>
-      <input
+      <SelectMultiple
+        v-model="selectedClasses"
+        :options="mapSoundscapeToOptions(soundscapeRecordings ?? [])"
         placeholder="Wind, Birds, ..."
-        class="input-style"
-      >
+      />
     </div>
 
     <div>
@@ -91,11 +92,11 @@
 import type { AxiosInstance } from 'axios'
 import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 
-import { type ClassesRecordingResponse, type TagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type ClassesRecordingResponse, type SoundscapeResponse, type TagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { useGetClasses, useGetTags } from '../api/use-recordings'
+import { useGetClasses, useGetSoundscape, useGetTags } from '../api/use-recordings'
 import SelectMultiple from './select-multiple.vue'
 import { type Option } from './select-multiple.vue'
 
@@ -105,6 +106,8 @@ const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
 
 const { data: classesRecordings } = useGetClasses(apiClientArbimon, selectedProjectSlug)
+const { data: soundscapeRecordings } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
+
 const { data: tagsRecording } = useGetTags(apiClientArbimon, selectedProjectSlug)
 
 const optionsGrouping = ['Site', 'Hour', 'Date']
@@ -155,6 +158,15 @@ function mapToOptions (data: ClassesRecordingResponse[]): Option[] {
       { label: 'Select all species', value: 'ALL', isSelectAll: true },
       ...baseOptions
     ]
+}
+
+function mapSoundscapeToOptions (data: SoundscapeResponse[]): Option[] {
+  return data.map(item => ({
+    label: item.name,
+    value: item.id,
+    tooltip: item.name,
+    group: item.type
+  }))
 }
 
 const selectedTags = ref<(string | number)[]>([])
