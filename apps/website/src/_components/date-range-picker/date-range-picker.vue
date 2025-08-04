@@ -157,15 +157,19 @@ const convertMinutestoCount = (minutes: number): string => {
 }
 
 const addPickerListener = () => {
-  const datepickerPicker = document.querySelector('.datepicker-picker')
-  datepickerPicker?.addEventListener('click', () => {
-    const targets = document.querySelectorAll('.hide-child')
-    if (targets.length) {
-      targets.forEach(target => {
-        target.parentElement?.classList.add('not-visible')
+  const datepickerPickers = document.querySelectorAll('.datepicker-picker')
+  if (datepickerPickers.length) {
+    datepickerPickers.forEach(datepickerPicker => {
+      datepickerPicker?.addEventListener('click', () => {
+        const targets = document.querySelectorAll('.hide-child')
+        if (targets.length) {
+          targets.forEach(target => {
+            target.parentElement?.classList.add('not-visible')
+          })
+        }
       })
-    }
-  })
+    })
+  }
   startDatePickerInput.value?.addEventListener('input', () => {
     startDatePickerInputChanged.value = true
     endDatePickerInputChanged.value = false
@@ -231,7 +235,7 @@ watch(() => [startDate, endDate, recordedMinutesPerDayConverted], () => {
   }
 
   .selected, .range-start, .range-end {
-    background-color: rgb(173, 255, 44, 0.15) !important;
+    background-color: #adff2c26 !important;
     border: 1px solid #ADFF2C !important;
   }
 
@@ -270,9 +274,16 @@ watch(() => [startDate, endDate, recordedMinutesPerDayConverted], () => {
     font-size: 14px;
   }
 
-  .hide-child, .not-visible {
+  .hide-child,
+  .not-visible,
+  .not-visible.selected,
+  .not-visible.range-start,
+  .not-visible.range-end,
+  .not-visible.range {
     pointer-events: none !important;
     user-select: none !important;
+    background-color: #1e1c13 !important;
+    border: #1e1c13 !important;
   }
 
   .rounded-l-lg, .rounded-r-lg {
