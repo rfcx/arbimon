@@ -129,7 +129,7 @@ const setDatePickerOptions = () => {
     const monthInCalendar = document.querySelectorAll('.view-switch')
     const hideDates = isStartHidden ? (monthInCalendar[1].innerHTML.replace(/[^a-zA-Z]+/g, '') !== dayjs(date).format('MMMM')) : isEndHidden ? monthInCalendar[0].innerHTML.replace(/[^a-zA-Z]+/g, '') !== dayjs(date).format('MMMM') : false
     return {
-      content: `<div style="line-height:1.25rem;${props.recordedMinutesPerDay ? 'padding-top:5px' : 'padding:10px'};${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${hideDates ? 'display:none' : 'display:block'}" class="${(minutes === 0 && props.recordedMinutesPerDay !== undefined) ? 'text-util-gray-02' : 'text-insight'}">${day}</div>
+      content: `<div style="line-height:1.25rem;${props.recordedMinutesPerDay ? 'padding-top:5px' : 'padding:10px'};${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${hideDates ? 'display:none' : 'display:block'}" class="${(minutes === 0 && props.recordedMinutesPerDay !== undefined) ? 'text-util-gray-02' : 'text-insight'} ${hideDates ? 'hide-child' : ''}">${day}</div>
         <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${(props.recordedMinutesPerDay === undefined || hideDates) ? 'display:none' : 'display:block'}"
         class="${minutes >= 10000 ? 'text-insight' : minutes === 0 ? 'text-util-gray-02' : 'text-flamingo'}">
         ${convertMinutestoCount(minutes)}</div>`
@@ -143,6 +143,12 @@ const setDatePickerOptions = () => {
     newDiv.classList.add('datepicker-footer-text')
     footerElement.appendChild(newDiv)
   }
+  const targets = document.querySelectorAll('.hide-child')
+  if (targets.length) {
+    targets.forEach(target => {
+      target.parentElement?.classList.add('not-visible')
+    })
+  }
 }
 
 const convertMinutestoCount = (minutes: number): string => {
@@ -151,6 +157,15 @@ const convertMinutestoCount = (minutes: number): string => {
 }
 
 const addPickerListener = () => {
+  const datepickerPicker = document.querySelector('.datepicker-picker')
+  datepickerPicker?.addEventListener('click', () => {
+    const targets = document.querySelectorAll('.hide-child')
+    if (targets.length) {
+      targets.forEach(target => {
+        target.parentElement?.classList.add('not-visible')
+      })
+    }
+  })
   startDatePickerInput.value?.addEventListener('input', () => {
     startDatePickerInputChanged.value = true
     endDatePickerInputChanged.value = false
@@ -253,6 +268,11 @@ watch(() => [startDate, endDate, recordedMinutesPerDayConverted], () => {
 
   .datepicker-footer-text {
     font-size: 14px;
+  }
+
+  .hide-child, .not-visible {
+    pointer-events: none !important;
+    user-select: none !important;
   }
 
   .rounded-l-lg, .rounded-r-lg {
