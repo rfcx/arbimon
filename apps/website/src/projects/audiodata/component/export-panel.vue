@@ -23,7 +23,7 @@
     <div>
       <label class="block text-sm mb-1">Soundscape Composition</label>
       <SelectMultiple
-        v-model="selectedClasses"
+        v-model="selectedSoundscape"
         :options="mapSoundscapeToOptions(soundscapeRecordings ?? [])"
         placeholder="Wind, Birds, ..."
       />
@@ -80,7 +80,10 @@
         <icon-fa-undo class="h-3 w-3 mr-1" />
         Reset
       </button>
-      <button class="btn btn-primary btn-small w-full items-center justify-center inline-flex ml-1">
+      <button
+        class="btn btn-primary btn-small w-full items-center justify-center inline-flex ml-1"
+        @click="exportData()"
+      >
         <icon-fa-send-o class="h-3 w-3 mr-1" />
         Export Data
       </button>
@@ -92,7 +95,7 @@
 import type { AxiosInstance } from 'axios'
 import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 
-import { type ClassesRecordingResponse, type SoundscapeResponse, type TagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type ClassesRecordingResponse, type ExportParams, type SoundscapeResponse, type TagResponse, apiLegacyExport } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
@@ -134,7 +137,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 
-const selectedFields = ref<(string | number)[]>(['filename', 'site', 'day'])
+const selectedFields = ref<(string)[]>(['filename', 'site', 'day'])
 const fieldsOptions = [
   { value: 'filename', label: 'Filename', tooltip: 'The recording filename' },
   { value: 'site', label: 'Site', tooltip: 'The recording site' },
@@ -143,7 +146,7 @@ const fieldsOptions = [
   { value: 'url', label: 'Url', tooltip: 'The recording URl' }
 ]
 
-const selectedClasses = ref<(string | number)[]>([])
+const selectedClasses = ref<(number)[]>([])
 function mapToOptions (data: ClassesRecordingResponse[]): Option[] {
   const baseOptions = data.map(item => ({
     label: `${item.species_name} - ${item.songtype_name}`,
@@ -160,6 +163,7 @@ function mapToOptions (data: ClassesRecordingResponse[]): Option[] {
     ]
 }
 
+const selectedSoundscape = ref<(number)[]>([])
 function mapSoundscapeToOptions (data: SoundscapeResponse[]): Option[] {
   return data.map(item => ({
     label: item.name,
@@ -169,7 +173,7 @@ function mapSoundscapeToOptions (data: SoundscapeResponse[]): Option[] {
   }))
 }
 
-const selectedTags = ref<(string | number)[]>([])
+const selectedTags = ref<(number)[]>([])
 function mapTagToOptions (data: TagResponse[]): Option[] {
   return data.map(item => ({
     label: item.tag,
@@ -179,7 +183,7 @@ function mapTagToOptions (data: TagResponse[]): Option[] {
   }))
 }
 
-const selectedSpecies = ref<(string | number)[]>([])
+const selectedSpecies = ref<(string)[]>([])
 const speciesOption = computed(() => {
   if (!classesRecordings.value) return
   const uniqueNames = [...new Set(classesRecordings.value.map(item => item.species_name))]
@@ -193,6 +197,40 @@ const speciesOption = computed(() => {
       ...baseOptions
     ]
 })
+
+async function exportData () {
+  let selectedSpeciesId: number[] = []
+
+  if (classesRecordings.value) {
+    selectedSpeciesId = Array.from(new Set(
+      classesRecordings.value
+        .filter(item => selectedSpecies.value.includes(item.species_name.split(' ').join('_')))
+        .map(item => item.species)
+    ))
+  }
+
+  const exportParams = ref<(ExportParams| null)>(null)
+  exportParams.value = {
+    filters: { userEmail: store.user?.email ?? '' },
+    show: {
+      ...(selectedFields.value?.length ? { recording: selectedFields.value } : {}),
+      ...(selectedSpecies.value?.length ? { species_name: selectedSpecies.value } : {}),
+      ...(selectedTags.value?.length ? { tag: selectedTags.value } : {}),
+      ...(selectedSoundscape.value?.length ? { soundscapeComposition: selectedSoundscape.value } : {}),
+      ...(selectedClasses.value?.length ? { validation: selectedClasses.value } : {}),
+      ...(selectedGrouping.value ? { grouped: selectedGrouping.value.toLowerCase() } : {}),
+      ...(selectedSpeciesId.length ? { species: Array.from(selectedSpeciesId) } : {})
+    }
+  }
+  try {
+    await apiLegacyExport(apiClientArbimon, selectedProjectSlug.value ?? '', exportParams.value)
+    // showAlertDialog('success', 'Success', 'Removed')
+  } catch (e) {
+    // showAlertDialog('error', 'Error', 'Remove site')
+  }
+
+  console.info('exportParams', exportParams.value)
+}
 </script>
 
 <style lang="scss">

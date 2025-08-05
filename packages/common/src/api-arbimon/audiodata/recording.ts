@@ -83,3 +83,44 @@ export const apiArbimonGetTags = async (apiClient: AxiosInstance, slug: string):
   const response = await apiClient.get(`/legacy-api/project/${slug}/tags/recording`)
   return response.data
 }
+
+interface DateRange {
+  from: string | Date
+  to: string | Date
+}
+
+interface Filters {
+  userEmail?: string
+  range?: DateRange
+}
+
+interface Projection {
+  recording?: string[]
+  species?: number[]
+  soundscapeComposition?: number[]
+  tags?: number[]
+  species_name?: string[]
+  grouped?: string
+  validation?: number[]
+}
+
+export interface ExportParams {
+  filters: Filters
+  show: Projection
+}
+
+export interface ExportResponse {
+  success: boolean
+}
+
+export const apiLegacyExport = async (apiClient: AxiosInstance, slug: string, params: ExportParams): Promise<ExportResponse> => {
+  let endpoint = 'recordings-export'
+  if (params.show.species && params.show.species.length > 0) {
+    endpoint = 'occupancy-models-export'
+  } else if (params.show.grouped) {
+    endpoint = 'grouped-detections-export'
+  }
+
+  const fullUrl = `/legacy-api/project/${slug}/recordings/${endpoint}`
+  return await apiClient.post(fullUrl, params)
+}
