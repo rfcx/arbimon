@@ -159,13 +159,32 @@ onBeforeUnmount(() => {
 
 const showExportModal = ref(false)
 
+function getSpeciesNameList () {
+  if (!selectedSpecies.value?.length) return []
+
+  return selectedSpecies.value.includes('ALL')
+    ? speciesOption.value?.filter(opt => !opt.isSelectAll).map(opt => opt.value) ?? []
+    : selectedSpecies.value
+}
+
+function getValidationList (): number[] {
+  if (!selectedClasses.value?.length) return []
+
+  const list = mapToOptions(classesRecordings.value ?? [])
+  if (!list.length) return []
+
+  return selectedClasses.value.includes('ALL')
+    ? list.filter(opt => opt.isSelectAll !== true).map(opt => Number(opt.value))
+    : selectedClasses.value.map(v => Number(v))
+}
+
 async function handleExport (email: string | undefined) {
   let selectedSpeciesId: number[] = []
 
   if (classesRecordings.value) {
     selectedSpeciesId = Array.from(new Set(
       classesRecordings.value
-        .filter(item => selectedSpecies.value.includes(item.species_name.split(' ').join('_')))
+        .filter(item => getSpeciesNameList().includes(item.species_name.split(' ').join('_')))
         .map(item => item.species)
     ))
   }
@@ -175,10 +194,10 @@ async function handleExport (email: string | undefined) {
     filters: { userEmail: email ?? store.user?.email ?? '' },
     show: {
       ...(selectedFields.value?.length ? { recording: selectedFields.value } : {}),
-      ...(selectedSpecies.value?.length ? { species_name: selectedSpecies.value } : {}),
+      ...(selectedSpecies.value?.length ? { species_name: getSpeciesNameList() } : {}),
       ...(selectedTags.value?.length ? { tag: selectedTags.value } : {}),
       ...(selectedSoundscape.value?.length ? { soundscapeComposition: selectedSoundscape.value } : {}),
-      ...(selectedClasses.value?.length ? { validation: selectedClasses.value } : {}),
+      ...(selectedClasses.value?.length ? { validation: getValidationList() } : {}),
       ...(selectedGrouping.value ? { grouped: selectedGrouping.value.toLowerCase() } : {}),
       ...(selectedSpeciesId.length ? { species: Array.from(selectedSpeciesId) } : {})
     }
@@ -187,9 +206,11 @@ async function handleExport (email: string | undefined) {
     await apiLegacyExport(apiClientArbimon, selectedProjectSlug.value ?? '', exportParams.value)
     // showAlertDialog('success', 'Success', 'Removed')
     showExportModal.value = false
+    emit('close')
   } catch (e) {
     // showAlertDialog('error', 'Error', 'Remove site')
     showExportModal.value = false
+    emit('close')
   }
 }
 
@@ -202,12 +223,13 @@ const fieldsOptions = [
   { value: 'url', label: 'Url', tooltip: 'The recording URl' }
 ]
 
-const selectedClasses = ref<(number)[]>([])
+const selectedClasses = ref<(number|string)[]>([])
 function mapToOptions (data: ClassesRecordingResponse[]): Option[] {
   const baseOptions = data.map(item => ({
     label: `${item.species_name} - ${item.songtype_name}`,
     value: item.id,
     tooltip: `${item.species_name} - ${item.songtype_name}`,
+    isSelectAll: false,
     badges: [
         { icon: 'val-1', value: item.vals_present },
         { icon: 'val-0', value: item.vals_absent }
@@ -246,7 +268,8 @@ const speciesOption = computed(() => {
   const baseOptions = uniqueNames.map(item => ({
     label: item,
     value: item.split(' ').join('_'),
-    tooltip: item
+    tooltip: item,
+    isSelectAll: false
   }))
   return [
       { label: 'Select all species', value: 'ALL', isSelectAll: true },
