@@ -82,12 +82,17 @@
       </button>
       <button
         class="btn btn-primary btn-small w-full items-center justify-center inline-flex ml-1"
-        @click="exportData()"
+        @click="showExportModal = true"
       >
         <icon-fa-send-o class="h-3 w-3 mr-1" />
         Export Data
       </button>
     </div>
+    <ExportReportModal
+      v-if="showExportModal"
+      @close="showExportModal = false"
+      @export="handleExport"
+    />
   </div>
 </template>
 
@@ -100,6 +105,7 @@ import { type ClassesRecordingResponse, type ExportParams, type SoundscapeRespon
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetClasses, useGetSoundscape, useGetTags } from '../api/use-recordings'
+import ExportReportModal from './export-report.vue'
 import SelectMultiple from './select-multiple.vue'
 import { type Option } from './select-multiple.vue'
 
@@ -136,6 +142,42 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
+
+const showExportModal = ref(false)
+
+async function handleExport (email: string | undefined) {
+  let selectedSpeciesId: number[] = []
+
+  if (classesRecordings.value) {
+    selectedSpeciesId = Array.from(new Set(
+      classesRecordings.value
+        .filter(item => selectedSpecies.value.includes(item.species_name.split(' ').join('_')))
+        .map(item => item.species)
+    ))
+  }
+
+  const exportParams = ref<(ExportParams| null)>(null)
+  exportParams.value = {
+    filters: { userEmail: email ?? store.user?.email ?? '' },
+    show: {
+      ...(selectedFields.value?.length ? { recording: selectedFields.value } : {}),
+      ...(selectedSpecies.value?.length ? { species_name: selectedSpecies.value } : {}),
+      ...(selectedTags.value?.length ? { tag: selectedTags.value } : {}),
+      ...(selectedSoundscape.value?.length ? { soundscapeComposition: selectedSoundscape.value } : {}),
+      ...(selectedClasses.value?.length ? { validation: selectedClasses.value } : {}),
+      ...(selectedGrouping.value ? { grouped: selectedGrouping.value.toLowerCase() } : {}),
+      ...(selectedSpeciesId.length ? { species: Array.from(selectedSpeciesId) } : {})
+    }
+  }
+  try {
+    await apiLegacyExport(apiClientArbimon, selectedProjectSlug.value ?? '', exportParams.value)
+    // showAlertDialog('success', 'Success', 'Removed')
+    showExportModal.value = false
+  } catch (e) {
+    // showAlertDialog('error', 'Error', 'Remove site')
+    showExportModal.value = false
+  }
+}
 
 const selectedFields = ref<(string)[]>(['filename', 'site', 'day'])
 const fieldsOptions = [
@@ -197,40 +239,6 @@ const speciesOption = computed(() => {
       ...baseOptions
     ]
 })
-
-async function exportData () {
-  let selectedSpeciesId: number[] = []
-
-  if (classesRecordings.value) {
-    selectedSpeciesId = Array.from(new Set(
-      classesRecordings.value
-        .filter(item => selectedSpecies.value.includes(item.species_name.split(' ').join('_')))
-        .map(item => item.species)
-    ))
-  }
-
-  const exportParams = ref<(ExportParams| null)>(null)
-  exportParams.value = {
-    filters: { userEmail: store.user?.email ?? '' },
-    show: {
-      ...(selectedFields.value?.length ? { recording: selectedFields.value } : {}),
-      ...(selectedSpecies.value?.length ? { species_name: selectedSpecies.value } : {}),
-      ...(selectedTags.value?.length ? { tag: selectedTags.value } : {}),
-      ...(selectedSoundscape.value?.length ? { soundscapeComposition: selectedSoundscape.value } : {}),
-      ...(selectedClasses.value?.length ? { validation: selectedClasses.value } : {}),
-      ...(selectedGrouping.value ? { grouped: selectedGrouping.value.toLowerCase() } : {}),
-      ...(selectedSpeciesId.length ? { species: Array.from(selectedSpeciesId) } : {})
-    }
-  }
-  try {
-    await apiLegacyExport(apiClientArbimon, selectedProjectSlug.value ?? '', exportParams.value)
-    // showAlertDialog('success', 'Success', 'Removed')
-  } catch (e) {
-    // showAlertDialog('error', 'Error', 'Remove site')
-  }
-
-  console.info('exportParams', exportParams.value)
-}
 </script>
 
 <style lang="scss">
