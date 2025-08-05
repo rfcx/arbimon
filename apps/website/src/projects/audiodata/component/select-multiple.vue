@@ -143,7 +143,7 @@ const openDropdown = () => {
           class="inline-flex items-center px-[5px] py-[4px] text-[12px] rounded text-cloud bg-util-gray-04 border border-util-gray-04 mt-1 mb-[3px] ml-1 hover:bg-[#0a0a0a]"
           :title="opt.tooltip"
         >
-          <span class="mr-1 font-bold">{{ opt.label }}</span>
+          <span class="mr-1 font-bold">{{ opt.group }} / {{ opt.label }}</span>
           <button
             class="text-white font-bold opacity-20 hover:bg-echo"
             @click.stop="removeValue(opt.value)"

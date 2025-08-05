@@ -246,7 +246,7 @@ function mapSoundscapeToOptions (data: SoundscapeResponse[]): Option[] {
   return data.map(item => ({
     label: item.name,
     value: item.id,
-    tooltip: item.name,
+    tooltip: `${item.type} / ${item.name}`,
     group: item.type
   }))
 }
