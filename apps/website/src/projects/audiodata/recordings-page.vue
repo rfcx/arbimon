@@ -18,12 +18,15 @@
         >
           <button
             class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
-            @click="exportRecordings()"
+            @click="showExportPanel = true"
           >
             <span>Export</span>
             <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
           </button>
-          <ExportPanel v-if="showExportPanel" />
+          <ExportPanel
+            v-if="showExportPanel"
+            @close="showExportPanel = false"
+          />
         </div>
         <button
           class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
@@ -199,10 +202,6 @@ const onSelectedItem = (row?: Record<string, any>) => {
 
 const filterRecordings = () => {
   console.info('FilterRecordings')
-}
-const exportRecordings = () => {
-  console.info('exportRecordings')
-  showExportPanel.value = true
 }
 const saveToPlaylist = (name: string) => {
   console.info('Saving playlist:', name)

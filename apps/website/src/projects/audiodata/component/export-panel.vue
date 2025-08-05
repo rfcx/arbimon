@@ -1,5 +1,8 @@
 <template>
-  <div class="absolute top-full mt-2 z-50 bg-moss border-0 text-white rounded-lg p-4 w-[400px] space-y-4 border border-util-gray-03 shadow-lg">
+  <div
+    ref="panelRef"
+    class="absolute top-full mt-2 z-50 bg-moss border-0 text-white rounded-lg p-4 w-[400px] space-y-4 border border-util-gray-03 shadow-lg"
+  >
     <div>
       <h3 class="block text-sm mb-1">
         Recording fields
@@ -7,7 +10,7 @@
       <SelectMultiple
         v-model="selectedFields"
         :options="fieldsOptions"
-        placeholder="filename, site, ..."
+        placeholder="Filename, Site, ..."
       />
     </div>
 
@@ -76,7 +79,10 @@
     </div>
 
     <div class="flex justify-between mt-4">
-      <button class="btn btn-secondary  btn-small w-full items-center justify-center inline-flex hover:text-pitch mr-1">
+      <button
+        class="btn btn-secondary  btn-small w-full items-center justify-center inline-flex hover:text-pitch mr-1"
+        @click="resetExportData"
+      >
         <icon-fa-undo class="h-3 w-3 mr-1" />
         Reset
       </button>
@@ -124,23 +130,31 @@ const selectedGrouping = ref<string | null>(null)
 const isOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
 
+const emit = defineEmits(['close'])
+const panelRef = ref<HTMLElement | null>(null)
+
 function selectGrouping (opt: string) {
   selectedGrouping.value = opt
   isOpen.value = false
 }
 
 function handleClickOutside (event: MouseEvent) {
+  if (panelRef.value && !panelRef.value.contains(event.target as Node)) {
+    emit('close')
+  }
   if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
     isOpen.value = false
   }
 }
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
+  setTimeout(() => {
+    document.addEventListener('mousedown', handleClickOutside)
+  }, 0)
 })
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('mousedown', handleClickOutside)
 })
 
 const showExportModal = ref(false)
@@ -239,6 +253,15 @@ const speciesOption = computed(() => {
       ...baseOptions
     ]
 })
+
+function resetExportData () {
+  selectedFields.value = []
+  selectedSpecies.value = []
+  selectedTags.value = []
+  selectedSoundscape.value = []
+  selectedClasses.value = []
+  selectedGrouping.value = ''
+}
 </script>
 
 <style lang="scss">
