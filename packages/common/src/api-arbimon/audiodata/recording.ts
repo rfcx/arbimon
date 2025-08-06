@@ -124,3 +124,16 @@ export const apiLegacyExport = async (apiClient: AxiosInstance, slug: string, pa
   const fullUrl = `/legacy-api/project/${slug}/recordings/${endpoint}`
   return await apiClient.post(fullUrl, params)
 }
+
+export interface CreatePlaylistRequest {
+  params: { recIds?: number[] }
+  playlist_name: string
+}
+export interface CreatePlaylistResponse {
+  playlist_id: number
+  success: boolean
+}
+
+export const apiLegacyCreatePlaylists = async (apiClient: AxiosInstance, slug: string, params: CreatePlaylistRequest): Promise<CreatePlaylistResponse> => {
+  return await apiClient.post(`/legacy-api/project/${slug}/playlists/create`, params)
+}

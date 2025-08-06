@@ -106,6 +106,7 @@
         :default-sort-order="'desc'"
         :project-slug="selectedProjectSlug"
         :show-checkbox="true"
+        @selected-rows="onSelectedRecordings"
         @selected-item="onSelectedItem"
       />
     </div>
@@ -128,7 +129,7 @@ import type { AxiosInstance } from 'axios'
 import { initDropdowns } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
-import { type RecordingSearchParams, type RecordingSearchResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type RecordingSearchParams, type RecordingSearchResponse, apiLegacyCreatePlaylists } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
@@ -137,6 +138,7 @@ import CreatePlaylistModal from './component/create-playlist.vue'
 import ExportPanel from './component/export-panel.vue'
 import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
+import { type Row } from './component/sortable-table.vue'
 
 const limitPerPage = ref(10)
 const currentPage = ref(1)
@@ -199,13 +201,21 @@ const changeLimit = async (value: number) => {
 const onSelectedItem = (row?: Record<string, any>) => {
   console.info('onSelectedItem', row)
 }
+const selectedRows = ref<Row[]>([])
+
+const onSelectedRecordings = (rows?: Row[]) => {
+  if (!rows) return
+  selectedRows.value = rows
+}
 
 const filterRecordings = () => {
   console.info('FilterRecordings')
 }
-const saveToPlaylist = (name: string) => {
-  console.info('Saving playlist:', name)
+const saveToPlaylist = async (name: string) => {
   showCreatePlaylistModal.value = false
+  try {
+  await apiLegacyCreatePlaylists(apiClientArbimon, selectedProjectSlug.value ?? '', { playlist_name: name, params: selectedRows.value.length ? { recIds: selectedRows.value.map(item => Number(item.id)) } : {} })
+  } catch (e) {}
 }
 const deleteCheckedRecordings = () => {
   console.info('deleteCheckedRecordings')

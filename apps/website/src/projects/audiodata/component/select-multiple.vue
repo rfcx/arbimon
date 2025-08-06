@@ -42,7 +42,6 @@ const handleClickOutside = (e: MouseEvent) => {
 onMounted(() => document.addEventListener('click', handleClickOutside))
 onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
 
-// ✅ Search filter
 const search = ref('')
 type DropdownOption = Option & { disabled?: boolean }
 
@@ -117,7 +116,6 @@ const openDropdown = () => {
     ref="wrapper"
     class="relative"
   >
-    <!-- Selected tags -->
     <div
       class="input-select-multiple flex flex-wrap"
       @click="openDropdown"
@@ -143,7 +141,14 @@ const openDropdown = () => {
           class="inline-flex items-center px-[5px] py-[4px] text-[12px] rounded text-cloud bg-util-gray-04 border border-util-gray-04 mt-1 mb-[3px] ml-1 hover:bg-[#0a0a0a]"
           :title="opt.tooltip"
         >
-          <span class="mr-1 font-bold">{{ opt.group }} / {{ opt.label }}</span>
+          <span
+            v-if="opt.group"
+            class="mr-1 font-bold"
+          >{{ opt.group }} / {{ opt.label }}</span>
+          <span
+            v-else
+            class="mr-1 font-bold"
+          >{{ opt.label }}</span>
           <button
             class="text-white font-bold opacity-20 hover:bg-echo"
             @click.stop="removeValue(opt.value)"
@@ -163,7 +168,6 @@ const openDropdown = () => {
       >
     </div>
 
-    <!-- Dropdown -->
     <div
       v-if="isOpen && filteredOptions.length"
       class="absolute mt-1 w-full border border-util-gray-03 rounded bg-echo text-insight text-sm font-medium shadow z-10 max-h-60 overflow-y-auto"
@@ -172,15 +176,12 @@ const openDropdown = () => {
         v-for="[groupName, opts] in groupedOptions"
         :key="groupName"
       >
-        <!-- หัวข้อ group -->
         <div
           v-if="groupName !== '__nogroup'"
           class="px-3 py-1 text-xs text-gray-400 uppercase font-semibold"
         >
           {{ groupName }}
         </div>
-
-        <!-- options -->
         <div
           v-for="opt in opts"
           :key="opt.value"

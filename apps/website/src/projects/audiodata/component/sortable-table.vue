@@ -139,13 +139,13 @@ const props = defineProps<{
   projectSlug?: string
 }>()
 
-const emit = defineEmits<{(e: 'selectedItem', row?: Row): void}>()
+const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void}>()
 
 const sortKey = ref<string | null>(null)
 const sortOrder = ref<'asc' | 'desc'>('asc')
 
 const selectedRows = ref<Row[]>([])
-  const isLoaded = ref(true)
+const isLoaded = ref(true)
 
 function onImageLoad () {
   isLoaded.value = false
@@ -338,6 +338,10 @@ onMounted(() => {
     sortKey.value = props.defaultSortKey
     sortOrder.value = props.defaultSortOrder ?? 'asc'
   }
+})
+
+watch(() => selectedRows.value, (rows) => {
+  emit('selectedRows', rows)
 })
 
 watch(() => props.selectedRow, (row) => {
