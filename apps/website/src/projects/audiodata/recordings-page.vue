@@ -122,6 +122,18 @@
       @close="showCreatePlaylistModal = false"
       @save="saveToPlaylist"
     />
+    <CustomPopup
+      :visible="showPopup"
+      :is-for-delete-popup="true"
+      :list="recordingsSelected"
+      title="Delete recordings"
+      message="Are you sure you want to delete the following?"
+      note="Note: analysis results on these recordings will also be deleted"
+      btn-ok-text="Delete"
+      btn-cancel-text="Cancel"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    />
   </section>
 </template>
 <script setup lang="ts">
@@ -135,6 +147,7 @@ import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useRecordings } from './api/use-recordings'
 import CreatePlaylistModal from './component/create-playlist.vue'
+import CustomPopup from './component/custom-popup.vue'
 import ExportPanel from './component/export-panel.vue'
 import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
@@ -189,6 +202,11 @@ const filteredRecordings = computed(() => {
 onMounted(() => {
   initDropdowns()
 })
+
+const showPopup = ref(false)
+const allFiltered = ref(false)
+const recordingsSelected = ref<string[]>([])
+
 const applyRecordings = async () => {
   await refetchRecordings()
 }
@@ -201,8 +219,8 @@ const changeLimit = async (value: number) => {
 const onSelectedItem = (row?: Record<string, any>) => {
   console.info('onSelectedItem', row)
 }
-const selectedRows = ref<Row[]>([])
 
+const selectedRows = ref<Row[]>([])
 const onSelectedRecordings = (rows?: Row[]) => {
   if (!rows) return
   selectedRows.value = rows
@@ -211,16 +229,66 @@ const onSelectedRecordings = (rows?: Row[]) => {
 const filterRecordings = () => {
   console.info('FilterRecordings')
 }
+
 const saveToPlaylist = async (name: string) => {
   showCreatePlaylistModal.value = false
   try {
   await apiLegacyCreatePlaylists(apiClientArbimon, selectedProjectSlug.value ?? '', { playlist_name: name, params: selectedRows.value.length ? { recIds: selectedRows.value.map(item => Number(item.id)) } : {} })
   } catch (e) {}
 }
+
 const deleteCheckedRecordings = () => {
+  getDeleteConfirmationMessage()
+  showPopup.value = !showPopup.value
   console.info('deleteCheckedRecordings')
 }
+
 const deleteAllFilteredRecordings = () => {
+  allFiltered.value = true
+  showPopup.value = !showPopup.value
   console.info('deleteRecording')
 }
+
+async function handleOk () {
+  try {
+    showPopup.value = false
+    // await apiLegacySiteDelete(apiClientArbimon, selectedProjectSlug.value ?? '', siteIds.value)
+    // reloadSite()
+    // showAlertDialog('success', 'Success', 'Removed')
+  } catch (e) {
+    // showAlertDialog('error', 'Error', 'Remove site')
+  }
+}
+
+const handleCancel = () => {
+  showPopup.value = false
+}
+
+function getDeleteConfirmationMessage () {
+  const recs = selectedRows.value.map(item => item.site)
+  const countMap = recs.reduce((acc: Record<string, number>, curr) => {
+    acc[curr] = (acc[curr] || 0) + 1
+    return acc
+  }, {})
+
+  const siteNames = Object.keys(countMap)
+  const topSites = siteNames.slice(0, 3)
+  const otherSites = siteNames.slice(3)
+
+  const list: string[] = []
+
+  topSites.forEach(site => {
+    const count = countMap[site]
+    const s = count > 1 ? 's' : ''
+    list.push(`${count} recording${s} from "${site}"`)
+  })
+
+  if (otherSites.length > 0) {
+    const otherCount = otherSites.reduce((sum, site) => sum + countMap[site], 0)
+    list.push(`& ${otherCount} recording${otherCount > 1 ? 's' : ''} from ${otherSites.length} other site${otherSites.length > 1 ? 's' : ''}`)
+  }
+
+  recordingsSelected.value = list
+}
+
 </script>
