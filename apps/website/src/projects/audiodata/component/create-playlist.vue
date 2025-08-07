@@ -3,7 +3,7 @@
     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
     @click.self="close"
   >
-    <div class="bg-moss text-white rounded-xl w-full max-w-[600px] px-6 py-6 relative shadow-lg">
+    <div class="input-item-playlist bg-moss text-white rounded-xl w-full max-w-[600px] px-6 py-6 relative shadow-lg">
       <button
         class="absolute top-4 right-4 text-white hover:opacity-70"
         aria-label="Close"
@@ -20,7 +20,7 @@
       <input
         v-model="playlistName"
         type="text"
-        class="rounded py-2 h-[34px] w-full items-center inline-flex rounded border-1 border-util-gray-03 bg-echo"
+        class="rounded mt-2 py-2 h-[34px] w-full items-center inline-flex rounded border-1 border-util-gray-03 bg-echo"
       >
 
       <div class="flex justify-between space-x-4 mt-8">
@@ -59,3 +59,13 @@ function save () {
   }
 }
 </script>
+
+<style lang="scss">
+.input-item-playlist {
+  [type='text']:focus {
+    border-color: #ADFF2C;
+    --tw-ring-color: transparent;
+  }
+  color: #fff;
+}
+</style>
