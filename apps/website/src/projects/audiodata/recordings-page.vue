@@ -141,7 +141,7 @@ import type { AxiosInstance } from 'axios'
 import { initDropdowns } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
-import { type RecordingSearchParams, type RecordingSearchResponse, apiLegacyCreatePlaylists } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type RecordingSearchParams, type RecordingSearchResponse, apiLegacyCreatePlaylists, apiLegacyDeleteRecording } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
@@ -252,11 +252,11 @@ const deleteAllFilteredRecordings = () => {
 async function handleOk () {
   try {
     showPopup.value = false
-    // await apiLegacySiteDelete(apiClientArbimon, selectedProjectSlug.value ?? '', siteIds.value)
-    // reloadSite()
+    await apiLegacyDeleteRecording(apiClientArbimon, selectedProjectSlug.value ?? '', { recs: selectedRows.value })
+    applyRecordings()
     // showAlertDialog('success', 'Success', 'Removed')
   } catch (e) {
-    // showAlertDialog('error', 'Error', 'Remove site')
+    // showAlertDialog('error', 'Error', 'Remove recording')
   }
 }
 

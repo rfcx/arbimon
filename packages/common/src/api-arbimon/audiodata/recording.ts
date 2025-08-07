@@ -137,3 +137,13 @@ export interface CreatePlaylistResponse {
 export const apiLegacyCreatePlaylists = async (apiClient: AxiosInstance, slug: string, params: CreatePlaylistRequest): Promise<CreatePlaylistResponse> => {
   return await apiClient.post(`/legacy-api/project/${slug}/playlists/create`, params)
 }
+export interface DeleteRecordingRequest {
+  recs: any[]
+}
+export interface DeleteRecordingResponse {
+  deleted: number[]
+  msg: string
+}
+export const apiLegacyDeleteRecording = async (apiClient: AxiosInstance, slug: string, params: DeleteRecordingRequest): Promise<DeleteRecordingResponse> => {
+  return await apiClient.post(`/legacy-api/project/${slug}/recordings/delete`, params)
+}
