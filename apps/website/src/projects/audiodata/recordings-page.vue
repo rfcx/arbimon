@@ -134,6 +134,12 @@
       @ok="handleOk"
       @cancel="handleCancel"
     />
+    <alert-dialog
+      v-if="showAlert"
+      :severity="success"
+      :title="title"
+      :message="message"
+    />
   </section>
 </template>
 <script setup lang="ts">
@@ -143,6 +149,8 @@ import { computed, inject, onMounted, ref } from 'vue'
 
 import { type RecordingSearchParams, type RecordingSearchResponse, apiLegacyCreatePlaylists, apiLegacyDeleteRecording } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 
+import type { AlertDialogType } from '@/_components/alert-dialog.vue'
+import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useRecordings } from './api/use-recordings'
@@ -238,6 +246,11 @@ const saveToPlaylist = async (name: string) => {
 }
 
 const deleteCheckedRecordings = () => {
+  if (selectedRows.value.length === 0) {
+    showAlertDialog('error', '', 'There are not any recordings to delete')
+    return
+  }
+
   getDeleteConfirmationMessage()
   showPopup.value = !showPopup.value
   console.info('deleteCheckedRecordings')
@@ -254,9 +267,9 @@ async function handleOk () {
     showPopup.value = false
     await apiLegacyDeleteRecording(apiClientArbimon, selectedProjectSlug.value ?? '', { recs: selectedRows.value })
     applyRecordings()
-    // showAlertDialog('success', 'Success', 'Removed')
+    showAlertDialog('success', 'Success', 'Removed')
   } catch (e) {
-    // showAlertDialog('error', 'Error', 'Remove recording')
+    showAlertDialog('error', 'Error', 'Remove recording')
   }
 }
 
@@ -289,6 +302,21 @@ function getDeleteConfirmationMessage () {
   }
 
   recordingsSelected.value = list
+}
+
+const success = ref<AlertDialogType>('error')
+const title = ref('')
+const message = ref('')
+const showAlert = ref(false)
+
+const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue: string, hideAfter = 7000) => {
+  showAlert.value = true
+  success.value = type
+  title.value = titleValue
+  message.value = messageValue
+  setTimeout(() => {
+    showAlert.value = false
+  }, hideAfter)
 }
 
 </script>
