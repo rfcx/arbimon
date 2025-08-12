@@ -5,13 +5,19 @@
         Recordings
       </h1>
       <div class="flex mt-6">
-        <button
-          class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
-          @click="filterRecordings()"
+        <div
+          ref="filtersRef"
+          class="relative"
         >
-          <span>Filters</span>
-          <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
-        </button>
+          <button
+            class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
+            @click="filterRecordings()"
+          >
+            <span>Filters</span>
+            <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
+          </button>
+          <FilterPanel v-if="showFilterModal" />
+        </div>
         <div
           ref="exportRef"
           class="relative"
@@ -157,6 +163,7 @@ import { useRecordings } from './api/use-recordings'
 import CreatePlaylistModal from './component/create-playlist.vue'
 import CustomPopup from './component/custom-popup.vue'
 import ExportPanel from './component/export-panel.vue'
+import FilterPanel from './component/filter-panel.vue'
 import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
 import { type Row } from './component/sortable-table.vue'
@@ -234,7 +241,10 @@ const onSelectedRecordings = (rows?: Row[]) => {
   selectedRows.value = rows
 }
 
+const showFilterModal = ref(false)
 const filterRecordings = () => {
+  showFilterModal.value = !showFilterModal.value
+
   console.info('FilterRecordings')
 }
 
