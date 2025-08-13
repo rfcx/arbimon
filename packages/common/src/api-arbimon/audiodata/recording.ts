@@ -10,8 +10,8 @@ export interface RecordingSearchParams {
 export interface RecordingSearchResponse {
   count?: number
   date_range?: {
-    min: string
-    max: string
+    min_date: string
+    max_date: string
   }
   list?: any[]
 }

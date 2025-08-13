@@ -162,7 +162,7 @@ const openDropdown = () => {
         ref="searchInput"
         v-model="search"
         type="text"
-        class="flex-1 min-w-[50px] border-none outline-none bg-transparent py-1 placeholder-insight focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
+        class="flex-1 border-none outline-none bg-transparent py-1 placeholder-insight focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
         :placeholder="!selectedOptions.length ? (placeholder || 'Search or select...') : ''"
         @focus="isOpen = true"
       >

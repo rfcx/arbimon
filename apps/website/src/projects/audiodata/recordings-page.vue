@@ -16,7 +16,11 @@
             <span>Filters</span>
             <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
           </button>
-          <FilterPanel v-if="showFilterModal" />
+          <FilterPanel
+            v-if="showFilterModal"
+            :date-range="recordings?.date_range"
+            :sites="sites"
+          />
         </div>
         <div
           ref="exportRef"
@@ -154,12 +158,14 @@ import { initDropdowns } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
 import { type RecordingSearchParams, type RecordingSearchResponse, apiLegacyCreatePlaylists, apiLegacyDeleteRecording } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type SiteParams } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useRecordings } from './api/use-recordings'
+import { useSites } from './api/use-sites'
 import CreatePlaylistModal from './component/create-playlist.vue'
 import CustomPopup from './component/custom-popup.vue'
 import ExportPanel from './component/export-panel.vue'
@@ -195,6 +201,15 @@ const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
 
 const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings, isRefetching: isRefetchRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, requestParams)
+
+const siteParams = computed<SiteParams>(() => {
+  return {
+    count: true,
+    deployment: true,
+    logs: true
+  }
+})
+const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
 
 const recordingsCount = computed(() => { return recordings.value?.count ?? 0 })
 const showCreatePlaylistModal = ref(false)

@@ -4,7 +4,7 @@
   >
     <!-- Date range -->
     <div class="flex items-center space-x-2">
-      <label class="w-32">Date range:</label>
+      <label>Date range:</label>
       <input
         v-model="filters.dateRange.from"
         type="date"
@@ -18,26 +18,29 @@
     </div>
 
     <!-- Date and Time -->
-    <div class="flex items-center space-x-2">
-      <label class="w-32">Date and Time:</label>
-      <input
-        v-model.number="filters.dateTime.years"
-        type="number"
+    <div class="flex items-start space-x-2">
+      <label>Date and Time:</label>
+      <SelectMultiple
+        v-model="selectedYears"
+        class="flex-1 min-w-0"
+        :options="getYearOptions(dateRange?.min_date, dateRange?.max_date) ?? []"
         placeholder="Years"
-        class="w-20 p-2 rounded bg-[#2a2a2a] text-white"
-      >
+      />
       <SelectMultiple
         v-model="selectedMonths"
+        class="flex-1 min-w-0"
         :options="staticMonths ?? []"
         placeholder="Months"
       />
       <SelectMultiple
         v-model="selectedDays"
+        class="flex-1 min-w-0"
         :options="staticDays ?? []"
         placeholder="Days"
       />
       <SelectMultiple
         v-model="selectedHours"
+        class="flex-1 min-w-0"
         :options="staticHours ?? []"
         placeholder="Hours"
       />
@@ -45,18 +48,18 @@
 
     <!-- Sites -->
     <div class="flex items-center space-x-2">
-      <label class="w-32">Sites:</label>
-      <input
-        v-model="sitesInput"
-        type="text"
+      <label>Sites:</label>
+      <SelectMultiple
+        v-model="selectedSites"
+        class="flex-1 min-w-0"
+        :options="staticSites ?? []"
         placeholder="Site1, Site2, ..."
-        class="flex-1 p-2 rounded bg-[#2a2a2a] text-white"
-      >
+      />
     </div>
 
     <!-- Playlists -->
     <div class="flex items-center space-x-2">
-      <label class="w-32">Playlists:</label>
+      <label>Playlists:</label>
       <input
         v-model="playlistsInput"
         type="text"
@@ -67,7 +70,7 @@
 
     <!-- Tags -->
     <div class="flex items-center space-x-2">
-      <label class="w-32">Tags:</label>
+      <label>Tags:</label>
       <input
         v-model="tagsInput"
         type="text"
@@ -78,7 +81,7 @@
 
     <!-- Validations -->
     <div class="flex items-center space-x-2">
-      <label class="w-32">Validations:</label>
+      <label>Validations:</label>
       <input
         v-model="validationsSpeciesInput"
         type="text"
@@ -95,7 +98,7 @@
 
     <!-- Classifications -->
     <div class="flex items-center space-x-2">
-      <label class="w-32">Classifications:</label>
+      <label>Classifications:</label>
       <input
         v-model="classificationsInput"
         type="text"
@@ -146,14 +149,22 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import dayjs from 'dayjs'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+
+import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 
 import SelectMultiple from './select-multiple.vue'
+import { type Option } from './select-multiple.vue'
 
 export interface DataItem {
   value: number
   string: string
   count: null
+}
+export interface DateTime {
+  max_date: string
+  min_date: string
 }
 
 export interface FilterModel {
@@ -168,6 +179,7 @@ export interface FilterModel {
 }
 
 const emit = defineEmits<{(e: 'apply', value: FilterModel): void }>()
+const props = defineProps<{ dateRange: DateTime | undefined, sites: SiteResponse[] | undefined }>()
 
 const filters = reactive<FilterModel>({
   dateRange: { from: null, to: null },
@@ -194,6 +206,23 @@ const isOpen = ref(false)
 const selectedMonths = ref<(string)[]>([])
 const dropdownMonthRef = ref<HTMLElement | null>(null)
 
+const selectedYears = ref<(number)[]>([])
+function getYearOptions (minDate: string| undefined, maxDate: string| undefined): Option[] {
+  if (!minDate || !maxDate) return []
+  const startYear = dayjs(minDate).year()
+  const endYear = dayjs(maxDate).year()
+
+  const years: Option[] = []
+  for (let year = endYear; year >= startYear; year--) {
+    years.push({
+      value: year,
+      label: String(year),
+      tooltip: String(year)
+    })
+  }
+  return years
+}
+
 const staticMonths = [
   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
 ].map((mon, ind) => ({ value: mon, label: mon, tooltip: mon }))
@@ -206,9 +235,19 @@ const staticHours = [{ value: 'ALL', label: 'Select all', tooltip: 'Select all',
 for (let hour = 0; hour < 24; hour++) {
   staticHours.push({ value: String(hour), label: (hour < 10 ? '0' : '') + hour + ':00', tooltip: (hour < 10 ? '0' : '') + hour + ':00', isSelectAll: false })
 }
+
+const selectedSites = ref<(string)[]>([])
+const staticSites = computed<Option[]>(() =>
+  (props.sites ?? []).map(site => ({
+    value: site.name,
+    label: site.name,
+    tooltip: site.name
+  }))
+)
 function splitCSV (str: string): string[] {
   return str.split(',').map(s => s.trim()).filter(Boolean)
 }
+
 function handleClickOutside (event: MouseEvent) {
   if (dropdownMonthRef.value && !dropdownMonthRef.value.contains(event.target as Node)) {
     isOpen.value = false
@@ -268,3 +307,9 @@ function emitApply () {
   emit('apply', filters)
 }
 </script>
+
+<style scoped>
+label {
+  @apply w-32 min-w-32;
+}
+</style>
