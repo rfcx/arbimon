@@ -55,6 +55,26 @@ export const apiArbimonGetClasses = async (apiClient: AxiosInstance, slug: strin
     return response.data
   } else return undefined
 }
+
+export interface PlaylistResponse {
+  count: number
+  id: number
+  metadata: any | null
+  name: string
+  project_id: number
+  type: string
+  uri: string | null
+}
+
+export const apiArbimonGetPlaylists = async (apiClient: AxiosInstance, slug: string): Promise<PlaylistResponse[] | undefined> => {
+  if (slug !== undefined) {
+    const response = await apiClient.request<PlaylistResponse[]>({
+      method: 'GET',
+      url: `/legacy-api/project/${slug}/playlists`
+    })
+    return response.data
+  } else return undefined
+}
 export interface SoundscapeResponse {
   id: number
   name: string

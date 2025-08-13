@@ -3,7 +3,7 @@
     class="absolute top-full mt-2 z-50 bg-echo text-insight rounded-lg p-4 w-[900px] space-y-4 border border-util-gray-03 shadow-lg"
   >
     <!-- Date range -->
-    <div class="flex items-center space-x-2">
+    <div class="flex items-start space-x-2">
       <label>Date range:</label>
       <input
         v-model="filters.dateRange.from"
@@ -47,7 +47,7 @@
     </div>
 
     <!-- Sites -->
-    <div class="flex items-center space-x-2">
+    <div class="flex items-start space-x-2">
       <label>Sites:</label>
       <SelectMultiple
         v-model="selectedSites"
@@ -58,36 +58,36 @@
     </div>
 
     <!-- Playlists -->
-    <div class="flex items-center space-x-2">
+    <div class="flex items-start space-x-2">
       <label>Playlists:</label>
-      <input
-        v-model="playlistsInput"
-        type="text"
+      <SelectMultiple
+        v-model="selectedPlaylists"
+        class="flex-1 min-w-0"
+        :options="staticPlaylists ?? []"
         placeholder="Playlist1, Playlist2, ..."
-        class="flex-1 p-2 rounded bg-[#2a2a2a] text-white"
-      >
+      />
     </div>
 
     <!-- Tags -->
-    <div class="flex items-center space-x-2">
+    <div class="flex items-start space-x-2">
       <label>Tags:</label>
-      <input
-        v-model="tagsInput"
-        type="text"
+      <SelectMultiple
+        v-model="selectedTags"
+        class="flex-1 min-w-0"
+        :options="staticTags ?? []"
         placeholder="Tags"
-        class="flex-1 p-2 rounded bg-[#2a2a2a] text-white"
-      >
+      />
     </div>
 
     <!-- Validations -->
-    <div class="flex items-center space-x-2">
+    <div class="flex items-start space-x-2">
       <label>Validations:</label>
-      <input
-        v-model="validationsSpeciesInput"
-        type="text"
+      <SelectMultiple
+        v-model="selectedClasses"
+        class="flex-1 min-w-0"
+        :options="staticClasses ?? []"
         placeholder="Species - Sound..."
-        class="flex-1 p-2 rounded bg-[#2a2a2a] text-white"
-      >
+      />
       <input
         v-model="validationsValidationInput"
         type="text"
@@ -97,7 +97,7 @@
     </div>
 
     <!-- Classifications -->
-    <div class="flex items-center space-x-2">
+    <div class="flex items-start space-x-2">
       <label>Classifications:</label>
       <input
         v-model="classificationsInput"
@@ -114,14 +114,14 @@
     </div>
 
     <!-- Soundscape Composition -->
-    <div class="flex items-center space-x-2">
+    <div class="flex items-start space-x-2">
       <label class="w-32">Soundscape:</label>
-      <input
-        v-model="audioClassesInput"
-        type="text"
+      <SelectMultiple
+        v-model="selectedSoundscapes"
+        class="flex-1 min-w-0"
+        :options="staticSoundscapes ?? []"
         placeholder="Audio Classes"
-        class="flex-1 p-2 rounded bg-[#2a2a2a] text-white"
-      >
+      />
       <input
         v-model="annotationInput"
         type="text"
@@ -152,6 +152,7 @@
 import dayjs from 'dayjs'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
+import { type ClassesRecordingResponse, type PlaylistResponse, type SoundscapeResponse, type TagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 
 import SelectMultiple from './select-multiple.vue'
@@ -179,7 +180,14 @@ export interface FilterModel {
 }
 
 const emit = defineEmits<{(e: 'apply', value: FilterModel): void }>()
-const props = defineProps<{ dateRange: DateTime | undefined, sites: SiteResponse[] | undefined }>()
+const props = defineProps<{
+  dateRange: DateTime | undefined,
+  sites: SiteResponse[] | undefined,
+  playlists: PlaylistResponse[] | undefined,
+  tags: TagResponse[] | undefined
+  classes: ClassesRecordingResponse[] | undefined,
+  soundscapes: SoundscapeResponse[] | undefined
+}>()
 
 const filters = reactive<FilterModel>({
   dateRange: { from: null, to: null },
@@ -244,6 +252,52 @@ const staticSites = computed<Option[]>(() =>
     tooltip: site.name
   }))
 )
+
+const selectedPlaylists = ref<(string)[]>([])
+const staticPlaylists = computed<Option[]>(() =>
+  (props.playlists ?? []).map(p => ({
+    value: p.name,
+    label: p.name,
+    tooltip: p.name,
+    count: p.count
+  }))
+)
+
+const selectedTags = ref<(number)[]>([])
+const staticTags = computed<Option[]>(() =>
+  (props.tags ?? []).map(t => ({
+    value: t.tag_id,
+    label: t.tag,
+    tooltip: t.tag,
+    count: t.count,
+    tagIcon: true
+  }))
+)
+
+const selectedClasses = ref<(number|string)[]>([])
+const staticClasses = computed<Option[]>(() =>
+  (props.classes ?? []).map(item => ({
+    label: `${item.species_name} - ${item.songtype_name}`,
+    value: item.id,
+    tooltip: `${item.species_name} - ${item.songtype_name}`,
+    isSelectAll: false,
+    badges: [
+        { icon: 'val-1', value: item.vals_present },
+        { icon: 'val-0', value: item.vals_absent }
+      ]
+  }))
+)
+
+const selectedSoundscapes = ref<(number)[]>([])
+const staticSoundscapes = computed<Option[]>(() =>
+  (props.soundscapes ?? []).map(item => ({
+    label: item.name,
+    value: item.id,
+    tooltip: `${item.type} / ${item.name}`,
+    group: item.type
+  }))
+)
+
 function splitCSV (str: string): string[] {
   return str.split(',').map(s => s.trim()).filter(Boolean)
 }

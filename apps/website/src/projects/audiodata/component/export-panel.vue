@@ -36,7 +36,7 @@
       <label class="block text-sm mb-1">Tags</label>
       <SelectMultiple
         v-model="selectedTags"
-        :options="mapTagToOptions(tagsRecording ?? [])"
+        :options="mapTagToOptions(tags ?? [])"
         placeholder="Tags..."
       />
     </div>
@@ -110,7 +110,6 @@ import { type ClassesRecordingResponse, type ExportParams, type SoundscapeRespon
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { useGetClasses, useGetSoundscape, useGetTags } from '../api/use-recordings'
 import ExportReportModal from './export-report.vue'
 import SelectMultiple from './select-multiple.vue'
 import { type Option } from './select-multiple.vue'
@@ -120,17 +119,14 @@ const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
 
-const { data: classesRecordings } = useGetClasses(apiClientArbimon, selectedProjectSlug)
-const { data: soundscapeRecordings } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
-
-const { data: tagsRecording } = useGetTags(apiClientArbimon, selectedProjectSlug)
-
 const optionsGrouping = ['Site', 'Hour', 'Date']
 const selectedGrouping = ref<string | null>(null)
 const isOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
 
 const emit = defineEmits(['close'])
+const props = defineProps<{ tags: TagResponse[] | undefined, classesRecordings: ClassesRecordingResponse[] | undefined, soundscapeRecordings: SoundscapeResponse[] | undefined }>()
+
 const panelRef = ref<HTMLElement | null>(null)
 
 function selectGrouping (opt: string) {
@@ -170,7 +166,7 @@ function getSpeciesNameList () {
 function getValidationList (): number[] {
   if (!selectedClasses.value?.length) return []
 
-  const list = mapToOptions(classesRecordings.value ?? [])
+  const list = mapToOptions(props.classesRecordings ?? [])
   if (!list.length) return []
 
   return selectedClasses.value.includes('ALL')
@@ -181,9 +177,9 @@ function getValidationList (): number[] {
 async function handleExport (email: string | undefined) {
   let selectedSpeciesId: number[] = []
 
-  if (classesRecordings.value) {
+  if (props.classesRecordings) {
     selectedSpeciesId = Array.from(new Set(
-      classesRecordings.value
+    props.classesRecordings
         .filter(item => getSpeciesNameList().includes(item.species_name.split(' ').join('_')))
         .map(item => item.species)
     ))
@@ -263,8 +259,8 @@ function mapTagToOptions (data: TagResponse[]): Option[] {
 
 const selectedSpecies = ref<(string)[]>([])
 const speciesOption = computed(() => {
-  if (!classesRecordings.value) return
-  const uniqueNames = [...new Set(classesRecordings.value.map(item => item.species_name))]
+  if (!props.classesRecordings) return
+  const uniqueNames = [...new Set(props.classesRecordings.map(item => item.species_name))]
   const baseOptions = uniqueNames.map(item => ({
     label: item,
     value: item.split(' ').join('_'),

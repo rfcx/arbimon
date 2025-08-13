@@ -2,7 +2,7 @@ import { type UseQueryReturnType, useQuery } from '@tanstack/vue-query'
 import type { AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 
-import { type ClassesRecordingResponse, type RecordingSearchParams, type RecordingSearchResponse, type SoundscapeResponse, type TagResponse, apiArbimonGetClasses, apiArbimonGetRecordings, apiArbimonGetSoundscape, apiArbimonGetTags } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type ClassesRecordingResponse, type PlaylistResponse, type RecordingSearchParams, type RecordingSearchResponse, type SoundscapeResponse, type TagResponse, apiArbimonGetClasses, apiArbimonGetPlaylists, apiArbimonGetRecordings, apiArbimonGetSoundscape, apiArbimonGetTags } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 
 export const useRecordings = (
   apiClient: AxiosInstance,
@@ -29,6 +29,13 @@ export const useGetClasses = (apiClient: AxiosInstance, slug: ComputedRef<string
   return useQuery({
     queryKey: ['get-classes', slug],
     queryFn: async () => await apiArbimonGetClasses(apiClient, slug?.value ?? '')
+  })
+}
+
+export const useGetPlaylists = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>): UseQueryReturnType<PlaylistResponse[] | undefined, unknown> => {
+  return useQuery({
+    queryKey: ['get-playlists', slug],
+    queryFn: async () => await apiArbimonGetPlaylists(apiClient, slug?.value ?? '')
   })
 }
 

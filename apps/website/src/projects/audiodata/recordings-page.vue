@@ -20,6 +20,10 @@
             v-if="showFilterModal"
             :date-range="recordings?.date_range"
             :sites="sites"
+            :playlists="playlists"
+            :tags="tagsRecording"
+            :classes="classesRecordings"
+            :soundscapes="soundscapeRecordings"
           />
         </div>
         <div
@@ -35,6 +39,9 @@
           </button>
           <ExportPanel
             v-if="showExportPanel"
+            :tags="tagsRecording"
+            :classes-recordings="classesRecordings"
+            :soundscape-recordings="soundscapeRecordings"
             @close="showExportPanel = false"
           />
         </div>
@@ -164,7 +171,7 @@ import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { useRecordings } from './api/use-recordings'
+import { useGetClasses, useGetPlaylists, useGetSoundscape, useGetTags, useRecordings } from './api/use-recordings'
 import { useSites } from './api/use-sites'
 import CreatePlaylistModal from './component/create-playlist.vue'
 import CustomPopup from './component/custom-popup.vue'
@@ -210,6 +217,10 @@ const siteParams = computed<SiteParams>(() => {
   }
 })
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
+const { data: playlists } = useGetPlaylists(apiClientArbimon, selectedProjectSlug)
+const { data: tagsRecording } = useGetTags(apiClientArbimon, selectedProjectSlug)
+const { data: classesRecordings } = useGetClasses(apiClientArbimon, selectedProjectSlug)
+const { data: soundscapeRecordings } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
 
 const recordingsCount = computed(() => { return recordings.value?.count ?? 0 })
 const showCreatePlaylistModal = ref(false)

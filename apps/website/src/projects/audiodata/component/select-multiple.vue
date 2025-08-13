@@ -14,6 +14,7 @@ export interface Option {
   isSelectAll?: boolean
   badges?:Badge[]
   count?: number
+  tagIcon?: boolean
 }
 
 const props = defineProps<{
@@ -178,7 +179,7 @@ const openDropdown = () => {
       >
         <div
           v-if="groupName !== '__nogroup'"
-          class="px-3 py-1 text-xs text-gray-400 uppercase font-semibold"
+          class="mt-1 px-3 py-1 text-xs text-gray-400 uppercase font-semibold"
         >
           {{ groupName }}
         </div>
@@ -192,10 +193,16 @@ const openDropdown = () => {
           }"
           @click.stop="!opt.disabled && selectOption(opt.value)"
         >
-          <span
-            class="truncate max-w-[75%]"
-            :title="opt.label"
-          >{{ opt.label }}</span>
+          <div class="inline-flex max-w-[75%] items-center">
+            <icon-fa-tag
+              v-if="opt.tagIcon === true"
+              class="text-[10px]"
+            />
+            <span
+              class="truncate "
+              :title="opt.label"
+            >{{ opt.label }}</span>
+          </div>
 
           <span
             v-if="opt.count"
