@@ -24,6 +24,7 @@
             :tags="tagsRecording"
             :classes="classesRecordings"
             :soundscapes="soundscapeRecordings"
+            :classifications="classifications"
           />
         </div>
         <div
@@ -171,7 +172,7 @@ import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { useGetClasses, useGetPlaylists, useGetSoundscape, useGetTags, useRecordings } from './api/use-recordings'
+import { useGetClasses, useGetClassifications, useGetPlaylists, useGetSoundscape, useGetTags, useRecordings } from './api/use-recordings'
 import { useSites } from './api/use-sites'
 import CreatePlaylistModal from './component/create-playlist.vue'
 import CustomPopup from './component/custom-popup.vue'
@@ -221,6 +222,7 @@ const { data: playlists } = useGetPlaylists(apiClientArbimon, selectedProjectSlu
 const { data: tagsRecording } = useGetTags(apiClientArbimon, selectedProjectSlug)
 const { data: classesRecordings } = useGetClasses(apiClientArbimon, selectedProjectSlug)
 const { data: soundscapeRecordings } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
+const { data: classifications } = useGetClassifications(apiClientArbimon, selectedProjectSlug)
 
 const recordingsCount = computed(() => { return recordings.value?.count ?? 0 })
 const showCreatePlaylistModal = ref(false)

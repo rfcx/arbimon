@@ -46,6 +46,8 @@
       />
     </div>
 
+    <div class="my-2 border-t-1 border-util-gray-03 border-line" />
+
     <!-- Sites -->
     <div class="flex items-start space-x-2">
       <label>Sites:</label>
@@ -79,38 +81,40 @@
       />
     </div>
 
+    <div class="my-2 border-t-1 border-util-gray-03 border-line" />
+
     <!-- Validations -->
     <div class="flex items-start space-x-2">
       <label>Validations:</label>
       <SelectMultiple
         v-model="selectedClasses"
-        class="flex-1 min-w-0"
+        class="flex-[2] min-w-0"
         :options="staticClasses ?? []"
         placeholder="Species - Sound..."
       />
-      <input
-        v-model="validationsValidationInput"
-        type="text"
+      <SelectMultiple
+        v-model="selectedValidation"
+        class="flex-[1] min-w-0"
+        :options="staticOptions ?? []"
         placeholder="Validation"
-        class="flex-1 p-2 rounded bg-[#2a2a2a] text-white"
-      >
+      />
     </div>
 
     <!-- Classifications -->
     <div class="flex items-start space-x-2">
       <label>Classifications:</label>
-      <input
-        v-model="classificationsInput"
-        type="text"
+      <SelectMultiple
+        v-model="selectedClassifications"
+        class="flex-[2] min-w-0"
+        :options="staticClassifications ?? []"
         placeholder="Classifications..."
-        class="flex-1 p-2 rounded bg-[#2a2a2a] text-white"
-      >
-      <input
-        v-model="resultsInput"
-        type="text"
+      />
+      <SelectMultiple
+        v-model="selectedResults"
+        class="flex-[1] min-w-0"
+        :options="staticOptions ?? []"
         placeholder="Results"
-        class="flex-1 p-2 rounded bg-[#2a2a2a] text-white"
-      >
+      />
     </div>
 
     <!-- Soundscape Composition -->
@@ -118,16 +122,16 @@
       <label class="w-32">Soundscape:</label>
       <SelectMultiple
         v-model="selectedSoundscapes"
-        class="flex-1 min-w-0"
+        class="flex-[2] min-w-0"
         :options="staticSoundscapes ?? []"
         placeholder="Audio Classes"
       />
-      <input
-        v-model="annotationInput"
-        type="text"
+      <SelectMultiple
+        v-model="selectedAnnotation"
+        class="flex-[1] min-w-0"
+        :options="staticOptions ?? []"
         placeholder="Annotation"
-        class="flex-1 p-2 rounded bg-[#2a2a2a] text-white"
-      >
+      />
     </div>
 
     <!-- Buttons -->
@@ -152,7 +156,7 @@
 import dayjs from 'dayjs'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
-import { type ClassesRecordingResponse, type PlaylistResponse, type SoundscapeResponse, type TagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type ClassesRecordingResponse, type ClassificationsResponse, type PlaylistResponse, type SoundscapeResponse, type TagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 
 import SelectMultiple from './select-multiple.vue'
@@ -187,6 +191,7 @@ const props = defineProps<{
   tags: TagResponse[] | undefined
   classes: ClassesRecordingResponse[] | undefined,
   soundscapes: SoundscapeResponse[] | undefined
+  classifications: ClassificationsResponse[] | undefined
 }>()
 
 const filters = reactive<FilterModel>({
@@ -213,6 +218,10 @@ const annotationInput = ref('')
 const isOpen = ref(false)
 const selectedMonths = ref<(string)[]>([])
 const dropdownMonthRef = ref<HTMLElement | null>(null)
+
+function formatTimestamp (timestamp: number): string {
+  return dayjs(timestamp).format('MMM D, YYYY h:mm A')
+}
 
 const selectedYears = ref<(number)[]>([])
 function getYearOptions (minDate: string| undefined, maxDate: string| undefined): Option[] {
@@ -274,6 +283,15 @@ const staticTags = computed<Option[]>(() =>
   }))
 )
 
+const selectedClassifications = ref<(number)[]>([])
+const staticClassifications = computed<Option[]>(() =>
+  (props.classifications ?? []).map(c => ({
+    value: c.cname,
+    label: c.cname + ' - ' + formatTimestamp(c.date),
+    tooltip: c.cname + ' - ' + formatTimestamp(c.date)
+  }))
+)
+
 const selectedClasses = ref<(number|string)[]>([])
 const staticClasses = computed<Option[]>(() =>
   (props.classes ?? []).map(item => ({
@@ -297,6 +315,14 @@ const staticSoundscapes = computed<Option[]>(() =>
     group: item.type
   }))
 )
+
+const selectedValidation = ref<(string)[]>([])
+const selectedResults = ref<(string)[]>([])
+const selectedAnnotation = ref<(string)[]>([])
+const staticOptions = [
+  { icon: 'val-1', label: 'Present', value: 'Present' },
+  { icon: 'val-0', label: 'Absent', value: 'Absent' }
+]
 
 function splitCSV (str: string): string[] {
   return str.split(',').map(s => s.trim()).filter(Boolean)

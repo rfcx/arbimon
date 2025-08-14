@@ -15,6 +15,7 @@ export interface Option {
   badges?:Badge[]
   count?: number
   tagIcon?: boolean
+  icon?: string
 }
 
 const props = defineProps<{
@@ -142,6 +143,14 @@ const openDropdown = () => {
           class="inline-flex items-center px-[5px] py-[4px] text-[12px] rounded text-cloud bg-util-gray-04 border border-util-gray-04 mt-1 mb-[3px] ml-1 hover:bg-[#0a0a0a]"
           :title="opt.tooltip"
         >
+          <icon-fa-check
+            v-if="opt.icon === 'val-1'"
+            class="h-3 w-3 text-[#1F57CC] mr-1"
+          />
+          <icon-fa-close
+            v-if="opt.icon === 'val-0'"
+            class="h-2.5 w-2.5 text-[#ffcd00] mr-1"
+          />
           <span
             v-if="opt.group"
             class="mr-1 font-bold"
@@ -193,10 +202,21 @@ const openDropdown = () => {
           }"
           @click.stop="!opt.disabled && selectOption(opt.value)"
         >
-          <div class="inline-flex max-w-[75%] items-center">
+          <div
+            class="inline-flex  items-center"
+            :class="{ 'max-w-[75%]': opt.badges }"
+          >
             <icon-fa-tag
               v-if="opt.tagIcon === true"
               class="text-[10px]"
+            />
+            <icon-fa-check
+              v-if="opt.icon === 'val-1'"
+              class="h-3 w-3 text-[#1F57CC] mr-1"
+            />
+            <icon-fa-close
+              v-if="opt.icon === 'val-0'"
+              class="h-2.5 w-2.5 text-[#ffcd00] mr-1"
             />
             <span
               class="truncate "
