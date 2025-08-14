@@ -31,6 +31,13 @@ export default defineConfig({
       addComponents({ '.w-fit': { width: ['-moz-fit-content', 'fit-content'] } })
     })
   ],
+  extract: {
+    include: [
+      'node_modules/flowbite/**/*.js',
+      'node_modules/flowbite-datepicker/**/*.js',
+      './**/*.vue'
+    ]
+  },
   theme: {
     extend: {
       screens: {

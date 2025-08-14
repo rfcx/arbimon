@@ -27,7 +27,7 @@ export const getRecordedMinutesPerDay = async (projectId: number, start?: Date, 
   const siteIds = await getSiteIdsFromQuerySiteNames(models, projectId, sites ?? '')
 
   const mainConditions = [`"RecordingBySiteHour"."location_project_id" = ${projectId}`]
-  const startEndClause = []
+  const startEndClause: string[] = []
 
   if (start !== undefined) {
     startEndClause.push(`"RecordingBySiteHour"."time_precision_hour_local" >= '${start.toISOString()}'`)

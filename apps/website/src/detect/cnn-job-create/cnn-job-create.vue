@@ -67,8 +67,11 @@
             >
               Date
             </label>
-            <date-picker
-              :initial-dates="projectDateRange"
+            <DaterangePicker
+              v-if="recordedMinutesPerDay"
+              :initial-date-start="projectDateRange.dateStartLocalIso"
+              :initial-date-end="projectDateRange.dateEndLocalIso"
+              :recorded-minutes-per-day="recordedMinutesPerDay"
               @emit-select-date-range="onSelectQueryDates"
             />
             <span
@@ -142,6 +145,7 @@
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
+import dayjs from 'dayjs'
 import { initTooltips } from 'flowbite'
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -152,9 +156,9 @@ import { displayFullValue } from '@rfcx-bio/utils/number'
 import { isDefined } from '@rfcx-bio/utils/predicates'
 import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 
+import { type DateRange } from '@/_components/date-range-picker/date-range-picker'
+import DaterangePicker from '@/_components/date-range-picker/date-range-picker.vue'
 import ClassifierPicker from '@/_services/picker/classifier-picker.vue'
-import DatePicker from '@/_services/picker/date-picker.vue'
-import type { DateRange } from '@/_services/picker/date-range-picker-interface'
 import SiteInput from '@/_services/picker/site-input.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
 import { apiClientKey } from '@/globals'
@@ -162,6 +166,7 @@ import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useClassifiers } from '../_composables/use-classifiers'
 import { useDetectRecording } from '../_composables/use-detect-recording'
+import { useGetRecordedMinutesPerDay } from '../_composables/use-get-recorded-minutes-per-day'
 import { usePostClassifierJob } from '../_composables/use-post-classifier-job'
 
 const router = useRouter()
@@ -182,15 +187,24 @@ const job: CreateClassifierJobBody = reactive({
   minutesTotal: 0
 })
 
+// Current projects
+const projectFilters = computed(() => store.projectFilters)
+const projectDateRange = computed(() => {
+  const dateStartLocalIso = dayjs(projectFilters.value?.dateStartInclusiveUtc).toISOString() ?? dayjs().toISOString()
+  const dateEndLocalIso = dayjs(projectFilters.value?.dateEndInclusiveUtc).toISOString() ?? dayjs().toISOString()
+
+  return { dateStartLocalIso, dateEndLocalIso }
+})
+
 const recordingQuery: DetectRecordingQueryParams = reactive({
-  dateStartLocal: '',
-  dateEndLocal: '',
+  dateStartLocal: projectDateRange.value.dateStartLocalIso,
+  dateEndLocal: projectDateRange.value.dateEndLocalIso,
   querySites: '',
   queryHours: '0-23'
 })
 
 const project = reactive({
-  projectId: '-1'
+  projectId: store.project?.id.toString() ?? '-1'
 })
 
 const hasProjectPermission = ref(false)
@@ -211,20 +225,11 @@ watch(() => store.project, () => {
 // Internal data
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { isLoading: isLoadingDetectRecording, isError: isErrorDetectRecording, data: recordingData } = useDetectRecording(apiClientBio, project, recordingQuery)
+const { data: recordedMinutesPerDay } = useGetRecordedMinutesPerDay(apiClientBio, project.projectId)
 
 // External data
 const { isLoading: isLoadingClassifiers, isError: isErrorClassifier, data: classifiers } = useClassifiers(apiClientBio)
 const { isPending: isLoadingPostJob, isError: isErrorPostJob, mutate: mutatePostJob } = usePostClassifierJob(apiClientBio)
-
-// Current projects
-const projectFilters = computed(() => store.projectFilters)
-const projectDateRange = computed(() => {
-  const dateStartLocalIso = projectFilters.value?.dateStartInclusiveUtc
-  const dateEndLocalIso = projectFilters.value?.dateEndInclusiveUtc
-
-  if (!dateStartLocalIso || !dateEndLocalIso) { return undefined }
-  return { dateStartLocalIso, dateEndLocalIso }
-})
 
 const checkDateDifference = (dateRange: [string, string]): boolean => {
   const start = new Date(dateRange[0])
