@@ -5,16 +5,14 @@
     <!-- Date range -->
     <div class="flex items-start space-x-2">
       <label>Date range:</label>
-      <input
-        v-model="filters.dateRange.from"
-        type="date"
-        class="flex-1 p-2 rounded bg-[#2a2a2a] text-white"
-      >
-      <input
-        v-model="filters.dateRange.to"
-        type="date"
-        class="flex-1 p-2 rounded bg-[#2a2a2a] text-white"
-      >
+      <DaterangePicker
+        v-if="recordedMinutesPerDay"
+        class="w-full"
+        :initial-date-start="projectDateRange.dateStartLocalIso"
+        :initial-date-end="projectDateRange.dateEndLocalIso"
+        :recorded-minutes-per-day="recordedMinutesPerDay"
+        @emit-select-date-range="onSelectQueryDates"
+      />
     </div>
 
     <!-- Date and Time -->
@@ -158,7 +156,11 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 import { type ClassesRecordingResponse, type ClassificationsResponse, type PlaylistResponse, type SoundscapeResponse, type TagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { type GetRecordedMinutesPerDayResponse } from '@rfcx-bio/common/api-bio/cnn/recorded-minutes-per-day'
 
+import { type DateRange } from '@/_components/date-range-picker/date-range-picker'
+import DaterangePicker from '@/_components/date-range-picker/date-range-picker.vue'
+import { useStore } from '~/store'
 import SelectMultiple from './select-multiple.vue'
 import { type Option } from './select-multiple.vue'
 
@@ -192,6 +194,7 @@ const props = defineProps<{
   classes: ClassesRecordingResponse[] | undefined,
   soundscapes: SoundscapeResponse[] | undefined
   classifications: ClassificationsResponse[] | undefined
+  recordedMinutesPerDay: GetRecordedMinutesPerDayResponse | undefined
 }>()
 
 const filters = reactive<FilterModel>({
@@ -218,6 +221,15 @@ const annotationInput = ref('')
 const isOpen = ref(false)
 const selectedMonths = ref<(string)[]>([])
 const dropdownMonthRef = ref<HTMLElement | null>(null)
+
+const store = useStore()
+const projectFilters = computed(() => store.projectFilters)
+const projectDateRange = computed(() => {
+  const dateStartLocalIso = dayjs(projectFilters.value?.dateStartInclusiveUtc).toISOString() ?? dayjs().toISOString()
+  const dateEndLocalIso = dayjs(projectFilters.value?.dateEndInclusiveUtc).toISOString() ?? dayjs().toISOString()
+
+  return { dateStartLocalIso, dateEndLocalIso }
+})
 
 function formatTimestamp (timestamp: number): string {
   return dayjs(timestamp).format('MMM D, YYYY h:mm A')
@@ -323,6 +335,10 @@ const staticOptions = [
   { icon: 'val-1', label: 'Present', value: 'Present' },
   { icon: 'val-0', label: 'Absent', value: 'Absent' }
 ]
+
+const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
+  console.info(dateStartLocalIso, dateEndLocalIso)
+}
 
 function splitCSV (str: string): string[] {
   return str.split(',').map(s => s.trim()).filter(Boolean)

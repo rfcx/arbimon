@@ -25,6 +25,7 @@
             :classes="classesRecordings"
             :soundscapes="soundscapeRecordings"
             :classifications="classifications"
+            :recorded-minutes-per-day="recordedMinutesPerDay"
           />
         </div>
         <div
@@ -163,14 +164,15 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { initDropdowns } from 'flowbite'
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 
 import { type RecordingSearchParams, type RecordingSearchResponse, apiLegacyCreatePlaylists, apiLegacyDeleteRecording } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteParams } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
-import { apiClientArbimonLegacyKey } from '@/globals'
+import { useGetRecordedMinutesPerDay } from '@/detect/_composables/use-get-recorded-minutes-per-day'
+import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetClasses, useGetClassifications, useGetPlaylists, useGetSoundscape, useGetTags, useRecordings } from './api/use-recordings'
 import { useSites } from './api/use-sites'
@@ -204,6 +206,7 @@ const handlePageChange = async (page: number) => {
 }
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
@@ -217,12 +220,22 @@ const siteParams = computed<SiteParams>(() => {
     logs: true
   }
 })
+
+const project = reactive({
+  projectId: store.project?.id.toString() ?? '-1'
+})
+
+watch(() => store.project, () => {
+  project.projectId = store.project?.id.toString() ?? '-1'
+})
+
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
 const { data: playlists } = useGetPlaylists(apiClientArbimon, selectedProjectSlug)
 const { data: tagsRecording } = useGetTags(apiClientArbimon, selectedProjectSlug)
 const { data: classesRecordings } = useGetClasses(apiClientArbimon, selectedProjectSlug)
 const { data: soundscapeRecordings } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
 const { data: classifications } = useGetClassifications(apiClientArbimon, selectedProjectSlug)
+const { data: recordedMinutesPerDay } = useGetRecordedMinutesPerDay(apiClientBio, project.projectId)
 
 const recordingsCount = computed(() => { return recordings.value?.count ?? 0 })
 const showCreatePlaylistModal = ref(false)
