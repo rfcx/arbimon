@@ -285,6 +285,7 @@ const staticTags = computed<Option[]>(() =>
     label: t.tag,
     tooltip: t.tag,
     count: t.count,
+    icon: 'tag-icon',
     tagIcon: true
   }))
 )
@@ -324,12 +325,12 @@ const staticSoundscapes = computed<Option[]>(() =>
 
 const selectedValidation = ref<(string)[]>([])
 const selectedResults = ref<(string)[]>([])
-const classificationResults = computed<Array<{ model: number }>>(() => {
+const classificationResults = computed<string[]>(() => {
   return selectedResults.value.map(r => {
-    if (r === 'present') return { model: 1 }
-    if (r === 'absent') return { model: 2 }
+    if (r === 'present') return JSON.stringify({ model: 1 })
+    if (r === 'absent') return JSON.stringify({ model: 2 })
     return null
-  }).filter((v): v is { model: number } => v !== null) // filter null ออก
+  }).filter((v): v is string => v !== null) // filter null ออก
 })
 const selectedAnnotation = ref<(string)[]>([])
 const staticOptions = [
@@ -350,7 +351,11 @@ function toRange (fromISO: string, toISO: string) {
     return `${year}-${month}-${day}T${endOfDay ? '23:59:59.999Z' : '00:00:00.000Z'}`
   }
 
-  return `{"from": ${formatDate(fromDate, false)}, "to": ${formatDate(toDate, true)}}`
+  const range = {
+    from: formatDate(fromDate, false),
+    to: formatDate(toDate, true)
+  }
+  return JSON.stringify(range)
 }
 
 const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
@@ -377,7 +382,13 @@ onBeforeUnmount(() => {
 watch(selectedYears, (v) => { filters.years = v })
 watch(selectedMonths, (v) => { filters.months = v })
 watch(selectedDays, (v) => { filters.days = v })
-watch(selectedHours, (v) => { filters.hours = v.map(h => Number(h)) })
+watch(selectedHours, (v) => {
+  if (v.includes('ALL')) {
+    filters.hours = Array.from({ length: 24 }, (_, i) => i)
+  } else {
+    filters.hours = v.map(h => Number(h))
+  }
+ })
 watch(selectedSites, (v) => {
   filters.sites_ids = v
   filters.sites = selectedSiteNames.value

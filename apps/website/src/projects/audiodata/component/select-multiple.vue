@@ -152,6 +152,10 @@ const openDropdown = () => {
             v-if="opt.icon === 'val-0'"
             class="h-2.5 w-2.5 text-[#ffcd00] mr-1"
           />
+          <icon-fa-tag
+            v-if="opt.icon === 'tag-icon'"
+            class="text-[10px]"
+          />
           <span
             v-if="opt.group"
             class="mr-1 font-bold"
@@ -160,6 +164,12 @@ const openDropdown = () => {
             v-else
             class="mr-1 font-bold"
           >{{ opt.label }}</span>
+          <span
+            v-if="opt.count && opt.icon === 'tag-icon'"
+            class="badge px-1 inline-flex flex-shrink-0 items-center gap-1 bg-util-gray-03 rounded-full mr-1"
+          >
+            <span class="text-xs mx-0.5">{{ opt.count }}</span>
+          </span>
           <button
             class="text-white font-bold opacity-20 hover:bg-echo text-[18px]"
             @click.stop="removeValue(opt.value)"

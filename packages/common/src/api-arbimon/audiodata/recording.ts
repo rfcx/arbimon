@@ -19,7 +19,7 @@ export interface RecordingSearchParams {
   hours?: number[]
   months?: number[]
   classifications?: number[]
-  classification_results?: Array<{ model: number }>
+  classification_results?: string[]
 }
 
 export interface RecordingSearchResponse {

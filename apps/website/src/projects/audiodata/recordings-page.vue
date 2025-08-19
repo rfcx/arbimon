@@ -307,8 +307,6 @@ const onSelectedRecordings = (rows?: Row[]) => {
 const showFilterModal = ref(false)
 const filterRecordings = () => {
   showFilterModal.value = !showFilterModal.value
-
-  console.info('FilterRecordings')
 }
 
 const saveToPlaylist = async (name: string) => {
