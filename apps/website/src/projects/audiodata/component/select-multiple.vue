@@ -115,6 +115,7 @@ const openDropdown = () => {
 
 <template>
   <div
+    id="selectMultiple"
     ref="wrapper"
     class="relative"
   >
@@ -123,7 +124,7 @@ const openDropdown = () => {
       @click="openDropdown"
     >
       <template v-if="selectedValues.includes('ALL')">
-        <div class="inline-flex items-center px-[5px] py-[4px] text-[12px] rounded text-cloud bg-util-gray-04 border border-util-gray-04 mt-1 mb-[3px] ml-1 hover:bg-[#0a0a0a]">
+        <div class="inline-flex items-center px-[5px] py-[4px] text-[12px] rounded rounde-xl font-display text-cloud bg-util-gray-04 border border-util-gray-04 mt-1 mb-[3px] ml-1 hover:bg-[#0a0a0a] hover:border-[#0a0a0a]">
           <span class="mr-1 font-bold">{{ selectAllOption?.label }}</span>
           <button
             class="font-bold opacity-80 hover:text-gray-200"
@@ -140,7 +141,7 @@ const openDropdown = () => {
         :key="opt.value"
       >
         <div
-          class="inline-flex items-center px-[5px] py-[4px] text-[12px] rounded text-cloud bg-util-gray-04 border border-util-gray-04 mt-1 mb-[3px] ml-1 hover:bg-[#0a0a0a]"
+          class="inline-flex items-center px-[5px] py-[4px] text-[12px] rounded rounde-xl font-display text-cloud bg-util-gray-04 border border-util-gray-04 mt-1 mb-[3px] ml-1 hover:bg-[#0a0a0a] hover:border-[#0a0a0a]"
           :title="opt.tooltip"
         >
           <icon-fa-check
@@ -160,7 +161,7 @@ const openDropdown = () => {
             class="mr-1 font-bold"
           >{{ opt.label }}</span>
           <button
-            class="text-white font-bold opacity-20 hover:bg-echo"
+            class="text-white font-bold opacity-20 hover:bg-echo text-[18px]"
             @click.stop="removeValue(opt.value)"
           >
             ×
@@ -264,7 +265,7 @@ const openDropdown = () => {
 
 <style scoped>
 .input-select-multiple {
-  @apply bg-echo text-insight w-full rounded text-sm placeholder-insight border border-util-gray-03;
+  @apply bg-echo text-insight w-full rounded rounded-md text-sm placeholder-insight border border-util-gray-03;
 }
 input::placeholder {
   @apply text-[14px];

@@ -3,11 +3,11 @@
     class="absolute top-full mt-2 z-50 bg-echo text-insight rounded-lg p-4 w-[900px] space-y-4 border border-util-gray-03 shadow-lg"
   >
     <!-- Date range -->
-    <div class="flex items-start space-x-2">
+    <div class="flex items-start">
       <label>Date range:</label>
       <DaterangePicker
         v-if="recordedMinutesPerDay"
-        class="w-full"
+        class="w-full m-0"
         :initial-date-start="projectDateRange.dateStartLocalIso"
         :initial-date-end="projectDateRange.dateEndLocalIso"
         :recorded-minutes-per-day="recordedMinutesPerDay"
@@ -16,29 +16,29 @@
     </div>
 
     <!-- Date and Time -->
-    <div class="flex items-start space-x-2">
+    <div class="flex items-start">
       <label>Date and Time:</label>
       <SelectMultiple
         v-model="selectedYears"
-        class="flex-1 min-w-0"
+        class="flex-[1] min-w-0"
         :options="getYearOptions(dateRange?.min_date, dateRange?.max_date) ?? []"
         placeholder="Years"
       />
       <SelectMultiple
         v-model="selectedMonths"
-        class="flex-1 min-w-0"
+        class="flex-[1] min-w-0 ml-1"
         :options="staticMonths ?? []"
         placeholder="Months"
       />
       <SelectMultiple
         v-model="selectedDays"
-        class="flex-1 min-w-0"
+        class="flex-[1] min-w-0 ml-1"
         :options="staticDays ?? []"
         placeholder="Days"
       />
       <SelectMultiple
         v-model="selectedHours"
-        class="flex-1 min-w-0"
+        class="flex-[1] min-w-0 ml-1"
         :options="staticHours ?? []"
         placeholder="Hours"
       />
@@ -47,7 +47,7 @@
     <div class="my-2 border-t-1 border-util-gray-03 border-line" />
 
     <!-- Sites -->
-    <div class="flex items-start space-x-2">
+    <div class="flex items-start">
       <label>Sites:</label>
       <SelectMultiple
         v-model="selectedSites"
@@ -58,7 +58,7 @@
     </div>
 
     <!-- Playlists -->
-    <div class="flex items-start space-x-2">
+    <div class="flex items-start">
       <label>Playlists:</label>
       <SelectMultiple
         v-model="selectedPlaylists"
@@ -69,7 +69,7 @@
     </div>
 
     <!-- Tags -->
-    <div class="flex items-start space-x-2">
+    <div class="flex items-start">
       <label>Tags:</label>
       <SelectMultiple
         v-model="selectedTags"
@@ -82,7 +82,7 @@
     <div class="my-2 border-t-1 border-util-gray-03 border-line" />
 
     <!-- Validations -->
-    <div class="flex items-start space-x-2">
+    <div class="flex items-start">
       <label>Validations:</label>
       <SelectMultiple
         v-model="selectedClasses"
@@ -92,14 +92,14 @@
       />
       <SelectMultiple
         v-model="selectedValidation"
-        class="flex-[1] min-w-0"
+        class="flex-[1] min-w-0 ml-2"
         :options="staticOptions ?? []"
         placeholder="Validation"
       />
     </div>
 
     <!-- Classifications -->
-    <div class="flex items-start space-x-2">
+    <div class="flex items-start">
       <label>Classifications:</label>
       <SelectMultiple
         v-model="selectedClassifications"
@@ -109,14 +109,14 @@
       />
       <SelectMultiple
         v-model="selectedResults"
-        class="flex-[1] min-w-0"
+        class="flex-[1] min-w-0 ml-2"
         :options="staticOptions ?? []"
         placeholder="Results"
       />
     </div>
 
     <!-- Soundscape Composition -->
-    <div class="flex items-start space-x-2">
+    <div class="flex items-start">
       <label class="w-32">Soundscape:</label>
       <SelectMultiple
         v-model="selectedSoundscapes"
@@ -126,7 +126,7 @@
       />
       <SelectMultiple
         v-model="selectedAnnotation"
-        class="flex-[1] min-w-0"
+        class="flex-[1] min-w-0 ml-2"
         :options="staticOptions ?? []"
         placeholder="Annotation"
       />
@@ -406,4 +406,17 @@ function resetFilters () {
 label {
   @apply w-32 min-w-32;
 }
+:deep(#dateRangePickerId input) {
+  @apply bg-[#1e1c13] text-insight rounded-md text-sm font-medium;
+}
+:deep(#dateRangePickerId input::placeholder) {
+  @apply text-insight text-sm font-medium;
+}
+:deep(#selectMultiple .input-select-multiple) {
+  @apply bg-[#1e1c13] text-insight rounded-md py-[1px] font-medium;
+}
+:deep(#selectMultiple input) {
+  @apply text-insight font-medium;
+}
+
 </style>

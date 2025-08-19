@@ -3,7 +3,7 @@
     id="dateRangePickerId"
     date-rangepicker
     datepicker-format="'dd-mm-yyyy'"
-    class="flex mt-6 items-center gap-4 md:flex-row"
+    class="flex items-center gap-4 md:flex-row"
   >
     <div class="flex-1">
       <label
