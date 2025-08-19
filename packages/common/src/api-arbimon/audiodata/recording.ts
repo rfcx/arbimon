@@ -5,6 +5,21 @@ export interface RecordingSearchParams {
   offset?: number
   output?: Array<'count' | 'date_range' | 'list'>
   sortBy?: string
+  playlists?: number[]
+  range?: string
+  sites?: string[]
+  sites_ids?: number[]
+  soundscape_composition?: number[]
+  soundscape_composition_annotation?: string[]
+  tags?: number[]
+  validations?: number[]
+  presence?: string[]
+  years?: number[]
+  days?: number[]
+  hours?: number[]
+  months?: number[]
+  classifications?: number[]
+  classification_results?: Array<{ model: number }>
 }
 
 export interface RecordingSearchResponse {

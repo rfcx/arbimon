@@ -154,7 +154,7 @@
 import dayjs from 'dayjs'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
-import { type ClassesRecordingResponse, type ClassificationsResponse, type PlaylistResponse, type SoundscapeResponse, type TagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type ClassesRecordingResponse, type ClassificationsResponse, type PlaylistResponse, type RecordingSearchParams, type SoundscapeResponse, type TagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type GetRecordedMinutesPerDayResponse } from '@rfcx-bio/common/api-bio/cnn/recorded-minutes-per-day'
 
@@ -174,18 +174,7 @@ export interface DateTime {
   min_date: string
 }
 
-export interface FilterModel {
-  dateRange: { from: string | null; to: string | null }
-  dateTime: { years: number | null; months: number | null; days: number | null; hours: number | null }
-  sites: string[]
-  playlists: string[]
-  tags: string[]
-  validations: { speciesSound: string[]; validation: string[] }
-  classifications: { classifications: string[]; results: string[] }
-  soundscape: { audioClasses: string[]; annotation: string[] }
-}
-
-const emit = defineEmits<{(e: 'apply', value: FilterModel): void }>()
+const emit = defineEmits<{(e: 'apply', value: RecordingSearchParams): void }>()
 const props = defineProps<{
   dateRange: DateTime | undefined,
   sites: SiteResponse[] | undefined,
@@ -197,29 +186,28 @@ const props = defineProps<{
   recordedMinutesPerDay: GetRecordedMinutesPerDayResponse | undefined
 }>()
 
-const filters = reactive<FilterModel>({
-  dateRange: { from: null, to: null },
-  dateTime: { years: null, months: null, days: null, hours: null },
-  sites: [],
-  playlists: [],
-  tags: [],
-  validations: { speciesSound: [], validation: [] },
-  classifications: { classifications: [], results: [] },
-  soundscape: { audioClasses: [], annotation: [] }
+const filters = reactive<RecordingSearchParams>({
+  limit: 10,
+  offset: 0,
+  output: ['count', 'date_range', 'list'],
+  sortBy: 'r.site_id DESC, r.datetime DESC',
+  playlists: undefined,
+  range: undefined,
+  sites: undefined,
+  sites_ids: undefined,
+  soundscape_composition: undefined,
+  soundscape_composition_annotation: undefined,
+  tags: undefined,
+  validations: undefined,
+  years: undefined,
+  days: undefined,
+  hours: undefined,
+  months: undefined,
+  classifications: undefined,
+  classification_results: undefined
 })
 
-const sitesInput = ref('')
-const playlistsInput = ref('')
-const tagsInput = ref('')
-const validationsSpeciesInput = ref('')
-const validationsValidationInput = ref('')
-const classificationsInput = ref('')
-const resultsInput = ref('')
-const audioClassesInput = ref('')
-const annotationInput = ref('')
-
 const isOpen = ref(false)
-const selectedMonths = ref<(string)[]>([])
 const dropdownMonthRef = ref<HTMLElement | null>(null)
 
 const store = useStore()
@@ -252,11 +240,12 @@ function getYearOptions (minDate: string| undefined, maxDate: string| undefined)
   return years
 }
 
+const selectedMonths = ref<(number)[]>([])
 const staticMonths = [
   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-].map((mon, ind) => ({ value: mon, label: mon, tooltip: mon }))
+].map((mon, ind) => ({ value: ind, label: mon, tooltip: mon }))
 
-const selectedDays = ref<(string)[]>([])
+const selectedDays = ref<(number)[]>([])
 const staticDays = Array.from({ length: 31 }, (_, i) => ({ value: i + 1, label: (i + 1).toString(), tooltip: (i + 1).toString() }))
 
 const selectedHours = ref<(string)[]>([])
@@ -265,19 +254,24 @@ for (let hour = 0; hour < 24; hour++) {
   staticHours.push({ value: String(hour), label: (hour < 10 ? '0' : '') + hour + ':00', tooltip: (hour < 10 ? '0' : '') + hour + ':00', isSelectAll: false })
 }
 
-const selectedSites = ref<(string)[]>([])
+const selectedSites = ref<(number)[]>([])
 const staticSites = computed<Option[]>(() =>
   (props.sites ?? []).map(site => ({
-    value: site.name,
+    value: site.id,
     label: site.name,
     tooltip: site.name
   }))
 )
+const selectedSiteNames = computed(() => {
+  return (props.sites ?? [])
+    .filter(site => selectedSites.value.includes(site.id))
+    .map(site => site.name)
+})
 
-const selectedPlaylists = ref<(string)[]>([])
+const selectedPlaylists = ref<(number)[]>([])
 const staticPlaylists = computed<Option[]>(() =>
   (props.playlists ?? []).map(p => ({
-    value: p.name,
+    value: p.id,
     label: p.name,
     tooltip: p.name,
     count: p.count
@@ -298,13 +292,13 @@ const staticTags = computed<Option[]>(() =>
 const selectedClassifications = ref<(number)[]>([])
 const staticClassifications = computed<Option[]>(() =>
   (props.classifications ?? []).map(c => ({
-    value: c.cname,
+    value: c.job_id,
     label: c.cname + ' - ' + formatTimestamp(c.date),
     tooltip: c.cname + ' - ' + formatTimestamp(c.date)
   }))
 )
 
-const selectedClasses = ref<(number|string)[]>([])
+const selectedClasses = ref<(number)[]>([])
 const staticClasses = computed<Option[]>(() =>
   (props.classes ?? []).map(item => ({
     label: `${item.species_name} - ${item.songtype_name}`,
@@ -330,18 +324,38 @@ const staticSoundscapes = computed<Option[]>(() =>
 
 const selectedValidation = ref<(string)[]>([])
 const selectedResults = ref<(string)[]>([])
+const classificationResults = computed<Array<{ model: number }>>(() => {
+  return selectedResults.value.map(r => {
+    if (r === 'present') return { model: 1 }
+    if (r === 'absent') return { model: 2 }
+    return null
+  }).filter((v): v is { model: number } => v !== null) // filter null ออก
+})
 const selectedAnnotation = ref<(string)[]>([])
 const staticOptions = [
-  { icon: 'val-1', label: 'Present', value: 'Present' },
-  { icon: 'val-0', label: 'Absent', value: 'Absent' }
+  { icon: 'val-1', label: 'Present', value: 'present' },
+  { icon: 'val-0', label: 'Absent', value: 'absent' }
 ]
 
-const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
-  console.info(dateStartLocalIso, dateEndLocalIso)
+function toRange (fromISO: string, toISO: string) {
+  const fromDate = new Date(fromISO)
+  const toDate = new Date(toISO)
+
+  const pad = (n: number) => String(n).padStart(2, '0')
+
+  const formatDate = (d: Date, endOfDay = false) => {
+    const year = d.getUTCFullYear()
+    const month = pad(d.getUTCMonth() + 1)
+    const day = pad(d.getUTCDate())
+    return `${year}-${month}-${day}T${endOfDay ? '23:59:59.999Z' : '00:00:00.000Z'}`
+  }
+
+  return `{"from": ${formatDate(fromDate, false)}, "to": ${formatDate(toDate, true)}}`
 }
 
-function splitCSV (str: string): string[] {
-  return str.split(',').map(s => s.trim()).filter(Boolean)
+const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
+  filters.range = toRange(dateStartLocalIso, dateEndLocalIso)
+  console.info(dateStartLocalIso, dateEndLocalIso)
 }
 
 function handleClickOutside (event: MouseEvent) {
@@ -360,47 +374,31 @@ onBeforeUnmount(() => {
   document.removeEventListener('mousedown', handleClickOutside)
 })
 
-// watch
-watch(sitesInput, (v) => { filters.sites = splitCSV(v) })
-watch(playlistsInput, (v) => { filters.playlists = splitCSV(v) })
-watch(tagsInput, (v) => { filters.tags = splitCSV(v) })
-watch(validationsSpeciesInput, (v) => { filters.validations.speciesSound = splitCSV(v) })
-watch(validationsValidationInput, (v) => { filters.validations.validation = splitCSV(v) })
-watch(classificationsInput, (v) => { filters.classifications.classifications = splitCSV(v) })
-watch(resultsInput, (v) => { filters.classifications.results = splitCSV(v) })
-watch(audioClassesInput, (v) => { filters.soundscape.audioClasses = splitCSV(v) })
-watch(annotationInput, (v) => { filters.soundscape.annotation = splitCSV(v) })
+watch(selectedYears, (v) => { filters.years = v })
+watch(selectedMonths, (v) => { filters.months = v })
+watch(selectedDays, (v) => { filters.days = v })
+watch(selectedHours, (v) => { filters.hours = v.map(h => Number(h)) })
+watch(selectedSites, (v) => {
+  filters.sites_ids = v
+  filters.sites = selectedSiteNames.value
+})
+watch(selectedPlaylists, (v) => { filters.playlists = v })
+watch(selectedTags, (v) => { filters.tags = v })
 
-function resetFilters () {
-  filters.dateRange.from = null
-  filters.dateRange.to = null
-  filters.dateTime.years = null
-  filters.dateTime.months = null
-  filters.dateTime.days = null
-  filters.dateTime.hours = null
-  filters.sites = []
-  filters.playlists = []
-  filters.tags = []
-  filters.validations.speciesSound = []
-  filters.validations.validation = []
-  filters.classifications.classifications = []
-  filters.classifications.results = []
-  filters.soundscape.audioClasses = []
-  filters.soundscape.annotation = []
+watch(selectedClasses, (v) => { filters.validations = v })
+watch(selectedValidation, (v) => { filters.presence = v })
 
-  sitesInput.value = ''
-  playlistsInput.value = ''
-  tagsInput.value = ''
-  validationsSpeciesInput.value = ''
-  validationsValidationInput.value = ''
-  classificationsInput.value = ''
-  resultsInput.value = ''
-  audioClassesInput.value = ''
-  annotationInput.value = ''
-}
+watch(selectedClassifications, (v) => { filters.classifications = v })
+watch(selectedResults, () => { filters.classification_results = classificationResults.value })
+
+watch(selectedSoundscapes, (v) => { filters.soundscape_composition = v })
+watch(selectedAnnotation, (v) => { filters.soundscape_composition_annotation = v })
 
 function emitApply () {
   emit('apply', filters)
+}
+function resetFilters () {
+  console.info('resetFilters')
 }
 </script>
 

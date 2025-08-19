@@ -26,6 +26,7 @@
             :soundscapes="soundscapeRecordings"
             :classifications="classifications"
             :recorded-minutes-per-day="recordedMinutesPerDay"
+            @apply="applyFilters"
           />
         </div>
         <div
@@ -190,11 +191,26 @@ const currentPage = ref(1)
 const offset = computed(() => (currentPage.value - 1) * limitPerPage.value)
 const limitOptions = [10, 25, 50, 100]
 
+const filterParams = ref<RecordingSearchParams>()
 const requestParams = computed<RecordingSearchParams>(() => ({
   limit: limitPerPage.value,
   offset: offset.value,
   output: ['count', 'date_range', 'list'],
-  sortBy: 'r.site_id DESC, r.datetime DESC'
+  sortBy: 'r.site_id DESC, r.datetime DESC',
+  playlists: filterParams.value?.playlists,
+  range: filterParams.value?.range,
+  sites: filterParams.value?.sites,
+  sites_ids: filterParams.value?.sites_ids,
+  soundscape_composition: filterParams.value?.soundscape_composition,
+  soundscape_composition_annotation: filterParams.value?.soundscape_composition_annotation,
+  tags: filterParams.value?.tags,
+  validations: filterParams.value?.validations,
+  years: filterParams.value?.years,
+  days: filterParams.value?.days,
+  hours: filterParams.value?.hours,
+  months: filterParams.value?.months,
+  classifications: filterParams.value?.classifications,
+  classification_results: filterParams.value?.classification_results
 }))
 
 const totalPages = computed(() => Math.ceil(recordingsCount.value / limitPerPage.value))
@@ -262,6 +278,12 @@ onMounted(() => {
 const showPopup = ref(false)
 const allFiltered = ref(false)
 const recordingsSelected = ref<string[]>([])
+
+const applyFilters = async (filter: RecordingSearchParams) => {
+  filterParams.value = filter
+  await refetchRecordings()
+  showFilterModal.value = false
+}
 
 const applyRecordings = async () => {
   await refetchRecordings()
