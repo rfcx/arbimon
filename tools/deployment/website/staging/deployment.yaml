@@ -27,4 +27,4 @@ spec:
               cpu: '250m'
           envFrom:
             - secretRef:
-              name: biodiversity-website-secrets
+                name: biodiversity-website-secrets
