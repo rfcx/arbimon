@@ -44,6 +44,7 @@
       :is-error="isErrorLoadedProject"
       @emit-selected-project="onEmitSelectedProject"
     />
+    <chat-view />
   </section>
 </template>
 <script setup lang="ts">
@@ -57,6 +58,7 @@ import { type ProjectLight, type ProjectProfileWithMetrics } from '@rfcx-bio/com
 import type { SearchResponseProject } from '@rfcx-bio/common/api-bio/search/search'
 import { apiBioSearch } from '@rfcx-bio/common/api-bio/search/search'
 
+import ChatView from '@/_components/arbi-assistant/chat-view.vue'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'

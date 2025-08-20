@@ -75,6 +75,7 @@ const endDatePickerInput = ref<HTMLInputElement>()
 const startDatePickerInputChanged = ref<boolean>(false)
 const endDatePickerInputChanged = ref<boolean>(false)
 const onGoing = ref<boolean>(props.onGoing || false)
+const datepickerPickers = ref<NodeListOf<Element>>()
 
 let picker: FlowbiteDateRangePicker | undefined
 
@@ -85,7 +86,7 @@ onMounted(async () => {
     if (startDatePickerInput.value && endDatePickerInput.value && dateRangePickerEl) {
       picker = initDateRangePicker(dateRangePickerEl, {
         inputs: [startDatePickerInput.value, endDatePickerInput.value],
-        autohide: true,
+        autohide: false,
         format: 'dd/mm/yyyy',
         allowOneSidedRange: false,
         minDate: startDate.value,
@@ -157,9 +158,9 @@ const convertMinutestoCount = (minutes: number): string => {
 }
 
 const addPickerListener = () => {
-  const datepickerPickers = document.querySelectorAll('.datepicker-picker')
-  if (datepickerPickers.length) {
-    datepickerPickers.forEach(datepickerPicker => {
+  datepickerPickers.value = document.querySelectorAll('.datepicker-picker')
+  if (datepickerPickers.value.length) {
+    datepickerPickers.value.forEach(datepickerPicker => {
       datepickerPicker?.addEventListener('click', () => {
         const targets = document.querySelectorAll('.hide-child')
         if (targets.length) {
@@ -170,13 +171,50 @@ const addPickerListener = () => {
       })
     })
   }
+
   startDatePickerInput.value?.addEventListener('input', () => {
     startDatePickerInputChanged.value = true
     endDatePickerInputChanged.value = false
   })
+
   endDatePickerInput.value?.addEventListener('input', () => {
     startDatePickerInputChanged.value = false
     endDatePickerInputChanged.value = true
+  })
+
+  endDatePickerInput.value?.addEventListener('click', () => {
+    const beforeShowDay = (date: Date) => {
+      const day = date.getDate()
+      const dayConverted = dateToCalendarFormat(date)
+      const isFutureDate = dayjs(dayjs(date).format('YYYY-MM-DD') + 'T00:00:00.000Z').toDate() > dayjs().toDate()
+      const minutes = recordedMinutesPerDayConverted.value[dayConverted as string] ?? 0
+      const datepickers = document.querySelectorAll('body > div.datepicker')
+      const isStartHidden = datepickers[0] !== undefined && datepickers[0].classList.contains('hidden')
+      const isEndHidden = datepickers[1] !== undefined && datepickers[1].classList.contains('hidden')
+      const monthInCalendar = document.querySelectorAll('.view-switch')
+      const hideDates = isStartHidden ? (monthInCalendar[1].innerHTML.replace(/[^a-zA-Z]+/g, '') !== dayjs(date).format('MMMM')) : isEndHidden ? monthInCalendar[0].innerHTML.replace(/[^a-zA-Z]+/g, '') !== dayjs(date).format('MMMM') : false
+      return {
+        content: `<div style="line-height:1.25rem;${props.recordedMinutesPerDay ? 'padding-top:5px' : 'padding:10px'};${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${hideDates ? 'display:none' : 'display:block'}" class="${(minutes === 0 && props.recordedMinutesPerDay !== undefined) ? 'text-util-gray-02' : 'text-insight'} ${hideDates ? 'hide-child' : ''}">${day}</div>
+          <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px;${isFutureDate ? 'cursor: not-allowed!important' : 'cursor: cursor-pointer'};${(props.recordedMinutesPerDay === undefined || hideDates) ? 'display:none' : 'display:block'}"
+          class="${minutes >= 10000 ? 'text-insight' : minutes === 0 ? 'text-util-gray-02' : 'text-flamingo'}">
+          ${convertMinutestoCount(minutes)}</div>`
+      }
+    }
+
+    picker?.setOptions({ beforeShowDay })
+    datepickerPickers.value = document.querySelectorAll('.datepicker-picker')
+    if (datepickerPickers.value.length) {
+      datepickerPickers.value.forEach(datepickerPicker => {
+        datepickerPicker?.addEventListener('click', () => {
+          const targets = document.querySelectorAll('.hide-child')
+          if (targets.length) {
+            targets.forEach(target => {
+              target.parentElement?.classList.add('not-visible')
+            })
+          }
+        })
+      })
+    }
   })
   startDatePickerInput.value?.addEventListener('changeDate', () => {
     const dates = picker?.getDates()
@@ -188,6 +226,7 @@ const addPickerListener = () => {
       picker?.setDates(dateToCalendarFormat(startDateChanged.value), '')
     }
   })
+
   endDatePickerInput.value?.addEventListener('changeDate', () => {
     const dates = picker?.getDates()
     if (dates === undefined) return
