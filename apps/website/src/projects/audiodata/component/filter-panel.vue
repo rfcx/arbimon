@@ -7,6 +7,7 @@
       <label>Date range:</label>
       <DaterangePicker
         v-if="recordedMinutesPerDay"
+        ref="datePickerComponentRef"
         class="w-full m-0"
         :initial-date-start="projectDateRange.dateStartLocalIso"
         :initial-date-end="projectDateRange.dateEndLocalIso"
@@ -186,6 +187,8 @@ const props = defineProps<{
   recordedMinutesPerDay: GetRecordedMinutesPerDayResponse | undefined
 }>()
 
+const datePickerComponentRef = ref<InstanceType<typeof DaterangePicker> | null>(null)
+
 const filters = reactive<RecordingSearchParams>({
   limit: 10,
   offset: 0,
@@ -215,7 +218,6 @@ const projectFilters = computed(() => store.projectFilters)
 const projectDateRange = computed(() => {
   const dateStartLocalIso = dayjs(projectFilters.value?.dateStartInclusiveUtc).toISOString() ?? dayjs().toISOString()
   const dateEndLocalIso = dayjs(projectFilters.value?.dateEndInclusiveUtc).toISOString() ?? dayjs().toISOString()
-
   return { dateStartLocalIso, dateEndLocalIso }
 })
 
@@ -360,7 +362,6 @@ function toRange (fromISO: string, toISO: string) {
 
 const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
   filters.range = toRange(dateStartLocalIso, dateEndLocalIso)
-  console.info(dateStartLocalIso, dateEndLocalIso)
 }
 
 function handleClickOutside (event: MouseEvent) {
@@ -408,8 +409,22 @@ watch(selectedAnnotation, (v) => { filters.soundscape_composition_annotation = v
 function emitApply () {
   emit('apply', filters)
 }
+
 function resetFilters () {
-  console.info('resetFilters')
+  selectedYears.value = []
+  selectedMonths.value = []
+  selectedDays.value = []
+  selectedHours.value = []
+  selectedSites.value = []
+  selectedPlaylists.value = []
+  selectedTags.value = []
+  selectedClasses.value = []
+  selectedValidation.value = []
+  selectedClassifications.value = []
+  selectedResults.value = []
+  selectedSoundscapes.value = []
+  selectedAnnotation.value = []
+  datePickerComponentRef.value?.resetDatePicker()
 }
 </script>
 

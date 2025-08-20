@@ -219,6 +219,20 @@ watch(() => [startDate, endDate, recordedMinutesPerDayConverted], () => {
   setDatePickerOptions()
 })
 
+function resetDatePicker () {
+  picker?.setDates('', '')
+  startDateChanged.value = ''
+  endDateChanged.value = ''
+  if (startDatePickerInput.value) {
+    startDatePickerInput.value.value = ''
+  }
+  if (endDatePickerInput.value) {
+    endDatePickerInput.value.value = ''
+  }
+}
+
+defineExpose({ resetDatePicker })
+
 </script>
 <style lang="scss">
 
