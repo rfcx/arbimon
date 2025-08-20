@@ -10,6 +10,7 @@ export const authClientKey = Symbol('authClientKey') as InjectionKey<Auth0Client
 export const apiClientKey = Symbol('apiClientKey') as InjectionKey<AxiosInstance>
 export const apiClientCoreKey = Symbol('apiClientCoreKey') as InjectionKey<AxiosInstance>
 export const apiClientArbimonLegacyKey = Symbol('apiClientArbimonLegacyKey') as InjectionKey<AxiosInstance>
+export const apiClientArbiAssistantKey = Symbol('apiClientArbiAssistantKey') as InjectionKey<AxiosInstance>
 export const apiClientMediaKey = Symbol('apiClientMediaKey') as InjectionKey<AxiosInstance>
 export const apiClientDeviceKey = Symbol('apiClientDevice') as InjectionKey<AxiosInstance>
 export const storeKey = Symbol('storeKey') as InjectionKey<BiodiversityStore>
