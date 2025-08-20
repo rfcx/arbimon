@@ -130,8 +130,15 @@
         @selected-item="onSelectedItem"
       />
     </div>
+    <div
+      v-if="!isLoadingRecordings && recordingsCount === 0"
+      class="font-display text-cloud text-[26px] text-center mt-10"
+    >
+      <span class="font-display">Recordings not found</span>
+    </div>
+
     <PaginationComponent
-      v-show="!isLoadingRecordings"
+      v-show="!isLoadingRecordings && !(recordingsCount === 0)"
       class="mt-4 px-8"
       :current-page="currentPage"
       :total-pages="totalPages"
