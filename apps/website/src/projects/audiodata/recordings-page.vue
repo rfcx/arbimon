@@ -50,7 +50,7 @@
         </div>
         <button
           class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
-          @click="showCreatePlaylistModal = true"
+          @click="showCreatePlaylist"
         >
           <span>Save to Playlist</span>
         </button>
@@ -314,6 +314,14 @@ const onSelectedRecordings = (rows?: Row[]) => {
 const showFilterModal = ref(false)
 const filterRecordings = () => {
   showFilterModal.value = !showFilterModal.value
+}
+
+const showCreatePlaylist = () => {
+  if (selectedRows.value.length === 0 && recordingsCount.value === 0) {
+    showAlertDialog('error', '', 'You can\'t create playlist with 0 recording')
+  } else {
+    showCreatePlaylistModal.value = true
+  }
 }
 
 const saveToPlaylist = async (name: string) => {
