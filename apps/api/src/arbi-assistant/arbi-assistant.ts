@@ -1,19 +1,14 @@
-import type { FastifyReply } from 'fastify'
-
-import { type ArbiUserQuestionParams } from '@rfcx-bio/common/api-arbimon/arbi-assistant'
+import { type ArbiResponseData, type ArbiSessionData, type ArbiUserQuestionParams, type ArbiUserSessionParams } from '@rfcx-bio/common/api-arbimon/arbi-assistant'
 
 import { getArbiAssistantSessionFromApi, postArbiAssistantQuestion } from '../_services/api-arbi-assistant/api-arbi-assistant'
 import type { Handler } from '../_services/api-helpers/types'
-import { assertQueryParamsExist } from '../_services/validation'
 
-export const getArbiAssistantSessionHandler: Handler<FastifyReply, unknown, string> = async (req, res) => {
-  const userId = req.query
-  assertQueryParamsExist({ userId })
-  const data = await getArbiAssistantSessionFromApi(userId)
+export const getArbiAssistantSessionHandler: Handler<ArbiSessionData, unknown, unknown, ArbiUserSessionParams> = async (req, res) => {
+  const data = await getArbiAssistantSessionFromApi(req.body)
   return await res.send(data)
 }
 
-export const postArbiAssistantQuestionHandler: Handler<FastifyReply, unknown, ArbiUserQuestionParams> = async (req, res) => {
-  const data = await postArbiAssistantQuestion(req.headers.authorization ?? '', req.params as ArbiUserQuestionParams)
+export const postArbiAssistantQuestionHandler: Handler<ArbiResponseData, unknown, unknown, ArbiUserQuestionParams> = async (req, res) => {
+  const data = await postArbiAssistantQuestion(req.body)
   return await res.send(data)
 }

@@ -11,7 +11,7 @@ import { FEATURE_TOGGLES } from '~/feature-toggles'
 import routerOptions, { ROUTE_NAMES } from '~/router'
 import { pinia, useStoreOutsideSetup } from '~/store'
 import { componentsFromGlob } from '~/vue/register-components'
-import { apiClientArbiAssistantKey, apiClientArbimonLegacyKey, apiClientCoreKey, apiClientDeviceKey, apiClientKey, apiClientMediaKey, authClientKey, gtagKey, routeNamesKey, storeKey, togglesKey } from './globals'
+import { apiClientArbimonLegacyKey, apiClientCoreKey, apiClientDeviceKey, apiClientKey, apiClientMediaKey, authClientKey, gtagKey, routeNamesKey, storeKey, togglesKey } from './globals'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
 import 'virtual:windi.css'
@@ -55,7 +55,6 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
     const apiClientCore = getApiClient(import.meta.env.VITE_CORE_API_BASE_URL, getToken)
     const apiClientMedia = getApiClient(import.meta.env.VITE_MEDIA_API_BASE_URL, getToken)
     const apiClientArbimonLegacy = getApiClient(import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL, getToken)
-    const apiClientArbiAssistant = getApiClient(import.meta.env.VITE_ARBI_ASSISTANT_BASE_URL, getToken)
     const apiClientDevice = getApiClient(import.meta.env.VITE_DEVICE_API_BASE_URL, getToken)
 
     // Inject globals
@@ -66,7 +65,6 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
       .provide(apiClientMediaKey, apiClientMedia)
       .provide(apiClientDeviceKey, apiClientDevice)
       .provide(apiClientArbimonLegacyKey, apiClientArbimonLegacy)
-      .provide(apiClientArbiAssistantKey, apiClientArbiAssistant)
       .provide(storeKey, store) // TODO: Delete this & use useStore() directly in components
 
     // Handle redirects

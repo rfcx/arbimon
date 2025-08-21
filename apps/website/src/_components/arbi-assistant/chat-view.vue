@@ -102,11 +102,11 @@
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { inject, nextTick, onMounted, ref } from 'vue'
+import { inject, nextTick, ref } from 'vue'
 
 import type { ArbiResponseData, ArbiSessionData, ArbiUserQuestionParams } from '@rfcx-bio/common/api-arbimon/arbi-assistant'
 
-import { apiClientArbiAssistantKey } from '@/globals'
+import { apiClientKey } from '@/globals'
 import { usePostUserQuestion } from './_composables/use-post-user-question'
 import { usePostUserSession } from './_composables/use-post-user-session'
 import ChatBubble from './chat-bubble.vue'
@@ -132,12 +132,26 @@ const currentSessionId = ref('')
 const isTyping = ref(false)
 const chatContainer = ref<HTMLElement | null>(null)
 
-const apiClient = inject(apiClientArbiAssistantKey) as AxiosInstance
+const apiClient = inject(apiClientKey) as AxiosInstance
 const { mutate: mutateSession } = usePostUserSession(apiClient)
 const { mutate: mutateQuestion } = usePostUserQuestion(apiClient)
 
 const toggleArbi = () => {
   isArbiToggled.value = !isArbiToggled.value
+  if (!messages.value.length) {
+    getSession()
+  }
+}
+
+const getSession = () => {
+  mutateSession('anonymous_user', {
+    onSuccess: async (arbiSessionData: ArbiSessionData) => {
+      currentSessionId.value = arbiSessionData.id
+    },
+    onError: () => {
+      getSession()
+    }
+  })
 }
 
 const sendMessage = () => {
@@ -149,7 +163,7 @@ const sendMessage = () => {
   isTyping.value = true
   const payload = {
     appName: 'arbimon_assistant',
-    userId: 'frongs',
+    userId: 'anonymous_user',
     sessionId: currentSessionId.value,
     newMessage: {
       parts: [{
@@ -189,12 +203,4 @@ const selectQuestion = (text: string) => {
   newMessage.value = text
   sendMessage()
 }
-
-onMounted(async () => {
-  mutateSession('frongs', {
-    onSuccess: async (arbiSessionData: ArbiSessionData) => {
-      currentSessionId.value = arbiSessionData.id
-    }
-  })
-})
 </script>

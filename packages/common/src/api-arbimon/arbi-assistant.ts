@@ -1,6 +1,10 @@
 import { type AxiosInstance } from 'axios'
 
 // Request types
+export interface ArbiUserSessionParams {
+  userId: string
+}
+
 interface Message {
   parts: Parts[]
   role: string
@@ -49,20 +53,14 @@ export interface ArbiResponseData {
 }
 
 // Route
-export const arbiAssistantSessionRoute = '/apps/arbimon_assistant/users/:userId/sessions'
-export const arbiAssistantQuestionRoute = '/run'
+export const arbiAssistantSessionRoute = '/arbi-assistant/sessions'
+export const arbiAssistantQuestionRoute = '/arbi-assistant/run'
 
 // Service
 export const apiGetArbiSession = async (apiClient: AxiosInstance, userId: string): Promise<ArbiSessionData> => {
-  return await apiClient.post(`/apps/arbimon_assistant/users/${userId}/sessions`).then(res => res.data)
+  return await apiClient.post(arbiAssistantSessionRoute, { userId }).then(res => res.data)
 }
 
-export const apiPostUserQuestion = async (apiClient: AxiosInstance, data: ArbiUserQuestionParams): Promise<ArbiResponseData[]> => {
-  const response = await apiClient.request<ArbiResponseData[]>({
-    method: 'POST',
-    url: '/run',
-    data
-  })
-  return response.data
-  // return await apiClient.post(`${arbiAssistantQuestionRoute}`, payload).then(res => res.data)
+export const apiPostUserQuestion = async (apiClient: AxiosInstance, payload: ArbiUserQuestionParams): Promise<ArbiResponseData[]> => {
+  return await apiClient.post(`${arbiAssistantQuestionRoute}`, payload).then(res => res.data)
 }

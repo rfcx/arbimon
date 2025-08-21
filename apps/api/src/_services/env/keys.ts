@@ -10,6 +10,7 @@
 // CANNOT be undefined or an empty string
 export const envKeysRequired = [
   // Secrets
+  'ARBI_ASSISTANT_BASE_URL',
   'AUTHO_ANONYMOUS_CLIENT_SECRET',
   'AWS_S3_ACCESS_KEY_ID',
   'AWS_S3_SECRET_ACCESS_KEY',
