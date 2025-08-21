@@ -25,6 +25,3 @@ spec:
             limits:
               memory: '500Mi'
               cpu: '250m'
-          envFrom:
-            - secretRef:
-                name: biodiversity-website-secrets
