@@ -297,7 +297,6 @@ onMounted(() => {
 })
 
 const showPopup = ref(false)
-const allFiltered = ref(false)
 const recordingsSelected = ref<string[]>([])
 
 const applyFilters = async (filter: RecordingSearchParams) => {
@@ -355,13 +354,15 @@ const deleteCheckedRecordings = () => {
 
   getDeleteConfirmationMessage()
   showPopup.value = !showPopup.value
-  console.info('deleteCheckedRecordings')
 }
 
 const deleteAllFilteredRecordings = () => {
-  allFiltered.value = true
+  if (recordingsCount.value === 0) {
+    showAlertDialog('error', 'Error', 'Recordings not found')
+    return
+  }
+  getDeleteConfirmationMessage(true)
   showPopup.value = !showPopup.value
-  console.info('deleteRecording')
 }
 
 async function handleOk () {
@@ -379,8 +380,8 @@ const handleCancel = () => {
   showPopup.value = false
 }
 
-function getDeleteConfirmationMessage () {
-  const recs = selectedRows.value.map(item => item.site)
+function getDeleteConfirmationMessage (isAllFiltered?: boolean) {
+  const recs = isAllFiltered === true ? [] : selectedRows.value.map(item => item.site) // add all Filtered in []
   const countMap = recs.reduce((acc: Record<string, number>, curr) => {
     acc[curr] = (acc[curr] || 0) + 1
     return acc
