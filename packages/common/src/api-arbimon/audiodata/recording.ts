@@ -20,6 +20,7 @@ export interface RecordingSearchParams {
   months?: number[]
   classifications?: number[]
   classification_results?: string[]
+  recIds?: number[]
 }
 
 export interface RecordingSearchResponse {
@@ -183,8 +184,27 @@ export const apiLegacyExport = async (apiClient: AxiosInstance, slug: string, pa
   return await apiClient.post(fullUrl, params)
 }
 
+export interface RecordingParams {
+  playlists?: number[]
+  range?: string
+  sites?: string[]
+  sites_ids?: number[]
+  soundscape_composition?: number[]
+  soundscape_composition_annotation?: string[]
+  tags?: number[]
+  validations?: number[]
+  presence?: string[]
+  years?: number[]
+  days?: number[]
+  hours?: number[]
+  months?: number[]
+  classifications?: number[]
+  classification_results?: string[]
+  recIds?: number[]
+}
+
 export interface CreatePlaylistRequest {
-  params: { recIds?: number[] }
+  params: RecordingParams
   playlist_name: string
 }
 export interface CreatePlaylistResponse {

@@ -198,6 +198,7 @@ const currentPage = ref(1)
 const offset = computed(() => (currentPage.value - 1) * limitPerPage.value)
 const limitOptions = [10, 25, 50, 100]
 
+const selectedRows = ref<Row[]>([])
 const filterParams = ref<RecordingSearchParams>()
 const requestParams = computed<RecordingSearchParams>(() => ({
   limit: limitPerPage.value,
@@ -217,8 +218,21 @@ const requestParams = computed<RecordingSearchParams>(() => ({
   hours: filterParams.value?.hours,
   months: filterParams.value?.months,
   classifications: filterParams.value?.classifications,
-  classification_results: filterParams.value?.classification_results
+  classification_results: filterParams.value?.classification_results,
+  ...(selectedRows.value.length > 0 && {
+    recIds: selectedRows.value.map(item => Number(item.id))
+  })
 }))
+
+const requestParamsForPlaylist = computed(() => {
+  const { limit, offset, output, sortBy, ...rest } = requestParams.value
+  return rest
+})
+
+const filteredRequestParams = computed(() => {
+  const { recIds, ...rest } = requestParams.value
+  return rest
+})
 
 const totalPages = computed(() => Math.ceil(recordingsCount.value / limitPerPage.value))
 
@@ -234,7 +248,7 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
 
-const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings, isRefetching: isRefetchRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, requestParams)
+const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings, isRefetching: isRefetchRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, filteredRequestParams)
 
 const siteParams = computed<SiteParams>(() => {
   return {
@@ -305,7 +319,6 @@ const onSelectedItem = (row?: Record<string, any>) => {
   console.info('onSelectedItem', row)
 }
 
-const selectedRows = ref<Row[]>([])
 const onSelectedRecordings = (rows?: Row[]) => {
   if (!rows) return
   selectedRows.value = rows
@@ -327,8 +340,11 @@ const showCreatePlaylist = () => {
 const saveToPlaylist = async (name: string) => {
   showCreatePlaylistModal.value = false
   try {
-  await apiLegacyCreatePlaylists(apiClientArbimon, selectedProjectSlug.value ?? '', { playlist_name: name, params: selectedRows.value.length ? { recIds: selectedRows.value.map(item => Number(item.id)) } : {} })
-  } catch (e) {}
+  await apiLegacyCreatePlaylists(apiClientArbimon, selectedProjectSlug.value ?? '', { playlist_name: name, params: requestParamsForPlaylist.value })
+    showAlertDialog('success', 'Success', 'Created playlist')
+  } catch (e) {
+    showAlertDialog('error', 'Error', 'Create playlist')
+  }
 }
 
 const deleteCheckedRecordings = () => {
