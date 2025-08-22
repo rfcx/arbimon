@@ -225,3 +225,25 @@ export interface DeleteRecordingResponse {
 export const apiLegacyDeleteRecording = async (apiClient: AxiosInstance, slug: string, params: DeleteRecordingRequest): Promise<DeleteRecordingResponse> => {
   return await apiClient.post(`/legacy-api/project/${slug}/recordings/delete`, params)
 }
+
+export interface SearchCountResponse {
+  count: number
+  imported: number
+  site: string
+  site_id: number
+}
+
+export const apiLegacySearchCount = async (
+  apiClient: AxiosInstance,
+  slug: string,
+  params: RecordingSearchParams
+): Promise<SearchCountResponse[] | undefined> => {
+  if (slug !== undefined) {
+    const response = await apiClient.request<SearchCountResponse[]>({
+      method: 'GET',
+      url: `/legacy-api/project/${slug}/recordings/search-count`,
+      params
+    })
+    return response.data
+  } else return undefined
+}

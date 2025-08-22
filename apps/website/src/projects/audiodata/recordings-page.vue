@@ -174,7 +174,7 @@ import type { AxiosInstance } from 'axios'
 import { initDropdowns } from 'flowbite'
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 
-import { type RecordingSearchParams, type RecordingSearchResponse, apiLegacyCreatePlaylists, apiLegacyDeleteRecording } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type RecordingSearchParams, type RecordingSearchResponse, type SearchCountResponse, apiLegacyCreatePlaylists, apiLegacyDeleteRecording, apiLegacySearchCount } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteParams } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
@@ -205,6 +205,7 @@ const requestParams = computed<RecordingSearchParams>(() => ({
   offset: offset.value,
   output: ['count', 'date_range', 'list'],
   sortBy: 'r.site_id DESC, r.datetime DESC',
+  presence: filterParams.value?.presence,
   playlists: filterParams.value?.playlists,
   range: filterParams.value?.range,
   sites: filterParams.value?.sites,
@@ -356,12 +357,15 @@ const deleteCheckedRecordings = () => {
   showPopup.value = !showPopup.value
 }
 
-const deleteAllFilteredRecordings = () => {
+const deleteAllFilteredRecordings = async () => {
   if (recordingsCount.value === 0) {
     showAlertDialog('error', 'Error', 'Recordings not found')
     return
   }
-  getDeleteConfirmationMessage(true)
+
+  const response = await apiLegacySearchCount(apiClientArbimon, selectedProjectSlug.value ?? '', requestParamsForPlaylist.value)
+  if (response === undefined) return
+  formattedRecordings(response)
   showPopup.value = !showPopup.value
 }
 
@@ -380,8 +384,29 @@ const handleCancel = () => {
   showPopup.value = false
 }
 
-function getDeleteConfirmationMessage (isAllFiltered?: boolean) {
-  const recs = isAllFiltered === true ? [] : selectedRows.value.map(item => item.site) // add all Filtered in []
+const formattedRecordings = (recCount: SearchCountResponse[]) => {
+  const list = []
+  const recCountLength = recCount.length
+  recCount.forEach((entry, index) => {
+    if (!entry.imported && index < 3) {
+      const s = entry.count > 1 ? 's' : ''
+      list.push(`${entry.count} recording${s} from "${entry.site}"`)
+    }
+  })
+  if (recCountLength > 3) {
+    const remainingCount = recCount
+      .slice(3)
+      .reduce((sum, entry) => sum + entry.count, 0)
+
+    const msg = `& ${remainingCount} recordings from ${recCountLength - 3} other sites`
+    list.push(msg)
+  }
+
+  recordingsSelected.value = list
+}
+
+function getDeleteConfirmationMessage () {
+  const recs = selectedRows.value.map(item => item.site)
   const countMap = recs.reduce((acc: Record<string, number>, curr) => {
     acc[curr] = (acc[curr] || 0) + 1
     return acc
