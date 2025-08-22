@@ -226,6 +226,15 @@ export const apiLegacyDeleteRecording = async (apiClient: AxiosInstance, slug: s
   return await apiClient.post(`/legacy-api/project/${slug}/recordings/delete`, params)
 }
 
+export interface DeletemMatchingResponse {
+  deleted: number[]
+  msg: string
+}
+
+export const apiLegacyDeleteMatchingRecording = async (apiClient: AxiosInstance, slug: string, params: RecordingSearchParams): Promise<DeletemMatchingResponse> => {
+  return await apiClient.post(`/legacy-api/project/${slug}/recordings/delete-matching`, params)
+}
+
 export interface SearchCountResponse {
   count: number
   imported: number

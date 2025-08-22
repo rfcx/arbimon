@@ -174,7 +174,7 @@ import type { AxiosInstance } from 'axios'
 import { initDropdowns } from 'flowbite'
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 
-import { type RecordingSearchParams, type RecordingSearchResponse, type SearchCountResponse, apiLegacyCreatePlaylists, apiLegacyDeleteRecording, apiLegacySearchCount } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type RecordingSearchParams, type RecordingSearchResponse, type SearchCountResponse, apiLegacyCreatePlaylists, apiLegacyDeleteMatchingRecording, apiLegacyDeleteRecording, apiLegacySearchCount } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteParams } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
@@ -297,6 +297,7 @@ onMounted(() => {
   initDropdowns()
 })
 
+const deleteAllFiltered = ref(false)
 const showPopup = ref(false)
 const recordingsSelected = ref<string[]>([])
 
@@ -366,13 +367,18 @@ const deleteAllFilteredRecordings = async () => {
   const response = await apiLegacySearchCount(apiClientArbimon, selectedProjectSlug.value ?? '', requestParamsForPlaylist.value)
   if (response === undefined) return
   formattedRecordings(response)
+  deleteAllFiltered.value = true
   showPopup.value = !showPopup.value
 }
 
 async function handleOk () {
   try {
     showPopup.value = false
-    await apiLegacyDeleteRecording(apiClientArbimon, selectedProjectSlug.value ?? '', { recs: selectedRows.value })
+    if (deleteAllFiltered.value) {
+      await apiLegacyDeleteMatchingRecording(apiClientArbimon, selectedProjectSlug.value ?? '', requestParamsForPlaylist.value)
+    } else {
+      await apiLegacyDeleteRecording(apiClientArbimon, selectedProjectSlug.value ?? '', { recs: selectedRows.value })
+    }
     applyRecordings()
     showAlertDialog('success', 'Success', 'Removed')
   } catch (e) {
