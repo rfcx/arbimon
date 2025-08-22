@@ -9,8 +9,14 @@
         Arbi Assistant
       </div>
       <div class="flex flex-row justify-end items-center gap-x-2 pr-4">
-        <!-- <icon-custom-fi-arbi-assistant-history class="h-5 cursor-pointer text-frequency" />
-        <icon-custom-fi-arbi-assistant-edit class="h-5 cursor-pointer text-frequency" /> -->
+        <!-- <icon-custom-fi-arbi-assistant-history class="h-5 cursor-pointer text-frequency" /> -->
+        <button
+          type="button"
+          title="Clear the chat"
+          @click="clearChat"
+        >
+          <icon-custom-fi-arbi-assistant-edit class="h-5 cursor-pointer text-frequency" />
+        </button>
         <button
           type="button"
           title="Close Arbi Assistant"
@@ -203,4 +209,11 @@ const selectQuestion = (text: string) => {
   newMessage.value = text
   sendMessage()
 }
+
+const clearChat = () => {
+  newMessage.value = ''
+  messages.value = []
+  isTyping.value = false
+}
+
 </script>
