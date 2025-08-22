@@ -44,6 +44,7 @@
             v-if="showExportPanel"
             :tags="tagsRecording"
             :classes-recordings="classesRecordings"
+            :filter-data="requestParamsForPlaylist"
             :soundscape-recordings="soundscapeRecordings"
             @close="showExportPanel = false"
           />

@@ -106,7 +106,7 @@
 import type { AxiosInstance } from 'axios'
 import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 
-import { type ClassesRecordingResponse, type ExportParams, type SoundscapeResponse, type TagResponse, apiLegacyExport } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type ClassesRecordingResponse, type ExportParams, type RecordingSearchParams, type SoundscapeResponse, type TagResponse, apiLegacyExport } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
@@ -125,7 +125,7 @@ const isOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
 
 const emit = defineEmits(['close'])
-const props = defineProps<{ tags: TagResponse[] | undefined, classesRecordings: ClassesRecordingResponse[] | undefined, soundscapeRecordings: SoundscapeResponse[] | undefined }>()
+const props = defineProps<{ tags: TagResponse[] | undefined, classesRecordings: ClassesRecordingResponse[] | undefined, soundscapeRecordings: SoundscapeResponse[] | undefined, filterData?: RecordingSearchParams }>()
 
 const panelRef = ref<HTMLElement | null>(null)
 
@@ -184,10 +184,15 @@ async function handleExport (email: string | undefined) {
         .map(item => item.species)
     ))
   }
-
+  const filteredParams = Object.fromEntries(
+    Object.entries(props.filterData ?? []).filter(([_, v]) => v !== undefined)
+  )
   const exportParams = ref<(ExportParams| null)>(null)
   exportParams.value = {
-    filters: { userEmail: email ?? store.user?.email ?? '' },
+    filters: {
+      userEmail: email ?? store.user?.email ?? '',
+      ...filteredParams
+    },
     show: {
       ...(selectedFields.value?.length ? { recording: selectedFields.value } : {}),
       ...(selectedSpecies.value?.length ? { species_name: getSpeciesNameList() } : {}),
