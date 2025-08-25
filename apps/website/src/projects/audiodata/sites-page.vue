@@ -8,7 +8,7 @@
         class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
         :disabled="!store.userIsFullProjectMember"
         data-tooltip-style="light"
-        :data-tooltip-target="!store.userIsFullProjectMember ? 'createSiteTooltip': ''"
+        :data-tooltip-target="!store.userIsFullProjectMember ? 'createSiteTooltip': null"
         @click="createSite()"
       >
         <span>Create</span>
@@ -18,7 +18,7 @@
         class="btn btn-secondary btn-medium ml-2 btn-small items-center text-frequency inline-flex hover:text-pitch px-3 disabled:hover:btn-disabled disabled:btn-disabled"
         :disabled="!store.userIsFullProjectMember"
         data-tooltip-style="light"
-        :data-tooltip-target="!store.userIsFullProjectMember ? 'importSiteTooltip': ''"
+        :data-tooltip-target="!store.userIsFullProjectMember ? 'importSiteTooltip': null"
         @click="triggerFileInput"
       >
         <span>Bulk Import Sites</span>
@@ -67,7 +67,7 @@
                 :disabled="selectedSite == undefined || !store.userIsFullProjectMember"
                 class="btn btn-secondary btn-medium btn-small disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled px-3 disabled:hover:btn-disabled disabled:btn-disabled"
                 data-tooltip-style="light"
-                :data-tooltip-target="!store.userIsFullProjectMember ? 'editSiteTooltip': ''"
+                :data-tooltip-target="!store.userIsFullProjectMember ? 'editSiteTooltip': null"
                 @click="editSite()"
               >
                 <span>Edit Site</span>
@@ -89,7 +89,7 @@
                 data-dropdown-toggle="deleteSiteDropdown"
                 :disabled="!store.userIsExpertMember"
                 data-tooltip-style="light"
-                :data-tooltip-target="!store.userIsExpertMember ? 'deleteSiteTooltip': ''"
+                :data-tooltip-target="!store.userIsExpertMember ? 'deleteSiteTooltip': null"
               >
                 <span class="inline-flex gap-1">
                   Delete
@@ -131,7 +131,7 @@
                 class="btn btn-secondary btn-medium ml-2 btn-small px-3 disabled:hover:btn-disabled disabled:btn-disabled"
                 :disabled="!store.userIsDataEntryMember"
                 data-tooltip-style="light"
-                :data-tooltip-target="!store.userIsDataEntryMember ? 'exportSitesTooltip': ''"
+                :data-tooltip-target="!store.userIsDataEntryMember ? 'exportSitesTooltip': null"
                 @click="exportSites()"
               >
                 <span>Export Sites</span>

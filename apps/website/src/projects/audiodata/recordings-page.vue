@@ -18,6 +18,7 @@
           </button>
           <FilterPanel
             v-if="showFilterModal"
+            ref="filtersRef"
             :date-range="recordings?.date_range"
             :sites="sites"
             :playlists="playlists"
@@ -37,7 +38,7 @@
             class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
             :disabled="!store.userIsDataEntryMember"
             data-tooltip-style="light"
-            :data-tooltip-target="!store.userIsDataEntryMember ? 'exportRecordingTooltip': ''"
+            :data-tooltip-target="!store.userIsDataEntryMember ? 'exportRecordingTooltip': null"
             @click="showExportPanel = true"
           >
             <span>Export</span>
@@ -68,7 +69,7 @@
           class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
           :disabled="!store.userIsFullProjectMember"
           data-tooltip-style="light"
-          :data-tooltip-target="!store.userIsFullProjectMember ? 'recordingPlaylistTooltip': ''"
+          :data-tooltip-target="!store.userIsFullProjectMember ? 'recordingPlaylistTooltip': null"
           @click="showCreatePlaylist"
         >
           <span>Save to Playlist</span>
@@ -90,7 +91,7 @@
           :disabled="!store.userIsExpertMember"
           data-dropdown-toggle="deleteRecordingDropdown"
           data-tooltip-style="light"
-          :data-tooltip-target="!store.userIsExpertMember ? 'deleteRecordingTooltip': ''"
+          :data-tooltip-target="!store.userIsExpertMember ? 'deleteRecordingTooltip': null"
         >
           <span>Delete</span>
           <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
@@ -218,7 +219,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { initDropdowns, initTooltips } from 'flowbite'
-import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
+import { computed, inject, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 
 import { type RecordingSearchParams, type RecordingSearchResponse, type SearchCountResponse, apiLegacyCreatePlaylists, apiLegacyDeleteMatchingRecording, apiLegacyDeleteRecording, apiLegacySearchCount } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteParams } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
@@ -313,6 +314,18 @@ watch(() => store.project, () => {
   project.projectId = store.project?.id.toString() ?? '-1'
 })
 
+const filtersRef = ref<HTMLElement | null>(null)
+
+const handleClickOutside = (event: MouseEvent) => {
+  if (filtersRef.value && !filtersRef.value.contains(event.target as Node)) {
+    showFilterModal.value = false
+  }
+}
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
+
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
 const { data: playlists } = useGetPlaylists(apiClientArbimon, selectedProjectSlug)
 const { data: tagsRecording } = useGetTags(apiClientArbimon, selectedProjectSlug)
@@ -342,6 +355,8 @@ const filteredRecordings = computed(() => {
 onMounted(() => {
   initDropdowns()
   initTooltips()
+
+  document.addEventListener('click', handleClickOutside)
 })
 
 const deleteAllFiltered = ref(false)
@@ -410,12 +425,15 @@ const deleteAllFilteredRecordings = async () => {
     showAlertDialog('error', 'Error', 'Recordings not found')
     return
   }
-
+  try {
   const response = await apiLegacySearchCount(apiClientArbimon, selectedProjectSlug.value ?? '', requestParamsForPlaylist.value)
   if (response === undefined) return
   formattedRecordings(response)
   deleteAllFiltered.value = true
   showPopup.value = !showPopup.value
+  } catch (e) {
+    showAlertDialog('error', 'Error', 'Remove recording')
+  }
 }
 
 async function handleOk () {
