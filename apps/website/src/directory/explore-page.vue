@@ -23,6 +23,7 @@
       :project-id="selectedProjectId"
       @emit-close-project-info="selectedProjectId = null"
     />
+    <chat-view />
     <div
       class="flex flex-col inset-1/2 w-3vh absolute z-40 h-7vh bg-moss transition-transform -translate-x-full rounded-r-lg "
       :class="leftMargin"
@@ -44,7 +45,6 @@
       :is-error="isErrorLoadedProject"
       @emit-selected-project="onEmitSelectedProject"
     />
-    <chat-view />
   </section>
 </template>
 <script setup lang="ts">

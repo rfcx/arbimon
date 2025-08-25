@@ -1,17 +1,19 @@
 <template>
   <div
     v-if="isArbiToggled"
-    class="inset-y-auto fixed bottom-0 right-0 w-[450px] overflow-y-auto transition-transform -translate-x-full bg-pitch z-50 h-100vh border-0 py-4 shadow"
+    id="arbi-chat"
+    class="inset-y-auto right-0 fixed w-[450px] overflow-y-auto transition-transform -translate-x-full bg-pitch absolute z-40 h-100vh border-0 shadow"
+    aria-labelledby="arbi-chat-label"
+    tabindex="-1"
   >
-    <div class="h-full overflow-y flex justify-between flex-col">
-      <div>
-        <div class="flex flex-row justify-between items-center border-b border-util-gray-03 pb-4">
+    <div class="h-full overflow-y">
+      <div class="relative sticky top-0">
+        <div class="flex flex-row justify-between items-center border-b border-util-gray-03 py-4">
           <div class="pl-4 text-lg relative">
             <icon-custom-fi-arbi-assistant-icon class="absolute top-[-5px] left-12" />
             Arbi Assistant
           </div>
           <div class="flex flex-row justify-end items-center gap-x-2 pr-4">
-            <!-- <icon-custom-fi-arbi-assistant-history class="h-5 cursor-pointer text-frequency" /> -->
             <button
               type="button"
               title="Clear the chat"
@@ -28,74 +30,77 @@
             </button>
           </div>
         </div>
-        <div
-          v-if="!messages.length"
-          class="flex flex-col px-6 py-4 gap-y-4 pt-20"
-        >
-          <div class="flex flex-col items-center flex-wrap gap-2">
-            <p class="text-lg">
-              Hello! I'm Arbi.
-            </p>
-            <span class="text-sm">I’m here to help you explore the Arbimon project directory. You can ask about:</span>
-          </div>
-          <ul class="flex flex-col justify-start list-disc list-inside p-4 gap-2 text-sm">
-            <li>locations by country, region</li>
-            <li>species by name, taxon or IUCN status</li>
-            <li>types of project</li>
-            <li>recordings</li>
-          </ul>
-          <div class="flex flex-col justify-start text-sm">
-            <p>You can ask me...</p>
-            <div class="flex flex-col justify-start flex-wrap py-4 gap-y-3">
-              <div
-                v-for="(tag, index) in tagsTitles"
-                :key="index"
-                class="w-fit p-2 text-sm text-wrap bg-transparent rounded-[10px] border-1 border-frequency text-frequency cursor-pointer"
-                @click="selectQuestion(tag.text)"
-              >
-                {{ tag.text }}
+      </div>
+      <div class="flex h-[calc(100vh-60px)] justify-between flex-col overflow-y-auto">
+        <div>
+          <div
+            v-if="!messages.length"
+            class="flex flex-col px-6 py-4 gap-y-4 pt-20"
+          >
+            <div class="flex flex-col items-center flex-wrap gap-2">
+              <p class="text-lg">
+                Hello! I'm Arbi.
+              </p>
+              <span class="text-sm">I’m here to help you explore the Arbimon project directory. You can ask about:</span>
+            </div>
+            <ul class="flex flex-col justify-start list-disc list-inside p-4 gap-2 text-sm">
+              <li>locations by country, region</li>
+              <li>species by name, taxon or IUCN status</li>
+              <li>types of project</li>
+              <li>recordings</li>
+            </ul>
+            <div class="flex flex-col justify-start text-sm">
+              <p>You can ask me...</p>
+              <div class="flex flex-col justify-start flex-wrap py-4 gap-y-3">
+                <div
+                  v-for="(tag, index) in tagsTitles"
+                  :key="index"
+                  class="w-fit p-2 text-sm text-wrap bg-transparent rounded-[10px] border-1 border-frequency text-frequency cursor-pointer"
+                  @click="selectQuestion(tag.text)"
+                >
+                  {{ tag.text }}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          v-if="messages.length"
-          ref="chatContainer"
-          class="flex flex-1 flex-col gap-4 px-4 pt-4 pb-30"
-        >
-          <ChatBubble
-            v-for="(msg, index) in messages"
-            :key="index"
-            :text="msg.text"
-            :is-user="msg.isUser"
-          />
-          <div v-if="isTyping">
+          <div
+            v-if="messages.length"
+            ref="chatContainer"
+            class="flex flex-1 flex-col gap-4 px-4 pt-4 overflow-y-auto"
+          >
             <ChatBubble
-              :text="'Typing...'"
-              :is-user="false"
+              v-for="(msg, index) in messages"
+              :key="index"
+              :text="msg.text"
+              :is-user="msg.isUser"
             />
+            <div v-if="isTyping">
+              <ChatBubble
+                :text="'Typing...'"
+                :is-user="false"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div class="[h-96px] w-full px-4">
-        <form
-          class="flex p-3 bg-pitch relative items-center overflow-hidden rounded-lg border border-util-gray-02"
-          @submit.prevent="sendMessage"
-        >
-          <textarea
-            v-model="newMessage"
-            type="text"
-            placeholder="How can I help?"
-            class="placeholder:(text-util-gray-01 text-sm font-semibold) flex flex-wrap overflow-y-auto [h-96px] px-2 pb-10 w-full bg-pitch border-0 scroll-smooth outline-none focus:(outline-none ring-transparent)"
-          />
-          <!-- <icon-custom-ft-mic class="w-7 text-frequency absolute bottom-2 left-4" /> -->
-          <button
-            type="submit"
-            class="absolute bottom-2 right-2"
+        <div class="[h-96px] w-full px-4 py-6">
+          <form
+            class="flex p-3 bg-pitch relative items-center overflow-hidden rounded-lg border border-util-gray-02"
+            @submit.prevent="sendMessage"
           >
-            <icon-custom-fi-arbi-assistant-send class="h-7 w-7 cursor-pointer" />
-          </button>
-        </form>
+            <textarea
+              v-model="newMessage"
+              type="text"
+              placeholder="How can I help?"
+              class="placeholder:(text-util-gray-01 text-sm font-semibold) flex flex-wrap overflow-y-auto [h-96px] px-2 pb-10 w-full bg-pitch border-0 scroll-smooth outline-none focus:(outline-none ring-transparent)"
+            />
+            <button
+              type="submit"
+              class="absolute bottom-2 right-2"
+            >
+              <icon-custom-fi-arbi-assistant-send class="h-7 w-7 cursor-pointer" />
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
