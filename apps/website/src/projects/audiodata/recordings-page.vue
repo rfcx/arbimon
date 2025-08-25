@@ -34,7 +34,10 @@
           class="relative"
         >
           <button
-            class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
+            class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+            :disabled="!store.userIsDataEntryMember"
+            data-tooltip-style="light"
+            :data-tooltip-target="!store.userIsDataEntryMember ? 'exportRecordingTooltip': ''"
             @click="showExportPanel = true"
           >
             <span>Export</span>
@@ -49,19 +52,61 @@
             @close="showExportPanel = false"
           />
         </div>
+        <div
+          v-if="!store.userIsDataEntryMember"
+          id="exportRecordingTooltip"
+          role="tooltip"
+          class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+        >
+          You do not have permission to export data
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
         <button
-          class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
+          class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+          :disabled="!store.userIsFullProjectMember"
+          data-tooltip-style="light"
+          :data-tooltip-target="!store.userIsFullProjectMember ? 'recordingPlaylistTooltip': ''"
           @click="showCreatePlaylist"
         >
           <span>Save to Playlist</span>
         </button>
+        <div
+          v-if="!store.userIsFullProjectMember"
+          id="recordingPlaylistTooltip"
+          role="tooltip"
+          class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+        >
+          You do not have permission to create playlists
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
         <button
-          class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
+          class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+          :disabled="!store.userIsExpertMember"
           data-dropdown-toggle="deleteRecordingDropdown"
+          data-tooltip-style="light"
+          :data-tooltip-target="!store.userIsExpertMember ? 'deleteRecordingTooltip': ''"
         >
           <span>Delete</span>
           <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
         </button>
+        <div
+          v-if="!store.userIsExpertMember"
+          id="deleteRecordingTooltip"
+          role="tooltip"
+          class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+        >
+          You do not have permission to delete recordings
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
         <div
           id="deleteRecordingDropdown"
           class="z-10 hidden bg-moss border border-frequency rounded-lg"
@@ -172,7 +217,7 @@
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { initDropdowns } from 'flowbite'
+import { initDropdowns, initTooltips } from 'flowbite'
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 
 import { type RecordingSearchParams, type RecordingSearchResponse, type SearchCountResponse, apiLegacyCreatePlaylists, apiLegacyDeleteMatchingRecording, apiLegacyDeleteRecording, apiLegacySearchCount } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
@@ -296,6 +341,7 @@ const filteredRecordings = computed(() => {
 })
 onMounted(() => {
   initDropdowns()
+  initTooltips()
 })
 
 const deleteAllFiltered = ref(false)
