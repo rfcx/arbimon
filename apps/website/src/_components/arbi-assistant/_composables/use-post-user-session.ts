@@ -6,6 +6,8 @@ import { type ArbiSessionData, apiGetArbiSession } from '@rfcx-bio/common/api-ar
 export const usePostUserSession = (apiClient: AxiosInstance): UseMutationReturnType<ArbiSessionData, unknown, string, unknown> => {
   return useMutation({
     mutationKey: ['post-user-session'],
-    mutationFn: async (userId: string) => { return await apiGetArbiSession(apiClient, userId) }
+    mutationFn: async (userId: string) => { return await apiGetArbiSession(apiClient, userId) },
+    retry: 3,
+    retryDelay: 5000
   })
 }

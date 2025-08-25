@@ -6,6 +6,8 @@ import { type ArbiResponseData, type ArbiUserQuestionParams, apiPostUserQuestion
 export const usePostUserQuestion = (apiClient: AxiosInstance): UseMutationReturnType<ArbiResponseData[], unknown, ArbiUserQuestionParams, unknown> => {
   return useMutation({
     mutationKey: ['post-user-question'],
-    mutationFn: async (payload: ArbiUserQuestionParams) => { return await apiPostUserQuestion(apiClient, payload) }
+    mutationFn: async (payload: ArbiUserQuestionParams) => { return await apiPostUserQuestion(apiClient, payload) },
+    retry: 1,
+    retryDelay: 5000
   })
 }
