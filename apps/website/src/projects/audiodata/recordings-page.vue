@@ -29,6 +29,7 @@
             :recorded-minutes-per-day="recordedMinutesPerDay"
             :filters-data="filterParams"
             @apply="applyFilters"
+            @reset-filters="resetFilters"
           />
         </div>
         <div
@@ -220,6 +221,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { initDropdowns, initTooltips } from 'flowbite'
+import debounce from 'lodash.debounce'
 import { computed, inject, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 
 import { type RecordingSearchParams, type RecordingSearchResponse, type SearchCountResponse, apiLegacyCreatePlaylists, apiLegacyDeleteMatchingRecording, apiLegacyDeleteRecording, apiLegacySearchCount } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
@@ -369,6 +371,11 @@ const applyFilters = async (filter: RecordingSearchParams) => {
   await refetchRecordings()
   showFilterModal.value = false
 }
+
+const resetFilters = debounce(async (filter: RecordingSearchParams) => {
+  filterParams.value = filter
+  await refetchRecordings()
+}, 500)
 
 const applyRecordings = async () => {
   await refetchRecordings()

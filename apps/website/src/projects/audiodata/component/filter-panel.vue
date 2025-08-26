@@ -175,7 +175,7 @@ export interface DateTime {
   min_date: string
 }
 
-const emit = defineEmits<{(e: 'apply', value: RecordingSearchParams): void }>()
+const emit = defineEmits<{(e: 'apply', value: RecordingSearchParams): void, (e: 'resetFilters', value: RecordingSearchParams): void }>()
 const props = defineProps<{
   dateRange: DateTime | undefined,
   sites: SiteResponse[] | undefined,
@@ -441,6 +441,7 @@ function resetFilters () {
   selectedSoundscapes.value = []
   selectedAnnotation.value = []
   datePickerComponentRef.value?.resetDatePicker()
+  emit('resetFilters', filters)
 }
 </script>
 
