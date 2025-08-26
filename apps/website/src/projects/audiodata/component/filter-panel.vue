@@ -185,6 +185,7 @@ const props = defineProps<{
   soundscapes: SoundscapeResponse[] | undefined
   classifications: ClassificationsResponse[] | undefined
   recordedMinutesPerDay: GetRecordedMinutesPerDayResponse | undefined
+  filtersData?: RecordingSearchParams | undefined
 }>()
 
 const datePickerComponentRef = ref<InstanceType<typeof DaterangePicker> | null>(null)
@@ -371,6 +372,21 @@ function handleClickOutside (event: MouseEvent) {
 }
 
 onMounted(() => {
+  const v = props.filtersData
+  selectedYears.value = v?.years ?? []
+  selectedMonths.value = v?.months ?? []
+  selectedDays.value = v?.days ?? []
+  selectedHours.value = (v?.hours ?? []).map(String)
+  selectedSites.value = v?.sites_ids ?? []
+  selectedPlaylists.value = v?.playlists ?? []
+  selectedTags.value = v?.tags ?? []
+  selectedClasses.value = v?.validations ?? []
+  selectedValidation.value = v?.presence ?? []
+  selectedClassifications.value = v?.classifications ?? []
+  selectedResults.value = v?.classification_results ?? []
+  selectedSoundscapes.value = v?.soundscape_composition ?? []
+  selectedAnnotation.value = v?.soundscape_composition_annotation ?? []
+
   setTimeout(() => {
     document.addEventListener('mousedown', handleClickOutside)
   }, 0)

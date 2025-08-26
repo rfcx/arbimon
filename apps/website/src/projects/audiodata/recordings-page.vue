@@ -27,6 +27,7 @@
             :soundscapes="soundscapeRecordings"
             :classifications="classifications"
             :recorded-minutes-per-day="recordedMinutesPerDay"
+            :filters-data="filterParams"
             @apply="applyFilters"
           />
         </div>
