@@ -19,6 +19,7 @@ const client = await auth.getIdTokenClient(ARBI_ASSISTANT_BASE_URL)
 const idToken = await client.idTokenProvider.fetchIdToken(ARBI_ASSISTANT_BASE_URL)
 
 export async function getArbiAssistantSessionFromApi (userData: ArbiUserSessionParams): Promise<ArbiSessionData> {
+  console.info('ARBI_ASSISTANT_BASE_URL', ARBI_ASSISTANT_BASE_URL, idToken)
   try {
     const response = await axios.request({
       method: 'POST',
