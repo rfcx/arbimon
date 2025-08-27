@@ -86,7 +86,6 @@
                     v-show="isLoaded"
                     class="loading-shimmer w-[420px] h-[154px]"
                   />
-                  <!-- :src="'https://staging.arbimon.org/' + row.thumbnail" -->
                   <img
                     :src="row.thumbnail"
                     alt="spectrogram"
@@ -153,7 +152,6 @@ function onImageLoad () {
 
 const onVisualizerRedirect = (id: number) => {
   window.location.assign(`${window.location.origin}/project/${props.projectSlug ?? ''}/visualizer/rec/${id}`)
-  // window.location.assign(`https://staging.arbimon.org/project/${props.projectSlug ?? ''}/visualizer/rec/${id}`)
 }
 
 const areAllRowsSelected = computed(() => {

@@ -19,7 +19,7 @@
           <FilterPanel
             v-if="showFilterModal"
             ref="filtersRef"
-            :date-range="recordings?.date_range"
+            :date-range="dateRange"
             :sites="sites"
             :playlists="playlists"
             :tags="tagsRecording"
@@ -52,7 +52,7 @@
             :classes-recordings="classesRecordings"
             :filter-data="requestParamsForPlaylist"
             :soundscape-recordings="soundscapeRecordings"
-            @close="showExportPanel = false"
+            @close="handleCloseExport"
           />
         </div>
         <div
@@ -176,7 +176,6 @@
         :project-slug="selectedProjectSlug"
         :show-checkbox="true"
         @selected-rows="onSelectedRecordings"
-        @selected-item="onSelectedItem"
       />
     </div>
     <div
@@ -237,7 +236,7 @@ import { useSites } from './api/use-sites'
 import CreatePlaylistModal from './component/create-playlist.vue'
 import CustomPopup from './component/custom-popup.vue'
 import ExportPanel from './component/export-panel.vue'
-import FilterPanel from './component/filter-panel.vue'
+import FilterPanel, { type DateTime } from './component/filter-panel.vue'
 import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
 import { type Row } from './component/sortable-table.vue'
@@ -300,6 +299,17 @@ const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
 
 const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings, isRefetching: isRefetchRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, filteredRequestParams)
+
+const dateRange = ref<DateTime | undefined>()
+watch(
+  () => recordings.value?.date_range as DateTime | undefined,
+  (newVal) => {
+    if (dateRange.value === undefined && newVal !== undefined) {
+      dateRange.value = newVal
+    }
+  },
+  { immediate: true }
+)
 
 const siteParams = computed<SiteParams>(() => {
   return {
@@ -386,10 +396,6 @@ const changeLimit = async (value: number) => {
   await refetchRecordings()
 }
 
-const onSelectedItem = (row?: Record<string, any>) => {
-  console.info('onSelectedItem', row)
-}
-
 const onSelectedRecordings = (rows?: Row[]) => {
   if (!rows) return
   selectedRows.value = rows
@@ -461,6 +467,16 @@ async function handleOk () {
 
 const handleCancel = () => {
   showPopup.value = false
+}
+
+const handleCloseExport = (isSuccess?: boolean) => {
+  showExportPanel.value = false
+  if (isSuccess === true) {
+    showAlertDialog('success', '', 'Your report export request is processing and will be sent by email.')
+  }
+  if (isSuccess === false) {
+    showAlertDialog('error', '', 'Error export')
+  }
 }
 
 const formattedRecordings = (recCount: SearchCountResponse[]) => {

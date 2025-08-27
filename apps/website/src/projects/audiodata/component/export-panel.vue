@@ -123,8 +123,7 @@ const optionsGrouping = ['Site', 'Hour', 'Date']
 const selectedGrouping = ref<string | null>(null)
 const isOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
-
-const emit = defineEmits(['close'])
+const emit = defineEmits<{(e: 'close', isSuccess?: boolean): void }>()
 const props = defineProps<{ tags: TagResponse[] | undefined, classesRecordings: ClassesRecordingResponse[] | undefined, soundscapeRecordings: SoundscapeResponse[] | undefined, filterData?: RecordingSearchParams }>()
 
 const panelRef = ref<HTMLElement | null>(null)
@@ -205,13 +204,11 @@ async function handleExport (email: string | undefined) {
   }
   try {
     await apiLegacyExport(apiClientArbimon, selectedProjectSlug.value ?? '', exportParams.value)
-    // showAlertDialog('success', 'Success', 'Removed')
     showExportModal.value = false
-    emit('close')
+    emit('close', true)
   } catch (e) {
-    // showAlertDialog('error', 'Error', 'Remove site')
     showExportModal.value = false
-    emit('close')
+    emit('close', false)
   }
 }
 
