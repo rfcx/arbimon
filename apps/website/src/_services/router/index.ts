@@ -186,6 +186,11 @@ const routes: RouteRecordRaw[] = [
             path: 'sites',
             name: ROUTE_NAMES.mySites,
             component: PAGES.MySites
+          },
+          {
+            path: 'recordings',
+            name: ROUTE_NAMES.myRecordings,
+            component: PAGES.MyRecordings
           }
         ]
       },

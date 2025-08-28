@@ -5,14 +5,20 @@
         Sites
       </h1>
       <button
-        class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex px-3"
+        class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+        :disabled="!store.userIsFullProjectMember"
+        data-tooltip-style="light"
+        :data-tooltip-target="!store.userIsFullProjectMember ? 'createSiteTooltip': null"
         @click="createSite()"
       >
         <span>Create</span>
         <icon-custom-ic-plus-icon class="ml-2 w-4 h-4" />
       </button>
       <button
-        class="btn btn-secondary btn-medium ml-2 btn-small items-center text-frequency inline-flex hover:text-pitch px-3"
+        class="btn btn-secondary btn-medium ml-2 btn-small items-center text-frequency inline-flex hover:text-pitch px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+        :disabled="!store.userIsFullProjectMember"
+        data-tooltip-style="light"
+        :data-tooltip-target="!store.userIsFullProjectMember ? 'importSiteTooltip': null"
         @click="triggerFileInput"
       >
         <span>Bulk Import Sites</span>
@@ -26,6 +32,30 @@
         @change="handleFileUpload"
       >
     </div>
+    <div
+      v-if="!store.userIsFullProjectMember"
+      id="createSiteTooltip"
+      role="tooltip"
+      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+    >
+      You do not have permission to add sites
+      <div
+        class="tooltip-arrow"
+        data-popper-arrow
+      />
+    </div>
+    <div
+      v-if="!store.userIsFullProjectMember"
+      id="importSiteTooltip"
+      role="tooltip"
+      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+    >
+      You do not have permission to add sites
+      <div
+        class="tooltip-arrow"
+        data-popper-arrow
+      />
+    </div>
     <div class="flex flex-col sm:flex-row gap-6 px-4 sm:px-6 lg:px-8 mt-7">
       <!-- Left: Table (scrollable) -->
       <div class="w-full sm:w-2/3 overflow-y-auto pr-0 sm:pr-4">
@@ -34,21 +64,50 @@
           <div class="p-1 flex justify-between">
             <div>
               <button
-                :disabled="selectedSite == undefined"
-                class="btn btn-secondary btn-medium btn-small disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled px-3"
+                :disabled="selectedSite == undefined || !store.userIsFullProjectMember"
+                class="btn btn-secondary btn-medium btn-small disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+                data-tooltip-style="light"
+                :data-tooltip-target="!store.userIsFullProjectMember ? 'editSiteTooltip': null"
                 @click="editSite()"
               >
                 <span>Edit Site</span>
               </button>
+              <div
+                v-if="!store.userIsFullProjectMember"
+                id="editSiteTooltip"
+                role="tooltip"
+                class="absolute z-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+              >
+                You do not have permission to edit sites
+                <div
+                  class="tooltip-arrow"
+                  data-popper-arrow
+                />
+              </div>
               <button
-                class="btn btn-secondary btn-medium ml-2 btn-small px-3"
+                class="btn btn-secondary btn-medium ml-2 btn-small px-3 disabled:hover:btn-disabled disabled:btn-disabled"
                 data-dropdown-toggle="deleteSiteDropdown"
+                :disabled="!store.userIsExpertMember"
+                data-tooltip-style="light"
+                :data-tooltip-target="!store.userIsExpertMember ? 'deleteSiteTooltip': null"
               >
                 <span class="inline-flex gap-1">
                   Delete
                   <icon-custom-el-angle-down class="ml-2 mt-1 w-3 h-3" />
                 </span>
               </button>
+              <div
+                v-if="!store.userIsExpertMember"
+                id="deleteSiteTooltip"
+                role="tooltip"
+                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+              >
+                You do not have permission to remove sites
+                <div
+                  class="tooltip-arrow"
+                  data-popper-arrow
+                />
+              </div>
               <div
                 id="deleteSiteDropdown"
                 class="z-10 hidden bg-moss border border-frequency rounded-lg"
@@ -69,11 +128,26 @@
                 </ul>
               </div>
               <button
-                class="btn btn-secondary btn-medium ml-2 btn-small px-3"
+                class="btn btn-secondary btn-medium ml-2 btn-small px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+                :disabled="!store.userIsDataEntryMember"
+                data-tooltip-style="light"
+                :data-tooltip-target="!store.userIsDataEntryMember ? 'exportSitesTooltip': null"
                 @click="exportSites()"
               >
                 <span>Export Sites</span>
               </button>
+              <div
+                v-if="!store.userIsDataEntryMember"
+                id="exportSitesTooltip"
+                role="tooltip"
+                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+              >
+                You do not have permission to export sites
+                <div
+                  class="tooltip-arrow"
+                  data-popper-arrow
+                />
+              </div>
             </div>
             <div class="input-item search form-element">
               <icon-fa-search class="h-3 w-3 mt-3 fa-search text-insight" />
@@ -183,7 +257,7 @@
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { initDropdowns } from 'flowbite'
+import { initDropdowns, initTooltips } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
 import { type CreateSiteBody, type SiteParams, type SiteResponse, apiLegacySiteCreate, apiLegacySiteDelete } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
@@ -258,6 +332,7 @@ const searchTimeout = ref<number | undefined>(undefined)
 // Show on UI
 onMounted(() => {
   initDropdowns()
+  initTooltips()
 
   if (store.myProjects.length === 0) {
     fetchProjects(0, LIMIT)

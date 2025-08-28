@@ -40,7 +40,7 @@
 
         <p
           v-if="note"
-          class="text-sm text-gray-600 italic mb-4"
+          class="text-base font-medium italic mb-4"
         >
           {{ note }}
         </p>

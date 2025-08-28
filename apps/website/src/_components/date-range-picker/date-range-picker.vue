@@ -3,7 +3,7 @@
     id="dateRangePickerId"
     date-rangepicker
     datepicker-format="'dd-mm-yyyy'"
-    class="flex mt-6 items-center gap-4 md:flex-row"
+    class="flex items-center gap-4 md:flex-row"
   >
     <div class="flex-1">
       <label
@@ -257,6 +257,33 @@ watch(() => emitValue.value, (newValue) => {
 watch(() => [startDate, endDate, recordedMinutesPerDayConverted], () => {
   setDatePickerOptions()
 })
+
+function resetDatePicker (preset?: { from: string; to: string }) {
+  if (preset?.from && preset?.to) {
+    const fromStr = dateToCalendarFormat(preset.from)
+    const toStr = dateToCalendarFormat(preset.to)
+
+    picker?.setDates(fromStr, toStr)
+
+    startDateChanged.value = preset.from
+    endDateChanged.value = preset.to
+
+    if (startDatePickerInput.value) startDatePickerInput.value.value = fromStr
+    if (endDatePickerInput.value) endDatePickerInput.value.value = toStr
+  } else {
+    picker?.setDates('', '')
+    startDateChanged.value = ''
+    endDateChanged.value = ''
+    if (startDatePickerInput.value) {
+      startDatePickerInput.value.value = ''
+    }
+    if (endDatePickerInput.value) {
+      endDatePickerInput.value.value = ''
+    }
+  }
+}
+
+defineExpose({ resetDatePicker })
 
 </script>
 <style lang="scss">

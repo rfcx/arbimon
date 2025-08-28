@@ -69,6 +69,7 @@
             </label>
             <DaterangePicker
               v-if="recordedMinutesPerDay"
+              class="mt-6"
               :initial-date-start="projectDateRange.dateStartLocalIso"
               :initial-date-end="projectDateRange.dateEndLocalIso"
               :recorded-minutes-per-day="recordedMinutesPerDay"
