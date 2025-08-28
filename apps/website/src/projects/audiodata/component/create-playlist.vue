@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, ref } from 'vue'
+import { ref } from 'vue'
 
 const emit = defineEmits<{(e: 'close'): void, (e: 'save', playlistName: string): void}>()
 
