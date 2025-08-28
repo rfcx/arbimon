@@ -219,15 +219,28 @@ watch(() => [startDate, endDate, recordedMinutesPerDayConverted], () => {
   setDatePickerOptions()
 })
 
-function resetDatePicker () {
-  picker?.setDates('', '')
-  startDateChanged.value = ''
-  endDateChanged.value = ''
-  if (startDatePickerInput.value) {
-    startDatePickerInput.value.value = ''
-  }
-  if (endDatePickerInput.value) {
-    endDatePickerInput.value.value = ''
+function resetDatePicker (preset?: { from: string; to: string }) {
+  if (preset?.from && preset?.to) {
+    const fromStr = dateToCalendarFormat(preset.from)
+    const toStr = dateToCalendarFormat(preset.to)
+
+    picker?.setDates(fromStr, toStr)
+
+    startDateChanged.value = preset.from
+    endDateChanged.value = preset.to
+
+    if (startDatePickerInput.value) startDatePickerInput.value.value = fromStr
+    if (endDatePickerInput.value) endDatePickerInput.value.value = toStr
+  } else {
+    picker?.setDates('', '')
+    startDateChanged.value = ''
+    endDateChanged.value = ''
+    if (startDatePickerInput.value) {
+      startDatePickerInput.value.value = ''
+    }
+    if (endDatePickerInput.value) {
+      endDatePickerInput.value.value = ''
+    }
   }
 }
 

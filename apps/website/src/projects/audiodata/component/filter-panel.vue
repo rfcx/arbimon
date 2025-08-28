@@ -340,7 +340,9 @@ const staticOptions = [
   { icon: 'val-0', label: 'Absent', value: 'absent' }
 ]
 
-function toRange (fromISO: string, toISO: string) {
+function toRange (fromISO?: string, toISO?: string) {
+  if (!fromISO || !toISO) return undefined
+
   const fromDate = new Date(fromISO)
   const toDate = new Date(toISO)
 
@@ -379,6 +381,25 @@ function handleClickOutside (event: MouseEvent) {
   }
 }
 
+type RangeObj = { from: string; to: string }
+
+function isRangeObj (value: unknown): value is RangeObj {
+  if (typeof value !== 'object' || value === null) return false
+  const v = value as { from?: unknown; to?: unknown }
+  return typeof v.from === 'string' && typeof v.to === 'string'
+}
+
+function parseRange (rangeStr?: string): RangeObj | undefined {
+  if (!rangeStr) return undefined
+  try {
+    const obj: unknown = JSON.parse(rangeStr)
+    if (isRangeObj(obj)) return obj
+  } catch {
+    // ignore
+  }
+  return undefined
+}
+
 onMounted(() => {
   const v = props.filtersData
   selectedYears.value = v?.years ?? []
@@ -394,6 +415,7 @@ onMounted(() => {
   selectedResults.value = v?.classification_results ?? []
   selectedSoundscapes.value = v?.soundscape_composition ?? []
   selectedAnnotation.value = v?.soundscape_composition_annotation ?? []
+  datePickerComponentRef.value?.resetDatePicker(parseRange(v?.range))
 
   setTimeout(() => {
     document.addEventListener('mousedown', handleClickOutside)
@@ -435,6 +457,7 @@ function emitApply () {
 }
 
 function resetFilters () {
+  filters.range = undefined
   selectedYears.value = []
   selectedMonths.value = []
   selectedDays.value = []
