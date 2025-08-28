@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="panelRef"
     class="absolute top-full mt-2 z-50 bg-echo text-insight rounded-lg p-4 w-[900px] space-y-4 border border-util-gray-03 shadow-lg"
   >
     <!-- Date range -->
@@ -212,8 +213,6 @@ const filters = reactive<RecordingSearchParams>({
 })
 
 const isOpen = ref(false)
-const dropdownMonthRef = ref<HTMLElement | null>(null)
-
 const store = useStore()
 const projectFilters = computed(() => store.projectFilters)
 const projectDateRange = computed(() => {
@@ -333,7 +332,7 @@ const classificationResults = computed<string[]>(() => {
     if (r === 'present') return JSON.stringify({ model: 1 })
     if (r === 'absent') return JSON.stringify({ model: 2 })
     return null
-  }).filter((v): v is string => v !== null) // filter null ออก
+  }).filter((v): v is string => v !== null)
 })
 const selectedAnnotation = ref<(string)[]>([])
 const staticOptions = [
@@ -365,8 +364,17 @@ const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) =
   filters.range = toRange(dateStartLocalIso, dateEndLocalIso)
 }
 
+const panelRef = ref<HTMLElement | null>(null)
+
+function isFromFlowbiteDatepicker (el: Element | null) {
+  return !!el?.closest('.datepicker, .datepicker-picker, .datepicker-dropdown')
+}
+
 function handleClickOutside (event: MouseEvent) {
-  if (dropdownMonthRef.value && !dropdownMonthRef.value.contains(event.target as Node)) {
+  const el = event.target as Element
+  if (isFromFlowbiteDatepicker(el)) return
+
+  if (panelRef.value && !panelRef.value.contains(el)) {
     isOpen.value = false
   }
 }

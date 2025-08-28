@@ -6,7 +6,7 @@
       </h1>
       <div class="flex mt-6">
         <div
-          ref="filtersRef"
+          ref="filtersRootRef"
           class="relative"
         >
           <button
@@ -18,7 +18,6 @@
           </button>
           <FilterPanel
             v-if="showFilterModal"
-            ref="filtersRef"
             :date-range="dateRange"
             :sites="sites"
             :playlists="playlists"
@@ -327,16 +326,21 @@ watch(() => store.project, () => {
   project.projectId = store.project?.id.toString() ?? '-1'
 })
 
-const filtersRef = ref<HTMLElement | null>(null)
+const filtersRootRef = ref<HTMLElement | null>(null)
+function isFromFlowbiteDatepicker (el: Element | null) {
+  return !!el?.closest('.datepicker, .datepicker-picker, .datepicker-dropdown')
+}
 
 const handleClickOutside = (event: MouseEvent) => {
-  if (filtersRef.value && !filtersRef.value.contains(event.target as Node)) {
+  const el = event.target as Element | null
+  if (isFromFlowbiteDatepicker(el)) return
+  if (filtersRootRef.value && !filtersRootRef.value.contains(el as Node)) {
     showFilterModal.value = false
   }
 }
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('click', handleClickOutside, true)
 })
 
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, siteParams)
@@ -369,7 +373,7 @@ onMounted(() => {
   initDropdowns()
   initTooltips()
 
-  document.addEventListener('click', handleClickOutside)
+  document.addEventListener('click', handleClickOutside, true)
 })
 
 const deleteAllFiltered = ref(false)
