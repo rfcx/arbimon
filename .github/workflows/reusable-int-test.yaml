@@ -155,4 +155,5 @@ jobs:
           OPENSEARCH_HOST: localhost
           OPENSEARCH_PORT: 9202
           OPENSEARCH_SSL_ENABLED: false
+          ARBI_ASSISTANT_BASE_URL: https://adk-default-service-name-435981252511.europe-west1.run.app
           ARBIMON_LEGACY_API_BASE_URL: http://localhost:3000/legacy-api
