@@ -8,7 +8,7 @@ import { env } from '../env'
 
 const ARBI_ASSISTANT_BASE_URL = env.ARBI_ASSISTANT_BASE_URL
 
-const keysEnvVar = process.env.ARBI_ASSISTANT_SERVICE_ACCOUNT
+const keysEnvVar = env.ARBI_ASSISTANT_SERVICE_ACCOUNT
 if (!keysEnvVar) {
   throw new Error('The $CREDS environment variable was not found!')
 }

@@ -10,7 +10,6 @@
 // CANNOT be undefined or an empty string
 export const envKeysRequired = [
   // Secrets
-  'ARBI_ASSISTANT_SERVICE_ACCOUNT',
   'AUTHO_ANONYMOUS_CLIENT_SECRET',
   'AWS_S3_ACCESS_KEY_ID',
   'AWS_S3_SECRET_ACCESS_KEY',
@@ -32,6 +31,7 @@ export const envKeysRequired = [
 
 // CAN be undefined or empty string
 export const envKeysOptional = [
+  'ARBI_ASSISTANT_SERVICE_ACCOUNT',
   'AWS_OSS_ACCESS_KEY_ID',
   'AWS_OSS_SECRET_ACCESS_KEY',
   'AWS_OSS_REGION',
