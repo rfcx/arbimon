@@ -16,9 +16,9 @@ const credentials = JSON.parse(keysEnvVar)
 
 const auth = new GoogleAuth({ credentials })
 const client = await auth.getIdTokenClient(ARBI_ASSISTANT_BASE_URL)
-const idToken = await client.idTokenProvider.fetchIdToken(ARBI_ASSISTANT_BASE_URL)
 
 export async function getArbiAssistantSessionFromApi (userData: ArbiUserSessionParams): Promise<ArbiSessionData> {
+  const idToken = await client.idTokenProvider.fetchIdToken(ARBI_ASSISTANT_BASE_URL)
   console.info('ARBI_ASSISTANT_BASE_URL', ARBI_ASSISTANT_BASE_URL, idToken)
   try {
     const response = await axios.request({
@@ -36,6 +36,7 @@ export async function getArbiAssistantSessionFromApi (userData: ArbiUserSessionP
 }
 
 export async function postArbiAssistantQuestion (data: ArbiUserQuestionParams): Promise<ArbiResponseData> {
+  const idToken = await client.idTokenProvider.fetchIdToken(ARBI_ASSISTANT_BASE_URL)
   try {
     const response = await axios.request({
       method: 'POST',
