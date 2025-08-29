@@ -25,11 +25,13 @@ export const envKeysRequired = [
   'AWS_S3_BUCKET_NAME',
   'AWS_S3_BUCKET_REGION',
   'CORE_API_BASE_URL',
+  'ARBI_ASSISTANT_BASE_URL',
   'ARBIMON_LEGACY_API_BASE_URL'
 ] as const
 
 // CAN be undefined or empty string
 export const envKeysOptional = [
+  'ARBI_ASSISTANT_SERVICE_ACCOUNT',
   'AWS_OSS_ACCESS_KEY_ID',
   'AWS_OSS_SECRET_ACCESS_KEY',
   'AWS_OSS_REGION',
