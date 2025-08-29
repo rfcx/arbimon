@@ -7,12 +7,12 @@
     <div class="flex items-start">
       <label>Date range:</label>
       <DaterangePicker
-        v-if="recordedMinutesPerDay"
         ref="datePickerComponentRef"
         class="w-full m-0"
-        :initial-date-start="projectDateRange.dateStartLocalIso"
-        :initial-date-end="projectDateRange.dateEndLocalIso"
-        :recorded-minutes-per-day="recordedMinutesPerDay"
+        :initial-date-start="dateStart"
+        :initial-date-end="dateEnd"
+        :input-label-start="'Start date'"
+        :input-label-end="'End date'"
         @emit-select-date-range="onSelectQueryDates"
       />
     </div>
@@ -162,7 +162,6 @@ import { type GetRecordedMinutesPerDayResponse } from '@rfcx-bio/common/api-bio/
 
 import { type DateRange } from '@/_components/date-range-picker/date-range-picker'
 import DaterangePicker from '@/_components/date-range-picker/date-range-picker.vue'
-import { useStore } from '~/store'
 import SelectMultiple from './select-multiple.vue'
 import { type Option } from './select-multiple.vue'
 
@@ -211,15 +210,10 @@ const filters = reactive<RecordingSearchParams>({
   classifications: undefined,
   classification_results: undefined
 })
+const dateStart = ref<string | undefined>()
+const dateEnd = ref<string | undefined>()
 
 const isOpen = ref(false)
-const store = useStore()
-const projectFilters = computed(() => store.projectFilters)
-const projectDateRange = computed(() => {
-  const dateStartLocalIso = dayjs(projectFilters.value?.dateStartInclusiveUtc).toISOString() ?? dayjs().toISOString()
-  const dateEndLocalIso = dayjs(projectFilters.value?.dateEndInclusiveUtc).toISOString() ?? dayjs().toISOString()
-  return { dateStartLocalIso, dateEndLocalIso }
-})
 
 function formatTimestamp (timestamp: number): string {
   return dayjs(timestamp).format('MMM D, YYYY h:mm A')
