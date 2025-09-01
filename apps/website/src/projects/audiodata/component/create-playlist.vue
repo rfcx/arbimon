@@ -31,7 +31,8 @@
           Cancel
         </button>
         <button
-          class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex px-5"
+          class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex px-5 disabled:hover:btn-disabled disabled:btn-disabled"
+          :disabled="!playlistName.trim()"
           @click="save"
         >
           Save
