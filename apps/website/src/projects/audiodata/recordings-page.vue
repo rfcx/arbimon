@@ -407,7 +407,7 @@ const changeLimit = async (value: number) => {
 
 const onSelectedRecordings = (rows?: Row[]) => {
   if (!rows) return
-  selectedRows.value = rows
+  selectedRows.value = rows === undefined ? [] : rows
 }
 
 const showFilterModal = ref(false)
