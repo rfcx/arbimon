@@ -22,7 +22,7 @@
             @click="sortBy(column.key)"
           >
             <span
-              class="flex items-center max-w-[100px] truncate"
+              class="flex items-center truncate"
               :class="isDecimalKey(column.key) ? 'truncate' : ''"
               :style="`max-width: ${column.maxWidth || 100}px`"
               :title="column.label"
@@ -216,8 +216,11 @@ function formatValueByKey (key: string, value: any, row: any, forTitle?: boolean
   if (key === 'timezone') return forTitle === true ? value : getUTCOffset(value)
   if (key === 'deployment') return value === 0 ? 'no data' : formatDateTime(value, row.timezone)
   if (key === 'updated_at') return formatDateTime(value, row.timezone)
-  if (key === 'upload_time') return formatDateShort(value, row.timezone)
-  if (key === 'datetime') return formatDateFullInParens(value, row.timezone)
+  if (key === 'datetime') return forTitle === true ? getUTCOffset(row.timezone) : formatDateFullInParens(value, row.timezone)
+  if (key === 'comments') return forTitle === true ? row.meta.comment ?? value : value
+  if (key === 'site') return forTitle === true ? undefined : value
+  if (key === 'upload_time') return forTitle === true ? '' : formatDateShort(value, row.timezone)
+  if (key === 'recorder') return forTitle === true ? undefined : value
 
   if (typeof value !== 'number') return value
 
