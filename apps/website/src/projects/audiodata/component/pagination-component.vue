@@ -61,7 +61,7 @@
       type="number"
       min="1"
       :max="totalPages"
-      class="w-16 px-2 py-1 ml-1 bg-black border border-util-gray-03 rounded text-sm focus:border-util-gray-03 focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
+      class="no-spinner w-16 px-2 py-1 ml-1 bg-black border border-util-gray-03 rounded text-sm focus:border-util-gray-03 focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
     >
   </div>
 </template>
@@ -123,6 +123,19 @@ const visiblePages = computed(() => {
 <style scoped>
 .pagination-btn {
   @apply px-3 py-1 border border-util-gray-03 text-white text-xs hover:bg-util-gray-04 disabled:cursor-not-allowed;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input[type='number'].no-spinner::-webkit-outer-spin-button,
+input[type='number'].no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'].no-spinner {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 </style>

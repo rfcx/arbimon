@@ -131,7 +131,11 @@
       </div>
     </div>
     <div
-      v-show="!isLoadingRecordings"
+      v-if="isLoadingRecordings || isRefetchRecordings"
+      class="loading-shimmer h-32 mx-8 my-5"
+    />
+    <div
+      v-show="!isLoadingRecordings && !isRefetchRecordings"
       class="mt-4 px-8"
     >
       <div class="flex justify-between items-center mb-4">
@@ -191,7 +195,7 @@
     </div>
 
     <PaginationComponent
-      v-show="!isLoadingRecordings && !(recordingsCount === 0) && !isErrorRecordings"
+      v-show="!isLoadingRecordings && !(recordingsCount === 0) && !isErrorRecordings && !isRefetchRecordings"
       class="mt-4 px-8"
       :current-page="currentPage"
       :total-pages="totalPages"
