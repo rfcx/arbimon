@@ -310,6 +310,11 @@ watch(
   { immediate: true }
 )
 
+const searchCount = ref<SearchCountResponse[] | undefined>()
+watch(recordings, async () => {
+  searchCount.value = await apiLegacySearchCount(apiClientArbimon, selectedProjectSlug.value ?? '', requestParamsForPlaylist.value)
+})
+
 const siteParams = computed<SiteParams>(() => {
   return {
     count: true,
@@ -435,7 +440,7 @@ const deleteCheckedRecordings = () => {
   }
 
   getDeleteConfirmationMessage()
-  showPopup.value = !showPopup.value
+  showPopup.value = true
 }
 
 const deleteAllFilteredRecordings = async () => {
@@ -443,15 +448,15 @@ const deleteAllFilteredRecordings = async () => {
     showAlertDialog('error', 'Error', 'Recordings not found')
     return
   }
-  try {
-  const response = await apiLegacySearchCount(apiClientArbimon, selectedProjectSlug.value ?? '', requestParamsForPlaylist.value)
-  if (response === undefined) return
-  formattedRecordings(response)
-  deleteAllFiltered.value = true
-  showPopup.value = !showPopup.value
-  } catch (e) {
+
+  if (searchCount.value === undefined) {
     showAlertDialog('error', 'Error', 'Remove recording')
+    return
   }
+
+  formattedRecordings(searchCount.value)
+  deleteAllFiltered.value = true
+  showPopup.value = true
 }
 
 async function handleOk () {
