@@ -10,7 +10,7 @@
           class="relative"
         >
           <button
-            class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3"
+            class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3"
             @click="filterRecordings()"
           >
             <span>Filters</span>
@@ -36,7 +36,7 @@
           class="relative"
         >
           <button
-            class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+            class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
             :disabled="!store.userIsDataEntryMember"
             data-tooltip-style="light"
             :data-tooltip-target="!store.userIsDataEntryMember ? 'exportRecordingTooltip': null"
@@ -67,7 +67,7 @@
           />
         </div>
         <button
-          class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+          class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
           :disabled="!store.userIsFullProjectMember"
           data-tooltip-style="light"
           :data-tooltip-target="!store.userIsFullProjectMember ? 'recordingPlaylistTooltip': null"
@@ -88,7 +88,7 @@
           />
         </div>
         <button
-          class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+          class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
           :disabled="!store.userIsExpertMember"
           data-dropdown-toggle="deleteRecordingDropdown"
           data-tooltip-style="light"

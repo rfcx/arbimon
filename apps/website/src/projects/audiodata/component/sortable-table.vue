@@ -68,7 +68,7 @@
               v-for="column in columns"
               :key="column.key"
               :style="`max-width: ${column.maxWidth || 100}px`"
-              class="py-2 pl-2 truncate whitespace-nowrap overflow-hidden"
+              class="py-2 pl-2 truncate whitespace-nowrap overflow-hidden h-[40px]"
               :title="formatforTitle(column.key, row[column.key], row)"
             >
               {{ formatValueByKey(column.key, row[column.key], row) }}
@@ -80,7 +80,7 @@
           </tr>
           <tr v-if="selectedRowIndex === index">
             <td :colspan="columns.length + (props.showCheckbox ? 1 : 0)">
-              <div class="p-4 bg-pitch flex flex-col gap-2">
+              <div class="p-2 bg-pitch flex flex-col">
                 <div class="recording-img">
                   <div
                     v-show="isLoaded"
@@ -94,7 +94,7 @@
                   >
                 </div>
                 <button
-                  class="btn btn-secondary btn-xs-custom items-center inline-flex w-max hover:bg-opacity-80"
+                  class="btn btn-secondary btn-xs-custom items-center inline-flex w-max hover:bg-opacity-80 mt-2"
                   @click="onVisualizerRedirect(row.id)"
                 >
                   <icon-fa-cubes class="w-[15px] h-[12px] mr-1" /> View in Visualizer
