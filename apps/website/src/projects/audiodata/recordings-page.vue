@@ -111,7 +111,7 @@
         </div>
         <div
           id="deleteRecordingDropdown"
-          class="z-10 hidden bg-moss border border-frequency rounded-lg"
+          class="z-10 hidden bg-moss rounded-lg"
         >
           <ul class="p-2 font-medium">
             <li
@@ -136,7 +136,7 @@
     >
       <div class="flex justify-between items-center mb-4">
         <span class="ml-1 font-bold text-left text-sm reclist-total text-white">
-          {{ recordingsCount }} {{ recordingsCount > 1 ? "Recordings" : "Recording" }}
+          {{ recordingsCountText }} {{ recordingsCount > 1 ? "Recordings" : "Recording" }}
         </span>
 
         <div class="flex items-center">
@@ -183,9 +183,15 @@
     >
       <span class="font-display">Recordings not found</span>
     </div>
+    <div
+      v-if="!isLoadingRecordings && isErrorRecordings"
+      class="font-display text-cloud text-[26px] text-center mt-10"
+    >
+      <span class="font-display">Recordings not found</span>
+    </div>
 
     <PaginationComponent
-      v-show="!isLoadingRecordings && !(recordingsCount === 0)"
+      v-show="!isLoadingRecordings && !(recordingsCount === 0) && !isErrorRecordings"
       class="mt-4 px-8"
       :current-page="currentPage"
       :total-pages="totalPages"
@@ -297,7 +303,7 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
 
-const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings, isRefetching: isRefetchRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, filteredRequestParams)
+const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings, isRefetching: isRefetchRecordings, isError: isErrorRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, filteredRequestParams)
 
 const dateRange = ref<DateTime | undefined>()
 watch(
@@ -357,16 +363,19 @@ const { data: classifications } = useGetClassifications(apiClientArbimon, select
 const { data: recordedMinutesPerDay } = useGetRecordedMinutesPerDay(apiClientBio, project.projectId)
 
 const recordingsCount = computed(() => { return recordings.value?.count ?? 0 })
+const recordingsCountText = computed<string>(() =>
+  new Intl.NumberFormat('en-US').format(recordingsCount.value)
+)
 const showCreatePlaylistModal = ref(false)
 const showExportPanel = ref(false)
 
 const columns = [
-  { label: 'Site', key: 'site', maxWidth: 130 },
+  { label: 'Site', key: 'site', maxWidth: 90 },
   { label: 'Recorded Time', key: 'datetime', maxWidth: 110 },
-  { label: 'Filename', key: 'filename', maxWidth: 140 },
-  { label: 'Uploaded', key: 'upload_time', maxWidth: 100 },
-  { label: 'Recorder', key: 'recorder', maxWidth: 100 },
-  { label: 'Notes', key: 'comments', maxWidth: 100 }
+  { label: 'Filename', key: 'filename', maxWidth: 90 },
+  { label: 'Uploaded', key: 'upload_time', maxWidth: 70 },
+  { label: 'Recorder', key: 'recorder', maxWidth: 70 },
+  { label: 'Notes', key: 'comments', maxWidth: 150 }
 ]
 const selectedRecording = ref<RecordingSearchResponse | undefined>(undefined)
 

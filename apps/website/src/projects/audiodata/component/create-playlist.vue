@@ -25,13 +25,13 @@
 
       <div class="flex justify-between space-x-4 mt-8">
         <button
-          class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-5 bg-echo"
+          class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-5 bg-echo text-[16px] py-3"
           @click="close"
         >
           Cancel
         </button>
         <button
-          class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex px-5 disabled:hover:btn-disabled disabled:btn-disabled"
+          class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex px-6 disabled:hover:btn-disabled disabled:btn-disabled text-[16px] py-[10px]"
           :disabled="!playlistName.trim()"
           @click="save"
         >

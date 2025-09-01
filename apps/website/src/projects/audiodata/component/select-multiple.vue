@@ -127,7 +127,7 @@ const openDropdown = () => {
         <div class="inline-flex items-center px-[5px] py-[4px] text-[12px] rounded rounde-xl font-display text-cloud bg-util-gray-04 border border-util-gray-04 mt-1 mb-[3px] ml-1 hover:bg-[#0a0a0a] hover:border-[#0a0a0a]">
           <span class="mr-1 font-bold">{{ selectAllOption?.label }}</span>
           <button
-            class="font-bold opacity-80 hover:text-gray-200"
+            class="text-white font-bold opacity-20 hover:bg-echo text-[18px]"
             @click.stop="removeAll"
           >
             ×
