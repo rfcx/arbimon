@@ -28,34 +28,39 @@ export const useRecordings = (
 export const useGetClasses = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>): UseQueryReturnType<ClassesRecordingResponse[] | undefined, unknown> => {
   return useQuery({
     queryKey: ['get-classes', slug],
-    queryFn: async () => await apiArbimonGetClasses(apiClient, slug?.value ?? '')
+    queryFn: async () => await apiArbimonGetClasses(apiClient, slug?.value ?? ''),
+    refetchOnWindowFocus: false
   })
 }
 
 export const useGetPlaylists = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>): UseQueryReturnType<PlaylistResponse[] | undefined, unknown> => {
   return useQuery({
     queryKey: ['get-playlists', slug],
-    queryFn: async () => await apiArbimonGetPlaylists(apiClient, slug?.value ?? '')
+    queryFn: async () => await apiArbimonGetPlaylists(apiClient, slug?.value ?? ''),
+    refetchOnWindowFocus: false
   })
 }
 
 export const useGetSoundscape = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>): UseQueryReturnType<SoundscapeResponse[] | undefined, unknown> => {
   return useQuery({
     queryKey: ['get-soundscape', slug],
-    queryFn: async () => await apiArbimonGetSoundscape(apiClient, slug?.value ?? '')
+    queryFn: async () => await apiArbimonGetSoundscape(apiClient, slug?.value ?? ''),
+    refetchOnWindowFocus: false
   })
 }
 
 export const useGetClassifications = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>): UseQueryReturnType<ClassificationsResponse[] | undefined, unknown> => {
   return useQuery({
     queryKey: ['get-classifications', slug],
-    queryFn: async () => await apiArbimonGetClassifications(apiClient, slug?.value ?? '')
+    queryFn: async () => await apiArbimonGetClassifications(apiClient, slug?.value ?? ''),
+    refetchOnWindowFocus: false
   })
 }
 
 export const useGetTags = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>): UseQueryReturnType<TagResponse[] | undefined, unknown> => {
   return useQuery({
     queryKey: ['get-tags', slug],
-    queryFn: async () => await apiArbimonGetTags(apiClient, slug?.value ?? '')
+    queryFn: async () => await apiArbimonGetTags(apiClient, slug?.value ?? ''),
+    refetchOnWindowFocus: false
   })
 }

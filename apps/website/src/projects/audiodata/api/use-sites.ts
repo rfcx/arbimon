@@ -8,7 +8,8 @@ import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 export const useSites = (apiClient: AxiosInstance, params: ComputedRef<string | undefined>, request: ComputedRef<SiteParams | undefined>): UseQueryReturnType<SitesResponse | undefined, unknown> => {
   return useQuery({
     queryKey: ['fetch-sites', params],
-    queryFn: async () => await apiArbimonGetSites(apiClient, params?.value ?? '', request.value ?? { count: true, deployment: true, logs: true })
+    queryFn: async () => await apiArbimonGetSites(apiClient, params?.value ?? '', request.value ?? { count: true, deployment: true, logs: true }),
+    refetchOnWindowFocus: false
   })
 }
 
