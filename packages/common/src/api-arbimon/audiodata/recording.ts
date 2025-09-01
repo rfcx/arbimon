@@ -49,17 +49,47 @@ export const apiArbimonGetRecordings = async (
   slug: string,
   params: RecordingSearchParams
 ): Promise<RecordingSearchResponse | undefined> => {
-  if (slug !== undefined) {
-    const response = await apiClient.request<RecordingSearchResponse>({
-      method: 'GET',
-      url: `/legacy-api/project/${slug}/recordings/search`,
-      params: {
-        ...params,
-        output: params.output
-      }
-    })
-    return response.data
-  } else return undefined
+  if (!slug) return undefined
+
+  const searchParams = new URLSearchParams()
+  const appendArray = (key: string, arr?: Array<string | number>): void => {
+    if (arr && arr.length > 0) {
+      arr.forEach(v => {
+        searchParams.append(key, String(v))
+      })
+    }
+  }
+
+  if (params.limit !== undefined) searchParams.append('limit', String(params.limit))
+  if (params.offset !== undefined) searchParams.append('offset', String(params.offset))
+  if (params.sortBy) searchParams.append('sortBy', params.sortBy)
+  if (params.range) searchParams.append('range', params.range)
+
+  appendArray('output', params.output)
+  appendArray('playlists', params.playlists)
+  appendArray('sites', params.sites)
+  appendArray('sites_ids', params.sites_ids)
+  appendArray('soundscape_composition', params.soundscape_composition)
+  appendArray('soundscape_composition_annotation', params.soundscape_composition_annotation)
+  appendArray('tags[]', params.tags)
+  appendArray('validations', params.validations)
+  appendArray('presence', params.presence)
+  appendArray('years', params.years)
+  appendArray('days', params.days)
+  appendArray('hours', params.hours)
+  appendArray('months', params.months)
+  appendArray('classifications', params.classifications)
+  appendArray('classification_results', params.classification_results)
+  appendArray('recIds', params.recIds)
+
+  const response = await apiClient.request<RecordingSearchResponse>({
+    method: 'GET',
+    url: `/legacy-api/project/${slug}/recordings/search`,
+    params: {},
+    paramsSerializer: () => searchParams.toString()
+  })
+
+  return response.data
 }
 
 export const apiArbimonGetClasses = async (apiClient: AxiosInstance, slug: string): Promise<ClassesRecordingResponse[] | undefined> => {
