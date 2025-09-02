@@ -5,10 +5,11 @@
   >
     <!-- Date range -->
     <div class="flex items-start">
-      <label>Date range:</label>
+      <label class="label-first">Date range:</label>
       <DaterangePicker
         ref="datePickerComponentRef"
         class="w-full m-0"
+        :hide-label="true"
         :initial-date-start="dateStart"
         :initial-date-end="dateEnd"
         :input-label-start="'Start date'"
@@ -137,13 +138,13 @@
     <!-- Buttons -->
     <div class="flex justify-between mt-4">
       <button
-        class="btn btn-secondary btn-small text-sm px-[12px] py-[6px]"
+        class="btn btn-secondary btn-small text-sm px-[12px] h-[34px]"
         @click="resetFilters"
       >
         Reset filters
       </button>
       <button
-        class="btn btn-primary btn-small text-sm px-[12px] py-[6px]"
+        class="btn btn-primary btn-small text-sm px-[12px] h-[34px]"
         @click="emitApply"
       >
         Apply filters
@@ -471,8 +472,11 @@ function resetFilters () {
 </script>
 
 <style scoped>
+.label-first {
+  margin-top: 19px !important;
+}
 label {
-  @apply w-32 min-w-32;
+  @apply w-32 min-w-32 mt-[11px] text-[14px];
 }
 :deep(#dateRangePickerId input) {
   @apply bg-[#1e1c13] text-insight rounded-md text-sm font-medium;

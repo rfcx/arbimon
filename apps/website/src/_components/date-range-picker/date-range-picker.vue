@@ -7,6 +7,7 @@
   >
     <div class="flex-1">
       <label
+        v-if="!hideLabel"
         class="block mb-2 font-medium text-gray-900 dark:text-secondary"
       >{{ inputLabelStartFormatted }}</label>
       <div class="relative flex-1">
@@ -22,6 +23,7 @@
     <span class="mt-7 hidden md:block">-</span>
     <div class="flex-1">
       <label
+        v-if="!hideLabel"
         class="block mb-2 font-medium text-gray-900 dark:text-secondary"
       >{{ inputLabelEndFormatted }}</label>
       <div
@@ -54,6 +56,7 @@ const props = defineProps<{
   initialDateStart?: string,
   initialDateEnd?: string,
   onGoing?: boolean,
+  hideLabel?: boolean,
   inputLabelStart?: string,
   inputLabelEnd?: string,
   recordedMinutesPerDay?: GetRecordedMinutesPerDayResponse
