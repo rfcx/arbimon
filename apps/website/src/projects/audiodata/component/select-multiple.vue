@@ -120,7 +120,7 @@ const openDropdown = () => {
     class="relative"
   >
     <div
-      class="input-select-multiple flex flex-wrap"
+      class="input-select-multiple flex flex-wrap overflow-y-auto pr-1"
       @click="openDropdown"
     >
       <template v-if="selectedValues.includes('ALL')">
@@ -183,7 +183,7 @@ const openDropdown = () => {
         ref="searchInput"
         v-model="search"
         type="text"
-        class="flex-1 border-none outline-none bg-transparent py-1 placeholder-insight focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
+        class="flex-1 min-w-[100px] border-none outline-none bg-transparent py-1 placeholder-insight focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
         :placeholder="!selectedOptions.length ? (placeholder || 'Search or select...') : ''"
         @focus="isOpen = true"
       >
@@ -276,7 +276,15 @@ const openDropdown = () => {
 <style scoped>
 .input-select-multiple {
   @apply bg-echo text-insight w-full rounded rounded-md text-sm placeholder-insight border border-util-gray-03;
+  --chip-h: 28px;
+  --line-gap: 6px;
+  max-height: calc(var(--chip-h) * 3 + var(--line-gap) * 2 + 8px);
 }
+
+.input-select-multiple > * {
+  white-space: nowrap;
+}
+
 input::placeholder {
   @apply text-[14px];
 }

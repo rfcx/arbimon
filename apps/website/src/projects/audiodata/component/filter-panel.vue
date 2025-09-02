@@ -5,7 +5,7 @@
   >
     <!-- Date range -->
     <div class="flex items-start">
-      <label class="label-first">Date range:</label>
+      <label>Date range:</label>
       <DaterangePicker
         ref="datePickerComponentRef"
         class="w-full m-0"
@@ -89,7 +89,7 @@
       <label>Validations:</label>
       <SelectMultiple
         v-model="selectedClasses"
-        class="flex-[2] min-w-0"
+        class="flex-[4] min-w-0"
         :options="staticClasses ?? []"
         placeholder="Species - Sound..."
       />
@@ -106,7 +106,7 @@
       <label>Classifications:</label>
       <SelectMultiple
         v-model="selectedClassifications"
-        class="flex-[2] min-w-0"
+        class="flex-[4] min-w-0"
         :options="staticClassifications ?? []"
         placeholder="Classifications..."
       />
@@ -123,7 +123,7 @@
       <label class="w-32">Soundscape:</label>
       <SelectMultiple
         v-model="selectedSoundscapes"
-        class="flex-[2] min-w-0"
+        class="flex-[4] min-w-0"
         :options="staticSoundscapes ?? []"
         placeholder="Audio Classes"
       />
@@ -472,11 +472,8 @@ function resetFilters () {
 </script>
 
 <style scoped>
-.label-first {
-  margin-top: 19px !important;
-}
 label {
-  @apply w-32 min-w-32 mt-[11px] text-[14px];
+  @apply w-32 min-w-32 mt-[11px] text-[14px] font-medium;
 }
 :deep(#dateRangePickerId input) {
   @apply bg-[#1e1c13] text-insight rounded-md text-sm font-medium;

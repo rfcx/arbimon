@@ -20,7 +20,10 @@
         >
       </div>
     </div>
-    <span class="mt-7 hidden md:block">-</span>
+    <span
+      class="hidden md:block"
+      :class="{'mt-7' : !hideLabel}"
+    >-</span>
     <div class="flex-1">
       <label
         v-if="!hideLabel"
