@@ -8,7 +8,7 @@
   >
     <div
       id="targetElement"
-      class="flex fixed bottom-4 justify-around items-center p-4 mb-4 rounded-lg border-1 w-fit"
+      class="flex fixed bottom-4 justify-around items-center p-4 mb-4 rounded-lg border-1 w-fit mr-4"
       :class="{
         'text-insight bg-white dark:bg-util-gray-04 border-util-gray-02': severity === 'success',
         'bg-danger-background border-l-4 border-ibis text-pitch': severity === 'error'
