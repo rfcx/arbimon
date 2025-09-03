@@ -130,9 +130,9 @@
         </div>
       </div>
     </div>
-    <div
+    <icon-custom-ic-loading
       v-if="isLoadingRecordings || isRefetchRecordings"
-      class="loading-shimmer h-32 mx-8 my-5"
+      class="animate-spin text-2xl mt-[100px]"
     />
     <div
       v-show="!isLoadingRecordings && !isRefetchRecordings"

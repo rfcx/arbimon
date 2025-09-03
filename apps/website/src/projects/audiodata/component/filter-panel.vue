@@ -329,6 +329,20 @@ const classificationResults = computed<string[]>(() => {
     return null
   }).filter((v): v is string => v !== null)
 })
+function decodeClassification (values: string[]): ('present' | 'absent')[] {
+  return values
+    .map(v => {
+      try {
+        const obj = JSON.parse(v) as { model: number }
+        if (obj.model === 1) return 'present'
+        if (obj.model === 2) return 'absent'
+        return null
+      } catch {
+        return null
+      }
+    })
+    .filter((v): v is 'present' | 'absent' => v !== null)
+}
 const selectedAnnotation = ref<(string)[]>([])
 const staticOptions = [
   { icon: 'val-1', label: 'Present', value: 'present' },
@@ -407,7 +421,7 @@ onMounted(() => {
   selectedClasses.value = v?.validations ?? []
   selectedValidation.value = v?.presence ?? []
   selectedClassifications.value = v?.classifications ?? []
-  selectedResults.value = v?.classification_results ?? []
+  selectedResults.value = decodeClassification(v?.classification_results ?? [])
   selectedSoundscapes.value = v?.soundscape_composition ?? []
   selectedAnnotation.value = v?.soundscape_composition_annotation ?? []
   datePickerComponentRef.value?.resetDatePicker(parseRange(v?.range))
