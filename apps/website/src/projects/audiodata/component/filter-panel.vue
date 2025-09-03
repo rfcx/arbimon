@@ -6,16 +6,37 @@
     <!-- Date range -->
     <div class="flex items-start">
       <label>Date range:</label>
-      <DaterangePicker
-        ref="datePickerComponentRef"
-        class="w-full m-0"
-        :hide-label="true"
-        :initial-date-start="dateStart"
-        :initial-date-end="dateEnd"
-        :input-label-start="'Start date'"
-        :input-label-end="'End date'"
-        @emit-select-date-range="onSelectQueryDates"
-      />
+      <span
+        ref="datePickerStartDate"
+        class="w-full"
+      >
+        <el-date-picker
+          v-model="dateStart"
+          class="custom-h w-full border text-secondary border-util-gray-03 rounded-md dark:(bg-pitch text-secondary placeholder:text-placeholder) focus:(border-frequency ring-frequency)"
+          type="date"
+          placeholder="Choose date"
+          format="DD/MM/YYYY"
+          :disabled-date="disabledStartDate"
+          :teleported="false"
+        />
+      </span>
+      <div class="px-3 py-1">
+        -
+      </div>
+      <span
+        ref="datePickerEndDate"
+        class="w-full"
+      >
+        <el-date-picker
+          v-model="dateEnd"
+          class="custom-h h-[34px] w-full border text-secondary border-util-gray-03 rounded-md dark:(bg-pitch text-secondary placeholder:text-placeholder) focus:(border-frequency ring-frequency)"
+          type="date"
+          placeholder="Choose date"
+          format="DD/MM/YYYY"
+          :disabled-date="disabledEndDateRange"
+          :teleported="false"
+        />
+      </span>
     </div>
 
     <!-- Date and Time -->
@@ -148,6 +169,10 @@
         @click="emitApply"
       >
         Apply filters
+        <icon-custom-ic-loading
+          v-if="isLoading"
+          class="animate-spin text-xl ml-2 inline-flex"
+        />
       </button>
     </div>
   </div>
@@ -161,8 +186,6 @@ import { type ClassesRecordingResponse, type ClassificationsResponse, type Playl
 import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type GetRecordedMinutesPerDayResponse } from '@rfcx-bio/common/api-bio/cnn/recorded-minutes-per-day'
 
-import { type DateRange } from '@/_components/date-range-picker/date-range-picker'
-import DaterangePicker from '@/_components/date-range-picker/date-range-picker.vue'
 import SelectMultiple from './select-multiple.vue'
 import { type Option } from './select-multiple.vue'
 
@@ -189,7 +212,25 @@ const props = defineProps<{
   filtersData?: RecordingSearchParams | undefined
 }>()
 
-const datePickerComponentRef = ref<InstanceType<typeof DaterangePicker> | null>(null)
+function isFuture (time: Date) {
+  const todayEnd = new Date()
+  todayEnd.setHours(23, 59, 59, 999)
+  return time.getTime() > todayEnd.getTime()
+}
+
+function disabledStartDate (time: Date) {
+  return isFuture(time)
+}
+
+function disabledEndDateRange (time: Date) {
+  if (isFuture(time)) return true
+  if (dateStart.value) {
+    const start = new Date(dateStart.value)
+    start.setHours(0, 0, 0, 0)
+    return time.getTime() < start.getTime()
+  }
+  return false
+}
 
 const filters = reactive<RecordingSearchParams>({
   limit: 10,
@@ -215,6 +256,7 @@ const dateStart = ref<string | undefined>()
 const dateEnd = ref<string | undefined>()
 
 const isOpen = ref(false)
+const isLoading = ref(false)
 
 function formatTimestamp (timestamp: number): string {
   return dayjs(timestamp).format('MMM D, YYYY h:mm A')
@@ -349,6 +391,26 @@ const staticOptions = [
   { icon: 'val-0', label: 'Absent', value: 'absent' }
 ]
 
+const panelRef = ref<HTMLElement | null>(null)
+
+const datePickerStartDate = ref<HTMLElement | null>(null)
+const datePickerEndDate = ref<HTMLElement | null>(null)
+
+function handleClickOutside (event: MouseEvent) {
+  const target = event.target as Node
+
+  const insidePanel = panelRef.value?.contains(target) ?? false
+  const insideStart = datePickerStartDate.value?.contains(target) ?? false
+  const insideEnd = datePickerEndDate.value?.contains(target) ?? false
+
+  const insideElPopper = target instanceof Element && !!(target.closest('.el-picker-panel, .el-popper'))
+  const clickedInside = insidePanel || insideStart || insideEnd || insideElPopper
+
+  if (!clickedInside) {
+    isOpen.value = false
+  }
+}
+
 function toRange (fromISO?: string, toISO?: string) {
   if (!fromISO || !toISO) return undefined
 
@@ -371,43 +433,8 @@ function toRange (fromISO?: string, toISO?: string) {
   return JSON.stringify(range)
 }
 
-const onSelectQueryDates = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
-  filters.range = toRange(dateStartLocalIso, dateEndLocalIso)
-}
-
-const panelRef = ref<HTMLElement | null>(null)
-
-function isFromFlowbiteDatepicker (el: Element | null) {
-  return !!el?.closest('.datepicker, .datepicker-picker, .datepicker-dropdown')
-}
-
-function handleClickOutside (event: MouseEvent) {
-  const el = event.target as Element
-  if (isFromFlowbiteDatepicker(el)) return
-
-  if (panelRef.value && !panelRef.value.contains(el)) {
-    isOpen.value = false
-  }
-}
-
-type RangeObj = { from: string; to: string }
-
-function isRangeObj (value: unknown): value is RangeObj {
-  if (typeof value !== 'object' || value === null) return false
-  const v = value as { from?: unknown; to?: unknown }
-  return typeof v.from === 'string' && typeof v.to === 'string'
-}
-
-function parseRange (rangeStr?: string): RangeObj | undefined {
-  if (!rangeStr) return undefined
-  try {
-    const obj: unknown = JSON.parse(rangeStr)
-    if (isRangeObj(obj)) return obj
-  } catch {
-    // ignore
-  }
-  return undefined
-}
+watch(dateStart, (v) => { filters.range = toRange(v, dateEnd.value) })
+watch(dateEnd, (v) => { filters.range = toRange(dateStart.value, v) })
 
 onMounted(() => {
   const v = props.filtersData
@@ -424,12 +451,22 @@ onMounted(() => {
   selectedResults.value = decodeClassification(v?.classification_results ?? [])
   selectedSoundscapes.value = v?.soundscape_composition ?? []
   selectedAnnotation.value = v?.soundscape_composition_annotation ?? []
-  datePickerComponentRef.value?.resetDatePicker(parseRange(v?.range))
-
+  applyRangeJSON(v?.range)
   setTimeout(() => {
     document.addEventListener('mousedown', handleClickOutside)
   }, 0)
 })
+
+function applyRangeJSON (rangeStr?: string) {
+  if (!rangeStr) { dateStart.value = ''; dateEnd.value = ''; return }
+  try {
+    const { from, to } = JSON.parse(rangeStr) as { from: string; to: string }
+    dateStart.value = from.slice(0, 10) // "YYYY-MM-DD"
+    dateEnd.value = to.slice(0, 10)
+  } catch (e) {
+    console.error('Invalid range JSON', e)
+  }
+}
 
 onBeforeUnmount(() => {
   document.removeEventListener('mousedown', handleClickOutside)
@@ -462,6 +499,7 @@ watch(selectedSoundscapes, (v) => { filters.soundscape_composition = v })
 watch(selectedAnnotation, (v) => { filters.soundscape_composition_annotation = v })
 
 function emitApply () {
+  isLoading.value = true
   emit('apply', filters)
 }
 
@@ -480,7 +518,8 @@ function resetFilters () {
   selectedResults.value = []
   selectedSoundscapes.value = []
   selectedAnnotation.value = []
-  datePickerComponentRef.value?.resetDatePicker()
+  dateEnd.value = ''
+  dateStart.value = ''
   emit('resetFilters', filters)
 }
 </script>
@@ -489,17 +528,32 @@ function resetFilters () {
 label {
   @apply w-32 min-w-32 mt-[11px] text-[14px] font-medium;
 }
-:deep(#dateRangePickerId input) {
-  @apply bg-[#1e1c13] text-insight rounded-md text-sm font-medium;
-}
-:deep(#dateRangePickerId input::placeholder) {
-  @apply text-insight text-sm font-medium;
-}
 :deep(#selectMultiple .input-select-multiple) {
   @apply bg-[#1e1c13] text-insight rounded-md py-[1px] font-medium;
 }
 :deep(#selectMultiple input) {
   @apply text-insight font-medium;
+}
+:deep(.el-input__inner) {
+  @apply h-[36px] leading-[36px];
+  font-size: 14px !important;
+}
+:deep(.custom-h .el-input__wrapper) {
+  height: 36px;
+  min-height: 36px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+:deep(.custom-h .el-input__inner::placeholder) {
+  @apply text-[#FFFEFC] text-insight text-sm font-medium;
+}
+
+:deep(.el-date-editor.el-input) {
+  @apply bg-[#1e1c13] text-insight rounded-md text-sm font-medium;
+  height: 36px;
+}
+:deep(.custom-h .el-input__icon) {
+  @apply text-[#FFFEFC] mt-1;
 }
 
 </style>

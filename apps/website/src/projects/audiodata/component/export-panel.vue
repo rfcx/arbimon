@@ -80,14 +80,14 @@
 
     <div class="flex justify-between mt-4">
       <button
-        class="btn btn-secondary text-[14px] btn-small w-full items-center justify-center inline-flex hover:text-pitch mr-1 py-2"
+        class="btn btn-secondary text-[14px] btn-small w-full items-center justify-center inline-flex hover:text-pitch mr-1 h-[34px]"
         @click="resetExportData"
       >
         <icon-fa-undo class="h-3 w-3 mr-1" />
         Reset
       </button>
       <button
-        class="btn btn-primary btn-small w-full items-center justify-center inline-flex ml-1 text-[14px] py-2"
+        class="btn btn-primary btn-small w-full items-center justify-center inline-flex ml-1 text-[14px] h-[34px]"
         @click="showExportModal = true"
       >
         <icon-fa-send-o class="h-3 w-3 mr-1" />
