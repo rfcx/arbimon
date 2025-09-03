@@ -10,6 +10,8 @@ import { getExportFilterName } from '~/filters'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
+import CircleLegend from '~/maps/map-legend/circle-legend.vue'
+import HeatmapLegend from '~/maps/map-legend/heatmap-legend.vue'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
 import { type MapBaseFormatter, type MapDataSet, type MapMoveEvent } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
@@ -21,7 +23,9 @@ const DEFAULT_PREFIX = 'Species-By-Site'
 @Options({
   components: {
     MapBaseComponent,
-    MapToolMenuComponent
+    MapToolMenuComponent,
+    CircleLegend,
+    HeatmapLegend
   }
 })
 export default class SpeciesRichnessByLocation extends Vue {

@@ -33,11 +33,12 @@
       </template>
     </section-title>
     <div
+      v-for="(dataset, idx) in datasets"
+      :key="'activity-patterns-by-location-wrapper' + idx"
       class="grid gap-2 mt-2"
       :class="{ [`md:grid-cols-${columnCount}`]: true }"
     >
       <map-base-component
-        v-for="(dataset, idx) in datasets"
         :key="'activity-patterns-by-location-' + idx"
         :dataset="dataset"
         :data-key="selectedType"
@@ -55,6 +56,18 @@
         class="w-full"
         @emit-map-moved="propagateMapMove"
       />
+      <div class="flex flex-row justify-between mt-4">
+        <circle-legend
+          v-if="mapStatisticsStyle === MAPBOX_STYLE_CIRCLE"
+          :map-base-formatter="circleFormatter"
+          :style-non-zero="circleStyles[idx]"
+        />
+        <heatmap-legend
+          v-else-if="mapStatisticsStyle === MAPBOX_STYLE_HEATMAP"
+          :max-value="dataset.maxValues.count"
+          :title="`Number of species`"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -68,9 +81,11 @@ import type { SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-i
 import { SPOTLIGHT_MAP_KEYS } from '@/insights/activity-patterns/functions'
 import { getExportFilterName } from '~/filters'
 import type { MapboxGroundStyle, MapboxStatisticsStyle, MapboxStyle } from '~/maps'
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import MapBaseComponent from '~/maps/map-base/map-base.vue'
+import CircleLegend from '~/maps/map-legend/circle-legend.vue'
+import HeatmapLegend from '~/maps/map-legend/heatmap-legend.vue'
 import MapToolMenuComponent from '~/maps/map-tool-menu/map-tool-menu.vue'
 import type { MapBaseFormatter, MapDataSet, MapMoveEvent } from '~/maps/types'
 import { CircleFormatterBinary } from '~/maps/utils/circle-formatter/circle-formatter-binary'

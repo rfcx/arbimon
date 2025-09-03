@@ -14,11 +14,12 @@
       </template>
     </section-title>
     <div
+      v-for="(dataset, idx) in datasets"
+      :key="'species-richness-by-location-wrapper' + idx"
       class="grid gap-2 mt-2"
       :class="{ [`md:grid-cols-${columnCount}`]: true }"
     >
       <map-base-component
-        v-for="(dataset, idx) in datasets"
         :key="'species-richness-by-location-' + idx"
         :dataset="dataset"
         :data-key="mapDataKey"
@@ -33,9 +34,22 @@
         :is-show-labels="isShowLabels"
         :style-non-zero="circleStyles[idx]"
         :map-move-event="mapMoveEvent"
-        class="w-full"
+        class="map-bubble w-full"
         @emit-map-moved="propagateMapMove"
       />
+      {{ dataset }}
+      <div class="flex flex-row justify-between mt-4">
+        <circle-legend
+          v-if="mapStatisticsStyle === 'circle'"
+          :map-base-formatter="circleFormatter"
+          :style-non-zero="circleStyles[idx]"
+        />
+        <heatmap-legend
+          v-else-if="mapStatisticsStyle === 'heatmap'"
+          :max-value="dataset.maxValues[0]"
+          :title="`Number of species`"
+        />
+      </div>
     </div>
   </div>
 </template>

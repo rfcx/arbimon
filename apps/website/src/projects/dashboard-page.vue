@@ -42,13 +42,20 @@
               map-export-name="dashboard-sites"
               :map-id="'dashboard-sites'"
               :map-initial-bounds="mapInitialBounds()"
-              :map-base-formatter="circleFormatter()"
+              :map-base-formatter="circleFormatter"
               :map-ground-style="mapGroundStyle"
               :map-statistics-style="mapStatisticsStyle"
               :is-show-labels="isShowLabels"
               :map-height="tabHeight"
-              :style-non-zero="circleStyle()"
+              :style-non-zero="circleStyle"
               class="map-bubble w-full"
+            />
+          </div>
+          <div class="flex flex-row justify-between mt-4">
+            <circle-legend
+              v-if="mapStatisticsStyle === MAPBOX_STYLE_CIRCLE"
+              :map-base-formatter="circleFormatter"
+              :style-non-zero="circleStyle"
             />
           </div>
         </div>
@@ -103,6 +110,7 @@
 import type { AxiosInstance } from 'axios'
 import { initModals } from 'flowbite'
 import { type LngLatBoundsLike } from 'mapbox-gl'
+import type { ComputedRef } from 'vue'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
@@ -111,9 +119,9 @@ import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
+import CircleLegend from '~/maps/map-legend/circle-legend.vue'
 import { type MapBaseFormatter, type MapDataSet, type MapSiteData } from '~/maps/types'
 import { CircleFormatterNormalizedWithMin } from '~/maps/utils/circle-formatter/circle-formatter-normalized-with-min'
-import { type CircleStyle } from '~/maps/utils/circle-style/types'
 import { useStore } from '~/store'
 import { useAedJobCount, useClusteringJobCount, useClusteringSpeciesDetected } from './_composables/use-aed-count'
 import { usePlaylistCount } from './_composables/use-playlist-count'
@@ -182,13 +190,10 @@ const getPopupHtml = (data: MapSiteData, dataKey: string): string => {
 }
 const hasOpenedAnalysisSelector = ref(false)
 
-function color (): string {
-  return store.datasetColors[0] ?? '#EFEFEF'
-}
-
-function circleStyle (): CircleStyle {
-  return { ...DEFAULT_NON_ZERO_STYLE, color: color() }
-}
+const circleStyle = computed(() => {
+  const color = store.datasetColors[0] ?? '#EFEFEF'
+  return { ...DEFAULT_NON_ZERO_STYLE, color }
+})
 
 function mapDataset (): MapDataSet {
   return {
@@ -232,9 +237,9 @@ function mapInitialBounds (): LngLatBoundsLike | undefined {
   return [[project.longitudeWest, project.latitudeSouth], [project.longitudeEast, project.latitudeNorth]]
 }
 
-function circleFormatter (): MapBaseFormatter {
-  return new CircleFormatterNormalizedWithMin({ maxValueRaw: maxRecordings.value })
-}
+const circleFormatter: ComputedRef<MapBaseFormatter> = computed(() => {
+  return new CircleFormatterNormalizedWithMin({ maxValueRaw: mapDataset().maxValues[MAP_KEY], showZeroInLegend: false })
+})
 
 function toggleAnalysisSelector (isOpened: boolean): void {
   hasOpenedAnalysisSelector.value = isOpened
