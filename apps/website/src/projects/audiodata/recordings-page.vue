@@ -440,10 +440,31 @@ const showCreatePlaylist = () => {
   }
 }
 
+function omitEmptyArrays<T extends Record<string, any>> (obj: T): Partial<T> {
+  const out: Record<string, any> = {}
+
+  for (const [k, v] of Object.entries(obj)) {
+    if (Array.isArray(v)) {
+      if (v.length > 0) out[k] = v
+      continue
+    }
+
+    if (v !== null && v !== undefined && typeof v === 'object' && !(v instanceof Date)) {
+      const nested = omitEmptyArrays(v)
+      if (Object.keys(nested).length > 0) out[k] = nested
+      continue
+    }
+
+    if (v !== undefined) out[k] = v
+  }
+
+  return out as Partial<T>
+}
+
 const saveToPlaylist = async (name: string) => {
   showCreatePlaylistModal.value = false
   try {
-  await apiLegacyCreatePlaylists(apiClientArbimon, selectedProjectSlug.value ?? '', { playlist_name: name, params: requestParamsForPlaylist.value })
+  await apiLegacyCreatePlaylists(apiClientArbimon, selectedProjectSlug.value ?? '', { playlist_name: name, params: omitEmptyArrays(requestParamsForPlaylist.value) })
     showAlertDialog('success', 'Success', 'Created playlist')
   } catch (e) {
     showAlertDialog('error', 'Error', 'Create playlist')
