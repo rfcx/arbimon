@@ -17,9 +17,10 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref, watch } from 'vue'
 
 import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/constants'
-import type { MapBaseFormatter, MapBaseStyle } from '~/maps/types'
+import type { MapBaseFormatter, MapBaseLegendEntry, MapBaseStyle } from '~/maps/types'
 
 const props = withDefaults(defineProps<{
   mapBaseFormatter: MapBaseFormatter,
@@ -30,6 +31,14 @@ const props = withDefaults(defineProps<{
   styleZero: () => DEFAULT_ZERO_STYLE
 })
 
-const legendEntry = props.mapBaseFormatter.getLegendEntries(props.styleNonZero, props.styleZero)
+const legendEntry = ref<MapBaseLegendEntry[]>([])
+
+watch(() => props.mapBaseFormatter, (newValue) => {
+  legendEntry.value = newValue.getLegendEntries(props.styleNonZero, props.styleZero)
+})
+
+onMounted(() => {
+  legendEntry.value = props.mapBaseFormatter.getLegendEntries(props.styleNonZero, props.styleZero)
+})
 
 </script>

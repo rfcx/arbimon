@@ -63,8 +63,8 @@
           />
           <heatmap-legend
             v-else-if="mapStatisticsStyle === 'heatmap'"
-            :max-value="dataset.maxValues.count"
-            :title="`Number of species`"
+            :max-value="selectedType === 'detectionFrequency' ? dataset.maxValues.detectionFrequency : dataset.maxValues.count"
+            :title="selectedType === 'detectionFrequency' ? 'Detection frequency' : 'Number of species'"
           />
         </div>
       </div>

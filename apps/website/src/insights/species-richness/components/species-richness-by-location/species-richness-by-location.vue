@@ -37,7 +37,6 @@
         class="map-bubble w-full"
         @emit-map-moved="propagateMapMove"
       />
-      {{ dataset }}
       <div class="flex flex-row justify-between mt-4">
         <circle-legend
           v-if="mapStatisticsStyle === 'circle'"

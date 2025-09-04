@@ -32,17 +32,21 @@
 
 import { computed } from 'vue'
 
-const MINIMUM_VALUE = 10
-
 const props = defineProps<{
   maxValue: number,
+  minValue?: number,
   title: string,
 }>()
 
+const isFloat = (num: number) => {
+  return !isNaN(num) && num % 1 !== 0
+}
+
 const mapLegendLabels = computed(() => {
-  const maxValue = Math.max(props.maxValue, MINIMUM_VALUE)
+  const maxValue = props.maxValue
   if (maxValue === 0) return null
-  return [1, Math.ceil(maxValue / 2), maxValue]
+  if (props.minValue !== undefined) return [props.minValue, isFloat(maxValue) ? (maxValue / 2).toFixed(2) : Math.ceil(maxValue / 2), isFloat(maxValue) ? maxValue.toFixed(3) : maxValue]
+  return [0, isFloat(maxValue) ? (maxValue / 2).toFixed(3) : Math.ceil(maxValue / 2), isFloat(maxValue) ? maxValue.toFixed(3) : maxValue]
 })
 
 </script>
