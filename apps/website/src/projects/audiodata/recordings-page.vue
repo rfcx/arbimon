@@ -27,6 +27,7 @@
             :classifications="classifications"
             :recorded-minutes-per-day="recordedMinutesPerDay"
             :filters-data="filterParams"
+            :is-reset="isResetFilter"
             @apply="applyFilters"
             @reset-filters="resetFilters"
           />
@@ -403,10 +404,13 @@ const applyFilters = async (filter: RecordingSearchParams) => {
   await refetchRecordings()
   showFilterModal.value = false
 }
+const isResetFilter = ref(false)
 
 const resetFilters = debounce(async (filter: RecordingSearchParams) => {
+  isResetFilter.value = true
   filterParams.value = filter
   await refetchRecordings()
+  isResetFilter.value = false
 }, 500)
 
 const applyRecordings = async () => {

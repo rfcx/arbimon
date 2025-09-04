@@ -163,13 +163,17 @@
         @click="resetFilters"
       >
         Reset filters
+        <icon-custom-ic-loading-dark
+          v-if="isResetFilters"
+          class="animate-spin text-xl ml-2 inline-flex"
+        />
       </button>
       <button
         class="btn btn-primary btn-small text-sm px-[12px] h-[34px]"
         @click="emitApply"
       >
         Apply filters
-        <icon-custom-ic-loading
+        <icon-custom-ic-loading-dark
           v-if="isLoading"
           class="animate-spin text-xl ml-2 inline-flex"
         />
@@ -210,6 +214,7 @@ const props = defineProps<{
   classifications: ClassificationsResponse[] | undefined
   recordedMinutesPerDay: GetRecordedMinutesPerDayResponse | undefined
   filtersData?: RecordingSearchParams | undefined
+  isReset?: boolean
 }>()
 
 function isFuture (time: Date) {
@@ -503,7 +508,11 @@ function emitApply () {
   emit('apply', filters)
 }
 
+const isResetFilters = ref(false)
+watch(() => props.isReset, (v) => { isResetFilters.value = v })
+
 function resetFilters () {
+  isResetFilters.value = true
   filters.range = undefined
   selectedYears.value = []
   selectedMonths.value = []
