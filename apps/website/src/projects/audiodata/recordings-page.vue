@@ -116,13 +116,13 @@
         >
           <ul class="p-2 font-medium">
             <li
-              class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer"
+              class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer text-[14px]"
               @click="deleteCheckedRecordings"
             >
               Checked recordings
             </li>
             <li
-              class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer"
+              class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer text-[14px]"
               @click="deleteAllFilteredRecordings"
             >
               All filtered recordings
