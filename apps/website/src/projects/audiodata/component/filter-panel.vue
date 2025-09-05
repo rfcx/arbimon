@@ -110,13 +110,13 @@
       <label>Validations:</label>
       <SelectMultiple
         v-model="selectedClasses"
-        class="flex-[4] min-w-0"
+        class="flex-[7] min-w-0"
         :options="staticClasses ?? []"
         placeholder="Species - Sound..."
       />
       <SelectMultiple
         v-model="selectedValidation"
-        class="flex-[1] min-w-0 ml-2"
+        class="flex-[3] min-w-0 ml-2"
         :options="staticOptions ?? []"
         placeholder="Validation"
       />
@@ -127,13 +127,13 @@
       <label>Classifications:</label>
       <SelectMultiple
         v-model="selectedClassifications"
-        class="flex-[4] min-w-0"
+        class="flex-[7] min-w-0"
         :options="staticClassifications ?? []"
         placeholder="Classifications..."
       />
       <SelectMultiple
         v-model="selectedResults"
-        class="flex-[1] min-w-0 ml-2"
+        class="flex-[3] min-w-0 ml-2"
         :options="staticOptions ?? []"
         placeholder="Results"
       />
@@ -144,13 +144,13 @@
       <label class="w-32">Soundscape:</label>
       <SelectMultiple
         v-model="selectedSoundscapes"
-        class="flex-[4] min-w-0"
+        class="flex-[7] min-w-0"
         :options="staticSoundscapes ?? []"
         placeholder="Audio Classes"
       />
       <SelectMultiple
         v-model="selectedAnnotation"
-        class="flex-[1] min-w-0 ml-2"
+        class="flex-[3] min-w-0 ml-2"
         :options="staticOptions ?? []"
         placeholder="Annotation"
       />
