@@ -22,6 +22,7 @@ const props = defineProps<{
   modelValue:(string | number)[]
   options: Option[]
   placeholder?: string
+  hideAfterSelected?: boolean
 }>()
 
 const emit = defineEmits<{(e: 'update:modelValue', value: (string | number)[]): void }>()
@@ -88,6 +89,12 @@ const selectOption = (value: string | number) => {
   }
 
   search.value = ''
+
+  if (props.hideAfterSelected) {
+    isOpen.value = false
+    return
+  }
+
   nextTick(() => searchInput.value?.focus())
 }
 

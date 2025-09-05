@@ -118,6 +118,7 @@
         v-model="selectedValidation"
         class="flex-[3] min-w-0 ml-2"
         :options="staticOptions ?? []"
+        :hide-after-selected="true"
         placeholder="Validation"
       />
     </div>
@@ -135,6 +136,7 @@
         v-model="selectedResults"
         class="flex-[3] min-w-0 ml-2"
         :options="staticOptions ?? []"
+        :hide-after-selected="true"
         placeholder="Results"
       />
     </div>
@@ -152,6 +154,7 @@
         v-model="selectedAnnotation"
         class="flex-[3] min-w-0 ml-2"
         :options="staticOptions ?? []"
+        :hide-after-selected="true"
         placeholder="Annotation"
       />
     </div>
