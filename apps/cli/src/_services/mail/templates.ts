@@ -14,6 +14,7 @@ const projectBackupBody = ({ url, projectName }: { url: string, projectName: str
           <img style="width: 14px; height: 14px; margin-left:8px" src="https://static.rfcx.org/arbimon/download-icon.png">
       </a>
   </button>
+  <img style="width: 14px; height: 14px; margin-left:8px" src="https://static.rfcx.org/arbimon/download-icon.png"><a style="margin-left: 1px" href="${url}">Download export</a>
   <p style="color:black;">
     <span> - The Arbimon Team </span>
   </p>
