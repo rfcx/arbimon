@@ -3,7 +3,7 @@ import { type MapBaseLegendEntry } from '~/maps/types'
 import { CircleFormatterNormalized, DEFAULT_FORMAT_FUNCTION, DEFAULT_LEGEND_COUNT, DEFAULT_RADIUS_IN_PIXELS } from './circle-formatter-normalized'
 
 export const DEFAULT_SHOW_IN_LEGEND = true
-export const DEFAULT_LABEL_ZERO = 'No detections'
+export const DEFAULT_LABEL_ZERO = '0'
 
 export class CircleFormatterNormalizedWithMin extends CircleFormatterNormalized {
   protected readonly showZeroInLegend: boolean

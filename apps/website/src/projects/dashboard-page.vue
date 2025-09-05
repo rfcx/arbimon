@@ -238,7 +238,7 @@ function mapInitialBounds (): LngLatBoundsLike | undefined {
 }
 
 const circleFormatter: ComputedRef<MapBaseFormatter> = computed(() => {
-  return new CircleFormatterNormalizedWithMin({ maxValueRaw: mapDataset().maxValues[MAP_KEY], showZeroInLegend: false })
+  return new CircleFormatterNormalizedWithMin({ maxValueRaw: mapDataset().maxValues[MAP_KEY], showZeroInLegend: true })
 })
 
 function toggleAnalysisSelector (isOpened: boolean): void {

@@ -57,12 +57,12 @@
         />
         <div class="flex flex-row justify-between mt-4">
           <circle-legend
-            v-if="mapStatisticsStyle === 'circle'"
+            v-if="mapStatisticsStyle === 'circle' && !loading"
             :map-base-formatter="circleFormatter"
             :style-non-zero="circleStyles[idx]"
           />
           <heatmap-legend
-            v-else-if="mapStatisticsStyle === 'heatmap'"
+            v-else-if="mapStatisticsStyle === 'heatmap' && !loading"
             :max-value="selectedType === 'detectionFrequency' ? dataset.maxValues.detectionFrequency : dataset.maxValues.count"
             :title="selectedType === 'detectionFrequency' ? 'Detection frequency' : 'Number of species'"
           />

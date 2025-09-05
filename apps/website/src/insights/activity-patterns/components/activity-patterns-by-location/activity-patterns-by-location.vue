@@ -58,12 +58,12 @@
       />
       <div class="flex flex-row justify-between mt-4">
         <circle-legend
-          v-if="mapStatisticsStyle === MAPBOX_STYLE_CIRCLE"
+          v-if="mapStatisticsStyle === MAPBOX_STYLE_CIRCLE && !loading"
           :map-base-formatter="circleFormatter"
           :style-non-zero="circleStyles[idx]"
         />
         <heatmap-legend
-          v-else-if="mapStatisticsStyle === MAPBOX_STYLE_HEATMAP"
+          v-else-if="mapStatisticsStyle === MAPBOX_STYLE_HEATMAP && !loading"
           :max-value="selectedType === SPOTLIGHT_MAP_KEYS.detectionFrequency ? dataset.maxValues.detectionFrequency : dataset.maxValues.count"
           :title="selectedType === SPOTLIGHT_MAP_KEYS.detectionFrequency ? 'Detection frequency' : 'Number of species'"
         />
@@ -137,7 +137,7 @@ const mapInitialBounds = computed<LngLatBoundsLike>(() => {
 const circleFormatter = computed<MapBaseFormatter>(() => {
   return selectedType.value === SPOTLIGHT_MAP_KEYS.occupancy
     ? new CircleFormatterBinary()
-    : new CircleFormatterNormalizedWithMin({ maxValueRaw: props.datasets[0].maxValues[selectedType.value] })
+    : new CircleFormatterNormalizedWithMin({ maxValueRaw: props.datasets[0].maxValues[selectedType.value], showZeroInLegend: true })
 })
 
 const circleStyles = computed<CircleStyle[]>(() => {
