@@ -47,7 +47,7 @@
         data-popper-arrow
       />
     </div>
-    <div class="flex mt-6 px-8">
+    <div class="flex mt-5 px-8">
       <button
         class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex text-[14px] h-[34px] px-3 disabled:hover:btn-disabled disabled:btn-disabled"
         :disabled="!store.userIsFullProjectMember"
@@ -89,20 +89,68 @@
         />
       </div>
     </div>
+    <div class="flex mt-5 px-9">
+      <div class="input-item search form-element">
+        <icon-fa-search class="h-3 w-3 mt-3 fa-search text-insight" />
+        <input
+          v-model="searchKeyword"
+          type="text"
+          placeholder="Search species by scientific name or family"
+          class="form-control placeholder-style rounded px-3 py-2 h-[34px] w-59.5 items-center inline-flex rounded border-1 border-util-gray-03 bg-echo"
+          @input="onSearchInput"
+        >
+      </div>
+    </div>
   </section>
 </template>
 <script setup lang="ts">
+import type { AxiosInstance } from 'axios'
 import { initTooltips } from 'flowbite'
-import { onMounted, ref } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 
+import { type SpeciesClassesParams } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+
+import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
+import { useGetSpecies } from './api/use-species'
 
 const store = useStore()
+const selectedProjectSlug = computed(() => store.project?.slug)
+
 const speciesSelected = ref(undefined)
+
+const searchKeyword = ref('')
+const searchTimeout = ref<number | undefined>(undefined)
+
+const LIMIT = 10
+const currentPage = ref(1)
+
+const offset = computed(() => (currentPage.value - 1) * LIMIT)
+
+const speciesParams = computed<SpeciesClassesParams>(() => {
+  return {
+    limit: LIMIT,
+    offset: offset.value,
+    q: ''
+  }
+})
+
+const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+
+const { data: speciesData } = useGetSpecies(apiClientArbimon, selectedProjectSlug, speciesParams.value)
 
 onMounted(() => {
   initTooltips()
+
+  console.info(speciesData)
 })
+
+const onSearchInput = () => {
+  clearTimeout(searchTimeout.value)
+  searchTimeout.value = window.setTimeout(() => {
+    // debounce
+  }, 300)
+}
 
 const createSpecies = () => {
   console.info('createSpecies')
