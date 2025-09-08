@@ -191,6 +191,11 @@ const routes: RouteRecordRaw[] = [
             path: 'recordings',
             name: ROUTE_NAMES.myRecordings,
             component: PAGES.MyRecordings
+          },
+          {
+            path: 'species',
+            name: ROUTE_NAMES.mySpecies,
+            component: PAGES.MySpecies
           }
         ]
       },
