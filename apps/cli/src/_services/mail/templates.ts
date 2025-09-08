@@ -8,13 +8,10 @@ const projectBackupBody = ({ url, projectName }: { url: string, projectName: str
     Please note that this link will expire in 7 days.
     If you have any questions about Arbimon, check out our <a href="https://help.arbimon.org/">support docs</a>.
   </p>
-  <button style="background:#ADFF2C;border:1px solid #ADFF2C;padding:6px 14px;;border-radius:9999px;cursor:pointer;margin: 10px 0">
-      <a style="text-decoration:none;color:#14130D;white-space:nowrap;text-align:center;vertical-align:middle;align-items:center;display:inline-flex;display: -webkit-inline-flex;" href="${url}">
-          Download
-          <img style="width: 14px; height: 14px; margin-left:8px" src="https://static.rfcx.org/arbimon/download-icon.png">
-      </a>
-  </button>
-  <img style="width: 14px; height: 14px; margin-left:8px" src="https://static.rfcx.org/arbimon/download-icon.png"><a style="margin-left: 1px" href="${url}">Download export</a>
+  <div style="text-align:center;vertical-align:middle;align-items:center;display:inline-flex;display: -webkit-inline-flex;">
+    <img style="width: 14px; height: 14px; margin-left:8px" src="https://static.rfcx.org/arbimon/download-icon.png">
+    <a style="margin-left: 1px" href="${url}">Download export</a>
+  </div>
   <p style="color:black;">
     <span> - The Arbimon Team </span>
   </p>
