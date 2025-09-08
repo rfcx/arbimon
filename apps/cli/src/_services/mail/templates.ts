@@ -9,8 +9,8 @@ const projectBackupBody = ({ url, projectName }: { url: string, projectName: str
     If you have any questions about Arbimon, check out our <a href="https://help.arbimon.org/">support docs</a>.
   </p>
   <div style="text-align:center;vertical-align:middle;align-items:center;display:inline-flex;display: -webkit-inline-flex;">
-    <img style="width: 14px; height: 14px; margin-left:8px" src="https://static.rfcx.org/arbimon/download-icon.png">
-    <a style="margin-left: 1px" href="${url}">Download export</a>
+    <img style="width: 14px; height: 14px;" src="https://static.rfcx.org/arbimon/download-icon.png">
+    <a style="margin-left: 2px" href="${url}">Download export</a>
   </div>
   <p style="color:black;">
     <span> - The Arbimon Team </span>
