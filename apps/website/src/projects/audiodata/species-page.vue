@@ -102,7 +102,16 @@
       </div>
     </div>
     <div class="flex mt-5 px-9">
+      <span
+        v-if="!isLoadingSpecies && !isRefetchSpecies"
+        class="ml-1 font-bold text-left text-sm reclist-total text-white"
+      >
+        {{ speciesCountText }} species
+      </span>
+    </div>
+    <div class="flex mt-3 px-9">
       <SortableTable
+        v-if="!isLoadingSpecies && !isRefetchSpecies"
         class="mt-5"
         :columns="columns"
         :rows="filteredSpecies ?? []"
@@ -112,6 +121,20 @@
         @selected-item="onSelectedItem"
       />
     </div>
+    <div class="flex mt-3">
+      <PaginationComponent
+        v-show="!isLoadingSpecies && !(speciesCount === 0) && !isErrorSpecies && !isRefetchSpecies"
+        class="mt-4 px-8"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        :hide-jump-page="true"
+        @update:current-page="handlePageChange"
+      />
+    </div>
+    <icon-custom-ic-loading
+      v-if="isLoadingSpecies || isRefetchSpecies"
+      class="animate-spin text-2xl mt-[100px]"
+    />
   </section>
 </template>
 <script setup lang="ts">
@@ -124,6 +147,7 @@ import { type SpeciesClassesParams, type SpeciesType } from '@rfcx-bio/common/ap
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetSpecies } from './api/use-species'
+import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
 
 const store = useStore()
@@ -138,18 +162,15 @@ const LIMIT = 10
 const currentPage = ref(1)
 
 const offset = computed(() => (currentPage.value - 1) * LIMIT)
-
-const speciesParams = computed<SpeciesClassesParams>(() => {
-  return {
+const speciesParams = computed<SpeciesClassesParams>(() => ({
     limit: LIMIT,
     offset: offset.value,
     q: searchKeyword.value
-  }
-})
+}))
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
-const { data: speciesData } = useGetSpecies(apiClientArbimon, selectedProjectSlug, speciesParams.value)
+const { data: speciesData, isLoading: isLoadingSpecies, isError: isErrorSpecies, isRefetching: isRefetchSpecies, refetch: refetchSpecies } = useGetSpecies(apiClientArbimon, selectedProjectSlug, speciesParams)
 
 const columns = [
   { label: 'Species', key: 'species_name', maxWidth: 150 },
@@ -158,6 +179,18 @@ const columns = [
   { label: 'Project Templates', key: 'templates', maxWidth: 50 },
   { label: 'Public Templates', key: 'public_templates', maxWidth: 50 }
 ]
+
+const speciesCount = computed(() => { return speciesData.value?.count ?? 0 })
+const speciesCountText = computed<string>(() =>
+  new Intl.NumberFormat('en-US').format(speciesCount.value)
+)
+const totalPages = computed(() => Math.ceil(speciesCount.value / LIMIT))
+
+const handlePageChange = async (page: number) => {
+  if (currentPage.value === page) return
+  currentPage.value = page
+  await refetchSpecies()
+}
 
 const selectedSpecies = ref<SpeciesType | undefined>(undefined)
 
@@ -180,7 +213,7 @@ onMounted(() => {
 const onSearchInput = () => {
   clearTimeout(searchTimeout.value)
   searchTimeout.value = window.setTimeout(() => {
-    // debounce
+    refetchSpecies()
   }, 300)
 }
 
