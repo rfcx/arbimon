@@ -2,7 +2,17 @@ import type { AxiosInstance } from 'axios'
 
 export interface SpeciesResponse {
   count?: number
-  list?: any[]
+  list?: SpeciesType[]
+}
+
+export interface SpeciesType {
+  id: number
+  projectId: number
+  songTypeId: number
+  songTypeName: string
+  speciesId: number
+  speciesName: string
+  taxon: string
 }
 
 export interface SpeciesClassesParams {

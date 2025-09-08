@@ -96,10 +96,21 @@
           v-model="searchKeyword"
           type="text"
           placeholder="Search species by scientific name or family"
-          class="form-control placeholder-style rounded px-3 py-2 h-[34px] w-59.5 items-center inline-flex rounded border-1 border-util-gray-03 bg-echo"
+          class="form-control placeholder-style rounded px-3 py-2 h-[34px] w-[470px] items-center inline-flex rounded border-1 border-util-gray-03 bg-echo"
           @input="onSearchInput"
         >
       </div>
+    </div>
+    <div class="flex mt-5 px-9">
+      <SortableTable
+        class="mt-5"
+        :columns="columns"
+        :rows="filteredSpecies ?? []"
+        :selected-row="selectedSpecies"
+        :default-sort-key="'updated_at'"
+        :default-sort-order="'desc'"
+        @selected-item="onSelectedItem"
+      />
     </div>
   </section>
 </template>
@@ -108,11 +119,12 @@ import type { AxiosInstance } from 'axios'
 import { initTooltips } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
-import { type SpeciesClassesParams } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+import { type SpeciesClassesParams, type SpeciesType } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetSpecies } from './api/use-species'
+import SortableTable from './component/sortable-table.vue'
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
@@ -131,13 +143,33 @@ const speciesParams = computed<SpeciesClassesParams>(() => {
   return {
     limit: LIMIT,
     offset: offset.value,
-    q: ''
+    q: searchKeyword.value
   }
 })
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
 const { data: speciesData } = useGetSpecies(apiClientArbimon, selectedProjectSlug, speciesParams.value)
+
+const columns = [
+  { label: 'Species', key: 'species_name', maxWidth: 150 },
+  { label: 'Taxon', key: 'taxon', maxWidth: 50 },
+  { label: 'Sound', key: 'songtype_name', maxWidth: 50 },
+  { label: 'Project Templates', key: 'templates', maxWidth: 50 },
+  { label: 'Public Templates', key: 'public_templates', maxWidth: 50 }
+]
+
+const selectedSpecies = ref<SpeciesType | undefined>(undefined)
+
+const filteredSpecies = computed(() => {
+  if (!speciesData.value) return []
+  return speciesData.value.list
+})
+
+const onSelectedItem = (row?: Record<string, any>) => {
+  selectedSpecies.value = row as SpeciesType
+  console.info(selectedSpecies.value)
+}
 
 onMounted(() => {
   initTooltips()

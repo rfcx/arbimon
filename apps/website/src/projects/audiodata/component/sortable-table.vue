@@ -218,9 +218,9 @@ function formatValueByKey (key: string, value: any, row: any, forTitle?: boolean
   if (key === 'updated_at') return formatDateTime(value, row.timezone)
   if (key === 'datetime') return forTitle === true ? getUTCOffset(row.timezone) : formatDateFullInParens(value, row.timezone)
   if (key === 'comments') return forTitle === true ? row.meta.comment ?? value : value
-  if (key === 'site') return forTitle === true ? undefined : value
+  if (key === 'site') return forTitle === true ? '' : value
   if (key === 'upload_time') return forTitle === true ? '' : formatDateShort(value, row.timezone)
-  if (key === 'recorder') return forTitle === true ? undefined : value
+  if (key === 'recorder') return forTitle === true ? '' : value
 
   if (typeof value !== 'number') return value
 
