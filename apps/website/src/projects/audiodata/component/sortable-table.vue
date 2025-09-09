@@ -78,7 +78,7 @@
               />
             </td>
           </tr>
-          <tr v-if="selectedRowIndex === index">
+          <tr v-if="selectedRowIndex === index && showExpand === true">
             <td :colspan="columns.length + (props.showCheckbox ? 1 : 0)">
               <div class="p-2 bg-pitch flex flex-col">
                 <div class="recording-img">
@@ -136,6 +136,7 @@ const props = defineProps<{
   selectedRow?: Row | null
   showCheckbox?: boolean
   projectSlug?: string
+  showExpand?: boolean
 }>()
 
 const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void}>()
