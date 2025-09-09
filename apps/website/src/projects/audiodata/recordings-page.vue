@@ -178,6 +178,7 @@
         :default-sort-key="'updated_at'"
         :default-sort-order="'desc'"
         :project-slug="selectedProjectSlug"
+        :show-expand="true"
         :show-checkbox="true"
         @selected-rows="onSelectedRecordings"
       />
