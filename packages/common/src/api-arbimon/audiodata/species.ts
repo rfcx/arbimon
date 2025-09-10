@@ -31,3 +31,37 @@ export const apiArbimonGetSpeciesClasses = async (apiClient: AxiosInstance, slug
     return response.data
   } else return undefined
 }
+
+export interface ProjectTemplatesResponse {
+  id: number
+  project: number
+  recording: number
+  species: number
+  songtype: number
+  name: string
+  uri?: string
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  date_created: string
+  user_id: number
+  disabled: number
+  species_name: string
+  songtype_name: string
+  author: string
+  project_name: string
+  project_url: string
+  source_project_id?: number
+  source_project_name?: string
+}
+
+export const apiArbimonGetProjectTemplates = async (apiClient: AxiosInstance, slug: string): Promise<ProjectTemplatesResponse[] | undefined> => {
+  if (slug !== undefined) {
+    const response = await apiClient.request<ProjectTemplatesResponse[]>({
+      method: 'GET',
+      url: `/legacy-api/project/${slug}/templates?projectTemplates=true`
+    })
+    return response.data
+  } else return undefined
+}

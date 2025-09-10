@@ -103,7 +103,7 @@
     </div>
     <div class="flex mt-5 px-9">
       <span
-        v-if="!isLoadingSpecies && !isRefetchSpecies"
+        v-if="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates"
         class="ml-1 font-bold text-left text-sm reclist-total text-white"
       >
         {{ speciesCountText }} species
@@ -111,19 +111,18 @@
     </div>
     <div class="flex mt-3 px-9">
       <SortableTable
-        v-if="!isLoadingSpecies && !isRefetchSpecies"
+        v-if="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates"
         class="mt-5"
         :columns="columns"
         :rows="filteredSpecies ?? []"
         :selected-row="selectedSpecies"
         :default-sort-key="'updated_at'"
         :default-sort-order="'desc'"
-        @selected-item="onSelectedItem"
       />
     </div>
     <div class="flex mt-3">
       <PaginationComponent
-        v-show="!isLoadingSpecies && !(speciesCount === 0) && !isErrorSpecies && !isRefetchSpecies"
+        v-show="!isLoadingSpecies && !(speciesCount === 0) && !isErrorSpecies && !isRefetchSpecies && !isLoadingProjectTemplates"
         class="mt-4 px-8"
         :current-page="currentPage"
         :total-pages="totalPages"
@@ -146,7 +145,7 @@ import { type SpeciesClassesParams, type SpeciesType } from '@rfcx-bio/common/ap
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { useGetSpecies } from './api/use-species'
+import { useGetProjectTemplates, useGetSpecies } from './api/use-species'
 import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
 
@@ -171,6 +170,7 @@ const speciesParams = computed<SpeciesClassesParams>(() => ({
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
 const { data: speciesData, isLoading: isLoadingSpecies, isError: isErrorSpecies, isRefetching: isRefetchSpecies, refetch: refetchSpecies } = useGetSpecies(apiClientArbimon, selectedProjectSlug, speciesParams)
+const { data: speciesProjectTemplates, isLoading: isLoadingProjectTemplates } = useGetProjectTemplates(apiClientArbimon, selectedProjectSlug)
 
 const columns = [
   { label: 'Species', key: 'species_name', maxWidth: 150 },
@@ -199,15 +199,11 @@ const filteredSpecies = computed(() => {
   return speciesData.value.list
 })
 
-const onSelectedItem = (row?: Record<string, any>) => {
-  selectedSpecies.value = row as SpeciesType
-  console.info(selectedSpecies.value)
-}
-
 onMounted(() => {
   initTooltips()
 
   console.info(speciesData)
+  console.info(speciesProjectTemplates)
 })
 
 const onSearchInput = () => {
