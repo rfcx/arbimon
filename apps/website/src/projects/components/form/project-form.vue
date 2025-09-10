@@ -21,22 +21,39 @@
       required
     >
   </div>
-  <ProjectDateRangeForm
+  <DaterangePicker
     :initial-date-start="dateStart !== null ? dateStart : undefined"
     :initial-date-end="dateEnd !== null ? dateEnd : undefined"
+    :input-label-start="'Project start date'"
+    :input-label-end="'Project end date'"
     :on-going="onGoing"
     :is-disabled="isDisabled"
     @emit-select-date-range="onSelectDateRange"
   />
+  <div class="items-center mt-4">
+    <input
+      id="project-settings-on-going-project-checkbox"
+      type="checkbox"
+      class="w-5 h-5 border-2 mb-1 rounded dark:bg-echo focus:ring-frequency border-white dark:focus:ring-frequency dark:ring-offset-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
+      :disabled="isDisabled"
+      :checked="onGoing"
+      @click="onSelectOnGoing()"
+    >
+    <label
+      class="font-light ml-2 cursor-pointer text-secondary"
+      @click="onSelectOnGoing()"
+    >This is an on-going project</label>
+  </div>
 </template>
 
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
 
+import { type DateRange } from '@/_components/date-range-picker/date-range-picker'
+import DaterangePicker from '@/_components/date-range-picker/date-range-picker.vue'
 import type { ProjectDefault } from '../../types'
 import IconIInfo from '../icon-i-info.vue'
-import ProjectDateRangeForm from './project-date-range-form.vue'
 
 const props = withDefaults(defineProps<{
   existingName?: string
@@ -97,11 +114,15 @@ watch(name, () => {
   emit('emitUpdateValue', value.value)
 })
 
-const onSelectDateRange = (v: { dateStartLocalIso: string, dateEndLocalIso: string, onGoing: boolean }) => {
-  startDate.value = v.dateStartLocalIso
-  endDate.value = v.dateEndLocalIso
-  onGoing.value = v.onGoing
+const onSelectDateRange = ({ dateStartLocalIso, dateEndLocalIso }: DateRange) => {
+  startDate.value = dateStartLocalIso
+  endDate.value = dateEndLocalIso
   emit('emitUpdateValue', value.value)
+}
+
+const onSelectOnGoing = () => {
+  onGoing.value = !onGoing.value
+  if (onGoing.value) { endDate.value = '' }
 }
 
 </script>

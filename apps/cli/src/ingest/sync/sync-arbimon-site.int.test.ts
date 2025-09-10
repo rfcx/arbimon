@@ -18,7 +18,7 @@ const { LocationProject, LocationSite, SyncStatus, SyncLogByProject } = ModelRep
 const SYNC_CONFIG: SyncConfig = {
   syncSourceId: masterSources.Arbimon.id,
   syncDataTypeId: masterSyncDataTypes.Site.id,
-  syncBatchLimit: 2
+  syncBatchLimit: 10
 }
 const syncStatus = getDefaultSyncStatus(SYNC_CONFIG)
 

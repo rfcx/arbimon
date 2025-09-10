@@ -17,6 +17,7 @@ data:
   AWS_S3_BUCKET_NAME: arbimon-staging
   AWS_S3_BUCKET_REGION: eu-west-1
   AWS_OSS_REGION: eu-west-1
+  ARBI_ASSISTANT_BASE_URL: https://adk-default-service-name-435981252511.europe-west1.run.app
   ARBIMON_LEGACY_API_BASE_URL: https://staging.arbimon.org/legacy-api
   CORE_API_BASE_URL: http://core-api-service.staging.svc.cluster.local
   OPENSEARCH_ENABLED: "true"

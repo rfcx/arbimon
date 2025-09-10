@@ -54,6 +54,7 @@
     "fastify": "^3.23.1",
     "fastify-auth0-verify": "0.7.4",
     "fastify-plugin": "^3.0.1",
+    "google-auth-library": "^10.2.1",
     "lodash-es": "^4.17.21",
     "quick-lru": "^7.0.0",
     "sequelize": "7.0.0-alpha.5"

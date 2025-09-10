@@ -61,12 +61,12 @@
       />
       <div class="flex flex-row justify-between mt-4">
         <circle-legend
-          v-if="mapStatisticsStyle === MAPBOX_STYLE_CIRCLE"
+          v-if="mapStatisticsStyle === MAPBOX_STYLE_CIRCLE && !isLoadingDataBySite"
           :map-base-formatter="circleFormatter"
           :style-non-zero="circleStyle"
         />
         <heatmap-legend
-          v-else-if="mapStatisticsStyle === MAPBOX_STYLE_HEATMAP"
+          v-else-if="mapStatisticsStyle === MAPBOX_STYLE_HEATMAP && !isLoadingDataBySite"
           :max-value="mapDataset.maxValues[MAP_KEY]"
           :title="`Number of species`"
         />

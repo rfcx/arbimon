@@ -32,11 +32,12 @@
     </section-title>
     <div class="mt-2">
       <div
+        v-for="(dataset, idx) in datasets"
+        :key="'activity-overview-by-location-wrapper' + idx"
         class="grid gap-2 mt-2"
         :class="{ [`md:grid-cols-${columnCount}`]: true }"
       >
         <map-base-component
-          v-for="(dataset, idx) in datasets"
           :key="'activity-overview-by-location-' + idx"
           :dataset="dataset"
           :data-key="selectedType"
@@ -54,6 +55,18 @@
           class="w-full"
           @emit-map-moved="propagateMapMove"
         />
+        <div class="flex flex-row justify-between mt-4">
+          <circle-legend
+            v-if="mapStatisticsStyle === 'circle' && !loading"
+            :map-base-formatter="circleFormatter"
+            :style-non-zero="circleStyles[idx]"
+          />
+          <heatmap-legend
+            v-else-if="mapStatisticsStyle === 'heatmap' && !loading"
+            :max-value="selectedType === 'detectionFrequency' ? dataset.maxValues.detectionFrequency : dataset.maxValues.count"
+            :title="selectedType === 'detectionFrequency' ? 'Detection frequency' : 'Number of species'"
+          />
+        </div>
       </div>
     </div>
   </div>

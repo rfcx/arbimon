@@ -4,7 +4,15 @@ import { type MapBaseFormatter, type MapBaseLegendEntry } from '~/maps/types'
 export const DEFAULT_MAX_VALUE_RAW = 1.0
 export const DEFAULT_LEGEND_COUNT = 4
 export const DEFAULT_RADIUS_IN_PIXELS = 10.0
-export const DEFAULT_FORMAT_FUNCTION = (value: number): string => value.toPrecision(3)
+export const DEFAULT_FORMAT_FUNCTION = (value: number): string => mapLegendLabelFormatted(value)
+
+const isFloat = (num: number): boolean => {
+  return !isNaN(num) && num % 1 !== 0
+}
+
+const mapLegendLabelFormatted = (value: number): string => {
+  return isFloat(value) ? value.toFixed(3) : `${value}`
+}
 
 export class CircleFormatterNormalized implements MapBaseFormatter {
   protected readonly stepValue: number

@@ -23,6 +23,7 @@
       :project-id="selectedProjectId"
       @emit-close-project-info="selectedProjectId = null"
     />
+    <!-- <chat-view /> -->
     <div
       class="flex flex-col inset-1/2 w-3vh absolute z-40 h-7vh bg-moss transition-transform -translate-x-full rounded-r-lg "
       :class="leftMargin"
@@ -57,6 +58,7 @@ import { type ProjectLight, type ProjectProfileWithMetrics } from '@rfcx-bio/com
 import type { SearchResponseProject } from '@rfcx-bio/common/api-bio/search/search'
 import { apiBioSearch } from '@rfcx-bio/common/api-bio/search/search'
 
+// import ChatView from '@/_components/arbi-assistant/chat-view.vue'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'

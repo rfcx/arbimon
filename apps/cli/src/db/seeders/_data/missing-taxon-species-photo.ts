@@ -20,6 +20,15 @@ export const rawMissingTaxonSpeciesPhoto: Array<Omit<TaxonSpeciesPhoto, 'taxonSp
     slug: 'vireo-latimeri'
   },
   {
+    source: 'INATURALIST',
+    photoUrl: 'https://inaturalist-open-data.s3.amazonaws.com/photos/535741214/medium.jpg',
+    photoCaption: 'Hyloxalus picachos',
+    photoAuthor: 'Jessica Miranda',
+    photoLicense: 'CC BY-NC',
+    photoLicenseUrl: 'https://inaturalist.ca/photos/535741214',
+    slug: 'hyloxalus-picachos'
+  },
+  {
     source: 'AMPHIBIANWEB',
     photoUrl: 'https://calphotos.berkeley.edu/imgs/512x768/1111_1111/1111/2882.jpeg',
     photoCaption: 'Coquí Martillito',

@@ -9,6 +9,8 @@ import { getExportFilterName } from '~/filters'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_HEATMAP, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'
+import CircleLegend from '~/maps/map-legend/circle-legend.vue'
+import HeatmapLegend from '~/maps/map-legend/heatmap-legend.vue'
 import { MapToolMenuComponent } from '~/maps/map-tool-menu'
 import { type MapBaseFormatter, type MapDataSet, type MapMoveEvent } from '~/maps/types'
 import { CircleFormatterBinary } from '~/maps/utils/circle-formatter/circle-formatter-binary'
@@ -26,7 +28,9 @@ const DEFAULT_PREFIX = 'Overview-By-Site'
 @Options({
   components: {
     MapBaseComponent,
-    MapToolMenuComponent
+    MapToolMenuComponent,
+    CircleLegend,
+    HeatmapLegend
   }
 })
 export default class ActivityOverviewByLocation extends Vue {

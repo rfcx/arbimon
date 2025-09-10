@@ -290,7 +290,9 @@ const allItems: Item[] = [
       },
       {
         title: 'Recordings',
-        legacyPath: '/audiodata/recordings'
+        route: {
+          name: ROUTE_NAMES.myRecordings
+        }
       },
       {
         title: 'Species',

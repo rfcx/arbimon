@@ -11,16 +11,18 @@ export interface GetRecordedMinutesPerDayQueryParams {
   end?: string
 }
 
-export type GetRecordedMinutesPerDayResponse = Array<{
+export interface GetRecordedMinutesPerDay {
   date: string
   recordedMinutesCount: number
-}>
+}
+
+export type GetRecordedMinutesPerDayResponse = GetRecordedMinutesPerDay[]
 
 // Route
 export const getRecordedMinutesPerDayRoute = '/projects/:projectId/recordings-per-day'
 
 // Service
-export const apiBioGetRecordedMinutesPerDayRoute = async (apiClient: AxiosInstance, projectId: number): Promise<GetRecordedMinutesPerDayResponse> => {
+export const apiBioGetRecordedMinutesPerDayRoute = async (apiClient: AxiosInstance, projectId: string): Promise<GetRecordedMinutesPerDayResponse> => {
   const response = await apiClient.get(`/projects/${projectId}/recordings-per-day`)
   return response.data
 }
