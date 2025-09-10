@@ -251,8 +251,8 @@ onMounted(() => {
     siteName.value = ''
   }
 
-  if (store.myProjects.length === 0) {
-    fetchProjects(0, LIMIT)
+  if (store.myProjects.length === 0 || store.myProjects.length === 20) {
+    fetchProjects(store.myProjects.length === 20 ? 20 : 0, LIMIT)
     return
   }
   projects.value = store.myProjects
