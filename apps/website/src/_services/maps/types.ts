@@ -48,7 +48,7 @@ export interface MapBaseLegendEntry {
 
 export interface MapBaseFormatter {
   getRadius: (value: number) => number
-  getLegendEntries: (styleNonZero: MapBaseStyle, styleZero: MapBaseStyle) => MapBaseLegendEntry[]
+  getLegendEntries: (styleNonZero: MapBaseStyle, styleZero: MapBaseStyle, isIntegerLabel: boolean) => MapBaseLegendEntry[]
 }
 
 export type StyleToPaint<T = unknown, R = unknown> = (style: MapBaseStyle, options?: R) => T

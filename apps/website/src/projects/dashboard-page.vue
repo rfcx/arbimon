@@ -56,6 +56,7 @@
               v-if="mapStatisticsStyle === MAPBOX_STYLE_CIRCLE"
               :map-base-formatter="circleFormatter"
               :style-non-zero="circleStyle"
+              :is-integer-label="true"
             />
           </div>
         </div>

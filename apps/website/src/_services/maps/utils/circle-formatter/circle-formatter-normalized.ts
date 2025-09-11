@@ -1,16 +1,19 @@
+import numeral from 'numeral'
+
 import { DEFAULT_NON_ZERO_STYLE, DEFAULT_ZERO_STYLE } from '~/maps/constants'
 import { type MapBaseFormatter, type MapBaseLegendEntry } from '~/maps/types'
 
 export const DEFAULT_MAX_VALUE_RAW = 1.0
 export const DEFAULT_LEGEND_COUNT = 4
 export const DEFAULT_RADIUS_IN_PIXELS = 10.0
-export const DEFAULT_FORMAT_FUNCTION = (value: number): string => mapLegendLabelFormatted(value)
+export const DEFAULT_FORMAT_FUNCTION = (value: number, isIntegerLabel: boolean): string => mapLegendLabelFormatted(value, isIntegerLabel)
 
 const isFloat = (num: number): boolean => {
   return !isNaN(num) && num % 1 !== 0
 }
 
-const mapLegendLabelFormatted = (value: number): string => {
+const mapLegendLabelFormatted = (value: number, isIntegerLabel: boolean): string => {
+  if (isIntegerLabel) return numeral(value).format('0')
   return isFloat(value) ? value.toFixed(3) : `${value}`
 }
 
@@ -20,7 +23,7 @@ export class CircleFormatterNormalized implements MapBaseFormatter {
   protected readonly maxValue: number
   protected readonly maxPixels: number
   protected readonly legendEntryCount: number
-  protected readonly formatFunction: (value: number) => string
+  protected readonly formatFunction: (value: number, isIntegerLabel: boolean) => string
 
   constructor ({
     maxValueRaw = DEFAULT_MAX_VALUE_RAW,
@@ -44,7 +47,8 @@ export class CircleFormatterNormalized implements MapBaseFormatter {
 
     // Round step value
     const stepValueRaw = (maxValueRaw || 1.0) / legendEntryCount
-    this.stepValue = Number(formatFunction(stepValueRaw))
+    const isIntegerLabel = false
+    this.stepValue = Number(formatFunction(stepValueRaw, isIntegerLabel))
 
     // Calculate max from rounded step
     this.maxValue = this.stepValue * legendEntryCount
@@ -54,9 +58,9 @@ export class CircleFormatterNormalized implements MapBaseFormatter {
     return (value / this.maxValue) * this.maxPixels
   }
 
-  getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE): MapBaseLegendEntry[] {
+  getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE, isIntegerLabel = false): MapBaseLegendEntry[] {
     return Array.from({ length: this.legendEntryCount }, (_, idx) => ({
-        label: this.formatFunction(this.stepValue * (idx + 1)),
+        label: this.formatFunction(this.stepValue * (idx + 1), isIntegerLabel),
         radiusPx: this.stepPixels * (idx + 1),
         style: styleNonZero
       }))

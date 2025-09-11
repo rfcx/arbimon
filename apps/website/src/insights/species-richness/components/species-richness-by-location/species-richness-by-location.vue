@@ -42,6 +42,7 @@
           v-if="mapStatisticsStyle === 'circle' && !loading"
           :map-base-formatter="circleFormatter"
           :style-non-zero="circleStyles[idx]"
+          :is-integer-label="true"
         />
         <heatmap-legend
           v-else-if="mapStatisticsStyle === 'heatmap' && !loading"

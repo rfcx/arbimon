@@ -25,20 +25,22 @@ import type { MapBaseFormatter, MapBaseLegendEntry, MapBaseStyle } from '~/maps/
 const props = withDefaults(defineProps<{
   mapBaseFormatter: MapBaseFormatter,
   styleNonZero?: MapBaseStyle,
-  styleZero?: MapBaseStyle
+  styleZero?: MapBaseStyle,
+  isIntegerLabel?: boolean
 }>(), {
   styleNonZero: () => DEFAULT_NON_ZERO_STYLE,
-  styleZero: () => DEFAULT_ZERO_STYLE
+  styleZero: () => DEFAULT_ZERO_STYLE,
+  isIntegerLabel: false
 })
 
 const legendEntry = ref<MapBaseLegendEntry[]>([])
 
 watch(() => props.mapBaseFormatter, (newValue) => {
-  legendEntry.value = newValue.getLegendEntries(props.styleNonZero, props.styleZero)
+  legendEntry.value = newValue.getLegendEntries(props.styleNonZero, props.styleZero, props.isIntegerLabel)
 })
 
 onMounted(() => {
-  legendEntry.value = props.mapBaseFormatter.getLegendEntries(props.styleNonZero, props.styleZero)
+  legendEntry.value = props.mapBaseFormatter.getLegendEntries(props.styleNonZero, props.styleZero, props.isIntegerLabel)
 })
 
 </script>

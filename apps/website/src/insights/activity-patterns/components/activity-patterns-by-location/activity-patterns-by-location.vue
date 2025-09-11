@@ -61,6 +61,7 @@
           v-if="mapStatisticsStyle === MAPBOX_STYLE_CIRCLE && !loading"
           :map-base-formatter="circleFormatter"
           :style-non-zero="circleStyles[idx]"
+          :is-integer-label="selectedType === SPOTLIGHT_MAP_KEYS.detectionFrequency ? false : true"
         />
         <heatmap-legend
           v-else-if="mapStatisticsStyle === MAPBOX_STYLE_HEATMAP && !loading"
