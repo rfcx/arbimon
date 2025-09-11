@@ -116,7 +116,7 @@
         :columns="columns"
         :rows="mergedSpecies ?? []"
         :selected-row="selectedSpecies"
-        :default-sort-key="'updated_at'"
+        :project-slug="selectedProjectSlug"
         :default-sort-order="'desc'"
       />
     </div>

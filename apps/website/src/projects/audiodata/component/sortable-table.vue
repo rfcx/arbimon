@@ -74,13 +74,48 @@
               <div v-if="!isTemplatesKey(column.key)">
                 {{ formatValueByKey(column.key, row[column.key], row) }}
               </div>
-              <div v-if="isTemplatesKey(column.key) && isEmptyTemplateList(column.key, row)">
-                <span>No templates available for this species</span>
+
+              <div v-else-if="isEmptyTemplateList(column.key, row)">
+                <span>No templates available for this species ...</span>
               </div>
-              <icon-custom-fi-eye-off
-                v-if="row.hidden === 1 && column.key === 'name'"
-                class="inline-flex text-util-gray-02 mr-2 w-4 ml-1"
-              />
+
+              <div
+                v-else
+                class="flex flex-col"
+              >
+                <div class="flex gap-2">
+                  <button
+                    v-for="tpl in getTopTemplates(row, column.key)"
+                    :key="tpl.id"
+                    class="relative w-[100px] h-[100px] rounded-md overflow-hidden bg-[#060508]"
+                    :title="tpl.name"
+                  >
+                    <img
+                      :src="tpl.uri"
+                      alt="template"
+                      class="w-full h-full object-cover"
+                    >
+                    <span class="absolute left-1 bottom-1 text-white/90 text-xs">▶</span>
+                    <span
+                      class="absolute right-1 bottom-1 text-white/90 text-xs"
+                      title="Open in new tab"
+                      @click.stop="onGoMore(column.key, row)"
+                    >↗</span>
+                  </button>
+                </div>
+                <div
+                  v-if="getTemplateCount(row, column.key) >= MAX_THUMBS"
+                  class="text-xs mt-1"
+                >
+                  More templates in
+                  <a
+                    class="underline cursor-pointer text-frequency "
+                    @click.stop="onGoMore(column.key, row)"
+                  >
+                    {{ column.key === 'project_templates' ? 'Project Templates' : 'Public Templates' }}
+                  </a>
+                </div>
+              </div>
             </td>
           </tr>
           <tr v-if="selectedRowIndex === index && showExpand === true">
@@ -159,6 +194,28 @@ const sortOrder = ref<'asc' | 'desc'>('asc')
 
 const selectedRows = ref<Row[]>([])
 const isLoaded = ref(true)
+
+const MAX_THUMBS = 3
+
+function getTemplates (row: Row, key: string): Array<ProjectTemplatesResponse | PublicTemplateResponse> {
+  const list = row[key]
+  return Array.isArray(list) ? list : []
+}
+
+function getTopTemplates (row: Row, key: string) {
+  return getTemplates(row, key).slice(0, MAX_THUMBS)
+}
+
+function getTemplateCount (row: Row, key: string) {
+  return getTemplates(row, key).length
+}
+
+function onGoMore (key: string, row: Row) {
+  const tab = key === 'project_templates' ? 'projectTemplates' : 'publicTemplates'
+  // const url = `${window.location.origin}/project/${props.projectSlug ?? ''}/analysis/patternmatching?tab=${tab}`
+  const url = `https://staging.arbimon.org/project/${props.projectSlug ?? ''}/analysis/patternmatching?tab=${tab}`
+  window.location.assign(url)
+}
 
 function onImageLoad () {
   isLoaded.value = false
