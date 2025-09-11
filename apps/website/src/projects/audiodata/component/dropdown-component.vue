@@ -20,13 +20,13 @@
         class="overflow-y-auto max-h-80 border-cloud bg-moss rounded-md"
       >
         <li
-          v-if="props.itmes.length === 0"
+          v-if="props.items.length === 0"
           class="rounded-lg p-4 text-center text-sm"
         >
           No data
         </li>
         <li
-          v-for="option in props.itmes"
+          v-for="option in props.items"
           v-else
           :key="'cj-filter-' + option.value"
           class="px-4 py-2 cursor-pointer hover:(bg-util-gray-03 rounded)"
@@ -50,10 +50,10 @@ export interface DropdownItem {
 }
 
 const props = defineProps<{
-  itmes: DropdownItem[], selected?: DropdownItem
+  items: DropdownItem[], selected?: DropdownItem
 }>()
 
-const emit = defineEmits<{(e: 'emitSelect', value: string): void}>()
+const emit = defineEmits<{(e: 'selectedItem', value: string): void}>()
 
 const selectedFilter = ref('')
 const dropdown = ref() as Ref<Dropdown>
@@ -69,8 +69,8 @@ onMounted(() => {
 })
 
 const selectFilter = (value: string) => {
+  emit('selectedItem', value)
   selectedFilter.value = value
-  emit('emitSelect', value)
   dropdown.value.hide()
 }
 
@@ -78,9 +78,9 @@ const onClickInput = (): void => {
   dropdown.value.show()
 }
 
-const projectSelected = computed(() => {
-  return props.itmes.find(idx => idx.value === selectedFilter.value ?? '')?.label
-})
+const projectSelected = computed(() =>
+  props.items.find(it => it.value === selectedFilter.value)?.label ?? ''
+)
 
 watch(() => props.selected, (newValue) => {
   selectedFilter.value = newValue?.value ?? ''

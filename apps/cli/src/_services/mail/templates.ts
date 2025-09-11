@@ -6,11 +6,10 @@ const projectBackupBody = ({ url, projectName }: { url: string, projectName: str
   <p style="color:black;">
     Thanks so much for using Arbimon! Your backup of the project "${projectName}" has been completed and now ready.
   </p>
-  <p style="color:black;">Please click the link below to download:</p>
-  <div><a href="${url}">[Link to Download]</a></div>
+  <p style="color:black;">Please <a href="${url}">click here</a> to download your file.</p>
   <p style="color:black;">Please note that this link will expire in 7 days.</p>
   <p style="color:black;">
-    For more information and support, please visit our documentation: <a href="https://help.arbimon.org/">support docs</a>.
+    For more information and support, please visit our documentation: https://help.arbimon.org/
   </p>
   <p style="color:black;">
     <span> - The Arbimon Team </span>

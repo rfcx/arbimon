@@ -155,8 +155,9 @@
     >
       <div>Project:</div>
       <DropdownComponent
-        :itmes="projectsItemList"
+        :items="projectsItemList"
         :selected="selectedProject"
+        @selected-item="onSelectProject"
       />
     </div>
     <div class="flex flex-row justify-between mt-5">
@@ -182,7 +183,7 @@ import type { AxiosInstance } from 'axios'
 import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { type SiteResponse, apiLegacySiteCreate, apiLegacySiteUpdate } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
-import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
+import { type LocationProjectWithInfo, type LocationProjectWithRole, apiBioGetMyProjects, apiBioGetProjectBySlug } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
 import { useStore } from '~/store'
@@ -192,7 +193,7 @@ import { type DropdownItem } from './dropdown-component.vue'
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
-const selectedProjectId = computed(() => store.project?.idArbimon)
+const selectedProjectCoreId = computed(() => store.project?.idCore)
 
 // API
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
@@ -213,6 +214,7 @@ const hidden = ref(false)
 const projects = ref<LocationProjectWithInfo[]>([])
 const projectsItemList = ref<DropdownItem[]>([])
 const selectedProject = ref<DropdownItem>()
+const selectedProjecInfo = ref<LocationProjectWithRole>()
 const hasFetchedAll = ref(false)
 const isLoading = ref(false)
 const hasFailed = ref(false)
@@ -249,8 +251,8 @@ onMounted(() => {
     siteName.value = ''
   }
 
-  if (store.myProjects.length === 0) {
-    fetchProjects(0, LIMIT)
+  if (store.myProjects.length === 0 || store.myProjects.length === 20) {
+    fetchProjects(store.myProjects.length === 20 ? 20 : 0, LIMIT)
     return
   }
   projects.value = store.myProjects
@@ -275,6 +277,12 @@ function handleClickOutside (event: MouseEvent) {
   if (popoverWrapper.value && !popoverWrapper.value.contains(event.target as Node)) {
     closePopover()
   }
+}
+
+const onSelectProject = async (projectCoreId: string) => {
+  const selected = store.myProjects.find(p => p.idCore === projectCoreId)
+  const projectResponse = await apiBioGetProjectBySlug(apiClientBio, selected?.slug ?? '')
+  selectedProjecInfo.value = projectResponse
 }
 
 onMounted(() => {
@@ -420,11 +428,9 @@ async function create () {
     hidden.value = true
   }
 
-  const selected = store.myProjects.find(p => p.slug === selectedProjectSlug.value)
-
   const site = {
     name: siteName.value,
-    project_id: selectedProject.value?.value ?? '',
+    project_id: selectedProjectCoreId.value ?? '',
     hidden: hidden.value ? 1 : 0,
     ...(lat.value !== '' && { lat: parseFloat(lat.value) }),
     ...(lon.value !== '' && { lon: parseFloat(lon.value) }),
@@ -440,10 +446,10 @@ async function create () {
     external_id: props.site?.external_id ?? '',
     hidden: hidden.value ? 1 : 0,
     project: {
-      project_id: selectedProjectId.value ?? 0,
-      name: selected?.name ?? '',
-      url: selected?.slug ?? '',
-      external_id: selected?.idCore ?? ''
+      project_id: selectedProjecInfo.value?.idArbimon ?? 0,
+      name: selectedProjecInfo.value?.name ?? '',
+      url: selectedProjecInfo.value?.slug ?? '',
+      external_id: selectedProjecInfo.value?.idCore ?? ''
     }
   }
 
