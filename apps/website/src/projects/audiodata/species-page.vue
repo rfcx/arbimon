@@ -103,7 +103,7 @@
     </div>
     <div class="flex mt-5 px-9">
       <span
-        v-if="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates"
+        v-if="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates"
         class="ml-1 font-bold text-left text-sm reclist-total text-white"
       >
         {{ speciesCountText }} species
@@ -111,7 +111,7 @@
     </div>
     <div class="flex mt-3 px-9">
       <SortableTable
-        v-if="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates"
+        v-if="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates"
         class="mt-5"
         :columns="columns"
         :rows="mergedSpecies ?? []"
@@ -122,7 +122,7 @@
     </div>
     <div class="flex mt-3">
       <PaginationComponent
-        v-show="!isLoadingSpecies && !(speciesCount === 0) && !isErrorSpecies && !isRefetchSpecies && !isLoadingProjectTemplates"
+        v-show="!isLoadingSpecies && !(speciesCount === 0) && !isErrorSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates"
         class="mt-4 px-8"
         :current-page="currentPage"
         :total-pages="totalPages"
@@ -141,11 +141,11 @@ import type { AxiosInstance } from 'axios'
 import { initTooltips } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
-import { type ProjectTemplatesResponse, type SpeciesClassesParams, type SpeciesType } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+import { type ProjectTemplatesResponse, type PublicTemplateResponse, type PublicTemplatesParams, type SpeciesClassesParams, type SpeciesType } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { useGetProjectTemplates, useGetSpecies } from './api/use-species'
+import { useGetProjectTemplates, useGetPublicTemplates, useGetSpecies } from './api/use-species'
 import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
 
@@ -169,8 +169,14 @@ const speciesParams = computed<SpeciesClassesParams>(() => ({
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
+const publicTemplatesParams = computed<PublicTemplatesParams | undefined>(() => {
+  const ids = speciesData.value?.list?.map(s => s.id).filter(Boolean) ?? []
+  return ids.length ? { classIds: ids } : undefined
+})
+
 const { data: speciesData, isLoading: isLoadingSpecies, isError: isErrorSpecies, isRefetching: isRefetchSpecies, refetch: refetchSpecies } = useGetSpecies(apiClientArbimon, selectedProjectSlug, speciesParams)
 const { data: speciesProjectTemplates, isLoading: isLoadingProjectTemplates } = useGetProjectTemplates(apiClientArbimon, selectedProjectSlug)
+const { data: speciesPublicTemplates, isLoading: isLoadingPublicTemplates } = useGetPublicTemplates(apiClientArbimon, selectedProjectSlug, publicTemplatesParams)
 
 const columns = [
   { label: 'Species', key: 'species_name', maxWidth: 70 },
@@ -196,7 +202,7 @@ const selectedSpecies = ref<SpeciesType | undefined>(undefined)
 
 const speciesSafe = computed<SpeciesType[]>(() => speciesData.value?.list ?? [])
 const projSafe = computed<ProjectTemplatesResponse[]>(() => speciesProjectTemplates.value ?? [])
-const pubSafe = computed<ProjectTemplatesResponse[]>(() => []) // speciesPublicTemplates.value ?? []
+const pubSafe = computed<PublicTemplateResponse[]>(() => speciesPublicTemplates.value ?? [])
 type SpeciesSongtypeKey = `${number}|${number}`
 
 const makeKey = (species: number, songtype: number): SpeciesSongtypeKey => `${species}|${songtype}` as `${number}|${number}`
@@ -213,7 +219,7 @@ function groupBy<T, K extends PropertyKey> (arr: readonly T[], key: (x: T) => K)
 
 const mergedSpecies = computed(() => {
   const projMap = groupBy<ProjectTemplatesResponse, SpeciesSongtypeKey>(projSafe.value, t => makeKey(t.species, t.songtype))
-  const pubMap = groupBy<ProjectTemplatesResponse, SpeciesSongtypeKey>(pubSafe.value, t => makeKey(t.species, t.songtype))
+  const pubMap = groupBy<PublicTemplateResponse, SpeciesSongtypeKey>(pubSafe.value, t => makeKey(t.species, t.songtype))
 
   return speciesSafe.value.map(s => {
     const key = makeKey(s.species, s.songtype)
@@ -231,7 +237,9 @@ onMounted(() => {
 
   console.info(speciesData)
   console.info(speciesProjectTemplates)
+  console.info(speciesPublicTemplates)
   console.info(mergedSpecies)
+  console.info(publicTemplatesParams)
 })
 
 const onSearchInput = () => {

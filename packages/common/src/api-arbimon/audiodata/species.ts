@@ -65,3 +65,37 @@ export const apiArbimonGetProjectTemplates = async (apiClient: AxiosInstance, sl
     return response.data
   } else return undefined
 }
+
+export interface PublicTemplatesParams {
+  classIds: number[] | undefined
+}
+export interface PublicTemplateResponse {
+  date_created: string
+  disabled: number
+  id: number
+  name: string
+  project: number
+  project_name: string
+  project_url: string
+  recording: number
+  songtype: number
+  species: number
+  uri: string
+  user_id: number
+  x1: number
+  x2: number
+  y1: number
+  y2: number
+}
+
+export const apiArbimonGetPublicTemplates = async (apiClient: AxiosInstance, slug: string, params: PublicTemplatesParams): Promise<PublicTemplateResponse[] | undefined> => {
+  if (slug !== undefined && params !== undefined) {
+    console.info(params)
+    const response = await apiClient.request<PublicTemplateResponse[]>({
+      method: 'GET',
+      url: `/legacy-api/project/${slug}/templates/class`,
+      params
+    })
+    return response.data
+  } else return undefined
+}

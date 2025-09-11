@@ -74,7 +74,7 @@
               <div v-if="!isTemplatesKey(column.key)">
                 {{ formatValueByKey(column.key, row[column.key], row) }}
               </div>
-              <div v-if="isTemplatesKey(column.key) && isEmptyTemplateList(row)">
+              <div v-if="isTemplatesKey(column.key) && isEmptyTemplateList(column.key, row)">
                 <span>No templates available for this species</span>
               </div>
               <icon-custom-fi-eye-off
@@ -117,7 +117,7 @@
 import dayjs from 'dayjs'
 import { computed, onMounted, ref, watch } from 'vue'
 
-import { type ProjectTemplatesResponse } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+import { type ProjectTemplatesResponse, type PublicTemplateResponse } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
 interface Column {
   label: string
@@ -195,9 +195,16 @@ const isRowSelected = (row: Row): boolean => {
   return selectedRows.value.some(r => r === row)
 }
 
-const isEmptyTemplateList = (row: Row): boolean => {
-  const projectTemplates = row.project_templates as ProjectTemplatesResponse[]
-  return projectTemplates.length === 0
+const isEmptyTemplateList = (key: string, row: Row): boolean => {
+  if (key === 'project_templates') {
+    const projectTemplates = row.project_templates as ProjectTemplatesResponse[]
+    return projectTemplates.length === 0
+  }
+  if (key === 'public_templates') {
+    const publicTemplates = row.public_templates as PublicTemplateResponse[]
+    return publicTemplates.length === 0
+  }
+  return false
 }
 
 const sortBy = (key: string) => {
