@@ -71,7 +71,12 @@
               class="py-2 pl-2 truncate whitespace-nowrap overflow-hidden h-[40px]"
               :title="formatforTitle(column.key, row[column.key], row)"
             >
-              {{ formatValueByKey(column.key, row[column.key], row) }}
+              <div v-if="!isTemplatesKey(column.key)">
+                {{ formatValueByKey(column.key, row[column.key], row) }}
+              </div>
+              <div v-if="isTemplatesKey(column.key) && isEmptyTemplateList(row)">
+                <span>No templates available for this species</span>
+              </div>
               <icon-custom-fi-eye-off
                 v-if="row.hidden === 1 && column.key === 'name'"
                 class="inline-flex text-util-gray-02 mr-2 w-4 ml-1"
@@ -112,6 +117,8 @@
 import dayjs from 'dayjs'
 import { computed, onMounted, ref, watch } from 'vue'
 
+import { type ProjectTemplatesResponse } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+
 interface Column {
   label: string
   key: string
@@ -128,6 +135,12 @@ const decimalKeys = ['lat', 'lon', 'alt', 'rec_count']
 function isDecimalKey (key: string): boolean {
   return decimalKeys.includes(key)
 }
+
+const templatesKeys = ['project_templates', 'public_templates']
+function isTemplatesKey (key: string): boolean {
+  return templatesKeys.includes(key)
+}
+
 const props = defineProps<{
   columns: Column[]
   rows: Row[]
@@ -180,6 +193,11 @@ const toggleSelectAll = () => {
 
 const isRowSelected = (row: Row): boolean => {
   return selectedRows.value.some(r => r === row)
+}
+
+const isEmptyTemplateList = (row: Row): boolean => {
+  const projectTemplates = row.project_templates as ProjectTemplatesResponse[]
+  return projectTemplates.length === 0
 }
 
 const sortBy = (key: string) => {

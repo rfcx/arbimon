@@ -7,11 +7,11 @@ export interface SpeciesResponse {
 
 export interface SpeciesType {
   id: number
-  projectId: number
-  songTypeId: number
-  songTypeName: string
-  speciesId: number
-  speciesName: string
+  project: number
+  songtype: number
+  songtype_name: string
+  species: number
+  species_name: string
   taxon: string
 }
 

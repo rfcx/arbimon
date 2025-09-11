@@ -16,7 +16,7 @@ export const useGetSpecies = (apiClient: AxiosInstance, slug: ComputedRef<string
   })
 }
 
-export const useGetProjectTemplates = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>): UseQueryReturnType<ProjectTemplatesResponse | undefined, unknown> => {
+export const useGetProjectTemplates = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>): UseQueryReturnType<ProjectTemplatesResponse[] | undefined, unknown> => {
   return useQuery({
     queryKey: ['get-project-templates', slug],
     queryFn: async () => await apiArbimonGetProjectTemplates(apiClient, slug?.value ?? ''),

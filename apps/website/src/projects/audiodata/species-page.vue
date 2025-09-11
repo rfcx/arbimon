@@ -114,7 +114,7 @@
         v-if="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates"
         class="mt-5"
         :columns="columns"
-        :rows="filteredSpecies ?? []"
+        :rows="mergedSpecies ?? []"
         :selected-row="selectedSpecies"
         :default-sort-key="'updated_at'"
         :default-sort-order="'desc'"
@@ -141,7 +141,7 @@ import type { AxiosInstance } from 'axios'
 import { initTooltips } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
-import { type SpeciesClassesParams, type SpeciesType } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+import { type ProjectTemplatesResponse, type SpeciesClassesParams, type SpeciesType } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
@@ -173,11 +173,11 @@ const { data: speciesData, isLoading: isLoadingSpecies, isError: isErrorSpecies,
 const { data: speciesProjectTemplates, isLoading: isLoadingProjectTemplates } = useGetProjectTemplates(apiClientArbimon, selectedProjectSlug)
 
 const columns = [
-  { label: 'Species', key: 'species_name', maxWidth: 150 },
-  { label: 'Taxon', key: 'taxon', maxWidth: 50 },
-  { label: 'Sound', key: 'songtype_name', maxWidth: 50 },
-  { label: 'Project Templates', key: 'templates', maxWidth: 50 },
-  { label: 'Public Templates', key: 'public_templates', maxWidth: 50 }
+  { label: 'Species', key: 'species_name', maxWidth: 70 },
+  { label: 'Taxon', key: 'taxon', maxWidth: 70 },
+  { label: 'Sound', key: 'songtype_name', maxWidth: 70 },
+  { label: 'Project Templates', key: 'project_templates', maxWidth: 150 },
+  { label: 'Public Templates', key: 'public_templates', maxWidth: 150 }
 ]
 
 const speciesCount = computed(() => { return speciesData.value?.count ?? 0 })
@@ -194,9 +194,36 @@ const handlePageChange = async (page: number) => {
 
 const selectedSpecies = ref<SpeciesType | undefined>(undefined)
 
-const filteredSpecies = computed(() => {
-  if (!speciesData.value) return []
-  return speciesData.value.list
+const speciesSafe = computed<SpeciesType[]>(() => speciesData.value?.list ?? [])
+const projSafe = computed<ProjectTemplatesResponse[]>(() => speciesProjectTemplates.value ?? [])
+const pubSafe = computed<ProjectTemplatesResponse[]>(() => []) // speciesPublicTemplates.value ?? []
+type SpeciesSongtypeKey = `${number}|${number}`
+
+const makeKey = (species: number, songtype: number): SpeciesSongtypeKey => `${species}|${songtype}` as `${number}|${number}`
+
+function groupBy<T, K extends PropertyKey> (arr: readonly T[], key: (x: T) => K): Map<K, T[]> {
+  const m = new Map<K, T[]>()
+  for (const it of arr) {
+    const k = key(it)
+    const b = m.get(k)
+    b ? b.push(it) : m.set(k, [it])
+  }
+  return m
+}
+
+const mergedSpecies = computed(() => {
+  const projMap = groupBy<ProjectTemplatesResponse, SpeciesSongtypeKey>(projSafe.value, t => makeKey(t.species, t.songtype))
+  const pubMap = groupBy<ProjectTemplatesResponse, SpeciesSongtypeKey>(pubSafe.value, t => makeKey(t.species, t.songtype))
+
+  return speciesSafe.value.map(s => {
+    const key = makeKey(s.species, s.songtype)
+
+    return {
+      ...s,
+      project_templates: projMap.get(key) ?? [],
+      public_templates: pubMap.get(key) ?? []
+    }
+  })
 })
 
 onMounted(() => {
@@ -204,6 +231,7 @@ onMounted(() => {
 
   console.info(speciesData)
   console.info(speciesProjectTemplates)
+  console.info(mergedSpecies)
 })
 
 const onSearchInput = () => {
