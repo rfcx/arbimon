@@ -13,7 +13,6 @@ const isFloat = (num: number): boolean => {
 }
 
 const mapLegendLabelFormatted = (value: number, isIntegerLabel: boolean): string => {
-  console.info('value', value)
   if (isIntegerLabel) return numeral(value).format('0,00')
   return isFloat(value) ? value.toFixed(3) : `${value}`
 }
@@ -47,10 +46,8 @@ export class CircleFormatterNormalized implements MapBaseFormatter {
     this.stepPixels = maxPixels / legendEntryCount
 
     // Round step value
-    const stepValueRaw = maxValueRaw === 1 ? 1 : (maxValueRaw || 1.0) / legendEntryCount
-    const isIntegerLabel = !!Number.isInteger(maxValueRaw)
-    this.stepValue = Number(formatFunction(stepValueRaw, isIntegerLabel))
-
+    const stepValueRaw = (maxValueRaw === 1) ? 1 : ((maxValueRaw || 1.0) / legendEntryCount)
+    this.stepValue = Number(formatFunction(stepValueRaw, false))
     // Calculate max from rounded step
     this.maxValue = this.stepValue * legendEntryCount
   }
