@@ -21,7 +21,7 @@ export const EXPORTS_MAPPER: Record<string, ExportConfig> = {
   sites: { sql: SITES },
   species: { sql: SPECIES },
   recordings: { sql: RECORDINGS, signedUrls: true },
-  recordingTags: { sql: RECORDING_TAGS },
+  recording_tags: { sql: RECORDING_TAGS },
   playlists: { sql: PLAYLISTS },
   playlist_recordings: { sql: PLAYLIST_RECORDINGS },
   templates: { sql: TEMPLATES, signedUrls: true },
