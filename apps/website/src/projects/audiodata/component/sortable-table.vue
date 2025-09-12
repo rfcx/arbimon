@@ -47,8 +47,8 @@
           :key="row.id ?? index"
         >
           <tr
-            class="border-t border-util-gray-03 hover:border-util-gray-03 hover:bg-moss cursor-pointer"
-            :class="selectedRowIndex === index ? 'bg-[#7F7D78]' : ''"
+            class="border-t border-util-gray-03 hover:border-util-gray-03 hover:bg-moss cursor-pointer font-medium"
+            :class="{ 'bg-[#7F7D78]': selectedRowIndex === index, 'h-min-[53px]': columns.some(col => col.key === 'project_templates') }"
             @click="handleRowClick(row, index)"
           >
             <td
@@ -71,12 +71,15 @@
               class="py-2 pl-2 truncate whitespace-nowrap overflow-hidden h-[40px]"
               :title="formatforTitle(column.key, row[column.key], row)"
             >
-              <div v-if="!isTemplatesKey(column.key)">
+              <div
+                v-if="!isTemplatesKey(column.key)"
+                class="truncate whitespace-nowrap overflow-hidden"
+              >
                 {{ formatValueByKey(column.key, row[column.key], row) }}
               </div>
 
               <div v-else-if="isEmptyTemplateList(column.key, row)">
-                <span>No templates available for this species ...</span>
+                <span>No templates available for this species</span>
               </div>
 
               <div
@@ -95,17 +98,23 @@
                       alt="template"
                       class="w-full h-full object-cover"
                     >
-                    <span class="absolute left-1 bottom-1 text-white/90 text-xs">▶</span>
+                    <span class="absolute left-1 bottom-1 text-white/90 text-xs"><icon-fa-play
+                      class="w-[16px] h-[16px] m-[6px]"
+                      style="filter: drop-shadow(0 0 5px #000)"
+                    /></span>
                     <span
                       class="absolute right-1 bottom-1 text-white/90 text-xs"
                       title="Open in new tab"
                       @click.stop="onGoMore(column.key, row)"
-                    >↗</span>
+                    ><icon-fa-external-link
+                      class="w-[16px] h-[16px] m-[6px]"
+                      style="filter: drop-shadow(0 0 5px #000)"
+                    /></span>
                   </button>
                 </div>
                 <div
                   v-if="getTemplateCount(row, column.key) >= MAX_THUMBS"
-                  class="text-xs mt-1"
+                  class="text-md mt-4"
                 >
                   More templates in
                   <a
@@ -304,6 +313,8 @@ function formatValueByKey (key: string, value: any, row: any, forTitle?: boolean
   if (key === 'site') return forTitle === true ? '' : value
   if (key === 'upload_time') return forTitle === true ? '' : formatDateShort(value, row.timezone)
   if (key === 'recorder') return forTitle === true ? '' : value
+  if (key === 'project_templates') return forTitle === true ? '' : value
+  if (key === 'public_templates') return forTitle === true ? '' : value
 
   if (typeof value !== 'number') return value
 
@@ -448,5 +459,9 @@ watch(() => props.selectedRow, (row) => {
 
 .btn-xs-custom {
   @apply px-[5px] py-[1px] text-[12px] leading-[1.5] rounded-full hover:bg-opacity-80;
+}
+
+.text-shadow {
+  text-shadow: 0 0 5px #000000;
 }
 </style>
