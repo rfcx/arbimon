@@ -248,8 +248,50 @@ export interface CreatePlaylistResponse {
   success: boolean
 }
 
-export const apiLegacyCreatePlaylists = async (apiClient: AxiosInstance, slug: string, params: CreatePlaylistRequest): Promise<CreatePlaylistResponse> => {
-  return await apiClient.post(`/legacy-api/project/${slug}/playlists/create`, params)
+export function buildPlaylistsParamsObject (params: RecordingParams): Record<string, any> {
+  const obj: Record<string, any> = {}
+
+  const appendArray = (key: string, arr?: Array<string | number>): void => {
+    if (arr && arr.length > 0) {
+      obj[key] = arr
+    }
+  }
+
+  if (params.range) obj.range = params.range
+
+  appendArray('playlists', params.playlists)
+  appendArray('sites', params.sites)
+  appendArray('sites_ids', params.sites_ids)
+  appendArray('soundscape_composition', params.soundscape_composition)
+  appendArray('soundscape_composition_annotation', params.soundscape_composition_annotation)
+  appendArray('tags[]', params.tags)
+  appendArray('validations', params.validations)
+
+  if (params.presence && params.presence.length === 1) {
+    if (params.presence[0] === 'present') {
+      obj.presence = 'present'
+    } else if (params.presence[0] === 'absent') {
+      obj.presence = 'absent'
+    }
+  }
+
+  appendArray('years', params.years)
+  appendArray('days', params.days)
+  appendArray('hours', params.hours)
+  appendArray('months', params.months)
+  appendArray('classifications', params.classifications)
+  appendArray('classification_results', params.classification_results)
+  appendArray('recIds', params.recIds)
+
+  return obj
+}
+
+export const apiLegacyCreatePlaylists = async (apiClient: AxiosInstance, slug: string, request: CreatePlaylistRequest): Promise<CreatePlaylistResponse> => {
+  const body = {
+    playlist_name: request.playlist_name,
+    params: buildPlaylistsParamsObject(request.params)
+  }
+  return await apiClient.post(`/legacy-api/project/${slug}/playlists/create`, body)
 }
 export interface DeleteRecordingRequest {
   recs: any[]
