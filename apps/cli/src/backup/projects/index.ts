@@ -16,6 +16,7 @@ export const EXPORT_ITEMS = {
   ARBIMON: [
     'sites',
     'recordings',
+    'recording_tags',
     'playlists',
     'playlist_recordings',
     'species',

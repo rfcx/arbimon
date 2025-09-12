@@ -55,6 +55,23 @@ export const RECORDINGS = `
   offset $offset
 `
 
+export const RECORDING_TAGS = `
+  select 
+    rt.recording_id,
+    rt.site_id,
+    rt.datetime,
+    rt.t0,
+    rt.f0,
+    rt.t1,
+    rt.f1,
+    t.tag 
+  from recording_tags rt
+  join tags t on t.tag_id = rt.tag_id
+  where rt.site_id = $siteId
+  limit $limit
+  offset $offset
+`
+
 export const PLAYLISTS = `
   select
     playlist_id,
