@@ -44,13 +44,7 @@ export interface ClassesRecordingResponse {
   vals_present: number
 }
 
-export const apiArbimonGetRecordings = async (
-  apiClient: AxiosInstance,
-  slug: string,
-  params: RecordingSearchParams
-): Promise<RecordingSearchResponse | undefined> => {
-  if (!slug) return undefined
-
+function buildRecordingSearchQuery (params: RecordingSearchParams): URLSearchParams {
   const searchParams = new URLSearchParams()
   const appendArray = (key: string, arr?: Array<string | number>): void => {
     if (arr && arr.length > 0) {
@@ -81,6 +75,18 @@ export const apiArbimonGetRecordings = async (
   appendArray('classifications', params.classifications)
   appendArray('classification_results', params.classification_results)
   appendArray('recIds', params.recIds)
+
+  return searchParams
+}
+
+export const apiArbimonGetRecordings = async (
+  apiClient: AxiosInstance,
+  slug: string,
+  params: RecordingSearchParams
+): Promise<RecordingSearchResponse | undefined> => {
+  if (!slug) return undefined
+
+  const searchParams = buildRecordingSearchQuery(params)
 
   const response = await apiClient.request<RecordingSearchResponse>({
     method: 'GET',
@@ -262,7 +268,7 @@ export interface DeletemMatchingResponse {
 }
 
 export const apiLegacyDeleteMatchingRecording = async (apiClient: AxiosInstance, slug: string, params: RecordingSearchParams): Promise<DeletemMatchingResponse> => {
-  return await apiClient.post(`/legacy-api/project/${slug}/recordings/delete-matching`, params)
+  return await apiClient.post(`/legacy-api/project/${slug}/recordings/delete-matching`, Object.fromEntries(buildRecordingSearchQuery(params)))
 }
 
 export interface SearchCountResponse {

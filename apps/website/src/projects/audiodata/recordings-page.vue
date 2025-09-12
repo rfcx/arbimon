@@ -402,6 +402,7 @@ const recordingsSelected = ref<string[]>([])
 
 const applyFilters = async (filter: RecordingSearchParams) => {
   filterParams.value = filter
+  currentPage.value = 1
   await refetchRecordings()
   showFilterModal.value = false
 }
@@ -501,10 +502,11 @@ const deleteAllFilteredRecordings = async () => {
 async function handleOk () {
   try {
     showPopup.value = false
-    if (deleteAllFiltered.value) {
+    if (selectedRows.value.length === 0) {
       await apiLegacyDeleteMatchingRecording(apiClientArbimon, selectedProjectSlug.value ?? '', requestParamsForPlaylist.value)
     } else {
       await apiLegacyDeleteRecording(apiClientArbimon, selectedProjectSlug.value ?? '', { recs: selectedRows.value })
+      selectedRows.value = []
     }
     applyRecordings()
     showAlertDialog('success', 'Success', 'Removed')
