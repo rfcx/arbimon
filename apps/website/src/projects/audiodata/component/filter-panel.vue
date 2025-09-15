@@ -191,7 +191,6 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 import { type ClassesRecordingResponse, type ClassificationsResponse, type PlaylistResponse, type RecordingSearchParams, type SoundscapeResponse, type TagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
-import { type GetRecordedMinutesPerDayResponse } from '@rfcx-bio/common/api-bio/cnn/recorded-minutes-per-day'
 
 import SelectMultiple from './select-multiple.vue'
 import { type Option } from './select-multiple.vue'
@@ -215,7 +214,6 @@ const props = defineProps<{
   classes: ClassesRecordingResponse[] | undefined,
   soundscapes: SoundscapeResponse[] | undefined
   classifications: ClassificationsResponse[] | undefined
-  recordedMinutesPerDay: GetRecordedMinutesPerDayResponse | undefined
   filtersData?: RecordingSearchParams | undefined
   isReset?: boolean
 }>()

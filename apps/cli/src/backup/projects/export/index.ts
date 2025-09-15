@@ -10,7 +10,7 @@ import { toCsv } from '@rfcx-bio/utils/file'
 import { mapPathToSignedUrl } from '@/export/_common/map-path-to-signed-url'
 import { retry } from '~/retry'
 import { BATCH_SIZE, CSV_DATE_FORMAT, LIMIT_SIZE, RECORDING_BATCH_SIZE } from '../config'
-import { PATTERN_MATCHING_ROIS, PATTERN_MATCHINGS, PLAYLIST_RECORDINGS, PLAYLISTS, RECORDING_VALIDATIONS, RECORDINGS, RFM_CLASSIFICATIONS, RFM_MODELS, SITES, SOUNDSCAPES, SPECIES, TEMPLATES } from './queries'
+import { PATTERN_MATCHING_ROIS, PATTERN_MATCHINGS, PLAYLIST_RECORDINGS, PLAYLISTS, RECORDING_TAGS, RECORDING_VALIDATIONS, RECORDINGS, RFM_CLASSIFICATIONS, RFM_MODELS, SITES, SOUNDSCAPES, SPECIES, TEMPLATES } from './queries'
 
 interface ExportConfig {
   sql: string
@@ -21,6 +21,7 @@ export const EXPORTS_MAPPER: Record<string, ExportConfig> = {
   sites: { sql: SITES },
   species: { sql: SPECIES },
   recordings: { sql: RECORDINGS, signedUrls: true },
+  recording_tags: { sql: RECORDING_TAGS },
   playlists: { sql: PLAYLISTS },
   playlist_recordings: { sql: PLAYLIST_RECORDINGS },
   templates: { sql: TEMPLATES, signedUrls: true },
@@ -84,6 +85,45 @@ export const generateCsvs = async (
           rowCount = 1
           fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
         }
+      }
+    }
+
+    if (verbose === true) {
+      console.info(`Fetched ${totalRows} records in ${fileCount} file(s) for ${item}`)
+    }
+    return allCSVFiles
+  }
+
+  if (item === 'recording_tags') {
+    const allRecords = fetchAllRecordsUsingSubquery<{ site_id: number }>(
+      'sites',
+      item,
+      { projectId },
+      (t) => ({ siteId: t.site_id }),
+      sequelize,
+      storage,
+      legacyStorage,
+      verbose
+    )
+    let totalRows = 1 // headers as first row
+    let rowCount = 1 // headers as first row
+    let fileCount = 1
+    let fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
+    const allCSVFiles: string[] = []
+    for await (const records of allRecords) {
+      if (records.at(0) === undefined) {
+        continue
+      }
+      if (!allCSVFiles.includes(fileName)) {
+        allCSVFiles.push(fileName)
+      }
+      await convertToCsv(fileName, records)
+      rowCount += records.length - 1
+      if (rowCount >= BATCH_SIZE) {
+        fileCount++
+        totalRows += rowCount
+        rowCount = 1
+        fileName = `${item}.${String(fileCount).padStart(4, '0')}.csv`
       }
     }
 

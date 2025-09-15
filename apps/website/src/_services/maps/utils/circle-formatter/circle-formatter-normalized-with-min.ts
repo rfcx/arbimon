@@ -29,8 +29,8 @@ export class CircleFormatterNormalizedWithMin extends CircleFormatterNormalized 
     return super.getRadius(value)
   }
 
-  override getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE): MapBaseLegendEntry[] {
-    const [head, ...tail] = super.getLegendEntries(styleNonZero, styleZero)
+  override getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE, isIntegerLabel: boolean = false): MapBaseLegendEntry[] {
+    const [head, ...tail] = super.getLegendEntries(styleNonZero, styleZero, isIntegerLabel)
 
     const zeroEntry = this.showZeroInLegend
       ? [{ label: this.labelZero, radiusPx: this.stepPixels, style: styleZero }]

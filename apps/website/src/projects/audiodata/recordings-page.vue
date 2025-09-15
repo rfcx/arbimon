@@ -25,7 +25,6 @@
             :classes="classesRecordings"
             :soundscapes="soundscapeRecordings"
             :classifications="classifications"
-            :recorded-minutes-per-day="recordedMinutesPerDay"
             :filters-data="filterParams"
             :is-reset="isResetFilter"
             @apply="applyFilters"
@@ -239,8 +238,7 @@ import { type SiteParams } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
-import { useGetRecordedMinutesPerDay } from '@/detect/_composables/use-get-recorded-minutes-per-day'
-import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
+import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetClasses, useGetClassifications, useGetPlaylists, useGetSoundscape, useGetTags, useRecordings } from './api/use-recordings'
 import { useSites } from './api/use-sites'
@@ -304,7 +302,6 @@ const handlePageChange = async (page: number) => {
 }
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
-const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
@@ -366,7 +363,6 @@ const { data: tagsRecording } = useGetTags(apiClientArbimon, selectedProjectSlug
 const { data: classesRecordings } = useGetClasses(apiClientArbimon, selectedProjectSlug)
 const { data: soundscapeRecordings } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
 const { data: classifications } = useGetClassifications(apiClientArbimon, selectedProjectSlug)
-const { data: recordedMinutesPerDay } = useGetRecordedMinutesPerDay(apiClientBio, project.projectId)
 
 const recordingsCount = computed(() => { return recordings.value?.count ?? 0 })
 const recordingsCountText = computed<string>(() =>
@@ -402,6 +398,7 @@ const recordingsSelected = ref<string[]>([])
 
 const applyFilters = async (filter: RecordingSearchParams) => {
   filterParams.value = filter
+  currentPage.value = 1
   await refetchRecordings()
   showFilterModal.value = false
 }
@@ -501,10 +498,11 @@ const deleteAllFilteredRecordings = async () => {
 async function handleOk () {
   try {
     showPopup.value = false
-    if (deleteAllFiltered.value) {
+    if (selectedRows.value.length === 0) {
       await apiLegacyDeleteMatchingRecording(apiClientArbimon, selectedProjectSlug.value ?? '', requestParamsForPlaylist.value)
     } else {
       await apiLegacyDeleteRecording(apiClientArbimon, selectedProjectSlug.value ?? '', { recs: selectedRows.value })
+      selectedRows.value = []
     }
     applyRecordings()
     showAlertDialog('success', 'Success', 'Removed')

@@ -53,9 +53,10 @@
           </div>
           <div class="flex flex-row justify-between mt-4">
             <circle-legend
-              v-if="mapStatisticsStyle === MAPBOX_STYLE_CIRCLE"
+              v-if="mapStatisticsStyle === MAPBOX_STYLE_CIRCLE && !isLoadingSitesRecCountBio"
               :map-base-formatter="circleFormatter"
               :style-non-zero="circleStyle"
+              :is-integer-label="true"
             />
           </div>
         </div>

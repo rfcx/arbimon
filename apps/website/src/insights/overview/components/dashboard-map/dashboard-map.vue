@@ -64,6 +64,7 @@
           v-if="mapStatisticsStyle === MAPBOX_STYLE_CIRCLE && !isLoadingDataBySite"
           :map-base-formatter="circleFormatter"
           :style-non-zero="circleStyle"
+          :is-integer-label="true"
         />
         <heatmap-legend
           v-else-if="mapStatisticsStyle === MAPBOX_STYLE_HEATMAP && !isLoadingDataBySite"
