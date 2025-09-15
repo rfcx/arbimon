@@ -47,7 +47,7 @@ export class CircleFormatterNormalized implements MapBaseFormatter {
 
     // Round step value
     const stepValueRaw = (maxValueRaw || 1.0) / legendEntryCount
-    this.stepValue = Number(isFloat(maxValueRaw) ? stepValueRaw.toFixed(3) : stepValueRaw.toFixed(0))
+    this.stepValue = Number((isFloat(maxValueRaw) || maxValueRaw === 1) ? stepValueRaw.toFixed(3) : stepValueRaw.toFixed(0))
     // Calculate max from rounded step
     this.maxValue = this.stepValue * legendEntryCount
   }

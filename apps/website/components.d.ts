@@ -79,6 +79,7 @@ declare module 'vue' {
     IconCustomIcExport: typeof import('~icons/custom-icons/ic-export')['default']
     IconCustomIcInfo: typeof import('~icons/custom-icons/ic-info')['default']
     IconCustomIcLoading: typeof import('~icons/custom-icons/ic-loading')['default']
+    IconCustomIcLoadingDark: typeof import('~icons/custom-icons/ic-loading-dark')['default']
     IconCustomIcPlus: typeof import('~icons/custom-icons/ic-plus')['default']
     IconCustomIcPlusIcon: typeof import('~icons/custom-icons/ic-plus-icon')['default']
     IconCustomIcProgress: typeof import('~icons/custom-icons/ic-progress')['default']
