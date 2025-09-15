@@ -57,10 +57,16 @@ export class CircleFormatterNormalized implements MapBaseFormatter {
   }
 
   getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE, isIntegerLabel = false): MapBaseLegendEntry[] {
-    return Array.from({ length: this.legendEntryCount }, (_, idx) => ({
-        label: this.formatFunction(this.stepValue * (idx + 1), isIntegerLabel),
+    return Array.from({ length: this.legendEntryCount }, (_, idx) => {
+      let step = this.stepValue * (idx + 1)
+      if (idx === (this.legendEntryCount - 1)) {
+        step = this.maxValue + this.stepValue
+      }
+      return {
+        label: this.formatFunction(step, isIntegerLabel),
         radiusPx: this.stepPixels * (idx + 1),
         style: styleNonZero
-      }))
+      }
+    })
   }
 }
