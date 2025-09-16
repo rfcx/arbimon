@@ -11,10 +11,9 @@ export const DEFAULT_FORMAT_FUNCTION = (value: number, isIntegerLabel: boolean):
 const isFloat = (num: number): boolean => {
   return !isNaN(num) && num % 1 !== 0
 }
-
 const mapLegendLabelFormatted = (value: number, isIntegerLabel: boolean): string => {
-  if (isIntegerLabel) return numeral(value).format('0,00')
-  return isFloat(value) ? value.toFixed(3) : `${value}`
+  if (value > 999 && !isFloat(value)) return numeral(value).format('0,00')
+  return isIntegerLabel ? Math.ceil(value).toPrecision(3) : value.toPrecision(3)
 }
 
 export class CircleFormatterNormalized implements MapBaseFormatter {
@@ -39,17 +38,18 @@ export class CircleFormatterNormalized implements MapBaseFormatter {
 
     // Store as props
     this.maxPixels = maxPixels
-    this.legendEntryCount = legendEntryCount
+    this.legendEntryCount = (!isFloat(maxValueRaw) && legendEntryCount > maxValueRaw) ? maxValueRaw : DEFAULT_LEGEND_COUNT
     this.formatFunction = formatFunction
 
     // Calc pixels per step
-    this.stepPixels = maxPixels / legendEntryCount
+    this.stepPixels = maxPixels / this.legendEntryCount
 
     // Round step value
-    const stepValueRaw = (maxValueRaw || 1.0) / legendEntryCount
-    this.stepValue = Number((isFloat(maxValueRaw) || maxValueRaw === 1) ? stepValueRaw.toFixed(3) : stepValueRaw.toFixed(0))
+    const stepValueRaw = (maxValueRaw || 1.0) / this.legendEntryCount
+    this.stepValue = Number(formatFunction(stepValueRaw, false))
+
     // Calculate max from rounded step
-    this.maxValue = this.stepValue * legendEntryCount
+    this.maxValue = this.stepValue * this.legendEntryCount
   }
 
   getRadius (value: number): number {
@@ -57,16 +57,10 @@ export class CircleFormatterNormalized implements MapBaseFormatter {
   }
 
   getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE, isIntegerLabel = false): MapBaseLegendEntry[] {
-    return Array.from({ length: this.legendEntryCount }, (_, idx) => {
-      let step = this.stepValue * (idx + 1)
-      if (idx === (this.legendEntryCount - 1)) {
-        step = this.maxValue + this.stepValue
-      }
-      return {
-        label: this.formatFunction(step, isIntegerLabel),
+    return Array.from({ length: this.legendEntryCount }, (_, idx) => ({
+        label: this.formatFunction(this.stepValue * (idx + 1), isIntegerLabel),
         radiusPx: this.stepPixels * (idx + 1),
         style: styleNonZero
-      }
-    })
+      }))
   }
 }
