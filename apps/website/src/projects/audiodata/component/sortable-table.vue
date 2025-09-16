@@ -69,6 +69,7 @@
               :key="column.key"
               :style="`max-width: ${column.maxWidth || 100}px`"
               class="py-2 pl-2 truncate whitespace-nowrap overflow-hidden h-[40px]"
+              :class="{'align-top': getTemplateCount(row, column.key) > 0 }"
               :title="formatforTitle(column.key, row[column.key], row)"
             >
               <div

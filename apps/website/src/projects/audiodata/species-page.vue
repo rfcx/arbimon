@@ -50,10 +50,10 @@
     <div class="flex mt-5 px-8">
       <button
         class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex text-[14px] h-[34px] px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-        :disabled="!store.userIsFullProjectMember"
+        :disabled="!store.userIsDataEntryMember"
         data-tooltip-style="light"
         data-tooltip-target="exportSpecieTooltip"
-        @click="bulkImport()"
+        @click="exportSpecies()"
       >
         <span>Export species list</span>
       </button>
@@ -62,7 +62,7 @@
         role="tooltip"
         class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
       >
-        {{ store.userIsFullProjectMember ? 'Export species list' : 'You do not have permission to add species' }}
+        {{ store.userIsDataEntryMember ? 'Export species list' : 'You do not have permission to export species' }}
         <div
           class="tooltip-arrow"
           data-popper-arrow
@@ -255,5 +255,16 @@ const createSpecies = () => {
 
 const bulkImport = () => {
   console.info('bulkImport')
+}
+
+const exportSpecies = () => {
+  // const url = `${window.location.origin}/legacy-api/project/${selectedProjectSlug.value}/species-export.csv`
+  const url = `https://staging.arbimon.org/legacy-api/project/${selectedProjectSlug.value}/species-export.csv`
+  const link = document.createElement('a')
+  link.href = url
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
 }
 </script>
