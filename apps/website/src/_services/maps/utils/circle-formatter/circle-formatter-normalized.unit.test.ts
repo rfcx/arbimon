@@ -62,16 +62,30 @@ describe('radius calculation', () => {
 })
 
 describe('legend', () => {
-  test('legend length matches legendEntryCount', () => {
+  test('legend length matches legendEntryCount if maxValueRaw greather than legendEntryCount', () => {
     // Arrange
     const legendEntryCount = 10
-    const formatter = new CircleFormatterNormalized({ formatFunction: NULL_FORMAT_FUNCTION, legendEntryCount })
+    const maxValueRaw = 200
+    const formatter = new CircleFormatterNormalized({ formatFunction: NULL_FORMAT_FUNCTION, maxValueRaw, legendEntryCount })
 
     // Act
     const entries = formatter.getLegendEntries()
 
     // Assert
     expect(entries).toHaveLength(legendEntryCount)
+  })
+
+  test('legend length matches maxValueRaw if maxValueRaw less than legendEntryCount', () => {
+    // Arrange
+    const legendEntryCount = 10
+    const maxValueRaw = 8
+    const formatter = new CircleFormatterNormalized({ formatFunction: NULL_FORMAT_FUNCTION, maxValueRaw, legendEntryCount })
+
+    // Act
+    const entries = formatter.getLegendEntries()
+
+    // Assert
+    expect(entries).toHaveLength(maxValueRaw)
   })
 
   test('legend entries should be positive', () => {

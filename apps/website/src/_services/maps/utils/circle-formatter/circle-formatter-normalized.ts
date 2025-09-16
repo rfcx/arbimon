@@ -38,7 +38,7 @@ export class CircleFormatterNormalized implements MapBaseFormatter {
 
     // Store as props
     this.maxPixels = maxPixels
-    this.legendEntryCount = (!isFloat(maxValueRaw) && legendEntryCount > maxValueRaw) ? maxValueRaw : DEFAULT_LEGEND_COUNT
+    this.legendEntryCount = (!isFloat(maxValueRaw) && legendEntryCount > maxValueRaw) ? maxValueRaw : legendEntryCount
     this.formatFunction = formatFunction
 
     // Calc pixels per step
