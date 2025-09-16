@@ -73,6 +73,7 @@
             >
               <div
                 v-if="!isTemplatesKey(column.key)"
+                :class="{'italic': isItalicText(column.key)}"
                 class="truncate whitespace-nowrap overflow-hidden"
               >
                 {{ formatValueByKey(column.key, row[column.key], row) }}
@@ -98,8 +99,17 @@
                       alt="template"
                       class="w-full h-full object-cover"
                     >
+                    <span
+                      v-if="isAddingTemplate(column.key)"
+                      class="absolute right-1 top-1 text-white/90 text-xs"
+                    >
+                      <icon-fa-plus
+                        class="w-[13px] h-[16px] m-[6px]"
+                        style="filter: drop-shadow(0 0 5px #000)"
+                      />
+                    </span>
                     <span class="absolute left-1 bottom-1 text-white/90 text-xs"><icon-fa-play
-                      class="w-[16px] h-[16px] m-[6px]"
+                      class="w-[13px] h-[16px] m-[6px]"
                       style="filter: drop-shadow(0 0 5px #000)"
                     /></span>
                     <span
@@ -178,6 +188,15 @@ type FormatType = 'datetime' | 'date' | 'friendly'
 const decimalKeys = ['lat', 'lon', 'alt', 'rec_count']
 function isDecimalKey (key: string): boolean {
   return decimalKeys.includes(key)
+}
+
+function isAddingTemplate (key: string): boolean {
+  return key === 'public_templates'
+}
+
+const italicKeys = ['species_name']
+function isItalicText (key: string): boolean {
+  return italicKeys.includes(key)
 }
 
 const templatesKeys = ['project_templates', 'public_templates']

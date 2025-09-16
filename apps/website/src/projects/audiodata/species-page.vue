@@ -179,7 +179,7 @@ const { data: speciesProjectTemplates, isLoading: isLoadingProjectTemplates } = 
 const { data: speciesPublicTemplates, isLoading: isLoadingPublicTemplates } = useGetPublicTemplates(apiClientArbimon, selectedProjectSlug, publicTemplatesParams)
 
 const columns = [
-  { label: 'Species', key: 'species_name', maxWidth: 70 },
+  { label: 'Species', key: 'species_name', maxWidth: 90 },
   { label: 'Taxon', key: 'taxon', maxWidth: 70 },
   { label: 'Sound', key: 'songtype_name', maxWidth: 70 },
   { label: 'Project Templates', key: 'project_templates', maxWidth: 150 },
