@@ -183,13 +183,7 @@
       />
     </div>
     <div
-      v-if="!isLoadingRecordings && recordingsCount === 0"
-      class="font-display text-cloud text-[26px] text-center mt-10"
-    >
-      <span class="font-display">Recordings not found</span>
-    </div>
-    <div
-      v-if="!isLoadingRecordings && isErrorRecordings"
+      v-if="!isLoadingRecordings && (recordingsCount === 0 || isErrorRecordings)"
       class="font-display text-cloud text-[26px] text-center mt-10"
     >
       <span class="font-display">Recordings not found</span>

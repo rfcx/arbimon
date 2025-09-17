@@ -118,6 +118,12 @@ const openDropdown = () => {
   isOpen.value = true
   nextTick(() => searchInput.value?.focus())
 }
+
+const valueKeys = ['{"model":1, "th":1}', '{"model":1, "th":0}', '{"model":0, "th":1}', '{"model":0, "th":0}']
+function haveValuekey (key: string): boolean {
+  return valueKeys.includes(key)
+}
+
 </script>
 
 <template>
@@ -163,14 +169,41 @@ const openDropdown = () => {
             v-if="opt.icon === 'tag-icon'"
             class="text-[10px]"
           />
-          <span
-            v-if="opt.group"
-            class="mr-1 font-bold"
-          >{{ opt.group }} / {{ opt.label }}</span>
-          <span
-            v-else
-            class="mr-1 font-bold"
-          >{{ opt.label }}</span>
+          <div
+            v-if="haveValuekey(opt.value.toString())"
+            class="mt-[2px] mr-1 font-bold"
+          >
+            <span>
+              Model:
+              <icon-fa-check
+                v-if="opt.label.includes('Model: present')"
+                class="h-3 w-3 text-[#1F57CC] inline-block mr-1 mb-[3px]"
+              />
+              <icon-fa-close
+                v-else
+                class="h-2.5 w-2.5 text-[#ffcd00] inline-block mr-1 mb-[3px]"
+              />
+              Th:
+              <icon-fa-check
+                v-if="opt.label.includes('Theshold: present')"
+                class="h-3 w-3 text-[#1F57CC] inline-block mr-1 mb-[3px]"
+              />
+              <icon-fa-close
+                v-else
+                class="h-2.5 w-2.5 text-[#ffcd00] inline-block mr-1 mb-[3px]"
+              />
+            </span>
+          </div>
+          <div v-else>
+            <span
+              v-if="opt.group"
+              class="mr-1 font-bold"
+            >{{ opt.group }} / {{ opt.label }}</span>
+            <span
+              v-else
+              class="mr-1 font-bold"
+            >{{ opt.label }}</span>
+          </div>
           <span
             v-if="opt.count && opt.icon === 'tag-icon'"
             class="badge px-1 inline-flex flex-shrink-0 items-center gap-1 bg-util-gray-03 rounded-full mr-1"
@@ -236,10 +269,37 @@ const openDropdown = () => {
               v-if="opt.icon === 'val-0'"
               class="h-2.5 w-2.5 text-[#ffcd00] mr-1"
             />
-            <span
-              class="truncate "
-              :title="opt.label"
-            >{{ opt.label }}</span>
+            <div
+              v-if="haveValuekey(opt.value.toString())"
+              class="mt-[2px] mr-1 font-bold"
+            >
+              <span>
+                Model:
+                <icon-fa-check
+                  v-if="opt.label.includes('Model: present')"
+                  class="h-3 w-3 text-[#1F57CC] inline-block mr-1 mb-[3px]"
+                />
+                <icon-fa-close
+                  v-else
+                  class="h-2.5 w-2.5 text-[#ffcd00] inline-block mr-1 mb-[3px]"
+                />
+                Th:
+                <icon-fa-check
+                  v-if="opt.label.includes('Theshold: present')"
+                  class="h-3 w-3 text-[#1F57CC] inline-block mr-1 mb-[3px]"
+                />
+                <icon-fa-close
+                  v-else
+                  class="h-2.5 w-2.5 text-[#ffcd00] inline-block mr-1 mb-[3px]"
+                />
+              </span>
+            </div>
+            <div v-else>
+              <span
+                class="truncate "
+                :title="opt.label"
+              >{{ opt.label }}</span>
+            </div>
           </div>
 
           <span
