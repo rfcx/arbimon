@@ -57,14 +57,14 @@ export const RECORDINGS = `
 
 export const RECORDING_TAGS = `
   select 
-    rt.recording_id,
     rt.site_id,
+    rt.recording_id,
+    t.tag,
     rt.datetime,
     rt.t0,
     rt.f0,
     rt.t1,
-    rt.f1,
-    t.tag 
+    rt.f1
   from recording_tags rt
   join tags t on t.tag_id = rt.tag_id
   where rt.site_id = $siteId
