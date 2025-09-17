@@ -350,20 +350,6 @@ const checkThreshold = computed(() => {
     .map(classification => classification?.threshold)
 })
 
-function syncSelectedResults () {
-  if (haveThreshold()) {
-    const thresholdValues = thresholdOptions.map(opt => opt.value)
-    selectedResults.value = selectedResults.value.filter(v =>
-      thresholdValues.includes(v)
-    )
-  } else {
-    const staticValues = staticClassificationOptions.map(opt => opt.value)
-    selectedResults.value = selectedResults.value.filter(v =>
-      staticValues.includes(v)
-    )
-  }
-}
-
 function haveThreshold (): boolean {
   return checkThreshold.value.some(v => v !== null && v !== undefined)
 }
@@ -411,6 +397,18 @@ const thresholdOptions = [
   { label: 'Model: absent, Theshold: present', value: '{"model":0, "th":1}', tooltip: 'Model: absent, Threshold: present' },
   { label: 'Model: absent, Theshold: absent', value: '{"model":0, "th":0}', tooltip: 'Model: absent, Threshold: absent' }
 ]
+const isThreshold = (v: string) =>
+  thresholdOptions.some(opt => opt.value === v)
+
+const isStatic = (v: string) =>
+  staticClassificationOptions.some(opt => opt.value === v)
+
+const effectiveSelected = computed<string[]>(() => {
+  const src = selectedResults.value.map(String)
+  return haveThreshold()
+    ? src.filter(isThreshold)
+    : src.filter(isStatic)
+})
 
 const panelRef = ref<HTMLElement | null>(null)
 
@@ -513,10 +511,12 @@ watch(selectedTags, (v) => { filters.tags = v })
 watch(selectedClasses, (v) => { filters.validations = v })
 watch(selectedValidation, (v) => { filters.presence = v })
 
-watch(selectedClassifications, (v) => { filters.classifications = v })
+watch(selectedClassifications, (v) => {
+  filters.classifications = v
+  filters.classification_results = effectiveSelected.value
+})
 watch(selectedResults, () => {
-  syncSelectedResults()
-  filters.classification_results = selectedResults.value
+  filters.classification_results = effectiveSelected.value
 })
 
 watch(selectedSoundscapes, (v) => { filters.soundscape_composition = v })
