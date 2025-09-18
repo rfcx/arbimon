@@ -392,10 +392,10 @@ const staticClassificationOptions = [
 ]
 
 const thresholdOptions = [
-  { label: 'Model: present, Theshold: present', value: '{"model":1, "th":1}', tooltip: 'Model: present, Threshold: present' },
-  { label: 'Model: present, Theshold: absent', value: '{"model":1, "th":0}', tooltip: 'Model: present, Threshold: absent' },
-  { label: 'Model: absent, Theshold: present', value: '{"model":0, "th":1}', tooltip: 'Model: absent, Threshold: present' },
-  { label: 'Model: absent, Theshold: absent', value: '{"model":0, "th":0}', tooltip: 'Model: absent, Threshold: absent' }
+  { label: 'Model: present, Threshold: present', value: '{"model":1, "th":1}', tooltip: 'Model: present, Threshold: present' },
+  { label: 'Model: present, Threshold: absent', value: '{"model":1, "th":0}', tooltip: 'Model: present, Threshold: absent' },
+  { label: 'Model: absent, Threshold: present', value: '{"model":0, "th":1}', tooltip: 'Model: absent, Threshold: present' },
+  { label: 'Model: absent, Threshold: absent', value: '{"model":0, "th":0}', tooltip: 'Model: absent, Threshold: absent' }
 ]
 const isThreshold = (v: string) =>
   thresholdOptions.some(opt => opt.value === v)

@@ -183,7 +183,7 @@ function haveValuekey (key: string): boolean {
                 v-else
                 class="h-2.5 w-2.5 text-[#ffcd00] inline-block mr-1 mb-[3px]"
               />
-              Theshold:
+              Threshold:
               <icon-fa-check
                 v-if="opt.label.includes('Theshold: present')"
                 class="h-3 w-3 text-[#1F57CC] inline-block mr-1 mb-[3px]"
@@ -283,7 +283,7 @@ function haveValuekey (key: string): boolean {
                   v-else
                   class="h-2.5 w-2.5 text-[#ffcd00] inline-block mr-1 mb-[3px]"
                 />
-                Theshold:
+                Threshold:
                 <icon-fa-check
                   v-if="opt.label.includes('Theshold: present')"
                   class="h-3 w-3 text-[#1F57CC] inline-block mr-1 mb-[3px]"
