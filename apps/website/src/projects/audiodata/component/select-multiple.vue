@@ -185,7 +185,7 @@ function haveValuekey (key: string): boolean {
               />
               Threshold:
               <icon-fa-check
-                v-if="opt.label.includes('Theshold: present')"
+                v-if="opt.label.includes('Threshold: present')"
                 class="h-3 w-3 text-[#1F57CC] inline-block mr-1 mb-[3px]"
               />
               <icon-fa-close
@@ -285,7 +285,7 @@ function haveValuekey (key: string): boolean {
                 />
                 Threshold:
                 <icon-fa-check
-                  v-if="opt.label.includes('Theshold: present')"
+                  v-if="opt.label.includes('Threshold: present')"
                   class="h-3 w-3 text-[#1F57CC] inline-block mr-1 mb-[3px]"
                 />
                 <icon-fa-close
