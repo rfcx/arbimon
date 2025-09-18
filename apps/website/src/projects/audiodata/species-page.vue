@@ -117,6 +117,7 @@
         :rows="mergedSpecies ?? []"
         :selected-row="selectedSpecies"
         :project-slug="selectedProjectSlug"
+        :project-templates="speciesProjectTemplates"
         :default-sort-order="'desc'"
       />
     </div>

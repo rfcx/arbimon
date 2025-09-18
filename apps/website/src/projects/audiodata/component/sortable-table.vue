@@ -103,13 +103,19 @@
                     <span
                       v-if="isAddingTemplate(column.key)"
                       class="absolute right-1 top-1 text-white/90 text-xs"
+                      title="Add templates to project"
                     >
                       <icon-fa-plus
-                        class="w-[13px] h-[16px] m-[6px]"
+                        :disable="isAdding || checkUserPermissions(tpl)"
+                        class="w-[13px] h-[16px] m-[6px] cursor-pointer"
+                        :class="[(isAdding || checkUserPermissions(tpl)) ? 'opacity-50 cursor-default' : 'cursor-pointer']"
                         style="filter: drop-shadow(0 0 5px #000)"
                       />
                     </span>
-                    <span class="absolute left-1 bottom-1 text-white/90 text-xs"><icon-fa-play
+                    <span
+                      class="absolute left-1 bottom-1 text-white/90 text-xs"
+                      title="Play sound"
+                    ><icon-fa-play
                       class="w-[13px] h-[16px] m-[6px]"
                       style="filter: drop-shadow(0 0 5px #000)"
                     /></span>
@@ -214,6 +220,7 @@ const props = defineProps<{
   showCheckbox?: boolean
   projectSlug?: string
   showExpand?: boolean
+  projectTemplates?: ProjectTemplatesResponse[]
 }>()
 
 const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void}>()
@@ -237,6 +244,25 @@ function getTopTemplates (row: Row, key: string) {
 
 function getTemplateCount (row: Row, key: string) {
   return getTemplates(row, key).length
+}
+
+const isAdding = ref(false)
+function checkUserPermissions (list: Row) {
+  const publicTemplate = list as PublicTemplateResponse
+
+  if (publicTemplate.project_url === props.projectSlug) return true
+
+  const isDuplicate = (props.projectTemplates ?? []).some((tpl: ProjectTemplatesResponse) =>
+    tpl.species === publicTemplate.species &&
+    tpl.songtype === publicTemplate.songtype &&
+    tpl.recording === publicTemplate.recording &&
+    tpl.x1 === publicTemplate.x1 &&
+    tpl.x2 === publicTemplate.x2 &&
+    tpl.y1 === publicTemplate.y1 &&
+    tpl.y2 === publicTemplate.y2
+  )
+
+  return isDuplicate
 }
 
 function onGoMore (key: string, row: Row) {
