@@ -99,3 +99,36 @@ export const apiArbimonGetPublicTemplates = async (apiClient: AxiosInstance, slu
     return response.data
   } else return undefined
 }
+
+export interface TemplateRequest {
+  name: string
+  recording: number
+  roi: {
+    x1: number
+    y1: number
+    x2: number
+    y2: number
+  }
+  songtype: number
+  source_project_id: number
+  species: number
+}
+export interface TemplateResponse {
+  id: number
+  name: string
+  project: number
+  recording: number
+  songtype: number
+  source_project_id: number
+  species: number
+  uri: string
+  user_id: number
+  x1: number
+  x2: number
+  y1: number
+  y2: number
+}
+
+export const apiLegacyAddTemplates = async (apiClient: AxiosInstance, slug: string, params: TemplateRequest): Promise<TemplateResponse> => {
+  return await apiClient.post(`/legacy-api/project/${slug}/templates/add`, params)
+}

@@ -119,6 +119,7 @@
         :project-slug="selectedProjectSlug"
         :project-templates="speciesProjectTemplates"
         :default-sort-order="'desc'"
+        @on-add-templates="onAddTemplates"
       />
     </div>
     <div class="flex mt-3">
@@ -135,6 +136,12 @@
       v-if="isLoadingSpecies || isRefetchSpecies"
       class="animate-spin text-2xl mt-[100px]"
     />
+    <alert-dialog
+      v-if="showAlert"
+      :severity="success"
+      :title="title"
+      :message="message"
+    />
   </section>
 </template>
 <script setup lang="ts">
@@ -142,8 +149,9 @@ import type { AxiosInstance } from 'axios'
 import { initTooltips } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
-import { type ProjectTemplatesResponse, type PublicTemplateResponse, type PublicTemplatesParams, type SpeciesClassesParams, type SpeciesType } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+import { type ProjectTemplatesResponse, type PublicTemplateResponse, type PublicTemplatesParams, type SpeciesClassesParams, type SpeciesType, type TemplateRequest, apiLegacyAddTemplates } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
+import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetProjectTemplates, useGetPublicTemplates, useGetSpecies } from './api/use-species'
@@ -258,6 +266,15 @@ const bulkImport = () => {
   console.info('bulkImport')
 }
 
+const onAddTemplates = async (request: TemplateRequest) => {
+  try {
+    await apiLegacyAddTemplates(apiClientArbimon, selectedProjectSlug.value ?? '', request)
+    showAlertDialog('success', 'Success', 'Add Templates')
+  } catch (e) {
+    showAlertDialog('error', 'Error', 'Add Templates')
+  }
+}
+
 const exportSpecies = () => {
   // const url = `${window.location.origin}/legacy-api/project/${selectedProjectSlug.value}/species-export.csv`
   const url = `https://staging.arbimon.org/legacy-api/project/${selectedProjectSlug.value}/species-export.csv`
@@ -267,5 +284,20 @@ const exportSpecies = () => {
   link.click()
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
+}
+
+const success = ref<AlertDialogType>('error')
+const title = ref('')
+const message = ref('')
+const showAlert = ref(false)
+
+const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue: string, hideAfter = 7000) => {
+  showAlert.value = true
+  success.value = type
+  title.value = titleValue
+  message.value = messageValue
+  setTimeout(() => {
+    showAlert.value = false
+  }, hideAfter)
 }
 </script>

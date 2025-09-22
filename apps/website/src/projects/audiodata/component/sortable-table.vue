@@ -110,6 +110,7 @@
                         class="w-[13px] h-[16px] m-[6px] cursor-pointer"
                         :class="[(isAdding || checkUserPermissions(tpl)) ? 'opacity-50 cursor-default' : 'cursor-pointer']"
                         style="filter: drop-shadow(0 0 5px #000)"
+                        @click="onAddTemplates(tpl)"
                       />
                     </span>
                     <span
@@ -178,7 +179,7 @@
 import dayjs from 'dayjs'
 import { computed, onMounted, ref, watch } from 'vue'
 
-import { type ProjectTemplatesResponse, type PublicTemplateResponse } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+import { type ProjectTemplatesResponse, type PublicTemplateResponse, type TemplateRequest } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
 interface Column {
   label: string
@@ -223,7 +224,7 @@ const props = defineProps<{
   projectTemplates?: ProjectTemplatesResponse[]
 }>()
 
-const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void}>()
+const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void, (e: 'onAddTemplates', request: TemplateRequest): void}>()
 
 const sortKey = ref<string | null>(null)
 const sortOrder = ref<'asc' | 'desc'>('asc')
@@ -244,6 +245,28 @@ function getTopTemplates (row: Row, key: string) {
 
 function getTemplateCount (row: Row, key: string) {
   return getTemplates(row, key).length
+}
+
+function onAddTemplates (row: Row) {
+  emit('onAddTemplates', toTemplateRequest(row))
+  console.info('treeeeee')
+  console.info(row)
+}
+
+function toTemplateRequest (row: Row): TemplateRequest {
+  return {
+    name: row.name,
+    recording: row.recording,
+    roi: {
+      x1: row.x1,
+      y1: row.y1,
+      x2: row.x2,
+      y2: row.y2
+    },
+    songtype: row.songtype,
+    source_project_id: row.project,
+    species: row.species
+  }
 }
 
 const isAdding = ref(false)
