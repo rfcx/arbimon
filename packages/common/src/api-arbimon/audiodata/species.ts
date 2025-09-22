@@ -90,7 +90,6 @@ export interface PublicTemplateResponse {
 
 export const apiArbimonGetPublicTemplates = async (apiClient: AxiosInstance, slug: string, params: PublicTemplatesParams): Promise<PublicTemplateResponse[] | undefined> => {
   if (slug !== undefined && params !== undefined) {
-    console.info(params)
     const response = await apiClient.request<PublicTemplateResponse[]>({
       method: 'GET',
       url: `/legacy-api/project/${slug}/templates/class`,
@@ -130,5 +129,6 @@ export interface TemplateResponse {
 }
 
 export const apiLegacyAddTemplates = async (apiClient: AxiosInstance, slug: string, params: TemplateRequest): Promise<TemplateResponse> => {
-  return await apiClient.post(`/legacy-api/project/${slug}/templates/add`, params)
+  const res = await apiClient.post(`/legacy-api/project/${slug}/templates/add`, params)
+  return res.data
 }

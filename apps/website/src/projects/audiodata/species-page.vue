@@ -119,6 +119,7 @@
         :project-slug="selectedProjectSlug"
         :project-templates="speciesProjectTemplates"
         :default-sort-order="'desc'"
+        :template-added-id="templateAddedId"
         @on-add-templates="onAddTemplates"
       />
     </div>
@@ -184,8 +185,8 @@ const publicTemplatesParams = computed<PublicTemplatesParams | undefined>(() => 
 })
 
 const { data: speciesData, isLoading: isLoadingSpecies, isError: isErrorSpecies, isRefetching: isRefetchSpecies, refetch: refetchSpecies } = useGetSpecies(apiClientArbimon, selectedProjectSlug, speciesParams)
-const { data: speciesProjectTemplates, isLoading: isLoadingProjectTemplates } = useGetProjectTemplates(apiClientArbimon, selectedProjectSlug)
-const { data: speciesPublicTemplates, isLoading: isLoadingPublicTemplates } = useGetPublicTemplates(apiClientArbimon, selectedProjectSlug, publicTemplatesParams)
+const { data: speciesProjectTemplates, isLoading: isLoadingProjectTemplates, refetch: refetchProjectTemplates } = useGetProjectTemplates(apiClientArbimon, selectedProjectSlug)
+const { data: speciesPublicTemplates, isLoading: isLoadingPublicTemplates, refetch: refetchPublicTemplates } = useGetPublicTemplates(apiClientArbimon, selectedProjectSlug, publicTemplatesParams)
 
 const columns = [
   { label: 'Species', key: 'species_name', maxWidth: 90 },
@@ -226,6 +227,12 @@ function groupBy<T, K extends PropertyKey> (arr: readonly T[], key: (x: T) => K)
   return m
 }
 
+function sortByDateCreatedDesc<T extends { date_created: string }> (arr: T[]): T[] {
+  return arr.sort(
+    (a, b) => new Date(b.date_created).getTime() - new Date(a.date_created).getTime()
+  )
+}
+
 const mergedSpecies = computed(() => {
   const projMap = groupBy<ProjectTemplatesResponse, SpeciesSongtypeKey>(projSafe.value, t => makeKey(t.species, t.songtype))
   const pubMap = groupBy<PublicTemplateResponse, SpeciesSongtypeKey>(pubSafe.value, t => makeKey(t.species, t.songtype))
@@ -235,20 +242,14 @@ const mergedSpecies = computed(() => {
 
     return {
       ...s,
-      project_templates: projMap.get(key) ?? [],
-      public_templates: pubMap.get(key) ?? []
+      project_templates: sortByDateCreatedDesc(projMap.get(key) ?? []),
+      public_templates: sortByDateCreatedDesc(pubMap.get(key) ?? [])
     }
   })
 })
 
 onMounted(() => {
   initTooltips()
-
-  console.info(speciesData)
-  console.info(speciesProjectTemplates)
-  console.info(speciesPublicTemplates)
-  console.info(mergedSpecies)
-  console.info(publicTemplatesParams)
 })
 
 const onSearchInput = () => {
@@ -266,10 +267,20 @@ const bulkImport = () => {
   console.info('bulkImport')
 }
 
+const templateAddedId = computed(() => templateId.value)
+const templateId = ref<number | undefined>(undefined)
+
 const onAddTemplates = async (request: TemplateRequest) => {
   try {
-    await apiLegacyAddTemplates(apiClientArbimon, selectedProjectSlug.value ?? '', request)
-    showAlertDialog('success', 'Success', 'Add Templates')
+    const templateResponse = await apiLegacyAddTemplates(apiClientArbimon, selectedProjectSlug.value ?? '', request)
+    if (templateResponse.id === 0) {
+      showAlertDialog('error', 'Error', 'The template already exists in the project templates.')
+    } else {
+      showAlertDialog('success', 'Success', 'Add Templates')
+      refetchProjectTemplates()
+      refetchPublicTemplates()
+      templateId.value = templateResponse.id
+    }
   } catch (e) {
     showAlertDialog('error', 'Error', 'Add Templates')
   }

@@ -100,17 +100,28 @@
                       alt="template"
                       class="w-full h-full object-cover"
                     >
+                    <div
+                      v-if="tpl.addedTemplate && column.key === 'project_templates'"
+                      class="roi-message"
+                    >
+                      Added
+                    </div>
                     <span
                       v-if="isAddingTemplate(column.key)"
                       class="absolute right-1 top-1 text-white/90 text-xs"
                       title="Add templates to project"
                     >
                       <icon-fa-plus
-                        :disable="isAdding || checkUserPermissions(tpl)"
+                        v-if="!tpl.addingTemplate"
+                        :disable="tpl.addingTemplate || checkUserPermissions(tpl)"
                         class="w-[13px] h-[16px] m-[6px] cursor-pointer"
                         :class="[(isAdding || checkUserPermissions(tpl)) ? 'opacity-50 cursor-default' : 'cursor-pointer']"
                         style="filter: drop-shadow(0 0 5px #000)"
-                        @click="onAddTemplates(tpl)"
+                        @click="onAddTemplates(tpl, tpl.id)"
+                      />
+                      <icon-custom-ic-loading
+                        v-if="tpl.addingTemplate"
+                        class="animate-spin text-xl"
                       />
                     </span>
                     <span
@@ -222,6 +233,7 @@ const props = defineProps<{
   projectSlug?: string
   showExpand?: boolean
   projectTemplates?: ProjectTemplatesResponse[]
+  templateAddedId?: number
 }>()
 
 const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void, (e: 'onAddTemplates', request: TemplateRequest): void}>()
@@ -234,9 +246,15 @@ const isLoaded = ref(true)
 
 const MAX_THUMBS = 3
 
-function getTemplates (row: Row, key: string): Array<ProjectTemplatesResponse | PublicTemplateResponse> {
+function getTemplates (row: Row, key: string): Array<(ProjectTemplatesResponse | PublicTemplateResponse) & { addingTemplate: boolean, addedTemplate: boolean }> {
   const list = row[key]
-  return Array.isArray(list) ? list : []
+  if (!Array.isArray(list)) return []
+
+  return list.map(tpl => ({
+    ...tpl,
+    addingTemplate: addingTemplateId.value === tpl.id,
+    addedTemplate: addedTemplate.value === tpl.id
+  }))
 }
 
 function getTopTemplates (row: Row, key: string) {
@@ -247,10 +265,12 @@ function getTemplateCount (row: Row, key: string) {
   return getTemplates(row, key).length
 }
 
-function onAddTemplates (row: Row) {
+const addingTemplateId = ref(0)
+const addedTemplate = ref(0)
+function onAddTemplates (row: Row, id: number) {
+  addingTemplateId.value = id
+  addedTemplate.value = id
   emit('onAddTemplates', toTemplateRequest(row))
-  console.info('treeeeee')
-  console.info(row)
 }
 
 function toTemplateRequest (row: Row): TemplateRequest {
@@ -516,6 +536,15 @@ watch(() => props.selectedRow, (row) => {
     selectedRowIndex.value = null
   }
 })
+
+watch(() => props.templateAddedId, (id) => {
+  addedTemplate.value = id ?? 0
+  addingTemplateId.value = 0
+  setTimeout(() => {
+    addedTemplate.value = 0
+  }, 5_000)
+})
+
 </script>
 
 <style scoped>
@@ -532,5 +561,15 @@ watch(() => props.selectedRow, (row) => {
 
 .text-shadow {
   text-shadow: 0 0 5px #000000;
+}
+
+.roi-message {
+  position: absolute;
+  background-color: rgba(6, 5, 8, 0.5);
+  color: #FFFEFC;
+  border-radius: 5px;
+  padding: 6px 7px;
+  left: 19%;
+  top: 35%;
 }
 </style>
