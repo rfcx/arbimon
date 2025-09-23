@@ -119,8 +119,10 @@
         :project-slug="selectedProjectSlug"
         :project-templates="speciesProjectTemplates"
         :default-sort-order="'desc'"
+        :show-checkbox="true"
         :template-added-id="templateAddedId"
         @on-add-templates="onAddTemplates"
+        @selected-rows="onSelectedRecordings"
       />
     </div>
     <div class="flex mt-3">
@@ -158,6 +160,7 @@ import { useStore } from '~/store'
 import { useGetProjectTemplates, useGetPublicTemplates, useGetSpecies } from './api/use-species'
 import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
+import { type Row } from './component/sortable-table.vue'
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
@@ -195,6 +198,8 @@ const columns = [
   { label: 'Project Templates', key: 'project_templates', maxWidth: 150 },
   { label: 'Public Templates', key: 'public_templates', maxWidth: 150 }
 ]
+
+const selectedRows = ref<Row[]>([])
 
 const speciesCount = computed(() => { return speciesData.value?.count ?? 0 })
 const speciesCountText = computed<string>(() =>
@@ -277,6 +282,7 @@ const onAddTemplates = async (request: TemplateRequest) => {
       showAlertDialog('error', 'Error', 'The template already exists in the project templates.')
     } else {
       showAlertDialog('success', 'Success', 'Add Templates')
+      currentPage.value = 1
       refetchProjectTemplates()
       refetchPublicTemplates()
       templateId.value = templateResponse.id
@@ -310,5 +316,10 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
   setTimeout(() => {
     showAlert.value = false
   }, hideAfter)
+}
+
+const onSelectedRecordings = (rows?: Row[]) => {
+  if (!rows) return
+  selectedRows.value = rows === undefined ? [] : rows
 }
 </script>
