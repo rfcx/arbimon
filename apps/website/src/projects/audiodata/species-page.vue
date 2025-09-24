@@ -164,7 +164,7 @@ import type { AxiosInstance } from 'axios'
 import { initTooltips } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
-import { type ProjectTemplatesResponse, type PublicTemplateResponse, type PublicTemplatesParams, type SpeciesClassesParams, type SpeciesType, type TemplateRequest, apiLegacyAddTemplates } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+import { type ProjectTemplatesResponse, type PublicTemplateResponse, type PublicTemplatesParams, type SpeciesClassesParams, type SpeciesType, type TemplateRequest, apiLegacyAddTemplates, apiLegacyDeleteSpecies } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
@@ -341,8 +341,16 @@ const deleteSpecies = () => {
   showPopup.value = true
 }
 
-function handleOk () {
+async function handleOk () {
   showPopup.value = false
+  try {
+    await apiLegacyDeleteSpecies(apiClientArbimon, selectedProjectSlug.value ?? '', { project_classes: selectedRows.value.map(r => r.id) })
+    selectedRows.value = []
+    refetchSpecies()
+    showAlertDialog('success', 'Success', 'Removed')
+  } catch (e) {
+    showAlertDialog('error', 'Error', 'Remove species')
+  }
 }
 
 const handleCancel = () => {

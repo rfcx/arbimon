@@ -132,3 +132,16 @@ export const apiLegacyAddTemplates = async (apiClient: AxiosInstance, slug: stri
   const res = await apiClient.post(`/legacy-api/project/${slug}/templates/add`, params)
   return res.data
 }
+
+export interface DeleteSpeciesRequest {
+  project_classes: number[]
+}
+export interface DeleteSpeciesResponse {
+  deleted: string[]
+  success: boolean
+}
+
+export const apiLegacyDeleteSpecies = async (apiClient: AxiosInstance, slug: string, params: DeleteSpeciesRequest): Promise<DeleteSpeciesResponse> => {
+  const res = await apiClient.post(`/legacy-api/project/${slug}/class/del`, params)
+  return res.data
+}
