@@ -185,12 +185,14 @@ const routes: RouteRecordRaw[] = [
           {
             path: 'sites',
             name: ROUTE_NAMES.mySites,
-            component: PAGES.MySites
+            component: PAGES.MySites,
+            beforeEnter: [authRequiredGuard, storeMemberGuard]
           },
           {
             path: 'recordings',
             name: ROUTE_NAMES.myRecordings,
-            component: PAGES.MyRecordings
+            component: PAGES.MyRecordings,
+            beforeEnter: [authRequiredGuard, storeMemberGuard]
           }
         ]
       },
