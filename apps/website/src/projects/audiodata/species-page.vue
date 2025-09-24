@@ -103,7 +103,7 @@
     </div>
     <div class="flex mt-5 px-9">
       <span
-        v-if="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates"
+        v-if="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates && speciesCount !== 0"
         class="ml-1 font-bold text-left text-sm reclist-total text-white"
       >
         {{ speciesCountText }} species
@@ -124,6 +124,12 @@
         @on-add-templates="onAddTemplates"
         @selected-rows="onSelectedSpecies"
       />
+    </div>
+    <div
+      v-if="!isLoadingSpecies && (speciesCount === 0 || isErrorSpecies) && !isRefetchSpecies"
+      class="font-display text-cloud text-[26px] text-center mt-12"
+    >
+      <span class="font-display">This project does not have any species assigned</span>
     </div>
     <div class="flex mt-3">
       <PaginationComponent
