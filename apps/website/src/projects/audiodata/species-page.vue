@@ -70,10 +70,10 @@
       </div>
       <button
         class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex text-[14px] h-[34px] px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-        :disabled="!store.userIsExpertMember || speciesSelected === undefined"
+        :disabled="!store.userIsExpertMember || selectedRows.length === 0"
         data-tooltip-style="light"
         data-tooltip-target="deleteSpeciesTooltip"
-        @click="bulkImport()"
+        @click="deleteSpecies()"
       >
         <span>Delete species</span>
       </button>
@@ -122,7 +122,7 @@
         :show-checkbox="true"
         :template-added-id="templateAddedId"
         @on-add-templates="onAddTemplates"
-        @selected-rows="onSelectedRecordings"
+        @selected-rows="onSelectedSpecies"
       />
     </div>
     <div class="flex mt-3">
@@ -145,6 +145,18 @@
       :title="title"
       :message="message"
     />
+    <CustomPopup
+      :visible="showPopup"
+      :is-for-delete-popup="true"
+      :list="selectedDeleteSpecies"
+      title="Delete species"
+      message="Are you sure you would like to remove the following species call from this project?"
+      note="Note: validations for this species call will also be removed from this project."
+      btn-ok-text="Delete"
+      btn-cancel-text="Cancel"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    />
   </section>
 </template>
 <script setup lang="ts">
@@ -158,14 +170,13 @@ import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetProjectTemplates, useGetPublicTemplates, useGetSpecies } from './api/use-species'
+import CustomPopup from './component/custom-popup.vue'
 import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
 import { type Row } from './component/sortable-table.vue'
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
-
-const speciesSelected = ref(undefined)
 
 const searchKeyword = ref('')
 const searchTimeout = ref<number | undefined>(undefined)
@@ -214,6 +225,8 @@ const handlePageChange = async (page: number) => {
 }
 
 const selectedSpecies = ref<SpeciesType | undefined>(undefined)
+const showPopup = ref(false)
+const selectedDeleteSpecies = ref<string[]>([])
 
 const speciesSafe = computed<SpeciesType[]>(() => speciesData.value?.list ?? [])
 const projSafe = computed<ProjectTemplatesResponse[]>(() => speciesProjectTemplates.value ?? [])
@@ -318,8 +331,21 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
   }, hideAfter)
 }
 
-const onSelectedRecordings = (rows?: Row[]) => {
+const onSelectedSpecies = (rows?: Row[]) => {
   if (!rows) return
   selectedRows.value = rows === undefined ? [] : rows
+  selectedDeleteSpecies.value = rows.map(r => `"${r.species_name} | ${r.songtype_name}"`)
+}
+
+const deleteSpecies = () => {
+  showPopup.value = true
+}
+
+function handleOk () {
+  showPopup.value = false
+}
+
+const handleCancel = () => {
+  showPopup.value = false
 }
 </script>
