@@ -43,7 +43,17 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
     // Authenticate current user
     const authClient = await useAuth0Client()
     const targetAfterAuth = await handleAuthCallback(authClient)
-    const user = await authClient.getUser()
+    let user = await authClient.getUser()
+    if (user === undefined) {
+      try {
+        await authClient.getTokenSilently()
+        user = await authClient.getUser()
+      } catch (error) {
+        if (import.meta.env.DEV) {
+          console.warn('Failed to silently retrieve Auth0 session', error)
+        }
+      }
+    }
 
     // Save to store
     const store = useStoreOutsideSetup()
