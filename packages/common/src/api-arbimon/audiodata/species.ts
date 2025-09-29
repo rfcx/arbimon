@@ -145,3 +145,54 @@ export const apiLegacyDeleteSpecies = async (apiClient: AxiosInstance, slug: str
   const res = await apiClient.post(`/legacy-api/project/${slug}/class/del`, params)
   return res.data
 }
+
+export interface SpeciesSearchResponse {
+  id: number
+  scientific_name: string
+  family: string
+  taxon: string
+  aliases: string
+}
+
+export const apiLegacySearchSpecies = async (
+  apiClient: AxiosInstance,
+  q: string
+): Promise<SpeciesSearchResponse[] | undefined> => {
+  if (!q) return undefined
+
+  const response = await apiClient.request<SpeciesSearchResponse[]>({
+    method: 'GET',
+    url: '/legacy-api/species/search',
+    params: { q }
+  })
+
+  return response.data
+}
+
+export interface SongtypeResponse {
+  id: number
+  name: string
+  description: string
+}
+
+export const songtypesSpecies = async (apiClient: AxiosInstance): Promise<SongtypeResponse[] | undefined> => {
+  const response = await apiClient.request<SongtypeResponse[]>({
+    method: 'GET',
+    url: '/legacy-api/songtypes/all'
+  })
+  return response.data
+}
+
+export interface SpeciesSongtypeRequest {
+  species: string
+  songtype: string
+}
+
+export interface BasicSuccessResponse {
+  success: boolean
+}
+
+export const apiLegacyAddSpecies = async (apiClient: AxiosInstance, slug: string, params: SpeciesSongtypeRequest): Promise<BasicSuccessResponse> => {
+  const res = await apiClient.post(`/legacy-api/project/${slug}/class/add`, params)
+  return res.data
+}

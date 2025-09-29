@@ -9,7 +9,7 @@
         :disabled="!store.userIsDataEntryMember"
         data-tooltip-style="light"
         data-tooltip-target="newSpeciesTooltip"
-        @click="createSpecies()"
+        @click="clickCreateSpecies()"
       >
         <span>New species</span>
         <icon-custom-ic-plus-icon class="ml-2 w-4 h-4" />
@@ -145,6 +145,10 @@
       v-if="isLoadingSpecies || isRefetchSpecies"
       class="animate-spin text-2xl mt-[100px]"
     />
+    <CreateSpecies
+      ref="createSpecies"
+      @species-select="speciesSelect"
+    />
     <alert-dialog
       v-if="showAlert"
       :severity="success"
@@ -170,12 +174,13 @@ import type { AxiosInstance } from 'axios'
 import { initTooltips } from 'flowbite'
 import { computed, inject, onMounted, ref } from 'vue'
 
-import { type ProjectTemplatesResponse, type PublicTemplateResponse, type PublicTemplatesParams, type SpeciesClassesParams, type SpeciesType, type TemplateRequest, apiLegacyAddTemplates, apiLegacyDeleteSpecies } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+import { type ProjectTemplatesResponse, type PublicTemplateResponse, type PublicTemplatesParams, type SpeciesClassesParams, type SpeciesSongtypeRequest, type SpeciesType, type TemplateRequest, apiLegacyAddSpecies, apiLegacyAddTemplates, apiLegacyDeleteSpecies } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetProjectTemplates, useGetPublicTemplates, useGetSpecies } from './api/use-species'
+import CreateSpecies from './component/create-species.vue'
 import CustomPopup from './component/custom-popup.vue'
 import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
@@ -183,6 +188,8 @@ import { type Row } from './component/sortable-table.vue'
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
+
+const createSpecies = ref<InstanceType<typeof CreateSpecies> | null>(null)
 
 const searchKeyword = ref('')
 const searchTimeout = ref<number | undefined>(undefined)
@@ -283,8 +290,25 @@ const onSearchInput = () => {
   }, 300)
 }
 
-const createSpecies = () => {
-  console.info('createSpecies')
+const speciesSelect = async (request: SpeciesSongtypeRequest) => {
+  try {
+    const addSpecies = await apiLegacyAddSpecies(apiClientArbimon, selectedProjectSlug.value ?? '', request)
+    if (addSpecies.success) {
+      showAlertDialog('success', '', `${request.species} ${request.songtype} added to project`)
+
+      refetchSpecies()
+      refetchProjectTemplates()
+      refetchPublicTemplates()
+    } else {
+          showAlertDialog('error', 'Error', `Add ${request.species} ${request.songtype} to project`)
+    }
+  } catch (e) {
+    showAlertDialog('error', 'Error', `Add ${request.species} ${request.songtype} to project`)
+  }
+}
+
+const clickCreateSpecies = () => {
+  createSpecies.value?.open()
 }
 
 const bulkImport = () => {
