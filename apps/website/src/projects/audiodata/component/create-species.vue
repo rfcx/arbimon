@@ -3,7 +3,7 @@
     v-if="isOpen"
     class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
   >
-    <div class="bg-moss text-white rounded-xl p-6 w-full max-w-xl shadow-lg relative">
+    <div class="bg-moss text-white rounded-xl p-6 w-full shadow-lg relative w-[900px] overflow-y-auto">
       <button
         class="absolute right-4"
         type="button"
@@ -17,42 +17,59 @@
         Species Library
       </h2>
 
-      <div class="flex mt-5 px-9">
+      <div class="flex mt-5">
         <div class="input-item search form-element">
           <icon-fa-search class="h-3 w-3 mt-3 fa-search text-insight" />
           <input
             v-model="searchKeyword"
             type="text"
             placeholder="Search species by scientific name or family"
-            class="form-control placeholder-style rounded px-3 py-2 h-[34px] w-[470px] items-center inline-flex rounded border-1 border-util-gray-03 bg-echo"
+            class="form-control placeholder-style rounded px-3 py-2 h-[36px] w-[512px] items-center inline-flex rounded border-1 border-util-gray-03 bg-echo"
             @input="onSearchInput"
           >
         </div>
       </div>
-      <div class="flex gap-4 mt-5">
-        <SortableTable
-          :columns="columns"
-          :rows="speciesData ?? []"
-          class="flex-1 max-h-[300px] overflow-y-auto"
-          @selected-item="onSelectedSpecies"
-        />
-
-        <SortableTable
-          :columns="[{ label: 'Sound', key: 'name', maxWidth: 120 }]"
-          :rows="songtypesSpecies ?? []"
-          class="w-[200px] max-h-[300px] overflow-y-auto"
-          @selected-item="onSelectSongtypes"
-        />
+      <div class="flex gap-4 mt-5 ">
+        <div class="flex-1 min-h-[200px] overflow-y-auto">
+          <SortableTable
+            :columns="columns"
+            :rows="speciesData ?? []"
+            class="max-h-[400px] overflow-y-auto mb-5"
+            container-class="bg-moss"
+            header-class="bg-moss"
+            row-hover-class="hover:bg-echo hover:border-util-gray-03"
+            text-size="text-md"
+            :non-rounded="true"
+            @selected-item="onSelectedSpecies"
+          />
+          <span
+            v-if="!speciesData"
+            class="font-medium"
+          >Select a species, then select a sound type</span>
+        </div>
+        <div class="w-[200px] min-h-[200px] overflow-y-auto">
+          <SortableTable
+            :columns="[{ label: 'Sound', key: 'name', maxWidth: 120 }]"
+            :rows="selectedSpecies === undefined ? []: songtypesSpecies ?? []"
+            class="max-h-[400px] overflow-y-auto"
+            container-class="bg-moss"
+            header-class="bg-moss"
+            row-hover-class="hover:bg-echo hover:border-util-gray-03"
+            text-size="text-md"
+            :non-rounded="true"
+            @selected-item="onSelectSongtypes"
+          />
+        </div>
       </div>
-      <div class="flex flex-row justify-center items-center mt-8 gap-x-4">
+      <div class="flex justify-between mt-8">
         <button
-          class="px-4 py-2 btn btn-secondary btn-medium w-full"
+          class="btn btn-secondary btn-medium ml-2 btn-small items-center inline-flex px-5 bg-echo text-[16px] py-3"
           @click="close"
         >
           Cancel
         </button>
         <button
-          class="px-4 py-2 btn btn-medium w-full btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
+          class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex px-6 disabled:hover:btn-disabled disabled:btn-disabled text-[16px] py-[10px]"
           :disabled="isDisabled"
           @click="speciesSelect"
         >

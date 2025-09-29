@@ -1,7 +1,16 @@
 <template>
-  <div class="text-white bg-pitch rounded-lg w-full">
-    <table class="table-auto w-full border-collapse text-sm border-util-gray-03">
-      <thead class="bg-pitch text-left">
+  <div
+    class="text-white  w-full"
+    :class="[props.containerClass ?? 'bg-pitch', props.nonRounded ? null : 'rounded-lg' ]"
+  >
+    <table
+      class="table-auto w-full border-collapse border-util-gray-03"
+      :class="props.textSize ?? 'text-sm'"
+    >
+      <thead
+        class="text-left"
+        :class="props.headerClass ?? 'bg-pitch'"
+      >
         <tr>
           <th
             v-if="props.showCheckbox"
@@ -48,7 +57,13 @@
         >
           <tr
             class="border-t border-util-gray-03 hover:border-util-gray-03 hover:bg-moss cursor-pointer font-medium"
-            :class="{ 'bg-[#7F7D78]': selectedRowIndex === index, 'h-min-[53px]': columns.some(col => col.key === 'project_templates') }"
+            :class="[
+              props.rowHoverClass ?? 'hover:bg-moss hover:border-util-gray-03',
+              selectedRowIndex === index
+                ? (props.rowSelectedClass ?? 'bg-[#7F7D78]')
+                : null,
+              columns.some(col => col.key === 'project_templates') ? 'h-min-[53px]' : null
+            ]"
             @click="handleRowClick(row, index)"
           >
             <td
@@ -234,6 +249,12 @@ const props = defineProps<{
   showExpand?: boolean
   projectTemplates?: ProjectTemplatesResponse[]
   templateAddedId?: number
+  containerClass?: string
+  headerClass?: string
+  rowHoverClass?: string
+  rowSelectedClass?: string
+  nonRounded?: boolean
+  textSize?: string
 }>()
 
 const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void, (e: 'onAddTemplates', request: TemplateRequest): void}>()
