@@ -264,7 +264,7 @@ export function buildPlaylistsParamsObject (params: RecordingParams): Record<str
   appendArray('sites_ids', params.sites_ids)
   appendArray('soundscape_composition', params.soundscape_composition)
   appendArray('soundscape_composition_annotation', params.soundscape_composition_annotation)
-  appendArray('tags[]', params.tags)
+  appendArray('tags', params.tags)
   appendArray('validations', params.validations)
 
   if (params.presence && params.presence.length === 1) {
