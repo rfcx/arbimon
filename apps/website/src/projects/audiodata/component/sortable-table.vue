@@ -83,7 +83,7 @@
               v-for="column in columns"
               :key="column.key"
               :style="`max-width: ${column.maxWidth || 100}px`"
-              class="py-2 pl-2 truncate whitespace-nowrap overflow-hidden h-[40px]"
+              class="py-2 pl-2 truncate whitespace-nowrap overflow-visible h-[40px] relative z-0"
               :class="{'align-top': getTemplateCount(row, column.key) > 0 }"
               :title="formatforTitle(column.key, row[column.key], row)"
             >
@@ -95,8 +95,42 @@
                 {{ formatValueByKey(column.key, row[column.key], row) }}
               </div>
 
-              <div v-else-if="isEmptyTemplateList(column.key, row)">
-                <span>No templates available for this species</span>
+              <div
+                v-else-if="isEmptyTemplateList(column.key, row)"
+                class="flex flex-row"
+              >
+                <div>
+                  <span>No templates available for this species</span>
+                </div>
+
+                <div
+                  ref="popoverWrapperInfo"
+                  class="relative inline-block z-50"
+                >
+                  <icon-custom-ic-info
+                    class="inline-block h-4 w-4 cursor-pointer ml-1"
+                    @click="togglePopover($event)"
+                  />
+                  <teleport to="body">
+                    <transition name="fade">
+                      <div
+                        v-if="showPopoverInfo"
+                        class="fixed w-[300px] p-3 text-sm text-white bg-moss rounded-lg shadow-lg z-[99999]"
+                        :style="{ top: `${popoverPos.top}px`, left: `${popoverPos.left}px` }"
+                        role="dialog"
+                      >
+                        There are no project templates for this species.<br>
+                        <a
+                          href="https://help.arbimon.org/article/226-creating-a-template"
+                          target="_blank"
+                          class="text-frequency underline cursor-pointer"
+                        >
+                          Learn how to create a template
+                        </a>
+                      </div>
+                    </transition>
+                  </teleport>
+                </div>
               </div>
 
               <div
@@ -565,6 +599,19 @@ watch(() => props.templateAddedId, (id) => {
     addedTemplate.value = 0
   }, 5_000)
 })
+
+const showPopoverInfo = ref(false)
+const popoverWrapperInfo = ref<HTMLElement | null>(null)
+
+const popoverPos = ref<{top:number; left:number}>({ top: 0, left: 0 })
+
+function togglePopover (e?: MouseEvent) {
+  showPopoverInfo.value = !showPopoverInfo.value
+  if (showPopoverInfo.value && e) {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
+    popoverPos.value = { top: rect.bottom + 8, left: rect.right - 150 }
+  }
+}
 
 </script>
 
