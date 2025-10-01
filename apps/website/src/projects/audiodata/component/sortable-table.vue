@@ -237,7 +237,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { type ProjectTemplatesResponse, type PublicTemplateResponse, type TemplateRequest } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
@@ -600,18 +600,56 @@ watch(() => props.templateAddedId, (id) => {
   }, 5_000)
 })
 
+const popoverPos = ref<{ top: number; left: number }>({ top: 0, left: 0 })
 const showPopoverInfo = ref(false)
-const popoverWrapperInfo = ref<HTMLElement | null>(null)
-
-const popoverPos = ref<{top:number; left:number}>({ top: 0, left: 0 })
+const popoverEl = ref<HTMLElement | null>(null)
+const popoverTrigger = ref<HTMLElement | null>(null)
 
 function togglePopover (e?: MouseEvent) {
   showPopoverInfo.value = !showPopoverInfo.value
   if (showPopoverInfo.value && e) {
+    addListeners()
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
     popoverPos.value = { top: rect.bottom + 8, left: rect.right - 150 }
+  } else {
+    removeListeners()
   }
 }
+
+function closePopover () {
+  showPopoverInfo.value = false
+  removeListeners()
+}
+
+function onPointerDown (ev: PointerEvent) {
+  const target = ev.target as Node
+  const insidePopover = !!(popoverEl.value && popoverEl.value.contains(target))
+  const insideTrigger = !!(popoverTrigger.value && popoverTrigger.value.contains(target))
+  if (insidePopover || insideTrigger) return
+  closePopover()
+}
+
+function onScroll () {
+  closePopover()
+}
+
+function onKeydown (ev: KeyboardEvent) {
+  if (ev.key === 'Escape') closePopover()
+}
+
+function addListeners () {
+  document.addEventListener('pointerdown', onPointerDown, true)
+  document.addEventListener('scroll', onScroll, true)
+  document.addEventListener('keydown', onKeydown)
+}
+
+function removeListeners () {
+  document.removeEventListener('pointerdown', onPointerDown, true)
+  document.removeEventListener('scroll', onScroll, true)
+  document.removeEventListener('keydown', onKeydown)
+}
+
+onBeforeUnmount(() => removeListeners())
 
 </script>
 
