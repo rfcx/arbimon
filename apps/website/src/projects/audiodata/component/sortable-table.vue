@@ -110,7 +110,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, toRaw, watch } from 'vue'
 
 interface Column {
   label: string
@@ -342,9 +342,9 @@ onMounted(() => {
   }
 })
 
-watch(() => selectedRows.value, (rows) => {
-  emit('selectedRows', rows)
-})
+watch(selectedRows, (rows) => {
+  emit('selectedRows', rows.map(r => toRaw(r)))
+}, { deep: true })
 
 watch(() => props.selectedRow, (row) => {
   if (row != null) {
