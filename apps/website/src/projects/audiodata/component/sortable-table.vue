@@ -237,7 +237,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, toRaw, watch } from 'vue'
 
 import { type ProjectTemplatesResponse, type PublicTemplateResponse, type TemplateRequest } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
@@ -402,7 +402,7 @@ const toggleSelectAll = () => {
 }
 
 const isRowSelected = (row: Row): boolean => {
-  return selectedRows.value.some(r => r === row)
+  return selectedRows.value.some(r => r.id === row.id)
 }
 
 const isEmptyTemplateList = (key: string, row: Row): boolean => {
@@ -426,19 +426,29 @@ const sortBy = (key: string) => {
   }
 }
 
-const sortedRows = computed(() => {
-  if (!sortKey.value) return props.rows
+const sortedRows = computed<Row[]>(() => {
+  const rows = toRaw(props.rows)
+  const list = Array.isArray(rows) ? [...rows] : []
 
-  return [...props.rows].sort((a, b) => {
-    const aVal = a[sortKey.value!]
-    const bVal = b[sortKey.value!]
+  if (!sortKey.value) {
+    return reactive(list) // คืน Proxy ของ list
+  }
 
+  const key = sortKey.value!
+  const order = sortOrder.value
+
+  const out = list.sort((a, b) => {
+    const aVal = a?.[key]
+    const bVal = b?.[key]
+    if (aVal == null && bVal == null) return 0
     if (aVal == null) return 1
     if (bVal == null) return -1
-    if (aVal < bVal) return sortOrder.value === 'asc' ? -1 : 1
-    if (aVal > bVal) return sortOrder.value === 'asc' ? 1 : -1
+    if (aVal < bVal) return order === 'asc' ? -1 : 1
+    if (aVal > bVal) return order === 'asc' ? 1 : -1
     return 0
   })
+
+  return reactive(out)
 })
 
 const selectedRowIndex = ref<number | null>(null)
@@ -579,9 +589,9 @@ onMounted(() => {
   }
 })
 
-watch(() => selectedRows.value, (rows) => {
-  emit('selectedRows', rows)
-})
+watch(selectedRows, (rows) => {
+  emit('selectedRows', rows.map(r => toRaw(r)))
+}, { deep: true })
 
 watch(() => props.selectedRow, (row) => {
   if (row != null) {

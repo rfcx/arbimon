@@ -282,6 +282,11 @@ const requestParamsForPlaylist = computed(() => {
   return rest
 })
 
+const requestParamsForSearchCount = computed(() => {
+  const { limit, offset, output, sortBy, recIds, ...rest } = requestParams.value
+  return rest
+})
+
 const filteredRequestParams = computed(() => {
   const { recIds, ...rest } = requestParams.value
   return rest
@@ -315,7 +320,7 @@ watch(
 
 const searchCount = ref<SearchCountResponse[] | undefined>()
 watch(recordings, async () => {
-  searchCount.value = await apiLegacySearchCount(apiClientArbimon, selectedProjectSlug.value ?? '', requestParamsForPlaylist.value)
+  searchCount.value = await apiLegacySearchCount(apiClientArbimon, selectedProjectSlug.value ?? '', requestParamsForSearchCount.value)
 })
 
 const siteParams = computed<SiteParams>(() => {
