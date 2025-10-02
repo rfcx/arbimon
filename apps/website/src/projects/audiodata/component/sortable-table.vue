@@ -134,6 +134,7 @@ const props = defineProps<{
   defaultSortKey?: string
   defaultSortOrder?: 'asc' | 'desc'
   selectedRow?: Row | null
+  selectedItems?: Row[]
   showCheckbox?: boolean
   projectSlug?: string
   showExpand?: boolean
@@ -340,6 +341,11 @@ onMounted(() => {
     sortKey.value = props.defaultSortKey
     sortOrder.value = props.defaultSortOrder ?? 'asc'
   }
+})
+
+watch(() => props.selectedItems, (rows) => {
+  if (rows === undefined) return
+  selectedRows.value = rows
 })
 
 watch(selectedRows, (rows) => {

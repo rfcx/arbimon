@@ -174,6 +174,7 @@
         :columns="columns"
         :rows="filteredRecordings ?? []"
         :selected-row="selectedRecording"
+        :selected-items="selectedRows"
         :default-sort-key="'updated_at'"
         :default-sort-order="'desc'"
         :project-slug="selectedProjectSlug"
@@ -398,6 +399,7 @@ const recordingsSelected = ref<string[]>([])
 const applyFilters = async (filter: RecordingSearchParams) => {
   filterParams.value = filter
   currentPage.value = 1
+  selectedRows.value = []
   await refetchRecordings()
   showFilterModal.value = false
 }
