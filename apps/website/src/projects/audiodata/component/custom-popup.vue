@@ -23,9 +23,9 @@
         <h2 class="text-2xl mb-4 font-header mt-6">
           {{ title }}
         </h2>
-        <p class="mb-2 text-base font-medium">
-          {{ message }}
-        </p>
+        <div class="popup-message mb-2 text-base font-medium">
+          <p v-html="message" />
+        </div>
         <ul
           v-if="list && list.length"
           class="mb-2 ml-4 text-left list-inside space-y-1"
@@ -85,5 +85,8 @@ defineEmits<{(e: 'ok'): void, (e: 'cancel'): void}>()
     color: #FFFEFC;
     background-color: #CC1E3D;
     border-color: #CC1E3D;
+  }
+  .popup-message {
+    white-space: pre-line;
   }
 </style>

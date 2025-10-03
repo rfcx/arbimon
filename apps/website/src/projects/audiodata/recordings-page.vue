@@ -205,10 +205,10 @@
     <CustomPopup
       :visible="showPopup"
       :is-for-delete-popup="true"
-      :list="recordingsSelected"
+      :list="(!filterParams && deleteAllFiltered) ? [] : recordingsSelected"
       title="Delete recordings"
-      message="Are you sure you want to delete the following?"
-      note="Note: analysis results on these recordings will also be deleted"
+      :message="popupMessage"
+      :note="popupNote"
       btn-ok-text="Delete"
       btn-cancel-text="Cancel"
       @ok="handleOk"
@@ -407,10 +407,24 @@ const isResetFilter = ref(false)
 
 const resetFilters = debounce(async (filter: RecordingSearchParams) => {
   isResetFilter.value = true
-  filterParams.value = filter
+  filterParams.value = undefined
   await refetchRecordings()
   isResetFilter.value = false
 }, 500)
+
+const popupMessage = computed(() => {
+  if (!filterParams.value && deleteAllFiltered.value) {
+    return `Are you sure you want to <b>delete all recordings </b>?\n\nYou are about to delete <b>all recordings</b> in this project (${recordingsCountText.value} recordings). If you only want to delete some of the recordings, we recommend <b>filtering your selection</b> first.`
+  }
+  return 'Are you sure you want to delete the following?'
+})
+
+const popupNote = computed(() => {
+  if (!filterParams.value && deleteAllFiltered.value) {
+    return 'Note: This action cannot be undone.'
+  }
+  return 'Note: analysis results on these recordings will also be deleted'
+})
 
 const applyRecordings = async () => {
   await refetchRecordings()

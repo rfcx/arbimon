@@ -110,7 +110,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { computed, onMounted, ref, toRaw, watch } from 'vue'
+import { computed, onMounted, reactive, ref, toRaw, watch } from 'vue'
 
 interface Column {
   label: string
@@ -180,7 +180,7 @@ const toggleSelectAll = () => {
 }
 
 const isRowSelected = (row: Row): boolean => {
-  return selectedRows.value.some(r => r === row)
+  return selectedRows.value.some(r => r.id === row.id)
 }
 
 const sortBy = (key: string) => {
@@ -191,20 +191,30 @@ const sortBy = (key: string) => {
     sortOrder.value = 'asc'
   }
 }
+const sortedRows = computed<Row[]>(() => {
+  const rows = toRaw(props.rows)
+  const list = Array.isArray(rows) ? [...rows] : []
 
-const sortedRows = computed(() => {
-  if (!sortKey.value) return props.rows
+  if (!sortKey.value) {
+    return reactive(list)
+  }
 
-  return [...props.rows].sort((a, b) => {
-    const aVal = a[sortKey.value!]
-    const bVal = b[sortKey.value!]
+  const key = sortKey.value!
+  const order = sortOrder.value
 
+    const out = list.sort((a, b) => {
+    const aVal = a?.[key]
+    const bVal = b?.[key]
+    if (aVal == null && bVal == null) return 0
     if (aVal == null) return 1
     if (bVal == null) return -1
-    if (aVal < bVal) return sortOrder.value === 'asc' ? -1 : 1
-    if (aVal > bVal) return sortOrder.value === 'asc' ? 1 : -1
+
+      if (aVal < bVal) return order === 'asc' ? -1 : 1
+    if (aVal > bVal) return order === 'asc' ? 1 : -1
     return 0
   })
+
+  return reactive(out)
 })
 
 const selectedRowIndex = ref<number | null>(null)
