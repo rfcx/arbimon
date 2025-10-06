@@ -89,16 +89,16 @@
         </div>
         <button
           class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-          :disabled="!store.userIsExpertMember"
+          :disabled="!store.userIsFullProjectMember"
           data-dropdown-toggle="deleteRecordingDropdown"
           data-tooltip-style="light"
-          :data-tooltip-target="!store.userIsExpertMember ? 'deleteRecordingTooltip': null"
+          :data-tooltip-target="!store.userIsFullProjectMember ? 'deleteRecordingTooltip': null"
         >
           <span>Delete</span>
           <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
         </button>
         <div
-          v-if="!store.userIsExpertMember"
+          v-if="!store.userIsFullProjectMember"
           id="deleteRecordingTooltip"
           role="tooltip"
           class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -205,10 +205,11 @@
     <CustomPopup
       :visible="showPopup"
       :is-for-delete-popup="true"
-      :list="(!filterParams && deleteAllFiltered) ? [] : recordingsSelected"
+      :list="(isTotalCountOverHalf && deleteAllFiltered) ? [] : recordingsSelected"
       title="Delete recordings"
       :message="popupMessage"
       :note="popupNote"
+      :is-total-count-over-half="(isTotalCountOverHalf && deleteAllFiltered) ? true : undefined"
       btn-ok-text="Delete"
       btn-cancel-text="Cancel"
       @ok="handleOk"
@@ -372,6 +373,10 @@ const recordingsCountText = computed<string>(() =>
 const showCreatePlaylistModal = ref(false)
 const showExportPanel = ref(false)
 
+const isTotalCountOverHalf = computed(() =>
+  totalCount.value > recordingsCount.value / 2
+)
+
 const columns = [
   { label: 'Site', key: 'site', maxWidth: 90 },
   { label: 'Recorded Time', key: 'datetime', maxWidth: 110 },
@@ -414,14 +419,14 @@ const resetFilters = debounce(async (filter: RecordingSearchParams) => {
 }, 500)
 
 const popupMessage = computed(() => {
-  if (!filterParams.value && deleteAllFiltered.value) {
-    return `Are you sure you want to <b>delete all recordings </b>?\n\nYou are about to delete <b>all recordings</b> in this project (${recordingsCountText.value} recordings). If you only want to delete some of the recordings, we recommend <b>filtering your selection</b> first.`
+  if (isTotalCountOverHalf.value && deleteAllFiltered.value) {
+    return `You are about to delete <b>${totalCountText.value} recordings</b> in this project. Are you sure?\n\nIf you only want to delete some of the recordings, we recommend filtering your selection again.`
   }
   return 'Are you sure you want to delete the following?'
 })
 
 const popupNote = computed(() => {
-  if (!filterParams.value && deleteAllFiltered.value) {
+  if (isTotalCountOverHalf.value && deleteAllFiltered.value) {
     return 'Note: This action cannot be undone.'
   }
   return 'Note: analysis results on these recordings will also be deleted'
@@ -615,11 +620,19 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
 }
 
 onBeforeRouteLeave(() => {
-  if (!savingPlaylist.value) {
+  if (savingPlaylist.value) {
     const answer = window.confirm('Your playlist is being created. You can check the created playlist when complete on the Playlist page.')
     return answer
   }
   return true
 })
+
+const totalCount = computed(() => {
+  return searchCount.value?.reduce((sum, item) => sum + item.count, 0) ?? 0
+})
+
+const totalCountText = computed<string>(() =>
+  new Intl.NumberFormat('en-US').format(totalCount.value)
+)
 
 </script>
