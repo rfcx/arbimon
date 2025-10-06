@@ -199,6 +199,7 @@
     />
     <CreatePlaylistModal
       v-if="showCreatePlaylistModal"
+      :playlist-name-exists="playlistNameExists"
       @close="showCreatePlaylistModal = false"
       @save="saveToPlaylist"
     />
@@ -481,13 +482,26 @@ function omitEmptyArrays<T extends Record<string, any>> (obj: T): Partial<T> {
 }
 
 const savingPlaylist = ref(false)
+const playlistNameExists = ref(false)
 const saveToPlaylist = async (name: string) => {
+  playlistNameExists.value = false
   savingPlaylist.value = true
   try {
-    await apiLegacyCreatePlaylists(apiClientArbimon, selectedProjectSlug.value ?? '', { playlist_name: name, params: omitEmptyArrays(requestParamsForPlaylist.value) })
-    showAlertDialog('success', 'Success', 'Created playlist')
-    showCreatePlaylistModal.value = false
-    savingPlaylist.value = false
+    const statusCreatePlaylists = await apiLegacyCreatePlaylists(apiClientArbimon, selectedProjectSlug.value ?? '', { playlist_name: name, params: omitEmptyArrays(requestParamsForPlaylist.value) })
+    console.info(statusCreatePlaylists)
+    if (statusCreatePlaylists.error !== undefined) {
+      savingPlaylist.value = false
+      if (statusCreatePlaylists.error === 'Playlist name in use') {
+        playlistNameExists.value = true
+      } else {
+        showAlertDialog('error', 'Error', statusCreatePlaylists.error)
+        showCreatePlaylistModal.value = false
+      }
+    } else {
+      showAlertDialog('success', 'Success', 'Created playlist')
+      savingPlaylist.value = false
+      showCreatePlaylistModal.value = false
+    }
   } catch (e) {
     showAlertDialog('error', 'Error', 'Create playlist')
     showCreatePlaylistModal.value = false
