@@ -486,7 +486,7 @@ const saveToPlaylist = async (name: string) => {
 
 const deleteCheckedRecordings = () => {
   if (selectedRows.value.length === 0) {
-    showAlertDialog('error', '', 'There are not any recordings to delete')
+    showAlertDialog('error', '', 'Please select recordings to delete.')
     return
   }
 
@@ -495,6 +495,11 @@ const deleteCheckedRecordings = () => {
 }
 
 const deleteAllFilteredRecordings = async () => {
+  if (filterParams.value === undefined) {
+    showAlertDialog('error', 'Error', 'There is not filter applied for deleting recordings yet. Please filter recordings before deleting.')
+    return
+  }
+
   if (recordingsCount.value === 0) {
     showAlertDialog('error', 'Error', 'Recordings not found')
     return
