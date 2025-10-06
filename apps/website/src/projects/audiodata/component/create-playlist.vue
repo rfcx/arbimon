@@ -32,10 +32,14 @@
         </button>
         <button
           class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex px-6 disabled:hover:btn-disabled disabled:btn-disabled text-[16px] py-[10px]"
-          :disabled="!playlistName.trim()"
+          :disabled="!playlistName.trim() || isLoading"
           @click="save"
         >
           Save
+          <icon-custom-ic-loading-dark
+            v-if="isLoading"
+            class="animate-spin text-xl ml-2 inline-flex"
+          />
         </button>
       </div>
     </div>
@@ -48,15 +52,16 @@ import { ref } from 'vue'
 const emit = defineEmits<{(e: 'close'): void, (e: 'save', playlistName: string): void}>()
 
 const playlistName = ref('')
+const isLoading = ref(false)
 
 function close () {
   emit('close')
 }
 
 function save () {
+  isLoading.value = true
   if (playlistName.value.trim()) {
     emit('save', playlistName.value.trim())
-    playlistName.value = ''
   }
 }
 </script>

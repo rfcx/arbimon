@@ -227,6 +227,7 @@ import type { AxiosInstance } from 'axios'
 import { initDropdowns, initTooltips } from 'flowbite'
 import debounce from 'lodash.debounce'
 import { computed, inject, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 
 import { type RecordingSearchParams, type RecordingSearchResponse, type SearchCountResponse, apiLegacyCreatePlaylists, apiLegacyDeleteMatchingRecording, apiLegacyDeleteRecording, apiLegacySearchCount } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteParams } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
@@ -474,13 +475,18 @@ function omitEmptyArrays<T extends Record<string, any>> (obj: T): Partial<T> {
   return out as Partial<T>
 }
 
+const savingPlaylist = ref(false)
 const saveToPlaylist = async (name: string) => {
-  showCreatePlaylistModal.value = false
+  savingPlaylist.value = true
   try {
-  await apiLegacyCreatePlaylists(apiClientArbimon, selectedProjectSlug.value ?? '', { playlist_name: name, params: omitEmptyArrays(requestParamsForPlaylist.value) })
+    await apiLegacyCreatePlaylists(apiClientArbimon, selectedProjectSlug.value ?? '', { playlist_name: name, params: omitEmptyArrays(requestParamsForPlaylist.value) })
     showAlertDialog('success', 'Success', 'Created playlist')
+    showCreatePlaylistModal.value = false
+    savingPlaylist.value = false
   } catch (e) {
     showAlertDialog('error', 'Error', 'Create playlist')
+    showCreatePlaylistModal.value = false
+    savingPlaylist.value = false
   }
 }
 
@@ -607,5 +613,13 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
     showAlert.value = false
   }, hideAfter)
 }
+
+onBeforeRouteLeave(() => {
+  if (!savingPlaylist.value) {
+    const answer = window.confirm('Your playlist is being created. You can check the created playlist when complete on the Playlist page.')
+    return answer
+  }
+  return true
+})
 
 </script>
