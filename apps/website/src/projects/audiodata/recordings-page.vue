@@ -521,7 +521,7 @@ const deleteCheckedRecordings = () => {
 
 const deleteAllFilteredRecordings = async () => {
   if (filterParams.value === undefined) {
-    showAlertDialog('error', 'Error', 'There is not filter applied for deleting recordings yet. Please filter recordings before deleting.')
+    showAlertDialog('error', '', 'There is not filter applied for deleting recordings yet. Please filter recordings before deleting.')
     return
   }
 
@@ -563,10 +563,10 @@ const handleCancel = () => {
 const handleCloseExport = (isSuccess?: boolean) => {
   showExportPanel.value = false
   if (isSuccess === true) {
-    showAlertDialog('success', '', 'Your report export request is processing and will be sent by email.')
+    showAlertDialog('success', 'Success', 'Your report export request is processing and will be sent by email.')
   }
   if (isSuccess === false) {
-    showAlertDialog('error', '', 'Error export')
+    showAlertDialog('error', 'Error', 'Error export')
   }
 }
 
