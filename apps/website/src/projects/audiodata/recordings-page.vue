@@ -89,16 +89,16 @@
         </div>
         <button
           class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-          :disabled="!store.userIsFullProjectMember"
+          :disabled="!store.userIsExpertMember"
           data-dropdown-toggle="deleteRecordingDropdown"
           data-tooltip-style="light"
-          :data-tooltip-target="!store.userIsFullProjectMember ? 'deleteRecordingTooltip': null"
+          :data-tooltip-target="!store.userIsExpertMember ? 'deleteRecordingTooltip': null"
         >
           <span>Delete</span>
           <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
         </button>
         <div
-          v-if="!store.userIsFullProjectMember"
+          v-if="!store.userIsExpertMember"
           id="deleteRecordingTooltip"
           role="tooltip"
           class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -206,11 +206,11 @@
     <CustomPopup
       :visible="showPopup"
       :is-for-delete-popup="true"
-      :list="(isTotalCountOverHalf && deleteAllFiltered) ? [] : recordingsSelected"
+      :list="(isTotalCountOverHalf && deleteAllFiltered) || isTotalCheckedOverHalf ? [] : recordingsSelected"
       title="Delete recordings"
       :message="popupMessage"
       :note="popupNote"
-      :is-total-count-over-half="(isTotalCountOverHalf && deleteAllFiltered) ? true : undefined"
+      :is-total-count-over-half="(isTotalCountOverHalf && deleteAllFiltered) || isTotalCheckedOverHalf ? true : undefined"
       btn-ok-text="Delete"
       btn-cancel-text="Cancel"
       @ok="handleOk"
@@ -378,6 +378,10 @@ const isTotalCountOverHalf = computed(() =>
   totalCount.value > recordingsCount.value / 2
 )
 
+const isTotalCheckedOverHalf = computed(() =>
+  selectedRows.value.length > recordingsCount.value / 2
+)
+
 const columns = [
   { label: 'Site', key: 'site', maxWidth: 90 },
   { label: 'Recorded Time', key: 'datetime', maxWidth: 110 },
@@ -420,14 +424,14 @@ const resetFilters = debounce(async (filter: RecordingSearchParams) => {
 }, 500)
 
 const popupMessage = computed(() => {
-  if (isTotalCountOverHalf.value && deleteAllFiltered.value) {
+  if ((isTotalCountOverHalf.value && deleteAllFiltered.value) || isTotalCheckedOverHalf.value) {
     return `You are about to delete <b>${totalCountText.value} recordings</b> in this project. Are you sure?\n\nIf you only want to delete some of the recordings, we recommend filtering your selection again.`
   }
   return 'Are you sure you want to delete the following?'
 })
 
 const popupNote = computed(() => {
-  if (isTotalCountOverHalf.value && deleteAllFiltered.value) {
+  if ((isTotalCountOverHalf.value && deleteAllFiltered.value) || isTotalCheckedOverHalf.value) {
     return 'Note: This action cannot be undone.'
   }
   return 'Note: analysis results on these recordings will also be deleted'
@@ -511,7 +515,7 @@ const saveToPlaylist = async (name: string) => {
 
 const deleteCheckedRecordings = () => {
   if (selectedRows.value.length === 0) {
-    showAlertDialog('error', '', 'Please select recordings to delete.')
+    showAlertDialog('error', '', 'There are not any recordings to delete. Please select recordings to delete.')
     return
   }
 
@@ -646,7 +650,7 @@ const totalCount = computed(() => {
 })
 
 const totalCountText = computed<string>(() =>
-  new Intl.NumberFormat('en-US').format(totalCount.value)
+  new Intl.NumberFormat('en-US').format(deleteAllFiltered.value ? totalCount.value : selectedRows.value.length)
 )
 
 </script>
