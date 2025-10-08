@@ -288,24 +288,21 @@
               v-if="!isSpeciesReading"
               class="flex flex-col items-center"
             >
-              <img
-                src="importRecordings"
-                class="h-24"
-              >
+              <icon-custom-cloud-upload class="ml-2 h-[100px] w-[92px]" />
+
               <div class="mt-5 flex flex-col items-start w-full max-w-[560px]">
-                <h4 class="mt-0 ml-0 font-poppins text-lg">
+                <h4 class="mt-0 ml-0 font-poppins text-lg font-medium">
                   Drag and drop or upload file
                 </h4>
-                <div class="w-full flex items-stretch gap-2">
+                <div class="w-full flex items-stretch mt-2">
                   <input
                     v-model="fileName"
                     type="text"
-                    class="flex-1 form-control bg-util-gray-04 border border-util-gray-03 rounded-lg px-3 py-2 text-sm"
+                    class="flex-1 placeholder-style w-[316px] h-[34px] bg-util-gray-04 border border-util-gray-03 rounded-l-[8px] rounded-r-none px-3 py-2 text-sm focus:(border-util-gray-03 ring-0)"
                     placeholder="Upload a batch species file (csv. xlsx.)"
                     aria-label="Upload a batch species file (csv. xlsx.)"
-                    readonly
                   >
-                  <label class="btn btn-primary rounded-lg cursor-pointer px-4 py-2 text-sm flex items-center">
+                  <label class="btn btn-primary rounded-r-[8px] rounded-l-none font-medium h-[34px] cursor-pointer px-4 py-2 text-sm flex items-center">
                     <span class="text-pitch">Choose file</span>
                     <input
                       accept=".csv,.xlsx,.xls"
@@ -316,7 +313,7 @@
                   </label>
                 </div>
                 <button
-                  class="text-link underline text-left text-sm mt-3"
+                  class="text-link underline text-left text-xs mt-3 text-frequency"
                   @click="downloadSpeciesExample"
                 >
                   Use our sample batch species file
@@ -333,13 +330,13 @@
       >
         <div class="flex items-center justify-between">
           <button
-            class="btn btn-success btn-sm"
+            class="btn btn-secondary btn-sm py-2"
             @click="emit('dismiss')"
           >
             Cancel
           </button>
           <button
-            class="btn btn-primary btn-sm flex items-center"
+            class="btn btn-primary btn-sm flex items-center py-2"
             :class="disableUpload ? 'opacity-60 cursor-not-allowed bg-util-gray-03 text-util-gray-05' : ''"
             :disabled="disableUpload"
             @click="uploadSpecies"
@@ -613,15 +610,27 @@ function downloadSpeciesExample () {
   exportCSVFile(headers, species, 'species_example')
 }
 
-// function downloadUnrecognizedSpecies () {
-//   const headers = { species: 'Species', sound: 'Sound' }
-//   const itemsFormatted = errorSpecies.value.map((item) => ({ species: item.species, sound: item.sound }))
-//   exportCSVFile(headers, itemsFormatted, 'unrecognized_species')
-// }
-
 function emitClose () {
   emit('update:modelValue', false)
   emit('close')
   console.info(props.modelValue)
 }
 </script>
+
+<style lang="scss">
+  .rounded-l-item {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+
+  .rounded-r-item {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+
+  .placeholder-style::placeholder {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+  }
+</style>
