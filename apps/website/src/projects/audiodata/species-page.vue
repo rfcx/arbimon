@@ -167,6 +167,11 @@
       @ok="handleOk"
       @cancel="handleCancel"
     />
+    <ImportSpecies
+      v-model="isOpen"
+      @imported="onImported"
+      @close="isOpen = false"
+    />
   </section>
 </template>
 <script setup lang="ts">
@@ -182,6 +187,7 @@ import { useStore } from '~/store'
 import { useGetProjectTemplates, useGetPublicTemplates, useGetSpecies } from './api/use-species'
 import CreateSpecies from './component/create-species.vue'
 import CustomPopup from './component/custom-popup.vue'
+import ImportSpecies from './component/import-species.vue'
 import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
 import { type Row } from './component/sortable-table.vue'
@@ -311,7 +317,13 @@ const clickCreateSpecies = () => {
   createSpecies.value?.open()
 }
 
+const isOpen = ref(false)
+function onImported (payload: { success: number; failed: number }) {
+  console.info('Imported species:', payload)
+}
+
 const bulkImport = () => {
+  isOpen.value = true
   console.info('bulkImport')
 }
 

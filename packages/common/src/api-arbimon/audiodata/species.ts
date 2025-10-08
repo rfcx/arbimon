@@ -196,3 +196,20 @@ export const apiLegacyAddSpecies = async (apiClient: AxiosInstance, slug: string
   const res = await apiClient.post(`/legacy-api/project/${slug}/class/add`, params)
   return res.data
 }
+
+export interface SpeciesClass {
+  species: string
+  sound: string
+  status: 'Success' | 'Failed'
+  position: number
+  error?: string
+}
+
+export interface SpeciesClassesResponse {
+  classes: SpeciesClass[]
+}
+
+export const apiLegacyRecognizeClasses = async (apiClient: AxiosInstance, slug: string, params: { classes: any }): Promise<SpeciesClassesResponse> => {
+  const res = await apiClient.post(`/legacy-api/project/${slug}/class/recognize`, params)
+  return res.data
+}
