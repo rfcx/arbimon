@@ -21,16 +21,24 @@
           <div class="flex items-center">
             <!-- Step 1 -->
             <div
-              class="flex items-center"
-              :class="isSelectStepper ? 'text-frequency' : 'text-fog'"
+              class="flex items-center text-frequency"
             >
               <div
                 class="w-6 h-6 rounded-full border flex items-center justify-center"
-                :class="isSelectStepper ? 'bg-frequency text-pitch border-frequency' : 'border-util-gray-02'"
+                :class="isSelectStepper ? 'bg-frequency text-pitch border-frequency' : 'border-none'"
               >
-                <span class="font-medium">1</span>
+                <span
+                  v-if="isSelectStepper"
+                  class="font-medium"
+                >1</span>
+                <icon-custom-ic-success
+                  v-else
+                  class="w-10 h-10"
+                />
               </div>
-              <span class="ml-2 font-medium">Select file</span>
+              <span
+                class="ml-2 font-medium text-frequency"
+              >Select file</span>
             </div>
             <div
               class="flex-1 border-t mx-3"
@@ -40,7 +48,7 @@
             <!-- Step 2 -->
             <div
               class="flex items-center"
-              :class="isReviewStepper ? 'text-frequency' : 'text-fog'"
+              :class="isReviewStepper ? 'text-frequency' : 'text-insight'"
             >
               <div
                 class="w-6 h-6 rounded-full border flex items-center justify-center"
@@ -58,7 +66,7 @@
             <!-- Step 3 -->
             <div
               class="flex items-center"
-              :class="isUploadStepper ? (isSpeciesBulkError ? 'text-ibis' : 'text-frequency') : 'text-fog'"
+              :class="isUploadStepper ? (isSpeciesBulkError ? 'text-ibis' : 'text-frequency') : 'text-insight'"
             >
               <div
                 class="w-6 h-6 rounded-full border flex items-center justify-center"
@@ -127,7 +135,7 @@
             class="flex items-center justify-between mt-5"
           >
             <a
-              class="text-link cursor-pointer underline text-sm"
+              class="text-link cursor-pointer underline text-md font-medium text-frequency"
               @click="downloadUnrecognizedSpecies"
             >
               Download unrecognized species (csv.)
@@ -193,16 +201,25 @@
                     >{{ row.sound }}</span>
                   </td>
                   <td class="px-3 py-2 border-b border-util-gray-03 align-middle">
-                    <div class="flex items-center">
+                    <div class="flex items-center justify-between w-full">
                       <span
-                        class="inline-block truncate w-[67px]"
+                        class="inline-block truncate"
                         :title="row.status"
                       >{{ row.status }}</span>
-                      <img
+
+                      <div
                         v-if="row.status === 'Success' || row.status === 'Failed'"
-                        :src="row.status === 'Success' ? '/images/fi-green-circle.svg' : '/images/fi-red-circle.svg'"
-                        class="ml-2"
+                        class="ml-4"
                       >
+                        <icon-custom-ic-success
+                          v-if="row.status === 'Success'"
+                          class="w-4 h-4"
+                        />
+                        <icon-custom-ic-cancelled
+                          v-else
+                          class="w-4 h-4"
+                        />
+                      </div>
                     </div>
                   </td>
                   <td class="px-3 py-2 border-b border-util-gray-03 align-middle">
@@ -331,7 +348,7 @@
         <div class="flex items-center justify-between">
           <button
             class="btn btn-secondary btn-sm py-2"
-            @click="emit('dismiss')"
+            @click="emitClose"
           >
             Cancel
           </button>
