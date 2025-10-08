@@ -26,7 +26,7 @@
         v-if="showError"
         class="text-red-400 text-sm mb-1 mt-2"
       >
-        Playlist is already in use. Please try again.
+        Playlist name is already in used. Please try again.
       </p>
       <div class="flex justify-between space-x-4 mt-8">
         <button
