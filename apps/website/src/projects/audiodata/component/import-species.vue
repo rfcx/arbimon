@@ -3,7 +3,11 @@
     v-if="modelValue"
     class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
   >
-    <div class="bg-echo text-white rounded-xl p-6 w-full shadow-lg relative w-[900px] overflow-y-auto ">
+    <div
+      class="bg-echo text-white rounded-xl p-6 shadow-lg relative
+         w-[900px] max-w-[calc(100vw-2rem)]
+         max-h-[95vh] overflow-y-auto"
+    >
       <button
         class="absolute right-4"
         type="button"
@@ -296,7 +300,7 @@
             >{{ percentage }} %</span>
             <div
               v-if="isSpeciesBulkLoading && !isSpeciesBulkError"
-              class="w-[300px] h-[10px] bg-util-gray-04 rounded"
+              class="w-[300px] h-[10px] bg-util-gray-02 rounded"
             >
               <div
                 class="h-full rounded"
@@ -390,7 +394,7 @@
           >
             <span v-if="isReviewStepper || isUploadStepper">Next: Upload</span>
             <span v-if="isSelectStepper">Next: Review</span>
-            <i class="fa fa-arrow-right ml-2 text-sm" />
+            <icon-fa-arrow-right class="h-[12px] w-[14px] ml-2" />
           </button>
         </div>
       </div>
