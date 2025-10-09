@@ -17,7 +17,7 @@
         Import Species
       </h2>
       <div>
-        <div class="pt-10">
+        <div class="pt-5">
           <div class="flex items-center">
             <!-- Step 1 -->
             <div
@@ -101,14 +101,14 @@
 
           <p
             v-if="isSelectStepper"
-            class="text-md mt-3 font-medium"
+            class="text-md mt-3"
           >
             Upload a CSV or MS Excel containing a list of species names and sounds.<br>
             See an example of the data we expect under the input file.
           </p>
           <p
             v-if="isReviewStepper"
-            class="text-md mt-3 font-medium"
+            class="text-md mt-3"
           >
             Our system matches the row value with our species database. Review the following species before uploading.
           </p>
@@ -118,15 +118,16 @@
             v-if="activeStepper !== 'Upload' && (errorSpecies.length || existedSpecies.length)"
             class="mt-5"
           >
-            <div class="flex gap-4 items-start rounded-lg p-4 bg-spoonbill-2 note-error-border">
-              <div class="flex items-center gap-2">
-                <img src="/images/fi-alert-triangle.svg">
-                <span class="text-pitch font-medium">Error</span>
+            <div
+              class="inline-flex w-fit self-start items-center justify-start gap-x-3 p-4 text-base text-pitch rounded-lg bg-[#FFDADA] border-ibis border-1 border-l-2 my-2"
+              role="alert"
+            >
+              <div class="w-5">
+                <icon-custom-alert-triangle class="h-6 w-6 cursor-pointer text-ibis" />
               </div>
-              <div class="flex flex-col gap-1">
-                <span class="text-pitch text-sm">{{ errorMessage }}</span>
-                <span class="text-pitch text-sm">{{ existedSpeciesMessage }}</span>
-              </div>
+              <span class="font-normal">Error</span>
+              <span class="text-pitch font-normal">{{ errorMessage }}</span>
+              <span class="text-pitch font-normal">{{ existedSpeciesMessage }}</span>
             </div>
           </div>
 
