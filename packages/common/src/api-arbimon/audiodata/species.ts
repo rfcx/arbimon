@@ -213,3 +213,12 @@ export const apiLegacyRecognizeClasses = async (apiClient: AxiosInstance, slug: 
   const res = await apiClient.post(`/legacy-api/project/${slug}/class/recognize`, params)
   return res.data
 }
+
+export interface BulkAddClassesResponse {
+  message: string
+}
+
+export const apiLegacyBulkAddClasses = async (apiClient: AxiosInstance, slug: string, params: { classes: any }): Promise<BulkAddClassesResponse> => {
+  const res = await apiClient.post(`/legacy-api/project/${slug}/class/bulk-add`, params)
+  return res.data
+}

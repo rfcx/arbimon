@@ -52,11 +52,21 @@
             >
               <div
                 class="w-6 h-6 rounded-full border flex items-center justify-center"
-                :class="isReviewStepper ? 'bg-frequency text-pitch border-frequency' : 'border-util-gray-02'"
+                :class="isReviewStepper || isUploadStepper ? 'bg-frequency text-pitch border-frequency' : 'border-util-gray-02'"
               >
-                <span class="font-medium">2</span>
+                <span
+                  v-if="isSelectStepper || isReviewStepper"
+                  class="font-medium"
+                >2</span>
+                <icon-custom-ic-success
+                  v-else
+                  class="w-10 h-10"
+                />
               </div>
-              <span class="ml-2 font-medium">Review</span>
+              <span
+                class="ml-2 font-medium"
+                :class="isReviewStepper || isUploadStepper ? 'text-frequency' : 'text-insight'"
+              >Review</span>
             </div>
             <div
               class="flex-1 border-t mx-3"
@@ -72,9 +82,19 @@
                 class="w-6 h-6 rounded-full border flex items-center justify-center"
                 :class="isUploadStepper ? (isSpeciesBulkError ? 'bg-ibis text-pitch border-ibis' : 'bg-frequency text-pitch border-frequency') : 'border-util-gray-02'"
               >
-                <span class="font-medium">3</span>
+                <icon-custom-ic-success
+                  v-if="isPercentageFinished"
+                  class="w-10 h-10"
+                />
+                <span
+                  v-else
+                  class="font-medium"
+                >3</span>
               </div>
-              <span class="ml-2 font-medium">Upload</span>
+              <span
+                class="ml-2 font-medium"
+                :class="isUploadStepper ? 'text-frequency' : 'text-insight'"
+              >Upload</span>
             </div>
           </div>
         </div>
@@ -126,8 +146,10 @@
                 <icon-custom-alert-triangle class="h-6 w-6 cursor-pointer text-ibis" />
               </div>
               <span class="font-normal">Error</span>
-              <span class="text-pitch font-normal">{{ errorMessage }}</span>
-              <span class="text-pitch font-normal">{{ existedSpeciesMessage }}</span>
+              <div class="text-pitch font-normal">
+                <div>{{ errorMessage }}</div>
+                <div>{{ existedSpeciesMessage }}</div>
+              </div>
             </div>
           </div>
 
@@ -247,16 +269,15 @@
           v-if="isUploadStepper"
           class="py-5"
         >
-          <div class="container-species bg-moss rounded-lg h-[350px] relative border border-util-gray-03 flex flex-col items-center justify-center gap-4">
-            <img
+          <div class="container-species bg-moss rounded-lg h-[350px] relative border border-util-gray-02 flex flex-col items-center justify-center gap-4">
+            <icon-custom-ic-success
               v-if="isPercentageFinished"
-              src="/images/fi-check-circle-primary.svg"
-            >
-            <img
+              class="w-20 h-20"
+            />
+            <icon-custom-ic-cancelled
               v-if="isSpeciesBulkError"
-              src="/images/fi-red-circle.svg"
-              class="w-20"
-            >
+              class="w-20 h-20"
+            />
             <div
               v-if="isSpeciesBulkError"
               class="text-center px-4"
@@ -285,8 +306,8 @@
             </div>
             <button
               v-if="isPercentageFinished || isSpeciesBulkError"
-              class="btn btn-primary rounded-full mt-2"
-              @click="emit('close')"
+              class="btn btn-primary rounded-full mt-2 h-[34px] flex items-center justify-center"
+              @click="emitClose"
             >
               Back to Species
             </button>
@@ -379,10 +400,10 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import * as XLSX from 'xlsx'
 
-import { apiLegacyRecognizeClasses } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+import { apiLegacyBulkAddClasses, apiLegacyRecognizeClasses } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
@@ -394,13 +415,12 @@ const selectedProjectSlug = computed(() => store.project?.slug)
 
 const props = defineProps<{
   modelValue: boolean
-  existingSpecies?: Array<{ species: string; songtype?: string }>
 }>()
 
 const emit = defineEmits<{(e: 'update:modelValue', v: boolean): void,
   (e: 'close'): void,
   (e: 'dismiss'): void,
-  (e: 'imported', payload: { success: number; failed: number }): void
+  (e: 'imported', success: boolean): void
 }>()
 // State
 const activeStepper = ref<'Select' | 'Review' | 'Upload'>('Select')
@@ -479,11 +499,13 @@ async function uploadSpecies () {
   successFiles.value = originalFiles.value.filter((f) => f.status === 'Success')
   percentage.value = 80
   try {
-    // await props.project.bulkAddClasses({ classes: successFiles.value })
+    await apiLegacyBulkAddClasses(apiClientArbimon, selectedProjectSlug.value ?? '', { classes: successFiles.value })
     percentage.value = 100
     isSpeciesBulkLoading.value = false
+    emit('imported', true)
   } catch (e) {
     isSpeciesBulkError.value = true
+    emit('imported', false)
   }
 }
 
@@ -626,10 +648,10 @@ async function recognize () {
 function downloadSpeciesExample () {
   const headers = { species: 'Species', sound: 'Sound' }
   const species = [
-    { species: 'Acanthis flammea', sound: 'Common Song' },
+    { species: 'Eleutherodactylus brittoni', sound: 'Common Song' },
     { species: 'Alophoixus bres', sound: 'Simple Call' },
-    { species: 'Amaurornis olivacea moluccana', sound: 'Common Song' },
-    { species: 'Amazona mercenaria', sound: 'Common Song' },
+    { species: 'Electron platyrhynchum', sound: 'Common Song' },
+    { species: 'Myrmia micrura', sound: 'Common Song' },
     { species: 'Amazona xanthops', sound: 'Common Song' },
     { species: 'Aramides cajanea', sound: 'Common Song' }
   ]
@@ -637,9 +659,37 @@ function downloadSpeciesExample () {
 }
 
 function emitClose () {
+  resetAll()
   emit('update:modelValue', false)
   emit('close')
-  console.info(props.modelValue)
+}
+
+watch(() => props.modelValue, (open) => {
+  if (open) {
+    resetAll()
+  }
+})
+
+function resetAll () {
+  activeStepper.value = 'Select'
+
+  files.value = []
+  originalFiles.value = []
+  successFiles.value = []
+  errorSpecies.value = []
+  existedSpecies.value = []
+
+  isSpeciesReading.value = false
+  isSpeciesBulkLoading.value = false
+  isSpeciesBulkError.value = false
+  toggleErrorSpecies.value = false
+
+  fileName.value = ''
+  csvFile.value = false
+  percentage.value = 0
+
+  errorMessage.value = ''
+  existedSpeciesMessage.value = ''
 }
 </script>
 

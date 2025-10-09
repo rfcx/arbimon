@@ -318,13 +318,16 @@ const clickCreateSpecies = () => {
 }
 
 const isOpen = ref(false)
-function onImported (payload: { success: number; failed: number }) {
-  console.info('Imported species:', payload)
+function onImported (success: boolean) {
+  if (success) {
+    refetchSpecies()
+    refetchProjectTemplates()
+    refetchPublicTemplates()
+  }
 }
 
 const bulkImport = () => {
   isOpen.value = true
-  console.info('bulkImport')
 }
 
 const templateAddedId = computed(() => templateId.value)
