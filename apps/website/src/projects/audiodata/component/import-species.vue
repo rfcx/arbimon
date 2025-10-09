@@ -143,12 +143,22 @@
             </a>
             <div class="flex items-center">
               <label class="inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  class="form-checkbox"
-                  :checked="!!toggleErrorSpecies"
-                  @change="toggleShowErrorOnly"
+                <button
+                  type="button"
+                  role="switch"
+                  :aria-checked="toggleErrorSpecies"
+                  class="relative inline-flex h-5 w-11 flex-shrink-0 cursor-pointer rounded-full
+             transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/40
+             items-center"
+                  :class="toggleErrorSpecies ? 'bg-frequency' : 'bg-util-gray-03'"
+                  @click="toggleShowErrorOnly"
                 >
+                  <span
+                    aria-hidden="true"
+                    class="inline-block h-4 w-4 transform rounded-full shadow ring-1 ring-black/10 transition"
+                    :class="toggleErrorSpecies ? 'translate-x-6.5 bg-[#000]' : 'translate-x-0.5 bg-white'"
+                  />
+                </button>
                 <span class="ml-2 text-sm">Show errors only</span>
               </label>
             </div>
@@ -157,15 +167,13 @@
 
         <div
           v-if="files.length && activeStepper !== 'Upload'"
-          class="mt-5"
+          class="mt-6"
         >
-          <div class="max-h-[300px] overflow-y-auto border border-util-gray-03 rounded-lg">
-            <table class="w-full text-sm">
-              <thead class="sticky top-0 bg-pitch">
+          <div class="max-h-[300px] overflow-y-auto rounded-lg">
+            <table class="w-full text-[13px]">
+              <thead class="sticky top-0">
                 <tr class="text-left">
-                  <th class="px-3 py-2 border-b border-util-gray-03 w-12">
-                    #
-                  </th>
+                  <th class="px-3 py-2 border-b border-util-gray-03 w-12" />
                   <th class="px-3 py-2 border-b border-util-gray-03 w-2/5">
                     Species
                   </th>
@@ -189,22 +197,22 @@
                   <td class="px-3 py-2 border-b border-util-gray-03 align-middle">
                     {{ row.position }}
                   </td>
-                  <td class="px-3 py-2 border-b border-util-gray-03 align-middle">
+                  <td class="border-b border-util-gray-03 align-middle">
                     <span
-                      class="inline-block max-w-full truncate"
+                      class="inline-block max-w-full truncate px-3 py-2"
                       :title="row.species"
                     >{{ row.species }}</span>
                   </td>
-                  <td class="px-3 py-2 border-b border-util-gray-03 align-middle">
+                  <td class="border-b border-util-gray-03 align-middle">
                     <span
-                      class="inline-block max-w-full truncate"
+                      class="inline-block max-w-full truncate px-3 py-2"
                       :title="row.sound"
                     >{{ row.sound }}</span>
                   </td>
-                  <td class="px-3 py-2 border-b border-util-gray-03 align-middle">
+                  <td class="border-b border-util-gray-03 align-middle">
                     <div class="flex items-center justify-between w-full">
                       <span
-                        class="inline-block truncate"
+                        class="inline-block truncate px-3 py-2"
                         :title="row.status"
                       >{{ row.status }}</span>
 
@@ -223,9 +231,9 @@
                       </div>
                     </div>
                   </td>
-                  <td class="px-3 py-2 border-b border-util-gray-03 align-middle">
+                  <td class="border-b border-util-gray-03 align-middle">
                     <span
-                      class="inline-block max-w-full truncate"
+                      class="inline-block max-w-full truncate px-3 py-2"
                       :title="row.error"
                     >{{ row.error }}</span>
                   </td>
