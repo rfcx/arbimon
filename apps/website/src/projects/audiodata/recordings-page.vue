@@ -28,6 +28,7 @@
             :filters-data="filterParams"
             :is-reset="isResetFilter"
             @apply="applyFilters"
+            @close="closeFilters"
             @reset-filters="resetFilters"
           />
         </div>
@@ -428,6 +429,11 @@ const applyFilters = async (filter: RecordingSearchParams) => {
   await refetchRecordings()
   showFilterModal.value = false
 }
+
+const closeFilters = () => {
+  showFilterModal.value = false
+}
+
 const isResetFilter = ref(false)
 
 const resetFilters = debounce(async (filter: RecordingSearchParams) => {

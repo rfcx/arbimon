@@ -3,6 +3,18 @@
     ref="panelRef"
     class="absolute top-full mt-2 z-50 bg-echo text-insight rounded-lg p-4 w-[900px] space-y-4 border border-util-gray-03 shadow-lg"
   >
+    <button
+      class="absolute top-4 right-4 text-white hover:opacity-70"
+      aria-label="Close"
+      @click="close"
+    >
+      <icon-custom-fi-close-thin class="h-6 w-6 cursor-pointer text-insight" />
+    </button>
+
+    <span class="text-[22px] font-bold mb-4 font-header">
+      Filters
+    </span>
+
     <!-- Date range -->
     <div class="flex items-start">
       <label>Date range:</label>
@@ -165,7 +177,7 @@
         class="btn btn-secondary btn-small text-sm px-[12px] h-[34px]"
         @click="resetFilters"
       >
-        Reset filters
+        Clear filters
         <icon-custom-ic-loading-dark
           v-if="isResetFilters"
           class="animate-spin text-xl ml-2 inline-flex"
@@ -205,7 +217,7 @@ export interface DateTime {
   min_date: string
 }
 
-const emit = defineEmits<{(e: 'apply', value: RecordingSearchParams): void, (e: 'resetFilters', value: RecordingSearchParams): void }>()
+const emit = defineEmits<{(e: 'apply', value: RecordingSearchParams): void, (e: 'resetFilters', value: RecordingSearchParams): void, (e: 'close'): void }>()
 const props = defineProps<{
   dateRange: DateTime | undefined,
   sites: SiteResponse[] | undefined,
@@ -525,6 +537,10 @@ watch(selectedAnnotation, (v) => { filters.soundscape_composition_annotation = v
 function emitApply () {
   isLoading.value = true
   emit('apply', filters)
+}
+
+function close () {
+  emit('close')
 }
 
 const isResetFilters = ref(false)
