@@ -312,11 +312,25 @@ const selectedProjectSlug = computed(() => store.project?.slug)
 const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings, isRefetching: isRefetchRecordings, isError: isErrorRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, filteredRequestParams)
 
 const dateRange = ref<DateTime | undefined>()
+
+const initialCount = ref<number | undefined>()
+
 watch(
   () => recordings.value?.date_range as DateTime | undefined,
   (newVal) => {
     if (dateRange.value === undefined && newVal !== undefined) {
       dateRange.value = newVal
+    }
+  },
+  { immediate: true }
+)
+
+const stopCountWatch = watch(
+  () => recordings.value?.count as number | undefined,
+  (count) => {
+    if (typeof count === 'number') {
+      initialCount.value = count
+      stopCountWatch()
     }
   },
   { immediate: true }
@@ -375,11 +389,11 @@ const showCreatePlaylistModal = ref(false)
 const showExportPanel = ref(false)
 
 const isTotalCountOverHalf = computed(() =>
-  totalCount.value > recordingsCount.value / 2
+  totalCount.value > (initialCount.value ?? 0) / 2
 )
 
 const isTotalCheckedOverHalf = computed(() =>
-  selectedRows.value.length > recordingsCount.value / 2
+  selectedRows.value.length > (initialCount.value ?? 0) / 2
 )
 
 const columns = [
@@ -514,6 +528,8 @@ const saveToPlaylist = async (name: string) => {
 }
 
 const deleteCheckedRecordings = () => {
+  deleteAllFiltered.value = false
+
   if (selectedRows.value.length === 0) {
     showAlertDialog('error', '', 'There are not any recordings to delete. Please select recordings to delete.')
     return
@@ -650,7 +666,7 @@ const totalCount = computed(() => {
 })
 
 const totalCountText = computed<string>(() =>
-  new Intl.NumberFormat('en-US').format(deleteAllFiltered.value ? totalCount.value : selectedRows.value.length)
+  new Intl.NumberFormat('en-US').format(selectedRows.value.length > 0 ? selectedRows.value.length : totalCount.value)
 )
 
 </script>
