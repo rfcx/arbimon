@@ -90,6 +90,10 @@
                   v-if="isPercentageFinished"
                   class="w-10 h-10"
                 />
+                <icon-custom-ic-cancelled
+                  v-else-if="isSpeciesBulkError"
+                  class="w-10 h-10"
+                />
                 <span
                   v-else
                   class="font-medium"
@@ -97,7 +101,7 @@
               </div>
               <span
                 class="ml-2 font-medium"
-                :class="isUploadStepper ? 'text-frequency' : 'text-insight'"
+                :class="isUploadStepper ? (isSpeciesBulkError ? 'text-ibis' : 'text-frequency') : 'text-insight'"
               >Upload</span>
             </div>
           </div>
