@@ -28,6 +28,7 @@
             :filters-data="filterParams"
             :is-reset="isResetFilter"
             @apply="applyFilters"
+            @close="closeFilters"
             @reset-filters="resetFilters"
           />
         </div>
@@ -174,6 +175,7 @@
         :columns="columns"
         :rows="filteredRecordings ?? []"
         :selected-row="selectedRecording"
+        :selected-items="selectedRows"
         :default-sort-key="'updated_at'"
         :default-sort-order="'desc'"
         :project-slug="selectedProjectSlug"
@@ -198,16 +200,18 @@
     />
     <CreatePlaylistModal
       v-if="showCreatePlaylistModal"
+      :playlist-name-exists="playlistNameExists"
       @close="showCreatePlaylistModal = false"
       @save="saveToPlaylist"
     />
     <CustomPopup
       :visible="showPopup"
       :is-for-delete-popup="true"
-      :list="recordingsSelected"
+      :list="(isTotalCountOverHalf && deleteAllFiltered) || isTotalCheckedOverHalf ? [] : recordingsSelected"
       title="Delete recordings"
-      message="Are you sure you want to delete the following?"
-      note="Note: analysis results on these recordings will also be deleted"
+      :message="popupMessage"
+      :note="popupNote"
+      :is-total-count-over-half="(isTotalCountOverHalf && deleteAllFiltered) || isTotalCheckedOverHalf ? true : undefined"
       btn-ok-text="Delete"
       btn-cancel-text="Cancel"
       @ok="handleOk"
@@ -226,6 +230,7 @@ import type { AxiosInstance } from 'axios'
 import { initDropdowns, initTooltips } from 'flowbite'
 import debounce from 'lodash.debounce'
 import { computed, inject, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 
 import { type RecordingSearchParams, type RecordingSearchResponse, type SearchCountResponse, apiLegacyCreatePlaylists, apiLegacyDeleteMatchingRecording, apiLegacyDeleteRecording, apiLegacySearchCount } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteParams } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
@@ -308,11 +313,25 @@ const selectedProjectSlug = computed(() => store.project?.slug)
 const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings, isRefetching: isRefetchRecordings, isError: isErrorRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, filteredRequestParams)
 
 const dateRange = ref<DateTime | undefined>()
+
+const initialCount = ref<number | undefined>()
+
 watch(
   () => recordings.value?.date_range as DateTime | undefined,
   (newVal) => {
     if (dateRange.value === undefined && newVal !== undefined) {
       dateRange.value = newVal
+    }
+  },
+  { immediate: true }
+)
+
+const stopCountWatch = watch(
+  () => recordings.value?.count as number | undefined,
+  (count) => {
+    if (typeof count === 'number') {
+      initialCount.value = count
+      stopCountWatch()
     }
   },
   { immediate: true }
@@ -370,6 +389,14 @@ const recordingsCountText = computed<string>(() =>
 const showCreatePlaylistModal = ref(false)
 const showExportPanel = ref(false)
 
+const isTotalCountOverHalf = computed(() =>
+  totalCount.value > (initialCount.value ?? 0) / 2
+)
+
+const isTotalCheckedOverHalf = computed(() =>
+  selectedRows.value.length > (initialCount.value ?? 0) / 2
+)
+
 const columns = [
   { label: 'Site', key: 'site', maxWidth: 90 },
   { label: 'Recorded Time', key: 'datetime', maxWidth: 110 },
@@ -398,17 +425,37 @@ const recordingsSelected = ref<string[]>([])
 const applyFilters = async (filter: RecordingSearchParams) => {
   filterParams.value = filter
   currentPage.value = 1
+  selectedRows.value = []
   await refetchRecordings()
   showFilterModal.value = false
 }
+
+const closeFilters = () => {
+  showFilterModal.value = false
+}
+
 const isResetFilter = ref(false)
 
 const resetFilters = debounce(async (filter: RecordingSearchParams) => {
   isResetFilter.value = true
-  filterParams.value = filter
+  filterParams.value = undefined
   await refetchRecordings()
   isResetFilter.value = false
 }, 500)
+
+const popupMessage = computed(() => {
+  if ((isTotalCountOverHalf.value && deleteAllFiltered.value) || isTotalCheckedOverHalf.value) {
+    return `You are about to delete <b>${totalCountText.value} recordings</b> in this project. Are you sure?\n\nIf you only want to delete some of the recordings, we recommend filtering your selection again.`
+  }
+  return 'Are you sure you want to delete the following?'
+})
+
+const popupNote = computed(() => {
+  if ((isTotalCountOverHalf.value && deleteAllFiltered.value) || isTotalCheckedOverHalf.value) {
+    return 'Note: This action cannot be undone.'
+  }
+  return 'Note: analysis results on these recordings will also be deleted'
+})
 
 const applyRecordings = async () => {
   await refetchRecordings()
@@ -458,19 +505,39 @@ function omitEmptyArrays<T extends Record<string, any>> (obj: T): Partial<T> {
   return out as Partial<T>
 }
 
+const savingPlaylist = ref(false)
+const playlistNameExists = ref(false)
 const saveToPlaylist = async (name: string) => {
-  showCreatePlaylistModal.value = false
+  playlistNameExists.value = false
+  savingPlaylist.value = true
   try {
-  await apiLegacyCreatePlaylists(apiClientArbimon, selectedProjectSlug.value ?? '', { playlist_name: name, params: omitEmptyArrays(requestParamsForPlaylist.value) })
-    showAlertDialog('success', 'Success', 'Created playlist')
+    const statusCreatePlaylists = await apiLegacyCreatePlaylists(apiClientArbimon, selectedProjectSlug.value ?? '', { playlist_name: name, params: omitEmptyArrays(requestParamsForPlaylist.value) })
+    console.info(statusCreatePlaylists)
+    if (statusCreatePlaylists.error !== undefined) {
+      savingPlaylist.value = false
+      if (statusCreatePlaylists.error === 'Playlist name in use') {
+        playlistNameExists.value = true
+      } else {
+        showAlertDialog('error', 'Error', statusCreatePlaylists.error)
+        showCreatePlaylistModal.value = false
+      }
+    } else {
+      showAlertDialog('success', 'Success', 'Created playlist')
+      savingPlaylist.value = false
+      showCreatePlaylistModal.value = false
+    }
   } catch (e) {
     showAlertDialog('error', 'Error', 'Create playlist')
+    showCreatePlaylistModal.value = false
+    savingPlaylist.value = false
   }
 }
 
 const deleteCheckedRecordings = () => {
+  deleteAllFiltered.value = false
+
   if (selectedRows.value.length === 0) {
-    showAlertDialog('error', '', 'There are not any recordings to delete')
+    showAlertDialog('error', '', 'There are not any recordings to delete. Please select recordings to delete.')
     return
   }
 
@@ -479,6 +546,11 @@ const deleteCheckedRecordings = () => {
 }
 
 const deleteAllFilteredRecordings = async () => {
+  if (filterParams.value === undefined) {
+    showAlertDialog('error', '', 'There is not filter applied for deleting recordings yet. Please filter recordings before deleting.')
+    return
+  }
+
   if (recordingsCount.value === 0) {
     showAlertDialog('error', 'Error', 'Recordings not found')
     return
@@ -517,10 +589,10 @@ const handleCancel = () => {
 const handleCloseExport = (isSuccess?: boolean) => {
   showExportPanel.value = false
   if (isSuccess === true) {
-    showAlertDialog('success', '', 'Your report export request is processing and will be sent by email.')
+    showAlertDialog('success', 'Success', 'Your report export request is processing and will be sent by email.')
   }
   if (isSuccess === false) {
-    showAlertDialog('error', '', 'Error export')
+    showAlertDialog('error', 'Error', 'Error export')
   }
 }
 
@@ -586,5 +658,21 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
     showAlert.value = false
   }, hideAfter)
 }
+
+onBeforeRouteLeave(() => {
+  if (savingPlaylist.value) {
+    const answer = window.confirm('Your playlist is being created. You can check the created playlist when complete on the Playlist page.')
+    return answer
+  }
+  return true
+})
+
+const totalCount = computed(() => {
+  return searchCount.value?.reduce((sum, item) => sum + item.count, 0) ?? 0
+})
+
+const totalCountText = computed<string>(() =>
+  new Intl.NumberFormat('en-US').format(selectedRows.value.length > 0 ? selectedRows.value.length : totalCount.value)
+)
 
 </script>

@@ -246,6 +246,7 @@ export interface CreatePlaylistRequest {
 export interface CreatePlaylistResponse {
   playlist_id: number
   success: boolean
+  error?: string
 }
 
 export function buildPlaylistsParamsObject (params: RecordingParams): Record<string, any> {
@@ -291,7 +292,8 @@ export const apiLegacyCreatePlaylists = async (apiClient: AxiosInstance, slug: s
     playlist_name: request.playlist_name,
     params: buildPlaylistsParamsObject(request.params)
   }
-  return await apiClient.post(`/legacy-api/project/${slug}/playlists/create`, body)
+  const response = await apiClient.post(`/legacy-api/project/${slug}/playlists/create`, body)
+  return response.data
 }
 export interface DeleteRecordingRequest {
   recs: any[]

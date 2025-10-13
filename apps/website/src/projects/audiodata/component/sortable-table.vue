@@ -69,14 +69,19 @@
             <td
               v-if="props.showCheckbox"
               class="w-4 pl-2"
+              @click.stop
+              @dblclick.stop
             >
               <input
-                v-model="selectedRows"
+                type="checkbox"
                 :checked="isRowSelected(row)"
                 class="w-[14px] h-[14px] rounded text-frequency focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
-                type="checkbox"
-                :value="row"
+                @change.stop="onRowCheckboxChange($event, row)"
                 @click.stop
+                @mousedown.stop
+                @mouseup.stop
+                @keydown.enter.stop.prevent
+                @keydown.space.stop.prevent
               >
             </td>
             <td
@@ -237,7 +242,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { computed, onBeforeUnmount, onMounted, reactive, ref, toRaw, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
 
 import { type ProjectTemplatesResponse, type PublicTemplateResponse, type TemplateRequest } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
@@ -278,6 +283,7 @@ const props = defineProps<{
   defaultSortKey?: string
   defaultSortOrder?: 'asc' | 'desc'
   selectedRow?: Row | null
+  selectedItems?: Row[]
   showCheckbox?: boolean
   projectSlug?: string
   showExpand?: boolean
@@ -374,6 +380,30 @@ function onImageLoad () {
   isLoaded.value = false
 }
 
+function sameIds (a?: Row[], b?: Row[]) {
+  if (!a || !b) return a === b
+  if (a.length !== b.length) return false
+  const as = a.map(x => x.id).sort()
+  const bs = b.map(x => x.id).sort()
+  for (let i = 0; i < as.length; i++) if (as[i] !== bs[i]) return false
+  return true
+}
+
+function onRowCheckboxChange (e: Event, row: Row) {
+  const target = e.target as HTMLInputElement
+  toggleRow(row, target.checked)
+}
+
+function toggleRow (row: Row, checked: boolean) {
+  const next = checked
+    ? [...selectedRows.value.filter(r => r.id !== row.id), row]
+    : selectedRows.value.filter(r => r.id !== row.id)
+
+  if (!sameIds(next, selectedRows.value)) {
+    selectedRows.value = next
+  }
+}
+
 const onVisualizerRedirect = (id: number) => {
   window.location.assign(`${window.location.origin}/project/${props.projectSlug ?? ''}/visualizer/rec/${id}`)
 }
@@ -386,18 +416,17 @@ const areAllRowsSelected = computed(() => {
 })
 
 const toggleSelectAll = () => {
-  const currentPage = sortedRows.value.map(row => row)
+  const pageIds = new Set(sortedRows.value.map(r => r.id))
+  const current = selectedRows.value
 
   if (areAllRowsSelected.value) {
-    selectedRows.value = selectedRows.value.filter(
-      r => !currentPage.includes(r)
-    )
+    const next = current.filter(r => !pageIds.has(r.id))
+    if (!sameIds(next, current)) selectedRows.value = next
   } else {
-    sortedRows.value.forEach(row => {
-      if (!selectedRows.value.some(r => r === row)) {
-        selectedRows.value.push(row)
-      }
-    })
+    const map = new Map(current.map(r => [r.id, r]))
+    for (const r of sortedRows.value) map.set(r.id, r)
+    const next = Array.from(map.values())
+    if (!sameIds(next, current)) selectedRows.value = next
   }
 }
 
@@ -425,19 +454,18 @@ const sortBy = (key: string) => {
     sortOrder.value = 'asc'
   }
 }
-
 const sortedRows = computed<Row[]>(() => {
   const rows = toRaw(props.rows)
   const list = Array.isArray(rows) ? [...rows] : []
 
   if (!sortKey.value) {
-    return reactive(list) // คืน Proxy ของ list
+    return list
   }
 
   const key = sortKey.value!
   const order = sortOrder.value
 
-  const out = list.sort((a, b) => {
+  const out = [...list].sort((a, b) => {
     const aVal = a?.[key]
     const bVal = b?.[key]
     if (aVal == null && bVal == null) return 0
@@ -448,7 +476,7 @@ const sortedRows = computed<Row[]>(() => {
     return 0
   })
 
-  return reactive(out)
+  return out
 })
 
 const selectedRowIndex = ref<number | null>(null)
@@ -589,9 +617,18 @@ onMounted(() => {
   }
 })
 
-watch(selectedRows, (rows) => {
-  emit('selectedRows', rows.map(r => toRaw(r)))
-}, { deep: true })
+watch(selectedRows, (rows, prev) => {
+  if (!sameIds(rows, prev)) {
+    emit('selectedRows', rows.map(r => toRaw(r)))
+  }
+})
+
+watch(() => props.selectedItems, (rows) => {
+  if (!rows) return
+  if (!sameIds(rows, selectedRows.value)) {
+    selectedRows.value = rows
+  }
+})
 
 watch(() => props.selectedRow, (row) => {
   if (row != null) {
