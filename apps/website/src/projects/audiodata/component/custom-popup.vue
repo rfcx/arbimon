@@ -99,7 +99,7 @@ defineEmits<{(e: 'ok'): void, (e: 'cancel'): void}>()
 
 const confirmText = ref('')
 const canDelete = computed(() => {
-  if (props.isTotalCountOverHalf === undefined) return true
+  if (props.isTotalCountOverHalf !== true) return true
   return confirmText.value.trim() === 'confirm delete'
 })
 </script>
