@@ -111,11 +111,12 @@
     </div>
     <div class="flex mt-3 px-9">
       <SortableTable
-        v-if="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates"
+        v-show="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates"
         class="mt-5"
         :columns="columns"
         :rows="mergedSpecies ?? []"
         :selected-row="selectedSpecies"
+        :selected-items="selectedRows"
         :project-slug="selectedProjectSlug"
         :project-templates="speciesProjectTemplates"
         :default-sort-order="'desc'"
@@ -327,7 +328,7 @@ const speciesSelect = async (request: SpeciesSongtypeRequest) => {
     const addSpecies = await apiLegacyAddSpecies(apiClientArbimon, selectedProjectSlug.value ?? '', request)
     if (addSpecies.success) {
       showAlertDialog('success', '', `${request.species} ${request.songtype} added to project`)
-
+      selectedRows.value = []
       refetchSpecies()
       refetchProjectTemplates()
       refetchPublicTemplates()
@@ -346,6 +347,8 @@ const clickCreateSpecies = () => {
 const isOpen = ref(false)
 function onImported (success: boolean) {
   if (success) {
+    selectedRows.value = []
+
     refetchSpecies()
     refetchProjectTemplates()
     refetchPublicTemplates()
@@ -404,8 +407,22 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
 const onSelectedSpecies = (rows?: Row[]) => {
   if (!rows) return
   selectedRows.value = rows === undefined ? [] : rows
-  selectedDeleteSpecies.value = rows.map(r => `"${r.species_name} | ${r.songtype_name}"`)
 }
+
+watch(
+  selectedRows,
+  (rows) => {
+    if (rows.length === 0) {
+      selectedDeleteSpecies.value = []
+      return
+    }
+
+    selectedDeleteSpecies.value = rows.map(
+      (r) => `"${r.species_name} | ${r.songtype_name}"`
+    )
+  },
+  { immediate: true, deep: true }
+)
 
 const deleteSpecies = () => {
   showPopup.value = true
