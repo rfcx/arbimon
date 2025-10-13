@@ -127,13 +127,24 @@
     </div>
     <div
       v-if="!isLoadingSpecies && (speciesCount === 0 || isErrorSpecies) && !isRefetchSpecies"
-      class="font-display text-cloud text-[26px] text-center mt-12"
+      class="font-display text-cloud text-[26px] text-center mt-20"
     >
-      <span class="font-display">This project does not have any species assigned</span>
+      <span
+        v-if="initialSpeciesCount !== 0"
+        class="font-display"
+      >
+        No species found. Please try again.
+      </span>
+      <span
+        v-else
+        class="font-display"
+      >
+        This project does not have any species assigned
+      </span>
     </div>
     <div class="flex mt-3">
       <PaginationComponent
-        v-show="!isLoadingSpecies && !(speciesCount === 0) && !isErrorSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates"
+        v-show="!isLoadingSpecies && !(speciesCount === 0) && !isErrorSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates && (initialSpeciesCount ?? 0) > LIMIT"
         class="mt-4 px-8"
         :current-page="currentPage"
         :total-pages="totalPages"
@@ -164,6 +175,7 @@
       note="Note: validations for this species call will also be removed from this project."
       btn-ok-text="Delete"
       btn-cancel-text="Cancel"
+      max-width="max-w-xl"
       @ok="handleOk"
       @cancel="handleCancel"
     />
@@ -177,7 +189,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { initTooltips } from 'flowbite'
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 
 import { type ProjectTemplatesResponse, type PublicTemplateResponse, type PublicTemplatesParams, type SpeciesClassesParams, type SpeciesSongtypeRequest, type SpeciesType, type TemplateRequest, apiLegacyAddSpecies, apiLegacyAddTemplates, apiLegacyDeleteSpecies } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
@@ -217,9 +229,23 @@ const publicTemplatesParams = computed<PublicTemplatesParams | undefined>(() => 
   return ids.length ? { classIds: ids } : undefined
 })
 
+const initialSpeciesCount = ref<number | null>(null)
+const initializedSpeciesCount = ref(false)
+
 const { data: speciesData, isLoading: isLoadingSpecies, isError: isErrorSpecies, isRefetching: isRefetchSpecies, refetch: refetchSpecies } = useGetSpecies(apiClientArbimon, selectedProjectSlug, speciesParams)
 const { data: speciesProjectTemplates, isLoading: isLoadingProjectTemplates, refetch: refetchProjectTemplates } = useGetProjectTemplates(apiClientArbimon, selectedProjectSlug)
 const { data: speciesPublicTemplates, isLoading: isLoadingPublicTemplates, refetch: refetchPublicTemplates } = useGetPublicTemplates(apiClientArbimon, selectedProjectSlug, publicTemplatesParams)
+
+watch(
+  () => speciesData.value?.count,
+  (count) => {
+    if (!initializedSpeciesCount.value && typeof count === 'number') {
+      initialSpeciesCount.value = count
+      initializedSpeciesCount.value = true
+    }
+  },
+  { immediate: true }
+)
 
 const columns = [
   { label: 'Species', key: 'species_name', maxWidth: 90 },
@@ -351,8 +377,7 @@ const onAddTemplates = async (request: TemplateRequest) => {
 }
 
 const exportSpecies = () => {
-  // const url = `${window.location.origin}/legacy-api/project/${selectedProjectSlug.value}/species-export.csv`
-  const url = `https://staging.arbimon.org/legacy-api/project/${selectedProjectSlug.value}/species-export.csv`
+  const url = `${window.location.origin}/legacy-api/project/${selectedProjectSlug.value}/species-export.csv`
   const link = document.createElement('a')
   link.href = url
   document.body.appendChild(link)
@@ -402,3 +427,12 @@ const handleCancel = () => {
   showPopup.value = false
 }
 </script>
+
+<style lang="scss">
+.input-item {
+  [type='text']:focus {
+    border-color: #ADFF2C;
+    --tw-ring-color: transparent;
+  }
+}
+</style>

@@ -209,9 +209,7 @@
                   <th class="px-3 py-2 border-b border-util-gray-03 w-32">
                     Status
                   </th>
-                  <th class="px-3 py-2 border-b border-util-gray-03">
-                    Error
-                  </th>
+                  <th class="px-3 py-2 border-b border-util-gray-03" />
                 </tr>
               </thead>
               <tbody>

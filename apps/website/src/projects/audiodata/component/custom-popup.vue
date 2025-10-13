@@ -3,7 +3,10 @@
     v-if="visible"
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
   >
-    <div class="bg-moss rounded-xl shadow-lg max-w-md w-full p-6">
+    <div
+      class="bg-moss rounded-xl shadow-lg w-full p-6"
+      :class="maxWidth ?? 'max-w-md'"
+    >
       <div class="flex flex-col">
         <div class="flex items-start justify-between">
           <div class="rounded-full bg-util-gray-01 p-3">
@@ -75,6 +78,7 @@ defineProps<{
   isForDeletePopup: boolean
   list?: string[]
   note?: string
+  maxWidth?: string
 }>()
 
 defineEmits<{(e: 'ok'): void, (e: 'cancel'): void}>()
