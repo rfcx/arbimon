@@ -222,3 +222,19 @@ export const apiLegacyBulkAddClasses = async (apiClient: AxiosInstance, slug: st
   const res = await apiClient.post(`/legacy-api/project/${slug}/class/bulk-add`, params)
   return res.data
 }
+
+export async function getTemplateAudio (
+  apiClient: AxiosInstance,
+  projectSlug: string,
+  templateId: number,
+  gain = 2
+): Promise<Blob> {
+  const res = await apiClient.request<Blob>({
+    method: 'GET',
+    url: `/legacy-api/project/${projectSlug}/templates/audio/${templateId}.mp3`,
+    params: { gain },
+    responseType: 'blob',
+    headers: { Accept: 'audio/mpeg' }
+  })
+  return res.data
+}

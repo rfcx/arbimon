@@ -178,13 +178,13 @@
                         class="animate-spin text-xl"
                       />
                     </span>
-                    <span
-                      class="absolute left-1 bottom-1 text-white/90 text-xs"
-                      title="Play sound"
-                    ><icon-fa-play
-                      class="w-[13px] h-[16px] m-[6px]"
-                      style="filter: drop-shadow(0 0 5px #000)"
-                    /></span>
+                    <audio-controller
+                      class="absolute left-2 bottom-2 text-white/90 text-xs"
+                      :playing="playing"
+                      :loading="audioLoading"
+                      size="sm"
+                      @click="playing ? stop() : play()"
+                    />
                     <span
                       class="absolute right-1 bottom-1 text-white/90 text-xs"
                       title="Open in new tab"
@@ -238,13 +238,49 @@
       </tbody>
     </table>
   </div>
+  <div
+    class="fixed w-72 h-12 inset-x-0 mx-auto z-50 px-4 py-2 bg-steel-gray-light rounded-md transition-all duration-500"
+    :class="playing ? 'bottom-4' : '-bottom-12'"
+  >
+    <div class="h-full flex items-center content-center">
+      <audio-controller
+        :playing="playing"
+        @click="playing ? stop() : play()"
+      />
+      <div
+        class="relative w-full mx-2"
+        @click="setAudioPlayProgress($event)"
+      >
+        <div
+          class="absolute w-full h-1 bg-white opacity-50 rounded-full cursor-pointer"
+        />
+        <div
+          class="absolute h-1 bg-white rounded-full z-51 cursor-pointer"
+          :style="{ width: playedProgressPercentage + '%' }"
+        />
+      </div>
+      <div>{{ displayPlayedTime }}</div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
+import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
-import { computed, onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
+import { Howl } from 'howler'
+import { computed, inject, onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
 
-import { type ProjectTemplatesResponse, type PublicTemplateResponse, type TemplateRequest } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+import { type ProjectTemplatesResponse, type PublicTemplateResponse, type TemplateRequest, getTemplateAudio } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+
+import { apiClientArbimonLegacyKey } from '@/globals'
+
+const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+
+const audio = ref<Howl | null>(null)
+const playing = ref(false)
+const playedTime = ref(0)
+const playedProgressPercentage = ref(0)
+const audioLoading = ref(false)
 
 interface Column {
   label: string
@@ -697,6 +733,70 @@ function removeListeners () {
 }
 
 onBeforeUnmount(() => removeListeners())
+
+const setAudio = (audioBlob: Blob) => {
+  audio.value = new Howl({
+    src: window.URL.createObjectURL(audioBlob),
+    html5: true,
+      onend: () => {
+        playing.value = false
+      },
+      onpause: () => {
+        playing.value = false
+      },
+      onplay: () => {
+        playing.value = true
+        requestAnimationFrame(step)
+      },
+      onstop: () => {
+        playing.value = false
+      }
+  })
+}
+
+const play = async () => {
+  if (!audio.value) {
+    audioLoading.value = true
+    const audioBlob = await getTemplateAudio(apiClientArbimon, props.projectSlug ?? '', 15, 2)
+    audioLoading.value = false
+
+    setAudio(audioBlob)
+  }
+  audio.value?.play()
+}
+
+const stop = () => {
+  audio.value?.stop()
+}
+
+const step = (): void => {
+  const seek = audio.value?.seek() ?? 0
+  if (audio.value?.playing() ?? false) {
+    playedTime.value = seek
+    playedProgressPercentage.value = (seek / (audio.value?.duration() ?? 0)) * 100
+    requestAnimationFrame(step)
+  }
+}
+
+const setAudioPlayProgress = (event: MouseEvent): void => {
+  const target = event.currentTarget as HTMLDivElement
+  const targetWidth = target.offsetWidth
+  const offsetX = event.offsetX
+  const playedProgress = (offsetX / targetWidth)
+  playedProgressPercentage.value = playedProgress * 100
+  selectedDuration(playedProgress)
+}
+
+const selectedDuration = (progress: number): void => {
+  const selectedTime = (audio.value?.duration() ?? 0) * progress
+  playedTime.value = selectedTime
+  audio.value?.seek(selectedTime)
+  audio.value?.play()
+}
+
+const displayPlayedTime = computed((): string => {
+  return `${dayjs.duration(playedTime.value, 'seconds').format('m:ss')}`
+})
 
 </script>
 
