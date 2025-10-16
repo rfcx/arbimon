@@ -180,10 +180,10 @@
                     </span>
                     <audio-controller
                       class="absolute left-2 bottom-2 text-white/90 text-xs"
-                      :playing="playing"
-                      :loading="audioLoading"
+                      :playing="isPlayingCell(row, column.key, tpl)"
+                      :loading="loadingMap[cellKey(row.id, column.key, tpl.id)]"
                       size="sm"
-                      @click="playing ? stop() : play()"
+                      @click.stop="isPlayingCell(row, column.key, tpl) ? stopCell(row, column.key, tpl) : playCell(row, column.key, tpl)"
                     />
                     <span
                       class="absolute right-1 bottom-1 text-white/90 text-xs"
@@ -240,26 +240,23 @@
   </div>
   <div
     class="fixed w-72 h-12 inset-x-0 mx-auto z-50 px-4 py-2 bg-steel-gray-light rounded-md transition-all duration-500"
-    :class="playing ? 'bottom-4' : '-bottom-12'"
+    :class="playingKey ? 'bottom-4' : '-bottom-12'"
   >
     <div class="h-full flex items-center content-center">
       <audio-controller
-        :playing="playing"
-        @click="playing ? stop() : play()"
+        :playing="!!playingKey"
+        @click="toggleGlobal"
       />
       <div
         class="relative w-full mx-2"
-        @click="setAudioPlayProgress($event)"
       >
+        <div class="absolute w-full h-1 bg-white opacity-50 rounded-full" />
         <div
-          class="absolute w-full h-1 bg-white opacity-50 rounded-full cursor-pointer"
-        />
-        <div
-          class="absolute h-1 bg-white rounded-full z-51 cursor-pointer"
-          :style="{ width: playedProgressPercentage + '%' }"
+          class="absolute h-1 bg-white rounded-full z-51"
+          :style="{ width: (durationSeconds ? (playedSeconds / durationSeconds) * 100 : 0) + '%' }"
         />
       </div>
-      <div>{{ displayPlayedTime }}</div>
+      <div>{{ formatTime(playedSeconds) }}</div>
     </div>
   </div>
 </template>
@@ -268,19 +265,13 @@
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
 import { Howl } from 'howler'
-import { computed, inject, onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, reactive, ref, toRaw, watch } from 'vue'
 
 import { type ProjectTemplatesResponse, type PublicTemplateResponse, type TemplateRequest, getTemplateAudio } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
-
-const audio = ref<Howl | null>(null)
-const playing = ref(false)
-const playedTime = ref(0)
-const playedProgressPercentage = ref(0)
-const audioLoading = ref(false)
 
 interface Column {
   label: string
@@ -732,71 +723,141 @@ function removeListeners () {
   document.removeEventListener('keydown', onKeydown)
 }
 
-onBeforeUnmount(() => removeListeners())
-
-const setAudio = (audioBlob: Blob) => {
-  audio.value = new Howl({
-    src: window.URL.createObjectURL(audioBlob),
-    html5: true,
-      onend: () => {
-        playing.value = false
-      },
-      onpause: () => {
-        playing.value = false
-      },
-      onplay: () => {
-        playing.value = true
-        requestAnimationFrame(step)
-      },
-      onstop: () => {
-        playing.value = false
-      }
-  })
-}
-
-const play = async () => {
-  if (!audio.value) {
-    audioLoading.value = true
-    const audioBlob = await getTemplateAudio(apiClientArbimon, props.projectSlug ?? '', 15, 2)
-    audioLoading.value = false
-
-    setAudio(audioBlob)
-  }
-  audio.value?.play()
-}
-
-const stop = () => {
-  audio.value?.stop()
-}
-
-const step = (): void => {
-  const seek = audio.value?.seek() ?? 0
-  if (audio.value?.playing() ?? false) {
-    playedTime.value = seek
-    playedProgressPercentage.value = (seek / (audio.value?.duration() ?? 0)) * 100
-    requestAnimationFrame(step)
-  }
-}
-
-const setAudioPlayProgress = (event: MouseEvent): void => {
-  const target = event.currentTarget as HTMLDivElement
-  const targetWidth = target.offsetWidth
-  const offsetX = event.offsetX
-  const playedProgress = (offsetX / targetWidth)
-  playedProgressPercentage.value = playedProgress * 100
-  selectedDuration(playedProgress)
-}
-
-const selectedDuration = (progress: number): void => {
-  const selectedTime = (audio.value?.duration() ?? 0) * progress
-  playedTime.value = selectedTime
-  audio.value?.seek(selectedTime)
-  audio.value?.play()
-}
-
-const displayPlayedTime = computed((): string => {
-  return `${dayjs.duration(playedTime.value, 'seconds').format('m:ss')}`
+onBeforeUnmount(() => {
+  howls.forEach(h => h.unload())
+  howls.clear()
+  stopProgressTimer()
+  removeListeners()
 })
+
+const cellKey = (rowId: string | number, colKey: string, tplId?: string | number) => `${rowId}::${colKey}::${tplId ?? 'no-tpl'}`
+const howls = new Map<string, Howl>()
+
+const playingKey = ref<string | null>(null)
+const loadingKey = ref<string | null>(null)
+
+const progressTimer = ref<number | null>(null)
+const playedSeconds = ref(0)
+const durationSeconds = ref(0)
+
+const loadingMap = reactive<Record<string, boolean>>({})
+
+function isPlayingCell (row: any, colKey: string, tpl?: any) {
+  return playingKey.value === cellKey(row.id ?? row._id ?? row.key ?? row, colKey, tpl?.id)
+}
+
+function getOrCreateHowl (k: string, audioBlob: Blob) {
+  let h = howls.get(k)
+  if (!h) {
+    const objectUrl = window.URL.createObjectURL(audioBlob)
+    const sound = new Howl({
+      src: objectUrl,
+      html5: true
+    })
+
+    sound.on('play', () => startProgressTimer(h ?? sound))
+    sound.on('end', () => {
+      if (playingKey.value === k) playingKey.value = null
+      stopProgressTimer()
+    })
+    sound.on('stop', () => {
+      if (playingKey.value === k) playingKey.value = null
+      stopProgressTimer()
+    })
+
+    howls.set(k, sound)
+    h = sound
+  }
+  return h
+}
+
+function startProgressTimer (h: Howl) {
+  stopProgressTimer()
+  progressTimer.value = window.setInterval(() => {
+    try {
+      durationSeconds.value = h.duration() ?? 0
+      playedSeconds.value = h.seek() as number ?? 0
+    } catch { /* ignore */ }
+  }, 200)
+}
+function stopProgressTimer () {
+  if (progressTimer.value != null) {
+    clearInterval(progressTimer.value)
+    progressTimer.value = null
+  }
+}
+
+const playCell = async (row: any, colKey: string, tpl?: any) => {
+  const k = cellKey(row.id ?? row._id ?? row.key ?? row, colKey, tpl?.id)
+  currentKey.value = k
+  loadingKey.value = k
+  playingKey.value = k
+  loadingMap[k] = true
+
+  try {
+    const blob = await getTemplateAudio(
+      apiClientArbimon,
+      props.projectSlug ?? '',
+      tpl?.id,
+      2
+    )
+
+    loadingMap[k] = false
+    const h = getOrCreateHowl(k, blob)
+
+    if (playingKey.value && playingKey.value !== k) {
+      stopByKey(playingKey.value)
+    }
+    h.play()
+  } catch (e) {
+    loadingMap[k] = false
+    loadingKey.value = null
+  }
+}
+
+function stopCell (row: any, colKey: string, tpl?: any) {
+  const k = cellKey(row.id ?? row._id ?? row.key ?? row, colKey, tpl?.id)
+  stopByKey(k)
+}
+
+function stopByKey (k: string) {
+  const h = howls.get(k)
+  if (h) {
+    h.stop()
+  }
+  if (playingKey.value === k) playingKey.value = null
+  if (loadingKey.value === k) loadingKey.value = null
+  stopProgressTimer()
+}
+
+function formatTime (s: number) {
+  const mm = Math.floor(s / 60).toString().padStart(2, '0')
+  const ss = Math.floor(s % 60).toString().padStart(2, '0')
+  return `${mm}:${ss}`
+}
+
+const currentKey = ref<string | null>(null)
+
+function toggleGlobal () {
+  if (!currentKey.value) return
+  const h = howls.get(currentKey.value)
+  if (!h) return
+  if (playingKey.value === currentKey.value) {
+    stopByKey(currentKey.value)
+  } else {
+    if (h.state() === 'loaded') {
+      playingKey.value = currentKey.value
+      h.play()
+      startProgressTimer(h)
+    } else {
+      h.once('load', () => {
+        playingKey.value = currentKey.value
+        h.play()
+        startProgressTimer(h)
+      })
+    }
+  }
+}
 
 </script>
 
