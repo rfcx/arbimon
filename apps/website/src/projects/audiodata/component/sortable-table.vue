@@ -182,6 +182,7 @@
                       class="absolute left-2 bottom-2 text-white/90 text-xs"
                       :playing="isPlayingCell(row, column.key, tpl)"
                       :loading="loadingMap[cellKey(row.id, column.key, tpl.id)]"
+                      title="Play sound"
                       size="sm"
                       @click.stop="isPlayingCell(row, column.key, tpl) ? stopCell(row, column.key, tpl) : playCell(row, column.key, tpl)"
                     />
@@ -324,7 +325,7 @@ const props = defineProps<{
   textSize?: string
 }>()
 
-const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void, (e: 'onAddTemplates', request: TemplateRequest): void}>()
+const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void, (e: 'onAddTemplates', request: TemplateRequest): void, (e: 'onPlaySoundError'): void}>()
 
 const sortKey = ref<string | null>(null)
 const sortOrder = ref<'asc' | 'desc'>('asc')
@@ -810,8 +811,11 @@ const playCell = async (row: any, colKey: string, tpl?: any) => {
     }
     h.play()
   } catch (e) {
+    if (loadingKey.value === k) loadingKey.value = null
+    if (playingKey.value === k) playingKey.value = null
+    if (currentKey.value === k) currentKey.value = null
     loadingMap[k] = false
-    loadingKey.value = null
+    emit('onPlaySoundError')
   }
 }
 

@@ -236,5 +236,9 @@ export async function getTemplateAudio (
     responseType: 'blob',
     headers: { Accept: 'audio/mpeg' }
   })
+
+  if (res.data == null || res.data.size < 100) {
+    throw new Error('Empty audio blob')
+  }
   return res.data
 }

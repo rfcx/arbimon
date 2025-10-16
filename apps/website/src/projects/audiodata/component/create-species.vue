@@ -44,7 +44,7 @@
           />
           <span
             v-if="!speciesData"
-            class="font-medium"
+            class="font-medium fixed pt-5"
           >Select a species, then select a sound type</span>
         </div>
         <div class="w-[200px] min-h-[200px] overflow-y-auto">

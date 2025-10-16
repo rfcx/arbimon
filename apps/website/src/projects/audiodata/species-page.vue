@@ -124,6 +124,7 @@
         :template-added-id="templateAddedId"
         @on-add-templates="onAddTemplates"
         @selected-rows="onSelectedSpecies"
+        @onPlaySoundError="onPlaySoundError"
       />
     </div>
     <div
@@ -407,6 +408,10 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
 const onSelectedSpecies = (rows?: Row[]) => {
   if (!rows) return
   selectedRows.value = rows === undefined ? [] : rows
+}
+
+const onPlaySoundError = () => {
+  showAlertDialog('error', '', 'Failed to load audio')
 }
 
 watch(
