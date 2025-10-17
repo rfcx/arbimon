@@ -760,6 +760,8 @@ function getOrCreateHowl (k: string, audioBlob: Blob) {
     sound.on('end', () => {
       if (playingKey.value === k) playingKey.value = null
       stopProgressTimer()
+        playedSeconds.value = 0
+        durationSeconds.value = 0
     })
     sound.on('stop', () => {
       if (playingKey.value === k) playingKey.value = null
@@ -794,6 +796,13 @@ const playCell = async (row: any, colKey: string, tpl?: any) => {
   loadingKey.value = k
   playingKey.value = k
   loadingMap[k] = true
+
+  if (playingKey.value && playingKey.value !== k) {
+    stopByKey(playingKey.value)
+  }
+
+  playedSeconds.value = 0
+  durationSeconds.value = 0
 
   try {
     const blob = await getTemplateAudio(
@@ -832,6 +841,9 @@ function stopByKey (k: string) {
   if (playingKey.value === k) playingKey.value = null
   if (loadingKey.value === k) loadingKey.value = null
   stopProgressTimer()
+
+  playedSeconds.value = 0
+  durationSeconds.value = 0
 }
 
 function formatTime (s: number) {
