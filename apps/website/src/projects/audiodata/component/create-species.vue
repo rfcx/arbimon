@@ -29,11 +29,12 @@
           >
         </div>
       </div>
-      <div class="flex gap-4 mt-5 ">
-        <div class="flex-1 min-h-[200px] overflow-y-auto">
+      <div class="flex gap-4 mt-5 max-h-[400px]">
+        <div class="w-[200px] flex-1 min-h-[200px] overflow-y-auto">
           <SortableTable
             :columns="columns"
             :rows="speciesData ?? []"
+            :selected-row="selectedSpecies"
             class="max-h-[400px] overflow-y-auto mb-5"
             container-class="bg-moss"
             header-class="bg-moss"
@@ -43,14 +44,15 @@
             @selected-item="onSelectedSpecies"
           />
           <span
-            v-if="!speciesData"
+            v-if="(!speciesData || speciesData?.length === 0) && !loadingSearchSpecies"
             class="font-medium fixed pt-5"
-          >Select a species, then select a sound type</span>
+          >{{ searchKeyword === '' ? 'Select a species, then select a sound type' : 'Species not found. Please try again.' }}</span>
         </div>
         <div class="w-[200px] min-h-[200px] overflow-y-auto">
           <SortableTable
             :columns="[{ label: 'Sound', key: 'name', maxWidth: 120 }]"
             :rows="selectedSpecies === undefined ? []: songtypesSpecies ?? []"
+            :selected-row="selectedSongtype"
             class="max-h-[400px] overflow-y-auto"
             container-class="bg-moss"
             header-class="bg-moss"
@@ -99,7 +101,7 @@ const searchTimeout = ref<number | undefined>(undefined)
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
-const { data: speciesData, refetch: refetchSearchSpecies } = useSearchSpecies(apiClientArbimon, computed(() => searchKeyword.value))
+const { data: speciesData, refetch: refetchSearchSpecies, isLoading: loadingSearchSpecies } = useSearchSpecies(apiClientArbimon, computed(() => searchKeyword.value))
 const { data: songtypesSpecies } = useSongtypesSpecies(apiClientArbimon)
 
 const columns = [
@@ -133,6 +135,8 @@ const speciesSelect = () => {
 
 const onSearchInput = () => {
   clearTimeout(searchTimeout.value)
+  selectedSpecies.value = undefined
+  selectedSongtype.value = undefined
   searchTimeout.value = window.setTimeout(() => {
     refetchSearchSpecies()
   }, 300)
