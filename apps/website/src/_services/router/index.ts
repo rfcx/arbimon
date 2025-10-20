@@ -206,7 +206,8 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'import-recordings',
         name: ROUTE_NAMES.importRecordings,
-        component: PAGES.importRecordings
+        component: PAGES.importRecordings,
+        beforeEnter: [authRequiredGuard]
       }
     ]
   },
