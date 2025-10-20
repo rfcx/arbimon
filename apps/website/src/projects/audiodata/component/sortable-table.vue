@@ -1,5 +1,6 @@
 <template>
   <div
+    v-bind="attrs"
     class="text-white  w-full"
     :class="[props.containerClass ?? 'bg-pitch', props.nonRounded ? null : 'rounded-lg' ]"
   >
@@ -152,7 +153,7 @@
                     <img
                       :src="tpl.uri"
                       alt="template"
-                      class="w-full h-full object-cover"
+                      class="w-full h-full"
                     >
                     <div
                       v-if="tpl.addedTemplate && column.key === 'project_templates'"
@@ -266,13 +267,14 @@
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
 import { Howl } from 'howler'
-import { computed, inject, onBeforeUnmount, onMounted, reactive, ref, toRaw, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, reactive, ref, toRaw, useAttrs, watch } from 'vue'
 
 import { type ProjectTemplatesResponse, type PublicTemplateResponse, type TemplateRequest, getTemplateAudio } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+const attrs = useAttrs()
 
 interface Column {
   label: string

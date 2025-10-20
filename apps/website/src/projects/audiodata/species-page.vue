@@ -109,9 +109,11 @@
         {{ speciesCountText }} species
       </span>
     </div>
-    <div class="flex mt-3 px-9">
+    <div
+      v-show="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates"
+      class="flex mt-3 px-9"
+    >
       <SortableTable
-        v-show="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates"
         class="mt-5"
         :columns="columns"
         :rows="mergedSpecies ?? []"
@@ -124,7 +126,7 @@
         :template-added-id="templateAddedId"
         @on-add-templates="onAddTemplates"
         @selected-rows="onSelectedSpecies"
-        @onPlaySoundError="onPlaySoundError"
+        @on-play-sound-error="onPlaySoundError"
       />
     </div>
     <div
@@ -191,7 +193,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { initTooltips } from 'flowbite'
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { type ProjectTemplatesResponse, type PublicTemplateResponse, type PublicTemplatesParams, type SpeciesClassesParams, type SpeciesSongtypeRequest, type SpeciesType, type TemplateRequest, apiLegacyAddSpecies, apiLegacyAddTemplates, apiLegacyDeleteSpecies } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
@@ -371,6 +373,7 @@ const onAddTemplates = async (request: TemplateRequest) => {
     } else {
       showAlertDialog('success', 'Success', 'Add Templates')
       currentPage.value = 1
+      refetchSpecies()
       refetchProjectTemplates()
       refetchPublicTemplates()
       templateId.value = templateResponse.id
@@ -382,12 +385,7 @@ const onAddTemplates = async (request: TemplateRequest) => {
 
 const exportSpecies = () => {
   const url = `${window.location.origin}/legacy-api/project/${selectedProjectSlug.value}/species-export.csv`
-  const link = document.createElement('a')
-  link.href = url
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-  URL.revokeObjectURL(url)
+  window.location.assign(url)
 }
 
 const success = ref<AlertDialogType>('error')
@@ -413,6 +411,12 @@ const onSelectedSpecies = (rows?: Row[]) => {
 const onPlaySoundError = () => {
   showAlertDialog('error', '', 'Failed to load audio')
 }
+
+onBeforeUnmount(() => {
+  if (searchTimeout.value !== undefined) {
+    window.clearTimeout(searchTimeout.value)
+  }
+})
 
 watch(
   selectedRows,
