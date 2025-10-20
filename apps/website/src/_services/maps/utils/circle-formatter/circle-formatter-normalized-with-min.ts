@@ -30,11 +30,13 @@ export class CircleFormatterNormalizedWithMin extends CircleFormatterNormalized 
   }
 
   override getLegendEntries (styleNonZero = DEFAULT_NON_ZERO_STYLE, styleZero = DEFAULT_ZERO_STYLE, isIntegerLabel: boolean = false): MapBaseLegendEntry[] {
-    const [head, ...tail] = super.getLegendEntries(styleNonZero, styleZero, isIntegerLabel)
+    const [head, ...tail] = super.getLegendEntries(styleNonZero, styleZero, isIntegerLabel) ?? []
 
     const zeroEntry = this.showZeroInLegend
       ? [{ label: this.labelZero, radiusPx: this.stepPixels, style: styleZero }]
       : []
+
+    if (head == null) return [...zeroEntry]
 
     return [
       ...zeroEntry,
