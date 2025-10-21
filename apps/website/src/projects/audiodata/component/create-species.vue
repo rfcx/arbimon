@@ -23,7 +23,7 @@
           <input
             v-model="searchKeyword"
             type="text"
-            placeholder="Search species by scientific name or family"
+            placeholder="Search species by scientific name"
             class="form-control placeholder-style rounded px-3 py-2 h-[36px] w-[512px] items-center inline-flex rounded border-1 border-util-gray-03 bg-echo"
             @input="onSearchInput"
           >
