@@ -124,6 +124,7 @@
         :default-sort-order="'desc'"
         :show-checkbox="true"
         :template-added-id="templateAddedId"
+        :adding-template-id="addingTemplateId"
         @on-add-templates="onAddTemplates"
         @selected-rows="onSelectedSpecies"
         @on-play-sound-error="onPlaySoundError"
@@ -193,7 +194,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { initTooltips } from 'flowbite'
-import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { type ProjectTemplatesResponse, type PublicTemplateResponse, type PublicTemplatesParams, type SpeciesClassesParams, type SpeciesSongtypeRequest, type SpeciesType, type TemplateRequest, apiLegacyAddSpecies, apiLegacyAddTemplates, apiLegacyDeleteSpecies } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
@@ -245,7 +246,7 @@ watch(
   (count) => {
     if (!initializedSpeciesCount.value && typeof count === 'number') {
       initialSpeciesCount.value = count
-      initializedSpeciesCount.value = true
+      initializedSpeciesCount.value = count !== 0
     }
   },
   { immediate: true }
@@ -321,6 +322,7 @@ onMounted(() => {
 
 const onSearchInput = () => {
   clearTimeout(searchTimeout.value)
+  currentPage.value = 1
   searchTimeout.value = window.setTimeout(() => {
     refetchSpecies()
   }, 300)
@@ -331,12 +333,14 @@ const speciesSelect = async (request: SpeciesSongtypeRequest) => {
     const addSpecies = await apiLegacyAddSpecies(apiClientArbimon, selectedProjectSlug.value ?? '', request)
     if (addSpecies.success) {
       showAlertDialog('success', '', `${request.species} ${request.songtype} added to project`)
-      selectedRows.value = []
-      refetchSpecies()
+      currentPage.value = 1
+      await refetchSpecies()
+      await nextTick()
       refetchProjectTemplates()
       refetchPublicTemplates()
+      selectedRows.value = []
     } else {
-          showAlertDialog('error', 'Error', `Add ${request.species} ${request.songtype} to project`)
+      showAlertDialog('error', 'Error', `Add ${request.species} ${request.songtype} to project`)
     }
   } catch (e) {
     showAlertDialog('error', 'Error', `Add ${request.species} ${request.songtype} to project`)
@@ -348,11 +352,12 @@ const clickCreateSpecies = () => {
 }
 
 const isOpen = ref(false)
-function onImported (success: boolean) {
+const onImported = async (success: boolean) => {
   if (success) {
     selectedRows.value = []
-
-    refetchSpecies()
+    currentPage.value = 1
+    await refetchSpecies()
+    await nextTick()
     refetchProjectTemplates()
     refetchPublicTemplates()
   }
@@ -365,7 +370,10 @@ const bulkImport = () => {
 const templateAddedId = computed(() => templateId.value)
 const templateId = ref<number | undefined>(undefined)
 
-const onAddTemplates = async (request: TemplateRequest) => {
+const addingTemplateId = ref<number | null>(null)
+
+const onAddTemplates = async (request: TemplateRequest, tplId?: number) => {
+  addingTemplateId.value = tplId ?? null
   try {
     const templateResponse = await apiLegacyAddTemplates(apiClientArbimon, selectedProjectSlug.value ?? '', request)
     if (templateResponse.id === 0) {
@@ -373,14 +381,17 @@ const onAddTemplates = async (request: TemplateRequest) => {
     } else {
       showAlertDialog('success', 'Success', 'Add Templates')
       currentPage.value = 1
-      refetchSpecies()
+      await refetchSpecies()
+      await nextTick()
       refetchProjectTemplates()
       refetchPublicTemplates()
       templateId.value = templateResponse.id
     }
   } catch (e) {
     showAlertDialog('error', 'Error', 'Add Templates')
-  }
+  } finally {
+    addingTemplateId.value = null
+   }
 }
 
 const exportSpecies = () => {
@@ -442,6 +453,7 @@ async function handleOk () {
   try {
     await apiLegacyDeleteSpecies(apiClientArbimon, selectedProjectSlug.value ?? '', { project_classes: selectedRows.value.map(r => r.id) })
     selectedRows.value = []
+    initializedSpeciesCount.value = false
     refetchSpecies()
     showAlertDialog('success', 'Success', 'Removed')
   } catch (e) {

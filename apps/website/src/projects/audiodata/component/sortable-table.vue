@@ -167,24 +167,25 @@
                       title="Add templates to project"
                     >
                       <icon-fa-plus
-                        v-if="!tpl.addingTemplate"
-                        :disable="tpl.addingTemplate || checkUserPermissions(tpl)"
+                        v-if="addingTemplateId !== tpl.id"
+                        :disable="(addingTemplateId === tpl.id) || checkUserPermissions(tpl)"
                         class="w-[13px] h-[16px] m-[6px] cursor-pointer"
-                        :class="[(isAdding || checkUserPermissions(tpl)) ? 'opacity-50 cursor-default' : 'cursor-pointer']"
+                        :class="[(addingTemplateId === tpl.id || checkUserPermissions(tpl)) ? 'opacity-50 cursor-default' : 'cursor-pointer']"
                         style="filter: drop-shadow(0 0 5px #000)"
                         @click="onAddTemplates(tpl, tpl.id)"
                       />
                       <icon-custom-ic-loading
-                        v-if="tpl.addingTemplate"
+                        v-if="addingTemplateId === tpl.id"
                         class="animate-spin text-xl"
                       />
                     </span>
                     <audio-controller
-                      class="absolute left-2 bottom-2 text-white/90 text-xs"
+                      class="absolute left-2 bottom-3 text-white/90 text-xs"
                       :playing="isPlayingCell(row, column.key, tpl)"
                       :loading="loadingMap[cellKey(row.id, column.key, tpl.id)]"
                       title="Play sound"
-                      size="sm"
+                      style="filter: drop-shadow(0 0 5px #000)"
+                      size="xs"
                       @click.stop="isPlayingCell(row, column.key, tpl) ? stopCell(row, column.key, tpl) : playCell(row, column.key, tpl)"
                     />
                     <span
@@ -325,9 +326,10 @@ const props = defineProps<{
   rowSelectedClass?: string
   nonRounded?: boolean
   textSize?: string
+  addingTemplateId?: number | null
 }>()
 
-const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void, (e: 'onAddTemplates', request: TemplateRequest): void, (e: 'onPlaySoundError'): void}>()
+const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void, (e: 'onAddTemplates', request: TemplateRequest, tplId?: number): void, (e: 'onPlaySoundError'): void}>()
 
 const sortKey = ref<string | null>(null)
 const sortOrder = ref<'asc' | 'desc'>('asc')
@@ -343,7 +345,6 @@ function getTemplates (row: Row, key: string): Array<(ProjectTemplatesResponse |
 
   return list.map(tpl => ({
     ...tpl,
-    addingTemplate: addingTemplateId.value === tpl.id,
     addedTemplate: addedTemplate.value === tpl.id
   }))
 }
@@ -356,12 +357,10 @@ function getTemplateCount (row: Row, key: string) {
   return getTemplates(row, key).length
 }
 
-const addingTemplateId = ref(0)
 const addedTemplate = ref(0)
 function onAddTemplates (row: Row, id: number) {
-  addingTemplateId.value = id
   addedTemplate.value = id
-  emit('onAddTemplates', toTemplateRequest(row))
+  emit('onAddTemplates', toTemplateRequest(row), id)
 }
 
 function toTemplateRequest (row: Row): TemplateRequest {
@@ -380,7 +379,6 @@ function toTemplateRequest (row: Row): TemplateRequest {
   }
 }
 
-const isAdding = ref(false)
 function checkUserPermissions (list: Row) {
   const publicTemplate = list as PublicTemplateResponse
 
@@ -671,7 +669,6 @@ watch(() => props.selectedRow, (row) => {
 
 watch(() => props.templateAddedId, (id) => {
   addedTemplate.value = id ?? 0
-  addingTemplateId.value = 0
   setTimeout(() => {
     addedTemplate.value = 0
   }, 5_000)

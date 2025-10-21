@@ -45,7 +45,7 @@
           />
           <span
             v-if="(!speciesData || speciesData?.length === 0) && !loadingSearchSpecies"
-            class="font-medium fixed pt-5"
+            class="font-medium fixed pt-1"
           >{{ searchKeyword === '' ? 'Select a species, then select a sound type' : 'Species not found. Please try again.' }}</span>
         </div>
         <div class="w-[200px] min-h-[200px] overflow-y-auto">
