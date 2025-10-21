@@ -399,8 +399,7 @@ function checkUserPermissions (list: Row) {
 
 function onGoMore (key: string, row: Row) {
   const tab = key === 'project_templates' ? 'projectTemplates' : 'publicTemplates'
-  // const url = `${window.location.origin}/project/${props.projectSlug ?? ''}/analysis/patternmatching?tab=${tab}`
-  const url = `https://staging.arbimon.org/project/${props.projectSlug ?? ''}/analysis/patternmatching?tab=${tab}`
+  const url = `${window.location.origin}/project/${props.projectSlug ?? ''}/analysis/patternmatching?tab=${tab}`
   window.location.assign(url)
 }
 
