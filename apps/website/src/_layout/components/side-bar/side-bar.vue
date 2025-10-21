@@ -296,7 +296,9 @@ const allItems: Item[] = [
       },
       {
         title: 'Species',
-        legacyPath: '/audiodata/species'
+        route: {
+          name: ROUTE_NAMES.mySpecies
+        }
       },
       {
         title: 'Playlists',

@@ -25,6 +25,7 @@ export { default as UserCompleteProfile } from '@/preferences/complete-profile-p
 export { default as UserPreferences } from '@/preferences/preferences-page.vue'
 export { default as MyRecordings } from '@/projects/audiodata/recordings-page.vue'
 export { default as MySites } from '@/projects/audiodata/sites-page.vue'
+export { default as MySpecies } from '@/projects/audiodata/species-page.vue'
 export { default as CreateProject } from '@/projects/create-project-page.vue'
 export { default as Dashboard } from '@/projects/dashboard-page.vue'
 export { default as MyProjects } from '@/projects/my-projects-page.vue'
