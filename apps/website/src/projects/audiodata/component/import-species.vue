@@ -327,7 +327,9 @@
         >
           <div
             class="container-species bg-moss rounded-lg h-[350px] relative border-2 border-dashed border-util-gray-03 flex flex-col items-center justify-center"
-            @dragover.prevent
+            :class="{ 'bg-pitch/40' : isDragOver }"
+            @dragover.prevent="onDragOver"
+            @dragleave.prevent="onDragLeave"
             @drop.prevent="onDrop"
           >
             <div
@@ -515,6 +517,16 @@ async function uploadSpecies () {
   }
 }
 
+const isDragOver = ref(false)
+
+function onDragOver () {
+  isDragOver.value = true
+}
+
+function onDragLeave () {
+  isDragOver.value = false
+}
+
 function uploadState () {
   isSpeciesBulkLoading.value = true
   activeStepper.value = 'Upload'
@@ -569,6 +581,8 @@ async function onFileChange (e: Event) {
 }
 
 function onDrop (ev: DragEvent) {
+  isDragOver.value = false
+
   const f = ev.dataTransfer?.files?.[0]
   if (!f) return
   const input = document.createElement('input')
