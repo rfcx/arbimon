@@ -129,7 +129,7 @@
                         <a
                           href="https://help.arbimon.org/article/226-creating-a-template"
                           target="_blank"
-                          class="text-frequency underline cursor-pointer"
+                          class="text-frequency underline cursor-pointer hover:text-chirp"
                         >
                           Learn how to create a template
                         </a>

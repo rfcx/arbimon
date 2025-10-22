@@ -81,6 +81,7 @@
         <span>Delete species</span>
       </button>
       <div
+        v-if="!store.userIsExpertMember || selectedRows.length === 0"
         id="deleteSpeciesTooltip"
         role="tooltip"
         class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
