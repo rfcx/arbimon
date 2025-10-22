@@ -3,6 +3,17 @@
     ref="panelRef"
     class="absolute top-full mt-2 z-50 bg-moss border-0 text-white rounded-lg p-4 w-[400px] space-y-4 border border-util-gray-03 shadow-lg"
   >
+    <button
+      class="absolute top-4 right-4 text-white hover:opacity-70"
+      aria-label="Close"
+      @click="$emit('close')"
+    >
+      <icon-custom-fi-close-thin class="h-6 w-6 cursor-pointer text-insight" />
+    </button>
+
+    <span class="text-[22px] font-bold mb-4 font-header">
+      Export
+    </span>
     <div>
       <label class="block text-sm mb-1 font-bold">
         Recording fields

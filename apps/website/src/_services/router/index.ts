@@ -181,6 +181,7 @@ const routes: RouteRecordRaw[] = [
         path: 'audiodata',
         component: RouterView,
         redirect: { name: ROUTE_NAMES.mySites },
+        beforeEnter: [authRequiredGuard, storeMemberGuard],
         children: [
           {
             path: 'sites',
@@ -191,6 +192,11 @@ const routes: RouteRecordRaw[] = [
             path: 'recordings',
             name: ROUTE_NAMES.myRecordings,
             component: PAGES.MyRecordings
+          },
+          {
+            path: 'species',
+            name: ROUTE_NAMES.mySpecies,
+            component: PAGES.MySpecies
           }
         ]
       },
@@ -211,7 +217,8 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'import-recordings',
         name: ROUTE_NAMES.importRecordings,
-        component: PAGES.importRecordings
+        component: PAGES.importRecordings,
+        beforeEnter: [authRequiredGuard]
       }
     ]
   },

@@ -1,7 +1,17 @@
 <template>
-  <div class="text-white bg-pitch rounded-lg w-full">
-    <table class="table-auto w-full border-collapse text-sm border-util-gray-03">
-      <thead class="bg-pitch text-left">
+  <div
+    v-bind="attrs"
+    class="text-white  w-full"
+    :class="[props.containerClass ?? 'bg-pitch', props.nonRounded ? null : 'rounded-lg' ]"
+  >
+    <table
+      class="table-auto w-full border-collapse border-util-gray-03"
+      :class="props.textSize ?? 'text-sm'"
+    >
+      <thead
+        class="text-left"
+        :class="props.headerClass ?? 'bg-pitch'"
+      >
         <tr>
           <th
             v-if="props.showCheckbox"
@@ -47,35 +57,160 @@
           :key="row.id ?? index"
         >
           <tr
-            class="border-t border-util-gray-03 hover:border-util-gray-03 hover:bg-moss cursor-pointer"
-            :class="selectedRowIndex === index ? 'bg-[#7F7D78]' : ''"
+            class="border-t border-util-gray-03 hover:border-util-gray-03 hover:bg-moss cursor-pointer font-medium"
+            :class="[
+              props.rowHoverClass ?? 'hover:bg-moss hover:border-util-gray-03',
+              selectedRowIndex === index
+                ? (props.rowSelectedClass ?? 'bg-[#7F7D78]')
+                : null,
+              columns.some(col => col.key === 'project_templates') ? 'h-min-[53px]' : null
+            ]"
             @click="handleRowClick(row, index)"
           >
             <td
               v-if="props.showCheckbox"
               class="w-4 pl-2"
+              @click.stop
+              @dblclick.stop
             >
               <input
-                v-model="selectedRows"
+                type="checkbox"
                 :checked="isRowSelected(row)"
                 class="w-[14px] h-[14px] rounded text-frequency focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
-                type="checkbox"
-                :value="row"
+                @change.stop="onRowCheckboxChange($event, row)"
                 @click.stop
+                @mousedown.stop
+                @mouseup.stop
+                @keydown.enter.stop.prevent
+                @keydown.space.stop.prevent
               >
             </td>
             <td
               v-for="column in columns"
               :key="column.key"
               :style="`max-width: ${column.maxWidth || 100}px`"
-              class="py-2 pl-2 truncate whitespace-nowrap overflow-hidden h-[40px]"
+              class="py-2 pl-2 truncate whitespace-nowrap overflow-visible h-[40px] relative z-0"
+              :class="{'align-top': getTemplateCount(row, column.key) > 0 }"
               :title="formatforTitle(column.key, row[column.key], row)"
             >
-              {{ formatValueByKey(column.key, row[column.key], row) }}
-              <icon-custom-fi-eye-off
-                v-if="row.hidden === 1 && column.key === 'name'"
-                class="inline-flex text-util-gray-02 mr-2 w-4 ml-1"
-              />
+              <div
+                v-if="!isTemplatesKey(column.key)"
+                :class="{'italic': isItalicText(column.key)}"
+                class="truncate whitespace-nowrap overflow-hidden"
+              >
+                {{ formatValueByKey(column.key, row[column.key], row) }}
+              </div>
+
+              <div
+                v-else-if="isEmptyTemplateList(column.key, row)"
+                class="flex flex-row"
+              >
+                <div>
+                  <span>No templates available for this species</span>
+                </div>
+
+                <div
+                  ref="popoverWrapperInfo"
+                  class="relative inline-block z-50"
+                >
+                  <icon-custom-ic-info
+                    class="inline-block h-4 w-4 cursor-pointer ml-1"
+                    @click="togglePopover($event)"
+                  />
+                  <teleport to="body">
+                    <transition name="fade">
+                      <div
+                        v-if="showPopoverInfo"
+                        class="fixed w-[300px] p-3 text-sm text-white bg-moss rounded-lg shadow-lg z-[99999]"
+                        :style="{ top: `${popoverPos.top}px`, left: `${popoverPos.left}px` }"
+                        role="dialog"
+                      >
+                        There are no project templates for this species.<br>
+                        <a
+                          href="https://help.arbimon.org/article/226-creating-a-template"
+                          target="_blank"
+                          class="text-frequency underline cursor-pointer"
+                        >
+                          Learn how to create a template
+                        </a>
+                      </div>
+                    </transition>
+                  </teleport>
+                </div>
+              </div>
+
+              <div
+                v-else
+                class="flex flex-col"
+              >
+                <div class="flex gap-2">
+                  <button
+                    v-for="tpl in getTopTemplates(row, column.key)"
+                    :key="tpl.id"
+                    class="relative w-[100px] h-[100px] rounded-md overflow-hidden bg-[#060508]"
+                    :title="tpl.name"
+                  >
+                    <img
+                      :src="tpl.uri"
+                      alt="template"
+                      class="w-full h-full"
+                    >
+                    <div
+                      v-if="tpl.addedTemplate && column.key === 'project_templates'"
+                      class="roi-message"
+                    >
+                      Added
+                    </div>
+                    <span
+                      v-if="isAddingTemplate(column.key)"
+                      class="absolute right-1 top-1 text-white/90 text-xs"
+                      title="Add templates to project"
+                    >
+                      <icon-fa-plus
+                        v-if="addingTemplateId !== tpl.id"
+                        :disable="(addingTemplateId === tpl.id) || checkUserPermissions(tpl)"
+                        class="w-[13px] h-[16px] m-[6px] cursor-pointer"
+                        :class="[(addingTemplateId === tpl.id || checkUserPermissions(tpl)) ? 'opacity-50 cursor-default' : 'cursor-pointer']"
+                        style="filter: drop-shadow(0 0 5px #000)"
+                        @click="onAddTemplates(tpl, tpl.id)"
+                      />
+                      <icon-custom-ic-loading
+                        v-if="addingTemplateId === tpl.id"
+                        class="animate-spin text-xl"
+                      />
+                    </span>
+                    <audio-controller
+                      class="absolute left-2 bottom-3 text-white/90 text-xs"
+                      :playing="isPlayingCell(row, column.key, tpl)"
+                      :loading="loadingMap[cellKey(row.id, column.key, tpl.id)]"
+                      title="Play sound"
+                      style="filter: drop-shadow(0 0 5px #000)"
+                      size="xs"
+                      @click.stop="isPlayingCell(row, column.key, tpl) ? stopCell(row, column.key, tpl) : playCell(row, column.key, tpl)"
+                    />
+                    <span
+                      class="absolute right-1 bottom-1 text-white/90 text-xs"
+                      title="Open in new tab"
+                      @click.stop="onGoMore(column.key, row)"
+                    ><icon-fa-external-link
+                      class="w-[16px] h-[16px] m-[6px]"
+                      style="filter: drop-shadow(0 0 5px #000)"
+                    /></span>
+                  </button>
+                </div>
+                <div
+                  v-if="getTemplateCount(row, column.key) >= MAX_THUMBS"
+                  class="text-md mt-4"
+                >
+                  More templates in
+                  <a
+                    class="underline cursor-pointer text-frequency "
+                    @click.stop="onGoMore(column.key, row)"
+                  >
+                    {{ column.key === 'project_templates' ? 'Project Templates' : 'Public Templates' }}
+                  </a>
+                </div>
+              </div>
             </td>
           </tr>
           <tr v-if="selectedRowIndex === index && showExpand === true">
@@ -106,11 +241,41 @@
       </tbody>
     </table>
   </div>
+  <div
+    class="fixed w-72 h-12 inset-x-0 mx-auto z-50 px-4 py-2 bg-steel-gray-light rounded-md transition-all duration-500"
+    :class="playingKey ? 'bottom-4' : '-bottom-12'"
+  >
+    <div class="h-full flex items-center content-center">
+      <audio-controller
+        :playing="!!playingKey"
+        @click="toggleGlobal"
+      />
+      <div
+        class="relative w-full mx-2"
+      >
+        <div class="absolute w-full h-1 bg-white opacity-50 rounded-full" />
+        <div
+          class="absolute h-1 bg-white rounded-full z-51"
+          :style="{ width: (durationSeconds ? (playedSeconds / durationSeconds) * 100 : 0) + '%' }"
+        />
+      </div>
+      <div>{{ formatTime(playedSeconds) }}</div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
+import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
-import { computed, onMounted, ref, watch } from 'vue'
+import { Howl } from 'howler'
+import { computed, inject, onBeforeUnmount, onMounted, reactive, ref, toRaw, useAttrs, watch } from 'vue'
+
+import { type ProjectTemplatesResponse, type PublicTemplateResponse, type TemplateRequest, getTemplateAudio } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+
+import { apiClientArbimonLegacyKey } from '@/globals'
+
+const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+const attrs = useAttrs()
 
 interface Column {
   label: string
@@ -128,18 +293,43 @@ const decimalKeys = ['lat', 'lon', 'alt', 'rec_count']
 function isDecimalKey (key: string): boolean {
   return decimalKeys.includes(key)
 }
+
+function isAddingTemplate (key: string): boolean {
+  return key === 'public_templates'
+}
+
+const italicKeys = ['species_name']
+function isItalicText (key: string): boolean {
+  return italicKeys.includes(key)
+}
+
+const templatesKeys = ['project_templates', 'public_templates']
+function isTemplatesKey (key: string): boolean {
+  return templatesKeys.includes(key)
+}
+
 const props = defineProps<{
   columns: Column[]
   rows: Row[]
   defaultSortKey?: string
   defaultSortOrder?: 'asc' | 'desc'
   selectedRow?: Row | null
+  selectedItems?: Row[]
   showCheckbox?: boolean
   projectSlug?: string
   showExpand?: boolean
+  projectTemplates?: ProjectTemplatesResponse[]
+  templateAddedId?: number
+  containerClass?: string
+  headerClass?: string
+  rowHoverClass?: string
+  rowSelectedClass?: string
+  nonRounded?: boolean
+  textSize?: string
+  addingTemplateId?: number | null
 }>()
 
-const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void}>()
+const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void, (e: 'onAddTemplates', request: TemplateRequest, tplId?: number): void, (e: 'onPlaySoundError'): void}>()
 
 const sortKey = ref<string | null>(null)
 const sortOrder = ref<'asc' | 'desc'>('asc')
@@ -147,8 +337,98 @@ const sortOrder = ref<'asc' | 'desc'>('asc')
 const selectedRows = ref<Row[]>([])
 const isLoaded = ref(true)
 
+const MAX_THUMBS = 3
+
+function getTemplates (row: Row, key: string): Array<(ProjectTemplatesResponse | PublicTemplateResponse) & { addingTemplate: boolean, addedTemplate: boolean }> {
+  const list = row[key]
+  if (!Array.isArray(list)) return []
+
+  return list.map(tpl => ({
+    ...tpl,
+    addedTemplate: addedTemplate.value === tpl.id
+  }))
+}
+
+function getTopTemplates (row: Row, key: string) {
+  return getTemplates(row, key).slice(0, MAX_THUMBS)
+}
+
+function getTemplateCount (row: Row, key: string) {
+  return getTemplates(row, key).length
+}
+
+const addedTemplate = ref(0)
+function onAddTemplates (row: Row, id: number) {
+  addedTemplate.value = id
+  emit('onAddTemplates', toTemplateRequest(row), id)
+}
+
+function toTemplateRequest (row: Row): TemplateRequest {
+  return {
+    name: row.name,
+    recording: row.recording,
+    roi: {
+      x1: row.x1,
+      y1: row.y1,
+      x2: row.x2,
+      y2: row.y2
+    },
+    songtype: row.songtype,
+    source_project_id: row.project,
+    species: row.species
+  }
+}
+
+function checkUserPermissions (list: Row) {
+  const publicTemplate = list as PublicTemplateResponse
+
+  if (publicTemplate.project_url === props.projectSlug) return true
+
+  const isDuplicate = (props.projectTemplates ?? []).some((tpl: ProjectTemplatesResponse) =>
+    tpl.species === publicTemplate.species &&
+    tpl.songtype === publicTemplate.songtype &&
+    tpl.recording === publicTemplate.recording &&
+    tpl.x1 === publicTemplate.x1 &&
+    tpl.x2 === publicTemplate.x2 &&
+    tpl.y1 === publicTemplate.y1 &&
+    tpl.y2 === publicTemplate.y2
+  )
+
+  return isDuplicate
+}
+
+function onGoMore (key: string, row: Row) {
+  const tab = key === 'project_templates' ? 'projectTemplates' : 'publicTemplates'
+  const url = `${window.location.origin}/project/${props.projectSlug ?? ''}/analysis/patternmatching?tab=${tab}`
+  window.location.assign(url)
+}
+
 function onImageLoad () {
   isLoaded.value = false
+}
+
+function sameIds (a?: Row[], b?: Row[]) {
+  if (!a || !b) return a === b
+  if (a.length !== b.length) return false
+  const as = a.map(x => x.id).sort()
+  const bs = b.map(x => x.id).sort()
+  for (let i = 0; i < as.length; i++) if (as[i] !== bs[i]) return false
+  return true
+}
+
+function onRowCheckboxChange (e: Event, row: Row) {
+  const target = e.target as HTMLInputElement
+  toggleRow(row, target.checked)
+}
+
+function toggleRow (row: Row, checked: boolean) {
+  const next = checked
+    ? [...selectedRows.value.filter(r => r.id !== row.id), row]
+    : selectedRows.value.filter(r => r.id !== row.id)
+
+  if (!sameIds(next, selectedRows.value)) {
+    selectedRows.value = next
+  }
 }
 
 const onVisualizerRedirect = (id: number) => {
@@ -163,23 +443,34 @@ const areAllRowsSelected = computed(() => {
 })
 
 const toggleSelectAll = () => {
-  const currentPage = sortedRows.value.map(row => row)
+  const pageIds = new Set(sortedRows.value.map(r => r.id))
+  const current = selectedRows.value
 
   if (areAllRowsSelected.value) {
-    selectedRows.value = selectedRows.value.filter(
-      r => !currentPage.includes(r)
-    )
+    const next = current.filter(r => !pageIds.has(r.id))
+    if (!sameIds(next, current)) selectedRows.value = next
   } else {
-    sortedRows.value.forEach(row => {
-      if (!selectedRows.value.some(r => r === row)) {
-        selectedRows.value.push(row)
-      }
-    })
+    const map = new Map(current.map(r => [r.id, r]))
+    for (const r of sortedRows.value) map.set(r.id, r)
+    const next = Array.from(map.values())
+    if (!sameIds(next, current)) selectedRows.value = next
   }
 }
 
 const isRowSelected = (row: Row): boolean => {
-  return selectedRows.value.some(r => r === row)
+  return selectedRows.value.some(r => r.id === row.id)
+}
+
+const isEmptyTemplateList = (key: string, row: Row): boolean => {
+  if (key === 'project_templates') {
+    const projectTemplates = row.project_templates as ProjectTemplatesResponse[]
+    return projectTemplates.length === 0
+  }
+  if (key === 'public_templates') {
+    const publicTemplates = row.public_templates as PublicTemplateResponse[]
+    return publicTemplates.length === 0
+  }
+  return false
 }
 
 const sortBy = (key: string) => {
@@ -190,20 +481,29 @@ const sortBy = (key: string) => {
     sortOrder.value = 'asc'
   }
 }
+const sortedRows = computed<Row[]>(() => {
+  const rows = toRaw(props.rows)
+  const list = Array.isArray(rows) ? [...rows] : []
 
-const sortedRows = computed(() => {
-  if (!sortKey.value) return props.rows
+  if (!sortKey.value) {
+    return list
+  }
 
-  return [...props.rows].sort((a, b) => {
-    const aVal = a[sortKey.value!]
-    const bVal = b[sortKey.value!]
+  const key = sortKey.value!
+  const order = sortOrder.value
 
+  const out = [...list].sort((a, b) => {
+    const aVal = a?.[key]
+    const bVal = b?.[key]
+    if (aVal == null && bVal == null) return 0
     if (aVal == null) return 1
     if (bVal == null) return -1
-    if (aVal < bVal) return sortOrder.value === 'asc' ? -1 : 1
-    if (aVal > bVal) return sortOrder.value === 'asc' ? 1 : -1
+    if (aVal < bVal) return order === 'asc' ? -1 : 1
+    if (aVal > bVal) return order === 'asc' ? 1 : -1
     return 0
   })
+
+  return out
 })
 
 const selectedRowIndex = ref<number | null>(null)
@@ -222,6 +522,8 @@ function formatValueByKey (key: string, value: any, row: any, forTitle?: boolean
   if (key === 'site') return forTitle === true ? '' : value
   if (key === 'upload_time') return forTitle === true ? '' : formatDateShort(value, row.timezone)
   if (key === 'recorder') return forTitle === true ? '' : value
+  if (key === 'project_templates') return forTitle === true ? '' : value
+  if (key === 'public_templates') return forTitle === true ? '' : value
 
   if (typeof value !== 'number') return value
 
@@ -342,8 +644,17 @@ onMounted(() => {
   }
 })
 
-watch(() => selectedRows.value, (rows) => {
-  emit('selectedRows', rows)
+watch(selectedRows, (rows, prev) => {
+  if (!sameIds(rows, prev)) {
+    emit('selectedRows', rows.map(r => toRaw(r)))
+  }
+})
+
+watch(() => props.selectedItems, (rows) => {
+  if (!rows) return
+  if (!sameIds(rows, selectedRows.value)) {
+    selectedRows.value = rows
+  }
 })
 
 watch(() => props.selectedRow, (row) => {
@@ -354,6 +665,214 @@ watch(() => props.selectedRow, (row) => {
     selectedRowIndex.value = null
   }
 })
+
+watch(() => props.templateAddedId, (id) => {
+  addedTemplate.value = id ?? 0
+  setTimeout(() => {
+    addedTemplate.value = 0
+  }, 5_000)
+})
+
+const popoverPos = ref<{ top: number; left: number }>({ top: 0, left: 0 })
+const showPopoverInfo = ref(false)
+const popoverEl = ref<HTMLElement | null>(null)
+const popoverTrigger = ref<HTMLElement | null>(null)
+
+function togglePopover (e?: MouseEvent) {
+  showPopoverInfo.value = !showPopoverInfo.value
+  if (showPopoverInfo.value && e) {
+    addListeners()
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
+    popoverPos.value = { top: rect.bottom + 8, left: rect.right - 150 }
+  } else {
+    removeListeners()
+  }
+}
+
+function closePopover () {
+  showPopoverInfo.value = false
+  removeListeners()
+}
+
+function onPointerDown (ev: PointerEvent) {
+  const target = ev.target as Node
+  const insidePopover = !!(popoverEl.value && popoverEl.value.contains(target))
+  const insideTrigger = !!(popoverTrigger.value && popoverTrigger.value.contains(target))
+  if (insidePopover || insideTrigger) return
+  closePopover()
+}
+
+function onScroll () {
+  closePopover()
+}
+
+function onKeydown (ev: KeyboardEvent) {
+  if (ev.key === 'Escape') closePopover()
+}
+
+function addListeners () {
+  document.addEventListener('pointerdown', onPointerDown, true)
+  document.addEventListener('scroll', onScroll, true)
+  document.addEventListener('keydown', onKeydown)
+}
+
+function removeListeners () {
+  document.removeEventListener('pointerdown', onPointerDown, true)
+  document.removeEventListener('scroll', onScroll, true)
+  document.removeEventListener('keydown', onKeydown)
+}
+
+onBeforeUnmount(() => {
+  howls.forEach(h => h.unload())
+  howls.clear()
+  stopProgressTimer()
+  removeListeners()
+})
+
+const cellKey = (rowId: string | number, colKey: string, tplId?: string | number) => `${rowId}::${colKey}::${tplId ?? 'no-tpl'}`
+const howls = new Map<string, Howl>()
+
+const playingKey = ref<string | null>(null)
+const loadingKey = ref<string | null>(null)
+
+const progressTimer = ref<number | null>(null)
+const playedSeconds = ref(0)
+const durationSeconds = ref(0)
+
+const loadingMap = reactive<Record<string, boolean>>({})
+
+function isPlayingCell (row: any, colKey: string, tpl?: any) {
+  return playingKey.value === cellKey(row.id ?? row._id ?? row.key ?? row, colKey, tpl?.id)
+}
+
+function getOrCreateHowl (k: string, audioBlob: Blob) {
+  let h = howls.get(k)
+  if (!h) {
+    const objectUrl = window.URL.createObjectURL(audioBlob)
+    const sound = new Howl({
+      src: objectUrl,
+      html5: true
+    })
+
+    sound.on('play', () => startProgressTimer(h ?? sound))
+    sound.on('end', () => {
+      if (playingKey.value === k) playingKey.value = null
+      stopProgressTimer()
+        playedSeconds.value = 0
+        durationSeconds.value = 0
+    })
+    sound.on('stop', () => {
+      if (playingKey.value === k) playingKey.value = null
+      stopProgressTimer()
+    })
+
+    howls.set(k, sound)
+    h = sound
+  }
+  return h
+}
+
+function startProgressTimer (h: Howl) {
+  stopProgressTimer()
+  progressTimer.value = window.setInterval(() => {
+    try {
+      durationSeconds.value = h.duration() ?? 0
+      playedSeconds.value = h.seek() as number ?? 0
+    } catch { /* ignore */ }
+  }, 200)
+}
+function stopProgressTimer () {
+  if (progressTimer.value != null) {
+    clearInterval(progressTimer.value)
+    progressTimer.value = null
+  }
+}
+
+const playCell = async (row: any, colKey: string, tpl?: any) => {
+  const k = cellKey(row.id ?? row._id ?? row.key ?? row, colKey, tpl?.id)
+  currentKey.value = k
+  loadingKey.value = k
+  playingKey.value = k
+  loadingMap[k] = true
+
+  if (playingKey.value && playingKey.value !== k) {
+    stopByKey(playingKey.value)
+  }
+
+  playedSeconds.value = 0
+  durationSeconds.value = 0
+
+  try {
+    const blob = await getTemplateAudio(
+      apiClientArbimon,
+      props.projectSlug ?? '',
+      tpl?.id,
+      2
+    )
+
+    loadingMap[k] = false
+    const h = getOrCreateHowl(k, blob)
+
+    if (playingKey.value && playingKey.value !== k) {
+      stopByKey(playingKey.value)
+    }
+    h.play()
+  } catch (e) {
+    if (loadingKey.value === k) loadingKey.value = null
+    if (playingKey.value === k) playingKey.value = null
+    if (currentKey.value === k) currentKey.value = null
+    loadingMap[k] = false
+    emit('onPlaySoundError')
+  }
+}
+
+function stopCell (row: any, colKey: string, tpl?: any) {
+  const k = cellKey(row.id ?? row._id ?? row.key ?? row, colKey, tpl?.id)
+  stopByKey(k)
+}
+
+function stopByKey (k: string) {
+  const h = howls.get(k)
+  if (h) {
+    h.stop()
+  }
+  if (playingKey.value === k) playingKey.value = null
+  if (loadingKey.value === k) loadingKey.value = null
+  stopProgressTimer()
+
+  playedSeconds.value = 0
+  durationSeconds.value = 0
+}
+
+function formatTime (s: number) {
+  const mm = Math.floor(s / 60).toString().padStart(2, '0')
+  const ss = Math.floor(s % 60).toString().padStart(2, '0')
+  return `${mm}:${ss}`
+}
+
+const currentKey = ref<string | null>(null)
+
+function toggleGlobal () {
+  if (!currentKey.value) return
+  const h = howls.get(currentKey.value)
+  if (!h) return
+  if (playingKey.value === currentKey.value) {
+    stopByKey(currentKey.value)
+  } else {
+    if (h.state() === 'loaded') {
+      playingKey.value = currentKey.value
+      h.play()
+      startProgressTimer(h)
+    } else {
+      h.once('load', () => {
+        playingKey.value = currentKey.value
+        h.play()
+        startProgressTimer(h)
+      })
+    }
+  }
+}
+
 </script>
 
 <style scoped>
@@ -366,5 +885,19 @@ watch(() => props.selectedRow, (row) => {
 
 .btn-xs-custom {
   @apply px-[5px] py-[1px] text-[12px] leading-[1.5] rounded-full hover:bg-opacity-80;
+}
+
+.text-shadow {
+  text-shadow: 0 0 5px #000000;
+}
+
+.roi-message {
+  position: absolute;
+  background-color: rgba(6, 5, 8, 0.5);
+  color: #FFFEFC;
+  border-radius: 5px;
+  padding: 6px 7px;
+  left: 19%;
+  top: 35%;
 }
 </style>

@@ -3,6 +3,18 @@
     ref="panelRef"
     class="absolute top-full mt-2 z-50 bg-echo text-insight rounded-lg p-4 w-[900px] space-y-4 border border-util-gray-03 shadow-lg"
   >
+    <button
+      class="absolute top-4 right-4 text-white hover:opacity-70"
+      aria-label="Close"
+      @click="close"
+    >
+      <icon-custom-fi-close-thin class="h-6 w-6 cursor-pointer text-insight" />
+    </button>
+
+    <span class="text-[22px] font-bold mb-4 font-header">
+      Filters
+    </span>
+
     <!-- Date range -->
     <div class="flex items-start">
       <label>Date range:</label>
@@ -135,7 +147,7 @@
       <SelectMultiple
         v-model="selectedResults"
         class="flex-[3] min-w-0 ml-2"
-        :options="staticOptions ?? []"
+        :options="haveThreshold() ? thresholdOptions : staticClassificationOptions ?? []"
         :hide-after-selected="true"
         placeholder="Results"
       />
@@ -165,7 +177,7 @@
         class="btn btn-secondary btn-small text-sm px-[12px] h-[34px]"
         @click="resetFilters"
       >
-        Reset filters
+        Clear filters
         <icon-custom-ic-loading-dark
           v-if="isResetFilters"
           class="animate-spin text-xl ml-2 inline-flex"
@@ -205,7 +217,7 @@ export interface DateTime {
   min_date: string
 }
 
-const emit = defineEmits<{(e: 'apply', value: RecordingSearchParams): void, (e: 'resetFilters', value: RecordingSearchParams): void }>()
+const emit = defineEmits<{(e: 'apply', value: RecordingSearchParams): void, (e: 'resetFilters', value: RecordingSearchParams): void, (e: 'close'): void }>()
 const props = defineProps<{
   dateRange: DateTime | undefined,
   sites: SiteResponse[] | undefined,
@@ -344,6 +356,16 @@ const staticClassifications = computed<Option[]>(() =>
   }))
 )
 
+const checkThreshold = computed(() => {
+  return (props.classifications ?? [])
+    .filter(c => selectedClassifications.value.includes(c.job_id))
+    .map(classification => classification?.threshold)
+})
+
+function haveThreshold (): boolean {
+  return checkThreshold.value.some(v => v !== null && v !== undefined)
+}
+
 const selectedClasses = ref<(number)[]>([])
 const staticClasses = computed<Option[]>(() =>
   (props.classes ?? []).map(item => ({
@@ -370,32 +392,35 @@ const staticSoundscapes = computed<Option[]>(() =>
 
 const selectedValidation = ref<(string)[]>([])
 const selectedResults = ref<(string)[]>([])
-const classificationResults = computed<string[]>(() => {
-  return selectedResults.value.map(r => {
-    if (r === 'present') return JSON.stringify({ model: 1 })
-    if (r === 'absent') return JSON.stringify({ model: 2 })
-    return null
-  }).filter((v): v is string => v !== null)
-})
-function decodeClassification (values: string[]): ('present' | 'absent')[] {
-  return values
-    .map(v => {
-      try {
-        const obj = JSON.parse(v) as { model: number }
-        if (obj.model === 1) return 'present'
-        if (obj.model === 2) return 'absent'
-        return null
-      } catch {
-        return null
-      }
-    })
-    .filter((v): v is 'present' | 'absent' => v !== null)
-}
 const selectedAnnotation = ref<(string)[]>([])
 const staticOptions = [
   { icon: 'val-1', label: 'Present', value: 'present' },
   { icon: 'val-0', label: 'Absent', value: 'absent' }
 ]
+
+const staticClassificationOptions = [
+  { icon: 'val-1', label: 'Present', value: '{"model": 1}' },
+  { icon: 'val-0', label: 'Absent', value: '{"model": 0}' }
+]
+
+const thresholdOptions = [
+  { label: 'Model: present, Threshold: present', value: '{"model":1, "th":1}', tooltip: 'Model: present, Threshold: present' },
+  { label: 'Model: present, Threshold: absent', value: '{"model":1, "th":0}', tooltip: 'Model: present, Threshold: absent' },
+  { label: 'Model: absent, Threshold: present', value: '{"model":0, "th":1}', tooltip: 'Model: absent, Threshold: present' },
+  { label: 'Model: absent, Threshold: absent', value: '{"model":0, "th":0}', tooltip: 'Model: absent, Threshold: absent' }
+]
+const isThreshold = (v: string) =>
+  thresholdOptions.some(opt => opt.value === v)
+
+const isStatic = (v: string) =>
+  staticClassificationOptions.some(opt => opt.value === v)
+
+const effectiveSelected = computed<string[]>(() => {
+  const src = selectedResults.value.map(String)
+  return haveThreshold()
+    ? src.filter(isThreshold)
+    : src.filter(isStatic)
+})
 
 const panelRef = ref<HTMLElement | null>(null)
 
@@ -454,7 +479,7 @@ onMounted(() => {
   selectedClasses.value = v?.validations ?? []
   selectedValidation.value = v?.presence ?? []
   selectedClassifications.value = v?.classifications ?? []
-  selectedResults.value = decodeClassification(v?.classification_results ?? [])
+  selectedResults.value = v?.classification_results ?? []
   selectedSoundscapes.value = v?.soundscape_composition ?? []
   selectedAnnotation.value = v?.soundscape_composition_annotation ?? []
   applyRangeJSON(v?.range)
@@ -498,8 +523,13 @@ watch(selectedTags, (v) => { filters.tags = v })
 watch(selectedClasses, (v) => { filters.validations = v })
 watch(selectedValidation, (v) => { filters.presence = v })
 
-watch(selectedClassifications, (v) => { filters.classifications = v })
-watch(selectedResults, () => { filters.classification_results = classificationResults.value })
+watch(selectedClassifications, (v) => {
+  filters.classifications = v
+  filters.classification_results = effectiveSelected.value
+})
+watch(selectedResults, () => {
+  filters.classification_results = effectiveSelected.value
+})
 
 watch(selectedSoundscapes, (v) => { filters.soundscape_composition = v })
 watch(selectedAnnotation, (v) => { filters.soundscape_composition_annotation = v })
@@ -507,6 +537,10 @@ watch(selectedAnnotation, (v) => { filters.soundscape_composition_annotation = v
 function emitApply () {
   isLoading.value = true
   emit('apply', filters)
+}
+
+function close () {
+  emit('close')
 }
 
 const isResetFilters = ref(false)

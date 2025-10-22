@@ -45,7 +45,8 @@ export const ROUTE_NAMES = {
   // audiodata
   mySites: 'my-sites',
   myRecordings: 'my-recordings',
-  visualizer: 'visualizer'
+  visualizer: 'visualizer',
+  mySpecies: 'my-species'
 } as const
 
 export type RouteNames = typeof ROUTE_NAMES

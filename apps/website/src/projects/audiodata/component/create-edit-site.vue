@@ -233,6 +233,7 @@ const updateSelectedProject = () => {
   const selected = store.myProjects.find(p => p.slug === selectedProjectSlug.value)
   if (selected && selectedProject.value === undefined) {
     selectedProject.value = { value: selected.idCore, label: selected.name }
+    onSelectProject(selected.idCore)
   }
 }
 
