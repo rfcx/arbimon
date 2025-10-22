@@ -435,15 +435,28 @@ onBeforeUnmount(() => {
 
 watch(
   selectedRows,
-  (rows) => {
-    if (rows.length === 0) {
+  (rows = []) => {
+    const list: string[] = []
+    const len = rows.length
+
+    if (len === 0) {
       selectedDeleteSpecies.value = []
       return
     }
 
-    selectedDeleteSpecies.value = rows.map(
-      (r) => `"${r.species_name} | ${r.songtype_name}"`
-    )
+    rows.forEach((r, index) => {
+      if (index < 3) {
+        list.push(`"${r.species_name} | ${r.songtype_name}"`)
+      }
+    })
+
+    if (len > 3) {
+      const remaining = len - 3
+      const msg = `& ${remaining} other species`
+      list.push(msg)
+    }
+
+    selectedDeleteSpecies.value = list
   },
   { immediate: true, deep: true }
 )
