@@ -203,6 +203,12 @@ const routes: RouteRecordRaw[] = [
         ]
       },
       {
+        path: 'visualizer/:browserType?/:browserTypeId?',
+        name: ROUTE_NAMES.visualizer,
+        component: PAGES.Visualizer,
+        beforeEnter: [authRequiredGuard]
+      },
+      {
         path: 'import-recordings',
         name: ROUTE_NAMES.importRecordings,
         component: PAGES.importRecordings
