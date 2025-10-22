@@ -140,10 +140,17 @@
       class="mt-4 px-8"
     >
       <div class="flex justify-between items-center mb-4">
-        <span class="ml-1 font-bold text-left text-sm reclist-total text-white">
-          {{ recordingsCountText }} {{ recordingsCount > 1 ? "Recordings" : "Recording" }}
-        </span>
-
+        <div class="inline-block flex">
+          <span class="ml-1 font-bold text-left text-sm leading-[26px] inline-block align-middle text-white">
+            {{ recordingsCountText }} {{ recordingsCount > 1 ? "Recordings" : "Recording" }}
+          </span>
+          <div
+            v-show="filterParams !== undefined"
+            class="px-2 py-1 bg-util-gray-04 text-sm ml-2 rounded-[3px] font-medium"
+          >
+            Filters applied
+          </div>
+        </div>
         <div class="flex items-center">
           <div class="inline-flex border border-util-gray-03 rounded overflow-hidden">
             <button
