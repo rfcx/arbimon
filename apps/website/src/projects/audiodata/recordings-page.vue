@@ -51,7 +51,7 @@
               v-if="showExportPanel"
               :tags="tagsRecording"
               :classes-recordings="classesRecordings"
-              :filter-data="requestParamsForPlaylist"
+              :filter-data="requestParamsForExport"
               :soundscape-recordings="soundscapeRecordings"
               @close="handleCloseExport"
             />
@@ -310,6 +310,17 @@ const requestParams = computed<RecordingSearchParams>(() => ({
 const requestParamsForPlaylist = computed(() => {
   const { limit, offset, output, sortBy, ...rest } = requestParams.value
   return rest
+})
+
+const requestParamsForExport = computed(() => {
+  const { recIds, ...rest } = requestParamsForPlaylist.value
+  const cleaned = Object.fromEntries(
+    Object.entries(rest).filter(([_, v]) => {
+      if (Array.isArray(v)) return v.length > 0
+      return v !== null && v !== undefined
+    })
+  )
+  return cleaned
 })
 
 const requestParamsForSearchCount = computed(() => {
