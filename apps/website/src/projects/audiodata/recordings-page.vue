@@ -4,130 +4,148 @@
       <h1 class="ml-1 text-gray-900 dark:text-insight">
         Recordings
       </h1>
-      <div class="flex mt-6">
-        <div
-          ref="filtersRootRef"
-          class="relative"
-        >
-          <button
-            class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3"
-            @click="filterRecordings()"
+      <div class="flex justify-between">
+        <div class="flex mt-6 items-center">
+          <div
+            ref="filtersRootRef"
+            class="relative"
           >
-            <span>Filters</span>
-            <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
-          </button>
-          <FilterPanel
-            v-if="showFilterModal"
-            :date-range="dateRange"
-            :sites="sites"
-            :playlists="playlists"
-            :tags="tagsRecording"
-            :classes="classesRecordings"
-            :soundscapes="soundscapeRecordings"
-            :classifications="classifications"
-            :filters-data="filterParams"
-            :is-reset="isResetFilter"
-            @apply="applyFilters"
-            @close="closeFilters"
-            @reset-filters="resetFilters"
-          />
-        </div>
-        <div
-          ref="exportRef"
-          class="relative"
-        >
+            <button
+              class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3"
+              @click="filterRecordings()"
+            >
+              <span>Filters</span>
+              <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
+            </button>
+            <FilterPanel
+              v-if="showFilterModal"
+              :date-range="dateRange"
+              :sites="sites"
+              :playlists="playlists"
+              :tags="tagsRecording"
+              :classes="classesRecordings"
+              :soundscapes="soundscapeRecordings"
+              :classifications="classifications"
+              :filters-data="filterParams"
+              :is-reset="isResetFilter"
+              @apply="applyFilters"
+              @close="closeFilters"
+              @reset-filters="resetFilters"
+            />
+          </div>
+          <div
+            ref="exportRef"
+            class="relative"
+          >
+            <button
+              class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+              :disabled="!store.userIsDataEntryMember"
+              data-tooltip-style="light"
+              :data-tooltip-target="!store.userIsDataEntryMember ? 'exportRecordingTooltip': null"
+              @click="showExportPanel = true"
+            >
+              <span>Export</span>
+              <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
+            </button>
+            <ExportPanel
+              v-if="showExportPanel"
+              :tags="tagsRecording"
+              :classes-recordings="classesRecordings"
+              :filter-data="requestParamsForExport"
+              :soundscape-recordings="soundscapeRecordings"
+              @close="handleCloseExport"
+            />
+          </div>
+          <div
+            v-if="!store.userIsDataEntryMember"
+            id="exportRecordingTooltip"
+            role="tooltip"
+            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+          >
+            You do not have permission to export data
+            <div
+              class="tooltip-arrow"
+              data-popper-arrow
+            />
+          </div>
           <button
             class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-            :disabled="!store.userIsDataEntryMember"
+            :disabled="!store.userIsFullProjectMember"
             data-tooltip-style="light"
-            :data-tooltip-target="!store.userIsDataEntryMember ? 'exportRecordingTooltip': null"
-            @click="showExportPanel = true"
+            :data-tooltip-target="!store.userIsFullProjectMember ? 'recordingPlaylistTooltip': null"
+            @click="showCreatePlaylist"
           >
-            <span>Export</span>
+            <span>Save to Playlist</span>
+          </button>
+          <div
+            v-if="!store.userIsFullProjectMember"
+            id="recordingPlaylistTooltip"
+            role="tooltip"
+            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+          >
+            You do not have permission to create playlists
+            <div
+              class="tooltip-arrow"
+              data-popper-arrow
+            />
+          </div>
+          <button
+            class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
+            :disabled="!store.userIsExpertMember"
+            data-dropdown-toggle="deleteRecordingDropdown"
+            data-tooltip-style="light"
+            :data-tooltip-target="!store.userIsExpertMember ? 'deleteRecordingTooltip': null"
+          >
+            <span>Delete</span>
             <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
           </button>
-          <ExportPanel
-            v-if="showExportPanel"
-            :tags="tagsRecording"
-            :classes-recordings="classesRecordings"
-            :filter-data="requestParamsForExport"
-            :soundscape-recordings="soundscapeRecordings"
-            @close="handleCloseExport"
-          />
-        </div>
-        <div
-          v-if="!store.userIsDataEntryMember"
-          id="exportRecordingTooltip"
-          role="tooltip"
-          class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
-        >
-          You do not have permission to export data
           <div
-            class="tooltip-arrow"
-            data-popper-arrow
-          />
-        </div>
-        <button
-          class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-          :disabled="!store.userIsFullProjectMember"
-          data-tooltip-style="light"
-          :data-tooltip-target="!store.userIsFullProjectMember ? 'recordingPlaylistTooltip': null"
-          @click="showCreatePlaylist"
-        >
-          <span>Save to Playlist</span>
-        </button>
-        <div
-          v-if="!store.userIsFullProjectMember"
-          id="recordingPlaylistTooltip"
-          role="tooltip"
-          class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
-        >
-          You do not have permission to create playlists
+            v-if="!store.userIsExpertMember"
+            id="deleteRecordingTooltip"
+            role="tooltip"
+            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+          >
+            You do not have permission to delete recordings
+            <div
+              class="tooltip-arrow"
+              data-popper-arrow
+            />
+          </div>
           <div
-            class="tooltip-arrow"
-            data-popper-arrow
-          />
+            id="deleteRecordingDropdown"
+            class="z-10 hidden bg-moss rounded-lg"
+          >
+            <ul class="p-2 font-medium">
+              <li
+                class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer text-[14px]"
+                @click="deleteCheckedRecordings"
+              >
+                Checked recordings
+              </li>
+              <li
+                class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer text-[14px]"
+                @click="deleteAllFilteredRecordings"
+              >
+                All filtered recordings
+              </li>
+            </ul>
+          </div>
         </div>
-        <button
-          class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-          :disabled="!store.userIsExpertMember"
-          data-dropdown-toggle="deleteRecordingDropdown"
-          data-tooltip-style="light"
-          :data-tooltip-target="!store.userIsExpertMember ? 'deleteRecordingTooltip': null"
-        >
-          <span>Delete</span>
-          <icon-custom-el-angle-down class="ml-2 w-3 h-3" />
-        </button>
+
         <div
-          v-if="!store.userIsExpertMember"
-          id="deleteRecordingTooltip"
-          role="tooltip"
-          class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+          v-show="selectedRows.length > 0"
+          class="text-base flex gap-x-5 items-center"
         >
-          You do not have permission to delete recordings
-          <div
-            class="tooltip-arrow"
-            data-popper-arrow
-          />
-        </div>
-        <div
-          id="deleteRecordingDropdown"
-          class="z-10 hidden bg-moss rounded-lg"
-        >
-          <ul class="p-2 font-medium">
-            <li
-              class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer text-[14px]"
-              @click="deleteCheckedRecordings"
-            >
-              Checked recordings
-            </li>
-            <li
-              class="px-3 py-2 hover:bg-util-gray-04/60 cursor-pointer text-[14px]"
-              @click="deleteAllFilteredRecordings"
-            >
-              All filtered recordings
-            </li>
-          </ul>
+          <span>
+            {{ selectedRows.length }} selected
+          </span>
+          <button
+            class="btn border-1 border-util-gray-03 text-spoonbill bg-spoonbill bg-opacity-10 rounded-full py-1 px-2 flex items-center gap-x-3"
+            @click="clearSelectedRows()"
+          >
+            <span>Clear</span>
+            <span><icon-custom-fi-close class="inline w-4 h-4 text-spoonbill" /></span>
+          </button>
         </div>
       </div>
     </div>
@@ -140,10 +158,17 @@
       class="mt-4 px-8"
     >
       <div class="flex justify-between items-center mb-4">
-        <span class="ml-1 font-bold text-left text-sm reclist-total text-white">
-          {{ recordingsCountText }} {{ recordingsCount > 1 ? "Recordings" : "Recording" }}
-        </span>
-
+        <div class="inline-block flex">
+          <span class="ml-1 font-bold text-left text-sm leading-[26px] inline-block align-middle text-white">
+            {{ recordingsCountText }} {{ recordingsCount > 1 ? "Recordings" : "Recording" }}
+          </span>
+          <div
+            v-show="filterParams !== undefined"
+            class="px-2 py-1 bg-util-gray-04 text-sm ml-2 rounded-[3px] font-medium"
+          >
+            Filters applied
+          </div>
+        </div>
         <div class="flex items-center">
           <div class="inline-flex border border-util-gray-03 rounded overflow-hidden">
             <button
@@ -470,6 +495,10 @@ const popupNote = computed(() => {
 
 const applyRecordings = async () => {
   await refetchRecordings()
+}
+
+const clearSelectedRows = async () => {
+  selectedRows.value = []
 }
 
 const changeLimit = async (value: number) => {

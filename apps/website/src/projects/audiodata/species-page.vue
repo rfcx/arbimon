@@ -81,6 +81,7 @@
         <span>Delete species</span>
       </button>
       <div
+        v-if="!store.userIsExpertMember || selectedRows.length === 0"
         id="deleteSpeciesTooltip"
         role="tooltip"
         class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -434,15 +435,28 @@ onBeforeUnmount(() => {
 
 watch(
   selectedRows,
-  (rows) => {
-    if (rows.length === 0) {
+  (rows = []) => {
+    const list: string[] = []
+    const len = rows.length
+
+    if (len === 0) {
       selectedDeleteSpecies.value = []
       return
     }
 
-    selectedDeleteSpecies.value = rows.map(
-      (r) => `"${r.species_name} | ${r.songtype_name}"`
-    )
+    rows.forEach((r, index) => {
+      if (index < 3) {
+        list.push(`"${r.species_name} | ${r.songtype_name}"`)
+      }
+    })
+
+    if (len > 3) {
+      const remaining = len - 3
+      const msg = `& ${remaining} other species`
+      list.push(msg)
+    }
+
+    selectedDeleteSpecies.value = list
   },
   { immediate: true, deep: true }
 )

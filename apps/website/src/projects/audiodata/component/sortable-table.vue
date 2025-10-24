@@ -129,7 +129,7 @@
                         <a
                           href="https://help.arbimon.org/article/226-creating-a-template"
                           target="_blank"
-                          class="text-frequency underline cursor-pointer"
+                          class="text-frequency underline cursor-pointer hover:text-chirp"
                         >
                           Learn how to create a template
                         </a>
@@ -204,7 +204,7 @@
                 >
                   More templates in
                   <a
-                    class="underline cursor-pointer text-frequency "
+                    class="underline cursor-pointer text-frequency hover:text-chirp"
                     @click.stop="onGoMore(column.key, row)"
                   >
                     {{ column.key === 'project_templates' ? 'Project Templates' : 'Public Templates' }}
