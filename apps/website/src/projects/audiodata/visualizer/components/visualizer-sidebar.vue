@@ -26,6 +26,18 @@
         <icon-custom-fi-soundscape class="w-3.5 h-4" />
       </button>
     </div>
+    <div class="flex flex-row items-center justify-start gap-x-2 px-[15px] pb-[15px] grid grid-cols-12 gap-4">
+      <div class="col-span-7">
+        <BasicSearchSelect
+          v-model="siteSelected"
+          :options="options"
+          placeholder="Select site"
+        />
+      </div>
+      <div class="col-span-5">
+        calendar
+      </div>
+    </div>
     <SidebarThumbnail />
     <SidebarSpectrogramPlayer
       v-if="visobject"
@@ -66,8 +78,10 @@ import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetTags } from '../../_composables/use-recordings'
+import { useSites } from '../../_composables/use-sites'
 import { useDeleteRecordingTag, useGetRecordingTag, usePutRecordingTag } from '../../_composables/use-visualizer'
 import { type BboxGroup, type FreqFilter } from '../types'
+import BasicSearchSelect from './basic-search-select.vue'
 import SidebarSpectrogramPlayer from './sidebar-spectrogram-player.vue'
 import SidebarTag from './sidebar-tag.vue'
 import SidebarThumbnail from './sidebar-thumbnail.vue'
@@ -115,6 +129,10 @@ const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientA
 const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { isPending: isAddingTag, mutate: mutateRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDeleteRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
+const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
+
+const options = computed(() => sites.value?.map(s => ({ label: s.name, value: s.id, count: s.rec_count })) ?? [])
+const siteSelected = ref<string | number | null>(null)
 
 const handleFreqFilter = (filter: FreqFilter) => {
   emits('updateFreqFilter', filter)
