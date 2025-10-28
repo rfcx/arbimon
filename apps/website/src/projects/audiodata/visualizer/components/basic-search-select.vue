@@ -73,7 +73,7 @@ type OptionObject = { label: string; value: string | number; count?: number }
 type InputOption = string | number | OptionObject
 
 const props = defineProps<{
-  modelValue: string | number | null
+  modelValue: string | number | undefined
   options: InputOption[]
   placeholder?: string
 }>()

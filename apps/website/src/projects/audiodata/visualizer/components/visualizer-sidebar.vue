@@ -35,7 +35,12 @@
         />
       </div>
       <div class="col-span-5">
-        calendar
+        <DateInputPicker
+          v-if="recordedMinutesPerDay"
+          :initial-date="initialDate"
+          :hide-label="true"
+          :recorded-minutes-per-day="recordedMinutesPerDay"
+        />
       </div>
     </div>
     <SidebarThumbnail />
@@ -75,9 +80,10 @@ import type { RecordingTagResponse, TagParams, Visobject } from '@rfcx-bio/commo
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
+import DateInputPicker from '@/_components/date-range-picker/date-input-picker.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { useGetTags } from '../../_composables/use-recordings'
+import { useGetTags, useLegacyAvailableBySiteYear } from '../../_composables/use-recordings'
 import { useSites } from '../../_composables/use-sites'
 import { useDeleteRecordingTag, useGetRecordingTag, usePutRecordingTag } from '../../_composables/use-visualizer'
 import { type BboxGroup, type FreqFilter } from '../types'
@@ -90,7 +96,6 @@ defineProps<{
   visobject: Visobject | undefined
   isLoadingVisobject: boolean
 }>()
-
 const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'updateColorSpectrogram', value: string): void,
   (e: 'updateFreqFilter', value: FreqFilter): void,
@@ -114,6 +119,7 @@ const title = ref('')
 const message = ref('')
 const showAlert = ref(false)
 const spectrogramTags = ref<BboxGroup[]>([])
+const initialDate = ref('')
 
 const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue: string, hideAfter = 7000) => {
   showAlert.value = true
@@ -132,7 +138,10 @@ const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDelete
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
 
 const options = computed(() => sites.value?.map(s => ({ label: s.name, value: s.id, count: s.rec_count })) ?? [])
-const siteSelected = ref<string | number | null>(null)
+const siteSelected = ref<string | number | undefined>(undefined)
+const siteSelectedValue = computed(() => siteSelected.value)
+
+const { data: recordedMinutesPerDay } = useLegacyAvailableBySiteYear(apiClientArbimon, selectedProjectSlug, siteSelectedValue, computed(() => 2022))
 
 const handleFreqFilter = (filter: FreqFilter) => {
   emits('updateFreqFilter', filter)

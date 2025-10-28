@@ -336,3 +336,21 @@ export const apiLegacySearchCount = async (
     return response.data
   } else return undefined
 }
+export type LegacyAvailableResponse = Record<string, Record<string, Record<string, Record<string, number>>>>
+
+export const apiLegacyGetAvailable = async (
+  apiClient: AxiosInstance,
+  slug: string,
+  siteId: string | number,
+  year: string | number
+): Promise<LegacyAvailableResponse | undefined> => {
+  if (!slug) return undefined
+
+  const url = `/legacy-api/project/${slug}/recordings/available/!q:${siteId}-${year}-[1:12]`
+  const response = await apiClient.request<LegacyAvailableResponse>({
+    method: 'GET',
+    url
+  })
+
+  return response.data
+}
