@@ -354,3 +354,18 @@ export const apiLegacyGetAvailable = async (
 
   return response.data
 }
+
+export type LegacyAvailableYearlyRaw = Record<string, Record<string, number>>
+
+export async function apiLegacyGetAvailableYearly (
+  apiClient: AxiosInstance,
+  slug: string,
+  siteId: string | number
+): Promise<LegacyAvailableYearlyRaw | undefined> {
+  if (typeof slug !== 'string' || slug.trim() === '') return undefined
+  if (siteId === null || siteId === undefined) return undefined
+
+  const url = `/legacy-api/project/${slug}/recordings/available/!q:${siteId}`
+  const res = await apiClient.request<LegacyAvailableYearlyRaw>({ method: 'GET', url })
+  return res.data
+}

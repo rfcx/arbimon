@@ -73,7 +73,8 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, ref, watch } from 'vue'
+import dayjs from 'dayjs'
+import { computed, inject, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { RecordingTagResponse, TagParams, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
@@ -83,7 +84,7 @@ import alertDialog from '@/_components/alert-dialog.vue'
 import DateInputPicker from '@/_components/date-range-picker/date-input-picker.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { useGetTags, useLegacyAvailableBySiteYear } from '../../_composables/use-recordings'
+import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
 import { useSites } from '../../_composables/use-sites'
 import { useDeleteRecordingTag, useGetRecordingTag, usePutRecordingTag } from '../../_composables/use-visualizer'
 import { type BboxGroup, type FreqFilter } from '../types'
@@ -141,7 +142,48 @@ const options = computed(() => sites.value?.map(s => ({ label: s.name, value: s.
 const siteSelected = ref<string | number | undefined>(undefined)
 const siteSelectedValue = computed(() => siteSelected.value)
 
-const { data: recordedMinutesPerDay } = useLegacyAvailableBySiteYear(apiClientArbimon, selectedProjectSlug, siteSelectedValue, computed(() => 2022))
+const { data: yearly } = useLegacyAvailableYearly(apiClientArbimon, selectedProjectSlug, siteSelectedValue)
+const yearSelected = computed(() => getYearWithMaxCount(yearly.value ?? []))
+const { data: recordedMinutesPerDay } = useLegacyAvailableBySiteYear(apiClientArbimon, selectedProjectSlug, siteSelectedValue, yearSelected)
+
+function getYearWithMaxCount (records: LegacyYearlyRecord[]): number {
+  if (records == null || records.length === 0) {
+    return dayjs().year()
+  }
+
+  const maxRec = records.reduce((max, curr) =>
+    curr.recordedMinutesCount > max.recordedMinutesCount ? curr : max
+  )
+
+  return maxRec.year
+}
+
+function getFirstRecordedDateOfYear (
+  records: LegacyAvailableRecordFormatted[],
+  year?: number
+): string {
+  if (records == null || records.length === 0) {
+    return dayjs().format('YYYY-MM-DD')
+  }
+
+  const filtered = year != null && !Number.isNaN(year)
+    ? records.filter(r => dayjs(r.date).year() === year)
+    : records
+
+  const sorted = filtered.length > 0 ? filtered : records
+
+  const first = sorted.reduce((min, curr) =>
+    curr.date < min.date ? curr : min
+  )
+
+  return first.date
+}
+
+watchEffect(() => {
+  if (recordedMinutesPerDay.value && recordedMinutesPerDay.value.length > 0) {
+    initialDate.value = getFirstRecordedDateOfYear(recordedMinutesPerDay.value)
+  }
+})
 
 const handleFreqFilter = (filter: FreqFilter) => {
   emits('updateFreqFilter', filter)

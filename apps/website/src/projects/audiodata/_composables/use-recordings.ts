@@ -3,7 +3,7 @@ import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
 import { type ComputedRef, computed } from 'vue'
 
-import { type ClassesRecordingResponse, type ClassificationsResponse, type LegacyAvailableResponse, type PlaylistResponse, type RecordingSearchParams, type RecordingSearchResponse, type SoundscapeResponse, type TagResponse, apiArbimonGetClasses, apiArbimonGetClassifications, apiArbimonGetPlaylists, apiArbimonGetRecordings, apiArbimonGetSoundscape, apiArbimonGetTags, apiLegacyGetAvailable } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { type ClassesRecordingResponse, type ClassificationsResponse, type LegacyAvailableResponse, type LegacyAvailableYearlyRaw, type PlaylistResponse, type RecordingSearchParams, type RecordingSearchResponse, type SoundscapeResponse, type TagResponse, apiArbimonGetClasses, apiArbimonGetClassifications, apiArbimonGetPlaylists, apiArbimonGetRecordings, apiArbimonGetSoundscape, apiArbimonGetTags, apiLegacyGetAvailable, apiLegacyGetAvailableYearly } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 
 export const useRecordings = (
   apiClient: AxiosInstance,
@@ -95,40 +95,16 @@ export function transformLegacyAvailableResponse (
   return out
 }
 
-export const useLegacyGetAvailable = (
-  apiClient: AxiosInstance,
-  slug: ComputedRef<string | undefined>,
-  siteId: ComputedRef<string | number | undefined>,
-  year: ComputedRef<string | number | undefined>
-): UseQueryReturnType<LegacyAvailableResponse | undefined, unknown> => {
-  const enabled = computed(() => Boolean((slug.value ?? '') !== '' && siteId.value !== undefined && siteId.value !== null && year.value !== undefined && year.value !== null))
-
-  return useQuery({
-    queryKey: ['legacy-available', slug, siteId, year],
-    queryFn: async () =>
-      await apiLegacyGetAvailable(
-        apiClient,
-        slug.value ?? '',
-        siteId.value ?? '',
-        year.value ?? ''
-      ),
-    enabled,
-    refetchOnWindowFocus: false
-  })
-}
-
 export function useLegacyAvailableBySiteYear (
   apiClient: AxiosInstance,
   slug: ComputedRef<string | undefined>,
   siteId: ComputedRef<string | number | undefined>,
-  year: ComputedRef<string | number | undefined>,
-  monthFrom: ComputedRef<number> = computed(() => 1),
-  monthTo: ComputedRef<number> = computed(() => 12)
+  year: ComputedRef<string | number | undefined>
 ): UseQueryReturnType<LegacyAvailableRecordFormatted[] | undefined, unknown> {
   const enabled = computed(() => Boolean(slug.value && siteId.value != null && year.value != null))
 
   return useQuery({
-    queryKey: ['legacy-available', slug, siteId, year, monthFrom, monthTo],
+    queryKey: ['legacy-available', slug, siteId, year],
     queryFn: async () => {
       const raw: LegacyAvailableResponse | undefined = await apiLegacyGetAvailable(
         apiClient,
@@ -138,6 +114,49 @@ export function useLegacyAvailableBySiteYear (
       )
       if (raw == null) return undefined
       return transformLegacyAvailableResponse(raw)
+    },
+    enabled,
+    refetchOnWindowFocus: false
+  })
+}
+
+export interface LegacyYearlyRecord {
+  year: number
+  recordedMinutesCount: number
+}
+
+export function transformLegacyAvailableYearly (
+  raw: LegacyAvailableYearlyRaw
+): LegacyYearlyRecord[] {
+  const out: LegacyYearlyRecord[] = []
+  for (const project of Object.keys(raw)) {
+    const years = raw[project]
+    for (const y of Object.keys(years)) {
+      out.push({ year: Number(y), recordedMinutesCount: years[y] })
+    }
+  }
+  out.sort((a, b) => a.year - b.year)
+  return out
+}
+
+export function useLegacyAvailableYearly (
+  apiClient: AxiosInstance,
+  slug: ComputedRef<string | undefined>,
+  siteId: ComputedRef<string | number | undefined>
+): UseQueryReturnType<LegacyYearlyRecord[] | undefined, unknown> {
+  const enabled = computed(() => {
+    const hasSlug = typeof slug.value === 'string' && slug.value.trim() !== ''
+    const hasSite = siteId.value !== undefined && siteId.value !== null
+    return hasSlug && hasSite
+  })
+
+  return useQuery({
+    queryKey: ['legacy-available-yearly', slug, siteId],
+    queryFn: async () => {
+      const raw: LegacyAvailableYearlyRaw | undefined =
+        await apiLegacyGetAvailableYearly(apiClient, slug.value ?? '', siteId.value as string | number)
+      if (raw == null) return undefined
+      return transformLegacyAvailableYearly(raw)
     },
     enabled,
     refetchOnWindowFocus: false
