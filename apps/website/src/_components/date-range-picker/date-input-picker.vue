@@ -12,15 +12,15 @@
         ref="datePickerInput"
         class="w-full border text-secondary border-util-gray-04 rounded-md h-[34px]
           dark:(bg-util-gray-04 text-secondary placeholder:text-placeholder)
-          focus:(border-frequency ring-frequency) disabled:(cursor-not-allowed opacity-60)"
+          disabled:(cursor-not-allowed opacity-60)"
         type="text"
         :placeholder="placeholder"
         :disabled="isDisabled"
       >
       <div
-        v-if="isDisabled || !hasSelected"
-        class="pointer-events-none absolute inset-0 flex items-center justify-center rounded-md
-               bg-util-gray-04 gap-2"
+        v-show="isDisabled || !hasSelected"
+        class="overlay-date pointer-events-none absolute inset-0 flex items-center justify-center rounded-md
+               bg-util-gray-04 gap-2 transition-colors"
         :class="isDisabled ? 'text-secondary/60' : 'text-insight'"
       >
         <icon-fa-calendar class="h-4 w-4" />
@@ -163,12 +163,56 @@ defineExpose({ resetDatePicker })
 </script>
 
 <style lang="scss">
-.datepicker-picker { background-color: #242424 !important; border-width: 0; }
+.datepicker-picker { background-color: #242424; border-width: 0; }
 .datepicker-controls button { background-color: #4B4B4B !important; }
-.datepicker-cell:hover { background-color: #4B4B4B !important; }
 .selected { background-color: #adff2c26 !important; }
 .datepicker-grid.w-64 { font-family: Geist, "Geist Fallback"; font-size: 16px; width: 22rem; }
 .datepicker-cell.range { background-color: rgb(173,255,44,0.15)!important; }
 .datepicker-cell.leading-9 { line-height: 1.6rem!important; }
 .datepicker-footer-text { font-size: 14px; }
+.focus\:ring-frequency:focus,
+.focus\:border-frequency:focus {
+  --tw-ring-color: #0a0a0a !important;
+  --tw-ring-offset-shadow: 0 0 0 0 #0a0a0a !important;
+  --tw-ring-shadow: 0 0 0 1px #0a0a0a !important;
+  border-color: #0a0a0a !important;
+  box-shadow: 0 0 0 1px #0a0a0a !important;
+}
+.relative:hover input:not(:disabled) + .overlay-date {
+  background-color: #0a0a0a !important;
+  border-color: #0a0a0a !important;
+  --tw-ring-color: #0a0a0a !important;
+  --tw-ring-offset-shadow: 0 0 0 0 #0a0a0a !important;
+  --tw-ring-shadow: 0 0 0 1px #0a0a0a !important;
+  border-color: #0a0a0a !important;
+  box-shadow: 0 0 0 1px #0a0a0a !important;
+}
+
+.relative:focus-within input:not(:disabled) + .overlay-date {
+  background-color: #0a0a0a !important;
+  border-color: #0a0a0a !important;
+  --tw-ring-color: #0a0a0a !important;
+  --tw-ring-offset-shadow: 0 0 0 0 #0a0a0a !important;
+  --tw-ring-shadow: 0 0 0 1px #0a0a0a !important;
+  border-color: #0a0a0a !important;
+  box-shadow: 0 0 0 1px #0a0a0a !important;
+}
+
+input[type='text']:not(:disabled):focus {
+  background-color: #0a0a0a !important;
+  border-color: #0a0a0a !important;
+  box-shadow: 0 0 0 1px #0a0a0a !important;
+}
+
+input[type='text']:not(:disabled):hover {
+  background-color: #0a0a0a !important;
+  border-color: #0a0a0a !important;
+}
+
+input[type='text']:disabled {
+  background-color: #2a2a2a !important; /* หรือใช้ bg-util-gray-04 */
+  border-color: #3a3a3a !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
 </style>
