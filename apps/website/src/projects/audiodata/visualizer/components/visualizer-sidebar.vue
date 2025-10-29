@@ -39,6 +39,8 @@
           :disabled="siteSelected === null || siteSelected === undefined"
           :initial-date="initialDate"
           :hide-label="true"
+          :initial-view-year="initialViewYear"
+          :initial-view-month="initialViewMonth"
           :recorded-minutes-per-day="recordedMinutesPerDay"
         />
       </div>
@@ -121,6 +123,8 @@ const message = ref('')
 const showAlert = ref(false)
 const spectrogramTags = ref<BboxGroup[]>([])
 const initialDate = ref('')
+const initialViewMonth = ref<number | undefined>(undefined)
+const initialViewYear = ref<number | undefined>(undefined)
 
 const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue: string, hideAfter = 7000) => {
   showAlert.value = true
@@ -181,7 +185,10 @@ function getFirstRecordedDateOfYear (
 
 watchEffect(() => {
   if (recordedMinutesPerDay.value && recordedMinutesPerDay.value.length > 0) {
-    initialDate.value = getFirstRecordedDateOfYear(recordedMinutesPerDay.value)
+    const firstRecordedDate = getFirstRecordedDateOfYear(recordedMinutesPerDay.value)
+    const [year, month] = firstRecordedDate.split('-')
+    initialViewYear.value = Number(year)
+    initialViewMonth.value = Number(month)
   }
 })
 

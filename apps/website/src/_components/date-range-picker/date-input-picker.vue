@@ -10,8 +10,8 @@
     <div class="relative flex-1">
       <input
         ref="datePickerInput"
-        class="w-full border text-secondary border-util-gray-03 rounded-md h-[34px]
-          dark:(bg-pitch text-secondary placeholder:text-placeholder)
+        class="w-full border text-secondary border-util-gray-04 rounded-md h-[34px]
+          dark:(bg-util-gray-04 text-secondary placeholder:text-placeholder)
           focus:(border-frequency ring-frequency) disabled:(cursor-not-allowed opacity-60)"
         type="text"
         :placeholder="placeholder"
@@ -20,7 +20,8 @@
       <div
         v-if="isDisabled || !hasSelected"
         class="pointer-events-none absolute inset-0 flex items-center justify-center rounded-md
-               bg-util-gray-04 text-secondary/60 gap-2"
+               bg-util-gray-04 gap-2"
+        :class="isDisabled ? 'text-secondary/60' : 'text-insight'"
       >
         <icon-fa-calendar class="h-4 w-4" />
         <span class="text-sm lowercase tracking-wide">date</span>
@@ -41,6 +42,8 @@ import { type FlowbiteDatePicker } from './date-range-picker'
 
 const props = defineProps<{
   initialDate?: string
+  initialViewYear?: number
+  initialViewMonth?: number
   hideLabel?: boolean
   inputLabel?: string
   placeholder?: string
@@ -94,11 +97,9 @@ onMounted(async () => {
   const { initDatePicker } = await import('./date-range-picker')
   if (!datePickerInput.value) return
 
-  const initDate = props.initialDate
-    ? dayjs(props.initialDate).format(format)
-    : dayjs().format(format)
-
-  datePickerInput.value.value = initDate
+  if (props.initialDate !== undefined) {
+    datePickerInput.value.value = dayjs(props.initialDate).format(format)
+  }
 
   picker.value = initDatePicker(datePickerInput.value, {
     autohide: true,
@@ -108,6 +109,11 @@ onMounted(async () => {
     nextArrow: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right size-4 rdp-chevron"><path d="m9 18 6-6-6-6"></path></svg>',
     prevArrow: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left size-4 rdp-chevron"><path d="m15 18-6-6 6-6"></path></svg>'
   })
+
+  if (props.initialViewYear != null && props.initialViewMonth != null) {
+    const temp = new Date(props.initialViewYear, props.initialViewMonth - 1, 1)
+    picker.value.setDate(temp)
+  }
 
   datePickerInput.value.addEventListener('changeDate', () => {
     const dates = picker.value?.getDate()
@@ -124,8 +130,19 @@ watch(() => props.recordedMinutesPerDay, () => {
 
 watch(() => props.initialDate, (v) => {
   const formatted = dayjs(v).format(format)
-    picker.value?.setDate(formatted)
+  picker.value?.setDate(formatted)
 })
+
+watch(
+  () => [props.initialViewYear, props.initialViewMonth],
+  ([year, month]) => {
+    if (year == null || month == null) return
+    const temp = new Date(year, month - 1, 1)
+    picker.value?.setDate(temp)
+    if (datePickerInput.value) datePickerInput.value.value = ''
+    selectedDateIso.value = ''
+  }
+)
 
 function resetDatePicker (preset?: { date: string }) {
   if (preset?.date) {
@@ -146,7 +163,7 @@ defineExpose({ resetDatePicker })
 </script>
 
 <style lang="scss">
-.datepicker-picker { background-color: #1e1c13 !important; }
+.datepicker-picker { background-color: #242424 !important; border-width: 0; }
 .datepicker-controls button { background-color: #4B4B4B !important; }
 .datepicker-cell:hover { background-color: #4B4B4B !important; }
 .selected { background-color: #adff2c26 !important; }
