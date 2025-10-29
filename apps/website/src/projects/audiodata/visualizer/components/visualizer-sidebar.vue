@@ -36,7 +36,7 @@
       </div>
       <div class="col-span-5">
         <DateInputPicker
-          v-if="recordedMinutesPerDay"
+          :disabled="siteSelected === null || siteSelected === undefined"
           :initial-date="initialDate"
           :hide-label="true"
           :recorded-minutes-per-day="recordedMinutesPerDay"
@@ -163,7 +163,7 @@ function getFirstRecordedDateOfYear (
   year?: number
 ): string {
   if (records == null || records.length === 0) {
-    return dayjs().format('YYYY-MM-DD')
+    return dayjs().format('DD-MM-YYYY')
   }
 
   const filtered = year != null && !Number.isNaN(year)

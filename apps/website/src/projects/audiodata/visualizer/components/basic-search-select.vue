@@ -22,7 +22,7 @@
         ref="inputEl"
         v-model="search"
         type="search"
-        class="flex-1 h-[34px] outline-none text-insight bg-transparent focus:ring-0 border-0 hover:(text-insight bg-[#0a0a0a] border-[#0a0a0a])"
+        class="flex-1 h-[34px] outline-none text-insight rounded bg-transparent focus:ring-0 border-0 hover:(text-insight bg-[#0a0a0a] border-[#0a0a0a])"
         :placeholder="placeholder"
         autocomplete="off"
       >

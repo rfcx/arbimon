@@ -12,10 +12,20 @@
         ref="datePickerInput"
         class="w-full border text-secondary border-util-gray-03 rounded-md h-[34px]
           dark:(bg-pitch text-secondary placeholder:text-placeholder)
-          focus:(border-frequency ring-frequency)"
+          focus:(border-frequency ring-frequency) disabled:(cursor-not-allowed opacity-60)"
         type="text"
         :placeholder="placeholder"
+        :disabled="isDisabled"
       >
+      <div
+        v-if="isDisabled || !hasSelected"
+        class="pointer-events-none absolute inset-0 flex items-center justify-center rounded-md
+               bg-util-gray-04 text-secondary/60 gap-2"
+      >
+        <icon-fa-calendar class="h-4 w-4" />
+        <span class="text-sm lowercase tracking-wide">date</span>
+        <icon-fa-chevron-down class="w-[9px] h-[9px]" />
+      </div>
     </div>
   </div>
 </template>
@@ -35,6 +45,7 @@ const props = defineProps<{
   inputLabel?: string
   placeholder?: string
   recordedMinutesPerDay?: GetRecordedMinutesPerDayResponse
+  disabled?: boolean
 }>()
 
 const emit = defineEmits<{(e: 'emitSelectDate', value: { dateLocalIso: string }): void}>()
@@ -46,6 +57,8 @@ const selectedDateIso = ref('')
 
 const placeholder = computed(() => props.placeholder ?? 'Choose date')
 const inputLabelFormatted = computed(() => props.inputLabel ?? 'Date')
+const isDisabled = computed(() => props.disabled === true)
+const hasSelected = computed(() => selectedDateIso.value !== '')
 
 const recordedMinutesPerDayConverted = computed(() => {
   const temp: Record<string, number> = {}
@@ -109,6 +122,11 @@ watch(() => props.recordedMinutesPerDay, () => {
   picker.value?.setOptions({ beforeShowDay })
 })
 
+watch(() => props.initialDate, (v) => {
+  const formatted = dayjs(v).format(format)
+    picker.value?.setDate(formatted)
+})
+
 function resetDatePicker (preset?: { date: string }) {
   if (preset?.date) {
     const formatted = dayjs(preset.date).format(format)
@@ -131,10 +149,7 @@ defineExpose({ resetDatePicker })
 .datepicker-picker { background-color: #1e1c13 !important; }
 .datepicker-controls button { background-color: #4B4B4B !important; }
 .datepicker-cell:hover { background-color: #4B4B4B !important; }
-.selected {
-  background-color: #adff2c26 !important;
-  border: 1px solid #ADFF2C !important;
-}
+.selected { background-color: #adff2c26 !important; }
 .datepicker-grid.w-64 { font-family: Geist, "Geist Fallback"; font-size: 16px; width: 22rem; }
 .datepicker-cell.range { background-color: rgb(173,255,44,0.15)!important; }
 .datepicker-cell.leading-9 { line-height: 1.6rem!important; }
