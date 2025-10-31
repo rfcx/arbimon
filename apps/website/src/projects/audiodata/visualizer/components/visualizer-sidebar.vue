@@ -39,8 +39,8 @@
           :disabled="siteSelected === null || siteSelected === undefined"
           :initial-date="initialDate"
           :hide-label="true"
-          :initial-view-year="initialViewYear"
-          :initial-view-month="initialViewMonth"
+          :initial-view-year="initialDate ? undefined : initialViewYear"
+          :initial-view-month="initialDate ? undefined : initialViewMonth"
           :recorded-minutes-per-day="recordedMinutesPerDay"
         />
       </div>
@@ -95,7 +95,7 @@ import SidebarSpectrogramPlayer from './sidebar-spectrogram-player.vue'
 import SidebarTag from './sidebar-tag.vue'
 import SidebarThumbnail from './sidebar-thumbnail.vue'
 
-defineProps<{
+const props = defineProps<{
   visobject: Visobject | undefined
   isLoadingVisobject: boolean
 }>()
@@ -252,6 +252,12 @@ const groupByBbox = (tags: RecordingTagResponse[]): BboxGroup[] => {
 watch(() => recordingTags.value, () => {
   if (!recordingTags.value) return
   spectrogramTags.value = groupByBbox(recordingTags.value)
+})
+
+watch(() => props.visobject, (v) => {
+  const site = options.value.find(s => s.label === v?.site)
+  siteSelected.value = site?.value
+  initialDate.value = v?.datetime ?? ''
 })
 </script>
 
