@@ -16,11 +16,12 @@
     </span>
     <div>
       <label class="block text-sm mb-1 font-bold">
-        Recording fields
+        Recording fields*
       </label>
       <SelectMultiple
         v-model="selectedFields"
         :options="fieldsOptions"
+        :error="selectedFields.length === 0 ? 'Recording fields cannot be empty' : ''"
         placeholder="Filename, Site, ..."
       />
     </div>
@@ -98,7 +99,8 @@
         Reset
       </button>
       <button
-        class="btn btn-primary btn-small w-full items-center justify-center inline-flex ml-1 text-[14px] h-[34px]"
+        class="btn btn-primary btn-small w-full items-center justify-center inline-flex ml-1 text-[14px] h-[34px] disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled"
+        :disabled="selectedFields.length === 0"
         @click="showExportModal = true"
       >
         <icon-fa-send-o class="h-3 w-3 mr-1" />

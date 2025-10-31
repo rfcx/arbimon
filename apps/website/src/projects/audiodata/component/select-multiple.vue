@@ -23,6 +23,7 @@ const props = defineProps<{
   options: Option[]
   placeholder?: string
   hideAfterSelected?: boolean
+  error?: string
 }>()
 
 const emit = defineEmits<{(e: 'update:modelValue', value: (string | number)[]): void }>()
@@ -35,6 +36,7 @@ const selectedValues = computed({
 const isOpen = ref(false)
 const wrapper = ref<HTMLElement | null>(null)
 const searchInput = ref<HTMLInputElement | null>(null)
+const hasError = computed(() => !!props.error)
 
 const handleClickOutside = (e: MouseEvent) => {
   if (wrapper.value && !wrapper.value.contains(e.target as Node)) {
@@ -134,6 +136,8 @@ function haveValuekey (key: string): boolean {
   >
     <div
       class="input-select-multiple flex flex-wrap overflow-y-auto pr-1"
+      :class="hasError ? 'border-[#d94b5a] ring-1 ring-[#d94b5a]' : 'border-util-gray-03'"
+      :aria-invalid="hasError ? 'true' : 'false'"
       @click="openDropdown"
     >
       <template v-if="selectedValues.includes('ALL')">
@@ -228,7 +232,13 @@ function haveValuekey (key: string): boolean {
         @focus="isOpen = true"
       >
     </div>
-
+    <p
+      v-if="hasError"
+      class="mt-2 flex items-center gap-2 text-[#d94b5a] text-[12px]"
+    >
+      <icon-custom-alert-triangle class="h-[13px] w-[13px] cursor-pointer" />
+      <span>{{ props.error }}</span>
+    </p>
     <div
       v-if="isOpen && filteredOptions.length"
       class="absolute mt-1 w-full border border-util-gray-03 rounded bg-echo text-insight text-sm font-medium shadow z-10 max-h-60 overflow-y-auto"
@@ -342,7 +352,7 @@ function haveValuekey (key: string): boolean {
 
 <style scoped>
 .input-select-multiple {
-  @apply bg-echo text-insight w-full rounded rounded-md text-sm placeholder-insight border border-util-gray-03;
+  @apply bg-echo text-insight w-full rounded rounded-md text-sm placeholder-insight border;
   --chip-h: 28px;
   --line-gap: 6px;
   max-height: calc(var(--chip-h) * 3 + var(--line-gap) * 2 + 8px);
@@ -355,4 +365,6 @@ function haveValuekey (key: string): boolean {
 input::placeholder {
   @apply text-[14px];
 }
+
+input::placeholder { @apply text-[14px] text-gray-400; }
 </style>
