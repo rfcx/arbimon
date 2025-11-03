@@ -199,6 +199,13 @@ async function handleExport (email: string | undefined) {
   const filteredParams = Object.fromEntries(
     Object.entries(props.filterData ?? []).filter(([_, v]) => v !== undefined)
   )
+
+  if (typeof filteredParams.range === 'string') {
+    try {
+      filteredParams.range = JSON.parse(filteredParams.range)
+    } catch { }
+  }
+
   const exportParams = ref<(ExportParams| null)>(null)
   exportParams.value = {
     filters: {
