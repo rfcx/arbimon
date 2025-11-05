@@ -27,10 +27,19 @@
           />
           <span>Training Sets (RF Algorithm)</span>
         </div>
-        <icon-fa-eye
-          class="h-5 w-5"
-          @click="toggleVisible"
-        />
+        <div
+          @click="toggleVisible = !toggleVisible"
+          @click.stop
+        >
+          <icon-fa-eye
+            v-if="toggleVisible"
+            class="h-5 w-5"
+          />
+          <icon-fa-eye-slash
+            v-else
+            class="h-5 w-5"
+          />
+        </div>
       </button>
     </div>
     <div
@@ -128,10 +137,9 @@ const toggleTrainingSets = () => {
   // TODO: When click on ic-plus-icon (trainingSetSelected.value is training set id)
 }
 
-const toggleVisible = () => {
-  console.info('toggleVisible')
-  // TODO: When click on ic-eye to hander hied/show TrainingSets box on spectrogram
-}
+const toggleVisible = ref<boolean>(true)
+// TODO: When click on ic-eye to hander hied/show TrainingSets box on spectrogram
+
 const trainingSetSelectedText = ref<string>('')
 watch(() => trainingSetSelected.value, (ts) => {
   if (ts === undefined) return

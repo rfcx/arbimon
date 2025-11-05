@@ -70,6 +70,10 @@
       :visobject="visobject"
       :training-set="trainingSetOptions"
     />
+    <SidebarTemplates
+      v-if="visobject"
+      :visobject="visobject"
+    />
     <alert-dialog
       v-if="showAlert"
       :severity="success"
@@ -100,6 +104,7 @@ import { type BboxGroup, type FreqFilter } from '../types'
 import BasicSearchSelect from './basic-search-select.vue'
 import SidebarSpectrogramPlayer from './sidebar-spectrogram-player.vue'
 import SidebarTag from './sidebar-tag.vue'
+import SidebarTemplates from './sidebar-templates.vue'
 import SidebarThumbnail from './sidebar-thumbnail.vue'
 import SidebarTrainingSets from './sidebar-training-sets.vue'
 
