@@ -10,21 +10,27 @@
     >
       <button
         type="button"
-        class="flex justify-start items-center w-full py-2 gap-x-1 text-insight dark:(bg-transparent text-insight)"
+        class="flex justify-between items-center w-full py-2 gap-x-1 text-insight dark:(bg-transparent text-insight)"
         data-accordion-target="#accordion-collapse-body-training"
         aria-expanded="false"
         aria-controls="accordion-collapse-body-training"
         @click="toggleTraining = !toggleTraining"
       >
-        <icon-fa-chevron-right
-          data-accordion-icon
-          class="w-3 h-3 fa-chevron-right"
+        <div>
+          <icon-fa-chevron-right
+            data-accordion-icon
+            class="w-3 h-3 fa-chevron-right"
+          />
+          <icon-fa-chevron-down
+            data-accordion-icon
+            class="w-3 h-3 fa-chevron-up hidden"
+          />
+          <span>Training Sets (RF Algorithm)</span>
+        </div>
+        <icon-fa-eye
+          class="h-5 w-5"
+          @click="toggleVisible"
         />
-        <icon-fa-chevron-down
-          data-accordion-icon
-          class="w-3 h-3 fa-chevron-up hidden"
-        />
-        <span>Training Sets (RF Algorithm)</span>
       </button>
     </div>
     <div
@@ -84,7 +90,7 @@
           />
           <span class="ml-1">{{ trainingSetSelectedText }}</span>
         </div>
-        <!-- Change number here! @Zhanya -->
+        <!-- TODO: Change number here! -->
         <span class="shrink-0 tabular-nums ml-1 bg-util-gray-03 rounded-full px-2 py-1 mr-1 text-[12px] font-bold">{{ 0 }}</span>
       </button>
     </div>
@@ -96,6 +102,7 @@
     >
       There is no training data in this recording.
     </div>
+    <!-- TODO: Add x1,y1,x2,y2 detail after drew box on Spectrogram -->
   </div>
 </template>
 
@@ -118,7 +125,12 @@ const options = computed(() => props.trainingSet?.map(t => ({ label: t.name, val
 
 const toggleTrainingSets = () => {
   console.info(trainingSetSelected.value)
-  // When click on ic-plus-icon (trainingSetSelected.value is training set id) @Zhanya
+  // TODO: When click on ic-plus-icon (trainingSetSelected.value is training set id)
+}
+
+const toggleVisible = () => {
+  console.info('toggleVisible')
+  // TODO: When click on ic-eye to hander hied/show TrainingSets box on spectrogram
 }
 const trainingSetSelectedText = ref<string>('')
 watch(() => trainingSetSelected.value, (ts) => {

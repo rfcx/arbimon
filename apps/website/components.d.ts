@@ -109,6 +109,7 @@ declare module 'vue' {
     IconFaCubes: typeof import('~icons/fa/cubes')['default']
     IconFaExclamationTriangle: typeof import('~icons/fa/exclamation-triangle')['default']
     IconFaExternalLink: typeof import('~icons/fa/external-link')['default']
+    IconFaEye: typeof import('~icons/fa/eye')['default']
     IconFaInfoCircle: typeof import('~icons/fa/info-circle')['default']
     IconFaMap: typeof import('~icons/fa/map')['default']
     IconFaMapMarker: typeof import('~icons/fa/map-marker')['default']
