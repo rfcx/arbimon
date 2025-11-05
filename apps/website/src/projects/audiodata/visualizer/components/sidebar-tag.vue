@@ -1,26 +1,26 @@
 <template>
   <div
-    id="accordion-collapse"
+    id="accordion-collapse-tag"
     data-accordion="collapse"
     class="flex flex-col gap-y-2 px-4 py-2 bg-moss shadow"
   >
     <div id="accordion-collapse-heading-tag">
       <button
         type="button"
-        class="flex justify-start items-center w-full py-2 gap-x-1 text-insight dark:(bg-transparent text-insight)"
+        class="flex justify-start items-center w-full py-2 gap-x-1 text-insight"
         data-accordion-target="#accordion-collapse-body-tag"
-        aria-expanded="true"
+        aria-expanded="false"
         aria-controls="accordion-collapse-body-tag"
       >
         <icon-fa-chevron-right
           data-accordion-icon
-          class="w-3 h-3 fa-chevron-right"
+          class="w-3 h-3 text-insight fa-chevron-right"
         />
         <icon-fa-chevron-down
           data-accordion-icon
-          class="w-3 h-3 fa-chevron-up hidden"
+          class="w-3 h-3 fa-chevron-up text-insight hidden"
         />
-        <span>Recording Tags</span>
+        <span class="text-insight">Recording Tags</span>
       </button>
     </div>
     <div
@@ -57,7 +57,7 @@
       >
         <SelectMultiple
           v-model="selectedTags"
-          class="flex-1 min-w-0 placeholder-util-gray-02"
+          class="flex-1 min-w-0 placeholder-util-gray-02 border-1 rounded"
           :options="staticTags ?? []"
           placeholder="Add new tag or annotate spectrogram"
         />

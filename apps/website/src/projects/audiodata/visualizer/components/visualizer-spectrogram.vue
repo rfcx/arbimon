@@ -149,7 +149,7 @@
         <!-- tooltips -->
         <div
           v-for="(tag, index) in spectrogramTags"
-          :id="`tagTooltip-${index}`"
+          :id="`tagTooltip_${index}`"
           :key="`tooltip-${index}`"
           role="tooltip"
           class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
@@ -170,7 +170,7 @@ import { useElementSize } from '@vueuse/core'
 import type { AxiosInstance } from 'axios'
 import * as d3 from 'd3'
 import { initTooltips } from 'flowbite'
-import { computed, inject, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { RecordingTagResponse, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
@@ -476,8 +476,10 @@ watch(() => keyword.value, () => {
   }
 })
 
-watch(() => recordingTags.value, (newValue) => {
+watch(() => recordingTags.value, async (newValue) => {
   if (!newValue) return
+  await nextTick()
+  initTooltips()
   spectrogramTags.value = groupByBbox(newValue)
 })
 
@@ -486,13 +488,13 @@ watch(() => props.isSpectrogramTagsUpdated, () => {
 })
 
 onMounted(() => {
-  initTooltips()
   containerSize.width = spectrogramContainer.value ? (spectrogramContainer.value.clientWidth - legendMetrics.value.axis_sizew - legendMetrics.value.axis_margin_x) : containerWidth.value - legendMetrics.value.axis_sizew - legendMetrics.value.axis_margin_x
   containerSize.height = spectrogramContainer.value ? (spectrogramContainer.value.clientHeight - legendMetrics.value.axis_sizeh - legendMetrics.value.axis_lead) : containerHeight.value - legendMetrics.value.axis_sizeh - legendMetrics.value.axis_lead
   window.addEventListener('resize', handleResize)
   document.addEventListener('keyup', onKeyUp)
   if (!recordingTags.value) return
   spectrogramTags.value = groupByBbox(recordingTags.value)
+  initTooltips()
 })
 
 onBeforeUnmount(() => {

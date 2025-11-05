@@ -127,6 +127,7 @@ declare module 'vue' {
     IconFaSendO: typeof import('~icons/fa/send-o')['default']
     IconFasFilter: typeof import('~icons/fa-solid/filter')['default']
     IconFasInfoCircle: typeof import('~icons/fa-solid/info-circle')['default']
+    IconFasMinus: typeof import('~icons/fa-solid/minus')['default']
     IconFasTag: typeof import('~icons/fa-solid/tag')['default']
     IconFaTag: typeof import('~icons/fa/tag')['default']
     IconFaTrash: typeof import('~icons/fa/trash')['default']

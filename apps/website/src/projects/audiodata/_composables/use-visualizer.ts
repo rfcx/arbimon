@@ -2,7 +2,7 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import type { AxiosInstance } from 'axios'
 import { type ComputedRef } from 'vue'
 
-import { type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type TagDeleteResponse, type TagParams, type VisobjectResponse, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetRecordingTag, apiPutRecordingTag, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type TagDeleteResponse, type TagParams, type VisobjectResponse, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetRecordingTag, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: ComputedRef<string | undefined>): UseQueryReturnType<VisobjectResponse | undefined, unknown> => {
   return useQuery({
@@ -64,6 +64,16 @@ export const useDeleteRecordingTag = (apiClient: AxiosInstance, slug: ComputedRe
     mutationFn: async (payload: RecordingTagResponse) => {
       if (!slug.value || !recordingId.value) return undefined
       return await apiDeleteRecordingTag(apiClient, slug.value, recordingId.value, payload)
+    }
+  })
+}
+
+export const useRecordingValidate = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: number): UseMutationReturnType<RecordingValidateResponse[] | undefined, unknown, RecordingValidateParams, unknown> => {
+  return useMutation({
+    mutationKey: ['post-recording-validate'],
+    mutationFn: async (payload: RecordingValidateParams) => {
+      if (!slug.value || !recordingId) return undefined
+      return await apiRecordingValidate(apiClient, slug.value, recordingId, payload)
     }
   })
 }

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-moss sidebar h-screen"
+    class="bg-moss sidebar h-screen overflow-y-scroll"
   >
     <div class="flex flex-row items-center justify-start gap-x-2 p-[15px]">
       <button
@@ -65,6 +65,10 @@
       @emit-tag="handleRecTag"
       @emit-active-layer="toggleSidebarTag"
     />
+    <SidebarSpecies
+      v-if="visobject"
+      :visobject="visobject"
+    />
     <SidebarTrainingSets
       v-if="visobject"
       :visobject="visobject"
@@ -102,6 +106,7 @@ import { useSites } from '../../_composables/use-sites'
 import { useDeleteRecordingTag, useGetRecordingTag, usePutRecordingTag } from '../../_composables/use-visualizer'
 import { type BboxGroup, type FreqFilter } from '../types'
 import BasicSearchSelect from './basic-search-select.vue'
+import SidebarSpecies from './sidebar-species.vue'
 import SidebarSpectrogramPlayer from './sidebar-spectrogram-player.vue'
 import SidebarTag from './sidebar-tag.vue'
 import SidebarTemplates from './sidebar-templates.vue'
@@ -198,7 +203,7 @@ function getFirstRecordedDateOfYear (
 }
 
 watchEffect(() => {
-  if (recordedMinutesPerDay.value && recordedMinutesPerDay.value.length > 0) {
+  if (recordedMinutesPerDay.value !== undefined && recordedMinutesPerDay.value.length > 0) {
     const firstRecordedDate = getFirstRecordedDateOfYear(recordedMinutesPerDay.value)
     const [year, month] = firstRecordedDate.split('-')
     initialViewYear.value = Number(year)

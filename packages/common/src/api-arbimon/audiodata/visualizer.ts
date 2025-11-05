@@ -41,6 +41,21 @@ export interface RecordingSearchParams {
   key: string
 }
 
+export interface RecordingValidateParams {
+  class: string
+  val: number
+  determinedFrom: string
+}
+
+export interface RecordingValidateResponse {
+  project_id: number
+  recording: number
+  songtype: number
+  species: number
+  user: number
+  val: number
+}
+
 export interface Recording {
   bit_rate: string
   datetime: string
@@ -87,6 +102,16 @@ interface Tiles {
   y: number
 }
 
+export interface Validation {
+  id: number
+  present: number
+  presentAed: number
+  presentReview: number
+  songtype: number
+  species: number
+  user: number
+}
+
 export interface Visobject extends Recording {
   isDisabled: boolean
   aedValidations: any[]
@@ -98,7 +123,7 @@ export interface Visobject extends Recording {
   legacy: boolean
   spectroColor: string
   tiles: Tiles
-  validations: any[]
+  validations: Validation[]
   span: number
   max_freq: number
   domain: any
@@ -230,6 +255,16 @@ export const apiPutRecordingTag = async (apiClient: AxiosInstance, slug: string,
   const res = await apiClient.request<RecordingTagResponse[]>({
     method: 'PUT',
     url: `/legacy-api/project/${slug}/tags/recording/${recId}`,
+    data: payload
+  })
+
+  return res.data
+}
+
+export const apiRecordingValidate = async (apiClient: AxiosInstance, slug: string, recId: number, payload: RecordingValidateParams): Promise<RecordingValidateResponse[]> => {
+  const res = await apiClient.request<RecordingValidateResponse[]>({
+    method: 'POST',
+    url: `/legacy-api/project/${slug}/recordings/validate/${recId}`,
     data: payload
   })
 
