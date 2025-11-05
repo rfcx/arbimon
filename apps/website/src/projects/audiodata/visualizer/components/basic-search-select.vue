@@ -12,10 +12,16 @@
     >
       <span
         v-if="!open"
-        class="flex-1 text-insight p-2 flex items-center"
+        class="flex-1 text-insight min-w-0 p-2 flex items-center"
       >
-        <icon-fa-map-marker class="w-2 h-4 mr-2 my-2" />
-        {{ selectedLabel || placeholder }}
+        <icon-fa-map-marker
+          v-show="showMapIcon"
+          class="w-2 h-4 mr-2 my-2"
+        />
+        <span class="truncate">
+          {{ selectedLabel || placeholder }}
+        </span>
+
       </span>
       <input
         v-else
@@ -37,6 +43,7 @@
       v-show="open"
       :id="listboxId"
       class="absolute z-50 mt-1 max-h-60 overflow-auto rounded bg-pitch border border-util-gray-04"
+      :class="{'w-full' : wFull}"
       role="listbox"
     >
       <li
@@ -57,10 +64,16 @@
         @mousedown.prevent="select(opt)"
       >
         <div class="flex items-center gap-1 min-w-0 px-2 p-1">
-          <icon-fa-map-marker class="w-2 h-4 mr-1 shrink-0" />
+          <icon-fa-map-marker
+            v-show="showMapIcon"
+            class="w-2 h-4 mr-1 shrink-0"
+          />
           <span class="truncate py-1">{{ opt.label }}</span>
         </div>
-        <span class="shrink-0 tabular-nums ml-1 bg-util-gray-03 rounded-full px-2 py-1 mr-1 text-[12px] font-bold">{{ opt.count ?? 0 }}</span>
+        <span
+          v-show="showMapIcon"
+          class="shrink-0 tabular-nums ml-1 bg-util-gray-03 rounded-full px-2 py-1 mr-1 text-[12px] font-bold"
+        >{{ opt.count ?? 0 }}</span>
       </li>
     </ul>
   </div>
@@ -76,6 +89,8 @@ const props = defineProps<{
   modelValue: string | number | undefined
   options: InputOption[]
   placeholder?: string
+  showMapIcon?: boolean
+  wFull?: boolean
 }>()
 
 const emit = defineEmits<{ 'update:modelValue':[string | number | null] }>()

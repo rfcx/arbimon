@@ -31,6 +31,7 @@
         <BasicSearchSelect
           v-model="siteSelected"
           :options="options"
+          :show-map-icon="true"
           placeholder="Select site"
         />
       </div>
@@ -64,6 +65,11 @@
       @emit-tag="handleRecTag"
       @emit-active-layer="toggleSidebarTag"
     />
+    <SidebarTrainingSets
+      v-if="visobject"
+      :visobject="visobject"
+      :training-set="trainingSetOptions"
+    />
     <alert-dialog
       v-if="showAlert"
       :severity="success"
@@ -86,6 +92,7 @@ import alertDialog from '@/_components/alert-dialog.vue'
 import DateInputPicker from '@/_components/date-range-picker/date-input-picker.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
+import { useLegacyTrainingSets } from '../../_composables/use-project'
 import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
 import { useSites } from '../../_composables/use-sites'
 import { useDeleteRecordingTag, useGetRecordingTag, usePutRecordingTag } from '../../_composables/use-visualizer'
@@ -94,6 +101,7 @@ import BasicSearchSelect from './basic-search-select.vue'
 import SidebarSpectrogramPlayer from './sidebar-spectrogram-player.vue'
 import SidebarTag from './sidebar-tag.vue'
 import SidebarThumbnail from './sidebar-thumbnail.vue'
+import SidebarTrainingSets from './sidebar-training-sets.vue'
 
 const props = defineProps<{
   visobject: Visobject | undefined
@@ -141,6 +149,7 @@ const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTa
 const { isPending: isAddingTag, mutate: mutateRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDeleteRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
+const { data: trainingSetOptions } = useLegacyTrainingSets(apiClientArbimon, selectedProjectSlug)
 
 const options = computed(() => sites.value?.map(s => ({ label: s.name, value: s.id, count: s.rec_count })) ?? [])
 const siteSelected = ref<string | number | undefined>(undefined)
