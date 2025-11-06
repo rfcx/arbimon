@@ -78,6 +78,12 @@
       v-if="visobject"
       :visobject="visobject"
     />
+    <SidebarSoundscape
+      v-if="visobject"
+      :visobject="visobject"
+      :soundscape-response="soundscape"
+      @action="handleAction"
+    />
     <alert-dialog
       v-if="showAlert"
       :severity="success"
@@ -101,11 +107,12 @@ import DateInputPicker from '@/_components/date-range-picker/date-input-picker.v
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useLegacyTrainingSets } from '../../_composables/use-project'
-import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
+import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetSoundscape, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
 import { useSites } from '../../_composables/use-sites'
 import { useDeleteRecordingTag, useGetRecordingTag, usePutRecordingTag } from '../../_composables/use-visualizer'
 import { type BboxGroup, type FreqFilter } from '../types'
 import BasicSearchSelect from './basic-search-select.vue'
+import SidebarSoundscape, { type SoundItem } from './sidebar-soundscape.vue'
 import SidebarSpecies from './sidebar-species.vue'
 import SidebarSpectrogramPlayer from './sidebar-spectrogram-player.vue'
 import SidebarTag from './sidebar-tag.vue'
@@ -160,6 +167,7 @@ const { isPending: isAddingTag, mutate: mutateRecordingTag } = usePutRecordingTa
 const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDeleteRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
 const { data: trainingSetOptions } = useLegacyTrainingSets(apiClientArbimon, selectedProjectSlug)
+const { data: soundscape } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
 
 const options = computed(() => sites.value?.map(s => ({ label: s.name, value: s.id, count: s.rec_count })) ?? [])
 const siteSelected = ref<string | number | undefined>(undefined)
@@ -266,6 +274,13 @@ const groupByBbox = (tags: RecordingTagResponse[]): BboxGroup[] => {
     }
   }
   return Object.values(map)
+}
+
+function handleAction (action: string, item: SoundItem) {
+  if (action === 'present') console.info('present', item)
+  if (action === 'absent') console.info('absent', item)
+  if (action === 'clearAnnotation') console.info('clear', item)
+  // TODO: call api for update action
 }
 
 watch(() => recordingTags.value, () => {
