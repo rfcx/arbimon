@@ -7,7 +7,7 @@
     <div id="accordion-collapse-heading-species">
       <button
         type="button"
-        class="flex justify-between items-center w-[90%] py-2 gap-x-1 text-insight dark:bg-moss dark:active:bg-moss"
+        class="flex justify-between items-center w-full py-2 gap-x-1 text-insight dark:bg-moss dark:active:bg-moss"
         data-accordion-target="#accordion-collapse-body-species"
         aria-expanded="false"
         aria-controls="accordion-collapse-body-species"
@@ -23,16 +23,31 @@
           />
           <span>Species Presence Validation</span>
         </div>
-        <div class="min-w-20 flex flex-row justify-center cursor-default items-center gap-x-1 bg-[#D9D9D9] text-pitch rounded-full text-xs px-2 py-1">
-          <icon-fa-check
-            class="h-3 text-[#1F57CC]"
-          />
-          <span>{{ getSpeciesPresentCount(visobject.validations) }}</span>
-          <span>/</span>
-          <icon-fa-close
-            class="h-3 text-[#E6B900]"
-          />
-          <span>{{ getSpeciesAbsentCount(visobject.validations) }}</span>
+        <div class="flex flex-row justify-center gap-x-3">
+          <div class="min-w-20 flex flex-row justify-center cursor-default items-center gap-x-1 bg-[#D9D9D9] text-pitch rounded-full text-xs px-2 py-0.6">
+            <icon-fa-check
+              class="h-3 text-[#1F57CC]"
+            />
+            <span>{{ getSpeciesPresentCount(visobject.validations) }}</span>
+            <span>/</span>
+            <icon-fa-close
+              class="h-3 text-[#E6B900]"
+            />
+            <span>{{ getSpeciesAbsentCount(visobject.validations) }}</span>
+          </div>
+          <div
+            @click="toggleVisible = !toggleVisible"
+            @click.stop
+          >
+            <icon-fa-eye
+              v-if="toggleVisible"
+              class="h-4 w-4"
+            />
+            <icon-fa-eye-slash
+              v-else
+              class="h-4 w-4"
+            />
+          </div>
         </div>
       </button>
     </div>
@@ -459,6 +474,7 @@ const toggleSpeciesAdd = ref(false)
 const toggleSpeciesSelect = ref(false)
 const toggleSongtypeSelect = ref(false)
 const classToAdd = ref<ClassToAdd>({ species: undefined, songtype: undefined })
+const toggleVisible = ref<boolean>(true)
 
 const { data: projectClasses, refetch: refetchGetClasses } = useGetClasses(apiClientArbimon, selectedProjectSlug)
 const { mutate: mutateRecordingValidate } = useRecordingValidate(apiClientArbimon, selectedProjectSlug, props.visobject.id)

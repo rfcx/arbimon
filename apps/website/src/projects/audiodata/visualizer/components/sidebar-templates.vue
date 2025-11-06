@@ -29,11 +29,11 @@
         >
           <icon-fa-eye
             v-if="toggleVisible"
-            class="h-5 w-5"
+            class="h-4 w-4"
           />
           <icon-fa-eye-slash
             v-else
-            class="h-5 w-5"
+            class="h-4 w-4"
           />
         </div>
       </button>

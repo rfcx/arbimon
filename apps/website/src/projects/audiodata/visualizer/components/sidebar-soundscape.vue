@@ -48,6 +48,7 @@
           <div class="flex items-center">
             <button
               class="flex items-center justify-center h-[24px] w-[24px] py-[1px] px-[6px] rounded-l bg-util-gray-04 hover:bg-echo"
+              title="Annotate as Present"
               @click="onPresent(item)"
             >
               <icon-fa-check class="text-[#7fa2ec] w-4 h-4" />
@@ -55,6 +56,7 @@
 
             <button
               class="flex items-center justify-center h-[24px] w-[24px] py-[2px] px-[7px] rounded-r bg-util-gray-04 hover:bg-echo"
+              title="Annotate as Absent"
               @click="onAbsent(item)"
             >
               <icon-fa-times class="text-[#ffe680] w-4 h-4" />
@@ -62,6 +64,7 @@
 
             <button
               class="flex items-center justify-center h-[24px] w-[24px] py-[2px] px-[7px] rounded bg-util-gray-04 hover:bg-echo ml-2"
+              title="Clear Annotation"
               @click="clearAnnotation(item)"
             >
               <icon-fa-minus class="text-[#7F7D78] w-4 h-4" />
