@@ -84,6 +84,12 @@
       :soundscape-response="soundscape"
       @action="handleAction"
     />
+    <SidebarAudioEvents
+      v-if="visobject"
+      :visobject="visobject"
+      :aed-clustering="aedClustering"
+      :playlist="playlist"
+    />
     <alert-dialog
       v-if="showAlert"
       :severity="success"
@@ -109,9 +115,10 @@ import { useStore } from '~/store'
 import { useLegacyTrainingSets } from '../../_composables/use-project'
 import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetSoundscape, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
 import { useSites } from '../../_composables/use-sites'
-import { useDeleteRecordingTag, useGetRecordingTag, usePutRecordingTag } from '../../_composables/use-visualizer'
+import { useAedClustering, useDeleteRecordingTag, useGetPlaylistInfo, useGetRecordingTag, usePutRecordingTag } from '../../_composables/use-visualizer'
 import { type BboxGroup, type FreqFilter } from '../types'
 import BasicSearchSelect from './basic-search-select.vue'
+import SidebarAudioEvents from './sidebar-audio-events.vue'
 import SidebarSoundscape, { type SoundItem } from './sidebar-soundscape.vue'
 import SidebarSpecies from './sidebar-species.vue'
 import SidebarSpectrogramPlayer from './sidebar-spectrogram-player.vue'
@@ -168,6 +175,10 @@ const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDelete
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
 const { data: trainingSetOptions } = useLegacyTrainingSets(apiClientArbimon, selectedProjectSlug)
 const { data: soundscape } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
+
+// TODO: change the number 7932954 & 8902
+const { data: aedClustering } = useAedClustering(apiClientArbimon, selectedProjectSlug, computed(() => 7932954))
+const { data: playlist } = useGetPlaylistInfo(apiClientArbimon, selectedProjectSlug, computed(() => 8902))
 
 const options = computed(() => sites.value?.map(s => ({ label: s.name, value: s.id, count: s.rec_count })) ?? [])
 const siteSelected = ref<string | number | undefined>(undefined)
@@ -292,6 +303,13 @@ watch(() => props.visobject, (v) => {
   const site = options.value.find(s => s.label === v?.site)
   siteSelected.value = site?.value
   initialDate.value = v?.datetime ?? ''
+})
+
+watch(siteSelected, (newVal, oldVal) => {
+  if (oldVal === undefined) return
+  if (newVal !== oldVal) {
+    initialDate.value = ''
+  }
 })
 </script>
 

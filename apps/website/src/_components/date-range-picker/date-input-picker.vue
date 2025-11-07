@@ -10,7 +10,7 @@
     <div class="relative flex-1">
       <input
         ref="datePickerInput"
-        class="w-full border text-secondary border-util-gray-04 rounded-md h-[34px]
+        class="w-full border text-secondary border-util-gray-04 rounded-md h-[34px] pl-7 pr-5
           dark:(bg-util-gray-04 text-secondary placeholder:text-placeholder)
           disabled:(cursor-not-allowed opacity-60)"
         type="text"
@@ -18,7 +18,7 @@
         :disabled="isDisabled"
       >
       <div
-        v-show="isDisabled || !hasSelected"
+        v-if="isDisabled || !hasSelected"
         class="overlay-date pointer-events-none absolute inset-0 flex items-center justify-center rounded-md
                bg-util-gray-04 gap-2 transition-colors"
         :class="isDisabled ? 'text-secondary/60' : 'text-insight'"
@@ -26,6 +26,12 @@
         <icon-fa-calendar class="h-4 w-4" />
         <span class="text-sm lowercase tracking-wide">date</span>
         <icon-fa-chevron-down class="w-[9px] h-[9px]" />
+      </div>
+      <div v-else>
+        <icon-fa-calendar
+          class="pointer-events-none absolute left-2 top-[8px] -translate-y-1/2 h-4 w-4 text-insight"
+        />
+        <icon-fa-chevron-down class="pointer-events-none absolute right-2 top-[12px] -translate-y-1/2 w-[9px] h-[9px] text-insight" />
       </div>
     </div>
   </div>
@@ -133,16 +139,19 @@ watch(() => props.initialDate, (v) => {
   picker.value?.setDate(formatted)
 })
 
-watch(
-  () => [props.initialViewYear, props.initialViewMonth],
-  ([year, month]) => {
-    if (year == null || month == null) return
-    const temp = new Date(year, month - 1, 1)
-    picker.value?.setDate(temp)
-    if (datePickerInput.value) datePickerInput.value.value = ''
-    selectedDateIso.value = ''
-  }
-)
+function updateViewDate () {
+  const year = props.initialViewYear
+  const month = props.initialViewMonth
+  if (year == null || month == null) return
+
+  const temp = new Date(year, month - 1, 1)
+  picker.value?.setDate(temp)
+  if (datePickerInput.value) datePickerInput.value.value = ''
+  selectedDateIso.value = ''
+}
+
+watch(() => props.initialViewYear, updateViewDate)
+watch(() => props.initialViewMonth, updateViewDate)
 
 function resetDatePicker (preset?: { date: string }) {
   if (preset?.date) {

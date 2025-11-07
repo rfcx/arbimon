@@ -279,3 +279,74 @@ export const apiDeleteRecordingTag = async (apiClient: AxiosInstance, slug: stri
 
   return res.data
 }
+export interface AedClusterItem {
+  job_id: number
+  name: string
+  parameters: Record<string, number>
+  timestamp: string
+  time_min: number
+  time_max: number
+  freq_min: number
+  freq_max: number
+  aed_id: number
+  species_id: number | null
+  songtype_id: number | null
+  species_name: string | null
+  songtype_name: string | null
+  rec_id: number
+  state: 'completed' | 'running' | 'failed' | string
+}
+export type AedClusterResponse = AedClusterItem[]
+
+export const apiArbimonGetAedClustering = async (
+  apiClient: AxiosInstance,
+  slug: string,
+  recId: string | number,
+  completed = true
+): Promise<AedClusterResponse | undefined> => {
+  if (!slug || recId == null) return undefined
+
+  const s = 'the-rooftop'
+  const url = `/legacy-api/project/${s}/audio-event-detections-clustering`
+  // TODO: should remove 2 lines above
+  // const url = `/legacy-api/project/${slug}/audio-event-detections-clustering`
+
+  const res = await apiClient.request<AedClusterResponse>({
+    method: 'GET',
+    url,
+    params: {
+      completed,
+      rec_id: recId
+    }
+  })
+  return res.data
+}
+export interface PlaylistInfo {
+  id: number
+  name: string
+  project_id: number
+  uri: string | null
+  metadata: unknown | null
+  count: number
+  type: string
+}
+
+export const apiArbimonGetPlaylistInfo = async (
+  apiClient: AxiosInstance,
+  slug: string,
+  playlistId: string | number
+): Promise<PlaylistInfo | undefined> => {
+  if (slug == null || slug === '' || playlistId == null || playlistId === '') {
+    return undefined
+  }
+  const s = 'the-rooftop'
+  const url = `/legacy-api/project/${s}/playlists/info/${playlistId}`
+  // TODO: should remove 2 lines above
+  // const url = `/legacy-api/project/${slug}/playlists/info/${playlistId}`
+  const response = await apiClient.request<PlaylistInfo>({
+    method: 'GET',
+    url
+  })
+
+  return response.data
+}

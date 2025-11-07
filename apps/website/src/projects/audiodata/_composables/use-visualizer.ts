@@ -1,8 +1,8 @@
 import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQuery } from '@tanstack/vue-query'
 import type { AxiosInstance } from 'axios'
-import { type ComputedRef } from 'vue'
+import { type ComputedRef, computed } from 'vue'
 
-import { type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type TagDeleteResponse, type TagParams, type VisobjectResponse, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetRecordingTag, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type AedClusterResponse, type PlaylistInfo, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type TagDeleteResponse, type TagParams, type VisobjectResponse, apiArbimonGetAedClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetRecordingTag, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: ComputedRef<string | undefined>): UseQueryReturnType<VisobjectResponse | undefined, unknown> => {
   return useQuery({
@@ -75,5 +75,48 @@ export const useRecordingValidate = (apiClient: AxiosInstance, slug: ComputedRef
       if (!slug.value || !recordingId) return undefined
       return await apiRecordingValidate(apiClient, slug.value, recordingId, payload)
     }
+  })
+}
+
+export const useAedClustering = (
+  apiClient: AxiosInstance,
+  slug: ComputedRef<string | undefined>,
+  recId: ComputedRef<string | number>,
+  completed: ComputedRef<boolean> = computed(() => true)
+): UseQueryReturnType<AedClusterResponse | undefined, unknown> => {
+  const enabled = computed(() => Boolean(slug.value && recId.value != null))
+
+  return useQuery({
+    queryKey: ['aed-clustering', slug, recId, completed],
+    queryFn: async () => {
+      if (!enabled.value) return undefined
+      const raw: AedClusterResponse | undefined = await apiArbimonGetAedClustering(
+        apiClient,
+        slug.value ?? '',
+        recId.value,
+        completed.value
+      )
+      return raw
+    },
+    enabled,
+    refetchOnWindowFocus: false
+  })
+}
+
+export const useGetPlaylistInfo = (
+  apiClient: AxiosInstance,
+  slug: ComputedRef<string | undefined>,
+  playlistId: ComputedRef<string | number | undefined>
+): UseQueryReturnType<PlaylistInfo | undefined, unknown> => {
+  const enabled = computed(() => Boolean(slug.value && playlistId.value))
+
+  return useQuery({
+    queryKey: ['playlist-info', slug, playlistId],
+    queryFn: async () => {
+      if (!enabled.value) return undefined
+      return await apiArbimonGetPlaylistInfo(apiClient, slug.value ?? '', playlistId.value ?? 0)
+    },
+    enabled,
+    refetchOnWindowFocus: false
   })
 }
