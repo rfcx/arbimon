@@ -87,7 +87,7 @@
       />
       <!-- ROI box -->
       <div
-        v-if="activeLayer === 'tag'"
+        v-if="activeLayer && activeLayer !== 'New Training Set'"
         class="input-source cursor-crosshair relative"
         :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
         @mousedown.left="onMouseDown"
@@ -96,12 +96,12 @@
       >
         <!-- Affixed Message -->
         <div class="pl-5 absolute text-pitch font-medium top-6">
-          Click to add tags to this recording.
+          Click to add {{ activeLayer }} to this recording.
           <div
             v-if="bboxWrapper.bbox && bboxWrapper.bbox.x1 !== 0"
             class="mt-1 text-sm text-pitch"
           >
-            Press <kbd>esc</kbd> to cancel tag addition.
+            Press <kbd>esc</kbd> to cancel {{ activeLayer }} addition.
           </div>
         </div>
 
@@ -116,23 +116,31 @@
           <icon-custom-fi-circle-dot class="w-3 h-3 absolute control-point -bottom-6px -left-6px cp-resize-bl" />
           <icon-custom-fi-circle-dot class="w-3 h-3 absolute control-point -bottom-6px -right-6px cp-resize-br" />
         </div>
-        <VisualizerBboxModal
-          v-model="keyword"
-          :keyword="keyword"
+        <VisualizerTagBboxModal
+          v-if="activeLayer === 'tag'"
+          v-model="tagKeyword"
+          :keyword="tagKeyword"
           :visible="bboxValid"
-          :items="keyword.length && keyword.length > 3 ? searchedTags?.map((tag) => { return {id: tag.tag_id, label: tag.tag }}) : projectTags?.map((tag) => { return {id: tag.tag_id, label: tag.tag }})"
+          :items="tagKeyword.length && tagKeyword.length > 3 ? searchedTags?.map((tag) => { return {id: tag.tag_id, label: tag.tag }}) : projectTags?.map((tag) => { return {id: tag.tag_id, label: tag.tag }})"
           :title="'Create Tag'"
           :list-name="'Tag'"
           @emit-selected-item="handleNewTag"
           @cancel="bboxValid = false"
         />
+        <VisualizerTrainingSetBboxModal
+          v-if="activeLayer === 'Training Set ROI Box' && trainingSet"
+          :title="'Training Set'"
+          :training-set-name="trainingSet.name"
+          :visible="bboxValid"
+          @handle-action="handleNewTrainingSet"
+        />
       </div>
       <!-- Tags layer -->
-      <div v-if="spectrogramTags">
+      <div v-if="spectrogramTags && layerVisibility.tag === true">
         <div
           v-for="(tag, index) in spectrogramTags"
           :key="index"
-          class="border-1 border-[#ff5340] bg-[rgba(255,83,64,0.05)] z-10 cursor-pointer absolute"
+          class="border-1 border-[#ff5340] bg-[rgba(255,83,64,0.05)] z-5 cursor-pointer absolute"
           :class="{ 'tag-selected': toggledTag === tag.bbox.id }"
           :style="{
             left: sec2x(tag.bbox.t0 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
@@ -143,18 +151,52 @@
           tabindex="-1"
           :title="'Tag: ' + getTagNames(tag.tags)"
           data-tooltip-style="dark"
-          :data-tooltip-target="`tagTooltip_${index}`"
+          :data-tooltip-target="`tagTooltipId-${index}`"
           @click="$event.stopPropagation(); toggleTag(tag.bbox.id)"
         />
-        <!-- tooltips -->
+        <!-- Tags Tooltips -->
         <div
           v-for="(tag, index) in spectrogramTags"
-          :id="`tagTooltip_${index}`"
-          :key="`tooltip-${index}`"
+          :id="`tagTooltipId-${index}`"
+          :key="`tagTooltipKey-${index}`"
           role="tooltip"
           class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
           {{ 'Tag: ' + getTagNames(tag.tags) }}
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
+      </div>
+      <!-- Training Sets layer -->
+      <div v-if="spectrogramTrainingSets && layerVisibility.ts === true">
+        <div
+          v-for="(ts, index) in spectrogramTrainingSets"
+          :key="index"
+          class="border-1 border-[#5340ff] bg-[rgba(83,64,255,0.05)] z-5 cursor-pointer absolute"
+          :class="{ 'ts-selected': toggledTrainingSet === ts.bbox.id }"
+          :style="{
+            left: sec2x(ts.bbox.x1 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
+            top: hz2y(ts.bbox.y2 ?? 0, 1) + legendMetrics.axis_margin_top + 'px',
+            width: getDsec2width(ts.bbox.x2 ?? 0, ts.bbox.x1 ?? 0, 1),
+            height: getDhz2height(ts.bbox.y2 ?? 0, ts.bbox.y1 ?? 0)
+          }"
+          tabindex="-1"
+          :title="'Tag: ' + getTrainingSetsNames(ts.ts)"
+          data-tooltip-style="dark"
+          :data-tooltip-target="`tsTooltipId-${index}`"
+          @click="$event.stopPropagation(); toggleTrainingSet(ts.bbox.id)"
+        />
+        <!-- Training Sets Tooltips -->
+        <div
+          v-for="(ts, index) in spectrogramTrainingSets"
+          :id="`tsTooltipId-${index}`"
+          :key="`tsTooltipKey-${index}`"
+          role="tooltip"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+        >
+          {{ 'Training Set: ' + getTrainingSetsNames(ts.ts) }}
           <div
             class="tooltip-arrow"
             data-popper-arrow
@@ -174,17 +216,21 @@ import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, 
 import { useRoute } from 'vue-router'
 
 import type { RecordingTagResponse, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type RecordingTrainingSet, type RecordingTrainingSetParams, type TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetTags } from '../../_composables/use-recordings'
+import { useGetRecordingTrainingSets, usePostTrainingSet } from '../../_composables/use-training-sets'
 import { useGetRecordingTag, usePutRecordingTag, useSearchTag } from '../../_composables/use-visualizer'
-import { type BboxGroup, type BboxListItem, type FreqFilter } from '../types'
-import VisualizerBboxModal from './visualizer-bbox-modal.vue'
+import { type BboxGroupTags, type BboxGroupTrainingSets, type BboxListItem, type FreqFilter } from '../types'
+import { type LayerVisibility } from '../visualizer-page.vue'
 import { CreateBBoxEditor } from './visualizer-create-bbox-editor'
 import { doXAxisLayout, doYAxisLayout, makeScale } from './visualizer-scale'
+import VisualizerTagBboxModal from './visualizer-tag-bbox-modal.vue'
 import VisualizerTileImg from './visualizer-tile-img.vue'
+import VisualizerTrainingSetBboxModal from './visualizer-trainin-set-bbox-modal.vue'
 
 const props = defineProps<{
   visobject: Visobject | undefined
@@ -192,6 +238,8 @@ const props = defineProps<{
   freqFilter?: FreqFilter
   isSpectrogramTagsUpdated: boolean
   activeLayer?: string | undefined
+  trainingSet: TrainingSet | undefined
+  layerVisibility: LayerVisibility
 }>()
 
 const selectedProjectSlug = computed(() => store.project?.slug)
@@ -209,9 +257,11 @@ const pointer = reactive<{ x: number; y: number; sec: number; hz: number }>({
 })
 
 const bboxWrapper = ref(new CreateBBoxEditor())
-const keyword = ref<string>('')
-const spectrogramTags = ref<BboxGroup[]>([])
+const tagKeyword = ref<string>('')
+const spectrogramTags = ref<BboxGroupTags[]>([])
+const spectrogramTrainingSets = ref<BboxGroupTrainingSets[]>([])
 const toggledTag = ref<number>()
+const toggledTrainingSet = ref<number>()
 
 const success = ref<AlertDialogType>('error')
 const title = ref('')
@@ -236,8 +286,17 @@ const { height: containerHeight, width: containerWidth } = useElementSize(spectr
 
 const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
 const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
-const { data: searchedTags, refetch: refetchSearchTags } = useSearchTag(apiClientArbimon, selectedProjectSlug, { q: keyword.value })
+const { data: searchedTags, refetch: refetchSearchTags } = useSearchTag(apiClientArbimon, selectedProjectSlug, { q: tagKeyword.value })
 const { mutate: mutateAddRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
+const { mutate: mutatePostTrainingSet } = usePostTrainingSet(apiClientArbimon, selectedProjectSlug)
+
+const recordingTrainingSetParams = computed<RecordingTrainingSetParams>(() => {
+  return {
+    recordingId: browserTypeId.value,
+    trainingSetId: props.trainingSet ? props.trainingSet.id : ''
+  }
+})
+const { data: trainingSets, refetch: refetchRecordingTrainingSets } = useGetRecordingTrainingSets(apiClientArbimon, selectedProjectSlug, recordingTrainingSetParams)
 
 const legendMetrics = computed(() => {
   return {
@@ -381,6 +440,10 @@ const getTagNames = (tags: RecordingTagResponse[]): string => {
   return tags.map(t => t.tag).join(',')
 }
 
+const getTrainingSetsNames = (trainingSets: RecordingTrainingSet[]): string => {
+  return trainingSets.map(t => t.name).join(',')
+}
+
 const handleResize = (): void => {
   containerSize.width = spectrogramContainer.value ? (spectrogramContainer.value.clientWidth - legendMetrics.value.axis_sizew - legendMetrics.value.axis_margin_x) : containerWidth.value - legendMetrics.value.axis_sizew - legendMetrics.value.axis_margin_x
   containerSize.height = spectrogramContainer.value ? (spectrogramContainer.value.clientHeight - legendMetrics.value.axis_sizeh - legendMetrics.value.axis_lead) : containerHeight.value - legendMetrics.value.axis_sizeh - legendMetrics.value.axis_lead
@@ -441,10 +504,37 @@ const handleNewTag = (tag: BboxListItem): void => {
   })
 }
 
+const handleNewTrainingSet = (action: string): void => {
+  bboxValid.value = false
+  if (action === 'cancel') {
+    return resetBBox()
+  }
+  mutatePostTrainingSet({
+    trainingSetId: props.trainingSet?.id as number,
+    recording: +browserTypeId.value,
+    roi: {
+      x1: bboxWrapper.value?.bbox?.x1 as number,
+      x2: bboxWrapper.value?.bbox?.x2 as number,
+      y1: bboxWrapper.value?.bbox?.y1 as number,
+      y2: bboxWrapper.value?.bbox?.y2 as number
+    }
+   }, {
+    onSuccess: () => {
+      refetchRecordingTrainingSets()
+      showAlertDialog('success', 'Success', 'Training set ROI is added')
+      resetBBox()
+    },
+    onError: (err) => {
+      console.info('err', err)
+      showAlertDialog('error', 'Error', 'Error creating ROI training set')
+      resetBBox()
+    }
+  })
+}
+
 const searchTags = (text: string) => {
   if (!text) return
   refetchSearchTags()
-  console.info('Searched tags:', searchedTags)
 }
 
 const toggleTag = (id: number) => {
@@ -452,8 +542,13 @@ const toggleTag = (id: number) => {
   else toggledTag.value = id
 }
 
-const groupByBbox = (tags: RecordingTagResponse[]): BboxGroup[] => {
-  const map: Record<string, BboxGroup> = {}
+const toggleTrainingSet = (id: number) => {
+  if (toggledTrainingSet.value === id) toggledTrainingSet.value = undefined
+  else toggledTrainingSet.value = id
+}
+
+const groupByBbox = (tags: RecordingTagResponse[]): BboxGroupTags[] => {
+  const map: Record<string, BboxGroupTags> = {}
   for (const tag of tags) {
     if (tag.f0 != null && tag.f1 != null) {
       const key = [tag.t0, tag.f0, tag.t1, tag.f1].join(',')
@@ -464,27 +559,52 @@ const groupByBbox = (tags: RecordingTagResponse[]): BboxGroup[] => {
   return Object.values(map)
 }
 
+const groupByBboxForTrainingSets = (ts: RecordingTrainingSet[]): BboxGroupTrainingSets[] => {
+  const map: Record<string, BboxGroupTrainingSets> = {}
+  for (const t of ts) {
+    if (t.x1 != null && t.x2 != null) {
+      const key = [t.x1, t.y1, t.x2, t.y2].join(',')
+      if (map[key] === undefined) map[key] = { bbox: t, ts: [] }
+      map[key].ts.push(t)
+    }
+  }
+  return Object.values(map)
+}
+
 watch(() => axisY.value, () => {
   drawChart()
+  if (trainingSets.value) {
+    spectrogramTrainingSets.value = groupByBboxForTrainingSets(trainingSets.value)
+  }
 })
 
-watch(() => keyword.value, () => {
-  console.info('keyword changed', keyword.value)
-  if (keyword.value.length && keyword.value.length > 2) {
-    searchTags(keyword.value)
+watch(() => tagKeyword.value, () => {
+  if (tagKeyword.value.length && tagKeyword.value.length > 2) {
+    searchTags(tagKeyword.value)
     refetchSearchTags()
   }
 })
 
 watch(() => recordingTags.value, async (newValue) => {
   if (!newValue) return
+  spectrogramTags.value = groupByBbox(newValue)
   await nextTick()
   initTooltips()
-  spectrogramTags.value = groupByBbox(newValue)
 })
 
-watch(() => props.isSpectrogramTagsUpdated, () => {
+watch(() => props.isSpectrogramTagsUpdated, async () => {
   refetchRecordingTags()
+  await nextTick()
+  initTooltips()
+})
+
+watch(() => props.trainingSet || trainingSets.value, async () => {
+  await refetchRecordingTrainingSets()
+  await nextTick()
+  initTooltips()
+  if (trainingSets.value) {
+    spectrogramTrainingSets.value = groupByBboxForTrainingSets(trainingSets.value)
+  }
 })
 
 onMounted(() => {
@@ -509,7 +629,8 @@ onBeforeUnmount(() => {
   position: absolute;
   background-color: rgba(255,255,255,.7)
 }
-.tag-selected {
+.tag-selected,
+.ts-selected {
   background-color: rgba(255,83,64,0.2) !important;
 }
 .crisp-image {

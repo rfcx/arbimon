@@ -1,3 +1,4 @@
+import { type RecordingTrainingSet } from '@rfcx-bio/common/api-arbimon/audiodata/training-sets'
 import { type RecordingTagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 export interface FreqFilter {
@@ -5,9 +6,14 @@ export interface FreqFilter {
   filterMax: number
 }
 
-export interface BboxGroup {
+export interface BboxGroupTags {
   bbox: RecordingTagResponse
   tags: RecordingTagResponse[]
+}
+
+export interface BboxGroupTrainingSets {
+  bbox: RecordingTrainingSet
+  ts: RecordingTrainingSet[]
 }
 
 export interface BboxListItem {

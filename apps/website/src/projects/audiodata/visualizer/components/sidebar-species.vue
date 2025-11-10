@@ -87,7 +87,7 @@
               v-if="filteredClass.length === 0 && searchKeyword.length > 0 && toggleSpeciesAdd && !toggleSpeciesSelect"
               class="flex flex-col px-4 py-2 gap-y-2 text-sm"
             >
-              We cannot find the species "{{ searchKeyword }}"" in the project.
+              We cannot find the species "{{ searchKeyword }}" in the project.
               <a
                 class="flex flex-row items-center text-frequency cursor-pointer"
                 @click="addSpecies()"
@@ -439,8 +439,8 @@ import { type AlertDialogType } from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetClasses } from '../../_composables/use-recordings'
+import { useSearchSpecies, useSongtypesSpecies } from '../../_composables/use-species'
 import { useRecordingValidate } from '../../_composables/use-visualizer'
-import { useSearchSpecies, useSongtypesSpecies } from '../../api/use-species'
 
 interface ClassToAdd {
   species: string | undefined
@@ -516,7 +516,6 @@ const clearSearchInput = () => {
 
 const filteredClass = computed((): ClassesRecordingResponse[] => {
   const prefix = searchKeyword.value.toLocaleLowerCase()
-  console.info(prefix)
   return (projectClasses.value ?? []).filter(cl => cl.species_name.toLocaleLowerCase().startsWith(prefix))
 })
 

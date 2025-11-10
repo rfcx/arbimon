@@ -204,7 +204,7 @@ import { type ProjectTemplatesResponse, type PublicTemplateResponse, type Public
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { useGetProjectTemplates, useGetPublicTemplates, useGetSpecies } from './api/use-species'
+import { useGetProjectTemplates, useGetPublicTemplates, useGetSpecies } from './_composables/use-species'
 import CreateSpecies from './component/create-species.vue'
 import CustomPopup from './component/custom-popup.vue'
 import ImportSpecies from './component/import-species.vue'

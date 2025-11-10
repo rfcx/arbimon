@@ -28,7 +28,7 @@
       class="hidden w-[90%] flex flex-col gap-y-2"
       aria-labelledby="accordion-collapse-heading-tag"
     >
-      <div class="flex flex-row justify-between items-center">
+      <div class="flex flex-row relative justify-between items-center">
         {{ visobject.file }}
         <button
           class="flex items-center justify-center p-1 w-7 h-7 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"

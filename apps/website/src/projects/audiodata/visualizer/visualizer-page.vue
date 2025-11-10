@@ -7,6 +7,8 @@
       @update-color-spectrogram="handleColorSpectrogram"
       @update-freq-filter="handleFreqFilter"
       @update-tags="handleTags"
+      @emit-training-set="handleTrainingSet"
+      @emit-training-set-visibility="handleTrainingSetVisibility"
       @emit-active-layer="handleActiveLayer"
     />
     <div
@@ -29,6 +31,8 @@
       :freq-filter="freqFilter"
       :is-spectrogram-tags-updated="isSpectrogramTagsUpdated"
       :active-layer="activeLayer"
+      :training-set="selectedTrainingSet"
+      :layer-visibility="layerVisibility"
     />
   </section>
 </template>
@@ -37,12 +41,21 @@ import type { AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
+import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
+
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetRecording } from '../_composables/use-visualizer'
 import VisualizerSidebar from './components/visualizer-sidebar.vue'
 import VisualizerSpectrogram from './components/visualizer-spectrogram.vue'
 import { type FreqFilter } from './types'
+
+export interface LayerVisibility {
+  tag: boolean
+  ts: boolean
+  aed: boolean
+  cluster: boolean
+}
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
@@ -54,6 +67,13 @@ const spectroColor = ref('spectroColor=mtrue')
 const freqFilter = ref<FreqFilter | undefined>(undefined)
 const isSpectrogramTagsUpdated = ref<boolean>(false)
 const activeLayer = ref<string | undefined>(undefined)
+const layerVisibility = ref<LayerVisibility>({
+  tag: true,
+  ts: true,
+  aed: true,
+  cluster: true
+})
+const selectedTrainingSet = ref<TrainingSet | undefined>(undefined)
 
 const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
 const browserType = computed(() => browserTypes.includes(route.params.browserType as string) ? route.params.browserType as string : undefined)
@@ -77,6 +97,14 @@ const handleFreqFilter = (filter: FreqFilter) => {
 const handleTags = () => {
   isSpectrogramTagsUpdated.value = false
   isSpectrogramTagsUpdated.value = true
+}
+
+const handleTrainingSet = (trainingSet: TrainingSet) => {
+  selectedTrainingSet.value = trainingSet
+}
+
+const handleTrainingSetVisibility = (value: boolean) => {
+  layerVisibility.value.ts = value
 }
 
 const handleActiveLayer = (layer: string | undefined) => {

@@ -71,8 +71,9 @@
     />
     <SidebarTrainingSets
       v-if="visobject"
-      :visobject="visobject"
-      :training-set="trainingSetOptions"
+      @emit-active-layer="toggleSidebarTrainingSet"
+      @emit-training-set="$emit('emitTrainingSet', $event)"
+      @emit-training-set-visibility="$emit('emitTrainingSetVisibility', $event)"
     />
     <SidebarTemplates
       v-if="visobject"
@@ -106,17 +107,22 @@ import { computed, inject, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { RecordingTagResponse, TagParams, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
 import DateInputPicker from '@/_components/date-range-picker/date-input-picker.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { useLegacyTrainingSets } from '../../_composables/use-project'
 import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetSoundscape, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
 import { useSites } from '../../_composables/use-sites'
+<<<<<<< Updated upstream
 import { useAedClustering, useDeleteRecordingTag, useGetPlaylistInfo, useGetRecordingTag, usePutRecordingTag } from '../../_composables/use-visualizer'
 import { type BboxGroup, type FreqFilter } from '../types'
+=======
+import { useDeleteRecordingTag, useGetRecordingTag, usePutRecordingTag } from '../../_composables/use-visualizer'
+import { type BboxGroupTags, type FreqFilter } from '../types'
+>>>>>>> Stashed changes
 import BasicSearchSelect from './basic-search-select.vue'
 import SidebarAudioEvents from './sidebar-audio-events.vue'
 import SidebarSoundscape, { type SoundItem } from './sidebar-soundscape.vue'
@@ -136,6 +142,8 @@ const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'updateFreqFilter', value: FreqFilter): void,
   (e: 'updateTags'): void,
   (e: 'emitActiveLayer', value: string | undefined): void,
+  (e: 'emitTrainingSet', value: TrainingSet): void,
+  (e: 'emitTrainingSetVisibility', value: boolean): void
 }>()
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
@@ -143,7 +151,6 @@ const route = useRoute()
 const store = useStore()
 
 const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
-// const layers: string[] = ['tag', 'species', 'template', 'aed', 'cluster']
 const activeLayer = ref<string | undefined>(undefined)
 const freqFilter = ref<FreqFilter | undefined>(undefined)
 const selectedProjectSlug = computed(() => store.project?.slug)
@@ -153,7 +160,7 @@ const success = ref<AlertDialogType>('error')
 const title = ref('')
 const message = ref('')
 const showAlert = ref(false)
-const spectrogramTags = ref<BboxGroup[]>([])
+const spectrogramTags = ref<BboxGroupTags[]>([])
 const initialDate = ref('')
 const initialViewMonth = ref<number | undefined>(undefined)
 const initialViewYear = ref<number | undefined>(undefined)
@@ -173,7 +180,6 @@ const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTa
 const { isPending: isAddingTag, mutate: mutateRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDeleteRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
-const { data: trainingSetOptions } = useLegacyTrainingSets(apiClientArbimon, selectedProjectSlug)
 const { data: soundscape } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
 
 // TODO: change the number 7932954 & 8902
@@ -275,8 +281,13 @@ const toggleSidebarTag = (isActive: boolean) => {
   emits('emitActiveLayer', activeLayer.value)
 }
 
-const groupByBbox = (tags: RecordingTagResponse[]): BboxGroup[] => {
-  const map: Record<string, BboxGroup> = {}
+const toggleSidebarTrainingSet = (isActive: boolean, type: string) => {
+  activeLayer.value = isActive ? type : undefined
+  emits('emitActiveLayer', activeLayer.value)
+}
+
+const groupByBbox = (tags: RecordingTagResponse[]): BboxGroupTags[] => {
+  const map: Record<string, BboxGroupTags> = {}
   for (const tag of tags) {
     if (tag.f0 != null && tag.f1 != null) {
       const key = [tag.t0, tag.f0, tag.t1, tag.f1].join(',')

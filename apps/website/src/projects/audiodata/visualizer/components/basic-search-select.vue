@@ -35,7 +35,7 @@
       <icon-fa-chevron-down
         v-if="!open"
         data-accordion-icon
-        class="w-[9px] h-[9px] mr-2 fa-chevron-up"
+        class="w-[9px] h-[9px] mr-2 fa-chevron-up cursor-pointer"
       />
     </div>
 
