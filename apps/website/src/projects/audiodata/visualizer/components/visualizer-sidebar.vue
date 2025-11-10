@@ -116,13 +116,8 @@ import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetSoundscape, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
 import { useSites } from '../../_composables/use-sites'
-<<<<<<< Updated upstream
 import { useAedClustering, useDeleteRecordingTag, useGetPlaylistInfo, useGetRecordingTag, usePutRecordingTag } from '../../_composables/use-visualizer'
-import { type BboxGroup, type FreqFilter } from '../types'
-=======
-import { useDeleteRecordingTag, useGetRecordingTag, usePutRecordingTag } from '../../_composables/use-visualizer'
 import { type BboxGroupTags, type FreqFilter } from '../types'
->>>>>>> Stashed changes
 import BasicSearchSelect from './basic-search-select.vue'
 import SidebarAudioEvents from './sidebar-audio-events.vue'
 import SidebarSoundscape, { type SoundItem } from './sidebar-soundscape.vue'
