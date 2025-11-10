@@ -126,6 +126,7 @@
                 >Email <span class="text-sm font-normal">(required)</span></label>
                 <input
                   id="email"
+                  v-model="email"
                   name="email"
                   type="email"
                   maxlength="80"
@@ -339,15 +340,22 @@
   <footer-contact />
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import FooterContact from '@/_layout/components/landing-footer-contact.vue'
+import { useStore } from '~/store'
 
 const route = useRoute()
+const store = useStore()
+
+const userFirstName = computed(() => store.user?.given_name)
+const userLastName = computed(() => store.user?.family_name)
+const userEmail = computed(() => store.user?.email)
 
 const firstName = ref('')
 const lastName = ref('')
+const email = ref('')
 const inquiryType = ref('Collaboration')
 const productName = ref('Companion app')
 const message = ref('')
@@ -370,6 +378,12 @@ const description = computed(() => {
   } else {
     return message.value
   }
+})
+
+onMounted(() => {
+  firstName.value = userFirstName.value ?? ''
+  lastName.value = userLastName.value ?? ''
+  email.value = userEmail.value ?? ''
 })
 
 const isError = ref(false)
