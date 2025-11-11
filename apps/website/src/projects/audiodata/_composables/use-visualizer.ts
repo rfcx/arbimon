@@ -2,7 +2,7 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import type { AxiosInstance } from 'axios'
 import { type ComputedRef, computed } from 'vue'
 
-import { type AedClusterResponse, type PlaylistInfo, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type TagDeleteResponse, type TagParams, type VisobjectResponse, apiArbimonGetAedClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetRecordingTag, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type AedClusterResponse, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type TagDeleteResponse, type TagParams, type VisobjectResponse, apiArbimonGetAedClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: ComputedRef<string | undefined>): UseQueryReturnType<VisobjectResponse | undefined, unknown> => {
   return useQuery({
@@ -44,6 +44,16 @@ export const useSearchTag = (apiClient: AxiosInstance, slug: ComputedRef<string 
     queryFn: async () => {
       if (!slug.value || !params.q.length) return []
       return await apiSearchTag(apiClient, slug.value, params)
+    }
+  })
+}
+
+export const useGetPatternMatchingBoxes = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, params: RecordingPatternMatchingBoxesParams): UseQueryReturnType<RecordingPatternMatchingBoxesResponse[] | undefined, unknown> => {
+  return useQuery({
+    queryKey: ['fetch-pm-box'],
+    queryFn: async () => {
+      if (!slug.value || params.rec_id === undefined) return []
+      return await apiGetPatternMatchingBoxes(apiClient, slug.value, params)
     }
   })
 }

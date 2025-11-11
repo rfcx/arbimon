@@ -30,6 +30,7 @@
         </div>
       </button>
       <div
+        class="cursor-pointer"
         @click="toggleTrainingSetVisible()"
       >
         <icon-fa-eye
@@ -211,7 +212,6 @@ const toggledTrainingSetMenu = ref<boolean>(false)
 const toggleTrainingSet = ref<boolean>(false)
 const selectedTrainingSet = ref<TrainingSet>()
 const selectedTrainingSetText = ref<string>('')
-// TODO: When click on ic-eye to hander hied/show TrainingSets box on spectrogram
 const toggleVisible = ref<boolean>(true)
 const toggledCreateTrainingSet = ref<boolean>(false)
 const success = ref<AlertDialogType>('error')

@@ -279,6 +279,44 @@ export const apiDeleteRecordingTag = async (apiClient: AxiosInstance, slug: stri
 
   return res.data
 }
+
+export interface RecordingPatternMatchingBoxesParams {
+  rec_id: string
+  validated: number
+}
+
+export interface RecordingPatternMatchingBoxesResponse {
+  pattern_matching_roi_id: number
+  pattern_matching_id: number
+  recording_id: number
+  species_id: number
+  songtype_id: number
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  uri_param1: number
+  uri_param2: number
+  score: number
+  validated: number
+  cs_val_present: number
+  cs_val_not_present: number
+  consensus_validated: number | null
+  expert_validated: number | null
+  expert_validation_user_id: number | null
+  denorm_site_id: number
+  denorm_recording_datetime: string
+  denorm_recording_date: string
+  species_name: string
+  songtype_name: string
+  uri: string
+}
+
+export const apiGetPatternMatchingBoxes = async (apiClient: AxiosInstance, slug: string, params: RecordingPatternMatchingBoxesParams): Promise<RecordingPatternMatchingBoxesResponse[] | undefined> => {
+  const response = await apiClient.get(`/legacy-api/project/${slug}/pattern-matchings`, { params })
+  return response.data
+}
+
 export interface AedClusterItem {
   job_id: number
   name: string

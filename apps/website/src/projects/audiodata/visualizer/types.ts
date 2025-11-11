@@ -16,6 +16,21 @@ export interface BboxGroupTrainingSets {
   ts: RecordingTrainingSet[]
 }
 
+export interface BboxGroupPm {
+  recId: number
+  patternMatchingId: number
+  patternMatchingRoiId: number
+  name: string
+  species: string
+  songtype: string
+  x1: number
+  x2: number
+  y1: number
+  y2: number
+  display: string
+  isPopupOpened: boolean
+}
+
 export interface BboxListItem {
   id: number
   label: string

@@ -141,7 +141,7 @@
           v-for="(tag, index) in spectrogramTags"
           :key="index"
           class="border-1 border-[#ff5340] bg-[rgba(255,83,64,0.05)] z-5 cursor-pointer absolute"
-          :class="{ 'tag-selected': toggledTag === tag.bbox.id }"
+          :class="{ 'roi-selected': toggledTag === tag.bbox.id }"
           :style="{
             left: sec2x(tag.bbox.t0 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
             top: hz2y(tag.bbox.f1 ?? 0, 1) + legendMetrics.axis_margin_top + 'px',
@@ -169,13 +169,47 @@
           />
         </div>
       </div>
+      <!-- Species layer -->
+      <div v-if="spectrogramPM && layerVisibility.species === true">
+        <div
+          v-for="(pmRoi, index) in spectrogramPM"
+          :key="index"
+          class="border-1 border-[#268f4b] bg-[rgba(38,143,75,0.05)] z-5 cursor-pointer absolute"
+          :class="{ 'roi-selected': toggledPmRoiBox === pmRoi.patternMatchingRoiId }"
+          :style="{
+            left: sec2x(pmRoi.x1 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
+            top: hz2y(pmRoi.y2 ?? 0, 1) + legendMetrics.axis_margin_top + 'px',
+            width: getDsec2width(pmRoi.x2 ?? 0, pmRoi.x1 ?? 0, 1),
+            height: getDhz2height(pmRoi.y2 ?? 0, pmRoi.y1 ?? 0)
+          }"
+          tabindex="-1"
+          :title="'Patter Matching Roi Box: ' + pmRoi.name"
+          data-tooltip-style="dark"
+          :data-tooltip-target="`pmTooltipId-${index}`"
+          @click="$event.stopPropagation(); togglePmRoiBox(pmRoi.patternMatchingRoiId)"
+        />
+        <!-- PM Roi Tooltips -->
+        <div
+          v-for="(pmRoi, index) in spectrogramPM"
+          :id="`pmTooltipId-${index}`"
+          :key="`pmTooltipKey-${index}`"
+          role="tooltip"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+        >
+          {{ 'Patter Matching Roi Box: ' + pmRoi.name }}
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
+      </div>
       <!-- Training Sets layer -->
       <div v-if="spectrogramTrainingSets && layerVisibility.ts === true">
         <div
           v-for="(ts, index) in spectrogramTrainingSets"
           :key="index"
           class="border-1 border-[#5340ff] bg-[rgba(83,64,255,0.05)] z-5 cursor-pointer absolute"
-          :class="{ 'ts-selected': toggledTrainingSet === ts.bbox.id }"
+          :class="{ 'roi-selected': toggledTrainingSet === ts.bbox.id }"
           :style="{
             left: sec2x(ts.bbox.x1 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
             top: hz2y(ts.bbox.y2 ?? 0, 1) + legendMetrics.axis_margin_top + 'px',
@@ -183,7 +217,7 @@
             height: getDhz2height(ts.bbox.y2 ?? 0, ts.bbox.y1 ?? 0)
           }"
           tabindex="-1"
-          :title="'Tag: ' + getTrainingSetsNames(ts.ts)"
+          :title="'Training Set: ' + getTrainingSetsNames(ts.ts)"
           data-tooltip-style="dark"
           :data-tooltip-target="`tsTooltipId-${index}`"
           @click="$event.stopPropagation(); toggleTrainingSet(ts.bbox.id)"
@@ -223,8 +257,8 @@ import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetTags } from '../../_composables/use-recordings'
 import { useGetRecordingTrainingSets, usePostTrainingSet } from '../../_composables/use-training-sets'
-import { useGetRecordingTag, usePutRecordingTag, useSearchTag } from '../../_composables/use-visualizer'
-import { type BboxGroupTags, type BboxGroupTrainingSets, type BboxListItem, type FreqFilter } from '../types'
+import { useGetPatternMatchingBoxes, useGetRecordingTag, usePutRecordingTag, useSearchTag } from '../../_composables/use-visualizer'
+import { type BboxGroupPm, type BboxGroupTags, type BboxGroupTrainingSets, type BboxListItem, type FreqFilter } from '../types'
 import { type LayerVisibility } from '../visualizer-page.vue'
 import { CreateBBoxEditor } from './visualizer-create-bbox-editor'
 import { doXAxisLayout, doYAxisLayout, makeScale } from './visualizer-scale'
@@ -260,8 +294,10 @@ const bboxWrapper = ref(new CreateBBoxEditor())
 const tagKeyword = ref<string>('')
 const spectrogramTags = ref<BboxGroupTags[]>([])
 const spectrogramTrainingSets = ref<BboxGroupTrainingSets[]>([])
+const spectrogramPM = ref<BboxGroupPm[]>([])
 const toggledTag = ref<number>()
 const toggledTrainingSet = ref<number>()
+const toggledPmRoiBox = ref<number>()
 
 const success = ref<AlertDialogType>('error')
 const title = ref('')
@@ -287,6 +323,7 @@ const { height: containerHeight, width: containerWidth } = useElementSize(spectr
 const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
 const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { data: searchedTags, refetch: refetchSearchTags } = useSearchTag(apiClientArbimon, selectedProjectSlug, { q: tagKeyword.value })
+const { data: pmBoxes, refetch: refetchPatternMatchingBoxes } = useGetPatternMatchingBoxes(apiClientArbimon, selectedProjectSlug, { rec_id: browserTypeId.value as string, validated: 1 })
 const { mutate: mutateAddRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { mutate: mutatePostTrainingSet } = usePostTrainingSet(apiClientArbimon, selectedProjectSlug)
 
@@ -547,6 +584,11 @@ const toggleTrainingSet = (id: number) => {
   else toggledTrainingSet.value = id
 }
 
+const togglePmRoiBox = (id: number) => {
+  if (toggledPmRoiBox.value === id) toggledPmRoiBox.value = undefined
+  else toggledPmRoiBox.value = id
+}
+
 const groupByBbox = (tags: RecordingTagResponse[]): BboxGroupTags[] => {
   const map: Record<string, BboxGroupTags> = {}
   for (const tag of tags) {
@@ -571,11 +613,39 @@ const groupByBboxForTrainingSets = (ts: RecordingTrainingSet[]): BboxGroupTraini
   return Object.values(map)
 }
 
+const fetchSpeciesPresence = (): void => {
+  const rec = props.visobject && (props.visobject.type === 'recording') && props.visobject.id
+  if (rec !== undefined && pmBoxes.value !== undefined) {
+    spectrogramPM.value = pmBoxes.value.map(roi => {
+      return {
+        recId: roi.recording_id,
+        patternMatchingId: roi.pattern_matching_id,
+        patternMatchingRoiId: roi.pattern_matching_roi_id,
+        name: roi.species_name + ' ' + roi.songtype_name,
+        species: roi.species_name,
+        songtype: roi.songtype_name,
+        x1: roi.x1,
+        x2: roi.x2,
+        y1: roi.y1,
+        y2: roi.y2,
+        display: roi.recording_id === rec ? 'block' : 'none',
+        isPopupOpened: false
+      }
+    })
+    // Add validated aed species boxes
+    if (props.visobject && props.visobject.aedValidations.length) {
+      spectrogramPM.value = spectrogramPM.value.concat(props.visobject.aedValidations)
+    }
+  }
+}
+
 watch(() => axisY.value, () => {
   drawChart()
   if (trainingSets.value) {
     spectrogramTrainingSets.value = groupByBboxForTrainingSets(trainingSets.value)
   }
+  refetchPatternMatchingBoxes()
+  fetchSpeciesPresence()
 })
 
 watch(() => tagKeyword.value, () => {
@@ -598,13 +668,28 @@ watch(() => props.isSpectrogramTagsUpdated, async () => {
   initTooltips()
 })
 
-watch(() => props.trainingSet || trainingSets.value, async () => {
-  await refetchRecordingTrainingSets()
+watch(() => pmBoxes.value, async (newValue) => {
+  if (!newValue) return
+  fetchSpeciesPresence()
   await nextTick()
   initTooltips()
+})
+
+watch(() => trainingSets.value, async () => {
   if (trainingSets.value) {
     spectrogramTrainingSets.value = groupByBboxForTrainingSets(trainingSets.value)
   }
+  await nextTick()
+  initTooltips()
+})
+
+watch(() => props.trainingSet, async () => {
+  await refetchRecordingTrainingSets()
+  if (trainingSets.value) {
+    spectrogramTrainingSets.value = groupByBboxForTrainingSets(trainingSets.value)
+  }
+  await nextTick()
+  initTooltips()
 })
 
 onMounted(() => {
@@ -629,8 +714,7 @@ onBeforeUnmount(() => {
   position: absolute;
   background-color: rgba(255,255,255,.7)
 }
-.tag-selected,
-.ts-selected {
+.roi-selected {
   background-color: rgba(255,83,64,0.2) !important;
 }
 .crisp-image {

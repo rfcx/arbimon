@@ -10,6 +10,7 @@
       @emit-training-set="handleTrainingSet"
       @emit-training-set-visibility="handleTrainingSetVisibility"
       @emit-active-layer="handleActiveLayer"
+      @emit-species-visibility="handleSpeciesVisibility"
     />
     <div
       v-if="isLoadingVisobject || isRefetching"
@@ -52,6 +53,7 @@ import { type FreqFilter } from './types'
 
 export interface LayerVisibility {
   tag: boolean
+  species: boolean
   ts: boolean
   aed: boolean
   cluster: boolean
@@ -69,6 +71,7 @@ const isSpectrogramTagsUpdated = ref<boolean>(false)
 const activeLayer = ref<string | undefined>(undefined)
 const layerVisibility = ref<LayerVisibility>({
   tag: true,
+  species: true,
   ts: true,
   aed: true,
   cluster: true
@@ -105,6 +108,10 @@ const handleTrainingSet = (trainingSet: TrainingSet) => {
 
 const handleTrainingSetVisibility = (value: boolean) => {
   layerVisibility.value.ts = value
+}
+
+const handleSpeciesVisibility = (value: boolean) => {
+  layerVisibility.value.species = value
 }
 
 const handleActiveLayer = (layer: string | undefined) => {

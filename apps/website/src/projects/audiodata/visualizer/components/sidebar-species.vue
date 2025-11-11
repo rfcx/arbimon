@@ -4,7 +4,10 @@
     data-accordion="collapse"
     class="flex flex-col gap-y-2 px-4 py-2 bg-moss shadow"
   >
-    <div id="accordion-collapse-heading-species">
+    <div
+      id="accordion-collapse-heading-species"
+      class="flex justify-between items-center"
+    >
       <button
         type="button"
         class="flex justify-between items-center w-full py-2 gap-x-1 text-insight dark:bg-moss dark:active:bg-moss"
@@ -23,7 +26,7 @@
           />
           <span>Species Presence Validation</span>
         </div>
-        <div class="flex flex-row justify-center gap-x-3">
+        <div class="flex flex-row justify-center gap-x-3 mr-2">
           <div class="min-w-20 flex flex-row justify-center cursor-default items-center gap-x-1 bg-[#D9D9D9] text-pitch rounded-full text-xs px-2 py-0.6">
             <icon-fa-check
               class="h-3 text-[#1F57CC]"
@@ -35,21 +38,21 @@
             />
             <span>{{ getSpeciesAbsentCount(visobject.validations) }}</span>
           </div>
-          <div
-            @click="toggleVisible = !toggleVisible"
-            @click.stop
-          >
-            <icon-fa-eye
-              v-if="toggleVisible"
-              class="h-4 w-4"
-            />
-            <icon-fa-eye-slash
-              v-else
-              class="h-4 w-4"
-            />
-          </div>
         </div>
       </button>
+      <div
+        class="cursor-pointer"
+        @click="toggleSpeciesVisible()"
+      >
+        <icon-fa-eye
+          v-if="toggleVisible"
+          class="h-4 w-4"
+        />
+        <icon-fa-eye-slash
+          v-else
+          class="h-4 w-4 text-util-gray-02"
+        />
+      </div>
     </div>
     <div
       id="accordion-collapse-body-species"
@@ -451,6 +454,8 @@ const props = defineProps<{
   visobject: Visobject
 }>()
 
+const emits = defineEmits<{(e: 'emitSpeciesVisibility', value: boolean): void}>()
+
 const speciesHeader = ['Species', 'Sound', 'Annotation']
 const validations = ref<Record<string, number[]>>({})
 const store = useStore()
@@ -727,8 +732,6 @@ const addSpecies = () => {
 const selectSpecies = (specie: SpeciesSearchResponse) => {
   classToAdd.value.species = specie.scientific_name
   toggleSpeciesSelect.value = false
-  // selected.value = {}
-  // tempSelected = {}
   toggleSongtypeSelect.value = true
 }
 
@@ -764,6 +767,11 @@ const addClass = async () => {
     searchKeyword.value = ''
     showAlertDialog('error', 'Error', `Add ${opts.species} ${opts.songtype} to project`)
   }
+}
+
+const toggleSpeciesVisible = () => {
+  toggleVisible.value = !toggleVisible.value
+  emits('emitSpeciesVisibility', toggleVisible.value)
 }
 
 const backToSelectSpecies = () => {

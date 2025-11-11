@@ -68,6 +68,7 @@
     <SidebarSpecies
       v-if="visobject"
       :visobject="visobject"
+      @emit-species-visibility="$emit('emitSpeciesVisibility', $event)"
     />
     <SidebarTrainingSets
       v-if="visobject"
@@ -138,7 +139,8 @@ const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'updateTags'): void,
   (e: 'emitActiveLayer', value: string | undefined): void,
   (e: 'emitTrainingSet', value: TrainingSet): void,
-  (e: 'emitTrainingSetVisibility', value: boolean): void
+  (e: 'emitTrainingSetVisibility', value: boolean): void,
+  (e: 'emitSpeciesVisibility', value: boolean): void
 }>()
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
