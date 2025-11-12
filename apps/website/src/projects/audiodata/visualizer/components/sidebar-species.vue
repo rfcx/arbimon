@@ -70,7 +70,7 @@
             ref="speciesSearchInput"
             v-model="searchKeyword"
             type="text"
-            placeholder="Search for species"
+            placeholder="Search for species sounds"
             class="form-control placeholder-style rounded h-[34px] w-full items-center inline-flex border-2 border-FFFEFC bg-moss flex-1 min-w-0 placeholder-util-gray-02"
             @input="onSearchInput"
           >
@@ -84,7 +84,7 @@
           id="speciesSearchDropdown"
           class="absolute hidden w-5/6 left-4 z-60 bg-white rounded-md shadow dark:bg-moss mt-2 border-util-gray-03 border-1"
         >
-          <!-- Add existing project species -->
+          <!-- Add existing project species sound -->
           <ul class="overflow-y-auto max-h-80 border-cloud bg-pitch rounded-md">
             <li
               v-if="filteredClass.length === 0 && searchKeyword.length > 0 && toggleSpeciesAdd && !toggleSpeciesSelect"

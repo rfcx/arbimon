@@ -21,7 +21,7 @@
           <label
             for="trainingSetName"
             class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
-          >Name:</label>
+          >Name</label>
           <input
             id="trainingSetName"
             v-model="trainingSetName"
@@ -35,9 +35,9 @@
         </div>
         <div>
           <label
-            for="trainingSetName"
+            for="speciesSound"
             class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
-          >Species Class (Species and Sound):</label>
+          >Species Sound</label>
           <div class="relative w-full">
             <input
               v-model="searchKeyword"

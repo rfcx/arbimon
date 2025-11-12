@@ -127,6 +127,12 @@
           @emit-selected-item="handleNewTag"
           @cancel="bboxValid = false"
         />
+        <VisualizerTemplateModal
+          v-if="activeLayer === 'template'"
+          :visible="bboxValid"
+          @emit-template-data="handleNewTemplate"
+          @cancel="resetBBox()"
+        />
         <VisualizerTrainingSetBboxModal
           v-if="activeLayer === 'Training Set ROI Box' && trainingSet"
           :title="'Training Set'"
@@ -237,6 +243,40 @@
           />
         </div>
       </div>
+      <!-- Templates layer -->
+      <div v-if="spectrogramTemplates && layerVisibility.template === true">
+        <div
+          v-for="(template, index) in spectrogramTemplates"
+          :key="index"
+          class="border-1 border-[#ffa600] bg-[rgba(255,174,0,0.05)] z-5 cursor-pointer absolute"
+          :class="{ 'roi-selected': toggledTemplateBox === template.id }"
+          :style="{
+            left: sec2x(template.x1 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
+            top: hz2y(template.y2 ?? 0, 1) + legendMetrics.axis_margin_top + 'px',
+            width: getDsec2width(template.x2 ?? 0, template.x1 ?? 0, 1),
+            height: getDhz2height(template.y2 ?? 0, template.y1 ?? 0)
+          }"
+          tabindex="-1"
+          :title="'Template: ' + template.name"
+          data-tooltip-style="dark"
+          :data-tooltip-target="`templateTooltipId-${index}`"
+          @click="$event.stopPropagation(); toggleTemplate(template.id)"
+        />
+        <!-- Templates Tooltips -->
+        <div
+          v-for="(template, index) in spectrogramTemplates"
+          :id="`templateTooltipId-${index}`"
+          :key="`templateTooltipKey-${index}`"
+          role="tooltip"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+        >
+          {{ 'Template: ' + template.name }}
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -249,22 +289,25 @@ import { initTooltips } from 'flowbite'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { RecordingTagResponse, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+// import type { SpeciesClassesParams } from '@rfcx-bio/common/api-arbimon/audiodata/species'
+import type { RecordingTagResponse, TemplateResponse, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import { type RecordingTrainingSet, type RecordingTrainingSetParams, type TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetTags } from '../../_composables/use-recordings'
+// import { useGetSpecies } from '../../_composables/use-species'
 import { useGetRecordingTrainingSets, usePostTrainingSet } from '../../_composables/use-training-sets'
-import { useGetPatternMatchingBoxes, useGetRecordingTag, usePutRecordingTag, useSearchTag } from '../../_composables/use-visualizer'
+import { useGetPatternMatchingBoxes, useGetRecordingTag, useGetTemplates, usePostTemplate, usePutRecordingTag, useSearchTag } from '../../_composables/use-visualizer'
 import { type BboxGroupPm, type BboxGroupTags, type BboxGroupTrainingSets, type BboxListItem, type FreqFilter } from '../types'
 import { type LayerVisibility } from '../visualizer-page.vue'
 import { CreateBBoxEditor } from './visualizer-create-bbox-editor'
 import { doXAxisLayout, doYAxisLayout, makeScale } from './visualizer-scale'
 import VisualizerTagBboxModal from './visualizer-tag-bbox-modal.vue'
+import VisualizerTemplateModal, { type TemplateData } from './visualizer-template-modal.vue'
 import VisualizerTileImg from './visualizer-tile-img.vue'
-import VisualizerTrainingSetBboxModal from './visualizer-trainin-set-bbox-modal.vue'
+import VisualizerTrainingSetBboxModal from './visualizer-training-set-bbox-modal.vue'
 
 const props = defineProps<{
   visobject: Visobject | undefined
@@ -295,9 +338,11 @@ const tagKeyword = ref<string>('')
 const spectrogramTags = ref<BboxGroupTags[]>([])
 const spectrogramTrainingSets = ref<BboxGroupTrainingSets[]>([])
 const spectrogramPM = ref<BboxGroupPm[]>([])
+const spectrogramTemplates = ref<TemplateResponse[]>([])
 const toggledTag = ref<number>()
 const toggledTrainingSet = ref<number>()
 const toggledPmRoiBox = ref<number>()
+const toggledTemplateBox = ref<number>()
 
 const success = ref<AlertDialogType>('error')
 const title = ref('')
@@ -324,8 +369,10 @@ const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientA
 const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { data: searchedTags, refetch: refetchSearchTags } = useSearchTag(apiClientArbimon, selectedProjectSlug, { q: tagKeyword.value })
 const { data: pmBoxes, refetch: refetchPatternMatchingBoxes } = useGetPatternMatchingBoxes(apiClientArbimon, selectedProjectSlug, { rec_id: browserTypeId.value as string, validated: 1 })
+const { data: templates, refetch: refetchTemplates } = useGetTemplates(apiClientArbimon, selectedProjectSlug)
 const { mutate: mutateAddRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { mutate: mutatePostTrainingSet } = usePostTrainingSet(apiClientArbimon, selectedProjectSlug)
+const { mutate: mutatePostTemplate } = usePostTemplate(apiClientArbimon, selectedProjectSlug)
 
 const recordingTrainingSetParams = computed<RecordingTrainingSetParams>(() => {
   return {
@@ -530,12 +577,39 @@ const handleNewTag = (tag: BboxListItem): void => {
     onSuccess: async () => {
       refetchProjectTags()
       refetchRecordingTags()
-      showAlertDialog('success', 'Success', 'Tag added')
+      showAlertDialog('success', 'Success', 'Tag is added')
       resetBBox()
     },
     onError: (err) => {
       console.info('err', err)
-      showAlertDialog('error', 'Error', 'Error adding tag')
+      showAlertDialog('error', 'Error', 'Error adding the tag')
+      resetBBox()
+    }
+  })
+}
+
+const handleNewTemplate = (templateData: TemplateData): void => {
+  bboxValid.value = false
+  mutatePostTemplate({
+    name: templateData.name,
+    recording: browserTypeId.value as string,
+    roi: {
+      x1: bboxWrapper.value?.bbox?.x1 as number,
+      y1: bboxWrapper.value?.bbox?.y1 as number,
+      x2: bboxWrapper.value?.bbox?.x2 as number,
+      y2: bboxWrapper.value?.bbox?.y2 as number
+    },
+    songtype: templateData.songtype,
+    species: templateData.species
+   }, {
+    onSuccess: async () => {
+      refetchTemplates()
+      showAlertDialog('success', 'Success', 'Template is added')
+      resetBBox()
+    },
+    onError: (err) => {
+      console.info('err', err)
+      showAlertDialog('error', 'Error', 'Error adding the template')
       resetBBox()
     }
   })
@@ -589,6 +663,11 @@ const togglePmRoiBox = (id: number) => {
   else toggledPmRoiBox.value = id
 }
 
+const toggleTemplate = (id: number) => {
+  if (toggledTemplateBox.value === id) toggledTemplateBox.value = undefined
+  else toggledTemplateBox.value = id
+}
+
 const groupByBbox = (tags: RecordingTagResponse[]): BboxGroupTags[] => {
   const map: Record<string, BboxGroupTags> = {}
   for (const tag of tags) {
@@ -639,6 +718,12 @@ const fetchSpeciesPresence = (): void => {
   }
 }
 
+const fetchRecordingTemplates = (): void => {
+  spectrogramTemplates.value = templates.value?.filter((template: TemplateResponse) => {
+    return template.recording === +browserTypeId.value
+  }) ?? []
+}
+
 watch(() => axisY.value, () => {
   drawChart()
   if (trainingSets.value) {
@@ -646,6 +731,7 @@ watch(() => axisY.value, () => {
   }
   refetchPatternMatchingBoxes()
   fetchSpeciesPresence()
+  refetchTemplates()
 })
 
 watch(() => tagKeyword.value, () => {
@@ -671,6 +757,12 @@ watch(() => props.isSpectrogramTagsUpdated, async () => {
 watch(() => pmBoxes.value, async (newValue) => {
   if (!newValue) return
   fetchSpeciesPresence()
+  await nextTick()
+  initTooltips()
+})
+
+watch(() => templates.value, async () => {
+  fetchRecordingTemplates()
   await nextTick()
   initTooltips()
 })

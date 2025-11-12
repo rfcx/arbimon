@@ -79,6 +79,8 @@
     <SidebarTemplates
       v-if="visobject"
       :visobject="visobject"
+      @emit-template-visibility="$emit('emitTemplateVisibility', $event)"
+      @emit-active-layer="toggleSidebarTemplate"
     />
     <SidebarSoundscape
       v-if="visobject"
@@ -140,7 +142,8 @@ const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'emitActiveLayer', value: string | undefined): void,
   (e: 'emitTrainingSet', value: TrainingSet): void,
   (e: 'emitTrainingSetVisibility', value: boolean): void,
-  (e: 'emitSpeciesVisibility', value: boolean): void
+  (e: 'emitSpeciesVisibility', value: boolean): void,
+  (e: 'emitTemplateVisibility', value: boolean): void
 }>()
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
@@ -280,6 +283,11 @@ const toggleSidebarTag = (isActive: boolean) => {
 
 const toggleSidebarTrainingSet = (isActive: boolean, type: string) => {
   activeLayer.value = isActive ? type : undefined
+  emits('emitActiveLayer', activeLayer.value)
+}
+
+const toggleSidebarTemplate = (isActive: boolean) => {
+  activeLayer.value = isActive ? 'template' : undefined
   emits('emitActiveLayer', activeLayer.value)
 }
 

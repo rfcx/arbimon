@@ -11,6 +11,7 @@
       @emit-training-set-visibility="handleTrainingSetVisibility"
       @emit-active-layer="handleActiveLayer"
       @emit-species-visibility="handleSpeciesVisibility"
+      @emit-template-visibility="handleTemplateVisibility"
     />
     <div
       v-if="isLoadingVisobject || isRefetching"
@@ -55,6 +56,7 @@ export interface LayerVisibility {
   tag: boolean
   species: boolean
   ts: boolean
+  template: boolean
   aed: boolean
   cluster: boolean
 }
@@ -73,6 +75,7 @@ const layerVisibility = ref<LayerVisibility>({
   tag: true,
   species: true,
   ts: true,
+  template: true,
   aed: true,
   cluster: true
 })
@@ -112,6 +115,10 @@ const handleTrainingSetVisibility = (value: boolean) => {
 
 const handleSpeciesVisibility = (value: boolean) => {
   layerVisibility.value.species = value
+}
+
+const handleTemplateVisibility = (value: boolean) => {
+  layerVisibility.value.template = value
 }
 
 const handleActiveLayer = (layer: string | undefined) => {

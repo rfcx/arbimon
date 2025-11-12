@@ -317,6 +317,73 @@ export const apiGetPatternMatchingBoxes = async (apiClient: AxiosInstance, slug:
   return response.data
 }
 
+export interface TemplateResponse {
+  id: number
+  project: number
+  recording: number
+  species: number
+  songtype: number
+  name: string
+  uri: string
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  date_created: string
+  user_id: string
+  disabled: number
+  species_name: string
+  songtype_name: string
+  author: string
+  project_name: string
+  project_url: string
+  source_project_id: number | null
+  source_project_name: string | null
+}
+
+export const apiGetTemplates = async (apiClient: AxiosInstance, slug: string): Promise<TemplateResponse[] | undefined> => {
+  const response = await apiClient.get(`/legacy-api/project/${slug}/templates?projectTemplates=true`)
+  return response.data
+}
+
+export interface TemplateParams {
+  name: string
+  recording: string
+  roi: {
+    x1: number
+    y1: number
+    x2: number
+    y2: number
+  }
+  species: number
+  songtype: number
+}
+
+export interface newTemplateResponse {
+  name: string
+  project: number
+  recording: number
+  species: number
+  songtype: number
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  user_id: number
+  id: number
+  uri: string
+}
+
+export const apiPostTemplate = async (apiClient: AxiosInstance, slug: string, payload: TemplateParams): Promise<newTemplateResponse[] | undefined> => {
+  const response = await apiClient.request<newTemplateResponse[]>({
+    method: 'POST',
+    url: `/legacy-api/project/${slug}/templates/add`,
+    data: payload
+  })
+
+  return response.data
+}
+
 export interface AedClusterItem {
   job_id: number
   name: string

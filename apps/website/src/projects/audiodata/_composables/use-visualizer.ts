@@ -2,7 +2,7 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import type { AxiosInstance } from 'axios'
 import { type ComputedRef, computed } from 'vue'
 
-import { type AedClusterResponse, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type TagDeleteResponse, type TagParams, type VisobjectResponse, apiArbimonGetAedClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type AedClusterResponse, type newTemplateResponse, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type TagDeleteResponse, type TagParams, type TemplateParams, type TemplateResponse, type VisobjectResponse, apiArbimonGetAedClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiGetTemplates, apiPostTemplate, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: ComputedRef<string | undefined>): UseQueryReturnType<VisobjectResponse | undefined, unknown> => {
   return useQuery({
@@ -54,6 +54,26 @@ export const useGetPatternMatchingBoxes = (apiClient: AxiosInstance, slug: Compu
     queryFn: async () => {
       if (!slug.value || params.rec_id === undefined) return []
       return await apiGetPatternMatchingBoxes(apiClient, slug.value, params)
+    }
+  })
+}
+
+export const useGetTemplates = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>): UseQueryReturnType<TemplateResponse[] | undefined, unknown> => {
+  return useQuery({
+    queryKey: ['fetch-template'],
+    queryFn: async () => {
+      if (!slug.value) return []
+      return await apiGetTemplates(apiClient, slug.value)
+    }
+  })
+}
+
+export const usePostTemplate = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>): UseMutationReturnType<newTemplateResponse[] | undefined, unknown, TemplateParams, unknown> => {
+  return useMutation({
+    mutationKey: ['post-template'],
+    mutationFn: async (payload: TemplateParams) => {
+      if (!slug.value) return undefined
+      return await apiPostTemplate(apiClient, slug.value, payload)
     }
   })
 }
