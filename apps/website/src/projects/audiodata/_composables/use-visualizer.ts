@@ -2,7 +2,7 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import type { AxiosInstance } from 'axios'
 import { type ComputedRef, computed } from 'vue'
 
-import { type AedClusterResponse, type newTemplateResponse, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type TagDeleteResponse, type TagParams, type TemplateParams, type TemplateResponse, type VisobjectResponse, apiArbimonGetAedClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiGetTemplates, apiPostTemplate, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type AedClusterResponse, type newTemplateResponse, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type SoundscapeCompositionParams, type SoundscapeCompositionResponse, type TagDeleteResponse, type TagParams, type TemplateParams, type TemplateResponse, type VisobjectResponse, apiArbimonGetAedClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiGetTemplates, apiPostSoundscapeComposition, apiPostTemplate, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: ComputedRef<string | undefined>): UseQueryReturnType<VisobjectResponse | undefined, unknown> => {
   return useQuery({
@@ -104,6 +104,16 @@ export const useRecordingValidate = (apiClient: AxiosInstance, slug: ComputedRef
     mutationFn: async (payload: RecordingValidateParams) => {
       if (!slug.value || !recordingId) return undefined
       return await apiRecordingValidate(apiClient, slug.value, recordingId, payload)
+    }
+  })
+}
+
+export const usePostSoundscapeComposition = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: string): UseMutationReturnType<SoundscapeCompositionResponse[] | undefined, unknown, SoundscapeCompositionParams, unknown> => {
+  return useMutation({
+    mutationKey: ['post-soundscape-composition'],
+    mutationFn: async (payload: SoundscapeCompositionParams) => {
+      if (!slug.value || !recordingId) return undefined
+      return await apiPostSoundscapeComposition(apiClient, slug.value, recordingId, payload)
     }
   })
 }

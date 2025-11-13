@@ -384,6 +384,27 @@ export const apiPostTemplate = async (apiClient: AxiosInstance, slug: string, pa
   return response.data
 }
 
+export interface SoundscapeCompositionResponse {
+  recordingId: number
+  scclassId: number
+  present: number
+}
+
+export interface SoundscapeCompositionParams {
+  class: string
+  val: number
+}
+
+export const apiPostSoundscapeComposition = async (apiClient: AxiosInstance, slug: string, recordingId: string, payload: SoundscapeCompositionParams): Promise<SoundscapeCompositionResponse[] | undefined> => {
+  const response = await apiClient.request<SoundscapeCompositionResponse[]>({
+    method: 'POST',
+    url: `/legacy-api/project/${slug}/soundscape-composition/annotate/${recordingId}`,
+    data: payload
+  })
+
+  return response.data
+}
+
 export interface AedClusterItem {
   job_id: number
   name: string

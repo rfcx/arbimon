@@ -86,7 +86,7 @@
       v-if="visobject"
       :visobject="visobject"
       :soundscape-response="soundscape"
-      @action="handleAction"
+      @on-emit-validation="handleAction"
     />
     <SidebarAudioEvents
       v-if="visobject"
@@ -119,11 +119,11 @@ import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetSoundscape, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
 import { useSites } from '../../_composables/use-sites'
-import { useAedClustering, useDeleteRecordingTag, useGetPlaylistInfo, useGetRecordingTag, usePutRecordingTag } from '../../_composables/use-visualizer'
+import { useAedClustering, useDeleteRecordingTag, useGetPlaylistInfo, useGetRecordingTag, usePostSoundscapeComposition, usePutRecordingTag } from '../../_composables/use-visualizer'
 import { type BboxGroupTags, type FreqFilter } from '../types'
 import BasicSearchSelect from './basic-search-select.vue'
 import SidebarAudioEvents from './sidebar-audio-events.vue'
-import SidebarSoundscape, { type SoundItem } from './sidebar-soundscape.vue'
+import SidebarSoundscape from './sidebar-soundscape.vue'
 import SidebarSpecies from './sidebar-species.vue'
 import SidebarSpectrogramPlayer from './sidebar-spectrogram-player.vue'
 import SidebarTag from './sidebar-tag.vue'
@@ -180,7 +180,8 @@ const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTa
 const { isPending: isAddingTag, mutate: mutateRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDeleteRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
-const { data: soundscape } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
+const { data: soundscape, refetch: refetchGetSoundscapeComposition } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
+const { mutate: mutatePostSoundscapeComposition } = usePostSoundscapeComposition(apiClientArbimon, selectedProjectSlug, browserTypeId.value as string)
 
 // TODO: change the number 7932954 & 8902
 const { data: aedClustering } = useAedClustering(apiClientArbimon, selectedProjectSlug, computed(() => 7932954))
@@ -303,11 +304,20 @@ const groupByBbox = (tags: RecordingTagResponse[]): BboxGroupTags[] => {
   return Object.values(map)
 }
 
-function handleAction (action: string, item: SoundItem) {
-  if (action === 'present') console.info('present', item)
-  if (action === 'absent') console.info('absent', item)
-  if (action === 'clearAnnotation') console.info('clear', item)
-  // TODO: call api for update action
+function handleAction (cl: number, val: number) {
+  mutatePostSoundscapeComposition({
+    class: cl.toString(),
+    val
+   }, {
+    onSuccess: () => {
+      refetchGetSoundscapeComposition()
+      showAlertDialog('success', 'Success', 'Soundscape composition class is updated')
+    },
+    onError: (err) => {
+      console.info('err', err)
+      showAlertDialog('error', 'Error', 'Error updating Soundscape composition class')
+    }
+  })
 }
 
 watch(() => recordingTags.value, () => {

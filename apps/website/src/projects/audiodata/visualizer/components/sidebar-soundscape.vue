@@ -1,10 +1,13 @@
 <template>
   <div
-    id="accordion-collapse"
+    id="accordion-collapse-soundscape-composition"
     data-accordion="collapse"
     class="flex flex-col gap-y-2 px-4 py-2 bg-moss shadow"
   >
-    <div id="accordion-collapse-heading-soundscape">
+    <div
+      id="accordion-collapse-heading-soundscape"
+      data-accordion="open"
+    >
       <button
         type="button"
         class="flex justify-between items-center w-full py-2 gap-x-1 text-insight dark:(bg-transparent text-insight)"
@@ -27,13 +30,12 @@
     </div>
     <div
       id="accordion-collapse-body-soundscape"
-      class="hidden flex flex-col gap-y-2 text-sm font-medium"
+      class="hidden flex flex-col gap-y-6 text-sm font-medium"
       aria-labelledby="accordion-collapse-heading-soundscape"
     >
       <div
         v-for="(group, groupName) in soundscape"
         :key="groupName"
-        class="mb-4"
       >
         <h4 class="font-bold text-sm mb-1">
           {{ groupName }}
@@ -49,7 +51,7 @@
             <button
               class="flex items-center justify-center h-[24px] w-[24px] py-[1px] px-[6px] rounded-l bg-util-gray-04 hover:bg-echo"
               title="Annotate as Present"
-              @click="onPresent(item)"
+              @click="validateSoundscapeComposition(item.id, 1)"
             >
               <icon-fa-check class="text-[#7fa2ec] w-4 h-4" />
             </button>
@@ -57,7 +59,7 @@
             <button
               class="flex items-center justify-center h-[24px] w-[24px] py-[2px] px-[7px] rounded-r bg-util-gray-04 hover:bg-echo"
               title="Annotate as Absent"
-              @click="onAbsent(item)"
+              @click="validateSoundscapeComposition(item.id, 0)"
             >
               <icon-fa-times class="text-[#ffe680] w-4 h-4" />
             </button>
@@ -65,7 +67,7 @@
             <button
               class="flex items-center justify-center h-[24px] w-[24px] py-[2px] px-[7px] rounded bg-util-gray-04 hover:bg-echo ml-2"
               title="Clear Annotation"
-              @click="clearAnnotation(item)"
+              @click="validateSoundscapeComposition(item.id, 2)"
             >
               <icon-fa-minus class="text-[#7F7D78] w-4 h-4" />
             </button>
@@ -77,7 +79,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { initAccordions } from 'flowbite'
+import { computed, nextTick, onMounted, watch } from 'vue'
 
 import type { SoundscapeResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import type { Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
@@ -115,18 +118,21 @@ function transformSoundscapeResponse (data: SoundItem[]): Soundscape {
 }
 
 const soundscape = computed(() => transformSoundscapeResponse(props.soundscapeResponse ?? []))
-const emit = defineEmits<{(e: 'action', action: 'present' | 'absent' | 'clearAnnotation', item: SoundItem): void}>()
-function onPresent (item: SoundItem) {
-  emit('action', 'present', item)
+const emit = defineEmits<{(e: 'onEmitValidation', cl: number, val: number): void}>()
+
+function validateSoundscapeComposition (cl: number, val: number) {
+  emit('onEmitValidation', cl, val)
 }
 
-function onAbsent (item: SoundItem) {
-  emit('action', 'absent', item)
-}
+watch(() => props.soundscapeResponse, async () => {
+  await nextTick()
+  initAccordions()
+})
 
-function clearAnnotation (item: SoundItem) {
-  emit('action', 'clearAnnotation', item)
-}
+onMounted(async () => {
+  await nextTick()
+  initAccordions()
+})
 </script>
 
 <style lang="scss">
