@@ -112,6 +112,7 @@ declare module 'vue' {
     IconFaEye: typeof import('~icons/fa/eye')['default']
     IconFaEyeSlash: typeof import('~icons/fa/eye-slash')['default']
     IconFaInfoCircle: typeof import('~icons/fa/info-circle')['default']
+    IconFaList: typeof import('~icons/fa/list')['default']
     IconFaMap: typeof import('~icons/fa/map')['default']
     IconFaMapMarker: typeof import('~icons/fa/map-marker')['default']
     IconFaMinus: typeof import('~icons/fa/minus')['default']

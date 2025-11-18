@@ -432,11 +432,7 @@ export const apiArbimonGetAedClustering = async (
 ): Promise<AedClusterResponse | undefined> => {
   if (!slug || recId == null) return undefined
 
-  const s = 'the-rooftop'
-  const url = `/legacy-api/project/${s}/audio-event-detections-clustering`
-  // TODO: should remove 2 lines above
-  // const url = `/legacy-api/project/${slug}/audio-event-detections-clustering`
-
+  const url = `/legacy-api/project/${slug}/audio-event-detections-clustering`
   const res = await apiClient.request<AedClusterResponse>({
     method: 'GET',
     url,
@@ -465,14 +461,35 @@ export const apiArbimonGetPlaylistInfo = async (
   if (slug == null || slug === '' || playlistId == null || playlistId === '') {
     return undefined
   }
-  const s = 'the-rooftop'
-  const url = `/legacy-api/project/${s}/playlists/info/${playlistId}`
-  // TODO: should remove 2 lines above
-  // const url = `/legacy-api/project/${slug}/playlists/info/${playlistId}`
+  const url = `/legacy-api/project/${slug}/playlists/info/${playlistId}`
   const response = await apiClient.request<PlaylistInfo>({
     method: 'GET',
     url
   })
 
   return response.data
+}
+
+export interface PlaylistItemsPayload {
+  offset?: number
+  limit?: number
+  show?: string // e.g. 'thumbnail-path'
+}
+
+export const apiArbimonPostPlaylistItems = async (
+  apiClient: AxiosInstance,
+  slug: string,
+  playlistId: string | number | undefined,
+  payload: PlaylistItemsPayload
+): Promise<RecordingResponse | undefined> => {
+  if (playlistId === undefined) return undefined
+  const url = `/legacy-api/project/${slug}/playlists/${playlistId}`
+  const body: PlaylistItemsPayload = {
+    offset: 0,
+    limit: 10,
+    show: 'thumbnail-path',
+    ...payload
+  }
+  const res = await apiClient.post(url, body)
+  return res.data as RecordingResponse
 }

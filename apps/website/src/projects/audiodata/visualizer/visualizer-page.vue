@@ -12,6 +12,8 @@
       @emit-active-layer="handleActiveLayer"
       @emit-species-visibility="handleSpeciesVisibility"
       @emit-template-visibility="handleTemplateVisibility"
+      @emit-selected-thumbnail="handleSelectedThumbnail"
+      @emit-selected-playlist="handleSelectedPlaylist"
     />
     <div
       v-if="isLoadingVisobject || isRefetching"
@@ -41,7 +43,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
@@ -64,6 +66,7 @@ export interface LayerVisibility {
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
 const route = useRoute()
+const router = useRouter()
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
 const currentTime = ref(0)
@@ -83,9 +86,23 @@ const selectedTrainingSet = ref<TrainingSet | undefined>(undefined)
 
 const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
 const browserType = computed(() => browserTypes.includes(route.params.browserType as string) ? route.params.browserType as string : undefined)
+const isPlaylist = computed(() => browserType.value === 'playlist')
 const browserTypeId = computed(() => route.params.browserTypeId as string ?? undefined)
+const browserRecId = computed(() => route.params.browserRecId as string ?? undefined)
 
-const { isLoading: isLoadingVisobject, data: visobject, refetch: refetchRecording, isRefetching } = useGetRecording(apiClientArbimon, selectedProjectSlug, browserTypeId)
+const idRecording = ref(0)
+const selectedPlaylist = ref(0)
+const idSelectedRecording = computed(() =>
+  idRecording.value === 0 ? '' : idRecording.value.toString()
+)
+
+const selectedRecordingId = computed(() => {
+  if (isPlaylist.value) {
+    return idSelectedRecording.value !== undefined ? idSelectedRecording.value : browserRecId.value
+  }
+  return browserTypeId.value
+})
+const { isLoading: isLoadingVisobject, data: visobject, refetch: refetchRecording, isRefetching } = useGetRecording(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
 
 const handleCurrentTime = (value: number): void => {
   currentTime.value = value
@@ -124,6 +141,33 @@ const handleTemplateVisibility = (value: boolean) => {
 const handleActiveLayer = (layer: string | undefined) => {
   activeLayer.value = layer
 }
+
+const handleSelectedThumbnail = (value: number) => {
+  idRecording.value = value
+    console.info(selectedRecordingId.value)
+
+  refetchRecording()
+}
+
+const handleSelectedPlaylist = (value: number) => {
+  selectedPlaylist.value = value
+  refetchRecording()
+}
+
+watch(selectedRecordingId, (newId) => {
+  if (!newId) return
+
+  router.replace(
+    `/p/${selectedProjectSlug.value}/visualizer/playlist/${browserTypeId.value}/${newId}`
+  )
+})
+
+watch(selectedPlaylist, (newId) => {
+  if (!newId) return
+  router.replace(
+    `/p/${selectedProjectSlug.value}/visualizer/playlist/${newId}`
+  )
+})
 
 watch(() => browserType.value, () => {
   refetchRecording()

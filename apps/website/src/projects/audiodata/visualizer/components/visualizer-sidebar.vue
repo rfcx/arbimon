@@ -26,7 +26,30 @@
         <icon-custom-fi-soundscape class="w-3.5 h-4" />
       </button>
     </div>
-    <div class="flex flex-row items-center justify-start gap-x-2 px-[15px] pb-[15px] grid grid-cols-12 gap-4">
+    <div
+      v-if="isPlaylist"
+      class="flex flex-col w-full px-[15px] pb-[15px]"
+    >
+      <BasicSearchSelect
+        v-model="playlistSelected"
+        class="w-full"
+        :options="optionsPlaylist"
+        :show-list-icon="true"
+        placeholder="Select Playlist"
+      />
+      <PaginationControl
+        v-model="page"
+        class="w-full"
+        :total-items="totalItems"
+        :page-size="pageSize"
+        :block-size="7"
+        @change="onPageChange"
+      />
+    </div>
+    <div
+      v-else
+      class="flex flex-row items-center justify-start gap-x-2 px-[15px] pb-[15px] grid grid-cols-12 gap-4"
+    >
       <div class="col-span-7">
         <BasicSearchSelect
           v-model="siteSelected"
@@ -46,7 +69,10 @@
         />
       </div>
     </div>
-    <SidebarThumbnail />
+    <SidebarThumbnail
+      :recordings-item="recordingResponse"
+      @on-selected-thumbnail="onSelectedThumbnail"
+    />
     <SidebarSpectrogramPlayer
       v-if="visobject"
       :visobject="visobject"
@@ -106,10 +132,11 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
-import { computed, inject, ref, watch, watchEffect } from 'vue'
+import { computed, inject, onMounted, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { RecordingTagResponse, TagParams, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import type { RecordingResponse, RecordingTagResponse, TagParams, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { apiArbimonPostPlaylistItems } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
@@ -117,11 +144,12 @@ import alertDialog from '@/_components/alert-dialog.vue'
 import DateInputPicker from '@/_components/date-range-picker/date-input-picker.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetSoundscape, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
+import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetPlaylists, useGetSoundscape, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
 import { useSites } from '../../_composables/use-sites'
 import { useAedClustering, useDeleteRecordingTag, useGetPlaylistInfo, useGetRecordingTag, usePostSoundscapeComposition, usePutRecordingTag } from '../../_composables/use-visualizer'
 import { type BboxGroupTags, type FreqFilter } from '../types'
 import BasicSearchSelect from './basic-search-select.vue'
+import PaginationControl from './pagination-control.vue'
 import SidebarAudioEvents from './sidebar-audio-events.vue'
 import SidebarSoundscape from './sidebar-soundscape.vue'
 import SidebarSpecies from './sidebar-species.vue'
@@ -143,7 +171,9 @@ const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'emitTrainingSet', value: TrainingSet): void,
   (e: 'emitTrainingSetVisibility', value: boolean): void,
   (e: 'emitSpeciesVisibility', value: boolean): void,
-  (e: 'emitTemplateVisibility', value: boolean): void
+  (e: 'emitTemplateVisibility', value: boolean): void,
+  (e: 'emitSelectedThumbnail', value: number): void,
+  (e: 'emitSelectedPlaylist', value: number): void
 }>()
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
@@ -156,6 +186,7 @@ const freqFilter = ref<FreqFilter | undefined>(undefined)
 const selectedProjectSlug = computed(() => store.project?.slug)
 const browserType = computed(() => browserTypes.includes(route.params.browserType as string) ? route.params.browserType as string : undefined)
 const browserTypeId = computed(() => route.params.browserTypeId as string ?? undefined)
+const browserRecId = computed(() => route.params.browserRecId as string ?? undefined)
 const success = ref<AlertDialogType>('error')
 const title = ref('')
 const message = ref('')
@@ -175,25 +206,46 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
   }, hideAfter)
 }
 
+const isPlaylist = computed(() => browserType.value === 'playlist')
+
 const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
-const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
-const { isPending: isAddingTag, mutate: mutateRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
-const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDeleteRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
+const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
+const { isPending: isAddingTag, mutate: mutateRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
+const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDeleteRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
 const { data: soundscape, refetch: refetchGetSoundscapeComposition } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
 const { mutate: mutatePostSoundscapeComposition } = usePostSoundscapeComposition(apiClientArbimon, selectedProjectSlug, browserTypeId.value as string)
 
-// TODO: change the number 7932954 & 8902
-const { data: aedClustering } = useAedClustering(apiClientArbimon, selectedProjectSlug, computed(() => 7932954))
-const { data: playlist } = useGetPlaylistInfo(apiClientArbimon, selectedProjectSlug, computed(() => 8902))
+const playlistSelected = ref<number | undefined>(undefined)
+const playlistSelectedValue = computed(() => playlistSelected.value)
+
+const playlistId = computed(() =>
+  playlistSelectedValue.value ?? (isPlaylist.value ? browserTypeId.value : undefined)
+)
+
+const { data: aedClustering } = useAedClustering(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : undefined)
+const { data: playlist } = useGetPlaylistInfo(apiClientArbimon, selectedProjectSlug, playlistId)
+const { data: playlists } = useGetPlaylists(apiClientArbimon, selectedProjectSlug)
 
 const options = computed(() => sites.value?.map(s => ({ label: s.name, value: s.id, count: s.rec_count })) ?? [])
+const optionsPlaylist = computed(() => playlists.value?.map(p => ({ label: p.name, value: p.id, count: p.count })) ?? [])
 const siteSelected = ref<string | number | undefined>(undefined)
 const siteSelectedValue = computed(() => siteSelected.value)
 
 const { data: yearly } = useLegacyAvailableYearly(apiClientArbimon, selectedProjectSlug, siteSelectedValue)
 const yearSelected = computed(() => getYearWithMaxCount(yearly.value ?? []))
 const { data: recordedMinutesPerDay } = useLegacyAvailableBySiteYear(apiClientArbimon, selectedProjectSlug, siteSelectedValue, yearSelected)
+
+const page = ref(0)
+const pageSize = 10
+const totalItems = computed(() => playlist?.value?.count ?? 0)
+
+const recordingResponse = ref<RecordingResponse | undefined>(undefined)
+
+async function onPageChange (p: number) {
+  page.value = p
+  recordingResponse.value = await apiArbimonPostPlaylistItems(apiClientArbimon, selectedProjectSlug.value ?? '', playlistSelectedValue.value, { offset: (p * pageSize), limit: pageSize })
+}
 
 function getYearWithMaxCount (records: LegacyYearlyRecord[]): number {
   if (records == null || records.length === 0) {
@@ -282,6 +334,10 @@ const toggleSidebarTag = (isActive: boolean) => {
   emits('emitActiveLayer', activeLayer.value)
 }
 
+const onSelectedThumbnail = (idR: number) => {
+ emits('emitSelectedThumbnail', idR)
+}
+
 const toggleSidebarTrainingSet = (isActive: boolean, type: string) => {
   activeLayer.value = isActive ? type : undefined
   emits('emitActiveLayer', activeLayer.value)
@@ -331,11 +387,23 @@ watch(() => props.visobject, (v) => {
   initialDate.value = v?.datetime ?? ''
 })
 
+onMounted(() => {
+  if (isPlaylist.value && browserTypeId.value !== undefined) {
+    playlistSelected.value = Number(browserTypeId.value)
+  }
+})
+
 watch(siteSelected, (newVal, oldVal) => {
   if (oldVal === undefined) return
   if (newVal !== oldVal) {
     initialDate.value = ''
   }
+})
+
+watch(playlistSelectedValue, async (val) => {
+  if (val === undefined) return
+  emits('emitSelectedPlaylist', val)
+  recordingResponse.value = await apiArbimonPostPlaylistItems(apiClientArbimon, selectedProjectSlug.value ?? '', val, { offset: (page.value * pageSize), limit: pageSize })
 })
 </script>
 

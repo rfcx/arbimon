@@ -32,7 +32,7 @@
     >
       <div class="text-sm">
         <span class="font-bold flex">Detection Jobs</span>
-        <span v-if="!aedClustering">There are no audio events in this recording.</span>
+        <span v-if="!aedClustering || aedClustering.length === 0">There are no audio events in this recording.</span>
         <section v-else>
           <div
             v-for="job in jobsView"

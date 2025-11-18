@@ -18,6 +18,10 @@
           v-show="showMapIcon"
           class="w-2 h-4 mr-2 my-2"
         />
+        <icon-fa-list
+          v-show="showListIcon"
+          class="w-3 h-4 mr-2 my-2"
+        />
         <span class="truncate">
           {{ selectedLabel || placeholder }}
         </span>
@@ -42,7 +46,7 @@
     <ul
       v-show="open"
       :id="listboxId"
-      class="absolute z-50 mt-1 max-h-60 overflow-auto rounded bg-pitch border border-util-gray-04"
+      class="absolute z-50 mt-1 max-h-60 max-w-full overflow-auto rounded bg-pitch border border-util-gray-04"
       :class="{'w-full' : wFull}"
       role="listbox"
     >
@@ -68,10 +72,17 @@
             v-show="showMapIcon"
             class="w-2 h-4 mr-1 shrink-0"
           />
-          <span class="truncate py-1">{{ opt.label }}</span>
+          <icon-fa-list
+            v-show="showListIcon"
+            class="w-3 h-4 shrink-0"
+          />
+          <span
+            class="truncate py-1"
+            :title="opt.label"
+          >{{ opt.label }}</span>
         </div>
         <span
-          v-show="showMapIcon"
+          v-show="showMapIcon || showListIcon"
           class="shrink-0 tabular-nums ml-1 bg-util-gray-03 rounded-full px-2 py-1 mr-1 text-[12px] font-bold"
         >{{ opt.count ?? 0 }}</span>
       </li>
@@ -90,6 +101,7 @@ const props = defineProps<{
   options: InputOption[]
   placeholder?: string
   showMapIcon?: boolean
+  showListIcon?: boolean
   wFull?: boolean
 }>()
 

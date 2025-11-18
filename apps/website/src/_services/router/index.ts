@@ -209,7 +209,7 @@ const routes: RouteRecordRaw[] = [
         ]
       },
       {
-        path: 'visualizer/:browserType?/:browserTypeId?',
+        path: 'visualizer/:browserType?/:browserTypeId?/:browserRecId?',
         name: ROUTE_NAMES.visualizer,
         component: PAGES.Visualizer,
         beforeEnter: [authRequiredGuard]

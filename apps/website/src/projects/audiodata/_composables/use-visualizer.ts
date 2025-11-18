@@ -8,7 +8,7 @@ export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<stri
   return useQuery({
     queryKey: ['fetch-recording'],
     queryFn: async () => {
-      if (!slug.value || !recordingId.value) return undefined
+      if (slug.value === undefined || recordingId.value === undefined || recordingId.value === '') return undefined
       return await apiArbimonGetRecording(apiClient, slug.value, recordingId.value)
     }
   })
@@ -121,10 +121,10 @@ export const usePostSoundscapeComposition = (apiClient: AxiosInstance, slug: Com
 export const useAedClustering = (
   apiClient: AxiosInstance,
   slug: ComputedRef<string | undefined>,
-  recId: ComputedRef<string | number>,
+  recId: ComputedRef<string | number> | undefined,
   completed: ComputedRef<boolean> = computed(() => true)
 ): UseQueryReturnType<AedClusterResponse | undefined, unknown> => {
-  const enabled = computed(() => Boolean(slug.value && recId.value != null))
+  const enabled = computed(() => Boolean(slug.value && recId !== undefined && recId.value != null))
 
   return useQuery({
     queryKey: ['aed-clustering', slug, recId, completed],
@@ -133,7 +133,7 @@ export const useAedClustering = (
       const raw: AedClusterResponse | undefined = await apiArbimonGetAedClustering(
         apiClient,
         slug.value ?? '',
-        recId.value,
+        recId?.value ?? 0,
         completed.value
       )
       return raw
@@ -148,13 +148,13 @@ export const useGetPlaylistInfo = (
   slug: ComputedRef<string | undefined>,
   playlistId: ComputedRef<string | number | undefined>
 ): UseQueryReturnType<PlaylistInfo | undefined, unknown> => {
-  const enabled = computed(() => Boolean(slug.value && playlistId.value))
+  const enabled = computed(() => Boolean(slug.value && playlistId?.value))
 
   return useQuery({
     queryKey: ['playlist-info', slug, playlistId],
     queryFn: async () => {
       if (!enabled.value) return undefined
-      return await apiArbimonGetPlaylistInfo(apiClient, slug.value ?? '', playlistId.value ?? 0)
+      return await apiArbimonGetPlaylistInfo(apiClient, slug.value ?? '', playlistId?.value ?? 0)
     },
     enabled,
     refetchOnWindowFocus: false

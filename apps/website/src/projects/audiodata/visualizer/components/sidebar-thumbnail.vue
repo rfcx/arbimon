@@ -29,6 +29,7 @@
           :key="index"
           class="visobj-list-item h-full flex flex-col mb-2"
           :class="browserTypeId === String(recording.id) ? 'active ' : ' '"
+          @click="onSelectedThumbnail(recording.id)"
         >
           <div>{{ getCaption(recording.site, recording.datetime) }}</div>
           <div class="flex overflow-hidden mx-0 my-1.5 h-32 max-w-full max-h-full">
@@ -77,9 +78,15 @@ const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
 const selectedProjectSlug = computed(() => store.project?.slug)
 const browserType = computed(() => browserTypes.includes(route.params.browserType as string) ? route.params.browserType : 'rec')
 const browserTypeId = computed(() => route.params.browserTypeId as string ?? undefined)
+const browserRecId = computed(() => route.params.browserRecId as string ?? undefined)
+const isPlaylist = computed(() => browserType.value === 'playlist')
 
 const thumbnailContainer = ref<HTMLElement | null>(null)
 let recordings: RecordingResponse = []
+
+const props = defineProps<{ recordingsItem: RecordingResponse | undefined }>()
+
+const emits = defineEmits<{(e: 'onSelectedThumbnail', id: number): void}>()
 
 const setErrorImage = (event: Event) => {
   const img = event.target as HTMLImageElement
@@ -94,7 +101,7 @@ const recordingListSearchParams = computed(() => {
   return {
     limit: recLimit,
     offset: recOffset.value * recLimit,
-    key: `!q:13780-2024-6-25?recording_id=${browserTypeId.value}&show=thumbnail-path` // TODO: update it after the calendar date selection
+    key: `!q:13780-2024-6-25?recording_id=${isPlaylist.value ? browserRecId.value : browserTypeId.value}&show=thumbnail-path` // TODO: update it after the calendar date selection
   }
 })
 
@@ -121,6 +128,10 @@ const handleScroll = (e: Event) => {
   })
 }
 
+const onSelectedThumbnail = (id: number) => {
+  emits('onSelectedThumbnail', id)
+}
+
 watch(() => recordingsResponse.value, (newValue) => {
   if (!newValue || recordingsResponse.value === undefined) return
   recordings = [...recordings, ...recordingsResponse.value]
@@ -129,6 +140,11 @@ watch(() => recordingsResponse.value, (newValue) => {
 
 watch(() => browserType.value, () => {
   refetchRecordings()
+})
+
+watch(() => props.recordingsItem, (r) => {
+  if (r === undefined) return
+  recordings = [...r]
 })
 
 onMounted(() => {
