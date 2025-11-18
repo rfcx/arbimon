@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-moss sidebar h-screen overflow-y-scroll"
+    class="bg-moss fixed sidebar h-screen overflow-y-scroll"
   >
     <div class="flex flex-row items-center justify-start gap-x-2 p-[15px]">
       <button

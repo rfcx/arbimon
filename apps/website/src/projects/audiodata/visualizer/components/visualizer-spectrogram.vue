@@ -20,7 +20,7 @@
           :class="{'crisp-image': tile.crisp}"
           :style="{
             left: Math.floor(tile.s * getSec2px(spectrogramMetrics.width, visobject.domain.x.span)) + legendMetrics.axis_sizew + 'px',
-            bottom: (visobject.scale.originalScale ? Math.floor(spectrogramMetrics.height - tile.hz * getHz2px(spectrogramMetrics.height, visobject.domain.y.span)) : 0) + legendMetrics.axis_sizeh + 'px',
+            top: (visobject.scale.originalScale ? Math.floor(spectrogramMetrics.height - tile.hz * getHz2px(spectrogramMetrics.height, visobject.domain.y.span)) : 0) + legendMetrics.axis_margin_top + 'px',
             height: Math.ceil(tile.dhz * getHz2px(spectrogramMetrics.height, visobject.domain.y.span)) + 'px',
             width: Math.ceil(tile.ds * getSec2px(spectrogramMetrics.width, visobject.domain.x.span)) + 'px'
           }"
@@ -31,12 +31,54 @@
           />
         </div>
       </div>
-      <!-- y legend -->
+      <!-- zoom -->
+      <div
+        class="zoom-control-group absolute z-5 top-0 right-6"
+      >
+        <ZoomControl
+          v-model="zoomData.x"
+          :horizontal="true"
+        />
+        <ZoomControl
+          v-model="zoomData.y"
+          :horizontal="false"
+        />
+        <!-- TODO -->
+        <!-- <div class="zoom-control-btns absolute flex flex-col gap-2">
+          <button
+            class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-0.5"
+            :class="{ 'active': click2zoom.active }"
+            @click="click2zoom.toggleActive()"
+          >
+            <icon-fa-search-plus
+              class="h-3 text-fog"
+            />
+          </button>
+          <button
+            class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-0.55"
+            @click="click2zoom.zoomOut()"
+          >
+            <icon-fa-search-minus
+              class="h-3 text-fog"
+            />
+          </button>
+          <button
+            class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-0.5"
+            @click="click2zoom.zoomReset()"
+          >
+            <icon-fa-eraser
+              class="h-3 text-fog"
+            />
+          </button>
+        </div> -->
+      </div>
+      <!-- y scale -->
       <svg
         v-show="visobject && visobject.domain.y"
         ref="axisY"
         class="z-5 absolute"
       >.</svg>
+      <!-- y legend -->
       <div
         v-if="visobject && visobject.domain.y"
         class="whitespace-nowrap absolute z-5"
@@ -49,18 +91,19 @@
           {{ visobject.domain.y.unit || 'Frequency ( kHz )' }}
         </span>
       </div>
-      <!-- x legend -->
+      <!-- x scale -->
       <svg
         v-show="visobject && visobject.domain.x"
         ref="axisX"
         class="z-5 absolute"
       >.</svg>
+      <!-- x legend -->
       <div
         v-if="visobject && visobject.domain.x"
         class="whitespace-nowrap absolute z-5"
         :style="{
           left: Math.ceil((containerWidth - legendMetrics.axis_margin_x) / 2) + 'px',
-          top: Math.ceil(containerHeight - legendMetrics.axis_margin_x * 2) + 'px'
+          top: Math.ceil(spectrogramMetrics.height + legendMetrics.axis_margin_x * 2) + 'px'
         }"
       >
         <div>{{ visobject.domain.x.unit || 'Time ( s )' }}</div>
@@ -90,15 +133,15 @@
         v-if="activeLayer && activeLayer !== 'New Training Set'"
         class="input-source cursor-crosshair relative"
         :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
-        @mousedown.left="onMouseDown"
-        @mousemove="onMouseMove"
-        @mouseup="onMouseUp"
+        @mousedown.left="onMouseDownRoi"
+        @mousemove="onMouseMoveRoi"
+        @mouseup="onMouseUpRoi"
       >
         <!-- Affixed Message -->
         <div class="pl-5 absolute text-pitch font-medium top-6">
           Click to add {{ activeLayer }} to this recording.
           <div
-            v-if="bboxWrapper.bbox && bboxWrapper.bbox.x1 !== 0"
+            v-if="createBboxEditor.bbox && createBboxEditor.bbox.x1 !== 0"
             class="mt-1 text-sm text-pitch"
           >
             Press <kbd>esc</kbd> to cancel {{ activeLayer }} addition.
@@ -107,9 +150,9 @@
 
         <!-- Bbox editor-->
         <div
-          v-if="bboxWrapper.bbox"
+          v-if="createBboxEditor.bbox"
           class="absolute border-1 border-[rgba(0,0,255)] bg-[rgba(0,0,255,0.05)]"
-          :style="{ left: sec2x(bboxWrapper.bbox.x1, 1) + 'px', top: hz2y(bboxWrapper.bbox.y2, 1) + 'px', width: getDsec2width(bboxWrapper.bbox.x2, bboxWrapper.bbox.x1, 1), height: getDhz2height(bboxWrapper.bbox.y2, bboxWrapper.bbox.y1)}"
+          :style="{ left: sec2x(createBboxEditor.bbox.x1, 1) + 'px', top: hz2y(createBboxEditor.bbox.y2, 1) + 'px', width: getDsec2width(createBboxEditor.bbox.x2, createBboxEditor.bbox.x1, 1), height: getDhz2height(createBboxEditor.bbox.y2, createBboxEditor.bbox.y1)}"
         >
           <icon-custom-fi-circle-dot class="w-3 h-3 absolute control-point -top-6px -left-6px cp-resize-tl" />
           <icon-custom-fi-circle-dot class="w-3 h-3 absolute control-point -top-6px -right-6px cp-resize-tr" />
@@ -306,6 +349,7 @@ import VisualizerTagBboxModal from './visualizer-tag-bbox-modal.vue'
 import VisualizerTemplateModal, { type TemplateData } from './visualizer-template-modal.vue'
 import VisualizerTileImg from './visualizer-tile-img.vue'
 import VisualizerTrainingSetBboxModal from './visualizer-training-set-bbox-modal.vue'
+import ZoomControl from './zoom-control.vue'
 
 const props = defineProps<{
   visobject: Visobject | undefined
@@ -331,7 +375,7 @@ const pointer = reactive<{ x: number; y: number; sec: number; hz: number }>({
   hz: 0
 })
 
-const bboxWrapper = ref(new CreateBBoxEditor())
+const createBboxEditor = ref(new CreateBBoxEditor())
 const tagKeyword = ref<string>('')
 const spectrogramTags = ref<BboxGroupTags[]>([])
 const spectrogramTrainingSets = ref<BboxGroupTrainingSets[]>([])
@@ -341,6 +385,15 @@ const toggledTag = ref<number>()
 const toggledTrainingSet = ref<number>()
 const toggledPmRoiBox = ref<number>()
 const toggledTemplateBox = ref<number>()
+
+const zoomData = reactive<{ x: number; y: number; levelx?: number[]; levely?: number[], maxSec2px: number, maxHz2px: number }>({
+  x: 0,
+  y: 0,
+  levelx: [],
+  levely: [],
+  maxSec2px: 100 / (1.0 / 8),
+  maxHz2px: 100 / (5000.0 / 8)
+})
 
 const success = ref<AlertDialogType>('error')
 const title = ref('')
@@ -397,9 +450,31 @@ const round = (val: number, precision = 1) => {
   return (((val / precision) | 0) * precision) || 0
 }
 
+const linearInterpolate = (x: number, levels: number[]) => {
+  const l = x * (levels.length - 1)
+  const f = Math.floor(l)
+  const c = Math.ceil(l)
+  const m = l - f
+
+  return levels[f] * (1 - m) + levels[c] * m
+}
+
+const interpolate = linearInterpolate
+
 const spectrogramMetrics = computed(() => {
   const width = containerSize.width
   const height = containerSize.height
+  let zoomedSpecW
+  let zoomedSpecH
+  if (props.visobject !== undefined && (zoomData.x !== 0 || zoomData.y !== 0)) {
+    const zoomLevelsX = [width / props.visobject.domain.x.span, zoomData.maxSec2px]
+    const zoomLevelsY = [height / props.visobject.domain.y.span, zoomData.maxHz2px]
+    const zoomSec2px = interpolate(zoomData.x, zoomLevelsX)
+    const zoomHz2px = interpolate(zoomData.y, zoomLevelsY)
+    zoomedSpecW = Math.max(width, Math.ceil(props.visobject.domain.x.span * zoomSec2px))
+    zoomedSpecH = Math.max(height, Math.ceil(props.visobject.domain.y.span * zoomHz2px))
+  }
+
   return {
     legend: { ...legendMetrics.value },
     css: {
@@ -408,8 +483,8 @@ const spectrogramMetrics = computed(() => {
       width,
       height
     },
-    width,
-    height
+    width: zoomedSpecW === undefined ? width : zoomedSpecW,
+    height: zoomedSpecH === undefined ? height : zoomedSpecH
   }
 })
 
@@ -532,22 +607,22 @@ const handleResize = (): void => {
   drawChart()
 }
 
-const onMouseDown = (e: MouseEvent) => {
+const onMouseDownRoi = (e: MouseEvent) => {
   pointer.sec = x2sec(e.offsetX)
   pointer.hz = y2hz(e.offsetY)
-  bboxWrapper.value.add_point(pointer.sec, pointer.hz)
+  createBboxEditor.value.add_point(pointer.sec, pointer.hz)
 }
 
-const onMouseMove = (e: MouseEvent) => {
+const onMouseMoveRoi = (e: MouseEvent) => {
   if (e.buttons === 1 && e.offsetX > pointer.sec) {
     pointer.sec = x2sec(e.offsetX)
     pointer.hz = y2hz(e.offsetY)
-    bboxWrapper.value.add_tracer_point(pointer.sec, pointer.hz)
+    createBboxEditor.value.add_tracer_point(pointer.sec, pointer.hz)
   }
 }
 
-const onMouseUp = () => {
-  bboxWrapper.value.add_point(pointer.sec, pointer.hz)
+const onMouseUpRoi = () => {
+  createBboxEditor.value.add_point(pointer.sec, pointer.hz)
   bboxValid.value = true
 }
 
@@ -559,7 +634,7 @@ const onKeyUp = (e: KeyboardEvent): void => {
 }
 
 const resetBBox = (): void => {
-  bboxWrapper.value.reset()
+  createBboxEditor.value.reset()
   bboxValid.value = false
 }
 
@@ -567,10 +642,10 @@ const handleNewTag = (tag: BboxListItem): void => {
   bboxValid.value = false
   mutateAddRecordingTag({
     id: tag.id,
-    f0: bboxWrapper.value?.bbox?.y1,
-    f1: bboxWrapper.value?.bbox?.y2,
-    t0: bboxWrapper.value?.bbox?.x1,
-    t1: bboxWrapper.value?.bbox?.x2
+    f0: createBboxEditor.value?.bbox?.y1,
+    f1: createBboxEditor.value?.bbox?.y2,
+    t0: createBboxEditor.value?.bbox?.x1,
+    t1: createBboxEditor.value?.bbox?.x2
    }, {
     onSuccess: async () => {
       refetchProjectTags()
@@ -592,10 +667,10 @@ const handleNewTemplate = (templateData: TemplateData): void => {
     name: templateData.name,
     recording: browserTypeId.value as string,
     roi: {
-      x1: bboxWrapper.value?.bbox?.x1 as number,
-      y1: bboxWrapper.value?.bbox?.y1 as number,
-      x2: bboxWrapper.value?.bbox?.x2 as number,
-      y2: bboxWrapper.value?.bbox?.y2 as number
+      x1: createBboxEditor.value?.bbox?.x1 as number,
+      y1: createBboxEditor.value?.bbox?.y1 as number,
+      x2: createBboxEditor.value?.bbox?.x2 as number,
+      y2: createBboxEditor.value?.bbox?.y2 as number
     },
     songtype: templateData.songtype,
     species: templateData.species
@@ -622,10 +697,10 @@ const handleNewTrainingSet = (action: string): void => {
     trainingSetId: props.trainingSet?.id as number,
     recording: +browserTypeId.value,
     roi: {
-      x1: bboxWrapper.value?.bbox?.x1 as number,
-      x2: bboxWrapper.value?.bbox?.x2 as number,
-      y1: bboxWrapper.value?.bbox?.y1 as number,
-      y2: bboxWrapper.value?.bbox?.y2 as number
+      x1: createBboxEditor.value?.bbox?.x1 as number,
+      x2: createBboxEditor.value?.bbox?.x2 as number,
+      y1: createBboxEditor.value?.bbox?.y1 as number,
+      y2: createBboxEditor.value?.bbox?.y2 as number
     }
    }, {
     onSuccess: () => {
@@ -721,6 +796,14 @@ const fetchRecordingTemplates = (): void => {
     return template.recording === +browserTypeId.value
   }) ?? []
 }
+
+watch(() => zoomData.x, () => {
+  handleResize()
+})
+
+watch(() => zoomData.y, () => {
+  drawChart()
+})
 
 watch(() => axisY.value, () => {
   drawChart()
@@ -833,6 +916,18 @@ onBeforeUnmount(() => {
   }
   &.cp-resize-tr, &.cp-resize-bl{
       cursor:nesw-resize;
+  }
+}
+
+.zoom-control-group {
+  opacity: 0.5;
+  &:hover {
+    opacity: 1;
+  }
+  > .zoom-control-btns {
+    top: 262px;
+    right: 16px;
+    width: 1.5em;
   }
 }
 </style>

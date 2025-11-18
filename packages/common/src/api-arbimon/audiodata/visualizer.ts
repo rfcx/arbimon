@@ -131,6 +131,7 @@ export interface Visobject extends Recording {
   offset: any
   spectrogram: any
   type: string
+  zoom: any
 }
 
 export type RecordingResponse = Recording[]

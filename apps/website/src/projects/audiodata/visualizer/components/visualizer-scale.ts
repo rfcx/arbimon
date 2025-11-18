@@ -10,7 +10,7 @@ export const doYAxisLayout = (axisY: Ref<SVGSVGElement | null>, visobject: Visob
   const scaley = visobject.spectrogram.legend.scale.y
 
   d3Yaxis.style('width', `${visobject.spectrogram.legend.axis_sizew as number}`)
-  d3Yaxis.style('height', '100%')
+  d3Yaxis.style('height', specH + (visobject.spectrogram.legend.axis_margin_top as number))
   d3Yaxis.style('scale', 'none')
   d3Yaxis.append('rect')
     .attr('class', 'bg')
@@ -33,7 +33,7 @@ export const doXAxisLayout = (axisX: Ref<SVGSVGElement | null>, visobject: Visob
   const scalex = visobject.spectrogram.legend.scale.x
 
   d3XAxis.style('height', visobject.spectrogram.legend.axis_sizeh)
-  d3XAxis.style('width', '100%')
+  d3XAxis.style('width', specW + (visobject.spectrogram.legend.axis_margin_x as number))
   d3XAxis.style('scale', 'none')
   d3XAxis.style('top', `${specH + (visobject.spectrogram.legend.axis_lead as number)}`)
   d3XAxis.style('left', 45)
