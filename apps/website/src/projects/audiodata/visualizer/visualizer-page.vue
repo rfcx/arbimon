@@ -98,7 +98,8 @@ const idSelectedRecording = computed(() =>
 
 const selectedRecordingId = computed(() => {
   if (isPlaylist.value) {
-    return idSelectedRecording.value !== undefined ? idSelectedRecording.value : browserRecId.value
+    const notEmtpy = idSelectedRecording.value !== undefined && idSelectedRecording.value !== ''
+    return notEmtpy ? idSelectedRecording.value : browserRecId.value
   }
   return browserTypeId.value
 })
@@ -144,8 +145,6 @@ const handleActiveLayer = (layer: string | undefined) => {
 
 const handleSelectedThumbnail = (value: number) => {
   idRecording.value = value
-    console.info(selectedRecordingId.value)
-
   refetchRecording()
 }
 
@@ -164,9 +163,12 @@ watch(selectedRecordingId, (newId) => {
 
 watch(selectedPlaylist, (newId) => {
   if (!newId) return
-  router.replace(
-    `/p/${selectedProjectSlug.value}/visualizer/playlist/${newId}`
-  )
+  if (newId.toString() !== browserTypeId.value) {
+    router.replace(
+      `/p/${selectedProjectSlug.value}/visualizer/playlist/${newId}`
+    )
+  }
+  idRecording.value = 0
 })
 
 watch(() => browserType.value, () => {

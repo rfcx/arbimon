@@ -90,8 +90,16 @@ const isAtFirstPage = computed(() => currentPage.value <= 0)
 const isAtLastPage = computed(() => currentPage.value >= lastPage.value)
 
 const digits = computed(() => String(currentPage.value + 1).length)
-const blockSize = computed(() => (digits.value < 3 ? 7 : 5))
+const blockSize = computed(() => {
+  const d = digits.value
 
+  if (d < 3) return 7
+  if (d < 5) return 5
+  if (d === 5 || d === 6) return 3
+  if (d >= 7 && d <= 10) return 2
+  if (d > 10) return 1
+  return 7
+})
 const pageBlock = computed<number[]>(() => {
   if (lastPage.value < 0) return []
 

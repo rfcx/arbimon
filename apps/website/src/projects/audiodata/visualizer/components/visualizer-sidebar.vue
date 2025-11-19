@@ -402,6 +402,7 @@ watch(siteSelected, (newVal, oldVal) => {
 
 watch(playlistSelectedValue, async (val) => {
   if (val === undefined) return
+  page.value = 0
   emits('emitSelectedPlaylist', val)
   recordingResponse.value = await apiArbimonPostPlaylistItems(apiClientArbimon, selectedProjectSlug.value ?? '', val, { offset: (page.value * pageSize), limit: pageSize })
 })
