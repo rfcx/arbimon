@@ -32,7 +32,7 @@
     >
       <div class="text-sm">
         <span class="font-bold flex">Detection Jobs</span>
-        <span v-if="!aedClustering || aedClustering.length === 0">There are no audio events in this recording.</span>
+        <span v-if="!jobsView || jobsView.length === 0">There are no audio events in this recording.</span>
         <section v-else>
           <div
             v-for="job in jobsView"
@@ -59,7 +59,7 @@
               />
               <icon-fa-eye-slash
                 v-else
-                class="h-4 w-4"
+                class="h-4 w-4 text-util-gray-02"
               />
             </div>
           </div>
@@ -95,73 +95,34 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-import type { AedClusterResponse, PlaylistInfo, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import type { PlaylistInfo, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+
+import type { AedJob } from './visualizer-sidebar.vue'
 
 const props = defineProps<{
   visobject: Visobject
-  aedClustering?: AedClusterResponse
+  aedJobs?: Record<string, AedJob>
   playlist?: PlaylistInfo
 }>()
 
-function formatParameters (params: Record<string, number>): string {
-  return Object.entries(params)
-    .map(([key, val]) => `${key}=${val}`)
-    .join(', ')
-}
+const emit = defineEmits<{(e: 'emitActiveAedLayer'): void, (e: 'emitActiveAedBoxes', visibleJobs: Record<number, boolean>, job: AedJob): void }>()
 
-interface AedJobView {
-  jobId: number
-  name: string
-  parametersText: string
-  timestamp: string
-  items: {
-    aed_id: number
-    time_min: number
-    time_max: number
-    freq_min: number
-    freq_max: number
-    state: string
-  }[]
-}
-
-function toJobsView (data: AedClusterResponse) {
-  const grouped: Record<string, AedJobView> = {}
-
-  for (const item of data) {
-    const key = String(item.name)
-
-    if (!(key in grouped)) {
-      grouped[key] = {
-        jobId: item.job_id,
-        name: item.name,
-        parametersText: formatParameters(item.parameters),
-        timestamp: item.timestamp,
-        items: []
-      }
-    }
-
-    grouped[key].items.push({
-      aed_id: item.aed_id,
-      time_min: item.time_min,
-      time_max: item.time_max,
-      freq_min: item.freq_min,
-      freq_max: item.freq_max,
-      state: item.state
-    })
-  }
-
-  return Object.values(grouped).sort(
+const jobsView = computed(() => props.aedJobs
+  ? Object.values(props.aedJobs).sort(
     (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
   )
-}
-
-const jobsView = computed(() => toJobsView(props.aedClustering ?? []))
+: [])
 const eyeVisibleMap = ref<Record<number, boolean>>({})
 
-function toggleVisible (job: AedJobView) {
+const toggleVisible = (job: AedJob) => {
+  // remove default/selected job from the audio events details page
+  localStorage.setItem('analysis.audioEventJob', '')
   const current = eyeVisibleMap.value[job.jobId] ?? false
   eyeVisibleMap.value[job.jobId] = !current
-  // TODO: When click on ic-eye to hander hied/show AedJob box on spectrogram
+  // add opacity to selected aed job
+  job.items.forEach(item => { item.opacity = eyeVisibleMap.value[job.jobId] === false ? 0 : 1 })
+  emit('emitActiveAedLayer')
+  emit('emitActiveAedBoxes', eyeVisibleMap.value, job)
 }
 
 const togglePlaylistVisible = ref<boolean>(false)

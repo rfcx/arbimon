@@ -130,7 +130,7 @@
       />
       <!-- ROI box -->
       <div
-        v-if="activeLayer && activeLayer !== 'New Training Set'"
+        v-if="activeLayer && activeLayer !== 'New Training Set' && activeLayer !== 'aed'"
         class="input-source cursor-crosshair relative"
         :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
         @mousedown.left="onMouseDownRoi"
@@ -320,6 +320,42 @@
           />
         </div>
       </div>
+      <!-- AED layer -->
+      <div v-if="spectrogramAed && layerVisibility.aed === true">
+        <div
+          v-for="(detection, index) in spectrogramAed"
+          :key="index"
+          class="border-1 z-5 cursor-pointer absolute"
+          :class="{ 'roi-selected': toggledAedBox === detection.aedId }"
+          :style="{
+            left: sec2x(detection.x1 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
+            top: hz2y(detection.y2 ?? 0, 1) + legendMetrics.axis_margin_top + 'px',
+            width: getDsec2width(detection.x2 ?? 0, detection.x1 ?? 0, 1),
+            height: getDhz2height(detection.y2 ?? 0, detection.y1 ?? 0),
+            'border-color': detection.borderColor,
+            'background-color': detection.backgroundColor
+          }"
+          tabindex="-1"
+          :title="'AED: ' + detection.name"
+          data-tooltip-style="dark"
+          :data-tooltip-target="`aedTooltipId-${index}`"
+          @click="$event.stopPropagation(); toggleAed(detection.aedId)"
+        />
+        <!-- AED Tooltips -->
+        <div
+          v-for="(detection, index) in spectrogramAed"
+          :id="`aedTooltipId-${index}`"
+          :key="`aedTooltipKey-${index}`"
+          role="tooltip"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+        >
+          {{ 'AED: ' + detection.name }}
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -345,6 +381,7 @@ import { type BboxGroupPm, type BboxGroupTags, type BboxGroupTrainingSets, type 
 import { type LayerVisibility } from '../visualizer-page.vue'
 import { CreateBBoxEditor } from './visualizer-create-bbox-editor'
 import { doXAxisLayout, doYAxisLayout, makeScale } from './visualizer-scale'
+import type { AedJob } from './visualizer-sidebar.vue'
 import VisualizerTagBboxModal from './visualizer-tag-bbox-modal.vue'
 import VisualizerTemplateModal, { type TemplateData } from './visualizer-template-modal.vue'
 import VisualizerTileImg from './visualizer-tile-img.vue'
@@ -358,6 +395,8 @@ const props = defineProps<{
   isSpectrogramTagsUpdated: boolean
   activeLayer?: string | undefined
   trainingSet: TrainingSet | undefined
+  aedJobs: AedJob[] | undefined
+  visibleAedJobs: Record<number, boolean>
   layerVisibility: LayerVisibility
 }>()
 
@@ -385,6 +424,7 @@ const toggledTag = ref<number>()
 const toggledTrainingSet = ref<number>()
 const toggledPmRoiBox = ref<number>()
 const toggledTemplateBox = ref<number>()
+const toggledAedBox = ref<number>()
 
 const zoomData = reactive<{ x: number; y: number; levelx?: number[]; levely?: number[], maxSec2px: number, maxHz2px: number }>({
   x: 0,
@@ -444,6 +484,8 @@ const legendMetrics = computed(() => {
     scale: {}
   }
 })
+
+const spectrogramAed = computed(() => props.aedJobs?.flatMap(j => j.items) ?? [])
 
 const round = (val: number, precision = 1) => {
   precision = precision || 1
@@ -741,6 +783,11 @@ const toggleTemplate = (id: number) => {
   else toggledTemplateBox.value = id
 }
 
+const toggleAed = (aedId: number) => {
+  if (toggledAedBox.value === aedId) toggledAedBox.value = undefined
+  else toggledAedBox.value = aedId
+}
+
 const groupByBbox = (tags: RecordingTagResponse[]): BboxGroupTags[] => {
   const map: Record<string, BboxGroupTags> = {}
   for (const tag of tags) {
@@ -861,6 +908,11 @@ watch(() => props.trainingSet, async () => {
   if (trainingSets.value) {
     spectrogramTrainingSets.value = groupByBboxForTrainingSets(trainingSets.value)
   }
+  await nextTick()
+  initTooltips()
+})
+
+watch(() => spectrogramAed.value, async () => {
   await nextTick()
   initTooltips()
 })

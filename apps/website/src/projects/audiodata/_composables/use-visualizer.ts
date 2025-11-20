@@ -124,10 +124,9 @@ export const useAedClustering = (
   recId: ComputedRef<string | number> | undefined,
   completed: ComputedRef<boolean> = computed(() => true)
 ): UseQueryReturnType<AedClusterResponse | undefined, unknown> => {
-  const enabled = computed(() => Boolean(slug.value && recId !== undefined && recId.value != null))
-
+  const enabled = computed(() => Boolean(slug.value && recId?.value !== undefined && recId.value !== null && recId.value !== ''))
   return useQuery({
-    queryKey: ['aed-clustering', slug, recId, completed],
+    queryKey: ['get-aed-clustering', slug, recId, completed],
     queryFn: async () => {
       if (!enabled.value) return undefined
       const raw: AedClusterResponse | undefined = await apiArbimonGetAedClustering(

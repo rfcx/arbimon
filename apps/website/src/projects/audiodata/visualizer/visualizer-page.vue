@@ -14,6 +14,7 @@
       @emit-template-visibility="handleTemplateVisibility"
       @emit-selected-thumbnail="handleSelectedThumbnail"
       @emit-selected-playlist="handleSelectedPlaylist"
+      @emit-active-aed-boxes="handleAedJobs"
     />
     <div
       v-if="isLoadingVisobject || isRefetching"
@@ -36,6 +37,8 @@
       :is-spectrogram-tags-updated="isSpectrogramTagsUpdated"
       :active-layer="activeLayer"
       :training-set="selectedTrainingSet"
+      :aed-jobs="selectedAedJobs"
+      :visible-aed-jobs="visibleAedJobs"
       :layer-visibility="layerVisibility"
     />
   </section>
@@ -50,7 +53,7 @@ import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/tra
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetRecording } from '../_composables/use-visualizer'
-import VisualizerSidebar from './components/visualizer-sidebar.vue'
+import VisualizerSidebar, { type AedJob } from './components/visualizer-sidebar.vue'
 import VisualizerSpectrogram from './components/visualizer-spectrogram.vue'
 import { type FreqFilter } from './types'
 
@@ -83,6 +86,8 @@ const layerVisibility = ref<LayerVisibility>({
   cluster: true
 })
 const selectedTrainingSet = ref<TrainingSet | undefined>(undefined)
+const selectedAedJobs = ref<AedJob[] | undefined>([])
+const visibleAedJobs = ref<Record<number, boolean>>({})
 
 const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
 const browserType = computed(() => browserTypes.includes(route.params.browserType as string) ? route.params.browserType as string : undefined)
@@ -151,6 +156,12 @@ const handleSelectedThumbnail = (value: number) => {
 const handleSelectedPlaylist = (value: number) => {
   selectedPlaylist.value = value
   refetchRecording()
+}
+
+const handleAedJobs = (visibleJobs: Record<number, boolean>, job: AedJob) => {
+  visibleAedJobs.value = visibleJobs
+  selectedAedJobs.value?.push(job)
+  selectedAedJobs.value = selectedAedJobs.value?.filter(j => visibleJobs[j.jobId] === true)
 }
 
 watch(selectedRecordingId, (newId) => {
