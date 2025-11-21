@@ -1,6 +1,7 @@
 import { type AxiosInstance } from 'axios'
 import { Vue } from 'vue-class-component'
 import { Inject, Prop } from 'vue-property-decorator'
+import { useRoute } from 'vue-router'
 
 import { apiBioGetRichnessExport } from '@rfcx-bio/common/api-bio/richness/richness-export'
 import { isDefined } from '@rfcx-bio/utils/predicates'
@@ -13,6 +14,7 @@ import { type BiodiversityStore, useStore } from '~/store'
 
 const DEFAULT_PREFIX = 'Species-Richness-Raw-Data'
 const store = useStore()
+const route = useRoute()
 
 export default class SpeciesRichnessIntroduction extends Vue {
   @Inject({ from: storeKey }) readonly store!: BiodiversityStore
@@ -32,7 +34,7 @@ export default class SpeciesRichnessIntroduction extends Vue {
   }
 
   get isViewingAsGuest (): boolean {
-    return this.$route.query.guest === '1'
+    return route.query.guest === '1'
   }
 
   // TODO ??? - I think Vue 3 composition API would let us simply import the function (instead of proxying it)

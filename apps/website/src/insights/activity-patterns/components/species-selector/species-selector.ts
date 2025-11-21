@@ -1,7 +1,7 @@
 import { type AxiosInstance } from 'axios'
 import { Vue } from 'vue-class-component'
 import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
-import { type RouteLocationNormalized } from 'vue-router'
+import { type RouteLocationNormalized, useRoute, useRouter } from 'vue-router'
 
 import { apiBioGetProjectSpecies } from '@rfcx-bio/common/api-bio/species/project-species-all'
 import { type SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-in-project'
@@ -9,6 +9,9 @@ import { type SpeciesInProjectTypes } from '@rfcx-bio/common/dao/types/species-i
 import { apiClientKey, routeNamesKey, storeKey } from '@/globals'
 import { type RouteNames } from '~/router'
 import { type BiodiversityStore } from '~/store'
+
+const route = useRoute()
+const router = useRouter()
 
 export default class SpeciesSelector extends Vue {
   @Inject({ from: apiClientKey }) readonly apiClientBio!: AxiosInstance
@@ -52,7 +55,7 @@ export default class SpeciesSelector extends Vue {
       this.allSpecies = await this.getAllSpecies()
       // reset not-exists species slug in the url.
       if (from.name === to.name && !this.allSpecies.length) {
-        void this.$router.replace({ params: { speciesSlug: '' }, query: this.$route.query })
+        void router.replace({ params: { speciesSlug: '' }, query: route.query })
       }
     }
   }

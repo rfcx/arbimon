@@ -60,7 +60,7 @@
             <tr>
               <td class="pt-2 px-1 sticky left-0 z-10">
                 <router-link
-                  :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.scientificName) }, query: $route.query }"
+                  :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: getSpeciesSlug(row.scientificName) }, query: route.query }"
                   class="text-subtle hover:(underline text-white)"
                 >
                   <span class="text-insight italic">{{ row.scientificName }}</span>
