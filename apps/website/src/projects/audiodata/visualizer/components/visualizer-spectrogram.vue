@@ -356,6 +356,42 @@
           />
         </div>
       </div>
+      <!-- Clustering layer -->
+      <div v-if="spectrogramClustering && layerVisibility.cluster === true">
+        <div
+          v-for="(cl, index) in spectrogramClustering"
+          :key="index"
+          class="border-1 z-5 cursor-pointer absolute"
+          :class="{ 'roi-selected': toggledClustering === cl.aedId }"
+          :style="{
+            left: sec2x(cl.x1 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
+            top: hz2y(cl.y2 ?? 0, 1) + legendMetrics.axis_margin_top + 'px',
+            width: getDsec2width(cl.x2 ?? 0, cl.x1 ?? 0, 1),
+            height: getDhz2height(cl.y2 ?? 0, cl.y1 ?? 0),
+            'border-color': cl.borderColor,
+            'background-color': cl.backgroundColor
+          }"
+          tabindex="-1"
+          :title="'Clustering Playlist: ' + cl.playlistName"
+          data-tooltip-style="dark"
+          :data-tooltip-target="`clusterTooltipId-${index}`"
+          @click="$event.stopPropagation(); toggleClustering(cl.aedId)"
+        />
+        <!-- Clustering Tooltips -->
+        <div
+          v-for="(cl, index) in spectrogramClustering"
+          :id="`clusterTooltipId-${index}`"
+          :key="`clusterTooltipKey-${index}`"
+          role="tooltip"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+        >
+          {{ 'Clustering Playlist: ' + cl.playlistName }}
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -381,7 +417,7 @@ import { type BboxGroupPm, type BboxGroupTags, type BboxGroupTrainingSets, type 
 import { type LayerVisibility } from '../visualizer-page.vue'
 import { CreateBBoxEditor } from './visualizer-create-bbox-editor'
 import { doXAxisLayout, doYAxisLayout, makeScale } from './visualizer-scale'
-import type { AedJob } from './visualizer-sidebar.vue'
+import type { AedJob, ClusteringPlaylist } from './visualizer-sidebar.vue'
 import VisualizerTagBboxModal from './visualizer-tag-bbox-modal.vue'
 import VisualizerTemplateModal, { type TemplateData } from './visualizer-template-modal.vue'
 import VisualizerTileImg from './visualizer-tile-img.vue'
@@ -396,7 +432,9 @@ const props = defineProps<{
   activeLayer?: string | undefined
   trainingSet: TrainingSet | undefined
   aedJobs: AedJob[] | undefined
+  clustering: ClusteringPlaylist[] | undefined
   visibleAedJobs: Record<number, boolean>
+  visibleClustering: Record<number, boolean>
   layerVisibility: LayerVisibility
 }>()
 
@@ -425,6 +463,7 @@ const toggledTrainingSet = ref<number>()
 const toggledPmRoiBox = ref<number>()
 const toggledTemplateBox = ref<number>()
 const toggledAedBox = ref<number>()
+const toggledClustering = ref<number>()
 
 const zoomData = reactive<{ x: number; y: number; levelx?: number[]; levely?: number[], maxSec2px: number, maxHz2px: number }>({
   x: 0,
@@ -486,6 +525,7 @@ const legendMetrics = computed(() => {
 })
 
 const spectrogramAed = computed(() => props.aedJobs?.flatMap(j => j.items) ?? [])
+const spectrogramClustering = computed(() => props.clustering?.flatMap(cl => cl.items) ?? [])
 
 const round = (val: number, precision = 1) => {
   precision = precision || 1
@@ -786,6 +826,11 @@ const toggleTemplate = (id: number) => {
 const toggleAed = (aedId: number) => {
   if (toggledAedBox.value === aedId) toggledAedBox.value = undefined
   else toggledAedBox.value = aedId
+}
+
+const toggleClustering = (aedId: number) => {
+  if (toggledClustering.value === aedId) toggledClustering.value = undefined
+  else toggledClustering.value = aedId
 }
 
 const groupByBbox = (tags: RecordingTagResponse[]): BboxGroupTags[] => {

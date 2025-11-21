@@ -2,7 +2,7 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import type { AxiosInstance } from 'axios'
 import { type ComputedRef, computed } from 'vue'
 
-import { type AedClusterResponse, type newTemplateResponse, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type SoundscapeCompositionParams, type SoundscapeCompositionResponse, type TagDeleteResponse, type TagParams, type TemplateParams, type TemplateResponse, type VisobjectResponse, apiArbimonGetAedClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiGetTemplates, apiPostSoundscapeComposition, apiPostTemplate, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type AedResponse, type ClusterResponse, type newTemplateResponse, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type SoundscapeCompositionParams, type SoundscapeCompositionResponse, type TagDeleteResponse, type TagParams, type TemplateParams, type TemplateResponse, type VisobjectResponse, apiArbimonGetAed, apiArbimonGetClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiGetTemplates, apiPostSoundscapeComposition, apiPostTemplate, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: ComputedRef<string | undefined>): UseQueryReturnType<VisobjectResponse | undefined, unknown> => {
   return useQuery({
@@ -118,22 +118,44 @@ export const usePostSoundscapeComposition = (apiClient: AxiosInstance, slug: Com
   })
 }
 
-export const useAedClustering = (
+export const useGetAed = (
   apiClient: AxiosInstance,
   slug: ComputedRef<string | undefined>,
   recId: ComputedRef<string | number> | undefined,
   completed: ComputedRef<boolean> = computed(() => true)
-): UseQueryReturnType<AedClusterResponse | undefined, unknown> => {
+): UseQueryReturnType<AedResponse | undefined, unknown> => {
   const enabled = computed(() => Boolean(slug.value && recId?.value !== undefined && recId.value !== null && recId.value !== ''))
   return useQuery({
-    queryKey: ['get-aed-clustering', slug, recId, completed],
+    queryKey: ['get-aed', slug, recId, completed],
     queryFn: async () => {
       if (!enabled.value) return undefined
-      const raw: AedClusterResponse | undefined = await apiArbimonGetAedClustering(
+      const raw: AedResponse | undefined = await apiArbimonGetAed(
         apiClient,
         slug.value ?? '',
         recId?.value ?? 0,
         completed.value
+      )
+      return raw
+    },
+    enabled,
+    refetchOnWindowFocus: false
+  })
+}
+
+export const useGetClustering = (
+  apiClient: AxiosInstance,
+  slug: ComputedRef<string | undefined>,
+  recId: ComputedRef<string | number> | undefined
+): UseQueryReturnType<ClusterResponse | undefined, unknown> => {
+  const enabled = computed(() => Boolean(slug.value && recId?.value !== undefined && recId.value !== null && recId.value !== ''))
+  return useQuery({
+    queryKey: ['get-clustering', slug, recId],
+    queryFn: async () => {
+      if (!enabled.value) return undefined
+      const raw: ClusterResponse | undefined = await apiArbimonGetClustering(
+        apiClient,
+        slug.value ?? '',
+        recId?.value ?? 0
       )
       return raw
     },

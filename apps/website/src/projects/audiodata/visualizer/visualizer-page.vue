@@ -15,6 +15,7 @@
       @emit-selected-thumbnail="handleSelectedThumbnail"
       @emit-selected-playlist="handleSelectedPlaylist"
       @emit-active-aed-boxes="handleAedJobs"
+      @emit-active-clustering="handleClustering"
     />
     <div
       v-if="isLoadingVisobject || isRefetching"
@@ -38,7 +39,9 @@
       :active-layer="activeLayer"
       :training-set="selectedTrainingSet"
       :aed-jobs="selectedAedJobs"
+      :clustering="selectedClustering"
       :visible-aed-jobs="visibleAedJobs"
+      :visible-clustering="visibleClustering"
       :layer-visibility="layerVisibility"
     />
   </section>
@@ -53,7 +56,7 @@ import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/tra
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetRecording } from '../_composables/use-visualizer'
-import VisualizerSidebar, { type AedJob } from './components/visualizer-sidebar.vue'
+import VisualizerSidebar, { type AedJob, type ClusteringPlaylist } from './components/visualizer-sidebar.vue'
 import VisualizerSpectrogram from './components/visualizer-spectrogram.vue'
 import { type FreqFilter } from './types'
 
@@ -87,7 +90,9 @@ const layerVisibility = ref<LayerVisibility>({
 })
 const selectedTrainingSet = ref<TrainingSet | undefined>(undefined)
 const selectedAedJobs = ref<AedJob[] | undefined>([])
+const selectedClustering = ref<ClusteringPlaylist[] | undefined>([])
 const visibleAedJobs = ref<Record<number, boolean>>({})
+const visibleClustering = ref<Record<number, boolean>>({})
 
 const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
 const browserType = computed(() => browserTypes.includes(route.params.browserType as string) ? route.params.browserType as string : undefined)
@@ -162,6 +167,12 @@ const handleAedJobs = (visibleJobs: Record<number, boolean>, job: AedJob) => {
   visibleAedJobs.value = visibleJobs
   selectedAedJobs.value?.push(job)
   selectedAedJobs.value = selectedAedJobs.value?.filter(j => visibleJobs[j.jobId] === true)
+}
+
+const handleClustering = (visiblePl: Record<number, boolean>, pl: ClusteringPlaylist) => {
+  visibleClustering.value = visiblePl
+  selectedClustering.value?.push(pl)
+  selectedClustering.value = selectedClustering.value?.filter(cl => visiblePl[cl.playlistId] === true)
 }
 
 watch(selectedRecordingId, (newId) => {

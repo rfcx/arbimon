@@ -406,7 +406,7 @@ export const apiPostSoundscapeComposition = async (apiClient: AxiosInstance, slu
   return response.data
 }
 
-export interface AedClusterItem {
+export interface AedItem {
   job_id: number
   name: string
   parameters: Record<string, number>
@@ -423,18 +423,18 @@ export interface AedClusterItem {
   rec_id: number
   state: 'completed' | 'running' | 'failed' | string
 }
-export type AedClusterResponse = AedClusterItem[]
+export type AedResponse = AedItem[]
 
-export const apiArbimonGetAedClustering = async (
+export const apiArbimonGetAed = async (
   apiClient: AxiosInstance,
   slug: string,
   recId: string | number,
   completed = true
-): Promise<AedClusterResponse | undefined> => {
+): Promise<AedResponse | undefined> => {
   if (!slug || recId == null) return undefined
 
   const url = `/legacy-api/project/${slug}/audio-event-detections-clustering`
-  const res = await apiClient.request<AedClusterResponse>({
+  const res = await apiClient.request<AedResponse>({
     method: 'GET',
     url,
     params: {
@@ -444,6 +444,40 @@ export const apiArbimonGetAedClustering = async (
   })
   return res.data
 }
+
+export interface ClusterItem {
+  aed_id: number
+  time_min: number
+  time_max: number
+  frequency_min: number
+  frequency_max: number
+  recording_id: number
+  uri: string
+  validated: number | null
+  playlist_name: string
+  playlist_id: number
+}
+export type ClusterResponse = ClusterItem[]
+
+export const apiArbimonGetClustering = async (
+  apiClient: AxiosInstance,
+  slug: string,
+  recId: string | number
+): Promise<ClusterResponse | undefined> => {
+  if (!slug || recId == null) return undefined
+
+  const url = `/legacy-api/project/${slug}/clustering-jobs/undefined/rois-details`
+  const res = await apiClient.request<ClusterResponse>({
+    method: 'POST',
+    url,
+    data: {
+      all: true,
+      rec_id: recId
+    }
+  })
+  return res.data
+}
+
 export interface PlaylistInfo {
   id: number
   name: string

@@ -118,9 +118,10 @@
       v-if="visobject"
       :visobject="visobject"
       :aed-jobs="audioEventJobs"
-      :playlist="playlist"
+      :clustering-playlists="clusteringPlaylists"
       @emit-active-aed-layer="$emit('emitActiveLayer', 'aed')"
       @emit-active-aed-boxes="onEmitActiveAedBoxes"
+      @emit-active-clustering="onEmitActiveClustering"
     />
     <alert-dialog
       v-if="showAlert"
@@ -148,7 +149,7 @@ import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetPlaylists, useGetSoundscape, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
 import { useSites } from '../../_composables/use-sites'
-import { useAedClustering, useDeleteRecordingTag, useGetPlaylistInfo, useGetRecordingTag, usePostSoundscapeComposition, usePutRecordingTag } from '../../_composables/use-visualizer'
+import { useDeleteRecordingTag, useGetAed, useGetClustering, useGetPlaylistInfo, useGetRecordingTag, usePostSoundscapeComposition, usePutRecordingTag } from '../../_composables/use-visualizer'
 import { type BboxGroupTags, type FreqFilter } from '../types'
 import BasicSearchSelect from './basic-search-select.vue'
 import PaginationControl from './pagination-control.vue'
@@ -183,6 +184,28 @@ export interface AedJob {
   }[]
 }
 
+export interface ClusteringPlaylist {
+  recId: number
+  playlistName: string
+  playlistId: number
+  count: number
+  visible: boolean
+  items: {
+    recId: number
+    aedId: number
+    x1: number
+    x2: number
+    y1: number
+    y2: number
+    playlistId: number | null
+    playlistName: string
+    display: string
+    borderColor: string
+    backgroundColor: string
+    opacity: number
+  }[]
+}
+
 const props = defineProps<{
   visobject: Visobject | undefined
   isLoadingVisobject: boolean
@@ -198,7 +221,8 @@ const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'emitTemplateVisibility', value: boolean): void,
   (e: 'emitSelectedThumbnail', value: number): void,
   (e: 'emitSelectedPlaylist', value: number): void,
-  (e: 'emitActiveAedBoxes', visibleJobs: Record<number, boolean>, job: AedJob): void
+  (e: 'emitActiveAedBoxes', visibleJobs: Record<number, boolean>, job: AedJob): void,
+  (e: 'emitActiveClustering', visiblePl: Record<number, boolean>, pl: ClusteringPlaylist): void
 }>()
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
@@ -222,6 +246,7 @@ const initialViewMonth = ref<number | undefined>(undefined)
 const initialViewYear = ref<number | undefined>(undefined)
 
 const audioEventJobs: Record<string, AedJob> = {}
+const clusteringPlaylists: Record<string, ClusteringPlaylist> = {}
 
 const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue: string, hideAfter = 7000) => {
   showAlert.value = true
@@ -250,7 +275,8 @@ const playlistId = computed(() =>
   playlistSelectedValue.value ?? (isPlaylist.value ? browserTypeId.value : undefined)
 )
 
-const { data: aedClustering } = useAedClustering(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
+const { data: auduoEventDetections } = useGetAed(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
+const { data: clustering } = useGetClustering(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { data: playlist } = useGetPlaylistInfo(apiClientArbimon, selectedProjectSlug, playlistId)
 const { data: playlists } = useGetPlaylists(apiClientArbimon, selectedProjectSlug)
 
@@ -407,6 +433,10 @@ const onEmitActiveAedBoxes = (visibleJobs: Record<number, boolean>, job: AedJob)
   emits('emitActiveAedBoxes', visibleJobs, job)
 }
 
+const onEmitActiveClustering = (visiblePl: Record<number, boolean>, pl: ClusteringPlaylist) => {
+  emits('emitActiveClustering', visiblePl, pl)
+}
+
 const formatParameters = (params: Record<string, number>): string => {
   return Object.entries(params)
     .map(([key, val]) => `${key}=${val}`)
@@ -421,7 +451,7 @@ const hexToRGB = (hex: string, opacity: number) => {
 }
 
 const fetchAudioEvents = () => {
-  if (aedClustering.value === undefined) return
+  if (auduoEventDetections.value === undefined) return
   let isAudioEventsPlaylist = false
   let selectedAudioEventJob: string | null = null
   try {
@@ -429,7 +459,7 @@ const fetchAudioEvents = () => {
     isAudioEventsPlaylist = !isNaN(Number(selectedAudioEventJob))
   } catch (e) {}
   const colors = ['#5340ff33', '#008000', '#ffcd00', '#1F57CC', '#53ff40', '#5bc0de', '#5340ff33']
-  for (const item of aedClustering.value) {
+  for (const item of auduoEventDetections.value) {
     const key = String(item.name)
     if (!(key in audioEventJobs)) {
       audioEventJobs[key] = {
@@ -468,6 +498,48 @@ const fetchAudioEvents = () => {
   }
 }
 
+const fetchClustering = () => {
+  if (clustering.value === undefined) return
+  const colors = ['#5340ff33', '#008000', '#ffcd00', '#1F57CC', '#53ff40', '#5bc0de', '#5340ff33']
+  for (const item of clustering.value) {
+    const key = String(item.playlist_id)
+    if (!(key in clusteringPlaylists)) {
+      clusteringPlaylists[key] = {
+        recId: item.recording_id,
+        playlistName: item.playlist_name,
+        playlistId: item.playlist_id,
+        count: 1,
+        // playlist is hidden by default
+        visible: false,
+        items: []
+      }
+    } else clusteringPlaylists[key].count += 1
+    clusteringPlaylists[key].items.push({
+      recId: item.recording_id,
+      aedId: item.aed_id,
+      x1: item.time_min,
+      x2: item.time_max,
+      y1: item.frequency_min,
+      y2: item.frequency_max,
+      playlistId: item.playlist_id || null,
+      playlistName: item.playlist_name,
+      display: item.recording_id === (isPlaylist.value ? +browserRecId.value : +browserTypeId.value) ? 'block' : 'none',
+      borderColor: '',
+      backgroundColor: '',
+      // boxes not visible by default
+      opacity: 0
+    })
+  }
+  const jobs = Object.values(clusteringPlaylists)
+  for (const [ind, job] of jobs.entries()) {
+    const color = colors[ind] || colors[0]
+    job.items.forEach((item: any) => {
+      item.borderColor = hexToRGB(color, 0.4)
+      item.backgroundColor = hexToRGB(color, 0.1)
+    })
+  }
+}
+
 watch(() => recordingTags.value, () => {
   if (!recordingTags.value) return
   spectrogramTags.value = groupByBbox(recordingTags.value)
@@ -493,8 +565,12 @@ watch(playlistSelectedValue, async (val) => {
   recordingResponse.value = await apiArbimonPostPlaylistItems(apiClientArbimon, selectedProjectSlug.value ?? '', val, { offset: (page.value * pageSize), limit: pageSize })
 })
 
-watch(() => aedClustering.value, () => {
+watch(() => auduoEventDetections.value, () => {
   fetchAudioEvents()
+})
+
+watch(() => clustering.value, () => {
+  fetchClustering()
 })
 
 onMounted(() => {

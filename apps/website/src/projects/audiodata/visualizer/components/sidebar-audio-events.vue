@@ -32,10 +32,12 @@
     >
       <div class="text-sm">
         <span class="font-bold flex">Detection Jobs</span>
-        <span v-if="!jobsView || jobsView.length === 0">There are no audio events in this recording.</span>
+        <span v-if="!aedJobsView || aedJobsView.length === 0">
+          There are no audio events in this recording.
+        </span>
         <section v-else>
           <div
-            v-for="job in jobsView"
+            v-for="job in aedJobsView"
             :key="job.jobId"
             class="flex items-center justify-between mt-3 pl-2"
           >
@@ -50,7 +52,7 @@
 
             <div
               class="cursor-pointer opacity-70 hover:opacity-100"
-              @click="toggleVisible(job)"
+              @click="toggleAedVisible(job)"
               @click.stop
             >
               <icon-fa-eye
@@ -67,27 +69,34 @@
       </div>
       <div class="text-sm mt-4">
         <span class="font-bold flex">Cluster Playlists</span>
-        <span v-if="!playlist">There are no related clustering playlists to this recording.</span>
-        <div
-          v-else
-          class="flex items-center justify-between mt-3 pl-2"
-        >
-          <span>{{ playlist.name }}</span>
+        <span v-if="!clusteringPlaylistView || clusteringPlaylistView.length === 0">
+          There are no related clustering playlists to this recording.
+        </span>
+        <section v-else>
           <div
-            class="cursor-pointer opacity-70 hover:opacity-100"
-            @click="togglePlaylistVisible = !togglePlaylistVisible"
-            @click.stop
+            v-for="playlist in clusteringPlaylistView"
+            :key="playlist.playlistId"
+            class="flex items-center justify-between mt-3 pl-2"
           >
-            <icon-fa-eye
-              v-if="togglePlaylistVisible"
-              class="h-4 w-4"
-            />
-            <icon-fa-eye-slash
-              v-else
-              class="h-4 w-4"
-            />
+            <h3 class="text-sm font-medium">
+              {{ playlist.playlistName }}
+            </h3>
+            <div
+              class="cursor-pointer opacity-70 hover:opacity-100"
+              @click="toggleClusteringVisible(playlist)"
+              @click.stop
+            >
+              <icon-fa-eye
+                v-if="eyeVisibleMap[playlist.playlistId]"
+                class="h-4 w-4"
+              />
+              <icon-fa-eye-slash
+                v-else
+                class="h-4 w-4 text-util-gray-02"
+              />
+            </div>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   </div>
@@ -95,26 +104,36 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-import type { PlaylistInfo, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import type { Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
-import type { AedJob } from './visualizer-sidebar.vue'
+import type { AedJob, ClusteringPlaylist } from './visualizer-sidebar.vue'
 
 const props = defineProps<{
   visobject: Visobject
   aedJobs?: Record<string, AedJob>
-  playlist?: PlaylistInfo
+  clusteringPlaylists?: Record<string, ClusteringPlaylist>
 }>()
 
-const emit = defineEmits<{(e: 'emitActiveAedLayer'): void, (e: 'emitActiveAedBoxes', visibleJobs: Record<number, boolean>, job: AedJob): void }>()
+const emit = defineEmits<{(e: 'emitActiveAedLayer'): void,
+  (e: 'emitActiveAedBoxes', visibleJobs: Record<number, boolean>, job: AedJob): void,
+  (e: 'emitActiveClustering', visiblePl: Record<number, boolean>, pl: ClusteringPlaylist): void
+}>()
 
-const jobsView = computed(() => props.aedJobs
+const aedJobsView = computed(() => props.aedJobs
   ? Object.values(props.aedJobs).sort(
     (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
   )
 : [])
+
+const clusteringPlaylistView = computed(() => props.clusteringPlaylists
+  ? Object.values(props.clusteringPlaylists).sort(
+    (a, b) => a.playlistId - b.playlistId
+  )
+: [])
+
 const eyeVisibleMap = ref<Record<number, boolean>>({})
 
-const toggleVisible = (job: AedJob) => {
+const toggleAedVisible = (job: AedJob) => {
   // remove default/selected job from the audio events details page
   localStorage.setItem('analysis.audioEventJob', '')
   const current = eyeVisibleMap.value[job.jobId] ?? false
@@ -125,7 +144,14 @@ const toggleVisible = (job: AedJob) => {
   emit('emitActiveAedBoxes', eyeVisibleMap.value, job)
 }
 
-const togglePlaylistVisible = ref<boolean>(false)
+const toggleClusteringVisible = (pl: ClusteringPlaylist) => {
+  const current = eyeVisibleMap.value[pl.playlistId] ?? false
+  eyeVisibleMap.value[pl.playlistId] = !current
+  // add opacity to selected aed job
+  pl.items.forEach(item => { item.opacity = eyeVisibleMap.value[pl.playlistId] === false ? 0 : 1 })
+  emit('emitActiveAedLayer')
+  emit('emitActiveClustering', eyeVisibleMap.value, pl)
+}
 
 </script>
 
