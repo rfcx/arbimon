@@ -106,6 +106,7 @@ declare module 'vue' {
     IconFaChevronRight: typeof import('~icons/fa/chevron-right')['default']
     IconFaChevronUp: typeof import('~icons/fa/chevron-up')['default']
     IconFaClose: typeof import('~icons/fa/close')['default']
+    IconFaCrosshairs: typeof import('~icons/fa/crosshairs')['default']
     IconFaCubes: typeof import('~icons/fa/cubes')['default']
     IconFaEraser: typeof import('~icons/fa/eraser')['default']
     IconFaExclamationTriangle: typeof import('~icons/fa/exclamation-triangle')['default']

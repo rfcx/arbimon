@@ -491,14 +491,28 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 const store = useStore()
 const route = useRoute()
+
+const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
 const browserTypeId = computed(() => route.params.browserTypeId as string ?? undefined)
+const browserType = computed(() => browserTypes.includes(route.params.browserType as string) ? route.params.browserType as string : undefined)
+const browserRecId = computed(() => route.params.browserRecId as string ?? undefined)
 
 const { height: containerHeight, width: containerWidth } = useElementSize(spectrogramContainer)
 
+const isSoundscape = computed(() => browserType.value === 'soundscape')
+const isPlaylist = computed(() => browserType.value === 'playlist')
+
+const selectedRecordingId = computed(() => {
+  if (isPlaylist.value) {
+    return browserRecId.value
+  }
+  return isSoundscape.value ? undefined : browserTypeId.value
+})
+
 const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
-const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
+const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
 const { data: searchedTags, refetch: refetchSearchTags } = useSearchTag(apiClientArbimon, selectedProjectSlug, { q: tagKeyword.value })
-const { data: pmBoxes, refetch: refetchPatternMatchingBoxes } = useGetPatternMatchingBoxes(apiClientArbimon, selectedProjectSlug, { rec_id: browserTypeId.value as string, validated: 1 })
+const { data: pmBoxes, refetch: refetchPatternMatchingBoxes } = useGetPatternMatchingBoxes(apiClientArbimon, selectedProjectSlug, { rec_id: selectedRecordingId.value as string, validated: 1 })
 const { data: templates, refetch: refetchTemplates } = useGetTemplates(apiClientArbimon, selectedProjectSlug)
 const { mutate: mutateAddRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
 const { mutate: mutatePostTrainingSet } = usePostTrainingSet(apiClientArbimon, selectedProjectSlug)

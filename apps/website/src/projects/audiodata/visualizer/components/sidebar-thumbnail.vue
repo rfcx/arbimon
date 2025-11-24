@@ -11,18 +11,18 @@
         class="loading-shimmer"
       />
       <div v-if="!recordings?.length">
-        <p ng-if="browserType == 'rec'">
+        <p v-show="browserType === 'rec'">
           Please, select a site and a date to browse
         </p>
-        <p ng-if="browserType == 'playlist'">
+        <p v-show="browserType === 'playlist'">
           Please, select a playlist to browse
         </p>
-        <p ng-if="browserType == 'soundscape'">
+        <p v-show="browserType === 'soundscape' && soundscape.length === 0">
           No soundscapes found
         </p>
       </div>
       <div
-        v-if="recordings?.length"
+        v-if="recordings?.length !== 0 && soundscape.length === 0"
       >
         <div
           v-for="(recording, index) in recordings"
@@ -49,6 +49,28 @@
           </div>
         </div>
       </div>
+      <div v-show="soundscape.length !== 0">
+        <div
+          v-for="(ss, index) in soundscape"
+          :key="index"
+          class="visobj-list-item h-full flex flex-col mb-2"
+          :class="browserTypeId === String(ss.id) ? 'active ' : ' '"
+          :data-ss-id="ss.id"
+          @click="onSelectedThumbnail(ss.id)"
+        >
+          <div class="flex flex-row justify-between text-sm">
+            <div>{{ ss.name }}</div>
+            <div>{{ 'scale:' + ss.max_value }}</div>
+          </div>
+          <div class="flex overflow-hidden mx-0 my-1.5 h-32 max-w-full max-h-full">
+            <img
+              :src="ss.thumbnail"
+              class="w-full h-full object-fill object-fill"
+              @error="setErrorImage($event)"
+            >
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -59,7 +81,7 @@ import dayjs from 'dayjs'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { type RecordingResponse } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type RecordingResponse, type SoundscapeResponse } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
@@ -80,11 +102,13 @@ const browserType = computed(() => browserTypes.includes(route.params.browserTyp
 const browserTypeId = computed(() => route.params.browserTypeId as string ?? undefined)
 const browserRecId = computed(() => route.params.browserRecId as string ?? undefined)
 const isPlaylist = computed(() => browserType.value === 'playlist')
+const isSoundscape = computed(() => browserType.value === 'soundscape')
 
 const thumbnailContainer = ref<HTMLElement | null>(null)
-let recordings: RecordingResponse = []
+const recordings = ref<RecordingResponse>([])
+const soundscape = ref<SoundscapeResponse>([])
 
-const props = defineProps<{ recordingsItem: RecordingResponse | undefined }>()
+const props = defineProps<{ recordingsItem: RecordingResponse | undefined, soundscapeResponse: SoundscapeResponse | undefined }>()
 
 const emits = defineEmits<{(e: 'onSelectedThumbnail', id: number): void}>()
 
@@ -97,11 +121,25 @@ const getCaption = (site: string, datetime: string) => {
   return [site, dayjs.utc(datetime).format('lll')].join(', ')
 }
 
+const idRecording = ref(0)
+const idSelectedRecording = computed(() =>
+  idRecording.value === 0 ? '' : idRecording.value.toString()
+)
+
+const selectedRecordingId = computed(() => {
+  if (isPlaylist.value) {
+    const notEmtpy = idSelectedRecording.value !== undefined && idSelectedRecording.value !== ''
+    return notEmtpy ? idSelectedRecording.value : browserRecId.value
+  }
+  return isSoundscape.value ? undefined : browserTypeId.value
+})
+
 const recordingListSearchParams = computed(() => {
+  if (!selectedRecordingId.value) return undefined
   return {
     limit: recLimit,
     offset: recOffset.value * recLimit,
-    key: `!q:13780-2024-6-25?recording_id=${isPlaylist.value ? browserRecId.value : browserTypeId.value}&show=thumbnail-path` // TODO: update it after the calendar date selection
+    key: `!q:13780-2024-6-25?recording_id=${selectedRecordingId.value}&show=thumbnail-path` // TODO: update it after the calendar date selection
   }
 })
 
@@ -129,12 +167,13 @@ const handleScroll = (e: Event) => {
 }
 
 const onSelectedThumbnail = (id: number) => {
+  idRecording.value = id
   emits('onSelectedThumbnail', id)
 }
 
 watch(() => recordingsResponse.value, (newValue) => {
   if (!newValue || recordingsResponse.value === undefined) return
-  recordings = [...recordings, ...recordingsResponse.value]
+  recordings.value = [...recordings.value, ...recordingsResponse.value]
   findVisObj()
 })
 
@@ -144,13 +183,52 @@ watch(() => browserType.value, () => {
 
 watch(() => props.recordingsItem, (r) => {
   if (r === undefined) return
-  recordings = [...r]
+  recordings.value = [...r]
+  soundscape.value = []
 })
+
+watch(() => props.soundscapeResponse, (ss) => {
+  if (ss === undefined) return
+  recordings.value = []
+  soundscape.value = [...ss]
+})
+
+const selectedSoundscapeId = computed(() => {
+  if (!isSoundscape.value) return null
+  const raw = browserTypeId.value
+  return raw ? Number(raw) : null
+})
+
+const scrollToSelectedSoundscape = async () => {
+  await nextTick()
+
+  if (!thumbnailContainer.value || selectedSoundscapeId.value == null) return
+
+  const el = thumbnailContainer.value.querySelector(
+    `[data-ss-id="${selectedSoundscapeId.value}"]`
+  ) as HTMLElement | null
+
+  if (!el) return
+
+  el.scrollIntoView({
+    block: 'center',
+    behavior: 'smooth'
+  })
+}
+
+watch(
+  () => soundscape.value,
+  () => {
+    scrollToSelectedSoundscape()
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   if (thumbnailContainer.value) {
     thumbnailContainer.value.addEventListener('scroll', handleScroll)
   }
+  scrollToSelectedSoundscape()
 })
 
 onBeforeUnmount(() => {

@@ -16,6 +16,7 @@
       @emit-selected-playlist="handleSelectedPlaylist"
       @emit-active-aed-boxes="handleAedJobs"
       @emit-active-clustering="handleClustering"
+      @emit-set-browser-type="setBrowserType"
     />
     <div
       v-if="isLoadingVisobject || isRefetching"
@@ -106,12 +107,14 @@ const idSelectedRecording = computed(() =>
   idRecording.value === 0 ? '' : idRecording.value.toString()
 )
 
+const isSoundscape = computed(() => browserType.value === 'soundscape')
+
 const selectedRecordingId = computed(() => {
   if (isPlaylist.value) {
     const notEmtpy = idSelectedRecording.value !== undefined && idSelectedRecording.value !== ''
     return notEmtpy ? idSelectedRecording.value : browserRecId.value
   }
-  return browserTypeId.value
+  return isSoundscape.value ? undefined : browserTypeId.value
 })
 const { isLoading: isLoadingVisobject, data: visobject, refetch: refetchRecording, isRefetching } = useGetRecording(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
 
@@ -147,6 +150,16 @@ const handleSpeciesVisibility = (value: boolean) => {
 
 const handleTemplateVisibility = (value: boolean) => {
   layerVisibility.value.template = value
+}
+
+const setBrowserType = (value: string) => {
+  if (value !== browserTypeId.value) {
+    router.replace(
+      `/p/${selectedProjectSlug.value}/visualizer/${value}`
+    )
+  }
+  idRecording.value = 0
+  // TODO reset all selected
 }
 
 const handleActiveLayer = (layer: string | undefined) => {

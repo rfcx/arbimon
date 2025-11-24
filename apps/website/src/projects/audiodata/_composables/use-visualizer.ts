@@ -2,7 +2,7 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import type { AxiosInstance } from 'axios'
 import { type ComputedRef, computed } from 'vue'
 
-import { type AedResponse, type ClusterResponse, type newTemplateResponse, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type SoundscapeCompositionParams, type SoundscapeCompositionResponse, type TagDeleteResponse, type TagParams, type TemplateParams, type TemplateResponse, type VisobjectResponse, apiArbimonGetAed, apiArbimonGetClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiGetTemplates, apiPostSoundscapeComposition, apiPostTemplate, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type AedResponse, type ClusterResponse, type newTemplateResponse, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type SoundscapeCompositionParams, type SoundscapeCompositionResponse, type SoundscapeResponse, type TagDeleteResponse, type TagParams, type TemplateParams, type TemplateResponse, type VisobjectResponse, apiArbimonGetAed, apiArbimonGetClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiGetSoundscapes, apiGetTemplates, apiPostSoundscapeComposition, apiPostTemplate, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: ComputedRef<string | undefined>): UseQueryReturnType<VisobjectResponse | undefined, unknown> => {
   return useQuery({
@@ -18,7 +18,7 @@ export const useGetListRecordings = (apiClient: AxiosInstance, slug: ComputedRef
   return useQuery({
     queryKey: ['fetch-recordings'],
     queryFn: async () => {
-      if (!slug.value) return undefined
+      if (!slug.value || params.value === undefined) return undefined
       return await apiArbimonGetRecordings(apiClient, slug.value, params.value ?? {
         limit: 10,
         offset: 0,
@@ -52,7 +52,7 @@ export const useGetPatternMatchingBoxes = (apiClient: AxiosInstance, slug: Compu
   return useQuery({
     queryKey: ['fetch-pm-box'],
     queryFn: async () => {
-      if (!slug.value || params.rec_id === undefined) return []
+      if (!slug.value || params.rec_id === undefined || params.rec_id === '') return []
       return await apiGetPatternMatchingBoxes(apiClient, slug.value, params)
     }
   })
@@ -121,7 +121,7 @@ export const usePostSoundscapeComposition = (apiClient: AxiosInstance, slug: Com
 export const useGetAed = (
   apiClient: AxiosInstance,
   slug: ComputedRef<string | undefined>,
-  recId: ComputedRef<string | number> | undefined,
+  recId: ComputedRef<string | number | undefined>,
   completed: ComputedRef<boolean> = computed(() => true)
 ): UseQueryReturnType<AedResponse | undefined, unknown> => {
   const enabled = computed(() => Boolean(slug.value && recId?.value !== undefined && recId.value !== null && recId.value !== ''))
@@ -178,6 +178,21 @@ export const useGetPlaylistInfo = (
       return await apiArbimonGetPlaylistInfo(apiClient, slug.value ?? '', playlistId?.value ?? 0)
     },
     enabled,
+    refetchOnWindowFocus: false
+  })
+}
+
+export const useGetSoundscapes = (
+  apiClient: AxiosInstance,
+  slug: ComputedRef<string | undefined>,
+  extraParams?: Record<string, any>
+): UseQueryReturnType<SoundscapeResponse | undefined, unknown> => {
+  return useQuery({
+    queryKey: ['fetch-soundscapes', slug, extraParams],
+    queryFn: async () => {
+      if (!slug.value) return []
+      return await apiGetSoundscapes(apiClient, slug.value, extraParams)
+    },
     refetchOnWindowFocus: false
   })
 }

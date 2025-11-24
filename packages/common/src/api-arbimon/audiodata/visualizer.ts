@@ -428,10 +428,10 @@ export type AedResponse = AedItem[]
 export const apiArbimonGetAed = async (
   apiClient: AxiosInstance,
   slug: string,
-  recId: string | number,
+  recId: string | number | undefined,
   completed = true
 ): Promise<AedResponse | undefined> => {
-  if (!slug || recId == null) return undefined
+  if (!slug || recId == null || recId === undefined) return undefined
 
   const url = `/legacy-api/project/${slug}/audio-event-detections-clustering`
   const res = await apiClient.request<AedResponse>({
@@ -527,4 +527,54 @@ export const apiArbimonPostPlaylistItems = async (
   }
   const res = await apiClient.post(url, body)
   return res.data as RecordingResponse
+}
+export interface SoundscapeItem {
+  id: number
+  name: string
+  project: number
+  playlist_id: number
+  user: number
+
+  min_value: number
+  max_value: number
+  visual_max_value: number | null
+  visual_palette: number
+
+  min_t: number
+  max_t: number
+  min_f: number
+  max_f: number
+
+  bin_size: number
+  threshold: number
+  threshold_type: string
+
+  frequency: number
+  normalized: number
+
+  aggregation: string
+  aggr_name: string
+  aggr_scale: string
+
+  uri: string
+  thumbnail: string
+}
+
+export type SoundscapeResponse = SoundscapeItem[]
+
+export const apiGetSoundscapes = async (
+  apiClient: AxiosInstance,
+  slug: string,
+  params: Record<string, any> = {}
+): Promise<SoundscapeResponse> => {
+  const url = `/legacy-api/project/${slug}/soundscapes/`
+
+  const response = await apiClient.get(url, {
+    params: {
+      show: 'thumbnail-path',
+      ...params
+    }
+  })
+
+  return response.data as SoundscapeResponse
 }

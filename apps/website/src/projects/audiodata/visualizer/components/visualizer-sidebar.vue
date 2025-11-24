@@ -8,6 +8,7 @@
           hover:(text-insight bg-[#0a0a0a] border-[#0a0a0a])"
         :class="browserType === 'rec' ? 'text-insight bg-[#0a0a0a] border-[#0a0a0a]' : ''"
         title="Browse Recordings by Site"
+        @click="setBrowserType('rec')"
       >
         <icon-fa-map-marker class="w-2 h-4" />
       </button>
@@ -15,6 +16,7 @@
         class="btn btn-icon rounded-sm flex items-center text-insight bg-util-gray-04 border-util-gray-04 hover:(text-insight bg-[#0a0a0a] border-[#0a0a0a])"
         :class="browserType === 'playlist' ? 'text-insight bg-[#0a0a0a] border-[#0a0a0a]' : ''"
         title="Browse Recordings by Playlist"
+        @click="setBrowserType('playlist')"
       >
         <icon-custom-fi-list class="w-3.5 h-4" />
       </button>
@@ -22,107 +24,122 @@
         class="btn btn-icon rounded-sm flex items-center text-insight bg-util-gray-04 border-util-gray-04 hover:(text-insight bg-[#0a0a0a] border-[#0a0a0a])"
         :class="browserType === 'soundscape' ? 'text-insight bg-[#0a0a0a] border-[#0a0a0a]' : ''"
         title="Show Soundscapes"
+        @click="setBrowserType('soundscape')"
       >
         <icon-custom-fi-soundscape class="w-3.5 h-4" />
       </button>
     </div>
-    <div
-      v-if="isPlaylist"
-      class="flex flex-col w-full px-[15px] pb-[15px]"
-    >
-      <BasicSearchSelect
-        v-model="playlistSelected"
-        class="w-full"
-        :options="optionsPlaylist"
-        :show-list-icon="true"
-        placeholder="Select Playlist"
-      />
-      <PaginationControl
-        v-model="page"
-        class="w-full"
-        :total-items="totalItems"
-        :page-size="pageSize"
-        :block-size="7"
-        @change="onPageChange"
-      />
-    </div>
-    <div
-      v-else
-      class="flex flex-row items-center justify-start gap-x-2 px-[15px] pb-[15px] grid grid-cols-12 gap-4"
-    >
-      <div class="col-span-7">
+    <div v-show="isPlaylist || isSite">
+      <div
+        v-if="isPlaylist"
+        class="flex flex-col w-full px-[15px] pb-[15px]"
+      >
         <BasicSearchSelect
-          v-model="siteSelected"
-          :options="options"
-          :show-map-icon="true"
-          placeholder="Select site"
+          v-model="playlistSelected"
+          class="w-full"
+          :options="optionsPlaylist"
+          :show-list-icon="true"
+          placeholder="Select Playlist"
+        />
+        <PaginationControl
+          v-model="page"
+          class="w-full"
+          :total-items="totalItems"
+          :page-size="pageSize"
+          :block-size="7"
+          @change="onPageChange"
         />
       </div>
-      <div class="col-span-5">
-        <DateInputPicker
-          :disabled="siteSelected === null || siteSelected === undefined"
-          :initial-date="initialDate"
-          :hide-label="true"
-          :initial-view-year="initialDate ? undefined : initialViewYear"
-          :initial-view-month="initialDate ? undefined : initialViewMonth"
-          :recorded-minutes-per-day="recordedMinutesPerDay"
-        />
+      <div
+        v-else
+        class="flex flex-row items-center justify-start gap-x-2 px-[15px] pb-[15px] grid grid-cols-12 gap-4"
+      >
+        <div class="col-span-7">
+          <BasicSearchSelect
+            v-model="siteSelected"
+            :options="options"
+            :show-map-icon="true"
+            placeholder="Select site"
+          />
+        </div>
+        <div class="col-span-5">
+          <DateInputPicker
+            :disabled="siteSelected === null || siteSelected === undefined"
+            :initial-date="initialDate"
+            :hide-label="true"
+            :initial-view-year="initialDate ? undefined : initialViewYear"
+            :initial-view-month="initialDate ? undefined : initialViewMonth"
+            :recorded-minutes-per-day="recordedMinutesPerDay"
+          />
+        </div>
       </div>
     </div>
     <SidebarThumbnail
       :recordings-item="recordingResponse"
+      :soundscape-response="soundscapeResponse"
       @on-selected-thumbnail="onSelectedThumbnail"
     />
-    <SidebarSpectrogramPlayer
-      v-if="visobject"
-      :visobject="visobject"
-      :is-loading-visobject="isLoadingVisobject"
-      :freq-filter="freqFilter"
-      @emit-current-time="$emit('updateCurrentTime', $event)"
-      @update-color-spectrogram="$emit('updateColorSpectrogram', $event)"
-      @update-freq-filter="handleFreqFilter"
-    />
-    <SidebarTag
-      v-if="visobject"
-      :visobject="visobject"
-      :is-adding-tag="isAddingTag || isRemovingTag"
-      :project-tags="projectTags"
-      :recording-tags="recordingTags"
-      @emit-tag="handleRecTag"
-      @emit-active-layer="toggleSidebarTag"
-    />
-    <SidebarSpecies
-      v-if="visobject"
-      :visobject="visobject"
-      @emit-species-visibility="$emit('emitSpeciesVisibility', $event)"
-    />
-    <SidebarTrainingSets
-      v-if="visobject"
-      @emit-active-layer="toggleSidebarTrainingSet"
-      @emit-training-set="$emit('emitTrainingSet', $event)"
-      @emit-training-set-visibility="$emit('emitTrainingSetVisibility', $event)"
-    />
-    <SidebarTemplates
-      v-if="visobject"
-      :visobject="visobject"
-      @emit-template-visibility="$emit('emitTemplateVisibility', $event)"
-      @emit-active-layer="toggleSidebarTemplate"
-    />
-    <SidebarSoundscape
-      v-if="visobject"
-      :visobject="visobject"
-      :soundscape-response="soundscape"
-      @on-emit-validation="onEmitValidation"
-    />
-    <SidebarAudioEvents
-      v-if="visobject"
-      :visobject="visobject"
-      :aed-jobs="audioEventJobs"
-      :clustering-playlists="clusteringPlaylists"
-      @emit-active-aed-layer="$emit('emitActiveLayer', 'aed')"
-      @emit-active-aed-boxes="onEmitActiveAedBoxes"
-      @emit-active-clustering="onEmitActiveClustering"
-    />
+    <div v-show="isPlaylist || isSite">
+      <SidebarSpectrogramPlayer
+        v-if="visobject"
+        :visobject="visobject"
+        :is-loading-visobject="isLoadingVisobject"
+        :freq-filter="freqFilter"
+        @emit-current-time="$emit('updateCurrentTime', $event)"
+        @update-color-spectrogram="$emit('updateColorSpectrogram', $event)"
+        @update-freq-filter="handleFreqFilter"
+      />
+      <SidebarTag
+        v-if="visobject"
+        :visobject="visobject"
+        :is-adding-tag="isAddingTag || isRemovingTag"
+        :project-tags="projectTags"
+        :recording-tags="recordingTags"
+        @emit-tag="handleRecTag"
+        @emit-active-layer="toggleSidebarTag"
+      />
+      <SidebarSpecies
+        v-if="visobject"
+        :visobject="visobject"
+        @emit-species-visibility="$emit('emitSpeciesVisibility', $event)"
+      />
+      <SidebarTrainingSets
+        v-if="visobject"
+        @emit-active-layer="toggleSidebarTrainingSet"
+        @emit-training-set="$emit('emitTrainingSet', $event)"
+        @emit-training-set-visibility="$emit('emitTrainingSetVisibility', $event)"
+      />
+      <SidebarTemplates
+        v-if="visobject"
+        :visobject="visobject"
+        @emit-template-visibility="$emit('emitTemplateVisibility', $event)"
+        @emit-active-layer="toggleSidebarTemplate"
+      />
+      <SidebarSoundscape
+        v-if="visobject"
+        :visobject="visobject"
+        :soundscape-response="soundscape"
+        @on-emit-validation="onEmitValidation"
+      />
+      <SidebarAudioEvents
+        v-if="visobject"
+        :visobject="visobject"
+        :aed-jobs="audioEventJobs"
+        :clustering-playlists="clusteringPlaylists"
+        @emit-active-aed-layer="$emit('emitActiveLayer', 'aed')"
+        @emit-active-aed-boxes="onEmitActiveAedBoxes"
+        @emit-active-clustering="onEmitActiveClustering"
+      />
+    </div>
+    <div v-show="isSoundscape">
+      <SoundscapeDetails
+        v-if="soundscapeSelected"
+        :item="soundscapeSelected"
+      />
+      <SoundscapeRegions
+        v-if="soundscapeSelected"
+      />
+    </div>
     <alert-dialog
       v-if="showAlert"
       :severity="success"
@@ -138,8 +155,8 @@ import dayjs from 'dayjs'
 import { computed, inject, onMounted, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { RecordingResponse, RecordingTagResponse, TagParams, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
-import { apiArbimonPostPlaylistItems } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import type { RecordingResponse, RecordingTagResponse, SoundscapeItem, SoundscapeResponse, TagParams, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { apiArbimonPostPlaylistItems, apiGetSoundscapes } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
@@ -155,6 +172,8 @@ import BasicSearchSelect from './basic-search-select.vue'
 import PaginationControl from './pagination-control.vue'
 import SidebarAudioEvents from './sidebar-audio-events.vue'
 import SidebarSoundscape from './sidebar-soundscape.vue'
+import SoundscapeDetails from './sidebar-soundscape-details.vue'
+import SoundscapeRegions from './sidebar-soundscape-regions.vue'
 import SidebarSpecies from './sidebar-species.vue'
 import SidebarSpectrogramPlayer from './sidebar-spectrogram-player.vue'
 import SidebarTag from './sidebar-tag.vue'
@@ -222,7 +241,8 @@ const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'emitSelectedThumbnail', value: number): void,
   (e: 'emitSelectedPlaylist', value: number): void,
   (e: 'emitActiveAedBoxes', visibleJobs: Record<number, boolean>, job: AedJob): void,
-  (e: 'emitActiveClustering', visiblePl: Record<number, boolean>, pl: ClusteringPlaylist): void
+  (e: 'emitActiveClustering', visiblePl: Record<number, boolean>, pl: ClusteringPlaylist): void,
+  (e: 'emitSetBrowserType', value: string): void
 }>()
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
@@ -259,9 +279,24 @@ const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue
 }
 
 const isPlaylist = computed(() => browserType.value === 'playlist')
+const isSite = computed(() => browserType.value === 'rec')
+const isSoundscape = computed(() => browserType.value === 'soundscape')
+
+const idRecording = ref(0)
+const idSelectedRecording = computed(() =>
+  idRecording.value === 0 ? '' : idRecording.value.toString()
+)
+
+const selectedRecordingId = computed(() => {
+  if (isPlaylist.value) {
+    const notEmtpy = idSelectedRecording.value !== undefined && idSelectedRecording.value !== ''
+    return notEmtpy ? idSelectedRecording.value : browserRecId.value
+  }
+  return isSoundscape.value ? undefined : browserTypeId.value
+})
 
 const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
-const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
+const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
 const { isPending: isAddingTag, mutate: mutateRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDeleteRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
@@ -275,7 +310,7 @@ const playlistId = computed(() =>
   playlistSelectedValue.value ?? (isPlaylist.value ? browserTypeId.value : undefined)
 )
 
-const { data: auduoEventDetections } = useGetAed(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
+const { data: auduoEventDetections } = useGetAed(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
 const { data: clustering } = useGetClustering(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { data: playlist } = useGetPlaylistInfo(apiClientArbimon, selectedProjectSlug, playlistId)
 const { data: playlists } = useGetPlaylists(apiClientArbimon, selectedProjectSlug)
@@ -294,6 +329,8 @@ const pageSize = 10
 const totalItems = computed(() => playlist?.value?.count ?? 0)
 
 const recordingResponse = ref<RecordingResponse | undefined>(undefined)
+const soundscapeResponse = ref<SoundscapeResponse | undefined>(undefined)
+const soundscapeSelected = ref<SoundscapeItem | undefined>(undefined)
 
 async function onPageChange (p: number) {
   page.value = p
@@ -387,8 +424,23 @@ const toggleSidebarTag = (isActive: boolean) => {
   emits('emitActiveLayer', activeLayer.value)
 }
 
-const onSelectedThumbnail = (idR: number) => {
- emits('emitSelectedThumbnail', idR)
+const setBrowserType = async (type: string) => {
+  emits('emitSetBrowserType', type)
+  if (type === 'soundscape') {
+    soundscapeResponse.value = await apiGetSoundscapes(apiClientArbimon, selectedProjectSlug.value ?? '')
+    if (browserTypeId.value !== undefined) {
+      soundscapeSelected.value = soundscapeResponse.value?.find(it => it.id === Number(browserTypeId.value)) ?? undefined
+    }
+  }
+}
+
+const onSelectedThumbnail = (idItem: number) => {
+  if (isSoundscape.value) {
+    soundscapeSelected.value = soundscapeResponse.value?.find(it => it.id === idItem) ?? undefined
+  } else {
+    emits('emitSelectedThumbnail', idItem)
+    idRecording.value = idItem
+  }
 }
 
 const toggleSidebarTrainingSet = (isActive: boolean, type: string) => {
@@ -551,6 +603,20 @@ watch(() => props.visobject, (v) => {
   initialDate.value = v?.datetime ?? ''
 })
 
+onMounted(async () => {
+  if (isPlaylist.value && browserTypeId.value !== undefined) {
+    playlistSelected.value = Number(browserTypeId.value)
+  }
+  if (isSoundscape.value) {
+    soundscapeResponse.value = await apiGetSoundscapes(apiClientArbimon, selectedProjectSlug.value ?? '')
+
+    if (browserTypeId.value !== undefined) {
+      console.info(soundscapeResponse.value)
+      soundscapeSelected.value = soundscapeResponse.value?.find(it => it.id === Number(browserTypeId.value)) ?? undefined
+    }
+  }
+})
+
 watch(siteSelected, (newVal, oldVal) => {
   if (oldVal === undefined) return
   if (newVal !== oldVal) {
@@ -571,12 +637,6 @@ watch(() => auduoEventDetections.value, () => {
 
 watch(() => clustering.value, () => {
   fetchClustering()
-})
-
-onMounted(() => {
-  if (isPlaylist.value && browserTypeId.value !== undefined) {
-    playlistSelected.value = Number(browserTypeId.value)
-  }
 })
 
 </script>
