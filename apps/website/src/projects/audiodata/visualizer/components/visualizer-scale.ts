@@ -1,9 +1,9 @@
 import * as d3 from 'd3'
 import { type Ref } from 'vue'
 
-import { type Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type SoundscapeItem, type Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
-export const doYAxisLayout = (axisY: Ref<SVGSVGElement | null>, visobject: Visobject): void => {
+export const doYAxisLayout = (axisY: Ref<SVGSVGElement | null>, visobject: Visobject | SoundscapeItem): void => {
   const d3Yaxis = d3.select(axisY.value)
   const specH: number = visobject.spectrogram.height
   const domain = visobject.domain
@@ -25,7 +25,7 @@ export const doYAxisLayout = (axisY: Ref<SVGSVGElement | null>, visobject: Visob
     .call(makeAxis(domain.y, scaley, 'left'))
 }
 
-export const doXAxisLayout = (axisX: Ref<SVGSVGElement | null>, visobject: Visobject): void => {
+export const doXAxisLayout = (axisX: Ref<SVGSVGElement | null>, visobject: Visobject | SoundscapeItem): void => {
   const d3XAxis = d3.select(axisX.value)
   const specH: number = visobject.spectrogram.height
   const specW: number = visobject.spectrogram.width

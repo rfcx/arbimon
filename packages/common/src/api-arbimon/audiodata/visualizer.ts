@@ -1,4 +1,8 @@
 import type { AxiosInstance, AxiosResponse } from 'axios'
+import dayjs from 'dayjs'
+import localeData from 'dayjs/plugin/localeData'
+
+dayjs.extend(localeData)
 
 export interface TagParams {
   id: number
@@ -160,12 +164,13 @@ const getSpectroColor = (): string => {
   }
 }
 
+const khzFormat = function (v: number): number { return (v / 1000) | 0 }
+
 const fetchRecording = (response: AxiosResponse<Visobject, any>): Visobject => {
   const recording = response.data
   const scaleCache = getSelectedFrequencyCache()
   const maxFreq = recording.sample_rate / 2
   const span = scaleCache.originalScale ? maxFreq : (maxFreq > 24000 ? maxFreq : 24000)
-  const khzFormat = function (v: number): number { return (v / 1000) | 0 }
   const visobject = {
     ...recording,
     type: 'rec',
@@ -539,30 +544,30 @@ export interface SoundscapeItem {
   project: number
   playlist_id: number
   user: number
-
   min_value: number
   max_value: number
   visual_max_value: number | null
   visual_palette: number
-
   min_t: number
   max_t: number
   min_f: number
   max_f: number
-
   bin_size: number
   threshold: number
   threshold_type: string
-
   frequency: number
   normalized: number
-
   aggregation: string
   aggr_name: string
   aggr_scale: string
-
   uri: string
   thumbnail: string
+  spectrogram: any
+  type: string
+  tiles: any
+  legend: any
+  domain: any
+  scale: any
 }
 
 export type SoundscapeResponse = SoundscapeItem[]
@@ -581,5 +586,126 @@ export const apiGetSoundscapes = async (
     }
   })
 
-  return response.data as SoundscapeResponse
+  return fetchSpondscape(response)
+}
+
+const khzUnitFmt = (v: number): string => { return `${Math.floor(v / 10.0) / 100.0} kHz` }
+
+const aggregations: Record<string, {
+  time_unit: string
+  unit_fmt: (v: number) => any
+}> = {
+  time_of_day: {
+    time_unit: 'Time (Hour in Day)',
+    unit_fmt: function (v: number) { return `${v | 0}:00` }
+  },
+  day_of_month: {
+    time_unit: 'Time (Day in Month)',
+    unit_fmt: function (v: number) { return v | 0 }
+  },
+  day_of_year: {
+    time_unit: 'Time (Day in Year )',
+    unit_fmt: function (v: number) { return v | 0 }
+  },
+  month_in_year: {
+    time_unit: 'Time (Month in Year)',
+    unit_fmt: function (v: number) { return dayjs().month((v | 0) - 1).format('MMMM') }
+  },
+  day_of_week: {
+    time_unit: 'Time (Weekday) ',
+    unit_fmt: function (v: number) { return dayjs.weekdays()[(v | 0) - 1] }
+  },
+  year: {
+    time_unit: 'Time (Year) ',
+    unit_fmt: function (v: number) { return v | 0 }
+  },
+  unknown: {
+    time_unit: 'Time',
+    unit_fmt: function (v: number) { return v | 0 }
+  }
+}
+
+const fetchSpondscape = (response: AxiosResponse<SoundscapeResponse, any>): SoundscapeResponse => {
+  const soundscapes = response.data
+  for (const soundscape of soundscapes) {
+    soundscape.type = 'soundscape'
+    const t0 = soundscape.min_t
+    const t1 = soundscape.max_t
+    const f0 = soundscape.min_f
+    const f1 = soundscape.max_f
+    let v0 = soundscape.min_value
+    let v1 = soundscape.visual_max_value ?? soundscape.max_value
+    if (soundscape.normalized) {
+      v0 = 0
+      v1 = 100
+    }
+    const dt = t1 - t0 + 1
+    const df = f1 - f0
+    const dv = v1 - v0
+
+    const aggregation = aggregations[soundscape.aggregation] ?? aggregations.unknown
+    const timeUnit = aggregation.time_unit
+    const scaleCache = getSelectedFrequencyCache()
+    soundscape.domain = {
+      x: {
+        from: t0,
+        to: t1,
+        span: dt,
+        ticks: dt,
+        ordinal: true,
+        unit_interval: 1,
+        unit_format: aggregation.unit_fmt,
+        unit: timeUnit ?? 'Time ( s )'
+      },
+      y: {
+        from: f0,
+        to: f1,
+        span: df,
+        unit: 'Frequency ( kHz )',
+        unit_interval: soundscape.bin_size,
+        unit_format: khzUnitFmt,
+        tick_format: khzFormat
+      },
+      legend: {
+        from: v0,
+        to: v1,
+        span: dv,
+        ticks: Math.max(2, Math.min(dv | 0, 10)),
+        unit: 'Count',
+        src: `/src/_assets/spectrogram/palettes/${soundscape.visual_palette}.png`
+      }
+    }
+    soundscape.scale = {
+      def_sec2px: 100 / 1.0,
+      def_hz2px: 100 / 5000.0,
+      max_sec2px: 100 / (1.0 / 8),
+      max_hz2px: 100 / (5000.0 / 8),
+      zoom: { x: 0, y: 0 },
+      sec2px: 100 / 1.0,
+      hz2px: 100 / 5000.0,
+      originalScale: scaleCache.originalScale
+    }
+    if (soundscape.normalized) {
+      soundscape.domain.legend.tick_format = (v: number) => { return `${v}%` }
+    }
+    soundscape.tiles = {
+      x: 1,
+      y: 1,
+      set: [{
+        i: 0,
+        j: 0,
+        s: 0,
+        hz: f1,
+        ds: dt,
+        dhz: df,
+        src: soundscape.thumbnail,
+        crisp: true
+      }]
+    }
+    soundscape.legend = {
+      min: 0,
+      max: 255
+    }
+  }
+  return soundscapes
 }

@@ -8,9 +8,10 @@ export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<stri
   return useQuery({
     queryKey: ['fetch-recording'],
     queryFn: async () => {
-      if (slug.value === undefined || recordingId.value === undefined || recordingId.value === '') return undefined
+      if (slug.value === undefined || recordingId.value === undefined || recordingId.value === '') return null
       return await apiArbimonGetRecording(apiClient, slug.value, recordingId.value)
-    }
+    },
+    retry: 0
   })
 }
 
@@ -18,13 +19,14 @@ export const useGetListRecordings = (apiClient: AxiosInstance, slug: ComputedRef
   return useQuery({
     queryKey: ['fetch-recordings'],
     queryFn: async () => {
-      if (!slug.value || params.value === undefined) return undefined
+      if (!slug.value || params.value === undefined) return null
       return await apiArbimonGetRecordings(apiClient, slug.value, params.value ?? {
         limit: 10,
         offset: 0,
         key: ''
       })
-    }
+    },
+    retry: 0
   })
 }
 

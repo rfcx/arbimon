@@ -12,12 +12,12 @@
       >
         <span>Unavailable</span>
       </div>
+      <!-- Base image - recording, playlist -->
       <div v-if="visobject && visobject.tiles.set && spectrogramContainer">
         <div
           v-for="(tile, index) in visobject.tiles.set"
           :key="index"
-          style="position:absolute;"
-          :class="{'crisp-image': tile.crisp}"
+          class="absolute"
           :style="{
             left: Math.floor(tile.s * getSec2px(spectrogramMetrics.width, visobject.domain.x.span)) + legendMetrics.axis_sizew + 'px',
             top: (visobject.scale.originalScale ? Math.floor(spectrogramMetrics.height - tile.hz * getHz2px(spectrogramMetrics.height, visobject.domain.y.span)) : 0) + legendMetrics.axis_margin_top + 'px',
@@ -31,6 +31,26 @@
           />
         </div>
       </div>
+      <!-- Base image - soundscape -->
+      <div v-if="visobjectSoundscape && spectrogramContainer">
+        <div
+          v-for="(tile, index) in visobjectSoundscape.tiles.set"
+          :key="index"
+          class="absolute crisp-image"
+          :style="{
+            left: Math.floor(tile.s * getSec2px(spectrogramMetrics.width, visobjectSoundscape.domain.x.span)) + legendMetrics.axis_sizew + 'px',
+            top: (visobjectSoundscape.scale.originalScale ? Math.floor(spectrogramMetrics.height - tile.hz * getHz2px(spectrogramMetrics.height, visobjectSoundscape.domain.y.span)) : 0) + legendMetrics.axis_margin_top + 'px',
+            height: Math.ceil(tile.dhz * getHz2px(spectrogramMetrics.height, visobjectSoundscape.domain.y.span)) + 'px',
+            width: Math.ceil(tile.ds * getSec2px(spectrogramMetrics.width, visobjectSoundscape.domain.x.span)) + 'px'
+          }"
+        >
+          <VisualizerTileImg
+            :id="'spectrogramTile'+index"
+            :tile-src="tile.src"
+          />
+        </div>
+      </div>
+
       <!-- zoom -->
       <div
         class="zoom-control-group absolute z-5 top-0 right-6"
@@ -72,13 +92,14 @@
           </button>
         </div> -->
       </div>
-      <!-- y scale -->
+
+      <!-- Y scale - recording, playlist-->
       <svg
         v-show="visobject && visobject.domain.y"
         ref="axisY"
         class="z-5 absolute"
       >.</svg>
-      <!-- y legend -->
+      <!-- Y legend - recording, playlist-->
       <div
         v-if="visobject && visobject.domain.y"
         class="whitespace-nowrap absolute z-5"
@@ -91,13 +112,33 @@
           {{ visobject.domain.y.unit || 'Frequency ( kHz )' }}
         </span>
       </div>
-      <!-- x scale -->
+      <!-- Y scale - soundscape-->
+      <svg
+        v-show="visobjectSoundscape && visobjectSoundscape.domain.y"
+        ref="axisY"
+        class="z-5 absolute"
+      >.</svg>
+      <!-- Y legend - soundscape -->
+      <div
+        v-if="visobjectSoundscape && visobjectSoundscape.domain.y"
+        class="whitespace-nowrap absolute z-5"
+        :style="{
+          left: - Math.ceil(legendMetrics.axis_margin_x * 3) + 'px',
+          top: Math.ceil(containerHeight / 2) + 'px'
+        }"
+      >
+        <span class="inline-block transform -rotate-90">
+          {{ visobjectSoundscape.domain.y.unit || 'Frequency ( kHz )' }}
+        </span>
+      </div>
+
+      <!-- X scale - recording, playlist-->
       <svg
         v-show="visobject && visobject.domain.x"
         ref="axisX"
         class="z-5 absolute"
       >.</svg>
-      <!-- x legend -->
+      <!-- X legend - recording, playlist-->
       <div
         v-if="visobject && visobject.domain.x"
         class="whitespace-nowrap absolute z-5"
@@ -108,6 +149,24 @@
       >
         <div>{{ visobject.domain.x.unit || 'Time ( s )' }}</div>
       </div>
+      <!-- X scale - soundscape-->
+      <svg
+        v-show="visobjectSoundscape && visobjectSoundscape.domain.x"
+        ref="axisX"
+        class="z-5 absolute"
+      >.</svg>
+      <!-- X legend -->
+      <div
+        v-if="visobjectSoundscape && visobjectSoundscape.domain.x"
+        class="whitespace-nowrap absolute z-5"
+        :style="{
+          left: Math.ceil((containerWidth - legendMetrics.axis_margin_x) / 2) + 'px',
+          top: Math.ceil(spectrogramMetrics.height + legendMetrics.axis_margin_x * 2) + 'px'
+        }"
+      >
+        <div>{{ visobjectSoundscape.domain.x.unit || 'Time ( s )' }}</div>
+      </div>
+
       <!-- play position -->
       <div
         v-if="visobject && visobject.type == 'rec'"
@@ -404,7 +463,7 @@ import { initTooltips } from 'flowbite'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { RecordingTagResponse, TemplateResponse, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import type { RecordingTagResponse, SoundscapeItem, TemplateResponse, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import { type RecordingTrainingSet, type RecordingTrainingSetParams, type TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
@@ -426,6 +485,7 @@ import ZoomControl from './zoom-control.vue'
 
 const props = defineProps<{
   visobject: Visobject | undefined
+  visobjectSoundscape?: SoundscapeItem | undefined
   currentTime: number
   freqFilter?: FreqFilter
   isSpectrogramTagsUpdated: boolean
@@ -582,23 +642,39 @@ const spectrogramMetrics = computed(() => {
 })
 
 const drawChart = () => {
-  if (!axisY.value || !axisX.value || props.visobject === undefined) return
+  if (!axisY.value || !axisX.value) return
   axisY.value.innerHTML = ''
   d3.select(axisY.value).selectAll('*').remove()
   axisX.value.innerHTML = ''
   d3.select(axisX.value).selectAll('*').remove()
-  const scale = {
-    x: makeScale(props.visobject.domain.x, [0, spectrogramMetrics.value.width]),
-    y: makeScale(props.visobject.domain.y, [spectrogramMetrics.value.height, 0]),
-    sec2px: 100 / 1.0
+  if (props.visobject) {
+    const scale = {
+      x: makeScale(props.visobject.domain.x, [0, spectrogramMetrics.value.width]),
+      y: makeScale(props.visobject.domain.y, [spectrogramMetrics.value.height, 0]),
+      sec2px: 100 / 1.0
+    }
+    const updatedVisobject = {
+      ...props.visobject,
+      spectrogram: spectrogramMetrics.value
+    }
+    updatedVisobject.spectrogram.legend.scale = scale
+    doYAxisLayout(axisY, updatedVisobject)
+    doXAxisLayout(axisX, updatedVisobject)
   }
-  const updatedVisobject = {
-    ...props.visobject,
-    spectrogram: spectrogramMetrics.value
+  if (props.visobjectSoundscape !== undefined && isSoundscape.value === true) {
+    const scale = {
+      x: makeScale(props.visobjectSoundscape.domain.x, [0, spectrogramMetrics.value.width]),
+      y: makeScale(props.visobjectSoundscape.domain.y, [spectrogramMetrics.value.height, 0]),
+      sec2px: 100 / 1.0
+    }
+    const updatedVisobject = {
+      ...props.visobjectSoundscape,
+      spectrogram: spectrogramMetrics.value
+    }
+    updatedVisobject.spectrogram.legend.scale = scale
+    doYAxisLayout(axisY, updatedVisobject)
+    doXAxisLayout(axisX, updatedVisobject)
   }
-  updatedVisobject.spectrogram.legend.scale = scale
-  doYAxisLayout(axisY, updatedVisobject)
-  doXAxisLayout(axisX, updatedVisobject)
 }
 
 const getSec2px = (containerWidth: number, xSpan: number): number => {
@@ -916,6 +992,18 @@ watch(() => axisY.value, () => {
   refetchPatternMatchingBoxes()
   fetchSpeciesPresence()
   refetchTemplates()
+})
+
+watch(() => props.visobjectSoundscape, async () => {
+  drawChart()
+  await nextTick()
+  initTooltips()
+})
+
+watch(() => props.visobject, async () => {
+  drawChart()
+  await nextTick()
+  initTooltips()
 })
 
 watch(() => tagKeyword.value, () => {

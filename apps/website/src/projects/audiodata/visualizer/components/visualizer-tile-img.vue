@@ -47,7 +47,7 @@ watch(() => props.tileSrc, (newSrc) => {
   image.onload = () => {
     src.value = image.src
   }
-  image.src = `${ARBIMON_BASE_URL}${newSrc}`
+  image.src = newSrc.startsWith('https') ? newSrc : `${ARBIMON_BASE_URL}${newSrc}`
 }, { immediate: true })
 </script>
 

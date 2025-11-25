@@ -290,7 +290,7 @@ const isSoundscape = computed(() => browserType.value === 'soundscape')
 const idRecording = ref(0)
 
 const selectedRecordingId = computed(() => {
-    return isPlaylist.value ? isSoundscape.value ? undefined : browserRecId.value : browserTypeId.value
+  return isPlaylist.value ? isSoundscape.value ? undefined : browserRecId.value : browserTypeId.value
 })
 
 const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
@@ -439,11 +439,10 @@ const setBrowserType = async (type: string) => {
 const onSelectedThumbnail = (idItem: number) => {
   if (isSoundscape.value) {
     soundscapeSelected.value = soundscapeResponse.value?.find(it => it.id === idItem) ?? undefined
-    emits('emitSelectedThumbnail', idItem)
   } else {
-    emits('emitSelectedThumbnail', idItem)
     idRecording.value = idItem
   }
+  emits('emitSelectedThumbnail', idItem)
 }
 
 const toggleSidebarTrainingSet = (isActive: boolean, type: string) => {

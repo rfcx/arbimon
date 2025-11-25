@@ -54,7 +54,7 @@
         <div
           v-for="(ss, index) in soundscape"
           :key="index"
-          class="visobj-list-item h-full flex flex-col mb-2"
+          class="visobj-list-item h-full flex flex-col mb-2 cursor-pointer"
           :class="browserTypeId === String(ss.id) ? 'active ' : ' '"
           :data-ss-id="ss.id"
           @click="onSelectedThumbnail(ss.id)"

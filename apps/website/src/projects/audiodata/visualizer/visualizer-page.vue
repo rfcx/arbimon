@@ -34,6 +34,7 @@
     <VisualizerSpectrogram
       v-else
       :visobject="visobject"
+      :visobject-soundscape="visobjectSoundscape"
       :current-time="currentTime"
       :freq-filter="freqFilter"
       :is-spectrogram-tags-updated="isSpectrogramTagsUpdated"
@@ -52,6 +53,7 @@ import type { AxiosInstance } from 'axios'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+import { type SoundscapeItem, type SoundscapeResponse, apiGetSoundscapes } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
@@ -101,7 +103,8 @@ const isPlaylist = computed(() => browserType.value === 'playlist')
 const isSoundscape = computed(() => browserType.value === 'soundscape')
 const browserTypeId = computed(() => route.params.browserTypeId as string ?? undefined)
 const browserRecId = computed(() => route.params.browserRecId as string ?? undefined)
-
+const soundscapeResponse = ref<SoundscapeResponse | undefined>(undefined)
+const visobjectSoundscape = ref<SoundscapeItem | undefined>(undefined)
 const idRecording = ref(0)
 const selectedPlaylist = ref(0)
 
@@ -191,8 +194,15 @@ const handleActiveLayer = (layer: string | undefined) => {
   activeLayer.value = layer
 }
 
-const handleSelectedThumbnail = (value: number) => {
+const handleSelectedThumbnail = async (value: number) => {
   idRecording.value = value
+  console.info('browserType.value', browserType.value, 'selectedRecordingId', selectedRecordingId)
+  if (browserType.value === 'soundscape') {
+    soundscapeResponse.value = await apiGetSoundscapes(apiClientArbimon, selectedProjectSlug.value ?? '')
+    if (browserTypeId.value !== undefined) {
+      visobjectSoundscape.value = soundscapeResponse.value?.find(it => it.id === value) ?? undefined
+    }
+  } else refetchRecording()
 }
 
 const handleSelectedPlaylist = (value: number) => {
@@ -225,6 +235,7 @@ onMounted(() => {
     if (browserTypeId.value === undefined || browserTypeId.value === '') return
     if (isSoundscape.value) {
       lastSoundscapeRecId.value = Number(browserTypeId.value)
+      handleSelectedThumbnail(lastSoundscapeRecId.value)
     } else {
       lastRecordingId.value = Number(browserTypeId.value)
     }
