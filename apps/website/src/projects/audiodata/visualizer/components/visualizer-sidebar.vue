@@ -42,6 +42,7 @@
           placeholder="Select Playlist"
         />
         <PaginationControl
+          v-if="totalItems > 10"
           v-model="page"
           class="w-full"
           :total-items="totalItems"
@@ -287,16 +288,9 @@ const isSite = computed(() => browserType.value === 'rec')
 const isSoundscape = computed(() => browserType.value === 'soundscape')
 
 const idRecording = ref(0)
-const idSelectedRecording = computed(() =>
-  idRecording.value === 0 ? '' : idRecording.value.toString()
-)
 
 const selectedRecordingId = computed(() => {
-  if (isPlaylist.value) {
-    const notEmtpy = idSelectedRecording.value !== undefined && idSelectedRecording.value !== ''
-    return notEmtpy ? idSelectedRecording.value : browserRecId.value
-  }
-  return isSoundscape.value ? undefined : browserTypeId.value
+    return isPlaylist.value ? isSoundscape.value ? undefined : browserRecId.value : browserTypeId.value
 })
 
 const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
@@ -445,6 +439,7 @@ const setBrowserType = async (type: string) => {
 const onSelectedThumbnail = (idItem: number) => {
   if (isSoundscape.value) {
     soundscapeSelected.value = soundscapeResponse.value?.find(it => it.id === idItem) ?? undefined
+    emits('emitSelectedThumbnail', idItem)
   } else {
     emits('emitSelectedThumbnail', idItem)
     idRecording.value = idItem
@@ -612,16 +607,18 @@ watch(() => props.visobject, (v) => {
 })
 
 onMounted(async () => {
-  if (isPlaylist.value && browserTypeId.value !== undefined) {
+  if (isPlaylist.value && browserTypeId.value !== undefined && browserTypeId.value !== '') {
     playlistSelected.value = Number(browserTypeId.value)
   }
   if (isSoundscape.value) {
     soundscapeResponse.value = await apiGetSoundscapes(apiClientArbimon, selectedProjectSlug.value ?? '')
 
     if (browserTypeId.value !== undefined) {
-      console.info(soundscapeResponse.value)
       soundscapeSelected.value = soundscapeResponse.value?.find(it => it.id === Number(browserTypeId.value)) ?? undefined
     }
+  }
+  if (isSite.value && browserTypeId.value !== undefined && browserTypeId.value !== '') {
+    idRecording.value = Number(browserTypeId.value)
   }
 })
 

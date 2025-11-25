@@ -49,7 +49,7 @@
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
@@ -98,24 +98,17 @@ const visibleClustering = ref<Record<number, boolean>>({})
 const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
 const browserType = computed(() => browserTypes.includes(route.params.browserType as string) ? route.params.browserType as string : undefined)
 const isPlaylist = computed(() => browserType.value === 'playlist')
+const isSoundscape = computed(() => browserType.value === 'soundscape')
 const browserTypeId = computed(() => route.params.browserTypeId as string ?? undefined)
 const browserRecId = computed(() => route.params.browserRecId as string ?? undefined)
 
 const idRecording = ref(0)
 const selectedPlaylist = ref(0)
-const idSelectedRecording = computed(() =>
-  idRecording.value === 0 ? '' : idRecording.value.toString()
-)
-
-const isSoundscape = computed(() => browserType.value === 'soundscape')
 
 const selectedRecordingId = computed(() => {
-  if (isPlaylist.value) {
-    const notEmtpy = idSelectedRecording.value !== undefined && idSelectedRecording.value !== ''
-    return notEmtpy ? idSelectedRecording.value : browserRecId.value
-  }
-  return isSoundscape.value ? undefined : browserTypeId.value
+  return isPlaylist.value ? isSoundscape.value ? undefined : browserRecId.value : browserTypeId.value
 })
+
 const { isLoading: isLoadingVisobject, data: visobject, refetch: refetchRecording, isRefetching } = useGetRecording(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
 
 const handleCurrentTime = (value: number): void => {
@@ -153,13 +146,45 @@ const handleTemplateVisibility = (value: boolean) => {
 }
 
 const setBrowserType = (value: string) => {
-  if (value !== browserTypeId.value) {
-    router.replace(
-      `/p/${selectedProjectSlug.value}/visualizer/${value}`
-    )
+  if (value === 'playlist') {
+    if (lastPlaylistId.value !== 0) {
+      if (lastPlaylistRecordingId.value !== 0) {
+        router.replace(
+          `/p/${selectedProjectSlug.value}/visualizer/playlist/${lastPlaylistId.value}/${lastPlaylistRecordingId.value}`
+        )
+      } else {
+        router.replace(
+          `/p/${selectedProjectSlug.value}/visualizer/playlist/${lastPlaylistId.value}`
+        )
+      }
+    } else {
+      router.replace(
+        `/p/${selectedProjectSlug.value}/visualizer/${value}`
+      )
+    }
+  } else {
+    if (value === 'soundscape') {
+      if (lastSoundscapeRecId.value === 0) {
+        router.replace(
+          `/p/${selectedProjectSlug.value}/visualizer/${value}`
+        )
+        return
+      }
+      router.replace(
+        `/p/${selectedProjectSlug.value}/visualizer/${value}/${lastSoundscapeRecId.value}`
+      )
+    } else {
+      if (lastRecordingId.value === 0) {
+        router.replace(
+          `/p/${selectedProjectSlug.value}/visualizer/${value}`
+        )
+        return
+      }
+      router.replace(
+        `/p/${selectedProjectSlug.value}/visualizer/${value}/${lastRecordingId.value}`
+      )
+    }
   }
-  idRecording.value = 0
-  // TODO reset all selected
 }
 
 const handleActiveLayer = (layer: string | undefined) => {
@@ -168,8 +193,6 @@ const handleActiveLayer = (layer: string | undefined) => {
 
 const handleSelectedThumbnail = (value: number) => {
   idRecording.value = value
-  // TODO change selected recording id in the route
-  refetchRecording()
 }
 
 const handleSelectedPlaylist = (value: number) => {
@@ -189,12 +212,44 @@ const handleClustering = (visiblePl: Record<number, boolean>, pl: ClusteringPlay
   selectedClustering.value = selectedClustering.value?.filter(cl => visiblePl[cl.playlistId] === true)
 }
 
-watch(selectedRecordingId, (newId) => {
-  if (!newId) return
+const lastPlaylistId = ref(0)
+const lastSoundscapeRecId = ref(0)
+const lastPlaylistRecordingId = ref(0)
+const lastRecordingId = ref(0)
 
-  router.replace(
-    `/p/${selectedProjectSlug.value}/visualizer/playlist/${browserTypeId.value}/${newId}`
-  )
+onMounted(() => {
+  if (isPlaylist.value) {
+    if (browserTypeId.value !== undefined && browserTypeId.value !== '') lastPlaylistId.value = Number(browserTypeId.value)
+    if (browserRecId.value !== undefined && browserRecId.value !== '') lastPlaylistRecordingId.value = Number(browserRecId.value)
+  } else {
+    if (browserTypeId.value === undefined || browserTypeId.value === '') return
+    if (isSoundscape.value) {
+      lastSoundscapeRecId.value = Number(browserTypeId.value)
+    } else {
+      lastRecordingId.value = Number(browserTypeId.value)
+    }
+  }
+})
+
+watch(idRecording, (newId) => {
+  if (!newId) return
+  if (isPlaylist.value && browserRecId.value !== newId.toString()) {
+    router.replace(
+      `/p/${selectedProjectSlug.value}/visualizer/playlist/${browserTypeId.value}/${newId}`
+    )
+    lastPlaylistRecordingId.value = newId
+  } else {
+    if (browserTypeId.value !== newId.toString()) {
+      router.replace(
+        `/p/${selectedProjectSlug.value}/visualizer/${browserType.value}/${newId}`
+      )
+    }
+    if (isSoundscape.value) {
+      lastSoundscapeRecId.value = newId
+    } else {
+      lastRecordingId.value = newId
+    }
+  }
 })
 
 watch(selectedPlaylist, (newId) => {
@@ -205,6 +260,7 @@ watch(selectedPlaylist, (newId) => {
     )
   }
   idRecording.value = 0
+  lastPlaylistId.value = newId
 })
 
 watch(() => browserType.value, () => {

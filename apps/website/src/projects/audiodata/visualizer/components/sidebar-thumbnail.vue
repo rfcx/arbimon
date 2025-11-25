@@ -22,13 +22,14 @@
         </p>
       </div>
       <div
-        v-if="recordings?.length !== 0 && soundscape.length === 0"
+        v-if="recordings?.length !== 0 && !isSoundscape"
       >
         <div
           v-for="(recording, index) in recordings"
           :key="index"
           class="visobj-list-item h-full flex flex-col mb-2 cursor-pointer"
           :class="browserTypeId === String(recording.id) ? 'active ' : ' '"
+          :data-ss-id="recording.id"
           @click="onSelectedThumbnail(recording.id)"
         >
           <div>{{ getCaption(recording.site, recording.datetime) }}</div>
@@ -49,7 +50,7 @@
           </div>
         </div>
       </div>
-      <div v-show="soundscape.length !== 0">
+      <div v-show="soundscape.length !== 0 && isSoundscape">
         <div
           v-for="(ss, index) in soundscape"
           :key="index"
@@ -129,17 +130,9 @@ const getCaption = (site: string, datetime: string) => {
 }
 
 const siteSelectedRef = ref<string | number | undefined>()
-const idRecording = ref(0)
-const idSelectedRecording = computed(() =>
-  idRecording.value === 0 ? '' : idRecording.value.toString()
-)
 
 const selectedRecordingId = computed(() => {
-  if (isPlaylist.value) {
-    const notEmtpy = idSelectedRecording.value !== undefined && idSelectedRecording.value !== ''
-    return notEmtpy ? idSelectedRecording.value : browserRecId.value
-  }
-  return isSoundscape.value ? undefined : browserTypeId.value
+    return isPlaylist.value ? isSoundscape.value ? undefined : browserRecId.value : browserTypeId.value
 })
 
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
@@ -148,6 +141,7 @@ const recordingListSearchParams = computed(() => {
   const formattedDate = dayjs.utc(props.initialDate).format('YYYY-MM-DD')
   if (!formattedDate) return
   const visobjSite = sites.value?.find(site => site.name === props.visobject?.site)
+  if (siteSelectedRef.value === undefined) return
   const opts = {
     // when the user change selected site selectedRecordingId shouldn't be include
     key: `!q:${siteSelectedRef.value}-${formattedDate}${visobjSite && visobjSite.id !== props.siteSelected ? '' : '?recording_id=' + selectedRecordingId.value}`,
@@ -182,7 +176,6 @@ const handleScroll = (e: Event) => {
 }
 
 const onSelectedThumbnail = (id: number) => {
-  idRecording.value = id
   emits('onSelectedThumbnail', id)
 }
 
@@ -201,28 +194,25 @@ watch(() => browserType.value, () => {
 watch(() => props.recordingsItem, (r) => {
   if (r === undefined) return
   recordings.value = [...r]
-  soundscape.value = []
 })
 
 watch(() => props.soundscapeResponse, (ss) => {
   if (ss === undefined) return
-  recordings.value = []
   soundscape.value = [...ss]
 })
 
-const selectedSoundscapeId = computed(() => {
-  if (!isSoundscape.value) return null
-  const raw = browserTypeId.value
+const selectedId = computed(() => {
+  const raw = isPlaylist.value ? browserRecId.value : browserTypeId.value
   return raw ? Number(raw) : null
 })
 
-const scrollToSelectedSoundscape = async () => {
+const scrollToSelected = async () => {
   await nextTick()
 
-  if (!thumbnailContainer.value || selectedSoundscapeId.value == null) return
+  if (!thumbnailContainer.value || selectedId.value == null) return
 
   const el = thumbnailContainer.value.querySelector(
-    `[data-ss-id="${selectedSoundscapeId.value}"]`
+    `[data-ss-id="${selectedId.value}"]`
   ) as HTMLElement | null
 
   if (!el) return
@@ -236,7 +226,19 @@ const scrollToSelectedSoundscape = async () => {
 watch(
   () => soundscape.value,
   () => {
-    scrollToSelectedSoundscape()
+    if (isSoundscape.value) {
+      scrollToSelected()
+    }
+  },
+  { deep: true }
+)
+
+watch(
+  () => recordings.value,
+  () => {
+    if (!isSoundscape.value) {
+      scrollToSelected()
+    }
   },
   { deep: true }
 )
@@ -254,7 +256,7 @@ onMounted(() => {
   if (thumbnailContainer.value) {
     thumbnailContainer.value.addEventListener('scroll', handleScroll)
   }
-  scrollToSelectedSoundscape()
+  scrollToSelected()
 })
 
 onBeforeUnmount(() => {

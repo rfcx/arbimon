@@ -499,14 +499,11 @@ const browserRecId = computed(() => route.params.browserRecId as string ?? undef
 
 const { height: containerHeight, width: containerWidth } = useElementSize(spectrogramContainer)
 
-const isSoundscape = computed(() => browserType.value === 'soundscape')
 const isPlaylist = computed(() => browserType.value === 'playlist')
+const isSoundscape = computed(() => browserType.value === 'soundscape')
 
 const selectedRecordingId = computed(() => {
-  if (isPlaylist.value) {
-    return browserRecId.value
-  }
-  return isSoundscape.value ? undefined : browserTypeId.value
+    return isPlaylist.value ? isSoundscape.value ? undefined : browserRecId.value : browserTypeId.value
 })
 
 const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
