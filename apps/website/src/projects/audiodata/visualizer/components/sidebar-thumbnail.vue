@@ -27,7 +27,7 @@
         <div
           v-for="(recording, index) in recordings"
           :key="index"
-          class="visobj-list-item h-full flex flex-col mb-2"
+          class="visobj-list-item h-full flex flex-col mb-2 cursor-pointer"
           :class="browserTypeId === String(recording.id) ? 'active ' : ' '"
           @click="onSelectedThumbnail(recording.id)"
         >
@@ -81,10 +81,11 @@ import dayjs from 'dayjs'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { type RecordingResponse, type SoundscapeResponse } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type RecordingResponse, type SoundscapeResponse, type Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
+import { useSites } from '../../_composables/use-sites'
 import { useGetListRecordings } from '../../_composables/use-visualizer'
 import YAxis from './sidebar-thumbnail-yAxis.vue'
 
@@ -108,7 +109,13 @@ const thumbnailContainer = ref<HTMLElement | null>(null)
 const recordings = ref<RecordingResponse>([])
 const soundscape = ref<SoundscapeResponse>([])
 
-const props = defineProps<{ recordingsItem: RecordingResponse | undefined, soundscapeResponse: SoundscapeResponse | undefined }>()
+const props = defineProps<{
+  recordingsItem: RecordingResponse | undefined,
+  soundscapeResponse: SoundscapeResponse | undefined,
+  initialDate: string
+  siteSelected: string | number | undefined
+  visobject: Visobject | undefined
+}>()
 
 const emits = defineEmits<{(e: 'onSelectedThumbnail', id: number): void}>()
 
@@ -121,6 +128,7 @@ const getCaption = (site: string, datetime: string) => {
   return [site, dayjs.utc(datetime).format('lll')].join(', ')
 }
 
+const siteSelectedRef = ref<string | number | undefined>()
 const idRecording = ref(0)
 const idSelectedRecording = computed(() =>
   idRecording.value === 0 ? '' : idRecording.value.toString()
@@ -134,13 +142,20 @@ const selectedRecordingId = computed(() => {
   return isSoundscape.value ? undefined : browserTypeId.value
 })
 
+const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
+
 const recordingListSearchParams = computed(() => {
-  if (!selectedRecordingId.value) return undefined
-  return {
+  const formattedDate = dayjs.utc(props.initialDate).format('YYYY-MM-DD')
+  if (!formattedDate) return
+  const visobjSite = sites.value?.find(site => site.name === props.visobject?.site)
+  const opts = {
+    // when the user change selected site selectedRecordingId shouldn't be include
+    key: `!q:${siteSelectedRef.value}-${formattedDate}${visobjSite && visobjSite.id !== props.siteSelected ? '' : '?recording_id=' + selectedRecordingId.value}`,
+    show: 'thumbnail-path',
     limit: recLimit,
-    offset: recOffset.value * recLimit,
-    key: `!q:13780-2024-6-25?recording_id=${selectedRecordingId.value}&show=thumbnail-path` // TODO: update it after the calendar date selection
+    offset: recOffset.value * recLimit
   }
+  return opts
 })
 
 const { isLoading: isLoadingRecordings, data: recordingsResponse, refetch: refetchRecordings, isRefetching: isRefetchRecordings } = useGetListRecordings(apiClientArbimon, selectedProjectSlug, recordingListSearchParams)
@@ -148,7 +163,7 @@ const { isLoading: isLoadingRecordings, data: recordingsResponse, refetch: refet
 const findVisObj = () => {
   setTimeout(async () => {
     const el = document.querySelector('.visobj-list-item.active') as HTMLElement
-    if (el !== undefined) {
+    if (el !== undefined && el !== null) {
       el.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     }
   }, 300)
@@ -173,8 +188,10 @@ const onSelectedThumbnail = (id: number) => {
 
 watch(() => recordingsResponse.value, (newValue) => {
   if (!newValue || recordingsResponse.value === undefined) return
-  recordings.value = [...recordings.value, ...recordingsResponse.value]
-  findVisObj()
+  if (recordingsResponse.value.length && recordings.value.length && recordingsResponse.value[0].site === recordings.value[0].site) {
+    recordings.value = [...recordings.value, ...recordingsResponse.value]
+    findVisObj()
+  } else recordings.value = recordingsResponse.value
 })
 
 watch(() => browserType.value, () => {
@@ -223,6 +240,15 @@ watch(
   },
   { deep: true }
 )
+
+watch(() => props.initialDate, () => {
+  refetchRecordings()
+})
+
+watch(() => props.siteSelected, () => {
+  if (siteSelectedRef.value === props.siteSelected || props.siteSelected === undefined) return
+  siteSelectedRef.value = props.siteSelected
+})
 
 onMounted(() => {
   if (thumbnailContainer.value) {

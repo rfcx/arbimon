@@ -150,8 +150,16 @@ function updateViewDate () {
   selectedDateIso.value = ''
 }
 
-watch(() => props.initialViewYear, updateViewDate)
-watch(() => props.initialViewMonth, updateViewDate)
+watch(() => props.initialViewYear, () => {
+  // do not update the calendar if pre-selected year is equal to a selected year
+  if (props.initialDate && dayjs.utc(props.initialDate).year() === props.initialViewYear) return
+  updateViewDate()
+})
+watch(() => props.initialViewMonth, () => {
+  // do not update calendar if pre selected month is equal to a selected month
+  if (props.initialDate && ((dayjs.utc(props.initialDate).month() + 1) === props.initialViewMonth)) return
+  updateViewDate()
+})
 
 function resetDatePicker (preset?: { date: string }) {
   if (preset?.date) {

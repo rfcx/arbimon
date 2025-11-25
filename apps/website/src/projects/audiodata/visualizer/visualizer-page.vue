@@ -168,6 +168,7 @@ const handleActiveLayer = (layer: string | undefined) => {
 
 const handleSelectedThumbnail = (value: number) => {
   idRecording.value = value
+  // TODO change selected recording id in the route
   refetchRecording()
 }
 

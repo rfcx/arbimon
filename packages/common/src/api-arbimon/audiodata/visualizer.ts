@@ -39,6 +39,7 @@ export interface RecordingSearchParams {
   limit?: number
   offset?: number
   key: string
+  show: string
 }
 
 export interface RecordingValidateParams {
@@ -233,10 +234,14 @@ export const apiArbimonGetRecording = async (apiClient: AxiosInstance, slug: str
 }
 
 export const apiArbimonGetRecordings = async (apiClient: AxiosInstance, slug: string, params: RecordingSearchParams): Promise<RecordingResponse | undefined> => {
+  const key = params.key
+  const opts = Object.fromEntries(
+    Object.entries(params).filter(([k]) => k !== 'key')
+  )
   const res = await apiClient.request<RecordingResponse>({
     method: 'GET',
-    url: `/legacy-api/project/${slug}/recordings/${params.key}`,
-    params
+    url: `/legacy-api/project/${slug}/recordings/${key}`,
+    params: opts
   })
 
   return res.data

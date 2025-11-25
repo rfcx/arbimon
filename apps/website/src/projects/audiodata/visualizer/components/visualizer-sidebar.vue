@@ -67,9 +67,10 @@
             :disabled="siteSelected === null || siteSelected === undefined"
             :initial-date="initialDate"
             :hide-label="true"
-            :initial-view-year="initialDate ? undefined : initialViewYear"
-            :initial-view-month="initialDate ? undefined : initialViewMonth"
+            :initial-view-year="initialViewYear"
+            :initial-view-month="initialViewMonth"
             :recorded-minutes-per-day="recordedMinutesPerDay"
+            @emit-select-date="onEmitSelectedDate"
           />
         </div>
       </div>
@@ -77,6 +78,9 @@
     <SidebarThumbnail
       :recordings-item="recordingResponse"
       :soundscape-response="soundscapeResponse"
+      :initial-date="initialDate"
+      :site-selected="siteSelected"
+      :visobject="visobject"
       @on-selected-thumbnail="onSelectedThumbnail"
     />
     <div v-show="isPlaylist || isSite">
@@ -322,7 +326,7 @@ const siteSelectedValue = computed(() => siteSelected.value)
 
 const { data: yearly } = useLegacyAvailableYearly(apiClientArbimon, selectedProjectSlug, siteSelectedValue)
 const yearSelected = computed(() => getYearWithMaxCount(yearly.value ?? []))
-const { data: recordedMinutesPerDay } = useLegacyAvailableBySiteYear(apiClientArbimon, selectedProjectSlug, siteSelectedValue, yearSelected)
+const { data: recordedMinutesPerDay, refetch: refetchAvailableBySiteYear } = useLegacyAvailableBySiteYear(apiClientArbimon, selectedProjectSlug, siteSelectedValue, yearSelected)
 
 const page = ref(0)
 const pageSize = 10
@@ -378,6 +382,10 @@ watchEffect(() => {
     initialViewMonth.value = Number(month)
   }
 })
+
+const onEmitSelectedDate = (date: { dateLocalIso: string }) => {
+  initialDate.value = date.dateLocalIso
+}
 
 const handleFreqFilter = (filter: FreqFilter) => {
   emits('updateFreqFilter', filter)
@@ -637,6 +645,10 @@ watch(() => auduoEventDetections.value, () => {
 
 watch(() => clustering.value, () => {
   fetchClustering()
+})
+
+watch(() => yearly.value, () => {
+  refetchAvailableBySiteYear()
 })
 
 </script>
