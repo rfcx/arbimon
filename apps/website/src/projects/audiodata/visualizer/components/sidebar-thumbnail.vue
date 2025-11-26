@@ -107,11 +107,12 @@ const isPlaylist = computed(() => browserType.value === 'playlist')
 const isSoundscape = computed(() => browserType.value === 'soundscape')
 
 const thumbnailContainer = ref<HTMLElement | null>(null)
-const recordings = ref<RecordingResponse>([])
+const recordingsSite = ref<RecordingResponse>([])
+const recordingsPlaylist = ref<RecordingResponse>([])
 const soundscape = ref<SoundscapeResponse>([])
 
 const props = defineProps<{
-  recordingsItem: RecordingResponse | undefined,
+  recordingsItem: RecordingResponse | undefined, // playlist
   soundscapeResponse: SoundscapeResponse | undefined,
   initialDate: string
   siteSelected: string | number | undefined
@@ -175,16 +176,20 @@ const handleScroll = (e: Event) => {
   })
 }
 
+const recordings = computed(() => {
+    return isPlaylist.value ? recordingsPlaylist.value : recordingsSite.value
+})
+
 const onSelectedThumbnail = (id: number) => {
   emits('onSelectedThumbnail', id)
 }
 
 watch(() => recordingsResponse.value, (newValue) => {
   if (!newValue || recordingsResponse.value === undefined) return
-  if (recordingsResponse.value.length && recordings.value.length && recordingsResponse.value[0].site === recordings.value[0].site) {
-    recordings.value = [...recordings.value, ...recordingsResponse.value]
+  if (recordingsResponse.value.length && recordingsSite.value.length && recordingsResponse.value[0].site === recordings.value[0].site) {
+    recordingsSite.value = [...recordingsSite.value, ...recordingsResponse.value]
     findVisObj()
-  } else recordings.value = recordingsResponse.value
+  } else recordingsSite.value = recordingsResponse.value
 })
 
 watch(() => browserType.value, () => {
@@ -193,7 +198,7 @@ watch(() => browserType.value, () => {
 
 watch(() => props.recordingsItem, (r) => {
   if (r === undefined) return
-  recordings.value = [...r]
+  recordingsPlaylist.value = [...r]
 })
 
 watch(() => props.soundscapeResponse, (ss) => {
