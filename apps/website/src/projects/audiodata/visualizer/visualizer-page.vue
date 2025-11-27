@@ -9,6 +9,8 @@
       @update-tags="handleTags"
       @emit-training-set="handleTrainingSet"
       @emit-training-set-visibility="handleTrainingSetVisibility"
+      @emit-soundscape-rigions-visibility="handleSoundscapeRegionsVisibility"
+      @emit-visible-soundscapes="handleSoundscapeRegions"
       @emit-active-layer="handleActiveLayer"
       @emit-species-visibility="handleSpeciesVisibility"
       @emit-template-visibility="handleTemplateVisibility"
@@ -42,9 +44,8 @@
       :training-set="selectedTrainingSet"
       :aed-jobs="selectedAedJobs"
       :clustering="selectedClustering"
-      :visible-aed-jobs="visibleAedJobs"
-      :visible-clustering="visibleClustering"
       :layer-visibility="layerVisibility"
+      :visible-soundscapes="visibleSoundscapes"
     />
   </section>
 </template>
@@ -59,6 +60,7 @@ import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/tra
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetRecording } from '../_composables/use-visualizer'
+import type { VisibleSoundscapes } from './components/sidebar-soundscape-regions.vue'
 import VisualizerSidebar, { type AedJob, type ClusteringPlaylist } from './components/visualizer-sidebar.vue'
 import VisualizerSpectrogram from './components/visualizer-spectrogram.vue'
 import { type FreqFilter } from './types'
@@ -70,6 +72,7 @@ export interface LayerVisibility {
   template: boolean
   aed: boolean
   cluster: boolean
+  soundscape: boolean
 }
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
@@ -89,13 +92,21 @@ const layerVisibility = ref<LayerVisibility>({
   ts: true,
   template: true,
   aed: true,
-  cluster: true
+  cluster: true,
+  soundscape: true
 })
 const selectedTrainingSet = ref<TrainingSet | undefined>(undefined)
 const selectedAedJobs = ref<AedJob[] | undefined>([])
 const selectedClustering = ref<ClusteringPlaylist[] | undefined>([])
 const visibleAedJobs = ref<Record<number, boolean>>({})
 const visibleClustering = ref<Record<number, boolean>>({})
+const visibleSoundscapes = ref<VisibleSoundscapes>({
+  showAllNames: true,
+  showAllTags: true,
+  showBoxes: [],
+  activeBox: null,
+  activeTag: null
+})
 
 const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
 const browserType = computed(() => browserTypes.includes(route.params.browserType as string) ? route.params.browserType as string : undefined)
@@ -148,6 +159,14 @@ const handleTemplateVisibility = (value: boolean) => {
   layerVisibility.value.template = value
 }
 
+const handleSoundscapeRegionsVisibility = (value: boolean) => {
+  layerVisibility.value.soundscape = value
+}
+
+const handleSoundscapeRegions = (value: VisibleSoundscapes) => {
+  visibleSoundscapes.value = value
+}
+
 const setBrowserType = (value: string) => {
   if (value === 'playlist') {
     if (lastPlaylistId.value !== 0) {
@@ -196,7 +215,6 @@ const handleActiveLayer = (layer: string | undefined) => {
 
 const handleSelectedThumbnail = async (value: number) => {
   idRecording.value = value
-  console.info('browserType.value', browserType.value, 'selectedRecordingId', selectedRecordingId)
   if (browserType.value === 'soundscape') {
     soundscapeResponse.value = await apiGetSoundscapes(apiClientArbimon, selectedProjectSlug.value ?? '')
     if (browserTypeId.value !== undefined) {

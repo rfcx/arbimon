@@ -451,6 +451,42 @@
           />
         </div>
       </div>
+      <!-- Soundscape Regions layer -->
+      <div v-if="spectrogramSoundscapeRegions && layerVisibility.soundscape === true">
+        <div
+          v-for="(sr, index) in spectrogramSoundscapeRegions"
+          :key="index"
+          class="border-1 z-5 cursor-pointer absolute"
+          :class="{ 'roi-selected': toggledSoundscapeRegion === sr.id }"
+          :style="{
+            left: sec2x(sr.x1 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
+            top: hz2y(sr.y2 ?? 0, 1, 1) + legendMetrics.axis_margin_top + 'px',
+            width: getDsec2width(sr.x2 ?? 0, sr.x1 ?? 0, 1, 1),
+            height: getDhz2height(sr.y2 ?? 0, sr.y1 ?? 0, 1, 1),
+            'border-color': '#080035',
+            'background-color': 'rgba(8, 0, 53, 0.3)'
+          }"
+          tabindex="-1"
+          :title="'Soundscape Region: ' + sr.name"
+          data-tooltip-style="dark"
+          :data-tooltip-target="`soundscapeRegionTooltipId-${index}`"
+          @click="$event.stopPropagation(); toggleSoundscapeRegion(sr.id)"
+        />
+        <!-- Soundscape Regions Tooltips -->
+        <div
+          v-for="(sr, index) in spectrogramSoundscapeRegions"
+          :id="`soundscapeRegionTooltipId-${index}`"
+          :key="`soundscapeRegionTooltipKey-${index}`"
+          role="tooltip"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+        >
+          {{ 'Soundscape Region: ' + sr.name }}
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -463,7 +499,7 @@ import { initTooltips } from 'flowbite'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { RecordingTagResponse, SoundscapeItem, TemplateResponse, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import type { RecordingTagResponse, SoundscapeItem, SoundscapeRegion, TemplateResponse, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import { type RecordingTrainingSet, type RecordingTrainingSetParams, type TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
@@ -471,9 +507,10 @@ import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetTags } from '../../_composables/use-recordings'
 import { useGetRecordingTrainingSets, usePostTrainingSet } from '../../_composables/use-training-sets'
-import { useGetPatternMatchingBoxes, useGetRecordingTag, useGetTemplates, usePostTemplate, usePutRecordingTag, useSearchTag } from '../../_composables/use-visualizer'
+import { useGetPatternMatchingBoxes, useGetRecordingTag, useGetSoundscapeRegions, useGetTemplates, usePostTemplate, usePutRecordingTag, useSearchTag } from '../../_composables/use-visualizer'
 import { type BboxGroupPm, type BboxGroupTags, type BboxGroupTrainingSets, type BboxListItem, type FreqFilter } from '../types'
 import { type LayerVisibility } from '../visualizer-page.vue'
+import type { VisibleSoundscapes } from './sidebar-soundscape-regions.vue'
 import { CreateBBoxEditor } from './visualizer-create-bbox-editor'
 import { doXAxisLayout, doYAxisLayout, makeScale } from './visualizer-scale'
 import type { AedJob, ClusteringPlaylist } from './visualizer-sidebar.vue'
@@ -493,8 +530,7 @@ const props = defineProps<{
   trainingSet: TrainingSet | undefined
   aedJobs: AedJob[] | undefined
   clustering: ClusteringPlaylist[] | undefined
-  visibleAedJobs: Record<number, boolean>
-  visibleClustering: Record<number, boolean>
+  visibleSoundscapes: VisibleSoundscapes
   layerVisibility: LayerVisibility
 }>()
 
@@ -516,6 +552,7 @@ const createBboxEditor = ref(new CreateBBoxEditor())
 const tagKeyword = ref<string>('')
 const spectrogramTags = ref<BboxGroupTags[]>([])
 const spectrogramTrainingSets = ref<BboxGroupTrainingSets[]>([])
+const spectrogramSoundscapeRegions = ref<SoundscapeRegion[]>([])
 const spectrogramPM = ref<BboxGroupPm[]>([])
 const spectrogramTemplates = ref<TemplateResponse[]>([])
 const toggledTag = ref<number>()
@@ -524,6 +561,7 @@ const toggledPmRoiBox = ref<number>()
 const toggledTemplateBox = ref<number>()
 const toggledAedBox = ref<number>()
 const toggledClustering = ref<number>()
+const toggledSoundscapeRegion = ref<number>()
 
 const zoomData = reactive<{ x: number; y: number; levelx?: number[]; levely?: number[], maxSec2px: number, maxHz2px: number }>({
   x: 0,
@@ -582,6 +620,7 @@ const recordingTrainingSetParams = computed<RecordingTrainingSetParams>(() => {
   }
 })
 const { data: trainingSets, refetch: refetchRecordingTrainingSets } = useGetRecordingTrainingSets(apiClientArbimon, selectedProjectSlug, recordingTrainingSetParams)
+const { data: soundscapeRegions } = useGetSoundscapeRegions(apiClientArbimon, selectedProjectSlug, browserTypeId)
 
 const legendMetrics = computed(() => {
   return {
@@ -687,6 +726,12 @@ const getHz2px = (containerHeight: number, ySpan: number): number => {
 }
 
 const hz2y = (hertz: number, round: number, intervalAlign?: number): number => {
+  if (isSoundscape.value === true && props.visobjectSoundscape) {
+    hertz = alignToInterval(hertz - props.visobjectSoundscape.offset.hz, props.visobjectSoundscape.domain.y, intervalAlign)
+    const h = spectrogramMetrics.value.height ?? 0
+    const y = h - hertz * getHz2px(spectrogramMetrics.value.height, props.visobjectSoundscape.domain.y.span)
+    return round ? (y ?? 0) : +y
+  }
   if (!props.visobject) return 0
   hertz = alignToInterval(hertz - props.visobject.offset.hz, props.visobject.domain.y, intervalAlign)
   const h = spectrogramMetrics.value.height ?? 0
@@ -695,17 +740,26 @@ const hz2y = (hertz: number, round: number, intervalAlign?: number): number => {
 }
 
 const sec2x = (seconds: number, round: number, intervalAlign?: number) => {
+  if (isSoundscape.value === true && props.visobjectSoundscape) {
+    seconds = alignToInterval(seconds - props.visobjectSoundscape.offset.sec, props.visobjectSoundscape.domain.x, intervalAlign)
+    const x = seconds * getSec2px(spectrogramMetrics.value.width, props.visobjectSoundscape.domain.x.span)
+    return round ? (x ?? 0) : +x
+  }
   if (!props.visobject) return 0
   seconds = alignToInterval(seconds - props.visobject.offset.sec, props.visobject.domain.x, intervalAlign)
   const x = seconds * getSec2px(spectrogramMetrics.value.width, props.visobject.domain.x.span)
   return round ? (x ?? 0) : +x
 }
 
-const dhz2height = (hz1: number, hz2: number, round?: number, inclusive?: boolean): number => {
-  if (!props.visobject) return 0
-  if (inclusive !== undefined) {
-    hz1 = alignToInterval(hz1, props.visobject.domain.y, 1)
+const dhz2height = (hz1: number, hz2: number, round?: number, inclusive?: number | undefined): number => {
+  if (isSoundscape.value === true && props.visobjectSoundscape) {
+    if (inclusive !== undefined) {
+      hz1 = alignToInterval(hz1, props.visobjectSoundscape.domain.y, 1)
+    }
+    const h = (hz1 - hz2) * getHz2px(spectrogramMetrics.value.height, props.visobjectSoundscape.domain.y.span)
+    return round !== undefined ? (h ?? 0) : +h
   }
+  if (!props.visobject) return 0
   const h = (hz1 - hz2) * getHz2px(spectrogramMetrics.value.height, props.visobject.domain.y.span)
   return round !== undefined ? (h ?? 0) : +h
 }
@@ -721,11 +775,15 @@ const alignToInterval = (unit: number, domain: any, align: number | undefined): 
   }
 }
 
-const dsec2width = (seconds1: number, seconds2: number, round?: number | undefined, inclusive?: boolean) => {
-  if (!props.visobject) return 0
-  if (inclusive !== undefined) {
-    seconds1 = alignToInterval(seconds1, props.visobject.domain.x, 1)
+const dsec2width = (seconds1: number, seconds2: number, round?: number | undefined, inclusive?: number | undefined) => {
+  if (isSoundscape.value === true && props.visobjectSoundscape) {
+    if (inclusive !== undefined) {
+      seconds1 = alignToInterval(seconds1, props.visobjectSoundscape.domain.x, 1)
+    }
+    const w = (seconds1 - seconds2) * getSec2px(spectrogramMetrics.value.width, props.visobjectSoundscape.domain.x.span)
+    return round !== undefined ? (w ?? 0) : +w
   }
+  if (!props.visobject) return 0
   const w = (seconds1 - seconds2) * getSec2px(spectrogramMetrics.value.width, props.visobject.domain.x.span)
   return round !== undefined ? (w ?? 0) : +w
 }
@@ -745,12 +803,12 @@ const y2hz = (y: number, intervalAlign?: number | undefined) => {
   return alignToInterval(+hertz, props.visobject.domain.y, intervalAlign)
 }
 
-const getDsec2width = (t1: number, t0: number, round?: number | undefined): string => {
-  return `${dsec2width(t1, t0, round)}px`
+const getDsec2width = (t1: number, t0: number, round?: number | undefined, inclusive?: number | undefined): string => {
+  return `${dsec2width(t1, t0, round, inclusive)}px`
 }
 
-const getDhz2height = (f1: number, f0: number): string => {
-  return `${dhz2height(f1, f0)}px`
+const getDhz2height = (f1: number, f0: number, round?: number | undefined, inclusive?: number | undefined): string => {
+  return `${dhz2height(f1, f0, round, inclusive)}px`
 }
 
 const getLeftPositionPlay = (): string => {
@@ -920,6 +978,11 @@ const toggleClustering = (aedId: number) => {
   else toggledClustering.value = aedId
 }
 
+const toggleSoundscapeRegion = (id: number) => {
+  if (toggledSoundscapeRegion.value === id) toggledSoundscapeRegion.value = undefined
+  else toggledSoundscapeRegion.value = id
+}
+
 const groupByBbox = (tags: RecordingTagResponse[]): BboxGroupTags[] => {
   const map: Record<string, BboxGroupTags> = {}
   for (const tag of tags) {
@@ -1057,6 +1120,13 @@ watch(() => props.trainingSet, async () => {
 })
 
 watch(() => spectrogramAed.value, async () => {
+  await nextTick()
+  initTooltips()
+})
+
+watch(() => soundscapeRegions.value, async () => {
+  if (soundscapeRegions.value === undefined) return
+  spectrogramSoundscapeRegions.value = soundscapeRegions.value
   await nextTick()
   initTooltips()
 })

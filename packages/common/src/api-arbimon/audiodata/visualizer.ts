@@ -566,6 +566,7 @@ export interface SoundscapeItem {
   type: string
   tiles: any
   legend: any
+  offset: any
   domain: any
   scale: any
 }
@@ -587,6 +588,41 @@ export const apiGetSoundscapes = async (
   })
 
   return fetchSpondscape(response)
+}
+
+export interface SoundscapeRegion {
+  id: number
+  name: string
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  count: number
+  treshold: number
+  threshold_type: number
+  playlist: number
+  tags: Tag[]
+}
+
+export interface Tag {
+  count: number
+  id: number
+  recording: number
+  region: number
+  tag: string
+  type: string
+}
+
+export const apiGetSoundscapeRegions = async (
+  apiClient: AxiosInstance,
+  slug: string,
+  soundscapeId: string
+): Promise<SoundscapeRegion[]> => {
+  const url = `/legacy-api/project/${slug}/soundscapes/${soundscapeId}/regions?view=tags`
+
+  const response = await apiClient.get(url)
+
+  return response.data
 }
 
 const khzUnitFmt = (v: number): string => { return `${Math.floor(v / 10.0) / 100.0} kHz` }
@@ -684,6 +720,10 @@ const fetchSpondscape = (response: AxiosResponse<SoundscapeResponse, any>): Soun
       sec2px: 100 / 1.0,
       hz2px: 100 / 5000.0,
       originalScale: scaleCache.originalScale
+    }
+    soundscape.offset = {
+      sec: 0,
+      hz: 0
     }
     if (soundscape.normalized) {
       soundscape.domain.legend.tick_format = (v: number) => { return `${v}%` }

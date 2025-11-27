@@ -124,7 +124,7 @@
         v-if="visobject"
         :visobject="visobject"
         :soundscape-response="soundscape"
-        @on-emit-validation="onEmitValidation"
+        @on-emit-validation="onEmitSounscapeValidation"
       />
       <SidebarAudioEvents
         v-if="visobject"
@@ -143,6 +143,9 @@
       />
       <SoundscapeRegions
         v-if="soundscapeSelected"
+        @emit-sounscape-rigions-visibility="$emit('emitSoundscapeRigionsVisibility', $event)"
+        @emit-active-layer="toggleSoundscapeRegions"
+        @emit-visible-soundscapes="$emit('emitVisibleSoundscapes', $event)"
       />
     </div>
     <alert-dialog
@@ -178,7 +181,7 @@ import PaginationControl from './pagination-control.vue'
 import SidebarAudioEvents from './sidebar-audio-events.vue'
 import SidebarSoundscape from './sidebar-soundscape.vue'
 import SoundscapeDetails from './sidebar-soundscape-details.vue'
-import SoundscapeRegions from './sidebar-soundscape-regions.vue'
+import SoundscapeRegions, { VisibleSoundscapes } from './sidebar-soundscape-regions.vue'
 import SidebarSpecies from './sidebar-species.vue'
 import SidebarSpectrogramPlayer from './sidebar-spectrogram-player.vue'
 import SidebarTag from './sidebar-tag.vue'
@@ -243,6 +246,8 @@ const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'emitTrainingSetVisibility', value: boolean): void,
   (e: 'emitSpeciesVisibility', value: boolean): void,
   (e: 'emitTemplateVisibility', value: boolean): void,
+  (e: 'emitSoundscapeRigionsVisibility', value: boolean): void,
+  (e: 'emitVisibleSoundscapes', value: VisibleSoundscapes): void,
   (e: 'emitSelectedThumbnail', value: number): void,
   (e: 'emitSelectedPlaylist', value: number): void,
   (e: 'emitActiveAedBoxes', visibleJobs: Record<number, boolean>, job: AedJob): void,
@@ -455,6 +460,11 @@ const toggleSidebarTemplate = (isActive: boolean) => {
   emits('emitActiveLayer', activeLayer.value)
 }
 
+const toggleSoundscapeRegions = (isActive: boolean) => {
+  activeLayer.value = isActive ? 'Soundscape Regions' : undefined
+  emits('emitActiveLayer', activeLayer.value)
+}
+
 const groupByBbox = (tags: RecordingTagResponse[]): BboxGroupTags[] => {
   const map: Record<string, BboxGroupTags> = {}
   for (const tag of tags) {
@@ -467,7 +477,7 @@ const groupByBbox = (tags: RecordingTagResponse[]): BboxGroupTags[] => {
   return Object.values(map)
 }
 
-const onEmitValidation = (cl: number, val: number) => {
+const onEmitSounscapeValidation = (cl: number, val: number) => {
   mutatePostSoundscapeComposition({
     class: cl.toString(),
     val

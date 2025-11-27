@@ -2,7 +2,7 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import type { AxiosInstance } from 'axios'
 import { type ComputedRef, computed } from 'vue'
 
-import { type AedResponse, type ClusterResponse, type newTemplateResponse, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type SoundscapeCompositionParams, type SoundscapeCompositionResponse, type SoundscapeResponse, type TagDeleteResponse, type TagParams, type TemplateParams, type TemplateResponse, type VisobjectResponse, apiArbimonGetAed, apiArbimonGetClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiGetSoundscapes, apiGetTemplates, apiPostSoundscapeComposition, apiPostTemplate, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type AedResponse, type ClusterResponse, type newTemplateResponse, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingTagSearchParams, type RecordingValidateParams, type RecordingValidateResponse, type SoundscapeCompositionParams, type SoundscapeCompositionResponse, type SoundscapeResponse, type TagDeleteResponse, type TagParams, type TemplateParams, type TemplateResponse, type VisobjectResponse, apiArbimonGetAed, apiArbimonGetClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiGetSoundscapeRegions, apiGetSoundscapes, apiGetTemplates, apiPostSoundscapeComposition, apiPostTemplate, apiPutRecordingTag, apiRecordingValidate, apiSearchTag, SoundscapeRegion } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: ComputedRef<string | undefined>): UseQueryReturnType<VisobjectResponse | undefined, unknown> => {
   return useQuery({
@@ -194,6 +194,21 @@ export const useGetSoundscapes = (
     queryFn: async () => {
       if (!slug.value) return []
       return await apiGetSoundscapes(apiClient, slug.value, extraParams)
+    },
+    refetchOnWindowFocus: false
+  })
+}
+
+export const useGetSoundscapeRegions = (
+  apiClient: AxiosInstance,
+  slug: ComputedRef<string | undefined>,
+  soundscapeId: ComputedRef<string | undefined>
+): UseQueryReturnType<SoundscapeRegion[] | undefined, unknown> => {
+  return useQuery({
+    queryKey: ['fetch-soundscape-regions', slug, soundscapeId],
+    queryFn: async () => {
+      if (!slug.value || !soundscapeId.value) return []
+      return await apiGetSoundscapeRegions(apiClient, slug.value, soundscapeId.value)
     },
     refetchOnWindowFocus: false
   })
