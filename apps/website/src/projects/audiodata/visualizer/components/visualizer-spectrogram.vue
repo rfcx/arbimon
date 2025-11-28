@@ -457,7 +457,7 @@
           v-for="(sr, index) in spectrogramSoundscapeRegions"
           :key="index"
           class="border-1 z-5 cursor-pointer absolute"
-          :class="{ 'roi-selected': toggledSoundscapeRegion === sr.id }"
+          :class="{ 'roi-selected': toggledSoundscapeRegion === sr.id, 'invisible': !props.visibleSoundscapes.showBoxes.includes(sr.id) }"
           :style="{
             left: sec2x(sr.x1 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
             top: hz2y(sr.y2 ?? 0, 1, 1) + legendMetrics.axis_margin_top + 'px',
@@ -471,7 +471,11 @@
           data-tooltip-style="dark"
           :data-tooltip-target="`soundscapeRegionTooltipId-${index}`"
           @click="$event.stopPropagation(); toggleSoundscapeRegion(sr.id)"
-        />
+        >
+          <span v-if="props.visibleSoundscapes.showAllNames || props.visibleSoundscapes.activeBox === sr.id">
+            {{ sr.name }}
+          </span>
+        </div>
         <!-- Soundscape Regions Tooltips -->
         <div
           v-for="(sr, index) in spectrogramSoundscapeRegions"
@@ -1130,6 +1134,8 @@ watch(() => soundscapeRegions.value, async () => {
   await nextTick()
   initTooltips()
 })
+
+watch(() => props.visibleSoundscapes, () => {}, { deep: true })
 
 onMounted(() => {
   containerSize.width = spectrogramContainer.value ? (spectrogramContainer.value.clientWidth - legendMetrics.value.axis_sizew - legendMetrics.value.axis_margin_x) : containerWidth.value - legendMetrics.value.axis_sizew - legendMetrics.value.axis_margin_x

@@ -9,7 +9,6 @@
       @update-tags="handleTags"
       @emit-training-set="handleTrainingSet"
       @emit-training-set-visibility="handleTrainingSetVisibility"
-      @emit-soundscape-rigions-visibility="handleSoundscapeRegionsVisibility"
       @emit-visible-soundscapes="handleSoundscapeRegions"
       @emit-active-layer="handleActiveLayer"
       @emit-species-visibility="handleSpeciesVisibility"
@@ -105,7 +104,8 @@ const visibleSoundscapes = ref<VisibleSoundscapes>({
   showAllTags: true,
   showBoxes: [],
   activeBox: null,
-  activeTag: null
+  activeTag: null,
+  toggleVisible: true
 })
 
 const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
@@ -159,11 +159,8 @@ const handleTemplateVisibility = (value: boolean) => {
   layerVisibility.value.template = value
 }
 
-const handleSoundscapeRegionsVisibility = (value: boolean) => {
-  layerVisibility.value.soundscape = value
-}
-
 const handleSoundscapeRegions = (value: VisibleSoundscapes) => {
+  layerVisibility.value.soundscape = value.toggleVisible
   visibleSoundscapes.value = value
 }
 

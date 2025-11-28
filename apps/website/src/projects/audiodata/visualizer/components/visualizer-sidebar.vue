@@ -143,7 +143,6 @@
       />
       <SoundscapeRegions
         v-if="soundscapeSelected"
-        @emit-sounscape-rigions-visibility="$emit('emitSoundscapeRigionsVisibility', $event)"
         @emit-active-layer="toggleSoundscapeRegions"
         @emit-visible-soundscapes="$emit('emitVisibleSoundscapes', $event)"
       />
@@ -181,7 +180,7 @@ import PaginationControl from './pagination-control.vue'
 import SidebarAudioEvents from './sidebar-audio-events.vue'
 import SidebarSoundscape from './sidebar-soundscape.vue'
 import SoundscapeDetails from './sidebar-soundscape-details.vue'
-import SoundscapeRegions, { VisibleSoundscapes } from './sidebar-soundscape-regions.vue'
+import SoundscapeRegions, { type VisibleSoundscapes } from './sidebar-soundscape-regions.vue'
 import SidebarSpecies from './sidebar-species.vue'
 import SidebarSpectrogramPlayer from './sidebar-spectrogram-player.vue'
 import SidebarTag from './sidebar-tag.vue'
@@ -246,7 +245,6 @@ const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'emitTrainingSetVisibility', value: boolean): void,
   (e: 'emitSpeciesVisibility', value: boolean): void,
   (e: 'emitTemplateVisibility', value: boolean): void,
-  (e: 'emitSoundscapeRigionsVisibility', value: boolean): void,
   (e: 'emitVisibleSoundscapes', value: VisibleSoundscapes): void,
   (e: 'emitSelectedThumbnail', value: number): void,
   (e: 'emitSelectedPlaylist', value: number): void,

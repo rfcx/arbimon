@@ -200,10 +200,10 @@ export interface VisibleSoundscapes {
   showBoxes: number[]
   activeBox: number | null
   activeTag: number | null
+  toggleVisible: boolean
 }
 
-const emits = defineEmits<{(e: 'emitSoundscapeRegionsVisibility', value: boolean): void,
-(e: 'emitActiveLayer', isActive: boolean): void,
+const emits = defineEmits<{(e: 'emitActiveLayer', isActive: boolean): void,
 (e: 'emitVisibleSoundscapes', value: VisibleSoundscapes): void
 }>()
 
@@ -220,15 +220,17 @@ const visibleSoundscapes = ref<VisibleSoundscapes>({
   showAllTags: true,
   showBoxes: [],
   activeBox: null,
-  activeTag: null
+  activeTag: null,
+  toggleVisible: true
 })
 
 const { data: soundscapeRegions, refetch: refetchGetSoundscapeRegions } = useGetSoundscapeRegions(apiClientArbimon, selectedProjectSlug, browserTypeId)
 
 const toggleSoundscapeRegionsVisible = () => {
   toggleVisible.value = !toggleVisible.value
-  emits('emitSoundscapeRegionsVisibility', toggleVisible.value)
-  emits('emitActiveLayer', true)
+  visibleSoundscapes.value.toggleVisible = toggleVisible.value
+  emits('emitVisibleSoundscapes', visibleSoundscapes.value)
+  emits('emitActiveLayer', toggleVisible.value)
 }
 
 const toggleSoundscapeRegionName = (regionId: number) => {
@@ -273,6 +275,7 @@ watch(() => toggleSoundscapeRegionTagsVisibility.value, () => {
 watch(() => soundscapeRegions.value, () => {
   if (!soundscapeRegions.value) return
   visibleSoundscapes.value.showBoxes = soundscapeRegions.value?.map(s => s.id)
+  emits('emitVisibleSoundscapes', visibleSoundscapes.value)
 })
 
 onMounted(() => {
