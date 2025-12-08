@@ -220,7 +220,7 @@
       </div>
       <!-- Accordion by taxon -->
       <div
-        v-for="taxon in taxons"
+        v-for="(taxon, index) in taxons"
         :id="'accordion-collapse-taxon-' + taxon"
         :key="taxon"
         data-accordion="collapse"
@@ -228,12 +228,12 @@
       >
         <!-- Taxon row -->
         <button
-          :id="'accordion-collapse-button-' + taxon"
+          :id="'accordion-collapse-button-' + index"
           type="button"
           class="flex justify-between items-center py-0 gap-x-1 text-insight"
-          :data-accordion-target="'#accordion-collapse-body-' + taxon"
+          :data-accordion-target="'#accordion-collapse-body-' + index"
           aria-expanded="false"
-          :aria-controls="'accordion-collapse-body-' + taxon"
+          :aria-controls="'accordion-collapse-body-' + index"
           @click="toggleAccordion(taxon)"
         >
           <div class="flex items-start items-center gap-x-1">
@@ -250,13 +250,13 @@
         </button>
         <!-- Taxon classes -->
         <div
-          :id="'accordion-collapse-body-' + taxon"
+          :id="'accordion-collapse-body-' + index"
           class="w-full flex flex-col gap-y-2"
           :class="{ 'hidden': byTaxonOpen[taxon] === false }"
-          :aria-labelledby="'accordion-collapse-button-' + taxon"
+          :aria-labelledby="'accordion-collapse-button-' + index"
         >
           <div class="flex flex-row items-center justify-between">
-            <div class="text-sm w-[77%]">
+            <div class="text-sm font-semibold w-[77%]">
               Species validations
             </div>
             <button
@@ -317,9 +317,8 @@
               :id="`speciesClass-${cl.id}`"
               :key="`cl-${cl.id}`"
               :label="cl.species_name"
-              class="flex flex-row items-center py-2 cursor-pointer font-semibold text-xs border-t-[0.5px] border-util-gray-03 hover:bg-util-gray-02"
+              class="flex flex-row items-center py-2 font-semibold text-xs border-t-[0.5px] border-util-gray-03 hover:bg-util-gray-02"
               :class="isSelected[cl.id] ? 'bg-util-gray-03' : ''"
-              @click="selectClass(cl)"
             >
               <span
                 class="w-[40%] text-wrap ml-2"
@@ -372,40 +371,40 @@
                     class="text-xxs mb-1"
                   />
                 </button>
-                <div
-                  :id="`validationDropdownToggle-${cl.id}`"
-                  class="z-10 hidden rounded-lg bg-moss flex flex-col gap-y-3"
+              </div>
+              <div
+                :id="`validationDropdownToggle-${cl.id}`"
+                class="z-10 hidden rounded-lg bg-moss flex flex-col gap-y-3"
+              >
+                <!-- Validate menu -->
+                <ul
+                  :aria-labelledby="`validationDropdownBtn-${cl.id}`"
+                  class="flex flex-col gap-y-1 rounded-md shadow dark:bg-moss border-util-gray-03 border-1 px-4 py-3 w-30 text-sm"
                 >
-                  <!-- Validate menu -->
-                  <ul
-                    :aria-labelledby="`validationDropdownBtn-${cl.id}`"
-                    class="flex flex-col gap-y-1 rounded-md shadow dark:bg-moss border-util-gray-03 border-1 px-4 py-3 w-30 text-sm"
+                  <li
+                    v-for="opt in valOptions"
+                    :key="opt.val"
                   >
-                    <li
-                      v-for="opt in valOptions"
-                      :key="opt.val"
+                    <a
+                      class="flex flex-row justify-start items-center cursor-pointer"
+                      @click="validate(opt.val, cl.id)"
                     >
-                      <a
-                        class="flex flex-row justify-start items-center cursor-pointer"
-                        @click="validate(opt.val, cl.id)"
-                      >
-                        <icon-fas-minus
-                          v-if="opt.val === 2"
-                          class="h-3 text-util-gray-03"
-                        />
-                        <icon-fa-check
-                          v-if="opt.val === 1"
-                          class="h-3 text-[#1F57CC]"
-                        />
-                        <icon-fa-close
-                          v-if="opt.val === 0"
-                          class="h-3 text-[#E6B900]"
-                        />
-                        {{ opt.label }}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                      <icon-fas-minus
+                        v-if="opt.val === 2"
+                        class="h-3 text-util-gray-03"
+                      />
+                      <icon-fa-check
+                        v-if="opt.val === 1"
+                        class="h-3 text-[#1F57CC]"
+                      />
+                      <icon-fa-close
+                        v-if="opt.val === 0"
+                        class="h-3 text-[#E6B900]"
+                      />
+                      {{ opt.label }}
+                    </a>
+                  </li>
+                </ul>
               </div>
             </li>
           </ul>
@@ -578,7 +577,6 @@ const scrollToBookmark = (bookmark: string) => {
   const element = document.getElementById(bookmark)
   if (element) {
     element.scrollIntoView({ behavior: 'smooth' })
-    window.location.hash = bookmark
   }
 }
 

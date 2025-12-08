@@ -80,7 +80,7 @@
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import { type RecordingResponse, type SoundscapeResponse, type Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
@@ -95,6 +95,7 @@ const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
 const route = useRoute()
 const store = useStore()
+const router = useRouter()
 
 const recOffset = ref<number>(0)
 const recLimit = 10
@@ -105,6 +106,7 @@ const browserTypeId = computed(() => route.params.browserTypeId as string ?? und
 const browserRecId = computed(() => route.params.browserRecId as string ?? undefined)
 const isPlaylist = computed(() => browserType.value === 'playlist')
 const isSoundscape = computed(() => browserType.value === 'soundscape')
+const isInitialDateWasChanged = ref<boolean>(false)
 
 const thumbnailContainer = ref<HTMLElement | null>(null)
 const recordingsSite = ref<RecordingResponse>([])
@@ -143,9 +145,10 @@ const recordingListSearchParams = computed(() => {
   if (!formattedDate) return
   const visobjSite = sites.value?.find(site => site.name === props.visobject?.site)
   if (siteSelectedRef.value === undefined) return
+  console.info('props.initialDate in recordingListSearchParams', props.initialDate)
   const opts = {
-    // when the user change selected site selectedRecordingId shouldn't be include
-    key: `!q:${siteSelectedRef.value}-${formattedDate}${visobjSite && visobjSite.id !== props.siteSelected ? '' : '?recording_id=' + selectedRecordingId.value}`,
+    // when the user change selected site or date selectedRecordingId shouldn't be include
+    key: `!q:${siteSelectedRef.value}-${formattedDate}${(visobjSite && visobjSite.id !== props.siteSelected) || isInitialDateWasChanged.value === true ? '' : '?recording_id=' + selectedRecordingId.value}`,
     show: 'thumbnail-path',
     limit: recLimit,
     offset: recOffset.value * recLimit
@@ -185,8 +188,9 @@ const onSelectedThumbnail = (id: number) => {
 }
 
 watch(() => recordingsResponse.value, (newValue) => {
+  isInitialDateWasChanged.value = false
   if (!newValue || recordingsResponse.value === undefined) return
-  if (recordingsResponse.value.length && recordingsSite.value.length && recordingsResponse.value[0].site === recordings.value[0].site) {
+  if (recordingsResponse.value.length && recordingsSite.value.length && recordingsResponse.value[0].site === recordings.value[0].site && dayjs.utc(recordingsResponse.value[0].datetime).format('DD.MM') === dayjs.utc(recordings.value[0].datetime).format('DD.MM')) {
     recordingsSite.value = [...recordingsSite.value, ...recordingsResponse.value]
     findVisObj()
   } else recordingsSite.value = recordingsResponse.value
@@ -249,6 +253,7 @@ watch(
 )
 
 watch(() => props.initialDate, () => {
+  isInitialDateWasChanged.value = true
   refetchRecordings()
 })
 
@@ -258,6 +263,10 @@ watch(() => props.siteSelected, () => {
 })
 
 onMounted(() => {
+  // default redirection to the visualizer/rec tab
+  if (!browserTypes.includes(route.params.browserType as string)) {
+    router.push({ path: `/p/${selectedProjectSlug.value}/visualizer/rec` })
+  }
   if (thumbnailContainer.value) {
     thumbnailContainer.value.addEventListener('scroll', handleScroll)
   }

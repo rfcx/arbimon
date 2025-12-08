@@ -93,15 +93,14 @@
         </div> -->
       </div>
 
-      <!-- Y scale - recording, playlist-->
+      <!-- Y scale -->
       <svg
-        v-show="visobject && visobject.domain.y"
         ref="axisY"
         class="z-5 absolute"
       >.</svg>
       <!-- Y legend - recording, playlist-->
       <div
-        v-if="visobject && visobject.domain.y"
+        v-if="visobject && visobject.domain.y && !isSoundscape"
         class="whitespace-nowrap absolute z-5"
         :style="{
           left: - Math.ceil(legendMetrics.axis_margin_x * 3) + 'px',
@@ -112,15 +111,9 @@
           {{ visobject.domain.y.unit || 'Frequency ( kHz )' }}
         </span>
       </div>
-      <!-- Y scale - soundscape-->
-      <svg
-        v-show="visobjectSoundscape && visobjectSoundscape.domain.y"
-        ref="axisY"
-        class="z-5 absolute"
-      >.</svg>
       <!-- Y legend - soundscape -->
       <div
-        v-if="visobjectSoundscape && visobjectSoundscape.domain.y"
+        v-if="visobjectSoundscape && visobjectSoundscape.domain.y && isSoundscape"
         class="whitespace-nowrap absolute z-5"
         :style="{
           left: - Math.ceil(legendMetrics.axis_margin_x * 3) + 'px',
@@ -132,15 +125,14 @@
         </span>
       </div>
 
-      <!-- X scale - recording, playlist-->
+      <!-- X scale -->
       <svg
-        v-show="visobject && visobject.domain.x"
         ref="axisX"
         class="z-5 absolute"
       >.</svg>
       <!-- X legend - recording, playlist-->
       <div
-        v-if="visobject && visobject.domain.x"
+        v-if="visobject && visobject.domain.x && !isSoundscape"
         class="whitespace-nowrap absolute z-5"
         :style="{
           left: Math.ceil((containerWidth - legendMetrics.axis_margin_x) / 2) + 'px',
@@ -149,15 +141,9 @@
       >
         <div>{{ visobject.domain.x.unit || 'Time ( s )' }}</div>
       </div>
-      <!-- X scale - soundscape-->
-      <svg
-        v-show="visobjectSoundscape && visobjectSoundscape.domain.x"
-        ref="axisX"
-        class="z-5 absolute"
-      >.</svg>
-      <!-- X legend -->
+      <!-- X legend - soundscape -->
       <div
-        v-if="visobjectSoundscape && visobjectSoundscape.domain.x"
+        v-if="visobjectSoundscape && visobjectSoundscape.domain.x && isSoundscape"
         class="whitespace-nowrap absolute z-5"
         :style="{
           left: Math.ceil((containerWidth - legendMetrics.axis_margin_x) / 2) + 'px',
