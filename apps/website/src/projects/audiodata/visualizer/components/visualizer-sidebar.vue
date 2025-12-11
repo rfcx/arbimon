@@ -82,6 +82,8 @@
       :initial-date="initialDate"
       :site-selected="siteSelected"
       :visobject="visobject"
+      :next-recording="nextRecording"
+      :prev-recording="prevRecording"
       @on-selected-thumbnail="onSelectedThumbnail"
     />
     <div v-show="isPlaylist || isSite">
@@ -91,6 +93,8 @@
         :is-loading-visobject="isLoadingVisobject"
         :freq-filter="freqFilter"
         @emit-current-time="$emit('updateCurrentTime', $event)"
+        @next-recording="setNextRecording"
+        @prev-recording="setPrevRecording"
         @update-color-spectrogram="$emit('updateColorSpectrogram', $event)"
         @update-freq-filter="handleFreqFilter"
       />
@@ -272,7 +276,8 @@ const spectrogramTags = ref<BboxGroupTags[]>([])
 const initialDate = ref('')
 const initialViewMonth = ref<number | undefined>(undefined)
 const initialViewYear = ref<number | undefined>(undefined)
-
+const nextRecording = ref<boolean>(false)
+const prevRecording = ref<boolean>(false)
 const audioEventJobs: Record<string, AedJob> = {}
 const clusteringPlaylists: Record<string, ClusteringPlaylist> = {}
 
@@ -437,6 +442,20 @@ const setBrowserType = async (type: string) => {
       soundscapeSelected.value = soundscapeResponse.value?.find(it => it.id === Number(browserTypeId.value)) ?? undefined
     }
   }
+}
+
+const setNextRecording = () => {
+  nextRecording.value = true
+  setTimeout(() => {
+    nextRecording.value = false
+  }, 1000)
+}
+
+const setPrevRecording = () => {
+  prevRecording.value = true
+  setTimeout(() => {
+    prevRecording.value = false
+  }, 1000)
 }
 
 const onSelectedThumbnail = (idItem: number) => {

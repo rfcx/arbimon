@@ -17,6 +17,8 @@
       <!-- Prev rec -->
       <button
         class="flex items-center justify-center p-1 w-7 h-7 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
+        title="Previous recording"
+        @click="setPrevRecording"
       >
         <icon-custom-fi-rewind class="h-5" />
       </button>
@@ -41,6 +43,8 @@
       <!-- Next rec -->
       <button
         class="flex items-center justify-center p-1 w-7 h-7 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
+        title="Next recording"
+        @click="setNextRecording"
       >
         <icon-custom-fi-fast-forward class="h-5" />
       </button>
@@ -126,7 +130,9 @@ const props = defineProps<{
 
 const emit = defineEmits<{(event: 'emitCurrentTime', currentTime: number): void,
   (e: 'updateColorSpectrogram', value: string): void,
-  (e: 'updateFreqFilter', value: FreqFilter): void
+  (e: 'updateFreqFilter', value: FreqFilter): void,
+  (e: 'nextRecording'): void,
+  (e: 'prevRecording'): void
 }>()
 
 const VITE_ARBIMON_LEGACY_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
@@ -197,6 +203,14 @@ const onChange = (e: Event): void => {
 const setGain = (ind: number) => {
   currentIndex.value = ind
   createAudio()
+}
+
+const setNextRecording = () => {
+  emit('nextRecording')
+}
+
+const setPrevRecording = () => {
+  emit('prevRecording')
 }
 
 watch(() => props.freqFilter, () => {

@@ -118,7 +118,9 @@ const props = defineProps<{
   soundscapeResponse: SoundscapeResponse | undefined,
   initialDate: string
   siteSelected: string | number | undefined
-  visobject: Visobject | undefined
+  visobject: Visobject | undefined,
+  nextRecording: boolean,
+  prevRecording: boolean
 }>()
 
 const emits = defineEmits<{(e: 'onSelectedThumbnail', id: number): void}>()
@@ -145,7 +147,6 @@ const recordingListSearchParams = computed(() => {
   if (!formattedDate) return
   const visobjSite = sites.value?.find(site => site.name === props.visobject?.site)
   if (siteSelectedRef.value === undefined) return
-  console.info('props.initialDate in recordingListSearchParams', props.initialDate)
   const opts = {
     // when the user change selected site or date selectedRecordingId shouldn't be include
     key: `!q:${siteSelectedRef.value}-${formattedDate}${(visobjSite && visobjSite.id !== props.siteSelected) || isInitialDateWasChanged.value === true ? '' : '?recording_id=' + selectedRecordingId.value}`,
@@ -180,7 +181,7 @@ const handleScroll = (e: Event) => {
 }
 
 const recordings = computed(() => {
-    return isPlaylist.value ? recordingsPlaylist.value : recordingsSite.value
+  return isPlaylist.value ? recordingsPlaylist.value : recordingsSite.value
 })
 
 const onSelectedThumbnail = (id: number) => {
@@ -260,6 +261,20 @@ watch(() => props.initialDate, () => {
 watch(() => props.siteSelected, () => {
   if (siteSelectedRef.value === props.siteSelected || props.siteSelected === undefined) return
   siteSelectedRef.value = props.siteSelected
+})
+
+watch(() => props.nextRecording, (newVal) => {
+  if (newVal === false) return
+  const index = recordings.value.findIndex(item => item.id === props.visobject?.id)
+  if (index === undefined || index === null || !recordings.value[index + 1].id) return
+  onSelectedThumbnail(recordings.value[index + 1].id)
+})
+
+watch(() => props.prevRecording, (newVal) => {
+  if (newVal === false) return
+  const index = recordings.value.findIndex(item => item.id === props.visobject?.id)
+  if (index === undefined || index === null || !recordings.value[index - 1].id) return
+  onSelectedThumbnail(recordings.value[index - 1].id)
 })
 
 onMounted(() => {
