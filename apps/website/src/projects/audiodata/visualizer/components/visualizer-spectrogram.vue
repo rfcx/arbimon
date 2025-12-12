@@ -175,6 +175,12 @@
       />
       <!-- ROI box -->
       <div
+        class="input-source relative"
+        :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
+        @mousemove="setPointerData"
+        @mouseleave="resetPointerData"
+      />
+      <div
         v-if="activeLayer && activeLayer !== 'New Training Set' && activeLayer !== 'aed'"
         class="input-source cursor-crosshair relative"
         :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
@@ -510,6 +516,8 @@ import VisualizerTileImg from './visualizer-tile-img.vue'
 import VisualizerTrainingSetBboxModal from './visualizer-training-set-bbox-modal.vue'
 import ZoomControl from './zoom-control.vue'
 
+export interface Pointer { sec: number; hz: number }
+
 const props = defineProps<{
   visobject: Visobject | undefined
   visobjectSoundscape?: SoundscapeItem | undefined
@@ -524,6 +532,8 @@ const props = defineProps<{
   layerVisibility: LayerVisibility
 }>()
 
+const emits = defineEmits<{(e: 'emitPointer', value: Pointer): void}>()
+
 const selectedProjectSlug = computed(() => store.project?.slug)
 const spectrogramContainer = ref<HTMLElement | null>(null)
 const containerSize = reactive({ width: 0, height: 0 })
@@ -531,11 +541,16 @@ const spectrogramTileHeight = ref<number>(0)
 const axisY = ref<SVGSVGElement | null>(null)
 const axisX = ref<SVGSVGElement | null>(null)
 const bboxValid = ref(false)
-const pointer = reactive<{ x: number; y: number; sec: number; hz: number }>({
+const bboxPointer = reactive<{ x: number; y: number; sec: number; hz: number }>({
   x: 0,
   y: 0,
   sec: 0,
   hz: 0
+})
+
+const pointer = reactive<Pointer>({
+  hz: 0,
+  sec: 0
 })
 
 const createBboxEditor = ref(new CreateBBoxEditor())
@@ -591,7 +606,7 @@ const isPlaylist = computed(() => browserType.value === 'playlist')
 const isSoundscape = computed(() => browserType.value === 'soundscape')
 
 const selectedRecordingId = computed(() => {
-    return isPlaylist.value ? isSoundscape.value ? undefined : browserRecId.value : browserTypeId.value
+  return isPlaylist.value ? isSoundscape.value ? undefined : browserRecId.value : browserTypeId.value
 })
 
 const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
@@ -825,21 +840,21 @@ const handleResize = (): void => {
 }
 
 const onMouseDownRoi = (e: MouseEvent) => {
-  pointer.sec = x2sec(e.offsetX)
-  pointer.hz = y2hz(e.offsetY)
-  createBboxEditor.value.add_point(pointer.sec, pointer.hz)
+  bboxPointer.sec = x2sec(e.offsetX)
+  bboxPointer.hz = y2hz(e.offsetY)
+  createBboxEditor.value.add_point(bboxPointer.sec, bboxPointer.hz)
 }
 
 const onMouseMoveRoi = (e: MouseEvent) => {
-  if (e.buttons === 1 && e.offsetX > pointer.sec) {
-    pointer.sec = x2sec(e.offsetX)
-    pointer.hz = y2hz(e.offsetY)
-    createBboxEditor.value.add_tracer_point(pointer.sec, pointer.hz)
+  if (e.buttons === 1 && e.offsetX > bboxPointer.sec) {
+    bboxPointer.sec = x2sec(e.offsetX)
+    bboxPointer.hz = y2hz(e.offsetY)
+    createBboxEditor.value.add_tracer_point(bboxPointer.sec, bboxPointer.hz)
   }
 }
 
 const onMouseUpRoi = () => {
-  createBboxEditor.value.add_point(pointer.sec, pointer.hz)
+  createBboxEditor.value.add_point(bboxPointer.sec, bboxPointer.hz)
   bboxValid.value = true
 }
 
@@ -848,6 +863,20 @@ const onKeyUp = (e: KeyboardEvent): void => {
     resetBBox()
     toggledTag.value = undefined
   }
+}
+
+const setPointerData = (e: MouseEvent) => {
+  const sec = x2sec(e.offsetX)
+  const hz = y2hz(e.offsetY)
+  pointer.hz = hz
+  pointer.sec = sec
+  emits('emitPointer', pointer)
+}
+
+const resetPointerData = (e: MouseEvent) => {
+  pointer.hz = 0
+  pointer.sec = 0
+  emits('emitPointer', pointer)
 }
 
 const resetBBox = (): void => {

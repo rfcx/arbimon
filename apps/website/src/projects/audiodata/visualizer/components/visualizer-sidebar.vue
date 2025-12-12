@@ -92,6 +92,7 @@
         :visobject="visobject"
         :is-loading-visobject="isLoadingVisobject"
         :freq-filter="freqFilter"
+        :pointer="props.pointer"
         @emit-current-time="$emit('updateCurrentTime', $event)"
         @next-recording="setNextRecording"
         @prev-recording="setPrevRecording"
@@ -191,6 +192,7 @@ import SidebarTag from './sidebar-tag.vue'
 import SidebarTemplates from './sidebar-templates.vue'
 import SidebarThumbnail from './sidebar-thumbnail.vue'
 import SidebarTrainingSets from './sidebar-training-sets.vue'
+import { type Pointer } from './visualizer-spectrogram.vue'
 
 export interface AedJob {
   jobId: number
@@ -239,6 +241,7 @@ export interface ClusteringPlaylist {
 const props = defineProps<{
   visobject: Visobject | undefined
   isLoadingVisobject: boolean
+  pointer: Pointer
 }>()
 const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'updateColorSpectrogram', value: string): void,

@@ -3,6 +3,7 @@
     <VisualizerSidebar
       :visobject="visobject"
       :is-loading-visobject="isLoadingVisobject"
+      :pointer="pointer"
       @update-current-time="handleCurrentTime"
       @update-color-spectrogram="handleColorSpectrogram"
       @update-freq-filter="handleFreqFilter"
@@ -45,12 +46,13 @@
       :clustering="selectedClustering"
       :layer-visibility="layerVisibility"
       :visible-soundscapes="visibleSoundscapes"
+      @emit-pointer="handlePointer"
     />
   </section>
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { type SoundscapeItem, type SoundscapeResponse, apiGetSoundscapes } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
@@ -61,7 +63,7 @@ import { useStore } from '~/store'
 import { useGetRecording } from '../_composables/use-visualizer'
 import type { VisibleSoundscapes } from './components/sidebar-soundscape-regions.vue'
 import VisualizerSidebar, { type AedJob, type ClusteringPlaylist } from './components/visualizer-sidebar.vue'
-import VisualizerSpectrogram from './components/visualizer-spectrogram.vue'
+import VisualizerSpectrogram, { type Pointer } from './components/visualizer-spectrogram.vue'
 import { type FreqFilter } from './types'
 
 export interface LayerVisibility {
@@ -106,6 +108,11 @@ const visibleSoundscapes = ref<VisibleSoundscapes>({
   activeBox: null,
   activeTag: null,
   toggleVisible: true
+})
+
+const pointer = reactive<Pointer>({
+  hz: 0,
+  sec: 0
 })
 
 const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
@@ -235,6 +242,11 @@ const handleClustering = (visiblePl: Record<number, boolean>, pl: ClusteringPlay
   visibleClustering.value = visiblePl
   selectedClustering.value?.push(pl)
   selectedClustering.value = selectedClustering.value?.filter(cl => visiblePl[cl.playlistId] === true)
+}
+
+const handlePointer = (data: Pointer) => {
+  pointer.sec = data.sec
+  pointer.hz = data.hz
 }
 
 const lastPlaylistId = ref(0)

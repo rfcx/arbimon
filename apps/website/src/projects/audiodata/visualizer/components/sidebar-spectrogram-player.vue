@@ -105,9 +105,9 @@
       </div>
       <div class="flex flex-row gap-x-1 items-center">
         <icon-custom-fi-navigation class="text-insight text-sm h-5" />
-        <span>{{ formatTime(duration) }}</span>
+        <span>{{ props.pointer.sec.toFixed(2) }}</span>
         s,
-        <span>{{ (props.visobject.span / 1000).toFixed(1) }} kHz</span>
+        <span>{{ (props.pointer.hz / 1000).toFixed(1) }} kHz</span>
       </div>
     </div>
   </div>
@@ -121,11 +121,13 @@ import type { Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualize
 
 import { type FreqFilter } from '../types'
 import SidebarControls from './sidebar-controls.vue'
+import { type Pointer } from './visualizer-spectrogram.vue'
 
 const props = defineProps<{
   visobject: Visobject
   isLoadingVisobject: boolean
   freqFilter?: FreqFilter
+  pointer: Pointer
 }>()
 
 const emit = defineEmits<{(event: 'emitCurrentTime', currentTime: number): void,
