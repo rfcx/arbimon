@@ -319,6 +319,7 @@
               :label="cl.species_name"
               class="flex flex-row items-center py-2 font-semibold text-xs border-t-[0.5px] border-util-gray-03 hover:bg-util-gray-02"
               :class="isSelected[cl.id] ? 'bg-util-gray-03' : ''"
+              @click="addSelectedClass(cl)"
             >
               <span
                 class="w-[40%] text-wrap ml-2"
@@ -628,6 +629,11 @@ const addValidation = (validation: Validation) => {
   const key = [validation.species, validation.songtype].join('-')
   const value = Object.values({ present: validation.present, presentReview: validation.presentReview, presentAed: validation.presentAed })
   validations.value[key] = value
+}
+
+const addSelectedClass = (projectClass: ClassesRecordingResponse) => {
+  isSelected.value = {}
+  isSelected.value[projectClass.id] = true
 }
 
 const selectClass = (projectClass: ClassesRecordingResponse) => {
