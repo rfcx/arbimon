@@ -185,15 +185,15 @@
         class="input-source cursor-crosshair relative"
         :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
         @mousedown.left="onMouseDownRoi"
-        @mousemove="onMouseMoveRoi"
+        @mousemove.prevent="onMouseMoveRoi"
         @mouseup="onMouseUpRoi"
       >
         <!-- Affixed Message -->
-        <div class="pl-5 absolute text-pitch font-medium top-6">
+        <div class="pl-5 absolute text-pitch font-medium top-6 select-none">
           Click to add {{ activeLayer }} to this recording.
           <div
             v-if="createBboxEditor.bbox && createBboxEditor.bbox.x1 !== 0"
-            class="mt-1 text-sm text-pitch"
+            class="mt-1 text-sm text-pitch select-none"
           >
             Press <kbd>esc</kbd> to cancel {{ activeLayer }} addition.
           </div>
@@ -219,7 +219,7 @@
           :title="'Create Tag'"
           :list-name="'Tag'"
           @emit-selected-item="handleNewTag"
-          @cancel="bboxValid = false"
+          @cancel="resetBBox()"
         />
         <VisualizerTemplateModal
           v-if="activeLayer === 'template'"
@@ -840,13 +840,14 @@ const handleResize = (): void => {
 }
 
 const onMouseDownRoi = (e: MouseEvent) => {
+  if (e.buttons !== 1) return
   bboxPointer.sec = x2sec(e.offsetX)
   bboxPointer.hz = y2hz(e.offsetY)
   createBboxEditor.value.add_point(bboxPointer.sec, bboxPointer.hz)
 }
 
 const onMouseMoveRoi = (e: MouseEvent) => {
-  if (e.buttons === 1 && e.offsetX > bboxPointer.sec) {
+  if (e.buttons === 1 && (x2sec(e.offsetX) > bboxPointer.sec || y2hz(e.offsetY) < bboxPointer.hz)) {
     bboxPointer.sec = x2sec(e.offsetX)
     bboxPointer.hz = y2hz(e.offsetY)
     createBboxEditor.value.add_tracer_point(bboxPointer.sec, bboxPointer.hz)
@@ -873,7 +874,7 @@ const setPointerData = (e: MouseEvent) => {
   emits('emitPointer', pointer)
 }
 
-const resetPointerData = (e: MouseEvent) => {
+const resetPointerData = () => {
   pointer.hz = 0
   pointer.sec = 0
   emits('emitPointer', pointer)
