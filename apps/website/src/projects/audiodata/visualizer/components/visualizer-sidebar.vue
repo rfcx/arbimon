@@ -112,6 +112,7 @@
         v-if="visobject"
         :visobject="visobject"
         @emit-species-visibility="$emit('emitSpeciesVisibility', $event)"
+        @update-validations="$emit('updateValidations')"
       />
       <SidebarTrainingSets
         v-if="visobject"
@@ -245,6 +246,7 @@ const props = defineProps<{
 }>()
 const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'updateColorSpectrogram', value: string): void,
+  (e: 'updateValidations'): void,
   (e: 'updateFreqFilter', value: FreqFilter): void,
   (e: 'updateTags'): void,
   (e: 'emitActiveLayer', value: string | undefined): void,

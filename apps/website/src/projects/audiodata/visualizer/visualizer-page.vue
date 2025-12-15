@@ -6,6 +6,7 @@
       :pointer="pointer"
       @update-current-time="handleCurrentTime"
       @update-color-spectrogram="handleColorSpectrogram"
+      @update-validations="updateValidations"
       @update-freq-filter="handleFreqFilter"
       @update-tags="handleTags"
       @emit-training-set="handleTrainingSet"
@@ -138,6 +139,10 @@ const handleCurrentTime = (value: number): void => {
 
 const handleColorSpectrogram = (value: string): void => {
   spectroColor.value = value
+  refetchRecording()
+}
+
+const updateValidations = (): void => {
   refetchRecording()
 }
 

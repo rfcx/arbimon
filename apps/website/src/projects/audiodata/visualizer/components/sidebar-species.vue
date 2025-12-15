@@ -454,7 +454,7 @@ const props = defineProps<{
   visobject: Visobject
 }>()
 
-const emits = defineEmits<{(e: 'emitSpeciesVisibility', value: boolean): void}>()
+const emits = defineEmits<{(e: 'emitSpeciesVisibility', value: boolean): void, (e: 'updateValidations'): void}>()
 
 const speciesHeader = ['Species', 'Sound', 'Annotation']
 const validations = ref<Record<string, number[]>>({})
@@ -714,6 +714,7 @@ const validate = async (val: number, dropdownId?: number | null, isClearOrAbsent
         showAlertDialog('success', 'Success', `Success to ${val === 1 ? 'validate' : val === 2 ? 'unvalidate' : 'clear'} the detection`)
         await nextTick()
         initDropdowns()
+        emits('updateValidations')
       },
       onError: (err) => {
         console.info('err', err)
