@@ -175,7 +175,7 @@
       />
       <!-- ROI box -->
       <div
-        class="input-source relative"
+        class="z-5 relative"
         :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
         @mousemove="setPointerData"
         @mouseleave="resetPointerData"
