@@ -25,7 +25,7 @@
             data-accordion-icon
             class="w-3 h-3 fa-chevron-up hidden"
           />
-          <span class="ml-1 text-sm font-bold">Soundscape Regions</span>
+          <span class="ml-1 text-sm font-semibold">Soundscape Regions</span>
         </div>
       </button>
       <div class="flex justify-row justify-end items-center gap-x-3">

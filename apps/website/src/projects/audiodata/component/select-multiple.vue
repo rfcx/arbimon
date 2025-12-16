@@ -24,6 +24,7 @@ const props = defineProps<{
   placeholder?: string
   hideAfterSelected?: boolean
   error?: string
+  borderColor? : string
 }>()
 
 const emit = defineEmits<{(e: 'update:modelValue', value: (string | number)[]): void }>()
@@ -136,7 +137,7 @@ function haveValuekey (key: string): boolean {
   >
     <div
       class="input-select-multiple flex flex-wrap overflow-y-auto pr-1"
-      :class="hasError ? 'border-[#d94b5a] ring-1 ring-[#d94b5a]' : 'border-util-gray-03'"
+      :class="hasError ? 'border-[#d94b5a] ring-1 ring-[#d94b5a]' : borderColor ? borderColor : 'border-util-gray-03'"
       :aria-invalid="hasError ? 'true' : 'false'"
       @click="openDropdown"
     >

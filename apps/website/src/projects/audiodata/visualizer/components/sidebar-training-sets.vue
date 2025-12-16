@@ -2,7 +2,7 @@
   <div
     id="accordion-collapse"
     data-accordion="collapse"
-    class="flex flex-col gap-y-2 px-4 py-2 bg-moss shadow"
+    class="flex flex-col gap-y-2 px-4 py-2 bg-moss shadow text-sm font-medium"
   >
     <div
       id="accordion-collapse-heading-training"
@@ -26,7 +26,7 @@
             data-accordion-icon
             class="w-3 h-3 fa-chevron-up hidden"
           />
-          <span>Training Sets (RF Algorithm)</span>
+          <span class="text-sm font-semibold">Training Sets (RF Algorithm)</span>
         </div>
       </button>
       <div
@@ -45,7 +45,7 @@
     </div>
     <div
       id="accordion-collapse-body-training"
-      class="hidden w-[90%] flex flex-col gap-y-2"
+      class="hidden flex flex-col gap-y-2"
       aria-labelledby="accordion-collapse-heading-training"
     >
       <div class="flex flex-row justify-between items-center">
@@ -86,7 +86,7 @@
     <div
       v-show="toggledTrainingSetMenu && selectedTrainingSetText !== ''"
       :id="'accordion-collapse-heading-training-sets-' + selectedTrainingSetText"
-      class="w-[90%] flex flex-row justify-between items-center"
+      class="flex flex-row justify-between items-center"
     >
       <button
         type="button"
@@ -151,7 +151,7 @@
     <div
       v-if="toggleTrainingSet"
       :id="'accordion-collapse-body-training-sets-' + selectedTrainingSetText"
-      class="w-[90%] flex flex-col gap-y-2 text-sm font-medium"
+      class="flex flex-col gap-y-2 text-sm font-medium"
       :aria-labelledby="'accordion-collapse-heading-training-sets-' + selectedTrainingSetText"
     >
       <ul
@@ -337,5 +337,9 @@ input::placeholder::-ms-input-placeholder {
 input::placeholder {
   --tw-placeholder-opacity: 1;
   color: rgba(161, 161, 158, var(--tw-placeholder-opacity)) !important;
+}
+input[type=text]:not(:disabled):hover {
+    background-color: #0a0a0a !important;
+    border-color: #FFFEFC !important;
 }
 </style>

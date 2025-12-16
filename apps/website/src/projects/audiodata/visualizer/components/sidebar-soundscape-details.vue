@@ -25,13 +25,13 @@
             data-accordion-icon
             class="w-3 h-3 fa-chevron-up hidden"
           />
-          <span class="ml-1 text-sm font-bold">{{ item.name }}</span>
+          <span class="ml-1 text-sm font-semibold">{{ item.name }}</span>
         </div>
       </button>
     </div>
     <div
       id="accordion-collapse-body-ss"
-      class="hidden w-[90%] flex flex-col gap-y-2 text-sm font-medium"
+      class="hidden flex flex-col gap-y-2 text-sm font-medium"
       aria-labelledby="accordion-collapse-heading-ss"
     >
       <div class="w-full text-insight">

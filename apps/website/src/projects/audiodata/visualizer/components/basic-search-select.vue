@@ -5,7 +5,7 @@
     @keydown.stop="onKeydown"
   >
     <div
-      class="h-[34px] flex items-center border rounded cursor-text text-insight bg-util-gray-04 border-util-gray-04 hover:(text-insight bg-[#0a0a0a] border-[#0a0a0a])"
+      class="h-[34px] flex items-center placeholder-util-gray-02 border rounded cursor-text text-insight bg-echo border-insight hover:(text-insight bg-[#0a0a0a] border-[#FFFEFC])"
       role="combobox"
       :aria-expanded="open"
       @click="toggle(true)"
@@ -22,7 +22,10 @@
           v-show="showListIcon"
           class="w-3 h-4 mr-2 my-2"
         />
-        <span class="truncate">
+        <span
+          class="truncate"
+          :class="selectedLabel? 'text-insight' : 'text-util-gray-02'"
+        >
           {{ selectedLabel || placeholder }}
         </span>
 
@@ -32,7 +35,7 @@
         ref="inputEl"
         v-model="search"
         type="search"
-        class="flex-1 h-[34px] outline-none text-insight rounded bg-transparent focus:ring-0 border-0 hover:(text-insight bg-[#0a0a0a] border-[#0a0a0a])"
+        class="input-search flex-1 h-[34px] outline-none text-insight rounded bg-transparent focus:ring-0 border-0 hover:(text-insight) placeholder:text-util-gray-02 placeholder:text-sm"
         :placeholder="placeholder"
         autocomplete="off"
       >
@@ -197,3 +200,10 @@ function clickOutside (ev: MouseEvent) {
 onMounted(() => document.addEventListener('mousedown', clickOutside))
 onBeforeUnmount(() => document.removeEventListener('mousedown', clickOutside))
 </script>
+
+<style lang="scss">
+  .input-search::placeholder {
+    color: #9ca3af;
+    font-size: 14px;
+  }
+</style>

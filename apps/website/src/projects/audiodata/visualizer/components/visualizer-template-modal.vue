@@ -28,7 +28,7 @@
             name="templateName"
             type="text"
             maxlength="80"
-            class="w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
+            class="placeholder-style placeholder-util-gray-02 w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency)"
             placeholder="Template Name"
             required
           >
@@ -52,7 +52,7 @@
               v-model="searchKeyword"
               type="text"
               placeholder="Search for species sounds"
-              class="form-control placeholder-style rounded h-[34px] w-full items-center inline-flex border-2 border-FFFEFC bg-moss flex-1 min-w-0 placeholder-util-gray-02"
+              class="placeholder-style form-control w-full border border-cloud rounded-md dark:(bg-pitch text-insight placeholder:text-insight) focus:(border-frequency ring-frequency) placeholder-util-gray-02"
               @input="onSearchInput"
             >
             <icon-fa-close

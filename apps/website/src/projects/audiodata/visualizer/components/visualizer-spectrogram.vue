@@ -7,8 +7,14 @@
       class="flex flex-row flex-nowrap relative h-screen"
     >
       <div
+        v-if="!visobject"
+        class="absolute inset-0 flex justify-center items-center text-sm font-medium"
+      >
+        <span>Please select a  {{ isSoundscape ? 'soundscape' : 'recording' }}</span>
+      </div>
+      <div
         v-if="visobject && visobject.isDisabled"
-        class="justify-center items-center pl-2 text-xl"
+        class="justify-center items-center pl-2 text-sm font-medium"
       >
         <span>Unavailable</span>
       </div>
@@ -53,6 +59,7 @@
 
       <!-- zoom -->
       <div
+        v-if="visobject"
         class="zoom-control-group absolute z-5 top-0 right-6"
       >
         <ZoomControl

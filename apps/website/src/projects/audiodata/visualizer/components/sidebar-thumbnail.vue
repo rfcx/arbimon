@@ -1,7 +1,7 @@
 <template>
   <div
     ref="thumbnailContainer"
-    class="p-[15px] bg-moss border-1 border-util-gray-04 overflow-y-auto max-h-[197px]"
+    class="p-[15px] bg-moss border-1 border-util-gray-04 overflow-y-auto max-h-[197px] text-sm font-medium"
   >
     <div
       class="max-h-[162px] text-insight"

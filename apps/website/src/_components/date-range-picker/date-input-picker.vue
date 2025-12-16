@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col text-sm font-medium">
     <label
       v-if="!hideLabel"
       class="block mb-2 font-medium text-gray-900 dark:text-secondary"
@@ -10,7 +10,7 @@
     <div class="relative flex-1">
       <input
         ref="datePickerInput"
-        class="w-full border text-secondary border-util-gray-04 rounded-md h-[34px] pl-7 pr-5
+        class="w-full border text-secondary border-util-gray-04 rounded-md h-[34px] pl-7 pr-5 text-sm font-medium
           dark:(bg-util-gray-04 text-secondary placeholder:text-placeholder)
           disabled:(cursor-not-allowed opacity-60)"
         type="text"

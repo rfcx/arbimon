@@ -2,7 +2,7 @@
   <div
     id="accordion-collapse"
     data-accordion="collapse"
-    class="flex flex-col gap-y-2 px-4 py-2 bg-moss shadow"
+    class="flex flex-col gap-y-2 px-4 py-2 bg-moss shadow text-sm font-medium"
   >
     <div id="accordion-collapse-heading-audio-events">
       <button
@@ -21,13 +21,13 @@
             data-accordion-icon
             class="w-3 h-3 fa-chevron-up hidden"
           />
-          <span class="ml-1">Audio Events</span>
+          <span class="ml-1 text-sm font-semibold">Audio Events</span>
         </div>
       </button>
     </div>
     <div
       id="accordion-collapse-body-audio-events"
-      class="hidden w-[90%] flex flex-col gap-y-2 text-sm font-medium"
+      class="hidden flex flex-col gap-y-2 text-sm font-medium"
       aria-labelledby="accordion-collapse-heading-audio-events"
     >
       <div class="text-sm">

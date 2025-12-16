@@ -2,7 +2,7 @@
   <div
     id="accordion-collapse-species"
     data-accordion="collapse"
-    class="flex flex-col gap-y-2 px-4 py-2 bg-moss shadow"
+    class="flex flex-col gap-y-2 px-4 py-2 bg-moss shadow text-sm font-medium"
   >
     <div
       id="accordion-collapse-heading-species"
@@ -24,7 +24,7 @@
             data-accordion-icon
             class="w-3 h-3 text-insight fa-chevron-up hidden"
           />
-          <span>Species Presence Validation</span>
+          <span class="text-sm font-semibold">Species Presence Validation</span>
         </div>
         <div class="flex flex-row justify-center gap-x-3 mr-2">
           <div class="min-w-20 flex flex-row justify-center cursor-default items-center gap-x-1 bg-[#D9D9D9] text-pitch rounded-full text-xs px-2 py-0.6">
@@ -56,7 +56,7 @@
     </div>
     <div
       id="accordion-collapse-body-species"
-      class="hidden w-[90%] flex flex-col gap-y-2"
+      class="hidden flex flex-col gap-y-2"
       aria-labelledby="accordion-collapse-heading-species"
     >
       <div class="flex flex-row items-center">
@@ -71,12 +71,12 @@
             v-model="searchKeyword"
             type="text"
             placeholder="Search for species sounds"
-            class="form-control placeholder-style rounded h-[34px] w-full items-center inline-flex border-2 border-FFFEFC bg-moss flex-1 min-w-0 placeholder-util-gray-02"
+            class="form-control placeholder-style rounded h-[34px] w-full items-center inline-flex border-1 border-insight bg-echo flex-1 min-w-0 placeholder-util-gray-02"
             @input="onSearchInput"
           >
           <icon-fa-close
             v-if="searchKeyword.length > 0"
-            class="h-3 text-util-gray-03 absolute top-2.5 right-2"
+            class="h-3 text-insight absolute top-2.5 right-2 cursor-pointer"
             @click="clearSearchInput()"
           />
         </div>
@@ -263,7 +263,7 @@
               :id="`validationAllDropdownBtn-${taxon}`"
               :data-dropdown-toggle="`validationAllDropdownToggle-${taxon}`"
               data-dropdown-placement="bottom"
-              class="w-[23%] flex flex-row justify-center items-center bg-util-gray-04 p-0 rounded-sm w-full"
+              class="w-[23%] flex flex-row justify-center items-center bg-util-gray-04 p-0 rounded-sm w-full hover:bg-[#0a0a0a]"
               :disabled="!store.userIsFullProjectMember"
             >
               {{ "---" }}
@@ -275,7 +275,7 @@
             >
               <ul
                 :aria-labelledby="`validationAllDropdownBtn-${taxon}`"
-                class="flex flex-col gap-y-1 rounded-md shadow bg-moss dark:bg-moss border-util-gray-03 border-1 px-4 py-3 w-60 text-sm"
+                class="flex flex-col gap-y-1 rounded-md shadow bg-moss dark:bg-moss border-util-gray-03 border-1 px-4 py-3 w-70 text-sm"
               >
                 <li
                   v-for="opt in valAllOptions"
@@ -317,12 +317,12 @@
               :id="`speciesClass-${cl.id}`"
               :key="`cl-${cl.id}`"
               :label="cl.species_name"
-              class="flex flex-row items-center py-2 font-semibold text-xs border-t-[0.5px] border-util-gray-03 hover:bg-util-gray-02"
+              class="flex flex-row items-center py-2 text-xs border-t-[0.5px] border-util-gray-03 hover:bg-util-gray-02"
               :class="isSelected[cl.id] ? 'bg-util-gray-03' : ''"
               @click="addSelectedClass(cl)"
             >
               <span
-                class="w-[40%] text-wrap ml-2"
+                class="w-[40%] text-wrap ml-1"
                 :title="cl.species_name"
               >
                 {{ cl.species_name }}
@@ -331,7 +331,7 @@
               <div class="w-[23%] flex flex-row justify-center items-center relative">
                 <div
                   v-if="valState(cl)?.showValidateOptions"
-                  class="flex flex-row justify-center items-center mr-2"
+                  class="flex flex-row justify-center items-center mr-2 hover:bg-[#0a0a0a]"
                 >
                   <icon-fas-minus
                     v-if="valState(cl)?.val === 2"
@@ -351,7 +351,7 @@
                   v-else
                   :id="`validationDropdownBtn-${cl.id}`"
                   :data-dropdown-toggle="`validationDropdownToggle-${cl.id}`"
-                  class="flex flex-row justify-center items-center bg-util-gray-04 p-1 rounded-sm w-full mr-2"
+                  class="flex flex-row justify-center items-center bg-util-gray-04 p-1 rounded-sm w-full mr-2 hover:bg-[#0a0a0a]"
                   :disabled="!store.userIsFullProjectMember"
                 >
                   <icon-fas-minus
@@ -700,7 +700,7 @@ const validate = async (val: number, dropdownId?: number | null, isClearOrAbsent
       onSuccess: async (result: RecordingValidateResponse[] | undefined) => {
         await refetchGetClasses()
         if (result === undefined) {
-          showAlertDialog('error', 'Error', `Error to ${val === 1 ? 'validate' : val === 2 ? 'unvalidate' : 'clear'} the detection`)
+          showAlertDialog('error', 'Error', `Error to ${val === 1 ? 'validate' : val === 0 ? 'unvalidate' : 'clear'} the detection`)
           return
         }
         result.forEach((res) => {
@@ -711,14 +711,14 @@ const validate = async (val: number, dropdownId?: number | null, isClearOrAbsent
             validations.value[key] = Object.values({ present: res.val, presentReview: 0 })
           }
         })
-        showAlertDialog('success', 'Success', `Success to ${val === 1 ? 'validate' : val === 2 ? 'unvalidate' : 'clear'} the detection`)
+        showAlertDialog('success', 'Success', `Success to ${val === 1 ? 'validate' : val === 0 ? 'unvalidate' : 'clear'} the detection`)
         await nextTick()
         initDropdowns()
         emits('updateValidations')
       },
       onError: (err) => {
         console.info('err', err)
-        showAlertDialog('error', 'Error', `Error to ${val === 1 ? 'validate' : val === 2 ? 'unvalidate' : 'clear'} the detection`)
+        showAlertDialog('error', 'Error', `Error to ${val === 1 ? 'validate' : val === 0 ? 'unvalidate' : 'clear'} the detection`)
       }
     })
   }
@@ -866,5 +866,10 @@ input::placeholder {
   font-style: normal;
   font-weight: 400;
   line-height: 20px;
+}
+
+input[type=text]:not(:disabled):hover {
+    background-color: #0a0a0a !important;
+    border-color: #FFFEFC !important;
 }
 </style>

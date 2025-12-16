@@ -113,11 +113,11 @@ const selectedProjectSlug = computed(() => store.project?.slug)
 const VITE_ARBIMON_LEGACY_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 
 const spectroColors = [
-  { name: 'Grayscale', value: 'mtrue', uri: '/src/_assets/spectrogram/spectro-gray.png' },
-  { name: 'Purple-Blue', value: 'mfalse', uri: '/src/_assets/spectrogram/spectro-blue-pink.png' },
-  { name: 'Red-Blue', value: 'mfalse_p2', uri: '/src/_assets/spectrogram/spectro-pink.png' },
-  { name: 'Brown-Green', value: 'mfalse_p3', uri: '/src/_assets/spectrogram/spectro-yellow.png' },
-  { name: 'Orange-Yellow', value: 'mfalse_p4', uri: '/src/_assets/spectrogram/spectro-orange.png' }
+  { name: 'Grayscale', value: 'mtrue', uri: '/images/spectro-gray.png' },
+  { name: 'Purple-Blue', value: 'mfalse', uri: '/images/spectro-blue-pink.png' },
+  { name: 'Red-Blue', value: 'mfalse_p2', uri: '/images/spectro-pink.png' },
+  { name: 'Brown-Green', value: 'mfalse_p3', uri: '/images/spectro-yellow.png' },
+  { name: 'Orange-Yellow', value: 'mfalse_p4', uri: '/images/spectro-orange.png' }
 ]
 const selectedSpectroColor = ref(spectroColors[0])
 const defaultColor = ref('mtrue')

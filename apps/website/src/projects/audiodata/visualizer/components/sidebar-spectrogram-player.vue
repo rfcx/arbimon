@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-4 px-4 py-2 bg-moss shadow">
+  <div class="flex flex-col gap-4 px-4 py-2 bg-moss shado text-sm font-medium">
     <!-- Progress bar -->
     <div class="flex-1 w-[90%]">
       <input

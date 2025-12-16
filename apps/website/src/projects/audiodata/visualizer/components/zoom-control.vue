@@ -1,15 +1,15 @@
 <template>
   <div :class="['zoom-control inline-flex items-center absolute', horizontal ? 'horizontal' : 'vertical']">
     <div
-      class="flex items-center gap-2"
-      :class="[horizontal ? 'horizontal flex-row' : 'vertical flex-col']"
+      v-if="horizontal"
+      class="flex items-center gap-2 horizontal flex-row"
     >
       <button
-        class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-0.5"
+        class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-1.5"
         @click="step(-1)"
       >
-        <icon-fas-minus
-          class="h-3 text-fog"
+        <icon-fa-minus
+          class="h-[12px] w-[9px] text-fog"
         />
       </button>
       <div
@@ -28,11 +28,47 @@
         />
       </div>
       <button
-        class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-0.5"
+        class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-1.5"
         @click="step(1)"
       >
         <icon-fa-plus
-          class="h-3 text-fog"
+          class="h-[12px] w-[9px] text-fog"
+        />
+      </button>
+    </div>
+    <div
+      v-else
+      class="flex items-center gap-2 vertical flex-col"
+    >
+      <button
+        class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-1.5"
+        @click="step(1)"
+      >
+        <icon-fa-plus
+          class="h-[12px] w-[9px] text-fog"
+        />
+      </button>
+      <div
+        ref="track"
+        class="zoom-track relative overflow-hidden mx-2 cursor-pointer"
+        @mousemove.prevent="onTrackMouseDown"
+        @mousedown.prevent="onTrackMouseDown"
+      >
+        <div
+          class="tick-marks absolute"
+          :class="horizontal ? 'h-2' : 'w-2'"
+        />
+        <div
+          class="btn zoom-marker bg-util-gray-04 border-util-gray-04 absolute p-0 width-[10px]"
+          :style="markerStyle"
+        />
+      </div>
+      <button
+        class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-1.5"
+        @click="step(-1)"
+      >
+        <icon-fa-minus
+          class="h-[12px] w-[9px] text-fog"
         />
       </button>
     </div>

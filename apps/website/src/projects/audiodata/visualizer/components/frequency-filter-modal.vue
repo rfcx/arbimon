@@ -23,7 +23,7 @@
           :img-src="getImg()"
           :max-freq="visobject.span"
         />
-        <div class="flex flex-row justify-between items-center gap-x-4">
+        <div class="flex flex-row justify-between items-center gap-x-4 mt-4">
           <button
             class="px-4 py-2 btn btn-secondary btn-medium w-full"
             @click="$emit('cancel')"

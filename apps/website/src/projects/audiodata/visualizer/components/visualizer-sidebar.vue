@@ -36,7 +36,7 @@
       >
         <BasicSearchSelect
           v-model="playlistSelected"
-          class="w-full"
+          class="w-full text-sm font-medium"
           :options="optionsPlaylist"
           :show-list-icon="true"
           placeholder="Select Playlist"
@@ -58,6 +58,7 @@
         <div class="col-span-7">
           <BasicSearchSelect
             v-model="siteSelected"
+            class="text-sm font-medium"
             :options="options"
             :show-map-icon="true"
             placeholder="Select site"
@@ -65,6 +66,7 @@
         </div>
         <div class="col-span-5">
           <DateInputPicker
+            ref="datePickerRef"
             :disabled="siteSelected === null || siteSelected === undefined"
             :initial-date="initialDate"
             :hide-label="true"
@@ -165,7 +167,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
-import { computed, inject, onMounted, ref, watch, watchEffect } from 'vue'
+import { computed, inject, nextTick, onMounted, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { RecordingResponse, RecordingTagResponse, SoundscapeItem, SoundscapeResponse, TagParams, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
@@ -390,8 +392,15 @@ watchEffect(() => {
   }
 })
 
+const datePickerRef = ref<InstanceType<typeof DateInputPicker> | null>(null)
+
 const onEmitSelectedDate = (date: { dateLocalIso: string }) => {
   initialDate.value = date.dateLocalIso
+
+  nextTick(() => {
+    const input = (datePickerRef.value as any)?.$refs?.datePickerInput as HTMLInputElement | undefined
+    input?.blur()
+  })
 }
 
 const handleFreqFilter = (filter: FreqFilter) => {

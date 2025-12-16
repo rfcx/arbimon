@@ -2,7 +2,7 @@
   <div
     id="accordion-collapse-soundscape-composition"
     data-accordion="collapse"
-    class="flex flex-col gap-y-2 px-4 py-2 bg-moss shadow"
+    class="flex flex-col gap-y-2 px-4 py-2 bg-moss shadow text-sm font-medium"
   >
     <div
       id="accordion-collapse-heading-soundscape"
@@ -24,7 +24,7 @@
             data-accordion-icon
             class="w-3 h-3 fa-chevron-up hidden"
           />
-          <span class="ml-1">Soundscape Composition</span>
+          <span class="ml-1 text-sm font-semibold">Soundscape Composition</span>
         </div>
       </button>
     </div>

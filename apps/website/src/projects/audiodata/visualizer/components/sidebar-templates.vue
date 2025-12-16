@@ -2,7 +2,7 @@
   <div
     id="accordion-collapse"
     data-accordion="collapse"
-    class="flex flex-col gap-y-2 px-4 py-2 bg-moss shadow"
+    class="flex flex-col gap-y-2 px-4 py-2 bg-moss shadow text-sm font-medium"
   >
     <div
       id="accordion-collapse-heading-templates"
@@ -26,7 +26,7 @@
             data-accordion-icon
             class="w-3 h-3 fa-chevron-up hidden"
           />
-          <span class="ml-1">Templates (Pattern Matching Analysis)</span>
+          <span class="ml-1 text-sm font-semibold">Templates (Pattern Matching Analysis)</span>
         </div>
       </button>
       <div
@@ -45,17 +45,22 @@
     </div>
     <div
       id="accordion-collapse-body-templates"
-      class="hidden w-[90%] flex flex-col gap-y-2 text-sm font-medium"
+      class="hidden flex flex-col gap-y-2 text-sm font-medium"
       aria-labelledby="accordion-collapse-heading-templates"
     >
-      <div class="flex flex-row justify-end gap-x-2">
+      <div class="flex flex-row gap-x-2 justify-between">
+        <span
+          :class="{
+            'invisible': !(spectrogramTemplates === undefined || spectrogramTemplates?.length === 0)
+          }"
+        >There are no templates in this recording.</span>
         <button
-          class="flex ml-2 items-center justify-center p-1 h-[20px] w-[32px] min-w-[32px] rounded-[6px] border-util-gray-01 bg-util-gray-03  cursor-pointer hover:bg-util-gray-04 transition"
+          class="flex items-center justify-center p-1 h-[20px] w-[32px] min-w-[32px] rounded-[6px] border-util-gray-01 bg-util-gray-03  cursor-pointer hover:bg-util-gray-04 transition"
           data-tooltip-target="tooltipSelectedTemplateId"
           data-tooltip-style="light"
           @click="toggleAddTemplate()"
         >
-          <icon-custom-ic-plus-icon class="text-util-gray-01 h-4" />
+          <icon-custom-ic-plus-icon class="h-4 text-frequency" />
         </button>
         <div
           id="tooltipSelectedTemplateId"
@@ -71,28 +76,22 @@
       </div>
       <ul
         v-if="spectrogramTemplates !== undefined && spectrogramTemplates?.length"
-        class="text-xs"
+        class="text-sm"
       >
-        <li
-          class="grid grid-cols-3 gap-x-6 text-white px-4 py-2 border-b-1 border-util-gray-03"
-        >
-          <span>Template</span>
-          <span>X scale</span>
-          <span>Y scale</span>
-        </li>
         <li
           v-for="template in spectrogramTemplates"
           :key="'template-' + template.id"
-          class="grid grid-cols-3 gap-x-6 text-white px-4 py-2 border-b-1 border-util-gray-03"
         >
-          <div>
-            <span>{{ template.name }}</span>
+          <div class="border-t-1 border-util-gray-03 p-[5px]">
+            <span class="flex">{{ template.name }}</span>
+            <span class="flex">{{ template.species_name }} {{ template.songtype_name }}</span>
           </div>
-          <span>{{ template.x1.toFixed(2) }} s - {{ template.x2.toFixed(2) }} s</span>
-          <span>{{ (template.y1/1000).toFixed(2) }} kHz - {{ (template.y2/1000).toFixed(2) }} kHz</span>
+          <div class="border-t-1 border-util-gray-03 p-[5px] grid grid-cols-2">
+            <span>{{ template.x1.toFixed(2) }} s - {{ template.x2.toFixed(2) }} s</span>
+            <span class="text-center">{{ (template.y1/1000).toFixed(2) }} kHz - {{ (template.y2/1000).toFixed(2) }} kHz</span>
+          </div>
         </li>
       </ul>
-      <span v-else>There are no templates in this recording.</span>
     </div>
   </div>
 </template>
