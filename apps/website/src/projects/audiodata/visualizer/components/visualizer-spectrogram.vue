@@ -210,12 +210,22 @@
         <div
           v-if="createBboxEditor.bbox"
           class="absolute border-1 border-[rgba(0,0,255)] bg-[rgba(0,0,255,0.05)]"
-          :style="{ left: sec2x(createBboxEditor.bbox.x1, 1) + 'px', top: hz2y(createBboxEditor.bbox.y2, 1) + 'px', width: getDsec2width(createBboxEditor.bbox.x2, createBboxEditor.bbox.x1, 1), height: getDhz2height(createBboxEditor.bbox.y2, createBboxEditor.bbox.y1)}"
+          :class="{
+            'border-[#ff5340] bg-[rgba(255,83,64,0.05)]': activeLayer === 'tag',
+            'border-[#5340ff] bg-[rgba(83,64,255,0.05)]': activeLayer === 'Training Set ROI Box',
+            'border-[#ffa600] bg-[rgba(255,174,0,0.05)]': activeLayer === 'template'
+          }"
+          :style="{
+            left: sec2x(createBboxEditor.bbox.x1, 1) + 'px',
+            top: hz2y(createBboxEditor.bbox.y2, 1) + 'px',
+            width: getDsec2width(createBboxEditor.bbox.x2, createBboxEditor.bbox.x1, 1),
+            height: getDhz2height(createBboxEditor.bbox.y2, createBboxEditor.bbox.y1)
+          }"
         >
-          <icon-custom-fi-circle-dot class="w-3 h-3 absolute control-point -top-6px -left-6px cp-resize-tl" />
-          <icon-custom-fi-circle-dot class="w-3 h-3 absolute control-point -top-6px -right-6px cp-resize-tr" />
-          <icon-custom-fi-circle-dot class="w-3 h-3 absolute control-point -bottom-6px -left-6px cp-resize-bl" />
-          <icon-custom-fi-circle-dot class="w-3 h-3 absolute control-point -bottom-6px -right-6px cp-resize-br" />
+          <icon-custom-fi-circle class="w-3 h-3 text-rgba(0,0,255) absolute control-point -top-6px -left-6px cp-resize-tl" />
+          <icon-custom-fi-circle class="w-3 h-3 text-rgba(0,0,255) absolute control-point -top-6px -right-6px cp-resize-tr" />
+          <icon-custom-fi-circle class="w-3 h-3 text-rgba(0,0,255) absolute control-point -bottom-6px -left-6px cp-resize-bl" />
+          <icon-custom-fi-circle class="w-3 h-3 text-rgba(0,0,255) absolute control-point -bottom-6px -right-6px cp-resize-br" />
         </div>
         <VisualizerTagBboxModal
           v-if="activeLayer === 'tag'"

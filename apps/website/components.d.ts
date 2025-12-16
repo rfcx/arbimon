@@ -26,6 +26,7 @@ declare module 'vue' {
     IconCustomFiArbiAssistantIcon: typeof import('~icons/custom-icons/fi-arbi-assistant-icon')['default']
     IconCustomFiArbiAssistantSend: typeof import('~icons/custom-icons/fi-arbi-assistant-send')['default']
     IconCustomFiCheckCircle: typeof import('~icons/custom-icons/fi-check-circle')['default']
+    IconCustomFiCircle: typeof import('~icons/custom-icons/fi-circle')['default']
     IconCustomFiCircleDot: typeof import('~icons/custom-icons/fi-circle-dot')['default']
     IconCustomFiClipboard: typeof import('~icons/custom-icons/fi-clipboard')['default']
     IconCustomFiClose: typeof import('~icons/custom-icons/fi-close')['default']
