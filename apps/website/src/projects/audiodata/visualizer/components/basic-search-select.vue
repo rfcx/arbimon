@@ -49,8 +49,8 @@
     <ul
       v-show="open"
       :id="listboxId"
-      class="absolute z-50 mt-1 max-h-60 max-w-full overflow-auto rounded bg-pitch border border-util-gray-04"
-      :class="{'w-full' : wFull}"
+      class="absolute z-50 mt-1 max-h-60 overflow-auto rounded bg-pitch border border-util-gray-04"
+      :class="[ wFull ? 'w-full' : '', widthClass ?? 'max-w-full' ]"
       role="listbox"
     >
       <li
@@ -106,6 +106,7 @@ const props = defineProps<{
   showMapIcon?: boolean
   showListIcon?: boolean
   wFull?: boolean
+  widthClass?: string
 }>()
 
 const emit = defineEmits<{ 'update:modelValue':[string | number | null] }>()

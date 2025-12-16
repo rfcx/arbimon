@@ -39,6 +39,7 @@
           class="w-full text-sm font-medium"
           :options="optionsPlaylist"
           :show-list-icon="true"
+          :w-full="true"
           placeholder="Select Playlist"
         />
         <PaginationControl
@@ -61,6 +62,7 @@
             class="text-sm font-medium"
             :options="options"
             :show-map-icon="true"
+            width-class="w-80"
             placeholder="Select site"
           />
         </div>
@@ -132,6 +134,7 @@
         v-if="visobject"
         :visobject="visobject"
         :soundscape-response="soundscape"
+        :soundscape-composition="soundscapeComposition"
         @on-emit-validation="onEmitSounscapeValidation"
       />
       <SidebarAudioEvents
@@ -181,7 +184,7 @@ import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetPlaylists, useGetSoundscape, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
 import { useSites } from '../../_composables/use-sites'
-import { useDeleteRecordingTag, useGetAed, useGetClustering, useGetPlaylistInfo, useGetRecordingTag, usePostSoundscapeComposition, usePutRecordingTag } from '../../_composables/use-visualizer'
+import { useDeleteRecordingTag, useGetAed, useGetClustering, useGetPlaylistInfo, useGetRecordingTag, useGetSoundscapeComposition, usePostSoundscapeComposition, usePutRecordingTag } from '../../_composables/use-visualizer'
 import { type BboxGroupTags, type FreqFilter } from '../types'
 import BasicSearchSelect from './basic-search-select.vue'
 import PaginationControl from './pagination-control.vue'
@@ -314,6 +317,7 @@ const { isPending: isAddingTag, mutate: mutateRecordingTag } = usePutRecordingTa
 const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDeleteRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
 const { data: soundscape, refetch: refetchGetSoundscapeComposition } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
+const { data: soundscapeComposition } = useGetSoundscapeComposition(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { mutate: mutatePostSoundscapeComposition } = usePostSoundscapeComposition(apiClientArbimon, selectedProjectSlug, browserTypeId.value as string)
 
 const playlistSelected = ref<number | undefined>(undefined)

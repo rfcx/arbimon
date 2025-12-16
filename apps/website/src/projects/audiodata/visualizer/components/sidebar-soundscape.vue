@@ -51,6 +51,7 @@
             <button
               class="flex items-center justify-center h-[24px] w-[24px] py-[1px] px-[6px] rounded-l bg-util-gray-04 hover:bg-echo"
               title="Annotate as Present"
+              :class="{ 'bg-echo': isSelect(item.id, 1) }"
               @click="validateSoundscapeComposition(item.id, 1)"
             >
               <icon-fa-check class="text-[#7fa2ec] w-4 h-4" />
@@ -59,6 +60,7 @@
             <button
               class="flex items-center justify-center h-[24px] w-[24px] py-[2px] px-[7px] rounded-r bg-util-gray-04 hover:bg-echo"
               title="Annotate as Absent"
+              :class="{ 'bg-echo': isSelect(item.id, 0) }"
               @click="validateSoundscapeComposition(item.id, 0)"
             >
               <icon-fa-times class="text-[#ffe680] w-4 h-4" />
@@ -83,11 +85,12 @@ import { initAccordions } from 'flowbite'
 import { computed, nextTick, onMounted, watch } from 'vue'
 
 import type { SoundscapeResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
-import type { Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import type { CounSoundscapeCompositiontById, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 const props = defineProps<{
   visobject: Visobject
   soundscapeResponse?: SoundscapeResponse[]
+  soundscapeComposition?: CounSoundscapeCompositiontById
 }>()
 
 export interface SoundItem {
@@ -133,6 +136,11 @@ onMounted(async () => {
   await nextTick()
   initAccordions()
 })
+
+function isSelect (id: number, expectedValue: number): boolean {
+  if (!props.soundscapeComposition) return false
+  return props.soundscapeComposition[id] === expectedValue
+}
 </script>
 
 <style lang="scss">

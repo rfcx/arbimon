@@ -749,3 +749,17 @@ const fetchSpondscape = (response: AxiosResponse<SoundscapeResponse, any>): Soun
   }
   return soundscapes
 }
+
+export type CounSoundscapeCompositiontById = Record<number, number>
+
+export const apiGetSoundscapeComposition = async (
+  apiClient: AxiosInstance,
+  slug: string,
+  recordingId: string
+): Promise<CounSoundscapeCompositiontById> => {
+  const url = `/legacy-api/project/${slug}/soundscape-composition/annotations/${recordingId}`
+
+  const response = await apiClient.get(url)
+
+  return response.data
+}
