@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="visible"
-    class="fixed inset-0 z-[9999] isolate flex items-center justify-center ml-120"
+    class="fixed inset-0 z-50 isolate flex items-center justify-center ml-120"
   >
     <div class="bg-moss rounded-xl shadow-lg max-w-md w-full p-6">
       <div class="flex flex-col gap-y-6">

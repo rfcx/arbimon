@@ -189,7 +189,8 @@
       />
       <div
         v-if="activeLayer && activeLayer !== 'New Training Set' && activeLayer !== 'aed'"
-        class="input-source cursor-crosshair relative"
+        ref="containerRef"
+        class="input-source cursor-crosshair relative z-5"
         :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
         @mousedown.left="onMouseDownRoi"
         @mousemove.prevent="onMouseMoveRoi"
@@ -227,31 +228,31 @@
           <icon-custom-fi-circle class="w-3 h-3 text-rgba(0,0,255) absolute control-point -bottom-6px -left-6px cp-resize-bl" />
           <icon-custom-fi-circle class="w-3 h-3 text-rgba(0,0,255) absolute control-point -bottom-6px -right-6px cp-resize-br" />
         </div>
-        <VisualizerTagBboxModal
-          v-if="activeLayer === 'tag'"
-          v-model="tagKeyword"
-          :keyword="tagKeyword"
-          :visible="bboxValid"
-          :items="tagKeyword.length && tagKeyword.length > 3 ? searchedTags?.map((tag) => { return {id: tag.tag_id, label: tag.tag }}) : projectTags?.map((tag) => { return {id: tag.tag_id, label: tag.tag }})"
-          :title="'Create Tag'"
-          :list-name="'Tag'"
-          @emit-selected-item="handleNewTag"
-          @cancel="resetBBox()"
-        />
-        <VisualizerTemplateModal
-          v-if="activeLayer === 'template'"
-          :visible="bboxValid"
-          @emit-template-data="handleNewTemplate"
-          @cancel="resetBBox()"
-        />
-        <VisualizerTrainingSetBboxModal
-          v-if="activeLayer === 'Training Set ROI Box' && trainingSet"
-          :title="'Training Set'"
-          :training-set-name="trainingSet.name"
-          :visible="bboxValid"
-          @handle-action="handleNewTrainingSet"
-        />
       </div>
+      <VisualizerTagBboxModal
+        v-if="activeLayer === 'tag'"
+        v-model="tagKeyword"
+        :keyword="tagKeyword"
+        :visible="bboxValid"
+        :items="tagKeyword.length && tagKeyword.length > 3 ? searchedTags?.map((tag) => { return {id: tag.tag_id, label: tag.tag }}) : projectTags?.map((tag) => { return {id: tag.tag_id, label: tag.tag }})"
+        :title="'Create Tag'"
+        :list-name="'Tag'"
+        @emit-selected-item="handleNewTag"
+        @cancel="resetBBox()"
+      />
+      <VisualizerTemplateModal
+        v-if="activeLayer === 'template'"
+        :visible="bboxValid"
+        @emit-template-data="handleNewTemplate"
+        @cancel="resetBBox()"
+      />
+      <VisualizerTrainingSetBboxModal
+        v-if="activeLayer === 'Training Set ROI Box' && trainingSet"
+        :title="'Training Set'"
+        :training-set-name="trainingSet.name"
+        :visible="bboxValid"
+        @handle-action="handleNewTrainingSet"
+      />
       <!-- Tags layer -->
       <div v-if="spectrogramTags && layerVisibility.tag === true">
         <div
@@ -578,6 +579,7 @@ const toggledTemplateBox = ref<number>()
 const toggledAedBox = ref<number>()
 const toggledClustering = ref<number>()
 const toggledSoundscapeRegion = ref<number>()
+const containerRef = ref<HTMLElement | null>(null)
 
 const zoomData = reactive<{ x: number; y: number; levelx?: number[]; levely?: number[], maxSec2px: number, maxHz2px: number }>({
   x: 0,
@@ -851,19 +853,26 @@ const handleResize = (): void => {
 }
 
 const onMouseDownRoi = (e: MouseEvent) => {
-  if (e.buttons !== 1) return
-  bboxPointer.sec = x2sec(e.offsetX)
-  bboxPointer.hz = y2hz(e.offsetY)
+  setBboxPointer(e)
   createBboxEditor.value.add_point(bboxPointer.sec, bboxPointer.hz)
 }
 
 const onMouseMoveRoi = (e: MouseEvent) => {
-  if (e.buttons === 1 && (x2sec(e.offsetX) > bboxPointer.sec || y2hz(e.offsetY) < bboxPointer.hz)) {
-    bboxPointer.sec = x2sec(e.offsetX)
-    bboxPointer.hz = y2hz(e.offsetY)
-    createBboxEditor.value.add_tracer_point(bboxPointer.sec, bboxPointer.hz)
-  }
+  setBboxPointer(e)
+  createBboxEditor.value.add_tracer_point(bboxPointer.sec, bboxPointer.hz)
 }
+
+ const setBboxPointer = (e: MouseEvent) => {
+  if (!containerRef.value) return
+  if ((e.buttons & 1) !== 1) return
+  const rect = containerRef.value.getBoundingClientRect()
+  const x = e.clientX - rect.left
+  const y = e.clientY - rect.top
+  const clampedX = Math.max(0, Math.min(x, rect.width))
+  const clampedY = Math.max(0, Math.min(y, rect.height))
+  bboxPointer.sec = x2sec(clampedX)
+  bboxPointer.hz = y2hz(clampedY)
+ }
 
 const onMouseUpRoi = () => {
   createBboxEditor.value.add_point(bboxPointer.sec, bboxPointer.hz)
