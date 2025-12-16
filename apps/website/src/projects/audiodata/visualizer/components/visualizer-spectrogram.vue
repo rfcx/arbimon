@@ -248,7 +248,7 @@
           v-for="(tag, index) in spectrogramTags"
           :key="index"
           class="border-1 border-[#ff5340] bg-[rgba(255,83,64,0.05)] z-5 cursor-pointer absolute"
-          :class="{ 'roi-selected': toggledTag === tag.bbox.id }"
+          :class="{ 'bg-[rgba(255,83,64,0.2)]': toggledTag === tag.bbox.id }"
           :style="{
             left: sec2x(tag.bbox.t0 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
             top: hz2y(tag.bbox.f1 ?? 0, 1) + legendMetrics.axis_margin_top + 'px',
@@ -256,10 +256,9 @@
             height: getDhz2height(tag.bbox.f1 ?? 0, tag.bbox.f0 ?? 0)
           }"
           tabindex="-1"
-          :title="'Tag: ' + getTagNames(tag.tags)"
           data-tooltip-style="dark"
           :data-tooltip-target="`tagTooltipId-${index}`"
-          @click="$event.stopPropagation(); toggleTag(tag.bbox.id)"
+          @click="$event.stopPropagation(); toggleTag(tag.bbox.id);"
         />
         <!-- Tags Tooltips -->
         <div
@@ -282,7 +281,7 @@
           v-for="(pmRoi, index) in spectrogramPM"
           :key="index"
           class="border-1 border-[#268f4b] bg-[rgba(38,143,75,0.05)] z-5 cursor-pointer absolute"
-          :class="{ 'roi-selected': toggledPmRoiBox === pmRoi.patternMatchingRoiId }"
+          :class="{ 'bg-[rgba(38,143,75,0.2)]': toggledPmRoiBox === pmRoi.patternMatchingRoiId }"
           :style="{
             left: sec2x(pmRoi.x1 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
             top: hz2y(pmRoi.y2 ?? 0, 1) + legendMetrics.axis_margin_top + 'px',
@@ -290,7 +289,6 @@
             height: getDhz2height(pmRoi.y2 ?? 0, pmRoi.y1 ?? 0)
           }"
           tabindex="-1"
-          :title="'Patter Matching Roi Box: ' + pmRoi.name"
           data-tooltip-style="dark"
           :data-tooltip-target="`pmTooltipId-${index}`"
           @click="$event.stopPropagation(); togglePmRoiBox(pmRoi.patternMatchingRoiId)"
@@ -316,7 +314,7 @@
           v-for="(ts, index) in spectrogramTrainingSets"
           :key="index"
           class="border-1 border-[#5340ff] bg-[rgba(83,64,255,0.05)] z-5 cursor-pointer absolute"
-          :class="{ 'roi-selected': toggledTrainingSet === ts.bbox.id }"
+          :class="{ 'bg-[rgba(83,64,255,0.2)]': toggledTrainingSet === ts.bbox.id }"
           :style="{
             left: sec2x(ts.bbox.x1 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
             top: hz2y(ts.bbox.y2 ?? 0, 1) + legendMetrics.axis_margin_top + 'px',
@@ -324,7 +322,6 @@
             height: getDhz2height(ts.bbox.y2 ?? 0, ts.bbox.y1 ?? 0)
           }"
           tabindex="-1"
-          :title="'Training Set: ' + getTrainingSetsNames(ts.ts)"
           data-tooltip-style="dark"
           :data-tooltip-target="`tsTooltipId-${index}`"
           @click="$event.stopPropagation(); toggleTrainingSet(ts.bbox.id)"
@@ -350,7 +347,7 @@
           v-for="(template, index) in spectrogramTemplates"
           :key="index"
           class="border-1 border-[#ffa600] bg-[rgba(255,174,0,0.05)] z-5 cursor-pointer absolute"
-          :class="{ 'roi-selected': toggledTemplateBox === template.id }"
+          :class="{ 'bg-[rgba(255,174,0,0.2)]': toggledTemplateBox === template.id }"
           :style="{
             left: sec2x(template.x1 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
             top: hz2y(template.y2 ?? 0, 1) + legendMetrics.axis_margin_top + 'px',
@@ -394,7 +391,6 @@
             'background-color': detection.backgroundColor
           }"
           tabindex="-1"
-          :title="'AED: ' + detection.name"
           data-tooltip-style="dark"
           :data-tooltip-target="`aedTooltipId-${index}`"
           @click="$event.stopPropagation(); toggleAed(detection.aedId)"
@@ -430,7 +426,6 @@
             'background-color': cl.backgroundColor
           }"
           tabindex="-1"
-          :title="'Clustering Playlist: ' + cl.playlistName"
           data-tooltip-style="dark"
           :data-tooltip-target="`clusterTooltipId-${index}`"
           @click="$event.stopPropagation(); toggleClustering(cl.aedId)"
@@ -466,7 +461,6 @@
             'background-color': 'rgba(8, 0, 53, 0.3)'
           }"
           tabindex="-1"
-          :title="'Soundscape Region: ' + sr.name"
           data-tooltip-style="dark"
           :data-tooltip-target="`soundscapeRegionTooltipId-${index}`"
           @click="$event.stopPropagation(); toggleSoundscapeRegion(sr.id)"
