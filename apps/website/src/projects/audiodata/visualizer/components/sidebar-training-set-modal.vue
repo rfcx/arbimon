@@ -47,6 +47,11 @@
               required
               @click="toggleInput = !toggleInput"
             >
+            <icon-fa-close
+              v-if="searchKeyword.length > 0"
+              class="h-3 text-util-gray-03 absolute right-2 top-[35%] cursor-pointer"
+              @click="clearSearchInput()"
+            />
             <div
               class="absolute w-5/6 left-4 z-60 bg-white rounded-md shadow dark:bg-moss mt-2 border-util-gray-03 border-1"
               :class="{'hidden': toggleInput === false }"
@@ -141,6 +146,10 @@ const clearData = () => {
   selectedClass.value = undefined
   searchKeyword.value = ''
   trainingSetName.value = ''
+}
+
+const clearSearchInput = () => {
+  searchKeyword.value = ''
 }
 
 const onEmitTrainingSet = () => {

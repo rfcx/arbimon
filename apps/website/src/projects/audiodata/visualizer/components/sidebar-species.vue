@@ -711,7 +711,6 @@ const validate = async (val: number, dropdownId?: number | null, isClearOrAbsent
             validations.value[key] = Object.values({ present: res.val, presentReview: 0 })
           }
         })
-        showAlertDialog('success', 'Success', `Success to ${val === 1 ? 'validate' : val === 0 ? 'unvalidate' : 'clear'} the detection`)
         await nextTick()
         initDropdowns()
         emits('updateValidations')

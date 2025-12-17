@@ -57,7 +57,7 @@
             >
             <icon-fa-close
               v-if="searchKeyword.length > 0"
-              class="h-3 text-util-gray-03 absolute top-2.5 right-2"
+              class="h-3 text-util-gray-03 absolute top-[12px] right-2 cursor-pointer"
               @click="clearSearchInput()"
             />
           </div>

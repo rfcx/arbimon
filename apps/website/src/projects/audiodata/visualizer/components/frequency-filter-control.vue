@@ -20,7 +20,7 @@
     />
     <button
       class="btn btn-small btn-secondary bg-util-gray-04 absolute text-[11px] p-1 rounded-sm w-16
-        -translate-y-[50%] -left-6 top focus:ring-0 focus:ring-offset-0"
+        -translate-y-[50%] -left-3 top focus:ring-0 focus:ring-offset-0"
       :style="{ top: topPosition }"
       @mousedown="onMouseDown"
     >
@@ -29,7 +29,7 @@
 
     <button
       class="btn btn-small btn-secondary bg-util-gray-04 absolute text-[11px] p-1 rounded-sm w-16
-        -translate-y-[50%] -left-6 bottom focus:ring-0 focus:ring-offset-0"
+        -translate-y-[50%] -left-3 bottom focus:ring-0 focus:ring-offset-0"
       :style="{ top: bottomPosition }"
       @mousedown="onMouseDown"
     >
