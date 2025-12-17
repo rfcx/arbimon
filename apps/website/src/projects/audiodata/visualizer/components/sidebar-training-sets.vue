@@ -57,7 +57,7 @@
           placeholder="Select a training set"
         />
         <button
-          class="flex ml-2 items-center justify-center p-1 h-[34px] w-[34px] min-w-[34px] rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
+          class="flex ml-2 items-center justify-center p-1 h-7 w-7 min-w-7 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
           data-tooltip-target="tooltipTrainingSetsId"
           data-tooltip-style="light"
           @click="toggleCreateTrainingSet()"
@@ -110,12 +110,12 @@
       </button>
       <div class="flex flex-row justify-center gap-x-2">
         <button
-          class="flex ml-2 items-center justify-center p-1 h-[20px] w-[32px] min-w-[32px] rounded-[6px] border-util-gray-01 bg-util-gray-03  cursor-pointer hover:bg-util-gray-04 transition"
+          class="flex ml-2 items-center justify-center p-1 h-[20px] w-[20px] min-w-[20px] rounded-[4px] border-util-gray-01 bg-util-gray-03 cursor-pointer hover:bg-util-gray-04 transition"
           data-tooltip-target="tooltipSelectedTrainingSetId"
           data-tooltip-style="light"
           @click="toggleAddTsRoiBox()"
         >
-          <icon-custom-ic-plus-icon class="text-util-gray-01 h-4" />
+          <icon-custom-ic-plus-icon class="text-util-gray-01 h-3" />
         </button>
         <div
           id="tooltipSelectedTrainingSetId"
@@ -337,9 +337,5 @@ input::placeholder::-ms-input-placeholder {
 input::placeholder {
   --tw-placeholder-opacity: 1;
   color: rgba(161, 161, 158, var(--tw-placeholder-opacity)) !important;
-}
-input[type=text]:not(:disabled):hover {
-    background-color: #0a0a0a !important;
-    border-color: #FFFEFC !important;
 }
 </style>

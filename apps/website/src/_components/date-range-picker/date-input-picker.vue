@@ -219,13 +219,13 @@ defineExpose({ resetDatePicker })
 
 input[type='text']:not(:disabled):focus {
   background-color: #0a0a0a !important;
-  border-color: #0a0a0a !important;
+  border-color: #ADFF2C !important;
   box-shadow: 0 0 0 1px #0a0a0a !important;
 }
 
 input[type='text']:not(:disabled):hover {
   background-color: #0a0a0a !important;
-  border-color: #0a0a0a !important;
+  border-color: #ADFF2C !important;
 }
 
 input[type='text']:disabled {

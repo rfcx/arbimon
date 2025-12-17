@@ -55,7 +55,7 @@
           }"
         >There are no templates in this recording.</span>
         <button
-          class="flex items-center justify-center p-1 h-[20px] w-[32px] min-w-[32px] rounded-[6px] border-util-gray-01 bg-util-gray-03  cursor-pointer hover:bg-util-gray-04 transition"
+          class="flex items-center justify-center p-1 h-7 w-7 min-w-7 rounded-[4px] border-util-gray-01 bg-util-gray-03  cursor-pointer hover:bg-util-gray-04 transition"
           data-tooltip-target="tooltipSelectedTemplateId"
           data-tooltip-style="light"
           @click="toggleAddTemplate()"

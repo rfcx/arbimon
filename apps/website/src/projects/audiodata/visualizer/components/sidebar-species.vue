@@ -27,14 +27,14 @@
           <span class="text-sm font-semibold">Species Presence Validation</span>
         </div>
         <div class="flex flex-row justify-center gap-x-3 mr-2">
-          <div class="min-w-20 flex flex-row justify-center cursor-default items-center gap-x-1 bg-[#D9D9D9] text-pitch rounded-full text-xs px-2 py-0.6">
+          <div class="min-w-10 flex flex-row justify-center cursor-default items-center bg-[#D9D9D9] text-pitch rounded-full text-xs font-semibold px-[7px] py-[1px]">
             <icon-fa-check
-              class="h-3 text-[#1F57CC]"
+              class="h-[10px] text-[#1F57CC]"
             />
             <span>{{ getSpeciesPresentCount(visobject.validations) }}</span>
             <span>/</span>
             <icon-fa-close
-              class="h-3 text-[#E6B900]"
+              class="h-[10px] text-[#E6B900]"
             />
             <span>{{ getSpeciesAbsentCount(visobject.validations) }}</span>
           </div>
@@ -71,7 +71,7 @@
             v-model="searchKeyword"
             type="text"
             placeholder="Search for species sounds"
-            class="form-control placeholder-style rounded h-[34px] w-full items-center inline-flex border-1 border-insight bg-echo flex-1 min-w-0 placeholder-util-gray-02"
+            class="input-highlight form-control placeholder-style rounded h-[34px] w-full items-center inline-flex border-1 border-util-gray-02 bg-echo flex-1 min-w-0 placeholder-util-gray-02 focus:border-frequency"
             @input="onSearchInput"
           >
           <icon-fa-close
@@ -868,8 +868,4 @@ input::placeholder {
   line-height: 20px;
 }
 
-input[type=text]:not(:disabled):hover {
-    background-color: #0a0a0a !important;
-    border-color: #FFFEFC !important;
-}
 </style>
