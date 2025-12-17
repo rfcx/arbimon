@@ -137,7 +137,13 @@ function haveValuekey (key: string): boolean {
   >
     <div
       class="input-select-multiple flex flex-wrap overflow-y-auto pr-1"
-      :class="hasError ? 'border-[#d94b5a] ring-1 ring-[#d94b5a]' : borderColor ? borderColor : 'border-util-gray-03'"
+      :class="[
+        hasError
+          ? 'border-[#d94b5a] ring-1 ring-[#d94b5a]'
+          : isOpen
+            ? 'border-frequency'
+            : borderColor || 'border-util-gray-03'
+      ]"
       :aria-invalid="hasError ? 'true' : 'false'"
       @click="openDropdown"
     >
@@ -353,7 +359,7 @@ function haveValuekey (key: string): boolean {
 
 <style scoped>
 .input-select-multiple {
-  @apply bg-echo text-insight w-full rounded rounded-md text-sm placeholder-insight border;
+  @apply bg-echo text-insight w-full rounded-md text-sm placeholder-insight border-1 hover:border-frequency focus:border-frequency;
   --chip-h: 28px;
   --line-gap: 6px;
   max-height: calc(var(--chip-h) * 3 + var(--line-gap) * 2 + 8px);

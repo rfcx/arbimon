@@ -60,7 +60,7 @@
           class="flex-1 min-w-0 placeholder-util-gray-02 h-[34px] "
           :options="staticTags ?? []"
           placeholder="Add new tag or annotate spectrogram"
-          border-color="border-insight"
+          border-color="border-util-gray-02"
         />
         <icon-custom-ic-loading
           v-if="isAddingTag"

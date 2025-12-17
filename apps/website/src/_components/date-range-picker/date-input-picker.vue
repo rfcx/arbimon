@@ -10,9 +10,9 @@
     <div class="relative flex-1">
       <input
         ref="datePickerInput"
-        class="w-full border text-secondary border-util-gray-04 rounded-md h-[34px] pl-7 pr-5 text-sm font-medium
-          dark:(bg-util-gray-04 text-secondary placeholder:text-placeholder)
-          disabled:(cursor-not-allowed opacity-60)"
+        class="w-full border text-secondary border-util-gray-02 rounded-md h-[34px] pl-7 pr-5 text-sm font-medium
+          dark:(bg-echo text-secondary placeholder:text-placeholder)
+          disabled:(cursor-not-allowed opacity-60 border-util-gray-04)"
         type="text"
         :placeholder="placeholder"
         :disabled="isDisabled"
@@ -20,7 +20,7 @@
       <div
         v-if="isDisabled || !hasSelected"
         class="overlay-date pointer-events-none absolute inset-0 flex items-center justify-center rounded-md
-               bg-util-gray-04 gap-2 transition-colors"
+               bg-echo gap-2 transition-colors"
         :class="isDisabled ? 'text-secondary/60' : 'text-insight'"
       >
         <icon-fa-calendar class="h-4 w-4" />

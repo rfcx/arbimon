@@ -71,7 +71,7 @@
             v-model="searchKeyword"
             type="text"
             placeholder="Search for species sounds"
-            class="input-highlight form-control placeholder-style rounded h-[34px] w-full items-center inline-flex border-1 border-util-gray-02 bg-echo flex-1 min-w-0 placeholder-util-gray-02 focus:border-frequency"
+            class="form-control rounded-md placeholder-style h-[34px] w-full items-center inline-flex border-1 border-util-gray-02 bg-echo flex-1 min-w-0 placeholder-util-gray-02 focus:border-frequency"
             @input="onSearchInput"
           >
           <icon-fa-close

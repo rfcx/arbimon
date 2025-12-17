@@ -5,7 +5,7 @@
     @keydown.stop="onKeydown"
   >
     <div
-      class="h-[34px] flex items-center placeholder-util-gray-02 border rounded cursor-text text-insight bg-echo border-insight hover:(text-insight bg-[#0a0a0a] border-[#FFFEFC])"
+      class="h-[34px] flex items-center placeholder-util-gray-02 rounded-md cursor-text focus:ring-0 border text-insight bg-echo border-util-gray-02 focus:border-0 hover:border-frequency"
       role="combobox"
       :aria-expanded="open"
       @click="toggle(true)"
@@ -35,7 +35,7 @@
         ref="inputEl"
         v-model="search"
         type="search"
-        class="input-search flex-1 h-[34px] outline-none text-insight rounded bg-transparent focus:ring-0 border-0 hover:(text-insight) placeholder:text-util-gray-02 placeholder:text-sm"
+        class="input-search flex-1 h-[34px] outline-none text-insight rounded bg-transparent  hover:(text-insight) placeholder:text-util-gray-02 placeholder:text-sm border-util-gray-02 focus:border-frequency hover:(text-insight bg-[#0a0a0a] border-frequency)"
         :placeholder="placeholder"
         autocomplete="off"
       >
@@ -206,5 +206,9 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', clickOutside))
   .input-search::placeholder {
     color: #9ca3af;
     font-size: 14px;
+  }
+
+  .focus\:border-frequency:focus {
+    border-color: #ADFF2C !important;
   }
 </style>
