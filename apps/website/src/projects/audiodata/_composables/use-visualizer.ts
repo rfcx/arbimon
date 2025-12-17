@@ -6,12 +6,14 @@ import { type AedResponse, type ClusterResponse, type CounSoundscapeCompositiont
 
 export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: ComputedRef<string | undefined>): UseQueryReturnType<VisobjectResponse | undefined, unknown> => {
   return useQuery({
-    queryKey: ['fetch-recording'],
+    queryKey: ['fetch-recording', slug, recordingId],
     queryFn: async () => {
       if (slug.value === undefined || recordingId.value === undefined || recordingId.value === '') return null
       return await apiArbimonGetRecording(apiClient, slug.value, recordingId.value)
     },
-    retry: 0
+    retry: 0,
+    refetchOnMount: false, // No refetch on page revisit
+    refetchOnWindowFocus: false // No refetch on tab focus
   })
 }
 
