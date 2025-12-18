@@ -108,10 +108,14 @@ import { useStore } from '~/store'
 import { useGetTemplates } from '../../_composables/use-visualizer'
 
 const props = defineProps<{
-  visobject: Visobject
+  visobject: Visobject,
+  currentTab: string
 }>()
 
-const emits = defineEmits<{(e: 'emitTemplateVisibility', value: boolean): void, (e: 'emitActiveLayer', isActive: boolean): void}>()
+const emits = defineEmits<{(e: 'emitTemplateVisibility', value: boolean): void,
+  (e: 'emitActiveLayer', isActive: boolean): void,
+  (e: 'emitClosedTabs', value: string): void
+}>()
 
 const spectrogramTemplates = ref<TemplateResponse[]>([])
 
@@ -144,7 +148,14 @@ const toggleAddTemplate = () => {
 const toggleTemplateMenu = () => {
   toggledTemplateMenu.value = !toggledTemplateMenu.value
   if (toggledTemplateMenu.value === false) emits('emitActiveLayer', false)
+  if (toggledTemplateMenu.value === true) emits('emitClosedTabs', 'template')
 }
+
+watch(() => props.currentTab, () => {
+  if (props.currentTab === 'trainingSet') return
+  toggledTemplateMenu.value = false
+  emits('emitActiveLayer', false)
+})
 
 watch(() => props.visobject, async () => {
   await refetchTemplates()

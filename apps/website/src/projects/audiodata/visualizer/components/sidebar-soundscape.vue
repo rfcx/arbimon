@@ -12,8 +12,9 @@
         type="button"
         class="flex justify-between items-center w-full py-2 gap-x-1 text-insight dark:(bg-transparent text-insight)"
         data-accordion-target="#accordion-collapse-body-soundscape"
-        aria-expanded="false"
+        :aria-expanded="isOpen"
         aria-controls="accordion-collapse-body-soundscape"
+        @click="isOpen = !isOpen"
       >
         <div>
           <icon-fa-chevron-right
@@ -82,16 +83,10 @@
 
 <script setup lang="ts">
 import { initAccordions } from 'flowbite'
-import { computed, nextTick, onMounted, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 
 import type { SoundscapeResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import type { CounSoundscapeCompositiontById, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
-
-const props = defineProps<{
-  visobject: Visobject
-  soundscapeResponse?: SoundscapeResponse[]
-  soundscapeComposition?: CounSoundscapeCompositiontById
-}>()
 
 export interface SoundItem {
   id: number
@@ -103,7 +98,20 @@ export interface SoundItem {
 
 type Soundscape = Record<string, SoundItem[]>
 
-function transformSoundscapeResponse (data: SoundItem[]): Soundscape {
+const props = defineProps<{
+  visobject: Visobject
+  soundscapeResponse?: SoundscapeResponse[]
+  soundscapeComposition?: CounSoundscapeCompositiontById
+}>()
+
+const emits = defineEmits<{(e: 'onEmitValidation', cl: number, val: number): void,
+(e: 'emitClosedTabs', value: string): void
+}>()
+
+const isOpen = ref<boolean>(false)
+const soundscape = computed(() => transformSoundscapeResponse(props.soundscapeResponse ?? []))
+
+const transformSoundscapeResponse = (data: SoundItem[]): Soundscape => {
   return data.reduce<Soundscape>((acc, item) => {
     const typeKey = String(item.type)
     if (!(typeKey in acc)) {
@@ -120,12 +128,20 @@ function transformSoundscapeResponse (data: SoundItem[]): Soundscape {
   }, {})
 }
 
-const soundscape = computed(() => transformSoundscapeResponse(props.soundscapeResponse ?? []))
-const emit = defineEmits<{(e: 'onEmitValidation', cl: number, val: number): void}>()
-
-function validateSoundscapeComposition (cl: number, val: number) {
-  emit('onEmitValidation', cl, val)
+const validateSoundscapeComposition = (cl: number, val: number) => {
+  emits('onEmitValidation', cl, val)
 }
+
+const isSelect = (id: number, expectedValue: number): boolean => {
+  if (!props.soundscapeComposition) return false
+  return props.soundscapeComposition[id] === expectedValue
+}
+
+watch(() => isOpen.value, () => {
+  if (isOpen.value === true) {
+    emits('emitClosedTabs', 'soundscape')
+  }
+})
 
 watch(() => props.soundscapeResponse, async () => {
   await nextTick()
@@ -136,11 +152,6 @@ onMounted(async () => {
   await nextTick()
   initAccordions()
 })
-
-function isSelect (id: number, expectedValue: number): boolean {
-  if (!props.soundscapeComposition) return false
-  return props.soundscapeComposition[id] === expectedValue
-}
 </script>
 
 <style lang="scss">

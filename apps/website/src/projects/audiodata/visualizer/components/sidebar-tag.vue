@@ -9,8 +9,9 @@
         type="button"
         class="flex justify-start items-center w-full py-2 gap-x-1 text-insight"
         data-accordion-target="#accordion-collapse-body-tag"
-        aria-expanded="false"
+        :aria-expanded="isOpen"
         aria-controls="accordion-collapse-body-tag"
+        @click="isOpen = !isOpen"
       >
         <icon-fa-chevron-right
           data-accordion-icon
@@ -88,11 +89,16 @@ const props = defineProps<{
   projectTags: TagResponse[] | undefined
   recordingTags: RecordingTagResponse[] | undefined
   isAddingTag: boolean
+  currentTab: string
 }>()
 
-const emit = defineEmits<{(e: 'emitTag', tags: TagParams[]): void, (e: 'emitActiveLayer', value: boolean): void }>()
+const emits = defineEmits<{(e: 'emitTag', tags: TagParams[]): void,
+  (e: 'emitActiveLayer', value: boolean): void,
+  (e: 'emitClosedTabs', value: string): void
+}>()
 
 const toggledTag = ref(false)
+const isOpen = ref(false)
 const selectedTags = ref<(number)[]>(props.recordingTags?.map(t => t.tag_id) ?? [])
 const staticTags = computed<Option[]>(() => {
   const projTags = (props.projectTags ?? []).map(t => ({
@@ -109,12 +115,28 @@ const staticTags = computed<Option[]>(() => {
 
 const toggleTag = () => {
   toggledTag.value = !toggledTag.value
-  emit('emitActiveLayer', toggledTag.value)
+  emits('emitActiveLayer', toggledTag.value)
 }
+
+watch(() => isOpen.value, () => {
+  if (isOpen.value === false) {
+    toggledTag.value = false
+    emits('emitActiveLayer', toggledTag.value)
+  }
+  if (isOpen.value === true) {
+    emits('emitClosedTabs', 'tag')
+  }
+})
+
+watch(() => props.currentTab, () => {
+  if (props.currentTab === 'tag') return
+  toggledTag.value = false
+  emits('emitActiveLayer', toggledTag.value)
+})
 
 watch(() => selectedTags.value, () => {
   const tags: TagParams[] = selectedTags.value.map(recId => { return { id: recId } })
-  return emit('emitTag', tags)
+  return emits('emitTag', tags)
 })
 
 onMounted(() => {

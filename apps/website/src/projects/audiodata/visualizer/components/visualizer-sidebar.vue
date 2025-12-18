@@ -109,26 +109,33 @@
         :is-adding-tag="isAddingTag || isRemovingTag"
         :project-tags="projectTags"
         :recording-tags="recordingTags"
+        :current-tab="currentOpenTab"
         @emit-tag="handleRecTag"
         @emit-active-layer="toggleSidebarTag"
+        @emit-closed-tabs="handleClosedTabs"
       />
       <SidebarSpecies
         v-if="visobject"
         :visobject="visobject"
         @emit-species-visibility="$emit('emitSpeciesVisibility', $event)"
         @update-validations="$emit('updateValidations')"
+        @emit-closed-tabs="handleClosedTabs"
       />
       <SidebarTrainingSets
         v-if="visobject"
+        :current-tab="currentOpenTab"
         @emit-active-layer="toggleSidebarTrainingSet"
         @emit-training-set="$emit('emitTrainingSet', $event)"
         @emit-training-set-visibility="$emit('emitTrainingSetVisibility', $event)"
+        @emit-closed-tabs="handleClosedTabs"
       />
       <SidebarTemplates
         v-if="visobject"
+        :current-tab="currentOpenTab"
         :visobject="visobject"
         @emit-template-visibility="$emit('emitTemplateVisibility', $event)"
         @emit-active-layer="toggleSidebarTemplate"
+        @emit-closed-tabs="handleClosedTabs"
       />
       <SidebarSoundscape
         v-if="visobject"
@@ -136,6 +143,7 @@
         :soundscape-response="soundscape"
         :soundscape-composition="soundscapeComposition"
         @on-emit-validation="onEmitSounscapeValidation"
+        @emit-closed-tabs="handleClosedTabs"
       />
       <SidebarAudioEvents
         v-if="visobject"
@@ -145,6 +153,7 @@
         @emit-active-aed-layer="$emit('emitActiveLayer', 'aed')"
         @emit-active-aed-boxes="onEmitActiveAedBoxes"
         @emit-active-clustering="onEmitActiveClustering"
+        @emit-closed-tabs="handleClosedTabs"
       />
     </div>
     <div v-show="isSoundscape">
@@ -284,6 +293,7 @@ const message = ref('')
 const showAlert = ref(false)
 const spectrogramTags = ref<BboxGroupTags[]>([])
 const initialDate = ref('')
+const currentOpenTab = ref('')
 const initialViewMonth = ref<number | undefined>(undefined)
 const initialViewYear = ref<number | undefined>(undefined)
 const nextRecording = ref<boolean>(false)
@@ -407,10 +417,15 @@ const onEmitSelectedDate = (date: { dateLocalIso: string }) => {
   })
 }
 
+const handleClosedTabs = (tab: string) => {
+  currentOpenTab.value = tab
+}
+
 const handleFreqFilter = (filter: FreqFilter) => {
   emits('updateFreqFilter', filter)
   freqFilter.value = filter
 }
+
 const handleRecTag = (tagIds: TagParams[]) => {
   if (recordingTags.value === undefined) return
   const arrIds = tagIds.map(t => t.id)

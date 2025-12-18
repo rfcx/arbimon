@@ -12,8 +12,9 @@
         type="button"
         class="flex justify-between items-center w-full py-2 gap-x-1 text-insight dark:bg-moss dark:active:bg-moss"
         data-accordion-target="#accordion-collapse-body-species"
-        aria-expanded="false"
+        :aria-expanded="isOpen"
         aria-controls="accordion-collapse-body-species"
+        @click="isOpen = !isOpen"
       >
         <div class="flex items-start items-center gap-x-1">
           <icon-fa-chevron-right
@@ -454,7 +455,10 @@ const props = defineProps<{
   visobject: Visobject
 }>()
 
-const emits = defineEmits<{(e: 'emitSpeciesVisibility', value: boolean): void, (e: 'updateValidations'): void}>()
+const emits = defineEmits<{(e: 'emitSpeciesVisibility', value: boolean): void,
+  (e: 'updateValidations'): void,
+  (e: 'emitClosedTabs', value: string): void
+}>()
 
 const speciesHeader = ['Species', 'Sound', 'Annotation']
 const validations = ref<Record<string, number[]>>({})
@@ -469,7 +473,7 @@ const valOptions = [
   { label: 'Present', val: 1, showValidateOptions: false },
   { label: 'Absent', val: 0, showValidateOptions: false }
 ]
-
+const isOpen = ref<boolean>(false)
 const success = ref<AlertDialogType>('error')
 const title = ref('')
 const message = ref('')
@@ -786,6 +790,12 @@ const backToSelectSpecies = () => {
 watch(props.visobject, () => {
   if (props.visobject.validations.length) {
     props.visobject.validations.forEach(addValidation)
+  }
+})
+
+watch(() => isOpen.value, () => {
+  if (isOpen.value === true) {
+    emits('emitClosedTabs', 'species')
   }
 })
 

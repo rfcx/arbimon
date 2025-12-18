@@ -9,8 +9,9 @@
         type="button"
         class="flex justify-between items-center w-full py-2 gap-x-1 text-insight dark:(bg-transparent text-insight)"
         data-accordion-target="#accordion-collapse-body-audio-events"
-        aria-expanded="false"
+        :aria-expanded="isOpen"
         aria-controls="accordion-collapse-body-audio-events"
+        @click="isOpen = !isOpen"
       >
         <div>
           <icon-fa-chevron-right
@@ -102,7 +103,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import type { Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
@@ -114,10 +115,13 @@ const props = defineProps<{
   clusteringPlaylists?: Record<string, ClusteringPlaylist>
 }>()
 
-const emit = defineEmits<{(e: 'emitActiveAedLayer'): void,
+const emits = defineEmits<{(e: 'emitActiveAedLayer'): void,
   (e: 'emitActiveAedBoxes', visibleJobs: Record<number, boolean>, job: AedJob): void,
-  (e: 'emitActiveClustering', visiblePl: Record<number, boolean>, pl: ClusteringPlaylist): void
+  (e: 'emitActiveClustering', visiblePl: Record<number, boolean>, pl: ClusteringPlaylist): void,
+  (e: 'emitClosedTabs', value: string): void
 }>()
+
+const isOpen = ref<boolean>(false)
 
 const aedJobsView = computed(() => props.aedJobs
   ? Object.values(props.aedJobs).sort(
@@ -140,8 +144,8 @@ const toggleAedVisible = (job: AedJob) => {
   eyeVisibleMap.value[job.jobId] = !current
   // add opacity to selected aed job
   job.items.forEach(item => { item.opacity = eyeVisibleMap.value[job.jobId] === false ? 0 : 1 })
-  emit('emitActiveAedLayer')
-  emit('emitActiveAedBoxes', eyeVisibleMap.value, job)
+  emits('emitActiveAedLayer')
+  emits('emitActiveAedBoxes', eyeVisibleMap.value, job)
 }
 
 const toggleClusteringVisible = (pl: ClusteringPlaylist) => {
@@ -149,9 +153,15 @@ const toggleClusteringVisible = (pl: ClusteringPlaylist) => {
   eyeVisibleMap.value[pl.playlistId] = !current
   // add opacity to selected aed job
   pl.items.forEach(item => { item.opacity = eyeVisibleMap.value[pl.playlistId] === false ? 0 : 1 })
-  emit('emitActiveAedLayer')
-  emit('emitActiveClustering', eyeVisibleMap.value, pl)
+  emits('emitActiveAedLayer')
+  emits('emitActiveClustering', eyeVisibleMap.value, pl)
 }
+
+watch(() => isOpen.value, () => {
+  if (isOpen.value === true) {
+    emits('emitClosedTabs', 'aed')
+  }
+})
 
 </script>
 

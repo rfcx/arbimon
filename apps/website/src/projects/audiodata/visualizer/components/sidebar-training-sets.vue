@@ -203,9 +203,14 @@ import { useGetRecordingTrainingSets, useGetTrainingSets, usePostNewTrainingSet 
 import BasicSearchSelect from './basic-search-select.vue'
 import SidebarTrainingSetModal from './sidebar-training-set-modal.vue'
 
+const props = defineProps<{
+  currentTab: string
+}>()
+
 const emits = defineEmits<{(e: 'emitTrainingSet', value: TrainingSet): void,
   (e: 'emitActiveLayer', isActive: boolean, type: string): void,
-  (e: 'emitTrainingSetVisibility', value: boolean): void
+  (e: 'emitTrainingSetVisibility', value: boolean): void,
+  (e: 'emitClosedTabs', value: string): void
 }>()
 
 const toggledTrainingSetMenu = ref<boolean>(false)
@@ -282,12 +287,19 @@ const toggleAddTsRoiBox = () => {
 const toggleTrainingSetMenu = () => {
   toggledTrainingSetMenu.value = !toggledTrainingSetMenu.value
   if (toggledTrainingSetMenu.value === false) emits('emitActiveLayer', false, '')
+  if (toggledTrainingSetMenu.value === true) emits('emitClosedTabs', 'trainingSet')
 }
 
 const toggleTrainingSetVisible = () => {
   toggleVisible.value = !toggleVisible.value
   emits('emitTrainingSetVisibility', toggleVisible.value)
 }
+
+watch(() => props.currentTab, () => {
+  if (props.currentTab === 'trainingSet') return
+  toggledTrainingSetMenu.value = false
+  emits('emitActiveLayer', false, '')
+})
 
 watch(() => selectedTrainingSetValue.value, (ts) => {
   if (ts === undefined) return
