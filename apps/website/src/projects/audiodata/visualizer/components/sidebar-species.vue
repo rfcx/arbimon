@@ -62,6 +62,7 @@
     >
       <div class="flex flex-row items-center">
         <div
+          id="speciesSearchBtn"
           data-dropdown-toggle="speciesSearchDropdown"
           class="input-item search relative w-full"
         >
@@ -484,6 +485,8 @@ const toggleSpeciesSelect = ref(false)
 const toggleSongtypeSelect = ref(false)
 const classToAdd = ref<ClassToAdd>({ species: undefined, songtype: undefined })
 const toggleVisible = ref<boolean>(true)
+const speciesSearchDropdownMenu = ref<HTMLElement | null>(null)
+let speciesSearchDropdownInput: Dropdown
 
 const { data: projectClasses, refetch: refetchGetClasses } = useGetClasses(apiClientArbimon, selectedProjectSlug)
 const { mutate: mutateRecordingValidate } = useRecordingValidate(apiClientArbimon, selectedProjectSlug, props.visobject.id)
@@ -554,6 +557,7 @@ const taxons = computed((): string[] => {
 const onSelectedClass = (cl: ClassesRecordingResponse) => {
   searchKeyword.value = cl.species_name
   scrollToClass(cl.species_name, cl.songtype_name)
+  speciesSearchDropdownInput.hide()
 }
 
 const toggleAccordion = (taxon: string) => {
@@ -814,6 +818,11 @@ onMounted(async () => {
   if (props.visobject.validations.length) {
     props.visobject.validations.forEach(addValidation)
   }
+  speciesSearchDropdownMenu.value = document.getElementById('speciesSearchDropdown')
+  speciesSearchDropdownInput = new Dropdown(
+    document.getElementById('speciesSearchDropdown'),
+    document.getElementById('speciesSearchBtn')
+  )
 })
 </script>
 
