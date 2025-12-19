@@ -20,7 +20,7 @@
         <div class="pl-0.5">
           {{ trainingSetName }}
         </div>
-        <div class="flex flex-row items-center gap-x-4">
+        <div class="flex flex-row items-center justify-between gap-x-4">
           <button
             class="px-4 py-2 btn btn-secondary btn-medium"
             @click="$emit('handleAction', 'cancel')"

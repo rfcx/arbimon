@@ -2,7 +2,7 @@
   <div :class="['zoom-control inline-flex items-center absolute', horizontal ? 'horizontal' : 'vertical']">
     <div
       v-if="horizontal"
-      class="flex items-center gap-2 horizontal flex-row"
+      class="flex items-center gap-1 horizontal flex-row"
     >
       <button
         class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-1.5"
@@ -14,7 +14,7 @@
       </button>
       <div
         ref="track"
-        class="zoom-track relative overflow-hidden mx-2 cursor-pointer"
+        class="zoom-track relative overflow-hidden mx-1 cursor-pointer"
         @mousemove.prevent="onTrackMouseDown"
         @mousedown.prevent="onTrackMouseDown"
       >
@@ -38,7 +38,7 @@
     </div>
     <div
       v-else
-      class="flex items-center gap-2 vertical flex-col"
+      class="flex items-center gap-1 vertical flex-col"
     >
       <button
         class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-1.5"
@@ -50,7 +50,7 @@
       </button>
       <div
         ref="track"
-        class="zoom-track relative overflow-hidden mx-2 cursor-pointer"
+        class="zoom-track relative overflow-hidden mx-1 cursor-pointer"
         @mousemove.prevent="onTrackMouseDown"
         @mousedown.prevent="onTrackMouseDown"
       >

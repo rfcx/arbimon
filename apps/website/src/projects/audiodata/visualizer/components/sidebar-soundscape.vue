@@ -50,7 +50,7 @@
 
           <div class="flex items-center">
             <button
-              class="flex items-center justify-center h-[24px] w-[24px] py-[1px] px-[6px] rounded-l bg-util-gray-04 hover:bg-echo"
+              class="flex items-center justify-center h-[24px] w-[24px] py-[1px] px-[6px] rounded-l bg-util-gray-04 hover:(bg-[#0a0a0a] border-[#050505])"
               title="Annotate as Present"
               :class="{ 'bg-echo': isSelect(item.id, 1) }"
               @click="validateSoundscapeComposition(item.id, 1)"
@@ -59,7 +59,7 @@
             </button>
 
             <button
-              class="flex items-center justify-center h-[24px] w-[24px] py-[2px] px-[7px] rounded-r bg-util-gray-04 hover:bg-echo"
+              class="flex items-center justify-center h-[24px] w-[24px] py-[2px] px-[7px] rounded-r bg-util-gray-04 hover:(bg-[#0a0a0a] border-[#050505])"
               title="Annotate as Absent"
               :class="{ 'bg-echo': isSelect(item.id, 0) }"
               @click="validateSoundscapeComposition(item.id, 0)"
@@ -68,7 +68,7 @@
             </button>
 
             <button
-              class="flex items-center justify-center h-[24px] w-[24px] py-[2px] px-[7px] rounded bg-util-gray-04 hover:bg-echo ml-2"
+              class="flex items-center justify-center h-[24px] w-[24px] py-[2px] px-[7px] rounded bg-util-gray-04 ml-2 hover:(bg-[#0a0a0a] border-[#050505])"
               title="Clear Annotation"
               @click="validateSoundscapeComposition(item.id, 2)"
             >
