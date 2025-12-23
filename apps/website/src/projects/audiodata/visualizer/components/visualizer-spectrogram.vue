@@ -544,7 +544,7 @@ const props = defineProps<{
   layerVisibility: LayerVisibility
 }>()
 
-const emits = defineEmits<{(e: 'emitPointer', value: Pointer): void}>()
+const emits = defineEmits<{(e: 'emitPointer', value: Pointer): void, (e: 'updateTags'): void}>()
 
 const selectedProjectSlug = computed(() => store.project?.slug)
 const spectrogramContainer = ref<HTMLElement | null>(null)
@@ -919,6 +919,7 @@ const handleNewTag = (tag: BboxListItem): void => {
       refetchRecordingTags()
       showAlertDialog('success', 'Success', 'Tag is added')
       resetBBox()
+      emits('updateTags')
     },
     onError: (err) => {
       console.info('err', err)

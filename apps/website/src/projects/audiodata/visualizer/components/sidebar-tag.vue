@@ -92,7 +92,7 @@ const props = defineProps<{
   currentTab: string
 }>()
 
-const emits = defineEmits<{(e: 'emitTag', tags: TagParams[]): void,
+const emits = defineEmits<{(e: 'emitTags', tags: TagParams[]): void,
   (e: 'emitActiveLayer', value: boolean): void,
   (e: 'emitClosedTabs', value: string): void
 }>()
@@ -136,7 +136,11 @@ watch(() => props.currentTab, () => {
 
 watch(() => selectedTags.value, () => {
   const tags: TagParams[] = selectedTags.value.map(recId => { return { id: recId } })
-  return emits('emitTag', tags)
+  emits('emitTags', tags)
+})
+
+watch(() => props.recordingTags, () => {
+  selectedTags.value = props.recordingTags?.map(t => t.tag_id) ?? []
 })
 
 onMounted(() => {

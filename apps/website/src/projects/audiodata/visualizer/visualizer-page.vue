@@ -4,11 +4,12 @@
       :visobject="visobject"
       :is-loading-visobject="isLoadingVisobject"
       :pointer="pointer"
+      :is-sidebar-tags-updated="isSidebarTagsUpdated"
       @update-current-time="handleCurrentTime"
       @update-color-spectrogram="handleColorSpectrogram"
       @update-validations="updateValidations"
       @update-freq-filter="handleFreqFilter"
-      @update-tags="handleTags"
+      @update-tags="updateSpectrogramrTags"
       @emit-training-set="handleTrainingSet"
       @emit-training-set-visibility="handleTrainingSetVisibility"
       @emit-visible-soundscapes="handleSoundscapeRegions"
@@ -48,6 +49,7 @@
       :layer-visibility="layerVisibility"
       :visible-soundscapes="visibleSoundscapes"
       @emit-pointer="handlePointer"
+      @update-tags="updateSidebarTags"
     />
   </section>
 </template>
@@ -87,6 +89,7 @@ const currentTime = ref(0)
 const spectroColor = ref('spectroColor=mtrue')
 const freqFilter = ref<FreqFilter | undefined>(undefined)
 const isSpectrogramTagsUpdated = ref<boolean>(false)
+const isSidebarTagsUpdated = ref<boolean>(false)
 const activeLayer = ref<string | undefined>(undefined)
 const layerVisibility = ref<LayerVisibility>({
   tag: true,
@@ -127,6 +130,11 @@ const visobjectSoundscape = ref<SoundscapeItem | undefined>(undefined)
 const idRecording = ref(0)
 const selectedPlaylist = ref(0)
 
+const lastPlaylistId = ref(0)
+const lastSoundscapeRecId = ref(0)
+const lastPlaylistRecordingId = ref(0)
+const lastRecordingId = ref(0)
+
 const selectedRecordingId = computed(() => {
   return isPlaylist.value ? isSoundscape.value ? undefined : browserRecId.value : browserTypeId.value
 })
@@ -150,9 +158,14 @@ const handleFreqFilter = (filter: FreqFilter) => {
   freqFilter.value = filter
 }
 
-const handleTags = () => {
+const updateSpectrogramrTags = () => {
   isSpectrogramTagsUpdated.value = false
   isSpectrogramTagsUpdated.value = true
+}
+
+const updateSidebarTags = () => {
+  isSidebarTagsUpdated.value = false
+  isSidebarTagsUpdated.value = true
 }
 
 const handleTrainingSet = (trainingSet: TrainingSet) => {
@@ -253,11 +266,6 @@ const handlePointer = (data: Pointer) => {
   pointer.sec = data.sec
   pointer.hz = data.hz
 }
-
-const lastPlaylistId = ref(0)
-const lastSoundscapeRecId = ref(0)
-const lastPlaylistRecordingId = ref(0)
-const lastRecordingId = ref(0)
 
 onMounted(() => {
   if (isPlaylist.value) {

@@ -110,7 +110,7 @@
         :project-tags="projectTags"
         :recording-tags="recordingTags"
         :current-tab="currentOpenTab"
-        @emit-tag="handleRecTag"
+        @emit-tags="handleRecTags"
         @emit-active-layer="toggleSidebarTag"
         @emit-closed-tabs="handleClosedTabs"
       />
@@ -257,7 +257,9 @@ const props = defineProps<{
   visobject: Visobject | undefined
   isLoadingVisobject: boolean
   pointer: Pointer
+  isSidebarTagsUpdated: boolean
 }>()
+
 const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'updateColorSpectrogram', value: string): void,
   (e: 'updateValidations'): void,
@@ -426,7 +428,7 @@ const handleFreqFilter = (filter: FreqFilter) => {
   freqFilter.value = filter
 }
 
-const handleRecTag = (tagIds: TagParams[]) => {
+const handleRecTags = (tagIds: TagParams[]) => {
   if (recordingTags.value === undefined) return
   const arrIds = tagIds.map(t => t.id)
   const tagsToDelete = recordingTags.value.filter((tag: RecordingTagResponse) => !arrIds.includes(tag.tag_id))
@@ -705,6 +707,10 @@ watch(() => clustering.value, () => {
 
 watch(() => yearly.value, () => {
   refetchAvailableBySiteYear()
+})
+
+watch(() => props.isSidebarTagsUpdated, async () => {
+  refetchRecordingTags()
 })
 
 </script>
