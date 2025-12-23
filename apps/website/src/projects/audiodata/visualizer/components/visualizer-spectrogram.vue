@@ -60,7 +60,11 @@
       <!-- zoom -->
       <div
         v-if="visobject"
-        class="zoom-control-group absolute z-6 top-0 right-6"
+        class="zoom-control-group absolute z-6"
+        :style="{
+          top: (legendMetrics.axis_margin_top + 10) + 'px',
+          left: (containerSize.width - 180) + 'px'
+        }"
       >
         <ZoomControl
           v-model="zoomData.x"

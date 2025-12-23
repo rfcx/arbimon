@@ -137,13 +137,11 @@ const onTrackMouseDown = (e: MouseEvent): void => {
 }
 .zoom-control.horizontal {
   width: 200px;
-  top: 20px;
-  right: 36px;
 }
 .zoom-control.vertical {
   height: 200px;
-  top: 60px;
-  right: 8px;
+  top: 20px;
+  left: 200px
 }
 
 .zoom-control .marker { position: absolute; background: #2563eb; border-radius: 2px; }
