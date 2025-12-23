@@ -135,8 +135,13 @@ watch(() => props.recordedMinutesPerDay, () => {
 })
 
 watch(() => props.initialDate, (v) => {
-  const formatted = dayjs(v).format(format)
-  picker.value?.setDate(formatted)
+  if (v === '') {
+    if (datePickerInput.value) datePickerInput.value.value = ''
+    selectedDateIso.value = ''
+  } else {
+    const formatted = dayjs(v).format(format)
+    picker.value?.setDate(formatted)
+  }
 })
 
 function updateViewDate () {
