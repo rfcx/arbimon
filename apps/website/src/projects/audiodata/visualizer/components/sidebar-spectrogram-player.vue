@@ -62,7 +62,7 @@
         </button>
         <div
           v-show="isGainOpen"
-          class="flex flex-col gap-y-1 absolute bg-echo -left-[50px] rounded-md p-2 z-10 w-75"
+          class="flex flex-col gap-y-1 absolute bg-echo -left-[60px] rounded-md p-2 z-10 w-75"
         >
           <div class="flex flex-row w-full items-center justify-end gap-x-2 pl-5">
             <icon-custom-fi-volume class="text-insight text-[10px] h-5" />
