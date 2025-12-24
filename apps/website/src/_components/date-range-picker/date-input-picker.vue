@@ -103,10 +103,6 @@ onMounted(async () => {
   const { initDatePicker } = await import('./date-range-picker')
   if (!datePickerInput.value) return
 
-  if (props.initialDate !== undefined) {
-    datePickerInput.value.value = dayjs(props.initialDate).format(format)
-  }
-
   picker.value = initDatePicker(datePickerInput.value, {
     autohide: true,
     format: 'dd/mm/yyyy',
@@ -119,6 +115,12 @@ onMounted(async () => {
   if (props.initialViewYear != null && props.initialViewMonth != null) {
     const temp = new Date(props.initialViewYear, props.initialViewMonth - 1, 1)
     picker.value.setDate(temp)
+  }
+
+  if (props.initialDate !== undefined) {
+    datePickerInput.value.value = dayjs(props.initialDate).format(format)
+    const dateIso = dayjs(datePickerInput.value.value).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+    selectedDateIso.value = dateIso
   }
 
   datePickerInput.value.addEventListener('changeDate', () => {
