@@ -257,6 +257,18 @@
         :visible="bboxValid"
         @handle-action="handleNewTrainingSet"
       />
+      <!-- Query box layer -->
+      <div v-if="browserQuery !== undefined">
+        <div
+          class="border-1 border-[#ffa600] bg-[rgba(255,166,0,0.05)] z-5 cursor-pointer absolute"
+          :style="{
+            left: sec2x(bboxQuery.x1 ?? 0, 1) + legendMetrics.axis_sizew + 'px',
+            top: hz2y(bboxQuery.y2 ?? 0, 1) + legendMetrics.axis_margin_top + 'px',
+            width: getDsec2width(bboxQuery.x2 ?? 0, bboxQuery.x1 ?? 0, 1),
+            height: getDhz2height(bboxQuery.y2 ?? 0, bboxQuery.y1 ?? 0)
+          }"
+        />
+      </div>
       <!-- Tags layer -->
       <div v-if="spectrogramTags && layerVisibility.tag === true">
         <div
@@ -626,6 +638,13 @@ const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
 const browserTypeId = computed(() => route.params.browserTypeId as string ?? undefined)
 const browserType = computed(() => browserTypes.includes(route.params.browserType as string) ? route.params.browserType as string : undefined)
 const browserRecId = computed(() => route.params.browserRecId as string ?? undefined)
+const browserQuery = computed(() => route.query.a as string ?? undefined)
+const bboxQuery = reactive<{ x1: number; y1: number; x2: number; y2: number }>({
+  x1: 0,
+  y1: 0,
+  x2: 0,
+  y2: 0
+})
 
 const { height: containerHeight, width: containerWidth } = useElementSize(spectrogramContainer)
 
@@ -1094,6 +1113,16 @@ const fetchRecordingTemplates = (): void => {
   }) ?? []
 }
 
+const parseQueryBox = (): void => {
+  if (browserQuery.value !== undefined) {
+    const box = browserQuery.value.split(',')
+    bboxQuery.x1 = +box[1]
+    bboxQuery.y1 = +box[2]
+    bboxQuery.x2 = +box[3]
+    bboxQuery.y2 = +box[4]
+  }
+}
+
 watch(() => zoomData.x, () => {
   handleResize()
 })
@@ -1186,6 +1215,10 @@ watch(() => soundscapeRegions.value, async () => {
   initTooltips()
 })
 
+watch(() => browserQuery.value, async () => {
+  parseQueryBox()
+})
+
 watch(() => props.visibleSoundscapes, () => {}, { deep: true })
 
 onMounted(() => {
@@ -1196,6 +1229,7 @@ onMounted(() => {
   if (!recordingTags.value) return
   spectrogramTags.value = groupByBbox(recordingTags.value)
   initTooltips()
+  parseQueryBox()
 })
 
 onBeforeUnmount(() => {
