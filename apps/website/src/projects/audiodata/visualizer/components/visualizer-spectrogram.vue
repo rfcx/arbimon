@@ -283,7 +283,9 @@
           role="tooltip"
           class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
-          {{ 'Tag: ' + getTagNames(tag.tags) }}
+          <div>
+            Tag: <span class="font-semibold">{{ getTagNames(tag.tags) }}</span>
+          </div>
           <div
             class="tooltip-arrow"
             data-popper-arrow
@@ -316,7 +318,11 @@
           role="tooltip"
           class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
-          {{ 'Patter Matching Roi Box: ' + pmRoi.name }}
+          <div>Validation</div>
+          <div class="mt-3">
+            Species: <span class="font-semibold">{{ pmRoi.species }}</span>
+          </div>
+          <div>Sound: <span class="font-semibold">{{ pmRoi.songtype }}</span></div>
           <div
             class="tooltip-arrow"
             data-popper-arrow
@@ -370,7 +376,6 @@
             height: getDhz2height(template.y2 ?? 0, template.y1 ?? 0)
           }"
           tabindex="-1"
-          :title="'Template: ' + template.name"
           data-tooltip-style="dark"
           :data-tooltip-target="`templateTooltipId-${index}`"
           @click="$event.stopPropagation(); toggleTemplate(template.id)"
@@ -383,7 +388,12 @@
           role="tooltip"
           class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
-          {{ 'Template: ' + template.name }}
+          <div>Template</div>
+          <div class="mt-3">
+            Name: <span class="font-semibold">{{ template.name }}</span>
+          </div>
+          <div>Species: <span class="font-semibold">{{ template.species_name }}</span></div>
+          <div>Sound: <span class="font-semibold">{{ template.songtype_name }}</span></div>
           <div
             class="tooltip-arrow"
             data-popper-arrow
