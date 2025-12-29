@@ -432,7 +432,7 @@ function toggleRow (row: Row, checked: boolean) {
 }
 
 const onVisualizerRedirect = (id: number) => {
-  window.location.assign(`${window.location.origin}/project/${props.projectSlug ?? ''}/visualizer/rec/${id}`)
+  window.location.assign(`${window.location.origin}/p/${props.projectSlug ?? ''}/visualizer/rec/${id}`)
 }
 
 const areAllRowsSelected = computed(() => {
