@@ -702,6 +702,13 @@ watch(() => auduoEventDetections.value, () => {
   fetchAudioEvents()
 })
 
+watch(() => isSoundscape.value, () => {
+  if (isSoundscape.value === true) {
+    activeLayer.value = undefined
+    emits('emitActiveLayer', activeLayer.value)
+  }
+})
+
 watch(() => clustering.value, () => {
   fetchClustering()
 })

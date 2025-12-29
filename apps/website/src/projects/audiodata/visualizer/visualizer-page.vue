@@ -317,6 +317,7 @@ watch(selectedPlaylist, (newId) => {
 watch(() => browserType.value, () => {
   refetchRecording()
   if (!visobject.value) return
+  visobjectSoundscape.value = undefined
   visobject.value.type = browserType.value as string
 })
 
