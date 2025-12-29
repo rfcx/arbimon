@@ -22,7 +22,8 @@ export const useRecordings = (
       })
     },
     staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    retry: 0
   })
 }
 
@@ -30,7 +31,8 @@ export const useGetClasses = (apiClient: AxiosInstance, slug: ComputedRef<string
   return useQuery({
     queryKey: ['get-classes', slug],
     queryFn: async () => await apiArbimonGetClasses(apiClient, slug?.value ?? ''),
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    retry: 0
   })
 }
 
@@ -116,7 +118,8 @@ export function useLegacyAvailableBySiteYear (
       return transformLegacyAvailableResponse(raw)
     },
     enabled,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    retry: 0
   })
 }
 
@@ -159,6 +162,7 @@ export function useLegacyAvailableYearly (
       return transformLegacyAvailableYearly(raw)
     },
     enabled,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    retry: 0
   })
 }

@@ -58,7 +58,8 @@ export const useGetPatternMatchingBoxes = (apiClient: AxiosInstance, slug: Compu
     queryFn: async () => {
       if (!slug.value || params.rec_id === undefined || params.rec_id === '') return []
       return await apiGetPatternMatchingBoxes(apiClient, slug.value, params)
-    }
+    },
+    retry: 0
   })
 }
 
@@ -68,7 +69,8 @@ export const useGetTemplates = (apiClient: AxiosInstance, slug: ComputedRef<stri
     queryFn: async () => {
       if (!slug.value) return []
       return await apiGetTemplates(apiClient, slug.value)
-    }
+    },
+    retry: 0
   })
 }
 

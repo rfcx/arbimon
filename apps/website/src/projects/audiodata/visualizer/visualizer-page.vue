@@ -23,7 +23,7 @@
       @emit-set-browser-type="setBrowserType"
     />
     <div
-      v-if="isLoadingVisobject || isRefetching"
+      v-if="isLoadingVisobject"
       class="ml-120 relative"
     >
       <div class="flex h-90vh justify-center items-center bg-util-gray-04 mt-4 mr-4 ml-16 mb-0">
@@ -139,7 +139,7 @@ const selectedRecordingId = computed(() => {
   return isPlaylist.value ? isSoundscape.value ? undefined : browserRecId.value : browserTypeId.value
 })
 
-const { isLoading: isLoadingVisobject, data: visobject, refetch: refetchRecording, isRefetching } = useGetRecording(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
+const { isLoading: isLoadingVisobject, data: visobject, refetch: refetchRecording } = useGetRecording(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
 
 const handleCurrentTime = (value: number): void => {
   currentTime.value = value
