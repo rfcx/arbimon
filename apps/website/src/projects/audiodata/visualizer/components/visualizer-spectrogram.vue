@@ -367,7 +367,16 @@
           role="tooltip"
           class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
-          {{ 'Training Set: ' + getTrainingSetsNames(ts.ts) }}
+          <div>Training set</div>
+          <div class="mt-3">
+            Name: <span class="font-semibold">{{ getTrainingSetsNames(ts.ts) }}</span>
+          </div>
+          <div>Species: <span class="font-semibold">{{ ts.bbox.species_name }}</span></div>
+          <div>Sound: <span class="font-semibold">{{ ts.bbox.songtype_name }}</span></div>
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
           <div
             class="tooltip-arrow"
             data-popper-arrow
