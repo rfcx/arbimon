@@ -377,10 +377,6 @@
             class="tooltip-arrow"
             data-popper-arrow
           />
-          <div
-            class="tooltip-arrow"
-            data-popper-arrow
-          />
         </div>
       </div>
       <!-- Templates layer -->
