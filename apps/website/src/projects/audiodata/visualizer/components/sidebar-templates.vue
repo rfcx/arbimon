@@ -13,9 +13,9 @@
         type="button"
         class="flex justify-start items-center w-full py-2 gap-x-1 text-insight dark:(bg-transparent text-insight)"
         data-accordion-target="#accordion-collapse-body-templates"
-        aria-expanded="false"
+        :aria-expanded="isOpen"
         aria-controls="accordion-collapse-body-templates"
-        @click="toggleTemplateMenu()"
+        @click="isOpen = !isOpen"
       >
         <div>
           <icon-fa-chevron-right
@@ -58,7 +58,7 @@
           class="flex items-center justify-center p-1 h-7 w-7 min-w-7 rounded-[4px] border-util-gray-01 bg-util-gray-03  cursor-pointer hover:bg-util-gray-04 transition"
           data-tooltip-target="tooltipSelectedTemplateId"
           data-tooltip-style="light"
-          @click="toggleAddTemplate()"
+          @click="toggleTemplate"
         >
           <icon-custom-ic-plus-icon class="h-4 text-frequency" />
         </button>
@@ -122,6 +122,7 @@ const spectrogramTemplates = ref<TemplateResponse[]>([])
 const store = useStore()
 const route = useRoute()
 const toggledTemplateMenu = ref<boolean>(false)
+const isOpen = ref(false)
 const selectedProjectSlug = computed(() => store.project?.slug)
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 const browserTypeId = computed(() => route.params.browserTypeId as string ?? undefined)
@@ -141,18 +142,23 @@ const fetchRecordingTemplates = (): void => {
   }) ?? []
 }
 
-const toggleAddTemplate = () => {
-  emits('emitActiveLayer', true)
+const toggleTemplate = () => {
+  toggledTemplateMenu.value = !toggledTemplateMenu.value
+  emits('emitActiveLayer', toggledTemplateMenu.value)
 }
 
-const toggleTemplateMenu = () => {
-  toggledTemplateMenu.value = !toggledTemplateMenu.value
-  if (toggledTemplateMenu.value === false) emits('emitActiveLayer', false)
-  if (toggledTemplateMenu.value === true) emits('emitClosedTabs', 'template')
-}
+watch(() => isOpen.value, () => {
+  if (isOpen.value === false) {
+    toggledTemplateMenu.value = false
+    emits('emitActiveLayer', toggledTemplateMenu.value)
+  }
+  if (isOpen.value === true) {
+    emits('emitClosedTabs', 'template')
+  }
+})
 
 watch(() => props.currentTab, () => {
-  if (props.currentTab === 'trainingSet') return
+  if (props.currentTab === 'template') return
   toggledTemplateMenu.value = false
   emits('emitActiveLayer', false)
 })

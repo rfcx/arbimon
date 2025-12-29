@@ -286,8 +286,8 @@ const toggleAddTsRoiBox = () => {
 
 const toggleTrainingSetMenu = () => {
   toggledTrainingSetMenu.value = !toggledTrainingSetMenu.value
-  if (toggledTrainingSetMenu.value === false) emits('emitActiveLayer', false, '')
-  if (toggledTrainingSetMenu.value === true) emits('emitClosedTabs', 'trainingSet')
+  if (toggledTrainingSetMenu.value === false) return emits('emitActiveLayer', false, '')
+  return emits('emitClosedTabs', 'trainingSet')
 }
 
 const toggleTrainingSetVisible = () => {
