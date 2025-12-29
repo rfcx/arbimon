@@ -105,7 +105,7 @@ onMounted(async () => {
 
   picker.value = initDatePicker(datePickerInput.value, {
     autohide: true,
-    format: 'dd/mm/yyyy',
+    format: 'dd-mm-yyyy',
     maxView: 1,
     beforeShowDay,
     nextArrow: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right size-4 rdp-chevron"><path d="m9 18 6-6-6-6"></path></svg>',
@@ -143,6 +143,8 @@ watch(() => props.initialDate, (v) => {
   } else {
     const formatted = dayjs(v).format(format)
     picker.value?.setDate(formatted)
+    if (datePickerInput.value) datePickerInput.value.value = formatted
+    selectedDateIso.value = dayjs(props.initialDate).format('YYYY-MM-DD') + 'T00:00:00.000Z'
   }
 })
 
