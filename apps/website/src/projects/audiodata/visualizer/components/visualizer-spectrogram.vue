@@ -293,7 +293,7 @@
           :id="`tagTooltipId-${index}`"
           :key="`tagTooltipKey-${index}`"
           role="tooltip"
-          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white dark:bg-moss rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
           <div>
             Tag: <span class="font-semibold">{{ getTagNames(tag.tags) }}</span>
@@ -328,7 +328,7 @@
           :id="`pmTooltipId-${index}`"
           :key="`pmTooltipKey-${index}`"
           role="tooltip"
-          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white dark:bg-moss rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
           <div>Validation</div>
           <div class="mt-3">
@@ -365,7 +365,7 @@
           :id="`tsTooltipId-${index}`"
           :key="`tsTooltipKey-${index}`"
           role="tooltip"
-          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white dark:bg-moss rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
           <div>Training set</div>
           <div class="mt-3">
@@ -403,7 +403,7 @@
           :id="`templateTooltipId-${index}`"
           :key="`templateTooltipKey-${index}`"
           role="tooltip"
-          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white dark:bg-moss rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
           <div>Template</div>
           <div class="mt-3">
@@ -443,7 +443,7 @@
           :id="`aedTooltipId-${index}`"
           :key="`aedTooltipKey-${index}`"
           role="tooltip"
-          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white dark:bg-moss rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
           {{ 'AED: ' + detection.name }}
           <div
@@ -478,7 +478,7 @@
           :id="`clusterTooltipId-${index}`"
           :key="`clusterTooltipKey-${index}`"
           role="tooltip"
-          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white dark:bg-moss rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
           {{ 'Clustering Playlist: ' + cl.playlistName }}
           <div
@@ -517,7 +517,7 @@
           :id="`soundscapeRegionTooltipId-${index}`"
           :key="`soundscapeRegionTooltipKey-${index}`"
           role="tooltip"
-          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+          class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white dark:bg-moss rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
           {{ 'Soundscape Region: ' + sr.name }}
           <div
