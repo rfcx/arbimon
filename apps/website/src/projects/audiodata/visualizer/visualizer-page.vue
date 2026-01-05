@@ -315,10 +315,12 @@ watch(selectedPlaylist, (newId) => {
 })
 
 watch(() => browserType.value, () => {
-  refetchRecording()
-  if (!visobject.value) return
-  visobjectSoundscape.value = undefined
-  visobject.value.type = browserType.value as string
+  if (browserType.value === 'playlist' || browserType.value === 'rec') {
+    refetchRecording()
+    visobjectSoundscape.value = undefined
+    if (!visobject.value) return
+    visobject.value.type = browserType.value as string
+  } else handleSelectedThumbnail(lastSoundscapeRecId.value)
 })
 
 watch(() => browserTypeId.value, () => {
