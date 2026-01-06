@@ -7,9 +7,11 @@
       class="max-h-[162px] text-insight"
     >
       <div
-        v-if="isLoadingRecordings || isRefetchRecordings"
-        class="loading-shimmer"
-      />
+        v-if="isLoadingRecordings || isRefetchRecordings || isLoadingPlaylist"
+        class="flex items-center justify-center mx-0 my-0 h-44 max-w-full max-h-full"
+      >
+        <icon-custom-ic-loading class="animate-spin h-6 w-6" />
+      </div>
       <div v-if="!recordings?.length">
         <p v-show="browserType === 'rec'">
           Please, select a site and a date to browse
@@ -107,6 +109,7 @@ const browserRecId = computed(() => route.params.browserRecId as string ?? undef
 const isPlaylist = computed(() => browserType.value === 'playlist')
 const isSoundscape = computed(() => browserType.value === 'soundscape')
 const isInitialDateWasChanged = ref<boolean>(false)
+const isLoadingPlaylist = ref<boolean>(false)
 
 const thumbnailContainer = ref<HTMLElement | null>(null)
 const recordingsSite = ref<RecordingResponse>([])
@@ -203,7 +206,11 @@ watch(() => browserType.value, () => {
 
 watch(() => props.recordingsItem, (r) => {
   if (r === undefined) return
+  isLoadingPlaylist.value = true
   recordingsPlaylist.value = [...r]
+  setTimeout(() => {
+    isLoadingPlaylist.value = false
+  }, 3000)
 })
 
 watch(() => props.soundscapeResponse, (ss) => {
