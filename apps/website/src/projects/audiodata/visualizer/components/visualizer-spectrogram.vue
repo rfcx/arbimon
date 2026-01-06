@@ -305,7 +305,7 @@
         </div>
       </div>
       <!-- Species layer -->
-      <div v-if="spectrogramPM && layerVisibility.species === true">
+      <div v-show="spectrogramPM && layerVisibility.species === true">
         <div
           v-for="(pmRoi, index) in spectrogramPM"
           :key="index"
@@ -342,7 +342,7 @@
         </div>
       </div>
       <!-- Training Sets layer -->
-      <div v-if="spectrogramTrainingSets && layerVisibility.ts === true">
+      <div v-show="spectrogramTrainingSets && layerVisibility.ts === true">
         <div
           v-for="(ts, index) in spectrogramTrainingSets"
           :key="index"
@@ -380,7 +380,7 @@
         </div>
       </div>
       <!-- Templates layer -->
-      <div v-if="spectrogramTemplates && layerVisibility.template === true">
+      <div v-show="spectrogramTemplates && layerVisibility.template === true">
         <div
           v-for="(template, index) in spectrogramTemplates"
           :key="index"
@@ -394,14 +394,14 @@
           }"
           tabindex="-1"
           data-tooltip-style="dark"
-          :data-tooltip-target="`templateTooltipId-${index}`"
+          :data-tooltip-target="`tempTooltipId-${index}`"
           @click="$event.stopPropagation(); toggleTemplate(template.id)"
         />
         <!-- Templates Tooltips -->
         <div
           v-for="(template, index) in spectrogramTemplates"
-          :id="`templateTooltipId-${index}`"
-          :key="`templateTooltipKey-${index}`"
+          :id="`tempTooltipId-${index}`"
+          :key="`tempTooltipKey-${index}`"
           role="tooltip"
           class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white dark:bg-moss rounded-lg shadow-sm opacity-0 tooltip"
         >
@@ -418,7 +418,7 @@
         </div>
       </div>
       <!-- AED layer -->
-      <div v-if="spectrogramAed && layerVisibility.aed === true">
+      <div v-show="spectrogramAed && layerVisibility.aed === true">
         <div
           v-for="(detection, index) in spectrogramAed"
           :key="index"
@@ -453,7 +453,7 @@
         </div>
       </div>
       <!-- Clustering layer -->
-      <div v-if="spectrogramClustering && layerVisibility.cluster === true">
+      <div v-show="spectrogramClustering && layerVisibility.cluster === true">
         <div
           v-for="(cl, index) in spectrogramClustering"
           :key="index"
@@ -488,7 +488,7 @@
         </div>
       </div>
       <!-- Soundscape Regions layer -->
-      <div v-if="spectrogramSoundscapeRegions && layerVisibility.soundscape === true">
+      <div v-show="spectrogramSoundscapeRegions && layerVisibility.soundscape === true">
         <div
           v-for="(sr, index) in spectrogramSoundscapeRegions"
           :key="index"
