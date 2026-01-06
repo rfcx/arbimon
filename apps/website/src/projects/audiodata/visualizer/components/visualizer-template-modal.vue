@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="visible"
+    v-show="visible"
     class="fixed inset-0 z-50 isolate flex items-center justify-center ml-120"
   >
     <div class="bg-moss rounded-xl shadow-lg max-w-md w-full p-6">
@@ -18,10 +18,7 @@
           </button>
         </div>
         <div>
-          <label
-            for="templatetName"
-            class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
-          >Name</label>
+          <label class="block mb-2 font-medium text-util-gray-01 dark:text-insight">Name</label>
           <input
             id="templateName"
             v-model="templateName"
@@ -35,20 +32,21 @@
         </div>
         <div class="flex flex-col relative">
           <label
-            for="speciesSound"
+            for="speciesInput"
             class="block mb-2 font-medium text-util-gray-01 dark:text-insight"
           >
             Species Sound
           </label>
           <div
-            id="templateDropdownTrigger"
-            data-dropdown-toggle="templateDropdown"
+            id="speciesBtn"
+            data-dropdown-toggle="speciesDropdown"
             class="input-item search relative w-full"
             @focusin="openDropdown"
           >
             <icon-fa-search class="h-3 w-3 mt-3 fa-search placeholder-util-gray-02" />
             <!-- Search class input -->
             <input
+              id="speciesInput"
               v-model="searchKeyword"
               type="text"
               placeholder="Search for species sounds"
@@ -62,7 +60,7 @@
             />
           </div>
           <div
-            id="templateDropdown"
+            id="speciesDropdown"
             class="absolute hidden w-5/6 left-4 z-60 bg-white rounded-md shadow dark:bg-moss mt-2 border-util-gray-03 border-1"
           >
             <!-- Add existing project species sound -->
@@ -223,7 +221,7 @@
 <script setup lang="ts">
 
 import { type AxiosInstance } from 'axios'
-import { initDropdowns } from 'flowbite'
+import { Dropdown, initDropdowns } from 'flowbite'
 import { computed, inject, nextTick, onMounted, ref } from 'vue'
 
 import type { ClassesRecordingResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
@@ -264,6 +262,8 @@ const success = ref<AlertDialogType>('error')
 const title = ref('')
 const message = ref('')
 const showAlert = ref(false)
+const speciesDropdownMenu = ref<HTMLElement | null>(null)
+let speciesDropdownInput: Dropdown
 
 const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue: string, hideAfter = 7000) => {
   showAlert.value = true
@@ -330,6 +330,7 @@ const backToSelectSpecies = () => {
 const onSelectedClass = (cl: ClassesRecordingResponse) => {
   searchKeyword.value = cl.species_name
   selectedClass.value = cl
+  speciesDropdownInput.hide()
 }
 
 const addClass = async () => {
@@ -384,8 +385,14 @@ const openDropdown = async () => {
   initDropdowns()
 }
 
-onMounted(() => {
+onMounted(async () => {
+  await nextTick()
   initDropdowns()
+  speciesDropdownMenu.value = document.getElementById('speciesDropdown')
+  speciesDropdownInput = new Dropdown(
+    document.getElementById('speciesDropdown'),
+    document.getElementById('speciesBtn')
+  )
 })
 
 </script>
