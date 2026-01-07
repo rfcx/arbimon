@@ -235,10 +235,7 @@
       </div>
       <VisualizerTagBboxModal
         v-if="activeLayer === 'tag'"
-        v-model="tagKeyword"
-        :keyword="tagKeyword"
         :visible="bboxValid"
-        :items="tagKeyword.length && tagKeyword.length > 3 ? searchedTags?.map((tag) => { return {id: tag.tag_id, label: tag.tag }}) : projectTags?.map((tag) => { return {id: tag.tag_id, label: tag.tag }})"
         :title="'Create Tag'"
         :list-name="'Tag'"
         @emit-selected-item="handleNewTag"
@@ -544,9 +541,8 @@ import { type RecordingTrainingSet, type RecordingTrainingSetParams, type Traini
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { useGetTags } from '../../_composables/use-recordings'
 import { useGetRecordingTrainingSets, usePostTrainingSet } from '../../_composables/use-training-sets'
-import { useGetPatternMatchingBoxes, useGetRecordingTag, useGetSoundscapeRegions, useGetTemplates, usePostTemplate, usePutRecordingTag, useSearchTag } from '../../_composables/use-visualizer'
+import { useGetPatternMatchingBoxes, useGetRecordingTag, useGetSoundscapeRegions, useGetTemplates, usePostTemplate, usePutRecordingTag } from '../../_composables/use-visualizer'
 import { type BboxGroupPm, type BboxGroupTags, type BboxGroupTrainingSets, type BboxListItem, type FreqFilter } from '../types'
 import { type LayerVisibility } from '../visualizer-page.vue'
 import type { VisibleSoundscapes } from './sidebar-soundscape-regions.vue'
@@ -597,7 +593,6 @@ const pointer = reactive<Pointer>({
 })
 
 const createBboxEditor = ref(new CreateBBoxEditor())
-const tagKeyword = ref<string>('')
 const spectrogramTags = ref<BboxGroupTags[]>([])
 const spectrogramTrainingSets = ref<BboxGroupTrainingSets[]>([])
 const spectrogramSoundscapeRegions = ref<SoundscapeRegion[]>([])
@@ -660,9 +655,7 @@ const selectedRecordingId = computed(() => {
   return isPlaylist.value ? isSoundscape.value ? undefined : browserRecId.value : browserTypeId.value
 })
 
-const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
 const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
-const { data: searchedTags, refetch: refetchSearchTags } = useSearchTag(apiClientArbimon, selectedProjectSlug, { q: tagKeyword.value })
 const { data: pmBoxes, refetch: refetchPatternMatchingBoxes } = useGetPatternMatchingBoxes(apiClientArbimon, selectedProjectSlug, { rec_id: selectedRecordingId.value as string, validated: 1 })
 const { data: templates, refetch: refetchTemplates } = useGetTemplates(apiClientArbimon, selectedProjectSlug)
 const { mutate: mutateAddRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
@@ -953,7 +946,6 @@ const handleNewTag = (tag: BboxListItem): void => {
     t1: createBboxEditor.value?.bbox?.x2
    }, {
     onSuccess: async () => {
-      refetchProjectTags()
       refetchRecordingTags()
       showAlertDialog('success', 'Success', 'Tag is added')
       resetBBox()
@@ -1020,11 +1012,6 @@ const handleNewTrainingSet = (action: string): void => {
       resetBBox()
     }
   })
-}
-
-const searchTags = (text: string) => {
-  if (!text) return
-  refetchSearchTags()
 }
 
 const toggleTag = (id: number) => {
@@ -1156,13 +1143,6 @@ watch(() => props.visobject, async () => {
   drawChart()
   await nextTick()
   initTooltips()
-})
-
-watch(() => tagKeyword.value, () => {
-  if (tagKeyword.value.length && tagKeyword.value.length > 2) {
-    searchTags(tagKeyword.value)
-    refetchSearchTags()
-  }
 })
 
 watch(() => recordingTags.value, async (newValue) => {

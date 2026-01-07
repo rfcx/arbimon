@@ -26,7 +26,7 @@
             @focusin="openDropdown"
           >
             <input
-              :value="keyword"
+              v-model="tagKeyword"
               class="block bg-moss border-util-gray-03 rounded-md w-full placeholder:text-insight focus:(border-frequency ring-frequency)"
               type="text"
               :placeholder="'Add' + listName + 's to this region.'"
@@ -88,12 +88,19 @@
             </ul>
           </div>
         </div>
-        <div class="flex flex-row items-center gap-x-4">
+        <div class="flex flex-row items-center justify-between gap-x-4">
           <button
             class="px-4 py-2 btn btn-secondary btn-medium"
             @click="$emit('cancel')"
           >
             Cancel
+          </button>
+          <button
+            class="px-4 py-2 btn btn-primary btn-medium disabled:(cursor-not-allowed opacity-50)"
+            :disabled="selectedItem === null"
+            @click="emitSelectedItem"
+          >
+            Add Data
           </button>
         </div>
       </div>
@@ -103,32 +110,53 @@
 
 <script setup lang="ts">
 
+import type { AxiosInstance } from 'axios'
 import { initDropdowns } from 'flowbite'
-import { nextTick, onMounted, ref } from 'vue'
+import { computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 
+import { apiClientArbimonLegacyKey } from '@/globals'
+import { useStore } from '~/store'
+import { useGetTags } from '../../_composables/use-recordings'
+import { useSearchTag } from '../../_composables/use-visualizer'
 import { type BboxListItem, type BboxListItems } from '../types'
 
 defineProps<{
-  keyword: string
   visible: boolean
   title: string
   listName?: string
-  items: BboxListItems | undefined
 }>()
 
-const emits = defineEmits<{(e: 'cancel'): void, (e: 'emitSelectedItem', value: BboxListItem): void}>()
+const emits = defineEmits<{(e: 'cancel'): void,
+  (e: 'emitSelectedItem', value: BboxListItem): void
+}>()
 
-const dropdownTrigger = ref<HTMLElement | null>(null)
-const dropdownMenu = ref<HTMLElement | null>(null)
+const store = useStore()
+const selectedProjectSlug = computed(() => store.project?.slug)
 const selectedItem = ref<BboxListItem | null>(null)
 const hasFocusInput = ref(false)
+const tagKeyword = ref<string>('')
+const tagKeywordParams = computed(() => tagKeyword.value || '')
+const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+
+const { data: searchedTags, refetch: refetchSearchTags, isRefetching } = useSearchTag(apiClientArbimon, selectedProjectSlug, tagKeywordParams)
+const { data: projectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
+
+const items = computed<BboxListItems | undefined>(() => {
+  return tagKeyword.value.length && tagKeyword.value.length > 1 ? searchedTags.value?.map((tag) => { return { id: tag.tag_id, label: tag.tag } }) : projectTags.value?.map((tag) => { return { id: tag.tag_id, label: tag.tag } })
+})
 
 const onClearInput = () => {
   selectedItem.value = null
+  tagKeyword.value = ''
 }
 
 const onSelected = (item: BboxListItem) => {
   selectedItem.value = item
+  tagKeyword.value = selectedItem.value.label
+}
+
+const emitSelectedItem = () => {
+  if (selectedItem.value === null) return
   emits('emitSelectedItem', selectedItem.value)
 }
 
@@ -136,6 +164,12 @@ const openDropdown = async () => {
   await nextTick()
   initDropdowns()
 }
+
+watch(() => tagKeyword.value, () => {
+  if ((tagKeyword.value.length && tagKeyword.value.length > 1) || isRefetching.value === true) {
+    refetchSearchTags()
+  }
+})
 
 onMounted(() => {
   initDropdowns()

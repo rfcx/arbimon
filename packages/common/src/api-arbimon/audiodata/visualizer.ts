@@ -258,7 +258,11 @@ export const apiGetRecordingTag = async (apiClient: AxiosInstance, slug: string,
 }
 
 export const apiSearchTag = async (apiClient: AxiosInstance, slug: string, params: RecordingTagSearchParams): Promise<RecordingTagResponse[] | undefined> => {
-  const response = await apiClient.get(`/legacy-api/project/${slug}/tags/`, { params })
+  const response = await apiClient.request<RecordingTagResponse[]>({
+    method: 'GET',
+    url: `/legacy-api/project/${slug}/tags`,
+    params
+  })
   return response.data
 }
 
