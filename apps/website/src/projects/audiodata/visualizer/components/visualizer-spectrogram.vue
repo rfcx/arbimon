@@ -19,7 +19,9 @@
         <span>Unavailable</span>
       </div>
       <!-- Base image - recording, playlist -->
-      <div v-if="visobject && visobject.tiles.set && spectrogramContainer">
+      <div
+        v-if="visobject && visobject.tiles.set && spectrogramContainer"
+      >
         <div
           v-for="(tile, index) in visobject.tiles.set"
           :key="index"
@@ -60,10 +62,10 @@
       <!-- zoom -->
       <div
         v-if="visobject"
-        class="zoom-control-group absolute z-6"
+        class="zoom-control-group fixed z-6"
         :style="{
           top: (legendMetrics.axis_margin_top + 10) + 'px',
-          left: (containerSize.width - 180) + 'px'
+          left: (containerSize.width + 300) + 'px'
         }"
       >
         <ZoomControl
@@ -74,34 +76,6 @@
           v-model="zoomData.y"
           :horizontal="false"
         />
-        <!-- TODO -->
-        <!-- <div class="zoom-control-btns absolute flex flex-col gap-2">
-          <button
-            class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-0.5"
-            :class="{ 'active': click2zoom.active }"
-            @click="click2zoom.toggleActive()"
-          >
-            <icon-fa-search-plus
-              class="h-3 text-fog"
-            />
-          </button>
-          <button
-            class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-0.55"
-            @click="click2zoom.zoomOut()"
-          >
-            <icon-fa-search-minus
-              class="h-3 text-fog"
-            />
-          </button>
-          <button
-            class="btn btn-xs rounded-sm bg-util-gray-03 border-0 py-1 px-0.5"
-            @click="click2zoom.zoomReset()"
-          >
-            <icon-fa-eraser
-              class="h-3 text-fog"
-            />
-          </button>
-        </div> -->
       </div>
 
       <!-- Y scale -->
@@ -184,7 +158,7 @@
         class="filter-band z-5"
         :style="{ top: `${hz2y(freqFilter?.filterMin, 1) + 15}px`, height: `${dhz2height(freqFilter?.filterMin, 0)}px`, width: `${spectrogramMetrics.width}px`, left: legendMetrics.axis_sizew + 'px' }"
       />
-      <!-- ROI box -->
+      <!-- Crosshair container -->
       <div
         class="absolute z-5"
         :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
@@ -193,8 +167,8 @@
       />
       <div
         v-if="activeLayer && activeLayer !== 'New Training Set' && activeLayer !== 'aed'"
-        ref="containerRef"
-        class="input-source cursor-crosshair relative z-5"
+        ref="crosshairContainerRef"
+        class="cursor-crosshair absolute z-5"
         :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
         @mousedown.left="onMouseDownRoi"
         @mousemove.prevent="onMouseMoveRoi"
@@ -605,7 +579,7 @@ const toggledTemplateBox = ref<number>()
 const toggledAedBox = ref<number>()
 const toggledClustering = ref<number>()
 const toggledSoundscapeRegion = ref<number>()
-const containerRef = ref<HTMLElement | null>(null)
+const crosshairContainerRef = ref<HTMLElement | null>(null)
 
 const zoomData = reactive<{ x: number; y: number; levelx?: number[]; levely?: number[], maxSec2px: number, maxHz2px: number }>({
   x: 0,
@@ -894,9 +868,9 @@ const onMouseMoveRoi = (e: MouseEvent) => {
 }
 
  const setBboxPointer = (e: MouseEvent) => {
-  if (!containerRef.value) return
+  if (!crosshairContainerRef.value) return
   if ((e.buttons & 1) !== 1) return
-  const rect = containerRef.value.getBoundingClientRect()
+  const rect = crosshairContainerRef.value.getBoundingClientRect()
   const x = e.clientX - rect.left
   const y = e.clientY - rect.top
   const clampedX = Math.max(0, Math.min(x, rect.width))
