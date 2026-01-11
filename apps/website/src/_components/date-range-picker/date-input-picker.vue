@@ -57,7 +57,7 @@ const props = defineProps<{
   disabled?: boolean
 }>()
 
-const emit = defineEmits<{(e: 'emitSelectDate', value: { dateLocalIso: string }): void}>()
+const emit = defineEmits<{(e: 'emitSelectDate', value: { dateLocalIso: string }): void, (e: 'emitChangedYear', value: { year: string }): void}>()
 
 const format = 'DD-MM-YYYY'
 const datePickerInput = ref<HTMLInputElement>()
@@ -99,6 +99,22 @@ const beforeShowDay = (date: Date) => {
   }
 }
 
+const beforeShowMonth = (date: Date) => {
+  const calendarMonth = date.getMonth()
+  let existingMonths: number[] = []
+  if (props.recordedMinutesPerDay !== undefined) {
+    if (new Date(props.recordedMinutesPerDay[0].date).getUTCFullYear() === date.getUTCFullYear()) {
+      existingMonths = props.recordedMinutesPerDay.map(row => new Date(row.date).getMonth())
+    }
+  }
+  return {
+    content: `
+      <div class="${existingMonths.includes(calendarMonth) && props.recordedMinutesPerDay ? 'text-frequency' : 'text-util-gray-02'}">
+        ${date.toLocaleString('en-US', { month: 'short' })}
+      </div>`
+  }
+}
+
 onMounted(async () => {
   const { initDatePicker } = await import('./date-range-picker')
   if (!datePickerInput.value) return
@@ -107,9 +123,17 @@ onMounted(async () => {
     autohide: true,
     format: 'dd-mm-yyyy',
     maxView: 1,
+    startView: 1,
+    pickLevel: 0,
     beforeShowDay,
+    beforeShowMonth,
     nextArrow: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right size-4 rdp-chevron"><path d="m9 18 6-6-6-6"></path></svg>',
     prevArrow: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left size-4 rdp-chevron"><path d="m15 18-6-6 6-6"></path></svg>'
+  })
+
+  datePickerInput.value.addEventListener('changeYear', (e: any) => {
+    const yearIso = dayjs(e.detail.viewDate).format('YYYY')
+    emit('emitChangedYear', { year: yearIso })
   })
 
   if (props.initialViewYear != null && props.initialViewMonth != null) {
@@ -133,7 +157,7 @@ onMounted(async () => {
 })
 
 watch(() => props.recordedMinutesPerDay, () => {
-  picker.value?.setOptions({ beforeShowDay })
+  picker.value?.setOptions({ beforeShowDay, beforeShowMonth })
 })
 
 watch(() => props.initialDate, (v) => {

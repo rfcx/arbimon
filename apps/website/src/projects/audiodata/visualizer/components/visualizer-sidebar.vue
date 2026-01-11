@@ -76,6 +76,7 @@
             :initial-view-month="initialViewMonth"
             :recorded-minutes-per-day="recordedMinutesPerDay"
             @emit-select-date="onEmitSelectedDate"
+            @emit-changed-year="onEmitChangeYear"
           />
         </div>
       </div>
@@ -350,7 +351,8 @@ const siteSelected = ref<string | number | undefined>(undefined)
 const siteSelectedValue = computed(() => siteSelected.value)
 
 const { data: yearly } = useLegacyAvailableYearly(apiClientArbimon, selectedProjectSlug, siteSelectedValue)
-const yearSelected = computed(() => getYearWithMaxCount(yearly.value ?? []))
+const viewedYear = ref<number | undefined>(undefined)
+const yearSelected = computed(() => getYearWithMaxCount(yearly.value ?? [], viewedYear.value))
 const { data: recordedMinutesPerDay, refetch: refetchAvailableBySiteYear } = useLegacyAvailableBySiteYear(apiClientArbimon, selectedProjectSlug, siteSelectedValue, yearSelected)
 
 const page = ref(0)
@@ -366,7 +368,8 @@ async function onPageChange (p: number) {
   recordingResponse.value = await apiArbimonPostPlaylistItems(apiClientArbimon, selectedProjectSlug.value ?? '', playlistSelectedValue.value, { offset: (p * pageSize), limit: pageSize })
 }
 
-function getYearWithMaxCount (records: LegacyYearlyRecord[]): number {
+function getYearWithMaxCount (records: LegacyYearlyRecord[], viewedYear?: number): number {
+  if (viewedYear !== undefined) return viewedYear
   if (records == null || records.length === 0) {
     return dayjs().year()
   }
@@ -417,6 +420,14 @@ const onEmitSelectedDate = (date: { dateLocalIso: string }) => {
     const input = (datePickerRef.value as any)?.$refs?.datePickerInput as HTMLInputElement | undefined
     input?.blur()
   })
+}
+
+const onEmitChangeYear = (date: { year: string }) => {
+  if (yearly.value === undefined) return
+  if (yearly.value?.filter(d => d.year === +date.year).length > 0) {
+    viewedYear.value = +date.year
+    refetchAvailableBySiteYear()
+  }
 }
 
 const handleClosedTabs = (tab: string) => {
