@@ -84,7 +84,7 @@
     </div>
 
     <div
-      v-show="toggledTrainingSetMenu && selectedTrainingSetText !== ''"
+      v-show="toggledTrainingSetMenu === true && selectedTrainingSetText !== ''"
       :id="'accordion-collapse-heading-training-sets-' + selectedTrainingSetText"
       class="flex flex-row justify-between items-center"
     >
@@ -149,7 +149,7 @@
       </div>
     </div>
     <div
-      v-if="toggleTrainingSet"
+      v-if="toggleTrainingSet === true"
       :id="'accordion-collapse-body-training-sets-' + selectedTrainingSetText"
       class="flex flex-col gap-y-2 text-sm font-medium"
       :aria-labelledby="'accordion-collapse-heading-training-sets-' + selectedTrainingSetText"
@@ -286,6 +286,7 @@ const toggleAddTsRoiBox = () => {
 
 const toggleTrainingSetMenu = () => {
   toggledTrainingSetMenu.value = !toggledTrainingSetMenu.value
+  toggleTrainingSet.value = false
   if (toggledTrainingSetMenu.value === false) return emits('emitActiveLayer', false, '')
   return emits('emitClosedTabs', 'trainingSet')
 }
