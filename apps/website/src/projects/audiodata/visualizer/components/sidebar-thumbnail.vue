@@ -7,12 +7,12 @@
       class="max-h-[162px] text-insight"
     >
       <div
-        v-if="isLoadingRecordings || isRefetchRecordings || isLoadingPlaylist"
+        v-if="isLoadingVisobject || isLoadingRecordings || isRefetchRecordings || isLoadingPlaylist"
         class="flex items-center justify-center mx-0 my-0 h-44 max-w-full max-h-full"
       >
         <icon-custom-ic-loading class="animate-spin h-6 w-6" />
       </div>
-      <div v-if="!recordings?.length">
+      <div v-if="!recordings?.length && !isLoadingVisobject">
         <p v-show="browserType === 'rec'">
           Please, select a site and a date to browse
         </p>
@@ -119,6 +119,7 @@ const soundscape = ref<SoundscapeResponse>([])
 const props = defineProps<{
   recordingsItem: RecordingResponse | undefined, // playlist
   soundscapeResponse: SoundscapeResponse | undefined,
+  isLoadingVisobject: boolean
   initialDate: string
   siteSelected: string | number | undefined
   visobject: Visobject | undefined,
@@ -147,7 +148,7 @@ const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed
 
 const recordingListSearchParams = computed(() => {
   const formattedDate = dayjs.utc(props.initialDate).format('YYYY-MM-DD')
-  if (!formattedDate) return
+  if (!formattedDate || props.initialDate === '') return
   const visobjSite = sites.value?.find(site => site.name === props.visobject?.site)
   if (siteSelectedRef.value === undefined) return
   const opts = {

@@ -85,6 +85,7 @@
       :recordings-item="recordingResponse"
       :soundscape-response="soundscapeResponse"
       :initial-date="initialDate"
+      :is-loading-visobject="isLoadingVisobject"
       :site-selected="siteSelected"
       :visobject="visobject"
       :next-recording="nextRecording"

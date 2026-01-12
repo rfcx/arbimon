@@ -102,7 +102,7 @@ const beforeShowDay = (date: Date) => {
 const beforeShowMonth = (date: Date) => {
   const calendarMonth = date.getMonth()
   let existingMonths: number[] = []
-  if (props.recordedMinutesPerDay !== undefined) {
+  if (props.recordedMinutesPerDay !== undefined && props.recordedMinutesPerDay[0] !== undefined) {
     if (new Date(props.recordedMinutesPerDay[0].date).getUTCFullYear() === date.getUTCFullYear()) {
       existingMonths = props.recordedMinutesPerDay.map(row => new Date(row.date).getMonth())
     }

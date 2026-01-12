@@ -2,7 +2,7 @@
   <section class="bg-white dark:bg-pitch">
     <VisualizerSidebar
       :visobject="visobject"
-      :is-loading-visobject="isLoadingVisobject"
+      :is-loading-visobject="isLoadingVisobject || isFetchingVisobject"
       :pointer="pointer"
       :is-sidebar-tags-updated="isSidebarTagsUpdated"
       @update-current-time="handleCurrentTime"
