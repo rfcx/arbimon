@@ -71,19 +71,37 @@
               {{ item.normalized ? 'Normalized' : '0 - ' + item.max_value + ' (auto)' }}
             </div>
           </div>
-
-          <div class="grid grid-cols-[200px_1fr] items-center py-2">
-            <div class="text-secondary/80">
-              Amplitude Threshold
-            </div>
-            <div>
-              <div class="font-medium">
-                {{ item.threshold }}
+          <div class="flex justify-between items-center">
+            <div class="grid grid-cols-[200px_1fr] items-center py-2">
+              <div class="text-secondary/80">
+                Amplitude Threshold
               </div>
-              <div class="mt-0.5">
-                {{ thresholdType }}
+              <div>
+                <div class="font-medium">
+                  {{ item.threshold }}
+                </div>
+                <div class="mt-0.5">
+                  {{ thresholdType }}
+                </div>
               </div>
             </div>
+            <div
+              class="cursor-pointer"
+              title="Edit Visualization Options"
+              @click="$event.stopPropagation();toggleOptions()"
+            >
+              <icon-custom-fi-wrench
+                class="h-4 w-4"
+              />
+            </div>
+            <SoundscapeOptions
+              :soundscape="item"
+              :visible="toggleVisible"
+              :soundscape-scidx="soundscapeScidx"
+              :soundscape-norm-vector="soundscapeNormVector"
+              @emit-options="$emit('emitSoundscapeOptions', $event)"
+              @cancel="toggleVisible = false"
+            />
           </div>
         </div>
       </div>
@@ -92,12 +110,28 @@
 </template>
 
 <script setup lang="ts">
+import { type AxiosInstance } from 'axios'
 import { initAccordions } from 'flowbite'
-import { computed, onMounted } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 
-import type { SoundscapeItem } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import type { SoundscapeItem, SoundscapeItemOptions } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+
+import { apiClientArbimonLegacyKey } from '@/globals'
+import { useStore } from '~/store'
+import { useGetSoundscapeNormVector, useGetSoundscapeScidx } from '../../_composables/use-visualizer'
+import SoundscapeOptions from './sidebar-soundscape-options-modal.vue'
 
 const props = defineProps<{ item: SoundscapeItem }>()
+
+defineEmits<{(e: 'emitSoundscapeOptions', value: SoundscapeItemOptions): void}>()
+
+const store = useStore()
+const selectedProjectSlug = computed(() => store.project?.slug)
+const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+const { data: soundscapeScidx } = useGetSoundscapeScidx(apiClientArbimon, selectedProjectSlug, computed(() => props.item.id.toString()))
+const { data: soundscapeNormVector } = useGetSoundscapeNormVector(apiClientArbimon, selectedProjectSlug, computed(() => props.item.id.toString()))
+
+const toggleVisible = ref<boolean>(false)
 
 const toTitle = (s: string) =>
   s.replace(/[_-]+/g, ' ')
@@ -117,6 +151,10 @@ const freqRange = computed(() =>
 )
 
 const thresholdType = computed(() => toTitle(props.item.threshold_type))
+
+const toggleOptions = () => {
+  toggleVisible.value = !toggleVisible.value
+}
 
 onMounted(() => {
   initAccordions()

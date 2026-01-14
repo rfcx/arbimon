@@ -6,6 +6,7 @@
       :pointer="pointer"
       :is-sidebar-tags-updated="isSidebarTagsUpdated"
       @update-current-time="handleCurrentTime"
+      @update-soundscape="handleVisobjectSoundscape"
       @update-color-spectrogram="handleColorSpectrogram"
       @update-validations="updateValidations"
       @update-freq-filter="handleFreqFilter"
@@ -63,7 +64,7 @@ import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/tra
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
-import { useGetRecording } from '../_composables/use-visualizer'
+import { useGetRecording, useGetSoundscapes } from '../_composables/use-visualizer'
 import type { VisibleSoundscapes } from './components/sidebar-soundscape-regions.vue'
 import VisualizerSidebar, { type AedJob, type ClusteringPlaylist } from './components/visualizer-sidebar.vue'
 import VisualizerSpectrogram, { type Pointer } from './components/visualizer-spectrogram.vue'
@@ -141,6 +142,7 @@ const selectedRecordingId = computed(() => {
 })
 
 const { isLoading: isLoadingVisobject, data: visobject, isRefetching, refetch: refetchRecording } = useGetRecording(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
+const { refetch: refetchSoundscapes } = useGetSoundscapes(apiClientArbimon, selectedProjectSlug)
 
 const handleCurrentTime = (value: number): void => {
   currentTime.value = value
@@ -189,6 +191,13 @@ const handleTemplateVisibility = (value: boolean) => {
 const handleSoundscapeRegions = (value: VisibleSoundscapes) => {
   layerVisibility.value.soundscape = value.toggleVisible
   visibleSoundscapes.value = value
+}
+
+const handleVisobjectSoundscape = async () => {
+  await refetchSoundscapes()
+  if (browserTypeId.value !== undefined) {
+    visobjectSoundscape.value = soundscapeResponse.value?.find(it => it.id === +browserTypeId.value) ?? undefined
+  }
 }
 
 const setBrowserType = (value: string) => {

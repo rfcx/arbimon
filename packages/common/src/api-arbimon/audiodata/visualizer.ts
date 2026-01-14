@@ -767,3 +767,56 @@ export const apiGetSoundscapeComposition = async (
 
   return response.data
 }
+
+export interface SoundscapeScidx {
+  height: number
+  index: Record<number, Record<number, [number, number[]?]>>
+  offsetx: number
+  offsety: number
+  stats: any
+  valid: boolean
+  version: number
+  width: number
+  __maxAmplitude?: number
+}
+
+export const apiGetSoundscapeScidx = async (
+  apiClient: AxiosInstance,
+  slug: string,
+  soundscapeId: string
+): Promise<SoundscapeScidx> => {
+  const url = `/legacy-api/project/${slug}/soundscapes/${soundscapeId}/scidx?count=1`
+  const response = await apiClient.get(url)
+  return response.data
+}
+
+export type NormVector = Record<number, number>
+
+export const apiGetSoundscapeNormVector = async (
+  apiClient: AxiosInstance,
+  slug: string,
+  soundscapeId: string
+): Promise<NormVector> => {
+  const url = `/legacy-api/project/${slug}/soundscapes/${soundscapeId}/norm-vector`
+  const response = await apiClient.get(url)
+  return response.data
+}
+
+export interface SoundscapeItemOptions {
+  palette: number
+  max: number
+  normalized: boolean
+  amplitude: number
+  amplitudeReference: string
+}
+
+export const apiGetSoundscapeScale = async (
+  apiClient: AxiosInstance,
+  slug: string,
+  soundscapeId: string,
+  payload: SoundscapeItemOptions
+): Promise<SoundscapeItem> => {
+  const url = `/legacy-api/project/${slug}/soundscapes/${soundscapeId}/scale`
+  const response = await apiClient.post(url, payload)
+  return response.data
+}

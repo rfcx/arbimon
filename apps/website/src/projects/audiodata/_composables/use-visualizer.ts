@@ -2,7 +2,7 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import type { AxiosInstance } from 'axios'
 import { type ComputedRef, computed } from 'vue'
 
-import { type AedResponse, type ClusterResponse, type CounSoundscapeCompositiontById, type newTemplateResponse, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingValidateParams, type RecordingValidateResponse, type SoundscapeCompositionParams, type SoundscapeCompositionResponse, type SoundscapeRegion, type SoundscapeResponse, type TagDeleteResponse, type TagParams, type TemplateParams, type TemplateResponse, type VisobjectResponse, apiArbimonGetAed, apiArbimonGetClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiGetSoundscapeComposition, apiGetSoundscapeRegions, apiGetSoundscapes, apiGetTemplates, apiPostSoundscapeComposition, apiPostTemplate, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type AedResponse, type ClusterResponse, type CounSoundscapeCompositiontById, type newTemplateResponse, type NormVector, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingValidateParams, type RecordingValidateResponse, type SoundscapeCompositionParams, type SoundscapeCompositionResponse, type SoundscapeItem, type SoundscapeItemOptions, type SoundscapeRegion, type SoundscapeResponse, type SoundscapeScidx,type TagDeleteResponse, type TagParams, type TemplateParams, type TemplateResponse, type VisobjectResponse, apiArbimonGetAed, apiArbimonGetClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiGetSoundscapeComposition, apiGetSoundscapeNormVector, apiGetSoundscapeRegions, apiGetSoundscapes, apiGetSoundscapeScale, apiGetSoundscapeScidx, apiGetTemplates, apiPostSoundscapeComposition, apiPostTemplate, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: ComputedRef<string | undefined>): UseQueryReturnType<VisobjectResponse | undefined, unknown> => {
   return useQuery({
@@ -230,6 +230,55 @@ export const useGetSoundscapeComposition = (
     queryFn: async () => {
       if (!slug.value || !soundscapeId.value) return undefined
       return await apiGetSoundscapeComposition(apiClient, slug.value, soundscapeId.value)
+    },
+    refetchOnWindowFocus: false,
+    retry: 0
+  })
+}
+
+export const useGetSoundscapeScidx = (
+  apiClient: AxiosInstance,
+  slug: ComputedRef<string | undefined>,
+  soundscapeId: ComputedRef<string | undefined>
+): UseQueryReturnType<SoundscapeScidx | undefined, unknown> => {
+  return useQuery({
+    queryKey: ['fetch-soundscape-scidx', slug, soundscapeId],
+    queryFn: async () => {
+      if (!slug.value || !soundscapeId.value) return []
+      return await apiGetSoundscapeScidx(apiClient, slug.value, soundscapeId.value)
+    },
+    refetchOnWindowFocus: false,
+    retry: 0
+  })
+}
+
+export const useGetSoundscapeNormVector = (
+  apiClient: AxiosInstance,
+  slug: ComputedRef<string | undefined>,
+  soundscapeId: ComputedRef<string | undefined>
+): UseQueryReturnType<NormVector | undefined, unknown> => {
+  return useQuery({
+    queryKey: ['fetch-soundscape-norm-vector', slug, soundscapeId],
+    queryFn: async () => {
+      if (!slug.value || !soundscapeId.value) return []
+      return await apiGetSoundscapeNormVector(apiClient, slug.value, soundscapeId.value)
+    },
+    refetchOnWindowFocus: false,
+    retry: 0
+  })
+}
+
+export const useGetSoundscapeNormScale = (
+  apiClient: AxiosInstance,
+  slug: ComputedRef<string | undefined>,
+  soundscapeId: ComputedRef<string | undefined>,
+  payload: SoundscapeItemOptions
+): UseQueryReturnType<SoundscapeItem | undefined, unknown> => {
+  return useQuery({
+    queryKey: ['post-soundscape-scale', slug, soundscapeId],
+    queryFn: async () => {
+      if (!slug.value || !soundscapeId.value) return []
+      return await apiGetSoundscapeScale(apiClient, slug.value, soundscapeId.value, payload)
     },
     refetchOnWindowFocus: false,
     retry: 0

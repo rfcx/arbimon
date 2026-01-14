@@ -60,6 +60,7 @@ declare module 'vue' {
     IconCustomFiUser: typeof import('~icons/custom-icons/fi-user')['default']
     IconCustomFiVisualizerRedirect: typeof import('~icons/custom-icons/fi-visualizer-redirect')['default']
     IconCustomFiVolume: typeof import('~icons/custom-icons/fi-volume')['default']
+    IconCustomFiWrench: typeof import('~icons/custom-icons/fi-wrench')['default']
     IconCustomFiXCircle: typeof import('~icons/custom-icons/fi-x-circle')['default']
     IconCustomFtActualBird: typeof import('~icons/custom-icons/ft-actual-bird')['default']
     IconCustomFtBold: typeof import('~icons/custom-icons/ft-bold')['default']

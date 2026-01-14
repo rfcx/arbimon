@@ -162,6 +162,7 @@
       <SoundscapeDetails
         v-if="soundscapeSelected"
         :item="soundscapeSelected"
+        @emit-soundscape-options="handleSoundscapeOptions"
       />
       <SoundscapeRegions
         v-if="soundscapeSelected"
@@ -184,8 +185,8 @@ import dayjs from 'dayjs'
 import { computed, inject, nextTick, onMounted, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { RecordingResponse, RecordingTagResponse, SoundscapeItem, SoundscapeResponse, TagParams, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
-import { apiArbimonPostPlaylistItems, apiGetSoundscapes } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import type { RecordingResponse, RecordingTagResponse, SoundscapeItem, SoundscapeItemOptions, SoundscapeResponse, TagParams, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { apiArbimonPostPlaylistItems, apiGetSoundscapes, apiGetSoundscapeScale } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
@@ -264,6 +265,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'updateColorSpectrogram', value: string): void,
+  (e: 'updateSoundscape'): void,
   (e: 'updateValidations'): void,
   (e: 'updateFreqFilter', value: FreqFilter): void,
   (e: 'updateTags'): void,
@@ -433,6 +435,13 @@ const onEmitChangeYear = (date: { year: string }) => {
 
 const handleClosedTabs = (tab: string) => {
   currentOpenTab.value = tab
+}
+
+const handleSoundscapeOptions = async (options: SoundscapeItemOptions) => {
+  if (selectedProjectSlug.value === undefined || soundscapeSelected.value?.id === undefined) return
+  const response = await apiGetSoundscapeScale(apiClientArbimon, selectedProjectSlug.value, soundscapeSelected.value.id.toString(), options)
+  console.info('response', response)
+  emits('updateSoundscape')
 }
 
 const handleFreqFilter = (filter: FreqFilter) => {
