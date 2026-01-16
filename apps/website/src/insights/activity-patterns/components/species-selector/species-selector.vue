@@ -161,9 +161,10 @@ watch(allSpecies, (newValue) => {
     }
   }
 
-  if (selectedSpecies.value) {
-    emit('emitSelectedSpeciesChange', selectedSpecies.value)
-  }
+  // temp hide it to check twice calling endpoint
+  // if (selectedSpecies.value) {
+  //   emit('emitSelectedSpeciesChange', selectedSpecies.value)
+  // }
 })
 
 watch(selectedSpeciesSlug, () => {
