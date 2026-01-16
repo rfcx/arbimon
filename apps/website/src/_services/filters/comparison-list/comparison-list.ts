@@ -1,5 +1,6 @@
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
+import { useRoute, useRouter } from 'vue-router'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
@@ -13,6 +14,9 @@ import { fromQuery, toQuery } from './query-string'
 const DEFAULT_START = dayjs.utc('1990-01-01T00:00:00.000Z').startOf('day')
 const DEFAULT_END = dayjs().utc().startOf('day')
 const defaultFilter = new FilterImpl(DEFAULT_START, DEFAULT_END)
+
+const route = useRoute()
+const router = useRouter()
 
 @Options({
   components: {
@@ -51,7 +55,7 @@ export default class ComparisonListComponent extends Vue {
   @Watch('store.projectFilters', { deep: true, immediate: true })
   onProjectFilterChange (): void {
     if (this.store.projectFilters === undefined) return
-    let filters = fromQuery(this.$route.query, this.store.projectFilters)
+    let filters = route?.query !== undefined ? fromQuery(route.query, this.store.projectFilters) : []
     if (filters.length === 0) {
       filters = [new FilterImpl(
         this.store.projectFilters?.dateStartInclusiveUtc ? dayjs.utc(this.store.projectFilters?.dateStartInclusiveUtc).startOf('day') : DEFAULT_START,
@@ -111,7 +115,7 @@ export default class ComparisonListComponent extends Vue {
     if (this.filters.length === 0) {
       this.filters.push(defaultFilter)
     }
-    void this.$router.replace({ query: toQuery(this.filters) })
+    void router.replace({ query: toQuery(this.filters) })
     this.emitSelect()
   }
 
@@ -124,7 +128,7 @@ export default class ComparisonListComponent extends Vue {
       this.filters.splice(this.selectedFilterId, 1, newFilter)
       this.selectedFilterId = -1
     }
-    void this.$router.replace({ query: toQuery(this.filters) })
+    void router.replace({ query: toQuery(this.filters) })
     this.emitSelect()
   }
 }
