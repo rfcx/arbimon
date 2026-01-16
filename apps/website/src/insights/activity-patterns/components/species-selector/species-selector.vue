@@ -160,10 +160,6 @@ watch(allSpecies, (newValue) => {
       selectedSpeciesSlug.value = allSpecies.value[0].taxonSpeciesSlug
     }
   }
-
-  if (selectedSpecies.value) {
-    emit('emitSelectedSpeciesChange', selectedSpecies.value)
-  }
 })
 
 watch(selectedSpeciesSlug, () => {
