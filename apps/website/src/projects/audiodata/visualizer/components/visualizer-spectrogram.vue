@@ -7,7 +7,7 @@
       class="flex flex-row flex-nowrap relative h-screen"
     >
       <div
-        v-if="!visobject"
+        v-if="!visobject && !visobjectSoundscape"
         class="absolute inset-0 flex justify-center items-center text-sm font-medium"
       >
         <span>Please select a  {{ isSoundscape ? 'soundscape' : 'recording' }}</span>
@@ -44,7 +44,7 @@
         <div
           v-for="(tile, index) in visobjectSoundscape.tiles.set"
           :key="index"
-          class="absolute crisp-image"
+          class="absolute"
           :style="{
             left: Math.floor(tile.s * getSec2px(spectrogramMetrics.width, visobjectSoundscape.domain.x.span)) + legendMetrics.axis_sizew + 'px',
             top: (visobjectSoundscape.scale.originalScale ? Math.floor(spectrogramMetrics.height - tile.hz * getHz2px(spectrogramMetrics.height, visobjectSoundscape.domain.y.span)) : 0) + legendMetrics.axis_margin_top + 'px',
@@ -54,7 +54,7 @@
         >
           <VisualizerTileImg
             :id="'spectrogramTile'+index"
-            :tile-src="getUrl(tile.src)"
+            :tile-src="tile.src + '?r=' + (new Date()).getTime()"
           />
         </div>
       </div>
@@ -520,7 +520,6 @@ import { useGetPatternMatchingBoxes, useGetRecordingTag, useGetSoundscapeRegions
 import { type BboxGroupPm, type BboxGroupTags, type BboxGroupTrainingSets, type BboxListItem, type FreqFilter } from '../types'
 import { type LayerVisibility } from '../visualizer-page.vue'
 import type { VisibleSoundscapes } from './sidebar-soundscape-regions.vue'
-import { useUpdatedUrl } from './use-url-update'
 import { CreateBBoxEditor } from './visualizer-create-bbox-editor'
 import { doXAxisLayout, doYAxisLayout, makeScale } from './visualizer-scale'
 import type { AedJob, ClusteringPlaylist } from './visualizer-sidebar.vue'
@@ -529,8 +528,6 @@ import VisualizerTemplateModal, { type TemplateData } from './visualizer-templat
 import VisualizerTileImg from './visualizer-tile-img.vue'
 import VisualizerTrainingSetBboxModal from './visualizer-training-set-bbox-modal.vue'
 import ZoomControl from './zoom-control.vue'
-
-const { getUrl } = useUpdatedUrl()
 
 export interface Pointer { sec: number; hz: number }
 

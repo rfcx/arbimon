@@ -11,11 +11,11 @@ import { onMounted, ref, watch } from 'vue'
 import { type NormVector, type SoundscapeScidx } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 const props = defineProps<{
-  normalized?: boolean
+  normalized: boolean
   amplitudeThreshold?: number
   amplitudeThresholdType?: string
   palette: string[]
-  visualMax?: number
+  visualMax: number
   soundscapeScidx: SoundscapeScidx | undefined
   soundscapeNormVector: NormVector | undefined
 }>()
@@ -50,7 +50,7 @@ const draw = () => {
   const ctx = canvas.getContext('2d')
   if (!ctx) return
 
-  let vmax = props.visualMax ?? 1
+  let vmax = props.visualMax && props.visualMax > 0 ? props.visualMax : 1
   let ampTh = props.amplitudeThreshold ?? 0
 
   if (props.amplitudeThresholdType === 'relative-to-peak-maximum') {
@@ -58,10 +58,10 @@ const draw = () => {
   }
 
   const palette = props.palette
-  const pallen1 = palette.length - 1
+  const pallen1 = 1.0 * (palette.length - 1)
 
   let color = (v: number, j?: number): string => {
-    const i = Math.max(0, Math.min(((v * pallen1) / vmax) | 0, pallen1))
+    const i = Math.max(0, Math.min(Math.floor((v * pallen1) / vmax), pallen1))
     return palette[i]
   }
 
@@ -103,7 +103,13 @@ const draw = () => {
   }
 }
 
-watch(() => [props.palette, props.amplitudeThreshold, props.amplitudeThresholdType, props.visualMax], () => {
+watch(() => [props.normalized,
+  props.amplitudeThreshold,
+  props.amplitudeThresholdType,
+  props.palette,
+  props.visualMax,
+  props.soundscapeScidx,
+  props.soundscapeNormVector], () => {
   draw()
 }, { deep: true })
 

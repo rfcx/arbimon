@@ -11,7 +11,7 @@
     <img
       v-if="tileSrc"
       :src="src"
-      class="block"
+      class="block crisp-image"
       @load="onLoad"
     >
   </div>
@@ -81,5 +81,12 @@ watch(() => props.tileSrc, (newSrc) => {
 
 .a2-img.loading img {
   opacity: 0.5;
+}
+
+.crisp-image {
+  -ms-interpolation-mode: nearest-neighbor;
+  image-rendering: optimizeSpeed;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
 }
 </style>

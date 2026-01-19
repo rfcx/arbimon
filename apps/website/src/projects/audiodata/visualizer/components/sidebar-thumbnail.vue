@@ -65,10 +65,10 @@
             <div>{{ ss.name }}</div>
             <div>{{ 'scale:' + ss.max_value }}</div>
           </div>
-          <div class="flex overflow-hidden mx-0 my-1.5 h-32 max-w-full max-h-full">
+          <div class="flex overflow-hidden mx-0 my-1.5 h-32 max-w-full max-h-full ">
             <img
-              :src="getUrl(ss.thumbnail)"
-              class="w-full h-full object-fill object-fill"
+              :src="ss.thumbnail + '?r=' + (new Date()).getTime()"
+              class="w-full h-full object-fill object-fill crisp-image"
               @error="setErrorImage($event)"
             >
           </div>
@@ -91,9 +91,6 @@ import { useStore } from '~/store'
 import { useSites } from '../../_composables/use-sites'
 import { useGetListRecordings } from '../../_composables/use-visualizer'
 import YAxis from './sidebar-thumbnail-yAxis.vue'
-import { useUpdatedUrl } from './use-url-update'
-
-const { getUrl } = useUpdatedUrl()
 
 const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
@@ -305,3 +302,11 @@ onBeforeUnmount(() => {
   }
 })
 </script>
+<style lang="scss">
+  .crisp-image {
+    -ms-interpolation-mode: nearest-neighbor;
+    image-rendering: optimizeSpeed;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+  }
+</style>

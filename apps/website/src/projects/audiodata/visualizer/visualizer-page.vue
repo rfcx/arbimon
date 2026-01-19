@@ -24,7 +24,7 @@
       @emit-set-browser-type="setBrowserType"
     />
     <div
-      v-if="isLoadingVisobject || isFetchingVisobject"
+      v-if="isLoadingVisobject || isFetchingVisobject || isLoadingSoundscape"
       class="ml-120 relative"
     >
       <div class="flex h-90vh justify-center items-center bg-util-gray-04 mt-4 mr-4 ml-16 mb-0">
@@ -127,6 +127,7 @@ const isSoundscape = computed(() => browserType.value === 'soundscape')
 const browserTypeId = computed(() => route.params.browserTypeId as string ?? undefined)
 const browserRecId = computed(() => route.params.browserRecId as string ?? undefined)
 const soundscapeResponse = ref<SoundscapeResponse | undefined>(undefined)
+const isLoadingSoundscape = ref<boolean>(false)
 const visobjectSoundscape = ref<SoundscapeItem | undefined>(undefined)
 const idRecording = ref(0)
 const selectedPlaylist = ref(0)
@@ -194,10 +195,12 @@ const handleSoundscapeRegions = (value: VisibleSoundscapes) => {
 }
 
 const handleVisobjectSoundscape = async () => {
+  isLoadingSoundscape.value = true
   await refetchSoundscapes()
   if (browserTypeId.value !== undefined) {
     visobjectSoundscape.value = soundscapeResponse.value?.find(it => it.id === +browserTypeId.value) ?? undefined
   }
+  isLoadingSoundscape.value = false
 }
 
 const setBrowserType = (value: string) => {

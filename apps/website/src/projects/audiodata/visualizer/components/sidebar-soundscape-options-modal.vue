@@ -28,29 +28,34 @@
                 v-model.number="currentMaxValue"
                 type="number"
                 :min="0"
-                class="w-20 text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 input-hide-arrows"
+                class="w-20 text-center text-sm bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 input-hide-arrows disabled:(text-util-gray-02 cursor-not-allowed)"
+                :disabled="isNormalize"
               >
-              (default: 6)
+              (default: {{ soundscape.max_value }})
             </div>
-            <input
-              id="normalizeCheckbox"
-              type="checkbox"
-              class="w-5 h-5 border-2 mb-1 cursor-pointer rounded dark:bg-echo focus:ring-frequency border-white dark:focus:ring-frequency dark:ring-offset-gray-800"
-              :checked="isNormalize"
-              @click="onSelectNormalize()"
-            >
-            <div>
+            <div class="flex flex-row items-start items-center gap-x-2 relative">
+              <input
+                id="normalizeCheckbox"
+                type="checkbox"
+                class="w-5 h-5 border-2 mb-1 cursor-pointer rounded dark:bg-echo focus:ring-frequency border-white dark:focus:ring-frequency dark:ring-offset-gray-800"
+                :checked="isNormalize"
+                @click="onSelectNormalize()"
+              >
               <label
                 for="normalizeCheckbox"
                 class="font-semibold"
               >
                 Normalize data
               </label>
-              <icon-fas-info-circle
-                data-tooltip-target="tooltipIdNormalizeData"
-                data-tooltip-style="light"
-                class="inline-block cursor-pointer h-4 w-4 ml-2 text-insight"
-              />
+              <div
+                title="Check to normalize each value in the soundscape using the number of recordings in the playlist that fall in that column. Note: This overrides the scale parameter."
+              >
+                <icon-fas-info-circle
+                  data-tooltip-target="tooltipIdNormalizeData"
+                  data-tooltip-style="light"
+                  class="inline-block cursor-pointer h-4 w-4 text-insight"
+                />
+              </div>
               <div
                 id="tooltipIdNormalizeData"
                 role="tooltip"
@@ -91,12 +96,12 @@
               min="0"
               max="1"
               step="0.001"
-              class="w-20 text-center bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
+              class="w-20 cursor-pointer text-center bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
             >
             <select
               id="amplitudeReference"
               v-model="selectedAmplitudeReference"
-              class="bg-pitch border border-frequency w-40 text-insight text-base rounded-md block text-ellipsis overflow-hidden pl-2 pr-5 font-sans border border-1 focus:border-frequency focus:outline-none focus:ring-0"
+              class="bg-pitch border cursor-pointer border-frequency w-40 text-insight text-base rounded-md block text-ellipsis overflow-hidden pl-2 pr-5 font-sans border border-1 focus:border-frequency focus:outline-none focus:ring-0"
             >
               <option
                 v-for="aref in amplitudeReferences"
@@ -240,7 +245,7 @@ const selectPalette = (idx: number) => {
 }
 
 const initialData = () => {
-  currentMaxValue.value = props.soundscape.max_value
+  currentMaxValue.value = props.soundscape.visual_max_value ?? 1
   isNormalize.value = props.soundscape.normalized === 1
   amplitudeThreshold.value = props.soundscape.threshold
   selectedAmplitudeReference.value = props.soundscape.threshold_type
