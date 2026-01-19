@@ -54,7 +54,7 @@
         >
           <VisualizerTileImg
             :id="'spectrogramTile'+index"
-            :tile-src="tile.src"
+            :tile-src="getUrl(tile.src)"
           />
         </div>
       </div>
@@ -520,6 +520,7 @@ import { useGetPatternMatchingBoxes, useGetRecordingTag, useGetSoundscapeRegions
 import { type BboxGroupPm, type BboxGroupTags, type BboxGroupTrainingSets, type BboxListItem, type FreqFilter } from '../types'
 import { type LayerVisibility } from '../visualizer-page.vue'
 import type { VisibleSoundscapes } from './sidebar-soundscape-regions.vue'
+import { useUpdatedUrl } from './use-url-update'
 import { CreateBBoxEditor } from './visualizer-create-bbox-editor'
 import { doXAxisLayout, doYAxisLayout, makeScale } from './visualizer-scale'
 import type { AedJob, ClusteringPlaylist } from './visualizer-sidebar.vue'
@@ -528,6 +529,8 @@ import VisualizerTemplateModal, { type TemplateData } from './visualizer-templat
 import VisualizerTileImg from './visualizer-tile-img.vue'
 import VisualizerTrainingSetBboxModal from './visualizer-training-set-bbox-modal.vue'
 import ZoomControl from './zoom-control.vue'
+
+const { getUrl } = useUpdatedUrl()
 
 export interface Pointer { sec: number; hz: number }
 

@@ -210,7 +210,10 @@ import SidebarTag from './sidebar-tag.vue'
 import SidebarTemplates from './sidebar-templates.vue'
 import SidebarThumbnail from './sidebar-thumbnail.vue'
 import SidebarTrainingSets from './sidebar-training-sets.vue'
+import { useUpdatedUrl } from './use-url-update'
 import { type Pointer } from './visualizer-spectrogram.vue'
+
+const { updateUrl } = useUpdatedUrl()
 
 export interface AedJob {
   jobId: number
@@ -441,6 +444,7 @@ const handleSoundscapeOptions = async (options: SoundscapeItemOptions) => {
   if (selectedProjectSlug.value === undefined || soundscapeSelected.value?.id === undefined) return
   const response = await apiGetSoundscapeScale(apiClientArbimon, selectedProjectSlug.value, soundscapeSelected.value.id.toString(), options)
   console.info('response', response)
+  updateUrl(response.thumbnail)
   emits('updateSoundscape')
 }
 

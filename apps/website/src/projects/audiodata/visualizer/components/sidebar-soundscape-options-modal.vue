@@ -228,13 +228,6 @@ const updateOptions = (): void => {
     amplitude: amplitudeThreshold.value,
     amplitudeReference: selectedAmplitudeReference.value
   })
-  console.info('emitOptions', {
-    palette: selectedPalette.value,
-    max: currentMaxValue.value,
-    normalized: isNormalize.value,
-    amplitude: amplitudeThreshold.value,
-    amplitudeReference: selectedAmplitudeReference.value
-  })
   emits('cancel')
 }
 

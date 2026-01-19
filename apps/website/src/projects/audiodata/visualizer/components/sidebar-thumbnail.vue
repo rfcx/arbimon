@@ -67,7 +67,7 @@
           </div>
           <div class="flex overflow-hidden mx-0 my-1.5 h-32 max-w-full max-h-full">
             <img
-              :src="ss.thumbnail"
+              :src="getUrl(ss.thumbnail)"
               class="w-full h-full object-fill object-fill"
               @error="setErrorImage($event)"
             >
@@ -91,6 +91,9 @@ import { useStore } from '~/store'
 import { useSites } from '../../_composables/use-sites'
 import { useGetListRecordings } from '../../_composables/use-visualizer'
 import YAxis from './sidebar-thumbnail-yAxis.vue'
+import { useUpdatedUrl } from './use-url-update'
+
+const { getUrl } = useUpdatedUrl()
 
 const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
