@@ -81,6 +81,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
+import { uniqBy } from 'lodash-es'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -195,10 +196,14 @@ const onSelectedThumbnail = (id: number) => {
 watch(() => recordingsResponse.value, (newValue) => {
   isInitialDateWasChanged.value = false
   if (!newValue || recordingsResponse.value === undefined) return
-  if (recordingsResponse.value.length && recordingsSite.value.length && recordingsResponse.value[0].site === recordings.value[0].site && dayjs.utc(recordingsResponse.value[0].datetime).format('DD.MM') === dayjs.utc(recordings.value[0].datetime).format('DD.MM')) {
-    recordingsSite.value = [...recordingsSite.value, ...recordingsResponse.value]
+  if (recordingsResponse.value.length === 0) return
+  // combine only selected site and date
+  if (recordingsResponse.value.length && recordingsSite.value.length && recordingsResponse.value[0].site === recordings.value[recordings.value.length - 1].site && dayjs.utc(recordingsResponse.value[0].datetime).format('DD.MM') === dayjs.utc(recordings.value[recordings.value.length - 1].datetime).format('DD.MM')) {
+    recordingsSite.value = uniqBy([...recordingsSite.value, ...recordingsResponse.value], 'id')
     findVisObj()
-  } else recordingsSite.value = recordingsResponse.value
+  } else {
+    recordingsSite.value = recordingsResponse.value
+  }
 })
 
 watch(() => browserType.value, () => {

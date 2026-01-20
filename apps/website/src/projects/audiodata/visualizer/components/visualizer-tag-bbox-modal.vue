@@ -142,7 +142,7 @@ const { data: searchedTags, refetch: refetchSearchTags, isRefetching } = useSear
 const { data: projectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
 
 const items = computed<BboxListItems | undefined>(() => {
-  return tagKeyword.value.length && tagKeyword.value.length > 1 ? searchedTags.value?.map((tag) => { return { id: tag.tag_id, label: tag.tag } }) : projectTags.value?.map((tag) => { return { id: tag.tag_id, label: tag.tag } })
+  return tagKeyword.value.length && tagKeyword.value.length > 0 ? searchedTags.value?.map((tag) => { return { id: tag.tag_id, label: tag.tag } }) : projectTags.value?.map((tag) => { return { id: tag.tag_id, label: tag.tag } })
 })
 
 const onClearInput = () => {
