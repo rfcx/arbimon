@@ -34,7 +34,7 @@ export default class SpeciesRichnessIntroduction extends Vue {
   }
 
   get isViewingAsGuest (): boolean {
-    return route.query.guest === '1'
+    return route?.query !== undefined && route.query?.guest === '1'
   }
 
   // TODO ??? - I think Vue 3 composition API would let us simply import the function (instead of proxying it)
