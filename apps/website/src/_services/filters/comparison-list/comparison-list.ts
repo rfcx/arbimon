@@ -112,7 +112,7 @@ export default class ComparisonListComponent extends Vue {
     if (this.filters.length === 0) {
       this.filters.push(defaultFilter)
     }
-    void router.replace({ query: toQuery(this.filters) })
+    void this.$router.replace({ query: toQuery(this.filters) })
     this.emitSelect()
   }
 
@@ -125,7 +125,6 @@ export default class ComparisonListComponent extends Vue {
       this.filters.splice(this.selectedFilterId, 1, newFilter)
       this.selectedFilterId = -1
     }
-    console.info('this.filters', this.filters)
     void this.$router.replace({ query: toQuery(this.filters) })
     this.emitSelect()
   }
