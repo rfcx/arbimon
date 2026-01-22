@@ -31,13 +31,13 @@ export interface BboxGroupPm {
   isPopupOpened: boolean
 }
 
-export interface BboxListItem {
-  id: number
-  label: string
+export interface BboxTagItem {
+  id?: number
+  text: string
   f0?: number
   f1?: number
   t0?: number
   t1?: number
 }
 
-export type BboxListItems = BboxListItem[]
+export type BboxTagItems = BboxTagItem[]

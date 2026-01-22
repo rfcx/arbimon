@@ -60,8 +60,10 @@
           v-model="selectedTags"
           class="flex-1 min-w-0 placeholder-util-gray-02 h-[34px] "
           :options="staticTags ?? []"
-          placeholder="Add new tag or annotate spectrogram"
+          :hide-after-selected="true"
+          :is-able-to-add-new-option="true"
           border-color="border-util-gray-02"
+          placeholder="Add new tag or annotate spectrogram"
         />
         <icon-custom-ic-loading
           v-if="isAddingTag"
@@ -88,6 +90,7 @@ const props = defineProps<{
   visobject: Visobject
   projectTags: TagResponse[] | undefined
   recordingTags: RecordingTagResponse[] | undefined
+  searchedTags: RecordingTagResponse[] | undefined
   isAddingTag: boolean
   currentTab: string
 }>()
@@ -99,7 +102,7 @@ const emits = defineEmits<{(e: 'emitTags', tags: TagParams[]): void,
 
 const toggledTag = ref(false)
 const isOpen = ref(false)
-const selectedTags = ref<(number)[]>(props.recordingTags?.map(t => t.tag_id) ?? [])
+const selectedTags = ref<(number | string)[]>(props.recordingTags?.map(t => t.tag_id) ?? [])
 const staticTags = computed<Option[]>(() => {
   const projTags = (props.projectTags ?? []).map(t => ({
     value: t.tag_id,
@@ -110,6 +113,15 @@ const staticTags = computed<Option[]>(() => {
   }))
   if (props.recordingTags === undefined) return projTags
     projTags.filter(pt => props.recordingTags && !props.recordingTags.some(rt => rt.tag_id === pt.value))
+  if (props.searchedTags !== undefined) {
+    return [...props.searchedTags, ...props.recordingTags].map(t => ({
+      value: t.tag_id,
+      label: t.tag,
+      tooltip: t.tag,
+      icon: 'tag-icon',
+      tagIcon: true
+    }))
+  }
   return projTags
 })
 
@@ -135,8 +147,10 @@ watch(() => props.currentTab, () => {
 })
 
 watch(() => selectedTags.value, () => {
-  const tags: TagParams[] = selectedTags.value.map(recId => { return { id: recId } })
-  emits('emitTags', tags)
+  const tags = selectedTags.value.map((recId) => {
+    return Number(recId) ? { id: recId } : { text: recId }
+  })
+  emits('emitTags', tags as TagParams[])
 })
 
 watch(() => props.recordingTags, () => {

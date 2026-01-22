@@ -111,6 +111,7 @@
         :is-adding-tag="isAddingTag || isRemovingTag"
         :project-tags="projectTags"
         :recording-tags="recordingTags"
+        :searched-tags="searchedTags"
         :current-tab="currentOpenTab"
         @emit-tags="handleRecTags"
         @emit-active-layer="toggleSidebarTag"
@@ -186,7 +187,7 @@ import { computed, inject, nextTick, onMounted, ref, watch, watchEffect } from '
 import { useRoute } from 'vue-router'
 
 import type { RecordingResponse, RecordingTagResponse, SoundscapeItem, SoundscapeItemOptions, SoundscapeResponse, TagParams, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
-import { apiArbimonPostPlaylistItems, apiGetSoundscapes, apiGetSoundscapeScale } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { apiArbimonPostPlaylistItems, apiGetSoundscapes, apiGetSoundscapeScale, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
@@ -306,6 +307,7 @@ const nextRecording = ref<boolean>(false)
 const prevRecording = ref<boolean>(false)
 const audioEventJobs: Record<string, AedJob> = {}
 const clusteringPlaylists: Record<string, ClusteringPlaylist> = {}
+const searchedTags = ref<RecordingTagResponse[]>()
 
 const showAlertDialog = (type: AlertDialogType, titleValue: string, messageValue: string, hideAfter = 7000) => {
   showAlert.value = true
@@ -450,12 +452,13 @@ const handleFreqFilter = (filter: FreqFilter) => {
   freqFilter.value = filter
 }
 
-const handleRecTags = (tagIds: TagParams[]) => {
+const handleRecTags = async (tagIds: TagParams[]) => {
   if (recordingTags.value === undefined) return
-  const arrIds = tagIds.map(t => t.id)
+  const arrIds = tagIds.filter((t: TagParams) => t.id !== undefined).map(t => t.id)
+  const textToSearch = tagIds.filter((t: TagParams) => t.text !== undefined).map(t => t.text) as string[]
   const tagsToDelete = recordingTags.value.filter((tag: RecordingTagResponse) => !arrIds.includes(tag.tag_id))
   const oldTags = recordingTags.value.map(t => t.tag_id)
-  const tagsToAdd = arrIds.filter((id: number) => !oldTags.includes(id))
+  const tagsToAdd = arrIds.filter((id): id is number => id !== undefined).filter(id => !oldTags.includes(id))
   if (tagsToAdd.length) {
     mutateRecordingTag(tagsToAdd.map(recId => { return { id: recId } })[0], {
       onSuccess: async () => {
@@ -483,6 +486,23 @@ const handleRecTags = (tagIds: TagParams[]) => {
         showAlertDialog('error', 'Error', 'Error removing tag')
       }
     })
+  }
+  if (textToSearch !== undefined && textToSearch.length) {
+    searchedTags.value = await apiSearchTag(apiClientArbimon, selectedProjectSlug.value ?? '', { q: textToSearch[0] })
+    if (searchedTags.value === undefined || searchedTags.value?.length === 0) {
+      mutateRecordingTag({ text: textToSearch[0] }, {
+        onSuccess: async () => {
+          refetchProjectTags()
+          refetchRecordingTags()
+          showAlertDialog('success', 'Success', 'Tag added')
+          emits('updateTags')
+        },
+        onError: (err) => {
+          console.info('err', err)
+          showAlertDialog('error', 'Error', 'Error adding tag')
+        }
+      })
+    }
   }
 }
 

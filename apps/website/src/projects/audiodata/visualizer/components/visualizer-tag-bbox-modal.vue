@@ -19,10 +19,13 @@
         </div>
         <div class="relative dropdown flex flex-col gap-4">
           <div
-            id="searchItemDropdownTrigger"
-            ref="dropdownTrigger"
+            id="tagBtn"
             class="flex relative items-center"
-            data-dropdown-toggle="searchItemDropdown"
+            data-dropdown-toggle="tagDropdown"
+            aria-expanded="false"
+            aria-haspopup="true"
+            data-dropdown-trigger="hover"
+            data-dropdown-placement="bottom"
             @focusin="openDropdown"
           >
             <input
@@ -61,11 +64,16 @@
             </span>
           </div>
           <div
-            id="searchItemDropdown"
-            ref="dropdownMenu"
+            id="tagDropdown"
             class="absolute hidden w-5/6 t-5 left-4 top-10 z-15 bg-white rounded-md shadow dark:bg-moss mt-2 border-util-gray-03 border-1 max-h-45 overflow-y-auto"
           >
-            <ul class="overflow-y-auto max-h-80 border-cloud bg-moss rounded-md">
+            <ul
+              aria-labelledby="tagBtn"
+              aria-orientation="vertical"
+              role="menu"
+              tabindex="-1"
+              class="overflow-y-auto max-h-80 border-cloud bg-moss rounded-md"
+            >
               <template v-if="items && items.length === 0">
                 <li
                   v-if="items.length === 0"
@@ -78,11 +86,12 @@
                 <li
                   v-for="item in items"
                   :key="item.id"
-                  :label="item.label"
-                  class="cursor-pointer rounded-md px-4 py-2 hover:bg-util-gray-03 text-sm"
+                  :label="item.text"
+                  class="flex flex-row items-center cursor-pointer rounded-md px-4 py-2 hover:bg-util-gray-03 text-sm"
                   @click="onSelected(item)"
                 >
-                  {{ item.label }}
+                  <icon-fa-tag class="text-[10px] mr-1" />
+                  {{ item.text }}
                 </li>
               </template>
             </ul>
@@ -111,14 +120,14 @@
 <script setup lang="ts">
 
 import type { AxiosInstance } from 'axios'
-import { initDropdowns } from 'flowbite'
+import { Dropdown, initDropdowns } from 'flowbite'
 import { computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetTags } from '../../_composables/use-recordings'
 import { useSearchTag } from '../../_composables/use-visualizer'
-import { type BboxListItem, type BboxListItems } from '../types'
+import { type BboxTagItem } from '../types'
 
 defineProps<{
   visible: boolean
@@ -127,22 +136,44 @@ defineProps<{
 }>()
 
 const emits = defineEmits<{(e: 'cancel'): void,
-  (e: 'emitSelectedItem', value: BboxListItem): void
+  (e: 'emitSelectedItem', value: BboxTagItem): void
 }>()
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
-const selectedItem = ref<BboxListItem | null>(null)
+const selectedItem = ref<BboxTagItem | null>(null)
 const hasFocusInput = ref(false)
 const tagKeyword = ref<string>('')
 const tagKeywordParams = computed(() => tagKeyword.value || '')
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+const tagDropdownMenu = ref<HTMLElement | null>(null)
+let tagDropdownInput: Dropdown
 
 const { data: searchedTags, refetch: refetchSearchTags, isRefetching } = useSearchTag(apiClientArbimon, selectedProjectSlug, tagKeywordParams)
 const { data: projectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
 
-const items = computed<BboxListItems | undefined>(() => {
-  return tagKeyword.value.length && tagKeyword.value.length > 0 ? searchedTags.value?.map((tag) => { return { id: tag.tag_id, label: tag.tag } }) : projectTags.value?.map((tag) => { return { id: tag.tag_id, label: tag.tag } })
+const items = computed<BboxTagItem[]>(() => {
+  const base =
+    tagKeyword.value?.length
+      ? searchedTags.value
+      : projectTags.value
+
+  const mapped: BboxTagItem[] =
+    base?.map(tag => ({
+      id: tag.tag_id,
+      text: tag.tag
+    })) ?? []
+
+  const keyword = tagKeyword.value?.trim()
+  if (!keyword) return mapped
+
+  const exists = mapped.some(
+    item => item.text.toLowerCase() === keyword.toLowerCase()
+  )
+
+  return exists
+    ? mapped
+    : [{ text: keyword }, ...mapped]
 })
 
 const onClearInput = () => {
@@ -150,9 +181,10 @@ const onClearInput = () => {
   tagKeyword.value = ''
 }
 
-const onSelected = (item: BboxListItem) => {
+const onSelected = (item: BboxTagItem) => {
   selectedItem.value = item
-  tagKeyword.value = selectedItem.value.label
+  tagKeyword.value = selectedItem.value.text
+  tagDropdownInput.hide()
 }
 
 const emitSelectedItem = () => {
@@ -163,6 +195,13 @@ const emitSelectedItem = () => {
 const openDropdown = async () => {
   await nextTick()
   initDropdowns()
+  await nextTick()
+  initDropdowns()
+  tagDropdownMenu.value = document.getElementById('tagDropdown')
+  tagDropdownInput = new Dropdown(
+    document.getElementById('tagDropdown'),
+    document.getElementById('tagBtn')
+  )
 }
 
 watch(() => tagKeyword.value, () => {
@@ -171,7 +210,8 @@ watch(() => tagKeyword.value, () => {
   }
 })
 
-onMounted(() => {
+onMounted(async () => {
+  await nextTick()
   initDropdowns()
 })
 

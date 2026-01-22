@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 interface Badge {
   icon: string
@@ -23,6 +23,7 @@ const props = defineProps<{
   options: Option[]
   placeholder?: string
   hideAfterSelected?: boolean
+  isAbleToAddNewOption?: boolean
   error?: string
   borderColor? : string
 }>()
@@ -59,6 +60,11 @@ const filteredOptions = computed<DropdownOption[]>(() => {
       .filter(opt => opt.isSelectAll !== true)
       .map(opt => ({ ...opt, disabled: true }))
       .filter(opt => opt.label.toLowerCase().includes(lower))
+  }
+  if (search.value.length && search.value.length > 1 && props.isAbleToAddNewOption === true) {
+    return [...props.options
+      .filter(opt => !selectedValues.value.includes(opt.value))
+      .filter(opt => opt.label.toLowerCase().includes(lower)), { value: search.value, label: search.value, icon: props.options[0].icon, tagIcon: props.options[0].tagIcon }]
   }
 
   return props.options
@@ -127,6 +133,19 @@ function haveValuekey (key: string): boolean {
   return valueKeys.includes(key)
 }
 
+watch(() => search.value, () => {
+  if (search.value.length && search.value.length > 1 && props.isAbleToAddNewOption === true && filteredOptions.value.length === 0) {
+    const index = selectedValues.value.findIndex(v => String(v).includes(search.value) || search.value.includes(String(v)))
+
+    if (index !== -1) {
+      selectedValues.value[index] = search.value
+      selectedValues.value = [...selectedValues.value]
+    } else {
+      selectedValues.value = [...selectedValues.value, search.value]
+    }
+  }
+})
+
 </script>
 
 <template>
@@ -178,7 +197,7 @@ function haveValuekey (key: string): boolean {
           />
           <icon-fa-tag
             v-if="opt.icon === 'tag-icon'"
-            class="text-[10px]"
+            class="text-[10px] mr-1"
           />
           <div
             v-if="haveValuekey(opt.value.toString())"
@@ -276,7 +295,7 @@ function haveValuekey (key: string): boolean {
           >
             <icon-fa-tag
               v-if="opt.tagIcon === true"
-              class="text-[10px]"
+              class="text-[10px] mr-1"
             />
             <icon-fa-check
               v-if="opt.icon === 'val-1'"

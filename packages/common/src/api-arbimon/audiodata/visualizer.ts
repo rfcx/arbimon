@@ -5,7 +5,8 @@ import localeData from 'dayjs/plugin/localeData'
 dayjs.extend(localeData)
 
 export interface TagParams {
-  id: number
+  id?: number
+  text?: string
   f0?: number
   f1?: number
   t0?: number

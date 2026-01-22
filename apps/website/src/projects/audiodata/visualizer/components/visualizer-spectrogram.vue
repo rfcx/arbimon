@@ -517,7 +517,7 @@ import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetRecordingTrainingSets, usePostTrainingSet } from '../../_composables/use-training-sets'
 import { useGetPatternMatchingBoxes, useGetRecordingTag, useGetSoundscapeRegions, useGetTemplates, usePostTemplate, usePutRecordingTag } from '../../_composables/use-visualizer'
-import { type BboxGroupPm, type BboxGroupTags, type BboxGroupTrainingSets, type BboxListItem, type FreqFilter } from '../types'
+import { type BboxGroupPm, type BboxGroupTags, type BboxGroupTrainingSets, type BboxTagItem, type FreqFilter } from '../types'
 import { type LayerVisibility } from '../visualizer-page.vue'
 import type { VisibleSoundscapes } from './sidebar-soundscape-regions.vue'
 import { CreateBBoxEditor } from './visualizer-create-bbox-editor'
@@ -910,10 +910,10 @@ const resetBBox = (): void => {
   bboxValid.value = false
 }
 
-const handleNewTag = (tag: BboxListItem): void => {
+const handleNewTag = (tag: BboxTagItem): void => {
   bboxValid.value = false
   mutateAddRecordingTag({
-    id: tag.id,
+    ...((tag.id !== undefined) ? { id: tag.id } : { text: tag.text }),
     f0: createBboxEditor.value?.bbox?.y1,
     f1: createBboxEditor.value?.bbox?.y2,
     t0: createBboxEditor.value?.bbox?.x1,
