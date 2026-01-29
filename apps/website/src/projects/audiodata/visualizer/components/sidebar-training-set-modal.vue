@@ -134,7 +134,7 @@ const filteredClass = computed((): ClassesRecordingResponse[] => {
 
 const selectClass = (cl: ClassesRecordingResponse) => {
   selectedClass.value = cl
-  searchKeyword.value = cl.species_name
+  searchKeyword.value = `${cl.species_name}, ${cl.songtype_name}`
   toggleInput.value = false
 }
 
