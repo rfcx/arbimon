@@ -47,25 +47,13 @@
               >
                 Normalize data
               </label>
-              <div
-                title="Check to normalize each value in the soundscape using the number of recordings in the playlist that fall in that column. Note: This overrides the scale parameter."
-              >
-                <icon-fas-info-circle
-                  data-tooltip-target="tooltipIdNormalizeData"
-                  data-tooltip-style="light"
-                  class="inline-block cursor-pointer h-4 w-4 text-insight"
-                />
-              </div>
-              <div
-                id="tooltipIdNormalizeData"
-                role="tooltip"
-                class="absolute z-200 invisible inline-block px-3 py-2 text-sm font-medium text-insight transition-opacity duration-300 bg-util-gray-03 rounded-lg shadow-sm opacity-0 tooltip"
-              >
-                Check to normalize each value in the soundscape <br> using the number of recordings in the playlist <br> that fall in that column. <br> Note: This overrides the scale parameter.
-                <div
-                  class="tooltip-arrow"
-                  data-popper-arrow
-                />
+              <div class="relative inline-flex items-center gap-2 group">
+                <icon-fas-info-circle class="h-4 w-4 cursor-pointer text-insight" />
+                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block px-3 py-2 text-sm text-insight bg-util-gray-03 rounded-lg shadow-lg z-[999] whitespace-normal w-80">
+                  Check to normalize each value in the soundscape using the number of recordings in the playlist that fall in that column.
+                  <br><br>
+                  <strong>Note:</strong> This overrides the scale parameter.
+                </div>
               </div>
             </div>
           </div>
@@ -98,19 +86,43 @@
               step="0.001"
               class="w-20 cursor-pointer text-center bg-transparent border-0 border-b-1 border-b-subtle focus:(ring-subtle border-b-subtle) px-1 py-0.5 mr-1 input-hide-arrows"
             >
-            <select
-              id="amplitudeReference"
-              v-model="selectedAmplitudeReference"
-              class="bg-pitch border cursor-pointer border-frequency w-40 text-insight text-base rounded-md block text-ellipsis overflow-hidden pl-2 pr-5 font-sans border border-1 focus:border-frequency focus:outline-none focus:ring-0"
-            >
-              <option
-                v-for="aref in amplitudeReferences"
-                :key="aref.value"
-                :value="aref.value"
-                class="w-50"
-                :label="aref.caption + ' (' + aref.description + ')'"
-              />
-            </select>
+            <div class="relative w-40">
+              <button
+                id="amplitudeReferenceButton"
+                class="flex flex-row justify-between items-center w-full border-1 border-util-gray-03 gap-x-2 bg-moss rounded p-3 h-10 focus:border-frequency focus:outline-none focus:ring-0"
+                @click="toggleAmplitudeDropdown"
+              >
+                {{ amplitudeReferences.find(a => a.value === selectedAmplitudeReference)?.caption }}
+                <span class="flex items-center">
+                  <icon-fa-chevron-down class="w-3 h-3" />
+                  <icon-fa-chevron-up class="w-3 h-3 hidden" />
+                </span>
+              </button>
+              <div
+                id="amplitudeReference"
+                class="absolute top-full mt-2 min-w-[22rem] max-w-[30rem] z-60 bg-white rounded-md shadow dark:bg-moss border-util-gray-03 border-1"
+                :class="{ 'hidden': dropdownThresholdFocused === false }"
+              >
+                <ul
+                  aria-labelledby="amplitudeReferenceButton"
+                  class="p-2 flex flex-col font-medium gap-2"
+                >
+                  <li
+                    v-for="aref in amplitudeReferences"
+                    :key="aref.value"
+                    class="bg-moss px-2 py-3 cursor-pointer flex flex-col gap-1"
+                    @click="selectAmplitudeReference(aref.value)"
+                  >
+                    <span class="whitespace-normal leading-snug">
+                      {{ aref.caption }}
+                    </span>
+                    <span class="text-util-gray-02 text-[12px] leading-snug">
+                      {{ aref.description }}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
         <div class="grid grid-cols-[100px_1fr] items-center py-2 border-b border-[#3a392f]">
@@ -120,34 +132,31 @@
           >
             Colors
           </label>
-          <div class="flex flex-row items-start items-center relative">
+          <div class="relative inline-flex">
             <button
               id="dropdownColorButton"
-              data-dropdown-toggle="dropdownColorMenu"
-              data-dropdown-placement="left"
-              class="border-1 border-frequency rounded-md bg-moss text-frequency px-3 py-2 flex items-center gap-2"
-              @focusin="openDropdown"
+              class="bg-pitch cursor-pointer border border-1 rounded-md text-frequency px-3 py-2 flex items-center gap-2 focus:border-frequency focus:outline-none focus:ring-0"
+              @click="toggleDropdown"
             >
               <SidebarSoundscapePalette
                 :selected-palette="palettes[selectedPalette]"
               />
-              <span>
-                <icon-fa-chevron-down class="w-3 h-3 fa-chevron-down" />
-                <icon-fa-chevron-up class="w-3 h-3 fa-chevron-up hidden" />
+              <span class="flex items-center">
+                <icon-fa-chevron-down class="w-3 h-3" />
+                <icon-fa-chevron-up class="w-3 h-3 hidden" />
               </span>
             </button>
+
             <div
               id="dropdownColorMenu"
-              class="absolute hidden left-4 z-60 bg-moss border-1 border-frequency rounded-lg"
+              class="absolute top-full left-0 mt-2 min-w-[14rem] z-60 bg-white rounded-md shadow dark:bg-moss border-util-gray-03 border-1"
+              :class="{ hidden: dropdownColorFocused === false }"
             >
-              <ul
-                aria-labelledby="dropdownColorButton"
-                class="p-2 flex flex-col font-medium"
-              >
+              <ul class="p-2 flex flex-col font-medium gap-1">
                 <li
                   v-for="(palette, idx) in palettes"
                   :key="idx"
-                  class="bg-moss text-frequency px-3 py-2 flex cursor-pointer items-center gap-2"
+                  class="bg-moss text-frequency px-3 py-2 cursor-pointer flex items-center gap-2"
                   @click="selectPalette(idx)"
                 >
                   <SidebarSoundscapePalette
@@ -209,8 +218,10 @@ const emits = defineEmits<{(e: 'cancel'): void, (e: 'emitOptions', value: Sounds
 const currentMaxValue = ref(0)
 const isNormalize = ref<boolean>(false)
 const amplitudeThreshold = ref(0)
-const selectedAmplitudeReference = ref<string>('absolute')
+const selectedAmplitudeReference = ref<string>(props.soundscape.threshold_type)
 const selectedPalette = ref(0)
+const dropdownThresholdFocused = ref(false)
+const dropdownColorFocused = ref(false)
 
 const amplitudeReferences = [
   { value: 'absolute', caption: 'Absolute', description: 'The threshold is taken as an absolute value of the amplitude of each peak.' },
@@ -244,6 +255,11 @@ const selectPalette = (idx: number) => {
   selectedPalette.value = idx
 }
 
+const selectAmplitudeReference = (val: string) => {
+  selectedAmplitudeReference.value = val
+  dropdownThresholdFocused.value = false
+}
+
 const initialData = () => {
   currentMaxValue.value = props.soundscape.visual_max_value ?? 1
   isNormalize.value = props.soundscape.normalized === 1
@@ -252,7 +268,14 @@ const initialData = () => {
   selectedPalette.value = props.soundscape.visual_palette
 }
 
-const openDropdown = async () => {
+const toggleAmplitudeDropdown = async () => {
+  dropdownThresholdFocused.value = !dropdownThresholdFocused.value
+  await nextTick()
+  initDropdowns()
+}
+
+const toggleDropdown = async () => {
+  dropdownColorFocused.value = !dropdownColorFocused.value
   await nextTick()
   initDropdowns()
 }
