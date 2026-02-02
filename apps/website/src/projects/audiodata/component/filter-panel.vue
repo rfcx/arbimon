@@ -119,7 +119,25 @@
 
     <!-- Validations -->
     <div class="flex items-start">
-      <label>Validations:</label>
+      <div>
+        <label>Validations</label>
+        <icon-custom-ic-info
+          class="inline-block h-4 w-4 cursor-pointer mx-2"
+          data-tooltip-target="tooltipFilterValidations"
+          data-tooltip-style="light"
+        />
+        <div
+          id="tooltipFilterValidations"
+          role="tooltip"
+          class="absolute z-200 invisible inline-block px-3 py-2 text-sm font-medium text-insight transition-opacity duration-300 bg-util-gray-03 rounded-lg shadow-sm opacity-0 tooltip"
+        >
+          Counts validated recordings, not individual detections
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
+      </div>
       <SelectMultiple
         v-model="selectedClasses"
         class="flex-[7] min-w-0"
@@ -199,6 +217,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
+import { initTooltips } from 'flowbite'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 import { type ClassesRecordingResponse, type ClassificationsResponse, type PlaylistResponse, type RecordingSearchParams, type SoundscapeResponse, type TagResponse } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
@@ -468,6 +487,7 @@ watch(dateStart, (v) => { filters.range = toRange(v, dateEnd.value) })
 watch(dateEnd, (v) => { filters.range = toRange(dateStart.value, v) })
 
 onMounted(() => {
+  initTooltips()
   const v = props.filtersData
   selectedYears.value = v?.years ?? []
   selectedMonths.value = v?.months ?? []
