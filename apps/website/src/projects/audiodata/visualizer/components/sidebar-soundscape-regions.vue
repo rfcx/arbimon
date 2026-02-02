@@ -131,7 +131,7 @@
                 <div class="flex flex-row items-center justify-center">
                   <span
                     v-if="!region.tags || !region.tags.length"
-                  >[None]</span>
+                  />
                   <template v-else>
                     <span
                       v-for="tag in region.tags"
@@ -164,14 +164,26 @@
               </td>
 
               <!-- Playlist -->
-              <td>
+              <td class="relative">
                 <div
                   v-if="region.playlist"
-                  class="cursor-pointer px-2"
-                  title="View the Playlist"
+                  class="flex flex-row items-center justify-center cursor-pointer px-2"
+                  :data-tooltip-target="`tooltipViewPlaylist-${region.id}`"
+                  data-tooltip-style="light"
                   @click="viewPlaylist(region)"
                 >
-                  <icon-fa-list class="h-4 w-4 mx-2" />
+                  <icon-fa-list class="h-4 w-4 mx-2 cursor-pointer text-insight" />
+                </div>
+                <div
+                  :id="`tooltipViewPlaylist-${region.id}`"
+                  role="tooltip"
+                  class="absolute z-200 invisible inline-block px-3 py-2 text-sm font-medium text-insight transition-opacity duration-300 bg-util-gray-03 rounded-lg shadow-sm opacity-0 tooltip"
+                >
+                  View Sampled Recordings
+                  <div
+                    class="tooltip-arrow"
+                    data-popper-arrow
+                  />
                 </div>
               </td>
             </tr>
@@ -184,8 +196,8 @@
 
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
-import { initAccordions, initTooltips } from 'flowbite'
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { initTooltips } from 'flowbite'
+import { computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { SoundscapeRegion } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
@@ -252,7 +264,7 @@ const toggleSoundscapeRegionVisibility = (region: SoundscapeRegion) => {
 }
 
 const viewPlaylist = (region: SoundscapeRegion) => {
-  // TODO: go to playlist
+  return window.location.assign(`${window.location.origin}/p/${store.project?.slug ?? ''}/visualizer/playlist/${region.playlist}`)
 }
 
 watch(() => browserTypeId.value, () => {
@@ -278,8 +290,8 @@ watch(() => soundscapeRegions.value, () => {
   emits('emitVisibleSoundscapes', visibleSoundscapes.value)
 })
 
-onMounted(() => {
-  initAccordions()
+onMounted(async () => {
+  await nextTick()
   initTooltips()
 })
 </script>
