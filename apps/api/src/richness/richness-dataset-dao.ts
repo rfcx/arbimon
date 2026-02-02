@@ -64,7 +64,7 @@ export const getRichnessByTimeSeries = async (sequelize: Sequelize, filter: Filt
     SELECT gs.gs as grouped_time_bucket, COALESCE(data.richness, 0)::integer as richness
     FROM generate_series(0, ${seriesEnd(timeSeries)}) gs
       LEFT JOIN (
-      SELECT extract(${timeSeries} FROM time_precision_hour_local) as grouped_time_bucket,
+      SELECT (extract(month FROM time_precision_hour_local) - 1) as grouped_time_bucket,
              Count(distinct taxon_species_id) as richness
       FROM detection_by_site_species_hour dbssh
       WHERE ${conditions}
