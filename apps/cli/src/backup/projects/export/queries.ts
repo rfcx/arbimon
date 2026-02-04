@@ -43,7 +43,6 @@ export const RECORDINGS = `
     sample_rate,
     duration,
     samples,
-    file_size,
     bit_rate,
     sample_encoding,
     upload_time,
