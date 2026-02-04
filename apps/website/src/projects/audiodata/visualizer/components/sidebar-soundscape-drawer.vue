@@ -39,8 +39,11 @@ const getMaxAmplitude = (): number => {
       }, maxAmp)
     }, 0)
   }
-
   return maxAmplitude.value
+}
+
+const isNormVectorEmpty = (nv?: NormVector): boolean => {
+  return !nv || Object.keys(nv).length === 0
 }
 
 const draw = () => {
@@ -50,7 +53,7 @@ const draw = () => {
   const ctx = canvas.getContext('2d')
   if (!ctx) return
 
-  let vmax = props.visualMax && props.visualMax > 0 ? props.visualMax : 1
+  let vmax = props.visualMax
   let ampTh = props.amplitudeThreshold ?? 0
 
   if (props.amplitudeThresholdType === 'relative-to-peak-maximum') {
@@ -61,15 +64,15 @@ const draw = () => {
   const pallen1 = 1.0 * (palette.length - 1)
 
   let color = (v: number, j?: number): string => {
-    const i = Math.max(0, Math.min(Math.floor((v * pallen1) / vmax), pallen1))
+    const i = Math.max(0, Math.min(((v * pallen1 / vmax) | 0), pallen1))
     return palette[i]
   }
 
-  if (props.soundscapeNormVector) {
+  if (!isNormVectorEmpty(props.soundscapeNormVector)) {
     vmax = 1
     const baseColor = color
     color = (v: number, j?: number) => {
-      const n = (j !== undefined && props.soundscapeNormVector !== undefined && props.soundscapeNormVector[j]) || 1
+      const n = props.soundscapeNormVector?.[Number(j)] ?? 1
       return baseColor(v / n)
     }
   }
@@ -87,31 +90,39 @@ const draw = () => {
     const row = props.soundscapeScidx.index[i]
     for (const j in row) {
       const cell = row[j]
-
       if (ampTh && cell[1]) {
-        let active = 0
-        for (const amp of cell[1]) {
-          if (amp > ampTh) active++
+        let act = 0
+        for (let al = cell[1], ali = 0, ale = al.length; ali < ale; ++ali) {
+          if (al[ali] > ampTh) { act++ }
         }
-        ctx.fillStyle = color(active, Number(j))
+        ctx.fillStyle = color(act, +j)
       } else {
-        ctx.fillStyle = color(cell[0], Number(j))
+        ctx.fillStyle = color(cell[0], +j)
       }
-
-      ctx.fillRect(Number(j), h - Number(i) - 1, 1, 1)
+      ctx.fillRect(+j, h - (+i) - 1, 1, 1)
     }
   }
 }
 
-watch(() => [props.normalized,
-  props.amplitudeThreshold,
-  props.amplitudeThresholdType,
-  props.palette,
-  props.visualMax,
-  props.soundscapeScidx,
-  props.soundscapeNormVector], () => {
-  draw()
-}, { deep: true })
+watch(
+  () => props.soundscapeScidx,
+  () => {
+    maxAmplitude.value = 0
+  }
+)
+
+watch(
+  () => [
+    props.normalized,
+    props.amplitudeThreshold,
+    props.amplitudeThresholdType,
+    props.visualMax
+  ],
+  draw
+)
+
+watch(() => props.palette, draw)
+watch(() => props.soundscapeNormVector, draw)
 
 onMounted(() => {
   draw()

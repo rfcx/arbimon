@@ -257,7 +257,7 @@ const selectAmplitudeReference = (val: string) => {
 }
 
 const initialData = () => {
-  currentMaxValue.value = props.soundscape.visual_max_value ?? 1
+  currentMaxValue.value = props.soundscape.visual_max_value ?? props.soundscape.max_value
   isNormalize.value = props.soundscape.normalized === 1
   amplitudeThreshold.value = props.soundscape.threshold
   selectedAmplitudeReference.value = props.soundscape.threshold_type
