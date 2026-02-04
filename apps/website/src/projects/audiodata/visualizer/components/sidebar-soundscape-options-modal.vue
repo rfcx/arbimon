@@ -251,10 +251,6 @@ const onSelectNormalize = () => {
   isNormalize.value = !isNormalize.value
 }
 
-const selectPalette = (idx: number) => {
-  selectedPalette.value = idx
-}
-
 const selectAmplitudeReference = (val: string) => {
   selectedAmplitudeReference.value = val
   dropdownThresholdFocused.value = false
@@ -278,6 +274,11 @@ const toggleDropdown = async () => {
   dropdownColorFocused.value = !dropdownColorFocused.value
   await nextTick()
   initDropdowns()
+}
+
+const selectPalette = (idx: number) => {
+  selectedPalette.value = idx
+  dropdownColorFocused.value = false
 }
 
 watch(() => props.soundscape, async () => {
