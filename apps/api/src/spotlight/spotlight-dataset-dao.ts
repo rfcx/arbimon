@@ -18,6 +18,7 @@ export async function filterDetections (models: AllModels, filter: FilterDataset
       attributes: ['id'],
       raw: true
     })
+    if (!sites.length) return []
     filter.siteIds = sites.map(site => site.id)
   }
   const where: Where<DetectionBySiteSpeciesHour> = whereInDataset(filter)
@@ -39,6 +40,7 @@ export async function getRecordedSitesCount (models: AllModels, filter: FilterDa
       attributes: ['id'],
       raw: true
     })
+    if (!sites.length) return 0
     filter.siteIds = sites.map(site => site.id)
   }
   const where: Where<RecordingBySiteHour> = whereRecordingBySiteHour(filter)
