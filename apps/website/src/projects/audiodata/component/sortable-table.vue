@@ -508,16 +508,20 @@ const sortedRows = computed<Row[]>(() => {
 
 const selectedRowIndex = ref<number | null>(null)
 
+const isLocationEmpty = (lat: number | null, lon: number | null) => {
+  return (lat === 0 && lon === 0) || (lat === null && lon === null)
+}
+
 function formatValueByKey (key: string, value: any, row: any, forTitle?: boolean): string {
-  if (row.hidden === 1 && (key === 'lat' || key === 'lon' || key === 'alt' || key === 'timezone')) {
+  if ((row.hidden === 1 && (key === 'lat' || key === 'lon' || key === 'alt' || key === 'timezone')) || (key === 'timezone' && isLocationEmpty(value.lat, value.lon))) {
     return '-'
   }
 
   if (value === null || value === undefined || value === '') return '-'
-  if (key === 'timezone') return forTitle === true ? value : getUTCOffset(value)
+  if (key === 'timezone') return forTitle === true ? value : row.utc
   if (key === 'deployment') return value === 0 ? 'no data' : formatDateTime(value, row.timezone)
   if (key === 'updated_at') return formatDateTime(value, row.timezone)
-  if (key === 'datetime') return forTitle === true ? getUTCOffset(row.timezone) : formatDateFullInParens(value, row.timezone)
+  if (key === 'datetime') return forTitle === true ? row.utc : formatDateFullInParens(value, row.timezone)
   if (key === 'comments') return forTitle === true ? row.meta.comment ?? value : value
   if (key === 'site') return forTitle === true ? '' : value
   if (key === 'upload_time') return forTitle === true ? '' : formatDateShort(value, row.timezone)
@@ -539,38 +543,10 @@ function formatValueByKey (key: string, value: any, row: any, forTitle?: boolean
 }
 
 function formatforTitle (key: string, value: any, row: any): string {
-  return formatValueByKey(key, value, row, true)
-}
-
-function getUTCOffset (timeZone: string | undefined): string {
-  if (!timeZone || typeof timeZone !== 'string') return ''
-
-  try {
-    const now = new Date()
-    const dtf = new Intl.DateTimeFormat('en-US', {
-      timeZone,
-      timeZoneName: 'short'
-    })
-    const parts = dtf.formatToParts(now)
-    const tzPart = parts.find(part => part.type === 'timeZoneName')
-
-    if (!tzPart) return '-'
-    const gmt = tzPart.value
-    const match = gmt.match(/GMT([+-])(\d{1,2})(?::(\d{2}))?/)
-    if (!match) return '-'
-
-    const sign = match[1]
-    const hour = match[2].padStart(2, '0')
-    const minute = match[3] || '00'
-
-    if (minute === '00') {
-      return `UTC${sign}${hour}`
-    } else {
-      return `UTC${sign}${hour}:${minute}`
-    }
-  } catch {
-    return '-'
+  if (row.hidden === 1 && (key === 'lat' || key === 'lon' || key === 'alt' || key === 'timezone')) {
+    return 'Excluded site from analyses and Insights'
   }
+  return formatValueByKey(key, value, row, true)
 }
 
 /**
