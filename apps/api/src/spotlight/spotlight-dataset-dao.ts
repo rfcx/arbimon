@@ -12,8 +12,16 @@ import { getSequelize } from '~/db'
 import { dayjs } from '../_services/dayjs-initialized'
 
 export async function filterDetections (models: AllModels, filter: FilterDatasetForSql): Promise<DetectionBySiteSpeciesHour[]> {
+  if (!filter.siteIds.length) {
+    const sites = await models.LocationSite.findAll({
+      where: { locationProjectId: filter.locationProjectId, hidden: false, latitude: { [Op.not]: null }, longitude: { [Op.not]: null } },
+      attributes: ['id'],
+      raw: true
+    })
+    if (!sites.length) return []
+    filter.siteIds = sites.map(site => site.id)
+  }
   const where: Where<DetectionBySiteSpeciesHour> = whereInDataset(filter)
-
   return await models.DetectionBySiteSpeciesHour.findAll({
     where,
     raw: true
@@ -26,6 +34,15 @@ export async function getRecordedMinutesCount (models: AllModels, filter: Filter
 }
 
 export async function getRecordedSitesCount (models: AllModels, filter: FilterDatasetForSql): Promise<number> {
+  if (!filter.siteIds.length) {
+    const sites = await models.LocationSite.findAll({
+      where: { locationProjectId: filter.locationProjectId, hidden: false, latitude: { [Op.not]: null }, longitude: { [Op.not]: null } },
+      attributes: ['id'],
+      raw: true
+    })
+    if (!sites.length) return 0
+    filter.siteIds = sites.map(site => site.id)
+  }
   const where: Where<RecordingBySiteHour> = whereRecordingBySiteHour(filter)
   return await models.RecordingBySiteHour.count({ where, distinct: true, col: 'location_site_id' })
 }
