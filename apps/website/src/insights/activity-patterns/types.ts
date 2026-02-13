@@ -14,6 +14,7 @@ export const ACTIVITY_PATTERN_TIME_KEYS: Record<string, keyof ActivityPatternsDa
 
 export interface MetricsDataset {
   value: string
+  title: string
   description: string
   color?: string
 }

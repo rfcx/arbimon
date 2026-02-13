@@ -34,10 +34,12 @@ export function transformToMetricsDatasets (datasets: SpotlightDataset[]): Metri
     const { recordedMinutesCount, totalSiteCount, detectionMinutesCount, detectionFrequency, occupiedSiteCount, occupiedSiteFrequency } = dataset
     metrics[0].datasets.push({
       value: detectionFrequency.toFixed(3),
+      title: detectionFrequency.toString(),
       description: `Found in ${detectionMinutesCount.toLocaleString()} out of ${recordedMinutesCount.toLocaleString()} recorded minutes`
     })
     metrics[1].datasets.push({
       value: occupiedSiteFrequency.toFixed(3),
+      title: occupiedSiteFrequency.toString(),
       description: `Found in ${occupiedSiteCount.toLocaleString()} out of ${totalSiteCount.toLocaleString()} sites`
     })
   })
