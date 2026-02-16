@@ -4,7 +4,10 @@
     :key="'metrics-dataset-' + idx"
     class="group"
   >
-    <div class="first:mt-4 hover:cursor-default">
+    <div
+      :title="item.title"
+      class="first:mt-4 hover:cursor-default"
+    >
       {{ item.value }}
     </div>
     <div class="relative mb-6">
