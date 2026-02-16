@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="text-3xl my-4">
+    <div
+      :title="title ?? value"
+      class="text-3xl my-4"
+    >
       {{ value }}
     </div>
     <div class="text-subtle">
@@ -10,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(defineProps<{ value: string, description: string }>(), {
+withDefaults(defineProps<{ value: string, title: string, description: string }>(), {
   description: undefined
 })
 </script>

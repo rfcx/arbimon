@@ -19,6 +19,7 @@
         <metrics-single
           v-if="item.datasets.length === 1"
           :value="item.datasets[0].value"
+          :title="item.datasets[0].title"
           :description="item.datasets[0].description"
         />
         <metrics-multi
