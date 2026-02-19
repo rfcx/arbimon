@@ -103,7 +103,6 @@ import FrequencyFilterModal from './frequency-filter-modal.vue'
 
 const props = defineProps<{
   visobject: Visobject
-  isLoadingVisobject: boolean
 }>()
 
 const emit = defineEmits<{(event: 'emitColorSpectrogram', value: string): void, (e: 'emitFreqFilter', value: FreqFilter): void}>()

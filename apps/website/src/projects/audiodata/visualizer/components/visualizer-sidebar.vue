@@ -96,7 +96,6 @@
       <SidebarSpectrogramPlayer
         v-if="visobject"
         :visobject="visobject"
-        :is-loading-visobject="isLoadingVisobject"
         :freq-filter="freqFilter"
         :pointer="props.pointer"
         @emit-current-time="$emit('updateCurrentTime', $event)"

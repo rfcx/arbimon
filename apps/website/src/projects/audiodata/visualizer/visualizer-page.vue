@@ -1,7 +1,7 @@
 <template>
   <section class="bg-white dark:bg-pitch">
     <VisualizerSidebar
-      :visobject="visobject"
+      :visobject="visobjectForSidebar"
       :is-loading-visobject="isLoadingVisobject || isFetchingVisobject"
       :pointer="pointer"
       :is-sidebar-tags-updated="isSidebarTagsUpdated"
@@ -56,10 +56,11 @@
 </template>
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
+import type { Ref } from 'vue'
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { type SoundscapeItem, type SoundscapeResponse, apiGetSoundscapes } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type SoundscapeItem, type SoundscapeResponse, type Visobject, apiGetSoundscapes } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
@@ -131,12 +132,12 @@ const isLoadingSoundscape = ref<boolean>(false)
 const visobjectSoundscape = ref<SoundscapeItem | undefined>(undefined)
 const idRecording = ref(0)
 const selectedPlaylist = ref(0)
-
 const lastPlaylistId = ref(0)
 const lastSoundscapeRecId = ref(0)
 const lastPlaylistRecordingId = ref(0)
 const lastRecordingId = ref(0)
 const isFetchingVisobject = ref<boolean>(false)
+const visobjectForSidebar: Ref<Visobject | undefined> = ref()
 
 const selectedRecordingId = computed(() => {
   return isPlaylist.value ? isSoundscape.value ? undefined : browserRecId.value : browserTypeId.value
@@ -294,6 +295,12 @@ onMounted(() => {
       lastRecordingId.value = Number(browserTypeId.value)
     }
   }
+})
+
+watch(() => visobject.value, () => {
+  console.info(visobject.value)
+  if (visobject.value === undefined && isLoadingVisobject.value === true) return
+  visobjectForSidebar.value = visobject.value
 })
 
 watch(idRecording, (newId) => {

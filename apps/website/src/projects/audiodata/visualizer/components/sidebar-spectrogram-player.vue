@@ -92,7 +92,6 @@
       </OnClickOutside>
       <SidebarControls
         :visobject="visobject"
-        :is-loading-visobject="isLoadingVisobject"
         @emit-color-spectrogram="$emit('updateColorSpectrogram', $event)"
         @emit-freq-filter="$emit('updateFreqFilter', $event)"
       />
@@ -125,7 +124,6 @@ import { type Pointer } from './visualizer-spectrogram.vue'
 
 const props = defineProps<{
   visobject: Visobject
-  isLoadingVisobject: boolean
   freqFilter?: FreqFilter
   pointer: Pointer
 }>()
