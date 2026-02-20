@@ -105,3 +105,11 @@ export const apiLegacySiteCreate = async (apiClient: AxiosInstance, slug: string
 export const apiLegacySiteDelete = async (apiClient: AxiosInstance, slug: string, sites: number[]): Promise<TextResponse> => {
   return await apiClient.post(`/legacy-api/project/${slug}/sites/delete`, { sites })
 }
+
+export const apiLegacySoftSitesDelete = async (apiClient: AxiosInstance, slug: string): Promise<TextResponse> => {
+  return await apiClient.post(`/legacy-api/project/${slug}/sites/soft-delete`)
+}
+
+export const apiLegacySoftProjectDelete = async (apiClient: AxiosInstance, slug: string): Promise<TextResponse> => {
+  return await apiClient.post(`/legacy-api/project/${slug}/soft-remove`)
+}
