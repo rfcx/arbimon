@@ -180,16 +180,16 @@
         </div>
         <div class="flex flex-row justify-between items-center gap-x-4 mt-4">
           <button
-            class="btn-primary px-4 py-2 btn btn-medium w-full"
-            @click="updateOptions"
-          >
-            Save & close
-          </button>
-          <button
             class="px-4 py-2 btn btn-secondary btn-medium w-full"
             @click="$emit('cancel')"
           >
             Close
+          </button>
+          <button
+            class="btn-primary px-4 py-2 btn btn-medium w-full"
+            @click="updateOptions"
+          >
+            Save & close
           </button>
         </div>
       </div>
