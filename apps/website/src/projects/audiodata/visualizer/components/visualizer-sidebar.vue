@@ -333,9 +333,9 @@ const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTa
 const { isPending: isAddingTag, mutate: mutateRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDeleteRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
-const { data: soundscape, refetch: refetchGetSoundscape } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
+const { data: soundscape } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
 const { data: soundscapeComposition, refetch: refetchGetSoundscapeComposition } = useGetSoundscapeComposition(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
-const { mutate: mutatePostSoundscapeComposition } = usePostSoundscapeComposition(apiClientArbimon, selectedProjectSlug, browserTypeId.value as string)
+const { mutate: mutatePostSoundscapeComposition } = usePostSoundscapeComposition(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId.value : browserTypeId.value)
 
 const playlistSelected = ref<number | undefined>(undefined)
 const playlistSelectedValue = computed(() => playlistSelected.value)
@@ -575,9 +575,8 @@ const onEmitSounscapeValidation = (cl: number, val: number) => {
     class: cl.toString(),
     val
    }, {
-    onSuccess: () => {
-      refetchGetSoundscapeComposition()
-      refetchGetSoundscape()
+    onSuccess: async () => {
+      await refetchGetSoundscapeComposition()
       showAlertDialog('success', 'Success', 'Soundscape composition class is updated')
     },
     onError: (err) => {
