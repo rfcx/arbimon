@@ -49,7 +49,7 @@
               </label>
               <div class="relative inline-flex items-center gap-2 group">
                 <icon-fas-info-circle class="h-4 w-4 cursor-pointer text-insight" />
-                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block px-3 py-2 text-sm text-insight bg-util-gray-03 rounded-lg shadow-lg z-[999] whitespace-normal w-80">
+                <div class="absolute bottom-full right-0 -translate-x-0 mb-2 hidden group-hover:block px-3 py-2 text-sm text-insight bg-util-gray-03 rounded-lg shadow-lg z-[999] whitespace-normal w-80">
                   Check to normalize each value in the soundscape using the number of recordings in the playlist that fall in that column.
                   <br><br>
                   <strong>Note:</strong> This overrides the scale parameter.
