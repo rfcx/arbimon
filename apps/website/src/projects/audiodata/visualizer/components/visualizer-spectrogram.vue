@@ -638,7 +638,7 @@ const { mutate: mutatePostTemplate } = usePostTemplate(apiClientArbimon, selecte
 
 const recordingTrainingSetParams = computed<RecordingTrainingSetParams>(() => {
   return {
-    recordingId: browserTypeId.value,
+    recordingId: isPlaylist.value ? +browserRecId.value : +browserTypeId.value,
     trainingSetId: props.trainingSet ? props.trainingSet.id : ''
   }
 })
@@ -967,7 +967,7 @@ const handleNewTrainingSet = (action: string): void => {
   }
   mutatePostTrainingSet({
     trainingSetId: props.trainingSet?.id as number,
-    recording: +browserTypeId.value,
+    recording: isPlaylist.value ? +browserRecId.value : +browserTypeId.value,
     roi: {
       x1: createBboxEditor.value?.bbox?.x1 as number,
       x2: createBboxEditor.value?.bbox?.x2 as number,
@@ -975,8 +975,8 @@ const handleNewTrainingSet = (action: string): void => {
       y2: createBboxEditor.value?.bbox?.y2 as number
     }
    }, {
-    onSuccess: () => {
-      refetchRecordingTrainingSets()
+    onSuccess: async () => {
+      await refetchRecordingTrainingSets()
       showAlertDialog('success', 'Success', 'Training set ROI is added')
       resetBBox()
     },

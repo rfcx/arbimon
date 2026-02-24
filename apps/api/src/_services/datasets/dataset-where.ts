@@ -82,6 +82,5 @@ export const whereInDataset = (filter: FilterDatasetForSql): Where<DetectionBySi
 
 export const whereRecordingBySiteHour = (filter: FilterDatasetForSql): Where<RecordingBySiteHour> => {
   const { taxonSpeciesId, taxons, ...filterWithoutTaxonSpeciesIdAndtaxonClassId } = filter
-  // console.info('\n\n-----filterWithoutTaxonSpeciesId------', filterWithoutTaxonSpeciesIdAndtaxonClassId)
   return whereInDataset(filterWithoutTaxonSpeciesIdAndtaxonClassId)
 }

@@ -13,9 +13,9 @@
         type="button"
         class="flex justify-start items-center w-full py-2 gap-x-1 text-insight dark:(bg-transparent text-insight)"
         data-accordion-target="#accordion-collapse-body-training"
-        aria-expanded="false"
+        :aria-expanded="isOpen"
         aria-controls="accordion-collapse-body-training"
-        @click="toggleTrainingSetMenu()"
+        @click="isOpen = !isOpen"
       >
         <div class="flex flex-row items-center gap-x-1">
           <icon-fa-chevron-right
@@ -215,6 +215,7 @@ const emits = defineEmits<{(e: 'emitTrainingSet', value: TrainingSet): void,
 
 const toggledTrainingSetMenu = ref<boolean>(false)
 const toggleTrainingSet = ref<boolean>(false)
+const isOpen = ref(false)
 const selectedTrainingSet = ref<TrainingSet>()
 const selectedTrainingSetText = ref<string>('')
 const toggleVisible = ref<boolean>(true)
@@ -284,21 +285,25 @@ const toggleAddTsRoiBox = () => {
   emits('emitActiveLayer', true, 'Training Set ROI Box')
 }
 
-const toggleTrainingSetMenu = () => {
-  toggledTrainingSetMenu.value = !toggledTrainingSetMenu.value
-  toggleTrainingSet.value = false
-  if (toggledTrainingSetMenu.value === false) return emits('emitActiveLayer', false, '')
-  return emits('emitClosedTabs', 'trainingSet')
-}
-
 const toggleTrainingSetVisible = () => {
   toggleVisible.value = !toggleVisible.value
   emits('emitTrainingSetVisibility', toggleVisible.value)
 }
 
+watch(() => isOpen.value, () => {
+  toggleTrainingSet.value = false
+  if (isOpen.value === false) {
+    toggledTrainingSetMenu.value = false
+    emits('emitActiveLayer', false, '')
+  }
+  if (isOpen.value === true) {
+    toggledTrainingSetMenu.value = true
+    emits('emitClosedTabs', 'trainingSet')
+  }
+})
+
 watch(() => props.currentTab, () => {
   if (props.currentTab === 'trainingSet') return
-  toggledTrainingSetMenu.value = false
   emits('emitActiveLayer', false, '')
 })
 

@@ -298,7 +298,6 @@ onMounted(() => {
 })
 
 watch(() => visobject.value, () => {
-  console.info(visobject.value)
   if (visobject.value === undefined && isLoadingVisobject.value === true) return
   visobjectForSidebar.value = visobject.value
 })
