@@ -937,7 +937,7 @@ const handleNewTemplate = (templateData: TemplateData): void => {
   bboxValid.value = false
   mutatePostTemplate({
     name: templateData.name,
-    recording: browserTypeId.value as string,
+    recording: isPlaylist.value ? browserRecId.value : browserTypeId.value,
     roi: {
       x1: createBboxEditor.value?.bbox?.x1 as number,
       y1: createBboxEditor.value?.bbox?.y1 as number,
@@ -1075,7 +1075,7 @@ const fetchSpeciesPresence = (): void => {
 
 const fetchRecordingTemplates = (): void => {
   spectrogramTemplates.value = templates.value?.filter((template: TemplateResponse) => {
-    return template.recording === +browserTypeId.value
+    return template.recording === (isPlaylist.value ? +browserRecId.value : +browserTypeId.value)
   }) ?? []
 }
 

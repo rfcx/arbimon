@@ -125,7 +125,11 @@ const toggledTemplateMenu = ref<boolean>(false)
 const isOpen = ref(false)
 const selectedProjectSlug = computed(() => store.project?.slug)
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
 const browserTypeId = computed(() => route.params.browserTypeId as string ?? undefined)
+const browserType = computed(() => browserTypes.includes(route.params.browserType as string) ? route.params.browserType as string : undefined)
+const browserRecId = computed(() => route.params.browserRecId as string ?? undefined)
+const isPlaylist = computed(() => browserType.value === 'playlist')
 
 const { data: templates, refetch: refetchTemplates } = useGetTemplates(apiClientArbimon, selectedProjectSlug)
 
@@ -138,7 +142,7 @@ const toggleTemplatesVisible = () => {
 
 const fetchRecordingTemplates = (): void => {
   spectrogramTemplates.value = templates.value?.filter((template: TemplateResponse) => {
-    return template.recording === +browserTypeId.value
+    return template.recording === (isPlaylist.value ? +browserRecId.value : +browserTypeId.value)
   }) ?? []
 }
 
