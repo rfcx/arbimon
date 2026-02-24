@@ -275,6 +275,7 @@ const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'emitSpeciesVisibility', value: boolean): void,
   (e: 'emitTemplateVisibility', value: boolean): void,
   (e: 'emitVisibleSoundscapes', value: VisibleSoundscapes): void,
+  (e: 'emitSoundscapeOptions', value: boolean): void
   (e: 'emitSelectedThumbnail', value: number): void,
   (e: 'emitSelectedPlaylist', value: number): void,
   (e: 'emitActiveAedBoxes', visibleJobs: Record<number, boolean>, job: AedJob): void,
@@ -439,8 +440,11 @@ const handleClosedTabs = (tab: string) => {
 }
 
 const handleSoundscapeOptions = async (options: SoundscapeItemOptions) => {
+  console.info('handleSoundscapeOptions', options)
   if (selectedProjectSlug.value === undefined || soundscapeSelected.value?.id === undefined) return
+  emits('emitSoundscapeOptions', true)
   await apiGetSoundscapeScale(apiClientArbimon, selectedProjectSlug.value, soundscapeSelected.value.id.toString(), options)
+  emits('emitSoundscapeOptions', false)
   emits('emitSelectedThumbnail', soundscapeSelected.value?.id)
   soundscapeResponse.value = await apiGetSoundscapes(apiClientArbimon, selectedProjectSlug.value ?? '')
   soundscapeSelected.value = soundscapeResponse.value?.find(it => it.id === Number(browserTypeId.value)) ?? undefined

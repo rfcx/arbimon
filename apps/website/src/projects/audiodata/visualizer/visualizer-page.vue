@@ -22,6 +22,7 @@
       @emit-active-aed-boxes="handleAedJobs"
       @emit-active-clustering="handleClustering"
       @emit-set-browser-type="setBrowserType"
+      @emit-soundscape-options="updateSoundscapeOptions"
     />
     <div
       v-if="isLoadingVisobject || isFetchingVisobject || isLoadingSoundscape"
@@ -202,6 +203,11 @@ const handleVisobjectSoundscape = async () => {
     visobjectSoundscape.value = soundscapeResponse.value?.find(it => it.id === +browserTypeId.value) ?? undefined
   }
   isLoadingSoundscape.value = false
+}
+
+const updateSoundscapeOptions = (val: boolean) => {
+  isLoadingSoundscape.value = val
+  console.info('isLoadingSoundscape.value', isLoadingSoundscape.value)
 }
 
 const setBrowserType = (value: string) => {
