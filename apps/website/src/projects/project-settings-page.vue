@@ -124,6 +124,7 @@ import { type AxiosError, type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
 
+import { apiLegacySoftProjectDelete, apiLegacySoftSitesDelete } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type ProjectProfileUpdateBody, ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isValidSlug } from '@rfcx-bio/utils/string/slug'
@@ -131,7 +132,7 @@ import { isValidSlug } from '@rfcx-bio/utils/string/slug'
 import SaveStatusText from '@/_components/save-status-text.vue'
 import ReadOnlyBanner from '@/_layout/components/guest-banner/guest-banner.vue'
 import { urlWrapper } from '@/_services/images/url-wrapper'
-import { apiClientKey, togglesKey } from '@/globals'
+import { apiClientArbimonLegacyKey, apiClientKey, togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
 import { useDeleteProject, useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
@@ -150,6 +151,7 @@ const router = useRouter()
 const store = useStore()
 const dashboardStore = useDashboardStore()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
+const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 const toggles = inject(togglesKey)
 const selectedProject = computed(() => store.project)
 const selectedProjectId = computed(() => store.project?.id)
@@ -181,6 +183,8 @@ const date = Math.floor(Date.now() / 1000)
 
 const lastModified = ref<number>(date)
 const lastSaved = ref<number>(date)
+
+const selectedProjectSlug = computed(() => store.project?.slug)
 
 const isToggledForBackup = computed(() => {
   const isInternalUser = store.user?.email?.includes('rfcx.org') ?? false
@@ -232,6 +236,8 @@ const onEmitSlug = (slug: string) => {
 const onEmitProjectDelete = () => {
   mutateDeleteProject(store.project?.id ?? -1, {
     onSuccess: async () => {
+      await apiLegacySoftProjectDelete(apiClientArbimon, selectedProjectSlug.value ?? '')
+      await apiLegacySoftSitesDelete(apiClientArbimon, selectedProjectSlug.value ?? '')
       store.deleteProject(store.project?.id)
       await router.push({ name: ROUTE_NAMES.myProjects })
     }
