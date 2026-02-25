@@ -5,6 +5,7 @@ import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { type LocationProjectUserRole, type UserProfile } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '~/db'
+import { BioNotFoundError } from '~/errors'
 import { fileUrl } from '~/format-helpers/file-url'
 import { getProjectById } from './projects-dao'
 
@@ -65,6 +66,7 @@ export const update = async (data: { locationProjectId: number, userId: number, 
 }
 
 export const getUserRoleForProject = async (userId: number | undefined, projectId: number): Promise<ProjectRole> => {
+  if (projectId === undefined || Number.isNaN(projectId)) { throw BioNotFoundError() }
   const projectIsPublished = (await getProjectById(projectId))?.status === 'published'
 
   // When there is no user (no token) and project is not published, no role
