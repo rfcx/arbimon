@@ -9,6 +9,7 @@
 
     <div class="relative flex-1">
       <input
+        id="datePickerId"
         ref="datePickerInput"
         class="w-full border text-secondary border-util-gray-02 rounded-md h-[34px] pl-7 pr-5 text-sm font-medium
           dark:(bg-echo text-secondary placeholder:text-placeholder)

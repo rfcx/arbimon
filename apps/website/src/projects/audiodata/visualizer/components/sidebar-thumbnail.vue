@@ -274,6 +274,7 @@ watch(() => props.initialDate, () => {
 watch(() => props.siteSelected, () => {
   if (siteSelectedRef.value === props.siteSelected || props.siteSelected === undefined) return
   siteSelectedRef.value = props.siteSelected
+  refetchRecordings()
 })
 
 watch(() => props.nextRecording, (newVal) => {

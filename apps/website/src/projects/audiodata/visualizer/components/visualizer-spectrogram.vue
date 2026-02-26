@@ -1115,6 +1115,7 @@ watch(() => props.visobjectSoundscape, async () => {
 
 watch(() => props.visobject, async () => {
   drawChart()
+  await refetchRecordingTags()
   await nextTick()
   initTooltips()
 })

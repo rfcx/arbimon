@@ -31,7 +31,7 @@
     </div>
     <div v-show="isPlaylist || isSite">
       <div
-        v-if="isPlaylist"
+        v-show="isPlaylist"
         class="flex flex-col w-full px-[15px] pb-[15px]"
       >
         <BasicSearchSelect
@@ -53,7 +53,7 @@
         />
       </div>
       <div
-        v-else
+        v-show="isSite"
         class="flex flex-row items-center justify-start gap-x-2 px-[15px] pb-[15px] grid grid-cols-12 gap-4"
       >
         <div class="col-span-7">
@@ -707,6 +707,7 @@ watch(() => recordingTags.value, () => {
 })
 
 watch(() => props.visobject, (v) => {
+  if (isPlaylist.value) return
   const site = options.value.find(s => s.label === v?.site)
   siteSelected.value = site?.value
   initialDate.value = v?.datetime ?? ''
@@ -729,6 +730,7 @@ onMounted(async () => {
 })
 
 watch(siteSelected, (newVal, oldVal) => {
+  if (isPlaylist.value) return
   if (oldVal === undefined) return
   if (newVal !== oldVal) {
     initialDate.value = ''
@@ -757,8 +759,8 @@ watch(() => clustering.value, () => {
   fetchClustering()
 })
 
-watch(() => yearly.value, () => {
-  refetchAvailableBySiteYear()
+watch(() => yearly.value, async () => {
+  await refetchAvailableBySiteYear()
 })
 
 watch(() => props.isSidebarTagsUpdated, async () => {

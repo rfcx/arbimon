@@ -349,10 +349,6 @@ watch(() => browserType.value, () => {
   } else handleSelectedThumbnail(lastSoundscapeRecId.value)
 })
 
-watch(() => browserTypeId.value, () => {
-  refetchRecording()
-})
-
 watch(() => isRefetching.value, () => {
   if (isRefetching.value === false) {
     isFetchingVisobject.value = false
