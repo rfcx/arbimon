@@ -110,7 +110,7 @@
                   <li
                     v-for="aref in amplitudeReferences"
                     :key="aref.value"
-                    class="bg-moss px-2 py-3 cursor-pointer flex flex-col gap-1"
+                    class="bg-moss px-2 py-3 cursor-pointer flex flex-col gap-1 hover:(bg-util-gray-03 text-gray-300)"
                     @click="selectAmplitudeReference(aref.value)"
                   >
                     <span class="whitespace-normal leading-snug">
