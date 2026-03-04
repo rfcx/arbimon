@@ -609,9 +609,15 @@ const store = useStore()
 const route = useRoute()
 
 const browserTypes: string[] = ['rec', 'playlist', 'soundscape']
-const browserTypeId = computed(() => route.params.browserTypeId as string ?? undefined)
 const browserType = computed(() => browserTypes.includes(route.params.browserType as string) ? route.params.browserType as string : undefined)
-const browserRecId = computed(() => route.params.browserRecId as string ?? undefined)
+const browserTypeId = computed<string | undefined>(() => {
+  const param = route.params.browserTypeId
+  return typeof param === 'string' ? param : undefined
+})
+const browserRecId = computed<string | undefined>(() => {
+  const param = route.params.browserRecId
+  return typeof param === 'string' ? param : undefined
+})
 const browserQuery = computed(() => route.query.a as string ?? undefined)
 const bboxQuery = reactive<{ x1: number; y1: number; x2: number; y2: number }>({
   x1: 0,
@@ -632,18 +638,18 @@ const selectedRecordingId = computed(() => {
 const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
 const { data: pmBoxes, refetch: refetchPatternMatchingBoxes } = useGetPatternMatchingBoxes(apiClientArbimon, selectedProjectSlug, { rec_id: selectedRecordingId.value as string, validated: 1 })
 const { data: templates, refetch: refetchTemplates } = useGetTemplates(apiClientArbimon, selectedProjectSlug)
-const { mutate: mutateAddRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, browserTypeId)
+const { mutate: mutateAddRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { mutate: mutatePostTrainingSet } = usePostTrainingSet(apiClientArbimon, selectedProjectSlug)
 const { mutate: mutatePostTemplate } = usePostTemplate(apiClientArbimon, selectedProjectSlug)
 
 const recordingTrainingSetParams = computed<RecordingTrainingSetParams>(() => {
   return {
-    recordingId: isPlaylist.value ? +browserRecId.value : +browserTypeId.value,
+    recordingId: isPlaylist.value ? Number(browserRecId.value) : Number(browserTypeId.value),
     trainingSetId: props.trainingSet ? props.trainingSet.id : ''
   }
 })
 const { data: trainingSets, refetch: refetchRecordingTrainingSets } = useGetRecordingTrainingSets(apiClientArbimon, selectedProjectSlug, recordingTrainingSetParams)
-const { data: soundscapeRegions } = useGetSoundscapeRegions(apiClientArbimon, selectedProjectSlug, browserTypeId)
+const { data: soundscapeRegions } = useGetSoundscapeRegions(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 
 const legendMetrics = computed(() => {
   return {
@@ -937,7 +943,7 @@ const handleNewTemplate = (templateData: TemplateData): void => {
   bboxValid.value = false
   mutatePostTemplate({
     name: templateData.name,
-    recording: isPlaylist.value ? browserRecId.value : browserTypeId.value,
+    recording: String(isPlaylist.value ? browserRecId.value : browserTypeId.value),
     roi: {
       x1: createBboxEditor.value?.bbox?.x1 as number,
       y1: createBboxEditor.value?.bbox?.y1 as number,
@@ -967,7 +973,7 @@ const handleNewTrainingSet = (action: string): void => {
   }
   mutatePostTrainingSet({
     trainingSetId: props.trainingSet?.id as number,
-    recording: isPlaylist.value ? +browserRecId.value : +browserTypeId.value,
+    recording: isPlaylist.value ? Number(browserRecId.value) : Number(browserTypeId.value),
     roi: {
       x1: createBboxEditor.value?.bbox?.x1 as number,
       x2: createBboxEditor.value?.bbox?.x2 as number,
@@ -1075,7 +1081,7 @@ const fetchSpeciesPresence = (): void => {
 
 const fetchRecordingTemplates = (): void => {
   spectrogramTemplates.value = templates.value?.filter((template: TemplateResponse) => {
-    return template.recording === (isPlaylist.value ? +browserRecId.value : +browserTypeId.value)
+    return template.recording === (isPlaylist.value ? Number(browserRecId.value) : Number(browserTypeId.value))
   }) ?? []
 }
 
