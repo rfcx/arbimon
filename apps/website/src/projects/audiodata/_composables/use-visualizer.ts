@@ -115,12 +115,12 @@ export const useRecordingValidate = (apiClient: AxiosInstance, slug: ComputedRef
   })
 }
 
-export const usePostSoundscapeComposition = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: string): UseMutationReturnType<SoundscapeCompositionResponse[] | undefined, unknown, SoundscapeCompositionParams, unknown> => {
+export const usePostSoundscapeComposition = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: ComputedRef<string | undefined>): UseMutationReturnType<SoundscapeCompositionResponse[] | undefined, unknown, SoundscapeCompositionParams, unknown> => {
   return useMutation({
     mutationKey: ['post-soundscape-composition'],
     mutationFn: async (payload: SoundscapeCompositionParams) => {
-      if (!slug.value || !recordingId) return undefined
-      return await apiPostSoundscapeComposition(apiClient, slug.value, recordingId, payload)
+      if (!slug.value || !recordingId.value) return undefined
+      return await apiPostSoundscapeComposition(apiClient, slug.value, recordingId.value, payload)
     }
   })
 }
@@ -152,7 +152,7 @@ export const useGetAed = (
 export const useGetClustering = (
   apiClient: AxiosInstance,
   slug: ComputedRef<string | undefined>,
-  recId: ComputedRef<string | number> | undefined
+  recId: ComputedRef<string | undefined> | undefined
 ): UseQueryReturnType<ClusterResponse | undefined, unknown> => {
   const enabled = computed(() => Boolean(slug.value && recId?.value !== undefined && recId.value !== null && recId.value !== ''))
   return useQuery({

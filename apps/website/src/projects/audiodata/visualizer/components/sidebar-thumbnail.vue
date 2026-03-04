@@ -148,7 +148,7 @@ const selectedRecordingId = computed(() => {
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
 
 const recordingListSearchParams = computed(() => {
-  const formattedDate = dayjs.utc(props.initialDate).format('YYYY-MM-DD')
+  const formattedDate = dayjs.utc(props.initialDate).format('YYYY-M-D')
   if (!formattedDate || props.initialDate === '') return
   const visobjSite = sites.value?.find(site => site.name === props.visobject?.site)
   if (siteSelectedRef.value === undefined) return

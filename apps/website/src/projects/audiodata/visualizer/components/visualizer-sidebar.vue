@@ -292,8 +292,14 @@ const activeLayer = ref<string | undefined>(undefined)
 const freqFilter = ref<FreqFilter | undefined>(undefined)
 const selectedProjectSlug = computed(() => store.project?.slug)
 const browserType = computed(() => browserTypes.includes(route.params.browserType as string) ? route.params.browserType as string : undefined)
-const browserTypeId = computed(() => route.params.browserTypeId as string ?? undefined)
-const browserRecId = computed(() => route.params.browserRecId as string ?? undefined)
+const browserTypeId = computed<string | undefined>(() => {
+  const param = route.params.browserTypeId
+  return typeof param === 'string' ? param : undefined
+})
+const browserRecId = computed<string | undefined>(() => {
+  const param = route.params.browserRecId
+  return typeof param === 'string' ? param : undefined
+})
 const success = ref<AlertDialogType>('error')
 const title = ref('')
 const message = ref('')
@@ -336,7 +342,7 @@ const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDelete
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
 const { data: soundscape } = useGetSoundscape(apiClientArbimon, selectedProjectSlug)
 const { data: soundscapeComposition, refetch: refetchGetSoundscapeComposition } = useGetSoundscapeComposition(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
-const { mutate: mutatePostSoundscapeComposition } = usePostSoundscapeComposition(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId.value : browserTypeId.value)
+const { mutate: mutatePostSoundscapeComposition } = usePostSoundscapeComposition(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 
 const playlistSelected = ref<number | undefined>(undefined)
 const playlistSelectedValue = computed(() => playlistSelected.value)
@@ -642,7 +648,7 @@ const fetchAudioEvents = () => {
       y1: item.freq_min,
       y2: item.freq_max,
       jobId: item.job_id || null,
-      display: item.rec_id === +browserTypeId.value ? 'block' : 'none',
+      display: browserTypeId.value && item.rec_id === +browserTypeId.value ? 'block' : 'none',
       borderColor: '',
       backgroundColor: '',
       // boxes not visible by default, except selected job from the audio events details page
@@ -684,7 +690,7 @@ const fetchClustering = () => {
       y2: item.frequency_max,
       playlistId: item.playlist_id || null,
       playlistName: item.playlist_name,
-      display: item.recording_id === (isPlaylist.value ? +browserRecId.value : +browserTypeId.value) ? 'block' : 'none',
+      display: item.recording_id === (isPlaylist.value ? browserRecId.value ? Number(browserRecId.value) : undefined : browserTypeId.value ? Number(browserTypeId.value) : undefined) ? 'block' : 'none',
       borderColor: '',
       backgroundColor: '',
       // boxes not visible by default
