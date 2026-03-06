@@ -135,7 +135,7 @@
           <div class="relative inline-flex">
             <button
               id="dropdownColorButton"
-              class="bg-pitch cursor-pointer border border-1 rounded-md text-frequency px-3 py-2 flex items-center gap-2 focus:border-frequency focus:outline-none focus:ring-0"
+              class="cursor-pointer border border-1 bg-moss border-util-gray-03 rounded-md px-3 py-2 flex items-center gap-2 focus:border-frequency focus:outline-none focus:ring-0"
               @click="toggleDropdown"
             >
               <SidebarSoundscapePalette
@@ -156,7 +156,7 @@
                 <li
                   v-for="(palette, idx) in palettes"
                   :key="idx"
-                  class="bg-moss text-frequency px-3 py-2 cursor-pointer flex items-center gap-2"
+                  class="bg-moss text-frequency px-3 py-2 cursor-pointer flex items-center gap-2 hover:(bg-util-gray-03 text-gray-300)"
                   @click="selectPalette(idx)"
                 >
                   <SidebarSoundscapePalette
