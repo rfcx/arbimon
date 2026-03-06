@@ -770,7 +770,8 @@ watch(() => yearly.value, async () => {
 })
 
 watch(() => props.isSidebarTagsUpdated, async () => {
-  refetchRecordingTags()
+  await refetchRecordingTags()
+  await refetchProjectTags()
 })
 
 </script>

@@ -926,10 +926,10 @@ const handleNewTag = (tag: BboxTagItem): void => {
     t1: createBboxEditor.value?.bbox?.x2
    }, {
     onSuccess: async () => {
-      refetchRecordingTags()
+      await refetchRecordingTags()
+      emits('updateTags')
       showAlertDialog('success', 'Success', 'Tag is added')
       resetBBox()
-      emits('updateTags')
     },
     onError: (err) => {
       console.info('err', err)
