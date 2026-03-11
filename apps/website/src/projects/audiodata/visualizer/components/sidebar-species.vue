@@ -722,6 +722,7 @@ const validate = async (val: number, dropdownId?: number | null, isClearOrAbsent
         await nextTick()
         initDropdowns()
         emits('updateValidations')
+        showAlertDialog('success', '', `Success to ${val === 1 ? 'validate' : val === 0 ? 'unvalidate' : 'clear'} the detection${isClearOrAbsentAll === true ? 's' : ''}`)
       },
       onError: (err) => {
         console.info('err', err)
