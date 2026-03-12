@@ -124,6 +124,7 @@ onMounted(async () => {
     autohide: true,
     format: 'dd-mm-yyyy',
     maxView: 1,
+    maxDate: new Date(),
     startView: 1,
     pickLevel: 0,
     beforeShowDay,
@@ -180,7 +181,7 @@ function updateViewDate () {
 
   const temp = new Date(year, month - 1, 1)
   // do not update the calendar if initialDate was changed it will be processed by watcher for initialDate
-  if (props.initialDate) return
+  // if (props.initialDate) return
   picker.value?.setDate(temp)
   if (datePickerInput.value) datePickerInput.value.value = ''
   selectedDateIso.value = ''
