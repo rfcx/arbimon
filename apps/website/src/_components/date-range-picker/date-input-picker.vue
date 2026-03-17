@@ -91,14 +91,22 @@ const beforeShowDay = (date: Date) => {
   const minutes = recordedMinutesPerDayConverted.value[dayFormatted] ?? 0
   return {
     content: `
-      <div style="line-height:1.25rem;padding-top:5px;${isFutureDate ? 'cursor:not-allowed!important' : ''}"
-        class="${minutes === 0 && props.recordedMinutesPerDay ? 'text-util-gray-02' : 'text-insight'}">${day}</div>
-      <div style="font-size:10px;line-height:1.25rem;padding-bottom:5px;"
-        class="${minutes >= 10000 ? 'text-insight' : minutes === 0 ? 'text-util-gray-02' : 'text-flamingo'}">
+      <div
+        style="line-height:1.25rem;padding-top:5px;${isFutureDate ? 'cursor:not-allowed!important' : ''}"
+        class="${minutes === 0 && props.recordedMinutesPerDay ? 'text-util-gray-02' : 'text-insight'}"
+        title="${isFutureDate ? 'Future dates are not available' : ''}"
+      >
+        ${day}
+      </div>
+      <div
+        style="font-size:10px;line-height:1.25rem;padding-bottom:5px;${isFutureDate ? 'cursor:not-allowed!important' : ''}"
+        class="${minutes >= 10000 ? 'text-insight' : minutes === 0 ? 'text-util-gray-02' : 'text-flamingo'}"
+      >
         ${props.recordedMinutesPerDay ? convertMinutestoCount(minutes) : ''}
-      </div>`
+      </div>
+      `
+    }
   }
-}
 
 const beforeShowMonth = (date: Date) => {
   const calendarMonth = date.getMonth()
