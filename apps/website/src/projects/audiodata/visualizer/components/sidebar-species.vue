@@ -792,10 +792,12 @@ const backToSelectSpecies = () => {
   toggleSongtypeSelect.value = false
 }
 
-watch(props.visobject, () => {
+watch(() => props.visobject, async () => {
+  validations.value = {}
   if (props.visobject.validations.length) {
     props.visobject.validations.forEach(addValidation)
   }
+  await refetchGetClasses()
 })
 
 watch(() => isOpen.value, () => {
