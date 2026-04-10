@@ -39,7 +39,7 @@ jobs:
       s3mock:
         image: adobe/s3mock:latest
         env:
-          initialBuckets: bucket
+          COM_ADOBE_TESTING_S3MOCK_STORE_INITIAL_BUCKETS: bucket
         ports:
           - 9090/tcp
         options: >-
