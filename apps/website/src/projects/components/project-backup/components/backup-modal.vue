@@ -36,7 +36,8 @@
                 Request project backup
               </h3>
               <p class="mt-2">
-                This process will take about 24 hours, depending on how large your project is. You're allowed to request a backup every 7 days.
+                <!-- This process will take about 24 hours, depending on how large your project is. You're allowed to request a backup every 7 days. -->
+                To request a full backup of this project, please send an email to jon@rfcx.org.
               </p>
             </div>
             <div
