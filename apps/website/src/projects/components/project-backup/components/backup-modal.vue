@@ -36,8 +36,7 @@
                 Request project backup
               </h3>
               <p class="mt-2">
-                <!-- This process will take about 24 hours, depending on how large your project is. You're allowed to request a backup every 7 days. -->
-                To request a full backup of this project, please send an email to jon@rfcx.org.
+                This process will take about 24 hours, depending on how large your project is. You're allowed to request a backup every 7 days.
               </p>
             </div>
             <div
@@ -78,7 +77,7 @@
             >
               <span>Cancel</span>
             </button>
-            <!-- <button
+            <button
               data-modal-target="backup-confirm-modal"
               data-modal-toggle="backup-confirm-modal"
               type="button"
@@ -90,27 +89,7 @@
                 v-if="isLoading"
                 class="ml-2 w-4 inline-flex stroke-pitch stroke-black"
               />
-            </button> -->
-            <a
-              type="button"
-              href="mailto:jon@rfcx.org"
-              class="rounded-full h-10 text-pitch font-medium bg-frequency w-fit px-5 py-3 text-center hover:bg-chirp flex flex-row items-center"
-              data-tooltip-target="Backuptooltip"
-              data-tooltip-style="light"
-            >
-              Request backup
-            </a>
-            <div
-              id="Backuptooltip"
-              role="tooltip"
-              class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
-            >
-              Request project backup via email
-              <div
-                class="tooltip-arrow"
-                data-popper-arrow
-              />
-            </div>
+            </button>
           </div>
           <div
             v-else

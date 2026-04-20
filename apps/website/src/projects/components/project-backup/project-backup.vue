@@ -16,9 +16,21 @@
             Learn more about project back-ups
           </a>
         </p>
+        <a
+          type="button"
+          href="mailto:jon@rfcx.org"
+          class="rounded-full h-10 text-pitch font-medium bg-frequency w-fit mt-6 px-5 py-3 text-center hover:bg-chirp flex flex-row items-center"
+          data-tooltip-target="Backuptooltip"
+          data-tooltip-style="light"
+        >
+          Request backup
+        </a>
+        <div class="text-flamingo mt-3">
+          To request a full backup of this project, please send an email to jon@rfcx.org
+        </div>
         <button
           v-if="!isLoading"
-          class="btn btn-medium mt-6"
+          class="btn btn-medium mt-6 hidden"
           :class="!isAllowedToRequestNewBackup ? 'cursor-not-allowed btn-disabled' : 'btn-secondary'"
           type="button"
           :disabled="!isAllowedToRequestNewBackup || isPending"
@@ -32,7 +44,7 @@
         </button>
         <span
           v-if="!isAllowedToRequestNewBackup"
-          class="ml-4 text-xs text-util-gray-02"
+          class="ml-4 text-xs text-util-gray-02 hidden"
         >
           {{ TEXT_BACKUP_LIMIT }}
         </span>
