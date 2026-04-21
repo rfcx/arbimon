@@ -61,6 +61,11 @@ const routes: RouteRecordRaw[] = [
     component: PAGES.Explore
   },
   {
+    path: '/pricing',
+    name: ROUTE_NAMES.pricing,
+    component: PAGES.Pricing
+  },
+  {
     path: '/my-projects',
     name: ROUTE_NAMES.myProjects,
     component: PAGES.MyProjects,
