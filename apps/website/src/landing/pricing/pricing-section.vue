@@ -1,26 +1,25 @@
 <template>
-  <landing-navbar />
-  <div class="min-h-screen bg-black text-white py-20 px-4 font-sans">
+  <div class="min-h-screen bg-black text-util-gray-02 py-20 px-4 font-sans border-b border-b-frequency">
     <div class="text-center mb-16">
-      <h1 class="text-[42px] mb-2">
+      <h1 class="text-[40px] mb-2 text-insight text-bold">
         Pricing
       </h1>
-      <p class="text-[#777777] text-[22px] font-medium">
+      <p class="text-[18px] font-medium">
         Start for free. Unlock for more.
       </p>
     </div>
 
     <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-      <div class="bg-[#0D0D0D] rounded-3xl p-5 flex flex-col h-full">
+      <div class="bg-echo rounded-3xl p-5 flex flex-col h-full">
         <div class="flex-grow">
           <div class="mb-8">
-            <h3 class="text-[#555555] text-[15px] mb-3">
+            <h3 class="text-[15px] mb-3">
               Basic
             </h3>
-            <h2 class="text-[32px] font-bold mb-3 font-sans">
+            <h2 class="text-[32px] text-insight font-bold mb-3 font-sans ">
               Free
             </h2>
-            <p class="text-[#555555] text-[13px] leading-relaxed mr-12">
+            <p class=" text-[13px] leading-relaxed mr-12">
               Ideal for low usage, exploratory users & project contributors
             </p>
           </div>
@@ -29,7 +28,7 @@
             <li
               v-for="feature in basicFeatures"
               :key="feature"
-              class="flex items-center text-[14px] text-[#555555]"
+              class="flex items-center text-[14px]"
             >
               <CheckIcon class="w-4 h-4 mr-3 text-gray-400" />
               {{ feature }}
@@ -39,7 +38,8 @@
 
         <div class="mt-10">
           <button
-            class="h-[40px] w-full bg-[#ffffff14] hover:bg-[#ffffff20] transition-colors py-3 rounded-xl text-[14px]"
+            disabled
+            class="h-[40px] w-full bg-[#ffffff14] text-[#fff] opacity-50 cursor-not-allowed transition-colors py-3 rounded-full text-[14px]"
             @click="signup"
           >
             Start with Basic
@@ -50,17 +50,17 @@
         </div>
       </div>
 
-      <div class="bg-[#0D0D0D] rounded-3xl p-5 flex flex-col h-full relative">
+      <div class="bg-echo rounded-3xl p-5 flex flex-col h-full relative">
         <div class="flex-grow">
           <div class="mb-8">
-            <h3 class="text-[#49FF50] text-[15px] mb-3">
+            <h3 class="text-frequency text-[15px] mb-3">
               Pro
             </h3>
             <div class="flex items-baseline gap-1 mb-4 font-sans">
-              <span class="text-[32px] font-bold">$995</span>
-              <span class="text-[#908B8B] text-[15px]">/ year</span>
+              <span class="text-[32px] font-bold text-insight">$995</span>
+              <span class=" text-[15px]">/ year</span>
             </div>
-            <p class="text-[#8F8B8B] text-[13px] leading-relaxed mr-12">
+            <p class="text-[13px] leading-relaxed mr-12">
               Dedicated to users leading an active project.
             </p>
           </div>
@@ -69,40 +69,37 @@
             <li
               v-for="feature in proFeatures"
               :key="feature"
-              class="flex items-center text-sm text-[#8F8B8B]"
+              class="flex items-center text-sm"
             >
-              <CheckIcon class="w-4 h-4 mr-3 text-[#49FF50]" />
+              <CheckIcon class="w-4 h-4 mr-3 text-frequency" />
               {{ feature }}
             </li>
           </ul>
         </div>
 
         <div class="mt-10">
-          <a
-            href="https://buy.stripe.com/8x2bJ29cl3PC6xN4VtfnO00"
-            target="_blank"
-            class="w-full"
+          <button
+            disabled
+            class="h-[40px] w-full bg-frequency opacity-50 cursor-not-allowed text-black rounded-full text-[14px] transition-colors"
           >
-            <button class="h-[40px] w-full bg-[#4aff50] hover:opacity-80 text-black rounded-xl text-[14px] transition-colors">
-              Start with Pro
-            </button>
-          </a>
-          <p class="text-center text-[13px] text-[#D9D9D9] mt-4 px-6 leading-tight h-[40px]">
+            Start with Pro
+          </button>
+          <p class="text-center text-[13px] mt-4 px-6 leading-tight h-[40px]">
             Unlock additional projects for $99/year per premium project.
           </p>
         </div>
       </div>
 
-      <div class="bg-[#0D0D0D] rounded-3xl p-5 flex flex-col h-full">
+      <div class="bg-echo rounded-3xl p-5 flex flex-col h-full">
         <div class="flex-grow">
           <div class="mb-8">
-            <h3 class="text-[#FFF2F2] text-[15px] mb-3">
+            <h3 class="text-insight text-[15px] mb-3">
               Enterprise
             </h3>
-            <h2 class="text-[32px] font-sans font-bold mb-3">
+            <h2 class="text-[32px] font-sans font-bold mb-3 text-insight">
               Contact us
             </h2>
-            <p class="text-[#8F8B8B] text-[13px] leading-relaxed mr-12">
+            <p class=" text-[13px] leading-relaxed mr-12">
               Perfect for users with multiple or high-scale projects
             </p>
           </div>
@@ -111,7 +108,7 @@
             <li
               v-for="feature in enterpriseFeatures"
               :key="feature"
-              class="flex items-center text-[14px] text-[#8F8B8B]"
+              class="flex items-center text-[14px]"
             >
               <CheckIcon class="w-4 h-4 mr-3 text-white" />
               {{ feature }}
@@ -120,16 +117,14 @@
         </div>
 
         <div class="mt-10 flex flex-col items-center">
-          <a
-            href="mailto:contact@arbimon.org"
-            class="w-full"
+          <button
+            disabled
+            class="h-[40px]  opacity-50 cursor-not-allowed w-full bg-[#F7F7F7] text-[#302F2F] text-[14px] rounded-full transition-colors"
           >
-            <button class="h-[40px] w-full bg-[#F7F7F7] hover:opacity-80 text-[#302F2F] text-[14px] rounded-xl transition-colors">
-              Get in touch
-            </button>
-          </a>
+            Get in touch
+          </button>
 
-          <p class="max-w-[200px] mx-auto text-center text-[13px] text-[#d9d9d9] mt-4 leading-tight h-[40px]">
+          <p class="text-center text-[13px] mt-4 leading-tight h-[40px] px-12">
             Contact us to unlock additional projects.
           </p>
         </div>
@@ -145,7 +140,6 @@ import { defineComponent, h, inject } from 'vue'
 
 import { apiArbimonLegacyClearSession } from '@rfcx-bio/common/api-arbimon/legacy-logout'
 
-import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientArbimonLegacyKey, authClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 

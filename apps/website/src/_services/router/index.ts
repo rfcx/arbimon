@@ -23,6 +23,11 @@ const routes: RouteRecordRaw[] = [
         name: ROUTE_NAMES.landingHowItWorks,
         component: PAGES.LandingHowItWorks
       },
+        {
+        path: 'pricing',
+        name: ROUTE_NAMES.pricing,
+        component: PAGES.Pricing
+      },
       {
         path: 'publications',
         name: ROUTE_NAMES.landingPublications,
@@ -59,11 +64,6 @@ const routes: RouteRecordRaw[] = [
     path: '/explore',
     name: ROUTE_NAMES.explore,
     component: PAGES.Explore
-  },
-  {
-    path: '/pricing',
-    name: ROUTE_NAMES.pricing,
-    component: PAGES.Pricing
   },
   {
     path: '/my-projects',
