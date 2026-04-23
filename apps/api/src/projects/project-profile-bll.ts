@@ -4,6 +4,7 @@ import { updateProjectLegacy } from '~/api-legacy-arbimon'
 import { BioNotFoundError, BioPublicError } from '~/errors'
 import { updateProjectSettings as updateProjectSettingsLocal } from './dao/project-profile-dao'
 import { updateProjectHiddenStatus } from './dao/project-status-dao'
+import { assertProjectSettingsUpdateAllowed } from './project-entitlement-bll'
 import { getProjectById } from './dao/projects-dao'
 
 export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody, token: string, projectId: number): Promise<void> => {
@@ -11,6 +12,8 @@ export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody,
   if (project === undefined) {
     throw BioNotFoundError()
   }
+
+  await assertProjectSettingsUpdateAllowed(projectId, request)
 
   // Don't allow changes to hidden if the project is published
   if (request.hidden !== undefined && project.status === 'published') {

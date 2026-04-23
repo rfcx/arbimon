@@ -8,6 +8,7 @@ import { type CoreCreateClassifierJobBody } from '~/api-core/types'
 import { getSequelize } from '~/db'
 import { BioInvalidBodyError, BioNotFoundError, BioPublicError } from '~/errors'
 import { createClassifierJob as coreCreateClassifierJob, updateClassifierJob } from '../_services/api-core/api-core'
+import { assertProjectAnalysisAllowed } from '@/projects/project-entitlement-bll'
 
 interface CreateClassifierJobRequestParsed {
   classifierId: number
@@ -54,6 +55,8 @@ export const createClassifierJob = async (token: string, body: CreateClassifierJ
   if (project === null || project === undefined) {
     throw BioNotFoundError()
   }
+
+  await assertProjectAnalysisAllowed(body.projectId)
 
   const coreCreateClassifierJobBody: CoreCreateClassifierJobBody = {
     classifier_id: body?.classifierId,

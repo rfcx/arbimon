@@ -12,9 +12,17 @@ export interface LocationProjectQuery {
   keyword?: string
 }
 
+export interface ProjectTieringUsage {
+  recordingMinutesCount: number
+  collaboratorCount: number
+  guestCount: number
+  patternMatchingCount: number
+}
+
 // Response types
 export type LocationProjectWithRole = LocationProjectTypes['light'] & {
   role: ProjectRole
+  usage?: ProjectTieringUsage
 }
 
 export type LocationProjectWithInfo = LocationProjectTypes['light'] & {
@@ -22,6 +30,7 @@ export type LocationProjectWithInfo = LocationProjectTypes['light'] & {
   objectives: string[]
   countries: string[]
   image: string
+  usage?: ProjectTieringUsage
 }
 
 export type ProjectLight = Pick<Project, 'id' | 'slug' | 'name'> & {

@@ -1,12 +1,18 @@
 <template>
   <section class="py-20 bg-white dark:bg-pitch pl-18 site-page">
+    <div
+      v-if="isProjectViewOnly"
+      class="mx-8 mb-4 rounded-lg border border-insight/30 bg-insight/10 px-4 py-3 text-sm text-insight"
+    >
+      This project is currently view-only. Site changes and exports are disabled until the project is reactivated.
+    </div>
     <div class="flex items-center px-8 bg-white dark:bg-pitch">
       <h1 class="ml-1 text-gray-900 dark:text-insight">
         Sites
       </h1>
       <button
         class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-        :disabled="!store.userIsFullProjectMember"
+        :disabled="!store.userIsFullProjectMember || isProjectViewOnly"
         data-tooltip-style="light"
         :data-tooltip-target="!store.userIsFullProjectMember ? 'createSiteTooltip': null"
         @click="createSite()"
@@ -16,7 +22,7 @@
       </button>
       <button
         class="btn btn-secondary btn-medium ml-2 btn-small items-center text-frequency inline-flex hover:text-pitch px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-        :disabled="!store.userIsFullProjectMember"
+        :disabled="!store.userIsFullProjectMember || isProjectViewOnly"
         data-tooltip-style="light"
         :data-tooltip-target="!store.userIsFullProjectMember ? 'importSiteTooltip': null"
         @click="triggerFileInput"
@@ -64,7 +70,7 @@
           <div class="p-1 flex justify-between">
             <div>
               <button
-                :disabled="selectedSite == undefined || !store.userIsFullProjectMember"
+                :disabled="selectedSite == undefined || !store.userIsFullProjectMember || isProjectViewOnly"
                 class="btn btn-secondary btn-medium btn-small disabled:cursor-not-allowed disabled:btn-disabled disabled:hover:btn-disabled px-3 disabled:hover:btn-disabled disabled:btn-disabled"
                 data-tooltip-style="light"
                 :data-tooltip-target="!store.userIsFullProjectMember ? 'editSiteTooltip': null"
@@ -87,7 +93,7 @@
               <button
                 class="btn btn-secondary btn-medium ml-2 btn-small px-3 disabled:hover:btn-disabled disabled:btn-disabled"
                 data-dropdown-toggle="deleteSiteDropdown"
-                :disabled="!store.userIsExpertMember"
+                :disabled="!store.userIsExpertMember || isProjectViewOnly"
                 data-tooltip-style="light"
                 :data-tooltip-target="!store.userIsExpertMember ? 'deleteSiteTooltip': null"
               >
@@ -129,7 +135,7 @@
               </div>
               <button
                 class="btn btn-secondary btn-medium ml-2 btn-small px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-                :disabled="!store.userIsDataEntryMember"
+                :disabled="!store.userIsDataEntryMember || isProjectViewOnly"
                 data-tooltip-style="light"
                 :data-tooltip-target="!store.userIsDataEntryMember ? 'exportSitesTooltip': null"
                 @click="exportSites()"
@@ -295,6 +301,7 @@ const importSiteModal = ref<InstanceType<typeof ImportSiteModal> | null>(null)
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
+const isProjectViewOnly = computed(() => store.project?.entitlementState === 'inactive' || store.project?.viewOnlyEffective === true)
 
 // API
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
@@ -413,6 +420,10 @@ const locationSelected = computed(() => {
 
 // function
 const deleteSelectedSite = () => {
+  if (isProjectViewOnly.value) {
+    showAlertDialog('error', 'Error', 'This project is currently view-only and cannot change sites.')
+    return
+  }
   if (selectedSite.value === undefined) {
     showAlertDialog('error', 'Error', 'Please select site to remove')
     return
@@ -425,6 +436,10 @@ const deleteSelectedSite = () => {
 }
 
 const deleteAllEmptySites = () => {
+  if (isProjectViewOnly.value) {
+    showAlertDialog('error', 'Error', 'This project is currently view-only and cannot change sites.')
+    return
+  }
   allEmptySites.value = true
   checkEmptySites()
   showPopup.value = !showPopup.value
@@ -443,6 +458,10 @@ function toCreateSiteBody (site: Site): CreateSiteBody {
 }
 
 async function createSitesFromCsvData (sites: Site[]) {
+  if (isProjectViewOnly.value) {
+    showAlertDialog('error', 'Error', 'This project is currently view-only and cannot import sites.')
+    return
+  }
   try {
   await createSites(sites)
     showAlertDialog('success', 'Success', 'All sites created successfully!')
@@ -477,6 +496,10 @@ async function createSites (sites: Site[]): Promise<void[]> {
 }
 
 const exportSites = () => {
+  if (isProjectViewOnly.value) {
+    showAlertDialog('error', 'Error', 'This project is currently view-only and cannot export sites.')
+    return
+  }
   const url = `${window.location.origin}/legacy-api/project/${selectedProjectSlug.value}/sites-export.csv`
   const link = document.createElement('a')
   link.href = url
@@ -487,6 +510,10 @@ const exportSites = () => {
 }
 
 const editSite = () => {
+  if (isProjectViewOnly.value) {
+    showAlertDialog('error', 'Error', 'This project is currently view-only and cannot change sites.')
+    return
+  }
   creating.value = false
   editing.value = true
 }
@@ -495,6 +522,10 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const importSites = ref<Site[]>([])
 
 function triggerFileInput () {
+  if (isProjectViewOnly.value) {
+    showAlertDialog('error', 'Error', 'This project is currently view-only and cannot import sites.')
+    return
+  }
   importSiteModal.value?.open()
 }
 
@@ -602,6 +633,10 @@ const reloadSite = async (status?: string, site?: SitePayload): Promise<void> =>
 }
 
 const createSite = () => {
+  if (isProjectViewOnly.value) {
+    showAlertDialog('error', 'Error', 'This project is currently view-only and cannot change sites.')
+    return
+  }
   creating.value = true
   editing.value = false
 }

@@ -1,7 +1,9 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 
+import { getIdByRole } from '@rfcx-bio/common/roles'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
+import { makeProject } from '@rfcx-bio/testing/model-builders/project-model-builder'
 
 import { GET, PATCH } from '~/api-helpers/types'
 import * as core from '../_services/api-core/api-core'
@@ -16,6 +18,8 @@ vi.mock('../_services/api-core/api-core', () => {
 })
 
 const ROUTE = '/profile'
+const PORTFOLIO_ROUTE = '/profile/portfolio-summary'
+const TIER_CHANGE_ROUTE = '/profile/tier-change'
 
 const defaultUserToken = {
   email: 'jake@rake.com',
@@ -31,16 +35,27 @@ const socialUserToken = {
   lastName: 'K'
 }
 
-const defaultUserProfile = { id: 1, ...defaultUserToken }
+const defaultUserProfile = { id: 1, ...defaultUserToken, accountTier: 'pro', additionalPremiumProjectSlots: 1 }
 const socialUserProfile = { id: 9001, ...socialUserToken }
 
-const { UserProfile } = modelRepositoryWithElevatedPermissions
+const { UserProfile, LocationProject, LocationProjectUserRole } = modelRepositoryWithElevatedPermissions
+
+const ownedProject = {
+  ...makeProject(11001, 'Tiered project alpha', 'listed'),
+  projectType: 'premium',
+  entitlementState: 'active',
+  viewOnlyEffective: false
+}
 
 beforeEach(async () => {
   await UserProfile.create(defaultUserProfile)
+  await LocationProject.create(ownedProject)
+  await LocationProjectUserRole.create({ locationProjectId: ownedProject.id, userId: defaultUserProfile.id, roleId: getIdByRole('owner'), ranking: 0 })
 })
 
 afterEach(async () => {
+  await LocationProjectUserRole.destroy({ where: { locationProjectId: ownedProject.id, userId: defaultUserProfile.id } })
+  await LocationProject.destroy({ where: { id: ownedProject.id }, force: true })
   await UserProfile.destroy({ where: { id: defaultUserProfile.id } })
 })
 
@@ -60,6 +75,8 @@ describe('GET /profile', async () => {
     const result = JSON.parse(response.body)
     expect(result.firstName).toBe(defaultUserProfile.firstName)
     expect(result.lastName).toBe(defaultUserProfile.lastName)
+    expect(result.accountTier).toBe(defaultUserProfile.accountTier)
+    expect(result.additionalPremiumProjectSlots).toBe(defaultUserProfile.additionalPremiumProjectSlots)
   })
 })
 
@@ -170,5 +187,53 @@ describe('PATCH /profile', async () => {
 
     const profile = await UserProfile.findOne({ where: { email: defaultUserProfile.email } })
     expect(profile?.organizationIdAffiliated).toBe(1)
+  })
+})
+
+describe('GET /profile/portfolio-summary', async () => {
+  test('returns portfolio summary for owned projects', async () => {
+    const app = await makeApp(routesUserProfile, { userId: defaultUserProfile.id })
+
+    const response = await app.inject({
+      method: GET,
+      url: PORTFOLIO_ROUTE
+    })
+
+    expect(response.statusCode).toBe(200)
+    const result = response.json()
+    expect(result.accountTier).toBe('pro')
+    expect(result.limits.premiumProjects).toBe(3)
+    expect(result.usage.premiumProjects).toBe(1)
+    expect(result.ownedProjects).toHaveLength(1)
+    expect(result.ownedProjects[0].projectType).toBe('premium')
+  })
+})
+
+describe('POST /profile/tier-change', async () => {
+  test('downgrades to free and inactivates unselected projects over limit', async () => {
+    const app = await makeApp(routesUserProfile, { userId: defaultUserProfile.id })
+
+    const response = await app.inject({
+      method: 'POST',
+      url: TIER_CHANGE_ROUTE,
+      payload: {
+        toTier: 'free',
+        selections: [
+          {
+            locationProjectId: ownedProject.id,
+            selectedProjectType: 'free',
+            selectedEntitlementState: 'active'
+          }
+        ]
+      }
+    })
+
+    expect(response.statusCode).toBe(200)
+
+    const updatedUser = await UserProfile.findByPk(defaultUserProfile.id)
+    const updatedProject = await LocationProject.findByPk(ownedProject.id)
+    expect(updatedUser?.accountTier).toBe('free')
+    expect(updatedProject?.projectType).toBe('free')
+    expect(updatedProject?.entitlementState).toBe('active')
   })
 })

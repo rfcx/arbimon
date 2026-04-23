@@ -5,6 +5,7 @@ import { type LocationProjectSpecies, type RiskRatingIucn, type TaxonSpecies } f
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
+import { assertProjectSettingsUpdateAllowed } from '@/projects/project-entitlement-bll'
 import { deleteHighlightedSpecies, getHighlightedSpecies, getRichnessByRisk, getRichnessByTaxon, getSpeciesBySlug, getTotalSpecies, postHighlightedSpecies } from './dashboard-species-data-dao'
 
 export const rawRiskRatings: RiskRatingIucn[] = [
@@ -79,6 +80,7 @@ export const dashboardSpeciesHighlightedPostHandler: Handler<SpeciesHighlightedR
   if (Number.isNaN(projectIdInteger)) {
     throw BioInvalidPathParamError({ projectId })
   }
+  await assertProjectSettingsUpdateAllowed(projectIdInteger, {})
   const species = req.body.species
   const locationProjectSpecies = await combineLocationProjectSpecies(species, projectIdInteger)
   await postHighlightedSpecies(locationProjectSpecies)
@@ -94,6 +96,7 @@ export const dashboardSpeciesHighlightedDeleteHandler: Handler<SpeciesHighlighte
   if (Number.isNaN(projectIdInteger)) {
     throw BioInvalidPathParamError({ projectId })
   }
+  await assertProjectSettingsUpdateAllowed(projectIdInteger, {})
   const species = req.body.species
   const locationProjectSpecies = await combineLocationProjectSpecies(species, projectIdInteger)
   await deleteHighlightedSpecies(locationProjectSpecies)

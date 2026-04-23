@@ -6,6 +6,12 @@
           <h1 class="md:text-5xl">
             Import Recordings with Arbimon Uploader
           </h1>
+          <div
+            v-if="isProjectViewOnly"
+            class="mt-6 rounded-lg border border-flamingo/30 bg-flamingo/10 px-4 py-3 text-sm text-flamingo"
+          >
+            This project is currently view-only. Uploads and imports should stay disabled until the project is reactivated.
+          </div>
           <h3 class="mt-6 mb-4">
             Use the Arbimon Uploader app to seamlessly upload large WAV or FLAC files to the Arbimon cloud. Uploads happen in the background, allowing you to continue working uninterrupted.
           </h3>
@@ -41,7 +47,13 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import importRecordings from '@/_assets/import-recordings.webp'
+import { useStore } from '~/store'
+
+const store = useStore()
+const isProjectViewOnly = computed(() => store.project?.entitlementState === 'inactive' || store.project?.viewOnlyEffective === true)
 
 const uploaderApps = {
     mac: 'https://rf.cx/ingest-app-latest-mac?r=' + (new Date()).getTime(),

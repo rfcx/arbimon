@@ -21,6 +21,160 @@
         <span v-if="isLoadingProfileData">Loading</span>
       </div>
       <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-10 border-b-1 border-white/80">
+        <div class="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+          <div>
+            <h3 class="text-gray-900 dark:text-white">
+              Plan &amp; subscription
+            </h3>
+            <p class="mt-2 text-insight">
+              Current plan
+            </p>
+            <div class="mt-3 inline-flex items-center rounded-full bg-frequency/10 px-3 py-1 text-sm font-medium text-frequency">
+              {{ currentAccountTierLabel }}
+            </div>
+            <p class="mt-4 text-sm text-insight">
+              {{ currentAccountTierDescription }}
+            </p>
+            <p
+              v-if="formattedTierUpdatedAt"
+              class="mt-2 text-sm text-insight"
+            >
+              Last updated {{ formattedTierUpdatedAt }}
+            </p>
+            <p
+              v-if="additionalPremiumProjectSlots > 0"
+              class="mt-2 text-sm text-insight"
+            >
+              Additional premium project slots: {{ additionalPremiumProjectSlots }}
+            </p>
+            <div
+              v-if="portfolioSummary"
+              class="mt-6 grid gap-3 sm:grid-cols-3"
+            >
+              <div class="rounded-lg border border-white/70 px-4 py-3">
+                <p class="text-xs uppercase tracking-wide text-insight">
+                  Free projects
+                </p>
+                <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
+                  {{ portfolioSummary.usage.freeProjects }} / {{ formatLimit(portfolioSummary.limits.freeProjects) }}
+                </p>
+              </div>
+              <div class="rounded-lg border border-white/70 px-4 py-3">
+                <p class="text-xs uppercase tracking-wide text-insight">
+                  Premium projects
+                </p>
+                <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
+                  {{ portfolioSummary.usage.premiumProjects }} / {{ formatLimit(portfolioSummary.limits.premiumProjects) }}
+                </p>
+              </div>
+              <div class="rounded-lg border border-white/70 px-4 py-3">
+                <p class="text-xs uppercase tracking-wide text-insight">
+                  Unlimited projects
+                </p>
+                <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
+                  {{ portfolioSummary.usage.unlimitedProjects }} / {{ formatLimit(portfolioSummary.limits.unlimitedProjects) }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="md:max-w-md md:min-w-100">
+            <div v-if="downgradeTargets.length > 0">
+              <p class="text-sm font-medium text-gray-900 dark:text-white">
+                Downgrade plan
+              </p>
+              <select
+                v-model="selectedDowngradeTier"
+                class="mt-3 w-full rounded-md border border-cloud bg-white px-3 py-2 text-insight dark:(bg-pitch text-fog)"
+              >
+                <option
+                  disabled
+                  value=""
+                >
+                  Select target tier
+                </option>
+                <option
+                  v-for="tier in downgradeTargets"
+                  :key="tier"
+                  :value="tier"
+                >
+                  {{ ACCOUNT_TIER_LABELS[tier] }}
+                </option>
+              </select>
+              <p class="mt-3 text-sm text-insight">
+                Choose which projects stay active after the downgrade. Projects left inactive will become view-only.
+              </p>
+              <div
+                v-if="selectedDowngradeTier && downgradeProjects.length > 0"
+                class="mt-4 max-h-80 overflow-y-auto rounded-lg border border-white/70"
+              >
+                <div
+                  v-for="project in downgradeProjects"
+                  :key="project.locationProjectId"
+                  class="border-b border-white/70 px-4 py-3 last:border-b-0"
+                >
+                  <div class="flex items-start justify-between gap-4">
+                    <div>
+                      <p class="font-medium text-gray-900 dark:text-white">
+                        {{ project.name }}
+                      </p>
+                      <p class="mt-1 text-sm text-insight">
+                        Current: {{ PROJECT_TYPE_LABELS[project.projectType] }} · {{ project.entitlementState }}
+                      </p>
+                    </div>
+                    <label
+                      v-if="downgradeSelections[project.locationProjectId]"
+                      class="flex items-center gap-2 text-sm text-insight"
+                    >
+                      <input
+                        v-model="downgradeSelections[project.locationProjectId].selectedEntitlementState"
+                        type="checkbox"
+                        true-value="active"
+                        false-value="inactive"
+                      >
+                      Keep active
+                    </label>
+                  </div>
+                  <select
+                    v-if="downgradeSelections[project.locationProjectId]"
+                    v-model="downgradeSelections[project.locationProjectId].selectedProjectType"
+                    class="mt-3 w-full rounded-md border border-cloud bg-white px-3 py-2 text-sm text-insight dark:(bg-pitch text-fog)"
+                  >
+                    <option
+                      v-for="projectType in allowedProjectTypesForTier(selectedDowngradeTier)"
+                      :key="projectType"
+                      :value="projectType"
+                    >
+                      {{ PROJECT_TYPE_LABELS[projectType] }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="btn btn-secondary mt-4 w-full disabled:btn-disabled disabled:hover:btn-disabled disabled:opacity-75 disabled:cursor-not-allowed"
+                :disabled="selectedDowngradeTier === '' || isSubmittingTierChange"
+                @click="submitDowngrade"
+              >
+                Apply downgrade
+              </button>
+              <p
+                v-if="tierChangeMessage"
+                class="mt-3 text-sm"
+                :class="tierChangeSuccess ? 'text-frequency' : 'text-flamingo'"
+              >
+                {{ tierChangeMessage }}
+              </p>
+            </div>
+            <p
+              v-else
+              class="text-sm text-insight"
+            >
+              No lower tier is available from the current plan.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-10 border-b-1 border-white/80">
         <div class="flex items-start gap-4 flex-col md:flex-row">
           <img
             :src="profilePhoto"
@@ -255,18 +409,20 @@
 </template>
 
 <script setup lang="ts">
-import { type AxiosInstance } from 'axios'
+import { type AxiosInstance, AxiosError } from 'axios'
 import type { DropdownOptions } from 'flowbite'
 import { Dropdown } from 'flowbite'
 import { type Ref, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { type AccountTier, type ProjectEntitlementState, type ProjectType } from '@rfcx-bio/common/dao/types'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import image from '@/_assets/cta/frog-hero.webp'
 import SaveStatusText from '@/_components/save-status-text.vue'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
+import { ACCOUNT_TIER_DESCRIPTIONS, ACCOUNT_TIER_LABELS, formatTierLimit, getAllowedProjectTypesForTier, PROJECT_TYPE_LABELS } from '@/projects/entitlement-helpers'
 import { useStore } from '~/store'
 import OrganizationSearchResultCard from '../insights/overview/components/dashboard-project-summary/components/dashboard-project-stakeholders/organization-search-result-card.vue'
 import { useCreateOrganization } from '../insights/overview/composables/use-create-organization'
@@ -274,6 +430,7 @@ import { useGetSearchOrganizationsResult } from '../insights/overview/composable
 import { useGetOrganizationsList } from './composables/use-get-organizations'
 import { usePatchProfileImage } from './composables/use-patch-profile-photo'
 import { useGetProfileData, usePatchUserProfile } from './composables/use-patch-user-profile'
+import { useGetPortfolioSummary, usePostTierChange } from './composables/use-tiering'
 
 const firstName = ref('')
 const lastName = ref('')
@@ -304,8 +461,10 @@ const router = useRouter()
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 
 const { isLoading: isLoadingProfileData, data: profileData, isError: isErrorProfileData } = useGetProfileData(apiClientBio)
+const { data: portfolioSummary, refetch: refetchPortfolioSummary } = useGetPortfolioSummary(apiClientBio)
 const { isPending: isUpdatingProfilePhoto, mutate: mutatePatchProfilePhoto } = usePatchProfileImage(apiClientBio)
 const { isPending: isUpdatingUserProfile, mutate: mutatePatchUserProfile } = usePatchUserProfile(apiClientBio)
+const { isPending: isSubmittingTierChange, mutate: mutateTierChange } = usePostTierChange(apiClientBio)
 const { data: organizationsList } = useGetOrganizationsList(apiClientBio)
 const { data: organizationsSearchResult, refetch: refetchOrganizationsSearchResult, isFetching: isSearchOrganizationFetching } = useGetSearchOrganizationsResult(apiClientBio, searchOrganizationValue)
 const { mutate: mutateNewOrganization } = useCreateOrganization(apiClientBio)
@@ -315,6 +474,10 @@ const selectedOrganizationId = ref(profileData.value?.organizationIdAffiliated)
 const showStatus = ref(false)
 const isSuccess = ref(false)
 const errorMessage = ref<string>()
+const selectedDowngradeTier = ref<AccountTier | ''>('')
+const downgradeSelections = ref<Record<number, { selectedProjectType: ProjectType, selectedEntitlementState: ProjectEntitlementState }>>({})
+const tierChangeMessage = ref('')
+const tierChangeSuccess = ref(false)
 
 onMounted(() => {
   firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''
@@ -332,6 +495,20 @@ watch(profileData, () => {
   searchOrganizationValue.value = displayedOrganization.value?.name ?? ''
 })
 
+watch([portfolioSummary, selectedDowngradeTier], () => {
+  if (!portfolioSummary.value || selectedDowngradeTier.value === '') return
+  const targetTier = selectedDowngradeTier.value
+  const allowedProjectTypes = allowedProjectTypesForTier(targetTier)
+  downgradeSelections.value = Object.fromEntries(portfolioSummary.value.ownedProjects.map(project => {
+    const defaultProjectType = allowedProjectTypes[0] ?? 'free'
+    const selectedProjectType = allowedProjectTypes.includes(project.projectType) ? project.projectType : defaultProjectType
+    return [project.locationProjectId, {
+      selectedProjectType,
+      selectedEntitlementState: project.entitlementState
+    }]
+  }))
+})
+
 watch(organizationsList, async () => {
   searchOrganizationValue.value = displayedOrganization.value?.name ?? ''
   await refetchOrganizationsSearch()
@@ -344,6 +521,36 @@ const profilePhoto = computed(() => {
 const isAuth0Account = computed(() => {
   return store.user?.auth0_user_id?.includes('auth0') === true
 })
+
+const currentAccountTier = computed<AccountTier>(() => {
+  return portfolioSummary.value?.accountTier ?? profileData.value?.accountTier ?? 'free'
+})
+
+const currentAccountTierLabel = computed(() => {
+  return ACCOUNT_TIER_LABELS[currentAccountTier.value]
+})
+
+const currentAccountTierDescription = computed(() => {
+  return ACCOUNT_TIER_DESCRIPTIONS[currentAccountTier.value]
+})
+
+const formattedTierUpdatedAt = computed(() => {
+  const value = profileData.value?.accountTierUpdatedAt
+  if (value == null) return ''
+  return new Intl.DateTimeFormat(undefined, { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(value))
+})
+
+const additionalPremiumProjectSlots = computed(() => {
+  return portfolioSummary.value?.additionalPremiumProjectSlots ?? profileData.value?.additionalPremiumProjectSlots ?? 0
+})
+
+const downgradeTargets = computed<AccountTier[]>(() => {
+  if (currentAccountTier.value === 'enterprise') return ['pro', 'free']
+  if (currentAccountTier.value === 'pro') return ['free']
+  return []
+})
+
+const downgradeProjects = computed(() => portfolioSummary.value?.ownedProjects ?? [])
 
 const orgsSearchResult = computed(() => {
   return searchOrganizationValue.value
@@ -366,6 +573,14 @@ const displayedOrganization = computed(() => {
   else if (profileData.value?.organizationIdAffiliated !== null) return organizationsList.value?.find(o => o.id === profileData.value?.organizationIdAffiliated)
   else return undefined
 })
+
+const formatLimit = (limit: number | null) => {
+  return formatTierLimit(limit)
+}
+
+const allowedProjectTypesForTier = (tier: AccountTier): ProjectType[] => {
+  return getAllowedProjectTypesForTier(tier)
+}
 
 const openOrganizationSearch = async () => {
   dropdownStatus.value = 'search'
@@ -517,6 +732,32 @@ const saveUserProfile = async (): Promise<void> => {
     },
     onError: () => {
       displayTextAfterSaveWithSuccessStatus(false, 'Failed to save changes to account settings.')
+    }
+  })
+}
+
+const submitDowngrade = () => {
+  if (selectedDowngradeTier.value === '') return
+  tierChangeMessage.value = ''
+
+  mutateTierChange({
+    toTier: selectedDowngradeTier.value,
+    selections: Object.entries(downgradeSelections.value).map(([locationProjectId, selection]) => ({
+      locationProjectId: Number(locationProjectId),
+      selectedProjectType: selection.selectedProjectType,
+      selectedEntitlementState: selection.selectedEntitlementState
+    }))
+  }, {
+    onSuccess: async () => {
+      tierChangeSuccess.value = true
+      tierChangeMessage.value = 'Tier downgrade applied. Refreshing account data...'
+      await refetchPortfolioSummary()
+      router.go(0)
+    },
+    onError: (error: unknown) => {
+      tierChangeSuccess.value = false
+      const axiosError = error instanceof AxiosError ? error : undefined
+      tierChangeMessage.value = axiosError?.response?.data?.message ?? 'Failed to apply tier change.'
     }
   })
 }

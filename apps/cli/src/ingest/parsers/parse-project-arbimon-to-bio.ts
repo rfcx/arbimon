@@ -24,8 +24,17 @@ export const parseProjectArbimonToBio = (projectArbimon: unknown): SafeParseRetu
   ProjectArbimonSchema.safeParse(projectArbimon)
 
 const transformProjectArbimonToProjectBio = (project: ProjectArbimon): Omit<Project, 'id' | 'statusUpdatedAt'> => {
-  const { updatedAt, deletedAt, isPrivate, ...rest } = project
-  return { ...rest, status: (isPrivate ? 'unlisted' : 'published') as ProjectStatus }
+  const {
+    updatedAt,
+    deletedAt,
+    isPrivate,
+    ...rest
+  } = project
+
+  return {
+    ...rest,
+    status: (isPrivate ? 'unlisted' : 'published') as ProjectStatus
+  }
 }
 
 export const getTransformedProjects = async (projects: ProjectArbimon[], sequelize: Sequelize): Promise<any[]> => {

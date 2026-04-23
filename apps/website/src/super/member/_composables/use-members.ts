@@ -1,15 +1,17 @@
 import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQuery } from '@tanstack/vue-query'
 import { type AxiosInstance } from 'axios'
+import { computed, type Ref } from 'vue'
 
 import { type ProjectMemberAddRemoveRequest, type ProjectMembersResponse, type ProjectMemberUpdateRequest } from '@rfcx-bio/common/api-bio/project/project-members'
 import { apiBioSuperAddProjectMember, apiBioSuperGetProjectMembers, apiBioSuperRemoveProjectMember, apiBioSuperUpdateProjectMember } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { type Error } from '../../error'
 
-export const useSuperGetProjectMembers = (apiClient: AxiosInstance, projectId: number): UseQueryReturnType<ProjectMembersResponse, Error> => {
+export const useSuperGetProjectMembers = (apiClient: AxiosInstance, projectId: Ref<number | null>, enabled?: Ref<boolean>): UseQueryReturnType<ProjectMembersResponse, Error> => {
   return useQuery({
     queryKey: ['get-super-project-members', projectId],
-    queryFn: async () => await apiBioSuperGetProjectMembers(apiClient, projectId),
+    queryFn: async () => await apiBioSuperGetProjectMembers(apiClient, Number(projectId.value)),
+    enabled: computed(() => projectId.value !== null && (enabled?.value ?? true)),
     retry: 0,
     staleTime: 1000
   })

@@ -5,6 +5,7 @@ import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioPublicError, BioUnauthorizedError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
+import { assertProjectSettingsUpdateAllowed } from '@/projects/project-entitlement-bll'
 import { getDashboardContent, updateDashboardContent } from './dashboard-content-dao'
 
 /**
@@ -54,6 +55,7 @@ export const updateDashboardContentHandler: Handler<UpdateDashboardContentRespon
     throw new BioPublicError('Missing or invalid required body parameter `value`', 400)
   }
 
+  await assertProjectSettingsUpdateAllowed(projectIdInteger, {})
   await updateDashboardContent(token, projectIdInteger, contentType, value)
 
   return {

@@ -13,11 +13,11 @@ export type ProjectMembersResponse = ProjectMember[]
 
 export interface ProjectMemberAddRemoveRequest {
   email: string
-  role?: Exclude<ProjectRole, 'none'>
+  role?: Exclude<ProjectRole, 'none' | 'external'>
 }
 export interface ProjectMemberUpdateRequest {
   email: string
-  role: Exclude<ProjectRole, 'none'>
+  role: Exclude<ProjectRole, 'none' | 'external'>
 }
 
 // Route

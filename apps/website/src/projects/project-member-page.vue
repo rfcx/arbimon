@@ -18,6 +18,28 @@
         class="grid lg:(grid-cols-2 gap-10)"
       >
         <div class="flex flex-col gap-y-10">
+          <div class="rounded-lg border border-util-gray-03 bg-util-gray-01 p-4 dark:(bg-moss border-util-gray-04)">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="rounded-full bg-frequency/10 px-3 py-1 text-sm font-medium text-frequency">
+                {{ projectTypeLabel }}
+              </span>
+              <span
+                v-if="projectInfo?.entitlementState === 'inactive'"
+                class="rounded-full bg-flamingo/10 px-3 py-1 text-sm font-medium text-flamingo"
+              >
+                Inactive
+              </span>
+              <span
+                v-else-if="projectInfo?.viewOnlyEffective"
+                class="rounded-full bg-insight/10 px-3 py-1 text-sm font-medium text-insight"
+              >
+                View only
+              </span>
+            </div>
+            <p class="mt-3 text-sm text-insight">
+              {{ memberLimitMessage }}
+            </p>
+          </div>
           <div
             class="flex flex-row justify-end"
           >
@@ -48,7 +70,7 @@
             <div>
               <button
                 class="inline-flex py-2 px-3 text-sm btn bg-moss border items-center justify-center text-white rounded-md border-l-1 rounded-l-none group dark:hover:bg-util-gray-04 dark:focus:ring-util-gray-04 disabled:(cursor-not-allowed bg-util-gray-04 text-util-gray-02 btn-border btn-border-l-1)"
-                :disabled="!store.userIsAdminProjectMember"
+                :disabled="!canAddProjectMember"
                 @click="addSelectedUser()"
               >
                 Add member
@@ -56,7 +78,7 @@
                   class="h-2 w-2 ml-2 text-insight focus:border-none focus:border-transparent ring-moss outline-none group-disabled:text-util-gray-03"
                 />
                 <div
-                  v-if="!store.userIsAdminProjectMember"
+                  v-if="!canAddProjectMember"
                   id="addProjectMemberTooltipId"
                   role="tooltip"
                   class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -156,6 +178,18 @@
                 @emit-selected-user="onEmitSelectedUser"
               />
             </div>
+            <p
+              v-if="memberLimitReached"
+              class="mt-3 text-sm text-insight"
+            >
+              This project has reached its collaborator limit.
+              <router-link
+                :to="{ name: ROUTE_NAMES.projectSettings }"
+                class="text-frequency underline"
+              >
+                View project usage in Project Settings
+              </router-link>
+            </p>
           </div>
           <div class="flex flex-col gap-y-4">
             <ProjectMember
@@ -282,7 +316,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import { type AxiosInstance } from 'axios'
+import { type AxiosInstance, AxiosError } from 'axios'
 import { type DropdownOptions, Dropdown, initTooltips } from 'flowbite'
 import debounce from 'lodash.debounce'
 import { type Ref, computed, inject, onMounted, ref } from 'vue'
@@ -293,8 +327,11 @@ import { type ProjectRole } from '@rfcx-bio/common/roles'
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientKey } from '@/globals'
+import { getProjectTypeUsageLimits } from '@/projects/entitlement-helpers'
+import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useAddProjectMember, useDeleteProjectMember, useGetProjectMembers, useSearchUsers, useUpdateProjectMember } from './_composables/use-project-member'
+import { useGetProjectInfo } from './_composables/use-project-profile'
 import ProjectMember from './components/project-member.vue'
 import ProjectUserSearch from './components/project-user-search.vue'
 import UserRoles from './user-roles.vue'
@@ -316,7 +353,10 @@ const isSearchingUsers = ref(false)
 const addNewUserError = ref(false)
 const userSearchValue = ref('')
 
-const disableText = ref('Contact your project administrator for permission to manage project members')
+const disableText = computed(() => {
+  if (memberLimitReached.value) return 'This project has reached its collaborator limit. Open Project Settings to review usage.'
+  return 'Contact your project administrator for permission to manage project members'
+})
 
 const newUser = ref({
   firstName: '',
@@ -365,6 +405,7 @@ const roles = [
 ]
 
 const { data: users, refetch: usersRefetch, isError: isErrorUsers } = useGetProjectMembers(apiClientBio, selectedProjectId)
+const { data: projectInfo } = useGetProjectInfo(apiClientBio, selectedProjectId, ['countryCodes'], computed(() => selectedProjectId.value !== undefined))
 const { data: searchedUsers, refetch: searchUsersRefetch } = useSearchUsers(apiClientBio, userSearchValue, computed(() => userSearchValue.value !== ''))
 const { mutate: mutatePatchUserRole } = useUpdateProjectMember(apiClientBio, store.project?.id ?? -1)
 const { mutate: mutatePostProjectMember } = useAddProjectMember(apiClientBio, store.project?.id ?? -1)
@@ -380,6 +421,34 @@ const userSort = computed(() => {
     if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) return 1
     return 0
   }))
+})
+
+const projectTypeLabel = computed(() => {
+  const projectType = projectInfo.value?.projectType ?? store.project?.projectType ?? 'free'
+  return `${projectType.charAt(0).toUpperCase()}${projectType.slice(1)} project`
+})
+
+const memberLimitMessage = computed(() => {
+  if (projectInfo.value?.entitlementState === 'inactive' || projectInfo.value?.viewOnlyEffective === true) {
+    return 'This project is view-only, so member changes are disabled until the project is reactivated.'
+  }
+
+  const projectType = projectInfo.value?.projectType ?? 'free'
+  const limits = projectInfo.value?.limits ?? getProjectTypeUsageLimits(projectType)
+  const usage = projectInfo.value?.usage
+  return `${projectType.charAt(0).toUpperCase()}${projectType.slice(1)} member usage: ${usage?.collaboratorCount ?? 0} / ${limits.collaboratorCount === null ? 'No cap' : limits.collaboratorCount} collaborators, ${usage?.guestCount ?? 0} / ${limits.guestCount === null ? 'No cap' : limits.guestCount} guests.`
+})
+
+const memberLimitReached = computed(() => {
+  if (projectInfo.value?.entitlementState === 'inactive' || projectInfo.value?.viewOnlyEffective === true) return false
+  const projectType = projectInfo.value?.projectType ?? 'free'
+  const limits = projectInfo.value?.limits ?? getProjectTypeUsageLimits(projectType)
+  if (limits.collaboratorCount === null) return false
+  return (projectInfo.value?.usage?.collaboratorCount ?? 0) >= limits.collaboratorCount
+})
+
+const canAddProjectMember = computed(() => {
+  return store.userIsAdminProjectMember && !memberLimitReached.value
 })
 
 onMounted(() => {
@@ -443,11 +512,13 @@ const addSelectedUser = ():void => {
       usersRefetch()
       showAlertDialog('success', 'Success', 'New Project member added successfully')
     },
-    onError: () => {
-      showAlertDialog('error', 'Verification Needed.', 'We couldn’t add this user as a project member because their account is unverified. Please ensure the user has verified their account before trying again.')
-}
+    onError: (error: unknown) => {
+      const axiosError = error instanceof AxiosError ? error : undefined
+      const message = axiosError?.response?.data?.message ?? 'We couldn’t add this user as a project member because their account is unverified. Please ensure the user has verified their account before trying again.'
+      showAlertDialog('error', 'Unable to Add Member.', message)
+    }
   })
-}
+  }
 }
 
 const changeUserRole = (email: string, role: ProjectRole):void => {
@@ -455,10 +526,14 @@ const changeUserRole = (email: string, role: ProjectRole):void => {
     email,
     // castable because the roles are converted from variable `roles` up top which non of it
     // cannot invoke the return value of `none`
-    role: role as Exclude<ProjectRole, 'none'>
+    role: role as Exclude<ProjectRole, 'none' | 'external'>
   }, {
     onSuccess: () => {
       usersRefetch()
+    },
+    onError: (error: unknown) => {
+      const axiosError = error instanceof AxiosError ? error : undefined
+      showAlertDialog('error', 'Unable to Update Member.', axiosError?.response?.data?.message ?? 'We encountered some issues while saving your changes. Could you please try again?')
     }
   })
 }
@@ -467,6 +542,10 @@ const deleteProjectMember = (email: string):void => {
   mutateDeleteProjectMember(email, {
     onSuccess: () => {
       usersRefetch()
+    },
+    onError: (error: unknown) => {
+      const axiosError = error instanceof AxiosError ? error : undefined
+      showAlertDialog('error', 'Unable to Remove Member.', axiosError?.response?.data?.message ?? 'We encountered some issues while deleting the member. Could you please try again?')
     }
   })
 }

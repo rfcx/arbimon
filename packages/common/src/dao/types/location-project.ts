@@ -1,8 +1,12 @@
 import { type AttributeTypes, attributes } from '../type-helpers'
 
 export const PROJECT_STATUS_ORDERED = ['hidden', 'unlisted', 'listed', 'published'] as const
+export const PROJECT_TYPE_ORDERED = ['free', 'premium', 'unlimited'] as const
+export const PROJECT_ENTITLEMENT_STATE_ORDERED = ['active', 'inactive'] as const
 
 export type ProjectStatus = typeof PROJECT_STATUS_ORDERED[number]
+export type ProjectType = typeof PROJECT_TYPE_ORDERED[number]
+export type ProjectEntitlementState = typeof PROJECT_ENTITLEMENT_STATE_ORDERED[number]
 
 export interface Project {
   id: number
@@ -16,6 +20,12 @@ export interface Project {
   latitudeSouth: number
   longitudeEast: number
   longitudeWest: number
+  projectType?: ProjectType
+  entitlementState?: ProjectEntitlementState
+  entitlementUpdatedAt?: Date
+  entitlementInactivatedReason?: string
+  downgradeLocked?: boolean
+  viewOnlyEffective?: boolean
   createdAt?: Date
   updatedAt?: Date
   deletedAt?: Date
@@ -29,7 +39,7 @@ export interface Project {
 }
 
 export const ATTRIBUTES_LOCATION_PROJECT = attributes<Project>()({
-  light: ['id', 'idCore', 'idArbimon', 'slug', 'name', 'status', 'statusUpdatedAt', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest'],
+  light: ['id', 'idCore', 'idArbimon', 'slug', 'name', 'status', 'statusUpdatedAt', 'latitudeNorth', 'latitudeSouth', 'longitudeEast', 'longitudeWest', 'projectType', 'entitlementState', 'viewOnlyEffective'],
   geo: ['id', 'slug', 'name', 'latitudeAvg', 'longitudeAvg']
 })
 

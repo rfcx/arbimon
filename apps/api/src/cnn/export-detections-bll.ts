@@ -4,9 +4,18 @@ import { type ExportDetectionsType } from '@rfcx-bio/common/api-bio/cnn/export-d
 import { createJob } from '@rfcx-bio/node-common/kubernetes'
 import { exportDetectionsJob } from '@rfcx-bio/node-common/kubernetes/job'
 
+import { getClassifierJobInformation } from '~/api-core/api-core'
 import { env } from '~/env'
+import { assertProjectExportAllowed } from '@/projects/project-entitlement-bll'
+import { getProjectByCoreId } from '@/projects/dao/projects-dao'
 
-export const exportDetections = async (jobId: number, types: ExportDetectionsType[], email: string): Promise<void> => {
+export const exportDetections = async (token: string, jobId: number, types: ExportDetectionsType[], email: string): Promise<void> => {
+  const classifierJob = await getClassifierJobInformation(token, jobId)
+  const project = await getProjectByCoreId(classifierJob.projectId)
+  if (project !== undefined) {
+    await assertProjectExportAllowed(project.id)
+  }
+
   const shasum = createHash('sha1')
   shasum.update(email)
   const hashString = shasum.digest('hex')

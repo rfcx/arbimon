@@ -118,7 +118,7 @@
           </button>
         </router-link>
         <button
-          :disabled="isLoadingPostJob || errors.length > 0 || !store.userIsExpertMember"
+          :disabled="isLoadingPostJob || errors.length > 0 || !store.userIsExpertMember || store.project?.entitlementState === 'inactive' || store.project?.viewOnlyEffective === true || isProjectJobLimitReached"
           :data-tooltip-target="!store.userIsExpertMember ? 'createJobTooltipId' : null"
           data-tooltip-placement="bottom"
           class="px-3 py-0 btn btn-primary h-40px w-106px disabled:hover:btn-disabled disabled:btn-disabled"
@@ -139,13 +139,25 @@
             data-popper-arrow
           />
         </div>
-        <span v-if="isErrorPostJob">Error saving job :(</span>
+        <span
+          v-if="isProjectJobLimitReached"
+          class="text-sm text-insight"
+        >
+          This project has reached its analysis-job limit.
+          <router-link
+            :to="{ name: ROUTE_NAMES.projectSettings }"
+            class="text-frequency underline"
+          >
+            View project usage in Project Settings
+          </router-link>
+        </span>
+        <span v-if="isErrorPostJob || submitErrorMessage">{{ submitErrorMessage ?? 'Error saving job :(' }}</span>
       </div>
     </form>
   </section>
 </template>
 <script setup lang="ts">
-import type { AxiosInstance } from 'axios'
+import { type AxiosError, type AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
 import { initTooltips } from 'flowbite'
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
@@ -162,9 +174,11 @@ import DaterangePicker from '@/_components/date-range-picker/date-range-picker.v
 import ClassifierPicker from '@/_services/picker/classifier-picker.vue'
 import SiteInput from '@/_services/picker/site-input.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
-import { apiClientKey } from '@/globals'
+import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
+import { getProjectTypeUsageLimits } from '@/projects/entitlement-helpers'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
+import { useProjectTieringUsage } from '../../super/project/_composables/use-project-tiering-usage'
 import { useClassifiers } from '../_composables/use-classifiers'
 import { useDetectRecording } from '../_composables/use-detect-recording'
 import { useGetRecordedMinutesPerDay } from '../_composables/use-get-recorded-minutes-per-day'
@@ -176,6 +190,7 @@ const store = useStore()
 const errorText = 'Error - there’s a problem loading the models. Please refresh this page and try again.'
 const disableText = 'Contact your project administrator for permission to create a job'
 const showDateDifferenceError = ref(false)
+const submitErrorMessage = ref<string | undefined>(undefined)
 
 // Fields
 const job: CreateClassifierJobBody = reactive({
@@ -225,6 +240,9 @@ watch(() => store.project, () => {
 
 // Internal data
 const apiClientBio = inject(apiClientKey) as AxiosInstance
+const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+const selectedProjectSlug = computed(() => store.project?.slug ?? '')
+const { data: projectUsage } = useProjectTieringUsage(apiClientArbimon, selectedProjectSlug)
 const { isLoading: isLoadingDetectRecording, isError: isErrorDetectRecording, data: recordingData } = useDetectRecording(apiClientBio, project, recordingQuery)
 const { data: recordedMinutesPerDay } = useGetRecordedMinutesPerDay(apiClientBio, project.projectId)
 
@@ -275,19 +293,29 @@ const validated = ref(false)
 
 const errorProject = computed(() => job.projectId !== undefined && job.projectId !== -1 ? undefined : 'No project selected or project is invalid')
 const errorPermission = computed(() => hasProjectPermission.value ? undefined : 'You do not have permission to create jobs for this project')
+const errorEntitlement = computed(() => store.project?.entitlementState === 'inactive' || store.project?.viewOnlyEffective === true ? 'This project is currently view-only and cannot run analyses.' : undefined)
+const errorJobLimit = computed(() => isProjectJobLimitReached.value ? 'This project has reached its analysis-job limit.' : undefined)
 const errorClassifier = computed(() => job.classifierId > 0 ? undefined : 'Please select a classifier')
 const errorHours = computed(() => isValidQueryHours(job.queryHours ?? '') ? undefined : 'Time of day must be in range of 0 - 23 following by , or - to split hours')
 
-const errors = computed(() => validated.value ? [errorProject.value, errorPermission.value, errorClassifier.value, errorHours.value].filter(isDefined) : [])
+const errors = computed(() => validated.value ? [errorProject.value, errorPermission.value, errorEntitlement.value, errorJobLimit.value, errorClassifier.value, errorHours.value].filter(isDefined) : [])
 
 const totalDurationInMinutes = computed(() => {
   return recordingData.value?.totalDurationInMinutes ?? 0
+})
+
+const isProjectJobLimitReached = computed(() => {
+  const projectType = store.project?.projectType ?? 'free'
+  const limits = getProjectTypeUsageLimits(projectType)
+  if (limits.jobCount === null) return false
+  return (projectUsage.value?.jobCount ?? 0) >= limits.jobCount
 })
 
 // Create job (call API)
 const createJob = async (): Promise<void> => {
   // Enable validation on first submit
   validated.value = true
+  submitErrorMessage.value = undefined
 
   // Reject if validation errors
   if (errors.value.length > 0) { return }
@@ -296,6 +324,10 @@ const createJob = async (): Promise<void> => {
   mutatePostJob({ ...job, minutesTotal: totalDurationInMinutes.value }, {
     onSuccess: async () => {
       router.push({ name: ROUTE_NAMES.cnnJobList })
+    },
+    onError: (error) => {
+      const axiosError = error as AxiosError<{ message?: string }>
+      submitErrorMessage.value = axiosError.response?.data?.message ?? 'Error saving job :('
     }
   })
 }

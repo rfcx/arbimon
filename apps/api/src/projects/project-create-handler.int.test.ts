@@ -85,3 +85,17 @@ test('POST /projects handles invalid dates', async () => {
   // Assert
   expect(response.statusCode).toBe(400)
 })
+
+test('POST /projects rejects premium project creation for free tier', async () => {
+  const app = await makeApp(routesProject, { userId, userToken })
+
+  const response = await app.inject({
+    method: POST,
+    url: ROUTE,
+    payload: { name: 'Premium blocked', projectType: 'premium' },
+    headers: { Authorization: fakeToken }
+  })
+
+  expect(response.statusCode).toBe(403)
+  expect(response.json().message).toContain('does not allow creating premium projects')
+})

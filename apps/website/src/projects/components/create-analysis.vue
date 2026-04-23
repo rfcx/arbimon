@@ -16,6 +16,12 @@
             @emit-selected-analysis="onSelectAnalysis"
           />
         </div>
+        <p
+          v-if="isProjectViewOnly"
+          class="text-sm text-flamingo"
+        >
+          This project is currently view-only and cannot run analyses until it is reactivated.
+        </p>
         <div class="flex items-center justify-between rounded-b">
           <button
             id="closeButton"
@@ -56,6 +62,9 @@ const store = useStore()
 const selectedProject = computed(() => store.project)
 const isAnalysisSelected = ref(false)
 const analysisUrl = ref('')
+const isProjectViewOnly = computed(() => {
+  return selectedProject.value?.entitlementState === 'inactive' || selectedProject.value?.viewOnlyEffective === true
+})
 
 const BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 
@@ -67,12 +76,13 @@ const analyses = ref([
 ])
 
 const onSelectAnalysis = (url: string, value: string) => {
+  if (isProjectViewOnly.value) return
   analyses.value.forEach((analysis: AnalysisCard) => {
     if (analysis.value !== value) {
       analysis.isSelected = false
     } else analysis.isSelected = true
   })
-  isAnalysisSelected.value = !!url
+  isAnalysisSelected.value = !!url && !isProjectViewOnly.value
   analysisUrl.value = url
 }
 

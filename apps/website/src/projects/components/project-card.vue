@@ -20,6 +20,23 @@
       >
         {{ project.name }}
       </h6>
+      <div class="mt-3 flex flex-wrap gap-2 text-xs font-medium">
+        <span class="rounded-full bg-frequency/10 px-2 py-1 text-frequency">
+          {{ projectTypeLabel }}
+        </span>
+        <span
+          v-if="project.entitlementState === 'inactive'"
+          class="rounded-full bg-flamingo/10 px-2 py-1 text-flamingo"
+        >
+          Inactive
+        </span>
+        <span
+          v-else-if="project.viewOnlyEffective"
+          class="rounded-full bg-insight/10 px-2 py-1 text-insight"
+        >
+          View only
+        </span>
+      </div>
       <div
         class="mt-3 gap-x-1 flex flex-row items-center font-display text-sm mr-2 h-5 whitespace-nowrap text-ellipsis overflow-hidden"
       >
@@ -77,6 +94,11 @@ defineEmits<{(e: 'on-click-project', value: boolean): void}>()
 
 const countries = computed(() => {
   return props.project.countries ?? []
+})
+
+const projectTypeLabel = computed(() => {
+  const projectType = props.project.projectType ?? 'free'
+  return projectType.charAt(0).toUpperCase() + projectType.slice(1)
 })
 
 const objectives = props.project.objectives?.map((objective) => {

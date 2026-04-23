@@ -37,10 +37,21 @@ export default class SpeciesRichnessIntroduction extends Vue {
     return route?.query !== undefined && route.query?.guest === '1'
   }
 
+  get isProjectViewOnly (): boolean {
+    return this.store.project?.entitlementState === 'inactive' || this.store.project?.viewOnlyEffective === true
+  }
+
+  get exportTitle (): string {
+    if (this.isProjectViewOnly) return 'This project is view-only and cannot export source data.'
+    if (!this.isProjectMember || this.isViewingAsGuest) return 'Only available to project members'
+    if (!this.hasData) return 'No data selected'
+    return ''
+  }
+
   // TODO ??? - I think Vue 3 composition API would let us simply import the function (instead of proxying it)
   async exportCsvReports (): Promise<void> {
     const projectId = this.store.project?.id
-    if (projectId === undefined) return
+    if (projectId === undefined || this.isProjectViewOnly) return
 
     this.loading = true
     const reports = (await Promise.all(

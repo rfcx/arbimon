@@ -7,6 +7,7 @@ import { type Project, type ProjectStatus, ATTRIBUTES_LOCATION_PROJECT } from '@
 
 import { getSequelize } from '~/db'
 import { fileUrl } from '~/format-helpers/file-url'
+import { getProjectsTieringUsage } from './project-tiering-usage-dao'
 
 const sequelize = getSequelize()
 const models = ModelRepository.getInstance(sequelize)
@@ -17,6 +18,10 @@ export const getProjectById = async (id: number): Promise<Project | undefined> =
 
 export const getProjectBySlug = async (slug: string): Promise<Project | undefined> => {
   return await models.LocationProject.findOne({ where: { slug }, raw: true }) ?? undefined
+}
+
+export const getProjectByCoreId = async (idCore: string): Promise<Project | undefined> => {
+  return await models.LocationProject.findOne({ where: { idCore }, raw: true }) ?? undefined
 }
 
 const computedAttributes: Record<string, [Literal, string]> = {
@@ -71,9 +76,12 @@ export const getViewableProjects = async (userId: number | undefined): Promise<L
       raw: true
     })
 
+  const usageByProjectId = await getProjectsTieringUsage(projects.map(project => project.id))
+
   return projects.map(p => ({
       ...p,
-      role: memberProjectIds.includes(p.id) ? 'viewer' : 'external'
+      role: memberProjectIds.includes(p.id) ? 'viewer' : 'external',
+      usage: usageByProjectId[p.id]
     }))
 }
 
@@ -102,6 +110,7 @@ export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, 
   const myProjectIds = myProjects.map(p => p.id)
   const profileInfo = await models.LocationProjectProfile.findAll({ where: { locationProjectId: myProjectIds }, raw: true })
   const countryInfo = await models.LocationProjectCountry.findAll({ where: { locationProjectId: myProjectIds }, raw: true })
+  const usageByProjectId = await getProjectsTieringUsage(myProjectIds)
 
   return {
     offset,
@@ -113,7 +122,8 @@ export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, 
       image: fileUrl(profileInfo.find(pi => pi.locationProjectId === p.id)?.image) ?? '',
       objectives: profileInfo.find(pi => pi.locationProjectId === p.id)?.objectives ?? [],
       countries: countryInfo.find(ci => ci.locationProjectId === p.id)?.countryCodes ?? [],
-      isPublished: p.status === 'published'
+      isPublished: p.status === 'published',
+      usage: usageByProjectId[p.id]
     }))
   }
 }

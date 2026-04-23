@@ -188,4 +188,32 @@ describe('POST /jobs', async () => {
     // Assert
     expect(response.statusCode).toEqual(403)
   })
+
+  test('view-only project cannot create classifier job', async () => {
+    await LocationProject.update({ entitlementState: 'inactive', viewOnlyEffective: true }, { where: { id: 64859 } })
+
+    const app = await makeApp(routesCnn, {
+      projectRole: 'user',
+      userToken: {
+        email: 'whoami@rfcx.org'
+      }
+    })
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/jobs',
+      payload: {
+        classifierId: 3,
+        projectId: 64859,
+        queryStreams: 'Viper*',
+        queryStart: '2024-01-01',
+        queryEnd: '2024-01-31',
+        queryHours: '8-10',
+        minutesTotal: 1288
+      }
+    })
+
+    expect(response.statusCode).toEqual(403)
+    expect(response.json().message).toContain('cannot run analyses')
+  })
 })

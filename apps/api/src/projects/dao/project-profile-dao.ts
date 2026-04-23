@@ -8,7 +8,9 @@ import { getProjectMetrics } from '@/dashboard/dashboard-metrics-dao'
 import { getRichnessByTaxon } from '@/dashboard/dashboard-species-data-dao'
 import { getSequelize } from '~/db'
 import { fileUrl } from '~/format-helpers/file-url'
+import { getProjectTypeLimitMap } from '../../tiering/tier-limit-bll'
 import { getImageByObjectives } from '../utils/image-by-objective'
+import { getProjectTieringUsage } from './project-tiering-usage-dao'
 
 const profileDefaults: Omit<LocationProjectProfile, 'locationProjectId'> = {
   summary: '',
@@ -50,7 +52,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
   const { LocationProject, LocationProjectProfile, LocationProjectCountry } = ModelRepository.getInstance(sequelize)
   const resProject = await LocationProject.findOne({
     where: { id: locationProjectId },
-    attributes: ['name', 'slug', 'status'],
+    attributes: ['name', 'slug', 'status', 'projectType', 'entitlementState', 'viewOnlyEffective'],
     raw: true
   })
   const resProfile = await LocationProjectProfile.findOne({
@@ -78,6 +80,11 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
   }
 
   if (!resProject) throw new Error(`Failed to get project settings for locationProjectId: ${locationProjectId}`)
+  const usage = await getProjectTieringUsage(locationProjectId)
+  const projectType = resProject.projectType ?? 'free'
+  const projectTypeLimitMap = await getProjectTypeLimitMap()
+  const limits = projectTypeLimitMap[projectType]
+
   const baseProject = {
     name: resProject.name,
     slug: resProject.slug,
@@ -86,7 +93,12 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     dateStart: resProfile?.dateStart ?? null,
     dateEnd: resProfile?.dateEnd ?? null,
     isPublished: resProject.status === 'published',
-    isPublic: resProject.status !== 'hidden'
+    isPublic: resProject.status !== 'hidden',
+    projectType,
+    entitlementState: resProject.entitlementState,
+    viewOnlyEffective: resProject.viewOnlyEffective,
+    usage,
+    limits
   }
 
   return {

@@ -190,6 +190,27 @@ describe(`POST ${backupsRoute}`, async () => {
         // Assert
         expect(response.statusCode).toBe(403)
     })
+
+    test('view-only project cannot request a backup', async () => {
+        await LocationProject.update({ entitlementState: 'inactive', viewOnlyEffective: true }, { where: { id: projectId2 } })
+
+        const app = await makeApp(routesBackup, { userId: ownerId })
+        const backup = {
+            entity: 'project',
+            entityId: projectId2
+        }
+
+        const response = await app.inject({
+            method: POST,
+            url: ROUTE,
+            payload: backup
+        })
+
+        expect(response.statusCode).toBe(403)
+        expect(response.json<{ message: string }>().message).toContain('cannot request exports or backups')
+
+        await LocationProject.update({ entitlementState: 'active', viewOnlyEffective: false }, { where: { id: projectId2 } })
+    })
 })
 
 describe(`GET ${backupsRoute}`, async () => {

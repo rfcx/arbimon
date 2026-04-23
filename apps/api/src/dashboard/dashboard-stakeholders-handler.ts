@@ -4,6 +4,7 @@ import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioUnauthorizedError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
+import { assertProjectSettingsUpdateAllowed } from '@/projects/project-entitlement-bll'
 import { getProjectStakeholders, getProjectUsers, updateProjectStakeholders } from './dashboard-stakeholders-dao'
 
 export const dashboardStakeholdersHandler: Handler<DashboardStakeholdersResponse, DashboardStakeholdersParams> = async (req) => {
@@ -45,6 +46,7 @@ export const updateDashboardStakeholdersHandler: Handler<string, UpdateDashboard
     throw BioInvalidPathParamError({ projectId })
   }
 
+  await assertProjectSettingsUpdateAllowed(projectIdInteger, {})
   await updateProjectStakeholders(projectIdInteger, req.body)
 
   void rep.code(204)

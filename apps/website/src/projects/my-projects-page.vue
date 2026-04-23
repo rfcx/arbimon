@@ -49,6 +49,49 @@
             </div>
           </div>
         </div>
+        <div
+          v-if="portfolioSummary"
+          class="mt-6 grid gap-4 rounded-lg border border-util-gray-03 bg-util-gray-01 p-4 md:grid-cols-4 dark:(bg-moss border-util-gray-04)"
+        >
+          <div>
+            <p class="text-xs uppercase tracking-wide text-insight">
+              Plan
+            </p>
+            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
+              {{ ACCOUNT_TIER_LABELS[portfolioSummary.accountTier] }}
+            </p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-insight">
+              Free
+            </p>
+            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
+              {{ portfolioSummary.usage.freeProjects }} / {{ formatLimit(portfolioSummary.limits.freeProjects) }}
+            </p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-insight">
+              Premium
+            </p>
+            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
+              {{ portfolioSummary.usage.premiumProjects }} / {{ formatLimit(portfolioSummary.limits.premiumProjects) }}
+            </p>
+          </div>
+          <div>
+            <p class="text-xs uppercase tracking-wide text-insight">
+              Unlimited
+            </p>
+            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
+              {{ portfolioSummary.usage.unlimitedProjects }} / {{ formatLimit(portfolioSummary.limits.unlimitedProjects) }}
+            </p>
+          </div>
+        </div>
+        <div
+          v-if="portfolioTieringMessage"
+          class="mt-4 rounded-lg border border-frequency/30 bg-frequency/5 px-4 py-3 text-sm text-insight"
+        >
+          {{ portfolioTieringMessage }}
+        </div>
         <div>
           <div
             v-if="(isLoading && projects.length === 0) || showLoading"
@@ -125,19 +168,22 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import debounce from 'lodash.debounce'
-import { inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 
 import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
+import { ACCOUNT_TIER_LABELS, formatTierLimit } from '@/projects/entitlement-helpers'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
+import { useGetPortfolioSummary } from '../user/composables/use-tiering'
 import ProjectCard from './components/project-card.vue'
 
 const store = useStore()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
+const { data: portfolioSummary } = useGetPortfolioSummary(apiClientBio)
 const projects = ref<LocationProjectWithInfo[]>([])
 const hasFetchedAll = ref(false)
 const LIMIT = 20
@@ -202,6 +248,33 @@ const fetchProjects = async (offset:number, limit: number, keyword: string | und
 const onProjectClicked = (value: boolean) => {
   showLoading.value = value
 }
+
+const formatLimit = (limit: number | null) => {
+  return formatTierLimit(limit)
+}
+
+const portfolioTieringMessage = computed(() => {
+  const summary = portfolioSummary.value
+  if (summary === undefined) return ''
+
+  if (summary.ownedProjects.some(project => project.entitlementState === 'inactive' || project.viewOnlyEffective)) {
+    return 'Some projects are currently view-only. Upgrade or reactivate them from Account Settings to restore full access.'
+  }
+
+  if (summary.limits.freeProjects !== null && summary.usage.freeProjects >= summary.limits.freeProjects) {
+    return 'Free project capacity is currently full for this account.'
+  }
+
+  if (summary.limits.premiumProjects !== null && summary.usage.premiumProjects >= summary.limits.premiumProjects && summary.limits.premiumProjects > 0) {
+    return 'Premium project capacity is currently full for this account.'
+  }
+
+  if (summary.limits.unlimitedProjects !== null && summary.usage.unlimitedProjects >= summary.limits.unlimitedProjects && summary.limits.unlimitedProjects > 0) {
+    return 'Unlimited project capacity is currently full for this account.'
+  }
+
+  return ''
+})
 
 </script>
 

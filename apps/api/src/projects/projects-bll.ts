@@ -1,11 +1,14 @@
 import QuickLRU from 'quick-lru'
 
 import { type LocationProjectWithRole, type ProjectsGeoResponse, type ProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
+import { type ProjectEntitlementSummaryResponse } from '@rfcx-bio/common/api-bio/project/project-entitlement-summary'
 import { type Project } from '@rfcx-bio/node-common/dao/types'
 
 import { BioNotFoundError } from '~/errors'
 import { getUserRoleForProject } from './dao/project-member-dao'
+import { getProjectTieringUsage } from './dao/project-tiering-usage-dao'
 import { getProjectBySlug, query } from './dao/projects-dao'
+import { getProjectTypeLimitMap } from '../tiering/tier-limit-bll'
 
 export const getProjects = async (limit?: number, offset?: number): Promise<ProjectsResponse> => {
   return await query<Project>({ status: ['listed', 'published'] }, { limit, offset })
@@ -35,5 +38,23 @@ export const getProjectBySlugForUser = async (slug: string, userId: number | und
   const role = await getUserRoleForProject(userId, project.id)
   if (role === 'none') { throw BioNotFoundError() }
 
-  return { ...project, role }
+  const usage = await getProjectTieringUsage(project.id)
+
+  return { ...project, role, usage }
+}
+
+export const getProjectEntitlementSummaryBySlug = async (slug: string): Promise<ProjectEntitlementSummaryResponse> => {
+  const project = await getProjectBySlug(slug)
+  if (project === undefined) { throw BioNotFoundError() }
+
+  const projectType = project.projectType ?? 'free'
+  const projectTypeLimitMap = await getProjectTypeLimitMap()
+
+  return {
+    slug: project.slug,
+    projectType,
+    entitlementState: project.entitlementState,
+    viewOnlyEffective: project.viewOnlyEffective,
+    limits: projectTypeLimitMap[projectType]
+  }
 }

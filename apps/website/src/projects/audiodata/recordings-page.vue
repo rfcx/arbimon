@@ -1,6 +1,12 @@
 <template>
   <section class="py-20 bg-white dark:bg-pitch pl-18 site-page">
     <div class="flex flex-col px-8 bg-white dark:bg-pitch">
+      <div
+        v-if="isProjectViewOnly"
+        class="mb-4 rounded-lg border border-insight/30 bg-insight/10 px-4 py-3 text-sm text-insight"
+      >
+        This project is currently view-only. Recording exports, playlist saves, and deletions are disabled until the project is reactivated.
+      </div>
       <h1 class="ml-1 text-gray-900 dark:text-insight">
         Recordings
       </h1>
@@ -39,7 +45,7 @@
           >
             <button
               class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-              :disabled="!store.userIsDataEntryMember"
+              :disabled="!store.userIsDataEntryMember || isProjectViewOnly"
               data-tooltip-style="light"
               :data-tooltip-target="!store.userIsDataEntryMember ? 'exportRecordingTooltip': null"
               @click="showExportPanel = true"
@@ -70,7 +76,7 @@
           </div>
           <button
             class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-            :disabled="!store.userIsFullProjectMember"
+              :disabled="!store.userIsFullProjectMember || isProjectViewOnly"
             data-tooltip-style="light"
             :data-tooltip-target="!store.userIsFullProjectMember ? 'recordingPlaylistTooltip': null"
             @click="showCreatePlaylist"
@@ -91,7 +97,7 @@
           </div>
           <button
             class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-            :disabled="!store.userIsExpertMember"
+            :disabled="!store.userIsExpertMember || isProjectViewOnly"
             data-dropdown-toggle="deleteRecordingDropdown"
             data-tooltip-style="light"
             :data-tooltip-target="!store.userIsExpertMember ? 'deleteRecordingTooltip': null"
@@ -345,6 +351,7 @@ const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
+const isProjectViewOnly = computed(() => store.project?.entitlementState === 'inactive' || store.project?.viewOnlyEffective === true)
 
 const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings, isRefetching: isRefetchRecordings, isError: isErrorRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, filteredRequestParams)
 
@@ -517,6 +524,10 @@ const filterRecordings = () => {
 }
 
 const showCreatePlaylist = () => {
+  if (isProjectViewOnly.value) {
+    showAlertDialog('error', 'Error', 'This project is currently view-only and cannot save playlists.')
+    return
+  }
   if (selectedRows.value.length === 0 && recordingsCount.value === 0) {
     showAlertDialog('error', '', 'You can\'t create playlist with 0 recording')
   } else {
@@ -574,6 +585,10 @@ const saveToPlaylist = async (name: string) => {
 }
 
 const deleteCheckedRecordings = () => {
+  if (isProjectViewOnly.value) {
+    showAlertDialog('error', 'Error', 'This project is currently view-only and cannot delete recordings.')
+    return
+  }
   deleteAllFiltered.value = false
 
   if (selectedRows.value.length === 0) {
@@ -586,6 +601,10 @@ const deleteCheckedRecordings = () => {
 }
 
 const deleteAllFilteredRecordings = async () => {
+  if (isProjectViewOnly.value) {
+    showAlertDialog('error', 'Error', 'This project is currently view-only and cannot delete recordings.')
+    return
+  }
   if (filterParams.value === undefined) {
     showAlertDialog('error', '', 'There is not filter applied for deleting recordings yet. Please filter recordings before deleting.')
     return

@@ -17,6 +17,76 @@
         Project settings
       </h1>
       <ReadOnlyBanner v-if="!store.userIsAdminProjectMember" />
+      <div class="rounded-lg border border-util-gray-03 bg-util-gray-01 p-4 dark:(bg-moss border-util-gray-04)">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="rounded-full bg-frequency/10 px-3 py-1 text-sm font-medium text-frequency">
+            {{ projectTypeLabel }}
+          </span>
+          <span
+            v-if="settings?.entitlementState === 'inactive'"
+            class="rounded-full bg-flamingo/10 px-3 py-1 text-sm font-medium text-flamingo"
+          >
+            Inactive
+          </span>
+          <span
+            v-else-if="settings?.viewOnlyEffective"
+            class="rounded-full bg-insight/10 px-3 py-1 text-sm font-medium text-insight"
+          >
+            View only
+          </span>
+          <span
+            v-else
+            class="rounded-full bg-success/10 px-3 py-1 text-sm font-medium text-success"
+          >
+            Active
+          </span>
+        </div>
+        <p class="mt-3 text-sm text-insight">
+          {{ projectTierMessage }}
+        </p>
+      </div>
+      <div
+        v-if="projectUsage !== undefined"
+        class="rounded-lg border border-util-gray-03 bg-util-gray-01 p-4 dark:(bg-moss border-util-gray-04)"
+      >
+        <h4 class="mb-4">
+          Project usage
+        </h4>
+        <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div class="rounded-lg border border-util-gray-03 bg-white px-4 py-3 dark:bg-pitch">
+            <p class="text-xs uppercase tracking-wide text-insight">
+              Recording minutes
+            </p>
+            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
+              {{ formatProjectUsage(projectUsage.recordingMinutesCount, settings?.limits?.recordingMinutesCount, 'mins') }}
+            </p>
+          </div>
+          <div class="rounded-lg border border-util-gray-03 bg-white px-4 py-3 dark:bg-pitch">
+            <p class="text-xs uppercase tracking-wide text-insight">
+              Analysis jobs
+            </p>
+            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
+              {{ formatProjectUsage(projectUsage.jobCount, settings?.limits?.jobCount) }}
+            </p>
+          </div>
+          <div class="rounded-lg border border-util-gray-03 bg-white px-4 py-3 dark:bg-pitch">
+            <p class="text-xs uppercase tracking-wide text-insight">
+              Collaborators
+            </p>
+            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
+              {{ formatProjectUsage(projectUsage.collaboratorCount, settings?.limits?.collaboratorCount) }}
+            </p>
+          </div>
+          <div class="rounded-lg border border-util-gray-03 bg-white px-4 py-3 dark:bg-pitch">
+            <p class="text-xs uppercase tracking-wide text-insight">
+              Guests
+            </p>
+            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
+              {{ formatProjectUsage(projectUsage.guestCount, settings?.limits?.guestCount) }}
+            </p>
+          </div>
+        </div>
+      </div>
       <div
         class="flex flex-row-reverse items-center gap-4"
       >
@@ -135,6 +205,7 @@ import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientArbimonLegacyKey, apiClientKey, togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
+import { useProjectTieringUsage } from '../super/project/_composables/use-project-tiering-usage'
 import { useDeleteProject, useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectDelete from './components/form/project-delete.vue'
@@ -155,8 +226,10 @@ const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 const toggles = inject(togglesKey)
 const selectedProject = computed(() => store.project)
 const selectedProjectId = computed(() => store.project?.id)
+const selectedProjectSlug = computed(() => store.project?.slug ?? '')
 
 const { data: settings, isError: isErrorSetting } = useGetProjectSettings(apiClientBio, selectedProjectId)
+const { data: projectUsage } = useProjectTieringUsage(apiClientArbimon, selectedProjectSlug)
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.project?.id ?? -1)
 const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, store.project?.id ?? -1)
 const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProject } = useDeleteProject(apiClientBio)
@@ -184,12 +257,33 @@ const date = Math.floor(Date.now() / 1000)
 const lastModified = ref<number>(date)
 const lastSaved = ref<number>(date)
 
-const selectedProjectSlug = computed(() => store.project?.slug)
-
 const isToggledForBackup = computed(() => {
   const isInternalUser = store.user?.email?.includes('rfcx.org') ?? false
   return toggles?.projectBackup === true || isInternalUser
 })
+
+const projectTypeLabel = computed(() => {
+  const projectType = settings.value?.projectType ?? selectedProject.value?.projectType ?? 'free'
+  return `${projectType.charAt(0).toUpperCase()}${projectType.slice(1)} project`
+})
+
+const projectTierMessage = computed(() => {
+  if (settings.value?.entitlementState === 'inactive') {
+    return 'This project is outside the active allowance for the current account tier and should remain view-only until reactivated.'
+  }
+
+  if (settings.value?.viewOnlyEffective === true) {
+    return 'This project is currently view-only because the account tier no longer includes its full paid capability set.'
+  }
+
+  return 'This project is currently active under the assigned project type.'
+})
+
+const formatProjectUsage = (used: number | undefined, limit: number | null | undefined, suffix?: string): string => {
+  const usedText = (used ?? 0).toLocaleString()
+  const limitText = limit == null ? 'No cap' : limit.toLocaleString()
+  return suffix === undefined ? `${usedText} / ${limitText}` : `${usedText} / ${limitText} ${suffix}`
+}
 
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
@@ -338,9 +432,9 @@ const updateSettings = () => {
     },
     onError: (e) => {
       isSaving.value = false
-      displayTextAfterSaveWithSuccessStatus(false, DEFAULT_ERROR_MSG)
-
       const error = e as AxiosError<Error>
+      displayTextAfterSaveWithSuccessStatus(false, error.response?.data?.message ?? DEFAULT_ERROR_MSG)
+
       if (error.response?.data !== undefined && error.response.data.message === ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE) {
         errorMessage.value = 'Duplicate URL Detected.' + ' Each project URL must be unique. Please enter a different URL to proceed.'
       }

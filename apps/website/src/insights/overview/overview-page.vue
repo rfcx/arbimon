@@ -13,7 +13,7 @@
   <div class="grid grid-col-1 lg:grid-cols-12 gap-20 mt-10 lg:mt-20">
     <div class="lg:col-span-8">
       <dashboard-project-summary
-        :can-edit="store.userIsAdminProjectMember"
+        :can-edit="store.userIsAdminProjectMember && !isProjectViewOnly"
         :is-project-member="store.userIsProjectMember"
         :is-viewing-as-guest="isViewingAsGuest"
       />
@@ -21,7 +21,7 @@
     <div class="lg:col-span-4 flex flex-col">
       <dashboard-highlighted-species
         :species="species?.speciesHighlighted"
-        :can-edit="store.userIsAdminProjectMember"
+        :can-edit="store.userIsAdminProjectMember && !isProjectViewOnly"
         :is-project-member="store.userIsProjectMember"
         :is-viewing-as-guest="isViewingAsGuest"
         :is-loading="isLoadingSpecies || isRefetchingSpecies"
@@ -90,6 +90,7 @@ const dashboardStore = useDashboardStore()
 
 // view type
 const isViewingAsGuest = computed(() => route.query.guest === '1' || store.userIsExternalGuest)
+const isProjectViewOnly = computed(() => store.project?.entitlementState === 'inactive' || store.project?.viewOnlyEffective === true)
 const selectedProjectId = computed(() => store.project?.id)
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 const { isLoading: isLoadingSpecies, isError: isErrorSpecies, refetch: refetchData, data: species, isRefetching: isRefetchingSpecies } = useSpeciesRichnessByRisk(apiClientBio)

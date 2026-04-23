@@ -28,6 +28,7 @@ const project: Project = {
   name: 'Istanbul cats diversities',
   slug: 'istanbul-cats-diversities',
   status: 'published',
+  projectType: 'premium',
   statusUpdatedAt: new Date(),
   latitudeNorth: 0,
   latitudeSouth: 0,
@@ -42,6 +43,9 @@ const projectForGetRouteTest: Project = {
   name: 'Dimitrovgrad diversities',
   slug: 'dimitrovgrad-diversities',
   status: 'published',
+  projectType: 'premium',
+  entitlementState: 'inactive',
+  viewOnlyEffective: true,
   statusUpdatedAt: new Date(),
   latitudeNorth: 0,
   latitudeSouth: 0,
@@ -174,6 +178,19 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
     const updatedProject = await LocationProject.findOne({ where: { id: project.id } })
     expect(updatedProject?.status).toBe('hidden')
   })
+
+  test('free projects cannot be hidden', async () => {
+    const app = await makeApp(routesProject, { projectRole: 'admin' })
+    await LocationProject.upsert({ ...project, status: 'listed', projectType: 'free' })
+    const payload = {
+      hidden: true
+    }
+
+    const response = await app.inject({ method: PATCH, url, payload })
+
+    expect(response.statusCode).toBe(400)
+    expect(response.json<{ message: string }>().message).toContain('Free projects must remain public')
+  })
 })
 
 describe('GET /projects/:projectId/profile', async () => {
@@ -194,6 +211,9 @@ describe('GET /projects/:projectId/profile', async () => {
     expect(json.objectives).toEqual(profileForGetRouteTest.objectives)
     expect(json.isPublished).toEqual(true)
     expect(json.isPublic).toEqual(true)
+    expect(json.projectType).toEqual(projectForGetRouteTest.projectType)
+    expect(json.entitlementState).toEqual(projectForGetRouteTest.entitlementState)
+    expect(json.viewOnlyEffective).toEqual(projectForGetRouteTest.viewOnlyEffective)
   })
 
   test('get with additional fields successfully', async () => {

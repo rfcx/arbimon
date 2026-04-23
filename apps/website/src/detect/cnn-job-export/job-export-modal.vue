@@ -98,6 +98,9 @@ const requestExport = async () => {
       if (error.response?.data !== undefined && error.response.data?.message.includes('already exists')) {
         emit('showAlertDialog', 'Your request is still processing. Please try again later.')
         closeModal()
+      } else if (error.response?.data?.message !== undefined) {
+        emit('showAlertDialog', error.response.data.message)
+        closeModal()
       } else {
         emit('showAlertDialog', 'There was a system error. Please try again.')
         closeModal()

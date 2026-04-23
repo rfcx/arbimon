@@ -1,11 +1,13 @@
 import { organizationsListRoute, userProfileRoute, usersRoute } from '@rfcx-bio/common/api-bio/users/profile'
 import { userProfileImageRoute } from '@rfcx-bio/common/api-bio/users/profile-image'
+import { userPortfolioSummaryRoute, userTierChangeRoute } from '@rfcx-bio/common/api-bio/users/tiering'
 
 import { requireAuthorized } from '@/_hooks/require-authenticated'
-import { type RouteRegistration, GET, PATCH } from '../_services/api-helpers/types'
+import { type RouteRegistration, GET, PATCH, POST } from '../_services/api-helpers/types'
 import { organizationsListHandler } from './organizations-handler'
 import { patchUserProfileHandler, userProfileHandler } from './user-profile-handler'
 import { getUserProfileImageHandler, patchUserProfileImageHandler } from './user-profile-image-handler'
+import { submitUserTierChangeHandler, userPortfolioSummaryHandler } from './user-tiering-handler'
 import { usersHandler } from './users-handler'
 
 export const routesUserProfile: RouteRegistration[] = [
@@ -20,6 +22,18 @@ export const routesUserProfile: RouteRegistration[] = [
     url: userProfileRoute,
     preHandler: [requireAuthorized],
     handler: patchUserProfileHandler
+  },
+  {
+    method: GET,
+    url: userPortfolioSummaryRoute,
+    preHandler: [requireAuthorized],
+    handler: userPortfolioSummaryHandler
+  },
+  {
+    method: POST,
+    url: userTierChangeRoute,
+    preHandler: [requireAuthorized],
+    handler: submitUserTierChangeHandler
   },
   {
     method: GET,

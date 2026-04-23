@@ -110,7 +110,8 @@ const project = computed(() => {
 })
 
 // == get members ==
-const { data: members, refetch: refetchMembers, error } = useSuperGetProjectMembers(apiClientBio, project.value.id)
+const projectId = computed(() => project.value.id)
+const { data: members, refetch: refetchMembers, error } = useSuperGetProjectMembers(apiClientBio, projectId)
 
 const sortedMembers = computed(() => {
   return members.value?.filter(u => u.roleId === 4).concat(members.value?.filter(u => u.roleId !== 4).sort(function (a, b) {
