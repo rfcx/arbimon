@@ -52,7 +52,7 @@ const getOwnedActiveProjectTypeCounts = async (userId: number): Promise<OwnedPro
         ON lp.id = lpur.location_project_id
       WHERE lpur.user_id = :userId
         AND lpur.role_id = :ownerRoleId
-        AND COALESCE(lp.entitlement_state, 'active') = 'active'
+        AND COALESCE(lp.is_locked, FALSE) = FALSE
       GROUP BY COALESCE(lp.project_type, 'free')
     `,
     { replacements: { userId, ownerRoleId: OWNER_ROLE_ID }, type: QueryTypes.SELECT }
@@ -94,7 +94,7 @@ export const assertProjectSettingsUpdateAllowed = async (projectId: number, requ
   const project = await getProjectById(projectId)
   if (project === undefined) throw BioNotFoundError()
 
-  if (project.entitlementState === 'inactive' || project.viewOnlyEffective === true) {
+  if (project.isLocked === true) {
     throw new BioPublicError('This project is currently view-only and cannot be edited.', 403)
   }
 
@@ -107,7 +107,7 @@ export const assertProjectAnalysisAllowed = async (projectId: number): Promise<v
   const project = await getProjectById(projectId)
   if (project === undefined) throw BioNotFoundError()
 
-  if (project.entitlementState === 'inactive' || project.viewOnlyEffective === true) {
+  if (project.isLocked === true) {
     throw new BioPublicError('This project is currently view-only and cannot run analyses.', 403)
   }
 }
@@ -116,7 +116,7 @@ export const assertProjectExportAllowed = async (projectId: number): Promise<voi
   const project = await getProjectById(projectId)
   if (project === undefined) throw BioNotFoundError()
 
-  if (project.entitlementState === 'inactive' || project.viewOnlyEffective === true) {
+  if (project.isLocked === true) {
     throw new BioPublicError('This project is currently view-only and cannot request exports or backups.', 403)
   }
 }
@@ -125,7 +125,7 @@ export const assertProjectMemberUpdateAllowed = async (locationProjectId: number
   const project = await getProjectById(locationProjectId)
   if (project === undefined) throw BioNotFoundError()
 
-  if (project.entitlementState === 'inactive' || project.viewOnlyEffective === true) {
+  if (project.isLocked === true) {
     throw new BioPublicError('This project is currently view-only and cannot be changed.', 403)
   }
 

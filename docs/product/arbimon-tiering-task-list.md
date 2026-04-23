@@ -81,7 +81,7 @@ Relevant existing tables:
 Completed in repo so far:
 
 - `Database P0`: created Umzug migration drafts for account tier, project type, entitlement state, downgrade selection, and tiering usage views
-- `Backend API 2.4`: profile and project responses now expose `accountTier`, `projectType`, `entitlementState`, `viewOnlyEffective`, project tiering usage, and portfolio summary data
+- `Backend API 2.4`: profile and project responses now expose `accountTier`, `projectType`, `isLocked`, project tiering usage, and portfolio summary data
 - `Backend API 2.5` partial: project creation now accepts `projectType` and enforces tier-based project-type eligibility and active-slot limits
 - `Backend API 2.6` partial: free projects cannot be hidden and view-only/inactive projects reject settings edits
 - `Backend API 2.7` partial: premium member caps are enforced for collaborators and guests

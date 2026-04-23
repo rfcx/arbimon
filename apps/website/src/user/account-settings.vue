@@ -118,7 +118,7 @@
                         {{ project.name }}
                       </p>
                       <p class="mt-1 text-sm text-insight">
-                        Current: {{ PROJECT_TYPE_LABELS[project.projectType] }} · {{ project.entitlementState }}
+                        Current: {{ PROJECT_TYPE_LABELS[project.projectType] }} · {{ project.isLocked ? 'view-only' : 'active' }}
                       </p>
                     </div>
                     <label
@@ -126,10 +126,10 @@
                       class="flex items-center gap-2 text-sm text-insight"
                     >
                       <input
-                        v-model="downgradeSelections[project.locationProjectId].selectedEntitlementState"
+                        v-model="downgradeSelections[project.locationProjectId].isLocked"
                         type="checkbox"
-                        true-value="active"
-                        false-value="inactive"
+                        :true-value="false"
+                        :false-value="true"
                       >
                       Keep active
                     </label>
@@ -415,7 +415,7 @@ import { Dropdown } from 'flowbite'
 import { type Ref, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { type AccountTier, type ProjectEntitlementState, type ProjectType } from '@rfcx-bio/common/dao/types'
+import { type AccountTier, type ProjectType } from '@rfcx-bio/common/dao/types'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import image from '@/_assets/cta/frog-hero.webp'
@@ -475,7 +475,7 @@ const showStatus = ref(false)
 const isSuccess = ref(false)
 const errorMessage = ref<string>()
 const selectedDowngradeTier = ref<AccountTier | ''>('')
-const downgradeSelections = ref<Record<number, { selectedProjectType: ProjectType, selectedEntitlementState: ProjectEntitlementState }>>({})
+const downgradeSelections = ref<Record<number, { selectedProjectType: ProjectType, isLocked: boolean }>>({})
 const tierChangeMessage = ref('')
 const tierChangeSuccess = ref(false)
 
@@ -504,7 +504,7 @@ watch([portfolioSummary, selectedDowngradeTier], () => {
     const selectedProjectType = allowedProjectTypes.includes(project.projectType) ? project.projectType : defaultProjectType
     return [project.locationProjectId, {
       selectedProjectType,
-      selectedEntitlementState: project.entitlementState
+      isLocked: project.isLocked
     }]
   }))
 })
@@ -745,7 +745,7 @@ const submitDowngrade = () => {
     selections: Object.entries(downgradeSelections.value).map(([locationProjectId, selection]) => ({
       locationProjectId: Number(locationProjectId),
       selectedProjectType: selection.selectedProjectType,
-      selectedEntitlementState: selection.selectedEntitlementState
+      isLocked: selection.isLocked
     }))
   }, {
     onSuccess: async () => {

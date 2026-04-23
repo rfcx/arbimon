@@ -22,8 +22,7 @@ interface SuperProjectRow {
   longitudeEast: number
   longitudeWest: number
   projectType: ProjectType
-  entitlementState: 'active' | 'inactive'
-  viewOnlyEffective: boolean
+  isLocked: boolean
   recordingMinutesCount: number
   collaboratorCount: number
   guestCount: number
@@ -59,8 +58,7 @@ const mapProjectSummary = (row: SuperProjectRow, limitMap: Record<ProjectType, S
     longitudeEast: Number(row.longitudeEast ?? 0),
     longitudeWest: Number(row.longitudeWest ?? 0),
     projectType,
-    entitlementState: row.entitlementState ?? 'active',
-    viewOnlyEffective: Boolean(row.viewOnlyEffective),
+    isLocked: Boolean(row.isLocked),
     usage: {
       recordingMinutesCount: Number(row.recordingMinutesCount ?? 0),
       collaboratorCount: Number(row.collaboratorCount ?? 0),
@@ -89,8 +87,7 @@ export const getProjects = async (keyword?: string, limit: number = 200, offset:
         lp.longitude_east AS "longitudeEast",
         lp.longitude_west AS "longitudeWest",
         COALESCE(lp.project_type, 'free') AS "projectType",
-        COALESCE(lp.entitlement_state, 'active') AS "entitlementState",
-        COALESCE(lp.view_only_effective, FALSE) AS "viewOnlyEffective",
+        COALESCE(lp.is_locked, FALSE) AS "isLocked",
         0 AS "recordingMinutesCount",
         COALESCE(lpmqu.collaborator_count, 0) AS "collaboratorCount",
         COALESCE(lpmqu.guest_count, 0) AS "guestCount",
@@ -121,9 +118,9 @@ export const getUsers = async (keyword?: string, limit: number = 200, offset: nu
         COALESCE(up.account_tier, 'free') AS "accountTier",
         COALESCE(up.additional_premium_project_slots, 0) AS "additionalPremiumProjectSlots",
         COUNT(lpur.location_project_id)::INTEGER AS "ownedProjectCount",
-        COUNT(lp.id) FILTER (WHERE COALESCE(lp.entitlement_state, 'active') = 'active' AND COALESCE(lp.project_type, 'free') = 'free')::INTEGER AS "freeProjects",
-        COUNT(lp.id) FILTER (WHERE COALESCE(lp.entitlement_state, 'active') = 'active' AND COALESCE(lp.project_type, 'free') = 'premium')::INTEGER AS "premiumProjects",
-        COUNT(lp.id) FILTER (WHERE COALESCE(lp.entitlement_state, 'active') = 'active' AND COALESCE(lp.project_type, 'free') = 'unlimited')::INTEGER AS "unlimitedProjects"
+        COUNT(lp.id) FILTER (WHERE COALESCE(lp.is_locked, FALSE) = FALSE AND COALESCE(lp.project_type, 'free') = 'free')::INTEGER AS "freeProjects",
+        COUNT(lp.id) FILTER (WHERE COALESCE(lp.is_locked, FALSE) = FALSE AND COALESCE(lp.project_type, 'free') = 'premium')::INTEGER AS "premiumProjects",
+        COUNT(lp.id) FILTER (WHERE COALESCE(lp.is_locked, FALSE) = FALSE AND COALESCE(lp.project_type, 'free') = 'unlimited')::INTEGER AS "unlimitedProjects"
       FROM user_profile up
       LEFT JOIN location_project_user_role lpur
         ON up.id = lpur.user_id
@@ -192,8 +189,7 @@ export const getUserProjects = async (userId: number): Promise<SuperProjectSumma
         lp.longitude_east AS "longitudeEast",
         lp.longitude_west AS "longitudeWest",
         COALESCE(lp.project_type, 'free') AS "projectType",
-        COALESCE(lp.entitlement_state, 'active') AS "entitlementState",
-        COALESCE(lp.view_only_effective, FALSE) AS "viewOnlyEffective",
+        COALESCE(lp.is_locked, FALSE) AS "isLocked",
         0 AS "recordingMinutesCount",
         COALESCE(lpmqu.collaborator_count, 0) AS "collaboratorCount",
         COALESCE(lpmqu.guest_count, 0) AS "guestCount",
@@ -253,12 +249,13 @@ export const updateUserTier = async (userId: number, body: SuperUserTierUpdateBo
       UPDATE user_profile
       SET
         account_tier = :accountTier,
+        additional_premium_project_slots = :additionalPremiumProjectSlots,
         account_tier_updated_at = CURRENT_TIMESTAMP,
         updated_at = CURRENT_TIMESTAMP
       WHERE id = :userId
       RETURNING id
     `,
-    { replacements: { userId, accountTier: body.accountTier }, type: QueryTypes.SELECT }
+    { replacements: { userId, accountTier: body.accountTier, additionalPremiumProjectSlots: body.additionalPremiumProjectSlots }, type: QueryTypes.SELECT }
   )
 
   if (rows.length === 0) {

@@ -23,13 +23,7 @@
             {{ projectTypeLabel }}
           </span>
           <span
-            v-if="settings?.entitlementState === 'inactive'"
-            class="rounded-full bg-flamingo/10 px-3 py-1 text-sm font-medium text-flamingo"
-          >
-            Inactive
-          </span>
-          <span
-            v-else-if="settings?.viewOnlyEffective"
+            v-if="settings?.isLocked"
             class="rounded-full bg-insight/10 px-3 py-1 text-sm font-medium text-insight"
           >
             View only
@@ -268,12 +262,8 @@ const projectTypeLabel = computed(() => {
 })
 
 const projectTierMessage = computed(() => {
-  if (settings.value?.entitlementState === 'inactive') {
-    return 'This project is outside the active allowance for the current account tier and should remain view-only until reactivated.'
-  }
-
-  if (settings.value?.viewOnlyEffective === true) {
-    return 'This project is currently view-only because the account tier no longer includes its full paid capability set.'
+  if (settings.value?.isLocked === true) {
+    return 'This project is currently locked and should remain view-only until it is reactivated or unlocked.'
   }
 
   return 'This project is currently active under the assigned project type.'

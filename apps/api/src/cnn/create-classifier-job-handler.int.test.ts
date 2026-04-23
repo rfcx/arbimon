@@ -190,7 +190,7 @@ describe('POST /jobs', async () => {
   })
 
   test('view-only project cannot create classifier job', async () => {
-    await LocationProject.update({ entitlementState: 'inactive', viewOnlyEffective: true }, { where: { id: 64859 } })
+    await LocationProject.update({ isLocked: true }, { where: { id: 64859 } })
 
     const app = await makeApp(routesCnn, {
       projectRole: 'user',

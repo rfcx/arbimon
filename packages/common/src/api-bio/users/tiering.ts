@@ -1,14 +1,13 @@
 import { type AxiosInstance } from 'axios'
 
-import { type AccountTier, type ProjectEntitlementState, type ProjectType } from '../../dao/types'
+import { type AccountTier, type ProjectType } from '../../dao/types'
 
 export interface PortfolioProjectSummary {
   locationProjectId: number
   slug: string
   name: string
   projectType: ProjectType
-  entitlementState: ProjectEntitlementState
-  viewOnlyEffective: boolean
+  isLocked: boolean
   recordingMinutesCount: number
   collaboratorCount: number
   guestCount: number
@@ -34,7 +33,7 @@ export interface PortfolioSummaryResponse {
 export interface TierChangeSelection {
   locationProjectId: number
   selectedProjectType: ProjectType
-  selectedEntitlementState: ProjectEntitlementState
+  isLocked: boolean
 }
 
 export interface SubmitTierChangeRequestBody {
@@ -43,7 +42,6 @@ export interface SubmitTierChangeRequestBody {
 }
 
 export interface SubmitTierChangeResponse {
-  requestId: number
   accountTier: AccountTier
   projectsUpdated: number
 }

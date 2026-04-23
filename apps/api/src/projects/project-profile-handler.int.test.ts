@@ -44,8 +44,7 @@ const projectForGetRouteTest: Project = {
   slug: 'dimitrovgrad-diversities',
   status: 'published',
   projectType: 'premium',
-  entitlementState: 'inactive',
-  viewOnlyEffective: true,
+  isLocked: true,
   statusUpdatedAt: new Date(),
   latitudeNorth: 0,
   latitudeSouth: 0,
@@ -212,8 +211,7 @@ describe('GET /projects/:projectId/profile', async () => {
     expect(json.isPublished).toEqual(true)
     expect(json.isPublic).toEqual(true)
     expect(json.projectType).toEqual(projectForGetRouteTest.projectType)
-    expect(json.entitlementState).toEqual(projectForGetRouteTest.entitlementState)
-    expect(json.viewOnlyEffective).toEqual(projectForGetRouteTest.viewOnlyEffective)
+    expect(json.isLocked).toEqual(projectForGetRouteTest.isLocked)
   })
 
   test('get with additional fields successfully', async () => {

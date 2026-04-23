@@ -19,7 +19,7 @@ vi.mock('@rfcx-bio/node-common/kubernetes', () => {
 
 describe('POST /jobs/:jobId/detections-export', () => {
   test('blocks export for view-only project', async () => {
-    await LocationProject.create({ ...makeProject(64859, 'Pandas of China', 'listed'), idCore: 'kd953mgodif9', entitlementState: 'inactive', viewOnlyEffective: true })
+    await LocationProject.create({ ...makeProject(64859, 'Pandas of China', 'listed'), idCore: 'kd953mgodif9', isLocked: true })
 
     const app = await makeApp(routesCnn, {
       userToken: {

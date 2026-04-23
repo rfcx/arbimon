@@ -42,7 +42,7 @@
           {{ project.projectType ?? 'free' }}
         </span>
         <span :class="stateBadgeClass(project)">
-          {{ project.viewOnlyEffective ? 'view-only' : project.entitlementState }}
+          {{ project.isLocked ? 'view-only' : 'active' }}
         </span>
       </div>
     </td>
@@ -125,8 +125,7 @@ const tierBadgeClass = (projectType: SuperProjectSummary['projectType'] | undefi
 }
 
 const stateBadgeClass = (project: SuperProjectSummary): string => {
-  if (project.viewOnlyEffective === true) return 'inline-flex rounded-full bg-stone-200 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-stone-700'
-  if (project.entitlementState === 'inactive') return 'inline-flex rounded-full bg-red-100 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-red-700'
+  if (project.isLocked === true) return 'inline-flex rounded-full bg-stone-200 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-stone-700'
   return 'inline-flex rounded-full bg-sky-100 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-sky-700'
 }
 

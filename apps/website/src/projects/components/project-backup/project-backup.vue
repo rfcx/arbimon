@@ -86,7 +86,7 @@ const TEXT_BACKUP_LIMIT = 'You can request a backup every 7 days'
 
 const store = useStore()
 const toggles = inject(togglesKey)
-const isProjectViewOnly = computed(() => store.project?.entitlementState === 'inactive' || store.project?.viewOnlyEffective === true)
+const isProjectViewOnly = computed(() => store.project?.isLocked === true)
 
 const timeFrameLimit = computed(() => {
   const hours = toggles?.projectBackupTesting === true ? 0.25 : 7 * 24

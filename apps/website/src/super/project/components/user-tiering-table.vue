@@ -70,7 +70,7 @@
                   <button
                     type="button"
                     class="rounded bg-frequency px-2 py-1 text-xs font-medium text-white disabled:(cursor-not-allowed opacity-50)"
-                    :disabled="savingUserId === user.id || (userTierDrafts[user.id] ?? user.accountTier) === user.accountTier"
+                    :disabled="savingUserId === user.id || !hasUserChanges(user)"
                     @click="saveUserTier(user)"
                   >
                     {{ savingUserId === user.id ? 'Saving' : 'Save' }}
@@ -82,7 +82,13 @@
               </div>
             </td>
             <td class="py-3 text-sm text-insight">
-              {{ user.additionalPremiumProjectSlots }}
+              <input
+                type="number"
+                min="0"
+                class="w-22 rounded border border-util-gray-03 bg-white px-2 py-1 text-sm text-insight"
+                :value="userAdditionalPremiumSlotDrafts[user.id] ?? user.additionalPremiumProjectSlots"
+                @input="onAdditionalPremiumSlotsChange(user.id, $event)"
+              >
             </td>
             <td class="py-3 text-sm text-insight">
               {{ formatPortfolioUsage(user.usage.freeProjects, user.limits.freeProjects) }}
@@ -168,6 +174,7 @@ const queryClient = useQueryClient()
 const expandedUserId = ref<number | null>(null)
 const selectedUserId = computed(() => expandedUserId.value)
 const userTierDrafts = ref<Record<number, SuperUserSummary['accountTier']>>({})
+const userAdditionalPremiumSlotDrafts = ref<Record<number, number>>({})
 const savingUserId = ref<number | null>(null)
 
 const { data: userProjects, isLoading: isLoadingUserProjects, isError: isErrorUserProjects } = useGetSuperUserProjects(apiClientBio, selectedUserId)
@@ -188,15 +195,29 @@ const onUserTierChange = (userId: number, event: Event): void => {
   updateUserTierDraft(userId, (event.target as HTMLSelectElement).value)
 }
 
+const onAdditionalPremiumSlotsChange = (userId: number, event: Event): void => {
+  userAdditionalPremiumSlotDrafts.value = {
+    ...userAdditionalPremiumSlotDrafts.value,
+    [userId]: Math.max(0, Number((event.target as HTMLInputElement).value || 0))
+  }
+}
+
+const hasUserChanges = (user: SuperUserSummary): boolean => {
+  const nextTier = userTierDrafts.value[user.id] ?? user.accountTier
+  const nextAdditionalSlots = userAdditionalPremiumSlotDrafts.value[user.id] ?? user.additionalPremiumProjectSlots
+  return nextTier !== user.accountTier || nextAdditionalSlots !== user.additionalPremiumProjectSlots
+}
+
 const saveUserTier = async (user: SuperUserSummary): Promise<void> => {
   const nextTier = userTierDrafts.value[user.id] ?? user.accountTier
-  if (nextTier === user.accountTier) return
+  const nextAdditionalPremiumProjectSlots = userAdditionalPremiumSlotDrafts.value[user.id] ?? user.additionalPremiumProjectSlots
+  if (!hasUserChanges(user)) return
 
   savingUserId.value = user.id
   try {
     await mutateUserTier({
       userId: user.id,
-      payload: { accountTier: nextTier }
+      payload: { accountTier: nextTier, additionalPremiumProjectSlots: nextAdditionalPremiumProjectSlots }
     })
     await queryClient.invalidateQueries({ queryKey: ['get-super-users'] })
     await queryClient.invalidateQueries({ queryKey: ['get-super-user-projects'] })

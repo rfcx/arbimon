@@ -351,7 +351,7 @@ const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
-const isProjectViewOnly = computed(() => store.project?.entitlementState === 'inactive' || store.project?.viewOnlyEffective === true)
+const isProjectViewOnly = computed(() => store.project?.isLocked === true)
 
 const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings, isRefetching: isRefetchRecordings, isError: isErrorRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, filteredRequestParams)
 

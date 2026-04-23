@@ -90,7 +90,7 @@ const dashboardStore = useDashboardStore()
 
 // view type
 const isViewingAsGuest = computed(() => route.query.guest === '1' || store.userIsExternalGuest)
-const isProjectViewOnly = computed(() => store.project?.entitlementState === 'inactive' || store.project?.viewOnlyEffective === true)
+const isProjectViewOnly = computed(() => store.project?.isLocked === true)
 const selectedProjectId = computed(() => store.project?.id)
 const { isLoading: isLoadingMetrics, isError: isErrorMetrics, data: metrics } = useGetDashboardMetrics(apiClientBio, selectedProjectId)
 const { isLoading: isLoadingSpecies, isError: isErrorSpecies, refetch: refetchData, data: species, isRefetching: isRefetchingSpecies } = useSpeciesRichnessByRisk(apiClientBio)

@@ -52,7 +52,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
   const { LocationProject, LocationProjectProfile, LocationProjectCountry } = ModelRepository.getInstance(sequelize)
   const resProject = await LocationProject.findOne({
     where: { id: locationProjectId },
-    attributes: ['name', 'slug', 'status', 'projectType', 'entitlementState', 'viewOnlyEffective'],
+    attributes: ['name', 'slug', 'status', 'projectType', 'isLocked'],
     raw: true
   })
   const resProfile = await LocationProjectProfile.findOne({
@@ -95,8 +95,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     isPublished: resProject.status === 'published',
     isPublic: resProject.status !== 'hidden',
     projectType,
-    entitlementState: resProject.entitlementState,
-    viewOnlyEffective: resProject.viewOnlyEffective,
+    isLocked: resProject.isLocked,
     usage,
     limits
   }

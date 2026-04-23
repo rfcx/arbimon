@@ -55,8 +55,7 @@ export const getProjectEntitlementSummaryBySlug = async (slug: string): Promise<
   return {
     slug: project.slug,
     projectType,
-    entitlementState: project.entitlementState,
-    viewOnlyEffective: project.viewOnlyEffective,
+    isLocked: project.isLocked,
     limits: projectTypeLimitMap[projectType]
   }
 }
@@ -76,8 +75,7 @@ export const getProjectUploadLimitSummaryByCoreId = async (idCore: string, token
     idCore: project.idCore,
     slug: project.slug,
     projectType,
-    entitlementState: project.entitlementState,
-    viewOnlyEffective: project.viewOnlyEffective,
+    isLocked: project.isLocked,
     recordingMinutesCount,
     recordingMinutesLimit,
     remainingRecordingMinutes: recordingMinutesLimit === null ? null : Math.max(0, recordingMinutesLimit - recordingMinutesCount)

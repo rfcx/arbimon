@@ -25,13 +25,7 @@
           {{ projectTypeLabel }}
         </span>
         <span
-          v-if="project.entitlementState === 'inactive'"
-          class="rounded-full bg-flamingo/10 px-2 py-1 text-flamingo"
-        >
-          Inactive
-        </span>
-        <span
-          v-else-if="project.viewOnlyEffective"
+          v-if="project.isLocked"
           class="rounded-full bg-insight/10 px-2 py-1 text-insight"
         >
           View only

@@ -43,8 +43,7 @@ const { UserProfile, LocationProject, LocationProjectUserRole } = modelRepositor
 const ownedProject = {
   ...makeProject(11001, 'Tiered project alpha', 'listed'),
   projectType: 'premium',
-  entitlementState: 'active',
-  viewOnlyEffective: false
+  isLocked: false
 }
 
 beforeEach(async () => {
@@ -222,7 +221,7 @@ describe('POST /profile/tier-change', async () => {
           {
             locationProjectId: ownedProject.id,
             selectedProjectType: 'free',
-            selectedEntitlementState: 'active'
+            isLocked: false
           }
         ]
       }
@@ -234,6 +233,6 @@ describe('POST /profile/tier-change', async () => {
     const updatedProject = await LocationProject.findByPk(ownedProject.id)
     expect(updatedUser?.accountTier).toBe('free')
     expect(updatedProject?.projectType).toBe('free')
-    expect(updatedProject?.entitlementState).toBe('active')
+    expect(updatedProject?.isLocked).toBe(false)
   })
 })

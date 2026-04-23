@@ -24,13 +24,7 @@
                 {{ projectTypeLabel }}
               </span>
               <span
-                v-if="projectInfo?.entitlementState === 'inactive'"
-                class="rounded-full bg-flamingo/10 px-3 py-1 text-sm font-medium text-flamingo"
-              >
-                Inactive
-              </span>
-              <span
-                v-else-if="projectInfo?.viewOnlyEffective"
+                v-if="projectInfo?.isLocked"
                 class="rounded-full bg-insight/10 px-3 py-1 text-sm font-medium text-insight"
               >
                 View only
@@ -429,7 +423,7 @@ const projectTypeLabel = computed(() => {
 })
 
 const memberLimitMessage = computed(() => {
-  if (projectInfo.value?.entitlementState === 'inactive' || projectInfo.value?.viewOnlyEffective === true) {
+  if (projectInfo.value?.isLocked === true) {
     return 'This project is view-only, so member changes are disabled until the project is reactivated.'
   }
 
@@ -440,7 +434,7 @@ const memberLimitMessage = computed(() => {
 })
 
 const memberLimitReached = computed(() => {
-  if (projectInfo.value?.entitlementState === 'inactive' || projectInfo.value?.viewOnlyEffective === true) return false
+  if (projectInfo.value?.isLocked === true) return false
   const projectType = projectInfo.value?.projectType ?? 'free'
   const limits = projectInfo.value?.limits ?? getProjectTypeUsageLimits(projectType)
   if (limits.collaboratorCount === null) return false

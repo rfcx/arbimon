@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaultsAutoPk } from '../model-factory-helpers/defaults'
-import { type Project, PROJECT_ENTITLEMENT_STATE_ORDERED, PROJECT_STATUS_ORDERED, PROJECT_TYPE_ORDERED } from '../types'
+import { type Project, PROJECT_STATUS_ORDERED, PROJECT_TYPE_ORDERED } from '../types'
 
 export const MODEL_LOCATION_PROJECT = 'LocationProject'
 export const TABLE_LOCATION_PROJECT = 'location_project'
@@ -14,11 +14,7 @@ export const UPDATE_ON_DUPLICATE_LOCATION_PROJECT: Array<keyof Project> = [
   'longitudeEast',
   'longitudeWest',
   'projectType',
-  'entitlementState',
-  'entitlementUpdatedAt',
-  'entitlementInactivatedReason',
-  'downgradeLocked',
-  'viewOnlyEffective',
+  'isLocked',
   'updatedAt'
 ]
 
@@ -61,22 +57,7 @@ export const LocationProjectModel = defineWithDefaultsAutoPk<Project>(
       type: DataTypes.ENUM(...PROJECT_TYPE_ORDERED),
       allowNull: true
     },
-    entitlementState: {
-      type: DataTypes.ENUM(...PROJECT_ENTITLEMENT_STATE_ORDERED),
-      allowNull: true,
-      defaultValue: 'active'
-    },
-    entitlementUpdatedAt: DataTypes.DATE,
-    entitlementInactivatedReason: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    downgradeLocked: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-    },
-    viewOnlyEffective: {
+    isLocked: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false

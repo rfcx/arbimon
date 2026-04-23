@@ -52,16 +52,14 @@ beforeAll(async () => {
     {
       ...makeProject(superUserRouteProjectId, 'Published Project', 'published'),
       projectType: 'premium',
-      entitlementState: 'active',
-      viewOnlyEffective: false
+      isLocked: false
     },
     {
       ...makeProject(superUserRouteProjectId2, 'Hidden Project 2', 'hidden'),
       projectType: 'free',
-      entitlementState: 'inactive',
-      viewOnlyEffective: true
+      isLocked: true
     }
-  ], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore', 'projectType', 'entitlementState', 'viewOnlyEffective'] })
+  ], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore', 'projectType', 'isLocked'] })
 
   await LocationProjectUserRole.bulkCreate([
     { locationProjectId: superUserRouteProjectId, userId: superUserRouteOwnerId, roleId: getIdByRole('owner'), ranking: 0 },
@@ -179,12 +177,13 @@ describe('Super projects route', async () => {
     const response = await app.inject({
       method: PATCH,
       url: superUserTierRoute.replace(':userId', superUserRouteOwnerId.toString()),
-      payload: { accountTier: 'enterprise' }
+      payload: { accountTier: 'enterprise', additionalPremiumProjectSlots: 2 }
     })
 
     expect(response.statusCode).toBe(204)
 
     const updated = await UserProfile.findByPk(superUserRouteOwnerId)
     expect(updated?.accountTier).toBe('enterprise')
+    expect(updated?.additionalPremiumProjectSlots).toBe(2)
   })
 })

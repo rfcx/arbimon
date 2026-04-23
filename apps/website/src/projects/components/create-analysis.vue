@@ -63,7 +63,7 @@ const selectedProject = computed(() => store.project)
 const isAnalysisSelected = ref(false)
 const analysisUrl = ref('')
 const isProjectViewOnly = computed(() => {
-  return selectedProject.value?.entitlementState === 'inactive' || selectedProject.value?.viewOnlyEffective === true
+  return selectedProject.value?.isLocked === true
 })
 
 const BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL

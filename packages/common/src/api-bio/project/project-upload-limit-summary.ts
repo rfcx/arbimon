@@ -10,8 +10,7 @@ export interface ProjectUploadLimitSummaryResponse {
   idCore: string
   slug: string
   projectType: NonNullable<Project['projectType']>
-  entitlementState: Project['entitlementState']
-  viewOnlyEffective: Project['viewOnlyEffective']
+  isLocked: Project['isLocked']
   recordingMinutesCount: number
   recordingMinutesLimit: number | null
   remainingRecordingMinutes: number | null

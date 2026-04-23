@@ -57,8 +57,7 @@ export type ProjectInfoResponse = Pick<Project, 'name' | 'slug'>
     isPublished: boolean
     isPublic: boolean
     projectType?: Project['projectType']
-    entitlementState?: Project['entitlementState']
-    viewOnlyEffective?: Project['viewOnlyEffective']
+    isLocked?: Project['isLocked']
     usage?: ProjectTieringUsage
     limits?: ProjectUsageLimits
     countryCodes?: string[]

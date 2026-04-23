@@ -53,7 +53,7 @@ import importRecordings from '@/_assets/import-recordings.webp'
 import { useStore } from '~/store'
 
 const store = useStore()
-const isProjectViewOnly = computed(() => store.project?.entitlementState === 'inactive' || store.project?.viewOnlyEffective === true)
+const isProjectViewOnly = computed(() => store.project?.isLocked === true)
 
 const uploaderApps = {
     mac: 'https://rf.cx/ingest-app-latest-mac?r=' + (new Date()).getTime(),

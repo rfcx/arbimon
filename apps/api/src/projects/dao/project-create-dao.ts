@@ -16,12 +16,9 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
     ...projectPartial,
     slug,
     projectType: projectPartial.projectType ?? 'free',
-    entitlementState: 'active',
-    viewOnlyEffective: false,
-    downgradeLocked: false,
+    isLocked: false,
     status: hidden ? 'hidden' : 'unlisted',
-    statusUpdatedAt: new Date(),
-    entitlementUpdatedAt: new Date()
+    statusUpdatedAt: new Date()
   }
   const { id } = await LocationProject.create(project)
 

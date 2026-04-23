@@ -42,6 +42,7 @@ export interface SuperProjectTierUpdateBody {
 
 export interface SuperUserTierUpdateBody {
   accountTier: AccountTier
+  additionalPremiumProjectSlots: number
 }
 
 // Route

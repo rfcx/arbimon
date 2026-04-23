@@ -301,7 +301,7 @@ const importSiteModal = ref<InstanceType<typeof ImportSiteModal> | null>(null)
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
-const isProjectViewOnly = computed(() => store.project?.entitlementState === 'inactive' || store.project?.viewOnlyEffective === true)
+const isProjectViewOnly = computed(() => store.project?.isLocked === true)
 
 // API
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance

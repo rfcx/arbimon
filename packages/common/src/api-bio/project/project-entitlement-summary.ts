@@ -10,8 +10,7 @@ export interface ProjectEntitlementSummaryParams {
 export interface ProjectEntitlementSummaryResponse {
   slug: string
   projectType: NonNullable<Project['projectType']>
-  entitlementState: Project['entitlementState']
-  viewOnlyEffective: Project['viewOnlyEffective']
+  isLocked: Project['isLocked']
   limits: ProjectUsageLimits
 }
 

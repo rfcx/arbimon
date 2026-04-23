@@ -21,11 +21,8 @@ export const up: MigrationFn<QueryInterface> = async ({ context }) => {
 
   await context.sequelize.query(`
     UPDATE "${LOCATION_PROJECT_TABLE}"
-    SET
-      entitlement_updated_at = COALESCE(entitlement_updated_at, NOW()),
-      view_only_effective = CASE WHEN entitlement_state = 'inactive' THEN TRUE ELSE view_only_effective END
-    WHERE entitlement_updated_at IS NULL
-      OR (entitlement_state = 'inactive' AND view_only_effective = FALSE);
+    SET is_locked = COALESCE(is_locked, FALSE)
+    WHERE is_locked IS NULL;
   `)
 }
 
@@ -34,8 +31,7 @@ export const down: MigrationFn<QueryInterface> = async ({ context }) => {
     UPDATE "${LOCATION_PROJECT_TABLE}"
     SET
       project_type = NULL,
-      view_only_effective = FALSE,
-      entitlement_updated_at = NULL
+      is_locked = FALSE
     WHERE project_type = 'free'::project_type_code;
   `)
 

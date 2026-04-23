@@ -118,7 +118,7 @@
           </button>
         </router-link>
         <button
-          :disabled="isLoadingPostJob || errors.length > 0 || !store.userIsExpertMember || store.project?.entitlementState === 'inactive' || store.project?.viewOnlyEffective === true || isProjectJobLimitReached"
+          :disabled="isLoadingPostJob || errors.length > 0 || !store.userIsExpertMember || store.project?.isLocked === true || isProjectJobLimitReached"
           :data-tooltip-target="!store.userIsExpertMember ? 'createJobTooltipId' : null"
           data-tooltip-placement="bottom"
           class="px-3 py-0 btn btn-primary h-40px w-106px disabled:hover:btn-disabled disabled:btn-disabled"
@@ -293,7 +293,7 @@ const validated = ref(false)
 
 const errorProject = computed(() => job.projectId !== undefined && job.projectId !== -1 ? undefined : 'No project selected or project is invalid')
 const errorPermission = computed(() => hasProjectPermission.value ? undefined : 'You do not have permission to create jobs for this project')
-const errorEntitlement = computed(() => store.project?.entitlementState === 'inactive' || store.project?.viewOnlyEffective === true ? 'This project is currently view-only and cannot run analyses.' : undefined)
+const errorEntitlement = computed(() => store.project?.isLocked === true ? 'This project is currently view-only and cannot run analyses.' : undefined)
 const errorJobLimit = computed(() => isProjectJobLimitReached.value ? 'This project has reached its analysis-job limit.' : undefined)
 const errorClassifier = computed(() => job.classifierId > 0 ? undefined : 'Please select a classifier')
 const errorHours = computed(() => isValidQueryHours(job.queryHours ?? '') ? undefined : 'Time of day must be in range of 0 - 23 following by , or - to split hours')

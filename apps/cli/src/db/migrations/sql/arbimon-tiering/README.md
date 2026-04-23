@@ -14,12 +14,11 @@ Execution order:
 
 1. `001_account_tier_and_project_type.sql`
 2. `002_project_entitlement_state.sql`
-3. `003_paid_unlocks_and_downgrade_selection.sql`
-4. `004_usage_views.sql`
-5. `005_backfill_defaults.sql`
+3. `004_usage_views.sql`
+4. `005_backfill_defaults.sql`
 
 Notes:
 
-- Bio/Postgres owns account tiers, add-on slots, downgrade requests, and project entitlement state.
-- Legacy/MySQL keeps recording/job usage and only the minimum project entitlement columns needed for legacy middleware enforcement.
+- Bio/Postgres owns account tiers, add-on slots, project types, and project lock state.
+- Project locking is represented by a single `location_project.is_locked` column.
 - `004_usage_views.sql` now only provides collaborator/guest quota usage from Bio membership data.

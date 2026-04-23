@@ -12,12 +12,9 @@ UPDATE location_project
 SET project_type = COALESCE(project_type, 'free'::project_type_code)
 WHERE project_type IS NULL;
 
--- Align inactive/view-only projection for any existing rows.
+-- Default existing projects to unlocked unless explicitly changed later.
 UPDATE location_project
-SET
-  entitlement_updated_at = COALESCE(entitlement_updated_at, NOW()),
-  view_only_effective = CASE WHEN entitlement_state = 'inactive' THEN TRUE ELSE view_only_effective END
-WHERE entitlement_updated_at IS NULL
-   OR (entitlement_state = 'inactive' AND view_only_effective = FALSE);
+SET is_locked = COALESCE(is_locked, FALSE)
+WHERE is_locked IS NULL;
 
 COMMIT;

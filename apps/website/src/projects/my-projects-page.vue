@@ -257,7 +257,7 @@ const portfolioTieringMessage = computed(() => {
   const summary = portfolioSummary.value
   if (summary === undefined) return ''
 
-  if (summary.ownedProjects.some(project => project.entitlementState === 'inactive' || project.viewOnlyEffective)) {
+  if (summary.ownedProjects.some(project => project.isLocked)) {
     return 'Some projects are currently view-only. Upgrade or reactivate them from Account Settings to restore full access.'
   }
 

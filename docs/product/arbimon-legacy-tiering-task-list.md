@@ -30,11 +30,7 @@ Suggested fields:
 - `users.account_tier_updated_at`
 - `users.additional_premium_project_slots`
 - `projects.project_type`
-- `projects.entitlement_state`
-- `projects.view_only_effective`
-- `projects.downgrade_locked`
-- `projects.entitlement_updated_at`
-- `projects.entitlement_inactivated_reason`
+- `projects.is_locked`
 
 Migration location:
 
@@ -49,8 +45,7 @@ Description:
 
 Target tables:
 
-- new `account_tier_change_request`
-- new `account_tier_change_project_selection`
+- no account-tier change tracking tables are required in legacy
 
 ### 1.3 Add usage aggregation support
 
@@ -76,14 +71,14 @@ Description:
 
 - default existing users to `free`
 - default existing projects to `free` + `active`
-- set `view_only_effective = 0` for existing rows
+- set `is_locked = 0` for existing rows
 
 ### 1.5 Define sync contract with Bio/UI repo
 
 Description:
 
 - decide whether this repo reads tiering directly from legacy DB, mirrored APIs, or sync tables
-- keep one canonical meaning for `project_type`, `entitlement_state`, and `view_only_effective`
+- keep one canonical meaning for `project_type` and `is_locked`
 
 ## 2. Backend
 
@@ -109,8 +104,7 @@ Description:
 
 Expected behavior:
 
-- block if `projects.entitlement_state = 'inactive'`
-- block if `projects.view_only_effective = 1`
+- block if `projects.is_locked = 1`
 
 Suggested helper shape:
 

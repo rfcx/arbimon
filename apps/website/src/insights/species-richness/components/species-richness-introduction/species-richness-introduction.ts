@@ -38,7 +38,7 @@ export default class SpeciesRichnessIntroduction extends Vue {
   }
 
   get isProjectViewOnly (): boolean {
-    return this.store.project?.entitlementState === 'inactive' || this.store.project?.viewOnlyEffective === true
+    return this.store.project?.isLocked === true
   }
 
   get exportTitle (): string {
