@@ -137,7 +137,6 @@ export const getUsers = async (keyword?: string, limit: number = 200, offset: nu
         up.last_name ILIKE '%' || :keyword || '%'
       )
       GROUP BY up.id
-      HAVING COUNT(lpur.location_project_id) > 0
       ORDER BY up.email, up.id
       LIMIT :limit OFFSET :offset
     `,

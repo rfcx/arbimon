@@ -27,6 +27,15 @@ async function patch (apiPath: string, token: string, data: any): Promise<void> 
   }).catch(e => unpackAxiosError(e))
 }
 
+async function get<T> (apiPath: string, token: string): Promise<T> {
+  const res = await axios.request<T>({
+    method: 'GET',
+    url: `${API_BASE_URL}${apiPath}`,
+    headers: { authorization: token }
+  }).catch(e => unpackAxiosError(e))
+  return res.data
+}
+
 export async function addProjectMemberLegacy (token: string, slug: string, email: string, role: Exclude<ProjectRole, 'none'>): Promise<void> {
   const data = {
     user_email: email,
@@ -59,4 +68,14 @@ export async function updateProjectSlugLegacy (token: string, idCore: string, sl
     url: slug
   }
   await patch(`/integration/projects/${idCore}`, token, data)
+}
+
+export async function getProjectTieringUsageLegacy (token: string, slug: string): Promise<{
+  recordingMinutesCount: number
+  collaboratorCount: number
+  guestCount: number
+  patternMatchingCount: number
+  jobCount: number
+}> {
+  return await get(`/project/${slug}/tiering-usage`, token)
 }

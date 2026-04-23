@@ -3,6 +3,7 @@ import { projectDeleteRoute } from '@rfcx-bio/common/api-bio/project/project-del
 import { projectFiltersRoute } from '@rfcx-bio/common/api-bio/project/project-filters'
 import { projectProfileImageRoute } from '@rfcx-bio/common/api-bio/project/project-image'
 import { projectEntitlementSummaryRoute } from '@rfcx-bio/common/api-bio/project/project-entitlement-summary'
+import { projectUploadLimitSummaryRoute } from '@rfcx-bio/common/api-bio/project/project-upload-limit-summary'
 import { projectMembersRoute } from '@rfcx-bio/common/api-bio/project/project-members'
 import { updateProjectPublishStatusRoute } from '@rfcx-bio/common/api-bio/project/project-publish-status'
 import { projectSitesRecordingCountRoute } from '@rfcx-bio/common/api-bio/project/project-recordings'
@@ -21,6 +22,7 @@ import { projectUpdateImageHandler } from './project-image-handler'
 import { addProjectMemberHandler, deleteProjectMemberHandler, getProjectMembersHandler, getProjectRoleHandler, patchProjectMemberHandler } from './project-member-handler'
 import { projectEntitlementSummaryHandler } from './project-entitlement-summary-handler'
 import { projectProfileHandler, projectProfileStakeholdersReadOnlyHandler, projectProfileUpdateHandler } from './project-profile-handler'
+import { projectUploadLimitSummaryHandler } from './project-upload-limit-summary-handler'
 import { patchProjectPublishStatusHandler } from './project-publish-status-handler'
 import { getProjectBySlugHandler, myProjectsHandler, projectsAllHandler, projectsGeoHandler } from './projects-handler'
 
@@ -50,6 +52,12 @@ export const routesProject: RouteRegistration[] = [
     method: GET,
     url: projectEntitlementSummaryRoute,
     handler: projectEntitlementSummaryHandler
+  },
+  {
+    method: GET,
+    url: projectUploadLimitSummaryRoute,
+    preHandler: [requireAuthorized],
+    handler: projectUploadLimitSummaryHandler
   },
   {
     method: GET,

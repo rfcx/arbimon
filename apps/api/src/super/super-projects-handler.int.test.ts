@@ -20,6 +20,7 @@ const userToken = {
 }
 
 const superUserRouteOwnerId = 1267801
+const superUserRouteNoProjectUserId = 1267802
 const superUserRouteProjectId = 1266600
 const superUserRouteProjectId2 = 1266601
 
@@ -36,6 +37,14 @@ beforeAll(async () => {
       lastName: 'Owner',
       accountTier: 'pro',
       additionalPremiumProjectSlots: 1
+    },
+    {
+      id: superUserRouteNoProjectUserId,
+      email: 'tier-no-project@test.com',
+      firstName: 'Tier',
+      lastName: 'NoProject',
+      accountTier: 'free',
+      additionalPremiumProjectSlots: 0
     }
   ], { updateOnDuplicate: ['email', 'firstName', 'lastName', 'accountTier', 'additionalPremiumProjectSlots'] })
 
@@ -63,7 +72,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await LocationProjectUserRole.destroy({ where: { locationProjectId: { [Op.in]: [superUserRouteProjectId, superUserRouteProjectId2] }, userId: superUserRouteOwnerId }, force: true })
   await LocationProject.destroy({ where: { id: { [Op.in]: [superUserRouteProjectId, superUserRouteProjectId2] } }, force: true })
-  await UserProfile.destroy({ where: { id: superUserRouteOwnerId }, force: true })
+  await UserProfile.destroy({ where: { id: { [Op.in]: [superUserRouteOwnerId, superUserRouteNoProjectUserId] } }, force: true })
 })
 
 describe('Super projects route', async () => {
@@ -113,6 +122,25 @@ describe('Super projects route', async () => {
     expect(results[0].limits.freeProjects).toBe(50)
     expect(results[0].limits.premiumProjects).toBe(3)
     expect(results[0].usage.premiumProjects).toBe(1)
+  })
+
+  test(`GET ${superUsersRoute} includes users with no owned projects`, async () => {
+    const app = await makeApp(routesSuper, { userId, userToken })
+
+    const response = await app.inject({
+      method: GET,
+      url: superUsersRoute,
+      query: { keyword: 'tier-no-project@test.com' }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(results).toHaveLength(1)
+    expect(results[0].email).toBe('tier-no-project@test.com')
+    expect(results[0].ownedProjectCount).toBe(0)
+    expect(results[0].usage.freeProjects).toBe(0)
+    expect(results[0].usage.premiumProjects).toBe(0)
+    expect(results[0].usage.unlimitedProjects).toBe(0)
   })
 
   test(`GET ${superUserProjectsRoute} returns owned projects for a selected user`, async () => {
