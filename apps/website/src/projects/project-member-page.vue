@@ -1,9 +1,15 @@
 <template>
   <section class="bg-white dark:bg-pitch pl-18">
     <div class="py-10 mx-auto max-w-screen-xl flex flex-col gap-y-6 pr-4">
-      <h1 class="text-gray-900 dark:text-insight">
-        Members
-      </h1>
+      <div class="flex items-center gap-3">
+        <h1 class="text-gray-900 dark:text-insight">
+          Members
+        </h1>
+
+        <span class="inline-flex items-center rounded-full bg-frequency/10 px-3 py-1 font-bold capitalize tracking-wide text-frequency leading-none">
+          {{ projectTypeLabel.toLowerCase() }}
+        </span>
+      </div>
       <div
         v-if="isErrorUsers"
         class="text-left"
@@ -18,7 +24,7 @@
         class="grid lg:(grid-cols-2 gap-10)"
       >
         <div class="flex flex-col gap-y-10">
-          <div class="rounded-lg border border-util-gray-03 bg-util-gray-01 p-4 dark:(bg-moss border-util-gray-04)">
+          <div class="rounded-lg border border-util-gray-03 bg-util-gray-01 p-4 dark:(bg-moss border-util-gray-04) hidden">
             <div class="flex flex-wrap items-center gap-2">
               <span class="rounded-full bg-frequency/10 px-3 py-1 text-sm font-medium text-frequency">
                 {{ projectTypeLabel }}
@@ -172,18 +178,6 @@
                 @emit-selected-user="onEmitSelectedUser"
               />
             </div>
-            <p
-              v-if="memberLimitReached"
-              class="mt-3 text-sm text-insight"
-            >
-              This project has reached its collaborator limit.
-              <router-link
-                :to="{ name: ROUTE_NAMES.projectSettings }"
-                class="text-frequency underline"
-              >
-                View project usage in Project Settings
-              </router-link>
-            </p>
           </div>
           <div class="flex flex-col gap-y-4">
             <ProjectMember
@@ -322,7 +316,6 @@ import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientKey } from '@/globals'
 import { getProjectTypeUsageLimits } from '@/projects/entitlement-helpers'
-import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useAddProjectMember, useDeleteProjectMember, useGetProjectMembers, useSearchUsers, useUpdateProjectMember } from './_composables/use-project-member'
 import { useGetProjectInfo } from './_composables/use-project-profile'
@@ -419,7 +412,7 @@ const userSort = computed(() => {
 
 const projectTypeLabel = computed(() => {
   const projectType = projectInfo.value?.projectType ?? store.project?.projectType ?? 'free'
-  return `${projectType.charAt(0).toUpperCase()}${projectType.slice(1)} project`
+  return `${projectType.charAt(0).toUpperCase()}${projectType.slice(1)}`
 })
 
 const memberLimitMessage = computed(() => {
