@@ -18,10 +18,7 @@
           Jobs
         </th>
         <th class="min-w-28">
-          Collaborators
-        </th>
-        <th class="min-w-24">
-          Guests
+          Member
         </th>
         <th
           v-if="showActions"
@@ -75,22 +72,23 @@
             </div>
             <div
               v-else
-              class="space-y-2"
+              class="grid grid-cols-1 md:grid-cols-2 gap-2"
             >
               <div
                 v-for="member in sortedMembers"
                 :key="member.userId"
-                class="flex items-center justify-between rounded border border-eco bg-echo px-3 py-2 text-sm"
+                class="flex items-center justify-between rounded  rounded-xl bg-pitch px-3 py-2 text-sm border border-util-gray-04"
               >
-                <div>
-                  <div class="font-medium text-insight">
+                <div class="min-w-0 flex-1 mr-2">
+                  <div class="font-medium text-insight truncate">
                     {{ member.firstName }} {{ member.lastName }}
                   </div>
-                  <div class="text-subtle">
+                  <div class="text-subtle truncate">
                     {{ member.email }}
                   </div>
                 </div>
-                <span class="rounded-full bg-util-gray-01 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-black">
+
+                <span class="shrink-0 rounded-full bg-util-gray-01 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-black">
                   {{ getRoleLabel(member.roleId) }}
                 </span>
               </div>

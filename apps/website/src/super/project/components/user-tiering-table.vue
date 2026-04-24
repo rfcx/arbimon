@@ -19,16 +19,10 @@
             Projects Owned
           </th>
           <th class="min-w-28">
-            Free Portfolio
-          </th>
-          <th class="min-w-28">
-            Premium Portfolio
-          </th>
-          <th class="min-w-28">
-            Unlimited Portfolio
+            All Projects
           </th>
           <th class="min-w-24">
-            Details
+            Action
           </th>
         </tr>
       </thead>
@@ -94,13 +88,20 @@
               {{ user.ownedProjectCount }}
             </td>
             <td class="py-3 text-sm text-insight">
-              {{ formatPortfolioUsage(user.usage.freeProjects, user.limits.freeProjects) }}
-            </td>
-            <td class="py-3 text-sm text-insight">
-              {{ formatPortfolioUsage(user.usage.premiumProjects, user.limits.premiumProjects) }}
-            </td>
-            <td class="py-3 text-sm text-insight">
-              {{ formatPortfolioUsage(user.usage.unlimitedProjects, user.limits.unlimitedProjects) }}
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between md:justify-start md:gap-2">
+                  <span class="font-medium min-w-[70px]">Free</span>
+                  <span>{{ formatPortfolioUsage(user.usage.freeProjects, user.limits.freeProjects) }}</span>
+                </div>
+                <div class="flex justify-between md:justify-start md:gap-2">
+                  <span class="font-medium min-w-[70px]">Premium</span>
+                  <span>{{ formatPortfolioUsage(user.usage.premiumProjects, user.limits.premiumProjects) }}</span>
+                </div>
+                <div class="flex justify-between md:justify-start md:gap-2">
+                  <span class="font-medium min-w-[70px]">Unlimited</span>
+                  <span>{{ formatPortfolioUsage(user.usage.unlimitedProjects, user.limits.unlimitedProjects) }}</span>
+                </div>
+              </div>
             </td>
             <td class="py-3">
               <button

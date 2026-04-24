@@ -47,16 +47,27 @@
       </div>
     </td>
     <td class="py-3 text-sm text-insight">
-      {{ formatUsage(usage?.recordingMinutesCount, limits.recordingMinutesCount, 'mins') }}
+      {{ formatInteger(usage?.recordingMinutesCount ?? 0) }}
     </td>
     <td class="py-3 text-sm text-insight">
       {{ formatUsage(usage?.jobCount, limits.jobCount) }}
     </td>
-    <td class="py-3 text-sm text-insight">
-      {{ formatUsage(usage?.collaboratorCount, limits.collaboratorCount) }}
-    </td>
-    <td class="py-3 text-sm text-insight">
-      {{ formatUsage(usage?.guestCount, limits.guestCount) }}
+    <td class="py-3 pr-4 text-sm text-insight">
+      <div class="flex flex-col gap-1">
+        <div class="flex justify-between items-center gap-2">
+          <span class="font-medium min-w-[60px]">Collabs</span>
+          <span>
+            {{ formatUsage(usage?.collaboratorCount, limits.collaboratorCount) }}
+          </span>
+        </div>
+
+        <div class="flex justify-between items-center gap-2">
+          <span class="font-medium min-w-[60px]">Guest</span>
+          <span>
+            {{ formatUsage(usage?.guestCount, limits.guestCount) }}
+          </span>
+        </div>
+      </div>
     </td>
     <td
       v-if="showActions"
@@ -129,7 +140,17 @@ const tierBadgeClass = (projectType: SuperProjectSummary['projectType'] | undefi
 
 const formatUsage = (used: number | undefined, limit: number | null, suffix?: string): string => {
   const usedText = (used ?? 0).toLocaleString()
-  return suffix === undefined ? `${usedText}` : `${usedText}`
+  return `${usedText}`
+}
+
+const formatInteger = (value: number | string): string => {
+  const num = typeof value === 'string' ? parseFloat(value) : value
+  if (isNaN(num)) return '0'
+
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(num)
 }
 
 const onProjectTypeChange = (event: Event): void => {
