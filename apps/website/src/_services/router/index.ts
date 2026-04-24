@@ -267,7 +267,15 @@ const routes: RouteRecordRaw[] = [
     path: '/tiers',
     name: ROUTE_NAMES.tier,
     component: PAGES.Tiers,
-    beforeEnter: [authRequiredGuard]
+    component: PAGES.Admin,
+    beforeEnter: [authRequiredGuard],
+    children: [
+      {
+        path: '',
+        name: ROUTE_NAMES.tierPage,
+        component: PAGES.Tiers
+      }
+    ]
   },
   {
     path: '/:pathMatch(.*)*',
