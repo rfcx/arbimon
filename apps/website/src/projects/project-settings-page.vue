@@ -13,114 +13,57 @@
       v-else
       class="py-10 mx-auto max-w-screen-xl flex flex-col gap-y-6 pr-4"
     >
-      <h1 class="text-gray-900 dark:text-insight">
-        Project settings
-      </h1>
-      <ReadOnlyBanner v-if="!store.userIsAdminProjectMember" />
-      <div class="rounded-lg border border-util-gray-03 bg-util-gray-01 p-4 dark:(bg-moss border-util-gray-04)">
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="rounded-full bg-frequency/10 px-3 py-1 text-sm font-medium text-frequency">
-            {{ projectTypeLabel }}
-          </span>
-          <span
-            v-if="settings?.isLocked"
-            class="rounded-full bg-insight/10 px-3 py-1 text-sm font-medium text-insight"
-          >
-            View only
-          </span>
-          <span
-            v-else
-            class="rounded-full bg-success/10 px-3 py-1 text-sm font-medium text-success"
-          >
-            Active
+      <div class="flex items-center justify-between w-full gap-3">
+        <div class="flex items-center gap-3">
+          <h1 class="text-gray-900 dark:text-insight">
+            Project settings
+          </h1>
+          <span class="inline-flex items-center rounded-full bg-frequency/10 px-3 py-1 font-bold capitalize tracking-wide text-frequency leading-none">
+            {{ projectTypeLabel.toLowerCase() }}
           </span>
         </div>
-        <p class="mt-3 text-sm text-insight">
-          {{ projectTierMessage }}
-        </p>
-      </div>
-      <div
-        v-if="projectUsage !== undefined"
-        class="rounded-lg border border-util-gray-03 bg-util-gray-01 p-4 dark:(bg-moss border-util-gray-04)"
-      >
-        <h4 class="mb-4">
-          Project usage
-        </h4>
-        <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <div class="rounded-lg border border-util-gray-03 bg-white px-4 py-3 dark:bg-pitch">
-            <p class="text-xs uppercase tracking-wide text-insight">
-              Recording minutes
-            </p>
-            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
-              {{ formatProjectUsage(projectUsage.recordingMinutesCount, settings?.limits?.recordingMinutesCount, 'mins') }}
-            </p>
-          </div>
-          <div class="rounded-lg border border-util-gray-03 bg-white px-4 py-3 dark:bg-pitch">
-            <p class="text-xs uppercase tracking-wide text-insight">
-              Analysis jobs
-            </p>
-            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
-              {{ formatProjectUsage(projectUsage.jobCount, settings?.limits?.jobCount) }}
-            </p>
-          </div>
-          <div class="rounded-lg border border-util-gray-03 bg-white px-4 py-3 dark:bg-pitch">
-            <p class="text-xs uppercase tracking-wide text-insight">
-              Collaborators
-            </p>
-            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
-              {{ formatProjectUsage(projectUsage.collaboratorCount, settings?.limits?.collaboratorCount) }}
-            </p>
-          </div>
-          <div class="rounded-lg border border-util-gray-03 bg-white px-4 py-3 dark:bg-pitch">
-            <p class="text-xs uppercase tracking-wide text-insight">
-              Guests
-            </p>
-            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
-              {{ formatProjectUsage(projectUsage.guestCount, settings?.limits?.guestCount) }}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div
-        class="flex flex-row-reverse items-center gap-4"
-      >
-        <button
-          :disabled="isSaving || !store.userIsAdminProjectMember"
-          class="inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
-          :data-tooltip-target="!store.userIsAdminProjectMember ? 'projectSettingsSaveTooltipId': null"
-          data-tooltip-placement="bottom"
-          @click.prevent="save"
-        >
-          Save
-        </button>
-        <div
-          v-if="!store.userIsAdminProjectMember"
-          id="projectSettingsSaveTooltipId"
-          role="tooltip"
-          class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
-        >
-          {{ disableText }}
+
+        <div class="flex flex-row-reverse items-center gap-4">
+          <button
+            :disabled="isSaving || !store.userIsAdminProjectMember"
+            class="inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
+            :data-tooltip-target="!store.userIsAdminProjectMember ? 'projectSettingsSaveTooltipId': null"
+            data-tooltip-placement="bottom"
+            @click.prevent="save"
+          >
+            Save
+          </button>
+
           <div
-            class="tooltip-arrow"
-            data-popper-arrow
+            v-if="!store.userIsAdminProjectMember"
+            id="projectSettingsSaveTooltipId"
+            role="tooltip"
+            class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+          >
+            {{ disableText }}
+            <div
+              class="tooltip-arrow"
+              data-popper-arrow
+            />
+          </div>
+
+          <div
+            v-if="isSaving"
+            class="inline-flex items-center"
+          >
+            <icon-custom-ic-loading class="animate-spin" />
+            <span class="ml-2 text-sm">Saving...</span>
+          </div>
+
+          <SaveStatusText
+            v-if="showStatus && !isSaving"
+            class="flex items-center"
+            :success="!hasFailed"
+            :error-message="errorMessage"
           />
         </div>
-        <div
-          v-if="isSaving"
-          class="inline-flex"
-        >
-          <icon-custom-ic-loading class="animate-spin" />
-          <span class="ml-2">
-            Saving...
-          </span>
-        </div>
-        <SaveStatusText
-          v-if="showStatus && !isSaving"
-          class="flex p-4"
-          :success="!hasFailed"
-          :error-message="errorMessage"
-        />
       </div>
+      <ReadOnlyBanner v-if="!store.userIsAdminProjectMember" />
       <div class="grid gap-10">
         <div>
           <h4>
@@ -199,7 +142,6 @@ import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientArbimonLegacyKey, apiClientKey, togglesKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
-import { useProjectTieringUsage } from '../super/project/_composables/use-project-tiering-usage'
 import { useDeleteProject, useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectDelete from './components/form/project-delete.vue'
@@ -223,7 +165,6 @@ const selectedProjectId = computed(() => store.project?.id)
 const selectedProjectSlug = computed(() => store.project?.slug ?? '')
 
 const { data: settings, isError: isErrorSetting } = useGetProjectSettings(apiClientBio, selectedProjectId)
-const { data: projectUsage } = useProjectTieringUsage(apiClientArbimon, selectedProjectSlug)
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.project?.id ?? -1)
 const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, store.project?.id ?? -1)
 const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProject } = useDeleteProject(apiClientBio)
@@ -258,22 +199,8 @@ const isToggledForBackup = computed(() => {
 
 const projectTypeLabel = computed(() => {
   const projectType = settings.value?.projectType ?? selectedProject.value?.projectType ?? 'free'
-  return `${projectType.charAt(0).toUpperCase()}${projectType.slice(1)} project`
+  return `${projectType.charAt(0).toUpperCase()}${projectType.slice(1)}`
 })
-
-const projectTierMessage = computed(() => {
-  if (settings.value?.isLocked === true) {
-    return 'This project is currently locked and should remain view-only until it is reactivated or unlocked.'
-  }
-
-  return 'This project is currently active under the assigned project type.'
-})
-
-const formatProjectUsage = (used: number | undefined, limit: number | null | undefined, suffix?: string): string => {
-  const usedText = (used ?? 0).toLocaleString()
-  const limitText = limit == null ? 'No cap' : limit.toLocaleString()
-  return suffix === undefined ? `${usedText} / ${limitText}` : `${usedText} / ${limitText} ${suffix}`
-}
 
 // update form values
 const onEmitDefaultValue = (value: ProjectDefault) => {
