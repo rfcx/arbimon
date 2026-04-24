@@ -20,7 +20,40 @@
         </h2>
         <span v-if="isLoadingProfileData">Loading</span>
       </div>
-      <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-10 border-b-1 border-white/80">
+      <div class="py-4 px-4 mx-auto max-w-screen-md border-b border-white/20">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <h3 class="text-gray-900 dark:text-white font-medium">
+              Your plan
+            </h3>
+            <div class="inline-flex items-center rounded-full bg-frequency/10 px-3 py-0.5 text-base font-bold capitalize tracking-wide text-frequency">
+              {{ currentAccountTierLabel.toLowerCase() }}
+            </div>
+          </div>
+
+          <router-link
+            to="/pricing"
+            class="text-sm font-semibold text-frequency hover:(underline text-frequency/80) transition-colors flex items-center gap-1"
+          >
+            Change plan
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </router-link>
+        </div>
+      </div>
+      <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-10 border-b-1 border-white/80 hidden">
         <div class="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <div>
             <h3 class="text-gray-900 dark:text-white">
