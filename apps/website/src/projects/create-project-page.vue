@@ -5,6 +5,37 @@
       <h1 class="tracking-tight font-medium text-gray-900 dark:text-white">
         Create a new project
       </h1>
+      <div
+        v-if="portfolioSummary"
+        class="rounded-xl border border-white/10 bg-echo shadow-xl grid grid-cols-3 py-3 mt-5"
+      >
+        <div class="flex flex-col items-center justify-center px-4 border-r border-white/10">
+          <p class="text-3xl font-bold text-white mb-1">
+            {{ portfolioSummary.usage.freeProjects }}<span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.freeProjects) }}</span>
+          </p>
+          <p class="text-sm capitalize text-gray-400">
+            Free Projects
+          </p>
+        </div>
+
+        <div class="flex flex-col items-center justify-center px-4 border-r border-white/10">
+          <p class="text-3xl font-bold text-white mb-1">
+            {{ portfolioSummary.usage.premiumProjects }}<span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.premiumProjects) }}</span>
+          </p>
+          <p class="text-sm capitalize text-gray-400">
+            Premium Projects
+          </p>
+        </div>
+
+        <div class="flex flex-col items-center justify-center px-4">
+          <p class="text-3xl font-bold text-white mb-1">
+            {{ portfolioSummary.usage.unlimitedProjects }}<span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.unlimitedProjects) }}</span>
+          </p>
+          <p class="text-sm capitalize text-gray-400">
+            Unlimited Projects
+          </p>
+        </div>
+      </div>
       <div class="mt-4">
         <project-form
           :is-disabled="false"
@@ -13,44 +44,40 @@
       </div>
       <div class="mt-4">
         <div class="rounded-lg border border-util-gray-03 bg-util-gray-01 p-4 dark:(bg-moss border-util-gray-04)">
-          <p class="text-sm text-insight">
-            Current plan
-          </p>
-          <div class="mt-2 inline-flex rounded-full bg-frequency/10 px-3 py-1 text-sm font-medium text-frequency">
-            {{ currentAccountTierLabel }}
+          <div class="flex items-center justify-between w-full">
+            <div class="flex items-center gap-3">
+              <p class="font-medium text-insight">
+                Your plan
+              </p>
+              <div class="inline-flex items-center rounded-full bg-frequency/10 px-3 py-1 font-bold capitalize tracking-wide text-frequency leading-none">
+                {{ currentAccountTierLabel.toLowerCase() }}
+              </div>
+            </div>
+
+            <router-link
+              to="/pricing"
+              class="text-sm font-semibold text-frequency hover:underline transition-all flex items-center gap-1"
+            >
+              Change plan
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </router-link>
           </div>
           <p class="mt-4 text-sm text-insight">
             Choose a project type for this new project.
           </p>
-          <div
-            v-if="portfolioSummary"
-            class="mt-4 grid gap-3 sm:grid-cols-3"
-          >
-            <div class="rounded-lg border border-util-gray-03 bg-white px-4 py-3 dark:bg-pitch">
-              <p class="text-xs uppercase tracking-wide text-insight">
-                Free slots
-              </p>
-              <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
-                {{ portfolioSummary.usage.freeProjects }} / {{ formatLimit(portfolioSummary.limits.freeProjects) }}
-              </p>
-            </div>
-            <div class="rounded-lg border border-util-gray-03 bg-white px-4 py-3 dark:bg-pitch">
-              <p class="text-xs uppercase tracking-wide text-insight">
-                Premium slots
-              </p>
-              <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
-                {{ portfolioSummary.usage.premiumProjects }} / {{ formatLimit(portfolioSummary.limits.premiumProjects) }}
-              </p>
-            </div>
-            <div class="rounded-lg border border-util-gray-03 bg-white px-4 py-3 dark:bg-pitch">
-              <p class="text-xs uppercase tracking-wide text-insight">
-                Unlimited slots
-              </p>
-              <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
-                {{ portfolioSummary.usage.unlimitedProjects }} / {{ formatLimit(portfolioSummary.limits.unlimitedProjects) }}
-              </p>
-            </div>
-          </div>
           <div class="mt-4 grid gap-3 md:grid-cols-3">
             <button
               v-for="option in projectTypeOptions"
@@ -120,7 +147,7 @@
           :disabled="isCreating || !isSelectedProjectTypeAvailable"
           @click.prevent="create"
         >
-          Create project
+          Your project
         </button>
         <icon-custom-ic-loading
           v-if="isCreating"
