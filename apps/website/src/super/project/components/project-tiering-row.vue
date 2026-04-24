@@ -1,5 +1,5 @@
 <template>
-  <tr class="border-y-1 border-util-gray-03 align-top">
+  <tr class="border-y-1 border-util-gray-03 align-top text-black">
     <td class="<sm:hidden text-sm text-subtle">
       {{ project.id }}
     </td>
@@ -15,7 +15,7 @@
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-2">
           <select
-            class="rounded border border-util-gray-03 bg-white px-2 py-1 text-xs uppercase"
+            class="w-25 rounded border border-util-gray-03 bg-white px-2 py-1 text-xs uppercase"
             :value="selectedProjectType"
             @change="onProjectTypeChange"
           >
@@ -31,7 +31,7 @@
           </select>
           <button
             type="button"
-            class="rounded bg-frequency px-2 py-1 text-xs font-medium text-white disabled:(cursor-not-allowed opacity-50)"
+            class="rounded bg-frequency px-2 py-1 text-xs font-medium disabled:(cursor-not-allowed opacity-50)"
             :disabled="isSavingTier || selectedProjectType === (project.projectType ?? 'free')"
             @click="emit('save-tier', project)"
           >

@@ -1,5 +1,5 @@
 <template>
-  <table class="w-full text-left rtl:text-right table-auto mt-6">
+  <table class="w-full text-left rtl:text-right table-auto">
     <thead class="border-y-1 border-util-gray-03 text-fog text-sm">
       <tr>
         <th class="w-20 <sm:hidden">
@@ -53,7 +53,7 @@
         >
           <td
             :colspan="showActions ? 8 : 7"
-            class="bg-util-gray-01 px-4 py-4"
+            class="bg-echo px-4 py-4"
           >
             <div
               v-if="isLoadingMembers"
@@ -80,7 +80,7 @@
               <div
                 v-for="member in sortedMembers"
                 :key="member.userId"
-                class="flex items-center justify-between rounded border border-util-gray-03 bg-white px-3 py-2 text-sm"
+                class="flex items-center justify-between rounded border border-eco bg-echo px-3 py-2 text-sm"
               >
                 <div>
                   <div class="font-medium text-insight">
@@ -90,7 +90,7 @@
                     {{ member.email }}
                   </div>
                 </div>
-                <span class="rounded-full bg-util-gray-01 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-insight">
+                <span class="rounded-full bg-util-gray-01 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-black">
                   {{ getRoleLabel(member.roleId) }}
                 </span>
               </div>
@@ -111,21 +111,18 @@ import { type ProjectMembersResponse } from '@rfcx-bio/common/api-bio/project/pr
 import { type SuperProjectSummary } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { apiClientKey } from '@/globals'
-import { type Error } from '../../error'
 import { useSuperGetProjectMembers } from '../../member/_composables/use-members'
 import { useUpdateSuperProjectTier } from '../_composables/use-projects'
 import ProjectTieringRow from './project-tiering-row.vue'
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   projects: SuperProjectSummary[]
   showActions?: boolean
 }>(), {
   showActions: true
 })
 
-const emit = defineEmits<{
-  (event: 'select-project', project: SuperProjectSummary): void
-}>()
+const emit = defineEmits<{(event: 'select-project', project: SuperProjectSummary): void }>()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const queryClient = useQueryClient()
