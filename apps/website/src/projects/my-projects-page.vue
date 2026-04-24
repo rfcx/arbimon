@@ -51,39 +51,44 @@
         </div>
         <div
           v-if="portfolioSummary"
-          class="mt-6 grid gap-4 rounded-lg border border-util-gray-03 bg-util-gray-01 p-4 md:grid-cols-4 dark:(bg-moss border-util-gray-04)"
+          class="mt-6 flex w-full gap-4 items-stretch"
         >
-          <div>
-            <p class="text-xs uppercase tracking-wide text-insight">
-              Plan
+          <div class="w-1/4 rounded-2xl border border-white/10 bg-echo p-6 shadow-xl flex flex-col justify-center">
+            <p class="text-sm capitalize text-gray-400">
+              User Plan
             </p>
-            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
+            <p class="mt-1 text-2xl font-bold text-white truncate">
               {{ ACCOUNT_TIER_LABELS[portfolioSummary.accountTier] }}
             </p>
           </div>
-          <div>
-            <p class="text-xs uppercase tracking-wide text-insight">
-              Free
-            </p>
-            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
-              {{ portfolioSummary.usage.freeProjects }} / {{ formatLimit(portfolioSummary.limits.freeProjects) }}
-            </p>
-          </div>
-          <div>
-            <p class="text-xs uppercase tracking-wide text-insight">
-              Premium
-            </p>
-            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
-              {{ portfolioSummary.usage.premiumProjects }} / {{ formatLimit(portfolioSummary.limits.premiumProjects) }}
-            </p>
-          </div>
-          <div>
-            <p class="text-xs uppercase tracking-wide text-insight">
-              Unlimited
-            </p>
-            <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
-              {{ portfolioSummary.usage.unlimitedProjects }} / {{ formatLimit(portfolioSummary.limits.unlimitedProjects) }}
-            </p>
+
+          <div class="w-3/4 rounded-2xl border border-white/10 bg-echo shadow-xl grid grid-cols-3 py-6">
+            <div class="flex flex-col items-center justify-center px-4 border-r border-white/10">
+              <p class="text-3xl font-bold text-white mb-1">
+                {{ portfolioSummary.usage.freeProjects }}<span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.freeProjects) }}</span>
+              </p>
+              <p class="text-sm capitalize text-gray-400">
+                Free Projects
+              </p>
+            </div>
+
+            <div class="flex flex-col items-center justify-center px-4 border-r border-white/10">
+              <p class="text-3xl font-bold text-white mb-1">
+                {{ portfolioSummary.usage.premiumProjects }}<span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.premiumProjects) }}</span>
+              </p>
+              <p class="text-sm capitalize text-gray-400">
+                Premium Projects
+              </p>
+            </div>
+
+            <div class="flex flex-col items-center justify-center px-4">
+              <p class="text-3xl font-bold text-white mb-1">
+                {{ portfolioSummary.usage.unlimitedProjects }}<span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.unlimitedProjects) }}</span>
+              </p>
+              <p class="text-sm capitalize text-gray-400">
+                Unlimited Projects
+              </p>
+            </div>
           </div>
         </div>
         <div
