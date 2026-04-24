@@ -4,7 +4,7 @@
       <h1 class="mb-6">
         Manage Project and User Tiers
       </h1>
-      <div class="mb-5 flex gap-2 border-b border-util-gray-03">
+      <div class="mb-3 flex gap-2 border-b border-util-gray-03">
         <button
           type="button"
           class="px-4 py-3 text-sm font-medium"
@@ -22,15 +22,71 @@
           Users
         </button>
       </div>
-      <input
-        id="searchInput"
-        v-model="searchKeyword"
-        name="search"
-        type="text"
-        class="search-input text-insight shadow-lg shadow-frequency/10"
-        :placeholder="activeTab === 'projects' ? 'Search for projects' : 'Search for users'"
-        autocomplete="off"
-      >
+      <div class="flex w-full gap-4 items-center mb-3">
+        <div class="flex-[7]">
+          <input
+            id="searchInput"
+            v-model="searchKeyword"
+            name="search"
+            type="text"
+            class="search-input w-full text-insight shadow-lg shadow-frequency/10"
+            :placeholder="activeTab === 'projects' ? 'Search for projects' : 'Search for users'"
+            autocomplete="off"
+          >
+        </div>
+
+        <div class="flex-[3] relative">
+          <select
+            v-if="activeTab === 'users'"
+            key="select-projects"
+            v-model="selectedTier"
+            class="search-input w-full text-gray-700 py-2.5 px-4 pr-10 shadow-lg shadow-frequency/10 appearance-none cursor-pointer text-sm focus:outline-none transition-all font-medium bg-white"
+          >
+            <option value="all">
+              All Tier
+            </option>
+            <option value="free">
+              Free
+            </option>
+            <option value="pro">
+              Pro
+            </option>
+            <option value="enterprise">
+              Enterprise
+            </option>
+          </select>
+
+          <select
+            v-else
+            key="select-users"
+            v-model="selectedTier"
+            class="search-input w-full text-gray-700 py-2.5 px-4 pr-10 shadow-lg shadow-frequency/10 appearance-none cursor-pointer text-sm focus:outline-none transition-all font-medium bg-white"
+          >
+            <option value="all">
+              All Tier
+            </option>
+            <option value="free">
+              Free
+            </option>
+            <option value="pro">
+              Premium
+            </option>
+            <option value="enterprise">
+              Unlimited
+            </option>
+          </select>
+
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+            <svg
+              class="h-4 w-4 fill-current"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+            </svg>
+          </div>
+        </div>
+      </div>
       <div
         v-if="isActiveTabError"
         class="mt-6 text-insight"
@@ -51,12 +107,12 @@
       <div v-else>
         <ProjectTieringTable
           v-if="activeTab === 'projects'"
-          :projects="projects ?? []"
+          :projects="filteredProjects ?? []"
           @select-project="onSelectProject"
         />
         <UserTieringTable
           v-else
-          :users="users ?? []"
+          :users="filteredUsers ?? []"
           @select-project="onSelectProject"
         />
         <div class="mt-3 text-sm text-subtle">
@@ -91,6 +147,8 @@ const searchKeyword = ref('')
 const limit = ref(200)
 const offset = ref(0)
 
+const selectedTier = ref('all')
+
 const searchParams = useDebounce(searchKeyword, 500)
 
 const { isError: isProjectError, isLoading: isProjectLoading, error: projectError, data: projects } = useGetSuperProjects(apiClientBio, { keyword: searchParams, limit, offset })
@@ -100,10 +158,27 @@ const isActiveTabError = computed(() => activeTab.value === 'projects' ? isProje
 const isActiveTabLoading = computed(() => activeTab.value === 'projects' ? isProjectLoading.value : isUserLoading.value)
 const activeTabError = computed(() => activeTab.value === 'projects' ? projectError.value : userError.value)
 
+const filteredProjects = computed(() => {
+  if (!projects.value) return []
+  if (selectedTier.value === 'all') return projects.value
+  return projects.value.filter((project) => project.projectType === selectedTier.value)
+})
+
+const filteredUsers = computed(() => {
+  if (!users.value) return []
+  if (selectedTier.value === 'all') return users.value
+  return users.value.filter((user) => user.accountTier === selectedTier.value)
+})
+
 watch(activeTabError, (newError) => {
   if (newError?.response?.status === 401) {
     router.push({ name: ROUTE_NAMES.error })
   }
+})
+
+watch(activeTab, (newTab) => {
+  searchKeyword.value = ''
+  selectedTier.value = 'all'
 })
 
 const onSelectProject = (project: SuperProjectSummary): void => {
