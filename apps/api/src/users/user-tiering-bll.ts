@@ -186,6 +186,7 @@ export const submitTierChange = async (userId: number, body: SubmitTierChangeReq
             project_type = :projectType,
             is_locked = :isLocked,
             status = CASE
+              WHEN :projectType IN ('premium', 'unlimited') AND status <> 'hidden' THEN 'unlisted'
               WHEN :projectType = 'free' THEN CASE WHEN status = 'hidden' THEN 'listed' ELSE status END
               ELSE status
             END

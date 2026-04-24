@@ -37,7 +37,8 @@ export type SuperUserSummary = UserTypes['light'] & {
 }
 
 export interface SuperProjectTierUpdateBody {
-  projectType: NonNullable<LocationProjectTypes['light']['projectType']>
+  projectType?: NonNullable<LocationProjectTypes['light']['projectType']>
+  isLocked?: boolean
 }
 
 export interface SuperUserTierUpdateBody {

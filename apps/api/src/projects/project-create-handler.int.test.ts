@@ -63,7 +63,7 @@ test('POST /projects adds extra infomation (profile, owner role, version)', asyn
   const result = JSON.parse(response.body)
   const project = await LocationProject.findOne({ where: { slug: result.slug } })
   expect(project).toBeDefined()
-  expect(project?.status).toBe('unlisted')
+  expect(project?.status).toBe('published')
   expect(response.headers.location).toBe(`/projects/${project?.id ?? -1}`)
   const projectRoles = await LocationProjectUserRole.findAll({ where: { locationProjectId: project?.id } })
   expect(projectRoles).toHaveLength(1)

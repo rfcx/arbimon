@@ -12,9 +12,9 @@
           <th class="min-w-24">
             Tier
           </th>
-          <!-- <th class="min-w-28">
+          <th class="min-w-28">
             Premium Add-ons
-          </th> -->
+          </th>
           <th class="min-w-24">
             Projects Owned
           </th>
@@ -75,15 +75,15 @@
                 </span>
               </div>
             </td>
-            <!-- <td class="py-3 text-sm text-insight">
+            <td class="py-3 text-sm text-insight">
               <input
                 type="number"
                 min="0"
-                class="w-22 rounded border border-util-gray-03 bg-white px-2 py-1 text-sm text-insight"
+                class="w-22 rounded border border-util-gray-03 bg-white px-2 py-1 text-xs text-black"
                 :value="userAdditionalPremiumSlotDrafts[user.id] ?? user.additionalPremiumProjectSlots"
                 @input="onAdditionalPremiumSlotsChange(user.id, $event)"
               >
-            </td> -->
+            </td>
             <td class="py-3 text-sm text-insight">
               {{ user.ownedProjectCount }}
             </td>
@@ -196,12 +196,12 @@ const onUserTierChange = (userId: number, event: Event): void => {
   updateUserTierDraft(userId, (event.target as HTMLSelectElement).value)
 }
 
-// const onAdditionalPremiumSlotsChange = (userId: number, event: Event): void => {
-//   userAdditionalPremiumSlotDrafts.value = {
-//     ...userAdditionalPremiumSlotDrafts.value,
-//     [userId]: Math.max(0, Number((event.target as HTMLInputElement).value || 0))
-//   }
-// }
+const onAdditionalPremiumSlotsChange = (userId: number, event: Event): void => {
+  userAdditionalPremiumSlotDrafts.value = {
+    ...userAdditionalPremiumSlotDrafts.value,
+    [userId]: Math.max(0, Number((event.target as HTMLInputElement).value || 0))
+  }
+}
 
 const hasUserChanges = (user: SuperUserSummary): boolean => {
   const nextTier = userTierDrafts.value[user.id] ?? user.accountTier
@@ -240,8 +240,7 @@ const tierBadgeClass = (accountTier: SuperUserSummary['accountTier']): string =>
 }
 
 const formatPortfolioUsage = (used: number, limit: number | null): string => {
-  // const limitText = limit === null ? 'No cap' : limit.toLocaleString()
-  // return `${used.toLocaleString()} / ${limitText}`
-  return `${used.toLocaleString()}`
+  const limitText = limit === null ? 'No cap' : limit.toLocaleString()
+  return `${used.toLocaleString()} / ${limitText}`
 }
 </script>

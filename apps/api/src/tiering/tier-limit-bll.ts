@@ -125,7 +125,7 @@ export const getAccountTierProjectLimitMap = async (accountTier: AccountTier, ad
     const premiumBase = limits.premium
     return {
       free: limits.free,
-      premium: accountTier === 'pro' && premiumBase !== null ? premiumBase + additionalPremiumProjectSlots : premiumBase,
+      premium: premiumBase !== null ? premiumBase + additionalPremiumProjectSlots : premiumBase,
       unlimited: limits.unlimited
     }
   } catch (error) {
@@ -134,7 +134,7 @@ export const getAccountTierProjectLimitMap = async (accountTier: AccountTier, ad
     const defaults = DEFAULT_ACCOUNT_TIER_PROJECT_LIMITS[accountTier]
     return {
       free: defaults.free,
-      premium: accountTier === 'pro' && defaults.premium !== null ? defaults.premium + additionalPremiumProjectSlots : defaults.premium,
+      premium: defaults.premium !== null ? defaults.premium + additionalPremiumProjectSlots : defaults.premium,
       unlimited: defaults.unlimited
     }
   }

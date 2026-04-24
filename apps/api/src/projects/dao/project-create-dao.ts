@@ -10,14 +10,15 @@ export const createProject = async (projectPartial: Pick<Project, 'idArbimon' | 
 
   const slug = await uniqueSlug(projectPartial.name, async (slug) => await LocationProject.count({ where: { slug }, paranoid: false }).then(x => x === 0))
 
+  const projectType = projectPartial.projectType ?? 'free'
   const projectDefaults = { latitudeNorth: 0, latitudeSouth: 0, longitudeEast: 0, longitudeWest: 0 }
   const project: Omit<Project, 'id'> = {
     ...projectDefaults,
     ...projectPartial,
     slug,
-    projectType: projectPartial.projectType ?? 'free',
+    projectType,
     isLocked: false,
-    status: hidden ? 'hidden' : 'unlisted',
+    status: hidden ? 'hidden' : (projectType === 'free' ? 'published' : 'unlisted'),
     statusUpdatedAt: new Date()
   }
   const { id } = await LocationProject.create(project)

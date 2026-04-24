@@ -249,6 +249,11 @@ const isProjectTypeSlotFull = (projectType: ProjectType): boolean => {
   return getProjectUsage(projectType) >= limit
 }
 
+const isProjectTypeAllowed = (projectType: ProjectType): boolean => {
+  const limit = getProjectLimit(projectType)
+  return limit === undefined || limit === null || limit > 0
+}
+
 const projectTypeOptions = computed<Array<{ id: ProjectType, label: string, description: string, enabled: boolean, badgeLabel?: string }>>(() => {
   return [
     {
@@ -262,8 +267,8 @@ const projectTypeOptions = computed<Array<{ id: ProjectType, label: string, desc
       id: 'premium',
       label: 'Premium',
       description: getProjectTypeCreateDescription('premium'),
-      enabled: (currentAccountTier.value === 'pro' || currentAccountTier.value === 'enterprise') && !isProjectTypeSlotFull('premium'),
-      badgeLabel: currentAccountTier.value !== 'pro' && currentAccountTier.value !== 'enterprise'
+      enabled: isProjectTypeAllowed('premium') && !isProjectTypeSlotFull('premium'),
+      badgeLabel: !isProjectTypeAllowed('premium')
         ? 'Unavailable'
         : (isProjectTypeSlotFull('premium') ? 'Full' : undefined)
     },
@@ -271,8 +276,8 @@ const projectTypeOptions = computed<Array<{ id: ProjectType, label: string, desc
       id: 'unlimited',
       label: 'Unlimited',
       description: getProjectTypeCreateDescription('unlimited'),
-      enabled: currentAccountTier.value === 'enterprise' && !isProjectTypeSlotFull('unlimited'),
-      badgeLabel: currentAccountTier.value !== 'enterprise'
+      enabled: isProjectTypeAllowed('unlimited') && !isProjectTypeSlotFull('unlimited'),
+      badgeLabel: !isProjectTypeAllowed('unlimited')
         ? 'Unavailable'
         : (isProjectTypeSlotFull('unlimited') ? 'Full' : undefined)
     }

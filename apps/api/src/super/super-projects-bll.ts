@@ -118,9 +118,9 @@ export const getUsers = async (keyword?: string, limit: number = 200, offset: nu
         COALESCE(up.account_tier, 'free') AS "accountTier",
         COALESCE(up.additional_premium_project_slots, 0) AS "additionalPremiumProjectSlots",
         COUNT(lpur.location_project_id)::INTEGER AS "ownedProjectCount",
-        COUNT(lp.id) FILTER (WHERE COALESCE(lp.is_locked, FALSE) = FALSE AND COALESCE(lp.project_type, 'free') = 'free')::INTEGER AS "freeProjects",
-        COUNT(lp.id) FILTER (WHERE COALESCE(lp.is_locked, FALSE) = FALSE AND COALESCE(lp.project_type, 'free') = 'premium')::INTEGER AS "premiumProjects",
-        COUNT(lp.id) FILTER (WHERE COALESCE(lp.is_locked, FALSE) = FALSE AND COALESCE(lp.project_type, 'free') = 'unlimited')::INTEGER AS "unlimitedProjects"
+        COUNT(lp.id) FILTER (WHERE COALESCE(lp.project_type, 'free') = 'free')::INTEGER AS "freeProjects",
+        COUNT(lp.id) FILTER (WHERE COALESCE(lp.project_type, 'free') = 'premium')::INTEGER AS "premiumProjects",
+        COUNT(lp.id) FILTER (WHERE COALESCE(lp.project_type, 'free') = 'unlimited')::INTEGER AS "unlimitedProjects"
       FROM user_profile up
       LEFT JOIN location_project_user_role lpur
         ON up.id = lpur.user_id
@@ -212,24 +212,29 @@ export const getUserProjects = async (userId: number): Promise<SuperProjectSumma
 export const updateProjectTier = async (projectId: number, body: SuperProjectTierUpdateBody): Promise<void> => {
   const sequelize = getSequelize()
 
-  if (!['free', 'premium', 'unlimited'].includes(body.projectType)) {
+  if (body.projectType !== undefined && !['free', 'premium', 'unlimited'].includes(body.projectType)) {
     throw new BioPublicError('Invalid project tier.', 400)
+  }
+  if (body.projectType === undefined && body.isLocked === undefined) {
+    throw new BioPublicError('No project update provided.', 400)
   }
 
   const rows = await sequelize.query<{ id: number }>(
     `
       UPDATE location_project
       SET
-        project_type = :projectType,
+        project_type = COALESCE(:projectType, project_type),
+        is_locked = COALESCE(:isLocked, is_locked),
         updated_at = CURRENT_TIMESTAMP,
         status = CASE
-          WHEN :projectType = 'free' AND status = 'hidden' THEN 'listed'
+          WHEN COALESCE(:projectType, project_type) IN ('premium', 'unlimited') AND status <> 'hidden' THEN 'unlisted'
+          WHEN COALESCE(:projectType, project_type) = 'free' AND status = 'hidden' THEN 'listed'
           ELSE status
         END
       WHERE id = :projectId
       RETURNING id
     `,
-    { replacements: { projectId, projectType: body.projectType }, type: QueryTypes.SELECT }
+    { replacements: { projectId, projectType: body.projectType ?? null, isLocked: body.isLocked ?? null }, type: QueryTypes.SELECT }
   )
 
   if (rows.length === 0) {

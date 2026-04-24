@@ -38,16 +38,21 @@
             {{ isSavingTier ? 'Saving' : 'Save' }}
           </button>
         </div>
-        <span :class="tierBadgeClass(project.projectType)">
-          {{ project.projectType ?? 'free' }}
-        </span>
-        <!-- <span :class="stateBadgeClass(project)">
-          {{ project.isLocked ? 'view-only' : 'active' }}
-        </span> -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span :class="tierBadgeClass(project.projectType)">
+            {{ project.projectType ?? 'free' }}
+          </span>
+          <span
+            v-if="project.isLocked"
+            :class="stateBadgeClass(project)"
+          >
+            view-only
+          </span>
+        </div>
       </div>
     </td>
     <td class="py-3 text-sm text-insight">
-      {{ formatInteger(usage?.recordingMinutesCount ?? 0) }}
+      {{ formatUsage(usage?.recordingMinutesCount, limits.recordingMinutesCount) }}
     </td>
     <td class="py-3 text-sm text-insight">
       {{ formatUsage(usage?.jobCount, limits.jobCount) }}
@@ -74,6 +79,13 @@
       class="py-3"
     >
       <div class="flex flex-col gap-2 text-sm">
+        <button
+          type="button"
+          class="text-left text-frequency"
+          @click="emit('toggle-lock', project)"
+        >
+          {{ project.isLocked ? 'Disable view-only' : 'Enable view-only' }}
+        </button>
         <button
           type="button"
           class="text-left text-frequency"
@@ -107,7 +119,7 @@ const props = withDefaults(defineProps<{
   isExpanded: false
 })
 
-const emit = defineEmits(['select-project', 'toggle-members', 'save-tier', 'update:selectedProjectType'])
+const emit = defineEmits(['select-project', 'toggle-members', 'save-tier', 'toggle-lock', 'update:selectedProjectType'])
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 const slug = computed(() => props.project.slug)
@@ -127,30 +139,14 @@ const tierBadgeClass = (projectType: SuperProjectSummary['projectType'] | undefi
   return `${base} bg-emerald-100 text-emerald-700`
 }
 
-// const stateBadgeClass = (project: SuperProjectSummary): string => {
-//   if (project.isLocked === true) return 'inline-flex rounded-full bg-stone-200 px-2 py-1 text-xs font-semibold capitalize tracking-wide text-stone-700'
-//   return 'inline-flex rounded-full bg-sky-100 px-2 py-1 text-xs font-semibold capitalize tracking-wide text-sky-700'
-// }
-
-// const formatUsage = (used: number | undefined, limit: number | null, suffix?: string): string => {
-//   const usedText = (used ?? 0).toLocaleString()
-//   const limitText = limit === null ? 'No cap' : limit.toLocaleString()
-//   return suffix === undefined ? `${usedText} / ${limitText}` : `${usedText} / ${limitText} ${suffix}`
-// }
-
-const formatUsage = (used: number | undefined, limit: number | null, suffix?: string): string => {
-  const usedText = (used ?? 0).toLocaleString()
-  return `${usedText}`
+const stateBadgeClass = (project: SuperProjectSummary): string => {
+  return 'inline-flex items-center justify-center w-fit rounded-full px-2 py-1 text-xs capitalize tracking-wide leading-none bg-stone-200 font-semibold'
 }
 
-const formatInteger = (value: number | string): string => {
-  const num = typeof value === 'string' ? parseFloat(value) : value
-  if (isNaN(num)) return '0'
-
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(num)
+const formatUsage = (used: number | undefined, limit: number | null): string => {
+  const usedText = (used ?? 0).toLocaleString()
+  const limitText = limit === null ? 'No cap' : limit.toLocaleString()
+  return `${usedText} / ${limitText}`
 }
 
 const onProjectTypeChange = (event: Event): void => {

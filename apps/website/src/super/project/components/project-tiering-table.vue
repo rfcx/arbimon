@@ -42,6 +42,7 @@
           @select-project="onSelectProject"
           @toggle-members="toggleMembers"
           @save-tier="saveProjectTier"
+          @toggle-lock="toggleProjectLock"
           @update:selected-project-type="value => updateProjectTierDraft(project.id, value)"
         />
         <tr
@@ -168,6 +169,21 @@ const saveProjectTier = async (project: SuperProjectSummary): Promise<void> => {
     await mutateProjectTier({
       projectId: project.id,
       payload: { projectType: nextProjectType as 'free' | 'premium' | 'unlimited' }
+    })
+    await queryClient.invalidateQueries({ queryKey: ['get-projects'] })
+    await queryClient.invalidateQueries({ queryKey: ['get-super-users'] })
+    await queryClient.invalidateQueries({ queryKey: ['get-super-user-projects'] })
+  } finally {
+    savingProjectId.value = null
+  }
+}
+
+const toggleProjectLock = async (project: SuperProjectSummary): Promise<void> => {
+  savingProjectId.value = project.id
+  try {
+    await mutateProjectTier({
+      projectId: project.id,
+      payload: { isLocked: !project.isLocked }
     })
     await queryClient.invalidateQueries({ queryKey: ['get-projects'] })
     await queryClient.invalidateQueries({ queryKey: ['get-super-users'] })
