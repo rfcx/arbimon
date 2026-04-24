@@ -15,7 +15,7 @@
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-2">
           <select
-            class="w-25 rounded border border-util-gray-03 bg-white px-2 py-1 text-xs uppercase"
+            class="w-25 rounded border border-util-gray-03 bg-white px-2 py-1 text-xs capitalize"
             :value="selectedProjectType"
             @change="onProjectTypeChange"
           >
@@ -41,9 +41,9 @@
         <span :class="tierBadgeClass(project.projectType)">
           {{ project.projectType ?? 'free' }}
         </span>
-        <span :class="stateBadgeClass(project)">
+        <!-- <span :class="stateBadgeClass(project)">
           {{ project.isLocked ? 'view-only' : 'active' }}
-        </span>
+        </span> -->
       </div>
     </td>
     <td class="py-3 text-sm text-insight">
@@ -70,19 +70,6 @@
         >
           {{ isExpanded ? 'Hide members' : 'Show members' }}
         </button>
-        <router-link
-          :to="{ name: ROUTE_NAMES.superMember, params: { projectId: project.id } }"
-          class="text-frequency"
-          @click="emit('select-project', project)"
-        >
-          Manage members
-        </router-link>
-        <router-link
-          :to="{ name: ROUTE_NAMES.superSyncHistory, params: { projectId: project.id } }"
-          class="text-frequency"
-        >
-          Syncing
-        </router-link>
       </div>
     </td>
   </tr>
@@ -95,7 +82,6 @@ import { computed, inject } from 'vue'
 import { type SuperProjectSummary } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
-import { ROUTE_NAMES } from '~/router'
 import { useProjectTieringUsage } from '../_composables/use-project-tiering-usage'
 
 const props = withDefaults(defineProps<{
@@ -119,20 +105,31 @@ const limits = computed(() => props.project.limits)
 const usage = computed(() => usageResponse.value)
 
 const tierBadgeClass = (projectType: SuperProjectSummary['projectType'] | undefined): string => {
-  if (projectType === 'premium') return 'inline-flex rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-amber-700'
-  if (projectType === 'unlimited') return 'inline-flex rounded-full bg-rose-100 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-rose-700'
-  return 'inline-flex rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700'
+  const base = 'inline-flex items-center justify-center w-fit rounded-full px-2 py-1 text-xs font-bold capitalize tracking-wide leading-none'
+
+  if (projectType === 'premium') {
+    return `${base} bg-amber-100 text-amber-700`
+  }
+  if (projectType === 'unlimited') {
+    return `${base} bg-rose-100 text-rose-700`
+  }
+  return `${base} bg-emerald-100 text-emerald-700`
 }
 
-const stateBadgeClass = (project: SuperProjectSummary): string => {
-  if (project.isLocked === true) return 'inline-flex rounded-full bg-stone-200 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-stone-700'
-  return 'inline-flex rounded-full bg-sky-100 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-sky-700'
-}
+// const stateBadgeClass = (project: SuperProjectSummary): string => {
+//   if (project.isLocked === true) return 'inline-flex rounded-full bg-stone-200 px-2 py-1 text-xs font-semibold capitalize tracking-wide text-stone-700'
+//   return 'inline-flex rounded-full bg-sky-100 px-2 py-1 text-xs font-semibold capitalize tracking-wide text-sky-700'
+// }
+
+// const formatUsage = (used: number | undefined, limit: number | null, suffix?: string): string => {
+//   const usedText = (used ?? 0).toLocaleString()
+//   const limitText = limit === null ? 'No cap' : limit.toLocaleString()
+//   return suffix === undefined ? `${usedText} / ${limitText}` : `${usedText} / ${limitText} ${suffix}`
+// }
 
 const formatUsage = (used: number | undefined, limit: number | null, suffix?: string): string => {
   const usedText = (used ?? 0).toLocaleString()
-  const limitText = limit === null ? 'No cap' : limit.toLocaleString()
-  return suffix === undefined ? `${usedText} / ${limitText}` : `${usedText} / ${limitText} ${suffix}`
+  return suffix === undefined ? `${usedText}` : `${usedText}`
 }
 
 const onProjectTypeChange = (event: Event): void => {

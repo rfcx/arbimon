@@ -12,7 +12,7 @@
           Tier
         </th>
         <th class="min-w-32">
-          Recordings
+          Mins of Rec.
         </th>
         <th class="min-w-28">
           Jobs

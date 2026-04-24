@@ -12,8 +12,11 @@
           <th class="min-w-24">
             Tier
           </th>
-          <th class="min-w-28">
+          <!-- <th class="min-w-28">
             Premium Add-ons
+          </th> -->
+          <th class="min-w-24">
+            Projects Owned
           </th>
           <th class="min-w-28">
             Free Portfolio
@@ -23,9 +26,6 @@
           </th>
           <th class="min-w-28">
             Unlimited Portfolio
-          </th>
-          <th class="min-w-24">
-            Owned Projects
           </th>
           <th class="min-w-24">
             Details
@@ -53,7 +53,7 @@
               <div class="flex flex-col gap-2">
                 <div class="flex items-center gap-2">
                   <select
-                    class="w-25 rounded border border-util-gray-03 bg-white px-2 py-1 text-xs uppercase"
+                    class="w-25 rounded border border-util-gray-03 bg-white px-2 py-1 text-xs capitalize"
                     :value="userTierDrafts[user.id] ?? user.accountTier"
                     @change="onUserTierChange(user.id, $event)"
                   >
@@ -81,7 +81,7 @@
                 </span>
               </div>
             </td>
-            <td class="py-3 text-sm text-insight">
+            <!-- <td class="py-3 text-sm text-insight">
               <input
                 type="number"
                 min="0"
@@ -89,6 +89,9 @@
                 :value="userAdditionalPremiumSlotDrafts[user.id] ?? user.additionalPremiumProjectSlots"
                 @input="onAdditionalPremiumSlotsChange(user.id, $event)"
               >
+            </td> -->
+            <td class="py-3 text-sm text-insight">
+              {{ user.ownedProjectCount }}
             </td>
             <td class="py-3 text-sm text-insight">
               {{ formatPortfolioUsage(user.usage.freeProjects, user.limits.freeProjects) }}
@@ -98,9 +101,6 @@
             </td>
             <td class="py-3 text-sm text-insight">
               {{ formatPortfolioUsage(user.usage.unlimitedProjects, user.limits.unlimitedProjects) }}
-            </td>
-            <td class="py-3 text-sm text-insight">
-              {{ user.ownedProjectCount }}
             </td>
             <td class="py-3">
               <button
@@ -195,12 +195,12 @@ const onUserTierChange = (userId: number, event: Event): void => {
   updateUserTierDraft(userId, (event.target as HTMLSelectElement).value)
 }
 
-const onAdditionalPremiumSlotsChange = (userId: number, event: Event): void => {
-  userAdditionalPremiumSlotDrafts.value = {
-    ...userAdditionalPremiumSlotDrafts.value,
-    [userId]: Math.max(0, Number((event.target as HTMLInputElement).value || 0))
-  }
-}
+// const onAdditionalPremiumSlotsChange = (userId: number, event: Event): void => {
+//   userAdditionalPremiumSlotDrafts.value = {
+//     ...userAdditionalPremiumSlotDrafts.value,
+//     [userId]: Math.max(0, Number((event.target as HTMLInputElement).value || 0))
+//   }
+// }
 
 const hasUserChanges = (user: SuperUserSummary): boolean => {
   const nextTier = userTierDrafts.value[user.id] ?? user.accountTier
@@ -227,13 +227,20 @@ const saveUserTier = async (user: SuperUserSummary): Promise<void> => {
 }
 
 const tierBadgeClass = (accountTier: SuperUserSummary['accountTier']): string => {
-  if (accountTier === 'enterprise') return 'inline-flex rounded-full bg-rose-100 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-rose-700'
-  if (accountTier === 'pro') return 'inline-flex rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-amber-700'
-  return 'inline-flex rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700'
+  const base = 'inline-flex items-center w-fit rounded-full px-2 py-1 text-xs font-bold capitalize tracking-wide leading-none'
+
+  if (accountTier === 'enterprise') {
+    return `${base} bg-rose-100 text-rose-700`
+  }
+  if (accountTier === 'pro') {
+    return `${base} bg-amber-100 text-amber-700`
+  }
+  return `${base} bg-emerald-100 text-emerald-700`
 }
 
 const formatPortfolioUsage = (used: number, limit: number | null): string => {
-  const limitText = limit === null ? 'No cap' : limit.toLocaleString()
-  return `${used.toLocaleString()} / ${limitText}`
+  // const limitText = limit === null ? 'No cap' : limit.toLocaleString()
+  // return `${used.toLocaleString()} / ${limitText}`
+  return `${used.toLocaleString()}`
 }
 </script>

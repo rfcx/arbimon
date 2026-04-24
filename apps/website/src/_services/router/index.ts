@@ -264,6 +264,12 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: '/tiers',
+    name: ROUTE_NAMES.tier,
+    component: PAGES.Tiers,
+    beforeEnter: [authRequiredGuard]
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: ROUTE_NAMES.error,
     component: PAGES.Error

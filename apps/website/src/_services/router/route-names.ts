@@ -46,7 +46,8 @@ export const ROUTE_NAMES = {
   mySites: 'my-sites',
   myRecordings: 'my-recordings',
   visualizer: 'visualizer',
-  mySpecies: 'my-species'
+  mySpecies: 'my-species',
+  tier: 'tier'
 } as const
 
 export type RouteNames = typeof ROUTE_NAMES
