@@ -4,11 +4,11 @@ import { parse } from 'node:path'
 import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 
+import { assertProjectAnalysisAllowed } from '@/projects/project-entitlement-bll'
 import { type CoreCreateClassifierJobBody } from '~/api-core/types'
 import { getSequelize } from '~/db'
 import { BioInvalidBodyError, BioNotFoundError, BioPublicError } from '~/errors'
 import { createClassifierJob as coreCreateClassifierJob, updateClassifierJob } from '../_services/api-core/api-core'
-import { assertProjectAnalysisAllowed } from '@/projects/project-entitlement-bll'
 
 interface CreateClassifierJobRequestParsed {
   classifierId: number

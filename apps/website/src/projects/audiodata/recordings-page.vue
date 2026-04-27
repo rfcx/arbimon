@@ -76,7 +76,7 @@
           </div>
           <button
             class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-              :disabled="!store.userIsFullProjectMember || isProjectViewOnly"
+            :disabled="!store.userIsFullProjectMember || isProjectViewOnly"
             data-tooltip-style="light"
             :data-tooltip-target="!store.userIsFullProjectMember ? 'recordingPlaylistTooltip': null"
             @click="showCreatePlaylist"

@@ -2,10 +2,10 @@ import { type HighlightedSpecies } from '@rfcx-bio/common/api-bio/dashboard/comm
 import { type DashboardSpeciesDataParams, type DashboardSpeciesDataResponse, type SpeciesHighlightedBody, type SpeciesHighlightedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
 import { type LocationProjectSpecies, type RiskRatingIucn, type TaxonSpecies } from '@rfcx-bio/node-common/dao/types'
 
+import { assertProjectSettingsUpdateAllowed } from '@/projects/project-entitlement-bll'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { assertProjectSettingsUpdateAllowed } from '@/projects/project-entitlement-bll'
 import { deleteHighlightedSpecies, getHighlightedSpecies, getRichnessByRisk, getRichnessByTaxon, getSpeciesBySlug, getTotalSpecies, postHighlightedSpecies } from './dashboard-species-data-dao'
 
 export const rawRiskRatings: RiskRatingIucn[] = [

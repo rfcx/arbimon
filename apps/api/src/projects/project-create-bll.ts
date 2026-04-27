@@ -1,5 +1,5 @@
-import { type ProjectType } from '@rfcx-bio/node-common/dao/types'
 import { RANKING_PRIMARY } from '@rfcx-bio/common/roles'
+import { type ProjectType } from '@rfcx-bio/node-common/dao/types'
 
 import { createProject as createProjectInCore, getProject as getProjectInCore } from '~/api-core/api-core'
 import { updateProjectSlugLegacy } from '~/api-legacy-arbimon'

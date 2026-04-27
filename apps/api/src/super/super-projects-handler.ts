@@ -1,5 +1,5 @@
-import { type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserSummary, type SuperUserTierUpdateBody } from '@rfcx-bio/common/api-bio/super/projects'
 import { type LocationProjectQuery } from '@rfcx-bio/common/api-bio/project/projects'
+import { type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserSummary, type SuperUserTierUpdateBody } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { type Handler } from '../_services/api-helpers/types'
 import { getProjects, getUserProjects, getUsers, updateProjectTier, updateUserTier } from './super-projects-bll'

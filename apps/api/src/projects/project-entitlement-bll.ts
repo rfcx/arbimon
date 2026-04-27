@@ -1,8 +1,8 @@
 import { QueryTypes } from 'sequelize'
 
-import { type AccountTier, type ProjectType } from '@rfcx-bio/node-common/dao/types'
 import { type ProjectRole, getIdByRole } from '@rfcx-bio/common/roles'
 import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
+import { type AccountTier, type ProjectType } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '~/db'
 import { BioNotFoundError, BioPublicError } from '~/errors'

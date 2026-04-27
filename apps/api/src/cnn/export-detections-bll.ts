@@ -4,10 +4,10 @@ import { type ExportDetectionsType } from '@rfcx-bio/common/api-bio/cnn/export-d
 import { createJob } from '@rfcx-bio/node-common/kubernetes'
 import { exportDetectionsJob } from '@rfcx-bio/node-common/kubernetes/job'
 
+import { getProjectByCoreId } from '@/projects/dao/projects-dao'
+import { assertProjectExportAllowed } from '@/projects/project-entitlement-bll'
 import { getClassifierJobInformation } from '~/api-core/api-core'
 import { env } from '~/env'
-import { assertProjectExportAllowed } from '@/projects/project-entitlement-bll'
-import { getProjectByCoreId } from '@/projects/dao/projects-dao'
 
 export const exportDetections = async (token: string, jobId: number, types: ExportDetectionsType[], email: string): Promise<void> => {
   const classifierJob = await getClassifierJobInformation(token, jobId)

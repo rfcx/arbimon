@@ -1,8 +1,8 @@
 import { type UpdateClassifierJobBody } from '@rfcx-bio/common/api-bio/cnn/classifier-job-information'
 
-import { getClassifierJobInformation, updateClassifierJob as coreUpdateClassifierJob } from '~/api-core/api-core'
 import { getProjectByCoreId } from '@/projects/dao/projects-dao'
 import { assertProjectAnalysisAllowed } from '@/projects/project-entitlement-bll'
+import { getClassifierJobInformation, updateClassifierJob as coreUpdateClassifierJob } from '~/api-core/api-core'
 import { BioInvalidBodyError } from '~/errors'
 
 export const updateClassifierJob = async (token: string, jobId: string, body: UpdateClassifierJobBody): Promise<any> => {

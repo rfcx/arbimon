@@ -1,10 +1,10 @@
 import { type DashboardStakeholdersParams, type DashboardStakeholdersResponse, type UpdateDashboardStakeholdersParams, type UpdateDashboardStakeholdersRequestBody } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
 
+import { assertProjectSettingsUpdateAllowed } from '@/projects/project-entitlement-bll'
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioUnauthorizedError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { assertProjectSettingsUpdateAllowed } from '@/projects/project-entitlement-bll'
 import { getProjectStakeholders, getProjectUsers, updateProjectStakeholders } from './dashboard-stakeholders-dao'
 
 export const dashboardStakeholdersHandler: Handler<DashboardStakeholdersResponse, DashboardStakeholdersParams> = async (req) => {

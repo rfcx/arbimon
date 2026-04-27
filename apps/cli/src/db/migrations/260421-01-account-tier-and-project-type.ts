@@ -55,6 +55,6 @@ export const down: MigrationFn<QueryInterface> = async ({ context }) => {
       DROP COLUMN IF EXISTS account_tier;
   `)
 
-  await context.sequelize.query(`DROP TYPE IF EXISTS project_type_code;`)
-  await context.sequelize.query(`DROP TYPE IF EXISTS account_tier_code;`)
+  await context.sequelize.query('DROP TYPE IF EXISTS project_type_code;')
+  await context.sequelize.query('DROP TYPE IF EXISTS account_tier_code;')
 }

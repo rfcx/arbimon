@@ -20,7 +20,7 @@ export const up: MigrationFn<QueryInterface> = async ({ context }) => {
 }
 
 export const down: MigrationFn<QueryInterface> = async ({ context }) => {
-  await context.sequelize.query(`DROP INDEX IF EXISTS location_project_project_type_idx;`)
+  await context.sequelize.query('DROP INDEX IF EXISTS location_project_project_type_idx;')
 
   await context.sequelize.query(`
     ALTER TABLE "${TABLE_NAME}"

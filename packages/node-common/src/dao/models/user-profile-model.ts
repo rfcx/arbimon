@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 
 import { defineWithDefaultsAutoPk } from '../model-factory-helpers/defaults'
-import { ACCOUNT_TIER_ORDERED, type UserProfile } from '../types'
+import { type UserProfile, ACCOUNT_TIER_ORDERED } from '../types'
 
 export const MODEL_USER_PROFILE = 'UserProfile'
 const TABLE_USER_PROFILE = 'user_profile'

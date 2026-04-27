@@ -4,8 +4,8 @@ import { getIdByEmail } from '@/users/user-profile-dao'
 import { addProjectMemberLegacy, removeProjectMemberLegacy, updateProjectMemberLegacy } from '~/api-legacy-arbimon'
 import { BioNotFoundError } from '~/errors'
 import { create, destroy, getRoleIdByProjectAndUser, update } from './dao/project-member-dao'
-import { assertProjectMemberUpdateAllowed, getCurrentProjectRole } from './project-entitlement-bll'
 import { getProjectById } from './dao/projects-dao'
+import { assertProjectMemberUpdateAllowed, getCurrentProjectRole } from './project-entitlement-bll'
 
 export const addProjectMember = async (token: string, locationProjectId: number, email: string, role?: Exclude<ProjectRole, 'none' | 'external'>): Promise<void> => {
   const project = await getProjectById(locationProjectId)

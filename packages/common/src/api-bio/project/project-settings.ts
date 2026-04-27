@@ -6,10 +6,10 @@ import { apiGetOrUndefined } from '@rfcx-bio/utils/api'
 
 import { type AttributeTypes, attributes } from '../../dao/type-helpers'
 import { type LocationProjectProfile, type Project } from '../../dao/types'
-import { type ProjectTieringUsage } from './projects'
 import { type ApiStack, type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 import { type DashboardMetricsResponse } from '../dashboard/dashboard-metrics'
 import { type DashboardStakeholdersResponse } from '../dashboard/dashboard-stakeholders'
+import { type ProjectTieringUsage } from './projects'
 
 // Request types
 export type ProjectProfileParams = ProjectRouteParamsSerialized

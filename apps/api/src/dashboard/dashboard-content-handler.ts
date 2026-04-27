@@ -1,11 +1,11 @@
 import { type DashboardContentParams, type DashboardContentResponse, type UpdateDashboardContentParams, type UpdateDashboardContentRequestBody, type UpdateDashboardContentResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-content'
 import { locationProjectProfileContentType } from '@rfcx-bio/node-common/dao/types'
 
+import { assertProjectSettingsUpdateAllowed } from '@/projects/project-entitlement-bll'
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioPublicError, BioUnauthorizedError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
-import { assertProjectSettingsUpdateAllowed } from '@/projects/project-entitlement-bll'
 import { getDashboardContent, updateDashboardContent } from './dashboard-content-dao'
 
 /**
