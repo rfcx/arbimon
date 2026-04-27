@@ -305,7 +305,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import { type AxiosInstance, AxiosError } from 'axios'
+import axios, { type AxiosInstance } from 'axios'
 import { type DropdownOptions, Dropdown, initTooltips } from 'flowbite'
 import debounce from 'lodash.debounce'
 import { type Ref, computed, inject, onMounted, ref } from 'vue'
@@ -523,8 +523,8 @@ const addSelectedUser = ():void => {
       showAlertDialog('success', 'Success', 'New Project member added successfully')
     },
     onError: (error: unknown) => {
-      const axiosError = error instanceof AxiosError ? error : undefined
-      const message = axiosError?.response?.data?.message ?? 'We couldn’t add this user as a project member because their account is unverified. Please ensure the user has verified their account before trying again.'
+      const axiosError = axios.isAxiosError(error) ? error : undefined
+      const message = (axiosError?.response?.data as { message?: string } | undefined)?.message ?? 'We couldn’t add this user as a project member because their account is unverified. Please ensure the user has verified their account before trying again.'
       showAlertDialog('error', 'Unable to Add Member.', message)
     }
   })
@@ -543,8 +543,8 @@ const changeUserRole = (email: string, role: ProjectRole):void => {
       refetchProjectInfo()
     },
     onError: (error: unknown) => {
-      const axiosError = error instanceof AxiosError ? error : undefined
-      showAlertDialog('error', 'Unable to Update Member.', axiosError?.response?.data?.message ?? 'We encountered some issues while saving your changes. Could you please try again?')
+      const axiosError = axios.isAxiosError(error) ? error : undefined
+      showAlertDialog('error', 'Unable to Update Member.', (axiosError?.response?.data as { message?: string } | undefined)?.message ?? 'We encountered some issues while saving your changes. Could you please try again?')
     }
   })
 }
@@ -555,8 +555,8 @@ const deleteProjectMember = (email: string):void => {
       usersRefetch()
     },
     onError: (error: unknown) => {
-      const axiosError = error instanceof AxiosError ? error : undefined
-      showAlertDialog('error', 'Unable to Remove Member.', axiosError?.response?.data?.message ?? 'We encountered some issues while deleting the member. Could you please try again?')
+      const axiosError = axios.isAxiosError(error) ? error : undefined
+      showAlertDialog('error', 'Unable to Remove Member.', (axiosError?.response?.data as { message?: string } | undefined)?.message ?? 'We encountered some issues while deleting the member. Could you please try again?')
     }
   })
 }

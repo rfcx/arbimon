@@ -442,7 +442,7 @@
 </template>
 
 <script setup lang="ts">
-import { type AxiosInstance, AxiosError } from 'axios'
+import axios, { type AxiosInstance } from 'axios'
 import type { DropdownOptions } from 'flowbite'
 import { Dropdown } from 'flowbite'
 import { type Ref, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
@@ -789,8 +789,8 @@ const submitDowngrade = () => {
     },
     onError: (error: unknown) => {
       tierChangeSuccess.value = false
-      const axiosError = error instanceof AxiosError ? error : undefined
-      tierChangeMessage.value = axiosError?.response?.data?.message ?? 'Failed to apply tier change.'
+      const axiosError = axios.isAxiosError(error) ? error : undefined
+      tierChangeMessage.value = (axiosError?.response?.data as { message?: string } | undefined)?.message ?? 'Failed to apply tier change.'
     }
   })
 }
