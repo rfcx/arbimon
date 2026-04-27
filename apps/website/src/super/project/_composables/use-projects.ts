@@ -2,23 +2,31 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import { type AxiosInstance } from 'axios'
 import { type Ref, computed } from 'vue'
 
-import { type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserSummary, type SuperUserTierUpdateBody, apiBioSuperGetProjects, apiBioSuperGetUserProjects, apiBioSuperGetUsers, apiBioSuperUpdateProjectTier, apiBioSuperUpdateUserTier } from '@rfcx-bio/common/api-bio/super/projects'
+import { type SuperPaginationResponse, type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserSummary, type SuperUserTierUpdateBody, apiBioSuperGetProjects, apiBioSuperGetUserProjects, apiBioSuperGetUsers, apiBioSuperUpdateProjectTier, apiBioSuperUpdateUserTier } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { type Error } from '../../error'
 
-export const useGetSuperProjects = (apiClient: AxiosInstance, options: { keyword?: Ref<string>, limit?: Ref<number>, offset?: Ref<number> }): UseQueryReturnType<SuperProjectSummary[], Error> => {
+export const useGetSuperProjects = (
+  apiClient: AxiosInstance,
+  options: { keyword?: Ref<string>, tier?: Ref<SuperProjectSummary['projectType'] | undefined>, limit?: Ref<number>, offset?: Ref<number>, enabled?: Ref<boolean> }
+): UseQueryReturnType<SuperPaginationResponse<SuperProjectSummary>, Error> => {
   return useQuery({
-    queryKey: ['get-projects', options.keyword, options.limit, options.offset],
-    queryFn: async () => await apiBioSuperGetProjects(apiClient, { keyword: options.keyword?.value, limit: options.limit?.value, offset: options.offset?.value }),
+    queryKey: ['get-projects', options.keyword, options.tier, options.limit, options.offset],
+    queryFn: async () => await apiBioSuperGetProjects(apiClient, { keyword: options.keyword?.value, tier: options.tier?.value, limit: options.limit?.value, offset: options.offset?.value }),
+    enabled: computed(() => options.enabled?.value ?? true),
     retry: 0,
     staleTime: 1000
   })
 }
 
-export const useGetSuperUsers = (apiClient: AxiosInstance, options: { keyword?: Ref<string>, limit?: Ref<number>, offset?: Ref<number> }): UseQueryReturnType<SuperUserSummary[], Error> => {
+export const useGetSuperUsers = (
+  apiClient: AxiosInstance,
+  options: { keyword?: Ref<string>, tier?: Ref<SuperUserSummary['accountTier'] | undefined>, limit?: Ref<number>, offset?: Ref<number>, enabled?: Ref<boolean> }
+): UseQueryReturnType<SuperPaginationResponse<SuperUserSummary>, Error> => {
   return useQuery({
-    queryKey: ['get-super-users', options.keyword, options.limit, options.offset],
-    queryFn: async () => await apiBioSuperGetUsers(apiClient, { keyword: options.keyword?.value, limit: options.limit?.value, offset: options.offset?.value }),
+    queryKey: ['get-super-users', options.keyword, options.tier, options.limit, options.offset],
+    queryFn: async () => await apiBioSuperGetUsers(apiClient, { keyword: options.keyword?.value, tier: options.tier?.value, limit: options.limit?.value, offset: options.offset?.value }),
+    enabled: computed(() => options.enabled?.value ?? true),
     retry: 0,
     staleTime: 1000
   })

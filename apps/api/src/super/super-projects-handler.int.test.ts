@@ -96,11 +96,14 @@ describe('Super projects route', async () => {
 
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body)
-    expect(typeof results[0].id).toBe('number')
-    expect(results[0].projectType).toBe('premium')
-    expect(results[0].usage.recordingMinutesCount).toBeTypeOf('number')
-    expect(results[0].limits.collaboratorCount).toBe(4)
-    expect(results[0].limits.jobCount).toBe(200)
+    expect(results.limit).toBeGreaterThan(0)
+    expect(results.offset).toBe(0)
+    expect(results.total).toBeGreaterThanOrEqual(1)
+    expect(typeof results.data[0].id).toBe('number')
+    expect(results.data[0].projectType).toBe('premium')
+    expect(results.data[0].usage.recordingMinutesCount).toBeTypeOf('number')
+    expect(results.data[0].limits.collaboratorCount).toBe(4)
+    expect(results.data[0].limits.jobCount).toBe(200)
   })
 
   test(`GET ${superUsersRoute} returns super users with tier info`, async () => {
@@ -114,12 +117,13 @@ describe('Super projects route', async () => {
 
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body)
-    expect(results).toHaveLength(1)
-    expect(results[0].accountTier).toBe('pro')
-    expect(results[0].ownedProjectCount).toBe(2)
-    expect(results[0].limits.freeProjects).toBe(50)
-    expect(results[0].limits.premiumProjects).toBe(3)
-    expect(results[0].usage.premiumProjects).toBe(1)
+    expect(results.data).toHaveLength(1)
+    expect(results.total).toBe(1)
+    expect(results.data[0].accountTier).toBe('pro')
+    expect(results.data[0].ownedProjectCount).toBe(2)
+    expect(results.data[0].limits.freeProjects).toBe(50)
+    expect(results.data[0].limits.premiumProjects).toBe(3)
+    expect(results.data[0].usage.premiumProjects).toBe(1)
   })
 
   test(`GET ${superUsersRoute} includes users with no owned projects`, async () => {
@@ -133,12 +137,48 @@ describe('Super projects route', async () => {
 
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body)
-    expect(results).toHaveLength(1)
-    expect(results[0].email).toBe('tier-no-project@test.com')
-    expect(results[0].ownedProjectCount).toBe(0)
-    expect(results[0].usage.freeProjects).toBe(0)
-    expect(results[0].usage.premiumProjects).toBe(0)
-    expect(results[0].usage.unlimitedProjects).toBe(0)
+    expect(results.data).toHaveLength(1)
+    expect(results.data[0].email).toBe('tier-no-project@test.com')
+    expect(results.data[0].ownedProjectCount).toBe(0)
+    expect(results.data[0].usage.freeProjects).toBe(0)
+    expect(results.data[0].usage.premiumProjects).toBe(0)
+    expect(results.data[0].usage.unlimitedProjects).toBe(0)
+  })
+
+  test(`GET ${superProjectsRoute} filters and paginates projects`, async () => {
+    const app = await makeApp(routesSuper, { userId, userToken })
+
+    const response = await app.inject({
+      method: GET,
+      url: superProjectsRoute,
+      query: { tier: 'premium', limit: 1, offset: 0 }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(results.limit).toBe(1)
+    expect(results.offset).toBe(0)
+    expect(results.total).toBeGreaterThanOrEqual(1)
+    expect(results.data).toHaveLength(1)
+    expect(results.data[0].projectType).toBe('premium')
+  })
+
+  test(`GET ${superUsersRoute} filters and paginates users`, async () => {
+    const app = await makeApp(routesSuper, { userId, userToken })
+
+    const response = await app.inject({
+      method: GET,
+      url: superUsersRoute,
+      query: { tier: 'pro', limit: 1, offset: 0 }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(results.limit).toBe(1)
+    expect(results.offset).toBe(0)
+    expect(results.total).toBeGreaterThanOrEqual(1)
+    expect(results.data).toHaveLength(1)
+    expect(results.data[0].accountTier).toBe('pro')
   })
 
   test(`GET ${superUserProjectsRoute} returns owned projects for a selected user`, async () => {

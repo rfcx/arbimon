@@ -1,15 +1,14 @@
-import { type LocationProjectQuery } from '@rfcx-bio/common/api-bio/project/projects'
-import { type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserSummary, type SuperUserTierUpdateBody } from '@rfcx-bio/common/api-bio/super/projects'
+import { type SuperPaginationResponse, type SuperProjectQuery, type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserQuery, type SuperUserSummary, type SuperUserTierUpdateBody } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { type Handler } from '../_services/api-helpers/types'
 import { getProjects, getUserProjects, getUsers, updateProjectTier, updateUserTier } from './super-projects-bll'
 
-export const superGetProjectsHandler: Handler<SuperProjectSummary[], unknown, LocationProjectQuery> = async (req) => {
-  return await getProjects(req.query.keyword, req.query.limit, req.query.offset)
+export const superGetProjectsHandler: Handler<SuperPaginationResponse<SuperProjectSummary>, unknown, SuperProjectQuery> = async (req) => {
+  return await getProjects(req.query.keyword, req.query.limit, req.query.offset, req.query.tier)
 }
 
-export const superGetUsersHandler: Handler<SuperUserSummary[], unknown, LocationProjectQuery> = async (req) => {
-  return await getUsers(req.query.keyword, req.query.limit, req.query.offset)
+export const superGetUsersHandler: Handler<SuperPaginationResponse<SuperUserSummary>, unknown, SuperUserQuery> = async (req) => {
+  return await getUsers(req.query.keyword, req.query.limit, req.query.offset, req.query.tier)
 }
 
 export const superGetUserProjectsHandler: Handler<SuperProjectSummary[], { userId: number }> = async (req) => {

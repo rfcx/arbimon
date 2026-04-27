@@ -1,6 +1,6 @@
 import { QueryTypes } from 'sequelize'
 
-import { type SuperProjectLimits, type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserSummary, type SuperUserTierUpdateBody } from '@rfcx-bio/common/api-bio/super/projects'
+import { type SuperPaginationResponse, type SuperProjectLimits, type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserSummary, type SuperUserTierUpdateBody } from '@rfcx-bio/common/api-bio/super/projects'
 import { type AccountTier, type ProjectType } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '~/db'
@@ -10,6 +10,7 @@ import { getAccountTierProjectLimitMap, getProjectTypeLimitMap } from '../tierin
 const OWNER_ROLE_ID = 4
 
 interface SuperProjectRow {
+  total: number
   id: number
   idCore: string
   idArbimon: number
@@ -30,6 +31,7 @@ interface SuperProjectRow {
 }
 
 interface SuperUserRow {
+  total: number
   id: number
   email: string
   firstName: string
@@ -69,12 +71,18 @@ const mapProjectSummary = (row: SuperProjectRow, limitMap: Record<ProjectType, S
   }
 }
 
-export const getProjects = async (keyword?: string, limit: number = 200, offset: number = 0): Promise<SuperProjectSummary[]> => {
+export const getProjects = async (
+  keyword?: string,
+  limit: number = 25,
+  offset: number = 0,
+  tier?: ProjectType
+): Promise<SuperPaginationResponse<SuperProjectSummary>> => {
   const sequelize = getSequelize()
   const projectTypeLimits = await getProjectTypeLimitMap()
   const rows = await sequelize.query<SuperProjectRow>(
     `
       SELECT
+        COUNT(*) OVER()::INTEGER AS "total",
         lp.id AS "id",
         lp.id_core AS "idCore",
         lp.id_arbimon AS "idArbimon",
@@ -95,21 +103,34 @@ export const getProjects = async (keyword?: string, limit: number = 200, offset:
       FROM location_project lp
       LEFT JOIN location_project_member_quota_usage lpmqu
         ON lp.id = lpmqu.location_project_id
-      WHERE (:keyword::TEXT IS NULL OR lp.name ILIKE '%' || :keyword || '%' OR lp.slug ILIKE '%' || :keyword || '%')
+      WHERE
+        (:keyword::TEXT IS NULL OR lp.name ILIKE '%' || :keyword || '%' OR lp.slug ILIKE '%' || :keyword || '%')
+        AND (:tier::TEXT IS NULL OR COALESCE(lp.project_type, 'free') = :tier)
       ORDER BY lp.name, lp.id
       LIMIT :limit OFFSET :offset
     `,
-    { replacements: { keyword: keyword ?? null, limit, offset }, type: QueryTypes.SELECT }
+    { replacements: { keyword: keyword ?? null, limit, offset, tier: tier ?? null }, type: QueryTypes.SELECT }
   )
 
-  return rows.map(row => mapProjectSummary(row, projectTypeLimits))
+  return {
+    data: rows.map(row => mapProjectSummary(row, projectTypeLimits)),
+    total: rows[0]?.total ?? 0,
+    limit,
+    offset
+  }
 }
 
-export const getUsers = async (keyword?: string, limit: number = 200, offset: number = 0): Promise<SuperUserSummary[]> => {
+export const getUsers = async (
+  keyword?: string,
+  limit: number = 25,
+  offset: number = 0,
+  tier?: AccountTier
+): Promise<SuperPaginationResponse<SuperUserSummary>> => {
   const sequelize = getSequelize()
   const rows = await sequelize.query<SuperUserRow>(
     `
       SELECT
+        COUNT(*) OVER()::INTEGER AS "total",
         up.id AS "id",
         up.email AS "email",
         up.first_name AS "firstName",
@@ -133,16 +154,17 @@ export const getUsers = async (keyword?: string, limit: number = 200, offset: nu
         up.first_name ILIKE '%' || :keyword || '%' OR
         up.last_name ILIKE '%' || :keyword || '%'
       )
+      AND (:tier::TEXT IS NULL OR COALESCE(up.account_tier, 'free') = :tier)
       GROUP BY up.id
       ORDER BY up.email, up.id
       LIMIT :limit OFFSET :offset
     `,
-    { replacements: { keyword: keyword ?? null, limit, offset, ownerRoleId: OWNER_ROLE_ID }, type: QueryTypes.SELECT }
+    { replacements: { keyword: keyword ?? null, limit, offset, tier: tier ?? null, ownerRoleId: OWNER_ROLE_ID }, type: QueryTypes.SELECT }
   )
 
   const portfolioLimitCache = new Map<string, Awaited<ReturnType<typeof getAccountTierProjectLimitMap>>>()
 
-  return await Promise.all(rows.map(async row => {
+  const data = await Promise.all(rows.map(async row => {
     const additionalPremiumProjectSlots = Number(row.additionalPremiumProjectSlots ?? 0)
     const cacheKey = `${row.accountTier}:${additionalPremiumProjectSlots}`
     const limits = portfolioLimitCache.get(cacheKey) ?? await getAccountTierProjectLimitMap(row.accountTier, additionalPremiumProjectSlots)
@@ -169,6 +191,13 @@ export const getUsers = async (keyword?: string, limit: number = 200, offset: nu
       }
     }
   }))
+
+  return {
+    data,
+    total: rows[0]?.total ?? 0,
+    limit,
+    offset
+  }
 }
 
 export const getUserProjects = async (userId: number): Promise<SuperProjectSummary[]> => {

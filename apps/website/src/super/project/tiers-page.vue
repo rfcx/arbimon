@@ -68,10 +68,10 @@
             <option value="free">
               Free
             </option>
-            <option value="pro">
+            <option value="premium">
               Premium
             </option>
-            <option value="enterprise">
+            <option value="unlimited">
               Unlimited
             </option>
           </select>
@@ -107,14 +107,38 @@
       <div v-else>
         <ProjectTieringTable
           v-if="activeTab === 'projects'"
-          :projects="filteredProjects ?? []"
+          :projects="projects?.data ?? []"
           @select-project="onSelectProject"
         />
         <UserTieringTable
           v-else
-          :users="filteredUsers ?? []"
+          :users="users?.data ?? []"
           @select-project="onSelectProject"
         />
+        <div class="mt-6 flex items-center justify-between gap-4 text-sm text-subtle">
+          <span>
+            Showing {{ paginationStart }}-{{ paginationEnd }} of {{ activeTabTotal }}
+          </span>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="rounded border border-util-gray-03 px-3 py-1.5 text-insight disabled:(cursor-not-allowed opacity-50)"
+              :disabled="currentPage <= 1 || isActiveTabLoading"
+              @click="goToPreviousPage"
+            >
+              Previous
+            </button>
+            <span>Page {{ currentPage }} / {{ totalPages }}</span>
+            <button
+              type="button"
+              class="rounded border border-util-gray-03 px-3 py-1.5 text-insight disabled:(cursor-not-allowed opacity-50)"
+              :disabled="currentPage >= totalPages || isActiveTabLoading"
+              @click="goToNextPage"
+            >
+              Next
+            </button>
+          </div>
+        </div>
         <div class="mt-3 text-sm text-subtle">
           Can't find the {{ activeTab === 'projects' ? 'project' : 'user' }} you want? Try searching by name or keyword.
         </div>
@@ -129,7 +153,7 @@ import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { type SuperProjectSummary } from '@rfcx-bio/common/api-bio/super/projects'
+import { type SuperProjectSummary, type SuperUserSummary } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
@@ -142,33 +166,50 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const router = useRouter()
 const superStore = useSuperStore()
 
+const PAGE_SIZE = 25
 const activeTab = ref<'projects' | 'users'>('projects')
 const searchKeyword = ref('')
-const limit = ref(200)
+const limit = ref(PAGE_SIZE)
 const offset = ref(0)
 
-const selectedTier = ref('all')
+const selectedTier = ref<'all' | 'free' | 'premium' | 'unlimited' | 'pro' | 'enterprise'>('all')
 
 const searchParams = useDebounce(searchKeyword, 500)
+const activeProjectsTab = computed(() => activeTab.value === 'projects')
+const activeUsersTab = computed(() => activeTab.value === 'users')
+const selectedProjectTier = computed<SuperProjectSummary['projectType'] | undefined>(() => {
+  if (!activeProjectsTab.value || selectedTier.value === 'all') return undefined
+  return selectedTier.value as SuperProjectSummary['projectType']
+})
+const selectedUserTier = computed<SuperUserSummary['accountTier'] | undefined>(() => {
+  if (!activeUsersTab.value || selectedTier.value === 'all') return undefined
+  return selectedTier.value as SuperUserSummary['accountTier']
+})
 
-const { isError: isProjectError, isLoading: isProjectLoading, error: projectError, data: projects } = useGetSuperProjects(apiClientBio, { keyword: searchParams, limit, offset })
-const { isError: isUserError, isLoading: isUserLoading, error: userError, data: users } = useGetSuperUsers(apiClientBio, { keyword: searchParams, limit, offset })
+const { isError: isProjectError, isLoading: isProjectLoading, error: projectError, data: projects } = useGetSuperProjects(apiClientBio, {
+  keyword: searchParams,
+  tier: selectedProjectTier,
+  limit,
+  offset,
+  enabled: activeProjectsTab
+})
+const { isError: isUserError, isLoading: isUserLoading, error: userError, data: users } = useGetSuperUsers(apiClientBio, {
+  keyword: searchParams,
+  tier: selectedUserTier,
+  limit,
+  offset,
+  enabled: activeUsersTab
+})
 
 const isActiveTabError = computed(() => activeTab.value === 'projects' ? isProjectError.value : isUserError.value)
 const isActiveTabLoading = computed(() => activeTab.value === 'projects' ? isProjectLoading.value : isUserLoading.value)
 const activeTabError = computed(() => activeTab.value === 'projects' ? projectError.value : userError.value)
-
-const filteredProjects = computed(() => {
-  if (!projects.value) return []
-  if (selectedTier.value === 'all') return projects.value
-  return projects.value.filter((project) => project.projectType === selectedTier.value)
-})
-
-const filteredUsers = computed(() => {
-  if (!users.value) return []
-  if (selectedTier.value === 'all') return users.value
-  return users.value.filter((user) => user.accountTier === selectedTier.value)
-})
+const activeTabResponse = computed(() => activeTab.value === 'projects' ? projects.value : users.value)
+const activeTabTotal = computed(() => activeTabResponse.value?.total ?? 0)
+const currentPage = computed(() => Math.floor(offset.value / limit.value) + 1)
+const totalPages = computed(() => Math.max(1, Math.ceil(activeTabTotal.value / limit.value)))
+const paginationStart = computed(() => activeTabTotal.value === 0 ? 0 : offset.value + 1)
+const paginationEnd = computed(() => Math.min(offset.value + limit.value, activeTabTotal.value))
 
 watch(activeTabError, (newError) => {
   if (newError?.response?.status === 401) {
@@ -176,12 +217,30 @@ watch(activeTabError, (newError) => {
   }
 })
 
-watch(activeTab, (newTab) => {
+watch(activeTab, () => {
   searchKeyword.value = ''
   selectedTier.value = 'all'
+  offset.value = 0
+})
+
+watch(searchParams, () => {
+  offset.value = 0
+})
+
+watch(selectedTier, () => {
+  offset.value = 0
 })
 
 const onSelectProject = (project: SuperProjectSummary): void => {
   superStore.setSelectedProject(project)
+}
+
+const goToPreviousPage = (): void => {
+  offset.value = Math.max(0, offset.value - limit.value)
+}
+
+const goToNextPage = (): void => {
+  if (currentPage.value >= totalPages.value) return
+  offset.value += limit.value
 }
 </script>

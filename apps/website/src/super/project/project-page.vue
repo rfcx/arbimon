@@ -47,7 +47,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="project in projects"
+              v-for="project in projects?.data ?? []"
               :key="project.id"
               class="border-y-1 border-util-gray-03"
             >
@@ -85,7 +85,7 @@ const apiClientBio = inject(apiClientKey) as AxiosInstance
 const router = useRouter()
 
 const searchKeyword = ref('')
-const limit = ref(200)
+const limit = ref(25)
 const offset = ref(0)
 
 const searchParams = useDebounce(searchKeyword, 500)

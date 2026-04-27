@@ -2,7 +2,7 @@ import { type AxiosInstance } from 'axios'
 
 import { type AccountTier, type LocationProjectTypes, type UserTypes } from '../../dao/types'
 import { type ProjectMemberAddRemoveRequest, type ProjectMembersResponse, type ProjectMemberUpdateRequest } from '../project/project-members'
-import { type ProjectTieringUsage } from '../project/projects'
+import { type LocationProjectQuery, type ProjectTieringUsage } from '../project/projects'
 
 export interface SuperProjectLimits {
   recordingMinutesCount: number | null
@@ -36,6 +36,21 @@ export type SuperUserSummary = UserTypes['light'] & {
   usage: SuperPortfolioUsage
 }
 
+export interface SuperProjectQuery extends LocationProjectQuery {
+  tier?: NonNullable<LocationProjectTypes['light']['projectType']>
+}
+
+export interface SuperUserQuery extends LocationProjectQuery {
+  tier?: AccountTier
+}
+
+export interface SuperPaginationResponse<T> {
+  data: T[]
+  offset: number
+  limit: number
+  total: number
+}
+
 export interface SuperProjectTierUpdateBody {
   projectType?: NonNullable<LocationProjectTypes['light']['projectType']>
   isLocked?: boolean
@@ -55,11 +70,11 @@ export const superUserProjectsRoute = superUsersRoute + '/:userId/projects'
 export const superUserTierRoute = superUsersRoute + '/:userId/tier'
 
 // Service
-export const apiBioSuperGetProjects = async (apiClient: AxiosInstance, options: { keyword?: string, limit?: number, offset?: number }): Promise<SuperProjectSummary[]> =>
-  await apiClient.get<SuperProjectSummary[]>(superProjectsRoute, { params: options }).then(res => res.data)
+export const apiBioSuperGetProjects = async (apiClient: AxiosInstance, options: SuperProjectQuery): Promise<SuperPaginationResponse<SuperProjectSummary>> =>
+  await apiClient.get<SuperPaginationResponse<SuperProjectSummary>>(superProjectsRoute, { params: options }).then(res => res.data)
 
-export const apiBioSuperGetUsers = async (apiClient: AxiosInstance, options: { keyword?: string, limit?: number, offset?: number }): Promise<SuperUserSummary[]> =>
-  await apiClient.get<SuperUserSummary[]>(superUsersRoute, { params: options }).then(res => res.data)
+export const apiBioSuperGetUsers = async (apiClient: AxiosInstance, options: SuperUserQuery): Promise<SuperPaginationResponse<SuperUserSummary>> =>
+  await apiClient.get<SuperPaginationResponse<SuperUserSummary>>(superUsersRoute, { params: options }).then(res => res.data)
 
 export const apiBioSuperGetUserProjects = async (apiClient: AxiosInstance, userId: number): Promise<SuperProjectSummary[]> =>
   await apiClient.get<SuperProjectSummary[]>(superUserProjectsRoute.replace(':userId', userId.toString())).then(res => res.data)
