@@ -13,6 +13,7 @@
             v-for="analysis in analyses"
             :key="analysis.value"
             :analysis="analysis"
+            :is-disabled="analysis.value === 'pm' && isPMLimitReached"
             @emit-selected-analysis="onSelectAnalysis"
           />
         </div>
@@ -74,6 +75,23 @@ const analyses = ref([
   { value: 'aed', title: 'AED & Clustering', description: 'An unsupervised approach for the automated detection and categorization of sounds within extensive audio datasets. This approach quickly identifies species communities and uncovers previously unknown sound categories.', url: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/audio-event-detections-clustering?newJob`, link: 'https://help.arbimon.org/category/198-analyze-recordings-with-audio-event-detection-clustering-aed-c', label: 'Learn more about AED and Clustering', isSelected: false },
   { value: 'rfm', title: 'Random Forest Model', description: 'A machine learning model, comprising multiple decision trees and trained with presence and absence data, designed to predict species presence in soundscape recordings. It serves as an efficient and accurate means of assessing species presence in diverse acoustic environments.', url: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models?newJob`, link: 'https://help.arbimon.org/category/199-analyze-recordings-with-random-forest-models-rfm', label: 'Learn more about RFM', isSelected: false }
 ])
+
+const isPMLimitReached = computed(() => {
+  const projectType = store.project?.projectType ?? 'free'
+  const currentPMJobs = store.project?.usage?.patternMatchingCount ?? 0
+
+  if (projectType === 'unlimited') return false
+
+  if (projectType === 'free') {
+    return currentPMJobs >= 50
+  }
+
+  if (projectType === 'premium') {
+    return currentPMJobs >= 200
+  }
+
+  return false
+})
 
 const onSelectAnalysis = (url: string, value: string) => {
   if (isProjectViewOnly.value) return
