@@ -12,14 +12,27 @@
             <h2 class="text-gray-900 dark:text-insight">
               My Projects
             </h2>
-            <router-link
-              :to="{ name: ROUTE_NAMES.createProject }"
-              class=" flex-row ml-6"
-            >
-              <button class="btn btn-primary">
-                Create a new project +
-              </button>
-            </router-link>
+            <div class="relative group inline-block ml-6">
+              <router-link
+                :to="canCreateProject ? { name: ROUTE_NAMES.createProject } : {}"
+                :class="{ 'pointer-events-none': !canCreateProject }"
+              >
+                <button
+                  class="btn btn-primary"
+                  :class="{ 'opacity-50 cursor-not-allowed grayscale': !canCreateProject }"
+                  :disabled="!canCreateProject"
+                >
+                  Create a new project +
+                </button>
+              </router-link>
+
+              <div
+                v-if="!canCreateProject"
+                class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip invisible group-hover:visible opacity-0 group-hover:opacity-100 top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none"
+              >
+                You have reached the maximum number of projects allowed for your plan.
+              </div>
+            </div>
           </div>
           <div>
             <div
@@ -218,6 +231,21 @@ watch(() => projectSearchValue.value, () => {
   if (projectSearchValue.value === '') {
     projects.value = store.myProjects
   }
+})
+
+const canCreateProject = computed(() => {
+  const plan = portfolioSummary.value?.accountTier?.toLowerCase() ?? 'free'
+  const currentCount = store.myProjects.length
+  if (plan === 'enterprise') {
+    return true
+  }
+  if (plan === 'pro') {
+    return currentCount < 52
+  }
+  if (plan === 'free') {
+    return currentCount < 5
+  }
+  return false
 })
 
 const loadMoreProject = async (): Promise<void> => {
