@@ -186,6 +186,7 @@
               :user="user"
               :roles="roles"
               :editable="store.userIsAdminProjectMember"
+              :project-info="projectInfo"
               :is-deleting="isDeletingProject"
               :is-error="isErrorDeleteProject"
               :is-success="isSuccessDeleteProject"
@@ -404,7 +405,7 @@ const roles = [
 ]
 
 const { data: users, refetch: usersRefetch, isError: isErrorUsers } = useGetProjectMembers(apiClientBio, selectedProjectId)
-const { data: projectInfo } = useGetProjectInfo(apiClientBio, selectedProjectId, ['countryCodes'], computed(() => selectedProjectId.value !== undefined))
+const { data: projectInfo, refetch: refetchProjectInfo } = useGetProjectInfo(apiClientBio, selectedProjectId, ['countryCodes'], computed(() => selectedProjectId.value !== undefined))
 const { data: searchedUsers, refetch: searchUsersRefetch } = useSearchUsers(apiClientBio, userSearchValue, computed(() => userSearchValue.value !== ''))
 const { mutate: mutatePatchUserRole } = useUpdateProjectMember(apiClientBio, store.project?.id ?? -1)
 const { mutate: mutatePostProjectMember } = useAddProjectMember(apiClientBio, store.project?.id ?? -1)
@@ -539,6 +540,7 @@ const changeUserRole = (email: string, role: ProjectRole):void => {
   }, {
     onSuccess: () => {
       usersRefetch()
+      refetchProjectInfo()
     },
     onError: (error: unknown) => {
       const axiosError = error instanceof AxiosError ? error : undefined

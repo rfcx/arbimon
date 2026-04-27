@@ -101,8 +101,13 @@
           <li
             v-for="role in roles.filter(r => r.id !== 4)"
             :key="role.id"
-            class="flex flex-row justify-start items-center p-1 m-0 cursor-pointer hover:bg-chirp hover:text-pitch hover:(border-chirp rounded-lg)"
-            @click="handleChangeUserRole(user.email, role.id); closeMenu()"
+            class="flex flex-row justify-start items-center p-1 m-0"
+            :class="[
+              isRoleDisabled(role.id)
+                ? 'opacity-50 cursor-not-allowed grayscale'
+                : 'cursor-pointer hover:bg-chirp hover:text-pitch hover:(border-chirp rounded-lg)'
+            ]"
+            @click="!isRoleDisabled(role.id) && (handleChangeUserRole(user.email, role.id), closeMenu())"
           >
             <span class="w-8">
               <icon-fa-check
@@ -110,7 +115,17 @@
                 class="text-xs"
               />
             </span>
-            {{ role.name }}
+            <div class="flex flex-col">
+              <span :class="{ 'font-medium': role.id === user.roleId }">
+                {{ role.name }}
+              </span>
+              <span
+                v-if="isRoleDisabled(role.id)"
+                class="text-[10px] text-red-500 italic"
+              >
+                Limit reached
+              </span>
+            </div>
           </li>
         </ul>
       </div>
@@ -128,6 +143,7 @@ import { Dropdown, initDropdowns, initTooltips } from 'flowbite'
 import { onMounted, ref } from 'vue'
 
 import type { ProjectMember } from '@rfcx-bio/common/api-bio/project/project-members'
+import { type ProjectInfoResponse } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { type ProjectRole, getRoleById } from '@rfcx-bio/common/roles'
 
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
@@ -143,7 +159,7 @@ interface Role {
 
 let dropdown: Dropdown
 
-const props = defineProps<{user: ProjectMember, roles: Role[], editable: boolean, isDeleting?: boolean, isError?: boolean, isSuccess?: boolean}>()
+const props = defineProps<{user: ProjectMember, roles: Role[], editable: boolean, isDeleting?: boolean, isError?: boolean, isSuccess?: boolean, projectInfo?: ProjectInfoResponse}>()
 const emit = defineEmits<{(e: 'emitChangeUserRole', email: string, role: ProjectRole): void, (e: 'emitDeleteProjectMember', email: string): void}>()
 
 const disableDeleteUserText = ref('Contact your project administrator for permission to delete project member')
@@ -154,6 +170,29 @@ const store = useStore()
 const getUserRoleName = (): string => {
   const role = props.roles.find(r => r.id === props.user.roleId)
   return role !== undefined ? role.name : 'Not defined'
+}
+
+const isRoleDisabled = (roleId: number): boolean => {
+  if (props.projectInfo?.isLocked === true) return true
+
+  const projectType = props.projectInfo?.projectType ?? 'free'
+  const usage = props.projectInfo?.usage
+
+  const roleName = getRoleById(roleId)
+
+  const collaboratorRoles: ProjectRole[] = ['admin', 'expert', 'user', 'entry']
+  const isCollaboratorRole = collaboratorRoles.includes(roleName)
+
+  if (projectType === 'premium' && isCollaboratorRole) {
+    const currentCollabs = usage?.collaboratorCount ?? 0
+    return currentCollabs >= 4
+  }
+
+  if (projectType === 'free') {
+    return roleName !== 'owner'
+  }
+
+  return false
 }
 
 const closeMenu = (): void => {
