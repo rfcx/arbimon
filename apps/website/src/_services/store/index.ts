@@ -27,11 +27,26 @@ export const useStore = defineStore('root', {
   getters: {
     userIsExternalGuest: (state) => state.project?.role === 'external',
     userIsGuest: (state) => state.project?.role === 'viewer' || state.project?.role === 'external',
-    userIsProjectMember: (state) => rolesGreaterOrEqualTo('viewer').includes(state.project?.role ?? 'none'),
-    userIsDataEntryMember: (state) => rolesGreaterOrEqualTo('entry').includes(state.project?.role ?? 'none'),
-    userIsFullProjectMember: (state) => rolesGreaterOrEqualTo('user').includes(state.project?.role ?? 'none'),
-    userIsAdminProjectMember: (state) => rolesGreaterOrEqualTo('admin').includes(state.project?.role ?? 'none'),
-    userIsExpertMember: (state) => rolesGreaterOrEqualTo('expert').includes(state.project?.role ?? 'none')
+    userIsProjectMember: (state) => {
+      if (state.project?.isLocked === true) return true
+      return rolesGreaterOrEqualTo('viewer').includes(state.project?.role ?? 'none')
+    },
+    userIsDataEntryMember: (state) => {
+      if (state.project?.isLocked === true) return false
+      return rolesGreaterOrEqualTo('entry').includes(state.project?.role ?? 'none')
+    },
+    userIsFullProjectMember: (state) => {
+      if (state.project?.isLocked === true) return false
+      return rolesGreaterOrEqualTo('user').includes(state.project?.role ?? 'none')
+    },
+    userIsAdminProjectMember: (state) => {
+      if (state.project?.isLocked === true) return false
+      return rolesGreaterOrEqualTo('admin').includes(state.project?.role ?? 'none')
+    },
+    userIsExpertMember: (state) => {
+      if (state.project?.isLocked === true) return false
+      return rolesGreaterOrEqualTo('expert').includes(state.project?.role ?? 'none')
+    }
   },
   actions: {
     async updateUser (user: User | undefined = undefined) {
