@@ -51,12 +51,12 @@
               placeholder="&#61442; Search by user email"
               :data-tooltip-target="!store.userIsFullProjectMember ? 'userSearchInputTooltipId' : null"
               data-tooltip-placement="bottom"
-              :disabled="!store.userIsAdminProjectMember"
+              :disabled="!canAddProjectMember"
               @input="searchUserInputChanged"
               @click="openUserSearch()"
             >
             <div
-              v-if="!store.userIsAdminProjectMember"
+              v-if="!canAddProjectMember"
               id="userSearchInputTooltipId"
               role="tooltip"
               class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
@@ -67,7 +67,7 @@
                 data-popper-arrow
               />
             </div>
-            <div>
+            <div class="relative inline-block">
               <button
                 class="inline-flex py-2 px-3 text-sm btn bg-moss border items-center justify-center text-white rounded-md border-l-1 rounded-l-none group dark:hover:bg-util-gray-04 dark:focus:ring-util-gray-04 disabled:(cursor-not-allowed bg-util-gray-04 text-util-gray-02 btn-border btn-border-l-1)"
                 :disabled="!canAddProjectMember"
@@ -81,7 +81,7 @@
                   v-if="!canAddProjectMember"
                   id="addProjectMemberTooltipId"
                   role="tooltip"
-                  class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+                  class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip invisible group-hover:visible opacity-0 group-hover:opacity-100 top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none"
                 >
                   {{ disableText }}
                   <div
@@ -340,8 +340,20 @@ const isSearchingUsers = ref(false)
 const addNewUserError = ref(false)
 const userSearchValue = ref('')
 
+const reachedText = computed(() => {
+  const type = projectInfo.value?.projectType ?? 'free'
+
+  if (type === 'free') {
+    return 'Free plan is limited to 1 member (Owner only).'
+  }
+  if (type === 'premium') {
+    return 'Premium plan limit reached (Max 4 collaborators / 8 members).'
+  }
+  return 'Limit reached for this project.'
+})
+
 const disableText = computed(() => {
-  if (memberLimitReached.value) return 'This project has reached its collaborator limit. Open Project Settings to review usage.'
+  if (!canAddMember.value) return reachedText.value + ' Open Project Settings to review usage.'
   return 'Contact your project administrator for permission to manage project members'
 })
 
@@ -426,16 +438,26 @@ const memberLimitMessage = computed(() => {
   return `${projectType.charAt(0).toUpperCase()}${projectType.slice(1)} member usage: ${usage?.collaboratorCount ?? 0} / ${limits.collaboratorCount === null ? 'No cap' : limits.collaboratorCount} collaborators, ${usage?.guestCount ?? 0} / ${limits.guestCount === null ? 'No cap' : limits.guestCount} guests.`
 })
 
-const memberLimitReached = computed(() => {
+const canAddMember = computed(() => {
   if (projectInfo.value?.isLocked === true) return false
+
   const projectType = projectInfo.value?.projectType ?? 'free'
-  const limits = projectInfo.value?.limits ?? getProjectTypeUsageLimits(projectType)
-  if (limits.collaboratorCount === null) return false
-  return (projectInfo.value?.usage?.collaboratorCount ?? 0) >= limits.collaboratorCount
+  const collabs = projectInfo.value?.usage?.collaboratorCount ?? 0
+  const guests = projectInfo.value?.usage?.guestCount ?? 0
+  const currentTotal = collabs + guests
+  if (projectType === 'free') {
+    return currentTotal < 1
+  }
+
+  if (projectType === 'premium') {
+    return currentTotal < 8
+  }
+
+  return true
 })
 
 const canAddProjectMember = computed(() => {
-  return store.userIsAdminProjectMember && !memberLimitReached.value
+  return store.userIsAdminProjectMember && canAddMember.value
 })
 
 onMounted(() => {
