@@ -7,7 +7,8 @@ module.exports = {
     'lib/',
     'cypress/',
     'coverage/',
-    '!.*'
+    '!.*',
+    '.vite-ssg-temp/'
   ],
   root: true,
   overrides: [
