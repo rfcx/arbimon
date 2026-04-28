@@ -14,22 +14,31 @@
     <td class="py-3">
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-2">
-          <select
-            class="w-25 rounded border border-util-gray-03 bg-white px-2 py-1 text-xs capitalize cursor-pointer disabled:(bg-util-gray-01 cursor-not-allowed)"
-            :value="selectedProjectType"
-            :disabled="isSavingTier || project.isLocked"
-            @change="onProjectTypeChange"
-          >
-            <option value="free">
-              free
-            </option>
-            <option value="premium">
-              premium
-            </option>
-            <option value="unlimited">
-              unlimited
-            </option>
-          </select>
+          <div class="relative group inline-block">
+            <select
+              class="w-25 rounded border border-util-gray-03 bg-white px-2 py-1 text-xs capitalize cursor-pointer disabled:(bg-util-gray-01 cursor-not-allowed)"
+              :value="selectedProjectType"
+              :disabled="isSavingTier || project.isLocked"
+              @change="onProjectTypeChange"
+            >
+              <option value="free">
+                free
+              </option>
+              <option value="premium">
+                premium
+              </option>
+              <option value="unlimited">
+                unlimited
+              </option>
+            </select>
+
+            <div
+              v-if="project.isLocked"
+              class="absolute w-max z-10 inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm tooltip invisible group-hover:visible opacity-0 group-hover:opacity-100 top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none"
+            >
+              Disable View-only before changing tiers
+            </div>
+          </div>
           <button
             type="button"
             class="rounded bg-frequency px-2 py-1 text-xs font-medium cursor-pointer disabled:(cursor-not-allowed opacity-50)"
