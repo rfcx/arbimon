@@ -3,11 +3,18 @@
     <td class="<sm:hidden text-sm text-subtle">
       {{ project.id }}
     </td>
-    <td class="py-3">
-      <div class="font-medium text-insight">
+    <td class="py-3 pr-3 max-w-[200px]">
+      <div
+        class="font-medium text-insight truncate"
+        :title="project.name"
+      >
         {{ project.name }}
       </div>
-      <div class="text-sm text-subtle">
+
+      <div
+        class="text-sm text-subtle truncate"
+        :title="project.slug"
+      >
         {{ project.slug }}
       </div>
     </td>
