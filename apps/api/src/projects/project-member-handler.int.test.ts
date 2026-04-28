@@ -33,6 +33,7 @@ const { LocationProject, LocationProjectProfile, LocationProjectUserRole, UserPr
 
 beforeAll(async () => {
   await createProject({ name: 'Grey-blue humpback whales' }, currentUserId, '')
+  await LocationProject.update({ projectType: 'premium' }, { where: { slug: { [Op.like]: 'grey-blue-humpback%' } } })
   await UserProfile.create(newUser)
   await UserProfile.bulkCreate(extraUsers)
 })
