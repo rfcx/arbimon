@@ -56,14 +56,17 @@
           </button>
         </div>
         <div class="flex flex-wrap items-center gap-2">
-          <span :class="tierBadgeClass(project.projectType)">
-            {{ project.projectType ?? 'free' }}
-          </span>
           <span
             v-if="project.isLocked"
             :class="stateBadgeClass(project)"
           >
             view-only
+          </span>
+          <span
+            v-else
+            :class="tierBadgeClass(project.projectType)"
+          >
+            {{ project.projectType ?? 'free' }}
           </span>
         </div>
       </div>

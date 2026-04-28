@@ -1,15 +1,17 @@
 <template>
   <section class="py-20 bg-white dark:bg-pitch pl-18 site-page">
     <div class="flex flex-col px-8 bg-white dark:bg-pitch">
-      <div
-        v-if="isProjectViewOnly"
-        class="mb-4 rounded-lg border border-insight/30 bg-insight/10 px-4 py-3 text-sm text-insight"
-      >
-        This project is currently view-only. Recording exports, playlist saves, and deletions are disabled until the project is reactivated.
+      <div class="flex flex-row items-center gap-2">
+        <h1 class="ml-1 text-gray-900 dark:text-insight">
+          Recordings
+        </h1>
+        <ProjectStateBadge
+          v-if="store.project"
+          :project-type="store.project.projectType"
+          :is-locked="store.project.isLocked"
+          class="w-max"
+        />
       </div>
-      <h1 class="ml-1 text-gray-900 dark:text-insight">
-        Recordings
-      </h1>
       <div class="flex justify-between">
         <div class="flex mt-6 items-center">
           <div
@@ -269,6 +271,7 @@ import { type SiteParams } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
+import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
 import { useStore } from '~/store'
 import { useGetClasses, useGetClassifications, useGetPlaylists, useGetSoundscape, useGetTags, useRecordings } from './_composables/use-recordings'
 import { useSites } from './_composables/use-sites'

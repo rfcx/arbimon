@@ -4,6 +4,11 @@
       <h1 class="ml-1 text-gray-900 dark:text-insight">
         Species
       </h1>
+      <ProjectStateBadge
+        v-if="store.project"
+        :project-type="store.project.projectType"
+        :is-locked="store.project.isLocked"
+      />
       <button
         class="btn btn-primary btn-medium ml-2 btn-small text-[14px] h-[34px] items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
         :disabled="!store.userIsDataEntryMember"
@@ -204,6 +209,7 @@ import { type ProjectTemplatesResponse, type PublicTemplateResponse, type Public
 
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
+import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
 import { useStore } from '~/store'
 import { useGetProjectTemplates, useGetPublicTemplates, useGetSpecies } from './_composables/use-species'
 import CreateSpecies from './component/create-species.vue'

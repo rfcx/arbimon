@@ -1,15 +1,14 @@
 <template>
   <section class="py-20 bg-white dark:bg-pitch pl-18 site-page">
-    <div
-      v-if="isProjectViewOnly"
-      class="mx-8 mb-4 rounded-lg border border-insight/30 bg-insight/10 px-4 py-3 text-sm text-insight"
-    >
-      This project is currently view-only. Site changes and exports are disabled until the project is reactivated.
-    </div>
     <div class="flex items-center px-8 bg-white dark:bg-pitch">
       <h1 class="ml-1 text-gray-900 dark:text-insight">
         Sites
       </h1>
+      <ProjectStateBadge
+        v-if="store.project"
+        :project-type="store.project.projectType"
+        :is-locked="store.project.isLocked"
+      />
       <button
         class="btn btn-primary btn-medium ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
         :disabled="!store.userIsFullProjectMember || isProjectViewOnly"
@@ -272,6 +271,7 @@ import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/com
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey, apiClientDeviceKey, apiClientKey } from '@/globals'
+import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
 import { useStore } from '~/store'
 import { apiDeviceGetAssets, useGetAssets, useSites } from './_composables/use-sites'
 import CreateEditSite from './component/create-edit-site.vue'
