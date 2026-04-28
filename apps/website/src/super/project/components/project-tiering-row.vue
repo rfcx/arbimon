@@ -15,8 +15,9 @@
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-2">
           <select
-            class="w-25 rounded border border-util-gray-03 bg-white px-2 py-1 text-xs capitalize"
+            class="w-25 rounded border border-util-gray-03 bg-white px-2 py-1 text-xs capitalize cursor-pointer disabled:(bg-util-gray-01 cursor-not-allowed)"
             :value="selectedProjectType"
+            :disabled="isSavingTier || project.isLocked"
             @change="onProjectTypeChange"
           >
             <option value="free">
@@ -31,8 +32,8 @@
           </select>
           <button
             type="button"
-            class="rounded bg-frequency px-2 py-1 text-xs font-medium disabled:(cursor-not-allowed opacity-50)"
-            :disabled="isSavingTier || selectedProjectType === (project.projectType ?? 'free')"
+            class="rounded bg-frequency px-2 py-1 text-xs font-medium cursor-pointer disabled:(cursor-not-allowed opacity-50)"
+            :disabled="isSavingTier || project.isLocked || selectedProjectType === (project.projectType ?? 'free')"
             @click="emit('save-tier', project)"
           >
             {{ isSavingTier ? 'Saving' : 'Save' }}
@@ -58,15 +59,15 @@
       {{ formatUsage(usage?.jobCount, limits.jobCount) }}
     </td>
     <td class="py-3 pr-4 text-sm text-insight">
-      <div class="flex flex-col gap-1">
-        <div class="flex justify-between items-center gap-2">
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-1">
           <span class="font-medium min-w-[60px]">Collabs</span>
           <span>
             {{ formatUsage(usage?.collaboratorCount, limits.collaboratorCount) }}
           </span>
         </div>
 
-        <div class="flex justify-between items-center gap-2">
+        <div class="flex items-center gap-1">
           <span class="font-medium min-w-[60px]">Guest</span>
           <span>
             {{ formatUsage(usage?.guestCount, limits.guestCount) }}

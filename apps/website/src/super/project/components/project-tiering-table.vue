@@ -183,7 +183,7 @@ const toggleProjectLock = async (project: SuperProjectSummary): Promise<void> =>
   try {
     await mutateProjectTier({
       projectId: project.id,
-      payload: { isLocked: !project.isLocked }
+      payload: { isLocked: project.isLocked !== true }
     })
     await queryClient.invalidateQueries({ queryKey: ['get-projects'] })
     await queryClient.invalidateQueries({ queryKey: ['get-super-users'] })
