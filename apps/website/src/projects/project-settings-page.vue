@@ -18,9 +18,12 @@
           <h1 class="text-gray-900 dark:text-insight">
             Project settings
           </h1>
-          <span class="inline-flex items-center rounded-full bg-frequency/10 px-3 py-1 font-bold capitalize tracking-wide text-frequency leading-none">
-            {{ projectTypeLabel.toLowerCase() }}
-          </span>
+          <ProjectStateBadge
+            v-if="store.project"
+            :project-type="store.project.projectType"
+            :is-locked="store.project.isLocked"
+            class="w-max"
+          />
         </div>
 
         <div class="flex flex-row-reverse items-center gap-4">
@@ -63,7 +66,7 @@
           />
         </div>
       </div>
-      <ReadOnlyBanner v-if="!store.userIsAdminProjectMember" />
+      <ReadOnlyBanner v-if="store.project?.isLocked !== true && !store.userIsAdminProjectMember" />
       <div class="grid gap-10">
         <div>
           <h4>
@@ -140,6 +143,7 @@ import SaveStatusText from '@/_components/save-status-text.vue'
 import ReadOnlyBanner from '@/_layout/components/guest-banner/guest-banner.vue'
 import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientArbimonLegacyKey, apiClientKey, togglesKey } from '@/globals'
+import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
 import { useDeleteProject, useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
@@ -195,11 +199,6 @@ const lastSaved = ref<number>(date)
 const isToggledForBackup = computed(() => {
   const isInternalUser = store.user?.email?.includes('rfcx.org') ?? false
   return toggles?.projectBackup === true || isInternalUser
-})
-
-const projectTypeLabel = computed(() => {
-  const projectType = settings.value?.projectType ?? selectedProject.value?.projectType ?? 'free'
-  return `${projectType.charAt(0).toUpperCase()}${projectType.slice(1)}`
 })
 
 // update form values

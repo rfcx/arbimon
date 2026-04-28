@@ -48,6 +48,10 @@ export default class ComparisonListComponent extends Vue {
     return this.filters.length < 5
   }
 
+  get disableFilter (): boolean {
+    return this.store.project?.isLocked === true
+  }
+
   // Trigger on first load and when project change
   @Watch('store.projectFilters', { deep: true, immediate: true })
   onProjectFilterChange (): void {

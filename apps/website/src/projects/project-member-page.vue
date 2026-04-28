@@ -5,10 +5,12 @@
         <h1 class="text-gray-900 dark:text-insight">
           Members
         </h1>
-
-        <span class="inline-flex items-center rounded-full bg-frequency/10 px-3 py-1 font-bold capitalize tracking-wide text-frequency leading-none">
-          {{ projectTypeLabel.toLowerCase() }}
-        </span>
+        <ProjectStateBadge
+          v-if="store.project"
+          :project-type="store.project.projectType"
+          :is-locked="store.project.isLocked"
+          class="w-max"
+        />
       </div>
       <div
         v-if="isErrorUsers"
@@ -316,6 +318,7 @@ import { type ProjectRole } from '@rfcx-bio/common/roles'
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientKey } from '@/globals'
+import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
 import { getProjectTypeUsageLimits } from '@/projects/entitlement-helpers'
 import { useStore } from '~/store'
 import { useAddProjectMember, useDeleteProjectMember, useGetProjectMembers, useSearchUsers, useUpdateProjectMember } from './_composables/use-project-member'
@@ -447,7 +450,7 @@ const canAddMember = computed(() => {
   const guests = projectInfo.value?.usage?.guestCount ?? 0
   const currentTotal = collabs + guests
   if (projectType === 'free') {
-    return currentTotal < 1
+    return false
   }
 
   if (projectType === 'premium') {
