@@ -90,16 +90,36 @@
             <td class="py-3 text-sm text-insight">
               <div class="flex flex-col gap-1">
                 <div class="flex justify-between md:justify-start md:gap-2">
-                  <span class="font-medium min-w-[70px]">Free</span>
-                  <span>{{ formatPortfolioUsage(user.usage.freeProjects, user.limits.freeProjects) }}</span>
+                  <span class="font-medium">Free</span>
+                  <div class="flex gap-1">
+                    <span :class="isOverLimit(user.usage.freeProjects, user.limits.freeProjects) ? 'text-red-500' : 'text-insight'">
+                      {{ user.usage.freeProjects.toLocaleString() }}
+                    </span>
+                    <span>/</span>
+                    <span>{{ getLimitText(user.limits.freeProjects) }}</span>
+                  </div>
                 </div>
+
                 <div class="flex justify-between md:justify-start md:gap-2">
-                  <span class="font-medium min-w-[70px]">Premium</span>
-                  <span>{{ formatPortfolioUsage(user.usage.premiumProjects, user.limits.premiumProjects) }}</span>
+                  <span class="font-medium">Premium</span>
+                  <div class="flex gap-1">
+                    <span :class="isOverLimit(user.usage.premiumProjects, user.limits.premiumProjects) ? 'text-red-500' : 'text-insight'">
+                      {{ user.usage.premiumProjects.toLocaleString() }}
+                    </span>
+                    <span>/</span>
+                    <span>{{ getLimitText(user.limits.premiumProjects) }}</span>
+                  </div>
                 </div>
+
                 <div class="flex justify-between md:justify-start md:gap-2">
-                  <span class="font-medium min-w-[70px]">Unlimited</span>
-                  <span>{{ formatPortfolioUsage(user.usage.unlimitedProjects, user.limits.unlimitedProjects) }}</span>
+                  <span class="font-medium">Unlimited</span>
+                  <div class="flex gap-1">
+                    <span :class="isOverLimit(user.usage.unlimitedProjects, user.limits.unlimitedProjects) ? 'text-red-500' : 'text-insight'">
+                      {{ user.usage.unlimitedProjects.toLocaleString() }}
+                    </span>
+                    <span>/</span>
+                    <span>{{ getLimitText(user.limits.unlimitedProjects) }}</span>
+                  </div>
                 </div>
               </div>
             </td>
@@ -239,8 +259,13 @@ const tierBadgeClass = (accountTier: SuperUserSummary['accountTier']): string =>
   return `${base} bg-emerald-100 text-emerald-700`
 }
 
-const formatPortfolioUsage = (used: number, limit: number | null): string => {
-  const limitText = limit === null ? 'No cap' : limit.toLocaleString()
-  return `${used.toLocaleString()} / ${limitText}`
+const getLimitText = (limit: number | null | undefined): string => {
+  if (limit === null || limit === undefined) return 'No cap'
+  return limit.toLocaleString()
+}
+
+const isOverLimit = (used: number | undefined, limit: number | null | undefined): boolean => {
+  if (limit === null || limit === undefined) return false
+  return (used ?? 0) > limit
 }
 </script>

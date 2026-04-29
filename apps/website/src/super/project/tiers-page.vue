@@ -115,7 +115,10 @@
           :users="users?.data ?? []"
           @select-project="onSelectProject"
         />
-        <div class="mt-6 flex items-center justify-between gap-4 text-sm text-subtle">
+        <div
+          v-if="!isProjectLoading && projects && projects?.data.length > 0"
+          class="mt-6 flex items-center justify-between gap-4 text-sm text-subtle"
+        >
           <span>
             Showing {{ paginationStart }}-{{ paginationEnd }} of {{ activeTabTotal }}
           </span>
@@ -139,8 +142,16 @@
             </button>
           </div>
         </div>
-        <div class="mt-3 text-sm text-subtle">
-          Can't find the {{ activeTab === 'projects' ? 'project' : 'user' }} you want? Try searching by name or keyword.
+        <div
+          v-if="!isProjectLoading && projects?.data.length === 0"
+          class="mt-10 flex flex-col items-center justify-center text-center"
+        >
+          <div class="text-lg font-bold text-insight">
+            Not found
+          </div>
+          <div class="mt-1 text-sm text-subtle">
+            Can't find the {{ activeTab === 'projects' ? 'project' : 'user' }} you want? Try searching by name or keyword.
+          </div>
         </div>
       </div>
     </div>
