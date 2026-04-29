@@ -7,7 +7,7 @@ import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 import { makeProject } from '@rfcx-bio/testing/model-builders/project-model-builder'
 
-import { GET } from '~/api-helpers/types'
+import { GET, PATCH } from '~/api-helpers/types'
 import { env } from '~/env'
 import { routesSuper } from './index'
 
@@ -156,8 +156,8 @@ describe('Super projects route', async () => {
 
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body)
-    expect(results.limit).toBe(1)
-    expect(results.offset).toBe(0)
+    expect(Number(results.limit)).toBe(1)
+    expect(Number(results.offset)).toBe(0)
     expect(results.total).toBeGreaterThanOrEqual(1)
     expect(results.data).toHaveLength(1)
     expect(results.data[0].projectType).toBe('premium')
@@ -174,8 +174,8 @@ describe('Super projects route', async () => {
 
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body)
-    expect(results.limit).toBe(1)
-    expect(results.offset).toBe(0)
+    expect(Number(results.limit)).toBe(1)
+    expect(Number(results.offset)).toBe(0)
     expect(results.total).toBeGreaterThanOrEqual(1)
     expect(results.data).toHaveLength(1)
     expect(results.data[0].accountTier).toBe('pro')

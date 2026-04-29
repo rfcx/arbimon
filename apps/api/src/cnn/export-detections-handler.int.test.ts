@@ -11,6 +11,7 @@ import { routesCnn } from './index'
 
 const { LocationProject } = modelRepositoryWithElevatedPermissions
 
+vi.mock('~/api-core/api-core')
 vi.mock('@rfcx-bio/node-common/kubernetes', () => {
   return {
     createJob: vi.fn(async () => {})
