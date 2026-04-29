@@ -8,9 +8,21 @@
   >
     <div class="max-w-screen-xl mx-auto pt-6 pb-10 text-gray-900 dark:text-insight">
       <div class="flex flex-col">
-        <h1 class="text-frequency font-header pt-4 pb-4">
-          {{ profile?.name ?? selectedProject?.name }}
-        </h1>
+        <div class="flex items-center gap-3 w-full min-w-0">
+          <h1
+            class="text-frequency font-header pt-4 pb-4 truncate min-w-0"
+            :title="profile?.name ?? selectedProject?.name"
+          >
+            {{ profile?.name ?? selectedProject?.name }}
+          </h1>
+
+          <ProjectStateBadge
+            v-if="selectedProject"
+            :project-type="selectedProject.projectType"
+            :is-locked="selectedProject.isLocked"
+            class="shrink-0"
+          />
+        </div>
         <hero-project-info
           :is-loading-profile="isLoadingProfile"
           :project-objectives="dashboardStore.projectObjectives ?? profile?.objectives ?? []"
@@ -143,6 +155,7 @@ import { useRoute } from 'vue-router'
 
 import FooterBar from '@/_layout/components/landing-footer.vue'
 import { apiClientKey } from '@/globals'
+import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
 import { useGetProjectInfo } from '../projects/_composables/use-project-profile'

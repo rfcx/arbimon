@@ -15,7 +15,7 @@
     >
       <div class="flex items-center justify-between w-full gap-3">
         <div class="flex items-center gap-3">
-          <h1 class="text-gray-900 dark:text-insight">
+          <h1 class="text-gray-900 dark:text-insight mr-2">
             Project settings
           </h1>
           <ProjectStateBadge

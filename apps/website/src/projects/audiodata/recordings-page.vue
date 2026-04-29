@@ -2,7 +2,7 @@
   <section class="py-20 bg-white dark:bg-pitch pl-18 site-page">
     <div class="flex flex-col px-8 bg-white dark:bg-pitch">
       <div class="flex flex-row items-center gap-2">
-        <h1 class="ml-1 text-gray-900 dark:text-insight">
+        <h1 class="ml-1 text-gray-900 dark:text-insight mr-2">
           Recordings
         </h1>
         <ProjectStateBadge

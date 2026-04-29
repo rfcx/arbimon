@@ -2,7 +2,7 @@
   <section class="bg-white dark:bg-pitch pl-18">
     <div class="py-10 mx-auto max-w-screen-xl flex flex-col gap-y-6 pr-4">
       <div class="flex items-center gap-3">
-        <h1 class="text-gray-900 dark:text-insight">
+        <h1 class="text-gray-900 dark:text-insight mr-2">
           Members
         </h1>
         <ProjectStateBadge

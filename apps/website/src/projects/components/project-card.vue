@@ -20,17 +20,11 @@
       >
         {{ project.name }}
       </h6>
-      <div class="mt-3 flex flex-wrap gap-2 text-xs font-medium">
-        <span class="rounded-full bg-frequency/10 px-2 py-1 text-frequency">
-          {{ projectTypeLabel }}
-        </span>
-        <span
-          v-if="project.isLocked"
-          class="rounded-full bg-insight/10 px-2 py-1 text-insight"
-        >
-          View only
-        </span>
-      </div>
+      <ProjectStateBadge
+        v-if="project"
+        :project-type="project.projectType"
+        :is-locked="project.isLocked"
+      />
       <div
         class="mt-3 gap-x-1 flex flex-row items-center font-display text-sm mr-2 h-5 whitespace-nowrap text-ellipsis overflow-hidden"
       >
@@ -79,6 +73,7 @@ import type { Project } from '@rfcx-bio/common/dao/types'
 
 import { getCountryLabel } from '@/_services/country'
 import { urlWrapper } from '@/_services/images/url-wrapper'
+import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
 import { ROUTE_NAMES } from '~/router'
 import TextTooltip from '../components/text-tooltip.vue'
 import { masterObjectiveTypes } from '../types'
@@ -88,11 +83,6 @@ defineEmits<{(e: 'on-click-project', value: boolean): void}>()
 
 const countries = computed(() => {
   return props.project.countries ?? []
-})
-
-const projectTypeLabel = computed(() => {
-  const projectType = props.project.projectType ?? 'free'
-  return projectType.charAt(0).toUpperCase() + projectType.slice(1)
 })
 
 const objectives = props.project.objectives?.map((objective) => {

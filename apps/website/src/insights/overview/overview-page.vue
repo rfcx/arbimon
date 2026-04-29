@@ -122,7 +122,7 @@ const speciesRichnessByRisk: ComputedRef<HorizontalStack[]> = computed(() => {
 })
 
 const totalSpecies = computed(() => {
-  return dashboardStore.speciesCount ?? `${species?.value?.totalSpeciesCount}` ?? '0'
+  return dashboardStore.speciesCount ?? `${species?.value?.totalSpeciesCount ?? 0}`
 })
 
 const refetchSpeciesRichnessByRisk = async (): Promise<void> => {
