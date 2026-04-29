@@ -5,13 +5,19 @@
         class="grid gap-y-20 mx-auto py-20 w-full max-w-screen-xl"
         :class="{'overflow-y-hidden h-screen': hasOpenedAnalysisSelector === true}"
       >
-        <div class="text-gray-900 dark:text-white w-full overflow-hidden">
+        <div class="text-gray-900 dark:text-white w-full overflow-hidden flex items-center gap-3">
           <h1
-            class="text-5xl w-full font-header font-normal <sm:text-2xl truncate max-w-full overflow-hidden whitespace-nowrap"
+            class="text-5xl font-header font-normal <sm:text-2xl truncate max-w-full overflow-hidden whitespace-nowrap"
             :title="store.project?.name"
           >
             {{ store.project?.name }}
           </h1>
+          <ProjectStateBadge
+            v-if="selectedProject"
+            :project-type="selectedProject.projectType"
+            :is-locked="selectedProject.isLocked"
+            class="shrink-0"
+          />
         </div>
         <div class="text-gray-900 dark:text-white flex flex-col gap-y-6">
           <h2>
@@ -120,6 +126,7 @@ import { computed, inject, onMounted, ref, watch } from 'vue'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
+import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
 import { type MapboxGroundStyle, type MapboxStatisticsStyle, MAPBOX_STYLE_CIRCLE, MAPBOX_STYLE_SATELLITE_STREETS } from '~/maps'
 import { DEFAULT_NON_ZERO_STYLE } from '~/maps/constants'
 import { MapBaseComponent } from '~/maps/map-base'

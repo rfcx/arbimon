@@ -3,74 +3,150 @@
     <td class="<sm:hidden text-sm text-subtle">
       {{ project.id }}
     </td>
-    <td class="py-3">
-      <div class="font-medium text-insight">
+    <td class="py-3 pr-3 max-w-[200px]">
+      <div
+        class="font-medium text-insight truncate"
+        :title="project.name"
+      >
         {{ project.name }}
       </div>
-      <div class="text-sm text-subtle">
+
+      <div
+        class="text-sm text-subtle truncate"
+        :title="project.slug"
+      >
         {{ project.slug }}
       </div>
     </td>
     <td class="py-3">
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-2">
-          <select
-            class="w-25 rounded border border-util-gray-03 bg-white px-2 py-1 text-xs capitalize"
-            :value="selectedProjectType"
-            @change="onProjectTypeChange"
-          >
-            <option value="free">
-              free
-            </option>
-            <option value="premium">
-              premium
-            </option>
-            <option value="unlimited">
-              unlimited
-            </option>
-          </select>
+          <div class="relative group inline-block">
+            <select
+              class="w-25 rounded border border-util-gray-03 bg-white px-2 py-1 text-xs capitalize cursor-pointer disabled:(bg-util-gray-01 cursor-not-allowed)"
+              :value="selectedProjectType"
+              :disabled="isSavingTier || project.isLocked"
+              @change="onProjectTypeChange"
+            >
+              <option value="free">
+                free
+              </option>
+              <option value="premium">
+                premium
+              </option>
+              <option value="unlimited">
+                unlimited
+              </option>
+            </select>
+
+            <div
+              v-if="project.isLocked"
+              class="absolute z-50 bg-white invisible group-hover:visible opacity-0 group-hover:opacity-100
+                  transition-all duration-200 text-black text-[10px] px-2 py-1
+                  rounded shadow-xl bottom-full left-1/2 -translate-x-1/2 mb-2 w-max"
+            >
+              Disable View-only before changing tiers
+            </div>
+          </div>
           <button
             type="button"
-            class="rounded bg-frequency px-2 py-1 text-xs font-medium disabled:(cursor-not-allowed opacity-50)"
-            :disabled="isSavingTier || selectedProjectType === (project.projectType ?? 'free')"
+            class="rounded bg-frequency px-2 py-1 text-xs font-medium cursor-pointer disabled:(cursor-not-allowed opacity-50)"
+            :disabled="isSavingTier || project.isLocked || selectedProjectType === (project.projectType ?? 'free')"
             @click="emit('save-tier', project)"
           >
             {{ isSavingTier ? 'Saving' : 'Save' }}
           </button>
         </div>
         <div class="flex flex-wrap items-center gap-2">
-          <span :class="tierBadgeClass(project.projectType)">
-            {{ project.projectType ?? 'free' }}
-          </span>
           <span
             v-if="project.isLocked"
             :class="stateBadgeClass(project)"
           >
             view-only
           </span>
+          <span
+            v-else
+            :class="tierBadgeClass(project.projectType)"
+          >
+            {{ project.projectType ?? 'free' }}
+          </span>
         </div>
       </div>
     </td>
     <td class="py-3 text-sm text-insight">
-      {{ formatUsage(usage?.recordingMinutesCount, limits.recordingMinutesCount) }}
+      <div class="flex items-center gap-1">
+        <span
+          :class="isOverLimit(usage?.recordingMinutesCount, limits?.recordingMinutesCount) ? 'text-red-500' : 'text-insight'"
+          class="font-medium"
+        >
+          {{ formatNumber(usage?.recordingMinutesCount ?? 0) }}
+        </span>
+
+        <span class="text-insight">/</span>
+
+        <span class="text-insight">
+          {{ getLimitText(limits?.recordingMinutesCount) }}
+        </span>
+      </div>
     </td>
     <td class="py-3 text-sm text-insight">
-      {{ formatUsage(usage?.jobCount, limits.jobCount) }}
+      <div class="flex items-center gap-1">
+        <div class="relative group">
+          <span
+            class="border-b border-dotted border-insight/30"
+            :class="isOverLimit(usage?.jobCount, limits?.jobCount) ? 'text-red-500' : 'text-insight'"
+          >
+            {{ formatUsage(usage?.jobCount) }}
+          </span>
+
+          <div
+            class="absolute z-50 bg-white invisible group-hover:visible opacity-0 group-hover:opacity-100
+                  transition-all duration-200 text-black text-[10px] px-2 py-1
+                  rounded shadow-xl bottom-full left-1/2 -translate-x-1/2 mb-2 w-max"
+          >
+            Total PM jobs in project
+          </div>
+        </div>
+
+        <span>/</span>
+
+        <div class="relative group">
+          <span class="border-b border-dotted border-insight/30">
+            {{ getLimitText(limits?.jobCount) }}
+          </span>
+
+          <div
+            class="absolute z-50 bg-white invisible group-hover:visible opacity-0 group-hover:opacity-100
+                  transition-all duration-200 text-black text-[10px] px-2 py-1
+                  rounded shadow-xl bottom-full left-1/2 -translate-x-1/2 mb-2 w-max"
+          >
+            Total PM jobs limit
+          </div>
+        </div>
+      </div>
     </td>
     <td class="py-3 pr-4 text-sm text-insight">
       <div class="flex flex-col gap-1">
-        <div class="flex justify-between items-center gap-2">
-          <span class="font-medium min-w-[60px]">Collabs</span>
-          <span>
-            {{ formatUsage(usage?.collaboratorCount, limits.collaboratorCount) }}
+        <div class="flex items-center gap-1">
+          <span class="font-medium">Collabs</span>
+          <span
+            :class="isOverLimit(usage?.collaboratorCount, limits?.collaboratorCount) ? 'text-red-500' : 'text-insight'"
+          >
+            {{ usage?.collaboratorCount ?? 0 }}
           </span>
+          <span>/</span>
+          <span>{{ getLimitText(limits?.collaboratorCount) }}</span>
         </div>
 
-        <div class="flex justify-between items-center gap-2">
-          <span class="font-medium min-w-[60px]">Guest</span>
-          <span>
-            {{ formatUsage(usage?.guestCount, limits.guestCount) }}
+        <div class="flex items-center gap-1">
+          <span class="font-medium">Guests</span>
+          <span
+            :class="isOverLimit(usage?.guestCount, limits?.guestCount) ? 'text-red-500' : 'text-insight'"
+          >
+            {{ usage?.guestCount ?? 0 }}
           </span>
+          <span>/</span>
+          <span>{{ getLimitText(limits?.guestCount) }}</span>
         </div>
       </div>
     </td>
@@ -143,12 +219,24 @@ const stateBadgeClass = (project: SuperProjectSummary): string => {
   return 'inline-flex items-center justify-center w-fit rounded-full px-2 py-1 text-xs capitalize tracking-wide leading-none bg-stone-200 font-semibold'
 }
 
-const formatUsage = (used: number | undefined, limit: number | null): string => {
-  const usedText = (used ?? 0).toLocaleString()
-  const limitText = limit === null ? 'No cap' : limit.toLocaleString()
-  return `${usedText} / ${limitText}`
+const formatNumber = (num: number) => {
+  return Number(num.toFixed(1))
 }
 
+const formatUsage = (val: number | undefined | null): string => {
+  if (val === null || val === undefined) return '0'
+  return val.toLocaleString()
+}
+
+const getLimitText = (limit: number | null | undefined): string => {
+  if (limit === null || limit === undefined) return 'No cap'
+  return limit.toLocaleString()
+}
+const isOverLimit = (used: number | undefined, limit: number | null | undefined) => {
+  if (limit === null || limit === undefined) return false
+
+  return (used ?? 0) > limit
+}
 const onProjectTypeChange = (event: Event): void => {
   emit('update:selectedProjectType', (event.target as HTMLSelectElement).value)
 }

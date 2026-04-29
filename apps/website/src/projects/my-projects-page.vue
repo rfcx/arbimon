@@ -63,7 +63,7 @@
           </div>
         </div>
         <div
-          v-if="portfolioSummary"
+          v-if="portfolioSummary && !showLoading"
           class="mt-6 flex w-full gap-4 items-stretch"
         >
           <div class="w-1/4 rounded-2xl border border-white/10 bg-echo p-6 shadow-xl flex flex-col justify-center">
@@ -105,7 +105,7 @@
           </div>
         </div>
         <div
-          v-if="portfolioTieringMessage"
+          v-if="portfolioTieringMessage && !showLoading"
           class="mt-4 rounded-lg border border-frequency/30 bg-frequency/5 px-4 py-3 text-sm text-insight"
         >
           {{ portfolioTieringMessage }}

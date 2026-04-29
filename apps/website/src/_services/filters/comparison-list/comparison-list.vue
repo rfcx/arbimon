@@ -4,7 +4,12 @@
       <div
         v-for="(filter, idx) in filters"
         :key="'site-card' + idx"
-        class="w-48 min-w-48 mr-4 cursor-pointer rounded-xl border-fog text-insight text-sm opacity-100 hover:opacity-90"
+        class="w-48 min-w-48 mr-4 rounded-xl border-fog text-insight text-sm"
+        :class="[
+          disableFilter
+            ? 'opacity-50 cursor-not-allowed'
+            : 'cursor-pointer hover:opacity-90'
+        ]"
         :style="{ 'border': `solid 3px ${getFilterColor(idx)}`, 'background-color': `${getFilterColor(idx)}80` }"
         @click="popupOpen(idx)"
       >
@@ -54,7 +59,12 @@
       </div>
       <div
         v-if="showAddButton"
-        class="flex justify-center items-center font-display text-center w-48 min-w-32 px-4 cursor-pointer rounded-xl bg-echo text-insight border-1 border-frequency hover:bg-moss"
+        class="flex justify-center items-center font-display text-center w-48 min-w-32 px-4 rounded-xl bg-echo text-insight border-1 border-frequency hover:bg-moss"
+        :class="[
+          disableFilter
+            ? 'opacity-50 cursor-not-allowed'
+            : 'cursor-pointer hover:opacity-90'
+        ]"
         @click="addFilterConfig"
       >
         Add comparison
