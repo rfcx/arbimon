@@ -15,9 +15,6 @@
           <th class="min-w-28">
             Premium Add-ons
           </th>
-          <th class="min-w-24">
-            Projects Owned
-          </th>
           <th class="min-w-28">
             All Projects
           </th>
@@ -67,7 +64,7 @@
                     :disabled="savingUserId === user.id || !hasUserChanges(user)"
                     @click="saveUserTier(user)"
                   >
-                    {{ savingUserId === user.id ? 'Saving' : 'Save' }}
+                    {{ savingUserId === user.id && hasUserChanges(user) ? 'Saving' : 'Save' }}
                   </button>
                 </div>
                 <span :class="tierBadgeClass(user.accountTier)">
@@ -83,42 +80,122 @@
                 :value="userAdditionalPremiumSlotDrafts[user.id] ?? user.additionalPremiumProjectSlots"
                 @input="onAdditionalPremiumSlotsChange(user.id, $event)"
               >
-            </td>
-            <td class="py-3 text-sm text-insight">
-              {{ user.ownedProjectCount }}
+              <button
+                type="button"
+                class="rounded bg-frequency px-2 py-1 text-xs font-medium disabled:(cursor-not-allowed opacity-50) text-black ml-2"
+                :disabled="savingUserId === user.id || !hasAdditionalSlotsChanges(user)"
+                @click="saveAdditional(user)"
+              >
+                {{ savingUserId === user.id && hasAdditionalSlotsChanges(user) ? 'Saving' : 'Save' }}
+              </button>
             </td>
             <td class="py-3 text-sm text-insight">
               <div class="flex flex-col gap-1">
                 <div class="flex justify-between md:justify-start md:gap-2">
                   <span class="font-medium">Free</span>
                   <div class="flex gap-1">
-                    <span :class="isOverLimit(user.usage.freeProjects, user.limits.freeProjects) ? 'text-red-500' : 'text-insight'">
-                      {{ user.usage.freeProjects.toLocaleString() }}
-                    </span>
+                    <div class="relative group">
+                      <span
+                        :class="isOverLimit(user.usage.freeProjects, user.limits.freeProjects) ? 'text-red-500' : 'text-insight'"
+                        class="font-medium"
+                      >
+                        {{ user.usage.freeProjects.toLocaleString() }}
+                      </span>
+
+                      <div
+                        class="absolute z-50 bg-white invisible group-hover:visible opacity-0 group-hover:opacity-100
+                  transition-all duration-200 text-black text-[10px] px-2 py-1
+                  rounded shadow-xl bottom-full left-1/2 -translate-x-1/2 mb-2 w-max"
+                      >
+                        Projects owned
+                      </div>
+                    </div>
                     <span>/</span>
-                    <span>{{ getLimitText(user.limits.freeProjects) }}</span>
+                    <div class="relative group">
+                      <span>
+                        {{ getLimitText(user.limits.freeProjects) }}
+                      </span>
+
+                      <div
+                        class="absolute z-50 bg-white invisible group-hover:visible opacity-0 group-hover:opacity-100
+                  transition-all duration-200 text-black text-[10px] px-2 py-1
+                  rounded shadow-xl bottom-full left-1/2 -translate-x-1/2 mb-2 w-max"
+                      >
+                        Limit projects
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <div class="flex justify-between md:justify-start md:gap-2">
                   <span class="font-medium">Premium</span>
                   <div class="flex gap-1">
-                    <span :class="isOverLimit(user.usage.premiumProjects, user.limits.premiumProjects) ? 'text-red-500' : 'text-insight'">
-                      {{ user.usage.premiumProjects.toLocaleString() }}
-                    </span>
+                    <div class="relative group">
+                      <span
+                        :class="isOverLimit(user.usage.premiumProjects, user.limits.premiumProjects) ? 'text-red-500' : 'text-insight'"
+                        class="font-medium"
+                      >
+                        {{ user.usage.premiumProjects.toLocaleString() }}
+                      </span>
+
+                      <div
+                        class="absolute z-50 bg-white invisible group-hover:visible opacity-0 group-hover:opacity-100
+                  transition-all duration-200 text-black text-[10px] px-2 py-1
+                  rounded shadow-xl bottom-full left-1/2 -translate-x-1/2 mb-2 w-max"
+                      >
+                        Projects owned
+                      </div>
+                    </div>
                     <span>/</span>
-                    <span>{{ getLimitText(user.limits.premiumProjects) }}</span>
+                    <div class="relative group">
+                      <span>
+                        {{ getLimitText(user.limits.premiumProjects) }}
+                      </span>
+
+                      <div
+                        class="absolute z-50 bg-white invisible group-hover:visible opacity-0 group-hover:opacity-100
+                  transition-all duration-200 text-black text-[10px] px-2 py-1
+                  rounded shadow-xl bottom-full left-1/2 -translate-x-1/2 mb-2 w-max"
+                      >
+                        Limit projects
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <div class="flex justify-between md:justify-start md:gap-2">
                   <span class="font-medium">Unlimited</span>
                   <div class="flex gap-1">
-                    <span :class="isOverLimit(user.usage.unlimitedProjects, user.limits.unlimitedProjects) ? 'text-red-500' : 'text-insight'">
-                      {{ user.usage.unlimitedProjects.toLocaleString() }}
-                    </span>
+                    <div class="relative group">
+                      <span
+                        :class="isOverLimit(user.usage.unlimitedProjects, user.limits.unlimitedProjects) ? 'text-red-500' : 'text-insight'"
+                        class="font-medium"
+                      >
+                        {{ user.usage.unlimitedProjects.toLocaleString() }}
+                      </span>
+
+                      <div
+                        class="absolute z-50 bg-white invisible group-hover:visible opacity-0 group-hover:opacity-100
+                  transition-all duration-200 text-black text-[10px] px-2 py-1
+                  rounded shadow-xl bottom-full left-1/2 -translate-x-1/2 mb-2 w-max"
+                      >
+                        Projects owned
+                      </div>
+                    </div>
                     <span>/</span>
-                    <span>{{ getLimitText(user.limits.unlimitedProjects) }}</span>
+                    <div class="relative group">
+                      <span>
+                        {{ getLimitText(user.limits.unlimitedProjects) }}
+                      </span>
+
+                      <div
+                        class="absolute z-50 bg-white invisible group-hover:visible opacity-0 group-hover:opacity-100
+                  transition-all duration-200 text-black text-[10px] px-2 py-1
+                  rounded shadow-xl bottom-full left-1/2 -translate-x-1/2 mb-2 w-max"
+                      >
+                        Limit projects
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -225,20 +302,40 @@ const onAdditionalPremiumSlotsChange = (userId: number, event: Event): void => {
 
 const hasUserChanges = (user: SuperUserSummary): boolean => {
   const nextTier = userTierDrafts.value[user.id] ?? user.accountTier
+  return nextTier !== user.accountTier
+}
+
+const hasAdditionalSlotsChanges = (user: SuperUserSummary): boolean => {
   const nextAdditionalSlots = userAdditionalPremiumSlotDrafts.value[user.id] ?? user.additionalPremiumProjectSlots
-  return nextTier !== user.accountTier || nextAdditionalSlots !== user.additionalPremiumProjectSlots
+  return nextAdditionalSlots !== user.additionalPremiumProjectSlots
 }
 
 const saveUserTier = async (user: SuperUserSummary): Promise<void> => {
   const nextTier = userTierDrafts.value[user.id] ?? user.accountTier
-  const nextAdditionalPremiumProjectSlots = userAdditionalPremiumSlotDrafts.value[user.id] ?? user.additionalPremiumProjectSlots
   if (!hasUserChanges(user)) return
 
   savingUserId.value = user.id
   try {
     await mutateUserTier({
       userId: user.id,
-      payload: { accountTier: nextTier, additionalPremiumProjectSlots: nextAdditionalPremiumProjectSlots }
+      payload: { accountTier: nextTier, additionalPremiumProjectSlots: user.additionalPremiumProjectSlots }
+    })
+    await queryClient.invalidateQueries({ queryKey: ['get-super-users'] })
+    await queryClient.invalidateQueries({ queryKey: ['get-super-user-projects'] })
+  } finally {
+    savingUserId.value = null
+  }
+}
+
+const saveAdditional = async (user: SuperUserSummary): Promise<void> => {
+  const nextAdditionalPremiumProjectSlots = userAdditionalPremiumSlotDrafts.value[user.id] ?? user.additionalPremiumProjectSlots
+  if (!hasAdditionalSlotsChanges(user)) return
+
+  savingUserId.value = user.id
+  try {
+    await mutateUserTier({
+      userId: user.id,
+      payload: { accountTier: user.accountTier, additionalPremiumProjectSlots: nextAdditionalPremiumProjectSlots }
     })
     await queryClient.invalidateQueries({ queryKey: ['get-super-users'] })
     await queryClient.invalidateQueries({ queryKey: ['get-super-user-projects'] })

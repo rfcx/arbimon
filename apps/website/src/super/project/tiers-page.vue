@@ -43,7 +43,7 @@
             class="search-input w-full text-gray-700 py-2.5 px-4 pr-10 shadow-lg shadow-frequency/10 appearance-none cursor-pointer text-sm focus:outline-none transition-all font-medium bg-white"
           >
             <option value="all">
-              All Tier
+              All Tiers
             </option>
             <option value="free">
               Free
@@ -63,7 +63,7 @@
             class="search-input w-full text-gray-700 py-2.5 px-4 pr-10 shadow-lg shadow-frequency/10 appearance-none cursor-pointer text-sm focus:outline-none transition-all font-medium bg-white"
           >
             <option value="all">
-              All Tier
+              All Tiers
             </option>
             <option value="free">
               Free
@@ -143,7 +143,7 @@
           </div>
         </div>
         <div
-          v-if="!isProjectLoading && projects?.data.length === 0"
+          v-if="showNotFound"
           class="mt-10 flex flex-col items-center justify-center text-center"
         >
           <div class="text-lg font-bold text-insight">
@@ -240,6 +240,16 @@ watch(searchParams, () => {
 
 watch(selectedTier, () => {
   offset.value = 0
+})
+
+const showNotFound = computed(() => {
+  if (activeTab.value === 'projects') {
+    return !isProjectLoading.value && projects.value?.data.length === 0
+  }
+  if (activeTab.value === 'users') {
+    return !isUserLoading.value && users.value?.data.length === 0
+  }
+  return false
 })
 
 const onSelectProject = (project: SuperProjectSummary): void => {
