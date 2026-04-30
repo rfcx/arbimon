@@ -47,6 +47,7 @@ export const ROUTE_NAMES = {
   myRecordings: 'my-recordings',
   visualizer: 'visualizer',
   mySpecies: 'my-species',
+  pricing: 'pricing',
   tier: 'tier',
   tierPage: 'tier-page'
 } as const

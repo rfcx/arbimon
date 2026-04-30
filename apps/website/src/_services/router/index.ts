@@ -24,6 +24,11 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.LandingHowItWorks
       },
       {
+        path: 'pricing',
+        name: ROUTE_NAMES.pricing,
+        component: PAGES.Pricing
+      },
+      {
         path: 'publications',
         name: ROUTE_NAMES.landingPublications,
         component: PAGES.LandingPublications

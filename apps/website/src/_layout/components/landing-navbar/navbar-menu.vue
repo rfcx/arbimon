@@ -20,6 +20,15 @@
       </router-link>
     </li>
     <li>
+      <router-link
+        :to="{ name: ROUTE_NAMES.pricing }"
+        exact-active-class="tab-active"
+        class="block tab relative"
+      >
+        Pricing
+      </router-link>
+    </li>
+    <li>
       <button
         :id="`${domId}DropdownResourcesButton`"
         type="button"
