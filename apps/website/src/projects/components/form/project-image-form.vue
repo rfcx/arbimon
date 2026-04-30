@@ -14,7 +14,8 @@
           Recommended size: 380 px by 180 px
         </p>
         <button
-          class="btn btn-secondary group mt-4 w-42 btn-medium"
+          class="btn btn-secondary group mt-4 w-42 btn-medium disabled:hover:btn-disabled disabled:btn-disabled"
+          :disabled="isProjectViewOnly"
           type="button"
           @click="selectPhoto"
         >
@@ -63,6 +64,7 @@
 import { initTooltips } from 'flowbite'
 import { computed, onMounted, ref } from 'vue'
 
+import { useStore } from '~/store'
 import IconIInfo from '../icon-i-info.vue'
 
 const maxSize = 600
@@ -70,6 +72,9 @@ const maxSize = 600
 const props = defineProps<{ isDisabled?: boolean, image?: string }>()
 
 const emit = defineEmits<{(e: 'emitProjectImage', file: File): void}>()
+
+const store = useStore()
+const isProjectViewOnly = computed(() => store.project?.isLocked === true)
 
 const uploadedPhotoUrl = ref('')
 

@@ -1,19 +1,25 @@
 import numeral from 'numeral'
 import { Options, Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Inject, Prop } from 'vue-property-decorator'
 
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { LAYOUT_BREAKPOINT } from '@/_layout/config'
+import { storeKey } from '@/globals'
 import { downloadSvgAsPng } from '~/charts'
 import { type LineChartConfig, type LineChartSeries, generateChartExport, LineChartComponent } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
+import { type BiodiversityStore, useStore } from '~/store'
 import { type TimeBucket, TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS } from '~/time-buckets'
+
+const store = useStore()
 
 @Options({
   components: { LineChartComponent }
 })
 export default class SpeciesRichnessByTime extends Vue {
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+
   @Prop() domId!: string
   @Prop() datasets!: Array<{ color: string, data: Record<TimeBucket, Record<number, number>> }>
   @Prop({ default: false }) loading!: boolean
@@ -43,6 +49,10 @@ export default class SpeciesRichnessByTime extends Vue {
 
   get datasetsForSelectedBucket (): LineChartSeries[] {
     return this.datasets.map(({ color, data }) => ({ color, data: data[this.selectedBucket] ?? [] }))
+  }
+
+  get isProjectViewOnly (): boolean {
+    return store.project?.isLocked === true
   }
 
   override created (): void {

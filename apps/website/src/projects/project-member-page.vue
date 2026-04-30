@@ -61,7 +61,7 @@
               v-if="!canAddProjectMember"
               id="userSearchInputTooltipId"
               role="tooltip"
-              class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+              class="hidden absolute z-10 w-max invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
             >
               {{ disableText }}
               <div
@@ -83,7 +83,7 @@
                   v-if="!canAddProjectMember"
                   id="addProjectMemberTooltipId"
                   role="tooltip"
-                  class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip invisible group-hover:visible opacity-0 group-hover:opacity-100 top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none"
+                  class="absolute z-10 w-95 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip invisible group-hover:visible opacity-0 group-hover:opacity-100 top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none"
                 >
                   {{ disableText }}
                   <div
@@ -344,21 +344,8 @@ const isSearchingUsers = ref(false)
 const addNewUserError = ref(false)
 const userSearchValue = ref('')
 
-const reachedText = computed(() => {
-  const type = projectInfo.value?.projectType ?? 'free'
-
-  if (type === 'free') {
-    return 'Free plan is limited to 1 member (Owner only).'
-  }
-  if (type === 'premium') {
-    return 'Premium plan limit reached (Max 4 collaborators / 8 members).'
-  }
-  return 'Limit reached for this project.'
-})
-
 const disableText = computed(() => {
-  if (!canAddMember.value) return reachedText.value + ' Open Project Settings to review usage.'
-  return 'Contact your project administrator for permission to manage project members'
+  return 'This project is now View Only due to inactivity. Upgrade your plan to restore access.'
 })
 
 const newUser = ref({

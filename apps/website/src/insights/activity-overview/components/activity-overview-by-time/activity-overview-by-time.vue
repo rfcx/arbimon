@@ -34,7 +34,7 @@
       </template>
       <template #controls>
         <export-button
-          v-if="hasData"
+          v-if="hasData && !isProjectViewOnly"
           @click="downloadChart()"
         />
       </template>
