@@ -75,25 +75,43 @@
     </td>
     <td class="py-3 text-sm text-insight">
       <div class="flex items-center gap-1">
-        <span
-          :class="isOverLimit(usage?.recordingMinutesCount, limits?.recordingMinutesCount) ? 'text-red-500' : 'text-insight'"
-          class="font-medium"
-        >
-          {{ formatNumber(usage?.recordingMinutesCount ?? 0) }}
-        </span>
+        <div class="relative group">
+          <span
+            :class="isOverLimit(usage?.recordingMinutesCount, limits?.recordingMinutesCount) ? 'text-red-500' : 'text-insight'"
+            class="font-medium"
+          >
+            {{ formatNumber(usage?.recordingMinutesCount ?? 0) }}
+          </span>
+
+          <div
+            class="absolute z-50 bg-white invisible group-hover:visible opacity-0 group-hover:opacity-100
+                  transition-all duration-200 text-black text-[10px] px-2 py-1
+                  rounded shadow-xl bottom-full left-1/2 -translate-x-1/2 mb-2 w-max"
+          >
+            Total mins of recordings in project
+          </div>
+        </div>
 
         <span class="text-insight">/</span>
+        <div class="relative group">
+          <span>
+            {{ getLimitText(limits?.recordingMinutesCount) }}
+          </span>
 
-        <span class="text-insight">
-          {{ getLimitText(limits?.recordingMinutesCount) }}
-        </span>
+          <div
+            class="absolute z-50 bg-white invisible group-hover:visible opacity-0 group-hover:opacity-100
+                  transition-all duration-200 text-black text-[10px] px-2 py-1
+                  rounded shadow-xl bottom-full left-1/2 -translate-x-1/2 mb-2 w-max"
+          >
+            Limit of mins of recordings
+          </div>
+        </div>
       </div>
     </td>
     <td class="py-3 text-sm text-insight">
       <div class="flex items-center gap-1">
         <div class="relative group">
           <span
-            class="border-b border-dotted border-insight/30"
             :class="isOverLimit(usage?.jobCount, limits?.jobCount) ? 'text-red-500' : 'text-insight'"
           >
             {{ formatUsage(usage?.jobCount) }}
@@ -111,7 +129,7 @@
         <span>/</span>
 
         <div class="relative group">
-          <span class="border-b border-dotted border-insight/30">
+          <span>
             {{ getLimitText(limits?.jobCount) }}
           </span>
 
@@ -220,7 +238,10 @@ const stateBadgeClass = (project: SuperProjectSummary): string => {
 }
 
 const formatNumber = (num: number) => {
-  return Number(num.toFixed(1))
+  return num.toLocaleString('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 1
+  })
 }
 
 const formatUsage = (val: number | undefined | null): string => {
