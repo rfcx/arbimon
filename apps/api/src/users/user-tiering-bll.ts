@@ -71,6 +71,7 @@ const getPortfolioProjectRows = async (userId: number): Promise<PortfolioProject
         ON lp.id = lpmqu.location_project_id
       WHERE lpur.user_id = :userId
         AND lpur.role_id = 4
+        AND lp.deleted_at IS NULL
       ORDER BY lp.name
     `,
     { replacements: { userId }, type: QueryTypes.SELECT }
