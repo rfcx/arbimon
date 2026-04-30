@@ -90,6 +90,14 @@
               </button>
             </td>
             <td class="py-3 text-sm text-insight">
+              <div class="flex justify-between md:justify-start md:gap-2 mb-1">
+                <span class="font-medium">View-only</span>
+                <span
+                  class="font-medium text-insight"
+                >
+                  {{ user.viewOnlyProjectCount.toLocaleString() }}
+                </span>
+              </div>
               <div class="flex flex-col gap-1">
                 <div class="flex justify-between md:justify-start md:gap-2">
                   <span class="font-medium">Free</span>
