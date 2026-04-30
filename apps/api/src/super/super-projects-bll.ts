@@ -40,6 +40,7 @@ interface SuperUserRow {
   accountTier: AccountTier
   additionalPremiumProjectSlots: number
   ownedProjectCount: number
+  viewOnlyProjectCount: number
   freeProjects: number
   premiumProjects: number
   unlimitedProjects: number
@@ -139,6 +140,7 @@ export const getUsers = async (
         COALESCE(up.account_tier, 'free') AS "accountTier",
         COALESCE(up.additional_premium_project_slots, 0) AS "additionalPremiumProjectSlots",
         COUNT(lpur.location_project_id)::INTEGER AS "ownedProjectCount",
+        COUNT(lp.id) FILTER (WHERE COALESCE(lp.is_locked, FALSE) = TRUE)::INTEGER AS "viewOnlyProjectCount",
         COUNT(lp.id) FILTER (WHERE COALESCE(lp.project_type, 'free') = 'free')::INTEGER AS "freeProjects",
         COUNT(lp.id) FILTER (WHERE COALESCE(lp.project_type, 'free') = 'premium')::INTEGER AS "premiumProjects",
         COUNT(lp.id) FILTER (WHERE COALESCE(lp.project_type, 'free') = 'unlimited')::INTEGER AS "unlimitedProjects"
@@ -179,6 +181,7 @@ export const getUsers = async (
       accountTier: row.accountTier,
       additionalPremiumProjectSlots,
       ownedProjectCount: Number(row.ownedProjectCount ?? 0),
+      viewOnlyProjectCount: Number(row.viewOnlyProjectCount ?? 0),
       limits: {
         freeProjects: limits.free,
         premiumProjects: limits.premium,

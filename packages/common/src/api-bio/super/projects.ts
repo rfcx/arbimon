@@ -32,6 +32,7 @@ export type SuperUserSummary = UserTypes['light'] & {
   accountTier: AccountTier
   additionalPremiumProjectSlots: number
   ownedProjectCount: number
+  viewOnlyProjectCount: number
   limits: SuperPortfolioLimits
   usage: SuperPortfolioUsage
 }
