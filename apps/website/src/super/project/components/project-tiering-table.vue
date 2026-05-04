@@ -194,7 +194,7 @@ const toggleProjectLock = async (project: SuperProjectSummary): Promise<void> =>
 }
 
 const getRoleLabel = (roleId: number): string => {
-  if (roleId === 4) return 'Owner'
+  if (roleId === 4) return 'Primary Admin'
   if (roleId === 3) return 'Guest'
   if (roleId === 2) return 'Admin'
   return 'Collaborator'

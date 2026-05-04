@@ -8,7 +8,15 @@ import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from
 export type ProjectMembersParams = ProjectRouteParamsSerialized
 
 // Response type
-export type ProjectMember = Omit<LocationProjectUserRole, 'createdAt' | 'updatedAt' | 'ranking'> & Pick<UserProfile, 'email' | 'firstName' | 'lastName' | 'image'>
+export type ProjectMember =
+  Omit<LocationProjectUserRole, 'createdAt' | 'updatedAt' | 'ranking'>
+  & Pick<UserProfile, 'email' | 'firstName' | 'lastName' | 'image'>
+  & {
+    /** Internal role identifier (unchanged), e.g. 'owner' | 'admin' | ... */
+    role?: ProjectRole
+    /** Display-only label, e.g. 'Primary Admin' for owner. Does not affect logic. */
+    roleDisplayName?: string
+  }
 export type ProjectMembersResponse = ProjectMember[]
 
 export interface ProjectMemberAddRemoveRequest {

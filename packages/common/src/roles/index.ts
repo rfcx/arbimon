@@ -12,6 +12,28 @@ const roles: Record<number, ProjectRole> = {
 
 export const orderedRoles: ProjectRole[] = ['external', 'viewer', 'entry', 'user', 'expert', 'admin', 'owner']
 
+/**
+ * Display-only mapping for ProjectRole names.
+ *
+ * IMPORTANT: This is for UI/serialization labels ONLY. The internal `ProjectRole`
+ * values (e.g. 'owner') and database role ids (e.g. 4) are unchanged. Code paths
+ * that compare role identifiers must continue to use the `ProjectRole` value
+ * (e.g. `role === 'owner'`), not the display name.
+ */
+const roleDisplayNames: Record<ProjectRole, string> = {
+  none: 'None',
+  external: 'External',
+  viewer: 'Guest',
+  entry: 'Data Entry',
+  user: 'User',
+  expert: 'Expert',
+  admin: 'Admin',
+  owner: 'Primary Admin'
+}
+
+export const getRoleDisplayName = (role: ProjectRole): string => roleDisplayNames[role] ?? 'None'
+export const getRoleDisplayNameById = (roleId: number): string => getRoleDisplayName(getRoleById(roleId))
+
 export const rolesGreaterOrEqualTo = (role: ProjectRole): ProjectRole[] =>
   orderedRoles.filter((r, i) => i >= orderedRoles.indexOf(role))
 

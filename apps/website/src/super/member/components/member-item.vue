@@ -12,7 +12,7 @@
       class="flex flex-start flex-row items-center gap-2 justify-start"
     >
       <p v-if="selectedRoleId === getIdByRole('owner')">
-        Owner
+        Primary Admin
       </p>
       <select
         v-else

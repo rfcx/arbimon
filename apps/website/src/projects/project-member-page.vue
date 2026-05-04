@@ -208,7 +208,7 @@
                 class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'owner'"
               >
-                Owner
+                Primary Admin
               </div>
               <div
                 :class="[activeTab === 'admin' ? 'font-medium text-frequency border-b-2 border-frequency bg-echo rounded-t-md' : '']"
@@ -364,8 +364,8 @@ const userToAdd = ref({
 const roles = [
   {
     id: 4,
-    name: 'Owner',
-    description: 'Project Owner - can manage and delete the project, edit project settings, and manage project members'
+    name: 'Primary Admin',
+    description: 'Project Primary Admin - can manage and delete the project, edit project settings, and manage project members'
   },
   {
     id: 1,

@@ -1,6 +1,7 @@
 import { Op, QueryTypes } from 'sequelize'
 
 import { type DashboardStakeholdersUser } from '@rfcx-bio/common/api-bio/dashboard/dashboard-stakeholders'
+import { getRoleById, getRoleDisplayName } from '@rfcx-bio/common/roles'
 import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { type LocationProjectUserRole, type OrganizationTypes } from '@rfcx-bio/node-common/dao/types'
 
@@ -35,6 +36,7 @@ export const getProjectUsers = async (projectId: number, onlyListedMembers: bool
   }
 
   return projectUsers.map(p => {
+    const role = getRoleById(p.roleId)
     return {
       id: p.id,
       email: p.email,
@@ -42,7 +44,9 @@ export const getProjectUsers = async (projectId: number, onlyListedMembers: bool
       lastName: p.lastName,
       image: fileUrl(p.image),
       roleId: p.roleId,
-      ranking: p.ranking
+      ranking: p.ranking,
+      role,
+      roleDisplayName: getRoleDisplayName(role)
     }
   })
 }
@@ -99,6 +103,7 @@ export const getProjectStakeholderUsers = async (projectId: number): Promise<Das
   })
   return users.map(u => {
     const p = profile.find(p => p.id === u.userId)
+    const role = getRoleById(u.roleId)
     return {
       id: u.userId,
       email: u.ranking !== 0 ? '' : p?.email ?? '', // only return email for primary contact
@@ -106,7 +111,9 @@ export const getProjectStakeholderUsers = async (projectId: number): Promise<Das
       lastName: p?.lastName ?? '',
       image: fileUrl(p?.image),
       roleId: u.roleId,
-      ranking: u.ranking
+      ranking: u.ranking,
+      role,
+      roleDisplayName: getRoleDisplayName(role)
     }
   })
 }

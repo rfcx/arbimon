@@ -1,6 +1,7 @@
 import { type AxiosInstance } from 'axios'
 
 import { type LocationProjectUserRole, type OrganizationTypes, type UserProfile } from '../../dao/types'
+import { type ProjectRole } from '../../roles'
 import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 
 // The `GET` Service
@@ -9,7 +10,15 @@ import { type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from
 export type DashboardStakeholdersParams = ProjectRouteParamsSerialized
 
 // Response types
-export type DashboardStakeholdersUser = Pick<UserProfile, 'email' | 'firstName' | 'lastName' | 'id' | 'image'> & Pick<LocationProjectUserRole, 'roleId' | 'ranking'>
+export type DashboardStakeholdersUser =
+  Pick<UserProfile, 'email' | 'firstName' | 'lastName' | 'id' | 'image'>
+  & Pick<LocationProjectUserRole, 'roleId' | 'ranking'>
+  & {
+    /** Internal role identifier (unchanged), e.g. 'owner'. */
+    role?: ProjectRole
+    /** Display-only label, e.g. 'Primary Admin' for owner. */
+    roleDisplayName?: string
+  }
 export interface DashboardStakeholdersResponse {
   users: DashboardStakeholdersUser[]
   organizations: Array<OrganizationTypes['light']>
