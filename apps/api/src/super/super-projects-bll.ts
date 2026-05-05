@@ -231,14 +231,13 @@ export const getUserProjects = async (userId: number): Promise<SuperProjectSumma
       FROM location_project lp
       INNER JOIN location_project_user_role lpur
         ON lp.id = lpur.location_project_id
-        AND lpur.role_id = :ownerRoleId
       LEFT JOIN location_project_member_quota_usage lpmqu
         ON lp.id = lpmqu.location_project_id
       WHERE lpur.user_id = :userId
         AND lp.deleted_at IS NULL
       ORDER BY lp.name, lp.id
     `,
-    { replacements: { userId, ownerRoleId: OWNER_ROLE_ID }, type: QueryTypes.SELECT }
+    { replacements: { userId }, type: QueryTypes.SELECT }
   )
 
   return rows.map(row => mapProjectSummary(row, projectTypeLimits))
