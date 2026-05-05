@@ -105,8 +105,9 @@
             :image="settings?.image !== undefined ? urlWrapper(settings?.image) : undefined"
             @emit-project-image="onEmitProjectImage"
           />
-          <hr class="border-util-gray-03 my-6">
+          <hr class="hidden border-util-gray-03 my-6">
           <project-listed-form
+            class="hidden"
             :is-public="settings?.isPublic"
             :is-disabled="!store.userIsAdminProjectMember || settings?.isPublished"
             :is-create-project="false"
@@ -118,7 +119,7 @@
           </template>
           <hr class="border-util-gray-03 my-6">
           <project-delete
-            v-if="store.project?.role === 'owner'"
+            v-if="store.project?.role === 'owner' && store.project?.isLocked !== true"
             :is-deleting="isDeletingProject"
             :is-error="isErrorDeleteProject"
             :is-success="isSuccessDeleteProject"

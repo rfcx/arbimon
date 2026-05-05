@@ -83,7 +83,7 @@
                   v-if="!canAddProjectMember"
                   id="addProjectMemberTooltipId"
                   role="tooltip"
-                  class="absolute z-10 w-95 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip invisible group-hover:visible opacity-0 group-hover:opacity-100 top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none"
+                  class="absolute z-10 w-max invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip invisible group-hover:visible opacity-0 group-hover:opacity-100 top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none"
                 >
                   {{ disableText }}
                   <div
@@ -345,7 +345,22 @@ const addNewUserError = ref(false)
 const userSearchValue = ref('')
 
 const disableText = computed(() => {
-  return 'This project is now View Only due to inactivity. Upgrade your plan to restore access.'
+  if (projectInfo.value?.isLocked === true) {
+    return 'This project is now View Only due to inactivity. Upgrade your plan to restore access.'
+  }
+
+  const projectType = projectInfo.value?.projectType ?? 'free'
+  const collabs = projectInfo.value?.usage?.collaboratorCount ?? 0
+  const guests = projectInfo.value?.usage?.guestCount ?? 0
+  const currentTotal = collabs + guests
+  if (projectType === 'free' || (projectType === 'premium' && currentTotal >= 8)) {
+    return 'Limit reached. Upgrade your plan to unlock this feature.'
+  }
+  if (!store.userIsAdminProjectMember) {
+    return 'You do not have permission to add members.'
+  }
+
+  return ''
 })
 
 const newUser = ref({

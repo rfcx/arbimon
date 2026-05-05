@@ -147,7 +147,7 @@
           :disabled="isCreating || !isSelectedProjectTypeAvailable"
           @click.prevent="create"
         >
-          Your project
+          Create project
         </button>
         <icon-custom-ic-loading
           v-if="isCreating"

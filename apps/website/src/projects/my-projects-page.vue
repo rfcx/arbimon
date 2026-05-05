@@ -83,6 +83,12 @@
               <p class="text-sm capitalize text-gray-400">
                 Free Projects
               </p>
+              <p
+                :class="portfolioSummary.usage.freeProjects > (portfolioSummary.limits.freeProjects ?? 0) ? 'visible' : 'invisible'"
+                class="text-[10px] text-red-500 mt-1 h-4"
+              >
+                Limit exceeded
+              </p>
             </div>
 
             <div class="flex flex-col items-center justify-center px-4 border-r border-white/10">
@@ -91,6 +97,12 @@
               </p>
               <p class="text-sm capitalize text-gray-400">
                 Premium Projects
+              </p>
+              <p
+                :class="portfolioSummary.usage.premiumProjects > (portfolioSummary.limits.premiumProjects ?? 0) ? 'visible' : 'invisible'"
+                class="text-[10px] text-red-500 mt-1"
+              >
+                Limit exceeded
               </p>
             </div>
 
@@ -101,14 +113,14 @@
               <p class="text-sm capitalize text-gray-400">
                 Unlimited Projects
               </p>
+              <p
+                :class="portfolioSummary.usage.unlimitedProjects > (portfolioSummary.limits.unlimitedProjects ?? 0) ? 'visible' : 'invisible'"
+                class="text-[10px] text-red-500 mt-1"
+              >
+                Limit exceeded
+              </p>
             </div>
           </div>
-        </div>
-        <div
-          v-if="portfolioTieringMessage && !showLoading"
-          class="mt-4 rounded-lg border border-frequency/30 bg-frequency/5 px-4 py-3 text-sm text-insight"
-        >
-          {{ portfolioTieringMessage }}
         </div>
         <div>
           <div
@@ -285,30 +297,6 @@ const onProjectClicked = (value: boolean) => {
 const formatLimit = (limit: number | null) => {
   return formatTierLimit(limit)
 }
-
-const portfolioTieringMessage = computed(() => {
-  const summary = portfolioSummary.value
-  if (summary === undefined) return ''
-
-  if (summary.ownedProjects.some(project => project.isLocked)) {
-    return 'Some projects are currently view-only. Upgrade or reactivate them from Account Settings to restore full access.'
-  }
-
-  if (summary.limits.freeProjects !== null && summary.usage.freeProjects >= summary.limits.freeProjects) {
-    return 'Free project capacity is currently full for this account.'
-  }
-
-  if (summary.limits.premiumProjects !== null && summary.usage.premiumProjects >= summary.limits.premiumProjects && summary.limits.premiumProjects > 0) {
-    return 'Premium project capacity is currently full for this account.'
-  }
-
-  if (summary.limits.unlimitedProjects !== null && summary.usage.unlimitedProjects >= summary.limits.unlimitedProjects && summary.limits.unlimitedProjects > 0) {
-    return 'Unlimited project capacity is currently full for this account.'
-  }
-
-  return ''
-})
-
 </script>
 
 <style scoped lang="scss">
