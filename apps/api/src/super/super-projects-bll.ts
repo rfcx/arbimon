@@ -105,7 +105,8 @@ export const getProjects = async (
       LEFT JOIN location_project_member_quota_usage lpmqu
         ON lp.id = lpmqu.location_project_id
       WHERE
-        (:keyword::TEXT IS NULL OR lp.name ILIKE '%' || :keyword || '%' OR lp.slug ILIKE '%' || :keyword || '%')
+        lp.deleted_at IS NULL
+        AND (:keyword::TEXT IS NULL OR lp.name ILIKE '%' || :keyword || '%' OR lp.slug ILIKE '%' || :keyword || '%')
         AND (:tier::TEXT IS NULL OR COALESCE(lp.project_type, 'free') = :tier)
       ORDER BY lp.name, lp.id
       LIMIT :limit OFFSET :offset
@@ -139,7 +140,7 @@ export const getUsers = async (
         up.image AS "image",
         COALESCE(up.account_tier, 'free') AS "accountTier",
         COALESCE(up.additional_premium_project_slots, 0) AS "additionalPremiumProjectSlots",
-        COUNT(lpur.location_project_id)::INTEGER AS "ownedProjectCount",
+        COUNT(lp.id)::INTEGER AS "ownedProjectCount",
         COUNT(lp.id) FILTER (WHERE COALESCE(lp.is_locked, FALSE) = TRUE AND lp.deleted_at IS NULL)::INTEGER AS "viewOnlyProjectCount",
         COUNT(lp.id) FILTER (WHERE COALESCE(lp.project_type, 'free') = 'free' AND lp.deleted_at IS NULL)::INTEGER AS "freeProjects",
         COUNT(lp.id) FILTER (WHERE COALESCE(lp.project_type, 'free') = 'premium' AND lp.deleted_at IS NULL)::INTEGER AS "premiumProjects",
@@ -150,6 +151,7 @@ export const getUsers = async (
         AND lpur.role_id = :ownerRoleId
       LEFT JOIN location_project lp
         ON lp.id = lpur.location_project_id
+        AND lp.deleted_at IS NULL
       WHERE (
         :keyword::TEXT IS NULL OR
         up.email ILIKE '%' || :keyword || '%' OR
@@ -233,6 +235,7 @@ export const getUserProjects = async (userId: number): Promise<SuperProjectSumma
       LEFT JOIN location_project_member_quota_usage lpmqu
         ON lp.id = lpmqu.location_project_id
       WHERE lpur.user_id = :userId
+        AND lp.deleted_at IS NULL
       ORDER BY lp.name, lp.id
     `,
     { replacements: { userId, ownerRoleId: OWNER_ROLE_ID }, type: QueryTypes.SELECT }
@@ -264,6 +267,7 @@ export const updateProjectTier = async (projectId: number, body: SuperProjectTie
           ELSE status
         END
       WHERE id = :projectId
+        AND deleted_at IS NULL
       RETURNING id
     `,
     { replacements: { projectId, projectType: body.projectType ?? null, isLocked: body.isLocked ?? null }, type: QueryTypes.SELECT }
