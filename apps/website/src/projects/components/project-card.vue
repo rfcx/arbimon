@@ -5,26 +5,31 @@
     @click="$emit('on-click-project', true)"
   >
     <div>
-      <img
-        v-if="project.image"
-        :src="urlWrapper(project.image)"
-        class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-03"
-      >
-      <div
-        v-else
-        class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-03 flex justify-center items-center"
-      />
+      <div class="flex justify-between flex-row">
+        <div>
+          <img
+            v-if="project.image"
+            :src="urlWrapper(project.image)"
+            class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-03"
+          >
+          <div
+            v-else
+            class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-03 flex justify-center items-center"
+          />
+        </div>
+        <ProjectStateBadge
+          v-if="project"
+          :project-type="project.projectType"
+          :is-locked="project.isLocked"
+        />
+      </div>
       <h6
         class="mb-2 mt-6 font-bold tracking-tight line-clamp-2 text-gray-900 dark:text-insight"
         :title="project?.name"
       >
         {{ project.name }}
       </h6>
-      <ProjectStateBadge
-        v-if="project"
-        :project-type="project.projectType"
-        :is-locked="project.isLocked"
-      />
+
       <div
         class="mt-3 gap-x-1 flex flex-row items-center font-display text-sm mr-2 h-5 whitespace-nowrap text-ellipsis overflow-hidden"
       >

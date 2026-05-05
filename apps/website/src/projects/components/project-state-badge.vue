@@ -43,9 +43,8 @@ const props = defineProps<{
 
 const tierClass = computed(() => {
   const tier = props.projectType?.toLowerCase() ?? 'free'
-  const base = 'inline-flex items-center justify-center w-fit rounded-full px-2 py-1 text-sm font-bold capitalize tracking-wide leading-none'
-
-switch (tier) {
+  const base = 'px-2 py-1 rounded-full text-sm font-bold capitalize leading-none flex items-center justify-center cursor-default h-fit w-fit self-start flex-none'
+  switch (tier) {
     case 'premium':
       return `${base} bg-amber-100/20 text-amber-700`
     case 'unlimited':
