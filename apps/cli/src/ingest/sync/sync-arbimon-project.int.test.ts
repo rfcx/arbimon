@@ -101,6 +101,44 @@ describe('ingest > sync', () => {
       expect(projects).toHaveLength(2)
     })
 
+    test('preserves projectType and isLocked on existing projects during re-sync', async () => {
+      const syncStatus = getDefaultSyncStatus(SYNC_CONFIG)
+      await arbimonSequelize.query(SQL_INSERT_PROJECT, { bind: DEFAULT_PROJECT })
+
+      await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, syncStatus)
+
+      await ModelRepository.getInstance(biodiversitySequelize).LocationProject.update(
+        { projectType: 'premium', isLocked: true },
+        { where: { idArbimon: DEFAULT_PROJECT.projectId } }
+      )
+
+      const nextSyncStatus = await ModelRepository.getInstance(biodiversitySequelize)
+        .SyncStatus
+        .findOne({
+          where: { syncSourceId: SYNC_CONFIG.syncSourceId, syncDataTypeId: SYNC_CONFIG.syncDataTypeId },
+          raw: true
+        }) ?? getDefaultSyncStatus(SYNC_CONFIG)
+
+      await arbimonSequelize.query(SQL_UPDATE_PROJECT, {
+        bind: {
+          projectId: DEFAULT_PROJECT.projectId,
+          isPrivate: DEFAULT_PROJECT.isPrivate,
+          updatedAt: '2021-03-20T16:00:00.000Z',
+          deletedAt: null
+        }
+      })
+
+      await syncArbimonProjectsBatch(arbimonSequelize, biodiversitySequelize, nextSyncStatus)
+
+      const project = await ModelRepository.getInstance(biodiversitySequelize).LocationProject.findOne({
+        where: { idArbimon: DEFAULT_PROJECT.projectId },
+        raw: true
+      })
+
+      expect(project?.projectType).toBe('premium')
+      expect(project?.isLocked).toBe(true)
+    })
+
     test('can sync projects when some invalid', async () => {
       // Arrange
       const idsArbimon = [1931, 1932]
