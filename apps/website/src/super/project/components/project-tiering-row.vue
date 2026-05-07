@@ -83,7 +83,7 @@
         <div class="flex flex-wrap items-center gap-2">
           <span
             v-if="project.isLocked"
-            :class="stateBadgeClass(project)"
+            :class="stateBadgeClass()"
           >
             view-only
           </span>
@@ -219,7 +219,7 @@
 import { type AxiosInstance } from 'axios'
 import { computed, inject } from 'vue'
 
-import { type SuperProjectSummary, type SuperUserProjectSummary } from '@rfcx-bio/common/api-bio/super/projects'
+import { type SuperUserProjectSummary } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useProjectTieringUsage } from '../_composables/use-project-tiering-usage'
@@ -256,7 +256,7 @@ const tierBadgeClass = (projectType: SuperUserProjectSummary['projectType'] | un
   return `${base} bg-emerald-100 text-emerald-700`
 }
 
-const stateBadgeClass = (project: SuperProjectSummary): string => {
+const stateBadgeClass = (): string => {
   return 'inline-flex items-center justify-center w-fit rounded-full px-2 py-1 text-xs capitalize tracking-wide leading-none bg-stone-200 font-semibold'
 }
 

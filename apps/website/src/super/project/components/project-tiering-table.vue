@@ -107,7 +107,7 @@ import { type AxiosInstance } from 'axios'
 import { computed, inject, ref } from 'vue'
 
 import { type ProjectMembersResponse } from '@rfcx-bio/common/api-bio/project/project-members'
-import { type SuperProjectSummary } from '@rfcx-bio/common/api-bio/super/projects'
+import { type SuperProjectSummary, type SuperUserProjectSummary } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { apiClientKey } from '@/globals'
 import { useSuperGetProjectMembers } from '../../member/_composables/use-members'
@@ -115,7 +115,7 @@ import { useUpdateSuperProjectTier } from '../_composables/use-projects'
 import ProjectTieringRow from './project-tiering-row.vue'
 
 withDefaults(defineProps<{
-  projects: SuperProjectSummary[]
+  projects: SuperUserProjectSummary[]
   showActions?: boolean
 }>(), {
   showActions: true
