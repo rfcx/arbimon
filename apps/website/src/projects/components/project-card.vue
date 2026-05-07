@@ -21,6 +21,7 @@
           v-if="project"
           :project-type="project.projectType"
           :is-locked="project.isLocked"
+          :is-hide-tooltip="true"
         />
       </div>
       <h6

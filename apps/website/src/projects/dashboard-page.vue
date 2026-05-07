@@ -5,7 +5,7 @@
         class="grid gap-y-20 mx-auto py-20 w-full max-w-screen-xl"
         :class="{'overflow-y-hidden h-screen': hasOpenedAnalysisSelector === true}"
       >
-        <div class="text-gray-900 dark:text-white w-full overflow-hidden flex items-center gap-3">
+        <div class="text-gray-900 dark:text-white w-full flex items-center gap-3">
           <h1
             class="text-5xl font-header font-normal <sm:text-2xl truncate max-w-full overflow-hidden whitespace-nowrap"
             :title="store.project?.name"

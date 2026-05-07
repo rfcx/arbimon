@@ -11,7 +11,8 @@
       </span>
 
       <div
-        class="absolute z-10 inline-block px-3 py-2 text-sm font-medium text-gray-900
+        v-if="isHideTooltip !== true"
+        class="absolute z-9999 inline-block px-3 py-2 text-sm font-medium text-gray-900
              transition-opacity transition-all duration-200 bg-white rounded-lg shadow-sm
              opacity-0 invisible
              group-hover:opacity-100 group-hover:visible
@@ -39,6 +40,7 @@ import { computed } from 'vue'
 const props = defineProps<{
   projectType?: string
   isLocked?: boolean
+  isHideTooltip?: boolean
 }>()
 
 const tierClass = computed(() => {

@@ -75,47 +75,56 @@
             </p>
           </div>
 
-          <div class="w-3/4 rounded-2xl border border-white/10 bg-echo shadow-xl grid grid-cols-3 py-6">
+          <div class="w-3/4 rounded-2xl border border-white/10 bg-echo shadow-xl grid grid-cols-3 pb-5 pt-6">
             <div class="flex flex-col items-center justify-center px-4 border-r border-white/10">
-              <p class="text-3xl font-bold text-white mb-1">
-                {{ portfolioSummary.usage.freeProjects }}<span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.freeProjects) }}</span>
-              </p>
-              <p class="text-sm capitalize text-gray-400">
-                Free Projects
-              </p>
+              <div class="flex flex-col items-center">
+                <p class="text-3xl font-bold text-white mb-1">
+                  {{ portfolioSummary.usage.freeProjects }}
+                  <span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.freeProjects) }}</span>
+                </p>
+                <p class="text-sm capitalize text-gray-400">
+                  Free Projects
+                </p>
+              </div>
               <p
                 :class="portfolioSummary.usage.freeProjects > (portfolioSummary.limits.freeProjects ?? 0) ? 'visible' : 'invisible'"
-                class="text-[10px] text-red-500 mt-1 h-4"
+                class="text-[10px] text-red-500 mt-[2px] whitespace-nowrap"
               >
                 Limit exceeded
               </p>
             </div>
 
             <div class="flex flex-col items-center justify-center px-4 border-r border-white/10">
-              <p class="text-3xl font-bold text-white mb-1">
-                {{ portfolioSummary.usage.premiumProjects }}<span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.premiumProjects) }}</span>
-              </p>
-              <p class="text-sm capitalize text-gray-400">
-                Premium Projects
-              </p>
+              <div class="flex flex-col items-center">
+                <p class="text-3xl font-bold text-white mb-1">
+                  {{ portfolioSummary.usage.premiumProjects }}
+                  <span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.premiumProjects) }}</span>
+                </p>
+                <p class="text-sm capitalize text-gray-400">
+                  Premium Projects
+                </p>
+              </div>
               <p
                 :class="portfolioSummary.usage.premiumProjects > (portfolioSummary.limits.premiumProjects ?? 0) ? 'visible' : 'invisible'"
-                class="text-[10px] text-red-500 mt-1"
+                class="text-[10px] text-red-500 mt-[2px] whitespace-nowrap"
               >
                 Limit exceeded
               </p>
             </div>
 
             <div class="flex flex-col items-center justify-center px-4">
-              <p class="text-3xl font-bold text-white mb-1">
-                {{ portfolioSummary.usage.unlimitedProjects }}<span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.unlimitedProjects) }}</span>
-              </p>
-              <p class="text-sm capitalize text-gray-400">
-                Unlimited Projects
-              </p>
+              <div class="flex flex-col items-center">
+                <p class="text-3xl font-bold text-white mb-1">
+                  {{ portfolioSummary.usage.unlimitedProjects }}
+                  <span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.unlimitedProjects) }}</span>
+                </p>
+                <p class="text-sm capitalize text-gray-400">
+                  Unlimited Projects
+                </p>
+              </div>
               <p
                 :class="portfolioSummary.usage.unlimitedProjects > (portfolioSummary.limits.unlimitedProjects ?? 0) ? 'visible' : 'invisible'"
-                class="text-[10px] text-red-500 mt-1"
+                class="text-[10px] text-red-500 [2px] whitespace-nowrap"
               >
                 Limit exceeded
               </p>
