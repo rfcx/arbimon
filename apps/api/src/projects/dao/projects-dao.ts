@@ -2,6 +2,7 @@ import { type WhereOptions, Op } from 'sequelize'
 import { type Literal } from 'sequelize/types/lib/utils'
 
 import { type LocationProjectWithRole, type MyProjectsResponse } from '@rfcx-bio/common/api-bio/project/projects'
+import { getIdByRole } from '@rfcx-bio/common/roles'
 import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { type Project, type ProjectStatus, ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/node-common/dao/types'
 
@@ -11,6 +12,7 @@ import { getProjectsTieringUsage } from './project-tiering-usage-dao'
 
 const sequelize = getSequelize()
 const models = ModelRepository.getInstance(sequelize)
+const OWNER_ROLE_ID = getIdByRole('owner')
 
 export const getProjectById = async (id: number): Promise<Project | undefined> => {
   return await models.LocationProject.findByPk(id) ?? undefined
@@ -90,6 +92,7 @@ export const getViewableProjects = async (userId: number | undefined): Promise<L
  */
 export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, limit: number = 20, keyword?: string): Promise<MyProjectsResponse> => {
   const memberProjectIds = await getProjectIdsByUser(userId)
+  const ownerProjectIds = await getProjectIdsByUser(userId, OWNER_ROLE_ID)
 
   const where: WhereOptions<Project> = { id: memberProjectIds }
 
@@ -122,6 +125,7 @@ export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, 
       image: fileUrl(profileInfo.find(pi => pi.locationProjectId === p.id)?.image) ?? '',
       objectives: profileInfo.find(pi => pi.locationProjectId === p.id)?.objectives ?? [],
       countries: countryInfo.find(ci => ci.locationProjectId === p.id)?.countryCodes ?? [],
+      isOwner: ownerProjectIds.includes(p.id),
       isPublished: p.status === 'published',
       usage: usageByProjectId[p.id]
     }))
@@ -146,10 +150,10 @@ export const getProjectArbimonId = async (locationProjectId: number): Promise<nu
   return project?.idArbimon ?? undefined
 }
 
-const getProjectIdsByUser = async (userId: number | undefined): Promise<number[]> => {
+const getProjectIdsByUser = async (userId: number | undefined, roleId?: number): Promise<number[]> => {
   if (userId === undefined) {
     return await Promise.resolve([])
   }
-  const projects = await models.LocationProjectUserRole.findAll({ where: { userId }, attributes: ['locationProjectId'], raw: true })
+  const projects = await models.LocationProjectUserRole.findAll({ where: { userId, ...(roleId !== undefined ? { roleId } : {}) }, attributes: ['locationProjectId'], raw: true })
   return projects.map(p => p.locationProjectId)
 }

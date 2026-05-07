@@ -30,6 +30,7 @@ export type LocationProjectWithInfo = LocationProjectTypes['light'] & {
   objectives: string[]
   countries: string[]
   image: string
+  isOwner: boolean
   usage?: ProjectTieringUsage
 }
 
