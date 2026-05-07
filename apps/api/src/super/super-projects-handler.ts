@@ -1,4 +1,4 @@
-import { type SuperPaginationResponse, type SuperProjectQuery, type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserQuery, type SuperUserSummary, type SuperUserTierUpdateBody } from '@rfcx-bio/common/api-bio/super/projects'
+import { type SuperPaginationResponse, type SuperProjectQuery, type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserProjectSummary, type SuperUserQuery, type SuperUserSummary, type SuperUserTierUpdateBody } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { type Handler } from '../_services/api-helpers/types'
 import { getProjects, getUserProjects, getUsers, updateProjectTier, updateUserTier } from './super-projects-bll'
@@ -11,7 +11,7 @@ export const superGetUsersHandler: Handler<SuperPaginationResponse<SuperUserSumm
   return await getUsers(req.query.keyword, req.query.limit, req.query.offset, req.query.tier)
 }
 
-export const superGetUserProjectsHandler: Handler<SuperProjectSummary[], { userId: number }> = async (req) => {
+export const superGetUserProjectsHandler: Handler<SuperUserProjectSummary[], { userId: number }> = async (req) => {
   return await getUserProjects(Number(req.params.userId))
 }
 

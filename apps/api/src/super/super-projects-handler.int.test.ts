@@ -196,6 +196,7 @@ describe('Super projects route', async () => {
     expect(results).toHaveLength(2)
     expect(results[0]).toHaveProperty('usage')
     expect(results[0]).toHaveProperty('limits')
+    expect(results[0].isOwner).toBe(true)
   })
 
   test(`PATCH ${superProjectTierRoute} updates project tier`, async () => {

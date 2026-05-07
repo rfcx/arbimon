@@ -28,6 +28,10 @@ export type SuperProjectSummary = LocationProjectTypes['light'] & {
   limits: SuperProjectLimits
 }
 
+export type SuperUserProjectSummary = SuperProjectSummary & {
+  isOwner: boolean
+}
+
 export type SuperUserSummary = UserTypes['light'] & {
   accountTier: AccountTier
   additionalPremiumProjectSlots: number
@@ -77,8 +81,8 @@ export const apiBioSuperGetProjects = async (apiClient: AxiosInstance, options: 
 export const apiBioSuperGetUsers = async (apiClient: AxiosInstance, options: SuperUserQuery): Promise<SuperPaginationResponse<SuperUserSummary>> =>
   await apiClient.get<SuperPaginationResponse<SuperUserSummary>>(superUsersRoute, { params: options }).then(res => res.data)
 
-export const apiBioSuperGetUserProjects = async (apiClient: AxiosInstance, userId: number): Promise<SuperProjectSummary[]> =>
-  await apiClient.get<SuperProjectSummary[]>(superUserProjectsRoute.replace(':userId', userId.toString())).then(res => res.data)
+export const apiBioSuperGetUserProjects = async (apiClient: AxiosInstance, userId: number): Promise<SuperUserProjectSummary[]> =>
+  await apiClient.get<SuperUserProjectSummary[]>(superUserProjectsRoute.replace(':userId', userId.toString())).then(res => res.data)
 
 export const apiBioSuperGetProjectMembers = async (apiClient: AxiosInstance, projectId: number): Promise<ProjectMembersResponse> => {
   return await apiClient.get(superProjectMembersRoute.replace(':projectId', projectId.toString())).then(res => res.data)

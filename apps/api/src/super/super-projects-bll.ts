@@ -1,6 +1,6 @@
 import { QueryTypes } from 'sequelize'
 
-import { type SuperPaginationResponse, type SuperProjectLimits, type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserSummary, type SuperUserTierUpdateBody } from '@rfcx-bio/common/api-bio/super/projects'
+import { type SuperPaginationResponse, type SuperProjectLimits, type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserProjectSummary, type SuperUserSummary, type SuperUserTierUpdateBody } from '@rfcx-bio/common/api-bio/super/projects'
 import { type AccountTier, type ProjectType } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '~/db'
@@ -28,6 +28,7 @@ interface SuperProjectRow {
   collaboratorCount: number
   guestCount: number
   patternMatchingCount: number
+  isOwner?: boolean
 }
 
 interface SuperUserRow {
@@ -205,7 +206,7 @@ export const getUsers = async (
   }
 }
 
-export const getUserProjects = async (userId: number): Promise<SuperProjectSummary[]> => {
+export const getUserProjects = async (userId: number): Promise<SuperUserProjectSummary[]> => {
   const sequelize = getSequelize()
   const projectTypeLimits = await getProjectTypeLimitMap()
   const rows = await sequelize.query<SuperProjectRow>(
@@ -227,7 +228,14 @@ export const getUserProjects = async (userId: number): Promise<SuperProjectSumma
         0 AS "recordingMinutesCount",
         COALESCE(lpmqu.collaborator_count, 0) AS "collaboratorCount",
         COALESCE(lpmqu.guest_count, 0) AS "guestCount",
-        0 AS "patternMatchingCount"
+        0 AS "patternMatchingCount",
+        EXISTS (
+          SELECT 1
+          FROM location_project_user_role lpur_owner
+          WHERE lpur_owner.location_project_id = lp.id
+            AND lpur_owner.user_id = :userId
+            AND lpur_owner.role_id = :ownerRoleId
+        ) AS "isOwner"
       FROM location_project lp
       INNER JOIN location_project_user_role lpur
         ON lp.id = lpur.location_project_id
@@ -237,10 +245,13 @@ export const getUserProjects = async (userId: number): Promise<SuperProjectSumma
         AND lp.deleted_at IS NULL
       ORDER BY lp.name, lp.id
     `,
-    { replacements: { userId }, type: QueryTypes.SELECT }
+    { replacements: { userId, ownerRoleId: OWNER_ROLE_ID }, type: QueryTypes.SELECT }
   )
 
-  return rows.map(row => mapProjectSummary(row, projectTypeLimits))
+  return rows.map(row => ({
+    ...mapProjectSummary(row, projectTypeLimits),
+    isOwner: Boolean(row.isOwner)
+  }))
 }
 
 export const updateProjectTier = async (projectId: number, body: SuperProjectTierUpdateBody): Promise<void> => {
