@@ -2,14 +2,14 @@ import { type UseMutationReturnType, type UseQueryReturnType, useMutation, useQu
 import { type AxiosInstance } from 'axios'
 import { type Ref, computed } from 'vue'
 
-import { type SuperPaginationResponse, type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserSummary, type SuperUserTierUpdateBody, apiBioSuperGetProjects, apiBioSuperGetUserProjects, apiBioSuperGetUsers, apiBioSuperUpdateProjectTier, apiBioSuperUpdateUserTier } from '@rfcx-bio/common/api-bio/super/projects'
+import { type SuperPaginationResponse, type SuperProjectTierUpdateBody, type SuperUserProjectSummary, type SuperUserSummary, type SuperUserTierUpdateBody, apiBioSuperGetProjects, apiBioSuperGetUserProjects, apiBioSuperGetUsers, apiBioSuperUpdateProjectTier, apiBioSuperUpdateUserTier } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { type Error } from '../../error'
 
 export const useGetSuperProjects = (
   apiClient: AxiosInstance,
-  options: { keyword?: Ref<string>, tier?: Ref<SuperProjectSummary['projectType'] | undefined>, limit?: Ref<number>, offset?: Ref<number>, enabled?: Ref<boolean> }
-): UseQueryReturnType<SuperPaginationResponse<SuperProjectSummary>, Error> => {
+  options: { keyword?: Ref<string>, tier?: Ref<SuperUserProjectSummary['projectType'] | undefined>, limit?: Ref<number>, offset?: Ref<number>, enabled?: Ref<boolean> }
+): UseQueryReturnType<SuperPaginationResponse<SuperUserProjectSummary>, Error> => {
   return useQuery({
     queryKey: ['get-projects', options.keyword, options.tier, options.limit, options.offset],
     queryFn: async () => await apiBioSuperGetProjects(apiClient, { keyword: options.keyword?.value, tier: options.tier?.value, limit: options.limit?.value, offset: options.offset?.value }),
@@ -32,7 +32,7 @@ export const useGetSuperUsers = (
   })
 }
 
-export const useGetSuperUserProjects = (apiClient: AxiosInstance, userId: Ref<number | null | undefined>): UseQueryReturnType<SuperProjectSummary[], Error> => {
+export const useGetSuperUserProjects = (apiClient: AxiosInstance, userId: Ref<number | null | undefined>): UseQueryReturnType<SuperUserProjectSummary[], Error> => {
   return useQuery({
     queryKey: ['get-super-user-projects', userId],
     queryFn: async () => await apiBioSuperGetUserProjects(apiClient, Number(userId.value)),

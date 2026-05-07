@@ -75,8 +75,8 @@ export const superUserProjectsRoute = superUsersRoute + '/:userId/projects'
 export const superUserTierRoute = superUsersRoute + '/:userId/tier'
 
 // Service
-export const apiBioSuperGetProjects = async (apiClient: AxiosInstance, options: SuperProjectQuery): Promise<SuperPaginationResponse<SuperProjectSummary>> =>
-  await apiClient.get<SuperPaginationResponse<SuperProjectSummary>>(superProjectsRoute, { params: options }).then(res => res.data)
+export const apiBioSuperGetProjects = async (apiClient: AxiosInstance, options: SuperProjectQuery): Promise<SuperPaginationResponse<SuperUserProjectSummary>> =>
+  await apiClient.get<SuperPaginationResponse<SuperUserProjectSummary>>(superProjectsRoute, { params: options }).then(res => res.data)
 
 export const apiBioSuperGetUsers = async (apiClient: AxiosInstance, options: SuperUserQuery): Promise<SuperPaginationResponse<SuperUserSummary>> =>
   await apiClient.get<SuperPaginationResponse<SuperUserSummary>>(superUsersRoute, { params: options }).then(res => res.data)
