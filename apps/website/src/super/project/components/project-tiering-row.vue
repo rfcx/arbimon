@@ -5,14 +5,37 @@
     </td>
     <td class="py-3 pr-3 max-w-[200px]">
       <div
-        class="font-medium text-insight truncate"
+        class="font-medium text-insight flex items-center gap-1.5 min-w-0 mr-3"
         :title="project.name"
       >
-        {{ project.name }}
+        <span class="truncate">
+          {{ project.name }}
+        </span>
+
+        <div
+          v-if="project.isOwner"
+          class="relative group flex-none"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="text-amber-500 w-4 h-4"
+          >
+            <path d="M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5ZM19 19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V18H19V19Z" />
+          </svg>
+
+          <div
+            class="absolute z-10 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200
+             px-2 py-1 text-[10px] font-medium text-black bg-white rounded shadow-sm
+             bottom-full mb-1.5 left-1/2 -translate-x-1/2 whitespace-nowrap"
+          >
+            Owned
+          </div>
+        </div>
       </div>
 
       <div
-        class="text-sm text-subtle truncate"
+        class="text-sm text-subtle truncate mr-3"
         :title="project.slug"
       >
         {{ project.slug }}
@@ -196,13 +219,13 @@
 import { type AxiosInstance } from 'axios'
 import { computed, inject } from 'vue'
 
-import { type SuperProjectSummary } from '@rfcx-bio/common/api-bio/super/projects'
+import { type SuperProjectSummary, type SuperUserProjectSummary } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useProjectTieringUsage } from '../_composables/use-project-tiering-usage'
 
 const props = withDefaults(defineProps<{
-  project: SuperProjectSummary
+  project: SuperUserProjectSummary
   showActions?: boolean
   selectedProjectType: string
   isSavingTier?: boolean
@@ -221,7 +244,7 @@ const { data: usageResponse } = useProjectTieringUsage(apiClientArbimon, slug)
 const limits = computed(() => props.project.limits)
 const usage = computed(() => usageResponse.value)
 
-const tierBadgeClass = (projectType: SuperProjectSummary['projectType'] | undefined): string => {
+const tierBadgeClass = (projectType: SuperUserProjectSummary['projectType'] | undefined): string => {
   const base = 'inline-flex items-center justify-center w-fit rounded-full px-2 py-1 text-xs font-bold capitalize tracking-wide leading-none'
 
   if (projectType === 'premium') {
