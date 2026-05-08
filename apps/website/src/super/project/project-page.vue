@@ -60,6 +60,23 @@
               <td>
                 {{ project.slug }}
               </td>
+              <td>
+                <router-link
+                  :to=" { name: ROUTE_NAMES.superMember, params: { projectId: project.id } }"
+                  class="text-frequency text-sm"
+                  @click="superStore.setSelectedProject(project)"
+                >
+                  Manage members
+                </router-link>
+              </td>
+              <td>
+                <router-link
+                  :to=" { name: ROUTE_NAMES.superSyncHistory, params: { projectId: project.id } }"
+                  class="text-frequency text-sm"
+                >
+                  Syncing
+                </router-link>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -79,13 +96,15 @@ import { useRouter } from 'vue-router'
 
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
+import { useSuperStore } from '~/store'
 import { useGetSuperProjects } from './_composables/use-projects'
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const router = useRouter()
+const superStore = useSuperStore()
 
 const searchKeyword = ref('')
-const limit = ref(25)
+const limit = ref(200)
 const offset = ref(0)
 
 const searchParams = useDebounce(searchKeyword, 500)
