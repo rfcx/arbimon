@@ -25,14 +25,16 @@
         />
       </div>
       <h6
-        class="mb-2 mt-6 font-bold tracking-tight line-clamp-2 text-gray-900 dark:text-insight !overflow-visible relative"
+        class="mb-2 mt-6 font-bold tracking-tight text-gray-900 dark:text-insight !overflow-visible relative flex items-center w-full"
         :title="project?.name"
       >
-        {{ project.name }}
+        <span class="truncate min-w-0">
+          {{ project.name }}
+        </span>
 
         <div
           v-if="project.isOwner"
-          class="relative group inline-flex items-center ml-1 z-50"
+          class="relative group inline-flex items-center ml-1 z-50 flex-none"
         >
           <svg
             viewBox="0 0 24 24"
@@ -48,6 +50,7 @@
        bottom-full mb-1.5 left-1/2 -translate-x-1/2 whitespace-nowrap pointer-events-none"
           >
             Primary Admin
+            <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-white" />
           </div>
         </div>
       </h6>
