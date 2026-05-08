@@ -353,7 +353,7 @@ const disableText = computed(() => {
   const collabs = projectInfo.value?.usage?.collaboratorCount ?? 0
   const guests = projectInfo.value?.usage?.guestCount ?? 0
   const currentTotal = collabs + guests
-  if (projectType === 'free' || (projectType === 'premium' && currentTotal >= 8)) {
+  if (projectType === 'free' || (projectType === 'premium' && currentTotal >= 7)) {
     return 'Limit reached. Upgrade your plan to unlock this feature.'
   }
   if (!store.userIsAdminProjectMember) {
@@ -456,7 +456,7 @@ const canAddMember = computed(() => {
   }
 
   if (projectType === 'premium') {
-    return currentTotal < 8
+    return currentTotal < 7
   }
 
   return true
@@ -521,10 +521,12 @@ const addSelectedUser = ():void => {
   } else {
   mutatePostProjectMember({
     email: userSearchValue.value,
-    role: 'user'
+    role: 'viewer'
   }, {
     onSuccess: () => {
+      userSearchValue.value = ''
       usersRefetch()
+      refetchProjectInfo()
       showAlertDialog('success', 'Success', 'New Project member added successfully')
     },
     onError: (error: unknown) => {
@@ -558,6 +560,7 @@ const deleteProjectMember = (email: string):void => {
   mutateDeleteProjectMember(email, {
     onSuccess: () => {
       usersRefetch()
+      refetchProjectInfo()
     },
     onError: (error: unknown) => {
       const axiosError = axios.isAxiosError(error) ? error : undefined
