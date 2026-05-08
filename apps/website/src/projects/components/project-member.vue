@@ -103,24 +103,18 @@
             :key="role.id"
             class="flex flex-row justify-start items-center p-1 m-0"
             :class="[
-              isRoleDisabled(role.id)
+              isRoleDisabled(role.id, user.role ?? 'none')
                 ? 'opacity-50 cursor-not-allowed grayscale'
                 : 'cursor-pointer hover:bg-chirp hover:text-pitch hover:(border-chirp rounded-lg)'
             ]"
-            @click="!isRoleDisabled(role.id) && (handleChangeUserRole(user.email, role.id), closeMenu())"
+            @click="!isRoleDisabled(role.id, user.role ?? 'none') && (handleChangeUserRole(user.email, role.id), closeMenu())"
           >
-            <span class="w-8">
-              <icon-fa-check
-                v-if="role.id === user.roleId"
-                class="text-xs"
-              />
-            </span>
             <div class="flex flex-col">
               <span :class="{ 'font-medium': role.id === user.roleId }">
                 {{ role.name }}
               </span>
               <span
-                v-if="isRoleDisabled(role.id)"
+                v-if="isRoleDisabled(role.id, user.role ?? 'none') && role.id !== user.roleId"
                 class="text-[10px] text-red-500 italic"
               >
                 Limit reached
@@ -172,24 +166,39 @@ const getUserRoleName = (): string => {
   return role !== undefined ? role.name : 'Not defined'
 }
 
-const isRoleDisabled = (roleId: number): boolean => {
+const isRoleDisabled = (targetRoleId: number, currentRole: ProjectRole): boolean => {
   if (props.projectInfo?.isLocked === true) return true
 
   const projectType = props.projectInfo?.projectType ?? 'free'
   const usage = props.projectInfo?.usage
 
-  const roleName = getRoleById(roleId)
-
+  const targetRoleName = getRoleById(targetRoleId) as ProjectRole
   const collaboratorRoles: ProjectRole[] = ['admin', 'expert', 'user', 'entry']
-  const isCollaboratorRole = collaboratorRoles.includes(roleName)
 
-  if (projectType === 'premium' && isCollaboratorRole) {
-    const currentCollabs = usage?.collaboratorCount ?? 0
-    return currentCollabs >= 4
+  const isTargetCollaborator = collaboratorRoles.includes(targetRoleName)
+  const isCurrentCollaborator = collaboratorRoles.includes(currentRole)
+
+  const isTargetGuest = targetRoleName === 'viewer'
+  const isCurrentGuest = currentRole === 'viewer'
+
+  if (projectType === 'premium') {
+    const collabCount = usage?.collaboratorCount ?? 0
+    const guestCount = usage?.guestCount ?? 0
+
+    if (isTargetCollaborator) {
+      if (isCurrentCollaborator) return false
+      return collabCount >= 4
+    }
+
+    // if should remove if can add guest more than 3
+    if (isTargetGuest) {
+      if (isCurrentGuest) return false
+      return guestCount >= 3
+    }
   }
 
   if (projectType === 'free') {
-    return roleName !== 'owner'
+    return targetRoleName !== 'owner'
   }
 
   return false
