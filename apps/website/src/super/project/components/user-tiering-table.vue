@@ -247,6 +247,7 @@
               <ProjectTieringTable
                 v-else
                 :projects="userProjects ?? []"
+                :user="user"
                 :show-actions="true"
                 @select-project="project => emit('select-project', project)"
               />

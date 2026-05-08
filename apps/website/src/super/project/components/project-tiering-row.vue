@@ -54,7 +54,11 @@
               <option value="free">
                 free
               </option>
-              <option value="premium">
+
+              <option
+                value="premium"
+                :disabled="isMaxLimit(user?.usage.premiumProjects, user?.limits.premiumProjects) "
+              >
                 premium
               </option>
               <option value="unlimited">
@@ -219,13 +223,14 @@
 import { type AxiosInstance } from 'axios'
 import { computed, inject } from 'vue'
 
-import { type SuperUserProjectSummary } from '@rfcx-bio/common/api-bio/super/projects'
+import { type SuperUserProjectSummary, type SuperUserSummary } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useProjectTieringUsage } from '../_composables/use-project-tiering-usage'
 
 const props = withDefaults(defineProps<{
   project: SuperUserProjectSummary
+  user?: SuperUserSummary
   showActions?: boolean
   selectedProjectType: string
   isSavingTier?: boolean
@@ -280,6 +285,11 @@ const isOverLimit = (used: number | undefined, limit: number | null | undefined)
   if (limit === null || limit === undefined) return false
 
   return (used ?? 0) > limit
+}
+const isMaxLimit = (used: number | undefined, limit: number | null | undefined) => {
+  if (limit === null || limit === undefined) return false
+
+  return (used ?? 0) >= limit
 }
 const onProjectTypeChange = (event: Event): void => {
   emit('update:selectedProjectType', (event.target as HTMLSelectElement).value)

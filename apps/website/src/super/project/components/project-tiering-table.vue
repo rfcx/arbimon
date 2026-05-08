@@ -35,6 +35,7 @@
       >
         <ProjectTieringRow
           :project="project"
+          :user="user"
           :show-actions="showActions"
           :selected-project-type="projectTierDrafts[project.id] ?? (project.projectType ?? 'free')"
           :is-saving-tier="savingProjectId === project.id"
@@ -107,7 +108,7 @@ import { type AxiosInstance } from 'axios'
 import { computed, inject, ref } from 'vue'
 
 import { type ProjectMembersResponse } from '@rfcx-bio/common/api-bio/project/project-members'
-import { type SuperProjectSummary, type SuperUserProjectSummary } from '@rfcx-bio/common/api-bio/super/projects'
+import { type SuperProjectSummary, type SuperUserProjectSummary, type SuperUserSummary } from '@rfcx-bio/common/api-bio/super/projects'
 
 import { apiClientKey } from '@/globals'
 import { useSuperGetProjectMembers } from '../../member/_composables/use-members'
@@ -116,6 +117,7 @@ import ProjectTieringRow from './project-tiering-row.vue'
 
 withDefaults(defineProps<{
   projects: SuperUserProjectSummary[]
+  user?: SuperUserSummary
   showActions?: boolean
 }>(), {
   showActions: true
