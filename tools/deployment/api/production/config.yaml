@@ -21,6 +21,6 @@ data:
   ARBIMON_LEGACY_API_BASE_URL: https://arbimon.org/legacy-api
   CORE_API_BASE_URL: https://api.rfcx.org
   OPENSEARCH_ENABLED: "true"
-  SUPER_USER_EMAILS: support@rfcx.org,scientist-super@rfcx.org
+  SUPER_USER_EMAILS: support@rfcx.org,scientist-super@rfcx.org,shruti@rfcx.org,aika@rfcx.org
   BACKUP_TIMEFRAME_LIMIT: "5m"
   KUBERNETES_NAMESPACE: production
