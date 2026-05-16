@@ -115,7 +115,7 @@ jobs:
 
   deploy-rfcx-local:
     name: 'Deploy: rfcx-local'
-    needs: [prepare, configure]
+    needs: [configure]
     if: ${{ needs.configure.outputs.namespace == 'production' }}
     uses: rfcx/cicd/.github/workflows/rfcx-local-cd.yaml@master
     with:
@@ -132,7 +132,7 @@ jobs:
   notify:
     name: 'Notify'
     if: ${{ always() }}
-    needs: [build, deploy]
+    needs: [build, deploy, deploy-rfcx-local]
     uses: rfcx/cicd/.github/workflows/notify.yaml@master
     with:
       workflow-id: cd.yaml
