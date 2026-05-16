@@ -113,6 +113,22 @@ jobs:
         with:
           args: apply -f ./tools/deployment/website/${{ needs.configure.outputs.namespace }}
 
+  deploy-rfcx-local:
+    name: 'Deploy: rfcx-local'
+    needs: [prepare, configure]
+    if: ${{ needs.configure.outputs.namespace == 'production' }}
+    uses: rfcx/cicd/.github/workflows/rfcx-local-cd.yaml@master
+    with:
+      repo: arbimon
+      dockerfile: tools/deployment/Dockerfile
+      targets: '["biodiversity-api","biodiversity-cli","biodiversity-website"]'
+      deployments: |
+        [
+          {"name": "biodiversity-api",     "image": "biodiversity-api"},
+          {"name": "biodiversity-website", "image": "biodiversity-website"}
+        ]
+
+
   notify:
     name: 'Notify'
     if: ${{ always() }}
