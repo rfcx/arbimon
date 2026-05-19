@@ -46,84 +46,33 @@ jobs:
           echo "release-date=$( date +"%s" ) >> $GITHUB_OUTPUT"
           echo "short-sha=$(echo ${GITHUB_SHA} | cut -c1-8) >> $GITHUB_OUTPUT"
 
-  build:
-    name: 'Build'
+  deploy-rfcx-local:
+    name: 'Deploy: rfcx-local'
     needs: [configure]
-    uses: rfcx/cicd/.github/workflows/ecr-build-push.yaml@master
+    if: ${{ needs.configure.outputs.namespace == 'production' }}
+    uses: rfcx/cicd/.github/workflows/rfcx-local-cd.yaml@master
     with:
+      repo: arbimon
       dockerfile: tools/deployment/Dockerfile
-      targets: "[\"biodiversity-api\",\"biodiversity-cli\",\"biodiversity-website\"]"
-      tag-environment: ${{ needs.configure.outputs.namespace }}
-      tag-latest: ${{ needs.configure.outputs.namespace == 'production' }}
-      build-args: |            
-        mode=${{ needs.configure.outputs.namespace }}
-        release_commit=${{ needs.configure.outputs.short-sha }}
-        release_date=${{ needs.configure.outputs.release-date }}
-    secrets:
-      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      targets: '["biodiversity-api","biodiversity-cli","biodiversity-website"]'
+      deployments: |
+        [
+          {"name": "biodiversity-api",     "image": "biodiversity-api"},
+          {"name": "biodiversity-website", "image": "biodiversity-website"}
+        ]
 
-  deploy:
-    name: 'Deploy'
-    runs-on: deployment-runner
-    needs: ['build', 'configure']
-    steps:
-      - name: 'Deploy: Setup Git checkout'
-        # v4 (4.1.1) @ 17 Oct 2023 https://github.com/actions/checkout/tags
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-
-      - name: 'Deploy: Set image version'
-        run: |
-          find tools/deployment -name "*.yaml" -exec sed -i s/:latest/:${{ needs.build.outputs.unique-tag }}/g {} +
-          find tools/deployment -name "*.yaml" -exec sed -i s/JOB_NUMBER/${{ github.run_number }}/g {} +
-
-      - name: 'Deploy: Kubernetes apply CLI (starts migrate)'
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_cli }}
-        # v1 (1.28.2) @ 19 Oct 2023 https://github.com/actions-hub/kubectl/tags
-        uses: actions-hub/kubectl@2d1ce94ead5b3ba03de25df993a359c1b4657b05
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
-        with:
-          args: apply -f ./tools/deployment/cli/${{ needs.configure.outputs.namespace }}
-
-      - name: 'Deploy: Wait for migrate to complete successfully'
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_cli }}
-        # v1 (1.28.2) @ 19 Oct 2023 https://github.com/actions-hub/kubectl/tags
-        uses: actions-hub/kubectl@2d1ce94ead5b3ba03de25df993a359c1b4657b05
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
-        with:
-          args: wait --for=condition=complete --timeout=500s -n ${{ needs.configure.outputs.namespace }} job/biodiversity-cli-migrate-${{ github.run_number }}
-
-      - name: 'Deploy: Kubernetes apply API'
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_api }}
-        # v1 (1.28.2) @ 19 Oct 2023 https://github.com/actions-hub/kubectl/tags
-        uses: actions-hub/kubectl@2d1ce94ead5b3ba03de25df993a359c1b4657b05
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
-        with:
-          args: apply -f ./tools/deployment/api/${{ needs.configure.outputs.namespace }}
-
-      - name: 'Deploy: Kubernetes apply WEB'
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.deploy_web }}
-        # v1 (1.28.2) @ 19 Oct 2023 https://github.com/actions-hub/kubectl/tags
-        uses: actions-hub/kubectl@2d1ce94ead5b3ba03de25df993a359c1b4657b05
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_SUPER }}
-        with:
-          args: apply -f ./tools/deployment/website/${{ needs.configure.outputs.namespace }}
 
   notify:
     name: 'Notify'
     if: ${{ always() }}
-    needs: [build, deploy]
+    needs: [deploy-rfcx-local]
     uses: rfcx/cicd/.github/workflows/notify.yaml@master
     with:
       workflow-id: cd.yaml
-      status: ${{ needs.deploy.result }}
+      status: ${{ needs.deploy-rfcx-local.result }}
       always: true
       notification-title: 'CD: Arbimon'
-      notification-footer: "Build: ${{ needs.build.result || 'n/a' }} | Deploy: ${{ needs.deploy.result || 'n/a' }}"
+      notification-footer: "Deploy (rfcx-local): ${{ needs.deploy-rfcx-local.result || 'n/a' }}"
     secrets:
       slack-webhook: ${{ secrets.SLACK_ALERT_ARBIMON_WEBHOOK }}
       github-token: ${{ secrets.GITHUB_TOKEN }}
