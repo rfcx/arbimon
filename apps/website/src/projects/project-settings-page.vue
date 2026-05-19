@@ -197,7 +197,6 @@ const date = Math.floor(Date.now() / 1000)
 const lastModified = ref<number>(date)
 const lastSaved = ref<number>(date)
 
-const selectedProjectSlug = computed(() => store.project?.slug)
 
 const isToggledForBackup = computed(() => {
   const isInternalUser = store.user?.email?.includes('rfcx.org') ?? false
