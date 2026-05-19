@@ -111,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import { Modal } from 'flowbite'
+import { initTooltips, Modal } from 'flowbite'
 import type { Ref } from 'vue'
 import { onMounted, ref, watch } from 'vue'
 
@@ -130,6 +130,7 @@ onMounted(() => {
       emit('emitClose')
     }
   })
+  initTooltips()
 })
 
 watch(() => props.isOpen, (val) => {

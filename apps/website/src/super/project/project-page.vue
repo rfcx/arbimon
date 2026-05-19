@@ -47,7 +47,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="project in projects"
+              v-for="project in projects?.data ?? []"
               :key="project.id"
               class="border-y-1 border-util-gray-03"
             >

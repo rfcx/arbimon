@@ -1,9 +1,17 @@
 <template>
   <section class="bg-white dark:bg-pitch pl-18">
     <div class="py-10 mx-auto max-w-screen-xl flex flex-col gap-y-6 pr-4">
-      <h1 class="text-gray-900 dark:text-insight">
-        Members
-      </h1>
+      <div class="flex items-center gap-3">
+        <h1 class="text-gray-900 dark:text-insight mr-2">
+          Members
+        </h1>
+        <ProjectStateBadge
+          v-if="store.project"
+          :project-type="store.project.projectType"
+          :is-locked="store.project.isLocked"
+          class="w-max"
+        />
+      </div>
       <div
         v-if="isErrorUsers"
         class="text-left"
@@ -18,6 +26,22 @@
         class="grid lg:(grid-cols-2 gap-10)"
       >
         <div class="flex flex-col gap-y-10">
+          <div class="rounded-lg border border-util-gray-03 bg-util-gray-01 p-4 dark:(bg-moss border-util-gray-04) hidden">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="rounded-full bg-frequency/10 px-3 py-1 text-sm font-medium text-frequency">
+                {{ projectTypeLabel }}
+              </span>
+              <span
+                v-if="projectInfo?.isLocked"
+                class="rounded-full bg-insight/10 px-3 py-1 text-sm font-medium text-insight"
+              >
+                View only
+              </span>
+            </div>
+            <p class="mt-3 text-sm text-insight">
+              {{ memberLimitMessage }}
+            </p>
+          </div>
           <div
             class="flex flex-row justify-end"
           >
@@ -29,15 +53,15 @@
               placeholder="&#61442; Search by user email"
               :data-tooltip-target="!store.userIsFullProjectMember ? 'userSearchInputTooltipId' : null"
               data-tooltip-placement="bottom"
-              :disabled="!store.userIsAdminProjectMember"
+              :disabled="!canAddProjectMember"
               @input="searchUserInputChanged"
               @click="openUserSearch()"
             >
             <div
-              v-if="!store.userIsAdminProjectMember"
+              v-if="!canAddProjectMember"
               id="userSearchInputTooltipId"
               role="tooltip"
-              class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+              class="hidden absolute z-10 w-max invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
             >
               {{ disableText }}
               <div
@@ -45,10 +69,10 @@
                 data-popper-arrow
               />
             </div>
-            <div>
+            <div class="relative inline-block">
               <button
                 class="inline-flex py-2 px-3 text-sm btn bg-moss border items-center justify-center text-white rounded-md border-l-1 rounded-l-none group dark:hover:bg-util-gray-04 dark:focus:ring-util-gray-04 disabled:(cursor-not-allowed bg-util-gray-04 text-util-gray-02 btn-border btn-border-l-1)"
-                :disabled="!store.userIsAdminProjectMember"
+                :disabled="!canAddProjectMember"
                 @click="addSelectedUser()"
               >
                 Add member
@@ -56,10 +80,10 @@
                   class="h-2 w-2 ml-2 text-insight focus:border-none focus:border-transparent ring-moss outline-none group-disabled:text-util-gray-03"
                 />
                 <div
-                  v-if="!store.userIsAdminProjectMember"
+                  v-if="!canAddProjectMember"
                   id="addProjectMemberTooltipId"
                   role="tooltip"
-                  class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+                  class="absolute z-10 w-max invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip invisible group-hover:visible opacity-0 group-hover:opacity-100 top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none"
                 >
                   {{ disableText }}
                   <div
@@ -164,6 +188,7 @@
               :user="user"
               :roles="roles"
               :editable="store.userIsAdminProjectMember"
+              :project-info="projectInfo"
               :is-deleting="isDeletingProject"
               :is-error="isErrorDeleteProject"
               :is-success="isSuccessDeleteProject"
@@ -177,45 +202,45 @@
             <h4 class="py-3 font-medium">
               Roles
             </h4>
-            <div class="grid grid-cols-6 gap-4 h-12 items-center border-b-1 border-util-gray-03">
+            <div class="grid grid-cols-14 gap-3 h-12 items-center border-b-1 border-util-gray-03">
               <div
                 :class="[activeTab === 'owner' ? 'font-medium text-frequency border-b-2 border-frequency bg-echo rounded-t-md' : '']"
-                class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
+                class="relative overflow-hidden mb-[-1px] text-center col-span-3 cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'owner'"
               >
-                Owner
+                Primary Admin
               </div>
               <div
                 :class="[activeTab === 'admin' ? 'font-medium text-frequency border-b-2 border-frequency bg-echo rounded-t-md' : '']"
-                class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
+                class="relative overflow-hidden mb-[-1px] col-span-2 text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'admin'"
               >
                 Admin
               </div>
               <div
                 :class="[activeTab === 'expert' ? 'font-medium text-frequency border-b-2 border-frequency bg-echo rounded-t-md' : '']"
-                class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
+                class="relative overflow-hidden mb-[-1px] col-span-2 text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'expert'"
               >
                 Expert
               </div>
               <div
                 :class="[activeTab === 'user' ? 'font-medium text-frequency border-b-2 border-frequency bg-echo rounded-t-md' : '']"
-                class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
+                class="relative overflow-hidden mb-[-1px] col-span-2 text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'user'"
               >
                 User
               </div>
               <div
                 :class="[activeTab === 'data-entry' ? 'font-medium text-frequency border-b-2 border-frequency bg-echo rounded-t-md' : '']"
-                class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
+                class="relative overflow-hidden mb-[-1px] col-span-3 text-center cursor-pointer col-span-2 py-3 hover:text-frequency"
                 @click="activeTab = 'data-entry'"
               >
                 Data Entry
               </div>
               <div
                 :class="[activeTab === 'guest' ? 'font-medium text-frequency border-b-2 border-frequency bg-echo rounded-t-md' : '']"
-                class="relative overflow-hidden mb-[-1px] text-center cursor-pointer py-3 hover:text-frequency"
+                class="relative overflow-hidden mb-[-1px] col-span-2 text-center cursor-pointer py-3 hover:text-frequency"
                 @click="activeTab = 'guest'"
               >
                 Guest
@@ -282,7 +307,7 @@
   </section>
 </template>
 <script setup lang="ts">
-import { type AxiosInstance } from 'axios'
+import axios, { type AxiosInstance } from 'axios'
 import { type DropdownOptions, Dropdown, initTooltips } from 'flowbite'
 import debounce from 'lodash.debounce'
 import { type Ref, computed, inject, onMounted, ref } from 'vue'
@@ -293,8 +318,11 @@ import { type ProjectRole } from '@rfcx-bio/common/roles'
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientKey } from '@/globals'
+import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
+import { getProjectTypeUsageLimits } from '@/projects/entitlement-helpers'
 import { useStore } from '~/store'
 import { useAddProjectMember, useDeleteProjectMember, useGetProjectMembers, useSearchUsers, useUpdateProjectMember } from './_composables/use-project-member'
+import { useGetProjectInfo } from './_composables/use-project-profile'
 import ProjectMember from './components/project-member.vue'
 import ProjectUserSearch from './components/project-user-search.vue'
 import UserRoles from './user-roles.vue'
@@ -316,7 +344,24 @@ const isSearchingUsers = ref(false)
 const addNewUserError = ref(false)
 const userSearchValue = ref('')
 
-const disableText = ref('Contact your project administrator for permission to manage project members')
+const disableText = computed(() => {
+  if (projectInfo.value?.isLocked === true) {
+    return 'This project is now View Only due to inactivity. Upgrade your plan to restore access.'
+  }
+
+  const projectType = projectInfo.value?.projectType ?? 'free'
+  const collabs = projectInfo.value?.usage?.collaboratorCount ?? 0
+  const guests = projectInfo.value?.usage?.guestCount ?? 0
+  const currentTotal = collabs + guests
+  if (projectType === 'free' || (projectType === 'premium' && currentTotal >= 7)) {
+    return 'Limit reached. Upgrade your plan to unlock this feature.'
+  }
+  if (!store.userIsAdminProjectMember) {
+    return 'You do not have permission to add members.'
+  }
+
+  return ''
+})
 
 const newUser = ref({
   firstName: '',
@@ -334,8 +379,8 @@ const userToAdd = ref({
 const roles = [
   {
     id: 4,
-    name: 'Owner',
-    description: 'Project Owner - can manage and delete the project, edit project settings, and manage project members'
+    name: 'Primary Admin',
+    description: 'Project Primary Admin - can manage and delete the project, edit project settings, and manage project members'
   },
   {
     id: 1,
@@ -365,6 +410,7 @@ const roles = [
 ]
 
 const { data: users, refetch: usersRefetch, isError: isErrorUsers } = useGetProjectMembers(apiClientBio, selectedProjectId)
+const { data: projectInfo, refetch: refetchProjectInfo } = useGetProjectInfo(apiClientBio, selectedProjectId, ['countryCodes'], computed(() => selectedProjectId.value !== undefined))
 const { data: searchedUsers, refetch: searchUsersRefetch } = useSearchUsers(apiClientBio, userSearchValue, computed(() => userSearchValue.value !== ''))
 const { mutate: mutatePatchUserRole } = useUpdateProjectMember(apiClientBio, store.project?.id ?? -1)
 const { mutate: mutatePostProjectMember } = useAddProjectMember(apiClientBio, store.project?.id ?? -1)
@@ -380,6 +426,44 @@ const userSort = computed(() => {
     if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) return 1
     return 0
   }))
+})
+
+const projectTypeLabel = computed(() => {
+  const projectType = projectInfo.value?.projectType ?? store.project?.projectType ?? 'free'
+  return `${projectType.charAt(0).toUpperCase()}${projectType.slice(1)}`
+})
+
+const memberLimitMessage = computed(() => {
+  if (projectInfo.value?.isLocked === true) {
+    return 'This project is view-only, so member changes are disabled until the project is reactivated.'
+  }
+
+  const projectType = projectInfo.value?.projectType ?? 'free'
+  const limits = projectInfo.value?.limits ?? getProjectTypeUsageLimits(projectType)
+  const usage = projectInfo.value?.usage
+  return `${projectType.charAt(0).toUpperCase()}${projectType.slice(1)} member usage: ${usage?.collaboratorCount ?? 0} / ${limits.collaboratorCount === null ? 'No cap' : limits.collaboratorCount} collaborators, ${usage?.guestCount ?? 0} / ${limits.guestCount === null ? 'No cap' : limits.guestCount} guests.`
+})
+
+const canAddMember = computed(() => {
+  if (projectInfo.value?.isLocked === true) return false
+
+  const projectType = projectInfo.value?.projectType ?? 'free'
+  const collabs = projectInfo.value?.usage?.collaboratorCount ?? 0
+  const guests = projectInfo.value?.usage?.guestCount ?? 0
+  const currentTotal = collabs + guests
+  if (projectType === 'free') {
+    return false
+  }
+
+  if (projectType === 'premium') {
+    return currentTotal < 7
+  }
+
+  return true
+})
+
+const canAddProjectMember = computed(() => {
+  return store.userIsAdminProjectMember && canAddMember.value
 })
 
 onMounted(() => {
@@ -437,17 +521,21 @@ const addSelectedUser = ():void => {
   } else {
   mutatePostProjectMember({
     email: userSearchValue.value,
-    role: 'user'
+    role: 'viewer'
   }, {
     onSuccess: () => {
+      userSearchValue.value = ''
       usersRefetch()
+      refetchProjectInfo()
       showAlertDialog('success', 'Success', 'New Project member added successfully')
     },
-    onError: () => {
-      showAlertDialog('error', 'Verification Needed.', 'We couldn’t add this user as a project member because their account is unverified. Please ensure the user has verified their account before trying again.')
-}
+    onError: (error: unknown) => {
+      const axiosError = axios.isAxiosError(error) ? error : undefined
+      const message = (axiosError?.response?.data as { message?: string } | undefined)?.message ?? 'We couldn’t add this user as a project member because their account is unverified. Please ensure the user has verified their account before trying again.'
+      showAlertDialog('error', 'Unable to Add Member.', message)
+    }
   })
-}
+  }
 }
 
 const changeUserRole = (email: string, role: ProjectRole):void => {
@@ -455,10 +543,15 @@ const changeUserRole = (email: string, role: ProjectRole):void => {
     email,
     // castable because the roles are converted from variable `roles` up top which non of it
     // cannot invoke the return value of `none`
-    role: role as Exclude<ProjectRole, 'none'>
+    role: role as Exclude<ProjectRole, 'none' | 'external'>
   }, {
     onSuccess: () => {
       usersRefetch()
+      refetchProjectInfo()
+    },
+    onError: (error: unknown) => {
+      const axiosError = axios.isAxiosError(error) ? error : undefined
+      showAlertDialog('error', 'Unable to Update Member.', (axiosError?.response?.data as { message?: string } | undefined)?.message ?? 'We encountered some issues while saving your changes. Could you please try again?')
     }
   })
 }
@@ -467,6 +560,11 @@ const deleteProjectMember = (email: string):void => {
   mutateDeleteProjectMember(email, {
     onSuccess: () => {
       usersRefetch()
+      refetchProjectInfo()
+    },
+    onError: (error: unknown) => {
+      const axiosError = axios.isAxiosError(error) ? error : undefined
+      showAlertDialog('error', 'Unable to Remove Member.', (axiosError?.response?.data as { message?: string } | undefined)?.message ?? 'We encountered some issues while deleting the member. Could you please try again?')
     }
   })
 }

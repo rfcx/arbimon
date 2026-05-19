@@ -24,23 +24,45 @@ export const parseProjectArbimonToBio = (projectArbimon: unknown): SafeParseRetu
   ProjectArbimonSchema.safeParse(projectArbimon)
 
 const transformProjectArbimonToProjectBio = (project: ProjectArbimon): Omit<Project, 'id' | 'statusUpdatedAt'> => {
-  const { updatedAt, deletedAt, isPrivate, ...rest } = project
-  return { ...rest, status: (isPrivate ? 'unlisted' : 'published') as ProjectStatus }
+  const {
+    updatedAt,
+    deletedAt,
+    isPrivate,
+    ...rest
+  } = project
+
+  return {
+    ...rest,
+    status: (isPrivate ? 'unlisted' : 'published') as ProjectStatus
+  }
 }
 
 export const getTransformedProjects = async (projects: ProjectArbimon[], sequelize: Sequelize): Promise<any[]> => {
   const notDeletedProjects = projects.filter(project => project.deletedAt === null)
-  const itemsToInsertOrUpsert = notDeletedProjects.map(transformProjectArbimonToProjectBio)
-
-  const deletedProjects = projects.filter(project => project.deletedAt !== null)
-  const idsArbimon = deletedProjects.map(project => project.idArbimon)
-  // TODO: There should NOT be a call to the database here
-  const itemsToDelete = await ModelRepository.getInstance(sequelize).LocationProject.findAll({
+  const idsArbimon = projects.map(project => project.idArbimon)
+  // Preserve locally managed fields that are not present in Arbimon's project payload.
+  const existingProjects = await ModelRepository.getInstance(sequelize).LocationProject.findAll({
     where: {
       idArbimon: { [Op.in]: idsArbimon }
     },
     raw: true
   }) as unknown as Project[]
+  const existingProjectsByIdArbimon = new Map(existingProjects.map(project => [project.idArbimon, project]))
+
+  const itemsToInsertOrUpsert = notDeletedProjects.map(project => {
+    const transformedProject = transformProjectArbimonToProjectBio(project)
+    const existingProject = existingProjectsByIdArbimon.get(project.idArbimon)
+
+    return {
+      ...transformedProject,
+      ...(existingProject?.projectType !== undefined ? { projectType: existingProject.projectType } : {}),
+      ...(existingProject?.isLocked !== undefined ? { isLocked: existingProject.isLocked } : {})
+    }
+  })
+
+  const deletedProjects = projects.filter(project => project.deletedAt !== null)
+  const deletedIdsArbimon = new Set(deletedProjects.map(project => project.idArbimon))
+  const itemsToDelete = existingProjects.filter(project => deletedIdsArbimon.has(project.idArbimon))
 
   return [itemsToInsertOrUpsert, itemsToDelete]
 }

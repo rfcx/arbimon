@@ -29,6 +29,11 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.Pricing
       },
       {
+        path: 'pricing',
+        name: ROUTE_NAMES.pricing,
+        component: PAGES.Pricing
+      },
+      {
         path: 'publications',
         name: ROUTE_NAMES.landingPublications,
         component: PAGES.LandingPublications
@@ -214,6 +219,12 @@ const routes: RouteRecordRaw[] = [
         ]
       },
       {
+        path: 'visualizer/:browserType?/:browserTypeId?/:browserRecId?',
+        name: ROUTE_NAMES.visualizer,
+        component: PAGES.Visualizer,
+        beforeEnter: [authRequiredGuard]
+      },
+      {
         path: 'import-recordings',
         name: ROUTE_NAMES.importRecordings,
         component: PAGES.importRecordings,
@@ -259,6 +270,19 @@ const routes: RouteRecordRaw[] = [
         path: ':projectId/sync-history',
         name: ROUTE_NAMES.superSyncHistory,
         component: PAGES.superSyncHistory
+      }
+    ]
+  },
+  {
+    path: '/tiers',
+    name: ROUTE_NAMES.tier,
+    component: PAGES.Tiers,
+    beforeEnter: [authRequiredGuard],
+    children: [
+      {
+        path: '',
+        name: ROUTE_NAMES.tierPage,
+        component: PAGES.Tiers
       }
     ]
   },

@@ -25,6 +25,7 @@
         {{ dataset.title }}
       </div>
       <export-button
+        v-if="!isProjectViewOnly"
         class="absolute top-2 right-2"
         @click="downloadMapPngInternal()"
       />
@@ -134,6 +135,7 @@ const emit = defineEmits<{(e: 'emitMapMoved', mapMoveEvent: MapMoveEvent): void}
 const mapIsLoading = ref(true)
 const mapErrorSetup = ref(false)
 const isSynchronizingMapPosition = ref(false)
+const isProjectViewOnly = computed(() => store.project?.isLocked === true)
 
 const getPaintStyle = (style: MapboxStatisticsStyle) => {
   switch (style) {

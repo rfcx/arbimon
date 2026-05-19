@@ -2,6 +2,7 @@ import { type ProjectPermission, hasPermission } from '@rfcx-bio/common/roles'
 
 import { ALLOWED_BACKUP_TYPES, BackupEntityGetters } from '@/backup/types'
 import { getUserRoleForProject } from '@/projects/dao/project-member-dao'
+import { assertProjectExportAllowed } from '@/projects/project-entitlement-bll'
 import type { Middleware } from '~/api-helpers/types'
 import { BioForbiddenError, BioInvalidPathParamError, BioMissingPathParamError, BioPublicError, BioUnauthorizedError } from '~/errors'
 
@@ -55,6 +56,7 @@ const validateRequest = async (data: EntityData, userId: number): Promise<void> 
     // Check project permissions for project backups
     if (entityType === 'project') {
         await checkProjectPermissions(userId, entityId)
+        await assertProjectExportAllowed(entityId)
     }
 }
 

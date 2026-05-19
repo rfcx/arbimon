@@ -89,7 +89,7 @@ import { computed, inject, ref } from 'vue'
 import { type SongtypeResponse, type SpeciesSearchResponse, type SpeciesSongtypeRequest } from '@rfcx-bio/common/api-arbimon/audiodata/species'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
-import { useSearchSpecies, useSongtypesSpecies } from '../api/use-species'
+import { useSearchSpecies, useSongtypesSpecies } from '../_composables/use-species'
 import SortableTable from './sortable-table.vue'
 
 const isOpen = ref(false)

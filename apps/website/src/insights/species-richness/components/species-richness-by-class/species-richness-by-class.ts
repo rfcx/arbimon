@@ -1,11 +1,14 @@
 import { Options, Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
+import { Inject, Prop } from 'vue-property-decorator'
 
+import { storeKey } from '@/globals'
 import { downloadSvgAsPng } from '~/charts'
 import { type BarChartConfig, type GroupedBarChartItem, generateChartExport, HorizontalBarChartComponent } from '~/charts/horizontal-bar-chart'
 import { getExportGroupName } from '~/filters'
+import { type BiodiversityStore, useStore } from '~/store'
 
 const DEFAULT_CHART_PREFIX = 'Species-By-Taxonomy'
+const store = useStore()
 
 @Options({
   components: {
@@ -13,6 +16,8 @@ const DEFAULT_CHART_PREFIX = 'Species-By-Taxonomy'
   }
 })
 export default class SpeciesRichnessByClass extends Vue {
+  @Inject({ from: storeKey }) readonly store!: BiodiversityStore
+
   @Prop() domId!: string
   @Prop() chartData!: GroupedBarChartItem[]
   @Prop() loading!: boolean
@@ -28,6 +33,10 @@ export default class SpeciesRichnessByClass extends Vue {
       displayXAxisTick: false,
       fontColor: 'white'
     }
+  }
+
+  get isProjectViewOnly (): boolean {
+    return store.project?.isLocked === true
   }
 
   async downloadChart (): Promise<void> {

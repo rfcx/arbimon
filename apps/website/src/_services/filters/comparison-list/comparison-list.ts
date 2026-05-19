@@ -1,6 +1,7 @@
 import { Options, Vue } from 'vue-class-component'
 import { Emit, Inject, Prop, Watch } from 'vue-property-decorator'
 
+// import { useRoute, useRouter } from 'vue-router'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 
 import { storeKey } from '@/globals'
@@ -45,6 +46,10 @@ export default class ComparisonListComponent extends Vue {
 
   get showAddButton (): boolean {
     return this.filters.length < 5
+  }
+
+  get disableFilter (): boolean {
+    return this.store.project?.isLocked === true
   }
 
   // Trigger on first load and when project change

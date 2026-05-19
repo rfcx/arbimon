@@ -1,6 +1,7 @@
 import { type RichnessExportParams, type RichnessExportQuery, type RichnessExportResponse } from '@rfcx-bio/common/api-bio/richness/richness-export'
 import { hasPermission } from '@rfcx-bio/common/roles'
 
+import { assertProjectExportAllowed } from '@/projects/project-entitlement-bll'
 import { BioInvalidPathParamError, BioInvalidQueryParamError } from '~/errors'
 import { type Handler } from '../_services/api-helpers/types'
 import { assertPathParamsExist } from '../_services/validation'
@@ -18,6 +19,7 @@ export const richnessExportHandler: Handler<RichnessExportResponse, RichnessExpo
   const { dateStartInclusiveLocalIso: startDateUtcInclusive, dateEndInclusiveLocalIso: endDateUtcInclusive, siteIds, taxonClassIds: taxons } = req.query
   if (!isValidDate(startDateUtcInclusive)) throw BioInvalidQueryParamError({ startDate: startDateUtcInclusive })
   if (!isValidDate(endDateUtcInclusive)) throw BioInvalidQueryParamError({ endDate: endDateUtcInclusive })
+  await assertProjectExportAllowed(projectIdInteger)
 
   const datasetFilter = {
     locationProjectId: projectIdInteger,

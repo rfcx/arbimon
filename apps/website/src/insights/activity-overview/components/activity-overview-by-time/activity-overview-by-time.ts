@@ -7,6 +7,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { downloadSvgAsPng } from '~/charts'
 import { type LineChartConfig, type LineChartSeries, DEFAULT_YAXIS_LINE_FORMAT, generateChartExport, LineChartComponent } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
+import { useStore } from '~/store'
 import { type TimeBucket, TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS } from '~/time-buckets'
 import { type ActivityOverviewDataByTime, type ActivityOverviewDataByTimeBucket, ACTIVITY_OVERVIEW_TIME_KEYS } from '../../types'
 
@@ -38,6 +39,8 @@ export default class ActivityOverviewByTime extends Vue {
   @Prop() datasets!: ActivityOverviewTimeDataset[]
   @Prop({ default: false }) loading!: boolean
 
+  store = useStore()
+
   selectedType: ActivityOverviewDataByTimeType = ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency
   datasetType: DropDownOption[] = [
     { label: DATASET_LABELS[ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency], value: ACTIVITY_OVERVIEW_TIME_KEYS.detectionFrequency },
@@ -65,6 +68,10 @@ export default class ActivityOverviewByTime extends Vue {
 
   get displayWholeNumber (): boolean {
     return this.selectedType === this.datasetType[1].value
+  }
+
+  get isProjectViewOnly (): boolean {
+    return this.store.project?.isLocked === true
   }
 
   get hasData (): boolean {

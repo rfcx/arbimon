@@ -5,8 +5,9 @@ import { addProjectMemberLegacy, removeProjectMemberLegacy, updateProjectMemberL
 import { BioNotFoundError } from '~/errors'
 import { create, destroy, getRoleIdByProjectAndUser, update } from './dao/project-member-dao'
 import { getProjectById } from './dao/projects-dao'
+import { assertProjectMemberUpdateAllowed, getCurrentProjectRole } from './project-entitlement-bll'
 
-export const addProjectMember = async (token: string, locationProjectId: number, email: string, role?: Exclude<ProjectRole, 'none'>): Promise<void> => {
+export const addProjectMember = async (token: string, locationProjectId: number, email: string, role?: Exclude<ProjectRole, 'none' | 'external'>): Promise<void> => {
   const project = await getProjectById(locationProjectId)
   if (project === undefined) {
     throw BioNotFoundError()
@@ -21,6 +22,8 @@ export const addProjectMember = async (token: string, locationProjectId: number,
   if (userRole !== undefined) {
     return
   }
+
+  await assertProjectMemberUpdateAllowed(locationProjectId, role ?? 'user')
 
   // Legacy
   await addProjectMemberLegacy(token, project.slug, email, role ?? 'user')
@@ -47,7 +50,7 @@ export const removeProjectMember = async (token: string, locationProjectId: numb
   await destroy(locationProjectId, userId)
 }
 
-export const updateProjectMember = async (token: string, locationProjectId: number, email: string, role: Exclude<ProjectRole, 'none'>): Promise<void> => {
+export const updateProjectMember = async (token: string, locationProjectId: number, email: string, role: Exclude<ProjectRole, 'none' | 'external'>): Promise<void> => {
   const project = await getProjectById(locationProjectId)
   if (project === undefined) {
     throw BioNotFoundError()
@@ -57,6 +60,9 @@ export const updateProjectMember = async (token: string, locationProjectId: numb
   if (userId === undefined) {
     throw BioNotFoundError()
   }
+
+  const currentRole = await getCurrentProjectRole(locationProjectId, userId)
+  await assertProjectMemberUpdateAllowed(locationProjectId, role, currentRole)
 
   // Legacy
   await updateProjectMemberLegacy(token, project.slug, email, role)

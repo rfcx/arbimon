@@ -1,9 +1,17 @@
 <template>
   <section class="py-20 bg-white dark:bg-pitch pl-18 site-page">
     <div class="flex flex-col px-8 bg-white dark:bg-pitch">
-      <h1 class="ml-1 text-gray-900 dark:text-insight">
-        Recordings
-      </h1>
+      <div class="flex flex-row items-center gap-2">
+        <h1 class="ml-1 text-gray-900 dark:text-insight mr-2">
+          Recordings
+        </h1>
+        <ProjectStateBadge
+          v-if="store.project"
+          :project-type="store.project.projectType"
+          :is-locked="store.project.isLocked"
+          class="w-max"
+        />
+      </div>
       <div class="flex justify-between">
         <div class="flex mt-6 items-center">
           <div
@@ -39,7 +47,7 @@
           >
             <button
               class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-              :disabled="!store.userIsDataEntryMember"
+              :disabled="!store.userIsDataEntryMember || isProjectViewOnly"
               data-tooltip-style="light"
               :data-tooltip-target="!store.userIsDataEntryMember ? 'exportRecordingTooltip': null"
               @click="showExportPanel = true"
@@ -70,7 +78,7 @@
           </div>
           <button
             class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-            :disabled="!store.userIsFullProjectMember"
+            :disabled="!store.userIsFullProjectMember || isProjectViewOnly"
             data-tooltip-style="light"
             :data-tooltip-target="!store.userIsFullProjectMember ? 'recordingPlaylistTooltip': null"
             @click="showCreatePlaylist"
@@ -91,7 +99,7 @@
           </div>
           <button
             class="btn btn-secondary btn-medium text-[14px] py-2 ml-2 btn-small items-center inline-flex px-3 disabled:hover:btn-disabled disabled:btn-disabled"
-            :disabled="!store.userIsExpertMember"
+            :disabled="!store.userIsExpertMember || isProjectViewOnly"
             data-dropdown-toggle="deleteRecordingDropdown"
             data-tooltip-style="light"
             :data-tooltip-target="!store.userIsExpertMember ? 'deleteRecordingTooltip': null"
@@ -263,9 +271,10 @@ import { type SiteParams } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import type { AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
+import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
 import { useStore } from '~/store'
-import { useGetClasses, useGetClassifications, useGetPlaylists, useGetSoundscape, useGetTags, useRecordings } from './api/use-recordings'
-import { useSites } from './api/use-sites'
+import { useGetClasses, useGetClassifications, useGetPlaylists, useGetSoundscape, useGetTags, useRecordings } from './_composables/use-recordings'
+import { useSites } from './_composables/use-sites'
 import CreatePlaylistModal from './component/create-playlist.vue'
 import CustomPopup from './component/custom-popup.vue'
 import ExportPanel from './component/export-panel.vue'
@@ -345,6 +354,7 @@ const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
+const isProjectViewOnly = computed(() => store.project?.isLocked === true)
 
 const { isLoading: isLoadingRecordings, data: recordings, refetch: refetchRecordings, isRefetching: isRefetchRecordings, isError: isErrorRecordings } = useRecordings(apiClientArbimon, selectedProjectSlug, filteredRequestParams)
 
@@ -517,6 +527,10 @@ const filterRecordings = () => {
 }
 
 const showCreatePlaylist = () => {
+  if (isProjectViewOnly.value) {
+    showAlertDialog('error', 'Error', 'This project is currently view-only and cannot save playlists.')
+    return
+  }
   if (selectedRows.value.length === 0 && recordingsCount.value === 0) {
     showAlertDialog('error', '', 'You can\'t create playlist with 0 recording')
   } else {
@@ -574,6 +588,10 @@ const saveToPlaylist = async (name: string) => {
 }
 
 const deleteCheckedRecordings = () => {
+  if (isProjectViewOnly.value) {
+    showAlertDialog('error', 'Error', 'This project is currently view-only and cannot delete recordings.')
+    return
+  }
   deleteAllFiltered.value = false
 
   if (selectedRows.value.length === 0) {
@@ -586,6 +604,10 @@ const deleteCheckedRecordings = () => {
 }
 
 const deleteAllFilteredRecordings = async () => {
+  if (isProjectViewOnly.value) {
+    showAlertDialog('error', 'Error', 'This project is currently view-only and cannot delete recordings.')
+    return
+  }
   if (filterParams.value === undefined) {
     showAlertDialog('error', '', 'There is not filter applied for deleting recordings yet. Please filter recordings before deleting.')
     return

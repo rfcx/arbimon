@@ -261,7 +261,7 @@ const onVisualizerRedirect = async (): Promise<void> => {
     emit('showAlertDialog')
     return
   }
-  window.location.assign(`${window.location.origin}/project/${store.project?.slug}/visualizer/rec/${response}`)
+  window.location.assign(`${window.location.origin}/p/${store.project?.slug}/visualizer/rec/${response}`)
 }
 
 const toggleDetection = (event: MouseEvent) => {

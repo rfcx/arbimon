@@ -197,7 +197,7 @@ describe('User projects', async () => {
     // Arrange
     const app = await makeApp(routesProject, { userId })
     const projects = zeroToN(90).map(i => makeProject(1234000 + i, `Project #${i}`))
-    const roles = projects.map(project => ({ locationProjectId: project.id, userId, roleId: 1, ranking: -1 }))
+    const roles = projects.map((project, index) => ({ locationProjectId: project.id, userId, roleId: index === 0 ? 4 : 1, ranking: -1 }))
     await LocationProject.bulkCreate(projects, { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
     await LocationProjectUserRole.bulkCreate(roles)
 
@@ -211,6 +211,7 @@ describe('User projects', async () => {
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body)
     expect(results.data).toHaveLength(20)
+    expect(typeof results.data[0].isOwner).toBe('boolean')
   })
 
   test(`GET ${myProjectsRoute} returns with set limit`, async () => {

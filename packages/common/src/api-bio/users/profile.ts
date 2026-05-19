@@ -8,7 +8,7 @@ import { type OrganizationTypes, type UserProfile, type UserTypes } from '../../
 export interface UsersRequestQueryParams {
   q?: string
 }
-export type UpdateUserProfileRequestBody = Partial<Omit<UserProfile, 'id' | 'idAuth0' | 'image' | 'createdAt' | 'updatedAt'>>
+export type UpdateUserProfileRequestBody = Partial<Omit<UserProfile, 'id' | 'idAuth0' | 'image' | 'createdAt' | 'updatedAt' | 'accountTier' | 'accountTierUpdatedAt' | 'additionalPremiumProjectSlots'>>
 
 // Response types
 export type UsersLightResponse = Array<UserTypes['light']>

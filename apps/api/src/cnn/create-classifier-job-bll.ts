@@ -4,6 +4,7 @@ import { parse } from 'node:path'
 import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { isValidQueryHours } from '@rfcx-bio/utils/query-hour'
 
+import { assertProjectAnalysisAllowed } from '@/projects/project-entitlement-bll'
 import { type CoreCreateClassifierJobBody } from '~/api-core/types'
 import { getSequelize } from '~/db'
 import { BioInvalidBodyError, BioNotFoundError, BioPublicError } from '~/errors'
@@ -54,6 +55,8 @@ export const createClassifierJob = async (token: string, body: CreateClassifierJ
   if (project === null || project === undefined) {
     throw BioNotFoundError()
   }
+
+  await assertProjectAnalysisAllowed(body.projectId)
 
   const coreCreateClassifierJobBody: CoreCreateClassifierJobBody = {
     classifier_id: body?.classifierId,

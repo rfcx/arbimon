@@ -1,8 +1,11 @@
 import { type AxiosInstance } from 'axios'
 
+import { type ProjectType } from '../../dao/types'
+
 // Request type
 export interface ProjectCreateRequest {
   name: string
+  projectType?: ProjectType
   hidden?: boolean
   objectives?: string[]
   associatedOrganizations?: string

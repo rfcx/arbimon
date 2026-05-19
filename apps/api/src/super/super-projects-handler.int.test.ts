@@ -1,12 +1,13 @@
 import { Op } from 'sequelize'
 import { afterAll, beforeAll, describe, expect, test } from 'vitest'
 
-import { superProjectsRoute } from '@rfcx-bio/common/api-bio/super/projects'
+import { superProjectsRoute, superProjectTierRoute, superUserProjectsRoute, superUsersRoute, superUserTierRoute } from '@rfcx-bio/common/api-bio/super/projects'
+import { getIdByRole } from '@rfcx-bio/common/roles'
 import { modelRepositoryWithElevatedPermissions } from '@rfcx-bio/testing/dao'
 import { makeApp } from '@rfcx-bio/testing/handlers'
 import { makeProject } from '@rfcx-bio/testing/model-builders/project-model-builder'
 
-import { GET } from '~/api-helpers/types'
+import { GET, PATCH } from '~/api-helpers/types'
 import { env } from '~/env'
 import { routesSuper } from './index'
 
@@ -18,68 +19,214 @@ const userToken = {
   lastName: 'User'
 }
 
-const { LocationProject } = modelRepositoryWithElevatedPermissions
+const superUserRouteOwnerId = 1267801
+const superUserRouteNoProjectUserId = 1267802
+const superUserRouteProjectId = 1266600
+const superUserRouteProjectId2 = 1266601
+
+const { LocationProject, LocationProjectUserRole, UserProfile } = modelRepositoryWithElevatedPermissions
 
 beforeAll(async () => {
   env.SUPER_USER_EMAILS = 'secret@rfcx.org,super@rfcx.org'
-  const publishedProject = makeProject(1266500, 'Published Project', 'published')
-  const hiddenProject1 = makeProject(1266501, 'Hidden Project 1', 'hidden')
-  const hiddenProject2 = makeProject(1266502, 'Hidden Project 2', 'hidden')
-  await LocationProject.bulkCreate([publishedProject, hiddenProject1, hiddenProject2], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore'] })
+
+  await UserProfile.bulkCreate([
+    {
+      id: superUserRouteOwnerId,
+      email: 'tier-owner@test.com',
+      firstName: 'Tier',
+      lastName: 'Owner',
+      accountTier: 'pro',
+      additionalPremiumProjectSlots: 1
+    },
+    {
+      id: superUserRouteNoProjectUserId,
+      email: 'tier-no-project@test.com',
+      firstName: 'Tier',
+      lastName: 'NoProject',
+      accountTier: 'free',
+      additionalPremiumProjectSlots: 0
+    }
+  ], { updateOnDuplicate: ['email', 'firstName', 'lastName', 'accountTier', 'additionalPremiumProjectSlots'] })
+
+  await LocationProject.bulkCreate([
+    {
+      ...makeProject(superUserRouteProjectId, 'Published Project', 'published'),
+      projectType: 'premium',
+      isLocked: false
+    },
+    {
+      ...makeProject(superUserRouteProjectId2, 'Hidden Project 2', 'hidden'),
+      projectType: 'free',
+      isLocked: true
+    }
+  ], { updateOnDuplicate: ['slug', 'name', 'idArbimon', 'idCore', 'projectType', 'isLocked'] })
+
+  await LocationProjectUserRole.bulkCreate([
+    { locationProjectId: superUserRouteProjectId, userId: superUserRouteOwnerId, roleId: getIdByRole('owner'), ranking: 0 },
+    { locationProjectId: superUserRouteProjectId2, userId: superUserRouteOwnerId, roleId: getIdByRole('owner'), ranking: 0 }
+  ], { updateOnDuplicate: ['roleId', 'ranking'] })
 })
 
 afterAll(async () => {
-  const locationProjectIds = [1266500, 1266501, 1266502]
-  await LocationProject.destroy({ where: { id: { [Op.in]: locationProjectIds } }, force: true })
+  await LocationProjectUserRole.destroy({ where: { locationProjectId: { [Op.in]: [superUserRouteProjectId, superUserRouteProjectId2] }, userId: superUserRouteOwnerId }, force: true })
+  await LocationProject.destroy({ where: { id: { [Op.in]: [superUserRouteProjectId, superUserRouteProjectId2] } }, force: true })
+  await UserProfile.destroy({ where: { id: { [Op.in]: [superUserRouteOwnerId, superUserRouteNoProjectUserId] } }, force: true })
 })
 
 describe('Super projects route', async () => {
   test(`GET ${superProjectsRoute} returns unauthorized when not super user`, async () => {
-    // Arrange
     const app = await makeApp(routesSuper, { userId, userToken: { ...userToken, email: 'someone@else.com' } })
 
-    // Act
     const response = await app.inject({
       method: GET,
       url: superProjectsRoute
     })
 
-    // Assert
     expect(response.statusCode).toBe(401)
   })
 
-  test(`GET ${superProjectsRoute} returns expected results`, async () => {
-    // Arrange
+  test(`GET ${superProjectsRoute} returns expected enriched results`, async () => {
     const app = await makeApp(routesSuper, { userId, userToken })
 
-    // Act
-    const response = await app.inject({
-      method: GET,
-      url: superProjectsRoute
-    })
-
-    // Assert
-    expect(response.statusCode).toBe(200)
-    const results = JSON.parse(response.body)
-    expect(typeof results[0].id).toBe('number')
-    expect(typeof results[0].slug).toBe('string')
-    expect(typeof results[0].name).toBe('string')
-  })
-
-  test(`GET ${superProjectsRoute} can filter by keyword`, async () => {
-    // Arrange
-    const app = await makeApp(routesSuper, { userId, userToken })
-
-    // Act
     const response = await app.inject({
       method: GET,
       url: superProjectsRoute,
-      query: { keyword: 'hidde' }
+      query: { keyword: 'Published Project' }
     })
 
-    // Assert
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(results.limit).toBeGreaterThan(0)
+    expect(results.offset).toBe(0)
+    expect(results.total).toBeGreaterThanOrEqual(1)
+    expect(typeof results.data[0].id).toBe('number')
+    expect(results.data[0].projectType).toBe('premium')
+    expect(results.data[0].usage.recordingMinutesCount).toBeTypeOf('number')
+    expect(results.data[0].limits.collaboratorCount).toBe(4)
+    expect(results.data[0].limits.jobCount).toBe(200)
+  })
+
+  test(`GET ${superUsersRoute} returns super users with tier info`, async () => {
+    const app = await makeApp(routesSuper, { userId, userToken })
+
+    const response = await app.inject({
+      method: GET,
+      url: superUsersRoute,
+      query: { keyword: 'tier-owner@test.com' }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(results.data).toHaveLength(1)
+    expect(results.total).toBe(1)
+    expect(results.data[0].accountTier).toBe('pro')
+    expect(results.data[0].ownedProjectCount).toBe(2)
+    expect(results.data[0].viewOnlyProjectCount).toBe(1)
+    expect(results.data[0].limits.freeProjects).toBe(50)
+    expect(results.data[0].limits.premiumProjects).toBe(3)
+    expect(results.data[0].usage.premiumProjects).toBe(1)
+  })
+
+  test(`GET ${superUsersRoute} includes users with no owned projects`, async () => {
+    const app = await makeApp(routesSuper, { userId, userToken })
+
+    const response = await app.inject({
+      method: GET,
+      url: superUsersRoute,
+      query: { keyword: 'tier-no-project@test.com' }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(results.data).toHaveLength(1)
+    expect(results.data[0].email).toBe('tier-no-project@test.com')
+    expect(results.data[0].ownedProjectCount).toBe(0)
+    expect(results.data[0].viewOnlyProjectCount).toBe(0)
+    expect(results.data[0].usage.freeProjects).toBe(0)
+    expect(results.data[0].usage.premiumProjects).toBe(0)
+    expect(results.data[0].usage.unlimitedProjects).toBe(0)
+  })
+
+  test(`GET ${superProjectsRoute} filters and paginates projects`, async () => {
+    const app = await makeApp(routesSuper, { userId, userToken })
+
+    const response = await app.inject({
+      method: GET,
+      url: superProjectsRoute,
+      query: { tier: 'premium', limit: 1, offset: 0 }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(Number(results.limit)).toBe(1)
+    expect(Number(results.offset)).toBe(0)
+    expect(results.total).toBeGreaterThanOrEqual(1)
+    expect(results.data).toHaveLength(1)
+    expect(results.data[0].projectType).toBe('premium')
+  })
+
+  test(`GET ${superUsersRoute} filters and paginates users`, async () => {
+    const app = await makeApp(routesSuper, { userId, userToken })
+
+    const response = await app.inject({
+      method: GET,
+      url: superUsersRoute,
+      query: { tier: 'pro', limit: 1, offset: 0 }
+    })
+
+    expect(response.statusCode).toBe(200)
+    const results = JSON.parse(response.body)
+    expect(Number(results.limit)).toBe(1)
+    expect(Number(results.offset)).toBe(0)
+    expect(results.total).toBeGreaterThanOrEqual(1)
+    expect(results.data).toHaveLength(1)
+    expect(results.data[0].accountTier).toBe('pro')
+  })
+
+  test(`GET ${superUserProjectsRoute} returns owned projects for a selected user`, async () => {
+    const app = await makeApp(routesSuper, { userId, userToken })
+
+    const response = await app.inject({
+      method: GET,
+      url: superUserProjectsRoute.replace(':userId', superUserRouteOwnerId.toString())
+    })
+
     expect(response.statusCode).toBe(200)
     const results = JSON.parse(response.body)
     expect(results).toHaveLength(2)
+    expect(results[0]).toHaveProperty('usage')
+    expect(results[0]).toHaveProperty('limits')
+    expect(results[0].isOwner).toBe(true)
+  })
+
+  test(`PATCH ${superProjectTierRoute} updates project tier`, async () => {
+    const app = await makeApp(routesSuper, { userId, userToken })
+
+    const response = await app.inject({
+      method: PATCH,
+      url: superProjectTierRoute.replace(':projectId', superUserRouteProjectId.toString()),
+      payload: { projectType: 'unlimited' }
+    })
+
+    expect(response.statusCode).toBe(204)
+
+    const updated = await LocationProject.findByPk(superUserRouteProjectId)
+    expect(updated?.projectType).toBe('unlimited')
+  })
+
+  test(`PATCH ${superUserTierRoute} updates user tier`, async () => {
+    const app = await makeApp(routesSuper, { userId, userToken })
+
+    const response = await app.inject({
+      method: PATCH,
+      url: superUserTierRoute.replace(':userId', superUserRouteOwnerId.toString()),
+      payload: { accountTier: 'enterprise', additionalPremiumProjectSlots: 2 }
+    })
+
+    expect(response.statusCode).toBe(204)
+
+    const updated = await UserProfile.findByPk(superUserRouteOwnerId)
+    expect(updated?.accountTier).toBe('enterprise')
+    expect(updated?.additionalPremiumProjectSlots).toBe(2)
   })
 })

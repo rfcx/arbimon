@@ -5,21 +5,56 @@
     @click="$emit('on-click-project', true)"
   >
     <div>
-      <img
-        v-if="project.image"
-        :src="urlWrapper(project.image)"
-        class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-03"
-      >
-      <div
-        v-else
-        class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-03 flex justify-center items-center"
-      />
+      <div class="flex justify-between flex-row">
+        <div>
+          <img
+            v-if="project.image"
+            :src="urlWrapper(project.image)"
+            class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-03"
+          >
+          <div
+            v-else
+            class="rounded-2xl w-7rem h-7rem object-cover object-center h-52 bg-util-gray-03 flex justify-center items-center"
+          />
+        </div>
+        <ProjectStateBadge
+          v-if="project"
+          :project-type="project.projectType"
+          :is-locked="project.isLocked"
+          :is-hide-tooltip="true"
+        />
+      </div>
       <h6
-        class="mb-2 mt-6 font-bold tracking-tight line-clamp-2 text-gray-900 dark:text-insight"
+        class="mb-2 mt-6 font-bold tracking-tight text-gray-900 dark:text-insight !overflow-visible relative flex items-center w-full"
         :title="project?.name"
       >
-        {{ project.name }}
+        <span class="truncate min-w-0">
+          {{ project.name }}
+        </span>
+
+        <div
+          v-if="project.isOwner"
+          class="relative group inline-flex items-center ml-1 z-50 flex-none"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="text-amber-500 w-4 h-4"
+          >
+            <path d="M5 16L3 5L8.5 10L12 4L15.5 10L21 5L19 16H5ZM19 19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V18H19V19Z" />
+          </svg>
+
+          <div
+            class="absolute z-[100] invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200
+       px-2 py-1 text-[10px] font-medium text-black bg-white rounded shadow-sm
+       bottom-full mb-1.5 left-1/2 -translate-x-1/2 whitespace-nowrap pointer-events-none"
+          >
+            Primary Admin
+            <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-white" />
+          </div>
+        </div>
       </h6>
+
       <div
         class="mt-3 gap-x-1 flex flex-row items-center font-display text-sm mr-2 h-5 whitespace-nowrap text-ellipsis overflow-hidden"
       >
@@ -64,15 +99,16 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type { Project } from '@rfcx-bio/common/dao/types'
+import { type LocationProjectWithInfo } from '@rfcx-bio/common/api-bio/project/projects'
 
 import { getCountryLabel } from '@/_services/country'
 import { urlWrapper } from '@/_services/images/url-wrapper'
+import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
 import { ROUTE_NAMES } from '~/router'
 import TextTooltip from '../components/text-tooltip.vue'
 import { masterObjectiveTypes } from '../types'
 
-const props = defineProps<{project: Omit<Project, 'idArbimon'> }>()
+const props = defineProps<{project: Omit<LocationProjectWithInfo, 'idArbimon'> }>()
 defineEmits<{(e: 'on-click-project', value: boolean): void}>()
 
 const countries = computed(() => {
