@@ -9,6 +9,7 @@ import { type LocationProjectProfile, type Project } from '../../dao/types'
 import { type ApiStack, type ProjectRouteParamsSerialized, PROJECT_SPECIFIC_ROUTE_PREFIX } from '../_helpers'
 import { type DashboardMetricsResponse } from '../dashboard/dashboard-metrics'
 import { type DashboardStakeholdersResponse } from '../dashboard/dashboard-stakeholders'
+import { type ProjectTieringUsage } from './projects'
 
 // Request types
 export type ProjectProfileParams = ProjectRouteParamsSerialized
@@ -39,6 +40,13 @@ export interface ProjectProfileLegacyUpdateBody {
   }
 }
 
+export interface ProjectUsageLimits {
+  recordingMinutesCount: number | null
+  collaboratorCount: number | null
+  guestCount: number | null
+  jobCount: number | null
+}
+
 type ProjectMetrics = Pick<DashboardMetricsResponse, 'totalSites' | 'totalSpecies' | 'threatenedSpecies' | 'totalDetections' | 'totalRecordings'>
 
 export type ProjectProfileUpdateResponse = Pick<LocationProjectProfile, 'summary' | 'objectives' | 'dateStart' | 'dateEnd'>
@@ -48,6 +56,10 @@ export type ProjectInfoResponse = Pick<Project, 'name' | 'slug'>
   & {
     isPublished: boolean
     isPublic: boolean
+    projectType?: Project['projectType']
+    isLocked?: Project['isLocked']
+    usage?: ProjectTieringUsage
+    limits?: ProjectUsageLimits
     countryCodes?: string[]
     readme?: string
     keyResult?: string

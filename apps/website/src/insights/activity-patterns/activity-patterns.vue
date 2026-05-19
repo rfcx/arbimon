@@ -6,7 +6,7 @@
       :topic="infoTopic"
     >
       <export-button
-        :disabled="!hasExportData || !store.userIsProjectMember || isViewingAsGuest"
+        :disabled="!hasExportData || !store.userIsProjectMember || isViewingAsGuest || isProjectViewOnly"
         :title="store.userIsProjectMember && !isViewingAsGuest ? (hasExportData ? '' : 'No data selected') : 'Only available to project members'"
         @click="exportDetectionsData()"
       >
@@ -142,6 +142,7 @@ const speciesPhotos: Ref<Array<TaxonSpeciesPhotoTypes['light']>> = ref([])
 const isLocationRedacted: Ref<boolean> = ref(false)
 
 const isViewingAsGuest = computed(() => route.query.guest === '1')
+const isProjectViewOnly = computed(() => store.project?.isLocked === true)
 
 const hasExportData = computed(() => {
   return timeDatasets.value.length > 0

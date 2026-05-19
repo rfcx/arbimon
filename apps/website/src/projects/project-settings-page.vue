@@ -13,50 +13,60 @@
       v-else
       class="py-10 mx-auto max-w-screen-xl flex flex-col gap-y-6 pr-4"
     >
-      <h1 class="text-gray-900 dark:text-insight">
-        Project settings
-      </h1>
-      <ReadOnlyBanner v-if="!store.userIsAdminProjectMember" />
-      <div
-        class="flex flex-row-reverse items-center gap-4"
-      >
-        <button
-          :disabled="isSaving || !store.userIsAdminProjectMember"
-          class="inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
-          :data-tooltip-target="!store.userIsAdminProjectMember ? 'projectSettingsSaveTooltipId': null"
-          data-tooltip-placement="bottom"
-          @click.prevent="save"
-        >
-          Save
-        </button>
-        <div
-          v-if="!store.userIsAdminProjectMember"
-          id="projectSettingsSaveTooltipId"
-          role="tooltip"
-          class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
-        >
-          {{ disableText }}
-          <div
-            class="tooltip-arrow"
-            data-popper-arrow
+      <div class="flex items-center justify-between w-full gap-3">
+        <div class="flex items-center gap-3">
+          <h1 class="text-gray-900 dark:text-insight mr-2">
+            Project settings
+          </h1>
+          <ProjectStateBadge
+            v-if="store.project"
+            :project-type="store.project.projectType"
+            :is-locked="store.project.isLocked"
+            class="w-max"
           />
         </div>
-        <div
-          v-if="isSaving"
-          class="inline-flex"
-        >
-          <icon-custom-ic-loading class="animate-spin" />
-          <span class="ml-2">
-            Saving...
-          </span>
+
+        <div class="flex flex-row-reverse items-center gap-4">
+          <button
+            :disabled="isSaving || !store.userIsAdminProjectMember"
+            class="inline-flex items-center py-2 px-14 btn btn-primary disabled:hover:btn-disabled disabled:btn-disabled"
+            :data-tooltip-target="!store.userIsAdminProjectMember ? 'projectSettingsSaveTooltipId': null"
+            data-tooltip-placement="bottom"
+            @click.prevent="save"
+          >
+            Save
+          </button>
+
+          <div
+            v-if="!store.userIsAdminProjectMember"
+            id="projectSettingsSaveTooltipId"
+            role="tooltip"
+            class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip"
+          >
+            {{ disableText }}
+            <div
+              class="tooltip-arrow"
+              data-popper-arrow
+            />
+          </div>
+
+          <div
+            v-if="isSaving"
+            class="inline-flex items-center"
+          >
+            <icon-custom-ic-loading class="animate-spin" />
+            <span class="ml-2 text-sm">Saving...</span>
+          </div>
+
+          <SaveStatusText
+            v-if="showStatus && !isSaving"
+            class="flex items-center"
+            :success="!hasFailed"
+            :error-message="errorMessage"
+          />
         </div>
-        <SaveStatusText
-          v-if="showStatus && !isSaving"
-          class="flex p-4"
-          :success="!hasFailed"
-          :error-message="errorMessage"
-        />
       </div>
+      <ReadOnlyBanner v-if="store.project?.isLocked !== true && !store.userIsAdminProjectMember" />
       <div class="grid gap-10">
         <div>
           <h4>
@@ -95,8 +105,9 @@
             :image="settings?.image !== undefined ? urlWrapper(settings?.image) : undefined"
             @emit-project-image="onEmitProjectImage"
           />
-          <hr class="border-util-gray-03 my-6">
+          <hr class="hidden border-util-gray-03 my-6">
           <project-listed-form
+            class="hidden"
             :is-public="settings?.isPublic"
             :is-disabled="!store.userIsAdminProjectMember || settings?.isPublished"
             :is-create-project="false"
@@ -108,7 +119,7 @@
           </template>
           <hr class="border-util-gray-03 my-6">
           <project-delete
-            v-if="store.project?.role === 'owner'"
+            v-if="store.project?.role === 'owner' && store.project?.isLocked !== true"
             :is-deleting="isDeletingProject"
             :is-error="isErrorDeleteProject"
             :is-success="isSuccessDeleteProject"
@@ -133,6 +144,7 @@ import SaveStatusText from '@/_components/save-status-text.vue'
 import ReadOnlyBanner from '@/_layout/components/guest-banner/guest-banner.vue'
 import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientArbimonLegacyKey, apiClientKey, togglesKey } from '@/globals'
+import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
 import { useDeleteProject, useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
@@ -155,6 +167,7 @@ const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 const toggles = inject(togglesKey)
 const selectedProject = computed(() => store.project)
 const selectedProjectId = computed(() => store.project?.id)
+const selectedProjectSlug = computed(() => store.project?.slug ?? '')
 
 const { data: settings, isError: isErrorSetting } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.project?.id ?? -1)
@@ -338,9 +351,9 @@ const updateSettings = () => {
     },
     onError: (e) => {
       isSaving.value = false
-      displayTextAfterSaveWithSuccessStatus(false, DEFAULT_ERROR_MSG)
-
       const error = e as AxiosError<Error>
+      displayTextAfterSaveWithSuccessStatus(false, error.response?.data?.message ?? DEFAULT_ERROR_MSG)
+
       if (error.response?.data !== undefined && error.response.data.message === ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE) {
         errorMessage.value = 'Duplicate URL Detected.' + ' Each project URL must be unique. Please enter a different URL to proceed.'
       }

@@ -131,7 +131,7 @@ interface Role {
 }
 
 const roles: Record<string, Role> = {
-  owner: { id: 'owner', name: 'Owner', description: 'Full access to project settings.' },
+  owner: { id: 'owner', name: 'Primary Admin', description: 'Full access to project settings.' },
   admin: { id: 'admin', name: 'Admin', description: 'Full access to project settings except deleting the project.' },
   expert: { id: 'expert', name: 'Expert', description: 'Manage sites, species, recordings, playlists, jobs, and validations' },
   user: { id: 'user', name: 'User', description: 'Manages sites, species, recordings, and playlists.' },

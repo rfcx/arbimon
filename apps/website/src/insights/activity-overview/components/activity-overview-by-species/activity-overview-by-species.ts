@@ -2,6 +2,7 @@ import { kebabCase } from 'lodash-es'
 import numeral from 'numeral'
 import { Vue } from 'vue-class-component'
 import { Inject, Prop, Watch } from 'vue-property-decorator'
+import { useRoute } from 'vue-router'
 
 import { routeNamesKey } from '@/globals'
 import { type RouteNames } from '~/router'
@@ -79,6 +80,8 @@ export default class ActivityOverviewBySpecies extends Vue {
   sortDetail: SortableDetail = 'detectionMinutesCount'
   sortDirection: SortDirection = SORTABLE_COLUMNS.scientificName.defaultDirection
   formattedDatasets: ActivityOverviewBySpeciesDataset[] = []
+
+  route = useRoute()
 
   get tableHeader (): Header[] {
     return [

@@ -5,12 +5,15 @@ import { BioNotFoundError, BioPublicError } from '~/errors'
 import { updateProjectSettings as updateProjectSettingsLocal } from './dao/project-profile-dao'
 import { updateProjectHiddenStatus } from './dao/project-status-dao'
 import { getProjectById } from './dao/projects-dao'
+import { assertProjectSettingsUpdateAllowed } from './project-entitlement-bll'
 
 export const updateProjectAndProfile = async (request: ProjectProfileUpdateBody, token: string, projectId: number): Promise<void> => {
   const project = await getProjectById(projectId)
   if (project === undefined) {
     throw BioNotFoundError()
   }
+
+  await assertProjectSettingsUpdateAllowed(projectId, request)
 
   // Don't allow changes to hidden if the project is published
   if (request.hidden !== undefined && project.status === 'published') {

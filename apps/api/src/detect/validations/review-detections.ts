@@ -2,7 +2,9 @@ import { type RequestQuerystringDefault } from 'fastify'
 
 import { type DetectReviewDetectionBody, type DetectReviewDetectionParams, type DetectReviewDetectionResponse } from '@rfcx-bio/common/api-bio/detect/review-detections'
 
-import { updateDetectionReviewFromApi } from '~/api-core/api-core'
+import { getProjectByCoreId } from '@/projects/dao/projects-dao'
+import { assertProjectAnalysisAllowed } from '@/projects/project-entitlement-bll'
+import { getClassifierJobInformation, updateDetectionReviewFromApi } from '~/api-core/api-core'
 import { isValidToken } from '~/api-helpers/is-valid-token'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError, BioUnauthorizedError } from '~/errors'
@@ -21,6 +23,12 @@ export const detectReviewDetectionHandler: Handler<DetectReviewDetectionResponse
 
   const jobIdInteger = parseInt(jobId)
   if (Number.isNaN(jobIdInteger)) throw BioInvalidPathParamError({ jobId })
+
+  const classifierJob = await getClassifierJobInformation(token, jobIdInteger)
+  const project = await getProjectByCoreId(classifierJob.projectId)
+  if (project !== undefined) {
+    await assertProjectAnalysisAllowed(project.id)
+  }
 
   return await updateDetectionReviewFromApi(token, jobIdInteger, req.body)
 }

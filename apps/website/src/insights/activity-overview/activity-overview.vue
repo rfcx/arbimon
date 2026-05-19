@@ -5,7 +5,7 @@
     :topic="infoTopic"
   >
     <export-button
-      :disabled="!hasData || !store.userIsProjectMember || isViewingAsGuest"
+      :disabled="!hasData || !store.userIsProjectMember || isViewingAsGuest || isProjectViewOnly"
       :title="store.userIsProjectMember && !isViewingAsGuest ? (hasData ? '' : 'No data selected') : 'Only available to project members'"
       @click="exportSpeciesData()"
     >
@@ -79,6 +79,8 @@ const isLocationRedacted = ref<boolean>(true)
 const loading = ref<boolean>(true)
 
 const isViewingAsGuest = computed(() => route.query.guest === '1')
+const isProjectViewOnly = computed(() => store.project?.isLocked === true)
+
 const hasData = computed(() => exportDatasets.value.length > 0)
 const infoTopic = ref(INFO_TOPICS.activity)
 

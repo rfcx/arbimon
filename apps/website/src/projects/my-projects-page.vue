@@ -12,14 +12,27 @@
             <h2 class="text-gray-900 dark:text-insight">
               My Projects
             </h2>
-            <router-link
-              :to="{ name: ROUTE_NAMES.createProject }"
-              class=" flex-row ml-6"
-            >
-              <button class="btn btn-primary">
-                Create a new project +
-              </button>
-            </router-link>
+            <div class="relative group inline-block ml-6">
+              <router-link
+                :to="canCreateProject ? { name: ROUTE_NAMES.createProject } : {}"
+                :class="{ 'pointer-events-none': !canCreateProject }"
+              >
+                <button
+                  class="btn btn-primary"
+                  :class="{ 'opacity-50 cursor-not-allowed grayscale': !canCreateProject }"
+                  :disabled="!canCreateProject"
+                >
+                  Create a new project +
+                </button>
+              </router-link>
+
+              <div
+                v-if="!canCreateProject"
+                class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip invisible group-hover:visible opacity-0 group-hover:opacity-100 top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none"
+              >
+                You have reached the maximum number of projects allowed for your plan.
+              </div>
+            </div>
           </div>
           <div>
             <div
@@ -46,6 +59,75 @@
                   @blur="isSearchBoxFocused = false"
                 >
               </div>
+            </div>
+          </div>
+        </div>
+        <div
+          v-if="portfolioSummary && !showLoading"
+          class="mt-6 flex w-full gap-4 items-stretch"
+        >
+          <div class="w-1/4 rounded-2xl border border-white/10 bg-echo p-6 shadow-xl flex flex-col justify-center">
+            <p class="text-sm capitalize text-gray-400">
+              User Plan
+            </p>
+            <p class="mt-1 text-2xl font-bold text-white truncate">
+              {{ ACCOUNT_TIER_LABELS[portfolioSummary.accountTier] }}
+            </p>
+          </div>
+
+          <div class="w-3/4 rounded-2xl border border-white/10 bg-echo shadow-xl grid grid-cols-3 pb-5 pt-6">
+            <div class="flex flex-col items-center justify-center px-4 border-r border-white/10">
+              <div class="flex flex-col items-center">
+                <p class="text-3xl font-bold text-white mb-1">
+                  {{ portfolioSummary.usage.freeProjects }}
+                  <span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.freeProjects) }}</span>
+                </p>
+                <p class="text-sm capitalize text-gray-400">
+                  Free Projects
+                </p>
+              </div>
+              <p
+                :class="portfolioSummary.usage.freeProjects > (portfolioSummary.limits.freeProjects ?? 0) ? 'visible' : 'invisible'"
+                class="text-[10px] text-red-500 mt-[2px] whitespace-nowrap"
+              >
+                Limit exceeded
+              </p>
+            </div>
+
+            <div class="flex flex-col items-center justify-center px-4 border-r border-white/10">
+              <div class="flex flex-col items-center">
+                <p class="text-3xl font-bold text-white mb-1">
+                  {{ portfolioSummary.usage.premiumProjects }}
+                  <span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.premiumProjects) }}</span>
+                </p>
+                <p class="text-sm capitalize text-gray-400">
+                  Premium Projects
+                </p>
+              </div>
+              <p
+                :class="portfolioSummary.usage.premiumProjects > (portfolioSummary.limits.premiumProjects ?? 0) ? 'visible' : 'invisible'"
+                class="text-[10px] text-red-500 mt-[2px] whitespace-nowrap"
+              >
+                Limit exceeded
+              </p>
+            </div>
+
+            <div class="flex flex-col items-center justify-center px-4">
+              <div class="flex flex-col items-center">
+                <p class="text-3xl font-bold text-white mb-1">
+                  {{ portfolioSummary.usage.unlimitedProjects }}
+                  <span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.unlimitedProjects) }}</span>
+                </p>
+                <p class="text-sm capitalize text-gray-400">
+                  Unlimited Projects
+                </p>
+              </div>
+              <p
+                :class="portfolioSummary.usage.unlimitedProjects > (portfolioSummary.limits.unlimitedProjects ?? 0) ? 'visible' : 'invisible'"
+                class="text-[10px] text-red-500 [2px] whitespace-nowrap"
+              >
+                Limit exceeded
+              </p>
             </div>
           </div>
         </div>
@@ -125,19 +207,22 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import debounce from 'lodash.debounce'
-import { inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 
 import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
+import { ACCOUNT_TIER_LABELS, formatTierLimit } from '@/projects/entitlement-helpers'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
+import { useGetPortfolioSummary } from '../user/composables/use-tiering'
 import ProjectCard from './components/project-card.vue'
 
 const store = useStore()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
+const { data: portfolioSummary } = useGetPortfolioSummary(apiClientBio)
 const projects = ref<LocationProjectWithInfo[]>([])
 const hasFetchedAll = ref(false)
 const LIMIT = 20
@@ -167,6 +252,21 @@ watch(() => projectSearchValue.value, () => {
   if (projectSearchValue.value === '') {
     projects.value = store.myProjects
   }
+})
+
+const canCreateProject = computed(() => {
+  const plan = portfolioSummary.value?.accountTier?.toLowerCase() ?? 'free'
+  const currentCount = store.myProjects.length
+  if (plan === 'enterprise') {
+    return true
+  }
+  if (plan === 'pro') {
+    return currentCount < 52
+  }
+  if (plan === 'free') {
+    return currentCount < 5
+  }
+  return false
 })
 
 const loadMoreProject = async (): Promise<void> => {
@@ -203,6 +303,9 @@ const onProjectClicked = (value: boolean) => {
   showLoading.value = value
 }
 
+const formatLimit = (limit: number | null) => {
+  return formatTierLimit(limit)
+}
 </script>
 
 <style scoped lang="scss">

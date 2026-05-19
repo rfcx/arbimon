@@ -1,7 +1,10 @@
 <template>
   <div
-    class="flex flex-col gap-y-2.5 justify-between bg-moss border-1 rounded-lg shadow p-4 hover:bg-util-gray-03 cursor-pointer"
-    :class="isSelected ? 'border-frequency' : 'border-transparent'"
+    class="flex flex-col gap-y-2.5 justify-between bg-moss border-1 rounded-lg shadow p-4"
+    :class="[
+      isSelected && !isDisabled ? 'border-frequency' : 'border-transparent',
+      isDisabled ? 'opacity-60 cursor-not-allowed grayscale' : 'hover:bg-util-gray-03 cursor-pointer'
+    ]"
     @click="selectedAnalysis()"
   >
     <h5
@@ -45,7 +48,7 @@ import { ref, watch } from 'vue'
 
 import { type AnalysisCard } from '../types'
 
-const props = defineProps<{analysis: AnalysisCard}>()
+const props = defineProps<{analysis: AnalysisCard, isDisabled?: boolean}>()
 const emit = defineEmits<{(event: 'emitSelectedAnalysis', url: string, value: string): void}>()
 const isSelected = ref(false)
 const isReadMore = ref(false)

@@ -1,0 +1,139 @@
+<mxfile host="app.diagrams.net" modified="2026-04-21T00:00:00.000Z" agent="Codex" version="26.0.11">
+  <diagram id="arbimon-tiering" name="Arbimon Tiering Workflow">
+    <mxGraphModel dx="1486" dy="964" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="2" value="Arbimon Tiering Workflow&#xa;Account tier + project type + downgrade state" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1f2937;fontColor=#ffffff;strokeColor=#111827;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="20" width="420" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="3" value="Start: User opens My Projects&#xa;Show account tier, portfolio usage, upgrade state" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;" vertex="1" parent="1">
+          <mxGeometry x="520" y="100" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="41" value="Account Settings&#xa;Show current paid tier&#xa;Allow downgrade flow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;" vertex="1" parent="1">
+          <mxGeometry x="860" y="100" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="4" value="Create Project page&#xa;Existing page gets tier-aware type selector" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0284c7;" vertex="1" parent="1">
+          <mxGeometry x="520" y="210" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="5" value="Choose account tier" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;" vertex="1" parent="1">
+          <mxGeometry x="545" y="315" width="170" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="6" value="Free account&#xa;- Own Free projects only&#xa;- Public only&#xa;- Export/download limited&#xa;- Keep last 5 active Free on downgrade into Free" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#16a34a;" vertex="1" parent="1">
+          <mxGeometry x="80" y="460" width="240" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="7" value="Pro account&#xa;- Own 50 Free + 2 Premium&#xa;- No Unlimited&#xa;- Additional Premium unlocks at $99/year" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#ca8a04;" vertex="1" parent="1">
+          <mxGeometry x="470" y="460" width="240" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="8" value="Enterprise account&#xa;- Own Unlimited Free + Unlimited Premium&#xa;- DEM included&#xa;- 1 Unlimited project" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#dc2626;" vertex="1" parent="1">
+          <mxGeometry x="860" y="460" width="240" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="9" value="Project type rules" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;" vertex="1" parent="1">
+          <mxGeometry x="545" y="620" width="170" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="10" value="Free project&#xa;- &lt; 40k mins&#xa;- Public only&#xa;- Free/Premium/Enterprise allowed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#15803d;" vertex="1" parent="1">
+          <mxGeometry x="60" y="760" width="260" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="11" value="Premium project&#xa;- &lt;= 1M mins&#xa;- Up to 4 collaborators&#xa;- Up to 3 guests&#xa;- Public or private&#xa;- Pro/Enterprise only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#a16207;" vertex="1" parent="1">
+          <mxGeometry x="470" y="760" width="260" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="12" value="Unlimited project&#xa;- Unlimited mins&#xa;- Unlimited collaborators&#xa;- Unlimited guests&#xa;- Public or private&#xa;- Enterprise only" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#b91c1c;" vertex="1" parent="1">
+          <mxGeometry x="880" y="760" width="260" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="13" value="Project created as Active" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#0369a1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="920" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="14" value="Existing pages gain tier-aware UI checks&#xa;- Dashboard: analysis + PM quota + inactive banner&#xa;- Members: collaborator/guest caps&#xa;- Settings: type badge, visibility lock, reactivation&#xa;- Import: minute usage + block when inactive&#xa;- Exports/downloads: shared entitlement gate" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#7c3aed;" vertex="1" parent="1">
+          <mxGeometry x="410" y="1020" width="440" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="15" value="Downgrade event?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#d97706;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="620" width="170" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="42" value="User selects which projects keep paid slots&#xa;Excess projects become View-only / Inactive" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fde68a;strokeColor=#d97706;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="470" width="260" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="16" value="Enterprise -&gt; Pro&#xa;- Apply confirmed downgrade retention rules&#xa;- All Unlimited inactive&#xa;- Remaining surplus projects inactive&#xa;- DEM handed to CSM" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#dc2626;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="760" width="250" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="17" value="Pro -&gt; Free&#xa;- Apply confirmed downgrade retention rules&#xa;- All Premium inactive&#xa;- Lose extra Premium unlock option&#xa;- Export/download reduced" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#ca8a04;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="930" width="250" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="18" value="Project state = Inactive&#xa;- View-only metadata&#xa;- No new imports&#xa;- No new analyses&#xa;- No member expansion&#xa;- Must reactivate or upgrade" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3f4f6;strokeColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="1090" width="260" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="19" value="Source of truth: use FINAL Published Features numbers for entitlements" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#ea580c;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="180" width="330" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;" edge="1" parent="1" source="3" target="4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;" edge="1" parent="1" source="41" target="15">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;" edge="1" parent="1" source="4" target="5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="22" value="Free" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#16a34a;" edge="1" parent="1" source="5" target="6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="23" value="Pro" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#ca8a04;" edge="1" parent="1" source="5" target="7">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="24" value="Enterprise" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#dc2626;" edge="1" parent="1" source="5" target="8">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;" edge="1" parent="1" source="6" target="9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;" edge="1" parent="1" source="7" target="9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;" edge="1" parent="1" source="8" target="9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="28" value="Allowed for all tiers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#15803d;" edge="1" parent="1" source="9" target="10">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="29" value="Pro + Enterprise" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#a16207;" edge="1" parent="1" source="9" target="11">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="30" value="Enterprise only" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b91c1c;" edge="1" parent="1" source="9" target="12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;" edge="1" parent="1" source="10" target="13">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;" edge="1" parent="1" source="11" target="13">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;" edge="1" parent="1" source="12" target="13">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;" edge="1" parent="1" source="13" target="14">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="35" value="If account changes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#475569;" edge="1" parent="1" source="8" target="15">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d97706;" edge="1" parent="1" source="15" target="42">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="36" value="Enterprise -&gt; Pro" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#dc2626;" edge="1" parent="1" source="42" target="16">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="37" value="Pro -&gt; Free" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#ca8a04;" edge="1" parent="1" source="42" target="17">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6b7280;" edge="1" parent="1" source="16" target="18">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6b7280;" edge="1" parent="1" source="17" target="18">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#ea580c;" edge="1" parent="1" source="19" target="5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

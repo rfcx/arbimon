@@ -1,0 +1,267 @@
+<template>
+  <div class="px-4 sm:px-6 py-8 lg:(pt-6 px-20) bg-white dark:bg-pitch">
+    <div class="mx-auto max-w-screen-xl pt-4 md:pt-10">
+      <h1 class="mb-6">
+        Manage Project and User Tiers
+      </h1>
+      <div class="mb-3 flex gap-2 border-b border-util-gray-03">
+        <button
+          type="button"
+          class="px-4 py-3 text-sm font-medium"
+          :class="activeTab === 'projects' ? 'text-frequency border-b-2 border-frequency' : 'text-subtle'"
+          @click="activeTab = 'projects'"
+        >
+          Projects
+        </button>
+        <button
+          type="button"
+          class="px-4 py-3 text-sm font-medium"
+          :class="activeTab === 'users' ? 'text-frequency border-b-2 border-frequency' : 'text-subtle'"
+          @click="activeTab = 'users'"
+        >
+          Users
+        </button>
+      </div>
+      <div class="flex w-full gap-4 items-center mb-3">
+        <div class="flex-[7]">
+          <input
+            id="searchInput"
+            v-model="searchKeyword"
+            name="search"
+            type="text"
+            class="search-input w-full text-insight shadow-lg shadow-frequency/10"
+            :placeholder="activeTab === 'projects' ? 'Search for projects' : 'Search for users'"
+            autocomplete="off"
+          >
+        </div>
+
+        <div class="flex-[3] relative">
+          <select
+            v-if="activeTab === 'users'"
+            key="select-projects"
+            v-model="selectedTier"
+            class="search-input w-full text-gray-700 py-2.5 px-4 pr-10 shadow-lg shadow-frequency/10 appearance-none cursor-pointer text-sm focus:outline-none transition-all font-medium bg-white"
+          >
+            <option value="all">
+              All Tiers
+            </option>
+            <option value="free">
+              Free
+            </option>
+            <option value="pro">
+              Pro
+            </option>
+            <option value="enterprise">
+              Enterprise
+            </option>
+          </select>
+
+          <select
+            v-else
+            key="select-users"
+            v-model="selectedTier"
+            class="search-input w-full text-gray-700 py-2.5 px-4 pr-10 shadow-lg shadow-frequency/10 appearance-none cursor-pointer text-sm focus:outline-none transition-all font-medium bg-white"
+          >
+            <option value="all">
+              All Tiers
+            </option>
+            <option value="free">
+              Free
+            </option>
+            <option value="premium">
+              Premium
+            </option>
+            <option value="unlimited">
+              Unlimited
+            </option>
+          </select>
+
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+            <svg
+              class="h-4 w-4 fill-current"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div
+        v-if="isActiveTabError"
+        class="mt-6 text-insight"
+      >
+        <span v-if="[401, 403].includes(activeTabError?.response?.status ?? 401)">
+          You do not have permission to view this page
+        </span>
+        <span v-else>
+          Unable to load {{ activeTab }}.
+        </span>
+      </div>
+      <div
+        v-else-if="isActiveTabLoading"
+        class="flex items-center justify-center h-96"
+      >
+        <icon-custom-ic-loading class="h-10 w-10" />
+      </div>
+      <div v-else>
+        <ProjectTieringTable
+          v-if="activeTab === 'projects'"
+          :projects="projects?.data ?? []"
+          @select-project="onSelectProject"
+        />
+        <UserTieringTable
+          v-else
+          :users="users?.data ?? []"
+          @select-project="onSelectProject"
+        />
+        <div
+          v-if="!isProjectLoading && projects && projects?.data.length > 0"
+          class="mt-6 flex items-center justify-between gap-4 text-sm text-subtle"
+        >
+          <span>
+            Showing {{ paginationStart }}-{{ paginationEnd }} of {{ activeTabTotal }}
+          </span>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="rounded border border-util-gray-03 px-3 py-1.5 text-insight disabled:(cursor-not-allowed opacity-50)"
+              :disabled="currentPage <= 1 || isActiveTabLoading"
+              @click="goToPreviousPage"
+            >
+              Previous
+            </button>
+            <span>Page {{ currentPage }} / {{ totalPages }}</span>
+            <button
+              type="button"
+              class="rounded border border-util-gray-03 px-3 py-1.5 text-insight disabled:(cursor-not-allowed opacity-50)"
+              :disabled="currentPage >= totalPages || isActiveTabLoading"
+              @click="goToNextPage"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+        <div
+          v-if="showNotFound"
+          class="mt-10 flex flex-col items-center justify-center text-center"
+        >
+          <div class="text-lg font-bold text-insight">
+            Not found
+          </div>
+          <div class="mt-1 text-sm text-subtle">
+            Can't find the {{ activeTab === 'projects' ? 'project' : 'user' }} you want? Try searching by name or keyword.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useDebounce } from '@vueuse/core'
+import { type AxiosInstance } from 'axios'
+import { computed, inject, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+
+import { type SuperProjectSummary, type SuperUserSummary } from '@rfcx-bio/common/api-bio/super/projects'
+
+import { apiClientKey } from '@/globals'
+import { ROUTE_NAMES } from '~/router'
+import { useSuperStore } from '~/store'
+import { useGetSuperProjects, useGetSuperUsers } from './_composables/use-projects'
+import ProjectTieringTable from './components/project-tiering-table.vue'
+import UserTieringTable from './components/user-tiering-table.vue'
+
+const apiClientBio = inject(apiClientKey) as AxiosInstance
+const router = useRouter()
+const superStore = useSuperStore()
+
+const PAGE_SIZE = 25
+const activeTab = ref<'projects' | 'users'>('projects')
+const searchKeyword = ref('')
+const limit = ref(PAGE_SIZE)
+const offset = ref(0)
+
+const selectedTier = ref<'all' | 'free' | 'premium' | 'unlimited' | 'pro' | 'enterprise'>('all')
+
+const searchParams = useDebounce(searchKeyword, 500)
+const activeProjectsTab = computed(() => activeTab.value === 'projects')
+const activeUsersTab = computed(() => activeTab.value === 'users')
+const selectedProjectTier = computed<SuperProjectSummary['projectType'] | undefined>(() => {
+  if (!activeProjectsTab.value || selectedTier.value === 'all') return undefined
+  return selectedTier.value as SuperProjectSummary['projectType']
+})
+const selectedUserTier = computed<SuperUserSummary['accountTier'] | undefined>(() => {
+  if (!activeUsersTab.value || selectedTier.value === 'all') return undefined
+  return selectedTier.value as SuperUserSummary['accountTier']
+})
+
+const { isError: isProjectError, isLoading: isProjectLoading, error: projectError, data: projects } = useGetSuperProjects(apiClientBio, {
+  keyword: searchParams,
+  tier: selectedProjectTier,
+  limit,
+  offset,
+  enabled: activeProjectsTab
+})
+const { isError: isUserError, isLoading: isUserLoading, error: userError, data: users } = useGetSuperUsers(apiClientBio, {
+  keyword: searchParams,
+  tier: selectedUserTier,
+  limit,
+  offset,
+  enabled: activeUsersTab
+})
+
+const isActiveTabError = computed(() => activeTab.value === 'projects' ? isProjectError.value : isUserError.value)
+const isActiveTabLoading = computed(() => activeTab.value === 'projects' ? isProjectLoading.value : isUserLoading.value)
+const activeTabError = computed(() => activeTab.value === 'projects' ? projectError.value : userError.value)
+const activeTabResponse = computed(() => activeTab.value === 'projects' ? projects.value : users.value)
+const activeTabTotal = computed(() => activeTabResponse.value?.total ?? 0)
+const currentPage = computed(() => Math.floor(offset.value / limit.value) + 1)
+const totalPages = computed(() => Math.max(1, Math.ceil(activeTabTotal.value / limit.value)))
+const paginationStart = computed(() => activeTabTotal.value === 0 ? 0 : offset.value + 1)
+const paginationEnd = computed(() => Math.min(offset.value + limit.value, activeTabTotal.value))
+
+watch(activeTabError, (newError) => {
+  if (newError?.response?.status === 401) {
+    router.push({ name: ROUTE_NAMES.error })
+  }
+})
+
+watch(activeTab, () => {
+  searchKeyword.value = ''
+  selectedTier.value = 'all'
+  offset.value = 0
+})
+
+watch(searchParams, () => {
+  offset.value = 0
+})
+
+watch(selectedTier, () => {
+  offset.value = 0
+})
+
+const showNotFound = computed(() => {
+  if (activeTab.value === 'projects') {
+    return !isProjectLoading.value && projects.value?.data.length === 0
+  }
+  if (activeTab.value === 'users') {
+    return !isUserLoading.value && users.value?.data.length === 0
+  }
+  return false
+})
+
+const onSelectProject = (project: SuperProjectSummary): void => {
+  superStore.setSelectedProject(project)
+}
+
+const goToPreviousPage = (): void => {
+  offset.value = Math.max(0, offset.value - limit.value)
+}
+
+const goToNextPage = (): void => {
+  if (currentPage.value >= totalPages.value) return
+  offset.value += limit.value
+}
+</script>

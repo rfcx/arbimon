@@ -3,7 +3,7 @@
     <section-title title="Distinct species by taxonomic class">
       <template #controls>
         <export-button
-          v-if="hasData"
+          v-if="hasData && !isProjectViewOnly"
           @click="downloadChart()"
         />
       </template>

@@ -1,7 +1,7 @@
 <template>
   <button
     :disabled="disabled || loading"
-    class="btn btn-icon flex items-center disabled:(cursor-not-allowed opacity-50)"
+    class="btn btn-icon flex items-center disabled:(btn-disabled cursor-not-allowed pointer-events-none)"
     :class="{ 'cursor-wait': loading }"
     :title="title"
   >

@@ -34,7 +34,7 @@
       </template>
       <template #controls>
         <export-button
-          v-if="hasData"
+          v-if="hasData && !isProjectViewOnly"
           @click="downloadChart()"
         />
       </template>
@@ -59,6 +59,7 @@ import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { downloadSvgAsPng } from '~/charts'
 import { type LineChartConfig, type LineChartSeries, DEFAULT_YAXIS_LINE_FORMAT, generateChartExport, LineChartComponent } from '~/charts/line-chart'
 import { getExportGroupName } from '~/filters'
+import { useStore } from '~/store'
 import { type TimeBucket, TIME_BUCKET_BOUNDS, TIME_BUCKET_LABELS, TIME_LABEL_FORMATTERS } from '~/time-buckets'
 import { type ActivityPatternsDataByTimeBucket, ACTIVITY_PATTERN_TIME_KEYS } from '../../types'
 import { type SpotlightTimeDataset } from './types'
@@ -92,6 +93,9 @@ const datasetType = ref<DropDownOption[]>([
   { label: DATASET_LABELS[ACTIVITY_PATTERN_TIME_KEYS.detection], value: ACTIVITY_PATTERN_TIME_KEYS.detection }
 ])
 const selectedType = ref<ActivityPatternsDataByTimeType>(ACTIVITY_PATTERN_TIME_KEYS.detectionFrequency)
+
+const store = useStore()
+const isProjectViewOnly = computed(() => store.project?.isLocked === true)
 
 const config = computed<Omit<LineChartConfig, 'width'>>(() => {
   return {

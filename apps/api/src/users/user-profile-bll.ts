@@ -47,7 +47,10 @@ export const getUserProfile = async (id: number): Promise<Omit<UserProfile, 'id'
     lastName: profile.lastName,
     email: profile.email,
     image: fileUrl(profile.image),
-    organizationIdAffiliated: profile.organizationIdAffiliated
+    organizationIdAffiliated: profile.organizationIdAffiliated,
+    accountTier: profile.accountTier,
+    accountTierUpdatedAt: profile.accountTierUpdatedAt,
+    additionalPremiumProjectSlots: profile.additionalPremiumProjectSlots
   }
 }
 

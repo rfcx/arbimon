@@ -12,12 +12,14 @@ export const exportDetectionsHandler: Handler<string, ExportDetectionsParams, un
   }
 
   const email = req?.userToken?.email ?? ''
+  const token = req.headers.authorization ?? ''
 
   if (req.body.types.length === 0) {
     req.body.types = [...EXPORT_DETECTIONS_TYPES]
   }
 
   await exportDetections(
+    token,
     jobIdInt,
     req.body.types,
     email

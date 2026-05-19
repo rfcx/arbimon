@@ -2,6 +2,7 @@ import { type HighlightedSpecies } from '@rfcx-bio/common/api-bio/dashboard/comm
 import { type DashboardSpeciesDataParams, type DashboardSpeciesDataResponse, type SpeciesHighlightedBody, type SpeciesHighlightedResponse } from '@rfcx-bio/common/api-bio/dashboard/dashboard-species-data'
 import { type LocationProjectSpecies, type RiskRatingIucn, type TaxonSpecies } from '@rfcx-bio/node-common/dao/types'
 
+import { assertProjectSettingsUpdateAllowed } from '@/projects/project-entitlement-bll'
 import { type Handler } from '~/api-helpers/types'
 import { BioInvalidPathParamError } from '~/errors'
 import { assertPathParamsExist } from '~/validation'
@@ -79,6 +80,7 @@ export const dashboardSpeciesHighlightedPostHandler: Handler<SpeciesHighlightedR
   if (Number.isNaN(projectIdInteger)) {
     throw BioInvalidPathParamError({ projectId })
   }
+  await assertProjectSettingsUpdateAllowed(projectIdInteger, {})
   const species = req.body.species
   const locationProjectSpecies = await combineLocationProjectSpecies(species, projectIdInteger)
   await postHighlightedSpecies(locationProjectSpecies)
@@ -94,6 +96,7 @@ export const dashboardSpeciesHighlightedDeleteHandler: Handler<SpeciesHighlighte
   if (Number.isNaN(projectIdInteger)) {
     throw BioInvalidPathParamError({ projectId })
   }
+  await assertProjectSettingsUpdateAllowed(projectIdInteger, {})
   const species = req.body.species
   const locationProjectSpecies = await combineLocationProjectSpecies(species, projectIdInteger)
   await deleteHighlightedSpecies(locationProjectSpecies)

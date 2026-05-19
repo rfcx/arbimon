@@ -13,9 +13,16 @@
             v-for="analysis in analyses"
             :key="analysis.value"
             :analysis="analysis"
+            :is-disabled="analysis.value === 'pm' && isPMLimitReached"
             @emit-selected-analysis="onSelectAnalysis"
           />
         </div>
+        <p
+          v-if="isProjectViewOnly"
+          class="text-sm text-flamingo"
+        >
+          This project is currently view-only and cannot run analyses until it is reactivated.
+        </p>
         <div class="flex items-center justify-between rounded-b">
           <button
             id="closeButton"
@@ -56,6 +63,9 @@ const store = useStore()
 const selectedProject = computed(() => store.project)
 const isAnalysisSelected = ref(false)
 const analysisUrl = ref('')
+const isProjectViewOnly = computed(() => {
+  return selectedProject.value?.isLocked === true
+})
 
 const BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 
@@ -66,13 +76,31 @@ const analyses = ref([
   { value: 'rfm', title: 'Random Forest Model', description: 'A machine learning model, comprising multiple decision trees and trained with presence and absence data, designed to predict species presence in soundscape recordings. It serves as an efficient and accurate means of assessing species presence in diverse acoustic environments.', url: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models?newJob`, link: 'https://help.arbimon.org/category/199-analyze-recordings-with-random-forest-models-rfm', label: 'Learn more about RFM', isSelected: false }
 ])
 
+const isPMLimitReached = computed(() => {
+  const projectType = store.project?.projectType ?? 'free'
+  const currentPMJobs = store.project?.usage?.patternMatchingCount ?? 0
+
+  if (projectType === 'unlimited') return false
+
+  if (projectType === 'free') {
+    return currentPMJobs >= 50
+  }
+
+  if (projectType === 'premium') {
+    return currentPMJobs >= 200
+  }
+
+  return false
+})
+
 const onSelectAnalysis = (url: string, value: string) => {
+  if (isProjectViewOnly.value) return
   analyses.value.forEach((analysis: AnalysisCard) => {
     if (analysis.value !== value) {
       analysis.isSelected = false
     } else analysis.isSelected = true
   })
-  isAnalysisSelected.value = !!url
+  isAnalysisSelected.value = !!url && !isProjectViewOnly.value
   analysisUrl.value = url
 }
 

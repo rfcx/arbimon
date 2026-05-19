@@ -12,7 +12,7 @@
       class="flex flex-start flex-row items-center gap-2 justify-start"
     >
       <p v-if="selectedRoleId === getIdByRole('owner')">
-        Owner
+        Primary Admin
       </p>
       <select
         v-else
@@ -103,7 +103,7 @@ const updateRole = (email: string, roleId: number) => {
   updateRoleErrorMessage.value = ''
   if (roleId === props.member.roleId) return
   const role = getRoleById(roleId)
-  if (role === 'none') return
+  if (role === 'none' || role === 'external') return
   isUpdatingRole.value = true
   matateUpdateMember({ email, role }, {
     onSuccess: () => {

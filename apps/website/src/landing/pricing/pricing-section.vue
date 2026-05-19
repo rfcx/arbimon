@@ -90,7 +90,7 @@
             <li
               v-for="subFeature in [
                 { text: '1 million minutes of recordings' },
-                { text: '7 members plus owner', sub: '(up to 4 collaborators*)' },
+                { text: '7 members plus primary admin', sub: '(up to 4 collaborators*)' },
                 { text: 'Private project option' },
                 { text: 'Export project data' }
               ]"
@@ -198,7 +198,7 @@ const CheckIcon = defineComponent({
 
 const basicSubFeatures = [
   '40,000 minutes of recordings',
-  '1 member (owner only)',
+  '1 member (primary admin only)',
   'Public visibility for project insights',
   'Export project data'
 ]

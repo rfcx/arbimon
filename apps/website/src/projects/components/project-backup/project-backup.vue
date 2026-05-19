@@ -16,10 +16,18 @@
             Learn more about project back-ups
           </a>
         </p>
+        <div
+          v-if="isProjectViewOnly"
+          class="mt-4 rounded-lg border border-flamingo/30 bg-flamingo/10 px-4 py-3 text-sm text-flamingo"
+        >
+          This project is currently view-only and cannot request exports or backups.
+        </div>
         <a
           type="button"
           href="mailto:jon@rfcx.org"
           class="rounded-full h-10 text-pitch font-medium bg-frequency w-fit mt-6 px-5 py-3 text-center hover:bg-chirp flex flex-row items-center"
+          data-tooltip-target="Backuptooltip"
+          data-tooltip-style="light"
         >
           Request backup
         </a>
@@ -78,6 +86,7 @@ const TEXT_BACKUP_LIMIT = 'You can request a backup every 7 days'
 
 const store = useStore()
 const toggles = inject(togglesKey)
+const isProjectViewOnly = computed(() => store.project?.isLocked === true)
 
 const timeFrameLimit = computed(() => {
   const hours = toggles?.projectBackupTesting === true ? 0.25 : 7 * 24
@@ -114,6 +123,10 @@ const { mutate, isPending } = useCreateBackup(apiClientBio)
 const createErrorMessage = ref<string | undefined>(undefined)
 
 const requestNewBackup = () => {
+  if (isProjectViewOnly.value) {
+    createErrorMessage.value = 'This project is currently view-only and cannot request exports or backups.'
+    return
+  }
   createErrorMessage.value = undefined
   mutate({ entityId: store.project?.id ?? -1, entity: 'project' }, {
     onSuccess: () => {

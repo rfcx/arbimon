@@ -11,7 +11,7 @@
   <div class="self-center md:overflow-hidden basis-3/4">
     <router-link
       v-if="redirect === true"
-      :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: slug }, query: $route.query }"
+      :to="{ name: ROUTE_NAMES.activityPatterns, params: { speciesSlug: slug }, query: route.query }"
       :title="scientificName"
       exact-active-class="!dark:text-insight"
       class="text-s italic tracking-tight line-clamp-2 md:(overflow-hidden text-ellipsis)"
@@ -38,8 +38,11 @@
 </template>
 
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
+
 import { ROUTE_NAMES } from '~/router'
 
 defineProps<{ slug: string, scientificName: string, commonName: string | undefined, photoUrl: string | undefined, redirect: boolean, textBlack: boolean }>()
 
+const route = useRoute()
 </script>
