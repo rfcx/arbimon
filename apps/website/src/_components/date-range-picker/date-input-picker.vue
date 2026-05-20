@@ -65,6 +65,26 @@ const datePickerInput = ref<HTMLInputElement>()
 const picker = ref<FlowbiteDatePicker>()
 const selectedDateIso = ref('')
 
+// True while a programmatic `picker.setDate(...)` is in progress (from one of
+// our own watchers / `updateViewDate` / `resetDatePicker`). flowbite-datepicker
+// dispatches MULTIPLE `changeDate` events per single `setDate(...)` call when
+// stepping through dates (one per intermediate day; observed up to 5 per call
+// during the rfcx/arbimon#2461 investigation), each with a different
+// `event.detail.date`. The earlier `if (dateIso === selectedDateIso.value)`
+// guard only catches the one whose date matches our target, so the others
+// emit `emitSelectDate` with the intermediate date, the parent assigns it to
+// `initialDate`, this component's watch fires again with the new value, and
+// the cycle compounds. Using a flag to suppress every `changeDate` that
+// originates from a programmatic `setDate` (as opposed to a real user click)
+// is the only reliable way to break the loop without changing behaviour for
+// genuine user interactions.
+let isProgrammaticSetDate = false
+const withProgrammaticSetDate = (fn: () => void): void => {
+  const wasInside = isProgrammaticSetDate
+  isProgrammaticSetDate = true
+  try { fn() } finally { isProgrammaticSetDate = wasInside }
+}
+
 const placeholder = computed(() => props.placeholder ?? 'Choose date')
 const inputLabelFormatted = computed(() => props.inputLabel ?? 'Date')
 const isDisabled = computed(() => props.disabled === true)
@@ -148,7 +168,7 @@ onMounted(async () => {
 
   if (props.initialViewYear != null && props.initialViewMonth != null) {
     const temp = new Date(props.initialViewYear, props.initialViewMonth - 1, 1)
-    picker.value.setDate(temp)
+    withProgrammaticSetDate(() => { picker.value?.setDate(temp) })
   }
 
   if (props.initialDate !== undefined) {
@@ -158,14 +178,16 @@ onMounted(async () => {
   }
 
   datePickerInput.value.addEventListener('changeDate', () => {
+    // Hard suppression: if we're inside our own programmatic setDate, ignore
+    // every changeDate (flowbite-datepicker emits multiple per call). See the
+    // `isProgrammaticSetDate` declaration above for the full rationale.
+    if (isProgrammaticSetDate) return
     const dates = picker.value?.getDate()
     if (dates === undefined || dates === null || !(dates instanceof Date)) return
     const dateIso = dayjs(dates).format('YYYY-MM-DD') + 'T00:00:00.000Z'
     // Defense in depth against the rfcx/arbimon#2461 feedback loop: don't
     // re-emit `emitSelectDate` when the picker fires `changeDate` with a
-    // value we already published. The setDate guard in `watch(initialDate)`
-    // is the primary fix; this is a belt-and-braces check against any other
-    // future code path that ends up calling `setDate` with the same value.
+    // value we already published.
     if (dateIso === selectedDateIso.value) return
     selectedDateIso.value = dateIso
     emit('emitSelectDate', { dateLocalIso: dateIso })
@@ -195,7 +217,7 @@ watch(() => props.initialDate, (v) => {
     // changing any user-visible behaviour (the picker is already showing
     // the right date). See rfcx/arbimon#2461.
     if (datePickerInput.value?.value !== formatted) {
-      picker.value?.setDate(formatted)
+      withProgrammaticSetDate(() => { picker.value?.setDate(formatted) })
       if (datePickerInput.value) datePickerInput.value.value = formatted
     }
     selectedDateIso.value = dayjs(props.initialDate).format('YYYY-MM-DD') + 'T00:00:00.000Z'
@@ -210,7 +232,7 @@ function updateViewDate () {
   const temp = new Date(year, month - 1, 1)
   // do not update the calendar if initialDate was changed it will be processed by watcher for initialDate
   // if (props.initialDate) return
-  picker.value?.setDate(temp)
+  withProgrammaticSetDate(() => { picker.value?.setDate(temp) })
   if (datePickerInput.value) datePickerInput.value.value = ''
   selectedDateIso.value = ''
 }
@@ -229,12 +251,12 @@ watch(() => props.initialViewMonth, () => {
 function resetDatePicker (preset?: { date: string }) {
   if (preset?.date) {
     const formatted = dayjs(preset.date).format(format)
-    picker.value?.setDate(formatted)
+    withProgrammaticSetDate(() => { picker.value?.setDate(formatted) })
     if (datePickerInput.value) datePickerInput.value.value = formatted
     selectedDateIso.value = dayjs(preset.date).format('YYYY-MM-DD') + 'T00:00:00.000Z'
     emit('emitSelectDate', { dateLocalIso: selectedDateIso.value })
   } else {
-    picker.value?.setDate('')
+    withProgrammaticSetDate(() => { picker.value?.setDate('') })
     selectedDateIso.value = ''
     if (datePickerInput.value) datePickerInput.value.value = ''
     emit('emitSelectDate', { dateLocalIso: '' })
