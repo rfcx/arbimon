@@ -160,7 +160,6 @@ watch(allSpecies, (newValue) => {
       selectedSpeciesSlug.value = allSpecies.value[0].taxonSpeciesSlug
     }
   }
-
 })
 
 watch(selectedSpeciesSlug, () => {
