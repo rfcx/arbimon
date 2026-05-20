@@ -481,7 +481,13 @@ export const apiArbimonGetClustering = async (
 ): Promise<ClusterResponse | undefined> => {
   if (!slug || recId == null) return undefined
 
-  const url = `/legacy-api/project/${slug}/clustering-jobs/undefined/rois-details`
+  // The legacy route is `/clustering-jobs/:job_id/rois-details` but the handler
+  // reads everything from the POST body (rec_id, all, etc.) and ignores the
+  // `:job_id` URL segment. We pass `_` as a placeholder so the URL is well-formed
+  // and clearly intentional (the previous literal string `undefined` was a
+  // refactor leftover that looked like a bug in network traces and could break
+  // if the legacy route is ever cleaned up).
+  const url = `/legacy-api/project/${slug}/clustering-jobs/_/rois-details`
   const res = await apiClient.request<ClusterResponse>({
     method: 'POST',
     url,
