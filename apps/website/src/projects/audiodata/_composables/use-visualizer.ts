@@ -47,12 +47,11 @@ export const useGetListRecordings = (apiClient: AxiosInstance, slug: ComputedRef
   return useQuery({
     queryKey: ['fetch-recordings', slug, params],
     queryFn: async () => {
+      // `enabled` already guarantees slug.value + params.value are both truthy,
+      // so the casts are safe. If a caller wires this query without that
+      // guard in the future, `enabled` short-circuits us back to null here.
       if (!enabled.value) return null
-      return await apiArbimonGetRecordings(apiClient, slug.value as string, params.value ?? {
-        limit: 10,
-        offset: 0,
-        key: ''
-      })
+      return await apiArbimonGetRecordings(apiClient, slug.value as string, params.value as RecordingSearchParams)
     },
     enabled,
     retry: 0,
