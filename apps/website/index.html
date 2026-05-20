@@ -12,25 +12,24 @@
     <link rel="preload" as="font" href="/src/_services/assets/ABCFavoritExtended-Medium.woff" crossorigin>
     <link rel="preload" as="font" href="/src/_services/assets/ABCFavoritExpanded-Medium.woff" crossorigin>
     <title>Arbimon</title>
-    <!-- Google Tag Manager -->
-    <script>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-5M6JKHVW');
-    </script>
-    <!-- End Google Tag Manager -->  
+    <!--
+      Google Tag Manager (GTM-5M6JKHVW) and the matching noscript iframe at
+      the bottom of <body> were temporarily removed while investigating the
+      visualizer-page hang (rfcx/arbimon#2461). vue-gtag was also disabled
+      separately (apps/website/src/_services/analytics/index.ts) in PR #2466,
+      but that only covered the gtag.js script injection that vue-gtag itself
+      controls. The GTM snippet here was independent and continued to load
+      gtm.js, which in turn loaded the G-RJJTZ45WJB gtag config, fired scroll
+      and page_view events, and ran setTimeout chains visible in CPU profiles
+      of the wedge. Removing it gives us a clean signal while we bisect.
+      Restore both blocks (this snippet + the noscript iframe at the bottom
+      of <body>) once #2461 is resolved.
+    -->
   </head>
 
   <body class="min-h-screen bg-pitch text-insight">
     <div id="app" class="w-full"></div>
     <script type="module" src="/src/main.ts"></script>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript>
-      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5M6JKHVW" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-    </noscript>
-    <!-- End Google Tag Manager (noscript) -->
-  
+    <!-- GTM noscript iframe removed alongside the GTM header script above (rfcx/arbimon#2461). -->
   </body>
 </html>
