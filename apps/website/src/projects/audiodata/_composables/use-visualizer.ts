@@ -5,12 +5,19 @@ import { type ComputedRef, computed } from 'vue'
 import { type AedResponse, type ClusterResponse, type CounSoundscapeCompositiontById, type newTemplateResponse, type NormVector, type PlaylistInfo, type RecordingPatternMatchingBoxesParams, type RecordingPatternMatchingBoxesResponse, type RecordingResponse, type RecordingSearchParams, type RecordingTagResponse, type RecordingValidateParams, type RecordingValidateResponse, type SoundscapeCompositionParams, type SoundscapeCompositionResponse, type SoundscapeItem, type SoundscapeItemOptions, type SoundscapeRegion, type SoundscapeResponse, type SoundscapeScidx, type TagDeleteResponse, type TagParams, type TemplateParams, type TemplateResponse, type VisobjectResponse, apiArbimonGetAed, apiArbimonGetClustering, apiArbimonGetPlaylistInfo, apiArbimonGetRecording, apiArbimonGetRecordings, apiDeleteRecordingTag, apiGetPatternMatchingBoxes, apiGetRecordingTag, apiGetSoundscapeComposition, apiGetSoundscapeNormVector, apiGetSoundscapeRegions, apiGetSoundscapes, apiGetSoundscapeScale, apiGetSoundscapeScidx, apiGetTemplates, apiPostSoundscapeComposition, apiPostTemplate, apiPutRecordingTag, apiRecordingValidate, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, recordingId: ComputedRef<string | undefined>): UseQueryReturnType<VisobjectResponse | undefined, unknown> => {
+  // Only fire the query when both keys are present. Vue Query watches `enabled`
+  // and auto-runs the query the moment the computed flips to true, which
+  // covers the common case where the recording id arrives a tick after mount.
+  // Without `enabled` the query is treated as always-on and may not refetch
+  // when the params settle, leaving the visualizer stuck without a recording.
+  const enabled = computed(() => Boolean(slug.value && recordingId.value))
   return useQuery({
     queryKey: ['fetch-recording', slug, recordingId],
     queryFn: async () => {
-      if (slug.value === undefined || recordingId.value === undefined || recordingId.value === '') return null
-      return await apiArbimonGetRecording(apiClient, slug.value, recordingId.value)
+      if (!enabled.value) return null
+      return await apiArbimonGetRecording(apiClient, slug.value as string, recordingId.value as string)
     },
+    enabled,
     retry: 0,
     refetchOnMount: false, // No refetch on page revisit
     refetchOnWindowFocus: false // No refetch on tab focus
