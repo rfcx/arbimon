@@ -25,17 +25,38 @@ export const useGetRecording = (apiClient: AxiosInstance, slug: ComputedRef<stri
 }
 
 export const useGetListRecordings = (apiClient: AxiosInstance, slug: ComputedRef<string | undefined>, params: ComputedRef<RecordingSearchParams | undefined>): UseQueryReturnType<RecordingResponse | undefined, unknown> => {
+  // The query is `enabled` only when both slug and params are defined. This
+  // replaces the previous pattern where the queryKey was static
+  // (`['fetch-recordings']`) and callers manually triggered `refetch()` from
+  // `watch(...)` callbacks whenever params changed.
+  //
+  // That manual-refetch pattern caused an infinite reactive loop on the
+  // visualizer page (rfcx/arbimon#2461): the watcher callbacks ran in Vue's
+  // pre-flush phase, called `refetch()`, which synchronously mutated the
+  // query's reactive `state` object via Vue Query's `updateState`. That
+  // synchronous mutation re-entered Vue's component-update cycle while the
+  // pre-flush watchers were still being drained, and Vue 3.3's production
+  // scheduler has no recursion guard (`checkRecursiveUpdates` is
+  // dev-build-only). The renderer thread wedged after ~6 s of runaway
+  // reactivity and Chrome killed it.
+  //
+  // Letting Vue Query own the refetch decision (via `enabled` + a reactive
+  // queryKey) means the work is scheduled asynchronously and never runs
+  // inside the pre-flush watcher path.
+  const enabled = computed(() => Boolean(slug.value && params.value))
   return useQuery({
-    queryKey: ['fetch-recordings'],
+    queryKey: ['fetch-recordings', slug, params],
     queryFn: async () => {
-      if (!slug.value || params.value === undefined) return null
-      return await apiArbimonGetRecordings(apiClient, slug.value, params.value ?? {
+      if (!enabled.value) return null
+      return await apiArbimonGetRecordings(apiClient, slug.value as string, params.value ?? {
         limit: 10,
         offset: 0,
         key: ''
       })
     },
-    retry: 0
+    enabled,
+    retry: 0,
+    refetchOnWindowFocus: false
   })
 }
 

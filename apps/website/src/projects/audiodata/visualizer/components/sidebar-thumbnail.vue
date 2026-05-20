@@ -194,6 +194,12 @@ const onSelectedThumbnail = (id: number) => {
 }
 
 watch(() => recordingsResponse.value, (newValue) => {
+  // Clear the "date-was-just-changed" flag once the response arrives. The
+  // flag tells `recordingListSearchParams` to omit `recording_id` from the
+  // query key so a freshly-selected date doesn't immediately scroll back
+  // onto the previously-active recording. Clearing it here is safe because
+  // the flag is only read inside `recordingListSearchParams`, and that
+  // computed is only consumed by the query whose response just arrived.
   isInitialDateWasChanged.value = false
   if (!newValue || recordingsResponse.value === undefined) return
   if (recordingsResponse.value.length === 0) return
@@ -206,9 +212,12 @@ watch(() => recordingsResponse.value, (newValue) => {
   }
 })
 
-watch(() => browserType.value, () => {
-  refetchRecordings()
-})
+// browserType / props.initialDate / props.siteSelected changes used to call
+// refetchRecordings() directly here. That synchronously mutated the Vue
+// Query reactive state inside Vue's pre-flush phase, which re-entered the
+// component-update cycle and wedged the renderer (rfcx/arbimon#2461). Now
+// that `useGetListRecordings` keys on `params`, Vue Query refetches on its
+// own when any of these inputs change, so the manual refetch is unnecessary.
 
 watch(() => props.recordingsItem, (r) => {
   if (r === undefined) return
@@ -267,14 +276,18 @@ watch(
 )
 
 watch(() => props.initialDate, () => {
+  // Mark that the date was just changed; the next `recordingListSearchParams`
+  // re-evaluation will drop the `recording_id` segment so we don't snap back
+  // to the previously-selected recording. Vue Query picks up the new key
+  // automatically; no manual refetch needed.
   isInitialDateWasChanged.value = true
-  refetchRecordings()
 })
 
 watch(() => props.siteSelected, () => {
   if (siteSelectedRef.value === props.siteSelected || props.siteSelected === undefined) return
   siteSelectedRef.value = props.siteSelected
-  refetchRecordings()
+  // No manual refetch: `recordingListSearchParams` reads `siteSelectedRef`,
+  // so the query key changes and Vue Query refetches asynchronously.
 })
 
 watch(() => props.nextRecording, (newVal) => {
