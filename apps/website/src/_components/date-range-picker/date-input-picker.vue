@@ -161,12 +161,6 @@ onMounted(async () => {
     const dates = picker.value?.getDate()
     if (dates === undefined || dates === null || !(dates instanceof Date)) return
     const dateIso = dayjs(dates).format('YYYY-MM-DD') + 'T00:00:00.000Z'
-    // Defense in depth against the rfcx/arbimon#2461 feedback loop: don't
-    // re-emit `emitSelectDate` when the picker fires `changeDate` with a
-    // value we already published. The setDate guard in `watch(initialDate)`
-    // is the primary fix; this is a belt-and-braces check against any other
-    // future code path that ends up calling `setDate` with the same value.
-    if (dateIso === selectedDateIso.value) return
     selectedDateIso.value = dateIso
     emit('emitSelectDate', { dateLocalIso: dateIso })
   })
@@ -182,22 +176,8 @@ watch(() => props.initialDate, (v) => {
     selectedDateIso.value = ''
   } else {
     const formatted = dayjs(v).format(format)
-    // Guard: only push the new date into the flatpickr instance when it
-    // *actually* differs from what's already displayed. `picker.setDate()`
-    // unconditionally dispatches a `changeDate` event, and the listener
-    // installed below emits `emitSelectDate` to the parent, which mutates
-    // its own `initialDate` ref — which propagates back as `props.initialDate`
-    // to *this* component, re-firing this watcher. Vue 3.3's production
-    // scheduler has no `RECURSION_LIMIT` (see Vue 3.4+'s `checkRecursiveUpdates`
-    // wrapped in a dev-only branch in @vue/runtime-core@3.3.13), so the loop
-    // is unbounded and wedges the renderer thread within ~6 s. Skipping the
-    // setDate when the value is already current breaks the cycle without
-    // changing any user-visible behaviour (the picker is already showing
-    // the right date). See rfcx/arbimon#2461.
-    if (datePickerInput.value?.value !== formatted) {
-      picker.value?.setDate(formatted)
-      if (datePickerInput.value) datePickerInput.value.value = formatted
-    }
+    picker.value?.setDate(formatted)
+    if (datePickerInput.value) datePickerInput.value.value = formatted
     selectedDateIso.value = dayjs(props.initialDate).format('YYYY-MM-DD') + 'T00:00:00.000Z'
   }
 })
