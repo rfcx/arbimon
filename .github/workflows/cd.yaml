@@ -17,7 +17,13 @@ on:
   push:
     branches:
       - master
-      - staging
+      # NOTE: 'staging' was removed from this list 2026-05-19. The current
+      # `Deploy: rfcx-local` job is gated to namespace=='production' (master
+      # only), so push to staging triggered the workflow but skipped every
+      # deploy step. Until a real staging environment is provisioned in
+      # rfcx-local (apps-staging namespace + staging.arbimon.org ingress),
+      # CD on staging is a no-op and only confused contributors. See
+      # rfcx-local STATE.md / runbooks for the planned staging environment.
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:  
   configure:
