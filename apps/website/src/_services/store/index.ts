@@ -68,8 +68,41 @@ export const useStore = defineStore('root', {
     async updateSelectedProjectSlug (slug: string) {
       // Temporary hack to get an API Client (this will be extracted in the loading branch)
       const authClient = await useAuth0Client()
-      const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, this.user ? async () => await getIdToken(authClient) : undefined)
+      // Always attach a token-resolver: even when `this.user` is undefined,
+      // the Auth0 SDK may still resolve a token via the existing SSO
+      // session (the user simply hadn't called `getUser()` yet, or the
+      // pinia state was hydrated before the auth bootstrap finished).
+      // If `getIdToken` throws (no SSO, login_required, etc.) the request
+      // falls back to an anonymous call — same behaviour as before for
+      // truly logged-out visitors.
+      //
+      // Why this matters: on direct-URL navigation to a non-public
+      // project (`status='hidden'|'unlisted'`), an anonymous fetch returns
+      // 404 from the bio-api, which renders the "This project either does
+      // not exist…" page even when the visitor actually has an Auth0
+      // session and is a member of the project (2026-05-27 support ticket
+      // for `asian-short-clawed-otters-in-plankendael-zoo`).
+      const getToken = async (): Promise<string> => {
+        try {
+          return await getIdToken(authClient)
+        } catch {
+          return ''
+        }
+      }
+      const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, getToken)
       this.project = await apiBioGetProjectBySlug(apiClient, slug)
+      // If we got nothing AND we previously thought we had no user, try
+      // refreshing the user state once — `getTokenSilently` may have
+      // populated the SDK's user cache on the previous call.
+      if (this.project === undefined && this.user === undefined) {
+        try {
+          const refreshedUser = await authClient.getUser()
+          if (refreshedUser !== undefined) {
+            this.user = refreshedUser
+            this.project = await apiBioGetProjectBySlug(apiClient, slug)
+          }
+        } catch { /* ignore */ }
+      }
     },
     updateSelectedProject (project?: LocationProjectWithRole) {
       if (this.project?.id === project?.id) return

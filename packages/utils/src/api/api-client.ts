@@ -9,8 +9,15 @@ export const getApiClient = (baseURL: string, getToken?: () => Promise<string>):
 
   if (getToken !== undefined) {
     apiClient.interceptors.request.use(async config => {
+      // `getToken` may return an empty string when the caller wanted to
+      // try an authenticated request opportunistically but the SDK had
+      // no SSO session to draw on. Skip the Authorization header in that
+      // case rather than sending `Bearer ` (which the bio-api treats as
+      // an invalid token).
       const token = await getToken()
-      config.headers = { ...config.headers, Authorization: `Bearer ${token}` }
+      if (token) {
+        config.headers = { ...config.headers, Authorization: `Bearer ${token}` }
+      }
       return config
     })
 

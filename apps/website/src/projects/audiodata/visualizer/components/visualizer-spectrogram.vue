@@ -649,7 +649,21 @@ const recordingTrainingSetParams = computed<RecordingTrainingSetParams>(() => {
   }
 })
 const { data: trainingSets, refetch: refetchRecordingTrainingSets } = useGetRecordingTrainingSets(apiClientArbimon, selectedProjectSlug, recordingTrainingSetParams)
-const { data: soundscapeRegions } = useGetSoundscapeRegions(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
+// `useGetSoundscapeRegions` calls `/legacy-api/project/<slug>/soundscapes/<id>/regions`,
+// which expects a soundscape id, NOT a recording id. The previous call site
+// passed `isPlaylist.value ? browserRecId : browserTypeId`, both of which are
+// recording ids on the `/rec/<id>` and `/playlist/<plId>/<recId>` URL shapes.
+// That meant the request fired on every visualizer page load and got a guaranteed
+// `404 {"error":"soundscape not found"}` (silent to the user because Vue Query has
+// retry:0; visible in network logs and as noise in the backend log).
+//
+// `browserTypeId` IS a soundscape id when `isSoundscape.value === true` (the URL is
+// `/visualizer/soundscape/<soundscapeId>`); we gate on that. Also use a reactive
+// computed so that intra-page browser-type switches (rec <-> soundscape) update
+// correctly — `isPlaylist.value`-read-once in the previous code was not reactive
+// to subsequent route changes either, but fixing that everywhere is out of scope.
+const soundscapeRegionsId = computed(() => isSoundscape.value ? browserTypeId.value : undefined)
+const { data: soundscapeRegions } = useGetSoundscapeRegions(apiClientArbimon, selectedProjectSlug, soundscapeRegionsId)
 
 const legendMetrics = computed(() => {
   return {
