@@ -1,5 +1,6 @@
 import { type LocationProjectQuery, type LocationProjectWithRole, type MyProjectsResponse, type ProjectsGeoResponse } from '@rfcx-bio/common/api-bio/project/projects'
 
+import { isSuperUser } from '@/_services/auth0/is-super-user'
 import { type Handler } from '../_services/api-helpers/types'
 import { getMyProjectsWithInfo, getViewableProjects } from './dao/projects-dao'
 import { getProjectBySlugForUser, getProjectsGeo } from './projects-bll'
@@ -18,5 +19,5 @@ export const myProjectsHandler: Handler<MyProjectsResponse, unknown, LocationPro
 
 export const getProjectBySlugHandler: Handler<LocationProjectWithRole, { slug: string }, unknown, unknown> = async (req) => {
   const userId = req.userId
-  return await getProjectBySlugForUser(req.params.slug, userId)
+  return await getProjectBySlugForUser(req.params.slug, userId, isSuperUser(req))
 }
