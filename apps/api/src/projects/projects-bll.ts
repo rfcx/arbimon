@@ -33,11 +33,20 @@ export const getProjectsGeo = async (limit?: number, offset?: number): Promise<P
   return projects
 }
 
-export const getProjectBySlugForUser = async (slug: string, userId: number | undefined): Promise<LocationProjectWithRole> => {
+export const getProjectBySlugForUser = async (slug: string, userId: number | undefined, isSuper: boolean = false): Promise<LocationProjectWithRole> => {
   const project = await getProjectBySlug(slug)
   if (project === undefined) { throw BioNotFoundError() }
 
-  const role = await getUserRoleForProject(userId, project.id)
+  let role = await getUserRoleForProject(userId, project.id)
+  // Super-user bypass: org-level support/scientist accounts (allow-list in
+  // SUPER_USER_EMAILS) are escalated to 'admin' on any project they aren't
+  // an explicit member of. Mirrors the legacy arbimon `is_super` behaviour
+  // (where the legacy app treats super users as admins on every project) so
+  // support staff can triage tickets against hidden / unlisted projects.
+  // We deliberately escalate to 'admin' rather than 'owner' so that
+  // owner-only operations (e.g. project deletion) still require an actual
+  // owner membership row.
+  if (role === 'none' && isSuper) { role = 'admin' }
   if (role === 'none') { throw BioNotFoundError() }
 
   const usage = await getProjectTieringUsage(project.id)
