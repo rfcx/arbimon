@@ -2,6 +2,7 @@ import axios, { type AxiosRequestConfig } from 'axios'
 
 import { logError } from '~/axios'
 import { requireEnv } from '~/env'
+import { WIKI_USER_AGENT } from './user-agent'
 
 export interface WikiMediaImageInfo {
   descriptionurl: string
@@ -26,7 +27,10 @@ export async function getWikiImageInfo (fileName: string | undefined): Promise<W
   if (!fileName) return undefined
   const endpoint: AxiosRequestConfig = {
     method: 'GET',
-    url: `${WIKI_MEDIA_BASE_URL}/w/api.php?action=query&prop=imageinfo&iiprop=extmetadata|url&format=json&titles=File:${fileName}`
+    url: `${WIKI_MEDIA_BASE_URL}/w/api.php?action=query&prop=imageinfo&iiprop=extmetadata|url&format=json&titles=File:${fileName}`,
+    headers: {
+      'User-Agent': WIKI_USER_AGENT
+    }
   }
 
   return await axios.request<WikiMediaResponse>(endpoint)
