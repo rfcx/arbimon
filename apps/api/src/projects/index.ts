@@ -14,6 +14,7 @@ import { myProjectsRoute, projectBySlugRoute, projectsDeprecatedRoute, projectsG
 import { logBody } from '@/_hooks/log-body'
 import { requireAuthorized } from '@/_hooks/require-authenticated'
 import { requireProjectPermission } from '@/_hooks/require-permission'
+import { requireSuperUser } from '@/_hooks/require-super'
 import { type RouteRegistration, DELETE, GET, PATCH, POST } from '../_services/api-helpers/types'
 import { projectCreateHandler } from './project-create-handler'
 import { projectDeleteHandler } from './project-delete-handler'
@@ -138,7 +139,9 @@ export const routesProject: RouteRegistration[] = [
   {
     method: DELETE,
     url: projectDeleteRoute,
-    preHandler: [requireProjectPermission('delete-project')],
+    // Project deletion is restricted to org-level super users
+    // (SUPER_USER_EMAILS allow-list, e.g. arbimon-admin@rfcx.org).
+    preHandler: [requireSuperUser],
     handler: projectDeleteHandler
   }
 ]
