@@ -1,12 +1,8 @@
-import { type ProjectPermission, hasPermission } from '@rfcx-bio/common/roles'
-
 import { ALLOWED_BACKUP_TYPES, BackupEntityGetters } from '@/backup/types'
-import { getUserRoleForProject } from '@/projects/dao/project-member-dao'
 import { assertProjectExportAllowed } from '@/projects/project-entitlement-bll'
 import type { Middleware } from '~/api-helpers/types'
-import { BioForbiddenError, BioInvalidPathParamError, BioMissingPathParamError, BioPublicError, BioUnauthorizedError } from '~/errors'
+import { BioInvalidPathParamError, BioMissingPathParamError, BioPublicError, BioUnauthorizedError } from '~/errors'
 
-const DEFAULT_PERMISSION: ProjectPermission = 'backup-project'
 interface EntityData {
     entity?: string
     entityId?: number
@@ -26,11 +22,11 @@ export const validationHandler: Middleware<void> = async (req): Promise<void> =>
     // Validate entity data
     if (method !== undefined) {
         const entityData = payload[String(method)] ?? {}
-        await validateRequest(entityData, userId)
+        await validateRequest(entityData)
     }
 }
 
-const validateRequest = async (data: EntityData, userId: number): Promise<void> => {
+const validateRequest = async (data: EntityData): Promise<void> => {
     const { entity: entityType, entityId } = data
 
     if (entityType === undefined) {
@@ -53,16 +49,10 @@ const validateRequest = async (data: EntityData, userId: number): Promise<void> 
         throw new BioPublicError(`${String(entityType)} with id ${Number(entityId)} not found`, 404)
     }
 
-    // Check project permissions for project backups
+    // Authorization is enforced upstream by the requireSuperUser preHandler
+    // (SUPER_USER_EMAILS allow-list). Here we only keep the view-only guard
+    // so a locked project still cannot have backups requested.
     if (entityType === 'project') {
-        await checkProjectPermissions(userId, entityId)
         await assertProjectExportAllowed(entityId)
-    }
-}
-
-const checkProjectPermissions = async (userId: number, projectId: number, permission: ProjectPermission = DEFAULT_PERMISSION): Promise<void> => {
-    const role = projectId !== undefined ? await getUserRoleForProject(userId, Number(projectId)) : 'none'
-    if (!hasPermission(role, permission)) {
-        throw BioForbiddenError()
     }
 }

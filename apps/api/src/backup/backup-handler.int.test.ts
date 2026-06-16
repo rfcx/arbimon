@@ -9,6 +9,7 @@ import { makeProject } from '@rfcx-bio/testing/model-builders/project-model-buil
 
 import { routesBackup } from '@/backup/index'
 import { GET, POST } from '~/api-helpers/types'
+import { env } from '~/env'
 
 const { LocationProject, LocationProjectUserRole, Backup } = modelRepositoryWithElevatedPermissions
 
@@ -19,9 +20,16 @@ const adminId = 9003
 const projectId1 = 2791456
 const projectId2 = 2791457
 
+// Backups are now gated on the SUPER_USER_EMAILS allow-list. Each
+// authorized request must carry a userToken.email on that list.
+const SUPER_EMAIL = 'arbimon-admin@rfcx.org'
+const superUserToken = { email: SUPER_EMAIL }
+const nonSuperUserToken = { email: 'someone-else@rfcx.org' }
+
 const BACKUP_GET_PROPS = ['requestedAt', 'url', 'status', 'expiresAt', 'minimum']
 
 beforeAll(async () => {
+    env.SUPER_USER_EMAILS = SUPER_EMAIL
     const project1 = makeProject(projectId1, 'Arctic foxes in Iceland')
     const project2 = makeProject(projectId2, 'Belugas in Norway')
     await LocationProject.bulkCreate([project1, project2])
@@ -54,7 +62,7 @@ describe(`POST ${backupsRoute}`, async () => {
 
     test('creates a project backup request successfully', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { userId: ownerId })
+        const app = await makeApp(routesBackup, { userId: ownerId, userToken: superUserToken })
         const backup = {
             entity: 'project',
             entityId: projectId1
@@ -73,7 +81,7 @@ describe(`POST ${backupsRoute}`, async () => {
 
     test('created and returned backup request contains the correct information', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { userId: ownerId })
+        const app = await makeApp(routesBackup, { userId: ownerId, userToken: superUserToken })
         const backup = {
             entity: 'project',
             entityId: projectId2
@@ -98,7 +106,7 @@ describe(`POST ${backupsRoute}`, async () => {
 
     test('backup cannot be requested within 7 days after the last request', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { userId: ownerId })
+        const app = await makeApp(routesBackup, { userId: ownerId, userToken: superUserToken })
         const backup = {
             entity: 'project',
             entityId: projectId1
@@ -117,7 +125,7 @@ describe(`POST ${backupsRoute}`, async () => {
 
     test('Can only have 1 on-going backup per project regardless of who has requested the backup', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { userId: adminId })
+        const app = await makeApp(routesBackup, { userId: adminId, userToken: superUserToken })
         const backup = {
             entity: 'project',
             entityId: projectId1
@@ -136,7 +144,7 @@ describe(`POST ${backupsRoute}`, async () => {
 
     test('returns 400 when an invalid entity type is sent', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { userId: ownerId })
+        const app = await makeApp(routesBackup, { userId: ownerId, userToken: superUserToken })
         const backup = {
             entity: 'asdf',
             entityId: projectId1
@@ -155,7 +163,7 @@ describe(`POST ${backupsRoute}`, async () => {
 
     test('returns 404 when entity doesn\'t exist', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { userId: ownerId })
+        const app = await makeApp(routesBackup, { userId: ownerId, userToken: superUserToken })
         const backup = {
             entity: 'project',
             entityId: 10029101
@@ -172,9 +180,9 @@ describe(`POST ${backupsRoute}`, async () => {
         expect(response.statusCode).toBe(404)
     })
 
-    test('non-owner user cannot request a backup', async () => {
+    test('non-super user cannot request a backup', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { userId })
+        const app = await makeApp(routesBackup, { userId, userToken: nonSuperUserToken })
         const backup = {
             entity: 'project',
             entityId: projectId1
@@ -188,13 +196,13 @@ describe(`POST ${backupsRoute}`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(403)
+        expect(response.statusCode).toBe(401)
     })
 
     test('view-only project cannot request a backup', async () => {
         await LocationProject.update({ isLocked: true }, { where: { id: projectId2 } })
 
-        const app = await makeApp(routesBackup, { userId: ownerId })
+        const app = await makeApp(routesBackup, { userId: ownerId, userToken: superUserToken })
         const backup = {
             entity: 'project',
             entityId: projectId2
@@ -216,7 +224,7 @@ describe(`POST ${backupsRoute}`, async () => {
 describe(`GET ${backupsRoute}`, async () => {
     test('returns backup requests', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { userId: ownerId })
+        const app = await makeApp(routesBackup, { userId: ownerId, userToken: superUserToken })
 
         // Act
         const response = await app.inject({
@@ -231,7 +239,7 @@ describe(`GET ${backupsRoute}`, async () => {
 
     test('returned backup requests contain the correct data', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { userId: ownerId })
+        const app = await makeApp(routesBackup, { userId: ownerId, userToken: superUserToken })
 
         // Act
         const response = await app.inject({
@@ -248,7 +256,7 @@ describe(`GET ${backupsRoute}`, async () => {
 
     test('throws 400 when an invalid entity type is sent', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { userId: ownerId })
+        const app = await makeApp(routesBackup, { userId: ownerId, userToken: superUserToken })
 
         // Act
         const response = await app.inject({
@@ -263,7 +271,7 @@ describe(`GET ${backupsRoute}`, async () => {
 
     test('throws 404 when entity doesn\'t exist', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { userId: ownerId })
+        const app = await makeApp(routesBackup, { userId: ownerId, userToken: superUserToken })
 
         // Act
         const response = await app.inject({
@@ -276,9 +284,9 @@ describe(`GET ${backupsRoute}`, async () => {
         expect(response.statusCode).toBe(404)
     })
 
-    test('non-owner user cannot fetch backup requests', async () => {
+    test('non-super user cannot fetch backup requests', async () => {
         // Arrange
-        const app = await makeApp(routesBackup, { userId })
+        const app = await makeApp(routesBackup, { userId, userToken: nonSuperUserToken })
 
         // Act
         const response = await app.inject({
@@ -288,6 +296,6 @@ describe(`GET ${backupsRoute}`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(403)
+        expect(response.statusCode).toBe(401)
     })
 })
