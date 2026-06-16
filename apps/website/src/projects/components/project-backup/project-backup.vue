@@ -22,15 +22,6 @@
         >
           This project is currently view-only and cannot request exports or backups.
         </div>
-        <a
-          type="button"
-          href="mailto:jon@rfcx.org"
-          class="rounded-full h-10 text-pitch font-medium bg-frequency w-fit mt-6 px-5 py-3 text-center hover:bg-chirp flex flex-row items-center"
-          data-tooltip-target="Backuptooltip"
-          data-tooltip-style="light"
-        >
-          Request backup
-        </a>
         <div class="text-flamingo mt-3">
           To request a full backup of this project, please send an email to jon@rfcx.org
         </div>
