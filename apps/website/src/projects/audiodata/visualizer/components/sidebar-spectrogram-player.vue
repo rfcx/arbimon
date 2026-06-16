@@ -143,7 +143,9 @@ const currentTime = ref(0)
 const duration = ref(0)
 const isGainOpen = ref(false)
 const gainLevels = [1, 2, 5, 10, 15, 20, 25, 30, 50]
-const currentIndex = ref(8)
+// Default to x1 (no gain). gainLevels[0] === 1; index 8 (x50) was applying a
+// 50x gain to playback by default.
+const currentIndex = ref(0)
 
 const selectedGain = computed(() => gainLevels[currentIndex.value])
 
