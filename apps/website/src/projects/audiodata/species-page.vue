@@ -264,6 +264,7 @@ watch(
 
 const columns = [
   { label: 'Species', key: 'species_name', maxWidth: 90 },
+  { label: 'Also known as', key: 'aliases', maxWidth: 120 },
   { label: 'Taxon', key: 'taxon', maxWidth: 70 },
   { label: 'Sound', key: 'songtype_name', maxWidth: 70 },
   { label: 'Project Templates', key: 'project_templates', maxWidth: 150 },
@@ -320,6 +321,16 @@ const mergedSpecies = computed(() => {
 
     return {
       ...s,
+      // 'aliases' (other/former names) comes from the legacy project/classes
+      // endpoint as a comma-joined string; tidy it (trim, drop blanks) so the
+      // 'Also known as' column renders cleanly. Kept on the row so e.g. a
+      // renamed species (Tyto alba furcata -> Tyto furcata pratincola) still
+      // shows its former name to projects that already track it.
+      aliases: (s.aliases ?? '')
+        .split(',')
+        .map(a => a.trim())
+        .filter(a => a.length > 0)
+        .join(', '),
       project_templates: sortByDateCreatedDesc(projMap.get(key) ?? []),
       public_templates: sortByDateCreatedDesc(pubMap.get(key) ?? [])
     }
