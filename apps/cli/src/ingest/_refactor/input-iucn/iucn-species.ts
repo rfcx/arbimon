@@ -1,7 +1,8 @@
-import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios'
+import { type AxiosRequestConfig, type AxiosResponse } from 'axios'
 
 import { requireEnv } from '~/env'
 import { logError } from '../../../_services/axios'
+import { iucnRequest } from './iucn-request'
 import { getSpeciesApiRedirectLink } from './utils'
 
 // TODO: This should be injected by the script controller
@@ -65,7 +66,7 @@ export async function getIucnSpecies (scientificName: string): Promise<IucnSpeci
     url: getSpeciesApiRedirectLink(scientificName)
   }
 
-  return await axios.request<IucnSpeciesResponse>(endpoint)
+  return await iucnRequest<IucnSpeciesResponse>(endpoint)
     .then(mapResult(scientificName))
     .catch(logError('getIucnSpecies', scientificName, '(no data)'))
 }
