@@ -45,13 +45,15 @@ interface Documentation {
   use_trade: string | null
 }
 
-export async function getIucnSpeciesNarrative (scientificName: string): Promise<IucnSpeciesNarrative | undefined> {
-  const iucnSpecies = await getIucnSpecies(scientificName)
-  const assessmentId = iucnSpecies?.assessments[0].assessment_id
-  if (assessmentId == null) {
-    console.info('getIucnSpeciesNarrative', scientificName, '(no data)')
-    return undefined
-  }
+/**
+ * Fetch the IUCN assessment narrative for a known assessment id.
+ *
+ * This is the preferred entry point for the sync: the caller already holds the
+ * assessment id (from the species lookup it did anyway), so we make exactly ONE
+ * request to `/assessment/{id}` and do NOT re-fetch `/species`. See the
+ * `getIucnSpeciesNarrative` wrapper below for why that matters.
+ */
+export async function getIucnAssessmentNarrative (assessmentId: number, scientificName: string): Promise<IucnSpeciesNarrative | undefined> {
   const endpoint: AxiosRequestConfig = {
     method: 'GET',
     headers: { Authorization: `Bearer ${IUCN_API_KEY}` },
@@ -61,6 +63,25 @@ export async function getIucnSpeciesNarrative (scientificName: string): Promise<
   return await iucnRequest<IucnSpeciesNarrativeResponse>(endpoint)
     .then(mapResult(scientificName))
     .catch(logError('getIucnSpeciesNarrative', scientificName, '(no data)'))
+}
+
+/**
+ * Backwards-compatible by-name lookup (kept for any external callers).
+ *
+ * WARNING: this makes an extra `getIucnSpecies` call just to obtain the
+ * assessment id. The sync hot path must NOT use this — it already has the
+ * species (and thus the assessment id) in hand, so it calls
+ * `getIucnAssessmentNarrative` directly to avoid doubling IUCN `/species`
+ * traffic across ~48.5k species per run.
+ */
+export async function getIucnSpeciesNarrative (scientificName: string): Promise<IucnSpeciesNarrative | undefined> {
+  const iucnSpecies = await getIucnSpecies(scientificName)
+  const assessmentId = iucnSpecies?.assessments[0].assessment_id
+  if (assessmentId == null) {
+    console.info('getIucnSpeciesNarrative', scientificName, '(no data)')
+    return undefined
+  }
+  return await getIucnAssessmentNarrative(assessmentId, scientificName)
 }
 
 const mapResult = (scientificName: string) => (response: AxiosResponse<IucnSpeciesNarrativeResponse>): IucnSpeciesNarrative | undefined => {
