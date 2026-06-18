@@ -3,7 +3,7 @@
     v-if="isOpen"
     class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
   >
-    <div class="bg-moss text-white rounded-xl p-6 shadow-lg relative w-[1100px] max-w-[95vw] overflow-y-auto">
+    <div class="bg-moss text-white rounded-xl p-6 shadow-lg relative w-[1250px] max-w-[95vw] overflow-y-auto">
       <button
         class="absolute right-4"
         type="button"
@@ -119,7 +119,7 @@ const { data: songtypesSpecies } = useSongtypesSpecies(apiClientArbimon)
 
 const columns = [
   { label: 'Species', key: 'scientific_name', maxWidth: 220 },
-  { label: 'Other names', key: 'aliases', maxWidth: 240 },
+  { label: 'Other names', key: 'aliases', maxWidth: 360 },
   { label: 'Family', key: 'family', maxWidth: 140 },
   { label: 'Taxon', key: 'taxon', maxWidth: 90 }
 ]
