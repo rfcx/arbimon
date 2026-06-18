@@ -1,8 +1,9 @@
-import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios'
+import { type AxiosRequestConfig, type AxiosResponse } from 'axios'
 
 import { getIucnSpecies } from '@/ingest/_refactor/input-iucn/iucn-species'
 import { requireEnv } from '~/env'
 import { logError } from '../../../_services/axios'
+import { iucnRequest } from './iucn-request'
 
 const { IUCN_BASE_URL, IUCN_API_KEY } = requireEnv('IUCN_BASE_URL', 'IUCN_API_KEY')
 
@@ -57,7 +58,7 @@ export async function getIucnSpeciesNarrative (scientificName: string): Promise<
     url: `${IUCN_BASE_URL}/assessment/${assessmentId}`
   }
 
-  return await axios.request<IucnSpeciesNarrativeResponse>(endpoint)
+  return await iucnRequest<IucnSpeciesNarrativeResponse>(endpoint)
     .then(mapResult(scientificName))
     .catch(logError('getIucnSpeciesNarrative', scientificName, '(no data)'))
 }
