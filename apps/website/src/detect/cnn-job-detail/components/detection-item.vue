@@ -261,7 +261,10 @@ const onVisualizerRedirect = async (): Promise<void> => {
     emit('showAlertDialog')
     return
   }
-  window.location.assign(`${window.location.origin}/p/${store.project?.slug}/visualizer/rec/${response}`)
+  // Route to the legacy visualizer (/project/...): the modern /p/ visualizer is
+  // currently redirected to legacy at the edge (public-router) due to a
+  // feature/stability gap. Link straight to legacy to skip the 302 hop.
+  window.location.assign(`${window.location.origin}/project/${store.project?.slug}/visualizer/rec/${response}`)
 }
 
 const toggleDetection = (event: MouseEvent) => {
