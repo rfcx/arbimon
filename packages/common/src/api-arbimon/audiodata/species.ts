@@ -13,6 +13,10 @@ export interface SpeciesType {
   species: number
   species_name: string
   taxon: string
+  // Comma-joined list of the species' other/former names (common names +
+  // superseded scientific names) from species_aliases. May be absent on
+  // older API builds.
+  aliases?: string
 }
 
 export interface SpeciesClassesParams {
