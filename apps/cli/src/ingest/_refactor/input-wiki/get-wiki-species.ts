@@ -2,6 +2,7 @@ import axios, { type AxiosRequestConfig } from 'axios'
 
 import { logError } from '~/axios'
 import { requireEnv } from '~/env'
+import { WIKI_USER_AGENT } from './user-agent'
 
 export interface WikiSummaryResponse {
   type: string
@@ -59,7 +60,10 @@ const { WIKI_BASE_URL } = requireEnv('WIKI_BASE_URL')
 export async function getWikiSpecies (scientificName: string): Promise<WikiSummaryResponse | undefined> {
   const endpoint: AxiosRequestConfig = {
     method: 'GET',
-    url: `${WIKI_BASE_URL}/api/rest_v1/page/summary/${scientificName}`
+    url: `${WIKI_BASE_URL}/api/rest_v1/page/summary/${scientificName}`,
+    headers: {
+      'User-Agent': WIKI_USER_AGENT
+    }
   }
 
   return await axios.request<WikiSummaryResponse>(endpoint)
