@@ -23,7 +23,7 @@
           <input
             v-model="searchKeyword"
             type="text"
-            placeholder="Search species by scientific name, family or taxon"
+            placeholder="Search species by scientific name, common name, family or taxon"
             class="form-control placeholder-style rounded px-3 py-2 h-[36px] w-[512px] items-center inline-flex rounded border-1 border-util-gray-03 bg-echo"
             @input="onSearchInput"
           >
@@ -33,7 +33,7 @@
         <div class="w-[200px] flex-1 min-h-[200px] overflow-y-auto">
           <SortableTable
             :columns="columns"
-            :rows="speciesData ?? []"
+            :rows="speciesRows"
             :selected-row="selectedSpecies"
             class="max-h-[400px] overflow-y-auto mb-5"
             container-class="bg-moss"
@@ -102,10 +102,24 @@ const searchTimeout = ref<number | undefined>(undefined)
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 
 const { data: speciesData, refetch: refetchSearchSpecies, isLoading: loadingSearchSpecies } = useSearchSpecies(apiClientArbimon, computed(() => searchKeyword.value))
+
+// The legacy search returns `aliases` as a comma-joined GROUP_CONCAT string that
+// can include empty entries (blank alias rows in arbimon2.species_aliases). Clean
+// it up so the "Other names" column shows a tidy, comma-separated list of common
+// names / synonyms (e.g. "American Barn Owl") instead of raw ",a,,b" output.
+const speciesRows = computed(() => (speciesData.value ?? []).map(s => ({
+  ...s,
+  aliases: (s.aliases ?? '')
+    .split(',')
+    .map(a => a.trim())
+    .filter(a => a.length > 0)
+    .join(', ')
+})))
 const { data: songtypesSpecies } = useSongtypesSpecies(apiClientArbimon)
 
 const columns = [
   { label: 'Species', key: 'scientific_name', maxWidth: 90 },
+  { label: 'Other names', key: 'aliases', maxWidth: 120 },
   { label: 'Family', key: 'family', maxWidth: 70 },
   { label: 'Taxon', key: 'taxon', maxWidth: 70 }
 ]
