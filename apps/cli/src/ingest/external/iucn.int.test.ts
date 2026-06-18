@@ -6,7 +6,7 @@ import { type TaxonSpecies } from '@rfcx-bio/node-common/dao/types'
 import { getSequelize } from '@/db/connections'
 import { rawRiskRatings } from '@/db/seeders/_data/risk-rating'
 import { getIucnSpecies } from '@/ingest/_refactor/input-iucn/iucn-species'
-import { getIucnSpeciesNarrative } from '@/ingest/_refactor/input-iucn/iucn-species-narrative'
+import { getIucnAssessmentNarrative } from '@/ingest/_refactor/input-iucn/iucn-species-narrative'
 import { syncOnlyMissingIUCNSpeciesInfo } from './iucn'
 
 // Inputs to the sync from the IUCN API
@@ -76,20 +76,18 @@ vi.mock('@/ingest/_refactor/input-iucn/iucn-species', () => {
 })
 vi.mock('@/ingest/_refactor/input-iucn/iucn-species-narrative', () => {
   return {
-    getIucnSpeciesNarrative: vi.fn(async (scientificName: string) => await Promise.resolve([IUCN_NARRATIVE_SPECIES_1, IUCN_NARRATIVE_SPECIES_2].find(s => s.taxon.scientific_name === scientificName)))
+    // The sync now passes the assessment id it already holds (from the species
+    // lookup) straight to the narrative endpoint, instead of re-fetching
+    // /species inside the narrative call. We still resolve by scientific name
+    // here so the existing fixtures and assertions are preserved.
+    getIucnAssessmentNarrative: vi.fn(async (_assessmentId: number, scientificName: string) => await Promise.resolve([IUCN_NARRATIVE_SPECIES_1, IUCN_NARRATIVE_SPECIES_2].find(s => s.taxon.scientific_name === scientificName)))
   }
 })
-vi.mock('@rfcx-bio/utils/async', () => {
-  return {
-    getSequentially: async <T>(keys: string[], getter: (key: string) => Promise<T | undefined>): Promise<Record<string, T>> => {
-      const results: Record<string, T> = {}
-      for (const key of keys) {
-        const result = await getter(key)
-        if (result !== undefined) results[key] = result
-      }
-      return results
-    }
-  }
+vi.mock('@rfcx-bio/utils/async', async () => {
+  // Preserve real exports (getSequentially, is-fulfilled, etc.) and only make
+  // `wait` instant so the batched sequential pass doesn't add real delays.
+  const actual = await vi.importActual<typeof import('@rfcx-bio/utils/async')>('@rfcx-bio/utils/async')
+  return { ...actual, wait: async () => { await Promise.resolve() } }
 })
 
 const biodiversitySequelize = getSequelize()
@@ -172,7 +170,7 @@ test('risk rating updated after 1 month', async () => {
   await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize)
   await biodiversitySequelize.query(`UPDATE taxon_species_iucn SET updated_at = date_trunc('day', updated_at - interval '1 month') WHERE taxon_species_id = ${SPECIES_1.id}`)
   ;(getIucnSpecies as any).mockResolvedValue(undefined)
-  ;(getIucnSpeciesNarrative as any).mockResolvedValue(undefined)
+  ;(getIucnAssessmentNarrative as any).mockResolvedValue(undefined)
 
   // Act
   await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize)
@@ -188,7 +186,7 @@ test('risk rating not updated when IUCN data not found', async () => {
   await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize)
   await biodiversitySequelize.query(`UPDATE taxon_species_iucn SET updated_at = date_trunc('day', updated_at - interval '1 month') WHERE taxon_species_id = ${SPECIES_1.id}`)
   ;(getIucnSpecies as any).mockResolvedValue(undefined)
-  ;(getIucnSpeciesNarrative as any).mockResolvedValue(undefined)
+  ;(getIucnAssessmentNarrative as any).mockResolvedValue(undefined)
 
   // Act
   await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize)
@@ -203,7 +201,7 @@ test('risk rating not updated when getting IUCN data is rejected', async () => {
   await syncOnlyMissingIUCNSpeciesInfo(biodiversitySequelize)
   await biodiversitySequelize.query(`UPDATE taxon_species_iucn SET updated_at = date_trunc('day', updated_at - interval '1 month') WHERE taxon_species_id = ${SPECIES_1.id}`)
   ;(getIucnSpecies as any).mockRejectedValue(new Error('Unexpected'))
-  ;(getIucnSpeciesNarrative as any).mockRejectedValue(new Error('Unexpected'))
+  ;(getIucnAssessmentNarrative as any).mockRejectedValue(new Error('Unexpected'))
   const catchCall = vi.fn()
 
   // Act
