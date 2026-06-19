@@ -12,7 +12,7 @@
       class="pagination-btn"
       @click="goToPage(currentPage - 1)"
     >
-      Previous
+      Prev
     </button>
 
     <button
@@ -54,22 +54,30 @@
     >
       Last
     </button>
-    <div v-if="hideJumpPage !== true">
-      <label class="ml-4 font-bold text-sm">Jump to page:</label>
-      <input
-        v-model.number="jumpPage"
-        type="number"
-        min="1"
-        :max="totalPages"
-        class="no-spinner w-16 px-2 py-1 ml-1 bg-black border border-util-gray-03 rounded text-sm focus:border-util-gray-03 focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
+    <div
+      v-if="hideJumpPage !== true"
+      class="flex items-center"
+    >
+      <label class="ml-4 font-bold text-sm">Jump to:</label>
+      <select
+        :value="currentPage"
+        class="w-20 px-2 py-1 ml-1 bg-black border border-util-gray-03 rounded text-sm focus:border-util-gray-03 focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
+        @change="onJumpSelect"
       >
+        <option
+          v-for="page in totalPages"
+          :key="page"
+          :value="page"
+        >
+          {{ page }}
+        </option>
+      </select>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import debounce from 'lodash.debounce'
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps<{
   currentPage: number
@@ -82,23 +90,10 @@ const emit = defineEmits<{(e: 'update:currentPage', value: number): void }>()
 
 const maxPagesToShow = props.maxPagesToShow ?? 10
 
-const jumpPage = ref(props.currentPage)
-
-watch(() => props.currentPage, (val) => {
-  jumpPage.value = val
-})
-
-watch(jumpPage, (val) => {
-  if (val !== props.currentPage && val >= 1 && val <= props.totalPages) {
-    debouncedGoToPage(val)
-  }
-})
-
-const debouncedGoToPage = debounce((page: number) => {
-  if (page >= 1 && page <= props.totalPages && page !== props.currentPage) {
-    goToPage(page)
-  }
-}, 600)
+const onJumpSelect = (e: Event) => {
+  const page = Number((e.target as HTMLSelectElement).value)
+  goToPage(page)
+}
 
 const goToPage = (page: number) => {
   if (page < 1 || page > props.totalPages) return
@@ -126,18 +121,4 @@ const visiblePages = computed(() => {
 .pagination-btn {
   @apply px-3 py-1 border border-util-gray-03 text-white text-xs hover:bg-util-gray-04 disabled:cursor-not-allowed;
 }
-
-/* Chrome, Safari, Edge, Opera */
-input[type='number'].no-spinner::-webkit-outer-spin-button,
-input[type='number'].no-spinner::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type='number'].no-spinner {
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
-
 </style>

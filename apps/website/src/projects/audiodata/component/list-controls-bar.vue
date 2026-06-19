@@ -21,6 +21,12 @@
         :total-pages="totalPages"
         @update:current-page="onPageChange"
       />
+      <!-- visual separator between pagination and page-size controls -->
+      <span
+        v-if="totalPages > 0"
+        class="self-stretch w-px bg-util-gray-03 mx-1"
+        aria-hidden="true"
+      />
       <div class="inline-flex border border-util-gray-03 rounded overflow-hidden">
         <button
           v-for="option in limitOptions"
