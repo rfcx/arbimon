@@ -66,10 +66,10 @@ export const syncIucnSpeciesInfo = async (sequelize: Sequelize, speciesNameToId:
       ? await getIucnAssessmentNarrative(assessmentId, speciesName)
       : undefined
 
-    const commonName = iucnSpeciesData?.common_names?.filter(n => n.main === true) ?? ''
+    const mainCommonName = iucnSpeciesData?.common_names?.find(n => n.main === true)?.name ?? ''
     batch.push({
       taxonSpeciesId: speciesNameToId[speciesName].id,
-      commonName: commonName[0]?.name ?? '',
+      commonName: mainCommonName,
       riskRatingIucnId: iucnCodeToId[iucnSpeciesData?.assessments[0]?.red_list_category_code ?? ''] ?? speciesNameToId[speciesName].riskRatingIucnId ?? DEFAULT_RISK_RATING,
       description: iucnSpeciesNarrativeData?.documentation?.habitats ?? '',
       descriptionSourceUrl: iucnSpeciesNarrativeData?.sourceUrl ?? ''
