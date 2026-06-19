@@ -119,6 +119,22 @@
       </span>
     </div>
     <div
+      v-show="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates && speciesCount !== 0"
+      class="flex items-center justify-between mt-5 px-9"
+    >
+      <PageSizeSelector
+        v-model="limitPerPage"
+        label="Per page"
+      />
+      <PaginationComponent
+        v-show="(initialSpeciesCount ?? 0) > limitPerPage"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        :hide-jump-page="true"
+        @update:current-page="handlePageChange"
+      />
+    </div>
+    <div
       v-show="!isLoadingSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates"
       class="flex mt-3 px-9"
     >
@@ -130,10 +146,11 @@
         :selected-items="selectedRows"
         :project-slug="selectedProjectSlug"
         :project-templates="speciesProjectTemplates"
-        :default-sort-order="'desc'"
+        :server-sort="true"
         :show-checkbox="true"
         :template-added-id="templateAddedId"
         :adding-template-id="addingTemplateId"
+        @sort="onSort"
         @on-add-templates="onAddTemplates"
         @selected-rows="onSelectedSpecies"
         @on-play-sound-error="onPlaySoundError"
@@ -158,7 +175,7 @@
     </div>
     <div class="flex mt-3">
       <PaginationComponent
-        v-show="!isLoadingSpecies && !(speciesCount === 0) && !isErrorSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates && (initialSpeciesCount ?? 0) > LIMIT"
+        v-show="!isLoadingSpecies && !(speciesCount === 0) && !isErrorSpecies && !isRefetchSpecies && !isLoadingProjectTemplates && !isLoadingPublicTemplates && (initialSpeciesCount ?? 0) > limitPerPage"
         class="mt-4 px-8"
         :current-page="currentPage"
         :total-pages="totalPages"
@@ -215,6 +232,7 @@ import { useGetProjectTemplates, useGetPublicTemplates, useGetSpecies } from './
 import CreateSpecies from './component/create-species.vue'
 import CustomPopup from './component/custom-popup.vue'
 import ImportSpecies from './component/import-species.vue'
+import PageSizeSelector from './component/page-size-selector.vue'
 import PaginationComponent from './component/pagination-component.vue'
 import SortableTable from './component/sortable-table.vue'
 import { type Row } from './component/sortable-table.vue'
@@ -227,14 +245,21 @@ const createSpecies = ref<InstanceType<typeof CreateSpecies> | null>(null)
 const searchKeyword = ref('')
 const searchTimeout = ref<number | undefined>(undefined)
 
-const LIMIT = 10
+const limitPerPage = ref(10)
 const currentPage = ref(1)
 
-const offset = computed(() => (currentPage.value - 1) * LIMIT)
+// Server-side sort state. `sortKey` is a whitelisted column key understood by
+// the arbimon-legacy /classes endpoint (species_name|taxon|songtype_name).
+const sortKey = ref<string | undefined>(undefined)
+const sortRev = ref<boolean>(false)
+
+const offset = computed(() => (currentPage.value - 1) * limitPerPage.value)
 const speciesParams = computed<SpeciesClassesParams>(() => ({
-    limit: LIMIT,
+    limit: limitPerPage.value,
     offset: offset.value,
-    q: searchKeyword.value
+    q: searchKeyword.value,
+    sortBy: sortKey.value,
+    sortRev: sortRev.value
 }))
 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
@@ -264,11 +289,13 @@ watch(
 
 const columns = [
   { label: 'Species', key: 'species_name', maxWidth: 90 },
-  { label: 'Also known as', key: 'aliases', maxWidth: 120 },
+  // 'Also known as' is a computed alias list, not a single sortable DB column.
+  { label: 'Also known as', key: 'aliases', maxWidth: 120, sortable: false },
   { label: 'Taxon', key: 'taxon', maxWidth: 70 },
   { label: 'Sound', key: 'songtype_name', maxWidth: 70 },
-  { label: 'Project Templates', key: 'project_templates', maxWidth: 150 },
-  { label: 'Public Templates', key: 'public_templates', maxWidth: 150 }
+  // Template columns render thumbnail grids, not a sortable scalar value.
+  { label: 'Project Templates', key: 'project_templates', maxWidth: 150, sortable: false },
+  { label: 'Public Templates', key: 'public_templates', maxWidth: 150, sortable: false }
 ]
 
 const selectedRows = ref<Row[]>([])
@@ -277,13 +304,27 @@ const speciesCount = computed(() => { return speciesData.value?.count ?? 0 })
 const speciesCountText = computed<string>(() =>
   new Intl.NumberFormat('en-US').format(speciesCount.value)
 )
-const totalPages = computed(() => Math.ceil(speciesCount.value / LIMIT))
+const totalPages = computed(() => Math.ceil(speciesCount.value / limitPerPage.value))
 
 const handlePageChange = async (page: number) => {
   if (currentPage.value === page) return
   currentPage.value = page
   await refetchSpecies()
 }
+
+// Re-sort the ENTIRE species list server-side and jump back to page 1.
+const onSort = async (payload: { key: string, order: 'asc' | 'desc' }) => {
+  sortKey.value = payload.key
+  sortRev.value = payload.order === 'desc'
+  currentPage.value = 1
+  await refetchSpecies()
+}
+
+// Changing page size resets to page 1.
+watch(limitPerPage, async () => {
+  currentPage.value = 1
+  await refetchSpecies()
+})
 
 const selectedSpecies = ref<SpeciesType | undefined>(undefined)
 const showPopup = ref(false)

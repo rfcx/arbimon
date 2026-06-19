@@ -17,8 +17,8 @@ export const useRecordings = (
       return await apiArbimonGetRecordings(apiClient, slug.value, request.value ?? {
         limit: 10,
         offset: 0,
-        output: ['count', 'date_range', 'list'],
-        sortBy: 'r.site_id DESC, r.datetime DESC'
+        output: ['count', 'date_range', 'list']
+        // No sortBy => backend default order (site_id DESC, datetime DESC).
       })
     },
     staleTime: 1000 * 60 * 5,

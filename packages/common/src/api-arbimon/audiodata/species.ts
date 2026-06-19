@@ -23,6 +23,10 @@ export interface SpeciesClassesParams {
   limit: number
   offset: number
   q: string
+  // Whitelisted server-side sort (arbimon-legacy /classes): one of
+  // species_name | taxon | songtype_name. Omit for default ordering.
+  sortBy?: string
+  sortRev?: boolean
 }
 
 export const apiArbimonGetSpeciesClasses = async (apiClient: AxiosInstance, slug: string, params: SpeciesClassesParams): Promise<SpeciesResponse[] | undefined> => {
