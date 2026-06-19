@@ -4,7 +4,11 @@ export interface RecordingSearchParams {
   limit?: number
   offset?: number
   output?: Array<'count' | 'date_range' | 'list'>
+  // Whitelisted server-side sort key (arbimon-legacy recordings/search):
+  // site | datetime | filename | upload_time | recorder. Omit for the
+  // backend default (site_id DESC, datetime DESC).
   sortBy?: string
+  sortRev?: boolean
   playlists?: number[]
   range?: string
   sites?: string[]
@@ -57,6 +61,7 @@ function buildRecordingSearchQuery (params: RecordingSearchParams): URLSearchPar
   if (params.limit !== undefined) searchParams.append('limit', String(params.limit))
   if (params.offset !== undefined) searchParams.append('offset', String(params.offset))
   if (params.sortBy) searchParams.append('sortBy', params.sortBy)
+  if (params.sortRev !== undefined) searchParams.append('sortRev', String(params.sortRev))
   if (params.range) searchParams.append('range', params.range)
 
   appendArray('output', params.output)

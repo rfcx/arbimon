@@ -202,6 +202,14 @@
         </div>
       </div>
 
+      <PaginationComponent
+        v-show="!isLoadingRecordings && !(recordingsCount === 0) && !isErrorRecordings && !isRefetchRecordings"
+        class="mb-4"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        @update:current-page="handlePageChange"
+      />
+
       <SortableTable
         v-show="!isLoadingRecordings && !isRefetchRecordings"
         class="mt-5"
@@ -209,11 +217,11 @@
         :rows="filteredRecordings ?? []"
         :selected-row="selectedRecording"
         :selected-items="selectedRows"
-        :default-sort-key="'updated_at'"
-        :default-sort-order="'desc'"
+        :server-sort="true"
         :project-slug="selectedProjectSlug"
         :show-expand="true"
         :show-checkbox="true"
+        @sort="onSort"
         @selected-rows="onSelectedRecordings"
       />
     </div>
@@ -291,11 +299,19 @@ const limitOptions = [10, 25, 50, 100]
 
 const selectedRows = ref<Row[]>([])
 const filterParams = ref<RecordingSearchParams>()
+// Server-side sort state. `sortKey` is a whitelisted column key understood
+// by the arbimon-legacy recordings/search endpoint (site|datetime|filename|
+// upload_time|recorder). `undefined` => backend default (site_id DESC,
+// datetime DESC). `sortRev=true` => DESC.
+const sortKey = ref<string | undefined>(undefined)
+const sortRev = ref<boolean>(true)
+
 const requestParams = computed<RecordingSearchParams>(() => ({
   limit: limitPerPage.value,
   offset: offset.value,
   output: ['count', 'date_range', 'list'],
-  sortBy: 'r.site_id DESC, r.datetime DESC',
+  sortBy: sortKey.value,
+  sortRev: sortRev.value,
   presence: filterParams.value?.presence,
   playlists: filterParams.value?.playlists,
   range: filterParams.value?.range,
@@ -317,7 +333,7 @@ const requestParams = computed<RecordingSearchParams>(() => ({
 }))
 
 const requestParamsForPlaylist = computed(() => {
-  const { limit, offset, output, sortBy, ...rest } = requestParams.value
+  const { limit, offset, output, sortBy, sortRev, ...rest } = requestParams.value
   return rest
 })
 
@@ -333,7 +349,7 @@ const requestParamsForExport = computed(() => {
 })
 
 const requestParamsForSearchCount = computed(() => {
-  const { limit, offset, output, sortBy, recIds, ...rest } = requestParams.value
+  const { limit, offset, output, sortBy, sortRev, recIds, ...rest } = requestParams.value
   return rest
 })
 
@@ -449,8 +465,17 @@ const columns = [
   { label: 'Filename', key: 'filename', maxWidth: 90 },
   { label: 'Uploaded', key: 'upload_time', maxWidth: 70 },
   { label: 'Recorder', key: 'recorder', maxWidth: 70 },
-  { label: 'Notes', key: 'comments', maxWidth: 150 }
+  // Free-text notes/comments are not a sortable DB column.
+  { label: 'Notes', key: 'comments', maxWidth: 150, sortable: false }
 ]
+
+// Re-sort the ENTIRE filtered dataset server-side and jump back to page 1.
+const onSort = async (payload: { key: string, order: 'asc' | 'desc' }) => {
+  sortKey.value = payload.key
+  sortRev.value = payload.order === 'desc'
+  currentPage.value = 1
+  await refetchRecordings()
+}
 const selectedRecording = ref<RecordingSearchResponse | undefined>(undefined)
 
 const filteredRecordings = computed(() => {
@@ -513,6 +538,7 @@ const clearSelectedRows = async () => {
 
 const changeLimit = async (value: number) => {
   limitPerPage.value = value
+  currentPage.value = 1
   await refetchRecordings()
 }
 
