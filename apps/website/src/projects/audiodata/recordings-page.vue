@@ -464,7 +464,9 @@ const columns = [
   { label: 'Recorded Time', key: 'datetime', maxWidth: 110 },
   { label: 'Filename', key: 'filename', maxWidth: 90 },
   { label: 'Uploaded', key: 'upload_time', maxWidth: 70 },
-  { label: 'Recorder', key: 'recorder', maxWidth: 70 },
+  // Recorder has no (site_id, recorder) composite index on the ~273M-row
+  // recordings table, so a project-wide sort would full-scan/time out.
+  { label: 'Recorder', key: 'recorder', maxWidth: 70, sortable: false },
   // Free-text notes/comments are not a sortable DB column.
   { label: 'Notes', key: 'comments', maxWidth: 150, sortable: false }
 ]
