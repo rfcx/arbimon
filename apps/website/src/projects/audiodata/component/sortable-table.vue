@@ -28,7 +28,9 @@
             v-for="column in columns"
             :key="column.key"
             :style="`max-width: ${column.maxWidth || 100}px`"
-            class="px-2 pb-2 cursor-pointer border-b-2 border-b-util-gray-03 align-bottom"
+            class="px-2 pb-2 border-b-2 border-b-util-gray-03 align-bottom"
+            :class="isSortable(column) ? 'cursor-pointer' : 'cursor-default'"
+            :aria-sort="sortKey === column.key ? (sortOrder === 'asc' ? 'ascending' : 'descending') : undefined"
             @click="sortBy(column.key)"
           >
             <span
@@ -41,7 +43,7 @@
                 {{ column.label }}
               </span>
               <span
-                v-if="sortKey === column.key"
+                v-if="isSortable(column) && sortKey === column.key"
                 class="ml-1 shrink-0 inline-block transform"
                 :class="sortOrder === 'asc' ? 'rotate-270' : 'rotate-90'"
               >
@@ -281,6 +283,10 @@ interface Column {
   label: string
   key: string
   maxWidth: number
+  // Columns are sortable by default. Set `sortable: false` to make a column
+  // (e.g. free-text Notes/comments) non-sortable: no pointer cursor, no
+  // click handler, no sort arrow.
+  sortable?: boolean
 }
 
 export interface Row {
@@ -327,9 +333,19 @@ const props = defineProps<{
   nonRounded?: boolean
   textSize?: string
   addingTemplateId?: number | null
+  // When true, the table is "controlled": header clicks emit `sort` and the
+  // parent is responsible for re-querying the full (server-paged) dataset in
+  // the requested order. Rows are rendered in the order received. When false
+  // (default), the table sorts the rows it was given client-side — correct
+  // only for lists that are fully loaded in the browser.
+  serverSort?: boolean
 }>()
 
-const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void, (e: 'onAddTemplates', request: TemplateRequest, tplId?: number): void, (e: 'onPlaySoundError'): void}>()
+const emit = defineEmits<{(e: 'selectedItem', row?: Row): void, (e: 'selectedRows', rows?: Row[]): void, (e: 'onAddTemplates', request: TemplateRequest, tplId?: number): void, (e: 'onPlaySoundError'): void, (e: 'sort', payload: { key: string, order: 'asc' | 'desc' }): void}>()
+
+function isSortable (column: Column): boolean {
+  return column.sortable !== false
+}
 
 const sortKey = ref<string | null>(null)
 const sortOrder = ref<'asc' | 'desc'>('asc')
@@ -477,18 +493,27 @@ const isEmptyTemplateList = (key: string, row: Row): boolean => {
 }
 
 const sortBy = (key: string) => {
+  const column = props.columns.find(c => c.key === key)
+  if (column && !isSortable(column)) return
+
   if (sortKey.value === key) {
     sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
   } else {
     sortKey.value = key
     sortOrder.value = 'asc'
   }
+
+  if (props.serverSort) {
+    emit('sort', { key, order: sortOrder.value })
+  }
 }
 const sortedRows = computed<Row[]>(() => {
   const rows = toRaw(props.rows)
   const list = Array.isArray(rows) ? [...rows] : []
 
-  if (!sortKey.value) {
+  // In controlled/server-sort mode the parent already returns rows in the
+  // requested order for the whole dataset; never re-sort the current page.
+  if (props.serverSort || !sortKey.value) {
     return list
   }
 
