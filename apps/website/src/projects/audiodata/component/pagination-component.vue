@@ -60,12 +60,12 @@
     >
       <label class="ml-4 font-bold text-sm">Jump to:</label>
       <select
-        :value="currentPage"
+        :value="startPage"
         class="w-20 px-2 py-1 ml-1 bg-black border border-util-gray-03 rounded text-sm focus:border-util-gray-03 focus:outline-none focus:shadow-none focus:ring-0 focus:ring-offset-0"
         @change="onJumpSelect"
       >
         <option
-          v-for="page in totalPages"
+          v-for="page in groupStartPages"
           :key="page"
           :value="page"
         >
@@ -111,6 +111,14 @@ const endPage = computed(() => {
 const visiblePages = computed(() => {
   const pages: number[] = []
   for (let i = startPage.value; i <= endPage.value; i++) {
+    pages.push(i)
+  }
+  return pages
+})
+
+const groupStartPages = computed(() => {
+  const pages: number[] = []
+  for (let i = 1; i <= props.totalPages; i += maxPagesToShow) {
     pages.push(i)
   }
   return pages
