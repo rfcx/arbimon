@@ -166,16 +166,22 @@
       class="mt-4 px-8"
     >
       <div class="flex justify-between items-center mb-4">
-        <div class="inline-block flex">
-          <span class="ml-1 font-bold text-left text-sm leading-[26px] inline-block align-middle text-white">
+        <div class="flex items-center flex-wrap gap-x-4 gap-y-2">
+          <span class="ml-1 font-bold text-left text-sm leading-[26px] inline-block align-middle text-white whitespace-nowrap">
             {{ recordingsCountText }} {{ recordingsCount > 1 ? "Recordings" : "Recording" }}
           </span>
           <div
             v-show="filterParams !== undefined"
-            class="px-2 py-1 bg-util-gray-04 text-sm ml-2 rounded-[3px] font-medium"
+            class="px-2 py-1 bg-util-gray-04 text-sm rounded-[3px] font-medium"
           >
             Filters applied
           </div>
+          <PaginationComponent
+            v-show="!isLoadingRecordings && !(recordingsCount === 0) && !isErrorRecordings && !isRefetchRecordings"
+            :current-page="currentPage"
+            :total-pages="totalPages"
+            @update:current-page="handlePageChange"
+          />
         </div>
         <div class="flex items-center">
           <div class="inline-flex border border-util-gray-03 rounded overflow-hidden">
@@ -201,14 +207,6 @@
           </button>
         </div>
       </div>
-
-      <PaginationComponent
-        v-show="!isLoadingRecordings && !(recordingsCount === 0) && !isErrorRecordings && !isRefetchRecordings"
-        class="mb-4"
-        :current-page="currentPage"
-        :total-pages="totalPages"
-        @update:current-page="handlePageChange"
-      />
 
       <SortableTable
         v-show="!isLoadingRecordings && !isRefetchRecordings"
