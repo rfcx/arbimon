@@ -165,48 +165,19 @@
       v-show="!isLoadingRecordings && !isRefetchRecordings"
       class="mt-4 px-8"
     >
-      <div class="flex justify-between items-center mb-4">
-        <div class="flex items-center flex-wrap gap-x-4 gap-y-2">
-          <span class="ml-1 font-bold text-left text-sm leading-[26px] inline-block align-middle text-white whitespace-nowrap">
-            {{ recordingsCountText }} {{ recordingsCount > 1 ? "Recordings" : "Recording" }}
-          </span>
-          <div
-            v-show="filterParams !== undefined"
-            class="px-2 py-1 bg-util-gray-04 text-sm rounded-[3px] font-medium"
-          >
-            Filters applied
-          </div>
-          <PaginationComponent
-            v-show="!isLoadingRecordings && !(recordingsCount === 0) && !isErrorRecordings && !isRefetchRecordings"
-            :current-page="currentPage"
-            :total-pages="totalPages"
-            @update:current-page="handlePageChange"
-          />
-        </div>
-        <div class="flex items-center">
-          <div class="inline-flex border border-util-gray-03 rounded overflow-hidden">
-            <button
-              v-for="(option) in limitOptions"
-              :key="option"
-              :class="[
-                'px-[10px] py-[5px] text-xs border-l font-bold border-util-gray-03 first:border-l-0',
-                limitPerPage === option
-                  ? 'bg-util-gray-03 text-white'
-                  : 'hover:bg-util-gray-04 text-white',
-              ]"
-              @click="changeLimit(option)"
-            >
-              {{ option }}
-            </button>
-          </div>
-          <button
-            class="ml-3 px-[10px] py-[5px] text-xs text-white border border-util-gray-03 rounded hover:bg-util-gray-04 transition"
-            @click="applyRecordings"
-          >
-            <icon-fa-refresh class="w-[10px]" />
-          </button>
-        </div>
-      </div>
+      <ListControlsBar
+        class="mb-4"
+        :total-count="recordingsCount"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        :limit-per-page="limitPerPage"
+        :limit-options="limitOptions"
+        :show-filters-applied="filterParams !== undefined"
+        :show-refresh="true"
+        @update:current-page="handlePageChange"
+        @update:limit-per-page="changeLimit"
+        @refresh="applyRecordings"
+      />
 
       <SortableTable
         v-show="!isLoadingRecordings && !isRefetchRecordings"
@@ -230,12 +201,19 @@
       <span class="font-display">Recordings not found</span>
     </div>
 
-    <PaginationComponent
+    <ListControlsBar
       v-show="!isLoadingRecordings && !(recordingsCount === 0) && !isErrorRecordings && !isRefetchRecordings"
       class="mt-4 px-8"
+      :total-count="recordingsCount"
       :current-page="currentPage"
       :total-pages="totalPages"
+      :limit-per-page="limitPerPage"
+      :limit-options="limitOptions"
+      :show-filters-applied="filterParams !== undefined"
+      :show-refresh="true"
       @update:current-page="handlePageChange"
+      @update:limit-per-page="changeLimit"
+      @refresh="applyRecordings"
     />
     <CreatePlaylistModal
       v-if="showCreatePlaylistModal"
@@ -285,7 +263,7 @@ import CreatePlaylistModal from './component/create-playlist.vue'
 import CustomPopup from './component/custom-popup.vue'
 import ExportPanel from './component/export-panel.vue'
 import FilterPanel, { type DateTime } from './component/filter-panel.vue'
-import PaginationComponent from './component/pagination-component.vue'
+import ListControlsBar from './component/list-controls-bar.vue'
 import SortableTable from './component/sortable-table.vue'
 import { type Row } from './component/sortable-table.vue'
 
@@ -443,9 +421,6 @@ const { data: soundscapeRecordings } = useGetSoundscape(apiClientArbimon, select
 const { data: classifications } = useGetClassifications(apiClientArbimon, selectedProjectSlug)
 
 const recordingsCount = computed(() => { return recordings.value?.count ?? 0 })
-const recordingsCountText = computed<string>(() =>
-  new Intl.NumberFormat('en-US').format(recordingsCount.value)
-)
 const showCreatePlaylistModal = ref(false)
 const showExportPanel = ref(false)
 
