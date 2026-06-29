@@ -1,50 +1,58 @@
-import axios from 'axios'
+import { QueryTypes } from 'sequelize'
 
 import { type LandingPublicationsResponse, type Publication } from '@rfcx-bio/common/api-bio/landing/landing-publications'
 
-import { unpackAxiosError } from '~/api-helpers/axios-errors'
-import { env } from '~/env'
+import { getSequelize } from '~/db'
 
-// INFO: https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values
-interface GoogleSheetsResponse {
-  range: string
-  majorDimension: 'ROWS' | 'COLUMNS'
-  values: string[][]
+// Backed by the `publication` table in the insights DB (replaces the legacy
+// hand-maintained Google Sheet). Returns the RFCx-curated subset to preserve
+// the original endpoint's "publications using RFCx/Arbimon" semantics + shape.
+interface PublicationRow {
+  type: string | null
+  author: string | null
+  year: number | null
+  title: string
+  journal: string | null
+  doiUrl: string | null
+  isRfcxAuthor: boolean
+  orgMention: string | null
+  uses: string | null
+  citations: number | null
 }
 
 export const getPublications = async (): Promise<LandingPublicationsResponse> => {
-  const apiKey = env.GOOGLE_SPREADSHEET_API_KEY
-  if (apiKey === undefined) {
-    return [{ type: 'Use', author: '', year: 2023, title: 'Missing API key', journal: '', doiUrl: '', isRFCxAuthor: true, orgMention: '', uses: '', citations: 0 }]
-  }
+  const sequelize = getSequelize()
 
-  // TODO: Use actual sheet
-  const spreadsheetId = '10jeiNtSLxa3yoox-_T3nH_LI0-1M4KyPMck0527Jcic'
-  const range = 'A:J'
+  const rows = await sequelize.query(
+    `SELECT
+        COALESCE(sheet_mention_type, 'Use') AS "type",
+        COALESCE(author_display, '') AS author,
+        publication_year AS "year",
+        title,
+        COALESCE(venue, '') AS journal,
+        CASE WHEN doi IS NOT NULL THEN 'https://doi.org/' || doi ELSE COALESCE(url, '') END AS "doiUrl",
+        is_rfcx_authored AS "isRfcxAuthor",
+        COALESCE(rfcx_curated_uses, '') AS "orgMention",
+        COALESCE(rfcx_curated_uses, '') AS uses,
+        COALESCE(cited_by_count, 0) AS citations
+     FROM publication
+     WHERE in_rfcx_curated_list = TRUE
+       AND is_visible = TRUE
+       AND review_status = 'approved'
+     ORDER BY publication_year DESC NULLS LAST, lower(title) ASC`,
+    { type: QueryTypes.SELECT }
+  ) as unknown as PublicationRow[]
 
-  try {
-    const response = await axios.get<GoogleSheetsResponse>(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!${range}`, {
-      headers: {
-        'x-goog-api-key': apiKey
-      }
-    })
-
-    // removes the first row that are the column names. Then start mapping
-    return response.data.values.slice(1).map(v => {
-      return {
-        type: v[0] as Publication['type'],
-        author: v[1],
-        year: Number(v[2]),
-        title: v[3],
-        journal: v[4],
-        doiUrl: v[5],
-        isRFCxAuthor: v[6].toLowerCase() === 'yes' || v[6].toLowerCase() === 'y',
-        orgMention: v[7],
-        uses: v[8],
-        citations: Number(v[9])
-      }
-    })
-  } catch (e) {
-    return unpackAxiosError(e)
-  }
+  return rows.map((r): Publication => ({
+    type: (r.type === 'Mention' || r.type === 'Co-author' ? r.type : 'Use'),
+    author: r.author ?? '',
+    year: r.year ?? 0,
+    title: r.title,
+    journal: r.journal ?? '',
+    doiUrl: r.doiUrl ?? '',
+    isRFCxAuthor: r.isRfcxAuthor,
+    orgMention: r.orgMention ?? '',
+    uses: r.uses ?? '',
+    citations: r.citations ?? 0
+  }))
 }
