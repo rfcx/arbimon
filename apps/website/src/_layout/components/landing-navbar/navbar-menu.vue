@@ -25,7 +25,7 @@
         exact-active-class="tab-active"
         class="block tab relative"
       >
-        Pricing
+        Pro
       </router-link>
     </li>
     <li>
