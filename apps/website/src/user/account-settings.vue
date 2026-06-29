@@ -82,7 +82,7 @@
             </p>
             <div
               v-if="portfolioSummary"
-              class="mt-6 grid gap-3 sm:grid-cols-3"
+              class="mt-6 grid gap-3 sm:grid-cols-2"
             >
               <div class="rounded-lg border border-white/70 px-4 py-3">
                 <p class="text-xs uppercase tracking-wide text-insight">
@@ -98,14 +98,6 @@
                 </p>
                 <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
                   {{ portfolioSummary.usage.premiumProjects }} / {{ formatLimit(portfolioSummary.limits.premiumProjects) }}
-                </p>
-              </div>
-              <div class="rounded-lg border border-white/70 px-4 py-3">
-                <p class="text-xs uppercase tracking-wide text-insight">
-                  Unlimited projects
-                </p>
-                <p class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
-                  {{ portfolioSummary.usage.unlimitedProjects }} / {{ formatLimit(portfolioSummary.limits.unlimitedProjects) }}
                 </p>
               </div>
             </div>
@@ -578,7 +570,6 @@ const additionalPremiumProjectSlots = computed(() => {
 })
 
 const downgradeTargets = computed<AccountTier[]>(() => {
-  if (currentAccountTier.value === 'enterprise') return ['pro', 'free']
   if (currentAccountTier.value === 'pro') return ['free']
   return []
 })

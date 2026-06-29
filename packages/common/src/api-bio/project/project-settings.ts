@@ -45,6 +45,7 @@ export interface ProjectUsageLimits {
   collaboratorCount: number | null
   guestCount: number | null
   jobCount: number | null
+  jobRecordingCount: number | null
 }
 
 type ProjectMetrics = Pick<DashboardMetricsResponse, 'totalSites' | 'totalSpecies' | 'threatenedSpecies' | 'totalDetections' | 'totalRecordings'>

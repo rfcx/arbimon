@@ -48,6 +48,7 @@ export const ROUTE_NAMES = {
   visualizer: 'visualizer',
   mySpecies: 'my-species',
   pricing: 'pricing',
+  pricingNew: 'pricing_new',
   tier: 'tier',
   tierPage: 'tier-page'
 } as const

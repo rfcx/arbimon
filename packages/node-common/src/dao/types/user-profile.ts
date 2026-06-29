@@ -1,6 +1,6 @@
 import { type AttributeTypes, attributes } from '../type-helpers'
 
-export const ACCOUNT_TIER_ORDERED = ['free', 'pro', 'enterprise'] as const
+export const ACCOUNT_TIER_ORDERED = ['free', 'pro'] as const
 export type AccountTier = typeof ACCOUNT_TIER_ORDERED[number]
 
 export interface UserProfile {

@@ -54,9 +54,6 @@
                     <option value="pro">
                       pro
                     </option>
-                    <option value="enterprise">
-                      enterprise
-                    </option>
                   </select>
                   <button
                     type="button"
@@ -356,9 +353,6 @@ const saveAdditional = async (user: SuperUserSummary): Promise<void> => {
 const tierBadgeClass = (accountTier: SuperUserSummary['accountTier']): string => {
   const base = 'inline-flex items-center w-fit rounded-full px-2 py-1 text-xs font-bold capitalize tracking-wide leading-none'
 
-  if (accountTier === 'enterprise') {
-    return `${base} bg-rose-100 text-rose-700`
-  }
   if (accountTier === 'pro') {
     return `${base} bg-amber-100 text-amber-700`
   }

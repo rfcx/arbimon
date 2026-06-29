@@ -6,7 +6,7 @@ import { updateProjectSlugLegacy } from '~/api-legacy-arbimon'
 import { createProject as createProjectLocal } from './dao/project-create-dao'
 import { create as createProjectMember } from './dao/project-member-dao'
 import { createProjectProfile } from './dao/project-profile-dao'
-import { assertCanCreateProject } from './project-entitlement-bll'
+import { assertCanCreateProject, getAccountTierForUser } from './project-entitlement-bll'
 
 interface ProjectCreateRequestParsed {
   name: string
@@ -19,7 +19,12 @@ interface ProjectCreateRequestParsed {
 }
 
 export const createProject = async (request: ProjectCreateRequestParsed, userId: number, token: string): Promise<[string, number]> => {
-  const projectType = request.projectType ?? 'free'
+  // Tier reframe (2026-06-29): project_type is DERIVED from the creator's
+  // account_tier, not chosen at creation. A Pro user's new projects are premium;
+  // everyone else's are free. (Matches the bulk Pro=>premium coupling in
+  // super updateUserTier.) The client no longer sends projectType.
+  const { accountTier } = await getAccountTierForUser(userId)
+  const projectType: ProjectType = accountTier === 'pro' ? 'premium' : 'free'
   const hidden = projectType === 'free' ? false : (request.hidden ?? false)
 
   await assertCanCreateProject(userId, projectType)

@@ -7,7 +7,7 @@ import { getSequelize } from '~/db'
 import { BioPublicError } from '~/errors'
 import { getAccountTierProjectLimitMap } from '../tiering/tier-limit-bll'
 
-const ACCOUNT_TIER_ORDER: AccountTier[] = ['free', 'pro', 'enterprise']
+const ACCOUNT_TIER_ORDER: AccountTier[] = ['free', 'pro']
 
 interface PortfolioProjectRow {
   locationProjectId: number
@@ -94,8 +94,7 @@ const toUsageCounts = (projects: PortfolioProjectRow[]): PortfolioSummaryRespons
 const sortSelectionsForTier = (toTier: AccountTier, projects: SubmitTierChangeRequestBody['selections']): SubmitTierChangeRequestBody['selections'] => {
   const preferredTypeOrder: Record<AccountTier, Record<ProjectType, number>> = {
     free: { free: 0, premium: 1, unlimited: 2 },
-    pro: { premium: 0, free: 1, unlimited: 2 },
-    enterprise: { unlimited: 0, premium: 1, free: 2 }
+    pro: { premium: 0, free: 1, unlimited: 2 }
   }
 
   return [...projects].sort((a, b) => {
