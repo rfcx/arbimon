@@ -1,6 +1,7 @@
 import { getSequelize } from '@/db/connections'
 import { syncAllProjectsIncrementally } from './incremental'
 import { getOpenSearchClient } from './opensearch/utilities'
+import { syncAllPublicationsIncrementally } from './publications/sync'
 
 const main = async (): Promise<void> => {
   console.info('opensearch incremental reindex start')
@@ -10,6 +11,7 @@ const main = async (): Promise<void> => {
     const sequelize = getSequelize()
 
     await syncAllProjectsIncrementally(opensearchClient, sequelize)
+    await syncAllPublicationsIncrementally(opensearchClient, sequelize)
   } catch (e) {
     console.error(e)
     process.exitCode = 1

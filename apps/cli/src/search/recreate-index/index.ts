@@ -6,6 +6,9 @@ import { PROJECTS_INDEX_NAME } from '../constants'
 import { getAnalysis } from '../opensearch/analysis'
 import { getMappings } from '../opensearch/mappings'
 import { createIndex, deleteIndex, getAvailableIndexes } from '../opensearch/utilities'
+import { PUBLICATIONS_INDEX_NAME } from '../publications/index'
+import { getPublicationsMappings } from '../publications/mappings'
+import { syncAllPublications } from '../publications/sync'
 
 export const recreateIndex = async (client: Client, index: string, body: object): Promise<void> => {
   console.info('- recreateIndex: getting available indexes from opensearch')
@@ -36,4 +39,11 @@ export const recreateIndexes = async (client: Client, sequelize: Sequelize): Pro
   console.info('- finished deleting the entry from sync_status')
   console.info('- starting the full reindex')
   await syncAllProjects(client, sequelize)
+
+  console.info('- recreating the publications index')
+  await recreateIndex(client, PUBLICATIONS_INDEX_NAME, { mappings: getPublicationsMappings() })
+  console.info('- deleting the publications entry from sync_status to force a reindex')
+  await sequelize.query('delete from sync_status where sync_source_id = 300 and sync_data_type_id = 810', { type: QueryTypes.DELETE })
+  console.info('- starting the full publications reindex')
+  await syncAllPublications(client, sequelize)
 }

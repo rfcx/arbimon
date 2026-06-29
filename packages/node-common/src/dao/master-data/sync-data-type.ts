@@ -10,7 +10,8 @@ export const masterSyncDataTypes = {
   Recording: { id: 500, name: 'Recording' },
   Detection: { id: 600, name: 'Detection' },
   RecordingDeleted: { id: 700, name: 'Recording Deleted' },
-  Opensearch: { id: 800, name: 'Opensearch' }
+  Opensearch: { id: 800, name: 'Opensearch' },
+  OpensearchPublications: { id: 810, name: 'Opensearch Publications' }
 } as const
 
 export type SyncTypesId = ValueOf<typeof masterSyncDataTypes>['id']
