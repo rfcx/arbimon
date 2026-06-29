@@ -9,6 +9,7 @@ export interface ProjectTypeLimit {
   collaboratorCount: number | null
   guestCount: number | null
   jobCount: number | null
+  jobRecordingCount: number | null
 }
 
 export interface AccountTierProjectLimitMap {
@@ -23,6 +24,7 @@ interface ProjectTypeLimitRow {
   collaboratorCount: number | null
   guestCount: number | null
   jobCount: number | null
+  jobRecordingCount: number | null
 }
 
 interface AccountTierProjectLimitRow {
@@ -35,29 +37,36 @@ const ACCOUNT_TIER_PROJECT_LIMIT_TABLE = 'account_tier_project_limit'
 
 const DEFAULT_PROJECT_LIMITS: Record<ProjectType, ProjectTypeLimit> = {
   free: {
-    recordingMinutesCount: 40000,
-    collaboratorCount: 0,
-    guestCount: 0,
-    jobCount: 50
+    recordingMinutesCount: 526000,
+    collaboratorCount: 3,
+    guestCount: null,
+    jobCount: null,
+    jobRecordingCount: 12000
   },
   premium: {
-    recordingMinutesCount: 1000000,
-    collaboratorCount: 4,
-    guestCount: 3,
-    jobCount: 200
+    recordingMinutesCount: null,
+    collaboratorCount: 20,
+    guestCount: null,
+    jobCount: null,
+    jobRecordingCount: null
   },
+  // 'unlimited' is retired (folded into 'premium'); kept fully-unlimited as a
+  // safe fallback for any not-yet-migrated rows.
   unlimited: {
     recordingMinutesCount: null,
     collaboratorCount: null,
     guestCount: null,
-    jobCount: null
+    jobCount: null,
+    jobRecordingCount: null
   }
 }
 
 const DEFAULT_ACCOUNT_TIER_PROJECT_LIMITS: Record<AccountTier, AccountTierProjectLimitMap> = {
-  free: { free: 5, premium: 0, unlimited: 0 },
-  pro: { free: 50, premium: 2, unlimited: 0 },
-  enterprise: { free: null, premium: null, unlimited: 1 }
+  // No project-COUNT cap enforced under the reframe (NULL = unlimited); the
+  // matrix mechanism is retained so an operator can impose counts later.
+  // free->premium stays 0 (a free user cannot self-own a premium project).
+  free: { free: null, premium: 0, unlimited: 0 },
+  pro: { free: null, premium: null, unlimited: 0 }
 }
 
 const isMissingTableError = (error: unknown): boolean => {
@@ -79,7 +88,8 @@ export const getProjectTypeLimitMap = async (): Promise<Record<ProjectType, Proj
           recording_minutes_limit AS "recordingMinutesCount",
           collaborator_limit AS "collaboratorCount",
           guest_limit AS "guestCount",
-          analyze_job_limit AS "jobCount"
+          analyze_job_limit AS "jobCount",
+          job_recording_limit AS "jobRecordingCount"
         FROM ${PROJECT_TYPE_LIMIT_TABLE}
       `,
       { type: QueryTypes.SELECT }
@@ -92,7 +102,8 @@ export const getProjectTypeLimitMap = async (): Promise<Record<ProjectType, Proj
         recordingMinutesCount: row.recordingMinutesCount === null ? null : Number(row.recordingMinutesCount),
         collaboratorCount: row.collaboratorCount === null ? null : Number(row.collaboratorCount),
         guestCount: row.guestCount === null ? null : Number(row.guestCount),
-        jobCount: row.jobCount === null ? null : Number(row.jobCount)
+        jobCount: row.jobCount === null ? null : Number(row.jobCount),
+        jobRecordingCount: row.jobRecordingCount === null ? null : Number(row.jobRecordingCount)
       }
       return acc
     }, { ...DEFAULT_PROJECT_LIMITS })

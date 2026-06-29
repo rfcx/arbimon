@@ -51,9 +51,6 @@
             <option value="pro">
               Pro
             </option>
-            <option value="enterprise">
-              Enterprise
-            </option>
           </select>
 
           <select
@@ -183,7 +180,7 @@ const searchKeyword = ref('')
 const limit = ref(PAGE_SIZE)
 const offset = ref(0)
 
-const selectedTier = ref<'all' | 'free' | 'premium' | 'unlimited' | 'pro' | 'enterprise'>('all')
+const selectedTier = ref<'all' | 'free' | 'premium' | 'unlimited' | 'pro'>('all')
 
 const searchParams = useDebounce(searchKeyword, 500)
 const activeProjectsTab = computed(() => activeTab.value === 'projects')

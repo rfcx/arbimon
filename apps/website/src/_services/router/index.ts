@@ -29,9 +29,9 @@ const routes: RouteRecordRaw[] = [
         component: PAGES.Pricing
       },
       {
-        path: 'pricing',
-        name: ROUTE_NAMES.pricing,
-        component: PAGES.Pricing
+        path: 'pricing-new',
+        name: ROUTE_NAMES.pricingNew,
+        component: PAGES.PricingNew
       },
       {
         path: 'publications',

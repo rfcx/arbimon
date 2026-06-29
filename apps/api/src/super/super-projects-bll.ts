@@ -1,6 +1,7 @@
 import { QueryTypes } from 'sequelize'
 
 import { type SuperPaginationResponse, type SuperProjectLimits, type SuperProjectSummary, type SuperProjectTierUpdateBody, type SuperUserProjectSummary, type SuperUserSummary, type SuperUserTierUpdateBody } from '@rfcx-bio/common/api-bio/super/projects'
+import { getIdByRole } from '@rfcx-bio/common/roles'
 import { type AccountTier, type ProjectType } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '~/db'
@@ -291,7 +292,7 @@ export const updateProjectTier = async (projectId: number, body: SuperProjectTie
 export const updateUserTier = async (userId: number, body: SuperUserTierUpdateBody): Promise<void> => {
   const sequelize = getSequelize()
 
-  if (!['free', 'pro', 'enterprise'].includes(body.accountTier)) {
+  if (!['free', 'pro'].includes(body.accountTier)) {
     throw new BioPublicError('Invalid account tier.', 400)
   }
 
@@ -311,5 +312,25 @@ export const updateUserTier = async (userId: number, body: SuperUserTierUpdateBo
 
   if (rows.length === 0) {
     throw BioNotFoundError()
+  }
+
+  // Tier reframe (2026-06-29): account_tier => project_type coupling. A Pro
+  // user's owned (primary-admin / owner) projects are premium. Setting a user to
+  // Pro promotes all their owned projects to premium. (No downgrade flip here:
+  // free is set via the dedicated tier-change workflow which manages project
+  // selections/locks; bulk-demoting on a super edit could silently lock data.)
+  if (body.accountTier === 'pro') {
+    await sequelize.query(
+      `
+        UPDATE location_project lp
+        SET project_type = 'premium', updated_at = CURRENT_TIMESTAMP
+        FROM location_project_user_role lpur
+        WHERE lpur.location_project_id = lp.id
+          AND lpur.user_id = :userId
+          AND lpur.role_id = :ownerRoleId
+          AND COALESCE(lp.project_type, 'free') <> 'premium'
+      `,
+      { replacements: { userId, ownerRoleId: getIdByRole('owner') }, type: QueryTypes.UPDATE }
+    )
   }
 }

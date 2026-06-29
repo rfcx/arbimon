@@ -220,13 +220,13 @@ describe('Super projects route', async () => {
     const response = await app.inject({
       method: PATCH,
       url: superUserTierRoute.replace(':userId', superUserRouteOwnerId.toString()),
-      payload: { accountTier: 'enterprise', additionalPremiumProjectSlots: 2 }
+      payload: { accountTier: 'pro', additionalPremiumProjectSlots: 2 }
     })
 
     expect(response.statusCode).toBe(204)
 
     const updated = await UserProfile.findByPk(superUserRouteOwnerId)
-    expect(updated?.accountTier).toBe('enterprise')
+    expect(updated?.accountTier).toBe('pro')
     expect(updated?.additionalPremiumProjectSlots).toBe(2)
   })
 })

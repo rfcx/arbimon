@@ -26,7 +26,7 @@ const GUEST_ROLE_ID = getIdByRole('viewer')
 
 const isUnlimited = (value: number | null): value is null => value === null
 
-const getAccountTierForUser = async (userId: number): Promise<{ accountTier: AccountTier, additionalPremiumProjectSlots: number }> => {
+export const getAccountTierForUser = async (userId: number): Promise<{ accountTier: AccountTier, additionalPremiumProjectSlots: number }> => {
   const sequelize = getSequelize()
   const { UserProfile } = ModelRepository.getInstance(sequelize)
   const user = await UserProfile.findByPk(userId, {

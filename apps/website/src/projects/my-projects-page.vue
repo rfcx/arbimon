@@ -255,18 +255,17 @@ watch(() => projectSearchValue.value, () => {
 })
 
 const canCreateProject = computed(() => {
-  const plan = portfolioSummary.value?.accountTier?.toLowerCase() ?? 'free'
-  const currentCount = store.myProjects.length
-  if (plan === 'enterprise') {
-    return true
-  }
-  if (plan === 'pro') {
-    return currentCount < 52
-  }
-  if (plan === 'free') {
-    return currentCount < 5
-  }
-  return false
+  // Tier reframe (2026-06-29): no project-COUNT cap is enforced (the
+  // account_tier_project_limit matrix is all-unlimited now). The matrix
+  // mechanism is retained server-side so an operator can impose a per-type count
+  // cap later; honor it here if present (null/undefined => unlimited).
+  const limits = portfolioSummary.value?.limits
+  if (limits === undefined) return true
+  const usage = portfolioSummary.value?.usage
+  const overFree = limits.freeProjects !== null && (usage?.freeProjects ?? 0) >= limits.freeProjects
+  const overPremium = limits.premiumProjects !== null && (usage?.premiumProjects ?? 0) >= limits.premiumProjects
+  // Can create if there's headroom for at least one allowed project type.
+  return !overFree || !overPremium
 })
 
 const loadMoreProject = async (): Promise<void> => {
