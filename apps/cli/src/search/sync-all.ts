@@ -1,6 +1,7 @@
 import { getSequelize } from '@/db/connections'
 import { syncAllProjects } from './all'
 import { getOpenSearchClient } from './opensearch/utilities'
+import { syncAllPublications } from './publications/sync'
 
 const main = async (): Promise<void> => {
   console.info('Opensearch daily sync start')
@@ -10,6 +11,7 @@ const main = async (): Promise<void> => {
     const sequelize = getSequelize()
 
     await syncAllProjects(opensearchClient, sequelize)
+    await syncAllPublications(opensearchClient, sequelize)
   } catch (e) {
     console.error(e)
     process.exitCode = 1
