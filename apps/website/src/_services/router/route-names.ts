@@ -49,6 +49,10 @@ export const ROUTE_NAMES = {
   mySpecies: 'my-species',
   pricing: 'pricing',
   pricingNew: 'pricing_new',
+  // Admin (super-user) pages. 'tier'/'tierPage' kept as legacy aliases so old
+  // { name: ROUTE_NAMES.tier } navigations still resolve (they redirect).
+  adminProjects: 'admin_projects',
+  adminUsers: 'admin_users',
   tier: 'tier',
   tierPage: 'tier-page'
 } as const

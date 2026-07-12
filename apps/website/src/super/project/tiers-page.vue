@@ -2,14 +2,14 @@
   <div class="px-4 sm:px-6 py-8 lg:(pt-6 px-20) bg-white dark:bg-pitch">
     <div class="mx-auto max-w-screen-xl pt-4 md:pt-10">
       <h1 class="mb-6">
-        Manage Project and User Tiers
+        Manage Projects and Users
       </h1>
       <div class="mb-3 flex gap-2 border-b border-util-gray-03">
         <button
           type="button"
           class="px-4 py-3 text-sm font-medium"
           :class="activeTab === 'projects' ? 'text-frequency border-b-2 border-frequency' : 'text-subtle'"
-          @click="activeTab = 'projects'"
+          @click="selectTab('projects')"
         >
           Projects
         </button>
@@ -17,7 +17,7 @@
           type="button"
           class="px-4 py-3 text-sm font-medium"
           :class="activeTab === 'users' ? 'text-frequency border-b-2 border-frequency' : 'text-subtle'"
-          @click="activeTab = 'users'"
+          @click="selectTab('users')"
         >
           Users
         </button>
@@ -159,7 +159,7 @@
 import { useDebounce } from '@vueuse/core'
 import { type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import { type SuperProjectSummary, type SuperUserSummary } from '@rfcx-bio/common/api-bio/super/projects'
 
@@ -172,10 +172,25 @@ import UserTieringTable from './components/user-tiering-table.vue'
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const router = useRouter()
+const route = useRoute()
 const superStore = useSuperStore()
 
 const PAGE_SIZE = 25
-const activeTab = ref<'projects' | 'users'>('projects')
+// The active tab is ROUTE-DRIVEN: /admin/projects and /admin/users are two
+// named routes over this same page. Clicking a tab navigates (so the URL is
+// shareable/bookmarkable); the route change updates the tab.
+const routeTab = (): 'projects' | 'users' => route.name === ROUTE_NAMES.adminUsers ? 'users' : 'projects'
+const activeTab = ref<'projects' | 'users'>(routeTab())
+
+const selectTab = (tab: 'projects' | 'users'): void => {
+  void router.push({ name: tab === 'users' ? ROUTE_NAMES.adminUsers : ROUTE_NAMES.adminProjects })
+}
+
+watch(() => route.name, () => {
+  if (route.name === ROUTE_NAMES.adminProjects || route.name === ROUTE_NAMES.adminUsers) {
+    activeTab.value = routeTab()
+  }
+})
 const searchKeyword = ref('')
 const limit = ref(PAGE_SIZE)
 const offset = ref(0)
