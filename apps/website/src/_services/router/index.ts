@@ -274,17 +274,25 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
+    // Admin (super-user) project/user management. The page is the former
+    // /tiers page; the active tab is driven by the route.
+    path: '/admin/projects',
+    name: ROUTE_NAMES.adminProjects,
+    component: PAGES.Tiers,
+    beforeEnter: [authRequiredGuard]
+  },
+  {
+    path: '/admin/users',
+    name: ROUTE_NAMES.adminUsers,
+    component: PAGES.Tiers,
+    beforeEnter: [authRequiredGuard]
+  },
+  {
+    // Legacy URL: /tiers -> /admin/projects (kept as a named redirect so
+    // old links and any { name: ROUTE_NAMES.tier } navigations still work).
     path: '/tiers',
     name: ROUTE_NAMES.tier,
-    component: PAGES.Tiers,
-    beforeEnter: [authRequiredGuard],
-    children: [
-      {
-        path: '',
-        name: ROUTE_NAMES.tierPage,
-        component: PAGES.Tiers
-      }
-    ]
+    redirect: { name: ROUTE_NAMES.adminProjects }
   },
   {
     path: '/:pathMatch(.*)*',
