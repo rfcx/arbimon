@@ -11,7 +11,31 @@
           :tooltip-text="'Delete this project permanently.'"
         />
       </div>
-      <div class="flex flex-row items-center mt-4">
+      <!-- Deactivated variant: project exceeds the deletion threshold -->
+      <template v-if="isDisabled">
+        <p class="mt-4 text-sm text-util-gray-01">
+          Project deletion isn't available for projects with more than {{ deleteMaxRecordings?.toLocaleString() ?? 'the allowed number of' }} recordings<span v-if="recordingCount !== null && recordingCount !== undefined"> (this project has {{ recordingCount.toLocaleString() }})</span>.
+          To delete this project, please contact support.
+        </p>
+        <div class="flex flex-row items-center mt-4">
+          <button
+            type="button"
+            disabled
+            class="btn flex flex-row py-2 bg-util-gray-04 text-util-gray-02 cursor-not-allowed"
+            :title="`Project deletion isn't available for projects with more than ${deleteMaxRecordings?.toLocaleString() ?? 'the allowed number of'} recordings`"
+          >
+            Delete project
+            <icon-fa-trash
+              class="ml-2"
+            />
+          </button>
+        </div>
+      </template>
+      <!-- Active variant: type-to-confirm deletion -->
+      <div
+        v-else
+        class="flex flex-row items-center mt-4"
+      >
         <button
           data-modal-target="project-delete-modal"
           data-modal-toggle="project-delete-modal"
@@ -58,9 +82,23 @@
                   <h2>Delete project</h2>
                   <div v-if="!isDeleting">
                     <p class="mt-2">
-                      Are you sure you want to delete this project?
+                      This will permanently delete the project, its sites, recordings, and analysis results.
                     </p>
-                    <p>This action cannot be undone</p>
+                    <p>This action cannot be undone.</p>
+                    <p class="mt-4 text-sm">
+                      To confirm, type
+                      <span class="font-medium select-all break-all">{{ projectSlug }}</span>
+                      in the box below:
+                    </p>
+                    <input
+                      v-model="confirmationText"
+                      type="text"
+                      autocomplete="off"
+                      autocapitalize="off"
+                      spellcheck="false"
+                      class="mt-2 w-full rounded-md border border-util-gray-03 bg-pitch px-3 py-2 text-sm text-insight placeholder:text-util-gray-02 focus:(border-flamingo ring-flamingo)"
+                      :placeholder="projectSlug"
+                    >
                   </div>
                 </div>
                 <div v-if="isDeleting">
@@ -93,7 +131,9 @@
                     data-modal-target="project-delete-modal"
                     data-modal-toggle="project-delete-modal"
                     type="button"
-                    class="btn bg-ibis flex flex-row text-insight justify-center px-6 py-3 w-49"
+                    class="btn flex flex-row text-insight justify-center px-6 py-3 w-49"
+                    :class="isConfirmationValid ? 'bg-ibis' : 'bg-util-gray-04 text-util-gray-02 cursor-not-allowed'"
+                    :disabled="!isConfirmationValid"
                     @click="accessToDelete"
                   >
                     <span>Delete project</span>
@@ -110,38 +150,77 @@
 
 <script setup lang="ts">
 import { Modal } from 'flowbite'
-import { type Ref, onMounted, ref, watch } from 'vue'
+import { type Ref, computed, nextTick, onMounted, ref, watch } from 'vue'
 
 import IconIInfo from '../icon-i-info.vue'
 
-const props = defineProps<{isDeleting?: boolean, isError?: boolean, isSuccess?: boolean}>()
+const props = defineProps<{
+  isDeleting?: boolean
+  isError?: boolean
+  isSuccess?: boolean
+  /** slug the user must type to arm the delete button (type-to-confirm) */
+  projectSlug?: string
+  /** deactivated variant: project exceeds the deletion threshold */
+  isDisabled?: boolean
+  recordingCount?: number | null
+  deleteMaxRecordings?: number
+}>()
 const emit = defineEmits<{(e: 'emitProjectDelete'): void}>()
 
 const modal = ref() as Ref<Modal>
+const confirmationText = ref('')
+
+// Type-to-confirm (common practice, e.g. GitHub repo deletion): the delete
+// button stays disabled until the user types the exact project slug.
+const isConfirmationValid = computed(() => {
+  const slug = props.projectSlug ?? ''
+  return slug !== '' && confirmationText.value.trim() === slug
+})
 
 watch(() => props.isSuccess, (val) => {
   if (val === true) closeModal()
 })
 
-onMounted(() => {
-  modal.value = new Modal(document.getElementById('project-delete-modal'), {
+const initModal = (): void => {
+  const el = document.getElementById('project-delete-modal')
+  if (el === null) return
+  modal.value = new Modal(el, {
     placement: 'top-center',
     backdrop: 'dynamic',
     backdropClasses: 'bg-pitch bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
     closable: true
   })
+}
+
+onMounted(() => {
+  if (props.isDisabled === true) return
+  initModal()
+})
+
+// The active variant's modal markup only renders once capabilities load
+// (isDisabled flips true -> false after the async fetch), which can happen
+// AFTER onMounted — re-init the modal when that occurs.
+watch(() => props.isDisabled, async (disabled) => {
+  if (disabled !== true && modal.value === undefined) {
+    await nextTick()
+    initModal()
+  }
 })
 
 const openModalToDeleteProject = (): void => {
-  modal.value.show()
+  if (modal.value === undefined) initModal()
+  confirmationText.value = ''
+  modal.value?.show()
 }
 
 const accessToDelete = (): void => {
+  if (!isConfirmationValid.value) return
   emit('emitProjectDelete')
 }
 
 const closeModal = (): void => {
-  modal.value.hide()
+  confirmationText.value = ''
+  modal.value?.hide()
 }
 
 </script>

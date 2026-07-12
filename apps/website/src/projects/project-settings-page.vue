@@ -117,12 +117,19 @@
             <hr class="border-util-gray-03 my-6">
             <project-backup />
           </template>
-          <template v-if="capabilities?.canDelete === true">
+          <!-- Danger Zone: shown to owners (and super users). Active when the
+               project is under the deletion threshold (capabilities.canDelete),
+               otherwise a deactivated variant explains the recording limit. -->
+          <template v-if="showDangerZone">
             <hr class="border-util-gray-03 my-6">
             <project-delete
               :is-deleting="isDeletingProject"
               :is-error="isErrorDeleteProject"
               :is-success="isSuccessDeleteProject"
+              :project-slug="selectedProjectSlug"
+              :is-disabled="capabilities?.canDelete !== true"
+              :recording-count="capabilities?.recordingCount"
+              :delete-max-recordings="capabilities?.deleteMaxRecordings"
               @emit-project-delete="onEmitProjectDelete"
             />
           </template>
@@ -179,6 +186,12 @@ const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, 
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
 const { data: capabilities } = useGetProjectCapabilities(apiClientBio, selectedProjectId)
 const selectedProjectSlug = computed(() => store.project?.slug)
+
+// Danger Zone visibility: owners always see the section (active or
+// deactivated); super users see it whenever the server grants canDelete.
+const showDangerZone = computed(() => {
+  return store.project?.role === 'owner' || capabilities?.value?.canDelete === true
+})
 const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProject } = useDeleteProject(apiClientBio)
 
 const onEmitProjectDelete = () => {
