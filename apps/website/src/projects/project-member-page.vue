@@ -345,16 +345,9 @@ const addNewUserError = ref(false)
 const userSearchValue = ref('')
 
 const disableText = computed(() => {
+  // Tier rollback (2026-07-12): member limits removed; no upgrade messaging.
   if (projectInfo.value?.isLocked === true) {
-    return 'This project is now View Only due to inactivity. Upgrade your plan to restore access.'
-  }
-
-  const projectType = projectInfo.value?.projectType ?? 'free'
-  const collabs = projectInfo.value?.usage?.collaboratorCount ?? 0
-  const guests = projectInfo.value?.usage?.guestCount ?? 0
-  const currentTotal = collabs + guests
-  if (projectType === 'free' || (projectType === 'premium' && currentTotal >= 7)) {
-    return 'Limit reached. Upgrade your plan to unlock this feature.'
+    return 'This project is currently view-only.'
   }
   if (!store.userIsAdminProjectMember) {
     return 'You do not have permission to add members.'
@@ -445,20 +438,13 @@ const memberLimitMessage = computed(() => {
 })
 
 const canAddMember = computed(() => {
+  // Tier rollback (2026-07-12): member limits removed. Previously this
+  // hardcoded `false` for free projects (blocking ALL member adds — stricter
+  // than the server ever was) and capped premium at 7 combined members
+  // (server allowed 20 collaborators + unlimited guests). The server-side
+  // guard (assertProjectMemberUpdateAllowed) remains the authority and
+  // no-ops now that project_type_limit values are NULL.
   if (projectInfo.value?.isLocked === true) return false
-
-  const projectType = projectInfo.value?.projectType ?? 'free'
-  const collabs = projectInfo.value?.usage?.collaboratorCount ?? 0
-  const guests = projectInfo.value?.usage?.guestCount ?? 0
-  const currentTotal = collabs + guests
-  if (projectType === 'free') {
-    return false
-  }
-
-  if (projectType === 'premium') {
-    return currentTotal < 7
-  }
-
   return true
 })
 

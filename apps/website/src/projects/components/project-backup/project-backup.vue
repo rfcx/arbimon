@@ -22,12 +22,15 @@
         >
           This project is currently view-only and cannot request exports or backups.
         </div>
-        <div class="text-flamingo mt-3">
+        <div
+          v-if="capabilities?.canBackup !== true"
+          class="text-flamingo mt-3"
+        >
           To request a full backup of this project, please send an email to jon@rfcx.org
         </div>
         <button
-          v-if="!isLoading"
-          class="btn btn-medium mt-6 hidden"
+          v-if="!isLoading && capabilities?.canBackup === true"
+          class="btn btn-medium mt-6"
           :class="!isAllowedToRequestNewBackup ? 'cursor-not-allowed btn-disabled' : 'btn-secondary'"
           type="button"
           :disabled="!isAllowedToRequestNewBackup || isPending"
@@ -40,8 +43,8 @@
           />
         </button>
         <span
-          v-if="!isAllowedToRequestNewBackup"
-          class="ml-4 text-xs text-util-gray-02 hidden"
+          v-if="capabilities?.canBackup === true && !isAllowedToRequestNewBackup"
+          class="ml-4 text-xs text-util-gray-02"
         >
           {{ TEXT_BACKUP_LIMIT }}
         </span>
@@ -69,6 +72,7 @@ import { computed, inject, ref } from 'vue'
 
 import { apiClientKey, togglesKey } from '@/globals'
 import { useStore } from '~/store'
+import { useGetProjectCapabilities } from '../../_composables/use-project-capabilities'
 import ProjectBackupModal from './components/backup-modal.vue'
 import ProjectBackupHistory from './components/project-backup-history-list.vue'
 import { useCreateBackup, useGetBackup } from './composables/use-project-backup'
@@ -78,6 +82,10 @@ const TEXT_BACKUP_LIMIT = 'You can request a backup every 7 days'
 const store = useStore()
 const toggles = inject(togglesKey)
 const isProjectViewOnly = computed(() => store.project?.isLocked === true)
+
+// Self-serve backup capability (2026-07-12, operator D3): server-computed
+// (super users always; owners/admins for small projects).
+const selectedProjectIdForCapabilities = computed(() => store.project?.id)
 
 const timeFrameLimit = computed(() => {
   const hours = toggles?.projectBackupTesting === true ? 0.25 : 7 * 24
@@ -107,6 +115,7 @@ const closeModal = () => {
 
 // API - GET backup history (loading state, success, error)
 const apiClientBio = inject(apiClientKey) as AxiosInstance
+const { data: capabilities } = useGetProjectCapabilities(apiClientBio, selectedProjectIdForCapabilities)
 const { data, error, isLoading, refetch: refetchList } = useGetBackup(apiClientBio, store.project?.id ?? -1)
 
 // API - POST request backup (loading state, success, error)

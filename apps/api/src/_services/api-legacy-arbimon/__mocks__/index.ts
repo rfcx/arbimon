@@ -7,3 +7,6 @@ export const updateProjectLegacy = vi.fn(async (): Promise<{ success: boolean, e
   return await Promise.resolve({ success: true })
 })
 export const updateProjectSlugLegacy = vi.fn(async (): Promise<void> => {})
+export const getProjectTieringUsageLegacy = vi.fn(async (): Promise<{ recordingMinutesCount: number, collaboratorCount: number, guestCount: number, patternMatchingCount: number, jobCount: number }> => {
+  return await Promise.resolve({ recordingMinutesCount: 0, collaboratorCount: 0, guestCount: 0, patternMatchingCount: 0, jobCount: 0 })
+})

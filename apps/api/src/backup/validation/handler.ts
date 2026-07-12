@@ -1,7 +1,12 @@
+import { type FastifyRequest } from 'fastify'
+
+import { isSuperUser } from '@/_services/auth0/is-super-user'
 import { ALLOWED_BACKUP_TYPES, BackupEntityGetters } from '@/backup/types'
+import { getUserRoleForProject } from '@/projects/dao/project-member-dao'
+import { getProjectCapabilities } from '@/projects/project-capabilities-bll'
 import { assertProjectExportAllowed } from '@/projects/project-entitlement-bll'
 import type { Middleware } from '~/api-helpers/types'
-import { BioInvalidPathParamError, BioMissingPathParamError, BioPublicError, BioUnauthorizedError } from '~/errors'
+import { BioForbiddenError, BioInvalidPathParamError, BioMissingPathParamError, BioPublicError, BioUnauthorizedError } from '~/errors'
 
 interface EntityData {
     entity?: string
@@ -22,11 +27,11 @@ export const validationHandler: Middleware<void> = async (req): Promise<void> =>
     // Validate entity data
     if (method !== undefined) {
         const entityData = payload[String(method)] ?? {}
-        await validateRequest(entityData)
+        await validateRequest(entityData, userId, req)
     }
 }
 
-const validateRequest = async (data: EntityData): Promise<void> => {
+const validateRequest = async (data: EntityData, userId: number, req: FastifyRequest): Promise<void> => {
     const { entity: entityType, entityId } = data
 
     if (entityType === undefined) {
@@ -49,10 +54,19 @@ const validateRequest = async (data: EntityData): Promise<void> => {
         throw new BioPublicError(`${String(entityType)} with id ${Number(entityId)} not found`, 404)
     }
 
-    // Authorization is enforced upstream by the requireSuperUser preHandler
-    // (SUPER_USER_EMAILS allow-list). Here we only keep the view-only guard
-    // so a locked project still cannot have backups requested.
     if (entityType === 'project') {
+        // Authorization (2026-07-12, operator D3): super users always; project
+        // admins/owners may self-serve backups for SMALL projects
+        // (<= PROJECT_BACKUP_MAX_RECORDINGS, default 100 recordings).
+        if (!isSuperUser(req)) {
+            const role = await getUserRoleForProject(userId, Number(entityId))
+            const capabilities = await getProjectCapabilities(req.headers.authorization ?? '', Number(entityId), role, false)
+            if (!capabilities.canBackup) {
+                throw BioForbiddenError()
+            }
+        }
+
+        // View-only guard: a locked project still cannot have backups requested.
         await assertProjectExportAllowed(entityId)
     }
 }

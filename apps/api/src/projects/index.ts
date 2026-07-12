@@ -1,3 +1,4 @@
+import { projectCapabilitiesRoute } from '@rfcx-bio/common/api-bio/project/project-capabilities'
 import { projectCreateRoute } from '@rfcx-bio/common/api-bio/project/project-create'
 import { projectDeleteRoute } from '@rfcx-bio/common/api-bio/project/project-delete'
 import { projectEntitlementSummaryRoute } from '@rfcx-bio/common/api-bio/project/project-entitlement-summary'
@@ -14,8 +15,9 @@ import { myProjectsRoute, projectBySlugRoute, projectsDeprecatedRoute, projectsG
 import { logBody } from '@/_hooks/log-body'
 import { requireAuthorized } from '@/_hooks/require-authenticated'
 import { requireProjectPermission } from '@/_hooks/require-permission'
-import { requireSuperUser } from '@/_hooks/require-super'
+import { requireProjectDeleteAllowed } from '@/_hooks/require-project-capability'
 import { type RouteRegistration, DELETE, GET, PATCH, POST } from '../_services/api-helpers/types'
+import { projectCapabilitiesHandler } from './project-capabilities-handler'
 import { projectCreateHandler } from './project-create-handler'
 import { projectDeleteHandler } from './project-delete-handler'
 import { projectEntitlementSummaryHandler } from './project-entitlement-summary-handler'
@@ -59,6 +61,12 @@ export const routesProject: RouteRegistration[] = [
     url: projectUploadLimitSummaryRoute,
     preHandler: [requireAuthorized],
     handler: projectUploadLimitSummaryHandler
+  },
+  {
+    method: GET,
+    url: projectCapabilitiesRoute,
+    preHandler: [requireAuthorized],
+    handler: projectCapabilitiesHandler
   },
   {
     method: GET,
@@ -139,9 +147,11 @@ export const routesProject: RouteRegistration[] = [
   {
     method: DELETE,
     url: projectDeleteRoute,
-    // Project deletion is restricted to org-level super users
-    // (SUPER_USER_EMAILS allow-list, e.g. arbimon-admin@rfcx.org).
-    preHandler: [requireSuperUser],
+    // Project deletion (2026-07-12, operator D3): super users always; project
+    // owners may self-serve delete SMALL projects (<= PROJECT_DELETE_MAX_RECORDINGS,
+    // default 60 recordings). Authz enforced inside the handler
+    // (requireProjectDeleteAllowed) because it needs the live recording count.
+    preHandler: [requireProjectDeleteAllowed],
     handler: projectDeleteHandler
   }
 ]

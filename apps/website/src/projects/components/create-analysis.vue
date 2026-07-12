@@ -76,22 +76,12 @@ const analyses = ref([
   { value: 'rfm', title: 'Random Forest Model', description: 'A machine learning model, comprising multiple decision trees and trained with presence and absence data, designed to predict species presence in soundscape recordings. It serves as an efficient and accurate means of assessing species presence in diverse acoustic environments.', url: `${BASE_URL}/project/${selectedProject.value?.slug}/analysis/random-forest-models/models?newJob`, link: 'https://help.arbimon.org/category/199-analyze-recordings-with-random-forest-models-rfm', label: 'Learn more about RFM', isSelected: false }
 ])
 
-const isPMLimitReached = computed(() => {
-  const projectType = store.project?.projectType ?? 'free'
-  const currentPMJobs = store.project?.usage?.patternMatchingCount ?? 0
-
-  if (projectType === 'unlimited') return false
-
-  if (projectType === 'free') {
-    return currentPMJobs >= 50
-  }
-
-  if (projectType === 'premium') {
-    return currentPMJobs >= 200
-  }
-
-  return false
-})
+// Tier rollback (2026-07-12): analysis-job count caps removed. This computed
+// previously hardcoded the RETIRED 2026-05-19 caps (free>=50 / premium>=200
+// historical PM jobs) client-side, silently disabling the PM card for
+// long-running projects even after the caps were removed from the DB on
+// 2026-06-29. Kept as an always-false hook in case a cap ever returns.
+const isPMLimitReached = computed(() => false)
 
 const onSelectAnalysis = (url: string, value: string) => {
   if (isProjectViewOnly.value) return

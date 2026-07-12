@@ -52,8 +52,9 @@ test(`DELETE ${projectDeleteRoute} deletes local project`, async () => {
   expect(project?.deletedAt).toBeTruthy()
 })
 
-test(`DELETE ${projectDeleteRoute} is forbidden for a non-super owner`, async () => {
-  // Arrange — owner of the project but NOT on the SUPER_USER_EMAILS list
+test(`DELETE ${projectDeleteRoute} is allowed for a non-super owner of a SMALL project`, async () => {
+  // 2026-07-12 (operator D3): owners can self-serve delete when the project
+  // has <= PROJECT_DELETE_MAX_RECORDINGS recordings (mocked legacy usage = 0).
   const app = await makeApp(routesProject, { userId, userToken: { idAuth0: 'test', email: 'not-super@rfcx.org' }, projectRole: 'owner' })
   const locationProjectId = await LocationProject.findOne({ where: { slug: { [Op.like]: 'snail%' } } }).then(p => p?.id ?? 0)
   const url = projectDeleteRoute.replace(':projectId', locationProjectId.toString())
@@ -62,6 +63,35 @@ test(`DELETE ${projectDeleteRoute} is forbidden for a non-super owner`, async ()
   const response = await app.inject({ method: DELETE, url, headers: { Authorization: fakeToken } })
 
   // Assert
-  expect(response.statusCode).toBe(401)
+  expect(response.statusCode).toBe(204)
+  expect(coreApi.deleteProject).toBeCalledTimes(1)
+})
+
+test(`DELETE ${projectDeleteRoute} is forbidden for a non-super owner of a LARGE project`, async () => {
+  // Arrange — owner, not super, and the project exceeds the delete threshold
+  const legacyApi = await import('~/api-legacy-arbimon')
+  vi.mocked(legacyApi.getProjectTieringUsageLegacy).mockResolvedValueOnce({ recordingMinutesCount: 1000000, collaboratorCount: 0, guestCount: 0, patternMatchingCount: 0, jobCount: 0 })
+  const app = await makeApp(routesProject, { userId, userToken: { idAuth0: 'test', email: 'not-super@rfcx.org' }, projectRole: 'owner' })
+  const locationProjectId = await LocationProject.findOne({ where: { slug: { [Op.like]: 'snail%' } } }).then(p => p?.id ?? 0)
+  const url = projectDeleteRoute.replace(':projectId', locationProjectId.toString())
+
+  // Act
+  const response = await app.inject({ method: DELETE, url, headers: { Authorization: fakeToken } })
+
+  // Assert
+  expect(response.statusCode).toBe(403)
+  expect(coreApi.deleteProject).not.toBeCalled()
+})
+
+test(`DELETE ${projectDeleteRoute} is forbidden for a non-super NON-owner even on a small project`, async () => {
+  const app = await makeApp(routesProject, { userId, userToken: { idAuth0: 'test', email: 'not-super@rfcx.org' }, projectRole: 'admin' })
+  const locationProjectId = await LocationProject.findOne({ where: { slug: { [Op.like]: 'snail%' } } }).then(p => p?.id ?? 0)
+  const url = projectDeleteRoute.replace(':projectId', locationProjectId.toString())
+
+  // Act
+  const response = await app.inject({ method: DELETE, url, headers: { Authorization: fakeToken } })
+
+  // Assert
+  expect(response.statusCode).toBe(403)
   expect(coreApi.deleteProject).not.toBeCalled()
 })
