@@ -1,24 +1,25 @@
 import { backupsRoute } from '@rfcx-bio/common/api-bio/backup/backups'
 
-import { requireSuperUser } from '@/_hooks/require-super'
 import { createBackupRequestHandler, getBackupRequestsHandler } from '@/backup/backup-handler'
 import { validationHandler } from '@/backup/validation/handler'
 import { type RouteRegistration, GET, POST } from '~/api-helpers/types'
 
-// Project backups are restricted to org-level super users
-// (SUPER_USER_EMAILS allow-list, e.g. arbimon-admin@rfcx.org). The
-// validationHandler still enforces entity shape + view-only guards.
+// Project backups (2026-07-12, operator D3): super users
+// (SUPER_USER_EMAILS) can always request backups; regular project
+// admins/owners can self-serve backups for SMALL projects
+// (<= PROJECT_BACKUP_MAX_RECORDINGS, default 100 recordings). Authz +
+// entity shape + view-only guards enforced inside validationHandler.
 export const routesBackup: RouteRegistration[] = [
   {
     method: GET,
     url: backupsRoute,
-    preHandler: [requireSuperUser, validationHandler],
+    preHandler: [validationHandler],
     handler: getBackupRequestsHandler
   },
   {
     method: POST,
     url: backupsRoute,
-    preHandler: [requireSuperUser, validationHandler],
+    preHandler: [validationHandler],
     handler: createBackupRequestHandler
   }
 ]

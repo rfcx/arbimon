@@ -47,5 +47,10 @@ export const envKeysOptional = [
   'OPENSEARCH_SSL_ENABLED',
   'SUPER_USER_EMAILS',
   'BACKUP_TIMEFRAME_LIMIT',
-  'KUBERNETES_NAMESPACE'
+  'KUBERNETES_NAMESPACE',
+  // Max recordings a project may contain for a non-super owner/admin to
+  // self-serve delete / backup it (operator-adjustable; defaults in
+  // projects/project-capabilities-bll.ts)
+  'PROJECT_DELETE_MAX_RECORDINGS',
+  'PROJECT_BACKUP_MAX_RECORDINGS'
 ] as const

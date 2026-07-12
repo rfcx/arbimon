@@ -1,5 +1,5 @@
 import { Op } from 'sequelize'
-import { afterAll, beforeAll, describe, expect, test } from 'vitest'
+import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest'
 
 import { backupsRoute } from '@rfcx-bio/common/api-bio/backup/backups'
 import { getIdByRole } from '@rfcx-bio/common/roles'
@@ -11,6 +11,10 @@ import { routesBackup } from '@/backup/index'
 import { GET, POST } from '~/api-helpers/types'
 import { env } from '~/env'
 
+// The self-serve capability check calls legacy for the recording count
+// (mock returns 0 recordings => small project).
+vi.mock('~/api-legacy-arbimon')
+
 const { LocationProject, LocationProjectUserRole, Backup } = modelRepositoryWithElevatedPermissions
 
 const ROUTE = backupsRoute
@@ -20,8 +24,9 @@ const adminId = 9003
 const projectId1 = 2791456
 const projectId2 = 2791457
 
-// Backups are now gated on the SUPER_USER_EMAILS allow-list. Each
-// authorized request must carry a userToken.email on that list.
+// Backups (2026-07-12, operator D3): super users always; project
+// admins/owners can self-serve backups for SMALL projects
+// (<= PROJECT_BACKUP_MAX_RECORDINGS recordings).
 const SUPER_EMAIL = 'arbimon-admin@rfcx.org'
 const superUserToken = { email: SUPER_EMAIL }
 const nonSuperUserToken = { email: 'someone-else@rfcx.org' }
@@ -180,8 +185,8 @@ describe(`POST ${backupsRoute}`, async () => {
         expect(response.statusCode).toBe(404)
     })
 
-    test('non-super user cannot request a backup', async () => {
-        // Arrange
+    test('non-super plain member (role user) cannot request a backup', async () => {
+        // Arrange — role 'user' lacks the backup-project permission
         const app = await makeApp(routesBackup, { userId, userToken: nonSuperUserToken })
         const backup = {
             entity: 'project',
@@ -196,7 +201,47 @@ describe(`POST ${backupsRoute}`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(401)
+        expect(response.statusCode).toBe(403)
+    })
+
+    test('non-super owner CAN request a backup for a small project', async () => {
+        // Arrange — owner + mocked legacy usage of 0 recordings (small)
+        const app = await makeApp(routesBackup, { userId: ownerId, userToken: nonSuperUserToken })
+        const backup = {
+            entity: 'project',
+            entityId: projectId1
+        }
+
+        // Act
+        const response = await app.inject({
+            method: POST,
+            url: ROUTE,
+            payload: backup
+        })
+
+        // Assert
+        expect(response.statusCode).toBe(201)
+    })
+
+    test('non-super owner cannot request a backup for a LARGE project', async () => {
+        // Arrange — owner, but the project exceeds the backup threshold
+        const legacyApi = await import('~/api-legacy-arbimon')
+        vi.mocked(legacyApi.getProjectTieringUsageLegacy).mockResolvedValueOnce({ recordingMinutesCount: 1000000, collaboratorCount: 0, guestCount: 0, patternMatchingCount: 0, jobCount: 0 })
+        const app = await makeApp(routesBackup, { userId: ownerId, userToken: nonSuperUserToken })
+        const backup = {
+            entity: 'project',
+            entityId: projectId1
+        }
+
+        // Act
+        const response = await app.inject({
+            method: POST,
+            url: ROUTE,
+            payload: backup
+        })
+
+        // Assert
+        expect(response.statusCode).toBe(403)
     })
 
     test('view-only project cannot request a backup', async () => {
@@ -284,8 +329,8 @@ describe(`GET ${backupsRoute}`, async () => {
         expect(response.statusCode).toBe(404)
     })
 
-    test('non-super user cannot fetch backup requests', async () => {
-        // Arrange
+    test('non-super plain member (role user) cannot fetch backup requests', async () => {
+        // Arrange — role 'user' lacks the backup-project permission
         const app = await makeApp(routesBackup, { userId, userToken: nonSuperUserToken })
 
         // Act
@@ -296,6 +341,6 @@ describe(`GET ${backupsRoute}`, async () => {
         })
 
         // Assert
-        expect(response.statusCode).toBe(401)
+        expect(response.statusCode).toBe(403)
     })
 })

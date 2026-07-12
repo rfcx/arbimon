@@ -35,17 +35,21 @@ interface AccountTierProjectLimitRow {
 const PROJECT_TYPE_LIMIT_TABLE = 'project_type_limit'
 const ACCOUNT_TIER_PROJECT_LIMIT_TABLE = 'account_tier_project_limit'
 
+// Tier rollback (2026-07-12): ALL limits are unlimited (NULL). The tier
+// mechanism is retained dormant; these defaults match the live
+// project_type_limit rows so a fresh seed cannot silently re-tighten limits.
+// See rfcx-local runbooks/AUDIT-arbimon-tier-limitations-rollback-plan-2026-07-12.md.
 const DEFAULT_PROJECT_LIMITS: Record<ProjectType, ProjectTypeLimit> = {
   free: {
-    recordingMinutesCount: 526000,
-    collaboratorCount: 3,
+    recordingMinutesCount: null,
+    collaboratorCount: null,
     guestCount: null,
     jobCount: null,
-    jobRecordingCount: 12000
+    jobRecordingCount: null
   },
   premium: {
     recordingMinutesCount: null,
-    collaboratorCount: 20,
+    collaboratorCount: null,
     guestCount: null,
     jobCount: null,
     jobRecordingCount: null
@@ -62,11 +66,11 @@ const DEFAULT_PROJECT_LIMITS: Record<ProjectType, ProjectTypeLimit> = {
 }
 
 const DEFAULT_ACCOUNT_TIER_PROJECT_LIMITS: Record<AccountTier, AccountTierProjectLimitMap> = {
-  // No project-COUNT cap enforced under the reframe (NULL = unlimited); the
-  // matrix mechanism is retained so an operator can impose counts later.
-  // free->premium stays 0 (a free user cannot self-own a premium project).
-  free: { free: null, premium: 0, unlimited: 0 },
-  pro: { free: null, premium: null, unlimited: 0 }
+  // Tier rollback (2026-07-12): no project-COUNT caps at all (NULL = unlimited,
+  // including free->premium per operator D2). The matrix mechanism is retained
+  // so an operator can impose counts later.
+  free: { free: null, premium: null, unlimited: null },
+  pro: { free: null, premium: null, unlimited: null }
 }
 
 const isMissingTableError = (error: unknown): boolean => {

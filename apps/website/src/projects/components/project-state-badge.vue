@@ -18,7 +18,7 @@
              group-hover:opacity-100 group-hover:visible
              left-1/2 -translate-x-1/2 bottom-full mb-2 w-max whitespace-nowrap"
       >
-        This project is now View Only due to inactivity. Upgrade your plan to restore access.
+        This project is currently view-only. Contact support to restore access.
         <div
           class="tooltip-arrow duration-300"
           data-popper-arrow

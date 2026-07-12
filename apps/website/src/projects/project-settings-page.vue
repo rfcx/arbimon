@@ -113,9 +113,18 @@
             :is-create-project="false"
             @emit-project-listed="toggleListedProject"
           />
-          <template v-if="isToggledForBackup && store.userIsAdminProjectMember">
+          <template v-if="(isToggledForBackup || capabilities?.canBackup === true) && store.userIsAdminProjectMember">
             <hr class="border-util-gray-03 my-6">
             <project-backup />
+          </template>
+          <template v-if="capabilities?.canDelete === true">
+            <hr class="border-util-gray-03 my-6">
+            <project-delete
+              :is-deleting="isDeletingProject"
+              :is-error="isErrorDeleteProject"
+              :is-success="isSuccessDeleteProject"
+              @emit-project-delete="onEmitProjectDelete"
+            />
           </template>
         </div>
       </div>
@@ -127,6 +136,7 @@ import { type AxiosError, type AxiosInstance } from 'axios'
 import { computed, inject, ref, watch } from 'vue'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
 
+import { apiLegacySoftProjectDelete, apiLegacySoftSitesDelete } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type ProjectProfileUpdateBody, ERROR_MESSAGE_UPDATE_PROJECT_SLUG_NOT_UNIQUE } from '@rfcx-bio/common/api-bio/project/project-settings'
 import { dayjs } from '@rfcx-bio/utils/dayjs-initialized'
 import { isValidSlug } from '@rfcx-bio/utils/string/slug'
@@ -134,11 +144,14 @@ import { isValidSlug } from '@rfcx-bio/utils/string/slug'
 import SaveStatusText from '@/_components/save-status-text.vue'
 import ReadOnlyBanner from '@/_layout/components/guest-banner/guest-banner.vue'
 import { urlWrapper } from '@/_services/images/url-wrapper'
-import { apiClientKey, togglesKey } from '@/globals'
+import { apiClientArbimonLegacyKey, apiClientKey, togglesKey } from '@/globals'
 import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
+import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
-import { useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
+import { useGetProjectCapabilities } from './_composables/use-project-capabilities'
+import { useDeleteProject, useGetProjectSettings, useUpdateProjectImage, useUpdateProjectSettings } from './_composables/use-project-profile'
 import { verifyDateFormError } from './components/form/functions'
+import ProjectDelete from './components/form/project-delete.vue'
 import ProjectForm from './components/form/project-form.vue'
 import ProjectImageForm from './components/form/project-image-form.vue'
 import ProjectListedForm from './components/form/project-listed-form.vue'
@@ -159,6 +172,25 @@ const selectedProjectId = computed(() => store.project?.id)
 const { data: settings, isError: isErrorSetting } = useGetProjectSettings(apiClientBio, selectedProjectId)
 const { mutate: mutateProjectSettings } = useUpdateProjectSettings(apiClientBio, store.project?.id ?? -1)
 const { mutate: mutatePatchProfilePhoto } = useUpdateProjectImage(apiClientBio, store.project?.id ?? -1)
+
+// Self-serve delete/backup (2026-07-12, operator D3): capabilities are
+// computed server-side (super users always; owners/admins for small projects
+// under the recording-count thresholds).
+const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
+const { data: capabilities } = useGetProjectCapabilities(apiClientBio, selectedProjectId)
+const selectedProjectSlug = computed(() => store.project?.slug)
+const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: isSuccessDeleteProject, mutate: mutateDeleteProject } = useDeleteProject(apiClientBio)
+
+const onEmitProjectDelete = () => {
+  mutateDeleteProject(store.project?.id ?? -1, {
+    onSuccess: async () => {
+      await apiLegacySoftProjectDelete(apiClientArbimon, selectedProjectSlug.value ?? '')
+      await apiLegacySoftSitesDelete(apiClientArbimon, selectedProjectSlug.value ?? '')
+      store.deleteProject(store.project?.id)
+      await router.push({ name: ROUTE_NAMES.myProjects })
+    }
+  })
+}
 
 const newName = ref('')
 const dateStart = ref<string | null>(null)

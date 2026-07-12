@@ -40,21 +40,14 @@ export const getProjectTypeCreateDescription = (projectType: ProjectType): strin
 }
 
 export const getProjectTypeUsageLimits = (projectType: ProjectType): ProjectUsageLimitSummary => {
-  if (projectType === 'premium' || projectType === 'unlimited') {
-    return {
-      recordingMinutesCount: null,
-      collaboratorCount: 20,
-      guestCount: null,
-      jobCount: null,
-      jobRecordingCount: null
-    }
-  }
-
+  // Tier rollback (2026-07-12): all limits are unlimited for every project
+  // type. This client-side fallback must never be tighter than the server
+  // (bio-api project_type_limit rows, which are all NULL).
   return {
-    recordingMinutesCount: 526000,
-    collaboratorCount: 3,
+    recordingMinutesCount: null,
+    collaboratorCount: null,
     guestCount: null,
     jobCount: null,
-    jobRecordingCount: 12000
+    jobRecordingCount: null
   }
 }
