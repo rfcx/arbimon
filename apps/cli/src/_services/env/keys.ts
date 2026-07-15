@@ -84,6 +84,7 @@ export const envGetters = {
 
   IUCN_BASE_URL: stringGetter,
   IUCN_API_KEY: stringGetter,
+  SYNC_SPECIES_LIMIT: numberGetter, // chunking: cap species processed per wiki/iucn run
 
   WIKI_BASE_URL: stringGetter,
   WIKI_MEDIA_BASE_URL: stringGetter,
