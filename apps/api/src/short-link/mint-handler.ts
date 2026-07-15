@@ -29,16 +29,20 @@ interface MintResponse {
 }
 
 /**
- * Service-auth for the internal mint endpoint: a shared bearer token
- * (`SHORT_LINK_MINT_TOKEN`). Never exposed publicly (mint stays in-cluster).
+ * Service-auth for the internal mint endpoint: a shared token in the
+ * `X-Mint-Token` header (`SHORT_LINK_MINT_TOKEN`). Deliberately NOT the
+ * `Authorization: Bearer` scheme — the global Auth0 plugin intercepts any
+ * `Bearer` token and JWT-decodes it, which would reject the (non-JWT) mint
+ * token before this handler runs. Never exposed publicly (mint stays
+ * in-cluster; the edge does not route `/internal/*`).
  */
 export const mintAuthHandler: Middleware = async (req, res) => {
   if (SHORT_LINK_MINT_TOKEN === undefined || SHORT_LINK_MINT_TOKEN === '') {
     await res.code(503).send({ error: 'mint_disabled' })
     return
   }
-  const auth = req.headers.authorization ?? ''
-  if (auth !== `Bearer ${SHORT_LINK_MINT_TOKEN}`) {
+  const provided = (req.headers['x-mint-token'] as string | undefined) ?? ''
+  if (provided !== SHORT_LINK_MINT_TOKEN) {
     await res.code(401).send({ error: 'unauthorized' })
   }
 }
