@@ -10,16 +10,16 @@ export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syn
   if (!dayjs(syncUntilDate).isValid()) return []
 
   const sql = `
-      SELECT s.site_id AS idArbimon,
-      s.external_id AS idCore,
-      s.project_id AS projectIdArbimon,
+      SELECT s.site_id AS "idArbimon",
+      s.external_id AS "idCore",
+      s.project_id AS "projectIdArbimon",
       s.name,
       s.lat AS latitude,
       s.lon AS longitude,
       s.alt AS altitude,
-      s.country_code AS countryCode,
-      s.updated_at AS updatedAt,
-      s.deleted_at AS deletedAt,
+      s.country_code AS "countryCode",
+      s.updated_at AS "updatedAt",
+      s.deleted_at AS "deletedAt",
       s.hidden
     FROM sites s
     WHERE (s.updated_at > $syncUntilDate OR (s.updated_at = $syncUntilDate AND s.site_id > $syncUntilId))
@@ -44,16 +44,16 @@ export const getArbimonSites = async (sequelize: Sequelize, { syncUntilDate, syn
 
 export const getArbimonSitesByProject = async (sequelize: Sequelize, projectId: number): Promise<SiteArbimon[]> => {
   const sql = `
-      SELECT s.site_id AS idArbimon,
-      s.external_id AS idCore,
-      s.project_id AS projectIdArbimon,
+      SELECT s.site_id AS "idArbimon",
+      s.external_id AS "idCore",
+      s.project_id AS "projectIdArbimon",
       s.name,
       s.lat AS latitude,
       s.lon AS longitude,
       s.alt AS altitude,
-      s.country_code AS countryCode,
-      s.updated_at AS updatedAt,
-      s.deleted_at AS deletedAt,
+      s.country_code AS "countryCode",
+      s.updated_at AS "updatedAt",
+      s.deleted_at AS "deletedAt",
       s.hidden
     FROM sites s
     WHERE s.project_id = $projectId AND s.deleted_at is null

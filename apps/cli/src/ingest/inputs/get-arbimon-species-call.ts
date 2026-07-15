@@ -10,19 +10,19 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDa
   if (!dayjs(syncUntilDate).isValid()) return []
 
   const sql = `
-    SELECT t.species_id AS taxonSpeciesId,
-      t.project_id AS callProjectId,
-      p.url AS  projectSlugArbimon,
-      r.site_id AS callSiteId,
-      r.datetime_utc AS callRecordedAt,
+    SELECT t.species_id AS "taxonSpeciesId",
+      t.project_id AS "callProjectId",
+      p.url AS  "projectSlugArbimon",
+      r.site_id AS "callSiteId",
+      r.datetime_utc AS "callRecordedAt",
       t.x1 AS start,
       t.x2 AS end,
-      s.external_id siteIdCore,
-      st.songtype AS callType,
-      t.recording_id AS recordingId,
-      s.timezone AS callTimezone,
-      t.date_created as updatedAt,
-      t.template_id as idArbimon
+      s.external_id AS "siteIdCore",
+      st.songtype AS "callType",
+      t.recording_id AS "recordingId",
+      s.timezone AS "callTimezone",
+      t.date_created AS "updatedAt",
+      t.template_id AS "idArbimon"
     FROM templates t
       JOIN recordings r ON t.recording_id = r.recording_id
       JOIN sites s ON r.site_id = s.site_id
@@ -56,19 +56,19 @@ export const getArbimonSpeciesCalls = async (sequelize: Sequelize, { syncUntilDa
 
 export const getArbimonProjectSpeciesCalls = async (sequelize: Sequelize, projectId: number): Promise<SpeciesCallArbimonRow[]> => {
   const sql = `
-    SELECT t.species_id AS taxonSpeciesId,
-      t.project_id AS callProjectId,
-      p.url AS  projectSlugArbimon,
-      r.site_id AS callSiteId,
-      r.datetime_utc AS callRecordedAt,
+    SELECT t.species_id AS "taxonSpeciesId",
+      t.project_id AS "callProjectId",
+      p.url AS  "projectSlugArbimon",
+      r.site_id AS "callSiteId",
+      r.datetime_utc AS "callRecordedAt",
       t.x1 AS start,
       t.x2 AS end,
-      s.external_id siteIdCore,
-      st.songtype AS callType,
-      t.recording_id AS recordingId,
-      s.timezone AS callTimezone,
-      t.date_created as updatedAt,
-      t.template_id as idArbimon
+      s.external_id AS "siteIdCore",
+      st.songtype AS "callType",
+      t.recording_id AS "recordingId",
+      s.timezone AS "callTimezone",
+      t.date_created AS "updatedAt",
+      t.template_id AS "idArbimon"
     FROM templates t
       JOIN recordings r ON t.recording_id = r.recording_id
       JOIN sites s ON r.site_id = s.site_id

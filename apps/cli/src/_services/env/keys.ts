@@ -37,8 +37,10 @@ export const envGetters = {
   BIO_ENVIRONMENT: unionGetter<BioEnvironment>(Object.values(BIO_ENVIRONMENT_VALUES)),
 
   ARBIMON_DB_DBNAME: stringGetter,
+  ARBIMON_DB_DIALECT: stringGetter, // mysql2pg: 'mysql' (default) or 'postgres'
   ARBIMON_DB_HOSTNAME: stringGetter,
   ARBIMON_DB_PASSWORD: stringGetter,
+  ARBIMON_DB_PORT: numberGetter, // mysql2pg: optional (e.g. 6432 for pgbouncer)
   ARBIMON_DB_USER: stringGetter,
 
   AUTHO_ANONYMOUS_CLIENT_SECRET: stringGetter,
