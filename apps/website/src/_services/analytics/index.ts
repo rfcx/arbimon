@@ -102,13 +102,14 @@ export const track = (eventName: string, properties?: Record<string, unknown>): 
 
 /**
  * Associate the current anonymous session with a stable person on login.
- * Canonical id = Auth0 `sub` (the operator-agreed cross-client identity key),
- * which the API resolves back to the internal user/profile. No PII in props.
+ * Canonical id = the user's account EMAIL address (operator decision 2026-07-15),
+ * shared across all rfcx clients so a person is one person regardless of app.
  */
 export const identify = (user?: User): void => {
-  if (!ready || posthog === undefined || user?.sub === undefined) return
+  const email = user?.email
+  if (!ready || posthog === undefined || email === undefined || email === '') return
   try {
-    posthog.identify(user.sub)
+    posthog.identify(email)
   } catch {
     // swallow
   }
