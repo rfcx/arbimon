@@ -7,6 +7,7 @@ import { wait } from '@rfcx-bio/utils/async'
 import { getIucnSpecies } from '@/ingest/_refactor/input-iucn/iucn-species'
 import { getIucnAssessmentNarrative } from '@/ingest/_refactor/input-iucn/iucn-species-narrative'
 import { writeIucnSpeciesDataToPostgres } from '@/ingest/_refactor/output-bio-db/taxon-species-iucn'
+import { optionalEnv } from '~/env'
 
 const DEFAULT_RISK_RATING = -1
 
@@ -22,12 +23,22 @@ const WRITE_BATCH_SIZE = 200
 const REQUEST_SPACING_MS = 500
 
 export const syncOnlyMissingIUCNSpeciesInfo = async (sequelize: Sequelize): Promise<void> => {
+  // Chunking (SYNC_SPECIES_LIMIT): the weekly full sweep of ~48.5k species
+  // can't finish under IUCN's aggressive 429 rate-limiting even in 6h. Because
+  // the selector already skips committed rows (missing OR ≥1-month-stale) and
+  // orders oldest-first (ts.id), a per-run LIMIT lets a FREQUENT small run
+  // finish and the sweep roll deterministically forward across runs. Unset =
+  // unbounded (prior behavior).
+  const { SYNC_SPECIES_LIMIT } = optionalEnv('SYNC_SPECIES_LIMIT')
+  const limitClause = SYNC_SPECIES_LIMIT != null && SYNC_SPECIES_LIMIT > 0
+    ? `\n    LIMIT ${Math.floor(SYNC_SPECIES_LIMIT)}`
+    : ''
   const sql = `
     SELECT DISTINCT ts.id, ts.scientific_name, tsi.risk_rating_iucn_id
     FROM taxon_species ts
     LEFT JOIN taxon_species_iucn tsi ON ts.id = tsi.taxon_species_id
     WHERE tsi.taxon_species_id IS NULL OR DATE_PART('month',AGE(CURRENT_TIMESTAMP, tsi.updated_at)) >= 1 
-    ORDER BY ts.id
+    ORDER BY ts.id${limitClause}
   `
   const speciesNameToId = await sequelize
     .query<{ id: number, scientific_name: string, risk_rating_iucn_id: number }>(sql, { type: QueryTypes.SELECT, raw: true })

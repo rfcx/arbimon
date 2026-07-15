@@ -7,6 +7,7 @@ import { truncateEllipsis } from '@rfcx-bio/utils/string'
 
 import { getWikiSummary } from '@/ingest/_refactor/input-wiki'
 import { writeWikiSpeciesDataToPostgres, writeWikiSpeciesPhotoDataToPostgres } from '@/ingest/_refactor/output-bio-db/taxon-species-wiki'
+import { optionalEnv } from '~/env'
 
 export const syncOnlyMissingWikiSpeciesInfo = async (sequelize: Sequelize): Promise<void> => {
   const unknownSpeciesRegexp = /^sp\d+$/
@@ -17,13 +18,22 @@ export const syncOnlyMissingWikiSpeciesInfo = async (sequelize: Sequelize): Prom
   // that can never get a row, burning the whole activeDeadline (1h) before
   // reaching the ~900 genuinely-fetchable binomials → DeadlineExceeded, 0 rows
   // written, every run. Filtering at the SQL drops the candidate set ~22.3K→~0.9K.
+  // Chunking (SYNC_SPECIES_LIMIT): the ~8.5k-binomial working set (after the
+  // subspecies filter) still can't fully drain under Wikipedia's throttle in
+  // one 1h run. The selector skips committed rows (missing OR ≥1-month-stale)
+  // and orders oldest-first, so a per-run LIMIT lets a frequent small run
+  // finish and roll the sweep forward. Unset = unbounded (prior behavior).
+  const { SYNC_SPECIES_LIMIT } = optionalEnv('SYNC_SPECIES_LIMIT')
+  const limitClause = SYNC_SPECIES_LIMIT != null && SYNC_SPECIES_LIMIT > 0
+    ? `\n    LIMIT ${Math.floor(SYNC_SPECIES_LIMIT)}`
+    : ''
   const sql = `
     SELECT DISTINCT ts.id, ts.scientific_name, ts.slug
     FROM taxon_species ts
     LEFT JOIN taxon_species_wiki tsw ON ts.id = tsw.taxon_species_id
     WHERE (tsw.taxon_species_id IS NULL OR DATE_PART('month',AGE(CURRENT_TIMESTAMP, tsw.updated_at)) >= 1)
       AND array_length(regexp_split_to_array(btrim(ts.scientific_name), '\\s+'), 1) = 2
-    ORDER BY ts.id
+    ORDER BY ts.id${limitClause}
   `
   // Lookups
   const speciesNameAndIds = await sequelize
