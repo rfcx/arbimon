@@ -52,5 +52,11 @@ export const envKeysOptional = [
   // self-serve delete / backup it (operator-adjustable; defaults in
   // projects/project-capabilities-bll.ts)
   'PROJECT_DELETE_MAX_RECORDINGS',
-  'PROJECT_BACKUP_MAX_RECORDINGS'
+  'PROJECT_BACKUP_MAX_RECORDINGS',
+  // arb.mn shortlink surface (OPEN-ITEMS #62). Mint token gates the internal
+  // POST /internal/short-links endpoint; when unset, minting is disabled (503)
+  // but public resolve still works. ARBMN_BASE_URL overrides the emitted link
+  // host (default https://arb.mn).
+  'SHORT_LINK_MINT_TOKEN',
+  'ARBMN_BASE_URL'
 ] as const

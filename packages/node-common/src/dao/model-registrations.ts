@@ -19,6 +19,7 @@ import { LocationSiteModel, MODEL_LOCATION_SITE } from './models/location-site-m
 import { MODEL_ORGANIZATION, OrganizationModel } from './models/organization-model'
 import { MODEL_RECORDING_BY_SITE_HOUR, RecordingBySiteHourModel } from './models/recording-by-site-hour-model'
 import { MODEL_RISK_RATING_IUCN, RiskRatingIucnModel } from './models/risk-rating-iucn-model'
+import { MODEL_SHORT_LINK, ShortLinkModel } from './models/short-link-model'
 import { MODEL_SPECIES_IN_PROJECT, SpeciesInProjectModel } from './models/species-in-project-model'
 import { MODEL_SYNC_DATA_TYPE, SyncDataTypeModel } from './models/sync-data-type-model'
 import { MODEL_SYNC_ERROR, SyncErrorModel } from './models/sync-error-model'
@@ -61,6 +62,7 @@ export const modelRegistrations = {
   [MODEL_SYNC_STATUS]: [SyncStatusModel, { manyToOne: [MODEL_SYNC_SOURCE, MODEL_SYNC_DATA_TYPE] }],
   [MODEL_USER_PROFILE]: [UserProfileModel, { manyToMany: [{ model: MODEL_LOCATION_PROJECT, through: MODEL_LOCATION_PROJECT_USER_ROLE, foreignKey: 'location_project_id' }] }],
   [MODEL_BACKUP]: [BackupModel],
+  [MODEL_SHORT_LINK]: [ShortLinkModel],
 
   // Views
   [MODEL_DASHBOARD_DETECTION_BY_HOUR]: [DashboardDetectionByHourModel],
