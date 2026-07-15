@@ -24,6 +24,7 @@ import { routesProject } from './projects'
 import { routesPublications } from './publications'
 import { routesRichness } from './richness'
 import { routesSearch } from './search'
+import { routesShortLink } from './short-link'
 import { routesSpecies } from './species'
 import { routesSpotlight } from './spotlight'
 import { routesStatus } from './status'
@@ -68,7 +69,8 @@ export const createApp = async (): Promise<FastifyInstance> => {
     routesUserProfile,
     routesCnn,
     routesHealthCheck,
-    routesBackup
+    routesBackup,
+    routesShortLink
   ]
 
   routesRegistrations

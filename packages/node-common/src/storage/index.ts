@@ -18,6 +18,14 @@ export interface GetObjectResponse {
     metadata: Partial<GetObjectCommandOutput>
 }
 
+export interface GetObjectStreamResponse {
+    stream: Readable
+    contentType?: string
+    contentLength?: number
+    lastModified?: Date
+    etag?: string
+}
+
 export interface PutObjectOptions {
     ACL?: 'public-read'
     CacheControl?: string
@@ -100,6 +108,34 @@ export class StorageClient {
         }
 
         return file
+    }
+
+    /**
+     * Streams an object from storage WITHOUT buffering it into memory.
+     * Returns the raw Readable body + response metadata so a caller can pipe it
+     * straight to an HTTP response (e.g. arb.mn/dl/<slug> download streaming).
+     * Prefer this over `getObject` for user-facing file downloads / large
+     * objects; `getObject` buffers the whole object and is meant for small
+     * assets (images).
+     *
+     * @param key {string} - path to object
+     * @param bucket {string} - specific bucket name else the default bucket
+     */
+    public async getObjectStream (key: string, bucket?: string): Promise<GetObjectStreamResponse> {
+        const command = new GetObjectCommand({
+            Bucket: bucket ?? this.defaultBucket,
+            Key: key
+        })
+
+        const response = await this.client.send(command)
+
+        return {
+            stream: response.Body as Readable,
+            contentType: response.ContentType,
+            contentLength: response.ContentLength,
+            lastModified: response.LastModified,
+            etag: response.ETag
+        }
     }
 
     /**
