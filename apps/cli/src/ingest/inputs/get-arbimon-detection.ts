@@ -37,15 +37,15 @@ export const getArbimonDetections = async (sequelize: Sequelize, { syncUntilDate
 
   const sql = `
     SELECT
-      rv.recording_validation_id idArbimon,
+      rv.recording_validation_id AS "idArbimon",
       r.datetime,
-      r.site_id siteId,
-      r.duration recordingDuration,
-      rv.species_id speciesId,
+      r.site_id AS "siteId",
+      r.duration AS "recordingDuration",
+      rv.species_id AS "speciesId",
       rv.present,
-      rv.present_review presentReview,
-      rv.present_aed presentAed,
-      rv.updated_at updatedAt
+      rv.present_review AS "presentReview",
+      rv.present_aed AS "presentAed",
+      rv.updated_at AS "updatedAt"
     FROM recording_validations rv
     JOIN recordings r ON rv.recording_id = r.recording_id
     WHERE rv.updated_at > $syncUntilDate OR (rv.updated_at = $syncUntilDate AND rv.recording_validation_id > $syncUntilId)
@@ -76,15 +76,15 @@ export const getArbimonProjectDetection = async (sequelize: Sequelize, projectId
 
   const sql = `
     SELECT /*+ MAX_EXECUTION_TIME(840000) */
-      rv.recording_validation_id idArbimon,
+      rv.recording_validation_id AS "idArbimon",
       r.datetime,
-      r.site_id siteId,
-      r.duration recordingDuration,
-      rv.species_id speciesId,
+      r.site_id AS "siteId",
+      r.duration AS "recordingDuration",
+      rv.species_id AS "speciesId",
       rv.present,
-      rv.present_review presentReview,
-      rv.present_aed presentAed,
-      rv.updated_at updatedAt
+      rv.present_review AS "presentReview",
+      rv.present_aed AS "presentAed",
+      rv.updated_at AS "updatedAt"
     FROM recording_validations rv
     JOIN recordings r ON rv.recording_id = r.recording_id
     JOIN sites s ON r.site_id = s.site_id
@@ -118,10 +118,28 @@ export const getArbimonProjectDetection = async (sequelize: Sequelize, projectId
 }
 
 export const getArbimonProjectDetectionBySiteSpeciesHours = async (sequelize: Sequelize, projectId: number, syncStatus: Pick<SyncStatus, 'syncUntilDate' | 'syncUntilId'>, limit: number, offset: number): Promise<ArbimonDetectionBySiteSpeciesHour[]> => {
-  const sql = `
-    SELECT /*+ MAX_EXECUTION_TIME(840000) */ r.site_id siteIdArbimon, rv.species_id speciesIdArbimon,
-      FROM_UNIXTIME(UNIX_TIMESTAMP(r.datetime) - MOD(UNIX_TIMESTAMP(r.datetime),3600)) timePrecisionHourLocal, 
-      GROUP_CONCAT(MOD(UNIX_TIMESTAMP(r.datetime), 3600) DIV 60) minutes
+  const isMySql = sequelize.getDialect() === 'mysql'
+
+  // mysql2pg: hour-truncation + minute-of-hour list — see getArbimonProjectRecordingsBySiteHour
+  const sql = isMySql
+    ? `
+    SELECT /*+ MAX_EXECUTION_TIME(840000) */ r.site_id AS "siteIdArbimon", rv.species_id AS "speciesIdArbimon",
+      FROM_UNIXTIME(UNIX_TIMESTAMP(r.datetime) - MOD(UNIX_TIMESTAMP(r.datetime),3600)) AS "timePrecisionHourLocal",
+      GROUP_CONCAT(MOD(UNIX_TIMESTAMP(r.datetime), 3600) DIV 60) AS "minutes"
+    FROM recording_validations rv
+      JOIN recordings r ON rv.recording_id = r.recording_id
+      JOIN sites s ON s.site_id = r.site_id
+    WHERE s.project_id = $projectId
+      AND s.deleted_at is null
+      AND r.datetime is not null
+      AND (rv.present = 1 OR rv.present_review > 0 OR rv.present_aed > 0)
+    GROUP BY 1, 2, 3 ORDER BY 1, 2, 3
+    LIMIT $limit OFFSET $offset
+  `
+    : `
+    SELECT r.site_id AS "siteIdArbimon", rv.species_id AS "speciesIdArbimon",
+      date_trunc('hour', r.datetime) AS "timePrecisionHourLocal",
+      string_agg((EXTRACT(MINUTE FROM r.datetime)::int)::text, ',') AS "minutes"
     FROM recording_validations rv
       JOIN recordings r ON rv.recording_id = r.recording_id
       JOIN sites s ON s.site_id = r.site_id
@@ -134,8 +152,6 @@ export const getArbimonProjectDetectionBySiteSpeciesHours = async (sequelize: Se
   `
   // AND r.upload_time < $syncUntilDate OR (r.upload_time = $syncUntilDate AND r.recording_id <= $syncUntilId)
   // AND r.duration is not null
-
-  const isMySql = sequelize.getDialect() === 'mysql'
 
   const results = await sequelize.query<ArbimonDetectionBySiteSpeciesHourRaw>(sql, {
     type: QueryTypes.SELECT,

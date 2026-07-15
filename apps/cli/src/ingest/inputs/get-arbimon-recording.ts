@@ -35,11 +35,11 @@ export const getArbimonRecording = async (sequelize: Sequelize, { syncUntilDate,
   // Do not process query if the date is not valid
   if (!dayjs(syncUntilDate).isValid()) return []
 
-  const sql = `SELECT r.site_id siteIdArbimon,
-      r.datetime datetime,
-      r.duration duration,
-      r.recording_id idArbimon,
-      r.upload_time updatedAt
+  const sql = `SELECT r.site_id AS "siteIdArbimon",
+      r.datetime AS "datetime",
+      r.duration AS "duration",
+      r.recording_id AS "idArbimon",
+      r.upload_time AS "updatedAt"
     FROM recordings r
     WHERE r.upload_time > $syncUntilDate OR (r.upload_time = $syncUntilDate AND r.recording_id > $syncUntilId)
       AND r.datetime is not null
@@ -71,11 +71,11 @@ export const getArbimonRecordingDeleted = async (sequelize: Sequelize, { syncUnt
   // Do not process query if the date is not valid
   if (!dayjs(syncUntilDate).isValid()) return []
 
-  const sql = `SELECT recording_id idArbimon,
-      site_id siteIdArbimon,
-      datetime datetime,
-      duration duration,
-      deleted_at deletedAt
+  const sql = `SELECT recording_id AS "idArbimon",
+      site_id AS "siteIdArbimon",
+      datetime AS "datetime",
+      duration AS "duration",
+      deleted_at AS "deletedAt"
     FROM recordings_deleted
     WHERE deleted_at > $syncUntilDate OR (deleted_at = $syncUntilDate AND recording_id > $syncUntilId)
     ORDER BY deleted_at, recording_id
@@ -102,11 +102,11 @@ export const getArbimonRecordingDeleted = async (sequelize: Sequelize, { syncUnt
 }
 
 export const getArbimonProjectRecording = async (sequelize: Sequelize, projectId: number, limit: number, offset: number): Promise<unknown[]> => {
-  const sql = `SELECT /*+ MAX_EXECUTION_TIME(840000) */ r.site_id siteIdArbimon,
-      r.datetime datetime,
-      r.duration duration,
-      r.recording_id idArbimon,
-      r.upload_time updatedAt
+  const sql = `SELECT /*+ MAX_EXECUTION_TIME(840000) */ r.site_id AS "siteIdArbimon",
+      r.datetime AS "datetime",
+      r.duration AS "duration",
+      r.recording_id AS "idArbimon",
+      r.upload_time AS "updatedAt"
     FROM recordings r
     JOIN sites s ON s.site_id = r.site_id
     WHERE s.project_id = $projectId
@@ -138,11 +138,29 @@ export const getArbimonProjectRecording = async (sequelize: Sequelize, projectId
 }
 
 export const getArbimonProjectRecordingsBySiteHour = async (sequelize: Sequelize, projectId: number, syncStatus: Pick<SyncStatus, 'syncUntilDate' | 'syncUntilId'>, limit: number, offset: number): Promise<ArbimonRecordingByHour[]> => {
-  const sql = `
-    SELECT /*+ MAX_EXECUTION_TIME(840000) */ r.site_id siteIdArbimon,
-      FROM_UNIXTIME(UNIX_TIMESTAMP(r.datetime) - MOD(UNIX_TIMESTAMP(r.datetime),3600)) timePrecisionHourLocal, 
-      GROUP_CONCAT(MOD(UNIX_TIMESTAMP(r.datetime), 3600) DIV 60) minutes,
-      SUM(duration) duration
+  const isMySql = sequelize.getDialect() === 'mysql'
+
+  // mysql2pg: hour-truncation + minute-of-hour list; the MySQL form goes through
+  // epoch seconds, the PG form uses date_trunc/EXTRACT(MINUTE) — identical for
+  // whole-hour session timezones (the prod connections run UTC)
+  const sql = isMySql
+    ? `
+    SELECT /*+ MAX_EXECUTION_TIME(840000) */ r.site_id AS "siteIdArbimon",
+      FROM_UNIXTIME(UNIX_TIMESTAMP(r.datetime) - MOD(UNIX_TIMESTAMP(r.datetime),3600)) AS "timePrecisionHourLocal",
+      GROUP_CONCAT(MOD(UNIX_TIMESTAMP(r.datetime), 3600) DIV 60) AS "minutes",
+      SUM(duration) AS "duration"
+    FROM recordings r JOIN sites s ON s.site_id = r.site_id
+    WHERE s.project_id = $projectId
+      AND s.deleted_at is null
+      AND r.datetime is not null
+    GROUP BY 1, 2 ORDER BY 1, 2
+    LIMIT $limit OFFSET $offset
+  `
+    : `
+    SELECT r.site_id AS "siteIdArbimon",
+      date_trunc('hour', r.datetime) AS "timePrecisionHourLocal",
+      string_agg((EXTRACT(MINUTE FROM r.datetime)::int)::text, ',') AS "minutes",
+      SUM(duration) AS "duration"
     FROM recordings r JOIN sites s ON s.site_id = r.site_id
     WHERE s.project_id = $projectId
       AND s.deleted_at is null
@@ -152,8 +170,6 @@ export const getArbimonProjectRecordingsBySiteHour = async (sequelize: Sequelize
   `
   // AND r.upload_time < $syncUntilDate OR (r.upload_time = $syncUntilDate AND r.recording_id <= $syncUntilId)
   // AND r.duration is not null
-
-  const isMySql = sequelize.getDialect() === 'mysql'
 
   const results = await sequelize.query<ArbimonRecordingByHourRaw>(sql, {
     type: QueryTypes.SELECT,
