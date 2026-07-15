@@ -14,6 +14,5 @@ export const apiClientArbiAssistantKey = Symbol('apiClientArbiAssistantKey') as 
 export const apiClientMediaKey = Symbol('apiClientMediaKey') as InjectionKey<AxiosInstance>
 export const apiClientDeviceKey = Symbol('apiClientDevice') as InjectionKey<AxiosInstance>
 export const storeKey = Symbol('storeKey') as InjectionKey<BiodiversityStore>
-export const gtagKey = Symbol('gtagKey') as InjectionKey<AxiosInstance>
 export const togglesKey = Symbol('togglesKey') as InjectionKey<FeatureToggles>
 export const routeNamesKey = Symbol('routeNamesKey') as InjectionKey<typeof ROUTE_NAMES>
