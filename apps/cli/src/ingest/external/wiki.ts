@@ -11,11 +11,18 @@ import { writeWikiSpeciesDataToPostgres, writeWikiSpeciesPhotoDataToPostgres } f
 export const syncOnlyMissingWikiSpeciesInfo = async (sequelize: Sequelize): Promise<void> => {
   const unknownSpeciesRegexp = /^sp\d+$/
 
+  // Only binomial (2-word) names are writable: syncWikiSpeciesInfo below drops
+  // any name with >2 words (`name.split(' ').length > 2`). Without this filter
+  // the daily job re-selected + sequentially re-fetched ~21K 3-word subspecies
+  // that can never get a row, burning the whole activeDeadline (1h) before
+  // reaching the ~900 genuinely-fetchable binomials → DeadlineExceeded, 0 rows
+  // written, every run. Filtering at the SQL drops the candidate set ~22.3K→~0.9K.
   const sql = `
     SELECT DISTINCT ts.id, ts.scientific_name, ts.slug
     FROM taxon_species ts
     LEFT JOIN taxon_species_wiki tsw ON ts.id = tsw.taxon_species_id
-    WHERE tsw.taxon_species_id IS NULL OR DATE_PART('month',AGE(CURRENT_TIMESTAMP, tsw.updated_at)) >= 1 
+    WHERE (tsw.taxon_species_id IS NULL OR DATE_PART('month',AGE(CURRENT_TIMESTAMP, tsw.updated_at)) >= 1)
+      AND array_length(regexp_split_to_array(btrim(ts.scientific_name), '\\s+'), 1) = 2
     ORDER BY ts.id
   `
   // Lookups

@@ -34,6 +34,16 @@ const TEST_SPECIES = {
   scientificName: 'sp21'
 }
 
+// 3-word subspecies: syncWikiSpeciesInfo drops names with >2 words, so these
+// can never get a wiki row — the select must exclude them too (else every run
+// re-fetches ~21K unwritable rows and blows the activeDeadline)
+const SUBSPECIES = {
+  idArbimon: 43846,
+  slug: 'bogus-malogus-minor',
+  taxonClassId: BIRDS_ID,
+  scientificName: 'Bogus Malogus minor'
+}
+
 const DEFAULT_WIKI_INFO = {
   title: 'Bogus Malogus',
   content: 'Random description',
@@ -49,11 +59,11 @@ const DEFAULT_WIKI_INFO = {
 }
 
 afterEach(async () => {
-  const species = await TaxonSpecies.findAll({ attributes: ['id'], where: { slug: [DEFAULT_SPECIES.slug, TEST_SPECIES.slug] } })
+  const species = await TaxonSpecies.findAll({ attributes: ['id'], where: { slug: [DEFAULT_SPECIES.slug, TEST_SPECIES.slug, SUBSPECIES.slug] } })
   await TaxonSpeciesWiki.destroy({ where: { taxonSpeciesId: { [Op.in]: species.map(s => s.id) } } })
   await TaxonSpeciesPhoto.destroy({ where: { taxonSpeciesId: { [Op.in]: species.map(s => s.id) } } })
   await TaxonSpeciesIucn.destroy({ where: { taxonSpeciesId: { [Op.in]: species.map(s => s.id) } } })
-  await TaxonSpecies.destroy({ where: { slug: [DEFAULT_SPECIES.slug, TEST_SPECIES.slug] } })
+  await TaxonSpecies.destroy({ where: { slug: [DEFAULT_SPECIES.slug, TEST_SPECIES.slug, SUBSPECIES.slug] } })
 })
 
 test('truncate long author field', async () => {
@@ -86,4 +96,19 @@ test('`sp` based (unknown species) are not being queried', async () => {
 
   const testSpeciesWiki = await TaxonSpeciesWiki.findOne({ where: { taxonSpeciesId: testSpecies?.get('id') } })
   expect(testSpeciesWiki).toBe(null)
+}, 10000)
+
+test('3-word subspecies are not being queried (unwritable by the >2-word rule)', async () => {
+  // Arrange
+  await TaxonSpecies.create(SUBSPECIES)
+  ;(getWikiSummary as any).mockResolvedValue({ ...DEFAULT_WIKI_INFO, credit: '' })
+
+  // Act
+  await syncOnlyMissingWikiSpeciesInfo(biodiversitySequelize)
+
+  // Assert: the subspecies was selected out (no wiki row written)
+  const sub = await TaxonSpecies.findOne({ where: { slug: SUBSPECIES.slug } })
+  expect(sub).not.toBe(null)
+  const subWiki = await TaxonSpeciesWiki.findOne({ where: { taxonSpeciesId: sub?.get('id') } })
+  expect(subWiki).toBe(null)
 }, 10000)
