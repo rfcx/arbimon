@@ -103,8 +103,8 @@
 <script setup lang="ts">
 import { initTooltips } from 'flowbite'
 import { computed, nextTick, onMounted, ref, unref, watch } from 'vue'
-import { event } from 'vue-gtag'
 
+import { track } from '~/analytics'
 import MarkdownEditor from '~/markdown/markdown-editor.vue'
 import MarkdownViewer from '~/markdown/markdown-viewer.vue'
 import { useStore } from '~/store'
@@ -178,7 +178,7 @@ const toggleExpandMarkdownContent = (): void => {
 }
 
 const editMarkdownContent = (): void => {
-  event('edit_content', {
+  track('edit_content', {
     event_category: 'project_summary',
     event_label: 'edit_content',
     value: props.id

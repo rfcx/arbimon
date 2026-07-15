@@ -1,17 +1,16 @@
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { ViteSSG } from 'vite-ssg'
-import VueGtag from 'vue-gtag'
 
 import { getApiClient } from '@rfcx-bio/utils/api'
 
 import appComponent from '@/_layout'
-import { ANALYTICS_CONFIGS } from '~/analytics'
+import { identify, initAnalytics } from '~/analytics'
 import { getIdToken, handleAuthCallback, useAuth0Client } from '~/auth-client'
 import { FEATURE_TOGGLES } from '~/feature-toggles'
 import routerOptions, { ROUTE_NAMES } from '~/router'
 import { pinia, useStoreOutsideSetup } from '~/store'
 import { componentsFromGlob } from '~/vue/register-components'
-import { apiClientArbimonLegacyKey, apiClientCoreKey, apiClientDeviceKey, apiClientKey, apiClientMediaKey, authClientKey, gtagKey, routeNamesKey, storeKey, togglesKey } from './globals'
+import { apiClientArbimonLegacyKey, apiClientCoreKey, apiClientDeviceKey, apiClientKey, apiClientMediaKey, authClientKey, routeNamesKey, storeKey, togglesKey } from './globals'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
 import 'virtual:windi.css'
@@ -21,7 +20,6 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
   // Setup app
   app
     .use(pinia)
-    .use(VueGtag, ANALYTICS_CONFIGS, router)
     .use(VueQueryPlugin)
     .use(componentsFromGlob, import.meta.globEager('/src/_components/**/*.vue'))
 
@@ -35,15 +33,22 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
   }
 
   // Inject globals (ssg and client)
-  app.provide(gtagKey, app.config.globalProperties.$gtag)
-    .provide(togglesKey, FEATURE_TOGGLES)
+  app.provide(togglesKey, FEATURE_TOGGLES)
     .provide(routeNamesKey, ROUTE_NAMES)
 
   if (isClient) {
+    // Initialise analytics (PostHog) client-side only, with manual pageviews.
+    // Conservative config (autocapture/replay OFF) per the #2461 gate — see
+    // ~/analytics. Env-gated + fail-safe (never blocks app boot).
+    await initAnalytics(router)
+
     // Authenticate current user
     const authClient = await useAuth0Client()
     const targetAfterAuth = await handleAuthCallback(authClient)
     const user = await authClient.getUser()
+
+    // Associate the PostHog person with the Auth0 user id (canonical identity).
+    identify(user)
 
     // Save to store
     const store = useStoreOutsideSetup()

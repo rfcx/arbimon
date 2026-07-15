@@ -13,23 +13,20 @@
     <link rel="preload" as="font" href="/src/_services/assets/ABCFavoritExpanded-Medium.woff" crossorigin>
     <title>Arbimon</title>
     <!--
-      Google Tag Manager (GTM-5M6JKHVW) and the matching noscript iframe at
-      the bottom of <body> were temporarily removed while investigating the
-      visualizer-page hang (rfcx/arbimon#2461). vue-gtag was also disabled
-      separately (apps/website/src/_services/analytics/index.ts) in PR #2466,
-      but that only covered the gtag.js script injection that vue-gtag itself
-      controls. The GTM snippet here was independent and continued to load
-      gtm.js, which in turn loaded the G-RJJTZ45WJB gtag config, fired scroll
-      and page_view events, and ran setTimeout chains visible in CPU profiles
-      of the wedge. Removing it gives us a clean signal while we bisect.
-      Restore both blocks (this snippet + the noscript iframe at the bottom
-      of <body>) once #2461 is resolved.
+      Web analytics is now self-hosted PostHog (see
+      apps/website/src/_services/analytics), initialised from main.ts with a
+      conservative config (autocapture/session-replay OFF, manual pageviews)
+      per rfcx/arbimon#2461. The old Google Tag Manager (GTM-5M6JKHVW) snippet
+      + its noscript iframe and the vue-gtag/GA integration (UA-38186431-11,
+      G-30S3SHR2JZ, G-RJJTZ45WJB) were removed — GTM's independent global
+      scroll/page_view listeners + setTimeout chains were the suspected #2461
+      trigger, and PostHog deliberately avoids those until the visualizer page
+      is validated.
     -->
   </head>
 
   <body class="min-h-screen bg-pitch text-insight">
     <div id="app" class="w-full"></div>
     <script type="module" src="/src/main.ts"></script>
-    <!-- GTM noscript iframe removed alongside the GTM header script above (rfcx/arbimon#2461). -->
   </body>
 </html>
