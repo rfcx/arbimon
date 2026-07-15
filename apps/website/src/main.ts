@@ -47,7 +47,7 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
     const targetAfterAuth = await handleAuthCallback(authClient)
     const user = await authClient.getUser()
 
-    // Associate the PostHog person with the Auth0 user id (canonical identity).
+    // Associate the PostHog person with the account email (canonical identity).
     identify(user)
 
     // Save to store
