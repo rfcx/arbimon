@@ -4,7 +4,7 @@ import { type SyncQueryParams } from './sync-query-params'
 
 export const getArbimonSpecies = async (sequelize: Sequelize, { syncUntilDate, syncUntilId, syncBatchLimit }: SyncQueryParams): Promise<Array<Record<string, any>>> => {
   const sql = `
-    SELECT species_id as idArbimon, taxon_id as taxonClassId, scientific_name as scientificName, updated_at as updatedAt
+    SELECT species_id AS "idArbimon", taxon_id AS "taxonClassId", scientific_name AS "scientificName", updated_at AS "updatedAt"
     FROM species
     WHERE updated_at > $syncUntilDate OR (updated_at = $syncUntilDate AND species_id > $syncUntilId)
     ORDER BY updated_at, species_id

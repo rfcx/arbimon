@@ -10,17 +10,17 @@ export const getArbimonProjects = async (sequelize: Sequelize, { syncUntilDate, 
   if (!dayjs(syncUntilDate).isValid()) return []
 
   const sql = `
-    SELECT p.project_id AS idArbimon,
-           p.external_id AS idCore,
+    SELECT p.project_id AS "idArbimon",
+           p.external_id AS "idCore",
            p.url AS slug,
            p.name,
-           (CASE WHEN s.north IS NULL THEN 0 ELSE s.north END) latitudeNorth,
-           (CASE WHEN s.south IS NULL THEN 0 ELSE s.south END) latitudeSouth,
-           (CASE WHEN s.east IS NULL THEN 0 ELSE s.east END) longitudeEast,
-           (CASE WHEN s.west IS NULL THEN 0 ELSE s.west END) longitudeWest,
-           p.is_private AS isPrivate,
-           p.updated_at AS updatedAt,
-           p.deleted_at AS deletedAt
+           (CASE WHEN s.north IS NULL THEN 0 ELSE s.north END) AS "latitudeNorth",
+           (CASE WHEN s.south IS NULL THEN 0 ELSE s.south END) AS "latitudeSouth",
+           (CASE WHEN s.east IS NULL THEN 0 ELSE s.east END) AS "longitudeEast",
+           (CASE WHEN s.west IS NULL THEN 0 ELSE s.west END) AS "longitudeWest",
+           p.is_private AS "isPrivate",
+           p.updated_at AS "updatedAt",
+           p.deleted_at AS "deletedAt"
     FROM projects p 
     LEFT JOIN (
       SELECT project_id,
