@@ -134,22 +134,36 @@
         <li
           v-for="item in items"
           :key="item.id"
-          class="py-2 flex items-center gap-x-4 text-sm"
+          class="py-2 text-sm"
         >
-          <span class="flex-1 truncate">{{ item.relativePath }}</span>
-          <span class="text-cloud w-24 text-right">{{ formatBytes(item.fileSizeBytes) }}</span>
-          <span
-            class="w-40 text-right"
-            :class="stateColor(item.state)"
+          <div class="flex items-center gap-x-4">
+            <span class="flex-1 truncate">{{ item.relativePath }}</span>
+            <span class="text-cloud w-24 text-right">{{ formatBytes(item.fileSizeBytes) }}</span>
+            <span
+              class="w-40 text-right"
+              :class="stateColor(item.state)"
+            >
+              <template v-if="item.state === 'uploading'">{{ Math.round((item.progress ?? 0) * 100) }}% · {{ formatBytes(Math.round(item.fileSizeBytes * (item.progress ?? 0))) }}</template>
+              <template v-else>{{ stateLabel(item.state) }}</template>
+            </span>
+            <span
+              v-if="item.error !== undefined"
+              class="text-flamingo text-xs max-w-64 truncate"
+              :title="item.error"
+            >{{ item.error }}</span>
+          </div>
+          <!-- Per-file progress meter: fills during upload, pulses while the
+               server processes, completes (and fades) on ingest. -->
+          <div
+            v-if="showMeter(item)"
+            class="mt-1 h-1 rounded bg-cloud/15 overflow-hidden"
           >
-            <template v-if="item.state === 'uploading'">{{ Math.round((item.progress ?? 0) * 100) }}%</template>
-            <template v-else>{{ stateLabel(item.state) }}</template>
-          </span>
-          <span
-            v-if="item.error !== undefined"
-            class="text-flamingo text-xs max-w-64 truncate"
-            :title="item.error"
-          >{{ item.error }}</span>
+            <div
+              class="h-full rounded transition-all duration-300"
+              :class="meterClass(item)"
+              :style="{ width: `${meterPercent(item)}%` }"
+            />
+          </div>
         </li>
       </ul>
     </template>
@@ -334,4 +348,26 @@ const stateColor = (state: UploadItemState): string => {
     default: return 'text-insight'
   }
 }
+
+// -- per-file progress meter ---------------------------------------------
+
+/** Show the meter from first activity until terminal success/failure. */
+const showMeter = (item: UploadItem): boolean =>
+  ['preparing', 'ready', 'signing', 'signed', 'uploading', 'uploaded'].includes(item.state)
+
+const meterPercent = (item: UploadItem): number => {
+  switch (item.state) {
+    case 'preparing': return 5
+    case 'ready':
+    case 'signing': return 8
+    case 'signed': return 10
+    // Byte progress owns 10–90%; the last 10% is server-side processing.
+    case 'uploading': return 10 + Math.round((item.progress ?? 0) * 80)
+    case 'uploaded': return 95
+    default: return 100
+  }
+}
+
+const meterClass = (item: UploadItem): string =>
+  item.state === 'uploaded' ? 'bg-frequency/60 animate-pulse' : 'bg-frequency'
 </script>
