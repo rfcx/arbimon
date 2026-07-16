@@ -9,6 +9,7 @@ import { getIdToken, handleAuthCallback, useAuth0Client } from '~/auth-client'
 import { FEATURE_TOGGLES } from '~/feature-toggles'
 import routerOptions, { ROUTE_NAMES } from '~/router'
 import { pinia, useStoreOutsideSetup } from '~/store'
+import { installAnalysisJobsSource } from '~/tasks/sources/analysis-jobs'
 import { componentsFromGlob } from '~/vue/register-components'
 import { apiClientArbimonLegacyKey, apiClientCoreKey, apiClientDeviceKey, apiClientKey, apiClientMediaKey, authClientKey, routeNamesKey, storeKey, togglesKey } from './globals'
 
@@ -71,6 +72,16 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
       .provide(apiClientDeviceKey, apiClientDevice)
       .provide(apiClientArbimonLegacyKey, apiClientArbimonLegacy)
       .provide(storeKey, store) // TODO: Delete this & use useStore() directly in components
+
+    // Install the analysis-jobs task source (floating tray). Current-project
+    // scoped; polls the bio /jobs endpoint. Registered here so it has the
+    // authed bio apiClient + store + router. Uploads self-register in app-root.
+    installAnalysisJobsSource(app, {
+      getApiClient: () => apiClient,
+      getProjectIdCore: () => store.project?.idCore,
+      getProjectSlug: () => store.project?.slug,
+      navigate: (path) => { void router.push(path) }
+    })
 
     // Handle redirects
     if (targetAfterAuth !== undefined) {
