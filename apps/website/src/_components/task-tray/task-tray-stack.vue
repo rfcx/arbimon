@@ -15,10 +15,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
+import { storeKey } from '@/globals'
+import { hasFeatureAccess } from '~/access/entitlements'
 import { taskSources } from '~/tasks/task-center'
 import TaskTray from './task-tray.vue'
 
-const visibleSources = computed(() => taskSources.filter(source => source.visible.value))
+// Resolve the store via inject (runtime) rather than a static `~/store`
+// import: this component sits in the app-root render chain, and a static
+// store import there creates an SSR module-init cycle (vite-ssg build).
+const store = inject(storeKey)
+
+// A source shows when it's visible AND (ungated OR the user is entitled).
+// Feature gating is enforced here centrally, so no source re-implements it.
+const visibleSources = computed(() => taskSources.filter(source =>
+  source.visible.value &&
+  (source.requiresFeature === undefined || hasFeatureAccess(source.requiresFeature, store?.user?.email))
+))
 </script>
