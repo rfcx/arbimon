@@ -57,6 +57,15 @@ export interface UploadItem {
   signedAtMs?: number
   /** Upload attempts so far. */
   attempts: number
+  /** Multipart state (files above the multipart threshold). */
+  multipart?: {
+    multipartUploadId: string
+    partSizeBytes: number
+    partCount: number
+    partUrls: Array<{ partNumber: number, url: string }>
+    /** ETags of parts confirmed uploaded (persisted for resume). */
+    completedParts: Array<{ partNumber: number, etag: string }>
+  }
   /** True when a failure is safe to retry (network class, checksum). */
   retryable?: boolean
   /** Human-readable failure/rejection reason. */
@@ -194,6 +203,10 @@ export interface UploadEngineConfig {
   statusPollIntervalMs?: number
   /** Re-sign URLs older than this (server expiry 24h). Default 20h. */
   signedUrlMaxAgeMs?: number
+  /** Files >= this use the multipart path. Default 100MB (server minimum). */
+  multipartThresholdBytes?: number
+  /** Concurrent part PUTs within one multipart file. Default 3. */
+  multipartPartConcurrency?: number
   /** Optional lane tier hint passed at signing. */
   laneTier?: 'express' | 'priority' | 'standard'
 }
