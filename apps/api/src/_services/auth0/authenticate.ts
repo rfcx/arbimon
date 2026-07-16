@@ -45,10 +45,14 @@ const fastifyJwtVerify = async (request: FastifyRequest): Promise<Auth0RawDecode
 
 export const authenticate = async (request: FastifyRequest): Promise<Auth0UserToken> => {
   const decoded = await fastifyJwtVerify(request)
+  // Machine-to-machine (client-credentials) tokens carry no name/email
+  // profile claims — `decoded.name` is undefined. Guard so system-token
+  // requests (e.g. ingest-service → upload-limit-summary) don't 500.
+  const nameParts = typeof decoded.name === 'string' ? decoded.name.split(' ') : []
   return {
-    idAuth0: decoded.auth0_user_id,
+    idAuth0: decoded.auth0_user_id ?? decoded.sub,
     email: decoded.email,
-    firstName: decoded.given_name ?? decoded.name.split(' ').at(0) ?? '',
-    lastName: decoded.family_name ?? decoded.name.split(' ').at(-1) ?? ''
+    firstName: decoded.given_name ?? nameParts.at(0) ?? '',
+    lastName: decoded.family_name ?? nameParts.at(-1) ?? ''
   }
 }
