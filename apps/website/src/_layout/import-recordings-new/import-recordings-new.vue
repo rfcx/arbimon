@@ -40,6 +40,7 @@
     <upload-panel
       v-if="selectedProjectSlug !== '' && !selectedProjectLocked"
       :sites="sites"
+      :project-slug="selectedProjectSlug"
     />
   </section>
 </template>

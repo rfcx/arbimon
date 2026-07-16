@@ -141,6 +141,17 @@
             class="text-flamingo text-xs max-w-64 truncate"
             :title="item.error"
           >{{ item.error }}</span>
+          <!-- Verification affordance: once ingested, open the recording in the
+               Visualizer (resolves the arbimon recording_id on click). -->
+          <button
+            v-if="item.state === 'ingested'"
+            class="text-xs text-frequency underline hover:no-underline whitespace-nowrap disabled:opacity-50 disabled:cursor-wait"
+            :disabled="openingVisualizerId === item.id"
+            :title="'Open this recording in the Visualizer (new tab)'"
+            @click="openInVisualizer(item)"
+          >
+            {{ openingVisualizerId === item.id ? 'Opening…' : 'View ↗' }}
+          </button>
         </div>
         <!-- Per-file progress meter: fills during upload, pulses while the
              server processes, completes (and fades) on ingest. -->
@@ -160,17 +171,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 
+import { apiArbimonResolveRecordingId } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type QueueStats, type UploadItem, type UploadItemState, BrowserFileSource, collectDroppedFiles, createUploadItem, IndexedDbUploadStore, isSupportedAudioFile, makeBrowserPrepare, UploadEngine } from '@rfcx-bio/upload-engine'
 
+import { apiClientArbimonLegacyKey } from '@/globals'
 import { useAuth0Client } from '~/auth-client'
 import { getIdToken } from '~/auth-client/get-id-token'
 
 const props = defineProps<{
   sites: SiteResponse[]
+  /** Project slug — needed to resolve a recording_id for the Visualizer link. */
+  projectSlug?: string
 }>()
+
+const apiClientArbimon = inject(apiClientArbimonLegacyKey)
 
 // -- site + timezone ---------------------------------------------------------
 const selectedSiteExternalId = ref('')
@@ -290,6 +307,28 @@ const retryFailed = async (): Promise<void> => {
 const clearCompleted = async (): Promise<void> => {
   await uploadStore.clearTerminal()
   await refreshItems()
+}
+
+// -- open in Visualizer (verification affordance) ----------------------------
+const openingVisualizerId = ref<string | undefined>(undefined)
+
+const openInVisualizer = async (item: UploadItem): Promise<void> => {
+  if (props.projectSlug === undefined || apiClientArbimon === undefined || item.timestampUtc === undefined) return
+  openingVisualizerId.value = item.id
+  try {
+    const recordingId = await apiArbimonResolveRecordingId(apiClientArbimon, props.projectSlug, item.streamId, item.timestampUtc)
+    if (recordingId === undefined) {
+      window.alert('This recording is not queryable yet — give it a moment and try again.')
+      return
+    }
+    // Legacy visualizer path (the modern /p/ visualizer is edge-redirected to
+    // legacy; link straight to legacy to skip the 302). New tab.
+    window.open(`${window.location.origin}/project/${props.projectSlug}/visualizer/rec/${recordingId}`, '_blank', 'noopener')
+  } catch {
+    window.alert('Could not open the recording in the Visualizer. Please try again.')
+  } finally {
+    openingVisualizerId.value = undefined
+  }
 }
 
 // -- display helpers ---------------------------------------------------------
