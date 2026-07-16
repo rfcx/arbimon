@@ -1,6 +1,7 @@
 export { default as Admin } from '@/_layout/admin-root'
 export { default as Error } from '@/_layout/error'
 export { default as importRecordings } from '@/_layout/import-recordings/import-recordings.vue'
+export { default as importRecordingsNew } from '@/_layout/import-recordings-new/import-recordings-new.vue'
 export { default as LandingRoot } from '@/_layout/landing-root'
 export { default as ProjectRoot } from '@/_layout/project-root'
 export { default as Auth } from '@/_services/auth-client/redirect-auth.vue'
