@@ -12,6 +12,7 @@
     <upload-panel
       v-else
       :sites="sites"
+      :project-slug="store.project?.slug"
     />
   </section>
 </template>

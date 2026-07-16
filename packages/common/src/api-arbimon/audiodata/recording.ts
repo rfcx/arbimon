@@ -184,6 +184,20 @@ export const apiArbimonGetTags = async (apiClient: AxiosInstance, slug: string):
   return response.data
 }
 
+/**
+ * Resolve a single arbimon numeric recording_id from a site external id +
+ * UTC timestamp. Backs the uploader's "open in Visualizer" link: an ingested
+ * upload knows its site + timestamp but not the legacy recording_id, and the
+ * Visualizer routes on the numeric id. Returns undefined if not (yet) found.
+ */
+export const apiArbimonResolveRecordingId = async (apiClient: AxiosInstance, slug: string, siteExternalId: string, startUtcIso: string): Promise<number | undefined> => {
+  const response = await apiClient.get<number>(`/legacy-api/project/${slug}/recordings/query`, {
+    params: { site_external_id: siteExternalId, start: startUtcIso }
+  })
+  const id = Number(response.data)
+  return Number.isFinite(id) && id > 0 ? id : undefined
+}
+
 interface DateRange {
   from: string | Date
   to: string | Date
