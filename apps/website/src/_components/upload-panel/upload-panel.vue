@@ -171,15 +171,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 
 import { apiArbimonResolveRecordingId } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteResponse } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
-import { type QueueStats, type UploadItem, type UploadItemState, BrowserFileSource, collectDroppedFiles, createUploadItem, IndexedDbUploadStore, isSupportedAudioFile, makeBrowserPrepare, UploadEngine } from '@rfcx-bio/upload-engine'
+import { type UploadItem, type UploadItemState, collectDroppedFiles, createUploadItem, isSupportedAudioFile } from '@rfcx-bio/upload-engine'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
-import { useAuth0Client } from '~/auth-client'
-import { getIdToken } from '~/auth-client/get-id-token'
+import { track } from '~/analytics'
+import { engine, engineRunning, fileSource, items, prepareOptions, refreshItems, stats, uploadStore } from '~/upload'
 
 const props = defineProps<{
   sites: SiteResponse[]
@@ -196,67 +196,17 @@ const timezoneMode = ref<'utc' | 'local'>('utc')
 
 const sites = computed(() => props.sites)
 
-// -- engine -----------------------------------------------------------------
-const INGEST_BASE_URL = (import.meta.env.VITE_INGEST_BASE_URL as string | undefined) ?? 'https://ingest.rfcx.org'
+// The engine, queue state, and online/beforeunload wiring are an app-wide
+// singleton (~/upload) so uploads continue across route changes and the
+// floating tray reflects the same state. This component is now pure UI.
+watch(timezoneMode, (mode) => {
+  prepareOptions.timezone = mode === 'local' ? browserTimezone : undefined
+}, { immediate: true })
 
-const uploadStore = new IndexedDbUploadStore()
-const fileSource = new BrowserFileSource()
-
-const getToken = async (): Promise<string> => {
-  const client = await useAuth0Client()
-  return await getIdToken(client)
-}
-
-const engine = new UploadEngine(
-  { ingestBaseUrl: INGEST_BASE_URL },
-  uploadStore,
-  fileSource,
-  getToken,
-  async (item, file) => await makeBrowserPrepare({ timezone: timezoneMode.value === 'local' ? browserTimezone : undefined })(item, file)
-)
-
-const items = ref<UploadItem[]>([])
-const stats = ref<QueueStats>({ total: 0, queued: 0, preparing: 0, ready: 0, signing: 0, signed: 0, uploading: 0, uploaded: 0, ingested: 0, duplicate: 0, failed: 0, rejected: 0, paused: 0, bytesTotal: 0, bytesUploaded: 0 })
-const engineRunning = ref(false)
 const dropActive = ref(false)
 
-const refreshItems = async (): Promise<void> => {
-  items.value = await uploadStore.list()
-}
-
-const offEngine = engine.on(event => {
-  if (event.type === 'stats') stats.value = event.stats
-  if (event.type === 'engine-state') engineRunning.value = event.running
-  if (event.type === 'item-updated') {
-    const index = items.value.findIndex(existing => existing.id === event.item.id)
-    if (index >= 0) items.value[index] = event.item
-    else items.value.push(event.item)
-  }
-})
-
-const onlineListener = (): void => { engine.setOnline(navigator.onLine) }
-
-// beforeunload guard while active work exists
-const beforeUnload = (event: BeforeUnloadEvent): void => {
-  const active = stats.value.uploading + stats.value.signed + stats.value.signing + stats.value.ready + stats.value.queued + stats.value.preparing
-  if (active > 0) {
-    event.preventDefault()
-    event.returnValue = ''
-  }
-}
-
 onMounted(async () => {
-  window.addEventListener('online', onlineListener)
-  window.addEventListener('offline', onlineListener)
-  window.addEventListener('beforeunload', beforeUnload)
   await refreshItems()
-})
-
-onBeforeUnmount(() => {
-  offEngine()
-  window.removeEventListener('online', onlineListener)
-  window.removeEventListener('offline', onlineListener)
-  window.removeEventListener('beforeunload', beforeUnload)
 })
 
 // -- file intake ------------------------------------------------------------
@@ -278,6 +228,11 @@ const enqueueFiles = async (files: Array<{ file: File, relativePath: string }>):
   await engine.enqueue(newItems)
   await refreshItems()
   engine.start()
+  track('web_upload_batch_enqueued', {
+    fileCount: newItems.length,
+    totalBytes: newItems.reduce((sum, item) => sum + item.fileSizeBytes, 0),
+    projectSlug: props.projectSlug
+  })
 }
 
 const onDrop = async (event: DragEvent): Promise<void> => {

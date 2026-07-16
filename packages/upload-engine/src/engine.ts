@@ -17,6 +17,7 @@
  */
 
 import { IngestApi, putToSignedUrl } from './ingest-api'
+import { MULTIPART_THRESHOLD_BYTES, MultipartApi, uploadParts } from './multipart'
 import { type BulkSignRequestItem, type FileSource, type QueueStats, type TokenProvider, type UploadEngineConfig, type UploadEngineEvent, type UploadEngineListener, type UploadItem, type UploadStore, SERVER_STATUS } from './types'
 
 const DEFAULTS = {
@@ -28,7 +29,9 @@ const DEFAULTS = {
   retryBaseDelayMs: 2000,
   retryMaxDelayMs: 60_000,
   statusPollIntervalMs: 5000,
-  signedUrlMaxAgeMs: 20 * 60 * 60 * 1000
+  signedUrlMaxAgeMs: 20 * 60 * 60 * 1000,
+  multipartThresholdBytes: MULTIPART_THRESHOLD_BYTES,
+  multipartPartConcurrency: 3
 } as const
 
 /** Signing errors that must not be retried (item-level rejections). */
@@ -63,6 +66,8 @@ export class UploadEngine {
     Pick<UploadEngineConfig, 'laneTier'>
 
   private readonly api: IngestApi
+  private readonly multipartApi: MultipartApi
+  private readonly multipartSigning = new Set<string>()
   private readonly listeners = new Set<UploadEngineListener>()
   private running = false
   private online = true
@@ -82,6 +87,7 @@ export class UploadEngine {
   ) {
     this.config = { ...DEFAULTS, ...config }
     this.api = new IngestApi(config.ingestBaseUrl, tokenProvider)
+    this.multipartApi = new MultipartApi(config.ingestBaseUrl, tokenProvider)
   }
 
   // -- public API -----------------------------------------------------------
@@ -280,13 +286,20 @@ export class UploadEngine {
 
   private async pumpSigning (): Promise<void> {
     if (this.signingInFlight) return
-    const ready = await this.store.list(['ready'])
+    const readyAll = await this.store.list(['ready'])
+    // Large files take the multipart path (individually signed).
+    const readyMultipart = readyAll.filter(item => item.fileSizeBytes >= this.config.multipartThresholdBytes)
+    for (const item of readyMultipart) {
+      void this.signMultipartOne(item)
+    }
+    const ready = readyAll.filter(item => item.fileSizeBytes < this.config.multipartThresholdBytes)
     // Also re-sign stale signed URLs.
     const signed = await this.store.list(['signed'])
     const stale = signed.filter(
       item =>
         item.signedAtMs !== undefined &&
-        Date.now() - item.signedAtMs > this.config.signedUrlMaxAgeMs
+        Date.now() - item.signedAtMs > this.config.signedUrlMaxAgeMs &&
+        item.multipart === undefined
     )
     const batch = [...ready, ...stale].slice(0, this.config.signBatchSize)
     if (batch.length === 0) return
@@ -368,7 +381,53 @@ export class UploadEngine {
     }
   }
 
+  /** Sign one large file for multipart (individual call; not batched). */
+  private async signMultipartOne (item: UploadItem): Promise<void> {
+    if (this.multipartSigning.has(item.id)) return
+    this.multipartSigning.add(item.id)
+    try {
+      const marked = await this.update(item, { state: 'signing' })
+      const descriptor = await this.multipartApi.create({
+        filename: marked.filename,
+        timestamp: marked.timestampUtc as string,
+        stream: marked.streamId,
+        duration: marked.durationMs !== undefined && marked.durationMs > 0 ? Math.round(marked.durationMs) : undefined,
+        fileSize: marked.fileSizeBytes,
+        sampleRate: marked.sampleRateHz,
+        checksum: marked.checksumSha1
+      })
+      await this.update(marked, {
+        state: 'signed',
+        uploadId: descriptor.uploadId,
+        signedAtMs: Date.now(),
+        multipart: {
+          multipartUploadId: descriptor.multipartUploadId,
+          partSizeBytes: descriptor.partSizeBytes,
+          partCount: descriptor.partCount,
+          partUrls: descriptor.partUrls,
+          completedParts: []
+        }
+      })
+      this.kick()
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      if (message === 'Duplicate.') {
+        await this.update(item, { state: 'duplicate', error: undefined })
+      } else if (NON_RETRYABLE_SIGN_ERRORS.some(pattern => pattern.test(message))) {
+        await this.update(item, { state: 'rejected', error: message })
+      } else {
+        await this.update(item, { state: 'ready', error: message })
+      }
+    } finally {
+      this.multipartSigning.delete(item.id)
+    }
+  }
+
   private async uploadOne (item: UploadItem): Promise<void> {
+    if (item.multipart !== undefined) {
+      await this.uploadMultipartOne(item)
+      return
+    }
     const file = await this.fileSource.getFile(item.id)
     if (file === undefined || item.signedUrl === undefined) {
       await this.update(item, {
@@ -440,6 +499,69 @@ export class UploadEngine {
       setTimeout(() => {
         this.kick()
       }, delay)
+    } finally {
+      this.abortControllers.delete(item.id)
+    }
+  }
+
+  /** Multipart upload path: part pool w/ per-part retry, then server complete. */
+  private async uploadMultipartOne (item: UploadItem): Promise<void> {
+    const file = await this.fileSource.getFile(item.id)
+    if (file === undefined || item.multipart === undefined || item.uploadId === undefined) {
+      await this.update(item, { state: 'rejected', error: 'File handle lost — re-add this file.' })
+      return
+    }
+    const controller = new AbortController()
+    this.abortControllers.set(item.id, controller)
+    let lastPersistedProgress = 0
+    let liveItem = item
+    try {
+      const completedParts = await uploadParts(file, {
+        uploadId: item.uploadId,
+        multipartUploadId: item.multipart.multipartUploadId,
+        partSizeBytes: item.multipart.partSizeBytes,
+        partCount: item.multipart.partCount,
+        partUrls: item.multipart.partUrls
+      }, {
+        partConcurrency: this.config.multipartPartConcurrency,
+        maxAttemptsPerPart: this.config.maxAttempts,
+        retryBaseDelayMs: this.config.retryBaseDelayMs,
+        retryMaxDelayMs: this.config.retryMaxDelayMs,
+        completedParts: item.multipart.completedParts,
+        abortSignal: controller.signal,
+        onProgress: (loadedBytes, totalBytes) => {
+          const progress = totalBytes > 0 ? loadedBytes / totalBytes : 0
+          liveItem.progress = progress
+          if (progress - lastPersistedProgress >= 0.05) {
+            lastPersistedProgress = progress
+            // Persist progress AND completed-part etags sparsely for resume.
+            void this.update(liveItem, { progress })
+          } else {
+            this.emit({ type: 'item-updated', item: { ...liveItem, progress } })
+          }
+        }
+      })
+      // Persist the final part list, then server-side complete (idempotent).
+      liveItem = await this.update(liveItem, {
+        multipart: { ...item.multipart, completedParts }
+      })
+      await this.multipartApi.complete(item.uploadId, completedParts)
+      await this.update(liveItem, { state: 'uploaded', progress: 1, attempts: item.attempts + 1 })
+      this.scheduleStatusPoll()
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      if (!this.running) {
+        await this.update(liveItem, { state: 'signed', progress: undefined })
+        return
+      }
+      const attempts = item.attempts + 1
+      if (attempts >= this.config.maxAttempts) {
+        await this.update(liveItem, { state: 'failed', attempts, retryable: true, error: message })
+        return
+      }
+      const delay = Math.min(this.config.retryMaxDelayMs, this.config.retryBaseDelayMs * 2 ** (attempts - 1)) * (0.5 + Math.random())
+      await this.update(liveItem, { state: 'signed', attempts, progress: undefined, error: message })
+      setTimeout(() => { this.kick() }, delay)
     } finally {
       this.abortControllers.delete(item.id)
     }
