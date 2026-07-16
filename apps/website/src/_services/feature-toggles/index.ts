@@ -10,7 +10,8 @@ const featureTogglesRaw = {
   legacyLogin: import.meta.env.VITE_TOGGLE_LEGACY_LOGIN,
   projectBackup: import.meta.env.VITE_TOGGLE_PROJECT_BACKUP,
   projectBackupTesting: import.meta.env.VITE_TOGGLE_PROJECT_BACKUP_TESTING,
-  cnnExport: import.meta.env.VITE_TOGGLE_CNN_EXPORT
+  cnnExport: import.meta.env.VITE_TOGGLE_CNN_EXPORT,
+  browserUploader: import.meta.env.VITE_TOGGLE_BROWSER_UPLOADER
   /* STOP: Declare toggles here */
 }
 

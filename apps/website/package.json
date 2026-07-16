@@ -42,6 +42,7 @@
     "@auth0/auth0-spa-js": "^1.19.2",
     "@leeoniya/ufuzzy": "^1.0.8",
     "@rfcx-bio/common": "workspace:^0.0.1",
+    "@rfcx-bio/upload-engine": "workspace:^0.0.1",
     "@rfcx-bio/utils": "workspace:^0.0.1",
     "@tanstack/vue-query": "^5.14.6",
     "@tiptap/core": "^2.1.13",

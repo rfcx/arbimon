@@ -42,6 +42,7 @@ export const ROUTE_NAMES = {
   signup: 'signup',
   // Uploader Recordings
   importRecordings: 'import_recordings',
+  uploadRecordings: 'upload_recordings',
   // audiodata
   mySites: 'my-sites',
   myRecordings: 'my-recordings',

@@ -1,5 +1,6 @@
 import { type RouteRecordRaw, type RouterOptions, RouterView } from 'vue-router'
 
+import { FEATURE_TOGGLES } from '~/feature-toggles'
 import { authRequiredGuard } from './guard-auth-required'
 import { rfcxEmailRequired } from './guard-rfcx-email'
 import { storeMemberGuard, storeProjectGuard } from './guard-store-project'
@@ -229,7 +230,16 @@ const routes: RouteRecordRaw[] = [
         name: ROUTE_NAMES.importRecordings,
         component: PAGES.importRecordings,
         beforeEnter: [authRequiredGuard]
-      }
+      },
+      // Flag-gated in-browser bulk uploader beta (VITE_TOGGLE_BROWSER_UPLOADER).
+      ...(FEATURE_TOGGLES.browserUploader
+        ? [{
+            path: 'upload-recordings',
+            name: ROUTE_NAMES.uploadRecordings,
+            component: PAGES.UploadRecordings,
+            beforeEnter: [authRequiredGuard]
+          }]
+        : [])
     ]
   },
   {

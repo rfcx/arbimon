@@ -1,0 +1,40 @@
+{
+  "name": "@rfcx-bio/upload-engine",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Framework-free bulk audio upload engine (browser + future desktop shells)",
+  "keywords": [
+    "upload",
+    "ingest",
+    "audio",
+    "rfcx",
+    "arbimon"
+  ],
+  "homepage": "https://github.com/rfcx/arbimon#readme",
+  "bugs": {
+    "url": "https://github.com/rfcx/arbimon/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rfcx/arbimon.git"
+  },
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "files": [
+    "lib/**/*.js"
+  ],
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json",
+    "clean": "rimraf \"./lib\" \"./*.tsbuildinfo\" \"./.eslintcache\"",
+    "lint": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:lint:*\"",
+    "lint-fix": "eslint . --fix && prettier . --loglevel warn --write",
+    "lint:eslint": "eslint . --cache",
+    "lint:prettier": "prettier . --check",
+    "test": "concurrently -r -m 1 --kill-others-on-fail \"pnpm:test:* -- --run\"",
+    "test:unit": "vitest .unit.test."
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
