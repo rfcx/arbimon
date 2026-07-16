@@ -16,6 +16,9 @@
     "paths": {
       "@rfcx-bio/utils/*": ["../../../packages/utils/src/*"],
       "@rfcx-bio/common/*": ["../../../packages/common/src/*"],
+      "@rfcx-bio/upload-engine": [
+        "../../../packages/upload-engine/src/index.ts"
+      ],
       "~/*": ["./_services/*"],
       "@/*": ["./*"]
     }
@@ -24,6 +27,7 @@
   "include": ["src/**/*.ts", "src/**/*.vue"],
   "references": [
     { "path": "../../packages/utils/tsconfig.build.json" },
-    { "path": "../../packages/common/tsconfig.build.json" }
+    { "path": "../../packages/common/tsconfig.build.json" },
+    { "path": "../../packages/upload-engine/tsconfig.build.json" }
   ]
 }

@@ -35,6 +35,7 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
     alias: {
       '@rfcx-bio/utils': resolve(__dirname, '../../packages/utils/src/'),
       '@rfcx-bio/common': resolve(__dirname, '../../packages/common/src/'),
+      '@rfcx-bio/upload-engine': resolve(__dirname, '../../packages/upload-engine/src/'),
       '~': resolve(__dirname, 'src/_services/'),
       '@': resolve(__dirname, 'src/')
     }

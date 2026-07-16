@@ -1,5 +1,6 @@
 import { type RouteRecordRaw, type RouterOptions, RouterView } from 'vue-router'
 
+import { FEATURE_TOGGLES } from '~/feature-toggles'
 import { authRequiredGuard } from './guard-auth-required'
 import { rfcxEmailRequired } from './guard-rfcx-email'
 import { storeMemberGuard, storeProjectGuard } from './guard-store-project'
@@ -80,6 +81,15 @@ const routes: RouteRecordRaw[] = [
     path: '/create-project',
     name: ROUTE_NAMES.createProject,
     component: PAGES.CreateProject,
+    beforeEnter: [authRequiredGuard]
+  },
+  // Unlisted in-browser bulk uploader beta (not linked from any nav/UI;
+  // reachable only by direct URL). Auth still required. Deliberately NOT
+  // behind the feature toggle so it can ship to production unlisted.
+  {
+    path: '/import-recordings-new',
+    name: ROUTE_NAMES.importRecordingsNew,
+    component: PAGES.importRecordingsNew,
     beforeEnter: [authRequiredGuard]
   },
   {
@@ -229,7 +239,16 @@ const routes: RouteRecordRaw[] = [
         name: ROUTE_NAMES.importRecordings,
         component: PAGES.importRecordings,
         beforeEnter: [authRequiredGuard]
-      }
+      },
+      // Flag-gated in-browser bulk uploader beta (VITE_TOGGLE_BROWSER_UPLOADER).
+      ...(FEATURE_TOGGLES.browserUploader
+        ? [{
+            path: 'upload-recordings',
+            name: ROUTE_NAMES.uploadRecordings,
+            component: PAGES.UploadRecordings,
+            beforeEnter: [authRequiredGuard]
+          }]
+        : [])
     ]
   },
   {
