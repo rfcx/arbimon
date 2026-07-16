@@ -80,6 +80,7 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
       getApiClient: () => apiClient,
       getProjectIdCore: () => store.project?.idCore,
       getProjectSlug: () => store.project?.slug,
+      getUserEmail: () => store.user?.email,
       navigate: (path) => { void router.push(path) }
     })
 

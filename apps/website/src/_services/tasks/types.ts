@@ -13,6 +13,8 @@
  */
 import { type ComputedRef } from 'vue'
 
+import { type GatedFeature } from '~/access/entitlements'
+
 export type TaskItemState = 'pending' | 'active' | 'done' | 'failed'
 
 export interface TaskAction {
@@ -54,6 +56,12 @@ export interface TaskSource {
   id: string
   /** Tray title ("Uploads", "Analyses"). */
   label: string
+  /**
+   * Optional allow-list feature gate. When set, the tray is only rendered for
+   * users entitled to that feature (see ~/access). VISIBILITY gating only —
+   * the source's data must still be safe for any user who could reach it.
+   */
+  requiresFeature?: GatedFeature
   /** Whether this source's tray should be shown at all. */
   visible: ComputedRef<boolean>
   summary: ComputedRef<TaskSummary>

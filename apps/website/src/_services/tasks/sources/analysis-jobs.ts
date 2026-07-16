@@ -25,6 +25,7 @@ import { type App } from 'vue'
 
 import { type ClassifierJob, apiBioGetClassifierJobs, CLASSIFIER_JOB_LABELS } from '@rfcx-bio/common/api-bio/cnn/classifier-jobs'
 
+import { hasFeatureAccess } from '~/access/entitlements'
 import { registerTaskSource } from '../task-center'
 import { type TaskItem, type TaskItemState, type TaskSource } from '../types'
 
@@ -39,6 +40,7 @@ interface JobsContext {
   getApiClient: () => AxiosInstance | undefined
   getProjectIdCore: () => string | undefined
   getProjectSlug: () => string | undefined
+  getUserEmail: () => string | undefined
   navigate: (path: string) => void
 }
 
@@ -69,6 +71,12 @@ const relevantJobs = computed(() =>
 const fetchJobs = async (): Promise<void> => {
   const apiClient = ctx?.getApiClient()
   const projectId = ctx?.getProjectIdCore()
+  // Don't poll for users who can't see the tray anyway (belt-and-braces with
+  // the render-time gate in task-tray-stack).
+  if (!hasFeatureAccess('analysisJobsTray', ctx?.getUserEmail())) {
+    jobs.value = []
+    return
+  }
   if (apiClient === undefined || projectId === undefined || projectId === '') {
     jobs.value = []
     return
@@ -111,6 +119,8 @@ const toTaskItem = (job: ClassifierJob): TaskItem => {
 const analysisJobsSource: TaskSource = {
   id: 'analysis-jobs',
   label: 'Analyses',
+  // Allow-list gated (beta): only shown to entitled users (see ~/access).
+  requiresFeature: 'analysisJobsTray',
   visible: computed(() => relevantJobs.value.length > 0),
   summary: computed(() => {
     const active = relevantJobs.value.filter(job => ACTIVE_STATUSES.has(job.status)).length

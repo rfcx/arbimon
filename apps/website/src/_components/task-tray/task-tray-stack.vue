@@ -17,8 +17,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import { hasFeatureAccess } from '~/access'
+import { useStore } from '~/store'
 import { taskSources } from '~/tasks/task-center'
 import TaskTray from './task-tray.vue'
 
-const visibleSources = computed(() => taskSources.filter(source => source.visible.value))
+const store = useStore()
+
+// A source shows when it's visible AND (ungated OR the user is entitled).
+// Feature gating is enforced here centrally, so no source re-implements it.
+const visibleSources = computed(() => taskSources.filter(source =>
+  source.visible.value &&
+  (source.requiresFeature === undefined || hasFeatureAccess(source.requiresFeature, store.user?.email))
+))
 </script>
