@@ -1,10 +1,14 @@
 <template>
   <router-view />
-  <!-- Global floating upload tray: shows whenever an upload queue exists,
-       survives route changes (the engine is an app-wide singleton). -->
-  <upload-tray />
+  <!-- Global task-tray stack: one floating collapsible tray per registered
+       task source (uploads today; analysis jobs next), stacked vertically.
+       Survives route changes — sources are app-wide singletons. -->
+  <task-tray-stack />
 </template>
 
 <script setup lang="ts">
-import UploadTray from '@/_components/upload-tray/upload-tray.vue'
+import TaskTrayStack from '@/_components/task-tray/task-tray-stack.vue'
+
+// Register task sources (side-effect imports).
+import '~/tasks/sources/uploads'
 </script>

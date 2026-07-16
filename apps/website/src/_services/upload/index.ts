@@ -3,8 +3,8 @@
  *
  * The engine + its IndexedDB queue live at module scope so uploads keep
  * running while the user navigates between routes (Drive-style). The
- * upload-panel (full page UI) and upload-tray (floating mini status) both
- * consume this shared state.
+ * upload-panel (full page UI) and the uploads TaskSource (~/tasks/sources/
+ * uploads → floating tray) both consume this shared state.
  */
 import { computed, reactive, ref } from 'vue'
 
