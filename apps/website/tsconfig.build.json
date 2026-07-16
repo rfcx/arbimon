@@ -16,7 +16,9 @@
     "paths": {
       "@rfcx-bio/utils/*": ["../../../packages/utils/src/*"],
       "@rfcx-bio/common/*": ["../../../packages/common/src/*"],
-      "@rfcx-bio/upload-engine": ["../../../packages/upload-engine/src/index.ts"],
+      "@rfcx-bio/upload-engine": [
+        "../../../packages/upload-engine/src/index.ts"
+      ],
       "~/*": ["./_services/*"],
       "@/*": ["./*"]
     }
