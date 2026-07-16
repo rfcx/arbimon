@@ -110,7 +110,8 @@ const toTaskItem = (job: ClassifierJob): TaskItem => {
       ? [{
           id: 'open',
           label: 'Open',
-          run: () => { ctx?.navigate(`/p/${slug}/analysis/cnn/detail/${job.id}`) }
+          // Route path is 'analyse' (British spelling) per the router tree.
+          run: () => { ctx?.navigate(`/p/${slug}/analyse/cnn/detail/${job.id}`) }
         }]
       : undefined
   }
@@ -144,7 +145,7 @@ const analysisJobsSource: TaskSource = {
   items: computed(() => relevantJobs.value.slice(0, MAX_VISIBLE_ITEMS).map(toTaskItem)),
   pageRoute: computed(() => {
     const slug = ctx?.getProjectSlug()
-    return slug !== undefined ? `/p/${slug}/analysis/cnn` : undefined
+    return slug !== undefined ? `/p/${slug}/analyse/cnn` : undefined
   }),
   pageLabel: 'View all'
 }
