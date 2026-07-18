@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 
 import { masterObjectiveTypes } from '@rfcx-bio/node-common/dao/master-data/project-objective'
 
-import { getImageByObjectives } from './image-by-objective'
+import { getImageByObjectives, resolveProjectImage } from './image-by-objective'
 
 describe('test get image by objectives', () => {
   test('undefined objectives', () => {
@@ -55,5 +55,32 @@ describe('test get image by objectives', () => {
     const result = getImageByObjectives(inputObjectives)
     const expectResults = [masterObjectiveTypes.ImpactConservation.imageUrl, masterObjectiveTypes.ImpactHuman.imageUrl, masterObjectiveTypes.Others.imageUrl]
     expect(expectResults).toContain(result)
+  })
+})
+
+describe('resolveProjectImage', () => {
+  test('keeps a stored custom storage path', () => {
+    const stored = 'projects/724/project-profile-image-abcd1234.png'
+    expect(resolveProjectImage(stored, ['bio-baseline'])).toBe(stored)
+  })
+  test('keeps a stored static:// reference', () => {
+    const stored = 'static://project/monitor-species.png'
+    expect(resolveProjectImage(stored, ['bio-baseline'])).toBe(stored)
+  })
+  test('keeps a stored absolute URL', () => {
+    const stored = 'https://example.com/photo.jpg'
+    expect(resolveProjectImage(stored, [])).toBe(stored)
+  })
+  test('empty string falls back to objective default', () => {
+    expect(resolveProjectImage('', ['bio-baseline'])).toBe(masterObjectiveTypes.BioBaseline.imageUrl)
+  })
+  test('undefined falls back to objective default', () => {
+    expect(resolveProjectImage(undefined, ['monitor-species'])).toBe(masterObjectiveTypes.MonitorSpecies.imageUrl)
+  })
+  test('null falls back to objective default', () => {
+    expect(resolveProjectImage(null, undefined)).toBe(masterObjectiveTypes.Others.imageUrl)
+  })
+  test('no image and no objectives falls back to Others', () => {
+    expect(resolveProjectImage('', [])).toBe(masterObjectiveTypes.Others.imageUrl)
   })
 })

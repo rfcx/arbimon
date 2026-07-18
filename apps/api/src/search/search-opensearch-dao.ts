@@ -4,6 +4,7 @@ import { type RawElasticSearchResponseBody, type SearchQueryProjectRawResponse, 
 
 import { fileUrl } from '~/format-helpers/file-url'
 import { getOpenSearchClient } from '~/opensearch'
+import { resolveProjectImage } from '../projects/utils/image-by-objective'
 import { getAverageCoordinate } from './helpers'
 
 export const getOpensearchProjects = async (query: string, isPublished: boolean, limit: number, offset: number): Promise<{ total: number, data: SearchResponse }> => {
@@ -85,8 +86,10 @@ export const getOpensearchProjects = async (query: string, isPublished: boolean,
       name: hit._source.name,
       slug: hit._source.slug,
       status: hit._source.status,
-      image: fileUrl(hit._source.image) ?? '',
-      thumbnail: fileUrl(hit._source.thumbnail) ?? '',
+      image: fileUrl(resolveProjectImage(hit._source.image, hit._source.objectives)) ?? '',
+      // The index stores an empty `thumbnail` for non-S3 images; resolveProjectImage
+      // treats '' as "no image" and falls back to the objective-based default.
+      thumbnail: fileUrl(resolveProjectImage(hit._source.thumbnail, hit._source.objectives)) ?? '',
       objectives: hit._source.objectives,
       summary: hit._source.summary,
       readme: hit._source.readme,

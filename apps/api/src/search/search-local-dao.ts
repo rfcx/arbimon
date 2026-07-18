@@ -6,6 +6,7 @@ import { type Project } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '~/db'
 import { fileUrl } from '~/format-helpers/file-url'
+import { resolveProjectImage } from '../projects/utils/image-by-objective'
 import { getAverageCoordinate } from './helpers'
 
 export const getProjectsByQuery = async (keyword?: string, isPublished?: boolean, limit?: number, offset?: number, order?: Order): Promise<{ total: number, data: SearchResponse }> => {
@@ -63,8 +64,8 @@ export const getProjectsByQuery = async (keyword?: string, isPublished?: boolean
         name: project.name,
         slug: project.slug,
         status: project.status,
-        image: fileUrl(profile?.image) ?? '',
-        thumbnail: fileUrl(profile?.image, 'thumbnail') ?? '',
+        image: fileUrl(resolveProjectImage(profile?.image, profile?.objectives)) ?? '',
+        thumbnail: fileUrl(resolveProjectImage(profile?.image, profile?.objectives), 'thumbnail') ?? '',
         objectives: profile?.objectives ?? [],
         summary: profile?.summary ?? '',
         readme: profile?.readme ?? '',

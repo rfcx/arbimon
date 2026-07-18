@@ -86,6 +86,12 @@ describe(`PATCH ${projectProfileImageRoute}`, async () => {
     const profile = await LocationProjectProfile.findOne({ where: { locationProjectId: defaultProject.id } })
     expect(profile).toBeDefined()
     expect(profile?.image).toBeDefined()
+    // Regression: creating a profile from an upload must persist the uploaded
+    // storage path, not overwrite it with the objective-based default. The
+    // uploaded object must be retrievable at the recorded path.
+    expect(profile?.image).toMatch(new RegExp(`^projects/${defaultProject.id}/project-profile-image-`))
+    const file = await storageClient.getObject(profile?.image ?? '') as Buffer
+    expect(file.byteLength).toBeGreaterThan(1000)
   })
 
   test('rejects non image', async () => {
