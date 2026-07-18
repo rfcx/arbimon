@@ -34,6 +34,21 @@
         </div>
       </div>
 
+      <!-- optional search box (e.g. masquerade user picker) -->
+      <div
+        v-if="source.searchBox !== undefined"
+        class="px-4 pt-2"
+      >
+        <input
+          type="text"
+          class="w-full rounded border border-cloud/30 bg-echo px-2 py-1 text-xs text-insight placeholder-cloud/60 focus:outline-none focus:border-frequency"
+          :placeholder="source.searchBox.placeholder"
+          :value="source.searchBox.query.value"
+          autocomplete="off"
+          @input="onSearchInput"
+        >
+      </div>
+
       <!-- item list -->
       <ul class="max-h-48 overflow-y-auto divide-y divide-cloud/10 px-4">
         <li
@@ -109,6 +124,10 @@ const pageRoute = computed(() => props.source.pageRoute?.value)
 
 const openPage = (): void => {
   if (pageRoute.value !== undefined) void router.push(pageRoute.value)
+}
+
+const onSearchInput = (event: Event): void => {
+  props.source.searchBox?.onInput((event.target as HTMLInputElement).value)
 }
 
 const stateColor = (state: TaskItemState): string => {

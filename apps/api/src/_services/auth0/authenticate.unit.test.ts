@@ -1,10 +1,18 @@
 import { type FastifyRequest } from 'fastify'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 
 import { authenticate } from './authenticate'
 
-const makeReq = (decoded: Record<string, unknown>): FastifyRequest =>
-  ({ jwtDecode: async () => decoded } as unknown as FastifyRequest)
+// authenticate.ts now imports ~/auth0/masquerade -> ~/env, which throws at
+// import time when required env vars are absent (the unit-test environment).
+// vi.mock is hoisted above the imports by vitest, so the mock is in place
+// before ./authenticate (and thus ~/env) is evaluated. Empty
+// SUPER_USER_EMAILS => masquerade never elevates, so plain-auth cases below
+// are unaffected.
+vi.mock('~/env', () => ({ env: { SUPER_USER_EMAILS: '' } }))
+
+const makeReq = (decoded: Record<string, unknown>, headers: Record<string, string> = {}): FastifyRequest =>
+  ({ jwtDecode: async () => decoded, headers, log: { warn: () => {} } } as unknown as FastifyRequest)
 
 describe('authenticate', () => {
   test('user token: name/email claims map to profile fields', async () => {
@@ -51,5 +59,15 @@ describe('authenticate', () => {
     }))
     expect(token.firstName).toBe('')
     expect(token.lastName).toBe('')
+  })
+
+  test('X-Masquerade-Email is ignored when SUPER_USER_EMAILS is empty (default mock)', async () => {
+    // With no supers configured, even a real rfcx.org token cannot masquerade.
+    const token = await authenticate(makeReq(
+      { auth0_user_id: 'auth0|s', email: 'support@rfcx.org', name: 'S' },
+      { 'x-masquerade-email': 'target@example.com' }
+    ))
+    expect(token.email).toBe('support@rfcx.org')
+    expect(token.masqueradedBy).toBeUndefined()
   })
 })

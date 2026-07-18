@@ -1,6 +1,7 @@
 import { type FastifyRequest } from 'fastify'
 
 import { BioPublicError, ERROR_STATUS_CODE } from '~/errors'
+import { resolveMasqueradeEmail } from './masquerade'
 import { type Auth0RawDecodedToken, type Auth0UserToken } from './types'
 
 const errorMessages = {
@@ -45,6 +46,27 @@ const fastifyJwtVerify = async (request: FastifyRequest): Promise<Auth0RawDecode
 
 export const authenticate = async (request: FastifyRequest): Promise<Auth0UserToken> => {
   const decoded = await fastifyJwtVerify(request)
+  // Superuser masquerade: a verified super may process this request AS a
+  // target user via the X-Masquerade-Email header (see ./masquerade.ts for
+  // the guards). Everything downstream (userId resolution, project roles)
+  // keys off userToken.email, so overriding here masquerades the whole
+  // request. Fails open to the REAL identity whenever any guard fails.
+  // (M2M tokens have no email claim -> resolveMasqueradeEmail never elevates
+  // them: an undefined/empty real email is not on SUPER_USER_EMAILS.)
+  if (typeof decoded.email === 'string' && decoded.email !== '') {
+    const { email, masqueradedBy } = resolveMasqueradeEmail(request, decoded.email)
+    if (masqueradedBy !== undefined) {
+      // Audit line (stdout -> Loki): who is acting as whom, on what.
+      request.log.warn({ masqueradedBy, masqueradeTarget: email, url: request.url, method: request.method }, 'MASQUERADE bio-api request')
+      return {
+        idAuth0: decoded.auth0_user_id ?? decoded.sub,
+        email,
+        firstName: '',
+        lastName: '',
+        masqueradedBy
+      }
+    }
+  }
   // Machine-to-machine (client-credentials) tokens carry no name/email
   // profile claims — `decoded.name` is undefined. Guard so system-token
   // requests (e.g. ingest-service → upload-limit-summary) don't 500.

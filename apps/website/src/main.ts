@@ -7,9 +7,11 @@ import appComponent from '@/_layout'
 import { identify, initAnalytics } from '~/analytics'
 import { getIdToken, handleAuthCallback, useAuth0Client } from '~/auth-client'
 import { FEATURE_TOGGLES } from '~/feature-toggles'
+import { installMasqueradeClient, markMasqueradeReadyNoop, masqueradeReady, masqueradeTargetEmail, refreshMasqueradeStatus } from '~/masquerade'
 import routerOptions, { ROUTE_NAMES } from '~/router'
 import { pinia, useStoreOutsideSetup } from '~/store'
 import { installAnalysisJobsSource } from '~/tasks/sources/analysis-jobs'
+import { installMasqueradeSource } from '~/tasks/sources/masquerade'
 import { componentsFromGlob } from '~/vue/register-components'
 import { apiClientArbimonLegacyKey, apiClientCoreKey, apiClientDeviceKey, apiClientKey, apiClientMediaKey, authClientKey, routeNamesKey, storeKey, togglesKey } from './globals'
 
@@ -57,7 +59,18 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
 
     // Setup API token
     const getToken = user ? async () => await getIdToken(authClient) : undefined
-    const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, getToken)
+    // Superuser masquerade: stamp X-Masquerade-Email so the modern UI is
+    // rendered AS the target. Applied ONLY to the primary API client
+    // (VITE_API_BASE_URL = arbimon.org/api) because:
+    //   (a) that is the ONLY service that implements the header (see
+    //       apps/api/.../auth0/masquerade.ts); core/media/device are separate
+    //       services with no masquerade support, and
+    //   (b) it is SAME-ORIGIN with the website (arbimon.org), so the custom
+    //       header needs no CORS preflight. Adding it to the cross-origin
+    //       clients would risk a preflight failure for zero benefit.
+    // Read reactively per-request so start/stop take effect without rebuild.
+    const masqueradeOpts = { getMasqueradeEmail: () => masqueradeTargetEmail.value, waitForMasqueradeReady: masqueradeReady }
+    const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, getToken, masqueradeOpts)
     const apiClientCore = getApiClient(import.meta.env.VITE_CORE_API_BASE_URL, getToken)
     const apiClientMedia = getApiClient(import.meta.env.VITE_MEDIA_API_BASE_URL, getToken)
     const apiClientArbimonLegacy = getApiClient(import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL, getToken)
@@ -73,9 +86,32 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
       .provide(apiClientArbimonLegacyKey, apiClientArbimonLegacy)
       .provide(storeKey, store) // TODO: Delete this & use useStore() directly in components
 
+    // Install the masquerade tray (superuser "view as user"). Uses the
+    // same-origin legacy api client to read/drive the shared masquerade
+    // session; the header injection above mirrors it onto bio-api requests.
+    installMasqueradeClient(apiClientArbimonLegacy)
+    // Resolve masquerade status BEFORE anything issues a bio-api request:
+    // this must run ahead of installAnalysisJobsSource (which polls /jobs
+    // immediately) AND before the ViteSSG setup callback returns and the app
+    // mounts (component onMounted fetches). Otherwise those first requests
+    // race ahead of the status poll, go out WITHOUT X-Masquerade-Email, and
+    // return the REAL super's data while masquerading. Only logged-in users
+    // can masquerade, so anonymous visitors skip the round-trip. Best-effort:
+    // never block boot on a failure.
+    if (user !== undefined) {
+      try { await refreshMasqueradeStatus() } catch { /* keep default inactive */ }
+    } else {
+      // Anonymous: no masquerade possible — release the readiness gate so
+      // their bio requests aren't held waiting on a status fetch that never runs.
+      markMasqueradeReadyNoop()
+    }
+    installMasqueradeSource(app)
+
     // Install the analysis-jobs task source (floating tray). Current-project
     // scoped; polls the bio /jobs endpoint. Registered here so it has the
     // authed bio apiClient + store + router. Uploads self-register in app-root.
+    // Registered AFTER the masquerade status resolves so its first /jobs poll
+    // already carries the masquerade header.
     installAnalysisJobsSource(app, {
       getApiClient: () => apiClient,
       getProjectIdCore: () => store.project?.idCore,

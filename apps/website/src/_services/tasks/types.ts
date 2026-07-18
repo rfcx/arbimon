@@ -51,6 +51,15 @@ export interface TaskSummary {
   headline: string
 }
 
+export interface TaskSearchBox {
+  /** Placeholder text for the input. */
+  placeholder: string
+  /** Current query (reactive via the source). */
+  query: ComputedRef<string>
+  /** Called on each input change (source debounces as needed). */
+  onInput: (value: string) => void
+}
+
 export interface TaskSource {
   /** Stable id ('uploads', 'analysis-jobs'…) — also the collapse-state key. */
   id: string
@@ -73,4 +82,9 @@ export interface TaskSource {
   pageRoute?: ComputedRef<string | undefined>
   /** Label for the page link. Default "Open". */
   pageLabel?: string
+  /**
+   * Optional free-text search box rendered above the item list (e.g. the
+   * masquerade user picker). Most sources omit this.
+   */
+  searchBox?: TaskSearchBox
 }
