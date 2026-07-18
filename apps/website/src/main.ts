@@ -59,15 +59,22 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
 
     // Setup API token
     const getToken = user ? async () => await getIdToken(authClient) : undefined
-    // Superuser masquerade: while active, every bio-facing client stamps
-    // X-Masquerade-Email so the modern UI is rendered AS the target (bio-api
-    // re-verifies the real super server-side). Read reactively per-request.
+    // Superuser masquerade: stamp X-Masquerade-Email so the modern UI is
+    // rendered AS the target. Applied ONLY to the primary API client
+    // (VITE_API_BASE_URL = arbimon.org/api) because:
+    //   (a) that is the ONLY service that implements the header (see
+    //       apps/api/.../auth0/masquerade.ts); core/media/device are separate
+    //       services with no masquerade support, and
+    //   (b) it is SAME-ORIGIN with the website (arbimon.org), so the custom
+    //       header needs no CORS preflight. Adding it to the cross-origin
+    //       clients would risk a preflight failure for zero benefit.
+    // Read reactively per-request so start/stop take effect without rebuild.
     const masqueradeOpts = { getMasqueradeEmail: () => masqueradeTargetEmail.value }
     const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, getToken, masqueradeOpts)
-    const apiClientCore = getApiClient(import.meta.env.VITE_CORE_API_BASE_URL, getToken, masqueradeOpts)
-    const apiClientMedia = getApiClient(import.meta.env.VITE_MEDIA_API_BASE_URL, getToken, masqueradeOpts)
+    const apiClientCore = getApiClient(import.meta.env.VITE_CORE_API_BASE_URL, getToken)
+    const apiClientMedia = getApiClient(import.meta.env.VITE_MEDIA_API_BASE_URL, getToken)
     const apiClientArbimonLegacy = getApiClient(import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL, getToken)
-    const apiClientDevice = getApiClient(import.meta.env.VITE_DEVICE_API_BASE_URL, getToken, masqueradeOpts)
+    const apiClientDevice = getApiClient(import.meta.env.VITE_DEVICE_API_BASE_URL, getToken)
 
     // Inject globals
     app
