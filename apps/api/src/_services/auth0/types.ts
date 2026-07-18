@@ -50,4 +50,10 @@ export interface Auth0UserToken {
   email: string
   firstName: string
   lastName: string
+  /**
+   * Superuser masquerade: the REAL super's email when this request is being
+   * processed AS another user (email above = the target). Undefined on
+   * normal requests. See ~/auth0/masquerade.
+   */
+  masqueradedBy?: string
 }

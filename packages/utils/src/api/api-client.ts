@@ -1,7 +1,18 @@
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import axios from 'axios'
 
-export const getApiClient = (baseURL: string, getToken?: () => Promise<string>): AxiosInstance => {
+export interface GetApiClientOptions {
+  /**
+   * Superuser masquerade: when this returns a non-empty email, every request
+   * carries `X-Masquerade-Email: <email>`. The bio-api honors it ONLY for a
+   * real super token (see apps/api/.../auth0/masquerade.ts), so it is inert
+   * for everyone else. Read reactively per-request so start/stop take effect
+   * without rebuilding the client.
+   */
+  getMasqueradeEmail?: () => string | null | undefined
+}
+
+export const getApiClient = (baseURL: string, getToken?: () => Promise<string>, options?: GetApiClientOptions): AxiosInstance => {
   const apiClient = axios.create({
     baseURL,
     timeout: 30 * 1000 // 30 secs
@@ -17,6 +28,10 @@ export const getApiClient = (baseURL: string, getToken?: () => Promise<string>):
       const token = await getToken()
       if (token) {
         config.headers = { ...config.headers, Authorization: `Bearer ${token}` }
+      }
+      const masqueradeEmail = options?.getMasqueradeEmail?.()
+      if (masqueradeEmail !== null && masqueradeEmail !== undefined && masqueradeEmail !== '') {
+        config.headers = { ...config.headers, 'X-Masquerade-Email': masqueradeEmail }
       }
       return config
     })
