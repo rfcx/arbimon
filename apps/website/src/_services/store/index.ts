@@ -7,6 +7,7 @@ import { rolesGreaterOrEqualTo } from '@rfcx-bio/common/roles'
 import { getApiClient } from '@rfcx-bio/utils/api'
 
 import { getIdToken, useAuth0Client } from '~/auth-client'
+import { masqueradeTargetEmail } from '~/masquerade'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 import { useDashboardStore } from './use-dashboard-store'
 import { useDetectionsResultFilterBySpeciesStore } from './use-detections-result-filter-by-species-store'
@@ -14,6 +15,12 @@ import { useDetectionsResultFilterStore } from './use-detections-result-filter-s
 import { useHighlightedSpeciesStore } from './use-highlighted-species-store'
 import { useProjectDirectoryStore } from './use-project-directory-store'
 import { useSuperStore } from './use-super-admin-store'
+
+// Superuser masquerade: every store-created bio-api client must carry the
+// X-Masquerade-Email header too (same-origin arbimon.org/api). Without this,
+// project-slug / project-filter fetches bypass the masquerade and briefly show
+// the REAL super's data. Read reactively per-request.
+const masqueradeApiOptions = { getMasqueradeEmail: () => masqueradeTargetEmail.value }
 
 export const useStore = defineStore('root', {
   state: () => ({
@@ -89,7 +96,7 @@ export const useStore = defineStore('root', {
           return ''
         }
       }
-      const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, getToken)
+      const apiClient = getApiClient(import.meta.env.VITE_API_BASE_URL, getToken, masqueradeApiOptions)
       this.project = await apiBioGetProjectBySlug(apiClient, slug)
       // If we got nothing AND we previously thought we had no user, try
       // refreshing the user state once — `getTokenSilently` may have
@@ -127,7 +134,7 @@ export const useStore = defineStore('root', {
 
       // Temporary hack to get an API Client (this will be extracted in the loading branch)
       const authClient = await useAuth0Client()
-      const apiClientBio = getApiClient(import.meta.env.VITE_API_BASE_URL, this.user ? async () => await getIdToken(authClient) : undefined)
+      const apiClientBio = getApiClient(import.meta.env.VITE_API_BASE_URL, this.user ? async () => await getIdToken(authClient) : undefined, masqueradeApiOptions)
 
       this.projectFilters = await apiBioGetProjectFilters(apiClientBio, this.project.id)
     },
