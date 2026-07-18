@@ -10,6 +10,13 @@ export interface GetApiClientOptions {
    * without rebuilding the client.
    */
   getMasqueradeEmail?: () => string | null | undefined
+  /**
+   * Resolves once the initial masquerade status is known. The interceptor
+   * awaits this before deciding whether to attach the header, so a request
+   * that fires during app boot cannot race ahead of the status resolution
+   * and leak the real (super) user's data while masquerading.
+   */
+  waitForMasqueradeReady?: () => Promise<void>
 }
 
 export const getApiClient = (baseURL: string, getToken?: () => Promise<string>, options?: GetApiClientOptions): AxiosInstance => {
@@ -28,6 +35,11 @@ export const getApiClient = (baseURL: string, getToken?: () => Promise<string>, 
       const token = await getToken()
       if (token) {
         config.headers = { ...config.headers, Authorization: `Bearer ${token}` }
+      }
+      // Wait until the initial masquerade status is resolved before reading it,
+      // so no boot-time request can leak the real user's data (see options doc).
+      if (options?.waitForMasqueradeReady !== undefined) {
+        await options.waitForMasqueradeReady()
       }
       const masqueradeEmail = options?.getMasqueradeEmail?.()
       if (masqueradeEmail !== null && masqueradeEmail !== undefined && masqueradeEmail !== '') {

@@ -7,7 +7,7 @@ import { rolesGreaterOrEqualTo } from '@rfcx-bio/common/roles'
 import { getApiClient } from '@rfcx-bio/utils/api'
 
 import { getIdToken, useAuth0Client } from '~/auth-client'
-import { masqueradeTargetEmail } from '~/masquerade'
+import { masqueradeReady, masqueradeTargetEmail } from '~/masquerade'
 import { COLORS_BIO_INCLUSIVE } from '~/store/colors'
 import { useDashboardStore } from './use-dashboard-store'
 import { useDetectionsResultFilterBySpeciesStore } from './use-detections-result-filter-by-species-store'
@@ -20,7 +20,7 @@ import { useSuperStore } from './use-super-admin-store'
 // X-Masquerade-Email header too (same-origin arbimon.org/api). Without this,
 // project-slug / project-filter fetches bypass the masquerade and briefly show
 // the REAL super's data. Read reactively per-request.
-const masqueradeApiOptions = { getMasqueradeEmail: () => masqueradeTargetEmail.value }
+const masqueradeApiOptions = { getMasqueradeEmail: () => masqueradeTargetEmail.value, waitForMasqueradeReady: masqueradeReady }
 
 export const useStore = defineStore('root', {
   state: () => ({

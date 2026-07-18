@@ -51,6 +51,28 @@ export const masqueradeTargetEmail = computed<string | null>(() =>
   status.value.active && status.value.target !== null ? status.value.target.email : null
 )
 
+// Readiness gate: resolves once the FIRST status fetch completes (or is
+// explicitly marked unnecessary for anonymous users). The api-client
+// interceptor awaits this before deciding whether to attach the masquerade
+// header, so NO bio-api request can ever race ahead of the initial status
+// resolution and leak the real super's data — regardless of what fires the
+// request (component onMounted, a task-source poll, a store action, etc.).
+let resolveReady: () => void
+const readyPromise = new Promise<void>(resolve => { resolveReady = resolve })
+let readyResolved = false
+const markReady = (): void => {
+  if (!readyResolved) { readyResolved = true; resolveReady() }
+}
+
+/** Awaited by the api-client interceptor. Returns immediately once resolved. */
+export const masqueradeReady = async (): Promise<void> => { await readyPromise }
+
+/**
+ * Mark masquerade status as resolved WITHOUT a fetch — for anonymous users
+ * (who can never masquerade), so their bio requests aren't held waiting.
+ */
+export const markMasqueradeReadyNoop = (): void => { markReady() }
+
 // The legacy api client (same-origin arbimon.org). Injected once at boot so
 // this module stays free of Vue-app singletons.
 let legacyClient: AxiosInstance | undefined
@@ -60,12 +82,16 @@ export const installMasqueradeClient = (client: AxiosInstance): void => {
 }
 
 export const refreshMasqueradeStatus = async (): Promise<void> => {
-  if (legacyClient === undefined) return
+  if (legacyClient === undefined) { markReady(); return }
   try {
     const res = await legacyClient.get<MasqueradeStatus>('/legacy-api/masquerade/status', { withCredentials: true })
     status.value = res.data
   } catch {
     // best-effort; keep last-known status on transient failure
+  } finally {
+    // Whether the fetch succeeded or not, status is now "as resolved as it
+    // will get" — release any bio requests waiting on the readiness gate.
+    markReady()
   }
 }
 
