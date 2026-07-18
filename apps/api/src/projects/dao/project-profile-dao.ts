@@ -9,7 +9,7 @@ import { getRichnessByTaxon } from '@/dashboard/dashboard-species-data-dao'
 import { getSequelize } from '~/db'
 import { fileUrl } from '~/format-helpers/file-url'
 import { getProjectTypeLimitMap } from '../../tiering/tier-limit-bll'
-import { getImageByObjectives } from '../utils/image-by-objective'
+import { getImageByObjectives, resolveProjectImage } from '../utils/image-by-objective'
 import { getProjectTieringUsage } from './project-tiering-usage-dao'
 
 const profileDefaults: Omit<LocationProjectProfile, 'locationProjectId'> = {
@@ -32,7 +32,15 @@ export const createProjectProfile = async (partialProfile: Partial<LocationProje
     const profile: LocationProjectProfile = {
       ...profileDefaults,
       ...partialProfile,
-      image: getImageByObjectives(partialProfile.objectives)
+      // Respect a caller-supplied image (e.g. an uploaded project thumbnail).
+      // Only fall back to the objective-based default when no image was
+      // provided. Previously this always overwrote `image` with the objective
+      // default, so a thumbnail uploaded to a project that had no profile row
+      // yet was silently lost (bytes landed in S3 but the DB recorded the
+      // default). See patchProjectProfileImage -> createProjectProfile.
+      image: (partialProfile.image !== undefined && partialProfile.image !== '')
+        ? partialProfile.image
+        : getImageByObjectives(partialProfile.objectives)
     }
     await ModelRepository.getInstance(getSequelize()).LocationProjectProfile.create(profile)
 }
@@ -105,7 +113,7 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     dateStart: baseProject.dateStart,
     ...(fields.includes('readme') ? { readme: resProfile?.readme ?? '' } : {}),
     ...(fields.includes('keyResult') ? { keyResult: resProfile?.keyResult ?? '' } : {}),
-    ...(fields.includes('image') ? { image: fileUrl(resProfile?.image) ?? '' } : {}),
+    ...(fields.includes('image') ? { image: fileUrl(resolveProjectImage(resProfile?.image, resProfile?.objectives)) ?? '' } : {}),
     ...(fields.includes('countryCodes') ? { countryCodes: resCountry?.countryCodes ?? [] } : {}),
     ...(fields.includes('richnessByTaxon') ? { richnessByTaxon } : {}),
     ...(fields.includes('resources') ? { resources: resProfile?.resources } : {}),

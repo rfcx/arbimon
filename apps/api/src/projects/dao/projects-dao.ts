@@ -8,6 +8,7 @@ import { type Project, type ProjectStatus, ATTRIBUTES_LOCATION_PROJECT } from '@
 
 import { getSequelize } from '~/db'
 import { fileUrl } from '~/format-helpers/file-url'
+import { resolveProjectImage } from '../utils/image-by-objective'
 import { getProjectsTieringUsage } from './project-tiering-usage-dao'
 
 const sequelize = getSequelize()
@@ -119,16 +120,19 @@ export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, 
     offset,
     limit,
     total: myProjects.length,
-    data: myProjects.map(p => ({
+    data: myProjects.map(p => {
+      const profile = profileInfo.find(pi => pi.locationProjectId === p.id)
+      return {
       ...p,
-      summary: profileInfo.find(pi => pi.locationProjectId === p.id)?.summary ?? '',
-      image: fileUrl(profileInfo.find(pi => pi.locationProjectId === p.id)?.image) ?? '',
-      objectives: profileInfo.find(pi => pi.locationProjectId === p.id)?.objectives ?? [],
+      summary: profile?.summary ?? '',
+      image: fileUrl(resolveProjectImage(profile?.image, profile?.objectives)) ?? '',
+      objectives: profile?.objectives ?? [],
       countries: countryInfo.find(ci => ci.locationProjectId === p.id)?.countryCodes ?? [],
       isOwner: ownerProjectIds.includes(p.id),
       isPublished: p.status === 'published',
       usage: usageByProjectId[p.id]
-    }))
+    }
+    })
   }
 }
 
