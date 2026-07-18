@@ -7,7 +7,7 @@ import appComponent from '@/_layout'
 import { identify, initAnalytics } from '~/analytics'
 import { getIdToken, handleAuthCallback, useAuth0Client } from '~/auth-client'
 import { FEATURE_TOGGLES } from '~/feature-toggles'
-import { installMasqueradeClient, masqueradeTargetEmail } from '~/masquerade'
+import { installMasqueradeClient, masqueradeTargetEmail, refreshMasqueradeStatus } from '~/masquerade'
 import routerOptions, { ROUTE_NAMES } from '~/router'
 import { pinia, useStoreOutsideSetup } from '~/store'
 import { installAnalysisJobsSource } from '~/tasks/sources/analysis-jobs'
@@ -101,6 +101,16 @@ export const createApp = ViteSSG(appComponent, routerOptions, async ({ app, rout
     // same-origin legacy api client to read/drive the shared masquerade
     // session; the header injection above mirrors it onto bio-api requests.
     installMasqueradeClient(apiClientArbimonLegacy)
+    // Resolve masquerade status BEFORE any component mounts (this ViteSSG
+    // setup callback runs prior to app.mount). Otherwise the first bio-api
+    // calls (e.g. my-projects onMounted) can race ahead of the async status
+    // poll and fetch as the REAL user, showing the super's own data while
+    // masquerading. Only logged-in users can masquerade, so skip the extra
+    // round-trip entirely for anonymous visitors. Best-effort: never block
+    // boot on a failure.
+    if (user !== undefined) {
+      try { await refreshMasqueradeStatus() } catch { /* keep default inactive */ }
+    }
     installMasqueradeSource(app)
 
     // Handle redirects
