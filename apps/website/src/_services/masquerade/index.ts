@@ -64,6 +64,16 @@ const markReady = (): void => {
   if (!readyResolved) { readyResolved = true; resolveReady() }
 }
 
+// Safety bound: never let a slow/down legacy /status endpoint hold the
+// readiness gate (and thus every bio request) for more than this. If it
+// trips, masquerade may briefly be treated as inactive on the very first
+// requests — acceptable degradation (worst case: a super sees their own data
+// for a moment) vs. blocking normal users' app for the full 30s HTTP timeout.
+const READY_MAX_WAIT_MS = 4000
+if (typeof window !== 'undefined') {
+  setTimeout(markReady, READY_MAX_WAIT_MS)
+}
+
 /** Awaited by the api-client interceptor. Returns immediately once resolved. */
 export const masqueradeReady = async (): Promise<void> => { await readyPromise }
 
