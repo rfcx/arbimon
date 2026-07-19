@@ -712,11 +712,29 @@ watch(() => recordingTags.value, () => {
   spectrogramTags.value = groupByBbox(recordingTags.value)
 })
 
+// Resolve the browse SITE from the opened recording's `site` label against the
+// loaded site list (`options`). On a COLD full-page load the recording-info
+// (`props.visobject`) can resolve BEFORE the sites query, so `options` is empty
+// when this first runs and `.find` returns undefined. Guard against clobbering:
+// only assign when a match is found, and add an `options` watcher that back-fills
+// once sites arrive. Without this, `siteSelected` stayed undefined forever on
+// full-load -> empty browse context / no thumbnail strip (visualizer parity A1,
+// runbooks/evidence/phase5-parity-testmatrix-2026-07-19.md).
 watch(() => props.visobject, (v) => {
   if (isPlaylist.value) return
   const site = options.value.find(s => s.label === v?.site)
-  siteSelected.value = site?.value
+  if (site !== undefined) siteSelected.value = site.value
   initialDate.value = v?.datetime ?? ''
+}, { immediate: true })
+
+// Back-fill the site once the sites list resolves late (cold-load race). Only
+// acts while `siteSelected` is still unset, so it can never override a site the
+// user picked manually.
+watch(options, () => {
+  if (isPlaylist.value) return
+  if (siteSelected.value !== undefined) return
+  const site = options.value.find(s => s.label === props.visobject?.site)
+  if (site !== undefined) siteSelected.value = site.value
 })
 
 onMounted(async () => {
