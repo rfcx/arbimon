@@ -27,6 +27,13 @@ export const doYAxisLayout = (axisY: Ref<SVGSVGElement | null>, visobject: Visob
     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     .attr('transform', `translate(${visobject.spectrogram.legend.axis_sizew as number}, ${visobject.spectrogram.legend.axis_lead as number})`)
     .call(makeAxis(domain.y, scaley, 'left'))
+  // Hide the y-axis "0" tick: its label sits at the very bottom where it
+  // collides with the x-axis line and gets visually cropped. It's redundant
+  // with the x-axis origin "0" right beside it (2026-07-19, operator OK'd
+  // hiding it). Remove the tick whose datum is 0.
+  d3Yaxis.selectAll('.axis .tick')
+    .filter((d: any) => Number(d) === 0)
+    .style('display', 'none')
 }
 
 export const doXAxisLayout = (axisX: Ref<SVGSVGElement | null>, visobject: Visobject | SoundscapeItem): void => {
@@ -41,7 +48,10 @@ export const doXAxisLayout = (axisX: Ref<SVGSVGElement | null>, visobject: Visob
   d3XAxis.style('height', visobject.spectrogram.legend.axis_sizeh)
   d3XAxis.style('width', specW + (visobject.spectrogram.legend.axis_margin_x as number))
   d3XAxis.style('scale', 'none')
-  d3XAxis.style('top', `${specH + axisLead}`)
+  // The tile grid ends a few px above specH+axis_lead due to per-tile height
+// rounding; nudge the x-axis up so its baseline sits FLUSH on the spectrogram
+// bottom (removes the small dark gap between them, 2026-07-19 operator).
+  d3XAxis.style('top', `${specH + axisLead - 5}`)
   // Align the x-axis origin with the spectrogram's left edge. Tiles start at
   // `axis_sizew`; the axis group is translated internally by `axis_lead`, so the
   // SVG left = axis_sizew - axis_lead keeps tick 0 under the spectrogram origin.
