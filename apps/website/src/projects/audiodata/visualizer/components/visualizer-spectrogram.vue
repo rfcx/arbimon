@@ -669,7 +669,7 @@ const legendMetrics = computed(() => {
     // and (b) the 2-digit y tick numbers on the inner ~half. 44px = ~20px
     // slider column + ~24px for the right-aligned numbers next to the
     // spectrogram. (Still narrower than the old 60px label gutter.)
-    axis_sizew: 56,
+    axis_sizew: 48,
     axis_sizeh: 60,
     axis_lead: 15,
     axis_margin_x: 20,
@@ -1233,6 +1233,12 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
+/* Axis backing rects were defaulting to pure black (#000) which mismatched the
+   page's dark navy (#060508). Match them so the axis divs blend with the page
+   (2026-07-19, operator). */
+.block {
+  fill: #060508;
+}
 .filter-band {
   position: absolute;
   background-color: rgba(255,255,255,.7)

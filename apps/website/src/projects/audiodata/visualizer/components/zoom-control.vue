@@ -143,38 +143,44 @@ const onTrackMouseDown = (e: MouseEvent): void => {
 }
 
 .zoom-control .marker { position: absolute; background: #2563eb; border-radius: 2px; }
-.tick-marks {
+
+/* Horizontal track: a centered horizontal rail of vertical tick lines. */
+.zoom-control.horizontal .tick-marks {
   left: 0;
   right: 0;
   top: 50%;
+  height: 9px;
   margin-top: -5px;
   background-size: 11px 9px;
-  /* Light ticks so they read against the dark spectrogram-adjacent background
-     (the calendar's old black/#242424 ticks were invisible here, 2026-07-19). */
-  background-image:
-    linear-gradient(
-      to right,
-      rgba(0,0,0,0) 0%,
-      rgba(0,0,0,0) 49%,
-      rgba(255,255,255,0.45) 49%,
-      rgba(255,255,255,0.45) 51%,
-      rgba(0,0,0,0) 51%,
-      rgba(0,0,0,0) 100%
-    ),
-    linear-gradient(
-      to bottom,
-      rgba(0,0,0,0) 0%,
-      rgba(0,0,0,0) 49%,
-      rgba(255,255,255,0.35) 49%,
-      rgba(255,255,255,0.35) 50%,
-      rgba(255,255,255,0.35) 51%,
-      rgba(0,0,0,0) 51%,
-      rgba(0,0,0,0) 100%
-    );
+  background-repeat: repeat-x;
+  background-image: linear-gradient(
+    to right,
+    rgba(0,0,0,0) 0%, rgba(0,0,0,0) 49%,
+    rgba(255,255,255,0.5) 49%, rgba(255,255,255,0.5) 51%,
+    rgba(0,0,0,0) 51%, rgba(0,0,0,0) 100%
+  );
+}
+
+/* Vertical track: a centered vertical rail of horizontal tick lines. */
+.zoom-control.vertical .tick-marks {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 9px;
+  margin-left: -5px;
+  background-size: 9px 11px;
+  background-repeat: repeat-y;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0%, rgba(0,0,0,0) 49%,
+    rgba(255,255,255,0.5) 49%, rgba(255,255,255,0.5) 51%,
+    rgba(0,0,0,0) 51%, rgba(0,0,0,0) 100%
+  );
 }
 
 /* Zoom controls sit on the dark page margin now (moved bottom-left 2026-07-19).
-   Make the buttons + track read clearly against dark. */
+   Buttons stay legible; the TRACK is transparent (no border/bg) so the tick
+   rail just floats against the page, matching the operator's request. */
 .zoom-control .btn.btn-xs {
   background-color: #3a3a38 !important;
   border: 1px solid #5a5a56 !important;
@@ -184,9 +190,8 @@ const onTrackMouseDown = (e: MouseEvent): void => {
   background-color: #4a4a47 !important;
 }
 .zoom-control .zoom-track {
-  background-color: rgba(255,255,255,0.06);
-  border: 1px solid #4a4a47;
-  border-radius: 3px;
+  background-color: transparent;
+  border: 0;
 }
 .zoom-control .zoom-marker {
   background-color: #ADFF2C !important;
