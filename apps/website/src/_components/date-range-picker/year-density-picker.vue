@@ -13,7 +13,7 @@
     100+          -> arbimon green  (#ADFF2C)     "many"   (@frequency)
   Legend '+1 / +50 / +100' mirrors legacy.
 
-  Drop-in for DateInputPicker in the visualizer sidebar: SAME props
+  Replaced the former DateInputPicker in the visualizer sidebar: SAME props
   (initialDate, recordedMinutesPerDay, initialViewYear/Month, disabled) and SAME
   emits (emitSelectDate {dateLocalIso}, emitChangedYear {year}). Days with no
   recordings are disabled (not clickable), matching legacy `disable-empty`.
