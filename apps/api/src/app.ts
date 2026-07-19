@@ -11,7 +11,6 @@ import { projectRolePlugin } from './_plugins/project-role'
 import { userPlugin } from './_plugins/user'
 import { env } from './_services/env'
 import { routesActivity } from './activity'
-import { routesArbiAssistant } from './arbi-assistant'
 import { routesClassifiers } from './classifiers'
 import { routesCnn } from './cnn'
 import { routesCoreProxy } from './core-proxy'
@@ -52,7 +51,6 @@ export const createApp = async (): Promise<FastifyInstance> => {
     routesActivity,
     routesClassifiers,
     routesCoreProxy,
-    routesArbiAssistant,
     routesDashboard,
     routesDetect,
     routesLanding,
