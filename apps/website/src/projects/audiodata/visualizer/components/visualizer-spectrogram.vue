@@ -86,7 +86,7 @@
           width: '24px',
           height: '200px',
           top: (spectrogramMetrics.height + legendMetrics.axis_lead - 190) + 'px',
-          left: '4px'
+          left: '-2px'
         }"
       >
         <ZoomControl
