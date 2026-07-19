@@ -60,7 +60,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{(e: 'emitSelectDate', value: { dateLocalIso: string }): void, (e: 'emitChangedYear', value: { year: string }): void}>()
 
-const format = 'DD-MM-YYYY'
+const format = 'YYYY-MM-DD'
 const datePickerInput = ref<HTMLInputElement>()
 const picker = ref<FlowbiteDatePicker>()
 const selectedDateIso = ref('')
@@ -150,7 +150,7 @@ onMounted(async () => {
 
   picker.value = initDatePicker(datePickerInput.value, {
     autohide: true,
-    format: 'dd-mm-yyyy',
+    format: 'yyyy-mm-dd',
     maxView: 1,
     maxDate: new Date(),
     startView: 1,
