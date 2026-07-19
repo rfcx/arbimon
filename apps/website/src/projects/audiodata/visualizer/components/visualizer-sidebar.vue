@@ -67,11 +67,10 @@
           />
         </div>
         <div class="col-span-5">
-          <DateInputPicker
+          <YearDensityPicker
             ref="datePickerRef"
             :disabled="siteSelected === null || siteSelected === undefined"
             :initial-date="initialDate"
-            :hide-label="true"
             :initial-view-year="initialViewYear"
             :initial-view-month="initialViewMonth"
             :recorded-minutes-per-day="recordedMinutesPerDay"
@@ -182,7 +181,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
-import { computed, inject, nextTick, onMounted, ref, watch, watchEffect } from 'vue'
+import { computed, inject, onMounted, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { RecordingResponse, RecordingTagResponse, SoundscapeItem, SoundscapeItemOptions, SoundscapeResponse, TagParams, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
@@ -191,7 +190,7 @@ import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/tra
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
-import DateInputPicker from '@/_components/date-range-picker/date-input-picker.vue'
+import YearDensityPicker from '@/_components/date-range-picker/year-density-picker.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetPlaylists, useGetSoundscape, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
@@ -422,15 +421,10 @@ watchEffect(() => {
   }
 })
 
-const datePickerRef = ref<InstanceType<typeof DateInputPicker> | null>(null)
+const datePickerRef = ref<InstanceType<typeof YearDensityPicker> | null>(null)
 
 const onEmitSelectedDate = (date: { dateLocalIso: string }) => {
   initialDate.value = date.dateLocalIso
-
-  nextTick(() => {
-    const input = (datePickerRef.value as any)?.$refs?.datePickerInput as HTMLInputElement | undefined
-    input?.blur()
-  })
 }
 
 const onEmitChangeYear = (date: { year: string }) => {
