@@ -137,10 +137,11 @@
       <!-- play position -->
       <div
         v-if="visobject && visobject.type == 'rec'"
-        class="absolute pointer-events-none z-5 bottom-60px border-1 border-blue-700 w-1px"
+        class="absolute pointer-events-none z-5 border-1 border-blue-700 w-1px"
         :style="{
           left: getLeftPositionPlay(),
-          height: getHeightPlay()
+          height: getHeightPlay(),
+          bottom: playLineBottom + 'px'
         }"
       />
       <!-- max frequency -->
@@ -875,6 +876,12 @@ const getLeftPositionPlay = (): string => {
 const getHeightPlay = (): string => {
   return `${Math.ceil(spectrogramTileHeight.value)}px`
 }
+
+// Bottom anchor for the playback line. Tracks the spectrogram bottom, which sits
+// at axis_sizeh above the container bottom PLUS the 5px the x-axis was nudged up
+// to be flush (see doXAxisLayout). Keep in sync so the line's foot lands exactly
+// on the spectrogram bottom / x-axis.
+const playLineBottom = computed<number>(() => (legendMetrics.value.axis_sizeh as number) + 5)
 
 const getTagNames = (tags: RecordingTagResponse[]): string => {
   return tags.map(t => t.tag).join(',')
