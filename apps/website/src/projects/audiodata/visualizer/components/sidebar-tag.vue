@@ -51,6 +51,23 @@
           />
         </div>
       </div>
+      <!-- Existing recording tags (read-only chips). Shown by default to match
+           the legacy visualizer, which lists a recording's tags immediately in
+           the expanded section (they were previously only visible after opening
+           the add-tag picker). Editing/removal is still done via the + picker. -->
+      <div
+        v-if="recordingTags && recordingTags.length > 0"
+        class="flex flex-row flex-wrap gap-1"
+      >
+        <span
+          v-for="tag in recordingTags"
+          :key="tag.tag_id"
+          class="inline-flex items-center gap-x-1 px-2 py-0.5 rounded-[4px] bg-util-gray-03 text-insight"
+        >
+          <icon-fa-tag class="text-frequency text-[10px]" />
+          {{ tag.tag }}
+        </span>
+      </div>
       <!-- Tag input -->
       <div
         v-if="toggledTag"
