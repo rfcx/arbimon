@@ -70,8 +70,8 @@
         :style="{
           width: '200px',
           height: '30px',
-          top: (spectrogramMetrics.height + legendMetrics.axis_sizeh + 4) + 'px',
-          left: '0px'
+          top: (spectrogramMetrics.height + legendMetrics.axis_lead + 27) + 'px',
+          left: (legendMetrics.axis_sizew - 3) + 'px'
         }"
       >
         <ZoomControl
@@ -83,10 +83,10 @@
         v-if="visobject"
         class="zoom-control-group absolute z-6"
         :style="{
-          width: '30px',
+          width: '24px',
           height: '200px',
-          top: (spectrogramMetrics.height + legendMetrics.axis_lead - 200) + 'px',
-          left: '0px'
+          top: (spectrogramMetrics.height + legendMetrics.axis_lead - 190) + 'px',
+          left: '-1px'
         }"
       >
         <ZoomControl
@@ -662,10 +662,12 @@ const { data: soundscapeRegions } = useGetSoundscapeRegions(apiClientArbimon, se
 const legendMetrics = computed(() => {
   return {
     gutter: spectrogramContainer.value?.scrollHeight,
-    // axis_sizew shrunk 60 -> 28 (2026-07-19): the y-axis only needs room for
-    // the 2-digit tick numbers (~11px) now that the rotated "Frequency ( kHz )"
-    // label is gone; the reclaimed width goes to the spectrogram.
-    axis_sizew: 28,
+    // axis_sizew (2026-07-19): with the rotated "Frequency ( kHz )" label gone,
+    // this left gutter now holds (a) the vertical Y-zoom slider on the far left
+    // and (b) the 2-digit y tick numbers on the inner ~half. 44px = ~20px
+    // slider column + ~24px for the right-aligned numbers next to the
+    // spectrogram. (Still narrower than the old 60px label gutter.)
+    axis_sizew: 56,
     axis_sizeh: 60,
     axis_lead: 15,
     axis_margin_x: 20,

@@ -149,13 +149,15 @@ const onTrackMouseDown = (e: MouseEvent): void => {
   top: 50%;
   margin-top: -5px;
   background-size: 11px 9px;
+  /* Light ticks so they read against the dark spectrogram-adjacent background
+     (the calendar's old black/#242424 ticks were invisible here, 2026-07-19). */
   background-image:
     linear-gradient(
       to right,
       rgba(0,0,0,0) 0%,
       rgba(0,0,0,0) 49%,
-      black 49%,
-      black 51%,
+      rgba(255,255,255,0.45) 49%,
+      rgba(255,255,255,0.45) 51%,
       rgba(0,0,0,0) 51%,
       rgba(0,0,0,0) 100%
     ),
@@ -163,11 +165,31 @@ const onTrackMouseDown = (e: MouseEvent): void => {
       to bottom,
       rgba(0,0,0,0) 0%,
       rgba(0,0,0,0) 49%,
-      #242424 49%,
-      #242424 50%,
-      #242424 51%,
+      rgba(255,255,255,0.35) 49%,
+      rgba(255,255,255,0.35) 50%,
+      rgba(255,255,255,0.35) 51%,
       rgba(0,0,0,0) 51%,
       rgba(0,0,0,0) 100%
     );
+}
+
+/* Zoom controls sit on the dark page margin now (moved bottom-left 2026-07-19).
+   Make the buttons + track read clearly against dark. */
+.zoom-control .btn.btn-xs {
+  background-color: #3a3a38 !important;
+  border: 1px solid #5a5a56 !important;
+  color: #e6e6e3 !important;
+}
+.zoom-control .btn.btn-xs:hover {
+  background-color: #4a4a47 !important;
+}
+.zoom-control .zoom-track {
+  background-color: rgba(255,255,255,0.06);
+  border: 1px solid #4a4a47;
+  border-radius: 3px;
+}
+.zoom-control .zoom-marker {
+  background-color: #ADFF2C !important;
+  border-color: #ADFF2C !important;
 }
 </style>
