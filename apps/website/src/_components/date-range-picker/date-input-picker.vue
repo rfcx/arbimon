@@ -93,8 +93,13 @@ const hasSelected = computed(() => selectedDateIso.value !== '')
 const recordedMinutesPerDayConverted = computed(() => {
   const temp: Record<string, number> = {}
   props.recordedMinutesPerDay?.forEach((rec: GetRecordedMinutesPerDay) => {
-    const converted = rec.date.split('-').reverse().join('-')
-    temp[converted] = rec.recordedMinutesCount
+    // `rec.date` is already 'YYYY-MM-DD' (see use-recordings formatter) and the
+    // day cells are keyed with `dayjs(date).format(format)` where `format` is
+    // now 'YYYY-MM-DD', so key on it directly. (Previously this reversed to
+    // 'DD-MM-YYYY' to match the old DD-MM-YYYY display format; that reversal
+    // must move in lockstep with `format` or the per-day counts silently
+    // stop matching.)
+    temp[rec.date] = rec.recordedMinutesCount
   })
   return temp
 })
