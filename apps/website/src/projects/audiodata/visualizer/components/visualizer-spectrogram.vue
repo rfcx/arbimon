@@ -59,19 +59,36 @@
         </div>
       </div>
 
-      <!-- zoom -->
+      <!-- zoom controls (moved to bottom-left 2026-07-19, operator):
+           - horizontal X-zoom slider sits UNDER the x-axis, against the left
+           - vertical Y-zoom slider sits LEFT of the y-axis, justified to bottom
+           Each wrapper is `relative` with an explicit size so the `absolute`
+           ZoomControl root anchors to it (otherwise the wrapper collapses). -->
       <div
         v-if="visobject"
-        class="zoom-control-group fixed z-6"
+        class="zoom-control-group absolute z-6"
         :style="{
-          top: (legendMetrics.axis_margin_top + 10) + 'px',
-          left: (containerSize.width + 300) + 'px'
+          width: '200px',
+          height: '30px',
+          top: (spectrogramMetrics.height + legendMetrics.axis_sizeh + 4) + 'px',
+          left: '0px'
         }"
       >
         <ZoomControl
           v-model="zoomData.x"
           :horizontal="true"
         />
+      </div>
+      <div
+        v-if="visobject"
+        class="zoom-control-group absolute z-6"
+        :style="{
+          width: '30px',
+          height: '200px',
+          top: (spectrogramMetrics.height + legendMetrics.axis_lead - 200) + 'px',
+          left: '0px'
+        }"
+      >
         <ZoomControl
           v-model="zoomData.y"
           :horizontal="false"
@@ -83,32 +100,9 @@
         ref="axisY"
         class="z-5 absolute"
       >.</svg>
-      <!-- Y legend - recording, playlist-->
-      <div
-        v-if="visobject && visobject.domain.y && !isSoundscape"
-        class="whitespace-nowrap absolute z-5"
-        :style="{
-          left: - Math.ceil(legendMetrics.axis_margin_x * 3) + 'px',
-          top: Math.ceil(containerHeight / 2) + 'px'
-        }"
-      >
-        <span class="inline-block transform -rotate-90">
-          {{ visobject.domain.y.unit || 'Frequency ( kHz )' }}
-        </span>
-      </div>
-      <!-- Y legend - soundscape -->
-      <div
-        v-if="visobjectSoundscape && visobjectSoundscape.domain.y && isSoundscape"
-        class="whitespace-nowrap absolute z-5"
-        :style="{
-          left: - Math.ceil(legendMetrics.axis_margin_x * 3) + 'px',
-          top: Math.ceil(containerHeight / 2) + 'px'
-        }"
-      >
-        <span class="inline-block transform -rotate-90">
-          {{ visobjectSoundscape.domain.y.unit || 'Frequency ( kHz )' }}
-        </span>
-      </div>
+      <!-- Y-axis "Frequency ( kHz )" legend removed 2026-07-19 (operator) to
+           reclaim the wide left gutter for the spectrogram; the y tick numbers
+           already convey the axis. axis_sizew reduced accordingly below. -->
 
       <!-- X scale -->
       <svg
@@ -668,7 +662,10 @@ const { data: soundscapeRegions } = useGetSoundscapeRegions(apiClientArbimon, se
 const legendMetrics = computed(() => {
   return {
     gutter: spectrogramContainer.value?.scrollHeight,
-    axis_sizew: 60,
+    // axis_sizew shrunk 60 -> 28 (2026-07-19): the y-axis only needs room for
+    // the 2-digit tick numbers (~11px) now that the rotated "Frequency ( kHz )"
+    // label is gone; the reclaimed width goes to the spectrogram.
+    axis_sizew: 28,
     axis_sizeh: 60,
     axis_lead: 15,
     axis_margin_x: 20,

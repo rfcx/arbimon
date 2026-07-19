@@ -10,7 +10,11 @@ export const doYAxisLayout = (axisY: Ref<SVGSVGElement | null>, visobject: Visob
   const scaley = visobject.spectrogram.legend.scale.y
 
   d3Yaxis.style('width', `${visobject.spectrogram.legend.axis_sizew as number}`)
-  d3Yaxis.style('height', specH + (visobject.spectrogram.legend.axis_margin_top as number))
+  // Include axis_lead of BOTTOM padding so the lowest tick label (e.g. "0"/"2")
+  // isn't clipped at the SVG edge. The axis group is translated down by
+  // axis_lead, so the axis spans [axis_lead, axis_lead+specH]; the SVG must be
+  // at least that tall plus room for the bottom label overflow.
+  d3Yaxis.style('height', specH + (visobject.spectrogram.legend.axis_lead as number) + (visobject.spectrogram.legend.axis_margin_top as number))
   d3Yaxis.style('scale', 'none')
   d3Yaxis.append('rect')
     .attr('class', 'block')
@@ -32,11 +36,18 @@ export const doXAxisLayout = (axisX: Ref<SVGSVGElement | null>, visobject: Visob
   const domain = visobject.domain
   const scalex = visobject.spectrogram.legend.scale.x
 
+  const axisSizeW = visobject.spectrogram.legend.axis_sizew as number
+  const axisLead = visobject.spectrogram.legend.axis_lead as number
   d3XAxis.style('height', visobject.spectrogram.legend.axis_sizeh)
   d3XAxis.style('width', specW + (visobject.spectrogram.legend.axis_margin_x as number))
   d3XAxis.style('scale', 'none')
-  d3XAxis.style('top', `${specH + (visobject.spectrogram.legend.axis_lead as number)}`)
-  d3XAxis.style('left', 45)
+  d3XAxis.style('top', `${specH + axisLead}`)
+  // Align the x-axis origin with the spectrogram's left edge. Tiles start at
+  // `axis_sizew`; the axis group is translated internally by `axis_lead`, so the
+  // SVG left = axis_sizew - axis_lead keeps tick 0 under the spectrogram origin.
+  // (Was hardcoded 45, tuned for the old axis_sizew=60 + the removed y-label;
+  // reducing axis_sizew to 28 left the x-axis mis-registered by ~17px.)
+  d3XAxis.style('left', `${axisSizeW - axisLead}`)
   d3XAxis.append('rect')
     .attr('class', 'block')
     .attr('x', 0)
