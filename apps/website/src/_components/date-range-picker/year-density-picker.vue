@@ -23,15 +23,15 @@
     <button
       ref="triggerRef"
       type="button"
-      class="btn btn-block w-full flex items-center justify-between gap-x-1 px-3 py-2 rounded-md border border-util-gray-02 text-insight bg-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+      class="w-full h-[34px] flex items-center justify-between gap-x-1 px-3 rounded-md border border-util-gray-02 text-insight text-sm font-medium bg-transparent disabled:opacity-50 disabled:cursor-not-allowed"
       :disabled="disabled"
       @click="toggleOpen"
     >
-      <span class="flex items-center gap-x-2 truncate">
-        <icon-fa-calendar class="text-[12px]" />
+      <span class="flex items-center gap-x-2 min-w-0">
+        <icon-fa-calendar class="shrink-0 text-[11px]" />
         <span class="truncate">{{ displayDate || 'date' }}</span>
       </span>
-      <icon-fa-chevron-down class="text-[10px]" />
+      <icon-fa-chevron-down class="shrink-0 text-[10px]" />
     </button>
 
     <div
