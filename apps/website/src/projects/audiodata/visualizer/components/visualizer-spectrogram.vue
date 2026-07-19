@@ -86,7 +86,7 @@
           width: '24px',
           height: '200px',
           top: (spectrogramMetrics.height + legendMetrics.axis_lead - 190) + 'px',
-          left: '-1px'
+          left: '4px'
         }"
       >
         <ZoomControl
@@ -670,7 +670,7 @@ const legendMetrics = computed(() => {
     // and (b) the 2-digit y tick numbers on the inner ~half. 44px = ~20px
     // slider column + ~24px for the right-aligned numbers next to the
     // spectrogram. (Still narrower than the old 60px label gutter.)
-    axis_sizew: 48,
+    axis_sizew: 53,
     axis_sizeh: 60,
     axis_lead: 15,
     axis_margin_x: 20,
