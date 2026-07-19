@@ -210,6 +210,7 @@ import SidebarTemplates from './sidebar-templates.vue'
 import SidebarThumbnail from './sidebar-thumbnail.vue'
 import SidebarTrainingSets from './sidebar-training-sets.vue'
 import { type Pointer } from './visualizer-spectrogram.vue'
+import { useVisualizerAnalytics } from '../_composables/use-visualizer-analytics'
 
 export interface AedJob {
   jobId: number
@@ -336,6 +337,17 @@ const selectedRecordingId = computed(() => {
 
 const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
 const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
+
+// Analytics (PostHog) — WRITE events are the highest-value science actions.
+// Taxonomy: runbooks/DESIGN-visualizer-posthog-analytics-2026-07-19. No-op
+// unless enabled (routes through the swallow-all track seam).
+const { trackVis } = useVisualizerAnalytics({
+  projectSlug: selectedProjectSlug,
+  browserType: () => browserType.value ?? 'rec',
+  recordingId: selectedRecordingId,
+  playlistId: () => (isPlaylist.value ? browserTypeId.value : undefined),
+  soundscapeId: () => (isSoundscape.value ? browserTypeId.value : undefined)
+})
 const { isPending: isAddingTag, mutate: mutateRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDeleteRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
@@ -465,6 +477,7 @@ const handleRecTags = async (tagIds: TagParams[]) => {
   if (tagsToAdd.length) {
     mutateRecordingTag(tagsToAdd.map(recId => { return { id: recId } })[0], {
       onSuccess: async () => {
+        trackVis('tag_added', { tag_id: tagsToAdd[0], is_new: false })
         refetchProjectTags()
         refetchRecordingTags()
         showAlertDialog('success', 'Success', 'Tag added')
@@ -479,6 +492,7 @@ const handleRecTags = async (tagIds: TagParams[]) => {
   if (tagsToDelete.length) {
     mutateDeleteRecordingTag(tagsToDelete[0], {
       onSuccess: async () => {
+        trackVis('tag_removed', { tag_id: tagsToDelete[0]?.tag_id })
         refetchProjectTags()
         refetchRecordingTags()
         showAlertDialog('success', 'Success', 'Tag removed')
@@ -495,6 +509,7 @@ const handleRecTags = async (tagIds: TagParams[]) => {
     if (searchedTags.value === undefined || searchedTags.value?.length === 0) {
       mutateRecordingTag({ text: textToSearch[0] }, {
         onSuccess: async () => {
+          trackVis('tag_added', { tag: textToSearch[0], is_new: true })
           refetchProjectTags()
           refetchRecordingTags()
           showAlertDialog('success', 'Success', 'Tag added')
@@ -580,6 +595,8 @@ const onEmitSounscapeValidation = (cl: number, val: number) => {
     val
    }, {
     onSuccess: async () => {
+      // val encodes present/absent/unset; expose as a readable state.
+      trackVis('soundscape_annotated', { class_id: cl, state: val === 1 ? 'present' : val === 0 ? 'absent' : 'unset' })
       await refetchGetSoundscapeComposition()
       showAlertDialog('success', 'Success', 'Soundscape composition class is updated')
     },

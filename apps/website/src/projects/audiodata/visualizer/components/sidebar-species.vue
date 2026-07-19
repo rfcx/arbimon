@@ -446,6 +446,7 @@ import { useStore } from '~/store'
 import { useGetClasses } from '../../_composables/use-recordings'
 import { useSearchSpecies, useSongtypesSpecies } from '../../_composables/use-species'
 import { useRecordingValidate } from '../../_composables/use-visualizer'
+import { useVisualizerAnalytics } from '../_composables/use-visualizer-analytics'
 
 interface ClassToAdd {
   species: string | undefined
@@ -490,6 +491,14 @@ let speciesSearchDropdownInput: Dropdown
 
 const { data: projectClasses, refetch: refetchGetClasses } = useGetClasses(apiClientArbimon, selectedProjectSlug)
 const { mutate: mutateRecordingValidate } = useRecordingValidate(apiClientArbimon, selectedProjectSlug, props.visobject.id)
+
+// Analytics: species-presence validation is a core science WRITE action.
+// Taxonomy: runbooks/DESIGN-visualizer-posthog-analytics-2026-07-19.
+const { trackVis } = useVisualizerAnalytics({
+  projectSlug: selectedProjectSlug,
+  browserType: () => 'rec',
+  recordingId: () => props.visobject.id
+})
 const { data: speciesData, refetch: refetchSearchSpecies, isLoading: loadingSearchSpecies } = useSearchSpecies(apiClientArbimon, computed(() => searchKeyword.value))
 const { data: songtypesSpecies } = useSongtypesSpecies(apiClientArbimon)
 
@@ -721,6 +730,11 @@ const validate = async (val: number, dropdownId?: number | null, isClearOrAbsent
         })
         await nextTick()
         initDropdowns()
+        trackVis('detection_validated', {
+          state: val === 1 ? 'present' : val === 0 ? 'absent' : 'unset',
+          class_count: result.length,
+          bulk: isClearOrAbsentAll === true
+        })
         emits('updateValidations')
         showAlertDialog('success', '', `Success to ${val === 1 ? 'validate' : val === 0 ? 'unvalidate' : 'clear'} the detection${isClearOrAbsentAll === true ? 's' : ''}`)
       },
