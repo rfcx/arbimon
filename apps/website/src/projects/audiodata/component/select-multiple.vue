@@ -62,9 +62,13 @@ const filteredOptions = computed<DropdownOption[]>(() => {
       .filter(opt => opt.label.toLowerCase().includes(lower))
   }
   if (search.value.length && search.value.length > 1 && props.isAbleToAddNewOption === true) {
+    // props.options may be EMPTY (e.g. project tags still loading, or a
+    // project with no tags) — options[0].icon then throws inside this
+    // computed and the dropdown never renders (the add-tag flow dies
+    // silently). Optional-chain the template option's icons.
     return [...props.options
       .filter(opt => !selectedValues.value.includes(opt.value))
-      .filter(opt => opt.label.toLowerCase().includes(lower)), { value: search.value, label: search.value, icon: props.options[0].icon, tagIcon: props.options[0].tagIcon }]
+      .filter(opt => opt.label.toLowerCase().includes(lower)), { value: search.value, label: search.value, icon: props.options[0]?.icon, tagIcon: props.options[0]?.tagIcon }]
   }
 
   return props.options
