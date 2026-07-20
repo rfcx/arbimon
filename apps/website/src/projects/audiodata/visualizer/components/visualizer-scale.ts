@@ -39,6 +39,12 @@ export const doYAxisLayout = (axisY: Ref<SVGSVGElement | null>, visobject: Visob
 export const doXAxisLayout = (axisX: Ref<SVGSVGElement | null>, visobject: Visobject | SoundscapeItem): void => {
   const d3XAxis = d3.select(axisX.value)
   const specH: number = visobject.spectrogram.height
+  // Visible (container) height — differs from specH when zoomed vertically.
+  // The tiles/y-axis/overlays are BOTTOM-ANCHORED to the visible area
+  // (contentYShift in visualizer-spectrogram.vue), so the x-axis must sit at
+  // the VISIBLE bottom, not at the zoomed content height (or it slides down
+  // away from the spectrogram on every vertical zoom step).
+  const visibleH: number = (visobject.spectrogram.css?.height as number | undefined) ?? specH
   const specW: number = visobject.spectrogram.width
   const domain = visobject.domain
   const scalex = visobject.spectrogram.legend.scale.x
@@ -48,10 +54,12 @@ export const doXAxisLayout = (axisX: Ref<SVGSVGElement | null>, visobject: Visob
   d3XAxis.style('height', visobject.spectrogram.legend.axis_sizeh)
   d3XAxis.style('width', specW + (visobject.spectrogram.legend.axis_margin_x as number))
   d3XAxis.style('scale', 'none')
-  // The tile grid ends a few px above specH+axis_lead due to per-tile height
+  // The tile grid ends a few px above the spectrogram bottom due to per-tile
 // rounding; nudge the x-axis up so its baseline sits FLUSH on the spectrogram
 // bottom (removes the small dark gap between them, 2026-07-19 operator).
-  d3XAxis.style('top', `${specH + axisLead - 5}`)
+// Uses visibleH (NOT specH) so the axis stays fixed under the bottom-anchored
+// spectrogram during vertical zoom (2026-07-20 operator report).
+  d3XAxis.style('top', `${visibleH + axisLead - 5}`)
   // Align the x-axis origin with the spectrogram's left edge. Tiles start at
   // `axis_sizew`; the axis group is translated internally by `axis_lead`, so the
   // SVG left = axis_sizew - axis_lead keeps tick 0 under the spectrogram origin.
