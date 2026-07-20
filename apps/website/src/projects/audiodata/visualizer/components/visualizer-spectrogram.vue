@@ -70,7 +70,7 @@
         :style="{
           width: '200px',
           height: '30px',
-          top: (spectrogramMetrics.height + legendMetrics.axis_lead + 27) + 'px',
+          top: (spectrogramMetrics.css.height + legendMetrics.axis_lead + 27) + 'px',
           left: (legendMetrics.axis_sizew - 3) + 'px'
         }"
       >
@@ -85,7 +85,7 @@
         :style="{
           width: '24px',
           height: '200px',
-          top: (spectrogramMetrics.height + legendMetrics.axis_lead - 190) + 'px',
+          top: (spectrogramMetrics.css.height + legendMetrics.axis_lead - 190) + 'px',
           left: '-2px'
         }"
       >
@@ -117,7 +117,7 @@
         class="whitespace-nowrap absolute z-5"
         :style="{
           left: Math.ceil((containerWidth - legendMetrics.axis_margin_x) / 2) + 'px',
-          top: Math.ceil(spectrogramMetrics.height + legendMetrics.axis_margin_x * 2) + 'px'
+          top: Math.ceil(spectrogramMetrics.css.height + legendMetrics.axis_margin_x * 2) + 'px'
         }"
       >
         <div>{{ visobject.domain.x.unit || 'Time ( s )' }}</div>
@@ -128,7 +128,7 @@
         class="whitespace-nowrap absolute z-5"
         :style="{
           left: Math.ceil((containerWidth - legendMetrics.axis_margin_x) / 2) + 'px',
-          top: Math.ceil(spectrogramMetrics.height + legendMetrics.axis_margin_x * 2) + 'px'
+          top: Math.ceil(spectrogramMetrics.css.height + legendMetrics.axis_margin_x * 2) + 'px'
         }"
       >
         <div>{{ visobjectSoundscape.domain.x.unit || 'Time ( s )' }}</div>
