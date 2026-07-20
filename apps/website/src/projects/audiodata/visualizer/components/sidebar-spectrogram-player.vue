@@ -149,12 +149,51 @@ const currentIndex = ref(0)
 
 const selectedGain = computed(() => gainLevels[currentIndex.value])
 
+// ---- Client-side gain (WebAudio) ------------------------------------
+// Gain is applied through a GainNode on the SAME playing audio element, so
+// changing it is instant and playback is CONTINUOUS (2026-07-20 operator
+// request). The previous implementation re-fetched the file with ?gain=N
+// server-side, which (a) restarted playback from 0 on every change and
+// (b) was silently dropped whenever a frequency filter was active (the URL
+// already carried ?maxFreq=..., and gain was appended as a second '?').
+let audioCtx: AudioContext | undefined
+let gainNode: GainNode | undefined
+let mediaSource: MediaElementAudioSourceNode | undefined
+
+const applyGain = () => {
+  if (audioCtx === undefined || gainNode === undefined) return
+  // setTargetAtTime = a short smoothing ramp (no click/pop on change)
+  gainNode.gain.setTargetAtTime(selectedGain.value, audioCtx.currentTime, 0.03)
+}
+
+const wireGainGraph = () => {
+  if (audio.value === undefined) return
+  try {
+    if (audioCtx === undefined) {
+      audioCtx = new AudioContext()
+      gainNode = audioCtx.createGain()
+      gainNode.connect(audioCtx.destination)
+    }
+    // one MediaElementSource per <audio> element; rebuild when audio changes
+    mediaSource?.disconnect()
+    mediaSource = audioCtx.createMediaElementSource(audio.value)
+    if (gainNode !== undefined) mediaSource.connect(gainNode)
+    applyGain()
+  } catch (e) {
+    // WebAudio unavailable/failed: audio still plays at x1 through the
+    // element's default output — never break playback for gain.
+  }
+}
+
 const createAudio = () => {
   audio.value?.pause()
   audio.value = undefined
   currentTime.value = 0
-  const url = `${VITE_ARBIMON_LEGACY_BASE_URL}${props.visobject.audioUrl + (props.freqFilter !== undefined ? `?maxFreq=${props.freqFilter?.filterMax}&minFreq=${props.freqFilter?.filterMin}` : '')}${selectedGain.value && selectedGain.value !== 1 ? '?gain=' + selectedGain.value : ''}`
+  const url = `${VITE_ARBIMON_LEGACY_BASE_URL}${props.visobject.audioUrl + (props.freqFilter !== undefined ? `?maxFreq=${props.freqFilter?.filterMax}&minFreq=${props.freqFilter?.filterMin}` : '')}`
   audio.value = new Audio(url)
+  // Required for createMediaElementSource on a CORS-capable URL
+  // (same-origin in prod, localhost in dev — harmless either way).
+  audio.value.crossOrigin = 'anonymous'
   audio.value?.addEventListener('loadedmetadata', () => {
     duration.value = audio.value?.duration ?? 0
   })
@@ -166,6 +205,9 @@ const createAudio = () => {
     isPlaying.value = false
     currentTime.value = 0
   })
+  // If the WebAudio graph already exists (gain was set before a freq-filter
+  // change rebuilt the element), rewire it to the new element.
+  if (audioCtx !== undefined) wireGainGraph()
 }
 
 const formatTime = (sec: number) => {
@@ -178,7 +220,11 @@ const togglePlay = () => {
   if (isPlaying.value) {
     audio.value?.pause()
   } else {
-    audio.value?.play()
+    // Lazily wire the WebAudio gain graph on first play (AudioContext must
+    // be created after a user gesture per browser autoplay policy).
+    if (mediaSource === undefined || audioCtx === undefined) wireGainGraph()
+    void audioCtx?.resume()
+    void audio.value?.play()
   }
   isPlaying.value = !isPlaying.value
 }
@@ -191,12 +237,15 @@ const seekAudio = () => {
 const onChange = (e: Event): void => {
   const target = e.target as HTMLInputElement
   currentIndex.value = Number(target.value)
-  createAudio()
+  // continuous playback: adjust the gain node in place — no audio rebuild
+  if (mediaSource === undefined || audioCtx === undefined) wireGainGraph()
+  applyGain()
 }
 
 const setGain = (ind: number) => {
   currentIndex.value = ind
-  createAudio()
+  if (mediaSource === undefined || audioCtx === undefined) wireGainGraph()
+  applyGain()
 }
 
 const setNextRecording = () => {
@@ -217,6 +266,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   audio.value?.pause()
+  try { mediaSource?.disconnect(); gainNode?.disconnect(); void audioCtx?.close() } catch (e) { /* noop */ }
+  audioCtx = undefined; gainNode = undefined; mediaSource = undefined
   if (audio.value === undefined) return
   audio.value.src = ''
 })
