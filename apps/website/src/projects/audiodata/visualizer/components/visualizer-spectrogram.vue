@@ -28,7 +28,7 @@
           class="absolute"
           :style="{
             left: Math.floor(tile.s * getSec2px(spectrogramMetrics.width, visobject.domain.x.span)) + legendMetrics.axis_sizew + 'px',
-            top: (visobject.scale.originalScale ? Math.floor(spectrogramMetrics.height - tile.hz * getHz2px(spectrogramMetrics.height, visobject.domain.y.span)) : 0) + legendMetrics.axis_margin_top - contentYShift + 'px',
+            top: (visobject.scale.originalScale ? Math.floor(spectrogramMetrics.height - tile.hz * getHz2px(spectrogramMetrics.height, visobject.domain.y.span)) : 0) + legendMetrics.axis_margin_top + 'px',
             height: Math.ceil(tile.dhz * getHz2px(spectrogramMetrics.height, visobject.domain.y.span)) + 'px',
             width: Math.ceil(tile.ds * getSec2px(spectrogramMetrics.width, visobject.domain.x.span)) + 'px'
           }"
@@ -47,7 +47,7 @@
           class="absolute"
           :style="{
             left: Math.floor(tile.s * getSec2px(spectrogramMetrics.width, visobjectSoundscape.domain.x.span)) + legendMetrics.axis_sizew + 'px',
-            top: (visobjectSoundscape.scale.originalScale ? Math.floor(spectrogramMetrics.height - tile.hz * getHz2px(spectrogramMetrics.height, visobjectSoundscape.domain.y.span)) : 0) + legendMetrics.axis_margin_top - contentYShift + 'px',
+            top: (visobjectSoundscape.scale.originalScale ? Math.floor(spectrogramMetrics.height - tile.hz * getHz2px(spectrogramMetrics.height, visobjectSoundscape.domain.y.span)) : 0) + legendMetrics.axis_margin_top + 'px',
             height: Math.ceil(tile.dhz * getHz2px(spectrogramMetrics.height, visobjectSoundscape.domain.y.span)) + 'px',
             width: Math.ceil(tile.ds * getSec2px(spectrogramMetrics.width, visobjectSoundscape.domain.x.span)) + 'px'
           }"
@@ -70,7 +70,7 @@
         :style="{
           width: '200px',
           height: '30px',
-          top: (spectrogramMetrics.css.height + legendMetrics.axis_lead + 27) + 'px',
+          top: (spectrogramMetrics.height + legendMetrics.axis_lead + 27) + 'px',
           left: (legendMetrics.axis_sizew - 3) + 'px'
         }"
       >
@@ -85,7 +85,7 @@
         :style="{
           width: '24px',
           height: '200px',
-          top: (spectrogramMetrics.css.height + legendMetrics.axis_lead - 190) + 'px',
+          top: (spectrogramMetrics.height + legendMetrics.axis_lead - 190) + 'px',
           left: '-2px'
         }"
       >
@@ -95,12 +95,12 @@
         />
       </div>
 
-      <!-- Y scale (shifted up by contentYShift to bottom-anchor with the tiles
-           when zoomed vertically) -->
+      <!-- Y scale (spans the full zoomed content height; vertical zoom grows
+           content DOWNWARD and auto-scrolls to keep the bottom in view — see
+           scrollBottomIntoView) -->
       <svg
         ref="axisY"
         class="z-5 absolute"
-        :style="{ top: (-contentYShift) + 'px' }"
       >.</svg>
       <!-- Y-axis "Frequency ( kHz )" legend removed 2026-07-19 (operator) to
            reclaim the wide left gutter for the spectrogram; the y tick numbers
@@ -117,7 +117,7 @@
         class="whitespace-nowrap absolute z-5"
         :style="{
           left: Math.ceil((containerWidth - legendMetrics.axis_margin_x) / 2) + 'px',
-          top: Math.ceil(spectrogramMetrics.css.height + legendMetrics.axis_margin_x * 2) + 'px'
+          top: Math.ceil(spectrogramMetrics.height + legendMetrics.axis_margin_x * 2) + 'px'
         }"
       >
         <div>{{ visobject.domain.x.unit || 'Time ( s )' }}</div>
@@ -128,7 +128,7 @@
         class="whitespace-nowrap absolute z-5"
         :style="{
           left: Math.ceil((containerWidth - legendMetrics.axis_margin_x) / 2) + 'px',
-          top: Math.ceil(spectrogramMetrics.css.height + legendMetrics.axis_margin_x * 2) + 'px'
+          top: Math.ceil(spectrogramMetrics.height + legendMetrics.axis_margin_x * 2) + 'px'
         }"
       >
         <div>{{ visobjectSoundscape.domain.x.unit || 'Time ( s )' }}</div>
@@ -158,7 +158,7 @@
       <!-- Crosshair container -->
       <div
         class="absolute z-5"
-        :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: (legendMetrics.axis_margin_top - contentYShift) + 'px'}"
+        :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
         @mousemove="setPointerData"
         @mouseleave="resetPointerData"
       />
@@ -166,7 +166,7 @@
         v-if="activeLayer && activeLayer !== 'New Training Set' && activeLayer !== 'aed'"
         ref="crosshairContainerRef"
         class="cursor-crosshair absolute z-5"
-        :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: (legendMetrics.axis_margin_top - contentYShift) + 'px'}"
+        :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
         @mousedown.left="onMouseDownRoi"
         @mousemove.prevent="onMouseMoveRoi"
         @mouseup="onMouseUpRoi"
@@ -725,14 +725,20 @@ const spectrogramMetrics = computed(() => {
   }
 })
 
-// Vertical zoom anchoring: when zoomed-in, the spectrogram content is taller
-// than the visible area. BOTTOM-anchor it (keep 0 kHz at the visible bottom,
-// growing upward) rather than top-anchor, so the zoom grows from where the
-// bottom-left slider sits. contentYShift = how far to lift the content so its
-// bottom lands on the visible bottom. 0 when not zoomed vertically.
-const contentYShift = computed<number>(() =>
-  Math.max(0, spectrogramMetrics.value.height - containerSize.height)
-)
+// Vertical zoom anchoring (v2, 2026-07-20 operator feedback): content grows
+// DOWNWARD naturally (browser overflow -> page scrolling works), and each
+// vertical zoom step auto-scrolls so the spectrogram bottom + x-axis stay in
+// view. This keeps the bottom visually pinned to the x-axis at the moment of
+// zooming (same feel as the previous coordinate-shift bottom-anchor) while
+// the higher frequencies remain REACHABLE by scrolling up — the coordinate-
+// shift approach pushed overflow above the page top, where browsers provide
+// no scrollback.
+const scrollBottomIntoView = () => {
+  void nextTick(() => {
+    // Align the x-axis (the content bottom) with the viewport bottom.
+    axisX.value?.scrollIntoView({ block: 'end', inline: 'nearest' })
+  })
+}
 
 const drawChart = () => {
   if (!axisY.value || !axisX.value) return
@@ -780,19 +786,16 @@ const getHz2px = (containerHeight: number, ySpan: number): number => {
 }
 
 const hz2y = (hertz: number, round: number, intervalAlign?: number): number => {
-  // Subtract contentYShift so frequency->y positions BOTTOM-anchor along with
-  // the tiles when zoomed vertically (0 kHz at the visible bottom).
-  const shift = contentYShift.value
   if (isSoundscape.value === true && props.visobjectSoundscape) {
     hertz = alignToInterval(hertz - props.visobjectSoundscape.offset.hz, props.visobjectSoundscape.domain.y, intervalAlign)
     const h = spectrogramMetrics.value.height ?? 0
-    const y = h - hertz * getHz2px(spectrogramMetrics.value.height, props.visobjectSoundscape.domain.y.span) - shift
+    const y = h - hertz * getHz2px(spectrogramMetrics.value.height, props.visobjectSoundscape.domain.y.span)
     return round ? (y ?? 0) : +y
   }
   if (!props.visobject) return 0
   hertz = alignToInterval(hertz - props.visobject.offset.hz, props.visobject.domain.y, intervalAlign)
   const h = spectrogramMetrics.value.height ?? 0
-  const y = h - hertz * getHz2px(spectrogramMetrics.value.height, props.visobject.domain.y.span) - shift
+  const y = h - hertz * getHz2px(spectrogramMetrics.value.height, props.visobject.domain.y.span)
   return round ? (y ?? 0) : +y
 }
 
@@ -1135,6 +1138,9 @@ watch(() => zoomData.x, () => {
 
 watch(() => zoomData.y, () => {
   drawChart()
+  // Keep the spectrogram bottom + x-axis in view while vertically zooming
+  // (content grows downward; overflow above is reachable by scrolling up).
+  scrollBottomIntoView()
 })
 
 watch(() => axisY.value, () => {
