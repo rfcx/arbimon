@@ -1,53 +1,53 @@
 <template>
-  <div class="flex flex-col gap-4 px-4 py-2 bg-moss shado text-sm font-medium">
-    <!-- Progress bar -->
-    <div class="flex-1 w-[90%]">
+  <div class="flex flex-col gap-2 px-4 py-2 bg-moss shado text-sm font-medium">
+    <!-- Transport row: Play/Pause | timeline | Prev + Next
+         (2026-07-20 operator layout: play toggles pause — no separate stop;
+         prev/next sit together right of the shortened timeline) -->
+    <div class="flex items-center gap-x-2 w-full">
+      <!-- Play / Pause toggle -->
+      <button
+        class="flex items-center justify-center p-1 w-7 h-7 shrink-0 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
+        :title="isPlaying ? 'Pause' : 'Play'"
+        @click="togglePlay"
+      >
+        <icon-custom-fi-play-solid
+          v-if="!isPlaying"
+          class="text-frequency h-4"
+        />
+        <icon-custom-fi-pause-solid
+          v-else
+          class="text-frequency h-4"
+        />
+      </button>
+      <!-- Progress bar -->
       <input
         v-model="currentTime"
         type="range"
         min="0"
         :max="duration"
         step="0.1"
-        class="w-full h-1 accent-frequency appearance-none custom-slider"
+        class="flex-1 min-w-0 h-1 accent-frequency appearance-none custom-slider"
         @input="seekAudio"
       >
-    </div>
-
-    <div class="flex items-center gap-x-[5px]">
       <!-- Prev rec -->
       <button
-        class="flex items-center justify-center p-1 w-7 h-7 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
+        class="flex items-center justify-center p-1 w-7 h-7 shrink-0 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
         title="Previous recording"
         @click="setPrevRecording"
       >
-        <icon-custom-fi-rewind class="h-5" />
-      </button>
-      <!-- Play button -->
-      <button
-        class="flex items-center justify-center p-1 w-7 h-7 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
-        @click="togglePlay"
-      >
-        <icon-custom-fi-skip-forward v-if="!isPlaying" />
-        <icon-fa-pause
-          v-else
-          class="text-frequency text-[10px] h-5"
-        />
-      </button>
-      <!-- Stop button -->
-      <button
-        class="flex items-center justify-center p-1 w-7 h-7 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
-        @click="toggleStop"
-      >
-        <icon-custom-fi-stop class="h-5" />
+        <icon-custom-fi-skip-back class="text-frequency h-4" />
       </button>
       <!-- Next rec -->
       <button
-        class="flex items-center justify-center p-1 w-7 h-7 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
+        class="flex items-center justify-center p-1 w-7 h-7 shrink-0 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
         title="Next recording"
         @click="setNextRecording"
       >
-        <icon-custom-fi-fast-forward class="h-5" />
+        <icon-custom-fi-skip-next class="text-frequency h-4" />
       </button>
+    </div>
+
+    <div class="flex items-center gap-x-[5px]">
       <!-- Volume control -->
       <OnClickOutside
         class="relative"
@@ -181,14 +181,6 @@ const togglePlay = () => {
     audio.value?.play()
   }
   isPlaying.value = !isPlaying.value
-}
-
-const toggleStop = () => {
-  if (audio.value === undefined) return
-  isPlaying.value = false
-  audio.value.pause()
-  audio.value.currentTime = 0
-  currentTime.value = 0
 }
 
 const seekAudio = () => {
