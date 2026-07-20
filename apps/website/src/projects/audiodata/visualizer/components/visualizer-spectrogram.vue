@@ -94,6 +94,26 @@
           :horizontal="false"
         />
       </div>
+      <!-- Scaling RESET button (2026-07-20 operator): bottom-left margin,
+           at the intersection of the two sliders — horizontally aligned with
+           the vertical (frequency) slider, vertically aligned with the
+           horizontal (time) slider. Same size/style as the slider -/+ buttons.
+           Restores x + y zoom to unscaled defaults. -->
+      <button
+        v-if="visobject"
+        class="zoom-reset-btn rounded-sm bg-util-gray-03 border-0 flex items-center justify-center absolute z-6"
+        title="Reset zoom"
+        :style="{
+          top: (spectrogramMetrics.height + legendMetrics.axis_lead + 24) + 'px',
+          left: '-2px',
+          width: '23px',
+          height: '22px',
+          padding: '0'
+        }"
+        @click="resetZoom"
+      >
+        <icon-custom-fi-shrink class="h-[13px] w-[13px] text-fog" />
+      </button>
 
       <!-- Y scale (spans the full zoomed content height; vertical zoom grows
            content DOWNWARD and auto-scrolls to keep the bottom in view — see
@@ -586,6 +606,13 @@ const zoomData = reactive<{ x: number; y: number; levelx?: number[]; levely?: nu
   maxSec2px: 100 / (1.0 / 8),
   maxHz2px: 100 / (5000.0 / 8)
 })
+
+// Restore both axes to their unscaled defaults (2026-07-20 operator). The
+// zoomData.x / .y watchers already handle the redraw + bottom-scroll.
+const resetZoom = (): void => {
+  zoomData.x = 0
+  zoomData.y = 0
+}
 
 const success = ref<AlertDialogType>('error')
 const title = ref('')

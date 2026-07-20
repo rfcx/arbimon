@@ -1,8 +1,9 @@
 <template>
   <div class="flex flex-col gap-2 px-4 py-2 bg-moss shado text-sm font-medium">
-    <!-- Transport row: Play/Pause | timeline | Prev + Next
+    <!-- Transport row: Play/Pause | timeline | Volume(gain) + Frequency-filter
          (2026-07-20 operator layout: play toggles pause — no separate stop;
-         prev/next sit together right of the shortened timeline) -->
+         gain + freq-filter controls sit right of the shortened timeline;
+         prev/next moved to the row below) -->
     <div class="flex items-center gap-x-2 w-full">
       <!-- Play / Pause toggle -->
       <button
@@ -29,28 +30,9 @@
         class="flex-1 min-w-0 h-1 accent-frequency appearance-none custom-slider"
         @input="seekAudio"
       >
-      <!-- Prev rec -->
-      <button
-        class="flex items-center justify-center p-1 w-7 h-7 shrink-0 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
-        title="Previous recording"
-        @click="setPrevRecording"
-      >
-        <icon-custom-fi-skip-back class="text-frequency h-4" />
-      </button>
-      <!-- Next rec -->
-      <button
-        class="flex items-center justify-center p-1 w-7 h-7 shrink-0 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
-        title="Next recording"
-        @click="setNextRecording"
-      >
-        <icon-custom-fi-skip-next class="text-frequency h-4" />
-      </button>
-    </div>
-
-    <div class="flex items-center gap-x-[5px]">
       <!-- Volume control -->
       <OnClickOutside
-        class="relative"
+        class="relative shrink-0"
         @trigger="isGainOpen = false"
       >
         <button
@@ -69,13 +51,6 @@
           class="flex flex-col gap-y-2 fixed bg-echo rounded-md p-3 z-50 w-80 shadow-lg border border-util-gray-03"
           :style="gainPopoverStyle"
         >
-          <!-- Realtime spectrum (normalized) — draws only while open + playing -->
-          <canvas
-            ref="spectrumCanvas"
-            width="272"
-            height="56"
-            class="w-full h-14 rounded-sm bg-[#0a0a08]"
-          />
           <!-- Continuous gain dial (log scale x1..x50) -->
           <div class="flex flex-row w-full items-center gap-x-2">
             <icon-custom-fi-volume class="text-insight text-[10px] h-5 shrink-0" />
@@ -115,25 +90,55 @@
           </label>
         </div>
       </OnClickOutside>
+      <!-- Frequency-filter button ONLY (color + download stay on the row below) -->
       <SidebarControls
+        class="shrink-0"
+        only="freq"
         :visobject="visobject"
         @emit-color-spectrogram="$emit('updateColorSpectrogram', $event)"
         @emit-freq-filter="$emit('updateFreqFilter', $event)"
       />
     </div>
-    <div class="flex flex-row justify-between w-[70%]">
-      <div class="flex flex-row gap-x-1 items-center">
+
+    <!-- Controls row: color + download, RIGHT-justified under Gain + Filter
+         (2026-07-20 operator layout: Prev/Next removed).
+         Single row: playback timecode LEFT (under Play); then cursor coords +
+         color-toggle + download grouped RIGHT (coords under the timeline,
+         stacked left of the color button). -->
+    <div class="flex flex-row justify-between items-center w-full">
+      <!-- Playback timecode, left (under Play) -->
+      <div class="flex flex-row gap-x-1 items-center shrink-0">
         <icon-custom-fi-play class="text-insight text-sm h-5" />
         <span>{{ formatTime(currentTime) }}</span>
         s
       </div>
-      <div class="flex flex-row gap-x-1 items-center">
-        <icon-custom-fi-navigation class="text-insight text-sm h-5" />
-        <span>{{ props.pointer.sec.toFixed(2) }}</span>
-        s,
-        <span>{{ (props.pointer.hz / 1000).toFixed(1) }} kHz</span>
+      <!-- Cursor coords + color/download, right -->
+      <div class="flex flex-row items-center gap-x-3">
+        <div class="flex flex-row gap-x-1 items-center">
+          <icon-custom-fi-navigation class="text-insight text-sm h-5" />
+          <span>{{ props.pointer.sec.toFixed(2) }}</span>
+          s,
+          <span>{{ (props.pointer.hz / 1000).toFixed(1) }} kHz</span>
+        </div>
+        <SidebarControls
+          class="shrink-0"
+          only="rest"
+          :visobject="visobject"
+          @emit-color-spectrogram="$emit('updateColorSpectrogram', $event)"
+          @emit-freq-filter="$emit('updateFreqFilter', $event)"
+        />
       </div>
     </div>
+
+    <!-- Realtime playback equalizer (moved out of the gain popup 2026-07-20).
+         Full column width, 64px tall; transparent bg (blends with the moss
+         panel) + hairline border; animates while audio plays. -->
+    <canvas
+      ref="spectrumCanvas"
+      width="272"
+      height="64"
+      class="w-full h-16 rounded-sm bg-transparent border border-util-gray-04"
+    />
   </div>
 </template>
 
@@ -155,9 +160,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{(event: 'emitCurrentTime', currentTime: number): void,
   (e: 'updateColorSpectrogram', value: string): void,
-  (e: 'updateFreqFilter', value: FreqFilter): void,
-  (e: 'nextRecording'): void,
-  (e: 'prevRecording'): void
+  (e: 'updateFreqFilter', value: FreqFilter): void
 }>()
 
 const VITE_ARBIMON_LEGACY_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
@@ -233,15 +236,17 @@ const applyLimiter = () => {
   if (audioCtx === undefined || limiterNode === undefined) return
   const t = audioCtx.currentTime
   if (limiterOn.value) {
-    limiterNode.threshold.setTargetAtTime(-6, t, 0.05)   // start taming at -6 dBFS
-    limiterNode.knee.setTargetAtTime(6, t, 0.05)         // soft knee
-    limiterNode.ratio.setTargetAtTime(20, t, 0.05)       // hard-limit slope
+    // -6 dBFS threshold, soft knee, 20:1 slope, fast attack / gentle release
+    limiterNode.threshold.setTargetAtTime(-6, t, 0.05)
+    limiterNode.knee.setTargetAtTime(6, t, 0.05)
+    limiterNode.ratio.setTargetAtTime(20, t, 0.05)
     limiterNode.attack.setTargetAtTime(0.002, t, 0.05)
     limiterNode.release.setTargetAtTime(0.15, t, 0.05)
   } else {
+    // 1:1 ratio / 0 knee = transparent bypass
     limiterNode.threshold.setTargetAtTime(0, t, 0.05)
     limiterNode.knee.setTargetAtTime(0, t, 0.05)
-    limiterNode.ratio.setTargetAtTime(1, t, 0.05)        // 1:1 = transparent
+    limiterNode.ratio.setTargetAtTime(1, t, 0.05)
   }
 }
 
@@ -253,9 +258,14 @@ const applyLimiter = () => {
 const drawSpectrum = () => {
   spectrumRaf = 0
   const canvas = spectrumCanvas.value
-  if (canvas === undefined || analyserNode === undefined) return
-  const ctx2d = canvas.getContext('2d')
-  if (ctx2d === null) return
+  const ctx2d = canvas?.getContext('2d') ?? null
+  // Keep the rAF loop alive while playing even if the WebAudio graph isn't
+  // wired yet (first frames can precede lazy analyser init) or the analyser
+  // is momentarily absent — otherwise the loop dies and never restarts.
+  if (canvas === undefined || analyserNode === undefined || ctx2d === null) {
+    if (isPlaying.value) { spectrumRaf = requestAnimationFrame(drawSpectrum) }
+    return
+  }
   const bins = new Uint8Array(analyserNode.frequencyBinCount)
   analyserNode.getByteFrequencyData(bins)
   const W = canvas.width; const H = canvas.height
@@ -275,21 +285,25 @@ const drawSpectrum = () => {
   const barW = W / BARS
   for (let i = 0; i < BARS; i++) {
     const h = (vals[i] / peak) * (H - 2) // normalized to frame peak
-    ctx2d.fillStyle = '#ADFF2C'
-    ctx2d.globalAlpha = 0.35 + 0.65 * (vals[i] / peak)
+    // Muted monochrome gray (2026-07-20 operator: less vibrant than the
+    // green accent). Faded via a lower alpha range so it reads as subtle.
+    ctx2d.fillStyle = '#9a9a94'
+    ctx2d.globalAlpha = 0.18 + 0.42 * (vals[i] / peak)
     ctx2d.fillRect(i * barW + 1, H - h, barW - 2, h)
   }
   ctx2d.globalAlpha = 1
-  if (isGainOpen.value && isPlaying.value) { spectrumRaf = requestAnimationFrame(drawSpectrum) }
+  // The equalizer now lives inline (not in the popup), so it animates
+  // whenever audio is playing — no longer gated on the gain popover.
+  if (isPlaying.value) { spectrumRaf = requestAnimationFrame(drawSpectrum) }
 }
 
 const kickSpectrum = () => {
-  if (spectrumRaf === 0 && isGainOpen.value && isPlaying.value) {
+  if (spectrumRaf === 0 && isPlaying.value) {
     spectrumRaf = requestAnimationFrame(drawSpectrum)
   }
 }
 
-watch([isGainOpen, isPlaying], () => { kickSpectrum() })
+watch(() => isPlaying.value, () => { kickSpectrum() })
 
 const wireGainGraph = () => {
   if (audio.value === undefined) return
@@ -318,17 +332,19 @@ const wireGainGraph = () => {
   }
 }
 
+// Native <audio src> streaming (2026-07-20): the /legacy-api audio endpoint
+// serves 206 Partial Content with `accept-ranges: bytes` and authenticates
+// via the cookie session, so the native element streams with fast-start
+// (~30ms canplay) + HTTP range/seek on both prod AND demo (verified
+// identical). Do NOT set crossOrigin='anonymous' — same-origin here, and
+// anonymous mode drops the cookie (breaks the auth wall). Do NOT buffer the
+// whole file into a blob — that kills fast-start + range.
 const createAudio = () => {
   audio.value?.pause()
   audio.value = undefined
   currentTime.value = 0
   const url = `${VITE_ARBIMON_LEGACY_BASE_URL}${props.visobject.audioUrl + (props.freqFilter !== undefined ? `?maxFreq=${props.freqFilter?.filterMax}&minFreq=${props.freqFilter?.filterMin}` : '')}`
   audio.value = new Audio(url)
-  // NOTE: do NOT set crossOrigin='anonymous'. The audio endpoint is
-  // SAME-ORIGIN in prod (MediaElementSource needs no CORS), and anonymous
-  // mode DROPS the session cookie — the auth wall 302s to /legacy-login and
-  // the element gets HTML => MEDIA_ELEMENT_ERROR: Format error (playback
-  // dead; found live 2026-07-20).
   audio.value?.addEventListener('loadedmetadata', () => {
     duration.value = audio.value?.duration ?? 0
   })
@@ -383,14 +399,6 @@ const setGain = (ind: number) => {
   gainSliderPos.value = Math.round(gainToPos(gainLevels[ind]))
   if (mediaSource === undefined || audioCtx === undefined) wireGainGraph()
   applyGain()
-}
-
-const setNextRecording = () => {
-  emit('nextRecording')
-}
-
-const setPrevRecording = () => {
-  emit('prevRecording')
 }
 
 watch(() => props.freqFilter, () => {

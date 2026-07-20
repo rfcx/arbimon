@@ -34,16 +34,18 @@
           :data-ss-id="recording.id"
           @click="onSelectedThumbnail(recording.id)"
         >
-          <div>{{ getCaption(recording.site, recording.datetime) }}</div>
+          <!-- Caption: site left-aligned, datetime right-aligned
+               (2026-07-20 operator) -->
+          <div class="flex flex-row justify-between gap-x-2 text-sm">
+            <div class="truncate">
+              {{ recording.site }}
+            </div>
+            <div class="shrink-0">
+              {{ formatDatetime(recording.datetime) }}
+            </div>
+          </div>
+          <!-- Frequency y-axis labels removed 2026-07-20 (operator) -->
           <div class="flex overflow-hidden mx-0 my-1.5 h-32 max-w-full max-h-full">
-            <YAxis
-              :min="0"
-              :max="recording.sample_rate/2000"
-              :ticks="5"
-              color="gray"
-              font="5px"
-              class="w-5 h-32"
-            />
             <img
               :src="ARBIMON_BASE_URL + recording.thumbnail"
               class="h-32 max-w-full max-h-full"
@@ -91,7 +93,6 @@ import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useSites } from '../../_composables/use-sites'
 import { useGetListRecordings } from '../../_composables/use-visualizer'
-import YAxis from './sidebar-thumbnail-yAxis.vue'
 
 const ARBIMON_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL
 const apiClientArbimon = inject(apiClientArbimonLegacyKey) as AxiosInstance
@@ -135,9 +136,7 @@ const setErrorImage = (event: Event) => {
   img.src = 'https://rfcx-web-static.s3.eu-west-1.amazonaws.com/arbimon/unavaliable.png'
 }
 
-const getCaption = (site: string, datetime: string) => {
-  return [site, dayjs.utc(datetime).format('lll')].join(', ')
-}
+const formatDatetime = (datetime: string) => dayjs.utc(datetime).format('lll')
 
 const siteSelectedRef = ref<string | number | undefined>()
 
