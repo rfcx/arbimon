@@ -448,10 +448,7 @@ function toggleRow (row: Row, checked: boolean) {
 }
 
 const onVisualizerRedirect = (id: number) => {
-  // Route to the legacy visualizer (/project/...): the modern /p/ visualizer is
-  // currently redirected to legacy at the edge (public-router) due to a
-  // feature/stability gap. Link straight to legacy to skip the 302 hop.
-  window.location.assign(`${window.location.origin}/project/${props.projectSlug ?? ''}/visualizer/rec/${id}`)
+  window.location.assign(`${window.location.origin}/p/${props.projectSlug ?? ''}/visualizer/rec/${id}`)
 }
 
 const areAllRowsSelected = computed(() => {

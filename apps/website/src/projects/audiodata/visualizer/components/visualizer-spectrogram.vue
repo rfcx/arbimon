@@ -28,7 +28,7 @@
           class="absolute"
           :style="{
             left: Math.floor(tile.s * getSec2px(spectrogramMetrics.width, visobject.domain.x.span)) + legendMetrics.axis_sizew + 'px',
-            top: (visobject.scale.originalScale ? Math.floor(spectrogramMetrics.height - tile.hz * getHz2px(spectrogramMetrics.height, visobject.domain.y.span)) : 0) + legendMetrics.axis_margin_top + 'px',
+            top: (visobject.scale.originalScale ? Math.floor(spectrogramMetrics.height - tile.hz * getHz2px(spectrogramMetrics.height, visobject.domain.y.span)) : 0) + legendMetrics.axis_margin_top - contentYShift + 'px',
             height: Math.ceil(tile.dhz * getHz2px(spectrogramMetrics.height, visobject.domain.y.span)) + 'px',
             width: Math.ceil(tile.ds * getSec2px(spectrogramMetrics.width, visobject.domain.x.span)) + 'px'
           }"
@@ -47,7 +47,7 @@
           class="absolute"
           :style="{
             left: Math.floor(tile.s * getSec2px(spectrogramMetrics.width, visobjectSoundscape.domain.x.span)) + legendMetrics.axis_sizew + 'px',
-            top: (visobjectSoundscape.scale.originalScale ? Math.floor(spectrogramMetrics.height - tile.hz * getHz2px(spectrogramMetrics.height, visobjectSoundscape.domain.y.span)) : 0) + legendMetrics.axis_margin_top + 'px',
+            top: (visobjectSoundscape.scale.originalScale ? Math.floor(spectrogramMetrics.height - tile.hz * getHz2px(spectrogramMetrics.height, visobjectSoundscape.domain.y.span)) : 0) + legendMetrics.axis_margin_top - contentYShift + 'px',
             height: Math.ceil(tile.dhz * getHz2px(spectrogramMetrics.height, visobjectSoundscape.domain.y.span)) + 'px',
             width: Math.ceil(tile.ds * getSec2px(spectrogramMetrics.width, visobjectSoundscape.domain.x.span)) + 'px'
           }"
@@ -59,56 +59,52 @@
         </div>
       </div>
 
-      <!-- zoom -->
+      <!-- zoom controls (moved to bottom-left 2026-07-19, operator):
+           - horizontal X-zoom slider sits UNDER the x-axis, against the left
+           - vertical Y-zoom slider sits LEFT of the y-axis, justified to bottom
+           Each wrapper is `relative` with an explicit size so the `absolute`
+           ZoomControl root anchors to it (otherwise the wrapper collapses). -->
       <div
         v-if="visobject"
-        class="zoom-control-group fixed z-6"
+        class="zoom-control-group absolute z-6"
         :style="{
-          top: (legendMetrics.axis_margin_top + 10) + 'px',
-          left: (containerSize.width + 300) + 'px'
+          width: '200px',
+          height: '30px',
+          top: (spectrogramMetrics.height + legendMetrics.axis_lead + 27) + 'px',
+          left: (legendMetrics.axis_sizew - 3) + 'px'
         }"
       >
         <ZoomControl
           v-model="zoomData.x"
           :horizontal="true"
         />
+      </div>
+      <div
+        v-if="visobject"
+        class="zoom-control-group absolute z-6"
+        :style="{
+          width: '24px',
+          height: '200px',
+          top: (spectrogramMetrics.height + legendMetrics.axis_lead - 190) + 'px',
+          left: '-2px'
+        }"
+      >
         <ZoomControl
           v-model="zoomData.y"
           :horizontal="false"
         />
       </div>
 
-      <!-- Y scale -->
+      <!-- Y scale (shifted up by contentYShift to bottom-anchor with the tiles
+           when zoomed vertically) -->
       <svg
         ref="axisY"
         class="z-5 absolute"
+        :style="{ top: (-contentYShift) + 'px' }"
       >.</svg>
-      <!-- Y legend - recording, playlist-->
-      <div
-        v-if="visobject && visobject.domain.y && !isSoundscape"
-        class="whitespace-nowrap absolute z-5"
-        :style="{
-          left: - Math.ceil(legendMetrics.axis_margin_x * 3) + 'px',
-          top: Math.ceil(containerHeight / 2) + 'px'
-        }"
-      >
-        <span class="inline-block transform -rotate-90">
-          {{ visobject.domain.y.unit || 'Frequency ( kHz )' }}
-        </span>
-      </div>
-      <!-- Y legend - soundscape -->
-      <div
-        v-if="visobjectSoundscape && visobjectSoundscape.domain.y && isSoundscape"
-        class="whitespace-nowrap absolute z-5"
-        :style="{
-          left: - Math.ceil(legendMetrics.axis_margin_x * 3) + 'px',
-          top: Math.ceil(containerHeight / 2) + 'px'
-        }"
-      >
-        <span class="inline-block transform -rotate-90">
-          {{ visobjectSoundscape.domain.y.unit || 'Frequency ( kHz )' }}
-        </span>
-      </div>
+      <!-- Y-axis "Frequency ( kHz )" legend removed 2026-07-19 (operator) to
+           reclaim the wide left gutter for the spectrogram; the y tick numbers
+           already convey the axis. axis_sizew reduced accordingly below. -->
 
       <!-- X scale -->
       <svg
@@ -141,10 +137,11 @@
       <!-- play position -->
       <div
         v-if="visobject && visobject.type == 'rec'"
-        class="absolute pointer-events-none z-5 bottom-60px border-1 border-blue-700 w-1px"
+        class="absolute pointer-events-none z-5 border-1 border-blue-700 w-1px"
         :style="{
           left: getLeftPositionPlay(),
-          height: getHeightPlay()
+          height: getHeightPlay(),
+          bottom: playLineBottom + 'px'
         }"
       />
       <!-- max frequency -->
@@ -161,7 +158,7 @@
       <!-- Crosshair container -->
       <div
         class="absolute z-5"
-        :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
+        :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: (legendMetrics.axis_margin_top - contentYShift) + 'px'}"
         @mousemove="setPointerData"
         @mouseleave="resetPointerData"
       />
@@ -169,7 +166,7 @@
         v-if="activeLayer && activeLayer !== 'New Training Set' && activeLayer !== 'aed'"
         ref="crosshairContainerRef"
         class="cursor-crosshair absolute z-5"
-        :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: legendMetrics.axis_margin_top + 'px'}"
+        :style="{ height: spectrogramMetrics.height + 'px', width: spectrogramMetrics.width + 'px', left: legendMetrics.axis_sizew + 'px', top: (legendMetrics.axis_margin_top - contentYShift) + 'px'}"
         @mousedown.left="onMouseDownRoi"
         @mousemove.prevent="onMouseMoveRoi"
         @mouseup="onMouseUpRoi"
@@ -668,7 +665,12 @@ const { data: soundscapeRegions } = useGetSoundscapeRegions(apiClientArbimon, se
 const legendMetrics = computed(() => {
   return {
     gutter: spectrogramContainer.value?.scrollHeight,
-    axis_sizew: 60,
+    // axis_sizew (2026-07-19): with the rotated "Frequency ( kHz )" label gone,
+    // this left gutter now holds (a) the vertical Y-zoom slider on the far left
+    // and (b) the 2-digit y tick numbers on the inner ~half. 44px = ~20px
+    // slider column + ~24px for the right-aligned numbers next to the
+    // spectrogram. (Still narrower than the old 60px label gutter.)
+    axis_sizew: 53,
     axis_sizeh: 60,
     axis_lead: 15,
     axis_margin_x: 20,
@@ -723,6 +725,15 @@ const spectrogramMetrics = computed(() => {
   }
 })
 
+// Vertical zoom anchoring: when zoomed-in, the spectrogram content is taller
+// than the visible area. BOTTOM-anchor it (keep 0 kHz at the visible bottom,
+// growing upward) rather than top-anchor, so the zoom grows from where the
+// bottom-left slider sits. contentYShift = how far to lift the content so its
+// bottom lands on the visible bottom. 0 when not zoomed vertically.
+const contentYShift = computed<number>(() =>
+  Math.max(0, spectrogramMetrics.value.height - containerSize.height)
+)
+
 const drawChart = () => {
   if (!axisY.value || !axisX.value) return
   axisY.value.innerHTML = ''
@@ -769,16 +780,19 @@ const getHz2px = (containerHeight: number, ySpan: number): number => {
 }
 
 const hz2y = (hertz: number, round: number, intervalAlign?: number): number => {
+  // Subtract contentYShift so frequency->y positions BOTTOM-anchor along with
+  // the tiles when zoomed vertically (0 kHz at the visible bottom).
+  const shift = contentYShift.value
   if (isSoundscape.value === true && props.visobjectSoundscape) {
     hertz = alignToInterval(hertz - props.visobjectSoundscape.offset.hz, props.visobjectSoundscape.domain.y, intervalAlign)
     const h = spectrogramMetrics.value.height ?? 0
-    const y = h - hertz * getHz2px(spectrogramMetrics.value.height, props.visobjectSoundscape.domain.y.span)
+    const y = h - hertz * getHz2px(spectrogramMetrics.value.height, props.visobjectSoundscape.domain.y.span) - shift
     return round ? (y ?? 0) : +y
   }
   if (!props.visobject) return 0
   hertz = alignToInterval(hertz - props.visobject.offset.hz, props.visobject.domain.y, intervalAlign)
   const h = spectrogramMetrics.value.height ?? 0
-  const y = h - hertz * getHz2px(spectrogramMetrics.value.height, props.visobject.domain.y.span)
+  const y = h - hertz * getHz2px(spectrogramMetrics.value.height, props.visobject.domain.y.span) - shift
   return round ? (y ?? 0) : +y
 }
 
@@ -862,6 +876,12 @@ const getLeftPositionPlay = (): string => {
 const getHeightPlay = (): string => {
   return `${Math.ceil(spectrogramTileHeight.value)}px`
 }
+
+// Bottom anchor for the playback line. Tracks the spectrogram bottom, which sits
+// at axis_sizeh above the container bottom PLUS the 5px the x-axis was nudged up
+// to be flush (see doXAxisLayout). Keep in sync so the line's foot lands exactly
+// on the spectrogram bottom / x-axis.
+const playLineBottom = computed<number>(() => (legendMetrics.value.axis_sizeh as number) + 5)
 
 const getTagNames = (tags: RecordingTagResponse[]): string => {
   return tags.map(t => t.tag).join(',')
@@ -1220,6 +1240,12 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
+/* Axis backing rects were defaulting to pure black (#000) which mismatched the
+   page's dark navy (#060508). Match them so the axis divs blend with the page
+   (2026-07-19, operator). */
+.block {
+  fill: #060508;
+}
 .filter-band {
   position: absolute;
   background-color: rgba(255,255,255,.7)

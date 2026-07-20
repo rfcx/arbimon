@@ -276,9 +276,8 @@ const openInVisualizer = async (item: UploadItem): Promise<void> => {
       window.alert('This recording is not queryable yet — give it a moment and try again.')
       return
     }
-    // Legacy visualizer path (the modern /p/ visualizer is edge-redirected to
-    // legacy; link straight to legacy to skip the 302). New tab.
-    window.open(`${window.location.origin}/project/${props.projectSlug}/visualizer/rec/${recordingId}`, '_blank', 'noopener')
+    // Modern visualizer path (parity reached; 302 lifted). New tab.
+    window.open(`${window.location.origin}/p/${props.projectSlug}/visualizer/rec/${recordingId}`, '_blank', 'noopener')
   } catch {
     window.alert('Could not open the recording in the Visualizer. Please try again.')
   } finally {

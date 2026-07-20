@@ -67,11 +67,10 @@
           />
         </div>
         <div class="col-span-5">
-          <DateInputPicker
+          <YearDensityPicker
             ref="datePickerRef"
             :disabled="siteSelected === null || siteSelected === undefined"
             :initial-date="initialDate"
-            :hide-label="true"
             :initial-view-year="initialViewYear"
             :initial-view-month="initialViewMonth"
             :recorded-minutes-per-day="recordedMinutesPerDay"
@@ -182,7 +181,7 @@
 <script setup lang="ts">
 import type { AxiosInstance } from 'axios'
 import dayjs from 'dayjs'
-import { computed, inject, nextTick, onMounted, ref, watch, watchEffect } from 'vue'
+import { computed, inject, onMounted, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { RecordingResponse, RecordingTagResponse, SoundscapeItem, SoundscapeItemOptions, SoundscapeResponse, TagParams, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
@@ -191,7 +190,7 @@ import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/tra
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
 import alertDialog from '@/_components/alert-dialog.vue'
-import DateInputPicker from '@/_components/date-range-picker/date-input-picker.vue'
+import YearDensityPicker from '@/_components/date-range-picker/year-density-picker.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetPlaylists, useGetSoundscape, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
@@ -211,6 +210,7 @@ import SidebarTemplates from './sidebar-templates.vue'
 import SidebarThumbnail from './sidebar-thumbnail.vue'
 import SidebarTrainingSets from './sidebar-training-sets.vue'
 import { type Pointer } from './visualizer-spectrogram.vue'
+import { useVisualizerAnalytics } from '../_composables/use-visualizer-analytics'
 
 export interface AedJob {
   jobId: number
@@ -337,6 +337,17 @@ const selectedRecordingId = computed(() => {
 
 const { data: projectTags, refetch: refetchProjectTags } = useGetTags(apiClientArbimon, selectedProjectSlug)
 const { data: recordingTags, refetch: refetchRecordingTags } = useGetRecordingTag(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
+
+// Analytics (PostHog) — WRITE events are the highest-value science actions.
+// Taxonomy: runbooks/DESIGN-visualizer-posthog-analytics-2026-07-19. No-op
+// unless enabled (routes through the swallow-all track seam).
+const { trackVis } = useVisualizerAnalytics({
+  projectSlug: selectedProjectSlug,
+  browserType: () => browserType.value ?? 'rec',
+  recordingId: selectedRecordingId,
+  playlistId: () => (isPlaylist.value ? browserTypeId.value : undefined),
+  soundscapeId: () => (isSoundscape.value ? browserTypeId.value : undefined)
+})
 const { isPending: isAddingTag, mutate: mutateRecordingTag } = usePutRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { isPending: isRemovingTag, mutate: mutateDeleteRecordingTag } = useDeleteRecordingTag(apiClientArbimon, selectedProjectSlug, isPlaylist.value ? browserRecId : browserTypeId)
 const { data: sites } = useSites(apiClientArbimon, selectedProjectSlug, computed(() => ({ count: true, deployment: true, logs: true })))
@@ -422,15 +433,10 @@ watchEffect(() => {
   }
 })
 
-const datePickerRef = ref<InstanceType<typeof DateInputPicker> | null>(null)
+const datePickerRef = ref<InstanceType<typeof YearDensityPicker> | null>(null)
 
 const onEmitSelectedDate = (date: { dateLocalIso: string }) => {
   initialDate.value = date.dateLocalIso
-
-  nextTick(() => {
-    const input = (datePickerRef.value as any)?.$refs?.datePickerInput as HTMLInputElement | undefined
-    input?.blur()
-  })
 }
 
 const onEmitChangeYear = (date: { year: string }) => {
@@ -471,6 +477,7 @@ const handleRecTags = async (tagIds: TagParams[]) => {
   if (tagsToAdd.length) {
     mutateRecordingTag(tagsToAdd.map(recId => { return { id: recId } })[0], {
       onSuccess: async () => {
+        trackVis('tag_added', { tag_id: tagsToAdd[0], is_new: false })
         refetchProjectTags()
         refetchRecordingTags()
         showAlertDialog('success', 'Success', 'Tag added')
@@ -485,6 +492,7 @@ const handleRecTags = async (tagIds: TagParams[]) => {
   if (tagsToDelete.length) {
     mutateDeleteRecordingTag(tagsToDelete[0], {
       onSuccess: async () => {
+        trackVis('tag_removed', { tag_id: tagsToDelete[0]?.tag_id })
         refetchProjectTags()
         refetchRecordingTags()
         showAlertDialog('success', 'Success', 'Tag removed')
@@ -501,6 +509,7 @@ const handleRecTags = async (tagIds: TagParams[]) => {
     if (searchedTags.value === undefined || searchedTags.value?.length === 0) {
       mutateRecordingTag({ text: textToSearch[0] }, {
         onSuccess: async () => {
+          trackVis('tag_added', { tag: textToSearch[0], is_new: true })
           refetchProjectTags()
           refetchRecordingTags()
           showAlertDialog('success', 'Success', 'Tag added')
@@ -586,6 +595,8 @@ const onEmitSounscapeValidation = (cl: number, val: number) => {
     val
    }, {
     onSuccess: async () => {
+      // val encodes present/absent/unset; expose as a readable state.
+      trackVis('soundscape_annotated', { class_id: cl, state: val === 1 ? 'present' : val === 0 ? 'absent' : 'unset' })
       await refetchGetSoundscapeComposition()
       showAlertDialog('success', 'Success', 'Soundscape composition class is updated')
     },
@@ -712,11 +723,29 @@ watch(() => recordingTags.value, () => {
   spectrogramTags.value = groupByBbox(recordingTags.value)
 })
 
+// Resolve the browse SITE from the opened recording's `site` label against the
+// loaded site list (`options`). On a COLD full-page load the recording-info
+// (`props.visobject`) can resolve BEFORE the sites query, so `options` is empty
+// when this first runs and `.find` returns undefined. Guard against clobbering:
+// only assign when a match is found, and add an `options` watcher that back-fills
+// once sites arrive. Without this, `siteSelected` stayed undefined forever on
+// full-load -> empty browse context / no thumbnail strip (visualizer parity A1,
+// runbooks/evidence/phase5-parity-testmatrix-2026-07-19.md).
 watch(() => props.visobject, (v) => {
   if (isPlaylist.value) return
   const site = options.value.find(s => s.label === v?.site)
-  siteSelected.value = site?.value
+  if (site !== undefined) siteSelected.value = site.value
   initialDate.value = v?.datetime ?? ''
+}, { immediate: true })
+
+// Back-fill the site once the sites list resolves late (cold-load race). Only
+// acts while `siteSelected` is still unset, so it can never override a site the
+// user picked manually.
+watch(options, () => {
+  if (isPlaylist.value) return
+  if (siteSelected.value !== undefined) return
+  const site = options.value.find(s => s.label === props.visobject?.site)
+  if (site !== undefined) siteSelected.value = site.value
 })
 
 onMounted(async () => {

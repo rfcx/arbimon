@@ -67,6 +67,7 @@ import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/tra
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { useStore } from '~/store'
 import { useGetRecording, useGetSoundscapes } from '../_composables/use-visualizer'
+import { useVisualizerAnalytics } from './_composables/use-visualizer-analytics'
 import type { VisibleSoundscapes } from './components/sidebar-soundscape-regions.vue'
 import VisualizerSidebar, { type AedJob, type ClusteringPlaylist } from './components/visualizer-sidebar.vue'
 import VisualizerSpectrogram, { type Pointer } from './components/visualizer-spectrogram.vue'
@@ -145,6 +146,17 @@ const selectedRecordingId = computed(() => {
 })
 
 const { isLoading: isLoadingVisobject, data: visobject, isRefetching, refetch: refetchRecording } = useGetRecording(apiClientArbimon, selectedProjectSlug, selectedRecordingId)
+
+// --- Analytics (PostHog): detailed visualizer instrumentation ---------------
+// Taxonomy + guardrails: runbooks/DESIGN-visualizer-posthog-analytics-2026-07-19.
+// No-op unless VITE_POSTHOG_ENABLED (routes through the swallow-all track seam).
+const { trackVis } = useVisualizerAnalytics({
+  projectSlug: selectedProjectSlug,
+  browserType: () => browserType.value ?? 'rec',
+  recordingId: selectedRecordingId,
+  playlistId: () => (isPlaylist.value ? browserTypeId.value : undefined),
+  soundscapeId: () => (isSoundscape.value ? browserTypeId.value : undefined)
+})
 const { refetch: refetchSoundscapes } = useGetSoundscapes(apiClientArbimon, selectedProjectSlug)
 
 const handleCurrentTime = (value: number): void => {
@@ -211,6 +223,7 @@ const updateSoundscapeOptions = (val: boolean) => {
 }
 
 const setBrowserType = (value: string) => {
+  if (value !== browserType.value) trackVis('browse_mode_changed', { from: browserType.value ?? 'rec', to: value })
   if (value === 'playlist') {
     if (lastPlaylistId.value !== 0) {
       if (lastPlaylistRecordingId.value !== 0) {
@@ -289,6 +302,7 @@ const handlePointer = (data: Pointer) => {
 }
 
 onMounted(() => {
+  trackVis('opened', { source: window.history.length > 1 ? 'in_app' : 'direct' })
   if (isPlaylist.value) {
     if (browserTypeId.value !== undefined && browserTypeId.value !== '') lastPlaylistId.value = Number(browserTypeId.value)
     if (browserRecId.value !== undefined && browserRecId.value !== '') lastPlaylistRecordingId.value = Number(browserRecId.value)
@@ -310,6 +324,7 @@ watch(() => visobject.value, () => {
 
 watch(idRecording, (newId) => {
   if (!newId) return
+  trackVis('recording_changed', { recording_id: Number(newId) })
   if (isPlaylist.value && browserRecId.value !== newId.toString()) {
     router.replace(
       `/p/${selectedProjectSlug.value}/visualizer/playlist/${browserTypeId.value}/${newId}`

@@ -140,36 +140,61 @@ const onTrackMouseDown = (e: MouseEvent): void => {
 }
 .zoom-control.vertical {
   height: 200px;
-  top: 20px;
-  left: 200px
 }
 
 .zoom-control .marker { position: absolute; background: #2563eb; border-radius: 2px; }
-.tick-marks {
+
+/* Horizontal track: a centered horizontal rail of vertical tick lines. */
+.zoom-control.horizontal .tick-marks {
   left: 0;
   right: 0;
   top: 50%;
+  height: 9px;
   margin-top: -5px;
   background-size: 11px 9px;
-  background-image:
-    linear-gradient(
-      to right,
-      rgba(0,0,0,0) 0%,
-      rgba(0,0,0,0) 49%,
-      black 49%,
-      black 51%,
-      rgba(0,0,0,0) 51%,
-      rgba(0,0,0,0) 100%
-    ),
-    linear-gradient(
-      to bottom,
-      rgba(0,0,0,0) 0%,
-      rgba(0,0,0,0) 49%,
-      #242424 49%,
-      #242424 50%,
-      #242424 51%,
-      rgba(0,0,0,0) 51%,
-      rgba(0,0,0,0) 100%
-    );
+  background-repeat: repeat-x;
+  background-image: linear-gradient(
+    to right,
+    rgba(0,0,0,0) 0%, rgba(0,0,0,0) 49%,
+    rgba(255,255,255,0.5) 49%, rgba(255,255,255,0.5) 51%,
+    rgba(0,0,0,0) 51%, rgba(0,0,0,0) 100%
+  );
+}
+
+/* Vertical track: a centered vertical rail of horizontal tick lines. */
+.zoom-control.vertical .tick-marks {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 9px;
+  margin-left: -5px;
+  background-size: 9px 11px;
+  background-repeat: repeat-y;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0%, rgba(0,0,0,0) 49%,
+    rgba(255,255,255,0.5) 49%, rgba(255,255,255,0.5) 51%,
+    rgba(0,0,0,0) 51%, rgba(0,0,0,0) 100%
+  );
+}
+
+/* Zoom controls sit on the dark page margin now (moved bottom-left 2026-07-19).
+   Buttons stay legible; the TRACK is transparent (no border/bg) so the tick
+   rail just floats against the page, matching the operator's request. */
+.zoom-control .btn.btn-xs {
+  background-color: #3a3a38 !important;
+  border: 1px solid #5a5a56 !important;
+  color: #e6e6e3 !important;
+}
+.zoom-control .btn.btn-xs:hover {
+  background-color: #4a4a47 !important;
+}
+.zoom-control .zoom-track {
+  background-color: transparent;
+  border: 0;
+}
+.zoom-control .zoom-marker {
+  background-color: #ADFF2C !important;
+  border-color: #ADFF2C !important;
 }
 </style>
