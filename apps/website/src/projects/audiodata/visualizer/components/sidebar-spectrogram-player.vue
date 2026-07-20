@@ -54,15 +54,20 @@
         @trigger="isGainOpen = false"
       >
         <button
+          ref="gainButton"
           class="flex items-center justify-center p-1 w-7 h-7 rounded-[4px] bg-util-gray-03 hover:bg-util-gray-04 transition"
           title="Recording volume"
-          @click="isGainOpen = !isGainOpen"
+          @click="toggleGainPopover"
         >
           <icon-custom-fi-volume class="text-frequency text-[10px] h-5" />
         </button>
+        <!-- position:fixed so the sidebar's overflow-y-scroll cannot crop the
+             popover (was clipped at the sidebar edge; found live 2026-07-20).
+             Anchored to the volume button at open time, clamped in-viewport. -->
         <div
           v-show="isGainOpen"
-          class="flex flex-col gap-y-2 absolute bg-echo -left-[60px] rounded-md p-3 z-10 w-80"
+          class="flex flex-col gap-y-2 fixed bg-echo rounded-md p-3 z-50 w-80 shadow-lg border border-util-gray-03"
+          :style="gainPopoverStyle"
         >
           <!-- Realtime spectrum (normalized) — draws only while open + playing -->
           <canvas
@@ -162,6 +167,21 @@ const isPlaying = ref(false)
 const currentTime = ref(0)
 const duration = ref(0)
 const isGainOpen = ref(false)
+
+// Popover anchoring: rendered position:fixed (so the sidebar's
+// overflow-y-scroll cannot crop it) and anchored to the volume button at
+// open time, clamped into the viewport.
+const gainButton = ref<HTMLButtonElement>()
+const gainPopoverStyle = ref<Record<string, string>>({})
+const toggleGainPopover = () => {
+  if (!isGainOpen.value && gainButton.value !== undefined) {
+    const r = gainButton.value.getBoundingClientRect()
+    const POP_W = 320 // w-80
+    const left = Math.max(8, Math.min(r.left - 60, window.innerWidth - POP_W - 8))
+    gainPopoverStyle.value = { left: `${left}px`, bottom: `${Math.max(8, window.innerHeight - r.top + 6)}px` }
+  }
+  isGainOpen.value = !isGainOpen.value
+}
 const gainLevels = [1, 2, 5, 10, 15, 20, 25, 30, 50]
 // Default to x1 (no gain). gainLevels[0] === 1; index 8 (x50) was applying a
 // 50x gain to playback by default.
@@ -304,9 +324,11 @@ const createAudio = () => {
   currentTime.value = 0
   const url = `${VITE_ARBIMON_LEGACY_BASE_URL}${props.visobject.audioUrl + (props.freqFilter !== undefined ? `?maxFreq=${props.freqFilter?.filterMax}&minFreq=${props.freqFilter?.filterMin}` : '')}`
   audio.value = new Audio(url)
-  // Required for createMediaElementSource on a CORS-capable URL
-  // (same-origin in prod, localhost in dev — harmless either way).
-  audio.value.crossOrigin = 'anonymous'
+  // NOTE: do NOT set crossOrigin='anonymous'. The audio endpoint is
+  // SAME-ORIGIN in prod (MediaElementSource needs no CORS), and anonymous
+  // mode DROPS the session cookie — the auth wall 302s to /legacy-login and
+  // the element gets HTML => MEDIA_ELEMENT_ERROR: Format error (playback
+  // dead; found live 2026-07-20).
   audio.value?.addEventListener('loadedmetadata', () => {
     duration.value = audio.value?.duration ?? 0
   })
