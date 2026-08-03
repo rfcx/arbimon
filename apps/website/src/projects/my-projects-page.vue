@@ -13,25 +13,11 @@
               My Projects
             </h2>
             <div class="relative group inline-block ml-6">
-              <router-link
-                :to="canCreateProject ? { name: ROUTE_NAMES.createProject } : {}"
-                :class="{ 'pointer-events-none': !canCreateProject }"
-              >
-                <button
-                  class="btn btn-primary"
-                  :class="{ 'opacity-50 cursor-not-allowed grayscale': !canCreateProject }"
-                  :disabled="!canCreateProject"
-                >
+              <router-link :to="{ name: ROUTE_NAMES.createProject }">
+                <button class="btn btn-primary">
                   Create a new project +
                 </button>
               </router-link>
-
-              <div
-                v-if="!canCreateProject"
-                class="absolute z-10 w-60 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 transition-opacity duration-300 bg-white rounded-lg shadow-sm opacity-0 tooltip invisible group-hover:visible opacity-0 group-hover:opacity-100 top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none"
-              >
-                You have reached the maximum number of projects allowed for your plan.
-              </div>
             </div>
           </div>
           <div>
@@ -80,54 +66,33 @@
               <div class="flex flex-col items-center">
                 <p class="text-3xl font-bold text-white mb-1">
                   {{ portfolioSummary.usage.freeProjects }}
-                  <span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.freeProjects) }}</span>
                 </p>
                 <p class="text-sm capitalize text-gray-400">
                   Free Projects
                 </p>
               </div>
-              <p
-                :class="portfolioSummary.usage.freeProjects > (portfolioSummary.limits.freeProjects ?? 0) ? 'visible' : 'invisible'"
-                class="text-[10px] text-red-500 mt-[2px] whitespace-nowrap"
-              >
-                Limit exceeded
-              </p>
             </div>
 
             <div class="flex flex-col items-center justify-center px-4 border-r border-white/10">
               <div class="flex flex-col items-center">
                 <p class="text-3xl font-bold text-white mb-1">
                   {{ portfolioSummary.usage.premiumProjects }}
-                  <span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.premiumProjects) }}</span>
                 </p>
                 <p class="text-sm capitalize text-gray-400">
                   Premium Projects
                 </p>
               </div>
-              <p
-                :class="portfolioSummary.usage.premiumProjects > (portfolioSummary.limits.premiumProjects ?? 0) ? 'visible' : 'invisible'"
-                class="text-[10px] text-red-500 mt-[2px] whitespace-nowrap"
-              >
-                Limit exceeded
-              </p>
             </div>
 
             <div class="flex flex-col items-center justify-center px-4">
               <div class="flex flex-col items-center">
                 <p class="text-3xl font-bold text-white mb-1">
                   {{ portfolioSummary.usage.unlimitedProjects }}
-                  <span class="text-sm text-gray-400 ml-1">/ {{ formatLimit(portfolioSummary.limits.unlimitedProjects) }}</span>
                 </p>
                 <p class="text-sm capitalize text-gray-400">
                   Unlimited Projects
                 </p>
               </div>
-              <p
-                :class="portfolioSummary.usage.unlimitedProjects > (portfolioSummary.limits.unlimitedProjects ?? 0) ? 'visible' : 'invisible'"
-                class="text-[10px] text-red-500 [2px] whitespace-nowrap"
-              >
-                Limit exceeded
-              </p>
             </div>
           </div>
         </div>
@@ -207,13 +172,13 @@
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
 import debounce from 'lodash.debounce'
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { inject, onMounted, ref, watch } from 'vue'
 
 import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
-import { ACCOUNT_TIER_LABELS, formatTierLimit } from '@/projects/entitlement-helpers'
+import { ACCOUNT_TIER_LABELS } from '@/projects/entitlement-helpers'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useGetPortfolioSummary } from '../user/composables/use-tiering'
@@ -254,20 +219,6 @@ watch(() => projectSearchValue.value, () => {
   }
 })
 
-const canCreateProject = computed(() => {
-  // Tier reframe (2026-06-29): no project-COUNT cap is enforced (the
-  // account_tier_project_limit matrix is all-unlimited now). The matrix
-  // mechanism is retained server-side so an operator can impose a per-type count
-  // cap later; honor it here if present (null/undefined => unlimited).
-  const limits = portfolioSummary.value?.limits
-  if (limits === undefined) return true
-  const usage = portfolioSummary.value?.usage
-  const overFree = limits.freeProjects !== null && (usage?.freeProjects ?? 0) >= limits.freeProjects
-  const overPremium = limits.premiumProjects !== null && (usage?.premiumProjects ?? 0) >= limits.premiumProjects
-  // Can create if there's headroom for at least one allowed project type.
-  return !overFree || !overPremium
-})
-
 const loadMoreProject = async (): Promise<void> => {
   if (hasFetchedAll.value || isLoading.value || hasFailed.value) return
   fetchProjects(projects.value.length, LIMIT, projectSearchValue.value === '' ? undefined : projectSearchValue.value)
@@ -300,10 +251,6 @@ const fetchProjects = async (offset:number, limit: number, keyword: string | und
 
 const onProjectClicked = (value: boolean) => {
   showLoading.value = value
-}
-
-const formatLimit = (limit: number | null) => {
-  return formatTierLimit(limit)
 }
 </script>
 
