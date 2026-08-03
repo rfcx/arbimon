@@ -6,7 +6,7 @@
           AI empowered biodiversity research & conservation action
         </h1>
         <p class="max-w-2xl mb-4 text-echo dark:text-insight">
-          Unleash the full potential of your acoustic data and gain unprecedented biodiveristy insights into the natural world.
+          Unleash the full potential of your acoustic data and gain unprecedented biodiversity insights into the natural world.
         </p>
         <p class="max-w-2xl mb-6 text-echo lg:mb-8 dark:text-insight">
           Join the global community of scientists, conservationists, and nature enthusiasts who use Arbimon to drive impactful and sustainable change.
