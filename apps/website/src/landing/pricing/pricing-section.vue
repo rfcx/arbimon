@@ -1,166 +1,92 @@
 <template>
   <div class="min-h-screen bg-black text-util-gray-02 py-20 px-4 font-sans border-b border-b-frequency">
-    <div class="text-center mb-16">
+    <div class="text-center mb-12">
       <h1 class="text-[40px] mb-2 text-insight text-bold">
         Pricing
       </h1>
       <p class="text-[18px] font-medium">
-        Start for free. Unlock for more.
+        Start for free. Upgrade for more.
       </p>
     </div>
 
-    <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-      <div class="bg-echo rounded-3xl p-5 flex flex-col h-full">
-        <div class="flex-grow">
-          <div class="mb-8">
-            <h3 class="text-[15px] mb-3">
-              Basic
-            </h3>
-            <h2 class="text-[32px] text-insight font-bold mb-3 font-sans ">
-              Free
-            </h2>
-            <p class="text-[13px] leading-relaxed mr-28">
-              For explorers, contributors, and light use.
-            </p>
+    <div class="matrix-scroll">
+      <div class="matrix">
+        <!-- header row -->
+        <div class="mcell hcell lblh" />
+        <div class="mcell hcell col-free">
+          <p class="kicker">
+            Free project
+          </p>
+          <div class="htt">
+            Free
           </div>
-
-          <ul class="space-y-4">
-            <li class="flex items-center text-[14px]">
-              <CheckIcon class="w-4 h-4 mr-3 text-gray-400" />
-              <span class="font-medium items-center">5 Free projects</span>
-            </li>
-            <li class="flex items-start text-[12px] ml-7">
-              <span class="italic">Each Free project includes</span>
-            </li>
-            <li
-              v-for="feature in basicSubFeatures"
-              :key="feature"
-              class="flex items-center text-[14px] ml-7"
-            >
-              <span class="mr-3 text-gray-400 font-bold text-[18px] leading-[20px]">•</span>
-              {{ feature }}
-            </li>
-          </ul>
+          <div class="hsub">
+            For everyone. No trial, no card.
+          </div>
+        </div>
+        <div class="mcell hcell col-prem">
+          <p class="kicker">
+            Premium project
+          </p>
+          <div class="htt">
+            Premium
+          </div>
+          <div class="hsub">
+            Everything in Free, plus more.
+          </div>
         </div>
 
-        <div class="mt-10">
+        <!-- feature rows -->
+        <template
+          v-for="row in rows"
+          :key="row.label"
+        >
+          <div class="mcell lbl">
+            <span class="k">{{ row.label }}</span>
+          </div>
+          <div class="mcell col-free">
+            <div class="val">
+              <div class="row">
+                <CheckIcon class="ic" />
+                <span>
+                  <span class="vline">{{ row.free.value }}</span>
+                  <span class="sline">{{ row.free.detail }}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="mcell col-prem">
+            <div class="val">
+              <div class="row">
+                <CheckIcon class="ic" />
+                <span>
+                  <span class="vline">{{ row.premium.value }}</span>
+                  <span class="sline">{{ row.premium.detail }}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- footer row -->
+        <div class="mcell lbl ctacell">
+          &nbsp;
+        </div>
+        <div class="mcell col-free ctacell">
           <button
-            disabled
-            class="h-[40px] w-full bg-[#ffffff14] text-[#fff] opacity-50 cursor-not-allowed transition-colors py-3 rounded-full text-[14px]"
+            class="cta free-cta"
             @click="signup"
           >
-            Start with Basic
+            Start for free
           </button>
-          <p class="mt-4 h-[40px] invisible text-[13px]">
-            spacer
+          <p class="subcta">
+            Always free
           </p>
         </div>
-      </div>
-
-      <div class="bg-echo rounded-3xl p-5 flex flex-col h-full relative">
-        <div class="flex-grow">
-          <div class="mb-8">
-            <h3 class="text-frequency text-[15px] mb-3">
-              Pro
-            </h3>
-            <div class="flex items-baseline gap-1 mb-3 font-sans">
-              <span class="text-[32px] font-bold text-insight">$995</span>
-              <span class=" text-[15px]">/ year</span>
-            </div>
-            <p class="text-[13px] leading-relaxed mr-12">
-              For teams and individuals managing active projects.
-            </p>
+        <div class="mcell col-prem ctacell">
+          <div class="upgrade-note">
+            Upgrade a Project Anytime
           </div>
-
-          <ul class="space-y-4">
-            <li class="flex items-center text-[14px]">
-              <CheckIcon class="w-4 h-4 mr-3 text-frequency" />
-              <span class="font-medium">50 Free projects</span>
-            </li>
-
-            <li class="flex items-center text-[14px]">
-              <CheckIcon class="w-4 h-4 mr-3 text-frequency" />
-              <span class="font-medium">2 Premium projects</span>
-            </li>
-
-            <li class="flex items-start text-[12px] ml-7">
-              <span class="italic">Each Premium project includes</span>
-            </li>
-
-            <li
-              v-for="subFeature in [
-                { text: '1 million minutes of recordings' },
-                { text: '7 members plus primary admin', sub: '(up to 4 collaborators*)' },
-                { text: 'Private project option' },
-                { text: 'Export project data' }
-              ]"
-              :key="subFeature.text"
-              class="flex items-start text-[14px] ml-7"
-            >
-              <span class="mr-3 font-bold text-frequency text-[18px] h-[21px] flex items-center">•</span>
-
-              <div class="flex flex-col">
-                <span class="leading-[21px]">{{ subFeature.text }}</span>
-
-                <span
-                  v-if="subFeature.sub"
-                  class="text-[10px] mt-1 leading-none"
-                >{{ subFeature.sub }}</span>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="mt-10">
-          <button
-            disabled
-            class="h-[40px] w-full bg-frequency opacity-50 cursor-not-allowed text-black rounded-full text-[14px] transition-colors"
-          >
-            Start with Pro
-          </button>
-          <p class="text-center text-[13px] mt-4 px-8 leading-tight h-[40px]">
-            Add premium projects for $99/year each.
-          </p>
-        </div>
-      </div>
-
-      <div class="bg-echo rounded-3xl p-5 flex flex-col h-full">
-        <div class="flex-grow">
-          <div class="mb-8">
-            <h3 class="text-insight text-[15px] mb-3">
-              Enterprise
-            </h3>
-            <h2 class="text-[32px] font-sans font-bold mb-3 text-insight">
-              Contact Us
-            </h2>
-            <p class=" text-[13px] leading-relaxed mr-12">
-              For multiple and large-scale projects.
-            </p>
-          </div>
-
-          <ul class="space-y-4">
-            <li
-              v-for="feature in enterpriseFeatures"
-              :key="feature"
-              class="flex items-center text-[14px]"
-            >
-              <CheckIcon class="w-4 h-4 mr-3 text-white" />
-              {{ feature }}
-            </li>
-          </ul>
-        </div>
-
-        <div class="mt-10 flex flex-col items-center">
-          <button
-            disabled
-            class="h-[40px]  opacity-50 cursor-not-allowed w-full bg-[#F7F7F7] text-[#302F2F] text-[14px] rounded-full transition-colors"
-          >
-            Get in touch
-          </button>
-
-          <p class="text-center text-[13px] mt-4 leading-tight h-[40px] px-12">
-            Contact us for custom project limits.
-          </p>
         </div>
       </div>
     </div>
@@ -196,20 +122,55 @@ const CheckIcon = defineComponent({
   }
 })
 
-const basicSubFeatures = [
-  '40,000 minutes of recordings',
-  '1 member (primary admin only)',
-  'Public visibility for project insights',
-  'Export project data'
-]
+interface TierCell { value: string, detail: string }
+interface FeatureRow { label: string, free: TierCell, premium: TierCell }
 
-const enterpriseFeatures: string[] = [
-  'Unlimited projects',
-  'Unlimited recordings',
-  'Unlimited members',
-  'Private project option',
-  'Export project data',
-  'Dedicated Account Support'
+const rows: FeatureRow[] = [
+  {
+    label: 'Recordings',
+    free: { value: '12,000,000 minutes', detail: 'of audio storage per project' },
+    premium: { value: 'Unlimited minutes', detail: 'no storage ceiling' }
+  },
+  {
+    label: 'Team',
+    free: { value: 'Up to 5 collaborators', detail: 'plus unlimited guests' },
+    premium: { value: 'Unlimited collaborators', detail: 'including co-admins' }
+  },
+  {
+    label: 'Privacy',
+    free: { value: 'Private / Hidden', detail: 'for up to 12 months' },
+    premium: { value: 'Private / Hidden', detail: 'with no time limit' }
+  },
+  {
+    label: 'Analyses',
+    free: { value: 'Up to 25 jobs / day', detail: '45,000 recordings per analysis' },
+    premium: { value: 'Unlimited', detail: 'no daily cap or size limit' }
+  },
+  {
+    label: 'Processing',
+    free: { value: 'Community pool', detail: 'shared analysis capacity' },
+    premium: { value: 'Jump the queue', detail: 'priority + 2× faster processing' }
+  },
+  {
+    label: 'Toolkit',
+    free: { value: 'Full suite', detail: 'PM, RF & CNN, soundscapes, AED, clustering, visualizer, insights, export' },
+    premium: { value: 'The full Free toolkit', detail: 'nothing removed' }
+  },
+  {
+    label: 'Export',
+    free: { value: 'Unlimited', detail: 'detections, sites & analysis results' },
+    premium: { value: 'Unlimited', detail: 'all project data' }
+  },
+  {
+    label: 'Re-Download',
+    free: { value: '60 recordings / day', detail: 're-download your original audio' },
+    premium: { value: '60,000 recordings / day', detail: 're-download your original audio' }
+  },
+  {
+    label: 'Retention',
+    free: { value: '10-year guarantee', detail: 'your data is preserved — on every tier' },
+    premium: { value: '10-year guarantee', detail: 'your data is preserved — on every tier' }
+  }
 ]
 
 const signup = async (): Promise<void> => {
@@ -217,3 +178,46 @@ const signup = async (): Promise<void> => {
   await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, screen_hint: 'signup' })
 }
 </script>
+
+<style scoped>
+/* Variant B "unified grid" (design/pricing-mockup/compare-variants.html, 2026-08-03).
+   Palette mirrors windi.config.ts: frequency #ADFF2C, chirp #D2FF8A, echo #14130D,
+   pitch #060508, insight #FFFEFC, cloud #F9F6F2, grays D3D2CF/A1A19E/4B4B4B/242424. */
+.matrix-scroll{max-width:980px;margin:0 auto;overflow-x:auto}
+/* label column shrinks to its text (free column sits flush against it); free column
+   absorbs the freed width; premium column keeps a fixed width */
+.matrix{display:grid;grid-template-columns:max-content 1fr 306px;min-width:760px;
+  border:1px solid #242424;border-radius:24px;overflow:hidden;background:#14130D}
+.mcell{padding:14px 18px;border-top:1px solid #242424;display:flex;flex-direction:column;justify-content:center}
+.col-free.mcell{background:linear-gradient(180deg,#20240f,#1a1d0e);
+  box-shadow:inset 1px 0 0 rgba(210,255,138,.22),inset -1px 0 0 rgba(210,255,138,.22)}
+.col-prem.mcell{background:linear-gradient(180deg,#1d2110,#181b0d)}
+.matrix > .mcell:nth-child(1),.matrix > .mcell:nth-child(2),.matrix > .mcell:nth-child(3){border-top:none}
+.mcell.lbl .k{font-size:13px;color:#D3D2CF;font-weight:600}
+.mcell .val{font-size:13.5px;line-height:1.38;color:#FFFEFC}
+.col-free.mcell .val{color:#F9F6F2}
+/* two-line cells: bold highlighted value line + lighter secondary info line */
+.mcell .val .vline{display:block;font-size:14px;font-weight:700;line-height:1.3;color:#ADFF2C}
+.mcell .val .sline{display:block;font-size:12px;color:#A1A19E;line-height:1.35;margin-top:2px;font-weight:400}
+.mcell .row{display:grid;grid-template-columns:15px 1fr;gap:9px;align-items:start}
+.mcell .ic{width:14px;height:14px;margin-top:2px}
+.col-free.mcell .ic{color:#D2FF8A}
+.col-prem.mcell .ic{color:#ADFF2C}
+.hcell{padding:20px 18px}
+.hcell.lblh{background:#14130D}
+.col-free.hcell{background:linear-gradient(180deg,#262c10,#20240f);border-bottom:3px solid #ADFF2C;
+  box-shadow:inset 1px 0 0 rgba(210,255,138,.22),inset -1px 0 0 rgba(210,255,138,.22)}
+.col-prem.hcell{background:linear-gradient(180deg,#212611,#1d2110);border-bottom:2px solid rgba(173,255,44,.5)}
+.hcell .kicker{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin:0 0 5px}
+.col-free.hcell .kicker{color:#D2FF8A}
+.col-prem.hcell .kicker{color:#ADFF2C}
+.hcell .htt{font-size:23px;font-weight:800;color:#FFFEFC;margin:0 0 3px}
+.hcell .hsub{font-size:12px;color:#A1A19E;line-height:1.4}
+.ctacell{padding:16px 18px}
+.ctacell .cta{height:40px;width:100%;border:none;border-radius:9999px;font-size:14px;font-weight:600;cursor:pointer}
+.ctacell .free-cta{background:#D2FF8A;color:#060508}
+.ctacell .subcta{font-size:11px;color:#A1A19E;text-align:center;margin-top:8px}
+/* Premium footer: plain light text, not a button — nothing clickable/performable here */
+.ctacell .upgrade-note{display:flex;align-items:center;justify-content:center;height:40px;
+  color:rgba(173,255,44,.66);font-size:13px;font-weight:400;letter-spacing:.02em;user-select:none}
+</style>
