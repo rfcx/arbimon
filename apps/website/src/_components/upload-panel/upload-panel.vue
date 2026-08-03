@@ -77,6 +77,13 @@
     </div>
 
     <!-- Aggregate progress -->
+    <p
+      v-if="skippedAlreadyUploaded > 0"
+      class="mt-4 rounded-lg border border-frequency/30 bg-frequency/10 px-4 py-3 text-sm text-insight inline-block"
+    >
+      {{ skippedAlreadyUploaded }} file{{ skippedAlreadyUploaded === 1 ? '' : 's' }} already uploaded in this session &mdash; skipped.
+    </p>
+
     <div
       v-if="stats.total > 0"
       class="mt-6"
@@ -105,7 +112,7 @@
           class="btn btn-secondary text-sm"
           @click="retryFailed"
         >
-          Retry failed
+          Retry / resume
         </button>
         <button
           class="btn btn-secondary text-sm"
@@ -212,9 +219,37 @@ onMounted(async () => {
 // -- file intake ------------------------------------------------------------
 const fileInput = ref<HTMLInputElement>()
 
+/**
+ * Files already present in the queue for this site that completed (or were
+ * server-side duplicates). Re-dropping the same folder — the documented way to
+ * resume an interrupted session, since File handles do not survive a reload —
+ * must NOT re-upload them: the server would (correctly) flag them as
+ * duplicates, which reads to the user as a false positive. Matched on
+ * relativePath + size + site, which is what the user actually re-dropped.
+ */
+const alreadyDoneKey = (relativePath: string, size: number, streamId: string): string =>
+  `${streamId}\u0000${relativePath}\u0000${size}`
+
+const skippedAlreadyUploaded = ref(0)
+
 const enqueueFiles = async (files: Array<{ file: File, relativePath: string }>): Promise<void> => {
   if (selectedSiteExternalId.value === '') return
-  const accepted = files.filter(({ file }) => isSupportedAudioFile(file.name))
+  const supported = files.filter(({ file }) => isSupportedAudioFile(file.name))
+  const existing = await uploadStore.list()
+  const doneKeys = new Set(
+    existing
+      .filter(item => item.state === 'ingested' || item.state === 'duplicate')
+      .map(item => alreadyDoneKey(item.relativePath, item.fileSizeBytes, item.streamId))
+  )
+  const accepted = supported.filter(
+    ({ file, relativePath }) =>
+      !doneKeys.has(alreadyDoneKey(relativePath, file.size, selectedSiteExternalId.value))
+  )
+  skippedAlreadyUploaded.value = supported.length - accepted.length
+  if (accepted.length === 0) {
+    await refreshItems()
+    return
+  }
   const newItems = accepted.map(({ file, relativePath }) => {
     const item = createUploadItem({
       filename: file.name,
@@ -254,9 +289,21 @@ const onPick = async (event: Event): Promise<void> => {
 const pauseEngine = async (): Promise<void> => { await engine.pause() }
 const resumeEngine = (): void => { engine.start() }
 
+/**
+ * Un-stick the queue.
+ *
+ * `failed` items go back through engine.retry(), and — critically — items
+ * stranded in a transient in-flight state (`uploading`/`signing`/`preparing`)
+ * by a network drop or tab close are recovered too. Before 2026-08-03 this
+ * only swept `failed`, so a mid-batch network failure left the queue looking
+ * busy forever with nothing progressing.
+ */
 const retryFailed = async (): Promise<void> => {
+  await engine.recoverStalled()
   const failed = await uploadStore.list(['failed'])
   for (const item of failed) await engine.retry(item.id)
+  engine.start()
+  await refreshItems()
 }
 
 const clearCompleted = async (): Promise<void> => {
@@ -306,7 +353,7 @@ const STATE_LABELS: Record<UploadItemState, string> = {
   uploading: 'Uploading',
   uploaded: 'Processing…',
   ingested: 'Complete',
-  duplicate: 'Duplicate (already ingested)',
+  duplicate: 'Already uploaded — skipped',
   failed: 'Failed',
   rejected: 'Rejected',
   paused: 'Paused'

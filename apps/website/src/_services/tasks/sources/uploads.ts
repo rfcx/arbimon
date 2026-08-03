@@ -34,7 +34,7 @@ const DETAIL_MAP: Partial<Record<UploadItemState, string>> = {
   signed: 'waiting to upload',
   uploaded: 'processing…',
   ingested: 'complete',
-  duplicate: 'duplicate (already ingested)',
+  duplicate: 'already uploaded — skipped',
   paused: 'paused'
 }
 
@@ -96,7 +96,26 @@ const uploadsSource: TaskSource = {
   ),
   actions: computed(() => {
     const active = activeCount.value
+    const stalledOrFailed =
+      stats.value.failed + stats.value.uploading + stats.value.signing + stats.value.preparing
     return [
+      // Un-stick a queue stranded by a network drop / tab close. Mirrors the
+      // panel's "Retry failed" (2026-08-03): recoverStalled() returns items
+      // orphaned in a transient in-flight state, which retry() alone cannot
+      // see because it only accepts `failed`/`rejected`.
+      ...(stalledOrFailed > 0
+        ? [{
+            id: 'retry-resume',
+            label: 'Retry / resume',
+            run: async () => {
+              await engine.recoverStalled()
+              const failed = await uploadStore.list(['failed'])
+              for (const item of failed) await engine.retry(item.id)
+              engine.start()
+              await refreshItems()
+            }
+          }]
+        : []),
       ...(active > 0
         ? [{
             id: 'pause-resume',
