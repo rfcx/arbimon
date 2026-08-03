@@ -143,7 +143,7 @@ const rows: FeatureRow[] = [
   },
   {
     label: 'Analyses',
-    free: { value: 'Up to 25 jobs / day', detail: '45,000 recordings per analysis' },
+    free: { value: 'Up to 10 jobs / day', detail: '45,000 recordings per analysis' },
     premium: { value: 'Unlimited', detail: 'no daily cap or size limit' }
   },
   {
