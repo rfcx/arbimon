@@ -109,8 +109,49 @@ export class UploadEngine {
     if (this.running) return
     this.running = true
     this.emit({ type: 'engine-state', running: true, online: this.online })
-    this.kick()
+    // Recover items orphaned by a hard interruption (tab close / crash /
+    // network drop that killed an in-flight PUT) BEFORE pumping. Without this
+    // they sit in `uploading`/`signing` forever: pumpUploads() only ever picks
+    // up `signed`, and nothing else moves them. Measured in production
+    // (2026-08-03): a mid-batch network failure left thousands of uploads
+    // signed server-side with bytes never sent, and the queue never resumed.
+    void this.recoverStalled().then(() => {
+      this.kick()
+    })
     this.scheduleStatusPoll()
+  }
+
+  /**
+   * Return items stranded in a transient in-flight state to the pool.
+   *
+   * `uploading` -> `signed` (re-PUT; the signed URL is reused when fresh,
+   *                and pumpSigning() re-signs it when stale)
+   * `signing`   -> `ready`  (re-request a URL)
+   * `preparing` -> `queued` (re-hash)
+   *
+   * Only touches items NOT currently owned by a live in-flight operation, so
+   * calling it mid-run is safe. Returns the number of items recovered.
+   */
+  async recoverStalled (): Promise<number> {
+    const stranded = await this.store.list(['uploading', 'signing', 'preparing'])
+    let recovered = 0
+    for (const item of stranded) {
+      if (this.abortControllers.has(item.id)) continue
+      if (this.multipartSigning.has(item.id)) continue
+      const state =
+        item.state === 'uploading'
+          ? 'signed'
+          : item.state === 'signing'
+            ? 'ready'
+            : 'queued'
+      await this.update(item, { state, progress: undefined })
+      recovered++
+    }
+    if (recovered > 0) {
+      await this.emitStats()
+      this.kick()
+    }
+    return recovered
   }
 
   /** Pause new work; in-flight PUTs are aborted back to `signed`. */
@@ -254,7 +295,7 @@ export class UploadEngine {
     if (file === undefined) {
       await this.update(item, {
         state: 'rejected',
-        error: 'File handle lost — re-add this file.'
+        error: 'Session interrupted — re-add this folder to resume (already-uploaded files are skipped).'
       })
       return
     }
@@ -432,7 +473,7 @@ export class UploadEngine {
     if (file === undefined || item.signedUrl === undefined) {
       await this.update(item, {
         state: 'rejected',
-        error: 'File handle lost — re-add this file.'
+        error: 'Session interrupted — re-add this folder to resume (already-uploaded files are skipped).'
       })
       return
     }
@@ -508,7 +549,7 @@ export class UploadEngine {
   private async uploadMultipartOne (item: UploadItem): Promise<void> {
     const file = await this.fileSource.getFile(item.id)
     if (file === undefined || item.multipart === undefined || item.uploadId === undefined) {
-      await this.update(item, { state: 'rejected', error: 'File handle lost — re-add this file.' })
+      await this.update(item, { state: 'rejected', error: 'Session interrupted — re-add this folder to resume (already-uploaded files are skipped).' })
       return
     }
     const controller = new AbortController()
