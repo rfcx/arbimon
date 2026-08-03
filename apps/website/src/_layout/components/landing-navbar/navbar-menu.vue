@@ -85,18 +85,6 @@
           </li>
           <li class="pt-2 border-t-1 border-util-gray-02">
             <a
-              href="https://rfcx.org/press"
-              class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
-            >Press <icon-custom-linkout class="inline ml-1" /></a>
-          </li>
-          <li class="pb-2 border-b-1 border-util-gray-02">
-            <a
-              href="https://rfcx.org/blog"
-              class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
-            >Blog <icon-custom-linkout class="inline ml-1" /></a>
-          </li>
-          <li class="pt-2">
-            <a
               href="https://help.arbimon.org/"
               class="block px-4 py-2 text-gray-700 dark:text-insight dark:hover:text-frequency"
             >Help &amp; support <icon-custom-linkout class="inline ml-1" /></a>
