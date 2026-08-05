@@ -34,6 +34,7 @@
           <router-link
             to="/pricing"
             class="text-sm font-semibold text-frequency hover:(underline text-frequency/80) transition-colors flex items-center gap-1"
+            @click="track('plan_change_clicked', { source: 'account_settings' })"
           >
             Change plan
             <svg
@@ -302,6 +303,7 @@ import SaveStatusText from '@/_components/save-status-text.vue'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
 import { ACCOUNT_TIER_LABELS } from '@/projects/entitlement-helpers'
+import { track } from '~/analytics'
 import { useStore } from '~/store'
 import OrganizationSearchResultCard from '../insights/overview/components/dashboard-project-summary/components/dashboard-project-stakeholders/organization-search-result-card.vue'
 import { useCreateOrganization } from '../insights/overview/composables/use-create-organization'

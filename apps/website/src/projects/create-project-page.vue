@@ -59,6 +59,7 @@ import { apiBioPostProjectCreate } from '@rfcx-bio/common/api-bio/project/projec
 
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
+import { track } from '~/analytics'
 import { ROUTE_NAMES } from '~/router'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectForm from './components/form/project-form.vue'
@@ -137,6 +138,7 @@ async function create () {
   }
   try {
     const response = await apiBioPostProjectCreate(apiClientBio, project)
+    track('project_created', { projectSlug: response?.slug ?? '', hidden: !isPublic.value, objectivesCount: objectives.value.length })
     await router.push({ name: ROUTE_NAMES.dashboard, params: { projectSlug: response?.slug } })
   } catch (e) {
     const error = e as AxiosError<{ message?: string }>

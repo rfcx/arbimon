@@ -101,6 +101,7 @@ import { defineComponent, h, inject } from 'vue'
 import { apiArbimonLegacyClearSession } from '@rfcx-bio/common/api-arbimon/legacy-logout'
 
 import { apiClientArbimonLegacyKey, authClientKey } from '@/globals'
+import { track } from '~/analytics'
 import { ROUTE_NAMES } from '~/router'
 
 const auth = inject(authClientKey) as Auth0Client
@@ -174,6 +175,7 @@ const rows: FeatureRow[] = [
 ]
 
 const signup = async (): Promise<void> => {
+  track('pricing_signup_clicked', { source: 'pricing_page' })
   await apiArbimonLegacyClearSession(apiClientArbimonLegacy).catch(() => {})
   await auth.loginWithRedirect({ appState: { target: { name: ROUTE_NAMES.myProjects } }, screen_hint: 'signup' })
 }

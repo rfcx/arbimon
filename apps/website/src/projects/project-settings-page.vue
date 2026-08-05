@@ -153,6 +153,7 @@ import ReadOnlyBanner from '@/_layout/components/guest-banner/guest-banner.vue'
 import { urlWrapper } from '@/_services/images/url-wrapper'
 import { apiClientArbimonLegacyKey, apiClientKey, togglesKey } from '@/globals'
 import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
+import { track } from '~/analytics'
 import { ROUTE_NAMES } from '~/router'
 import { useDashboardStore, useStore } from '~/store'
 import { useGetProjectCapabilities } from './_composables/use-project-capabilities'
@@ -353,6 +354,11 @@ const updateSettings = () => {
 
   mutateProjectSettings(update, {
     onSuccess: () => {
+      track('project_settings_saved', {
+        projectSlug: settings.value?.slug ?? '',
+        changedVisibility: update.hidden !== undefined,
+        ...(update.hidden !== undefined ? { hidden: update.hidden } : {})
+      })
       if (profileImageForm.value === undefined) {
         isSaving.value = false
         updateLastSaved()
