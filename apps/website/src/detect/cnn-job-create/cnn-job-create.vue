@@ -176,6 +176,7 @@ import SiteInput from '@/_services/picker/site-input.vue'
 import TimeOfDayPicker from '@/_services/picker/time-of-day-picker.vue'
 import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
 import { getProjectTypeUsageLimits } from '@/projects/entitlement-helpers'
+import { track } from '~/analytics'
 import { ROUTE_NAMES } from '~/router'
 import { useStore } from '~/store'
 import { useProjectTieringUsage } from '../../super/project/_composables/use-project-tiering-usage'
@@ -323,6 +324,7 @@ const createJob = async (): Promise<void> => {
   // Save
   mutatePostJob({ ...job, minutesTotal: totalDurationInMinutes.value }, {
     onSuccess: async () => {
+      track('cnn_job_created', { classifierId: job.classifierId, minutesTotal: totalDurationInMinutes.value })
       router.push({ name: ROUTE_NAMES.cnnJobList })
     },
     onError: (error) => {

@@ -320,6 +320,7 @@ import alertDialog from '@/_components/alert-dialog.vue'
 import { apiClientKey } from '@/globals'
 import ProjectStateBadge from '@/projects/components/project-state-badge.vue'
 import { getProjectTypeUsageLimits } from '@/projects/entitlement-helpers'
+import { track } from '~/analytics'
 import { useStore } from '~/store'
 import { useAddProjectMember, useDeleteProjectMember, useGetProjectMembers, useSearchUsers, useUpdateProjectMember } from './_composables/use-project-member'
 import { useGetProjectInfo } from './_composables/use-project-profile'
@@ -510,6 +511,7 @@ const addSelectedUser = ():void => {
     role: 'viewer'
   }, {
     onSuccess: () => {
+      track('project_member_added', { projectId: store.project?.id ?? -1 })
       userSearchValue.value = ''
       usersRefetch()
       refetchProjectInfo()
@@ -532,6 +534,7 @@ const changeUserRole = (email: string, role: ProjectRole):void => {
     role: role as Exclude<ProjectRole, 'none' | 'external'>
   }, {
     onSuccess: () => {
+      track('project_member_role_changed', { projectId: store.project?.id ?? -1, role })
       usersRefetch()
       refetchProjectInfo()
     },
@@ -545,6 +548,7 @@ const changeUserRole = (email: string, role: ProjectRole):void => {
 const deleteProjectMember = (email: string):void => {
   mutateDeleteProjectMember(email, {
     onSuccess: () => {
+      track('project_member_removed', { projectId: store.project?.id ?? -1 })
       usersRefetch()
       refetchProjectInfo()
     },
