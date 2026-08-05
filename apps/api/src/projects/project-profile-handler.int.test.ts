@@ -178,7 +178,11 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
     expect(updatedProject?.status).toBe('hidden')
   })
 
-  test('free projects cannot be hidden', async () => {
+  // C1 un-gate (2026-08-04, Gap-C study §6 / D-C4): hidden is available to
+  // ALL tiers now (the old gate guarded the directory flag, not privacy, and
+  // the legacy create path never enforced it). The free-tier 12-month privacy
+  // clock ships separately with the Option-1 mechanism.
+  test('free projects CAN be hidden (C1 un-gate)', async () => {
     const app = await makeApp(routesProject, { projectRole: 'admin' })
     await LocationProject.upsert({ ...project, status: 'listed', projectType: 'free' })
     const payload = {
@@ -187,8 +191,9 @@ describe(`PATCH ${projectDataRoute}/profile route`, async () => {
 
     const response = await app.inject({ method: PATCH, url, payload })
 
-    expect(response.statusCode).toBe(400)
-    expect(response.json<{ message: string }>().message).toContain('Free projects must remain public')
+    expect(response.statusCode).toBe(204)
+    const updatedProject = await LocationProject.findOne({ where: { id: project.id } })
+    expect(updatedProject?.status).toBe('hidden')
   })
 })
 

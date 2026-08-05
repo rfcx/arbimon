@@ -20,16 +20,10 @@
       <div class="mt-4">
         <project-listed-form
           :is-public="isPublic"
-          :is-disabled="!canChooseVisibility"
+          :is-disabled="false"
           :is-create-project="true"
           @emit-project-listed="toggleListedProject"
         />
-        <p
-          v-if="!canChooseVisibility"
-          class="mt-3 text-sm text-insight"
-        >
-          Free projects are always publicly visible. Upgrade to Pro for the option to hide a project.
-        </p>
       </div>
       <div class="mt-4 sm:mt-6">
         <button
@@ -58,7 +52,7 @@
 </template>
 <script setup lang="ts">
 import { type AxiosError, type AxiosInstance } from 'axios'
-import { computed, inject, ref, watch } from 'vue'
+import { inject, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { apiBioPostProjectCreate } from '@rfcx-bio/common/api-bio/project/project-create'
@@ -66,8 +60,6 @@ import { apiBioPostProjectCreate } from '@rfcx-bio/common/api-bio/project/projec
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
 import { ROUTE_NAMES } from '~/router'
-import { useGetProfileData } from '../user/composables/use-patch-user-profile'
-import { useGetPortfolioSummary } from '../user/composables/use-tiering'
 import { verifyDateFormError } from './components/form/functions'
 import ProjectForm from './components/form/project-form.vue'
 import ProjectListedForm from './components/form/project-listed-form.vue'
@@ -77,8 +69,6 @@ import type { ProjectDefault } from './types'
 const router = useRouter()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
-const { data: profileData } = useGetProfileData(apiClientBio)
-const { data: portfolioSummary } = useGetPortfolioSummary(apiClientBio)
 
 const name = ref<string>('')
 const startDate = ref<string | null>('')
@@ -99,15 +89,14 @@ watch(endDate, () => { hasFailed.value = false })
 watch(onGoing, () => { hasFailed.value = false })
 
 // Project type is DERIVED server-side from the creator's account tier (Pro =>
-// premium, else free); it is no longer chosen here. Only Pro users (whose new
-// projects are premium) get the option to hide a project; free projects stay
-// publicly visible.
-const currentAccountTier = computed(() => portfolioSummary.value?.accountTier ?? profileData.value?.accountTier ?? 'free')
-const canChooseVisibility = computed(() => currentAccountTier.value === 'pro')
-
-watch(canChooseVisibility, (canChoose) => {
-  if (!canChoose) isPublic.value = true
-}, { immediate: true })
+// premium, else free); it is no longer chosen here.
+// C1 un-gate (2026-08-04, Gap-C study §6 / D-C4): the hide/test-project option
+// is available to ALL tiers. The old Pro gate guarded the DIRECTORY flag (not
+// privacy) and its "Free projects are always publicly visible" copy was false
+// in production (the legacy create path allowed free-private all along — see
+// rfcx-local DESIGN-arbimon-privacy-gapC-study-2026-08-04.md §3). The 12-month
+// free-privacy clock (pricing-page Privacy row) arrives with the Option-1
+// mechanism; until then visibility is un-gated.
 
 const verifyFields = () => {
   if (name.value.length === 0) {
@@ -141,7 +130,7 @@ async function create () {
   const project = {
     name: name.value,
     // projectType intentionally omitted — derived server-side from account tier.
-    hidden: canChooseVisibility.value ? !isPublic.value : false,
+    hidden: !isPublic.value,
     objectives: objectives.value,
     dateStart: startDate.value ?? undefined,
     dateEnd: onGoing.value ? undefined : (endDate.value ?? undefined)
