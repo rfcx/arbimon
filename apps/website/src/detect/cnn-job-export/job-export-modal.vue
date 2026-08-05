@@ -46,6 +46,7 @@ import { useRoute } from 'vue-router'
 
 import exportAllModelDetections from '@/_assets/cnn/export-all-model-detections.png'
 import { apiClientKey } from '@/globals'
+import { track } from '~/analytics'
 import { useExportDetections } from '../_composables/use-export-detections'
 
 const ID = 'cnn-export-modal'
@@ -91,6 +92,7 @@ const requestExport = async () => {
   // TODO: leave open util export is done
   mutateExportDetections({ types: ['all-model-detections'] }, {
     onSuccess: async () => {
+      track('cnn_detections_export_requested', { jobId: Number(jobId.value) })
       closeModal()
     },
     onError: (e) => {

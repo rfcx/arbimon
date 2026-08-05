@@ -198,6 +198,7 @@ const { isPending: isDeletingProject, isError: isErrorDeleteProject, isSuccess: 
 const onEmitProjectDelete = () => {
   mutateDeleteProject(store.project?.id ?? -1, {
     onSuccess: async () => {
+      track('project_deleted', { projectId: store.project?.id ?? -1, projectSlug: selectedProjectSlug.value ?? '' })
       await apiLegacySoftProjectDelete(apiClientArbimon, selectedProjectSlug.value ?? '')
       await apiLegacySoftSitesDelete(apiClientArbimon, selectedProjectSlug.value ?? '')
       store.deleteProject(store.project?.id)

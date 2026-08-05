@@ -8,6 +8,7 @@ import { isDefined } from '@rfcx-bio/utils/predicates'
 
 import { apiClientKey, storeKey } from '@/globals'
 import { downloadCsvReports } from '@/insights/species-richness/csv'
+import { track } from '~/analytics'
 import { type ColoredFilter, filterToQuery } from '~/filters'
 import { INFO_TOPICS } from '~/info/info-page'
 import { type BiodiversityStore, useStore } from '~/store'
@@ -58,6 +59,7 @@ export default class SpeciesRichnessIntroduction extends Vue {
       this.filters.map(async filter => await apiBioGetRichnessExport(this.apiClientBio, projectId, filterToQuery(filter)).then(res => res?.richnessExport))
     )).filter(isDefined)
     await downloadCsvReports(this.filters, reports, DEFAULT_PREFIX, this.store.projectFilters?.taxonClasses ?? [])
+    track('richness_csv_exported', { projectId, filterCount: this.filters.length })
     this.loading = false
   }
 }
