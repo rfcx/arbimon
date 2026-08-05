@@ -56,5 +56,10 @@ export const envKeysOptional = [
   // but public resolve still works. ARBMN_BASE_URL overrides the emitted link
   // host (default https://arb.mn).
   'SHORT_LINK_MINT_TOKEN',
-  'ARBMN_BASE_URL'
+  'ARBMN_BASE_URL',
+  // Server-side PostHog capture for /super mutation audit events
+  // (_services/analytics/super-audit.ts). Both must be set to enable;
+  // unset = capture disabled (safe default).
+  'POSTHOG_CAPTURE_HOST',
+  'POSTHOG_PROJECT_TOKEN'
 ] as const

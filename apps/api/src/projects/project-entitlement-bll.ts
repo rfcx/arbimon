@@ -98,9 +98,10 @@ export const assertProjectSettingsUpdateAllowed = async (projectId: number, requ
     throw new BioPublicError('This project is currently view-only and cannot be edited.', 403)
   }
 
-  if (request.hidden === true && (project.projectType ?? 'free') === 'free') {
-    throw new BioPublicError('Free projects must remain public.', 400)
-  }
+  // C1 un-gate (2026-08-04, Gap-C study §6 / D-C4): the "Free projects must
+  // remain public" rejection is removed — hidden is available to all tiers.
+  // The free-tier 12-month privacy clock (pricing Privacy row) is enforced by
+  // the Option-1 mechanism when it ships, not by blocking the flag here.
 }
 
 export const assertProjectAnalysisAllowed = async (projectId: number): Promise<void> => {

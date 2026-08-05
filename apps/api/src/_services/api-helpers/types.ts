@@ -1,4 +1,4 @@
-import { type FastifyReply, type FastifySchema, type HTTPMethods, type preValidationHookHandler, type RawReplyDefaultExpression, type RawRequestDefaultExpression, type RawServerDefault, type RequestBodyDefault, type RequestParamsDefault, type RequestQuerystringDefault, type RouteHandlerMethod } from 'fastify'
+import { type FastifyReply, type FastifySchema, type HTTPMethods, type onResponseHookHandler, type preValidationHookHandler, type RawReplyDefaultExpression, type RawRequestDefaultExpression, type RawServerDefault, type RequestBodyDefault, type RequestParamsDefault, type RequestQuerystringDefault, type RouteHandlerMethod } from 'fastify'
 import { type ReplyDefault } from 'fastify/types/utils'
 
 import { type NoExtraProps } from '@rfcx-bio/utils/utility-types'
@@ -28,6 +28,8 @@ export interface RouteRegistration<Response = any, Params = any, Querystring = a
   preValidation?: preValidationHookHandler[]
   preHandler?: Array<Middleware<Params, Querystring>>
   handler: Handler<Response, Params, Querystring, Body>
+  // Route-scoped fastify onResponse hook(s) (e.g. super-action audit capture).
+  onResponse?: onResponseHookHandler | onResponseHookHandler[]
 }
 
 // Export convenient aliases

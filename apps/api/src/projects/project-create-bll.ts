@@ -25,12 +25,18 @@ export const createProject = async (request: ProjectCreateRequestParsed, userId:
   // super updateUserTier.) The client no longer sends projectType.
   const { accountTier } = await getAccountTierForUser(userId)
   const projectType: ProjectType = accountTier === 'pro' ? 'premium' : 'free'
-  const hidden = projectType === 'free' ? false : (request.hidden ?? false)
+  // C1 un-gate (2026-08-04, Gap-C study §6 / D-C4): hidden (test-project /
+  // unlisted flag) is available to ALL tiers — the old free=>false forcing
+  // guarded the directory flag, not privacy, and the legacy create path never
+  // enforced it anyway. The 12-month free-privacy clock (pricing Privacy row)
+  // ships separately with the Option-1 mechanism.
+  const hidden = request.hidden ?? false
 
   await assertCanCreateProject(userId, projectType)
 
-  // Create in Core
-  const idCore = await createProjectInCore({ name: request.name, is_public: projectType === 'free' }, token)
+  // Create in Core. is_public mirrors the user's visibility choice for free
+  // projects (was: forced true); premium stays private-by-default.
+  const idCore = await createProjectInCore({ name: request.name, is_public: projectType === 'free' && !hidden }, token)
   const { external_id: idArbimon } = await getProjectInCore(idCore, token)
 
   // Pre-populate insights table with the same data (will get updated from Core after sync)
