@@ -37,6 +37,15 @@ const POSTHOG_ENABLED =
   typeof POSTHOG_KEY === 'string' &&
   POSTHOG_KEY.length > 0
 
+// Phase-C lever (2026-08-04, AUDIT-arbimon-posthog-instrumentation-2026-08-04
+// Phase C): staged autocapture rollout. DEFAULT FALSE — flipping it is an
+// env/build change only, and the #2461 protocol applies: enable on the demo
+// tier first, re-test the visualizer page, THEN prod. Session replay is NOT
+// governed by this flag (stays disabled; separate decision — operator Q-B
+// 2026-08-04: replay stays OFF).
+const POSTHOG_AUTOCAPTURE =
+  String(import.meta.env.VITE_POSTHOG_AUTOCAPTURE).toLowerCase() === 'true'
+
 // Lazily-loaded posthog-js instance (only imported in the browser when enabled).
 let posthog: PostHog | undefined
 let ready = false
@@ -54,11 +63,13 @@ export const initAnalytics = async (router?: Router): Promise<void> => {
     posthog = mod.default
     posthog.init(POSTHOG_KEY, {
       api_host: POSTHOG_HOST,
-      // --- #2461 conservative gate: keep global listeners OFF for now ---
-      autocapture: false,
+      // --- #2461 conservative gate: global listeners OFF unless the Phase-C
+      // flag is explicitly set (staged rollout: demo → visualizer retest →
+      // prod). Replay stays hard-disabled regardless. ---
+      autocapture: POSTHOG_AUTOCAPTURE,
       disable_session_recording: true,
       capture_pageview: false,
-      capture_pageleave: false,
+      capture_pageleave: POSTHOG_AUTOCAPTURE,
       // First-party host; no third-party cookies needed.
       persistence: 'localStorage+cookie',
       // We don't use PostHog feature flags / surveys here, so disable the
