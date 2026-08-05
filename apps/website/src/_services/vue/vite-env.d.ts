@@ -10,6 +10,7 @@ declare global {
     readonly VITE_POSTHOG_ENABLED: string
     readonly VITE_POSTHOG_KEY: string
     readonly VITE_POSTHOG_HOST: string
+    readonly VITE_POSTHOG_AUTOCAPTURE: string
     readonly VITE_RELEASE_COMMIT: string
     readonly VITE_RELEASE_DATE: string
   }
