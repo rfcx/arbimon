@@ -3,6 +3,7 @@ import { superProjectMembersRoute, superProjectsRoute, superProjectTierRoute, su
 
 import { requireSuperUser } from '@/_hooks/require-super'
 import { addProjectMemberHandler, deleteProjectMemberHandler, getProjectMembersHandler, patchProjectMemberHandler } from '@/projects/project-member-handler'
+import { captureSuperAction } from '~/analytics/super-audit'
 import { type RouteRegistration, DELETE, GET, PATCH, POST } from '../_services/api-helpers/types'
 import { superProjectSyncHandler, superProjectSyncHistoryHandler } from './super-project-sync-handler'
 import { superGetProjectsHandler, superGetUserProjectsHandler, superGetUsersHandler, superUpdateProjectTierHandler, superUpdateUserTierHandler } from './super-projects-handler'
@@ -63,4 +64,7 @@ export const routesSuper: RouteRegistration[] = [
     url: superProjectSyncRoute,
     handler: superProjectSyncHandler
   }
-].map(r => ({ ...r, preHandler: [requireSuperUser] }))
+// Every super route: allow-list auth (preHandler) + server-side PostHog
+// audit capture of MUTATIONS (onResponse; `super_action` events carrying the
+// actor email — see _services/analytics/super-audit.ts).
+].map(r => ({ ...r, preHandler: [requireSuperUser], onResponse: captureSuperAction }))
