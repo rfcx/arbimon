@@ -1,5 +1,7 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
+import { QueryTypes } from 'sequelize'
 
+import { getSequelize } from '~/db'
 import { env } from '~/env'
 
 /**
@@ -20,6 +22,12 @@ import { env } from '~/env'
  * - Sanitized body: ALLOWLIST of known tier-management fields only — never
  *   forward arbitrary request bodies (they may carry PII or secrets).
  * - Disabled unless POSTHOG_CAPTURE_HOST + POSTHOG_PROJECT_TOKEN are set.
+ *
+ * PG MIRROR (Q-C, 2026-08-04): every event is ALSO appended to the
+ * `super_action_log` table (insights DB) — durable, SQL-queryable, and
+ * independent of PostHog retention. Same fire-and-forget contract: the
+ * insert failure is swallowed and never blocks the response. The table is
+ * append-only from the api role (INSERT-only grant).
  */
 
 const CAPTURE_TIMEOUT_MS = 2000
@@ -68,16 +76,59 @@ const postEvent = async (payload: Record<string, unknown>): Promise<void> => {
   }
 }
 
+const insertAuditRow = async (row: {
+  actorEmail: string
+  method: string
+  route: string
+  url: string
+  params: unknown
+  body: Record<string, unknown>
+  statusCode: number
+}): Promise<void> => {
+  const sequelize = getSequelize()
+  await sequelize.query(
+    `
+      INSERT INTO super_action_log (actor_email, method, route, url, params, body, status_code)
+      VALUES (:actorEmail, :method, :route, :url, :params::jsonb, :body::jsonb, :statusCode)
+    `,
+    {
+      replacements: {
+        actorEmail: row.actorEmail,
+        method: row.method,
+        route: row.route,
+        url: row.url,
+        params: JSON.stringify(row.params ?? {}),
+        body: JSON.stringify(row.body),
+        statusCode: row.statusCode
+      },
+      type: QueryTypes.INSERT
+    }
+  )
+}
+
 /**
  * Fastify onResponse hook for super routes. Registered per-route (super/index)
  * so it cannot accidentally observe non-admin traffic.
  */
 export const captureSuperAction = async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
   try {
-    if (!isEnabled()) return
     if (!MUTATION_METHODS.has(req.method)) return
 
     const actorEmail = req.userToken?.email ?? 'unknown'
+
+    // PG mirror (durable audit log) — ALWAYS on (independent of the PostHog
+    // env toggle), same fire-and-forget contract.
+    void insertAuditRow({
+      actorEmail,
+      method: req.method,
+      route: req.routerPath ?? req.url,
+      url: req.url,
+      params: req.params ?? {},
+      body: sanitizeBody(req.body),
+      statusCode: reply.statusCode
+    }).catch(() => { /* audit mirror must never break the API */ })
+
+    if (!isEnabled()) return
     const payload = {
       api_key: env.POSTHOG_PROJECT_TOKEN,
       event: 'super_action',
