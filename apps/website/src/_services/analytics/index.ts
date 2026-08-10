@@ -115,12 +115,38 @@ export const track = (eventName: string, properties?: Record<string, unknown>): 
  * Associate the current anonymous session with a stable person on login.
  * Canonical id = the user's account EMAIL address (operator decision 2026-07-15),
  * shared across all rfcx clients so a person is one person regardless of app.
+ *
+ * PERSON PROPERTIES ($set) — why this exists:
+ * PostHog's UI does NOT display `distinct_id` when it can avoid it. It renders
+ * `team.person_display_name_properties` or, when unset (our case — verified in
+ * posthog-postgres), the server default
+ * `PERSON_DEFAULT_DISPLAY_NAME_PROPERTIES = ["email", "name", "username"]`
+ * (posthog/api/person.py). Without `$set`, NO person carries any of those, so
+ * every person in Activity/Explore/Persons renders as a raw id string.
+ * Passing the email as distinct_id made that string *look* like an email, but
+ * the display layer was never populated. Measured 2026-08-09: 0 of 489 persons
+ * across all 3 teams (RFCx/Arbimon/Luca) had email/name/username.
+ *
+ * `$set` (not `$set_once`) so a name/email change on the account propagates.
+ * NORMALISED to lowercase+trimmed to match the distinct_id: PostHog ids are
+ * case-sensitive, so an unnormalised variant would split one human into two
+ * persons. Only identity fields are sent — no free text, no new PII class
+ * (these events are already identified by design; see the 2026-08-04 audit).
  */
 export const identify = (user?: User): void => {
-  const email = user?.email
-  if (!ready || posthog === undefined || email === undefined || email === '') return
+  const rawEmail = user?.email
+  if (!ready || posthog === undefined || rawEmail === undefined || rawEmail === '') return
+  const email = rawEmail.trim().toLowerCase()
+  if (email === '') return
   try {
-    posthog.identify(email)
+    // Build $set defensively: only include keys we actually have, so we never
+    // overwrite a populated person property with an empty string.
+    const props: Record<string, string> = { email }
+    const name = user?.name?.trim()
+    if (name !== undefined && name !== '') props.name = name
+    const username = user?.nickname?.trim()
+    if (username !== undefined && username !== '') props.username = username
+    posthog.identify(email, props)
   } catch {
     // swallow
   }
