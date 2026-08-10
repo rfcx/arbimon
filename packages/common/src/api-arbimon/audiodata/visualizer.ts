@@ -100,6 +100,19 @@ interface TileSet {
   y: number
   src: string
   crisp?: boolean
+  // Signed media-api credential, minted SERVER-SIDE per tile (#99 Track B).
+  // Present only for non-legacy recordings when the server has the salt
+  // configured; absent => fall back to the session-gated legacy proxy.
+  //
+  // `mediaStart`/`mediaEnd` are the glued UTC timestamps the filename MUST
+  // use verbatim: media-api re-parses the window out of the filename and the
+  // token is signed over exactly those integers. Re-deriving them here would
+  // reintroduce the 2026-08-10 fractional-millisecond 401 defect.
+  mediaStreamId?: string
+  mediaStart?: string
+  mediaEnd?: string
+  mediaToken?: string
+  mediaExp?: number
 }
 
 interface Tiles {
@@ -221,11 +234,65 @@ const fetchRecording = (response: AxiosResponse<Visobject, any>): Visobject => {
       // TODO: update this part for the legacy recordings
       // tile.src = `/legacy-api/project/${Project.getUrl()}/recordings/tiles/${recording.id}/${tile.i}/${tile.j}/${randomString}`
     } else {
-      const streamId = recording.uri.split('/')[3]
-      const datetime = recording.datetime_utc ? recording.datetime_utc : recording.datetime
-      const start = new Date(new Date(datetime).valueOf() + Math.round(tile.s * 1000)).toISOString()
-      const end = new Date(new Date(datetime).valueOf() + Math.round((tile.s + tile.ds) * 1000)).toISOString()
-      tile.src = `/legacy-api/ingest/recordings/${streamId}_t${start.replace(/-|:|\./g, '')}.${end.replace(/-|:|\./g, '')}_z95_wdolph_g1_fspec_${spectroColoredCache}_d1023.255.png`
+      // TILE SOURCE RESOLUTION (2026-08-10). Was `d1023.255`, which did NOT match
+      // the shape the tile is actually DISPLAYED at.
+      //
+      // A tile covers ~5.967 s x 23,906 Hz and renders at ~597 x 478 px at
+      // default zoom (sec2px 100, hz2px 100/5000) — a ~1.25:1 box, NOT the ~4:1
+      // strip the old source implies. So 1023x255 was being scaled 1.71x DOWN
+      // horizontally while being stretched 1.87x UP vertically: we shipped
+      // pixels nobody saw on one axis and invented them on the other. The
+      // stretch is especially visible because `.crisp-image` sets
+      // `image-rendering: pixelated`, so upscaling is NOT smoothed — it blocks.
+      //
+      // 512x1024 removes the upscale entirely (1.17x up W / 2.14x down H) for
+      // ~2x the bytes. Measured over the real 11-tile page against live
+      // media-api: 3.54 MiB and 129 ms warm median, vs 1.80 MiB / 113 ms before
+      // — and it was the FASTEST cold render of every candidate tested
+      // (590 ms median, 754 ms max).
+      //
+      // Height 1024 is the CEILING: media-api's checkAttrsValidity rejects
+      // d>1024 with `Spectrogram height can not be greater than 1024px` (400).
+      // Internally sox renders at a power-of-two+1 (1025) and ImageMagick
+      // resizes back, so 1024 costs the same as 1020.
+      //
+      // KNOWN TRADE-OFF: at MAX zoom (sec2px 800) 512px wide is a 9.3x
+      // horizontal upscale, worse than the old 4.67x. If zoomed-in inspection
+      // becomes a common workflow, 1280x1024 is the balanced alternative
+      // (2.15x/2.14x down at default, 3.73x/3.74x up at max) at 8.16 MiB /
+      // 143 ms warm.
+      //
+      // SAFE TO CHANGE FROM THE CLIENT: dimensions are NOT part of the signed
+      // message (the token binds stream+start+end+exp only), exactly like the
+      // palette — so this needs no server change and no re-mint. It IS part of
+      // the media-api cache key, so changing it re-fills the `spec` cache.
+      const renderAttrs = `z95_wdolph_g1_fspec_${spectroColoredCache}_d512.1024.png`
+
+      if (tile.mediaToken !== undefined && tile.mediaStart !== undefined && tile.mediaEnd !== undefined) {
+        // TRACK B (#99): go DIRECT to media-api, skipping the arbimon-legacy
+        // media proxy entirely. The token is minted server-side (the salt must
+        // never reach the browser) and authorises exactly this stream + time
+        // window. It does NOT bind the render parameters, which is why the
+        // per-user palette below can still vary freely.
+        //
+        // ⚠️ USE THE SERVER'S TIMESTAMPS VERBATIM. media-api re-parses the
+        // window from the filename and compares against what was signed, so
+        // recomputing them here — even "identically" — is exactly how the
+        // 2026-08-10 ROI defect 401'd 9 of 10 images.
+        tile.src = `/media-api/internal/assets/streams/${tile.mediaStreamId ?? recording.uri.split('/')[3]}` +
+          `_t${tile.mediaStart}Z.${tile.mediaEnd}Z_${renderAttrs}` +
+          `?stream-token=${tile.mediaToken}` +
+          (tile.mediaExp !== undefined ? `&exp=${tile.mediaExp}` : '')
+      } else {
+        // FALLBACK: the session-gated legacy proxy. Reached for legacy
+        // recordings, or when the server could not mint (salt unset). Kept so
+        // an older/misconfigured backend still renders tiles.
+        const streamId = recording.uri.split('/')[3]
+        const datetime = recording.datetime_utc ? recording.datetime_utc : recording.datetime
+        const start = new Date(new Date(datetime).valueOf() + Math.round(tile.s * 1000)).toISOString()
+        const end = new Date(new Date(datetime).valueOf() + Math.round((tile.s + tile.ds) * 1000)).toISOString()
+        tile.src = `/legacy-api/ingest/recordings/${streamId}_t${start.replace(/-|:|\./g, '')}.${end.replace(/-|:|\./g, '')}_${renderAttrs}`
+      }
     }
   })
   return visobject
