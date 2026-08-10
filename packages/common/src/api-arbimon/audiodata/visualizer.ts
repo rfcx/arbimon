@@ -100,6 +100,19 @@ interface TileSet {
   y: number
   src: string
   crisp?: boolean
+  // Signed media-api credential, minted SERVER-SIDE per tile (#99 Track B).
+  // Present only for non-legacy recordings when the server has the salt
+  // configured; absent => fall back to the session-gated legacy proxy.
+  //
+  // `mediaStart`/`mediaEnd` are the glued UTC timestamps the filename MUST
+  // use verbatim: media-api re-parses the window out of the filename and the
+  // token is signed over exactly those integers. Re-deriving them here would
+  // reintroduce the 2026-08-10 fractional-millisecond 401 defect.
+  mediaStreamId?: string
+  mediaStart?: string
+  mediaEnd?: string
+  mediaToken?: string
+  mediaExp?: number
 }
 
 interface Tiles {
@@ -221,11 +234,33 @@ const fetchRecording = (response: AxiosResponse<Visobject, any>): Visobject => {
       // TODO: update this part for the legacy recordings
       // tile.src = `/legacy-api/project/${Project.getUrl()}/recordings/tiles/${recording.id}/${tile.i}/${tile.j}/${randomString}`
     } else {
-      const streamId = recording.uri.split('/')[3]
-      const datetime = recording.datetime_utc ? recording.datetime_utc : recording.datetime
-      const start = new Date(new Date(datetime).valueOf() + Math.round(tile.s * 1000)).toISOString()
-      const end = new Date(new Date(datetime).valueOf() + Math.round((tile.s + tile.ds) * 1000)).toISOString()
-      tile.src = `/legacy-api/ingest/recordings/${streamId}_t${start.replace(/-|:|\./g, '')}.${end.replace(/-|:|\./g, '')}_z95_wdolph_g1_fspec_${spectroColoredCache}_d1023.255.png`
+      const renderAttrs = `z95_wdolph_g1_fspec_${spectroColoredCache}_d1023.255.png`
+
+      if (tile.mediaToken !== undefined && tile.mediaStart !== undefined && tile.mediaEnd !== undefined) {
+        // TRACK B (#99): go DIRECT to media-api, skipping the arbimon-legacy
+        // media proxy entirely. The token is minted server-side (the salt must
+        // never reach the browser) and authorises exactly this stream + time
+        // window. It does NOT bind the render parameters, which is why the
+        // per-user palette below can still vary freely.
+        //
+        // ⚠️ USE THE SERVER'S TIMESTAMPS VERBATIM. media-api re-parses the
+        // window from the filename and compares against what was signed, so
+        // recomputing them here — even "identically" — is exactly how the
+        // 2026-08-10 ROI defect 401'd 9 of 10 images.
+        tile.src = `/media-api/internal/assets/streams/${tile.mediaStreamId ?? recording.uri.split('/')[3]}` +
+          `_t${tile.mediaStart}Z.${tile.mediaEnd}Z_${renderAttrs}` +
+          `?stream-token=${tile.mediaToken}` +
+          (tile.mediaExp !== undefined ? `&exp=${tile.mediaExp}` : '')
+      } else {
+        // FALLBACK: the session-gated legacy proxy. Reached for legacy
+        // recordings, or when the server could not mint (salt unset). Kept so
+        // an older/misconfigured backend still renders tiles.
+        const streamId = recording.uri.split('/')[3]
+        const datetime = recording.datetime_utc ? recording.datetime_utc : recording.datetime
+        const start = new Date(new Date(datetime).valueOf() + Math.round(tile.s * 1000)).toISOString()
+        const end = new Date(new Date(datetime).valueOf() + Math.round((tile.s + tile.ds) * 1000)).toISOString()
+        tile.src = `/legacy-api/ingest/recordings/${streamId}_t${start.replace(/-|:|\./g, '')}.${end.replace(/-|:|\./g, '')}_${renderAttrs}`
+      }
     }
   })
   return visobject
