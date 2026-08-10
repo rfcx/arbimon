@@ -138,14 +138,27 @@ export const identify = (user?: User): void => {
   if (!ready || posthog === undefined || rawEmail === undefined || rawEmail === '') return
   const email = rawEmail.trim().toLowerCase()
   if (email === '') return
+  // Build $set defensively: only include keys we actually have, so we never
+  // overwrite a populated person property with an empty string.
+  //
+  // FAILURE MODE (deliberate): the optional DISPLAY fields must never be able
+  // to suppress the REQUIRED identity. Auth0 claims are not type-guaranteed
+  // (`name`/`nickname` are `unknown`-ish at runtime), so a malformed claim
+  // would throw on `.trim()`. If that were inside the same try as identify(),
+  // the catch would skip identify() ENTIRELY and we would lose the very
+  // attribution this function exists to create — a cosmetic field costing us
+  // the person. So property-building is isolated: on any error we degrade to
+  // email-only and still identify.
+  const props: Record<string, string> = { email }
   try {
-    // Build $set defensively: only include keys we actually have, so we never
-    // overwrite a populated person property with an empty string.
-    const props: Record<string, string> = { email }
-    const name = user?.name?.trim()
-    if (name !== undefined && name !== '') props.name = name
-    const username = user?.nickname?.trim()
-    if (username !== undefined && username !== '') props.username = username
+    const name = typeof user?.name === 'string' ? user.name.trim() : ''
+    if (name !== '') props.name = name
+    const username = typeof user?.nickname === 'string' ? user.nickname.trim() : ''
+    if (username !== '') props.username = username
+  } catch {
+    // keep going with email-only — identity matters more than display fields
+  }
+  try {
     posthog.identify(email, props)
   } catch {
     // swallow
