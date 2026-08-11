@@ -8,6 +8,7 @@
       @update-current-time="handleCurrentTime"
       @update-soundscape="handleVisobjectSoundscape"
       @update-color-spectrogram="handleColorSpectrogram"
+      @update-tile-quality="handleTileQuality"
       @update-validations="updateValidations"
       @update-freq-filter="handleFreqFilter"
       @update-tags="updateSpectrogramrTags"
@@ -50,6 +51,7 @@
       :clustering="selectedClustering"
       :layer-visibility="layerVisibility"
       :visible-soundscapes="visibleSoundscapes"
+      :tile-quality="tileQuality"
       @emit-pointer="handlePointer"
       @update-tags="updateSidebarTags"
       @refresh-recording="refetchRecording"
@@ -62,7 +64,8 @@ import type { Ref } from 'vue'
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { type SoundscapeItem, type SoundscapeResponse, type Visobject, apiGetSoundscapes } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { type TileQualityTierId } from '@rfcx-bio/common/api-arbimon/audiodata/tile-resolution'
+import { type SoundscapeItem, type SoundscapeResponse, type Visobject, apiGetSoundscapes, getTileQuality } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { apiClientArbimonLegacyKey } from '@/globals'
@@ -168,6 +171,16 @@ const handleColorSpectrogram = (value: string): void => {
   spectroColor.value = value
   isFetchingVisobject.value = true
   refetchRecording()
+}
+
+// Spectrogram QUALITY, in deliberate contrast to the palette handler above:
+// NO refetch, NO loading state. The tile source size is not part of the signed
+// stream-token, so the spectrogram re-derives its tile URLs from the same
+// credential and the new tiles stream in over the existing ones. Refetching
+// here would re-run recordings/info + the server-side tiling for no benefit.
+const tileQuality = ref<TileQualityTierId>(getTileQuality())
+const handleTileQuality = (value: TileQualityTierId): void => {
+  tileQuality.value = value
 }
 
 const updateValidations = (): void => {

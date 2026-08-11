@@ -102,6 +102,7 @@
         @prev-recording="setPrevRecording"
         @update-color-spectrogram="$emit('updateColorSpectrogram', $event)"
         @update-freq-filter="handleFreqFilter"
+        @update-tile-quality="$emit('updateTileQuality', $event)"
       />
       <SidebarTag
         v-if="visobject"
@@ -184,6 +185,7 @@ import dayjs from 'dayjs'
 import { computed, inject, onMounted, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
+import { type TileQualityTierId } from '@rfcx-bio/common/api-arbimon/audiodata/tile-resolution'
 import type { RecordingResponse, RecordingTagResponse, SoundscapeItem, SoundscapeItemOptions, SoundscapeResponse, TagParams, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import { apiArbimonPostPlaylistItems, apiGetSoundscapes, apiGetSoundscapeScale, apiSearchTag } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import type { TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
@@ -265,6 +267,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{(e: 'updateCurrentTime', value: number): void,
   (e: 'updateColorSpectrogram', value: string): void,
+  (e: 'updateTileQuality', value: TileQualityTierId): void,
   (e: 'updateSoundscape'): void,
   (e: 'updateValidations'): void,
   (e: 'updateFreqFilter', value: FreqFilter): void,

@@ -97,6 +97,7 @@
         :visobject="visobject"
         @emit-color-spectrogram="$emit('updateColorSpectrogram', $event)"
         @emit-freq-filter="$emit('updateFreqFilter', $event)"
+        @emit-tile-quality="$emit('updateTileQuality', $event)"
       />
     </div>
 
@@ -126,6 +127,7 @@
           :visobject="visobject"
           @emit-color-spectrogram="$emit('updateColorSpectrogram', $event)"
           @emit-freq-filter="$emit('updateFreqFilter', $event)"
+          @emit-tile-quality="$emit('updateTileQuality', $event)"
         />
       </div>
     </div>
@@ -146,6 +148,7 @@
 import { OnClickOutside } from '@vueuse/components'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
+import { type TileQualityTierId } from '@rfcx-bio/common/api-arbimon/audiodata/tile-resolution'
 import type { Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 import { type FreqFilter } from '../types'
@@ -160,7 +163,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{(event: 'emitCurrentTime', currentTime: number): void,
   (e: 'updateColorSpectrogram', value: string): void,
-  (e: 'updateFreqFilter', value: FreqFilter): void
+  (e: 'updateFreqFilter', value: FreqFilter): void,
+  (e: 'updateTileQuality', value: TileQualityTierId): void
 }>()
 
 const VITE_ARBIMON_LEGACY_BASE_URL = import.meta.env.VITE_ARBIMON_LEGACY_BASE_URL

@@ -94,6 +94,49 @@ export const resolveTileWidth = (displayWidthPx: number, userWidth?: number): nu
   return quantiseUp(needed, TILE_WIDTH_STEPS, floor, Math.max(ceiling, floor))
 }
 
+/**
+ * The user-facing quality tiers.
+ *
+ * NAMED, QUANTISED TIERS -- NOT A FREE-FORM SLIDER. Dimensions are part of the
+ * media-api result cache key on the durable tier, so a continuous 256..1024
+ * control would store 3,845 variants per tile window where this stores 15.
+ * Same reasoning that makes the token's hourly `exp` bucketing load-bearing.
+ *
+ * 4096 is deliberately NOT offered. Measured on a real 11-tile recording:
+ * 3.75 / 7.42 / 14.03 / 25.38 MiB per page at 512 / 1024 / 2048 / 4096, because
+ * the visualizer renders the FULL tile set with no virtualisation. 2048 is
+ * already a deliberate 14 MiB choice; 4096 stays reachable only by the
+ * zoom-aware floor on top of a 2048 preference (which is bounded by how far a
+ * user can actually zoom).
+ *
+ * `width` is what gets passed to resolveTileWidth() as the user preference.
+ * Selecting STANDARD is equivalent to expressing no preference at all -- it
+ * floors at the shipped default and still auto-escalates with zoom (pinned by
+ * tests, because a preference that acted as a CEILING would silently disable
+ * zoom sharpening).
+ */
+export const TILE_QUALITY_TIERS = [
+  { id: 'standard', label: 'Standard', width: 512, approxMiBPerPage: 3.8 },
+  { id: 'high', label: 'High', width: 1024, approxMiBPerPage: 7.4 },
+  { id: 'maximum', label: 'Maximum', width: 2048, approxMiBPerPage: 14 }
+] as const
+
+export type TileQualityTierId = typeof TILE_QUALITY_TIERS[number]['id']
+
+export const DEFAULT_TILE_QUALITY: TileQualityTierId = 'standard'
+
+/**
+ * Resolve a stored preference to a tier width, tolerating anything.
+ *
+ * Returns the DEFAULT tier's width for unknown/absent input rather than
+ * `undefined`, so a corrupted localStorage value degrades to today's shipped
+ * behaviour instead of an unpredictable one.
+ */
+export const tileQualityWidth = (tierId: string | null | undefined): number => {
+  const tier = TILE_QUALITY_TIERS.find(t => t.id === tierId)
+  return (tier ?? TILE_QUALITY_TIERS[0]).width
+}
+
 /** Choose the source HEIGHT for a tile (server caps at 1024). */
 export const resolveTileHeight = (userHeight?: number): number => {
   const h = userHeight ?? DEFAULT_TILE_HEIGHT

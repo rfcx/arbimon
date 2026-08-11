@@ -527,9 +527,9 @@ import { initTooltips } from 'flowbite'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { DEFAULT_TILE_HEIGHT, resolveTileHeight, resolveTileWidth } from '@rfcx-bio/common/api-arbimon/audiodata/tile-resolution'
+import { type TileQualityTierId, DEFAULT_TILE_HEIGHT, resolveTileHeight, resolveTileWidth, tileQualityWidth } from '@rfcx-bio/common/api-arbimon/audiodata/tile-resolution'
 import type { RecordingTagResponse, SoundscapeItem, SoundscapeRegion, TemplateResponse, TileSet, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
-import { buildTileSrc, getSpectroColor } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { buildTileSrc, getSpectroColor, getTileQuality } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import { type RecordingTrainingSet, type RecordingTrainingSetParams, type TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
@@ -563,6 +563,7 @@ const props = defineProps<{
   clustering: ClusteringPlaylist[] | undefined
   visibleSoundscapes: VisibleSoundscapes
   layerVisibility: LayerVisibility
+  tileQuality?: TileQualityTierId
 }>()
 
 const emits = defineEmits<{(e: 'emitPointer', value: Pointer): void, (e: 'updateTags'): void, (e: 'refreshRecording'): void}>()
@@ -632,7 +633,28 @@ const resetZoom = (): void => {
 // — the SOURCE WINDOW — and NOT the render parameters. So the same token is
 // reused at any size (verified live: dimension/palette swaps 200, changed
 // window 401). No re-mint, no /recordings/info refetch.
-const userTileWidth = ref<number | undefined>(undefined)
+// The user's explicit QUALITY preference, restored from localStorage on mount
+// and updated live by the quality control in the sidebar.
+//
+// Changing this re-derives `tileSrcs` (below) and nothing else — no refetch, no
+// page reload. That is the whole point: the token signs the source WINDOW, not
+// the render params, so a resize reuses the same credential. Routing this
+// through `refetchRecording()` (the way the PALETTE control does) would re-run
+// `recordings/info` and the server-side Jimp tiling on every change.
+const userTileWidth = ref<number | undefined>(tileQualityWidth(getTileQuality()))
+
+// The control lives in the sidebar (a sibling), so the selection arrives as a
+// prop routed through visualizer-page rather than via an event on this
+// component — the same shape every other sidebar control uses.
+watch(() => props.tileQuality, (tier) => {
+  if (tier !== undefined) userTileWidth.value = tileQualityWidth(tier)
+})
+
+// Height is intentionally NOT user-controllable. A tile renders at roughly
+// 597x478 px, so the shipped DEFAULT_TILE_HEIGHT of 1024 already supplies ~2x
+// the displayed height, and media-api hard-caps height at 1024 (400 above it).
+// A height control could therefore only make tiles blockier for no upside.
+// The plumbing stays so the policy module keeps one home for the decision.
 const userTileHeight = ref<number | undefined>(undefined)
 
 /** How wide ONE tile is actually drawn at the current zoom. */

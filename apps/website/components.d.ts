@@ -48,6 +48,7 @@ declare module 'vue' {
     IconCustomFiRfm: typeof import('~icons/custom-icons/fi-rfm')['default']
     IconCustomFiSettings: typeof import('~icons/custom-icons/fi-settings')['default']
     IconCustomFiShrink: typeof import('~icons/custom-icons/fi-shrink')['default']
+    IconCustomFiSliders: typeof import('~icons/custom-icons/fi-sliders')['default']
     IconCustomFiSoundscape: typeof import('~icons/custom-icons/fi-soundscape')['default']
     IconCustomFiUnknown: typeof import('~icons/custom-icons/fi-unknown')['default']
     IconCustomFiUnvalidated: typeof import('~icons/custom-icons/fi-unvalidated')['default']
