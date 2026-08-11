@@ -37,6 +37,17 @@
           </option>
         </select>
       </div>
+      <!-- #112: client-side lossless FLAC encoding toggle -->
+      <label class="flex items-center gap-x-2 text-sm cursor-pointer select-none">
+        <input
+          v-model="flacEncodeEnabled"
+          type="checkbox"
+          class="rounded border-cloud/30"
+        >
+        <span :title="'Losslessly convert WAV files to FLAC in your browser before uploading — about half the upload size, bit-identical audio. Files that cannot be converted losslessly (e.g. 32-bit float) upload unchanged.'">
+          Convert WAV → FLAC before upload (lossless)
+        </span>
+      </label>
     </div>
 
     <!-- Drop zone -->
@@ -187,7 +198,7 @@ import { type UploadItem, type UploadItemState, collectDroppedFiles, createUploa
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { track } from '~/analytics'
-import { engine, engineRunning, fileSource, items, prepareOptions, refreshItems, stats, uploadStore } from '~/upload'
+import { engine, engineRunning, fileSource, flacEncodeEnabled, items, prepareOptions, refreshItems, stats, uploadStore } from '~/upload'
 
 const props = defineProps<{
   sites: SiteResponse[]

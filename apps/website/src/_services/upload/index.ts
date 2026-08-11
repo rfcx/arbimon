@@ -8,7 +8,7 @@
  */
 import { computed, reactive, ref } from 'vue'
 
-import { type QueueStats, type UploadItem, BrowserFileSource, IndexedDbUploadStore, makeBrowserPrepare, UploadEngine } from '@rfcx-bio/upload-engine'
+import { type QueueStats, type UploadItem, BrowserFileSource, IndexedDbUploadStore, makeBrowserPrepare, TranscodeCache, TranscodingFileSource, UploadEngine, withFlacTranscode } from '@rfcx-bio/upload-engine'
 
 import { track } from '~/analytics'
 import { useAuth0Client } from '~/auth-client'
@@ -21,8 +21,20 @@ export const EMPTY_STATS: QueueStats = { total: 0, queued: 0, preparing: 0, read
 /** Per-prepare timezone context, set by the panel before enqueue. */
 export const prepareOptions = reactive<{ timezone?: string | number }>({})
 
+/**
+ * Client-side WAV→FLAC encoding (#112): lossless, metadata-gated, fail-open.
+ * Encodable WAVs are FLAC-encoded in the browser before hashing/upload —
+ * roughly half the bytes over the wire and no server-side WAV size cap.
+ * Files the encoder cannot guarantee lossless (float-32, >8ch, …) upload
+ * unchanged. Toggleable from the panel.
+ */
+export const flacEncodeEnabled = ref(true)
+export const transcodeCache = new TranscodeCache()
+
 export const uploadStore = new IndexedDbUploadStore()
-export const fileSource = new BrowserFileSource()
+// register() passes through to the inner BrowserFileSource; getFile() serves
+// the encoded FLAC when one exists.
+export const fileSource = new TranscodingFileSource(new BrowserFileSource(), transcodeCache)
 
 const getToken = async (): Promise<string> => {
   const client = await useAuth0Client()
@@ -34,8 +46,21 @@ export const engine = new UploadEngine(
   uploadStore,
   fileSource,
   getToken,
-  async (item, file) => await makeBrowserPrepare({ timezone: prepareOptions.timezone })(item, file)
+  async (item, file) => await withFlacTranscode(
+    makeBrowserPrepare({ timezone: prepareOptions.timezone }),
+    transcodeCache,
+    { enabled: flacEncodeEnabled.value }
+  )(item, file)
 )
+
+// Encoded blobs are released when their item settles (memory hygiene — a
+// long batch must not hold every FLAC in RAM).
+engine.on(event => {
+  if (event.type === 'item-updated' &&
+      ['ingested', 'duplicate', 'failed', 'rejected'].includes(event.item.state)) {
+    transcodeCache.release(event.item.id)
+  }
+})
 
 // -- shared reactive state (fed by engine events) -----------------------------
 export const items = ref<UploadItem[]>([])

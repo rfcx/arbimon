@@ -52,6 +52,13 @@ export interface PrepareResult {
   durationMs?: number
   sampleRateHz?: number
   error?: string
+  /**
+   * Set when the prepare stage transcoded the file (#112 client-side FLAC):
+   * the name+size the SERVER must see — signing and PUT use the encoded
+   * bytes, so filename/extension/fileSize must describe them, not the source.
+   */
+  transcodedFilename?: string
+  transcodedSizeBytes?: number
 }
 
 /** Shell-provided prepare step (browser: worker w/ sha1+header parse). */
@@ -315,7 +322,13 @@ export class UploadEngine {
         timestampUtc: result.timestampUtc,
         checksumSha1: result.checksumSha1,
         durationMs: result.durationMs,
-        sampleRateHz: result.sampleRateHz
+        sampleRateHz: result.sampleRateHz,
+        // client-side transcode (#112): from here on the item describes the
+        // ENCODED file — the server signs/receives those bytes. The original
+        // name survives in relativePath for the UI.
+        ...(result.transcodedFilename !== undefined
+          ? { filename: result.transcodedFilename, fileSizeBytes: result.transcodedSizeBytes }
+          : {})
       })
     } catch (err) {
       await this.update(item, {
