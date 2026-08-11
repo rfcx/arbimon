@@ -155,10 +155,7 @@ const props = defineProps<{
   disabled?: boolean
 }>()
 
-const emit = defineEmits<{
-  (e: 'emitSelectDate', value: { dateLocalIso: string }): void
-  (e: 'emitChangedYear', value: { year: string }): void
-}>()
+const emit = defineEmits<{(e: 'emitSelectDate', value: { dateLocalIso: string }): void, (e: 'emitChangedYear', value: { year: string }): void}>()
 
 // Density bucket colors — verified against the live legacy calendar DOM.
 const LEVEL_COLORS: Record<number, string> = {
@@ -299,7 +296,7 @@ const selectDay = (cell: DayCell): void => {
 
 const onDocClick = (e: MouseEvent): void => {
   const t = e.target as Node
-  if (popupRef.value?.contains(t) || triggerRef.value?.contains(t)) return
+  if (popupRef.value?.contains(t) === true || triggerRef.value?.contains(t) === true) return
   isOpen.value = false
 }
 const onReposition = (): void => { if (isOpen.value) updatePopupPosition() }

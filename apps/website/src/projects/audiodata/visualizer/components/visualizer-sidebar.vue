@@ -196,6 +196,7 @@ import { useStore } from '~/store'
 import { type LegacyAvailableRecordFormatted, type LegacyYearlyRecord, useGetPlaylists, useGetSoundscape, useGetTags, useLegacyAvailableBySiteYear, useLegacyAvailableYearly } from '../../_composables/use-recordings'
 import { useSites } from '../../_composables/use-sites'
 import { useDeleteRecordingTag, useGetAed, useGetClustering, useGetPlaylistInfo, useGetRecordingTag, useGetSoundscapeComposition, usePostSoundscapeComposition, usePutRecordingTag } from '../../_composables/use-visualizer'
+import { useVisualizerAnalytics } from '../_composables/use-visualizer-analytics'
 import { type BboxGroupTags, type FreqFilter } from '../types'
 import BasicSearchSelect from './basic-search-select.vue'
 import PaginationControl from './pagination-control.vue'
@@ -210,7 +211,6 @@ import SidebarTemplates from './sidebar-templates.vue'
 import SidebarThumbnail from './sidebar-thumbnail.vue'
 import SidebarTrainingSets from './sidebar-training-sets.vue'
 import { type Pointer } from './visualizer-spectrogram.vue'
-import { useVisualizerAnalytics } from '../_composables/use-visualizer-analytics'
 
 export interface AedJob {
   jobId: number
