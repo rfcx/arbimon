@@ -49,6 +49,50 @@ test('every event the spectrogram emits is bound by the page that mounts it', ()
   }
 })
 
+test('the quality control is wired end to end, sidebar -> page -> spectrogram', () => {
+  // Four components sit between the button and the tiles. A break anywhere in
+  // the chain leaves the control looking functional while doing nothing --
+  // the same silent-no-op class as the refreshRecording emit above.
+  const controls = read('./components/sidebar-controls.vue')
+  const player = read('./components/sidebar-spectrogram-player.vue')
+  const sidebar = read('./components/visualizer-sidebar.vue')
+  const page = read('./visualizer-page.vue')
+  const spectrogram = read('./components/visualizer-spectrogram.vue')
+
+  // 1. the control emits, and persists the choice
+  expect(declaredEmits(controls)).toContain('emitTileQuality')
+  expect(controls).toMatch(/emit\('emitTileQuality', tierId\)/)
+  expect(controls).toMatch(/setTileQuality\(tierId\)/)
+
+  // 2. every hop re-emits it
+  expect(player).toMatch(/@emit-tile-quality=/)
+  expect(declaredEmits(player)).toContain('updateTileQuality')
+  expect(sidebar).toMatch(/@update-tile-quality=/)
+  expect(declaredEmits(sidebar)).toContain('updateTileQuality')
+
+  // 3. the page binds the listener AND passes the value down as a prop
+  expect(page).toMatch(/@update-tile-quality="handleTileQuality"/)
+  expect(page).toMatch(/:tile-quality="tileQuality"/)
+
+  // 4. the spectrogram reacts to it
+  expect(spectrogram).toMatch(/tileQuality\?: TileQualityTierId/)
+  expect(spectrogram).toMatch(/watch\(\(\) => props\.tileQuality/)
+})
+
+test('changing quality must NOT trigger a recording refetch', () => {
+  // The palette control refetches (handleColorSpectrogram -> refetchRecording),
+  // which re-runs recordings/info and the server-side Jimp tiling. Quality must
+  // not: the stream-token signs the source WINDOW, not the render size, so tiles
+  // re-derive from the same credential with no round-trip. Wiring quality into a
+  // refetch would still LOOK correct on screen -- only slower and more costly --
+  // so only a test can hold this line.
+  const page = read('./visualizer-page.vue')
+  const handler = /const handleTileQuality = \([\s\S]{0,240}?\n}/.exec(page)?.[0]
+  expect(handler).toBeDefined()
+  expect(handler).not.toMatch(/refetchRecording/)
+  expect(handler).not.toMatch(/isFetchingVisobject/)
+})
+
 test('a tile load failure can actually reach the page (token-refresh path is connected)', () => {
   const tile = read('./components/visualizer-tile-img.vue')
   const child = read('./components/visualizer-spectrogram.vue')

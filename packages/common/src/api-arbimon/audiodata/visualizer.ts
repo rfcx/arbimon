@@ -2,7 +2,7 @@ import type { AxiosInstance, AxiosResponse } from 'axios'
 import dayjs from 'dayjs'
 import localeData from 'dayjs/plugin/localeData'
 
-import { buildTileRenderAttrs, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH } from './tile-resolution'
+import { type TileQualityTierId, buildTileRenderAttrs, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_QUALITY, DEFAULT_TILE_WIDTH, TILE_QUALITY_TIERS } from './tile-resolution'
 
 dayjs.extend(localeData)
 
@@ -177,6 +177,38 @@ export const getSpectroColor = (): string => {
     return selectedColor && colors.includes(selectedColor) ? selectedColor : 'mtrue'
   } catch (e) {
     return 'mtrue'
+  }
+}
+
+/**
+ * The stored spectrogram QUALITY preference (tile source resolution).
+ *
+ * Same shape as getSpectroColor above: try/catch + whitelist + safe default,
+ * because localStorage can throw (private mode, disabled storage) and can hold
+ * anything a previous build or a user wrote.
+ *
+ * NOTE the sibling key `visuilizer.frequencies.cache` is misspelled IN
+ * PRODUCTION -- do not "correct" it, it is a live storage key. This new key is
+ * spelled correctly; the two are unrelated.
+ */
+export const TILE_QUALITY_STORAGE_KEY = 'visualizer.tile_quality'
+
+export const getTileQuality = (): TileQualityTierId => {
+  try {
+    const stored = localStorage.getItem(TILE_QUALITY_STORAGE_KEY)
+    const match = TILE_QUALITY_TIERS.find(t => t.id === stored)
+    return match !== undefined ? match.id : DEFAULT_TILE_QUALITY
+  } catch (e) {
+    return DEFAULT_TILE_QUALITY
+  }
+}
+
+export const setTileQuality = (tierId: TileQualityTierId): void => {
+  try {
+    localStorage.setItem(TILE_QUALITY_STORAGE_KEY, tierId)
+  } catch (e) {
+    // Storage unavailable (private mode / quota). The in-memory ref still
+    // drives the current session; only persistence across reloads is lost.
   }
 }
 

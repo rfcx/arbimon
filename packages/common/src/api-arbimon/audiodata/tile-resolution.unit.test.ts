@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { buildTileRenderAttrs, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH, MAX_AUTO_TILE_WIDTH, MAX_UPSCALE, resolveTileHeight, resolveTileWidth, TILE_WIDTH_STEPS } from './tile-resolution'
+import { buildTileRenderAttrs, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_QUALITY, DEFAULT_TILE_WIDTH, MAX_AUTO_TILE_WIDTH, MAX_UPSCALE, resolveTileHeight, resolveTileWidth, TILE_QUALITY_TIERS, TILE_WIDTH_STEPS, tileQualityWidth } from './tile-resolution'
 
 // Behaviour tests for the tile-resolution policy.
 //
@@ -71,6 +71,47 @@ test('quantisation keeps the media-api cache-key cardinality tiny', () => {
     expect(TILE_WIDTH_STEPS).toContain(width)
   }
   expect(widths.size).toBeLessThanOrEqual(TILE_WIDTH_STEPS.length)
+})
+
+test('the quality tiers map onto the quantised ladder and stay affordable', () => {
+  // every offered tier must be a real ladder step -- an off-ladder width would
+  // add a whole new family of entries to the media-api durable cache
+  for (const tier of TILE_QUALITY_TIERS) {
+    expect(TILE_WIDTH_STEPS).toContain(tier.width)
+  }
+
+  // 4096 is deliberately NOT offered: measured 25.38 MiB/page for an 11-tile
+  // recording, because the visualizer renders the full tile set with no
+  // virtualisation. If someone adds it, this test should make them argue for it.
+  expect(TILE_QUALITY_TIERS.map(t => t.width)).toEqual([512, 1024, 2048])
+
+  // the default tier must be today's shipped behaviour, not a silent upgrade
+  expect(tileQualityWidth(DEFAULT_TILE_QUALITY)).toBe(DEFAULT_TILE_WIDTH)
+})
+
+test('an unknown or absent stored preference degrades to the default tier', () => {
+  // localStorage can hold anything a previous build or a user wrote
+  expect(tileQualityWidth(undefined)).toBe(DEFAULT_TILE_WIDTH)
+  expect(tileQualityWidth(null)).toBe(DEFAULT_TILE_WIDTH)
+  expect(tileQualityWidth('')).toBe(DEFAULT_TILE_WIDTH)
+  expect(tileQualityWidth('ludicrous')).toBe(DEFAULT_TILE_WIDTH)
+})
+
+test('choosing a tier never acts as a ceiling on zoom escalation', () => {
+  // THE LOAD-BEARING PROPERTY OF THE CONTROL. A preference raises the FLOOR and
+  // unlocks the ladder; it must never PREVENT the zoom-aware floor from
+  // sharpening. If 'standard' capped at 512, picking it would silently disable
+  // the feature this module exists for -- and tiles would merely look softer,
+  // so nobody would report it.
+  expect(resolveTileWidth(100, tileQualityWidth('standard'))).toBe(resolveTileWidth(100))
+  expect(resolveTileWidth(2437, tileQualityWidth('standard'))).toBe(resolveTileWidth(2437))
+  expect(resolveTileWidth(2437, tileQualityWidth('standard'))).toBe(MAX_AUTO_TILE_WIDTH)
+
+  // a higher tier floors higher...
+  expect(resolveTileWidth(100, tileQualityWidth('high'))).toBe(1024)
+  expect(resolveTileWidth(100, tileQualityWidth('maximum'))).toBe(2048)
+  // ...and still escalates beyond the auto ceiling when zoomed right in
+  expect(resolveTileWidth(4774, tileQualityWidth('maximum'))).toBe(4096)
 })
 
 test('render attrs match the media-api filename grammar', () => {

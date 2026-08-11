@@ -48,6 +48,49 @@
     >
       <icon-custom-fi-droplet class="text-frequency h-5" />
     </button>
+    <!-- Spectrogram QUALITY (tile source resolution), 2026-08-11.
+         Named quantised tiers, not a slider: dimensions are part of the
+         media-api durable cache key, so a free-form control would explode the
+         stored-variant count. Changing this re-renders tiles WITHOUT a page
+         reload or a server refetch — the stream-token signs the source window,
+         not the render size, so the same credential is reused. -->
+    <OnClickOutside
+      v-if="only !== 'freq'"
+      class="relative"
+      @trigger="isQualityMenuOpen = false"
+    >
+      <button
+        class="flex items-center justify-center p-1 w-7 h-7 rounded-[4px] transition"
+        :class="isQualityMenuOpen || selectedQuality !== 'standard' ? 'bg-util-gray-04' : 'bg-util-gray-03 hover:bg-util-gray-04'"
+        :title="`Spectrogram quality (${currentQualityLabel})`"
+        :aria-expanded="isQualityMenuOpen"
+        aria-haspopup="true"
+        @click="toggleQualityMenu"
+      >
+        <icon-custom-fi-sliders class="text-frequency h-5" />
+      </button>
+      <div
+        v-if="isQualityMenuOpen"
+        class="absolute right-0 z-20 mt-1 w-56 rounded-md bg-white dark:bg-pitch shadow-lg ring-1 ring-black ring-opacity-5 p-1"
+      >
+        <p class="px-2 pt-1 pb-1 text-xs text-insight opacity-70">
+          Spectrogram quality
+        </p>
+        <button
+          v-for="tier in qualityTiers"
+          :key="tier.id"
+          class="w-full flex items-baseline justify-between px-2 py-1.5 rounded text-sm hover:bg-util-gray-03 transition"
+          :class="tier.id === selectedQuality ? 'bg-util-gray-03 font-medium' : ''"
+          @click="selectQuality(tier.id)"
+        >
+          <span>{{ tier.label }}</span>
+          <span class="text-xs opacity-60">~{{ tier.approxMiBPerPage }} MB</span>
+        </button>
+        <p class="px-2 pt-1 pb-1 text-[11px] leading-snug opacity-60">
+          Higher quality loads more data per recording.
+        </p>
+      </div>
+    </OnClickOutside>
     <!-- download -->
     <button
       v-if="only !== 'freq'"
@@ -76,10 +119,13 @@
 </template>
 
 <script setup lang="ts">
+import { OnClickOutside } from '@vueuse/components'
 import { initTooltips } from 'flowbite'
 import { computed, onMounted, ref } from 'vue'
 
+import { type TileQualityTierId, DEFAULT_TILE_QUALITY, TILE_QUALITY_TIERS } from '@rfcx-bio/common/api-arbimon/audiodata/tile-resolution'
 import type { Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { getTileQuality, setTileQuality } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 
 import { getIdToken, useAuth0Client } from '@/_services/auth-client'
 import { useStore } from '~/store'
@@ -91,7 +137,30 @@ const props = defineProps<{
   only?: 'freq' | 'rest'
 }>()
 
-const emit = defineEmits<{(event: 'emitColorSpectrogram', value: string): void, (e: 'emitFreqFilter', value: FreqFilter): void}>()
+const emit = defineEmits<{(event: 'emitColorSpectrogram', value: string): void, (e: 'emitFreqFilter', value: FreqFilter): void, (e: 'emitTileQuality', value: TileQualityTierId): void}>()
+
+// --- Spectrogram quality (tile source resolution) --------------------------
+// Unlike the PALETTE toggle above, this does NOT trigger refetchRecording():
+// the stream-token signs the source window, not the render size, so the
+// spectrogram re-derives tile URLs from the same credential. A refetch here
+// would re-run recordings/info and the server-side tiling for nothing.
+const qualityTiers = TILE_QUALITY_TIERS
+const selectedQuality = ref<TileQualityTierId>(DEFAULT_TILE_QUALITY)
+const isQualityMenuOpen = ref(false)
+const currentQualityLabel = computed(() =>
+  (TILE_QUALITY_TIERS.find(t => t.id === selectedQuality.value) ?? TILE_QUALITY_TIERS[0]).label
+)
+
+const toggleQualityMenu = (): void => {
+  isQualityMenuOpen.value = !isQualityMenuOpen.value
+}
+
+const selectQuality = (tierId: TileQualityTierId): void => {
+  selectedQuality.value = tierId
+  setTileQuality(tierId)
+  isQualityMenuOpen.value = false
+  emit('emitTileQuality', tierId)
+}
 
 const store = useStore()
 const selectedProjectSlug = computed(() => store.project?.slug)
@@ -182,6 +251,7 @@ const toggleFrequencyModal = () => {
 
 onMounted(() => {
   initTooltips()
+  selectedQuality.value = getTileQuality()
   const spectroColorFromCache = getSpectroColor()
   spectroColors.forEach(color => {
     if (color.value === spectroColorFromCache) {
