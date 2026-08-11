@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { buildTileRenderAttrs, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_QUALITY, DEFAULT_TILE_WIDTH, MAX_AUTO_TILE_WIDTH, MAX_UPSCALE, resolveTileHeight, resolveTileWidth, TILE_QUALITY_TIERS, tileQualityWidth, TILE_WIDTH_STEPS } from './tile-resolution'
+import { buildTileRenderAttrs, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_QUALITY, DEFAULT_TILE_WIDTH, MAX_AUTO_TILE_WIDTH, MAX_UPSCALE, resolveTileHeight, resolveTileWidth, TILE_QUALITY_TIERS, TILE_WIDTH_STEPS, tileQualityWidth } from './tile-resolution'
 
 // Behaviour tests for the tile-resolution policy.
 //
