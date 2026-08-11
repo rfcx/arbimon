@@ -28,6 +28,16 @@ const props = defineProps<{
   tileSrc: string | null
 }>()
 
+// Raised when a tile image fails to load.
+//
+// ⚠️ WE CANNOT SEE THE HTTP STATUS HERE. `new Image()` reports failure through
+// a bare `onerror` with no status code, so a 401 (expired stream-token) is
+// indistinguishable from a 404/500/network drop. The parent therefore treats
+// this as a HINT and re-fetches the recording AT MOST ONCE per load to re-mint
+// tokens; if the failure was not auth-related, the retry is harmless and the
+// guard stops it repeating.
+const emits = defineEmits<{(e: 'loadError'): void}>()
+
 const isLoading = ref<boolean>(false)
 const src = ref<string>('')
 
@@ -96,6 +106,7 @@ watch(() => props.tileSrc, (newSrc) => {
       done()
     }
     image.onerror = () => {
+      if (myGen === generation) emits('loadError')
       done()
     }
     image.src = finalUrl

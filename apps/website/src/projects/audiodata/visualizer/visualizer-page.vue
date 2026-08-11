@@ -52,6 +52,7 @@
       :visible-soundscapes="visibleSoundscapes"
       @emit-pointer="handlePointer"
       @update-tags="updateSidebarTags"
+      @refresh-recording="refetchRecording"
     />
   </section>
 </template>

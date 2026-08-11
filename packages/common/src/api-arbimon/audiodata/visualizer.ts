@@ -2,6 +2,8 @@ import type { AxiosInstance, AxiosResponse } from 'axios'
 import dayjs from 'dayjs'
 import localeData from 'dayjs/plugin/localeData'
 
+import { buildTileRenderAttrs, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH } from './tile-resolution'
+
 dayjs.extend(localeData)
 
 export interface TagParams {
@@ -87,7 +89,7 @@ export interface Recording {
   isDisabled?: boolean
 }
 
-interface TileSet {
+export interface TileSet {
   dhz: number
   ds: number
   h: number
@@ -168,7 +170,7 @@ const getSelectedFrequencyCache = (): FrequencyCache => {
   }
 }
 
-const getSpectroColor = (): string => {
+export const getSpectroColor = (): string => {
   const colors = ['mtrue', 'mfalse', 'mfalse_p2', 'mfalse_p3', 'mfalse_p4']
   try {
     const selectedColor = localStorage.getItem('visualizer.spectro_color')
@@ -256,17 +258,18 @@ const fetchRecording = (response: AxiosResponse<Visobject, any>): Visobject => {
       // Internally sox renders at a power-of-two+1 (1025) and ImageMagick
       // resizes back, so 1024 costs the same as 1020.
       //
-      // KNOWN TRADE-OFF: at MAX zoom (sec2px 800) 512px wide is a 9.3x
-      // horizontal upscale, worse than the old 4.67x. If zoomed-in inspection
-      // becomes a common workflow, 1280x1024 is the balanced alternative
-      // (2.15x/2.14x down at default, 3.73x/3.74x up at max) at 8.16 MiB /
-      // 143 ms warm.
+      // ZOOM/RESOLUTION (2026-08-10): this baked-in default is only the FIRST
+      // paint. `buildTileSrc()` below is exported so the rendering component can
+      // rebuild the same URL at a larger source size when the user zooms in or
+      // picks a higher quality — reusing the SAME token, because dimensions are
+      // not signed. Keep the two in sync by construction: both call
+      // buildTileRenderAttrs().
       //
       // SAFE TO CHANGE FROM THE CLIENT: dimensions are NOT part of the signed
       // message (the token binds stream+start+end+exp only), exactly like the
       // palette — so this needs no server change and no re-mint. It IS part of
       // the media-api cache key, so changing it re-fills the `spec` cache.
-      const renderAttrs = `z95_wdolph_g1_fspec_${spectroColoredCache}_d512.1024.png`
+      const renderAttrs = buildTileRenderAttrs(spectroColoredCache, DEFAULT_TILE_WIDTH, DEFAULT_TILE_HEIGHT)
 
       if (tile.mediaToken !== undefined && tile.mediaStart !== undefined && tile.mediaEnd !== undefined) {
         // TRACK B (#99): go DIRECT to media-api, skipping the arbimon-legacy
@@ -279,23 +282,67 @@ const fetchRecording = (response: AxiosResponse<Visobject, any>): Visobject => {
         // window from the filename and compares against what was signed, so
         // recomputing them here — even "identically" — is exactly how the
         // 2026-08-10 ROI defect 401'd 9 of 10 images.
-        tile.src = `/media-api/internal/assets/streams/${tile.mediaStreamId ?? recording.uri.split('/')[3]}` +
-          `_t${tile.mediaStart}Z.${tile.mediaEnd}Z_${renderAttrs}` +
-          `?stream-token=${tile.mediaToken}` +
-          (tile.mediaExp !== undefined ? `&exp=${tile.mediaExp}` : '')
+        tile.src = buildDirectTileSrc(tile, recording, renderAttrs)
       } else {
         // FALLBACK: the session-gated legacy proxy. Reached for legacy
         // recordings, or when the server could not mint (salt unset). Kept so
         // an older/misconfigured backend still renders tiles.
-        const streamId = recording.uri.split('/')[3]
-        const datetime = recording.datetime_utc ? recording.datetime_utc : recording.datetime
-        const start = new Date(new Date(datetime).valueOf() + Math.round(tile.s * 1000)).toISOString()
-        const end = new Date(new Date(datetime).valueOf() + Math.round((tile.s + tile.ds) * 1000)).toISOString()
-        tile.src = `/legacy-api/ingest/recordings/${streamId}_t${start.replace(/-|:|\./g, '')}.${end.replace(/-|:|\./g, '')}_${renderAttrs}`
+        tile.src = buildProxyTileSrc(tile, recording, renderAttrs)
       }
     }
   })
   return visobject
+}
+
+const buildDirectTileSrc = (tile: TileSet, recording: Visobject, renderAttrs: string): string => {
+  // Callers only reach this when the credential fields are present; the local
+  // bindings keep the template literals free of `string | undefined`.
+  const streamId = tile.mediaStreamId ?? recording.uri.split('/')[3]
+  const start = tile.mediaStart ?? ''
+  const end = tile.mediaEnd ?? ''
+  const token = tile.mediaToken ?? ''
+  return `/media-api/internal/assets/streams/${streamId}` +
+    `_t${start}Z.${end}Z_${renderAttrs}` +
+    `?stream-token=${token}` +
+    (tile.mediaExp !== undefined ? `&exp=${tile.mediaExp}` : '')
+}
+
+const buildProxyTileSrc = (tile: TileSet, recording: Visobject, renderAttrs: string): string => {
+  const streamId = recording.uri.split('/')[3]
+  const datetime = recording.datetime_utc ? recording.datetime_utc : recording.datetime
+  const start = new Date(new Date(datetime).valueOf() + Math.round(tile.s * 1000)).toISOString()
+  const end = new Date(new Date(datetime).valueOf() + Math.round((tile.s + tile.ds) * 1000)).toISOString()
+  return `/legacy-api/ingest/recordings/${streamId}_t${start.replace(/-|:|\./g, '')}.${end.replace(/-|:|\./g, '')}_${renderAttrs}`
+}
+
+/**
+ * Rebuild a tile's URL at a DIFFERENT source resolution, reusing the same
+ * server-minted token.
+ *
+ * This exists because `tile.src` is baked once inside the vue-query `queryFn`
+ * (`fetchRecording`) and cached under a key of slug+recordingId only — so it is
+ * NOT reactive to a resolution change. The rendering component calls this from
+ * a `computed` instead of mutating the cached query data.
+ *
+ * Safe because the stream-token signs `streamId_startMs_endMs[_exp]` — the
+ * source window — and NOT the render parameters. Verified live: dimension and
+ * palette swaps return 200, a changed time window returns 401.
+ *
+ * Returns null for legacy recordings (no stream to address), so callers keep
+ * whatever placeholder behaviour they already have.
+ */
+export const buildTileSrc = (
+  tile: TileSet,
+  recording: Visobject,
+  palette: string,
+  width: number,
+  height: number
+): string | null => {
+  if (recording.legacy) return null
+  const renderAttrs = buildTileRenderAttrs(palette, width, height)
+  return tile.mediaToken !== undefined && tile.mediaStart !== undefined && tile.mediaEnd !== undefined
+    ? buildDirectTileSrc(tile, recording, renderAttrs)
+    : buildProxyTileSrc(tile, recording, renderAttrs)
 }
 
 export const apiArbimonGetRecording = async (apiClient: AxiosInstance, slug: string, recordingId: string): Promise<VisobjectResponse | undefined> => {
