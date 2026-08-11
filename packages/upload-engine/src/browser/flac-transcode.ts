@@ -17,12 +17,19 @@ import { type PrepareFn, type PrepareResult } from '../engine'
 import { encodeWavToFlac } from '../flac-encoder'
 import { type FileSource, type UploadItem } from '../types'
 import { parseWavMetadata } from '../wav-metadata'
+import { type EncodeFn } from './flac-encode-client'
 
 export interface FlacTranscodeOptions {
   /** master switch (UI toggle). Default true. */
   enabled?: boolean
   /** only encode WAVs at least this large. Default 8 MiB (small files gain little). */
   minSizeBytes?: number
+  /**
+   * Encoder implementation. Default: in-thread encodeWavToFlac (tests, small
+   * files). Shells SHOULD pass makeWorkerEncoder(...) so multi-hundred-MB
+   * encodes never block the main thread.
+   */
+  encode?: EncodeFn
   /** telemetry/debug hook */
   onDecision?: (item: UploadItem, decision: 'encoded' | 'skipped' | 'failed-open', detail: string) => void
 }
@@ -98,7 +105,7 @@ export const withFlacTranscode = (
         return await inner(item, file)
       }
 
-      const result = await encodeWavToFlac(file, meta)
+      const result = await (options.encode ?? encodeWavToFlac)(file, meta)
       const flacBlob = new Blob([result.flacBytes as BlobPart], { type: 'audio/flac' })
 
       // sanity: an "encode" that GREW the file is suspicious enough to skip

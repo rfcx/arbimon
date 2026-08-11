@@ -8,7 +8,7 @@
  */
 import { computed, reactive, ref } from 'vue'
 
-import { type QueueStats, type UploadItem, BrowserFileSource, IndexedDbUploadStore, makeBrowserPrepare, TranscodeCache, TranscodingFileSource, UploadEngine, withFlacTranscode } from '@rfcx-bio/upload-engine'
+import { type QueueStats, type UploadItem, BrowserFileSource, IndexedDbUploadStore, makeBrowserPrepare, makeWorkerEncoder, TranscodeCache, TranscodingFileSource, UploadEngine, withFlacTranscode } from '@rfcx-bio/upload-engine'
 
 import { track } from '~/analytics'
 import { useAuth0Client } from '~/auth-client'
@@ -31,6 +31,15 @@ export const prepareOptions = reactive<{ timezone?: string | number }>({})
 export const flacEncodeEnabled = ref(true)
 export const transcodeCache = new TranscodeCache()
 
+// Encoding runs in a module Worker (vite bundles the new-URL pattern
+// natively) so multi-hundred-MB encodes never block the UI thread.
+const workerEncode = makeWorkerEncoder(() =>
+  new Worker(
+    new URL('@rfcx-bio/upload-engine/src/browser/flac-encode-worker.ts', import.meta.url),
+    { type: 'module' }
+  )
+)
+
 export const uploadStore = new IndexedDbUploadStore()
 // register() passes through to the inner BrowserFileSource; getFile() serves
 // the encoded FLAC when one exists.
@@ -49,7 +58,7 @@ export const engine = new UploadEngine(
   async (item, file) => await withFlacTranscode(
     makeBrowserPrepare({ timezone: prepareOptions.timezone }),
     transcodeCache,
-    { enabled: flacEncodeEnabled.value }
+    { enabled: flacEncodeEnabled.value, encode: workerEncode }
   )(item, file)
 )
 
