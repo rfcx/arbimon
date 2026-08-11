@@ -135,10 +135,14 @@ export async function parseWavMetadata (blob: Blob, scanLimit = 1024 * 1024): Pr
       }
       meta.formatTag = tag
       meta.format =
-        tag === WAVE_FORMAT.PCM ? 'pcm'
-          : tag === WAVE_FORMAT.IEEE_FLOAT ? 'float'
-            : tag === WAVE_FORMAT.ALAW ? 'alaw'
-              : tag === WAVE_FORMAT.MULAW ? 'mulaw'
+        tag === WAVE_FORMAT.PCM
+? 'pcm'
+          : tag === WAVE_FORMAT.IEEE_FLOAT
+? 'float'
+            : tag === WAVE_FORMAT.ALAW
+? 'alaw'
+              : tag === WAVE_FORMAT.MULAW
+? 'mulaw'
                 : 'unknown'
     }
 
@@ -153,7 +157,7 @@ export async function parseWavMetadata (blob: Blob, scanLimit = 1024 * 1024): Pr
     offset += 8 + size + (size % 2)
   }
 
-  if (meta.dataByteLength !== null && byteRate) {
+  if (meta.dataByteLength !== null && byteRate !== null && byteRate > 0) {
     meta.durationSeconds = meta.dataByteLength / byteRate
   }
 

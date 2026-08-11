@@ -2,7 +2,18 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "noEmit": true,
-    "rootDir": "../../"
+    "rootDir": "../../",
+    // libflacjs 5.6.0 ships broken typesVersions declarations (its ts-5.6
+    // compat files import a non-existent export from ../index.d) — with the
+    // workspace's skipLibCheck=false, tsc fails on THEIR .d.ts. Scoped
+    // override for this package only: our own sources remain fully checked
+    // (skipLibCheck skips only declaration files), the deep imports resolve
+    // to our local any-typed shim (src/libflacjs.d.ts), and the runtime
+    // surface is pinned by the encode/decode parity tests.
+    "skipLibCheck": true,
+    "paths": {
+      "libflacjs/*": ["./src/libflacjs.d.ts"]
+    }
   },
   "include": ["src/**/*.ts", "./*.js", "./*.ts"],
   "exclude": ["node_modules", "dist", "lib", ".*/**"]

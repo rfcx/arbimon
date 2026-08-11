@@ -12,7 +12,8 @@
  * cases therefore get exact reason assertions, not just flag checks.
  */
 import { describe, expect, test } from 'vitest'
-import { parseWavMetadata, estimateFlacBytes, WAVE_FORMAT } from './wav-metadata'
+
+import { estimateFlacBytes, parseWavMetadata, WAVE_FORMAT } from './wav-metadata'
 
 // ---------------------------------------------------------------------------
 // byte-level WAV builder
