@@ -116,9 +116,10 @@
         </button>
         <button
           class="btn btn-secondary text-sm"
+          :title="'Remove finished, duplicate, rejected and failed items from this list (does not delete ingested recordings)'"
           @click="clearCompleted"
         >
-          Clear completed
+          Clear finished
         </button>
       </div>
     </div>
@@ -306,6 +307,13 @@ const retryFailed = async (): Promise<void> => {
   await refreshItems()
 }
 
+/**
+ * Remove every settled item from the list: ingested, duplicate, rejected AND
+ * failed. Before 2026-08-11 clearTerminal did not sweep `failed`, so failed/
+ * rejected remnants were IMPOSSIBLE to clear from the panel (operator-
+ * reported). Clearing failed rows is the explicit "give up on these" act —
+ * anything the user still wants goes through Retry FIRST.
+ */
 const clearCompleted = async (): Promise<void> => {
   await uploadStore.clearTerminal()
   await refreshItems()

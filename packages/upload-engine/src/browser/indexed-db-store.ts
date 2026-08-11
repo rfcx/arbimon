@@ -10,7 +10,12 @@ const DB_NAME = 'arbimon-upload-engine'
 const DB_VERSION = 1
 const STORE = 'upload-items'
 
-const TERMINAL_STATES: UploadItemState[] = ['ingested', 'duplicate', 'rejected']
+// States "Clear completed" sweeps. `failed` IS included: a failed item is
+// terminal unless the user retries it, and before 2026-08-11 its absence
+// here made failed rows IMPOSSIBLE to clear from the panel (operator-
+// reported). Retryable failures the user wants to keep are re-driven via
+// Retry BEFORE clearing; clearing is the explicit "give up on these" act.
+const TERMINAL_STATES: UploadItemState[] = ['ingested', 'duplicate', 'rejected', 'failed']
 
 const openDb = async (): Promise<IDBDatabase> =>
   await new Promise((resolve, reject) => {
