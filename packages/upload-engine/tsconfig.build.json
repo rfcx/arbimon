@@ -6,6 +6,12 @@
     "baseUrl": "src",
     "outDir": "lib",
     "types": ["vitest/globals"],
+    // libflacjs 5.6.0 ships broken typesVersions declarations (ts-5.6 compat
+    // imports a non-existent export) — with the workspace skipLibCheck=false
+    // every tsc entry point fails on THEIR .d.ts. Scoped to this package:
+    // our sources stay fully checked (skipLibCheck skips declaration files
+    // only); the runtime surface is pinned by the encode/decode parity tests.
+    "skipLibCheck": true,
     "plugins": [
       { "transform": "typescript-transform-paths" },
       { "transform": "typescript-transform-paths", "afterDeclarations": true }
