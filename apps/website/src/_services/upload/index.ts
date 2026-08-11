@@ -35,7 +35,7 @@ export const transcodeCache = new TranscodeCache()
 // natively) so multi-hundred-MB encodes never block the UI thread.
 const workerEncode = makeWorkerEncoder(() =>
   new Worker(
-    new URL('@rfcx-bio/upload-engine/src/browser/flac-encode-worker.ts', import.meta.url),
+    new URL('../../../../../packages/upload-engine/src/browser/flac-encode-worker.ts', import.meta.url),
     { type: 'module' }
   )
 )
