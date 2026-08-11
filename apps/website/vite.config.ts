@@ -187,6 +187,12 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
     port: 8101, // Bio-1
     open: false
   },
+  // #112 FLAC encode worker: vite defaults workers to iife, which cannot
+  // code-split — the libflacjs graph in the worker triggers splitting, so the
+  // production build fails without es format here (dev is unaffected).
+  worker: {
+    format: 'es'
+  },
   ssgOptions: {
     script: 'async',
     includedRoutes (paths, routes) {
