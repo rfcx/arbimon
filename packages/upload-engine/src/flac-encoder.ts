@@ -18,6 +18,11 @@
  *    of producing a bad file).
  */
 
+/// <reference path="./libflacjs.d.ts" />
+// ^ the shim must travel with this file: consumers (apps/website vue-tsc)
+// compile upload-engine SOURCE through workspace paths and do not inherit
+// this package's tsconfig "paths" — without the reference their builds fail
+// resolving the libflacjs deep imports (upstream's declarations are broken).
 import type { WavMetadata } from './wav-metadata'
 
 // libflacjs ships an Emscripten bundle; typed loosely on purpose — the
