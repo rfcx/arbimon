@@ -35,7 +35,8 @@
         >
           <VisualizerTileImg
             :id="'spectrogramTile'+index"
-            :tile-src="tile.src"
+            :tile-src="tileSrcs[index] ?? tile.src"
+            @load-error="onTileAuthError"
           />
         </div>
       </div>
@@ -526,7 +527,9 @@ import { initTooltips } from 'flowbite'
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { RecordingTagResponse, SoundscapeItem, SoundscapeRegion, TemplateResponse, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { DEFAULT_TILE_HEIGHT, resolveTileHeight, resolveTileWidth } from '@rfcx-bio/common/api-arbimon/audiodata/tile-resolution'
+import type { RecordingTagResponse, SoundscapeItem, SoundscapeRegion, TemplateResponse, TileSet, Visobject } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
+import { buildTileSrc, getSpectroColor } from '@rfcx-bio/common/api-arbimon/audiodata/visualizer'
 import { type RecordingTrainingSet, type RecordingTrainingSetParams, type TrainingSet } from '@rfcx-bio/common/src/api-arbimon/audiodata/training-sets'
 
 import { type AlertDialogType } from '@/_components/alert-dialog.vue'
@@ -562,7 +565,7 @@ const props = defineProps<{
   layerVisibility: LayerVisibility
 }>()
 
-const emits = defineEmits<{(e: 'emitPointer', value: Pointer): void, (e: 'updateTags'): void}>()
+const emits = defineEmits<{(e: 'emitPointer', value: Pointer): void, (e: 'updateTags'): void, (e: 'refreshRecording'): void}>()
 
 const selectedProjectSlug = computed(() => store.project?.slug)
 const spectrogramContainer = ref<HTMLElement | null>(null)
@@ -613,6 +616,60 @@ const resetZoom = (): void => {
   zoomData.x = 0
   zoomData.y = 0
 }
+
+// ---------------------------------------------------------------------------
+// TILE SOURCE RESOLUTION (zoom-aware + user preference)
+//
+// 🔴 WHY THIS IS A COMPUTED AND NOT A MUTATION OF `tile.src`.
+// `tile.src` is baked ONCE inside the vue-query `queryFn` (fetchRecording) and
+// cached under a key of slug+recordingId only, with refetchOnMount/
+// refetchOnWindowFocus disabled. It is therefore NOT reactive: changing a
+// resolution ref cannot make the cached string change, and mutating
+// query-cached data in place is fragile. Deriving the src here states the
+// dependency explicitly and re-renders without any server round-trip.
+//
+// Safe because the media-api stream-token signs `streamId_startMs_endMs[_exp]`
+// — the SOURCE WINDOW — and NOT the render parameters. So the same token is
+// reused at any size (verified live: dimension/palette swaps 200, changed
+// window 401). No re-mint, no /recordings/info refetch.
+const userTileWidth = ref<number | undefined>(undefined)
+const userTileHeight = ref<number | undefined>(undefined)
+
+/** How wide ONE tile is actually drawn at the current zoom. */
+const tileDisplayWidth = computed<number>(() => {
+  const tile = props.visobject?.tiles?.set?.[0]
+  if (tile === undefined || props.visobject === undefined) return 0
+  return Math.ceil(tile.ds * getSec2px(spectrogramMetrics.value.width, props.visobject.domain.x.span))
+})
+
+const tileWidth = computed<number>(() => resolveTileWidth(tileDisplayWidth.value, userTileWidth.value))
+const tileHeight = computed<number>(() => resolveTileHeight(userTileHeight.value ?? DEFAULT_TILE_HEIGHT))
+
+/**
+ * Tile srcs for the CURRENT resolution. Falls back to the server-provided
+ * `tile.src` (legacy recordings, or anything buildTileSrc declines to build).
+ */
+const tileSrcs = computed<Array<string | null>>(() => {
+  const visobject = props.visobject
+  if (visobject?.tiles?.set === undefined) return []
+  const palette = getSpectroColor()
+  return visobject.tiles.set.map((tile: TileSet) =>
+    buildTileSrc(tile, visobject, palette, tileWidth.value, tileHeight.value) ?? tile.src ?? null
+  )
+})
+
+// A minted token carries a bucketed 6-7h `exp`. Already-loaded tiles keep
+// working (immutable-cached), but a NEW fetch on a long-open tab can 401 —
+// and changing resolution is exactly what triggers new fetches. Re-fetching the
+// recording re-mints every token. Guarded so a genuine, repeatable failure
+// cannot become a refetch loop.
+const tokenRefreshed = ref(false)
+const onTileAuthError = (): void => {
+  if (tokenRefreshed.value) return
+  tokenRefreshed.value = true
+  emits('refreshRecording')
+}
+watch(() => props.visobject, () => { tokenRefreshed.value = false })
 
 const success = ref<AlertDialogType>('error')
 const title = ref('')
