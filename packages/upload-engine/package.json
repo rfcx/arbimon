@@ -36,5 +36,7 @@
     "test:unit": "vitest .unit.test."
   },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "fake-indexeddb": "6.2.2"
+  }
 }
