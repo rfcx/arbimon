@@ -997,7 +997,9 @@ export class UploadEngine {
         await this.update(item, { state: 'ingested' })
         break
       case SERVER_STATUS.DUPLICATE:
-        await this.update(item, { state: 'duplicate' })
+        // clear any stale transport error (e.g. an earlier PUT 429) so the
+        // label reads as a clean duplicate, not 'Duplicate — <old error>'
+        await this.update(item, { state: 'duplicate', error: undefined })
         break
       case SERVER_STATUS.CHECKSUM:
         // retry_upload path: URL may be reused if fresh; reset to ready to re-sign cleanly.
