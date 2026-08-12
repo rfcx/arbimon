@@ -145,21 +145,51 @@ const bumpMetrics = (patch: Partial<ProjectTransferMetrics>): void => {
   saveMetrics(slug, next)
 }
 
-// -- current transfer rate (EMA over PUT progress deltas) ---------------------
+// -- current transfer rate (sliding window over PER-ITEM PUT progress) --------
+// Derived from each item's own progress deltas, NOT from the queue-aggregate
+// stats.bytesUploaded: that aggregate is a function of queue MEMBERSHIP, so
+// Clear Completed dropped it (and racing stats events then re-raised it) —
+// producing phantom rate spikes on clear (operator-reported 2026-08-12).
+// Per-item deltas only ever reflect real bytes moving on the wire; a removed
+// item simply stops emitting.
 export const currentRateBps = ref(0)
 const rateWindow: Array<{ atMs: number, bytes: number }> = []
-let lastBytesUploaded = 0
+// last observed uploaded-bytes per in-flight item (cleared on settle/remove)
+const itemBytesSeen = new Map<string, number>()
 
-const observeRate = (bytesUploaded: number): void => {
-  const now = Date.now()
-  const delta = bytesUploaded - lastBytesUploaded
-  lastBytesUploaded = bytesUploaded
-  if (delta > 0) rateWindow.push({ atMs: now, bytes: delta })
+const recomputeRate = (now: number): void => {
   // 10-second sliding window
   while (rateWindow.length > 0 && now - rateWindow[0].atMs > 10_000) rateWindow.shift()
   const windowBytes = rateWindow.reduce((sum, s) => sum + s.bytes, 0)
   const windowMs = rateWindow.length > 0 ? Math.max(1000, now - rateWindow[0].atMs) : 1000
   currentRateBps.value = windowBytes / (windowMs / 1000)
+}
+
+const observeItemProgress = (item: UploadItem): void => {
+  const now = Date.now()
+  if (item.state === 'uploading' && item.progress !== undefined) {
+    const bytes = Math.floor(item.fileSizeBytes * item.progress)
+    const seen = itemBytesSeen.get(item.id) ?? 0
+    if (bytes > seen) {
+      rateWindow.push({ atMs: now, bytes: bytes - seen })
+      itemBytesSeen.set(item.id, bytes)
+    }
+  } else if (itemBytesSeen.has(item.id) && item.state !== 'uploading') {
+    // settled/paused/removed — credit any tail bytes on success, then forget
+    if (item.state === 'uploaded' || item.state === 'ingested' || item.state === 'duplicate') {
+      const seen = itemBytesSeen.get(item.id) ?? 0
+      if (item.fileSizeBytes > seen) rateWindow.push({ atMs: now, bytes: item.fileSizeBytes - seen })
+    }
+    itemBytesSeen.delete(item.id)
+  }
+  recomputeRate(now)
+}
+
+// decay to zero when idle (no progress events arrive to trigger recompute)
+if (typeof setInterval !== 'undefined') {
+  setInterval(() => {
+    if (currentRateBps.value > 0) recomputeRate(Date.now())
+  }, 2000)
 }
 
 // Track terminal outcomes per item — a Map so a RETRY can reverse the
@@ -169,11 +199,11 @@ const trackedTerminal = new Map<string, string>()
 
 engine.on(event => {
   if (event.type === 'stats') {
-    observeRate(event.stats.bytesUploaded)
     stats.value = event.stats
   }
   if (event.type === 'engine-state') engineRunning.value = event.running
   if (event.type === 'item-updated') {
+    observeItemProgress(event.item)
     const index = items.value.findIndex(existing => existing.id === event.item.id)
     if (index >= 0) items.value[index] = event.item
     else items.value.push(event.item)
