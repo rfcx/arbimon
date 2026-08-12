@@ -162,8 +162,10 @@ const observeRate = (bytesUploaded: number): void => {
   currentRateBps.value = windowBytes / (windowMs / 1000)
 }
 
-// Track terminal outcomes once per item (telemetry).
-const trackedTerminal = new Set<string>()
+// Track terminal outcomes per item — a Map so a RETRY can reverse the
+// previously-counted outcome (the count-once Set made a failed→retry→ingested
+// item stay counted as a failure forever; found live 2026-08-12).
+const trackedTerminal = new Map<string, string>()
 
 engine.on(event => {
   if (event.type === 'stats') {
@@ -176,20 +178,30 @@ engine.on(event => {
     if (index >= 0) items.value[index] = event.item
     else items.value.push(event.item)
 
-    // telemetry + project metrics: one count per terminal outcome per item
+    // telemetry + project metrics: one count per terminal outcome per item,
+    // REVERSED if the item re-enters the pipeline (retry).
     const terminalStates = ['ingested', 'duplicate', 'failed', 'rejected', 'cancelled']
-    if (terminalStates.includes(event.item.state) && !trackedTerminal.has(event.item.id)) {
-      trackedTerminal.add(event.item.id)
-      if (event.item.state === 'ingested') bumpMetrics({ completed: 1, bytesTransferred: event.item.fileSizeBytes })
-      if (event.item.state === 'duplicate') bumpMetrics({ duplicates: 1 })
-      if (event.item.state === 'failed' || event.item.state === 'rejected' || event.item.state === 'cancelled') bumpMetrics({ failed: 1 })
-      track('web_upload_file_terminal', {
-        outcome: event.item.state,
-        fileSizeBytes: event.item.fileSizeBytes,
-        attempts: event.item.attempts,
-        multipart: event.item.multipart !== undefined,
-        error: ['failed', 'rejected', 'cancelled'].includes(event.item.state) ? event.item.error : undefined
-      })
+    const counted = trackedTerminal.get(event.item.id)
+    if (terminalStates.includes(event.item.state)) {
+      if (counted === undefined) {
+        trackedTerminal.set(event.item.id, event.item.state)
+        if (event.item.state === 'ingested') bumpMetrics({ completed: 1, bytesTransferred: event.item.fileSizeBytes })
+        if (event.item.state === 'duplicate') bumpMetrics({ duplicates: 1 })
+        if (event.item.state === 'failed' || event.item.state === 'rejected' || event.item.state === 'cancelled') bumpMetrics({ failed: 1 })
+        track('web_upload_file_terminal', {
+          outcome: event.item.state,
+          fileSizeBytes: event.item.fileSizeBytes,
+          attempts: event.item.attempts,
+          multipart: event.item.multipart !== undefined,
+          error: ['failed', 'rejected', 'cancelled'].includes(event.item.state) ? event.item.error : undefined
+        })
+      }
+    } else if (counted !== undefined) {
+      // retry: un-count the stale outcome so the eventual final one counts
+      trackedTerminal.delete(event.item.id)
+      if (counted === 'ingested') bumpMetrics({ completed: -1, bytesTransferred: -event.item.fileSizeBytes })
+      else if (counted === 'duplicate') bumpMetrics({ duplicates: -1 })
+      else bumpMetrics({ failed: -1 })
     }
   }
   if (event.type === 'error') {
