@@ -1,36 +1,65 @@
 <template>
   <div class="mt-6">
-    <!-- Site header: this box IS the site scope (2026-08-12 multi-site pass) -->
-    <div class="flex items-center justify-between">
-      <h3 class="text-base font-medium">
-        <span class="text-cloud">Site:</span> {{ siteName }}
-        <span class="text-cloud text-sm font-normal ml-2">({{ items.length }} file{{ items.length === 1 ? '' : 's' }})</span>
-      </h3>
+    <!-- Box header line: site identity LEFT (selector while unlinked → bold
+         name once linked, + per-box timezone selector), remove-✕ RIGHT. -->
+    <div class="flex items-center justify-between gap-x-4">
+      <div class="flex items-center gap-x-4 flex-wrap gap-y-2">
+        <template v-if="siteName === undefined">
+          <select
+            ref="sitePicker"
+            class="rounded border-frequency/50 bg-pitch text-insight px-3 py-1.5 min-w-64 text-sm"
+            value=""
+            @change="$emit('siteChosen', ($event.target as HTMLSelectElement).value)"
+          >
+            <option
+              disabled
+              value=""
+            >
+              Select a site for this audio…
+            </option>
+            <option
+              v-for="option in siteOptions"
+              :key="option.id"
+              :value="option.id"
+              :disabled="option.taken"
+            >
+              {{ option.name }}{{ option.taken ? ' — already on this page' : '' }}
+            </option>
+          </select>
+        </template>
+        <template v-else>
+          <h3 class="text-base font-bold">
+            {{ siteName }}
+            <span class="text-cloud text-sm font-normal ml-2">({{ items.length }} file{{ items.length === 1 ? '' : 's' }})</span>
+          </h3>
+          <label class="flex items-center gap-x-2 text-sm text-cloud">
+            Timezone:
+            <select
+              :value="timezoneMode"
+              class="rounded border-cloud/30 bg-pitch text-insight px-2 py-1 text-sm"
+              @change="$emit('timezoneModeChanged', ($event.target as HTMLSelectElement).value)"
+            >
+              <option value="auto">
+                Automatic
+              </option>
+              <option value="site">
+                Site Local Time{{ siteTimezone !== undefined ? ` (${siteTimezone})` : '' }}
+              </option>
+              <option value="utc">
+                UTC
+              </option>
+            </select>
+          </label>
+        </template>
+      </div>
       <button
         v-if="items.length === 0"
-        class="text-cloud hover:text-flamingo text-sm"
-        title="Remove this empty site box"
+        class="text-cloud hover:text-flamingo text-sm shrink-0"
+        title="Remove this site box"
         @click="$emit('removeBox')"
       >
         ✕
       </button>
-    </div>
-    <!-- Filter row -->
-    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-      <span class="text-cloud">Hide:</span>
-      <label
-        v-for="group in FILTER_GROUPS"
-        :key="group.key"
-        class="flex items-center gap-x-1 cursor-pointer select-none"
-      >
-        <input
-          v-model="hiddenGroups"
-          type="checkbox"
-          :value="group.key"
-          class="rounded border-cloud/40 bg-pitch"
-        >
-        <span>{{ group.label }} <span class="text-cloud">({{ groupCounts[group.key] ?? 0 }})</span></span>
-      </label>
     </div>
 
     <!-- Actions row: selection actions LEFT, standing actions RIGHT -->
@@ -206,14 +235,7 @@
               </div>
             </td>
           </tr>
-          <tr v-if="visibleSorted.length === 0 && items.length > 0">
-            <td
-              :colspan="COLUMNS.length + 2"
-              class="px-4 py-6 text-center text-cloud"
-            >
-              All rows hidden by the filters.
-            </td>
-          </tr>
+          
         </tbody>
       </table>
       <!-- intake area (drop zone) — always beneath the last visible row;
@@ -224,14 +246,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import { type UploadItem, TIMEZONE_SOURCE_LABELS } from '@rfcx-bio/upload-engine'
 
 const props = defineProps<{
   items: UploadItem[]
-  /** The site this box is scoped to (shown in the header; no Site column). */
-  siteName: string
+  /** The linked site's name; undefined while the box is still UNLINKED
+   * (header shows the site selector instead, autofocused). */
+  siteName?: string
+  /** The linked site's IANA tz (shown in the Site Local Time option). */
+  siteTimezone?: string
+  /** Per-box timezone method (auto|site|utc). */
+  timezoneMode?: string
+  /** Options for the unlinked-state site selector; taken = already boxed. */
+  siteOptions?: Array<{ id: string, name: string, taken: boolean }>
   openingId?: string
   /** Whether the FLAC transcode stage is on — refines the pending-group label
    * (a queued WAV only counts as Transcode Pending when encoding will run). */
@@ -242,6 +271,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'removeBox'): void
+  (e: 'siteChosen', streamId: string): void
+  (e: 'timezoneModeChanged', mode: string): void
   (e: 'clearCompleted'): void
   (e: 'retryFailed'): void
   (e: 'startSelected', ids: string[]): void
@@ -253,24 +284,18 @@ const emit = defineEmits<{
   (e: 'openDestination', item: UploadItem): void
 }>()
 
-// -- status → filter-group mapping -------------------------------------------
+// autofocus the site selector when the box mounts unlinked
+const sitePicker = ref<HTMLSelectElement>()
+onMounted(() => {
+  if (props.siteName === undefined) sitePicker.value?.focus()
+})
+
+// -- status grouping (kept for Status-column sorting; the 'Hide:' checkbox
+// filters were retired 2026-08-12 — operator: not the right technique) -----
 
 type FilterGroup = 'completed' | 'failed' | 'cancelled' | 'duplicate' |
   'uploadInProgress' | 'uploadPending' | 'transcodeInProgress' |
   'transcodePending' | 'processing' | 'staged'
-
-const FILTER_GROUPS: Array<{ key: FilterGroup, label: string }> = [
-  { key: 'completed', label: 'Completed' },
-  { key: 'failed', label: 'Failed' },
-  { key: 'cancelled', label: 'Cancelled' },
-  { key: 'duplicate', label: 'Duplicate' },
-  { key: 'uploadInProgress', label: 'Upload In-Progress' },
-  { key: 'uploadPending', label: 'Upload Pending' },
-  { key: 'transcodeInProgress', label: 'Transcode In-Progress' },
-  { key: 'transcodePending', label: 'Transcode Pending' },
-  { key: 'processing', label: 'Processing' },
-  { key: 'staged', label: 'Staged' }
-]
 
 const groupOf = (item: UploadItem): FilterGroup => {
   // Transcode groups only apply to WAVs when encoding is on; everything
@@ -296,19 +321,7 @@ const groupOf = (item: UploadItem): FilterGroup => {
   }
 }
 
-const hiddenGroups = ref<FilterGroup[]>([])
-
-const groupCounts = computed<Partial<Record<FilterGroup, number>>>(() => {
-  const counts: Partial<Record<FilterGroup, number>> = {}
-  for (const item of props.items) {
-    const g = groupOf(item)
-    counts[g] = (counts[g] ?? 0) + 1
-  }
-  return counts
-})
-
-const visible = computed(() =>
-  props.items.filter(item => !hiddenGroups.value.includes(groupOf(item))))
+const visible = computed(() => props.items)
 
 /** Rows the standing buttons would act on (count shown in the label;
  * button hidden entirely at 0 — operator UI pass 2). */

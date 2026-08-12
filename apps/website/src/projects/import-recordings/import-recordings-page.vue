@@ -105,50 +105,19 @@
         </div>
       </div>
 
-      <!-- Options row: add-site + timezone + FLAC (below the control bar).
-           Site selection is now PER-BOX (multi-site parallel uploads) — the
-           moment of association is structural, not a page-level mode. -->
-      <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3 items-end">
-        <div class="relative">
-          <label class="block text-sm mb-1">Add audio for a site</label>
-          <select
-            v-model="newBoxSite"
-            class="rounded border-cloud/30 bg-pitch text-insight px-3 py-2 min-w-64"
-            @change="addSiteBox"
-          >
-            <option
-              disabled
-              value=""
-            >
-              + Add audio to a site…
-            </option>
-            <option
-              v-for="site in availableSites"
-              :key="site.external_id"
-              :value="site.external_id"
-            >
-              {{ site.name }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm mb-1">Timezone of Audio Recordings</label>
-          <select
-            v-model="timezoneMode"
-            class="rounded border-cloud/30 bg-pitch text-insight px-3 py-2"
-          >
-            <option value="auto">
-              Automatic
-            </option>
-            <option value="site">
-              Site Local Time (each site's own timezone)
-            </option>
-            <option value="utc">
-              UTC
-            </option>
-          </select>
-        </div>
-        <label class="flex items-center gap-x-2 text-sm cursor-pointer select-none pb-2">
+      <!-- Options row: Add-site button + FLAC toggle. Site selection + timezone
+           method live IN each box's header now (structural association). -->
+      <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3 items-center">
+        <button
+          class="btn btn-primary text-sm inline-flex items-center gap-x-2"
+          :disabled="hasUnlinkedBox"
+          :title="hasUnlinkedBox ? 'Pick a site for the new box above first' : 'Add an upload box for another site'"
+          @click="addUnlinkedBox"
+        >
+          <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
+          Add audio to another Site
+        </button>
+        <label class="flex items-center gap-x-2 text-sm cursor-pointer select-none">
           <input
             v-model="flacEncodeEnabled"
             type="checkbox"
@@ -191,21 +160,26 @@
            association is where you dropped, not a page-level selector. -->
       <div
         v-for="box in siteBoxes"
-        :key="box.streamId"
-        @dragenter.prevent="boxDragEnter(box.streamId)"
+        :key="box.boxId"
+        @dragenter.prevent="box.streamId !== undefined && boxDragEnter(box.streamId)"
         @dragover.prevent
-        @dragleave.prevent="boxDragLeave(box.streamId)"
-        @drop.prevent="boxDrop(box.streamId, $event)"
+        @dragleave.prevent="box.streamId !== undefined && boxDragLeave(box.streamId)"
+        @drop.prevent="box.streamId !== undefined && boxDrop(box.streamId, $event)"
       >
         <staging-table
-          :items="itemsForBox(box.streamId)"
+          :items="box.streamId !== undefined ? itemsForBox(box.streamId) : []"
           :site-name="box.siteName"
+          :site-timezone="box.siteTimezone"
+          :timezone-mode="box.timezoneMode"
+          :site-options="siteOptions"
           :opening-id="openingVisualizerId"
           :flac-enabled="flacEncodeEnabled"
-          :drop-active="dragBoxId === box.streamId"
-          @remove-box="removeSiteBox(box.streamId)"
-          @clear-completed="clearCompleted(box.streamId)"
-          @retry-failed="retryFailed(box.streamId)"
+          :drop-active="box.streamId !== undefined && dragBoxId === box.streamId"
+          @remove-box="removeSiteBox(box.boxId)"
+          @site-chosen="linkBoxToSite(box.boxId, $event)"
+          @timezone-mode-changed="box.timezoneMode = $event as TimezoneMode"
+          @clear-completed="box.streamId !== undefined && clearCompleted(box.streamId)"
+          @retry-failed="box.streamId !== undefined && retryFailed(box.streamId)"
           @start-selected="startSelected"
           @pause-selected="pauseSelected"
           @clear-selected="clearSelected"
@@ -217,20 +191,28 @@
           <template #intake>
             <div
               class="border-t border-dashed px-6 py-6 text-center transition-colors"
-              :class="dragBoxId === box.streamId ? 'border-frequency bg-frequency/10' : 'border-cloud/30'"
+              :class="box.streamId !== undefined && dragBoxId === box.streamId ? 'border-frequency bg-frequency/10' : 'border-cloud/30'"
             >
-              <p :class="itemsForBox(box.streamId).length === 0 ? 'text-lg' : 'text-base'">
-                Drag &amp; drop audio for <span class="text-frequency">{{ box.siteName }}</span>
-              </p>
-              <p class="text-sm text-cloud mt-1">
-                .wav, .flac, .opus — analyzed locally and staged above before anything uploads
-              </p>
-              <button
-                class="btn btn-secondary mt-3 text-sm"
-                @click="pickFilesFor(box.streamId)"
+              <template v-if="box.streamId !== undefined">
+                <p :class="itemsForBox(box.streamId).length === 0 ? 'text-lg' : 'text-base'">
+                  Drag &amp; drop audio for <span class="text-frequency">{{ box.siteName }}</span>
+                </p>
+                <p class="text-sm text-cloud mt-1">
+                  .wav, .flac, .opus — analyzed locally and staged above before anything uploads
+                </p>
+                <button
+                  class="btn btn-secondary mt-3 text-sm"
+                  @click="pickFilesFor(box.streamId)"
+                >
+                  Or choose files…
+                </button>
+              </template>
+              <p
+                v-else
+                class="text-cloud"
               >
-                Or choose files…
-              </button>
+                Select a site above to enable this box.
+              </p>
             </div>
           </template>
         </staging-table>
@@ -242,7 +224,7 @@
         class="mt-6 rounded-lg border-2 border-dashed border-cloud/40 px-6 py-12 text-center"
       >
         <p class="text-lg">
-          Pick a site from “Add audio for a site” above to begin
+          Click “Add audio to another Site” above to begin
         </p>
         <p class="text-sm text-cloud mt-2">
           Each site gets its own upload box — drop files into the box for the site they belong to. Boxes upload in parallel.
@@ -284,30 +266,62 @@ const isPopout = computed(() => route.query.popout === '1')
 // -- sites + per-site boxes ---------------------------------------------------
 
 const sites = ref<SiteResponse[]>([])
-const timezoneMode = ref<TimezoneMode>('auto')
 
-/** One upload box per site, newest FIRST. Session-local UI state; boxes for
- * sites that already have queue items are re-materialized on mount. */
-interface SiteBox { streamId: string, siteName: string }
+/** One upload box per site, newest FIRST. A box starts UNLINKED
+ * (streamId undefined — header shows the focused site selector) and links
+ * on selection. timezoneMode is PER-BOX (lives in the box header). */
+interface SiteBox {
+  boxId: string
+  streamId?: string
+  siteName?: string
+  siteTimezone?: string
+  timezoneMode: TimezoneMode
+}
 const siteBoxes = ref<SiteBox[]>([])
-const newBoxSite = ref('')
 
-const availableSites = computed(() =>
-  sites.value.filter(site => !siteBoxes.value.some(box => box.streamId === site.external_id)))
+const hasUnlinkedBox = computed(() => siteBoxes.value.some(box => box.streamId === undefined))
+
+/** Options for a box's site selector — already-boxed sites grayed out. */
+const siteOptions = computed(() =>
+  sites.value.map(site => ({
+    id: site.external_id,
+    name: site.name,
+    taken: siteBoxes.value.some(box => box.streamId === site.external_id)
+  })))
 
 const siteById = (streamId: string): SiteResponse | undefined =>
   sites.value.find(site => site.external_id === streamId)
 
-const addSiteBox = (): void => {
-  const site = siteById(newBoxSite.value)
-  if (site === undefined) return
-  siteBoxes.value = [{ streamId: site.external_id, siteName: site.name }, ...siteBoxes.value]
-  newBoxSite.value = '' // reset the picker to its prompt
+const addUnlinkedBox = (): void => {
+  if (hasUnlinkedBox.value) return // one pending box at a time
+  siteBoxes.value = [
+    { boxId: `box-${Date.now().toString(36)}`, timezoneMode: 'auto' },
+    ...siteBoxes.value
+  ]
+  // the box's own onMounted autofocuses its selector
 }
 
-const removeSiteBox = (streamId: string): void => {
-  siteBoxes.value = siteBoxes.value.filter(box => box.streamId !== streamId)
+const linkBoxToSite = (boxId: string, streamId: string): void => {
+  const site = siteById(streamId)
+  if (site === undefined) return
+  if (siteBoxes.value.some(box => box.streamId === streamId)) return // taken guard
+  siteBoxes.value = siteBoxes.value.map(box =>
+    box.boxId === boxId
+      ? {
+          ...box,
+          streamId: site.external_id,
+          siteName: site.name,
+          siteTimezone: site.timezone !== undefined && site.timezone !== '' ? site.timezone : undefined
+        }
+      : box)
 }
+
+const removeSiteBox = (boxId: string): void => {
+  siteBoxes.value = siteBoxes.value.filter(box => box.boxId !== boxId)
+}
+
+const boxForStream = (streamId: string): SiteBox | undefined =>
+  siteBoxes.value.find(box => box.streamId === streamId)
 
 const itemsForBox = (streamId: string): UploadItem[] =>
   projectItems.value.filter(item => item.streamId === streamId)
@@ -321,14 +335,18 @@ const loadSites = async (): Promise<void> => {
 /** Boxes must exist for any site that already has queue items (restored
  * session / other-window activity) — else those rows would be invisible. */
 const materializeBoxesFromQueue = (): void => {
-  const known = new Set(siteBoxes.value.map(box => box.streamId))
+  const known = new Set(siteBoxes.value.map(box => box.streamId).filter(id => id !== undefined))
   const additions: SiteBox[] = []
   for (const item of projectItems.value) {
     if (known.has(item.streamId)) continue
     known.add(item.streamId)
+    const site = siteById(item.streamId)
     additions.push({
+      boxId: `box-${item.streamId}`,
       streamId: item.streamId,
-      siteName: item.siteName ?? siteById(item.streamId)?.name ?? item.streamId
+      siteName: item.siteName ?? site?.name ?? item.streamId,
+      siteTimezone: site?.timezone !== undefined && site?.timezone !== '' ? site?.timezone : undefined,
+      timezoneMode: 'auto'
     })
   }
   if (additions.length > 0) siteBoxes.value = [...siteBoxes.value, ...additions]
@@ -375,6 +393,7 @@ const enqueueFiles = async (streamId: string, files: Array<{ file: File, relativ
   const site = siteById(streamId)
   if (site === undefined) return
   const siteTz = site.timezone !== undefined && site.timezone !== '' ? site.timezone : undefined
+  const boxMode = boxForStream(streamId)?.timezoneMode ?? 'auto'
   const accepted = files.filter(({ file }) => isSupportedAudioFile(file.name))
   const pairs = accepted.map(({ file, relativePath }) => {
     const item = createUploadItem({
@@ -395,13 +414,13 @@ const enqueueFiles = async (streamId: string, files: Array<{ file: File, relativ
     fileCount: pairs.length,
     totalBytes: pairs.reduce((sum, { item }) => sum + item.fileSizeBytes, 0),
     projectSlug: projectSlug.value,
-    timezoneMode: timezoneMode.value
+    timezoneMode: boxMode
   })
   // Analyze with small concurrency — header reads are cheap but many files
-  // shouldn't hammer the disk at once. Context is PER-SITE now: each box
-  // resolves its own site's timezone for the ladder.
+  // shouldn't hammer the disk at once. Context is PER-BOX: this box's own
+  // timezone method + its site's timezone.
   const context = {
-    mode: timezoneMode.value,
+    mode: boxMode,
     siteTimezone: siteTz,
     siteName: site.name
   }
