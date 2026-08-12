@@ -1,8 +1,8 @@
 <template>
   <div class="mt-6">
-    <!-- Box header line: site identity LEFT (selector while unlinked → bold
-         name once linked, + per-box timezone selector), remove-✕ RIGHT. -->
-    <div class="flex items-center justify-between gap-x-4">
+    <!-- Single header line: collapse-caret + site identity + timezone LEFT,
+         all action buttons RIGHT — one horizontal row above the table. -->
+    <div class="flex items-center justify-between gap-x-4 flex-wrap gap-y-2">
       <div class="flex items-center gap-x-4 flex-wrap gap-y-2">
         <template v-if="siteName === undefined">
           <select
@@ -28,6 +28,18 @@
           </select>
         </template>
         <template v-else>
+          <button
+            class="text-cloud hover:text-insight shrink-0 -mr-1"
+            :title="collapsed ? 'Expand' : 'Collapse'"
+            @click="collapsed = !collapsed"
+          >
+            <svg
+              viewBox="0 0 16 16"
+              class="w-4 h-4 fill-none stroke-current transition-transform duration-200"
+              :class="collapsed ? '-rotate-90' : ''"
+              stroke-width="2"
+            ><path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </button>
           <h3 class="text-base font-bold">
             {{ siteName }}
             <span class="text-cloud text-sm font-normal ml-2">({{ items.length }} file{{ items.length === 1 ? '' : 's' }})</span>
@@ -52,18 +64,8 @@
           </label>
         </template>
       </div>
-      <button
-        v-if="items.length === 0"
-        class="text-cloud hover:text-flamingo text-sm shrink-0"
-        title="Remove this site box"
-        @click="$emit('removeBox')"
-      >
-        ✕
-      </button>
-    </div>
 
-    <!-- Actions row: selection actions LEFT, standing actions RIGHT -->
-    <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mt-3">
+      <!-- action cluster: selection actions, then standing actions, then ✕ -->
       <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
         <template v-if="selectedIds.size > 0">
           <span class="text-sm text-cloud">{{ selectedIds.size }} selected:</span>
@@ -89,8 +91,6 @@
             Remove
           </button>
         </template>
-      </div>
-      <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
         <button
           v-if="clearableCount > 0"
           class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
@@ -107,12 +107,22 @@
           <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="1.8"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3" stroke-linecap="round" stroke-linejoin="round" /></svg>
           Retry Failed ({{ retryableCount }})
         </button>
+        <button
+          v-if="items.length === 0"
+          class="text-cloud hover:text-flamingo text-sm shrink-0"
+          title="Remove this site box"
+          @click="$emit('removeBox')"
+        >
+          ✕
+        </button>
       </div>
     </div>
 
     <!-- The table + intake area (one bordered region; the whole thing is a
-         drop target — the page passes highlight state via dropActive) -->
+         drop target — the page passes highlight state via dropActive).
+         v-show (not v-if) when collapsed: rows keep updating unseen. -->
     <div
+      v-show="!collapsed"
       class="mt-3 overflow-x-auto rounded-lg border transition-colors"
       :class="dropActive ? 'border-frequency bg-frequency/5' : 'border-cloud/20'"
     >
@@ -286,6 +296,9 @@ const emit = defineEmits<{
 
 // autofocus the site selector when the box mounts unlinked
 const sitePicker = ref<HTMLSelectElement>()
+
+// accordion collapse (per-box, session-local; v-show keeps rows live unseen)
+const collapsed = ref(false)
 onMounted(() => {
   if (props.siteName === undefined) sitePicker.value?.focus()
 })

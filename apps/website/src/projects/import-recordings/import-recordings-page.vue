@@ -78,7 +78,7 @@
           <span>{{ startPauseLabel }}</span>
         </button>
 
-        <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
             <span class="text-xs text-cloud uppercase tracking-wide">Upload Rate</span>
             <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
@@ -101,6 +101,13 @@
           <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
             <span class="text-xs text-cloud uppercase tracking-wide">Duplicates</span>
             <span class="text-xl tabular-nums font-medium">{{ metrics.duplicates }}</span>
+          </div>
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Complete</span>
+            <span class="text-xl tabular-nums font-medium">
+              {{ projectProgress.done }}/{{ projectProgress.total }}
+              <span class="text-sm text-cloud">({{ overallPercent }}%)</span>
+            </span>
           </div>
         </div>
       </div>
@@ -137,35 +144,24 @@
         @change="onPick"
       >
 
-      <!-- Aggregate progress (project-scoped) -->
-      <div
-        v-if="projectProgress.total > 0 && projectProgress.bytesTotal > 0"
-        class="mt-4"
-      >
-        <div class="flex justify-between text-sm mb-1">
-          <span>{{ projectProgress.done }} / {{ projectProgress.total }} complete</span>
-          <span>{{ formatBytes(projectProgress.bytesUploaded) }} / {{ formatBytes(projectProgress.bytesTotal) }}</span>
-        </div>
-        <div class="h-2 rounded bg-cloud/20 overflow-hidden">
-          <div
-            class="h-full bg-frequency transition-all"
-            :style="{ width: `${overallPercent}%` }"
-          />
-        </div>
-      </div>
-
       <!-- Per-site upload boxes, newest on top. Each box is a complete unit:
            header (site name) + filters + table + its OWN drag/drop intake.
            A drop into a box stages files for THAT box's site — the moment of
            association is where you dropped, not a page-level selector. -->
-      <div
-        v-for="box in siteBoxes"
+      <template
+        v-for="(box, boxIndex) in siteBoxes"
         :key="box.boxId"
-        @dragenter.prevent="box.streamId !== undefined && boxDragEnter(box.streamId)"
-        @dragover.prevent
-        @dragleave.prevent="box.streamId !== undefined && boxDragLeave(box.streamId)"
-        @drop.prevent="box.streamId !== undefined && boxDrop(box.streamId, $event)"
       >
+        <hr
+          v-if="boxIndex > 0"
+          class="mt-6 border-cloud/20"
+        >
+        <div
+          @dragenter.prevent="box.streamId !== undefined && boxDragEnter(box.streamId)"
+          @dragover.prevent
+          @dragleave.prevent="box.streamId !== undefined && boxDragLeave(box.streamId)"
+          @drop.prevent="box.streamId !== undefined && boxDrop(box.streamId, $event)"
+        >
         <staging-table
           :items="box.streamId !== undefined ? itemsForBox(box.streamId) : []"
           :site-name="box.siteName"
@@ -216,7 +212,8 @@
             </div>
           </template>
         </staging-table>
-      </div>
+        </div>
+      </template>
 
       <!-- Empty state: no boxes yet -->
       <div
@@ -607,8 +604,9 @@ const projectProgress = computed(() => {
   return { total: projectItems.value.length, done, bytesTotal, bytesUploaded }
 })
 
+// % accompanies the N/N Complete panel — count-based to match its ratio
 const overallPercent = computed(() =>
-  projectProgress.value.bytesTotal === 0 ? 0 : Math.round((projectProgress.value.bytesUploaded / projectProgress.value.bytesTotal) * 100))
+  projectProgress.value.total === 0 ? 0 : Math.round((projectProgress.value.done / projectProgress.value.total) * 100))
 
 const formatBytes = (bytes: number): string => {
   if (bytes < 1024) return `${bytes} B`
