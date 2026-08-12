@@ -6,7 +6,12 @@
 import { type BulkSignRequestItem, type BulkSignResponse, type TokenProvider, type UploadStatusResponse } from './types'
 
 export class IngestApiError extends Error {
-  constructor (message: string, public readonly status: number) {
+  constructor (
+    message: string,
+    public readonly status: number,
+    /** Parsed Retry-After (ms), when the server sent one and CORS exposed it. */
+    public readonly retryAfterMs?: number
+  ) {
     super(message)
     this.name = 'IngestApiError'
   }
@@ -100,10 +105,23 @@ export const putToSignedUrl = async (
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) resolve()
       else {
+        // Retry-After: seconds or an HTTP date. Readable only if the bucket
+        // CORS policy exposes it — absent header just means undefined.
+        let retryAfterMs: number | undefined
+        try {
+          const header = xhr.getResponseHeader('Retry-After')
+          if (header !== null) {
+            const seconds = Number(header)
+            retryAfterMs = Number.isFinite(seconds)
+              ? seconds * 1000
+              : Math.max(0, Date.parse(header) - Date.now()) || undefined
+          }
+        } catch { /* CORS-hidden — fine */ }
         reject(
           new IngestApiError(
             `Upload PUT failed: HTTP ${xhr.status}`,
-            xhr.status
+            xhr.status,
+            retryAfterMs
           )
         )
       }

@@ -174,6 +174,7 @@ export const uploadParts = async (
     const start = (part.partNumber - 1) * descriptor.partSizeBytes
     const end = Math.min(start + descriptor.partSizeBytes, file.size)
     const blob = file.slice(start, end)
+    let rateLimitWaits = 0
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       if (options.abortSignal?.aborted === true) throw new IngestApiError('Aborted', 0)
       try {
@@ -192,7 +193,18 @@ export const uploadParts = async (
         // Re-read aborted: it can flip asynchronously during the await above
         // (TS narrows it from the loop-top check otherwise).
         const signal: AbortSignal | undefined = options.abortSignal
-        if (signal?.aborted === true || attempt >= maxAttempts) throw err
+        if (signal?.aborted === true) throw err
+        // 429 (per-key/part rate limit) = congestion, not failure: don't
+        // burn an attempt; wait past the write window (≥2.5s + jitter).
+        // Bounded (20 waits ≈ 1 min) so a pathological limiter can't loop
+        // forever — beyond the bound it degrades to a normal counted retry.
+        if (err instanceof IngestApiError && err.status === 429 && rateLimitWaits < 20) {
+          rateLimitWaits++
+          attempt--
+          await sleep(2500 * (1 + Math.random() * 0.5))
+          continue
+        }
+        if (attempt >= maxAttempts) throw err
         const delay = Math.min(maxDelay, baseDelay * 2 ** (attempt - 1)) * (0.5 + Math.random())
         await sleep(delay)
       }

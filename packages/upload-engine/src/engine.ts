@@ -16,7 +16,7 @@
  * - online/offline transitions pause/resume the pool automatically.
  */
 
-import { IngestApi, putToSignedUrl } from './ingest-api'
+import { IngestApi, IngestApiError, putToSignedUrl } from './ingest-api'
 import { sha1HexOfBlob } from './sha1'
 import { MULTIPART_THRESHOLD_BYTES, MultipartApi, uploadParts } from './multipart'
 import { type BulkSignRequestItem, type FileSource, type QueueStats, type TokenProvider, type UploadEngineConfig, type UploadEngineEvent, type UploadEngineListener, type UploadItem, type UploadItemState, type UploadStore, SERVER_STATUS } from './types'
@@ -106,6 +106,19 @@ export class UploadEngine {
   // that have live pop-outs. Terminal/UI reads are NOT scoped (every window
   // may render everything); only the driving loops are.
   private scope: (item: UploadItem) => boolean = () => true
+  // 429-awareness (2026-08-12): R2's documented TooManyRequests is PER-OBJECT-
+  // KEY (~1 write/s to the same key), so a 429 means "this key was written too
+  // recently" — usually our own rapid retry of the same signed URL. Handling:
+  // (a) a 429'd item's next attempt is floored at RATE_LIMIT_FLOOR_MS (honoring
+  //     Retry-After when exposed) instead of the generic backoff curve, whose
+  //     jitter can land at ~1s and re-trip the limit;
+  // (b) a burst of 429s briefly narrows the upload pool (global slow-down)
+  //     rather than letting every worker slam into the same window;
+  // (c) 429 attempts do NOT count toward maxAttempts — rate limiting is
+  //     congestion, not failure, and must never terminal-fail a file.
+  private rateLimitedUntil = new Map<string, number>()
+  private rateLimitBurst = 0
+  private static readonly RATE_LIMIT_FLOOR_MS = 2500
 
   /** Restrict which items this engine instance drives (see field note). */
   setScope (predicate: ((item: UploadItem) => boolean) | undefined): void {
@@ -730,9 +743,19 @@ export class UploadEngine {
   }
 
   private async pumpUploads (): Promise<void> {
-    while (this.activeUploads < this.config.maxConcurrentUploads) {
+    // 429 burst → briefly narrow the pool: each recent burst unit parks one
+    // upload slot (floor 1), decaying as the rateLimitedUntil entries expire.
+    const now = Date.now()
+    for (const [id, until] of this.rateLimitedUntil) {
+      if (now >= until) this.rateLimitedUntil.delete(id)
+    }
+    this.rateLimitBurst = this.rateLimitedUntil.size
+    const poolCap = Math.max(1, this.config.maxConcurrentUploads - Math.min(this.rateLimitBurst, this.config.maxConcurrentUploads - 1))
+    while (this.activeUploads < poolCap) {
       const signed = await this.listScoped(['signed'])
-      const next = signed.find(item => !this.abortControllers.has(item.id))
+      const next = signed.find(item =>
+        !this.abortControllers.has(item.id) &&
+        (this.rateLimitedUntil.get(item.id) ?? 0) <= Date.now())
       if (next === undefined) return
       const item = await this.update(next, { state: 'uploading', progress: 0, uploadStartedAtMs: Date.now(), uploadEndedAtMs: undefined })
       this.activeUploads++
@@ -840,6 +863,19 @@ export class UploadEngine {
       if (!this.running) {
         // paused → back to signed for a clean resume
         await this.update(item, { state: 'signed', progress: undefined })
+        return
+      }
+      // 429 = per-key rate limit (congestion, not failure): no attempt burn,
+      // no terminal fail; floor the next try past the key's write window.
+      if (err instanceof IngestApiError && err.status === 429) {
+        const waitMs = Math.max(err.retryAfterMs ?? 0, UploadEngine.RATE_LIMIT_FLOOR_MS) * (1 + Math.random() * 0.5)
+        this.rateLimitedUntil.set(item.id, Date.now() + waitMs)
+        await this.update(item, {
+          state: 'signed',
+          progress: undefined,
+          error: 'Rate limited — retrying shortly'
+        })
+        setTimeout(() => { this.kick() }, waitMs)
         return
       }
       const attempts = item.attempts + 1
