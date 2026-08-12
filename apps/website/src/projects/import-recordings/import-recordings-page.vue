@@ -7,9 +7,9 @@
         </h1>
         <p
           v-if="projectName !== undefined"
-          class="text-base text-frequency mt-1 font-medium"
+          class="text-base mt-1 font-medium"
         >
-          {{ projectName }}
+          <span class="text-cloud">Project:</span> <span class="text-frequency">{{ projectName }}</span>
         </p>
         <p class="text-sm text-cloud mt-2">
           Upload audio directly from your browser. Files are analyzed locally first — review the list, then press Start.
@@ -105,38 +105,31 @@
         </div>
       </div>
 
-      <!-- Site + timezone + options (below the control bar) -->
+      <!-- Options row: add-site + timezone + FLAC (below the control bar).
+           Site selection is now PER-BOX (multi-site parallel uploads) — the
+           moment of association is structural, not a page-level mode. -->
       <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3 items-end">
         <div class="relative">
-          <label class="block text-sm mb-1">Site</label>
+          <label class="block text-sm mb-1">Add audio for a site</label>
           <select
-            v-model="selectedSiteExternalId"
-            class="rounded border-cloud/30 bg-pitch text-insight px-3 py-2 min-w-64 transition-shadow duration-300"
-            :class="siteFlash ? 'ring-2 ring-flamingo/80 shadow-lg shadow-flamingo/20' : ''"
+            v-model="newBoxSite"
+            class="rounded border-cloud/30 bg-pitch text-insight px-3 py-2 min-w-64"
+            @change="addSiteBox"
           >
             <option
               disabled
               value=""
             >
-              Select a site…
+              + Add audio to a site…
             </option>
             <option
-              v-for="site in sites"
+              v-for="site in availableSites"
               :key="site.external_id"
               :value="site.external_id"
             >
               {{ site.name }}
             </option>
           </select>
-          <!-- floating "select a site first" callout, anchored to the selector -->
-          <div
-            v-if="siteCalloutVisible"
-            class="absolute left-0 top-full mt-2 z-40 w-64 rounded-lg border border-flamingo/40 bg-pitch shadow-xl px-3 py-2 text-sm"
-          >
-            <div class="absolute -top-1.5 left-6 w-3 h-3 rotate-45 bg-pitch border-l border-t border-flamingo/40" />
-            <span class="text-flamingo">Select a site first</span>
-            <span class="text-cloud"> — files need a destination site before they can be analyzed.</span>
-          </div>
         </div>
         <div>
           <label class="block text-sm mb-1">Timezone of Audio Recordings</label>
@@ -147,11 +140,8 @@
             <option value="auto">
               Automatic
             </option>
-            <option
-              value="site"
-              :disabled="siteTimezone === undefined"
-            >
-              Site Local Time {{ siteTimezone !== undefined ? `(${siteTimezone})` : '(unknown)' }}
+            <option value="site">
+              Site Local Time (each site's own timezone)
             </option>
             <option value="utc">
               UTC
@@ -168,7 +158,7 @@
         </label>
       </div>
 
-      <!-- hidden file input (the intake button inside the table slot triggers it) -->
+      <!-- hidden file input; routed to whichever box requested the picker -->
       <input
         ref="fileInput"
         type="file"
@@ -195,22 +185,27 @@
         </div>
       </div>
 
-      <!-- Staging table + integrated intake area (whole region is a drop target).
-           dragenter/leave use a depth counter — a bare dragleave fires on every
-           child-element boundary and makes the highlight flicker. -->
+      <!-- Per-site upload boxes, newest on top. Each box is a complete unit:
+           header (site name) + filters + table + its OWN drag/drop intake.
+           A drop into a box stages files for THAT box's site — the moment of
+           association is where you dropped, not a page-level selector. -->
       <div
-        @dragenter.prevent="onDragEnter"
+        v-for="box in siteBoxes"
+        :key="box.streamId"
+        @dragenter.prevent="boxDragEnter(box.streamId)"
         @dragover.prevent
-        @dragleave.prevent="onDragLeave"
-        @drop.prevent="onDrop"
+        @dragleave.prevent="boxDragLeave(box.streamId)"
+        @drop.prevent="boxDrop(box.streamId, $event)"
       >
         <staging-table
-          :items="projectItems"
+          :items="itemsForBox(box.streamId)"
+          :site-name="box.siteName"
           :opening-id="openingVisualizerId"
           :flac-enabled="flacEncodeEnabled"
-          :drop-active="dropActive"
-          @clear-completed="clearCompleted"
-          @retry-failed="retryFailed"
+          :drop-active="dragBoxId === box.streamId"
+          @remove-box="removeSiteBox(box.streamId)"
+          @clear-completed="clearCompleted(box.streamId)"
+          @retry-failed="retryFailed(box.streamId)"
           @start-selected="startSelected"
           @pause-selected="pauseSelected"
           @clear-selected="clearSelected"
@@ -221,30 +216,37 @@
         >
           <template #intake>
             <div
-              class="border-t border-dashed px-6 py-8 text-center transition-colors"
-              :class="dropActive ? 'border-frequency bg-frequency/10' : 'border-cloud/30'"
+              class="border-t border-dashed px-6 py-6 text-center transition-colors"
+              :class="dragBoxId === box.streamId ? 'border-frequency bg-frequency/10' : 'border-cloud/30'"
             >
-              <p :class="items.length === 0 ? 'text-lg' : 'text-base'">
-                Drag &amp; drop audio files or folders here
+              <p :class="itemsForBox(box.streamId).length === 0 ? 'text-lg' : 'text-base'">
+                Drag &amp; drop audio for <span class="text-frequency">{{ box.siteName }}</span>
               </p>
               <p class="text-sm text-cloud mt-1">
-                .wav, .flac, .opus — files are analyzed locally and staged above before anything uploads
+                .wav, .flac, .opus — analyzed locally and staged above before anything uploads
               </p>
               <button
                 class="btn btn-secondary mt-3 text-sm"
-                @click="pickFiles"
+                @click="pickFilesFor(box.streamId)"
               >
                 Or choose files…
               </button>
-              <p
-                v-if="selectedSiteExternalId === ''"
-                class="text-sm text-cloud mt-2"
-              >
-                Select a site above to enable analysis.
-              </p>
             </div>
           </template>
         </staging-table>
+      </div>
+
+      <!-- Empty state: no boxes yet -->
+      <div
+        v-if="siteBoxes.length === 0"
+        class="mt-6 rounded-lg border-2 border-dashed border-cloud/40 px-6 py-12 text-center"
+      >
+        <p class="text-lg">
+          Pick a site from “Add audio for a site” above to begin
+        </p>
+        <p class="text-sm text-cloud mt-2">
+          Each site gets its own upload box — drop files into the box for the site they belong to. Boxes upload in parallel.
+        </p>
       </div>
     </template>
   </section>
@@ -279,31 +281,60 @@ const projectItems = computed(() =>
   items.value.filter(item => item.projectSlug === undefined || item.projectSlug === projectSlug.value))
 const isPopout = computed(() => route.query.popout === '1')
 
-// -- sites + timezone --------------------------------------------------------
+// -- sites + per-site boxes ---------------------------------------------------
 
 const sites = ref<SiteResponse[]>([])
-const selectedSiteExternalId = ref('')
 const timezoneMode = ref<TimezoneMode>('auto')
 
-const selectedSite = computed(() =>
-  sites.value.find(site => site.external_id === selectedSiteExternalId.value))
+/** One upload box per site, newest FIRST. Session-local UI state; boxes for
+ * sites that already have queue items are re-materialized on mount. */
+interface SiteBox { streamId: string, siteName: string }
+const siteBoxes = ref<SiteBox[]>([])
+const newBoxSite = ref('')
 
-const siteTimezone = computed(() => {
-  const tz = selectedSite.value?.timezone
-  return tz !== undefined && tz !== '' ? tz : undefined
-})
+const availableSites = computed(() =>
+  sites.value.filter(site => !siteBoxes.value.some(box => box.streamId === site.external_id)))
 
-// If the user had Site Local selected and switches to a site without a tz,
-// fall back to Automatic rather than silently uploading with a stale zone.
-watch(siteTimezone, (tz) => {
-  if (tz === undefined && timezoneMode.value === 'site') timezoneMode.value = 'auto'
-})
+const siteById = (streamId: string): SiteResponse | undefined =>
+  sites.value.find(site => site.external_id === streamId)
+
+const addSiteBox = (): void => {
+  const site = siteById(newBoxSite.value)
+  if (site === undefined) return
+  siteBoxes.value = [{ streamId: site.external_id, siteName: site.name }, ...siteBoxes.value]
+  newBoxSite.value = '' // reset the picker to its prompt
+}
+
+const removeSiteBox = (streamId: string): void => {
+  siteBoxes.value = siteBoxes.value.filter(box => box.streamId !== streamId)
+}
+
+const itemsForBox = (streamId: string): UploadItem[] =>
+  projectItems.value.filter(item => item.streamId === streamId)
 
 const loadSites = async (): Promise<void> => {
   if (apiClientArbimon === undefined || projectSlug.value === undefined) return
   const response = await apiArbimonGetSites(apiClientArbimon, projectSlug.value, {})
   sites.value = (response ?? []).filter(site => site.external_id !== null && site.external_id !== '')
 }
+
+/** Boxes must exist for any site that already has queue items (restored
+ * session / other-window activity) — else those rows would be invisible. */
+const materializeBoxesFromQueue = (): void => {
+  const known = new Set(siteBoxes.value.map(box => box.streamId))
+  const additions: SiteBox[] = []
+  for (const item of projectItems.value) {
+    if (known.has(item.streamId)) continue
+    known.add(item.streamId)
+    additions.push({
+      streamId: item.streamId,
+      siteName: item.siteName ?? siteById(item.streamId)?.name ?? item.streamId
+    })
+  }
+  if (additions.length > 0) siteBoxes.value = [...siteBoxes.value, ...additions]
+}
+
+watch(projectItems, materializeBoxesFromQueue)
 
 // -- metrics binding ----------------------------------------------------------
 
@@ -313,59 +344,44 @@ onMounted(async () => {
   await loadSites()
   bindProjectMetrics(projectSlug.value, store.user?.sub)
   await refreshItems()
+  materializeBoxesFromQueue()
 })
 
-// -- site-required guidance (flash + callout) ---------------------------------
+// -- staged intake (per-box) --------------------------------------------------
 
-const siteFlash = ref(false)
-const siteCalloutVisible = ref(false)
-let calloutTimer: ReturnType<typeof setTimeout> | undefined
-
-const promptForSite = (): void => {
-  // undramatic: one brief ring pulse on the selector + a small anchored
-  // callout that self-dismisses (or dismisses on site selection)
-  siteFlash.value = true
-  setTimeout(() => { siteFlash.value = false }, 1200)
-  siteCalloutVisible.value = true
-  if (calloutTimer !== undefined) clearTimeout(calloutTimer)
-  calloutTimer = setTimeout(() => { siteCalloutVisible.value = false }, 6000)
-}
-
-watch(selectedSiteExternalId, (value) => {
-  if (value !== '') {
-    siteCalloutVisible.value = false
-    if (calloutTimer !== undefined) clearTimeout(calloutTimer)
-  }
-})
-
-// -- staged intake ------------------------------------------------------------
-
-const dropActive = ref(false)
+/** which box is currently drag-hovered (depth-counted per box) */
+const dragBoxId = ref<string | undefined>(undefined)
 let dragDepth = 0
 const fileInput = ref<HTMLInputElement>()
+/** the box whose choose-files button opened the picker */
+let pickTargetStreamId: string | undefined
 
-const onDragEnter = (): void => {
+const boxDragEnter = (streamId: string): void => {
+  if (dragBoxId.value !== streamId) dragDepth = 0
+  dragBoxId.value = streamId
   dragDepth++
-  dropActive.value = true
 }
 
-const onDragLeave = (): void => {
+const boxDragLeave = (streamId: string): void => {
+  if (dragBoxId.value !== streamId) return
   dragDepth--
   if (dragDepth <= 0) {
     dragDepth = 0
-    dropActive.value = false
+    dragBoxId.value = undefined
   }
 }
 
-const enqueueFiles = async (files: Array<{ file: File, relativePath: string }>): Promise<void> => {
-  if (selectedSiteExternalId.value === '') { promptForSite(); return }
+const enqueueFiles = async (streamId: string, files: Array<{ file: File, relativePath: string }>): Promise<void> => {
+  const site = siteById(streamId)
+  if (site === undefined) return
+  const siteTz = site.timezone !== undefined && site.timezone !== '' ? site.timezone : undefined
   const accepted = files.filter(({ file }) => isSupportedAudioFile(file.name))
   const pairs = accepted.map(({ file, relativePath }) => {
     const item = createUploadItem({
       filename: file.name,
       relativePath,
       fileSizeBytes: file.size,
-      streamId: selectedSiteExternalId.value,
+      streamId,
       projectSlug: projectSlug.value,
       initialState: 'analyzing'
     })
@@ -382,11 +398,12 @@ const enqueueFiles = async (files: Array<{ file: File, relativePath: string }>):
     timezoneMode: timezoneMode.value
   })
   // Analyze with small concurrency — header reads are cheap but many files
-  // shouldn't hammer the disk at once.
+  // shouldn't hammer the disk at once. Context is PER-SITE now: each box
+  // resolves its own site's timezone for the ladder.
   const context = {
     mode: timezoneMode.value,
-    siteTimezone: siteTimezone.value,
-    siteName: selectedSite.value?.name
+    siteTimezone: siteTz,
+    siteName: site.name
   }
   const CONCURRENCY = 4
   let index = 0
@@ -401,23 +418,24 @@ const enqueueFiles = async (files: Array<{ file: File, relativePath: string }>):
   await refreshItems()
 }
 
-const onDrop = async (event: DragEvent): Promise<void> => {
+const boxDrop = async (streamId: string, event: DragEvent): Promise<void> => {
   dragDepth = 0
-  dropActive.value = false
+  dragBoxId.value = undefined
   if (event.dataTransfer === null) return
-  await enqueueFiles(await collectDroppedFiles(event.dataTransfer))
+  await enqueueFiles(streamId, await collectDroppedFiles(event.dataTransfer))
 }
 
-const pickFiles = (): void => {
-  if (selectedSiteExternalId.value === '') { promptForSite(); return }
+const pickFilesFor = (streamId: string): void => {
+  pickTargetStreamId = streamId
   fileInput.value?.click()
 }
 
 const onPick = async (event: Event): Promise<void> => {
   const input = event.target as HTMLInputElement
-  if (input.files === null) return
-  await enqueueFiles(Array.from(input.files).map(file => ({ file, relativePath: file.name })))
+  if (input.files === null || pickTargetStreamId === undefined) return
+  await enqueueFiles(pickTargetStreamId, Array.from(input.files).map(file => ({ file, relativePath: file.name })))
   input.value = ''
+  pickTargetStreamId = undefined
 }
 
 // -- global Start / Pause -----------------------------------------------------
@@ -470,15 +488,15 @@ const onStartPause = async (): Promise<void> => {
 
 // -- table actions ------------------------------------------------------------
 
-const clearCompleted = async (): Promise<void> => {
-  for (const item of projectItems.value.filter(i => i.state === 'ingested' || i.state === 'duplicate')) {
+const clearCompleted = async (streamId: string): Promise<void> => {
+  for (const item of itemsForBox(streamId).filter(i => i.state === 'ingested' || i.state === 'duplicate')) {
     await engine.remove(item.id)
   }
   await refreshItems()
 }
 
-const retryFailed = async (): Promise<void> => {
-  for (const item of projectItems.value.filter(i => ['failed', 'rejected', 'cancelled'].includes(i.state))) {
+const retryFailed = async (streamId: string): Promise<void> => {
+  for (const item of itemsForBox(streamId).filter(i => ['failed', 'rejected', 'cancelled'].includes(i.state))) {
     await engine.retry(item.id)
   }
   engine.start()

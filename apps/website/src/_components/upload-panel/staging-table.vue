@@ -1,5 +1,20 @@
 <template>
   <div class="mt-6">
+    <!-- Site header: this box IS the site scope (2026-08-12 multi-site pass) -->
+    <div class="flex items-center justify-between">
+      <h3 class="text-base font-medium">
+        <span class="text-cloud">Site:</span> {{ siteName }}
+        <span class="text-cloud text-sm font-normal ml-2">({{ items.length }} file{{ items.length === 1 ? '' : 's' }})</span>
+      </h3>
+      <button
+        v-if="items.length === 0"
+        class="text-cloud hover:text-flamingo text-sm"
+        title="Remove this empty site box"
+        @click="$emit('removeBox')"
+      >
+        ✕
+      </button>
+    </div>
     <!-- Filter row -->
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
       <span class="text-cloud">Hide:</span>
@@ -119,7 +134,6 @@
             >
               {{ displayFilename(item) }}
             </td>
-            <td class="px-2 py-1.5">{{ item.siteName ?? item.streamId }}</td>
             <td class="px-2 py-1.5">{{ recDate(item) }}</td>
             <td class="px-2 py-1.5">{{ recTime(item) }}</td>
             <td class="px-2 py-1.5">{{ zoneCol(item) }}</td>
@@ -216,6 +230,8 @@ import { type UploadItem, TIMEZONE_SOURCE_LABELS } from '@rfcx-bio/upload-engine
 
 const props = defineProps<{
   items: UploadItem[]
+  /** The site this box is scoped to (shown in the header; no Site column). */
+  siteName: string
   openingId?: string
   /** Whether the FLAC transcode stage is on — refines the pending-group label
    * (a queued WAV only counts as Transcode Pending when encoding will run). */
@@ -225,6 +241,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
+  (e: 'removeBox'): void
   (e: 'clearCompleted'): void
   (e: 'retryFailed'): void
   (e: 'startSelected', ids: string[]): void
@@ -305,7 +322,6 @@ const retryableCount = computed(() =>
 
 const COLUMNS: Array<{ key: string, label: string }> = [
   { key: 'filename', label: 'Filename' },
-  { key: 'siteName', label: 'Site' },
   { key: 'recDate', label: 'Date' },
   { key: 'recTime', label: 'Time' },
   { key: 'zone', label: 'Zone' },
@@ -328,7 +344,6 @@ const onSort = (key: string): void => {
 const sortValue = (item: UploadItem, key: string): string | number => {
   switch (key) {
     case 'filename': return item.relativePath.toLowerCase()
-    case 'siteName': return (item.siteName ?? item.streamId).toLowerCase()
     case 'recDate':
     case 'recTime': return item.localWallTime ?? ''
     case 'zone': return zoneCol(item)
