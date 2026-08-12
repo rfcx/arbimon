@@ -97,41 +97,15 @@
         </label>
       </div>
 
-      <!-- Drop zone -->
-      <div
-        class="mt-6 rounded-lg border-2 border-dashed px-6 py-10 text-center transition-colors"
-        :class="dropActive ? 'border-frequency bg-frequency/10' : 'border-cloud/40'"
-        @dragover.prevent="dropActive = true"
-        @dragleave.prevent="dropActive = false"
-        @drop.prevent="onDrop"
+      <!-- hidden file input (the intake button inside the table slot triggers it) -->
+      <input
+        ref="fileInput"
+        type="file"
+        multiple
+        accept=".wav,.flac,.opus"
+        class="hidden"
+        @change="onPick"
       >
-        <p class="text-lg">
-          Drag &amp; drop audio files or folders here
-        </p>
-        <p class="text-sm text-cloud mt-2">
-          .wav, .flac, .opus — files are analyzed locally and staged below before anything uploads
-        </p>
-        <button
-          class="btn btn-secondary mt-4"
-          @click="pickFiles"
-        >
-          Or choose files…
-        </button>
-        <input
-          ref="fileInput"
-          type="file"
-          multiple
-          accept=".wav,.flac,.opus"
-          class="hidden"
-          @change="onPick"
-        >
-        <p
-          v-if="selectedSiteExternalId === ''"
-          class="text-sm text-cloud mt-3"
-        >
-          Select a site above to enable analysis.
-        </p>
-      </div>
 
       <!-- Global control bar: Start/Pause + Grafana-style stat panels, full width -->
       <div
@@ -201,21 +175,57 @@
         </div>
       </div>
 
-      <!-- Staging table -->
-      <staging-table
-        :items="items"
-        :opening-id="openingVisualizerId"
-        :flac-enabled="flacEncodeEnabled"
-        @clear-completed="clearCompleted"
-        @retry-failed="retryFailed"
-        @start-selected="startSelected"
-        @pause-selected="pauseSelected"
-        @clear-selected="clearSelected"
-        @cancel-item="cancelItem"
-        @retry-item="retryItem"
-        @clear-item="clearItem"
-        @open-destination="openInVisualizer"
-      />
+      <!-- Staging table + integrated intake area (whole region is a drop target).
+           dragenter/leave use a depth counter — a bare dragleave fires on every
+           child-element boundary and makes the highlight flicker. -->
+      <div
+        @dragenter.prevent="onDragEnter"
+        @dragover.prevent
+        @dragleave.prevent="onDragLeave"
+        @drop.prevent="onDrop"
+      >
+        <staging-table
+          :items="items"
+          :opening-id="openingVisualizerId"
+          :flac-enabled="flacEncodeEnabled"
+          :drop-active="dropActive"
+          @clear-completed="clearCompleted"
+          @retry-failed="retryFailed"
+          @start-selected="startSelected"
+          @pause-selected="pauseSelected"
+          @clear-selected="clearSelected"
+          @cancel-item="cancelItem"
+          @retry-item="retryItem"
+          @clear-item="clearItem"
+          @open-destination="openInVisualizer"
+        >
+          <template #intake>
+            <div
+              class="border-t border-dashed px-6 py-8 text-center transition-colors"
+              :class="dropActive ? 'border-frequency bg-frequency/10' : 'border-cloud/30'"
+            >
+              <p :class="items.length === 0 ? 'text-lg' : 'text-base'">
+                Drag &amp; drop audio files or folders here
+              </p>
+              <p class="text-sm text-cloud mt-1">
+                .wav, .flac, .opus — files are analyzed locally and staged above before anything uploads
+              </p>
+              <button
+                class="btn btn-secondary mt-3 text-sm"
+                @click="pickFiles"
+              >
+                Or choose files…
+              </button>
+              <p
+                v-if="selectedSiteExternalId === ''"
+                class="text-sm text-cloud mt-2"
+              >
+                Select a site above to enable analysis.
+              </p>
+            </div>
+          </template>
+        </staging-table>
+      </div>
     </template>
   </section>
 </template>
@@ -304,7 +314,21 @@ watch(selectedSiteExternalId, (value) => {
 // -- staged intake ------------------------------------------------------------
 
 const dropActive = ref(false)
+let dragDepth = 0
 const fileInput = ref<HTMLInputElement>()
+
+const onDragEnter = (): void => {
+  dragDepth++
+  dropActive.value = true
+}
+
+const onDragLeave = (): void => {
+  dragDepth--
+  if (dragDepth <= 0) {
+    dragDepth = 0
+    dropActive.value = false
+  }
+}
 
 const enqueueFiles = async (files: Array<{ file: File, relativePath: string }>): Promise<void> => {
   if (selectedSiteExternalId.value === '') { promptForSite(); return }
@@ -350,6 +374,7 @@ const enqueueFiles = async (files: Array<{ file: File, relativePath: string }>):
 }
 
 const onDrop = async (event: DragEvent): Promise<void> => {
+  dragDepth = 0
   dropActive.value = false
   if (event.dataTransfer === null) return
   await enqueueFiles(await collectDroppedFiles(event.dataTransfer))

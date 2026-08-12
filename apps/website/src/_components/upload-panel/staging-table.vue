@@ -66,8 +66,12 @@
       </div>
     </div>
 
-    <!-- The table -->
-    <div class="mt-3 overflow-x-auto rounded-lg border border-cloud/20">
+    <!-- The table + intake area (one bordered region; the whole thing is a
+         drop target — the page passes highlight state via dropActive) -->
+    <div
+      class="mt-3 overflow-x-auto rounded-lg border transition-colors"
+      :class="dropActive ? 'border-frequency bg-frequency/5' : 'border-cloud/20'"
+    >
       <table class="w-full text-sm whitespace-nowrap">
         <thead>
           <tr class="bg-moss/40 text-left">
@@ -188,16 +192,19 @@
               </div>
             </td>
           </tr>
-          <tr v-if="visibleSorted.length === 0">
+          <tr v-if="visibleSorted.length === 0 && items.length > 0">
             <td
               :colspan="COLUMNS.length + 2"
               class="px-4 py-6 text-center text-cloud"
             >
-              {{ items.length === 0 ? 'No files yet — drop some above.' : 'All rows hidden by the filters.' }}
+              All rows hidden by the filters.
             </td>
           </tr>
         </tbody>
       </table>
+      <!-- intake area (drop zone) — always beneath the last visible row;
+           the PAGE owns the drag/drop handlers on the whole container -->
+      <slot name="intake" />
     </div>
   </div>
 </template>
@@ -213,6 +220,8 @@ const props = defineProps<{
   /** Whether the FLAC transcode stage is on — refines the pending-group label
    * (a queued WAV only counts as Transcode Pending when encoding will run). */
   flacEnabled?: boolean
+  /** Drag-hover highlight for the combined table+intake region (page-owned). */
+  dropActive?: boolean
 }>()
 
 const emit = defineEmits<{
