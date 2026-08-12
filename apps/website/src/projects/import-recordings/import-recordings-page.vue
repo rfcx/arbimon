@@ -34,8 +34,59 @@
     </div>
 
     <template v-else>
-      <!-- Site + timezone + options -->
-      <div class="mt-6 flex flex-wrap gap-x-6 gap-y-3 items-end">
+      <!-- Global control bar FIRST (2026-08-12 layout pass): Start/Pause +
+           Grafana-style stat panels sit directly under the title as the page's
+           permanent header row (no v-if — an Idle button + zeroed panels is the
+           stable empty state; hiding it made the layout jump on first file). -->
+      <div class="mt-6 flex items-stretch gap-x-3 w-full">
+        <button
+          class="shrink-0 rounded-lg px-6 font-medium text-base inline-flex flex-col items-center justify-center gap-y-1 min-w-28 transition-colors"
+          :class="startPauseClass"
+          :disabled="startPauseDisabled"
+          @click="onStartPause"
+        >
+          <svg
+            v-if="buttonMode === 'pause'"
+            viewBox="0 0 16 16"
+            class="w-5 h-5 fill-current"
+          ><path d="M4 2h3v12H4zM9 2h3v12H9z" /></svg>
+          <svg
+            v-else
+            viewBox="0 0 16 16"
+            class="w-5 h-5 fill-current"
+          ><path d="M4 2l9 6-9 6V2z" /></svg>
+          <span>{{ startPauseLabel }}</span>
+        </button>
+
+        <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Upload Rate</span>
+            <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
+          </div>
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Uploaded</span>
+            <span class="text-xl tabular-nums font-medium">{{ formatBytes(metrics.bytesTransferred) }}</span>
+          </div>
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Imported</span>
+            <span class="text-xl tabular-nums font-medium text-frequency">{{ metrics.completed }}</span>
+          </div>
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Errors</span>
+            <span
+              class="text-xl tabular-nums font-medium"
+              :class="metrics.failed > 0 ? 'text-flamingo' : ''"
+            >{{ metrics.failed }}</span>
+          </div>
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Duplicates</span>
+            <span class="text-xl tabular-nums font-medium">{{ metrics.duplicates }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Site + timezone + options (below the control bar) -->
+      <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3 items-end">
         <div class="relative">
           <label class="block text-sm mb-1">Site</label>
           <select
@@ -106,57 +157,6 @@
         class="hidden"
         @change="onPick"
       >
-
-      <!-- Global control bar: Start/Pause + Grafana-style stat panels, full width -->
-      <div
-        v-if="items.length > 0 || metrics.bytesTransferred > 0"
-        class="mt-6 flex items-stretch gap-x-3 w-full"
-      >
-        <button
-          class="shrink-0 rounded-lg px-6 font-medium text-base inline-flex flex-col items-center justify-center gap-y-1 min-w-28 transition-colors"
-          :class="startPauseClass"
-          :disabled="startPauseDisabled"
-          @click="onStartPause"
-        >
-          <svg
-            v-if="buttonMode === 'pause'"
-            viewBox="0 0 16 16"
-            class="w-5 h-5 fill-current"
-          ><path d="M4 2h3v12H4zM9 2h3v12H9z" /></svg>
-          <svg
-            v-else
-            viewBox="0 0 16 16"
-            class="w-5 h-5 fill-current"
-          ><path d="M4 2l9 6-9 6V2z" /></svg>
-          <span>{{ startPauseLabel }}</span>
-        </button>
-
-        <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Upload Rate</span>
-            <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
-          </div>
-          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Uploaded</span>
-            <span class="text-xl tabular-nums font-medium">{{ formatBytes(metrics.bytesTransferred) }}</span>
-          </div>
-          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Imported</span>
-            <span class="text-xl tabular-nums font-medium text-frequency">{{ metrics.completed }}</span>
-          </div>
-          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Errors</span>
-            <span
-              class="text-xl tabular-nums font-medium"
-              :class="metrics.failed > 0 ? 'text-flamingo' : ''"
-            >{{ metrics.failed }}</span>
-          </div>
-          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Duplicates</span>
-            <span class="text-xl tabular-nums font-medium">{{ metrics.duplicates }}</span>
-          </div>
-        </div>
-      </div>
 
       <!-- Aggregate progress -->
       <div
