@@ -91,6 +91,11 @@ export class UploadEngine {
   // are clearly coming, then send one big batch.
   private signFlushTimer: ReturnType<typeof setTimeout> | undefined
   private signFlushForced = false
+  // Whole-batch sign failures previously re-pumped with NO backoff — a
+  // fast-failing endpoint (proxy timeout, rate limit) produced a tight
+  // fire-fail-refire loop (observed live 2026-08-12: 30+ bulk calls/10s).
+  private signFailureStreak = 0
+  private signBackoffUntil = 0
   private readonly abortControllers = new Map<string, AbortController>()
 
   constructor (
@@ -467,6 +472,7 @@ export class UploadEngine {
 
   private async pumpSigning (): Promise<void> {
     if (this.signingInFlight) return
+    if (Date.now() < this.signBackoffUntil) return // batch-failure backoff
     const readyAll = await this.store.list(['ready'])
     // Large files take the multipart path (individually signed).
     const readyMultipart = readyAll.filter(item => item.fileSizeBytes >= this.config.multipartThresholdBytes)
@@ -530,6 +536,8 @@ export class UploadEngine {
         checksum: item.checksumSha1
       }))
       const response = await this.api.signBulk(request, this.config.laneTier)
+      this.signFailureStreak = 0
+      this.signBackoffUntil = 0
       for (const result of response.uploads) {
         const item = marked[result.index]
         if (item === undefined) continue
@@ -562,13 +570,21 @@ export class UploadEngine {
         }
       }
     } catch (err) {
-      // Whole-batch failure (auth/network/5xx): return items to ready.
+      // Whole-batch failure (auth/network/5xx): return items to ready, with
+      // exponential backoff before the next attempt (same curve as uploads).
       const message = err instanceof Error ? err.message : String(err)
       const signingItems = await this.store.list(['signing'])
       for (const item of signingItems) {
         await this.update(item, { state: 'ready' })
       }
-      this.emit({ type: 'error', message: `Signing batch failed: ${message}` })
+      this.signFailureStreak++
+      const delay = Math.min(
+        this.config.retryMaxDelayMs,
+        this.config.retryBaseDelayMs * 2 ** (this.signFailureStreak - 1)
+      ) * (0.5 + Math.random())
+      this.signBackoffUntil = Date.now() + delay
+      this.emit({ type: 'error', message: `Signing batch failed: ${message} (retrying in ${Math.round(delay / 1000)}s)` })
+      setTimeout(() => { this.kick() }, delay)
     } finally {
       this.signingInFlight = false
     }
