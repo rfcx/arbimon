@@ -53,6 +53,9 @@ export interface UploadItem {
   fileSizeBytes: number
   /** Target stream/site id. */
   streamId: string
+  /** Owning project slug — partitions the queue for multi-project windows
+   * (each pop-out drives only its own project's items). */
+  projectSlug?: string
   state: UploadItemState
   /** ISO-8601 UTC recording timestamp (parsed from filename). */
   timestampUtc?: string

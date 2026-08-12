@@ -239,6 +239,101 @@ engine.on(event => {
   }
 })
 
+// -- multi-window / pop-out coordination (per-project) ------------------------
+// The IndexedDB queue is shared by all windows; each window runs its own
+// engine. Per-PROJECT pop-outs each own their project's items: a pop-out
+// heartbeats on a per-project BroadcastChannel and scopes its engine TO that
+// project; every normal window excludes projects with a live pop-out from its
+// own scope (instead of pausing wholesale — the pre-multi-window design).
+// Multiple pop-outs for different projects therefore coexist: each drives
+// exactly its own partition, and main windows drive the rest.
+
+const POPOUT_CHANNEL = 'arbimon-uploader-popout'
+const POPOUT_BEAT_MS = 2000
+const POPOUT_STALE_MS = 5000
+
+/** projects with a live pop-out → last heartbeat epoch ms */
+const popoutBeats = new Map<string, number>()
+/** reactive view: slugs whose pop-out is currently alive */
+export const livePopouts = ref<Set<string>>(new Set())
+/** when THIS window is a pop-out: the project it owns */
+let ownPopoutSlug: string | undefined
+
+const recomputePopouts = (): void => {
+  const now = Date.now()
+  const alive = new Set<string>()
+  for (const [slug, at] of popoutBeats) {
+    if (now - at <= POPOUT_STALE_MS) alive.add(slug)
+    else popoutBeats.delete(slug)
+  }
+  const changed = alive.size !== livePopouts.value.size ||
+    [...alive].some(s => !livePopouts.value.has(s))
+  if (changed) {
+    livePopouts.value = alive
+    applyScope()
+  }
+}
+
+const applyScope = (): void => {
+  if (ownPopoutSlug !== undefined) {
+    // pop-out window: drive ONLY my project
+    const mine = ownPopoutSlug
+    engine.setScope(item => item.projectSlug === mine)
+  } else {
+    // normal window: drive everything EXCEPT projects with a live pop-out
+    const excluded = livePopouts.value
+    engine.setScope(item =>
+      item.projectSlug === undefined || !excluded.has(item.projectSlug))
+  }
+}
+
+let popoutChannel: BroadcastChannel | undefined
+
+/** Called by the uploader page when it mounts as a pop-out (?popout=1). */
+export const registerAsPopout = (slug: string): void => {
+  ownPopoutSlug = slug
+  applyScope()
+  popoutChannel?.postMessage({ type: 'popout-beat', slug })
+}
+
+/** Ask openers to transfer file handles for a project (pop-out bootstrap). */
+export const requestFileHandles = (slug: string): void => {
+  popoutChannel?.postMessage({ type: 'need-file-handles', slug })
+}
+
+if (!import.meta.env.SSR && typeof window !== 'undefined' && typeof BroadcastChannel !== 'undefined') {
+  popoutChannel = new BroadcastChannel(POPOUT_CHANNEL)
+  popoutChannel.onmessage = (event) => {
+    const msg = event.data as { type?: string, slug?: string, entries?: Array<[string, File]> }
+    if (msg?.type === 'popout-beat' && typeof msg.slug === 'string') {
+      if (ownPopoutSlug === undefined) {
+        popoutBeats.set(msg.slug, Date.now())
+        recomputePopouts()
+      }
+    }
+    if (msg?.type === 'need-file-handles' && ownPopoutSlug === undefined) {
+      // a pop-out bootstrapped; hand over handles for ITS project's items
+      try {
+        const wanted = new Set(items.value.filter(i => i.projectSlug === msg.slug).map(i => i.id))
+        const entries = fileSource.inner.entries().filter(([id]) => wanted.has(id))
+        if (entries.length > 0) popoutChannel?.postMessage({ type: 'file-handles', slug: msg.slug, entries })
+      } catch { /* clone limits — popout surfaces missing handles per-item */ }
+    }
+    if (msg?.type === 'file-handles' && ownPopoutSlug !== undefined && msg.slug === ownPopoutSlug) {
+      for (const [id, file] of msg.entries ?? []) fileSource.inner.register(id, file)
+      void refreshItems()
+    }
+  }
+  // pop-out: heartbeat; all windows: sweep stale beats
+  setInterval(() => {
+    if (ownPopoutSlug !== undefined) {
+      popoutChannel?.postMessage({ type: 'popout-beat', slug: ownPopoutSlug })
+    } else {
+      recomputePopouts()
+    }
+  }, POPOUT_BEAT_MS)
+}
+
 // online/offline handling lives with the singleton (not a component lifecycle)
 if (!import.meta.env.SSR && typeof window !== 'undefined') {
   window.addEventListener('online', () => { engine.setOnline(true) })

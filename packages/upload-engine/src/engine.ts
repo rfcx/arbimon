@@ -18,7 +18,7 @@
 
 import { IngestApi, putToSignedUrl } from './ingest-api'
 import { MULTIPART_THRESHOLD_BYTES, MultipartApi, uploadParts } from './multipart'
-import { type BulkSignRequestItem, type FileSource, type QueueStats, type TokenProvider, type UploadEngineConfig, type UploadEngineEvent, type UploadEngineListener, type UploadItem, type UploadStore, SERVER_STATUS } from './types'
+import { type BulkSignRequestItem, type FileSource, type QueueStats, type TokenProvider, type UploadEngineConfig, type UploadEngineEvent, type UploadEngineListener, type UploadItem, type UploadItemState, type UploadStore, SERVER_STATUS } from './types'
 
 const DEFAULTS = {
   maxConcurrentUploads: 4,
@@ -96,6 +96,25 @@ export class UploadEngine {
   // fire-fail-refire loop (observed live 2026-08-12: 30+ bulk calls/10s).
   private signFailureStreak = 0
   private signBackoffUntil = 0
+  // Multi-window queue partitioning (2026-08-12): the queue (IndexedDB) is
+  // shared by every window of the origin, but each window runs its OWN
+  // engine. Without a scope, two windows double-drive the same items (the
+  // original popout design paused the opener wholesale). A scope predicate
+  // restricts WHICH items this engine instance will pump/recover/poll — a
+  // project pop-out scopes to its project; the main window excludes projects
+  // that have live pop-outs. Terminal/UI reads are NOT scoped (every window
+  // may render everything); only the driving loops are.
+  private scope: (item: UploadItem) => boolean = () => true
+
+  /** Restrict which items this engine instance drives (see field note). */
+  setScope (predicate: ((item: UploadItem) => boolean) | undefined): void {
+    this.scope = predicate ?? (() => true)
+    this.kick()
+  }
+
+  private async listScoped (states: UploadItemState[]): Promise<UploadItem[]> {
+    return (await this.store.list(states)).filter(this.scope)
+  }
   private readonly abortControllers = new Map<string, AbortController>()
 
   constructor (
@@ -152,7 +171,7 @@ export class UploadEngine {
    * Returns the number released.
    */
   async startStaged (ids?: string[]): Promise<number> {
-    const staged = await this.store.list(['staged'])
+    const staged = await this.listScoped(['staged'])
     const idSet = ids === undefined ? undefined : new Set(ids)
     let released = 0
     for (const item of staged) {
@@ -246,7 +265,7 @@ export class UploadEngine {
    * calling it mid-run is safe. Returns the number of items recovered.
    */
   async recoverStalled (): Promise<number> {
-    const stranded = await this.store.list(['uploading', 'signing', 'preparing'])
+    const stranded = await this.listScoped(['uploading', 'signing', 'preparing'])
     let recovered = 0
     for (const item of stranded) {
       if (this.abortControllers.has(item.id)) continue
@@ -395,7 +414,7 @@ export class UploadEngine {
     }
     await this.emitStats()
     // Keep pumping while there is actionable work.
-    const items = await this.store.list(['queued', 'ready', 'signed'])
+    const items = await this.listScoped(['queued', 'ready', 'signed'])
     if (
       items.length > 0 &&
       (this.activePrepares < this.config.maxConcurrentPrepares ||
@@ -408,7 +427,7 @@ export class UploadEngine {
 
   private async pumpPrepares (): Promise<void> {
     while (this.activePrepares < this.config.maxConcurrentPrepares) {
-      const [next] = await this.store.list(['queued'])
+      const [next] = await this.listScoped(['queued'])
       if (next === undefined) return
       const item = await this.update(next, { state: 'preparing' })
       this.activePrepares++
@@ -473,7 +492,7 @@ export class UploadEngine {
   private async pumpSigning (): Promise<void> {
     if (this.signingInFlight) return
     if (Date.now() < this.signBackoffUntil) return // batch-failure backoff
-    const readyAll = await this.store.list(['ready'])
+    const readyAll = await this.listScoped(['ready'])
     // Large files take the multipart path (individually signed).
     const readyMultipart = readyAll.filter(item => item.fileSizeBytes >= this.config.multipartThresholdBytes)
     for (const item of readyMultipart) {
@@ -481,7 +500,7 @@ export class UploadEngine {
     }
     const ready = readyAll.filter(item => item.fileSizeBytes < this.config.multipartThresholdBytes)
     // Also re-sign stale signed URLs.
-    const signed = await this.store.list(['signed'])
+    const signed = await this.listScoped(['signed'])
     const stale = signed.filter(
       item =>
         item.signedAtMs !== undefined &&
@@ -497,7 +516,7 @@ export class UploadEngine {
     // guarantees progress — when it fires we sign whatever we have.
     if (!this.signFlushForced && batch.length < this.config.signBatchSize) {
       const feeding = this.activePrepares > 0 ||
-        (await this.store.list(['queued', 'preparing'])).length > 0
+        (await this.listScoped(['queued', 'preparing'])).length > 0
       if (feeding) {
         if (this.signFlushTimer === undefined) {
           this.signFlushTimer = setTimeout(() => {
@@ -573,7 +592,7 @@ export class UploadEngine {
       // Whole-batch failure (auth/network/5xx): return items to ready, with
       // exponential backoff before the next attempt (same curve as uploads).
       const message = err instanceof Error ? err.message : String(err)
-      const signingItems = await this.store.list(['signing'])
+      const signingItems = await this.listScoped(['signing'])
       for (const item of signingItems) {
         await this.update(item, { state: 'ready' })
       }
@@ -592,7 +611,7 @@ export class UploadEngine {
 
   private async pumpUploads (): Promise<void> {
     while (this.activeUploads < this.config.maxConcurrentUploads) {
-      const signed = await this.store.list(['signed'])
+      const signed = await this.listScoped(['signed'])
       const next = signed.find(item => !this.abortControllers.has(item.id))
       if (next === undefined) return
       const item = await this.update(next, { state: 'uploading', progress: 0, uploadStartedAtMs: Date.now(), uploadEndedAtMs: undefined })
@@ -810,7 +829,7 @@ export class UploadEngine {
   }
 
   private async pollStatuses (): Promise<void> {
-    const uploaded = await this.store.list(['uploaded'])
+    const uploaded = await this.listScoped(['uploaded'])
     if (uploaded.length === 0) return
     const withIds = uploaded.filter(item => item.uploadId !== undefined)
     for (
@@ -843,7 +862,7 @@ export class UploadEngine {
       }
     }
     await this.emitStats()
-    const remaining = await this.store.list(['uploaded'])
+    const remaining = await this.listScoped(['uploaded'])
     if (remaining.length > 0) this.scheduleStatusPoll()
   }
 

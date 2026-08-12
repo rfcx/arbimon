@@ -23,6 +23,8 @@ export const createUploadItem = (params: {
   relativePath: string
   fileSizeBytes: number
   streamId: string
+  /** Owning project (multi-window queue partitioning). */
+  projectSlug?: string
   /** 'queued' = legacy direct-enqueue; 'analyzing' = staged intake. */
   initialState?: 'queued' | 'analyzing'
 }): UploadItem => ({
@@ -34,6 +36,7 @@ export const createUploadItem = (params: {
     : '',
   fileSizeBytes: params.fileSizeBytes,
   streamId: params.streamId,
+  projectSlug: params.projectSlug,
   state: params.initialState ?? 'queued',
   attempts: 0,
   createdAtMs: Date.now(),

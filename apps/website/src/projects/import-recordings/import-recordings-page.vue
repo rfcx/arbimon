@@ -5,6 +5,12 @@
         <h1 :class="isPopout ? 'text-2xl' : 'mt-6'">
           Import Recordings <span class="text-sm align-middle rounded bg-frequency/20 px-2 py-1 ml-2">BETA</span>
         </h1>
+        <p
+          v-if="projectName !== undefined"
+          class="text-base text-frequency mt-1 font-medium"
+        >
+          {{ projectName }}
+        </p>
         <p class="text-sm text-cloud mt-2">
           Upload audio directly from your browser. Files are analyzed locally first — review the list, then press Start.
         </p>
@@ -172,14 +178,14 @@
         @change="onPick"
       >
 
-      <!-- Aggregate progress -->
+      <!-- Aggregate progress (project-scoped) -->
       <div
-        v-if="stats.total > 0 && stats.bytesTotal > 0"
+        v-if="projectProgress.total > 0 && projectProgress.bytesTotal > 0"
         class="mt-4"
       >
         <div class="flex justify-between text-sm mb-1">
-          <span>{{ stats.ingested + stats.duplicate }} / {{ stats.total }} complete</span>
-          <span>{{ formatBytes(stats.bytesUploaded) }} / {{ formatBytes(stats.bytesTotal) }}</span>
+          <span>{{ projectProgress.done }} / {{ projectProgress.total }} complete</span>
+          <span>{{ formatBytes(projectProgress.bytesUploaded) }} / {{ formatBytes(projectProgress.bytesTotal) }}</span>
         </div>
         <div class="h-2 rounded bg-cloud/20 overflow-hidden">
           <div
@@ -199,7 +205,7 @@
         @drop.prevent="onDrop"
       >
         <staging-table
-          :items="items"
+          :items="projectItems"
           :opening-id="openingVisualizerId"
           :flac-enabled="flacEncodeEnabled"
           :drop-active="dropActive"
@@ -245,7 +251,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { apiArbimonResolveRecordingId } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
@@ -256,14 +262,21 @@ import StagingTable from '@/_components/upload-panel/staging-table.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { track } from '~/analytics'
 import { useStore } from '~/store'
-import { bindProjectMetrics, currentRateBps, engine, engineRunning, fileSource, flacEncodeEnabled, items, projectMetrics, refreshItems, stats } from '~/upload'
+import { bindProjectMetrics, currentRateBps, engine, engineRunning, fileSource, flacEncodeEnabled, items, livePopouts, projectMetrics, refreshItems, registerAsPopout, requestFileHandles } from '~/upload'
 
 const route = useRoute()
 const store = useStore()
 const apiClientArbimon = inject(apiClientArbimonLegacyKey)
 
 const projectSlug = computed(() => route.params.projectSlug as string)
+const projectName = computed(() => store.project?.name)
 const isProjectViewOnly = computed(() => store.project?.isLocked === true)
+
+// The shared queue holds EVERY project's items; this page shows only its own.
+// (Legacy items with no projectSlug — pre-partitioning — show everywhere
+// rather than nowhere.)
+const projectItems = computed(() =>
+  items.value.filter(item => item.projectSlug === undefined || item.projectSlug === projectSlug.value))
 const isPopout = computed(() => route.query.popout === '1')
 
 // -- sites + timezone --------------------------------------------------------
@@ -353,6 +366,7 @@ const enqueueFiles = async (files: Array<{ file: File, relativePath: string }>):
       relativePath,
       fileSizeBytes: file.size,
       streamId: selectedSiteExternalId.value,
+      projectSlug: projectSlug.value,
       initialState: 'analyzing'
     })
     fileSource.register(item.id, file)
@@ -409,11 +423,11 @@ const onPick = async (event: Event): Promise<void> => {
 // -- global Start / Pause -----------------------------------------------------
 
 const activePipeline = computed(() =>
-  stats.value.queued + stats.value.preparing + stats.value.ready +
-  stats.value.signing + stats.value.signed + stats.value.uploading + stats.value.uploaded)
+  projectItems.value.filter(item =>
+    ['queued', 'preparing', 'ready', 'signing', 'signed', 'uploading', 'uploaded'].includes(item.state)).length)
 
 const startableCount = computed(() =>
-  items.value.filter(item => item.state === 'staged' && item.analysisError === undefined).length)
+  projectItems.value.filter(item => item.state === 'staged' && item.analysisError === undefined).length)
 
 /** 'pause' while work is flowing, 'start' when there is something to start,
  *  'inert' when nothing is actionable (all visible rows settled). */
@@ -443,7 +457,13 @@ const onStartPause = async (): Promise<void> => {
     await engine.pause()
     return
   }
-  if (startableCount.value > 0) await engine.startStaged()
+  if (startableCount.value > 0) {
+    await engine.startStaged(
+      projectItems.value
+        .filter(item => item.state === 'staged' && item.analysisError === undefined)
+        .map(item => item.id)
+    )
+  }
   engine.start()
   await refreshItems()
 }
@@ -451,14 +471,14 @@ const onStartPause = async (): Promise<void> => {
 // -- table actions ------------------------------------------------------------
 
 const clearCompleted = async (): Promise<void> => {
-  for (const item of items.value.filter(i => i.state === 'ingested' || i.state === 'duplicate')) {
+  for (const item of projectItems.value.filter(i => i.state === 'ingested' || i.state === 'duplicate')) {
     await engine.remove(item.id)
   }
   await refreshItems()
 }
 
 const retryFailed = async (): Promise<void> => {
-  for (const item of items.value.filter(i => ['failed', 'rejected', 'cancelled'].includes(i.state))) {
+  for (const item of projectItems.value.filter(i => ['failed', 'rejected', 'cancelled'].includes(i.state))) {
     await engine.retry(item.id)
   }
   engine.start()
@@ -506,81 +526,52 @@ const openInVisualizer = async (item: UploadItem): Promise<void> => {
   }
 }
 
-// -- pop-out ------------------------------------------------------------------
-// One engine per window over the SAME IndexedDB queue: when a popped-out
-// window is active, THIS window pauses its engine and shows a banner
-// (double-driving the queue would double-upload). BroadcastChannel carries
-// the liveness signal.
+// -- pop-out (per-project; coordination lives in ~/upload) --------------------
+// Each project can have its OWN pop-out: unique window name per slug, and the
+// singleton's scope machinery partitions the queue — a pop-out drives only
+// its project's items while main windows drive the rest. No wholesale pause.
 
-const popoutActive = ref(false)
-const POPOUT_CHANNEL = 'arbimon-uploader-popout'
-let channel: BroadcastChannel | undefined
-let heartbeatTimer: ReturnType<typeof setInterval> | undefined
-let lastPopoutBeatMs = 0
-let watchdogTimer: ReturnType<typeof setInterval> | undefined
+const popoutActive = computed(() => livePopouts.value.has(projectSlug.value))
 
 const popOut = (): void => {
   const url = `${window.location.origin}/p/${projectSlug.value}/import-recordings?popout=1`
-  window.open(url, 'arbimon-uploader', 'popup=yes,width=1280,height=860')
+  window.open(url, `arbimon-uploader-${projectSlug.value}`, 'popup=yes,width=1280,height=860')
 }
 
 const closePopout = (): void => {
   // window.close() works because the pop-out was opened by script (same
-  // origin, named window). The opener's 5s heartbeat watchdog then clears
-  // its dormant banner and resumes engine control automatically.
+  // origin, named window). Openers notice the heartbeat stop within ~5s,
+  // clear the banner, and resume driving this project's items.
   window.close()
 }
 
 onMounted(() => {
-  if (typeof BroadcastChannel === 'undefined') return
-  channel = new BroadcastChannel(POPOUT_CHANNEL)
   if (isPopout.value) {
-    // I am the pop-out: announce liveness every 2s; adopt file handles the
-    // opener transfers (File is structured-cloneable, so handles survive
-    // the channel — without this, staged items would have no bytes here).
-    channel.onmessage = (event) => {
-      if (event.data?.type === 'file-handles') {
-        for (const [id, file] of event.data.entries as Array<[string, File]>) {
-          fileSource.inner.register(id, file)
-        }
-        void refreshItems()
-      }
-    }
-    heartbeatTimer = setInterval(() => { channel?.postMessage({ type: 'popout-beat' }) }, 2000)
-    channel.postMessage({ type: 'popout-beat' })
-  } else {
-    // I am a normal page: dormant while a pop-out beats (last beat < 5s ago).
-    channel.onmessage = (event) => {
-      if (event.data?.type === 'popout-beat') {
-        lastPopoutBeatMs = Date.now()
-        if (!popoutActive.value) {
-          popoutActive.value = true
-          void engine.pause()
-          // hand the pop-out our file handles so it can drive the queue
-          try {
-            channel?.postMessage({ type: 'file-handles', entries: fileSource.inner.entries() })
-          } catch { /* very large registries may exceed clone limits — the popout will surface missing handles per-item */ }
-        }
-      }
-    }
-    watchdogTimer = setInterval(() => {
-      if (popoutActive.value && Date.now() - lastPopoutBeatMs > 5000) {
-        popoutActive.value = false // pop-out closed; this window may drive again
-      }
-    }, 2000)
+    registerAsPopout(projectSlug.value)
+    requestFileHandles(projectSlug.value)
   }
-})
-
-onBeforeUnmount(() => {
-  if (heartbeatTimer !== undefined) clearInterval(heartbeatTimer)
-  if (watchdogTimer !== undefined) clearInterval(watchdogTimer)
-  channel?.close()
 })
 
 // -- display helpers ----------------------------------------------------------
 
+const projectProgress = computed(() => {
+  let bytesTotal = 0
+  let bytesUploaded = 0
+  let done = 0
+  for (const item of projectItems.value) {
+    bytesTotal += item.fileSizeBytes
+    if (item.state === 'uploaded' || item.state === 'ingested' || item.state === 'duplicate') {
+      bytesUploaded += item.fileSizeBytes
+    } else if (item.state === 'uploading' && item.progress !== undefined) {
+      bytesUploaded += Math.floor(item.fileSizeBytes * item.progress)
+    }
+    if (item.state === 'ingested' || item.state === 'duplicate') done++
+  }
+  return { total: projectItems.value.length, done, bytesTotal, bytesUploaded }
+})
+
 const overallPercent = computed(() =>
-  stats.value.bytesTotal === 0 ? 0 : Math.round((stats.value.bytesUploaded / stats.value.bytesTotal) * 100))
+  projectProgress.value.bytesTotal === 0 ? 0 : Math.round((projectProgress.value.bytesUploaded / projectProgress.value.bytesTotal) * 100))
 
 const formatBytes = (bytes: number): string => {
   if (bytes < 1024) return `${bytes} B`
