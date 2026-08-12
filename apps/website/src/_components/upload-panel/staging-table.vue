@@ -48,20 +48,20 @@
       </div>
       <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
         <button
+          v-if="clearableCount > 0"
           class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
-          :disabled="groupCounts.completed === 0 && groupCounts.duplicate === 0"
           @click="$emit('clearCompleted')"
         >
           <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
-          Clear Completed
+          Clear Completed ({{ clearableCount }})
         </button>
         <button
+          v-if="retryableCount > 0"
           class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
-          :disabled="groupCounts.failed === 0 && groupCounts.cancelled === 0"
           @click="$emit('retryFailed')"
         >
           <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="1.8"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          Retry Failed
+          Retry Failed ({{ retryableCount }})
         </button>
       </div>
     </div>
@@ -283,6 +283,14 @@ const groupCounts = computed<Partial<Record<FilterGroup, number>>>(() => {
 
 const visible = computed(() =>
   props.items.filter(item => !hiddenGroups.value.includes(groupOf(item))))
+
+/** Rows the standing buttons would act on (count shown in the label;
+ * button hidden entirely at 0 — operator UI pass 2). */
+const clearableCount = computed(() =>
+  props.items.filter(item => item.state === 'ingested' || item.state === 'duplicate').length)
+
+const retryableCount = computed(() =>
+  props.items.filter(item => ['failed', 'rejected', 'cancelled'].includes(item.state)).length)
 
 // -- sorting ------------------------------------------------------------------
 

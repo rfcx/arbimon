@@ -36,11 +36,12 @@
     <template v-else>
       <!-- Site + timezone + options -->
       <div class="mt-6 flex flex-wrap gap-x-6 gap-y-3 items-end">
-        <div>
+        <div class="relative">
           <label class="block text-sm mb-1">Site</label>
           <select
             v-model="selectedSiteExternalId"
-            class="rounded border-cloud/30 bg-pitch text-insight px-3 py-2 min-w-64"
+            class="rounded border-cloud/30 bg-pitch text-insight px-3 py-2 min-w-64 transition-shadow duration-300"
+            :class="siteFlash ? 'ring-2 ring-flamingo/80 shadow-lg shadow-flamingo/20' : ''"
           >
             <option
               disabled
@@ -56,6 +57,15 @@
               {{ site.name }}
             </option>
           </select>
+          <!-- floating "select a site first" callout, anchored to the selector -->
+          <div
+            v-if="siteCalloutVisible"
+            class="absolute left-0 top-full mt-2 z-40 w-64 rounded-lg border border-flamingo/40 bg-pitch shadow-xl px-3 py-2 text-sm"
+          >
+            <div class="absolute -top-1.5 left-6 w-3 h-3 rotate-45 bg-pitch border-l border-t border-flamingo/40" />
+            <span class="text-flamingo">Select a site first</span>
+            <span class="text-cloud"> — files need a destination site before they can be analyzed.</span>
+          </div>
         </div>
         <div>
           <label class="block text-sm mb-1">Timezone of Audio Recordings</label>
@@ -103,7 +113,6 @@
         </p>
         <button
           class="btn btn-secondary mt-4"
-          :disabled="selectedSiteExternalId === ''"
           @click="pickFiles"
         >
           Or choose files…
@@ -118,9 +127,9 @@
         >
         <p
           v-if="selectedSiteExternalId === ''"
-          class="text-sm text-flamingo mt-3"
+          class="text-sm text-cloud mt-3"
         >
-          Select a site first.
+          Select a site above to enable analysis.
         </p>
       </div>
 
@@ -269,13 +278,36 @@ onMounted(async () => {
   await refreshItems()
 })
 
+// -- site-required guidance (flash + callout) ---------------------------------
+
+const siteFlash = ref(false)
+const siteCalloutVisible = ref(false)
+let calloutTimer: ReturnType<typeof setTimeout> | undefined
+
+const promptForSite = (): void => {
+  // undramatic: one brief ring pulse on the selector + a small anchored
+  // callout that self-dismisses (or dismisses on site selection)
+  siteFlash.value = true
+  setTimeout(() => { siteFlash.value = false }, 1200)
+  siteCalloutVisible.value = true
+  if (calloutTimer !== undefined) clearTimeout(calloutTimer)
+  calloutTimer = setTimeout(() => { siteCalloutVisible.value = false }, 6000)
+}
+
+watch(selectedSiteExternalId, (value) => {
+  if (value !== '') {
+    siteCalloutVisible.value = false
+    if (calloutTimer !== undefined) clearTimeout(calloutTimer)
+  }
+})
+
 // -- staged intake ------------------------------------------------------------
 
 const dropActive = ref(false)
 const fileInput = ref<HTMLInputElement>()
 
 const enqueueFiles = async (files: Array<{ file: File, relativePath: string }>): Promise<void> => {
-  if (selectedSiteExternalId.value === '') return
+  if (selectedSiteExternalId.value === '') { promptForSite(); return }
   const accepted = files.filter(({ file }) => isSupportedAudioFile(file.name))
   const pairs = accepted.map(({ file, relativePath }) => {
     const item = createUploadItem({
@@ -323,7 +355,10 @@ const onDrop = async (event: DragEvent): Promise<void> => {
   await enqueueFiles(await collectDroppedFiles(event.dataTransfer))
 }
 
-const pickFiles = (): void => { fileInput.value?.click() }
+const pickFiles = (): void => {
+  if (selectedSiteExternalId.value === '') { promptForSite(); return }
+  fileInput.value?.click()
+}
 
 const onPick = async (event: Event): Promise<void> => {
   const input = event.target as HTMLInputElement
