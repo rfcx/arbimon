@@ -403,16 +403,22 @@ const zoneCol = (item: UploadItem): string => {
     const [, sign, hh, mm] = offsetMatch
     return `UTC${sign}${parseInt(hh)}${mm !== '00' ? `:${mm}` : ''}`
   }
-  // IANA zone name → offset at the recording instant
-  try {
-    const at = item.timestampUtc !== undefined ? new Date(item.timestampUtc) : new Date()
-    // 'shortOffset' postdates this repo's TS lib — runtime-supported in all
-    // target browsers; cast keeps vue-tsc green.
-    const part = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'shortOffset' } as Intl.DateTimeFormatOptions)
-      .formatToParts(at).find(p => p.type === 'timeZoneName')?.value
-    // "GMT-5" / "GMT+5:30" / "GMT" → UTC form
-    if (part !== undefined) return part.replace('GMT', 'UTC') === 'UTC' ? 'UTC' : part.replace('GMT', 'UTC')
-  } catch { /* fall through */ }
+  // IANA zone name → offset AT the recording instant, derived from the data
+  // we already carry: offset = localWallTime − timestampUtc. DST-correct by
+  // construction and needs no Intl lib support.
+  if (item.localWallTime !== undefined && item.timestampUtc !== undefined) {
+    const wall = Date.parse(`${item.localWallTime}Z`)
+    const utc = Date.parse(item.timestampUtc)
+    if (!isNaN(wall) && !isNaN(utc)) {
+      const offsetMin = Math.round((wall - utc) / 60_000)
+      if (offsetMin === 0) return 'UTC'
+      const sign = offsetMin < 0 ? '-' : '+'
+      const abs = Math.abs(offsetMin)
+      const hours = Math.floor(abs / 60)
+      const mins = abs % 60
+      return `UTC${sign}${hours}${mins !== 0 ? `:${String(mins).padStart(2, '0')}` : ''}`
+    }
+  }
   return tz
 }
 
