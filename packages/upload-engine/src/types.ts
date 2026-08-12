@@ -234,6 +234,9 @@ export interface UploadEngineConfig {
   maxConcurrentPrepares?: number
   /** Items per /uploads/bulk call (server cap 100). Default 100. */
   signBatchSize?: number
+  /** Coalescing window before signing a PARTIAL batch while prepares are
+   * still feeding (ms). Bigger batches = fewer round trips. Default 750. */
+  signCoalesceMs?: number
   /** Items per /uploads/status call (server cap 100). Default 100. */
   statusBatchSize?: number
   /** Max upload attempts per item before terminal failure. Default 5. */

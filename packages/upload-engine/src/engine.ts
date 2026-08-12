@@ -24,6 +24,7 @@ const DEFAULTS = {
   maxConcurrentUploads: 4,
   maxConcurrentPrepares: 2,
   signBatchSize: 100,
+  signCoalesceMs: 750,
   statusBatchSize: 100,
   maxAttempts: 5,
   retryBaseDelayMs: 2000,
@@ -83,6 +84,13 @@ export class UploadEngine {
   private activeUploads = 0
   private activePrepares = 0
   private signingInFlight = false
+  // Sign-coalescing (2026-08-12): without it, prepares trickle items to
+  // `ready` 1-2 at a time and every pump fires a tiny /uploads/bulk call —
+  // a 100-file batch became ~50 SERIAL round trips (the "Waiting for URL"
+  // bottleneck). We hold signing for a short flush window while more items
+  // are clearly coming, then send one big batch.
+  private signFlushTimer: ReturnType<typeof setTimeout> | undefined
+  private signFlushForced = false
   private readonly abortControllers = new Map<string, AbortController>()
 
   constructor (
@@ -477,12 +485,38 @@ export class UploadEngine {
     const batch = [...ready, ...stale].slice(0, this.config.signBatchSize)
     if (batch.length === 0) return
 
+    // COALESCE: if the batch isn't full and the prepare pool is still
+    // feeding (queued/preparing items exist), wait signCoalesceMs for more
+    // to accumulate instead of burning a round trip on 1-2 items. The timer
+    // guarantees progress — when it fires we sign whatever we have.
+    if (!this.signFlushForced && batch.length < this.config.signBatchSize) {
+      const feeding = this.activePrepares > 0 ||
+        (await this.store.list(['queued', 'preparing'])).length > 0
+      if (feeding) {
+        if (this.signFlushTimer === undefined) {
+          this.signFlushTimer = setTimeout(() => {
+            this.signFlushTimer = undefined
+            this.signFlushForced = true
+            this.kick()
+          }, this.config.signCoalesceMs)
+        }
+        return
+      }
+    }
+    this.signFlushForced = false
+    if (this.signFlushTimer !== undefined) {
+      clearTimeout(this.signFlushTimer)
+      this.signFlushTimer = undefined
+    }
+
     this.signingInFlight = true
     try {
-      const marked: UploadItem[] = []
-      for (const item of batch) {
-        marked.push(await this.update(item, { state: 'signing' }))
-      }
+      // Mark the whole batch `signing` in ONE store write (100 sequential
+      // awaits added real latency before the request even fired).
+      const now = Date.now()
+      const marked: UploadItem[] = batch.map(item => ({ ...item, state: 'signing' as const, updatedAtMs: now }))
+      await this.store.putMany(marked)
+      for (const item of marked) this.emit({ type: 'item-updated', item })
       const request: BulkSignRequestItem[] = marked.map(item => ({
         filename: item.filename,
         timestamp: item.timestampUtc as string,
