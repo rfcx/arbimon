@@ -11,11 +11,17 @@
       </div>
       <button
         v-if="!isPopout"
-        class="btn btn-secondary text-sm mt-6 whitespace-nowrap"
+        class="btn btn-secondary text-sm mt-6 whitespace-nowrap inline-flex items-center gap-x-2"
         title="Open the uploader in its own window"
         @click="popOut"
       >
-        ⧉ Pop out
+        Pop-Out in New Window
+        <!-- Material Symbols "open in new" (the Gmail pop-out glyph);
+             -960-based viewBox per the Material icon coordinate system -->
+        <svg
+          viewBox="0 -960 960 960"
+          class="w-4 h-4 fill-current"
+        ><path d="M216-144q-29.7 0-50.85-21.15T144-216v-528q0-29.7 21.15-50.85T216-816h264v72H216v528h528v-264h72v264q0 29.7-21.15 50.85T744-144H216Zm171-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z" /></svg>
       </button>
       <button
         v-else
