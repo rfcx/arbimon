@@ -124,32 +124,54 @@
         </p>
       </div>
 
-      <!-- Global control bar: Start/Pause + metrics -->
+      <!-- Global control bar: Start/Pause + Grafana-style stat panels, full width -->
       <div
         v-if="items.length > 0 || metrics.bytesTransferred > 0"
-        class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3"
+        class="mt-6 flex items-stretch gap-x-3 w-full"
       >
         <button
-          class="btn text-base px-8 py-2.5 font-medium"
+          class="shrink-0 rounded-lg px-6 font-medium text-base inline-flex flex-col items-center justify-center gap-y-1 min-w-28 transition-colors"
           :class="startPauseClass"
           :disabled="startPauseDisabled"
           @click="onStartPause"
         >
-          {{ startPauseLabel }}
+          <svg
+            v-if="buttonMode === 'pause'"
+            viewBox="0 0 16 16"
+            class="w-5 h-5 fill-current"
+          ><path d="M4 2h3v12H4zM9 2h3v12H9z" /></svg>
+          <svg
+            v-else
+            viewBox="0 0 16 16"
+            class="w-5 h-5 fill-current"
+          ><path d="M4 2l9 6-9 6V2z" /></svg>
+          <span>{{ startPauseLabel }}</span>
         </button>
 
-        <div class="flex flex-wrap gap-x-6 gap-y-1 text-sm">
-          <span>
-            <span class="text-cloud">Current rate:</span>
-            <span class="tabular-nums ml-1">{{ formatRate(currentRateBps) }}</span>
-          </span>
-          <span>
-            <span class="text-cloud">Transferred (this project):</span>
-            <span class="tabular-nums ml-1">{{ formatBytes(metrics.bytesTransferred) }}</span>
-          </span>
-          <span class="text-frequency tabular-nums">✓ {{ metrics.completed }}</span>
-          <span class="text-flamingo tabular-nums">✗ {{ metrics.failed }}</span>
-          <span class="text-cloud tabular-nums">⧉ {{ metrics.duplicates }} duplicates</span>
+        <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Upload Rate</span>
+            <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
+          </div>
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Uploaded</span>
+            <span class="text-xl tabular-nums font-medium">{{ formatBytes(metrics.bytesTransferred) }}</span>
+          </div>
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Imported</span>
+            <span class="text-xl tabular-nums font-medium text-frequency">{{ metrics.completed }}</span>
+          </div>
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Errors</span>
+            <span
+              class="text-xl tabular-nums font-medium"
+              :class="metrics.failed > 0 ? 'text-flamingo' : ''"
+            >{{ metrics.failed }}</span>
+          </div>
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Duplicates</span>
+            <span class="text-xl tabular-nums font-medium">{{ metrics.duplicates }}</span>
+          </div>
         </div>
       </div>
 
@@ -176,11 +198,9 @@
         :opening-id="openingVisualizerId"
         :flac-enabled="flacEncodeEnabled"
         @clear-completed="clearCompleted"
-        @clear-failed="clearFailed"
         @retry-failed="retryFailed"
         @start-selected="startSelected"
-        @cancel-selected="cancelSelected"
-        @retry-selected="retrySelected"
+        @pause-selected="pauseSelected"
         @clear-selected="clearSelected"
         @cancel-item="cancelItem"
         @retry-item="retryItem"
@@ -321,18 +341,28 @@ const activePipeline = computed(() =>
 const startableCount = computed(() =>
   items.value.filter(item => item.state === 'staged' && item.analysisError === undefined).length)
 
-const startPauseLabel = computed(() => {
-  if (engineRunning.value && activePipeline.value > 0) return '⏸ Pause'
-  if (startableCount.value > 0) return `▶ Start (${startableCount.value})`
-  if (activePipeline.value > 0) return '▶ Resume'
-  return 'Paused'
+/** 'pause' while work is flowing, 'start' when there is something to start,
+ *  'inert' when nothing is actionable (all visible rows settled). */
+const buttonMode = computed(() => {
+  if (engineRunning.value && activePipeline.value > 0) return 'pause'
+  if (startableCount.value > 0 || activePipeline.value > 0) return 'start'
+  return 'inert'
 })
 
-const startPauseDisabled = computed(() =>
-  !engineRunning.value && startableCount.value === 0 && activePipeline.value === 0)
+const startPauseLabel = computed(() => {
+  if (buttonMode.value === 'pause') return 'Pause'
+  if (startableCount.value > 0) return `Start (${startableCount.value})`
+  if (activePipeline.value > 0) return 'Resume'
+  return 'Idle'
+})
 
-const startPauseClass = computed(() =>
-  engineRunning.value && activePipeline.value > 0 ? 'btn-secondary' : 'btn-primary')
+const startPauseDisabled = computed(() => buttonMode.value === 'inert')
+
+const startPauseClass = computed(() => {
+  if (buttonMode.value === 'inert') return 'border border-cloud/20 bg-moss/20 text-cloud/50 cursor-default'
+  if (buttonMode.value === 'pause') return 'btn-secondary'
+  return 'btn-primary'
+})
 
 const onStartPause = async (): Promise<void> => {
   if (engineRunning.value && activePipeline.value > 0) {
@@ -353,13 +383,6 @@ const clearCompleted = async (): Promise<void> => {
   await refreshItems()
 }
 
-const clearFailed = async (): Promise<void> => {
-  for (const item of items.value.filter(i => ['failed', 'rejected', 'cancelled'].includes(i.state))) {
-    await engine.remove(item.id)
-  }
-  await refreshItems()
-}
-
 const retryFailed = async (): Promise<void> => {
   for (const item of items.value.filter(i => ['failed', 'rejected', 'cancelled'].includes(i.state))) {
     await engine.retry(item.id)
@@ -374,14 +397,8 @@ const startSelected = async (ids: string[]): Promise<void> => {
   await refreshItems()
 }
 
-const cancelSelected = async (ids: string[]): Promise<void> => {
-  for (const id of ids) await engine.cancel(id)
-  await refreshItems()
-}
-
-const retrySelected = async (ids: string[]): Promise<void> => {
-  for (const id of ids) await engine.retry(id)
-  engine.start()
+const pauseSelected = async (ids: string[]): Promise<void> => {
+  await engine.pauseItems(ids)
   await refreshItems()
 }
 

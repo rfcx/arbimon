@@ -18,56 +18,52 @@
       </label>
     </div>
 
-    <!-- Standing + bulk actions -->
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-2 mt-3">
-      <button
-        class="btn btn-secondary text-sm"
-        :disabled="groupCounts.completed === 0 && groupCounts.duplicate === 0"
-        @click="$emit('clearCompleted')"
-      >
-        Clear Completed
-      </button>
-      <button
-        class="btn btn-secondary text-sm"
-        :disabled="groupCounts.failed === 0 && groupCounts.cancelled === 0"
-        @click="$emit('clearFailed')"
-      >
-        Clear Failed
-      </button>
-      <button
-        class="btn btn-secondary text-sm"
-        :disabled="groupCounts.failed === 0 && groupCounts.cancelled === 0"
-        @click="$emit('retryFailed')"
-      >
-        Retry Failed
-      </button>
-      <template v-if="selectedIds.size > 0">
-        <span class="text-sm text-cloud ml-2">{{ selectedIds.size }} selected:</span>
+    <!-- Actions row: selection actions LEFT, standing actions RIGHT -->
+    <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mt-3">
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <template v-if="selectedIds.size > 0">
+          <span class="text-sm text-cloud">{{ selectedIds.size }} selected:</span>
+          <button
+            class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
+            @click="emitSelected('startSelected')"
+          >
+            <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M4 2l9 6-9 6V2z" /></svg>
+            Start
+          </button>
+          <button
+            class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
+            @click="emitSelected('pauseSelected')"
+          >
+            <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M4 2h3v12H4zM9 2h3v12H9z" /></svg>
+            Pause
+          </button>
+          <button
+            class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
+            @click="emitSelected('clearSelected')"
+          >
+            <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
+            Remove
+          </button>
+        </template>
+      </div>
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
         <button
-          class="btn btn-secondary text-sm"
-          @click="emitSelected('startSelected')"
+          class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
+          :disabled="groupCounts.completed === 0 && groupCounts.duplicate === 0"
+          @click="$emit('clearCompleted')"
         >
-          Start
+          <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
+          Clear Completed
         </button>
         <button
-          class="btn btn-secondary text-sm"
-          @click="emitSelected('cancelSelected')"
+          class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
+          :disabled="groupCounts.failed === 0 && groupCounts.cancelled === 0"
+          @click="$emit('retryFailed')"
         >
-          Cancel
+          <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="1.8"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          Retry Failed
         </button>
-        <button
-          class="btn btn-secondary text-sm"
-          @click="emitSelected('retrySelected')"
-        >
-          Retry
-        </button>
-        <button
-          class="btn btn-secondary text-sm"
-          @click="emitSelected('clearSelected')"
-        >
-          Clear
-        </button>
-      </template>
+      </div>
     </div>
 
     <!-- The table -->
@@ -95,7 +91,7 @@
                 class="text-frequency"
               >{{ sortAsc ? '▲' : '▼' }}</span>
             </th>
-            <th class="px-2 py-2 w-24" />
+            <th class="px-2 py-2 w-20" />
           </tr>
         </thead>
         <tbody>
@@ -115,20 +111,14 @@
             </td>
             <td
               class="px-2 py-1.5 max-w-56 truncate"
-              :title="item.filename"
+              :title="item.relativePath"
             >
               {{ displayFilename(item) }}
             </td>
             <td class="px-2 py-1.5">{{ item.siteName ?? item.streamId }}</td>
-            <td
-              class="px-2 py-1.5 max-w-40 truncate text-cloud"
-              :title="item.directory"
-            >
-              {{ item.directory === '' ? '—' : item.directory }}
-            </td>
             <td class="px-2 py-1.5">{{ recDate(item) }}</td>
             <td class="px-2 py-1.5">{{ recTime(item) }}</td>
-            <td class="px-2 py-1.5">{{ item.timezoneName ?? '—' }}</td>
+            <td class="px-2 py-1.5">{{ zoneCol(item) }}</td>
             <td class="px-2 py-1.5 text-cloud">{{ tzSourceLabel(item) }}</td>
             <td class="px-2 py-1.5">{{ formatCol(item) }}</td>
             <td class="px-2 py-1.5 tabular-nums">{{ lengthCol(item) }}</td>
@@ -160,48 +150,47 @@
               >—</span>
             </td>
             <td class="px-2 py-1.5 tabular-nums text-cloud">{{ rateCol(item) }}</td>
-            <td class="px-2 py-1.5 text-center">
-              <button
-                v-if="item.state === 'ingested'"
-                class="text-frequency hover:text-frequency/70"
-                :disabled="openingId === item.id"
-                title="Open this recording in the Visualizer (new tab)"
-                @click="$emit('openDestination', item)"
-              >
-                <span v-if="openingId === item.id">…</span>
-                <span v-else>↗</span>
-              </button>
-              <span
-                v-else
-                class="text-cloud/40"
-              >—</span>
-            </td>
             <td class="px-2 py-1.5">
-              <div class="flex items-center gap-x-1 justify-end">
+              <div class="flex items-center gap-x-1.5 justify-end">
+                <button
+                  v-if="item.state === 'ingested'"
+                  class="text-cloud hover:text-frequency disabled:opacity-40"
+                  :disabled="openingId === item.id"
+                  title="Open this recording in the Visualizer (new tab)"
+                  @click="$emit('openDestination', item)"
+                >
+                  <svg viewBox="0 0 16 16" class="w-4 h-4 fill-none stroke-current" stroke-width="1.6"><path d="M6.5 3.5H3v9h9V9.5M9.5 2.5h4v4M13 3L7.5 8.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                </button>
                 <button
                   v-if="canCancel(item)"
-                  class="px-1 text-cloud hover:text-flamingo"
+                  class="text-cloud hover:text-flamingo"
                   title="Cancel"
                   @click="$emit('cancelItem', item.id)"
-                >✕</button>
+                >
+                  <svg viewBox="0 0 16 16" class="w-4 h-4 fill-none stroke-current" stroke-width="1.8"><path d="M4 4l8 8M12 4l-8 8" stroke-linecap="round" /></svg>
+                </button>
                 <button
                   v-if="canRetry(item)"
-                  class="px-1 text-cloud hover:text-frequency"
+                  class="text-cloud hover:text-frequency"
                   title="Retry"
                   @click="$emit('retryItem', item.id)"
-                >↻</button>
+                >
+                  <svg viewBox="0 0 16 16" class="w-4 h-4 fill-none stroke-current" stroke-width="1.8"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                </button>
                 <button
                   v-if="canClear(item)"
-                  class="px-1 text-cloud hover:text-insight"
-                  title="Clear from list"
+                  class="text-cloud hover:text-insight"
+                  title="Remove from list"
                   @click="$emit('clearItem', item.id)"
-                >🗑</button>
+                >
+                  <svg viewBox="0 0 16 16" class="w-4 h-4 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
+                </button>
               </div>
             </td>
           </tr>
           <tr v-if="visibleSorted.length === 0">
             <td
-              :colspan="COLUMNS.length + 3"
+              :colspan="COLUMNS.length + 2"
               class="px-4 py-6 text-center text-cloud"
             >
               {{ items.length === 0 ? 'No files yet — drop some above.' : 'All rows hidden by the filters.' }}
@@ -228,11 +217,9 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'clearCompleted'): void
-  (e: 'clearFailed'): void
   (e: 'retryFailed'): void
   (e: 'startSelected', ids: string[]): void
-  (e: 'cancelSelected', ids: string[]): void
-  (e: 'retrySelected', ids: string[]): void
+  (e: 'pauseSelected', ids: string[]): void
   (e: 'clearSelected', ids: string[]): void
   (e: 'cancelItem', id: string): void
   (e: 'retryItem', id: string): void
@@ -302,17 +289,15 @@ const visible = computed(() =>
 const COLUMNS: Array<{ key: string, label: string }> = [
   { key: 'filename', label: 'Filename' },
   { key: 'siteName', label: 'Site' },
-  { key: 'directory', label: 'Directory' },
-  { key: 'recDate', label: 'Recording Date' },
-  { key: 'recTime', label: 'Recording Time' },
-  { key: 'timezoneName', label: 'Timezone/Offset' },
-  { key: 'timezoneSource', label: 'Timezone Determined By' },
+  { key: 'recDate', label: 'Date' },
+  { key: 'recTime', label: 'Time' },
+  { key: 'zone', label: 'Zone' },
+  { key: 'timezoneSource', label: 'Method' },
   { key: 'format', label: 'Format' },
-  { key: 'durationMs', label: 'Length' },
+  { key: 'durationMs', label: 'Duration' },
   { key: 'status', label: 'Status' },
-  { key: 'progress', label: 'Transfer Progress' },
-  { key: 'rate', label: 'Transfer Rate (Avg)' },
-  { key: 'destination', label: 'Destination' }
+  { key: 'progress', label: 'Progress' },
+  { key: 'rate', label: 'Rate' }
 ]
 
 const sortKey = ref<string>('filename')
@@ -327,17 +312,15 @@ const sortValue = (item: UploadItem, key: string): string | number => {
   switch (key) {
     case 'filename': return item.relativePath.toLowerCase()
     case 'siteName': return (item.siteName ?? item.streamId).toLowerCase()
-    case 'directory': return (item.directory ?? '').toLowerCase()
     case 'recDate':
     case 'recTime': return item.localWallTime ?? ''
-    case 'timezoneName': return item.timezoneName ?? ''
+    case 'zone': return zoneCol(item)
     case 'timezoneSource': return item.timezoneSource ?? ''
     case 'format': return `${item.fileFormat ?? ''}-${item.sampleRateHz ?? 0}`
     case 'durationMs': return item.durationMs ?? -1
     case 'status': return groupOf(item)
     case 'progress': return item.state === 'ingested' ? 2 : (item.progress ?? -1)
     case 'rate': return avgRateBps(item) ?? -1
-    case 'destination': return item.state === 'ingested' ? 1 : 0
     default: return 0
   }
 }
@@ -383,12 +366,11 @@ watch(() => props.items, (items) => {
   if (next.size !== selectedIds.value.size) selectedIds.value = next
 })
 
-const emitSelected = (event: 'startSelected' | 'cancelSelected' | 'retrySelected' | 'clearSelected'): void => {
+const emitSelected = (event: 'startSelected' | 'pauseSelected' | 'clearSelected'): void => {
   const ids = [...selectedIds.value]
   // explicit dispatch: a dynamic event name defeats the emit overload types
   if (event === 'startSelected') emit('startSelected', ids)
-  else if (event === 'cancelSelected') emit('cancelSelected', ids)
-  else if (event === 'retrySelected') emit('retrySelected', ids)
+  else if (event === 'pauseSelected') emit('pauseSelected', ids)
   else emit('clearSelected', ids)
   selectedIds.value = new Set()
 }
@@ -406,6 +388,33 @@ const recDate = (item: UploadItem): string =>
 
 const recTime = (item: UploadItem): string =>
   item.localWallTime !== undefined ? item.localWallTime.slice(11, 19) : '—'
+
+/**
+ * Zone column: compact `UTC±H[:MM]` (unpadded hours). IANA zones are resolved
+ * to their offset AT THE RECORDING INSTANT (DST-correct), offset strings are
+ * reformatted, plain UTC renders as `UTC`.
+ */
+const zoneCol = (item: UploadItem): string => {
+  const tz = item.timezoneName
+  if (tz === undefined) return '—'
+  if (tz === 'UTC') return 'UTC'
+  const offsetMatch = tz.match(/^([+-])(\d{2}):(\d{2})$/)
+  if (offsetMatch !== null) {
+    const [, sign, hh, mm] = offsetMatch
+    return `UTC${sign}${parseInt(hh)}${mm !== '00' ? `:${mm}` : ''}`
+  }
+  // IANA zone name → offset at the recording instant
+  try {
+    const at = item.timestampUtc !== undefined ? new Date(item.timestampUtc) : new Date()
+    // 'shortOffset' postdates this repo's TS lib — runtime-supported in all
+    // target browsers; cast keeps vue-tsc green.
+    const part = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'shortOffset' } as Intl.DateTimeFormatOptions)
+      .formatToParts(at).find(p => p.type === 'timeZoneName')?.value
+    // "GMT-5" / "GMT+5:30" / "GMT" → UTC form
+    if (part !== undefined) return part.replace('GMT', 'UTC') === 'UTC' ? 'UTC' : part.replace('GMT', 'UTC')
+  } catch { /* fall through */ }
+  return tz
+}
 
 const tzSourceLabel = (item: UploadItem): string =>
   item.timezoneSource !== undefined ? TIMEZONE_SOURCE_LABELS[item.timezoneSource] : '—'
@@ -494,6 +503,10 @@ const avgRateBps = (item: UploadItem): number | undefined => {
 }
 
 const rateCol = (item: UploadItem): string => {
+  // Rate is only meaningful for uploads that moved real bytes: in-flight
+  // with progress, or terminal-successful. Failed/instant-aborted attempts
+  // produced absurd numbers (100+ MB/s on a CORS abort) — show — instead.
+  if (!['uploading', 'uploaded', 'ingested', 'duplicate'].includes(item.state)) return '—'
   const bps = avgRateBps(item)
   if (bps === undefined || bps <= 0) return '—'
   if (bps < 1024 * 1024) return `${(bps / 1024).toFixed(0)} KB/s`

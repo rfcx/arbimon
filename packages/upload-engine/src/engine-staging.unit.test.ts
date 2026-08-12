@@ -144,6 +144,34 @@ describe('cancel', () => {
   })
 })
 
+describe('pauseItems (per-item pause → staged)', () => {
+  test.each(['queued', 'ready', 'signing', 'signed', 'uploading'] as UploadItemState[])(
+    'pauses a %s item back to staged with context discarded', async (state) => {
+      const store = new MemoryStore()
+      const engine = makeEngine(store)
+      const item: UploadItem = { ...mkStaged(), state, uploadId: 'u1', signedUrl: 'http://x' }
+      store.items.set(item.id, item)
+      const n = await engine.pauseItems([item.id])
+      expect(n).toBe(1)
+      const after = store.items.get(item.id)
+      expect(after?.state).toBe('staged')
+      expect(after?.uploadId).toBeUndefined()
+      expect(after?.signedUrl).toBeUndefined()
+    })
+
+  test('leaves uploaded/terminal/staged items alone', async () => {
+    const store = new MemoryStore()
+    const engine = makeEngine(store)
+    for (const state of ['uploaded', 'ingested', 'failed', 'staged'] as UploadItemState[]) {
+      const item = { ...mkStaged(), state }
+      store.items.set(item.id, item)
+      const n = await engine.pauseItems([item.id])
+      expect(n).toBe(0)
+      expect(store.items.get(item.id)?.state).toBe(state)
+    }
+  })
+})
+
 describe('retry of a transcoded item (released-blob trap)', () => {
   test('rewinds to queued with the ORIGINAL identity, dropping the FLAC name/checksum', async () => {
     const store = new MemoryStore()

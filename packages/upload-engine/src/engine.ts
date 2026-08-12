@@ -156,6 +156,34 @@ export class UploadEngine {
   }
 
   /**
+   * Per-item pause: return pipeline items (queued/preparing/ready/signing/
+   * signed/uploading) to `staged`, aborting any in-flight PUT and discarding
+   * sign/multipart context. The complement of startStaged — a bulk "Pause"
+   * for a selection, without touching the global engine or other items.
+   * Items past the PUT (uploaded/terminal) are left alone. Returns count.
+   */
+  async pauseItems (ids: string[]): Promise<number> {
+    let paused = 0
+    for (const id of ids) {
+      const item = await this.store.get(id)
+      if (item === undefined) continue
+      if (!['queued', 'preparing', 'ready', 'signing', 'signed', 'uploading'].includes(item.state)) continue
+      this.abortControllers.get(id)?.abort()
+      await this.update(item, {
+        state: 'staged',
+        progress: undefined,
+        uploadId: undefined,
+        signedUrl: undefined,
+        multipart: undefined,
+        error: undefined
+      })
+      paused++
+    }
+    if (paused > 0) await this.emitStats()
+    return paused
+  }
+
+  /**
    * Cancel an item: terminal `cancelled` (failed-like — NO automatic
    * re-stage; Retry re-enters the pipeline explicitly). In-flight PUTs are
    * aborted; signed/multipart context is discarded so a later Retry signs
@@ -615,11 +643,11 @@ export class UploadEngine {
       this.scheduleStatusPoll()
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      // A user cancel() aborts the PUT and has ALREADY written the terminal
-      // `cancelled` state — the abort landing here must not resurrect the
-      // item to signed/failed. Re-read the stored state and respect it.
+      // A user cancel() or pauseItems() aborts the PUT and has ALREADY
+      // written its state (`cancelled`/`staged`) — the abort landing here
+      // must not resurrect the item. Re-read the stored state, respect it.
       const current = await this.store.get(item.id)
-      if (current?.state === 'cancelled') return
+      if (current?.state === 'cancelled' || current?.state === 'staged') return
       if (!this.running) {
         // paused → back to signed for a clean resume
         await this.update(item, { state: 'signed', progress: undefined })
@@ -701,10 +729,9 @@ export class UploadEngine {
       this.scheduleStatusPoll()
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      // Same cancel-race guard as uploadOne: a user cancel() already wrote
-      // `cancelled`; the aborted parts must not resurrect the item.
+      // Same cancel/pause-race guard as uploadOne.
       const current = await this.store.get(item.id)
-      if (current?.state === 'cancelled') return
+      if (current?.state === 'cancelled' || current?.state === 'staged') return
       if (!this.running) {
         await this.update(liveItem, { state: 'signed', progress: undefined })
         return
