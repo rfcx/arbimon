@@ -1,5 +1,6 @@
 import { type UploadItem } from './types'
 
+export * from './analyze'
 export * from './audio-metadata'
 export * from './browser/browser-file-source'
 export * from './browser/browser-prepare'
@@ -13,6 +14,7 @@ export * from './multipart'
 export * from './sha1'
 export * from './timestamp-parser'
 export * from './types'
+export * from './wav-embedded-timestamp'
 export * from './wav-metadata'
 
 /** Create a fresh queue item from a picked/dropped file. */
@@ -21,13 +23,18 @@ export const createUploadItem = (params: {
   relativePath: string
   fileSizeBytes: number
   streamId: string
+  /** 'queued' = legacy direct-enqueue; 'analyzing' = staged intake. */
+  initialState?: 'queued' | 'analyzing'
 }): UploadItem => ({
   id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`,
   filename: params.filename,
   relativePath: params.relativePath,
+  directory: params.relativePath.includes('/')
+    ? params.relativePath.slice(0, params.relativePath.lastIndexOf('/'))
+    : '',
   fileSizeBytes: params.fileSizeBytes,
   streamId: params.streamId,
-  state: 'queued',
+  state: params.initialState ?? 'queued',
   attempts: 0,
   createdAtMs: Date.now(),
   updatedAtMs: Date.now()

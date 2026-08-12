@@ -16,7 +16,7 @@ import { getIdToken } from '~/auth-client/get-id-token'
 
 const INGEST_BASE_URL = (import.meta.env.VITE_INGEST_BASE_URL as string | undefined) ?? 'https://ingest.rfcx.org'
 
-export const EMPTY_STATS: QueueStats = { total: 0, queued: 0, preparing: 0, ready: 0, signing: 0, signed: 0, uploading: 0, uploaded: 0, ingested: 0, duplicate: 0, failed: 0, rejected: 0, paused: 0, bytesTotal: 0, bytesUploaded: 0 }
+export const EMPTY_STATS: QueueStats = { total: 0, analyzing: 0, staged: 0, queued: 0, preparing: 0, ready: 0, signing: 0, signed: 0, uploading: 0, uploaded: 0, ingested: 0, duplicate: 0, failed: 0, rejected: 0, cancelled: 0, paused: 0, bytesTotal: 0, bytesUploaded: 0 }
 
 /** Per-prepare timezone context, set by the panel before enqueue. */
 export const prepareOptions = reactive<{ timezone?: string | number }>({})
@@ -66,7 +66,7 @@ export const engine = new UploadEngine(
 // long batch must not hold every FLAC in RAM).
 engine.on(event => {
   if (event.type === 'item-updated' &&
-      ['ingested', 'duplicate', 'failed', 'rejected'].includes(event.item.state)) {
+      ['ingested', 'duplicate', 'failed', 'rejected', 'cancelled'].includes(event.item.state)) {
     transcodeCache.release(event.item.id)
   }
 })
@@ -86,27 +86,109 @@ export const refreshItems = async (): Promise<void> => {
   items.value = await uploadStore.list()
 }
 
+// -- per-project transfer metrics (localStorage; reset on auth-user change) --
+export interface ProjectTransferMetrics {
+  bytesTransferred: number
+  completed: number
+  failed: number
+  duplicates: number
+  /** auth0 user sub the metrics belong to — mismatch = new session, reset. */
+  userSub?: string
+}
+
+const METRICS_PREFIX = 'upload-metrics:'
+const EMPTY_METRICS: ProjectTransferMetrics = { bytesTransferred: 0, completed: 0, failed: 0, duplicates: 0 }
+
+/** The project the metrics (and terminal counting) attribute to right now. */
+export const metricsProjectSlug = ref<string | undefined>(undefined)
+export const projectMetrics = ref<ProjectTransferMetrics>({ ...EMPTY_METRICS })
+
+const metricsKey = (slug: string): string => `${METRICS_PREFIX}${slug}`
+
+const loadMetrics = (slug: string): ProjectTransferMetrics => {
+  try {
+    const raw = localStorage.getItem(metricsKey(slug))
+    if (raw === null) return { ...EMPTY_METRICS }
+    return { ...EMPTY_METRICS, ...JSON.parse(raw) as ProjectTransferMetrics }
+  } catch { return { ...EMPTY_METRICS } }
+}
+
+const saveMetrics = (slug: string, metrics: ProjectTransferMetrics): void => {
+  try { localStorage.setItem(metricsKey(slug), JSON.stringify(metrics)) } catch { /* quota — metrics are best-effort */ }
+}
+
+/**
+ * Bind metrics to a project + the current auth user. A DIFFERENT user sub
+ * than the stored one resets the counters (operator rule: reset on logout /
+ * new arbimon session).
+ */
+export const bindProjectMetrics = (slug: string, userSub: string | undefined): void => {
+  metricsProjectSlug.value = slug
+  const loaded = loadMetrics(slug)
+  if (userSub !== undefined && loaded.userSub !== undefined && loaded.userSub !== userSub) {
+    projectMetrics.value = { ...EMPTY_METRICS, userSub }
+  } else {
+    projectMetrics.value = { ...loaded, userSub: userSub ?? loaded.userSub }
+  }
+  saveMetrics(slug, projectMetrics.value)
+}
+
+const bumpMetrics = (patch: Partial<ProjectTransferMetrics>): void => {
+  const slug = metricsProjectSlug.value
+  if (slug === undefined) return
+  const next = { ...projectMetrics.value }
+  if (patch.bytesTransferred !== undefined) next.bytesTransferred += patch.bytesTransferred
+  if (patch.completed !== undefined) next.completed += patch.completed
+  if (patch.failed !== undefined) next.failed += patch.failed
+  if (patch.duplicates !== undefined) next.duplicates += patch.duplicates
+  projectMetrics.value = next
+  saveMetrics(slug, next)
+}
+
+// -- current transfer rate (EMA over PUT progress deltas) ---------------------
+export const currentRateBps = ref(0)
+const rateWindow: Array<{ atMs: number, bytes: number }> = []
+let lastBytesUploaded = 0
+
+const observeRate = (bytesUploaded: number): void => {
+  const now = Date.now()
+  const delta = bytesUploaded - lastBytesUploaded
+  lastBytesUploaded = bytesUploaded
+  if (delta > 0) rateWindow.push({ atMs: now, bytes: delta })
+  // 10-second sliding window
+  while (rateWindow.length > 0 && now - rateWindow[0].atMs > 10_000) rateWindow.shift()
+  const windowBytes = rateWindow.reduce((sum, s) => sum + s.bytes, 0)
+  const windowMs = rateWindow.length > 0 ? Math.max(1000, now - rateWindow[0].atMs) : 1000
+  currentRateBps.value = windowBytes / (windowMs / 1000)
+}
+
 // Track terminal outcomes once per item (telemetry).
 const trackedTerminal = new Set<string>()
 
 engine.on(event => {
-  if (event.type === 'stats') stats.value = event.stats
+  if (event.type === 'stats') {
+    observeRate(event.stats.bytesUploaded)
+    stats.value = event.stats
+  }
   if (event.type === 'engine-state') engineRunning.value = event.running
   if (event.type === 'item-updated') {
     const index = items.value.findIndex(existing => existing.id === event.item.id)
     if (index >= 0) items.value[index] = event.item
     else items.value.push(event.item)
 
-    // telemetry: one event per terminal outcome per item
-    const terminalStates = ['ingested', 'duplicate', 'failed', 'rejected']
+    // telemetry + project metrics: one count per terminal outcome per item
+    const terminalStates = ['ingested', 'duplicate', 'failed', 'rejected', 'cancelled']
     if (terminalStates.includes(event.item.state) && !trackedTerminal.has(event.item.id)) {
       trackedTerminal.add(event.item.id)
+      if (event.item.state === 'ingested') bumpMetrics({ completed: 1, bytesTransferred: event.item.fileSizeBytes })
+      if (event.item.state === 'duplicate') bumpMetrics({ duplicates: 1 })
+      if (event.item.state === 'failed' || event.item.state === 'rejected' || event.item.state === 'cancelled') bumpMetrics({ failed: 1 })
       track('web_upload_file_terminal', {
         outcome: event.item.state,
         fileSizeBytes: event.item.fileSizeBytes,
         attempts: event.item.attempts,
         multipart: event.item.multipart !== undefined,
-        error: event.item.state === 'failed' || event.item.state === 'rejected' ? event.item.error : undefined
+        error: ['failed', 'rejected', 'cancelled'].includes(event.item.state) ? event.item.error : undefined
       })
     }
   }

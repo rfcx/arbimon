@@ -112,6 +112,71 @@ export class UploadEngine {
     this.kick()
   }
 
+  /**
+   * Staged intake: persist items WITHOUT entering the upload pipeline.
+   * The shell runs its local analysis (analyze step) and the user releases
+   * items explicitly via startStaged(). Items arrive as `analyzing` or
+   * `staged` — the pump ignores both states.
+   */
+  async stage (items: UploadItem[]): Promise<void> {
+    await this.store.putMany(items)
+    for (const item of items) this.emit({ type: 'item-updated', item })
+    await this.emitStats()
+  }
+
+  /** Persist an analysis update to a staged item (shell-driven). */
+  async updateStaged (itemId: string, patch: Partial<UploadItem>): Promise<void> {
+    const item = await this.store.get(itemId)
+    if (item === undefined) return
+    await this.update(item, patch)
+    await this.emitStats()
+  }
+
+  /**
+   * Release staged items into the pipeline (→ queued). Items with an
+   * analysisError are skipped — they cannot produce a valid sign request.
+   * Pass ids to release a selection; omit to release all staged items.
+   * Returns the number released.
+   */
+  async startStaged (ids?: string[]): Promise<number> {
+    const staged = await this.store.list(['staged'])
+    const idSet = ids === undefined ? undefined : new Set(ids)
+    let released = 0
+    for (const item of staged) {
+      if (idSet !== undefined && !idSet.has(item.id)) continue
+      if (item.analysisError !== undefined) continue
+      await this.update(item, { state: 'queued' })
+      released++
+    }
+    if (released > 0) {
+      await this.emitStats()
+      this.kick()
+    }
+    return released
+  }
+
+  /**
+   * Cancel an item: terminal `cancelled` (failed-like — NO automatic
+   * re-stage; Retry re-enters the pipeline explicitly). In-flight PUTs are
+   * aborted; signed/multipart context is discarded so a later Retry signs
+   * fresh. Terminal items (ingested/duplicate) are left untouched.
+   */
+  async cancel (itemId: string): Promise<void> {
+    const item = await this.store.get(itemId)
+    if (item === undefined) return
+    if (['ingested', 'duplicate', 'failed', 'rejected', 'cancelled'].includes(item.state)) return
+    this.abortControllers.get(itemId)?.abort()
+    await this.update(item, {
+      state: 'cancelled',
+      progress: undefined,
+      uploadId: undefined,
+      signedUrl: undefined,
+      multipart: undefined,
+      error: 'Cancelled by user.'
+    })
+    await this.emitStats()
+  }
+
   start (): void {
     if (this.running) return
     this.running = true
@@ -175,17 +240,30 @@ export class UploadEngine {
     if (online) this.kick()
   }
 
-  /** Retry a failed item (resets attempts). */
+  /** Retry a failed/rejected/cancelled item (resets attempts). */
   async retry (itemId: string): Promise<void> {
     const item = await this.store.get(itemId)
     if (item === undefined) return
-    if (item.state !== 'failed' && item.state !== 'rejected') return
+    if (item.state !== 'failed' && item.state !== 'rejected' && item.state !== 'cancelled') return
+    // Transcoded items must go back through prepare: their encoded blob was
+    // released at the terminal state, and the fileSource would serve the
+    // ORIGINAL bytes under the FLAC identity → guaranteed checksum mismatch.
+    const rewindTranscode = item.transcoded === true
     await this.update(item, {
-      state: item.checksumSha1 !== undefined ? 'ready' : 'queued',
+      state: !rewindTranscode && item.checksumSha1 !== undefined ? 'ready' : 'queued',
       attempts: 0,
       error: undefined,
       uploadId: undefined,
-      signedUrl: undefined
+      signedUrl: undefined,
+      multipart: undefined,
+      ...(rewindTranscode
+        ? {
+            filename: item.originalFilename ?? item.filename,
+            fileSizeBytes: item.originalFileSizeBytes ?? item.fileSizeBytes,
+            transcoded: undefined,
+            checksumSha1: undefined
+          }
+        : {})
     })
     this.kick()
   }
@@ -200,6 +278,8 @@ export class UploadEngine {
     const items = await this.store.list()
     const stats: QueueStats = {
       total: items.length,
+      analyzing: 0,
+      staged: 0,
       queued: 0,
       preparing: 0,
       ready: 0,
@@ -211,6 +291,7 @@ export class UploadEngine {
       duplicate: 0,
       failed: 0,
       rejected: 0,
+      cancelled: 0,
       paused: 0,
       bytesTotal: 0,
       bytesUploaded: 0
@@ -327,7 +408,17 @@ export class UploadEngine {
         // ENCODED file — the server signs/receives those bytes. The original
         // name survives in relativePath for the UI.
         ...(result.transcodedFilename !== undefined
-          ? { filename: result.transcodedFilename, fileSizeBytes: result.transcodedSizeBytes }
+          ? {
+              filename: result.transcodedFilename,
+              fileSizeBytes: result.transcodedSizeBytes,
+              transcoded: true,
+              // keep the pre-transcode identity for retry-after-terminal:
+              // the encoded blob is cache-released at terminal states, so a
+              // retry must re-enter prepare (re-encode), not reuse FLAC
+              // identity over WAV bytes.
+              originalFilename: item.filename,
+              originalFileSizeBytes: item.fileSizeBytes
+            }
           : {})
       })
     } catch (err) {
@@ -426,7 +517,7 @@ export class UploadEngine {
       const signed = await this.store.list(['signed'])
       const next = signed.find(item => !this.abortControllers.has(item.id))
       if (next === undefined) return
-      const item = await this.update(next, { state: 'uploading', progress: 0 })
+      const item = await this.update(next, { state: 'uploading', progress: 0, uploadStartedAtMs: Date.now(), uploadEndedAtMs: undefined })
       this.activeUploads++
       void this.uploadOne(item).finally(() => {
         this.activeUploads--
@@ -518,11 +609,17 @@ export class UploadEngine {
       await this.update(item, {
         state: 'uploaded',
         progress: 1,
-        attempts: item.attempts + 1
+        attempts: item.attempts + 1,
+        uploadEndedAtMs: Date.now()
       })
       this.scheduleStatusPoll()
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
+      // A user cancel() aborts the PUT and has ALREADY written the terminal
+      // `cancelled` state — the abort landing here must not resurrect the
+      // item to signed/failed. Re-read the stored state and respect it.
+      const current = await this.store.get(item.id)
+      if (current?.state === 'cancelled') return
       if (!this.running) {
         // paused → back to signed for a clean resume
         await this.update(item, { state: 'signed', progress: undefined })
@@ -600,10 +697,14 @@ export class UploadEngine {
         multipart: { ...item.multipart, completedParts }
       })
       await this.multipartApi.complete(item.uploadId, completedParts)
-      await this.update(liveItem, { state: 'uploaded', progress: 1, attempts: item.attempts + 1 })
+      await this.update(liveItem, { state: 'uploaded', progress: 1, attempts: item.attempts + 1, uploadEndedAtMs: Date.now() })
       this.scheduleStatusPoll()
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
+      // Same cancel-race guard as uploadOne: a user cancel() already wrote
+      // `cancelled`; the aborted parts must not resurrect the item.
+      const current = await this.store.get(item.id)
+      if (current?.state === 'cancelled') return
       if (!this.running) {
         await this.update(liveItem, { state: 'signed', progress: undefined })
         return

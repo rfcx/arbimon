@@ -27,6 +27,12 @@ export class BrowserFileSource implements FileSource {
     return this.files.get(itemId)
   }
 
+  /** All registered handles — used to hand files to a popped-out window
+   * (File is structured-cloneable, so it survives BroadcastChannel). */
+  entries (): Array<[string, File]> {
+    return [...this.files]
+  }
+
   clear (): void {
     this.files.clear()
   }

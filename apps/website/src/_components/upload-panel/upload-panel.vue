@@ -364,6 +364,9 @@ const formatBytes = (bytes: number): string => {
 }
 
 const STATE_LABELS: Record<UploadItemState, string> = {
+  analyzing: 'Analyzing…',
+  staged: 'Staged',
+  cancelled: 'Cancelled',
   queued: 'Queued',
   preparing: 'Preparing…',
   ready: 'Ready',

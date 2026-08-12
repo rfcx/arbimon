@@ -8,6 +8,8 @@
 
 /** Lifecycle state of a single file in the local queue. */
 export type UploadItemState =
+  | 'analyzing' // staged-intake: local header/filename analysis in progress
+  | 'staged' // analysis done; awaiting explicit Start (may carry analysisError)
   | 'queued' // accepted into the queue, not yet prepared
   | 'preparing' // hashing / timestamp parsing / duration probing
   | 'ready' // prepared, waiting for a signed URL
@@ -19,6 +21,7 @@ export type UploadItemState =
   | 'duplicate' // terminal: server-side sha1 duplicate (status 31)
   | 'failed' // terminal or retryable failure (see `retryable`)
   | 'rejected' // terminal: rejected before/at signing (validation, limits)
+  | 'cancelled' // terminal: user-cancelled (failed-like; Retry re-enters the pipeline)
   | 'paused' // user- or engine-paused (offline)
 
 /** Server ingest status codes (Mongo streamuploads.status). */
@@ -30,6 +33,15 @@ export const SERVER_STATUS = {
   DUPLICATE: 31,
   CHECKSUM: 32
 } as const
+
+/** How the recording timezone was determined for an item (staged analysis). */
+export type TimezoneSource =
+  | 'filename-offset' // explicit offset in the filename
+  | 'file-metadata' // GUANO / AudioMoth ICMT embedded timestamp
+  | 'site-local' // site's IANA timezone applied to a naive filename time
+  | 'utc-fallback' // no other rung fired
+  | 'forced-site' // user selected Site Local Time
+  | 'forced-utc' // user selected UTC
 
 export interface UploadItem {
   /** Engine-local id (stable across sessions; storage key). */
@@ -44,6 +56,34 @@ export interface UploadItem {
   state: UploadItemState
   /** ISO-8601 UTC recording timestamp (parsed from filename). */
   timestampUtc?: string
+  // -- staged-analysis fields (populated by the analyze step) ---------------
+  /** Directory part of relativePath ('' for root drops). */
+  directory?: string
+  /** Site display name (denormalized for the table). */
+  siteName?: string
+  /** Wall-clock recording time in the DETERMINED zone: `YYYY-MM-DDTHH:mm:ss`. */
+  localWallTime?: string
+  /** How the timezone was decided. */
+  timezoneSource?: TimezoneSource
+  /** Display string: IANA zone name or `+HH:MM` offset or `UTC`. */
+  timezoneName?: string
+  /** Container format from the header probe. */
+  fileFormat?: 'wav' | 'flac' | 'opus' | 'unknown'
+  /** Analysis failure (no timestamp derivable, unreadable, …). Item stays
+   * `staged` but is excluded from Start until resolved/cleared. */
+  analysisError?: string
+  /** Set when the FLAC transcode stage encoded this item (UI: transcode column). */
+  transcoded?: boolean
+  /** Pre-transcode identity, kept so a retry after the encoded blob was
+   * released (terminal-state cache eviction) can re-enter through prepare
+   * and re-encode instead of signing a FLAC name over WAV bytes. */
+  originalFilename?: string
+  originalFileSizeBytes?: number
+  // -- transfer metrics ------------------------------------------------------
+  /** Epoch ms when the first byte of the (current attempt's) PUT went out. */
+  uploadStartedAtMs?: number
+  /** Epoch ms when the PUT (or multipart complete) finished. */
+  uploadEndedAtMs?: number
   /** sha1 hex of file content (computed during prepare). */
   checksumSha1?: string
   /** Duration in ms (parsed from audio header during prepare). */
@@ -79,6 +119,8 @@ export interface UploadItem {
 /** Aggregate queue statistics for UI. */
 export interface QueueStats {
   total: number
+  analyzing: number
+  staged: number
   queued: number
   preparing: number
   ready: number
@@ -90,6 +132,7 @@ export interface QueueStats {
   duplicate: number
   failed: number
   rejected: number
+  cancelled: number
   paused: number
   bytesTotal: number
   bytesUploaded: number

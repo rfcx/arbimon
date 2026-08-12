@@ -7,11 +7,14 @@ import { computed } from 'vue'
 
 import { type UploadItem, type UploadItemState } from '@rfcx-bio/upload-engine'
 
-import { activeCount, engine, engineRunning, hasQueue, items, refreshItems, stats, uploadStore } from '~/upload'
+import { activeCount, engine, engineRunning, hasQueue, items, metricsProjectSlug, refreshItems, stats, uploadStore } from '~/upload'
 import { registerTaskSource } from '../task-center'
 import { type TaskItem, type TaskItemState, type TaskSource } from '../types'
 
 const STATE_MAP: Record<UploadItemState, TaskItemState> = {
+  analyzing: 'active',
+  staged: 'pending',
+  cancelled: 'failed',
   queued: 'pending',
   preparing: 'active',
   ready: 'pending',
@@ -27,6 +30,9 @@ const STATE_MAP: Record<UploadItemState, TaskItemState> = {
 }
 
 const DETAIL_MAP: Partial<Record<UploadItemState, string>> = {
+  analyzing: 'analyzing…',
+  staged: 'staged — press Start on the uploader page',
+  cancelled: 'cancelled',
   queued: 'queued',
   preparing: 'preparing…',
   ready: 'ready',
@@ -44,13 +50,16 @@ const DISPLAY_ORDER: Record<UploadItemState, number> = {
   signing: 2,
   signed: 3,
   preparing: 4,
-  queued: 5,
-  ready: 6,
-  failed: 7,
-  rejected: 8,
-  duplicate: 9,
-  ingested: 10,
-  paused: 11
+  analyzing: 5,
+  queued: 6,
+  ready: 7,
+  staged: 8,
+  failed: 9,
+  rejected: 10,
+  cancelled: 11,
+  duplicate: 12,
+  ingested: 13,
+  paused: 14
 }
 
 const MAX_VISIBLE_ITEMS = 6
@@ -60,7 +69,7 @@ const toTaskItem = (item: UploadItem): TaskItem => ({
   label: item.filename,
   state: STATE_MAP[item.state],
   progress: item.state === 'uploading' ? item.progress : undefined,
-  detail: item.state === 'failed' || item.state === 'rejected'
+  detail: item.state === 'failed' || item.state === 'rejected' || item.state === 'cancelled'
     ? (item.error ?? 'failed')
     : DETAIL_MAP[item.state]
 })
@@ -132,7 +141,11 @@ const uploadsSource: TaskSource = {
           }])
     ]
   }),
-  pageRoute: computed(() => '/import-recordings-new'),
+  // Project-scoped page (2026-08-12 rebuild). Falls back to home when no
+  // project has bound the uploader yet (queue restored before any visit).
+  pageRoute: computed(() => metricsProjectSlug.value !== undefined
+    ? `/p/${metricsProjectSlug.value}/import-recordings`
+    : '/'),
   pageLabel: 'Open uploader'
 }
 

@@ -21,18 +21,25 @@ export interface BrowserPrepareOptions {
 export const makeBrowserPrepare =
   (options: BrowserPrepareOptions = {}) =>
   async (item: UploadItem, file: Blob): Promise<PrepareResult> => {
-    const parsed = parseTimestamp(
-      item.filename,
-      options.timestampFormat ?? TIMESTAMP_FORMAT_AUTO
-    )
-    if (parsed === undefined) {
-      return {
-        error: 'Could not parse a recording timestamp from the filename.'
-      }
-    }
-    const timestampUtc = toUtcIso(parsed, options.timezone)
+    // Staged-analysis flow (2026-08-12): the analyze step already decided the
+    // timestamp via the timezone ladder (filename offset > file metadata >
+    // site tz > UTC). Re-parsing here would CLOBBER that decision with a
+    // plain filename parse — respect the analyzed value when present.
+    let timestampUtc = item.timestampUtc
     if (timestampUtc === undefined) {
-      return { error: 'Parsed timestamp is not a valid date.' }
+      const parsed = parseTimestamp(
+        item.filename,
+        options.timestampFormat ?? TIMESTAMP_FORMAT_AUTO
+      )
+      if (parsed === undefined) {
+        return {
+          error: 'Could not parse a recording timestamp from the filename.'
+        }
+      }
+      timestampUtc = toUtcIso(parsed, options.timezone)
+      if (timestampUtc === undefined) {
+        return { error: 'Parsed timestamp is not a valid date.' }
+      }
     }
     const [checksumSha1, metadata] = await Promise.all([
       sha1HexOfBlob(file),
