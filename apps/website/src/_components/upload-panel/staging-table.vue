@@ -518,6 +518,9 @@ const STATE_LABELS: Record<string, string> = {
 
 const statusCol = (item: UploadItem): string => {
   if (item.state === 'staged' && item.analysisError !== undefined) return item.analysisError
+  // prestaged: checksum + signed URL already in hand — Start goes straight
+  // to the PUT (and the server's dedup check already passed this file)
+  if (item.state === 'staged' && item.signedUrl !== undefined) return 'Staged — ready for fast upload'
   const label = STATE_LABELS[item.state] ?? item.state
   const detail = item.error
   return detail !== undefined && ['failed', 'rejected', 'cancelled'].includes(item.state)

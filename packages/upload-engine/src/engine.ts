@@ -17,6 +17,7 @@
  */
 
 import { IngestApi, putToSignedUrl } from './ingest-api'
+import { sha1HexOfBlob } from './sha1'
 import { MULTIPART_THRESHOLD_BYTES, MultipartApi, uploadParts } from './multipart'
 import { type BulkSignRequestItem, type FileSource, type QueueStats, type TokenProvider, type UploadEngineConfig, type UploadEngineEvent, type UploadEngineListener, type UploadItem, type UploadItemState, type UploadStore, SERVER_STATUS } from './types'
 
@@ -165,8 +166,11 @@ export class UploadEngine {
   }
 
   /**
-   * Release staged items into the pipeline (→ queued). Items with an
-   * analysisError are skipped — they cannot produce a valid sign request.
+   * Release staged items into the pipeline. Items with an analysisError are
+   * skipped — they cannot produce a valid sign request. PRESTAGED items
+   * (checksum + signed URL already obtained in the background) fast-track
+   * straight to `signed` — the upload pool picks them up immediately;
+   * everything else enters at `queued` (prepare → sign as before).
    * Pass ids to release a selection; omit to release all staged items.
    * Returns the number released.
    */
@@ -177,7 +181,8 @@ export class UploadEngine {
     for (const item of staged) {
       if (idSet !== undefined && !idSet.has(item.id)) continue
       if (item.analysisError !== undefined) continue
-      await this.update(item, { state: 'queued' })
+      const fastTrack = item.signedUrl !== undefined && item.checksumSha1 !== undefined
+      await this.update(item, { state: fastTrack ? 'signed' : 'queued' })
       released++
     }
     if (released > 0) {
@@ -185,6 +190,98 @@ export class UploadEngine {
       this.kick()
     }
     return released
+  }
+
+  /**
+   * Background prestage (2026-08-12, operator design): for STAGED files that
+   * will upload as-is (non-WAV — never transcoded), compute the sha1 and
+   * request the signed URL while the queue is still parked. Because signing
+   * IS the server's dedup check, will-be-duplicate rows get their verdict
+   * immediately (→ terminal `duplicate`, independent of Start), and Start
+   * fast-tracks prestaged rows straight into the upload pool.
+   *
+   * Deliberately conservative:
+   * - WAVs are NEVER prestaged (encoding must not begin before Start, and
+   *   the FLAC toggle can change; enforced here, not just at the call site)
+   * - multipart-sized files keep the normal path
+   * - non-retryable sign errors surface as analysisError (visible, excluded
+   *   from Start); retryable/network failures leave the item untouched —
+   *   the normal Start path remains the safety net
+   * - each result re-reads the stored item and only applies while it is
+   *   STILL staged (the user may have started/cancelled/removed mid-flight)
+   */
+  async prestage (ids: string[]): Promise<number> {
+    const eligible: UploadItem[] = []
+    for (const id of ids) {
+      const item = await this.store.get(id)
+      if (item === undefined) continue
+      if (item.state !== 'staged') continue
+      if (item.analysisError !== undefined) continue
+      if (item.timestampUtc === undefined) continue
+      if (item.signedUrl !== undefined) continue
+      if (item.filename.toLowerCase().endsWith('.wav')) continue
+      if (item.fileSizeBytes >= this.config.multipartThresholdBytes) continue
+      eligible.push(item)
+    }
+    if (eligible.length === 0) return 0
+
+    // hash with bounded concurrency (async WebCrypto — cheap but not free)
+    const hashed: UploadItem[] = []
+    let cursor = 0
+    await Promise.all(Array.from({ length: Math.min(2, eligible.length) }, async () => {
+      while (cursor < eligible.length) {
+        const item = eligible[cursor++]
+        if (item.checksumSha1 !== undefined) { hashed.push(item); continue }
+        const file = await this.fileSource.getFile(item.id)
+        if (file === undefined) continue
+        try {
+          const checksumSha1 = await sha1HexOfBlob(file)
+          hashed.push(await this.update(item, { checksumSha1 }))
+        } catch { /* unreadable — leave for the normal path */ }
+      }
+    }))
+    if (hashed.length === 0) return 0
+
+    let prestaged = 0
+    for (let offset = 0; offset < hashed.length; offset += this.config.signBatchSize) {
+      const batch = hashed.slice(offset, offset + this.config.signBatchSize)
+      try {
+        const request: BulkSignRequestItem[] = batch.map(item => ({
+          filename: item.filename,
+          timestamp: item.timestampUtc as string,
+          stream: item.streamId,
+          duration: item.durationMs !== undefined && item.durationMs > 0 ? Math.round(item.durationMs) : undefined,
+          fileSize: item.fileSizeBytes,
+          sampleRate: item.sampleRateHz,
+          checksum: item.checksumSha1
+        }))
+        const response = await this.api.signBulk(request, this.config.laneTier)
+        for (const result of response.uploads) {
+          const item = batch[result.index]
+          if (item === undefined) continue
+          const current = await this.store.get(item.id)
+          if (current === undefined || current.state !== 'staged') continue
+          if (result.ok && result.uploadId !== undefined && result.url !== undefined) {
+            await this.update(current, {
+              uploadId: result.uploadId,
+              signedUrl: result.url,
+              signedAtMs: Date.now()
+            })
+            prestaged++
+          } else {
+            const message = result.error ?? ''
+            if (message === 'Duplicate.') {
+              await this.update(current, { state: 'duplicate', error: undefined })
+            } else if (NON_RETRYABLE_SIGN_ERRORS.some(pattern => pattern.test(message))) {
+              await this.update(current, { analysisError: message })
+            }
+            // retryable → untouched; the normal path covers it at Start
+          }
+        }
+      } catch { /* whole-batch failure — items stay staged; normal path covers */ }
+    }
+    await this.emitStats()
+    return prestaged
   }
 
   /**

@@ -432,6 +432,11 @@ const enqueueFiles = async (streamId: string, files: Array<{ file: File, relativ
   })
   await Promise.all(workers)
   await refreshItems()
+  // Background prestage (non-WAV): sha1 + signed URL while still parked —
+  // signing IS the dedup check, so will-be-duplicate rows resolve NOW and
+  // Start fast-tracks the rest straight into the upload pool. Fire-and-
+  // forget: any failure leaves items on the normal Start path.
+  void engine.prestage(pairs.map(pair => pair.item.id)).then(async () => { await refreshItems() })
 }
 
 const boxDrop = async (streamId: string, event: DragEvent): Promise<void> => {
