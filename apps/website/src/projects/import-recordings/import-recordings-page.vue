@@ -17,6 +17,14 @@
       >
         ⧉ Pop out
       </button>
+      <button
+        v-else
+        class="btn btn-secondary text-sm whitespace-nowrap"
+        title="Close this window (uploads resume in the main tab)"
+        @click="closePopout"
+      >
+        ✕ Close window
+      </button>
     </div>
 
     <div
@@ -508,6 +516,13 @@ let watchdogTimer: ReturnType<typeof setInterval> | undefined
 const popOut = (): void => {
   const url = `${window.location.origin}/p/${projectSlug.value}/import-recordings?popout=1`
   window.open(url, 'arbimon-uploader', 'popup=yes,width=1280,height=860')
+}
+
+const closePopout = (): void => {
+  // window.close() works because the pop-out was opened by script (same
+  // origin, named window). The opener's 5s heartbeat watchdog then clears
+  // its dormant banner and resumes engine control automatically.
+  window.close()
 }
 
 onMounted(() => {

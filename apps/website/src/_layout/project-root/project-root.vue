@@ -1,6 +1,11 @@
 <template>
-  <landing-navbar v-if="shouldShowNavbar" />
-  <sidebar v-else />
+  <!-- Pop-out windows (uploader ?popout=1) are chrome-free: no navbar, no
+       sidebar — the window exists solely to keep uploads running while the
+       user navigates the ORIGINAL tab. -->
+  <template v-if="!isPopout">
+    <landing-navbar v-if="shouldShowNavbar" />
+    <sidebar v-else />
+  </template>
   <div
     v-if="store.project"
   >
@@ -27,5 +32,8 @@ const route = useRoute()
 
 // view as guest, or does not have a permission to view the project
 const shouldShowNavbar = computed(() => route.query.guest === '1' || store.userIsExternalGuest || store.project === undefined)
+
+// chrome-free pop-out mode (uploader)
+const isPopout = computed(() => route.query.popout === '1')
 
 </script>
