@@ -432,11 +432,41 @@ const enqueueFiles = async (streamId: string, files: Array<{ file: File, relativ
   })
   await Promise.all(workers)
   await refreshItems()
-  // Background prestage (non-WAV): sha1 + signed URL while still parked —
-  // signing IS the dedup check, so will-be-duplicate rows resolve NOW and
-  // Start fast-tracks the rest straight into the upload pool. Fire-and-
-  // forget: any failure leaves items on the normal Start path.
+  // Two background advisories, fire-and-forget (failures leave items on the
+  // normal Start path):
+  // 1. prestage (non-WAV): sha1 + signed URL while parked — signing IS the
+  //    dedup check, so those rows resolve NOW and Start fast-tracks them.
   void engine.prestage(pairs.map(pair => pair.item.id)).then(async () => { await refreshItems() })
+  // 2. existence check (ALL files incl. WAVs): a recording already at this
+  //    (site, timestamp) means the server WILL reject the upload (same
+  //    checksum → Duplicate., different → Invalid.) — surface that verdict
+  //    at staging time instead of after Start. Per-row Retry remains the
+  //    override for the rare recoverable (availability=0) case.
+  void checkExistingRecordings(pairs.map(pair => pair.item.id))
+}
+
+const checkExistingRecordings = async (ids: string[]): Promise<void> => {
+  if (apiClientArbimon === undefined) return
+  const CONCURRENCY = 4
+  let index = 0
+  let flagged = 0
+  const workers = Array.from({ length: Math.min(CONCURRENCY, ids.length) }, async () => {
+    while (index < ids.length) {
+      const id = ids[index++]
+      const item = items.value.find(i => i.id === id)
+      if (item === undefined || item.state !== 'staged' || item.timestampUtc === undefined) continue
+      try {
+        const recordingId = await apiArbimonResolveRecordingId(
+          apiClientArbimon, projectSlug.value, item.streamId, item.timestampUtc)
+        if (recordingId !== undefined) {
+          const ok = await engine.markDuplicateIfStaged(id, 'A recording already exists at this site + time')
+          if (ok) flagged++
+        }
+      } catch { /* advisory only — the sign-time check remains authoritative */ }
+    }
+  })
+  await Promise.all(workers)
+  if (flagged > 0) await refreshItems()
 }
 
 const boxDrop = async (streamId: string, event: DragEvent): Promise<void> => {

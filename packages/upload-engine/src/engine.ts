@@ -193,6 +193,25 @@ export class UploadEngine {
   }
 
   /**
+   * Advisory duplicate flag from a STAGING-TIME existence check (site+
+   * timestamp — no checksum needed, so it covers WAVs the checksum-based
+   * prestage cannot). A recording already existing at (stream, timestamp)
+   * guarantees the server would reject the upload (same checksum →
+   * Duplicate., different → Invalid.), so flagging terminal-duplicate is
+   * criteria-faithful. Guarded: applies only while the item is still
+   * staged. The rare availability=0 lost-recording case (where re-upload
+   * IS allowed) has the per-row Retry as its override — retry re-enters
+   * the pipeline and the server delivers the authoritative verdict.
+   */
+  async markDuplicateIfStaged (itemId: string, note?: string): Promise<boolean> {
+    const item = await this.store.get(itemId)
+    if (item === undefined || item.state !== 'staged') return false
+    await this.update(item, { state: 'duplicate', error: note })
+    await this.emitStats()
+    return true
+  }
+
+  /**
    * Background prestage (2026-08-12, operator design): for STAGED files that
    * will upload as-is (non-WAV — never transcoded), compute the sha1 and
    * request the signed URL while the queue is still parked. Because signing
@@ -397,11 +416,15 @@ export class UploadEngine {
     if (online) this.kick()
   }
 
-  /** Retry a failed/rejected/cancelled item (resets attempts). */
+  /** Retry a failed/rejected/cancelled/duplicate item (resets attempts).
+   * Duplicate is retryable as the OVERRIDE for advisory pre-upload flags
+   * (e.g. the availability=0 lost-recording case): the server re-issues
+   * the authoritative verdict at signing — a true duplicate just returns
+   * to `duplicate`, costing one sign-request slot and zero bytes. */
   async retry (itemId: string): Promise<void> {
     const item = await this.store.get(itemId)
     if (item === undefined) return
-    if (item.state !== 'failed' && item.state !== 'rejected' && item.state !== 'cancelled') return
+    if (!['failed', 'rejected', 'cancelled', 'duplicate'].includes(item.state)) return
     // Transcoded items must go back through prepare: their encoded blob was
     // released at the terminal state, and the fileSource would serve the
     // ORIGINAL bytes under the FLAC identity → guaranteed checksum mismatch.

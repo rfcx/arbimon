@@ -509,7 +509,7 @@ const STATE_LABELS: Record<string, string> = {
   uploading: 'Uploading',
   uploaded: 'Processing (server)…',
   ingested: 'Complete',
-  duplicate: 'Duplicate (already ingested)',
+  duplicate: 'Duplicate — already ingested (↻ to force retry)',
   failed: 'Failed',
   rejected: 'Rejected',
   cancelled: 'Cancelled',
@@ -521,6 +521,8 @@ const statusCol = (item: UploadItem): string => {
   // prestaged: checksum + signed URL already in hand — Start goes straight
   // to the PUT (and the server's dedup check already passed this file)
   if (item.state === 'staged' && item.signedUrl !== undefined) return 'Staged — ready for fast upload'
+  // advisory duplicates carry their staging-time note in `error`
+  if (item.state === 'duplicate' && item.error !== undefined) return `Duplicate — ${item.error}`
   const label = STATE_LABELS[item.state] ?? item.state
   const detail = item.error
   return detail !== undefined && ['failed', 'rejected', 'cancelled'].includes(item.state)
@@ -585,8 +587,11 @@ const rateCol = (item: UploadItem): string => {
 const canCancel = (item: UploadItem): boolean =>
   !['ingested', 'duplicate', 'failed', 'rejected', 'cancelled'].includes(item.state)
 
+// duplicate is retryable as the OVERRIDE for advisory staging-time flags
+// (lost-recording/availability=0 re-uploads) — the server re-verdicts at
+// signing, so a true duplicate just bounces back at zero byte cost
 const canRetry = (item: UploadItem): boolean =>
-  ['failed', 'rejected', 'cancelled'].includes(item.state)
+  ['failed', 'rejected', 'cancelled', 'duplicate'].includes(item.state)
 
 const canClear = (item: UploadItem): boolean =>
   ['ingested', 'duplicate', 'failed', 'rejected', 'cancelled', 'staged'].includes(item.state)
