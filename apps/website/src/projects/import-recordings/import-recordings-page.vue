@@ -45,6 +45,11 @@
          did not fix. -->
     <p class="text-sm text-cloud mt-3">
       Upload recordings from directly within your browser. Metadata from your recordings and project data are used to match each recording to the correct date, time and timezone and to scan for duplicate recordings within a Site. You&rsquo;ll have a chance to review and correct the dates, times and timezones of your recordings before they&rsquo;re uploaded. Then, click &ldquo;Start&rdquo; to launch the upload.
+      <!-- Background-uploads sentence: copy is deliberately honest about the
+           tab-close case — the queue persists (IndexedDB) but file handles
+           cannot survive a closed tab, so those items need re-adding
+           (verified in engine.prepareOne). -->
+      Uploads continue in the background while you browse other pages in Arbimon; if you close this tab, you&rsquo;ll be asked to re-add your recordings to finish &mdash; anything already uploaded is skipped.
     </p>
 
     <div
@@ -178,15 +183,7 @@
           ><path d="M3 2.5L8 7l5-4.5M3 9.5L8 14l5-4.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
           {{ anyBoxExpanded ? 'Collapse all' : 'Expand all' }}
         </button>
-        <!-- Background-uploads note: lives ON the options row (where Start is
-             conceptually near) not in the intro — it matters once uploads run.
-             Copy is deliberately honest about the tab-close case: the queue
-             persists (IndexedDB) but file handles cannot survive a closed tab,
-             so those items need re-adding (verified in engine.prepareOne). -->
-        <span class="text-xs text-cloud basis-full">
-          Uploads continue in the background while you browse other pages in Arbimon. If you close this tab, you&rsquo;ll be asked to re-add your recordings to finish &mdash; anything already uploaded is skipped.
-        </span>
-      </div>
+        </div>
 
       <!-- WAV->FLAC explainer modal -->
       <div
