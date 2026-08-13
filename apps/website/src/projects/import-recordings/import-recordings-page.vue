@@ -2,17 +2,23 @@
   <section :class="isPopout ? 'p-6' : 'pt-20 pl-18 pr-6 md:(pl-23 pr-10) pb-20'">
     <div class="flex items-start justify-between">
       <div>
+        <!-- The PROJECT is the primary header; the task is the sub-header. The
+             project you are uploading into is the thing that orients the user
+             (and the thing that differs between pop-out windows). -->
         <h1 :class="isPopout ? 'text-2xl' : 'mt-6'">
-          Import Recordings <span class="text-sm align-middle rounded bg-frequency/20 px-2 py-1 ml-2">BETA</span>
+          {{ projectName ?? 'Project' }}
         </h1>
-        <p
-          v-if="projectName !== undefined"
-          class="text-base mt-1 font-medium"
-        >
-          <span class="text-cloud">Project:</span> <span class="text-frequency">{{ projectName }}</span>
+        <h2 class="text-lg font-semibold mt-1">
+          Upload &amp; Import Recordings
+          <!-- Generic "NEW" chip: intentionally not uploader-specific so the
+               same treatment can flag other new features elsewhere. -->
+          <span class="text-xs align-middle rounded bg-frequency/20 text-frequency px-2 py-0.5 ml-2 font-medium tracking-wide">NEW</span>
+        </h2>
+        <p class="text-sm text-cloud mt-3 max-w-4xl">
+          Upload recordings from directly within your browser. Metadata from your recordings and project data are used to match each recording to the correct date, time and timezone and to scan for duplicate recordings within a Site. You&rsquo;ll have a chance to review and correct the dates, times and timezones of your recordings before they&rsquo;re uploaded. Then, click &ldquo;Start&rdquo; to launch the upload.
         </p>
-        <p class="text-sm text-cloud mt-2">
-          Upload recordings directly from your browser. Recordings are analyzed locally first — review the list, then press Start.
+        <p class="text-sm text-cloud mt-2 max-w-4xl">
+          When you add WAV audio files, this uploader may pre-encode the files from WAV to a lossless FLAC format prior to upload. This can reduce your upload time by as much as 50% on slower connections, but it will make use of your computer&rsquo;s CPU for the encoding. You can disable this feature at any time.
         </p>
       </div>
       <button
