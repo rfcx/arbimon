@@ -548,8 +548,11 @@ const DATE_PICKER_OPTIONS: FlowbiteDatePickerOptions = {
   // (measured: calendar y=111..369 for an input at y=369), which put the
   // calendar ~258px above the control, over the page header/stats — far from
   // where the user is looking, so it read as "the calendar didn't open".
-  // flowbite parses this as space-separated x/y keywords (processOptions.js).
-  orientation: 'bottom left'
+  // Horizontal stays AUTO: the control sits far right (x~1237) and the
+  // calendar is 392px wide, so pinning 'left' overflowed the viewport by
+  // ~98px; auto flips it to right-align against the field instead.
+  // flowbite parses this as space-separated y/x keywords (processOptions.js).
+  orientation: 'bottom auto'
 }
 
 /** Attach a picker to an input and mirror its picks back into a ref. */
