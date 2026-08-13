@@ -125,9 +125,9 @@
         </div>
       </div>
 
-      <!-- Options row: Add-site button + the SESSION-WIDE settings (timezone
-           method + FLAC toggle). Timezone moved up from the per-box header
-           2026-08-13 (operator) — one method for the whole session. -->
+      <!-- Options row: Add-site button on the LEFT; the SESSION-WIDE settings
+           (timezone method + FLAC toggle) justified RIGHT (operator
+           2026-08-13). ml-auto on the settings group does the split. -->
       <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3 items-center">
         <button
           class="btn btn-primary text-sm inline-flex items-center gap-x-2"
@@ -138,7 +138,8 @@
           <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
           Add Recordings to a Site
         </button>
-        <label class="flex items-center gap-x-2 text-sm text-cloud">
+        <div class="ml-auto flex flex-wrap items-center gap-x-6 gap-y-3">
+        <label class="flex items-center gap-x-2 text-sm text-cloud whitespace-nowrap">
           Determine Timezone(s):
           <select
             v-model="timezoneMode"
@@ -159,11 +160,13 @@
           </select>
         </label>
         <div class="flex items-center gap-x-1.5">
-          <label class="flex items-center gap-x-2 text-sm cursor-pointer select-none">
+          <!-- whitespace-nowrap + shrink-0: the label must never wrap mid-phrase
+               when the row tightens (operator 2026-08-13). -->
+          <label class="flex items-center gap-x-2 text-sm cursor-pointer select-none whitespace-nowrap shrink-0">
             <input
               v-model="flacEncodeEnabled"
               type="checkbox"
-              class="rounded border-cloud/40 bg-pitch"
+              class="rounded border-cloud/40 bg-pitch shrink-0"
             >
             Pre-Convert WAV to FLAC
           </label>
@@ -178,30 +181,36 @@
             extra-class-icon="mt-0 hover:text-frequency"
           />
         </div>
-        <!-- Gmail-style expand/collapse ALL site queues. Tri-state label:
-             if ANY box is expanded the action is Collapse all, else Expand
-             all. Only shown once there are ≥2 linked boxes to act on. -->
+        </div>
+      </div>
+
+      <!-- Expand/Collapse ALL, as an ICON button parked in the LEFT MARGIN so
+           it sits on the same vertical line as each section's caret (-ml-7 w-7
+           mirrors the caret's own geometry). Icons are Gmail's own
+           expand-all / collapse-all glyphs (-960 960 viewBox, Material
+           coordinate system). Only shown once there are ≥2 linked sections. -->
+      <div
+        v-if="linkedBoxCount >= 2"
+        class="mt-4 -mb-2"
+      >
         <button
-          v-if="linkedBoxCount >= 2"
-          class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
+          class="-ml-7 w-7 inline-flex items-center justify-center text-cloud hover:text-frequency"
           :title="anyBoxExpanded ? 'Collapse all Upload Queue Sections' : 'Expand all Upload Queue Sections'"
+          :aria-label="anyBoxExpanded ? 'Collapse all' : 'Expand all'"
           @click="toggleAllBoxes"
         >
           <svg
             v-if="anyBoxExpanded"
-            viewBox="0 0 16 16"
-            class="w-3.5 h-3.5 fill-none stroke-current"
-            stroke-width="1.8"
-          ><path d="M3 6.5L8 2l5 4.5M3 13.5L8 9l5 4.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            viewBox="0 -960 960 960"
+            class="w-5 h-5 fill-current"
+          ><path d="M289-95l-50-50L480-387L721-145L671-95L480-285L289-95ZM480-573L239-815l50-50L480-675L671-865l50,50L480-573Z" /></svg>
           <svg
             v-else
-            viewBox="0 0 16 16"
-            class="w-3.5 h-3.5 fill-none stroke-current"
-            stroke-width="1.8"
-          ><path d="M3 2.5L8 7l5-4.5M3 9.5L8 14l5-4.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          {{ anyBoxExpanded ? 'Collapse all' : 'Expand all' }}
+            viewBox="0 -960 960 960"
+            class="w-5 h-5 fill-current"
+          ><path d="M480-95L239-337l50-50l191,190l191-190l50,50L480-95ZM289-575l-50-50l241-242l241,242l-50,50l-191-190L289-575Z" /></svg>
         </button>
-        </div>
+      </div>
 
       <!-- hidden file input; routed to whichever box requested the picker -->
       <input
