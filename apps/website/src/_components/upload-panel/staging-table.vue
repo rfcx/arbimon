@@ -1,8 +1,10 @@
 <template>
-  <!-- Top border makes each site-queue a clearly delimited section; pl-7
-       reserves the left margin the caret hangs into (-ml-7 on the caret), so
-       the Site name sits flush with the table's left border below it. -->
-  <div class="mt-6 pt-5 border-t border-cloud/20 pl-7">
+  <!-- Top border makes each site-queue a clearly delimited section. NO extra
+       left padding: the section's content (site name + table) sits at the SAME
+       left edge as every other page section; the caret hangs INTO the page's
+       own gutter via its negative margin (operator 2026-08-13: the caret must
+       not shrink the queue's usable width). -->
+  <div class="mt-6 pt-5 border-t border-cloud/20">
     <!-- Single header line: collapse-caret + site identity + timezone LEFT,
          all action buttons RIGHT — one horizontal row above the table. -->
     <div class="flex items-center justify-between gap-x-4 flex-wrap gap-y-2">
@@ -31,21 +33,22 @@
           </select>
         </template>
         <template v-else>
-          <!-- Collapse caret: hangs INTO the left margin (-ml-7) so the site
-               name is flush with the table border. Solid triangle, standard
-               orientation: ▾ expanded / ▸ collapsed. Stark = filled + insight
-               colour, not the thin cloud stroke it used to be. -->
+          <!-- Collapse caret: the app's STANDARD chevron (custom-icons
+               'angle-down', same glyph as dropdowns elsewhere). Points DOWN
+               when expanded, ROTATES to point RIGHT when collapsed. It hangs
+               into the page gutter (-ml-7 w-7, no compensating padding on the
+               section) so the site name + queue box stay flush with the
+               common left edge of all page sections. -->
           <button
             class="-ml-7 w-7 -mr-4 shrink-0 inline-flex items-center justify-center text-insight hover:text-frequency"
             :title="collapsed ? 'Expand this site' : 'Collapse this site'"
             :aria-expanded="!collapsed"
             @click="$emit('toggleCollapsed')"
           >
-            <svg
-              viewBox="0 0 16 16"
-              class="w-5 h-5 fill-current transition-transform duration-200"
+            <icon-custom-angle-down
+              class="w-5 h-5 transition-transform duration-200"
               :class="collapsed ? '-rotate-90' : ''"
-            ><path d="M3.5 5.5h9L8 12z" /></svg>
+            />
           </button>
           <h3 class="text-xl font-bold">
             {{ siteName }}
@@ -176,11 +179,10 @@
                 class="px-2 py-1.5"
               >
                 <span class="inline-flex items-center gap-x-2">
-                  <svg
-                    viewBox="0 0 16 16"
-                    class="w-3.5 h-3.5 fill-current text-insight transition-transform duration-200"
+                  <icon-custom-angle-down
+                    class="w-4 h-4 text-insight transition-transform duration-200"
                     :class="groupCollapsed[section.key] ? '-rotate-90' : ''"
-                  ><path d="M3.5 5.5h9L8 12z" /></svg>
+                  />
                   <span
                     class="font-semibold"
                     :class="section.key === 'errors' ? 'text-flamingo' : section.key === 'completed' ? 'text-frequency' : 'text-insight'"
