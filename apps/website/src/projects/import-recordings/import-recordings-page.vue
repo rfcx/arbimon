@@ -240,7 +240,7 @@
           {{ siteBoxes.length === 0 ? 'Add Recordings to a Site' : 'Add Recordings to another Site' }}
         </span>
         <span class="block text-sm text-cloud mt-2">
-          Each site gets its own upload box — drop files into the box for the site they belong to. Boxes upload in parallel.
+          Each site gets its own upload box — drop recordings into the box for the site they belong to. Boxes upload in parallel.
         </span>
       </button>
     </template>
