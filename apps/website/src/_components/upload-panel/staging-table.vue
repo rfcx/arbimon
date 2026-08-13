@@ -108,6 +108,30 @@
       <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
         <template v-if="selectedIds.size > 0">
           <span class="text-sm text-cloud">{{ selectedIds.size }} selected:</span>
+          <!-- BATCH DATE EDIT (operator 2026-08-13): set one date across every
+               selected row, keeping each row's own TIME. Starting with date
+               only — a numeric UTC-offset picker was floated but deferred as
+               harder to reason about; this covers the common "recorder had the
+               wrong day" case. Only offered for rows that are still editable. -->
+          <label
+            v-if="editableSelectedCount > 0"
+            class="flex items-center gap-x-2 text-sm text-cloud"
+          >
+            Set date:
+            <input
+              v-model="batchDate"
+              type="date"
+              class="rounded border-cloud/30 bg-pitch text-insight px-2 py-1 text-sm"
+            >
+            <button
+              class="btn btn-secondary text-sm"
+              :disabled="batchDate === ''"
+              :title="`Apply this date to ${editableSelectedCount} selected recording${editableSelectedCount === 1 ? '' : 's'} (each keeps its own time)`"
+              @click="applyBatchDate"
+            >
+              Apply
+            </button>
+          </label>
           <button
             class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
             @click="emitSelected('startSelected')"
@@ -247,23 +271,35 @@
             >
               {{ displayFilename(item) }}
             </td>
-            <!-- Date + Time cells: pre-Start rows get an edit affordance opening the
-                 datetime-correction popover (operator 2026-08-13). One control edits
-                 BOTH cells (a datetime-local input) — date and time are one value. -->
+            <!-- Date and Time each get their OWN picker (operator 2026-08-13):
+                 a date input for the date cell, a time input for the time cell.
+                 Pre-Start rows only. -->
             <td class="px-2 py-1.5">
               <span class="inline-flex items-center gap-x-1">
                 {{ recDate(item) }}
                 <button
                   v-if="canEditDatetime(item)"
                   class="text-cloud/60 hover:text-frequency"
-                  title="Correct this recording’s date &amp; time"
-                  @click="openDatetimeEditor(item)"
+                  title="Correct this recording’s date"
+                  @click="openFieldEditor(item, 'date')"
                 >
                   <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="1.5"><path d="M10.5 2.5l3 3L6 13l-3.5.5L3 10l7.5-7.5zM9 4l3 3" stroke-linecap="round" stroke-linejoin="round" /></svg>
                 </button>
               </span>
             </td>
-            <td class="px-2 py-1.5">{{ recTime(item) }}</td>
+            <td class="px-2 py-1.5">
+              <span class="inline-flex items-center gap-x-1">
+                {{ recTime(item) }}
+                <button
+                  v-if="canEditDatetime(item)"
+                  class="text-cloud/60 hover:text-frequency"
+                  title="Correct this recording’s time"
+                  @click="openFieldEditor(item, 'time')"
+                >
+                  <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="1.5"><path d="M10.5 2.5l3 3L6 13l-3.5.5L3 10l7.5-7.5zM9 4l3 3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                </button>
+              </span>
+            </td>
             <td class="px-2 py-1.5">{{ zoneCol(item) }}</td>
             <td class="px-2 py-1.5 text-cloud">{{ tzSourceLabel(item) }}</td>
             <td class="px-2 py-1.5">{{ formatCol(item) }}</td>
@@ -342,8 +378,9 @@
       <slot name="intake" />
     </div>
 
-    <!-- Datetime-correction modal (native datetime-local input = the platform's
-         own date+time picker; house modal pattern, cf. the FLAC explainer). -->
+    <!-- Per-field correction modal: a DATE picker or a TIME picker depending on
+         which cell's pencil was clicked (native inputs = the platform's own
+         pickers). House modal pattern, cf. the FLAC explainer. -->
     <div
       v-if="editingItem !== undefined"
       class="fixed inset-0 z-[9999] isolate flex items-center justify-center bg-pitch/60"
@@ -353,7 +390,7 @@
         <div class="flex flex-col gap-y-4">
           <div class="flex flex-row items-center justify-between">
             <h2 class="text-xl font-header">
-              Correct Date &amp; Time
+              Correct {{ editField === 'date' ? 'Date' : 'Time' }}
             </h2>
             <button
               type="button"
@@ -367,10 +404,17 @@
             {{ editingItem.relativePath }}
           </p>
           <label class="text-sm text-cloud flex flex-col gap-y-1.5">
-            Recording started at ({{ editZoneLabel }})
+            {{ editField === 'date' ? 'Recording date' : 'Recording start time' }} ({{ editZoneLabel }})
             <input
+              v-if="editField === 'date'"
               v-model="editValue"
-              type="datetime-local"
+              type="date"
+              class="rounded border-cloud/30 bg-pitch text-insight px-3 py-2"
+            >
+            <input
+              v-else
+              v-model="editValue"
+              type="time"
               step="1"
               class="rounded border-cloud/30 bg-pitch text-insight px-3 py-2"
             >
@@ -385,7 +429,7 @@
             <button
               class="btn btn-primary btn-medium px-4 py-2"
               :disabled="editValue === ''"
-              @click="saveDatetime"
+              @click="saveField"
             >
               Save
             </button>
@@ -449,6 +493,7 @@ const sitePicker = ref<HTMLSelectElement>()
 // server registration and must not drift from it.
 const editingItem = ref<UploadItem>()
 const editValue = ref('')
+const editField = ref<'date' | 'time'>('date')
 
 const canEditDatetime = (item: UploadItem): boolean =>
   item.state === 'staged' || item.state === 'analyzing'
@@ -462,10 +507,15 @@ const onTitleAreaClick = (event: MouseEvent): void => {
   emit('toggleCollapsed')
 }
 
-const openDatetimeEditor = (item: UploadItem): void => {
+/** Open the DATE or TIME picker for one row. localWallTime is
+ * 'YYYY-MM-DDTHH:mm:ss', so each field is a slice of it. */
+const openFieldEditor = (item: UploadItem, field: 'date' | 'time'): void => {
   editingItem.value = item
-  // datetime-local wants 'YYYY-MM-DDTHH:mm:ss' — exactly localWallTime's shape
-  editValue.value = item.localWallTime ?? ''
+  editField.value = field
+  const wall = item.localWallTime
+  editValue.value = wall === undefined
+    ? ''
+    : field === 'date' ? wall.slice(0, 10) : wall.slice(11, 19)
 }
 
 /** The zone the edited wall time will be interpreted in — the row's OWN
@@ -505,10 +555,21 @@ const tzOffsetLabel = computed<string | undefined>(() => {
   } catch { return undefined }
 })
 
-const saveDatetime = (): void => {
+const saveField = (): void => {
   const item = editingItem.value
   if (item === undefined || editValue.value === '') return
-  const wall = editValue.value.length === 16 ? `${editValue.value}:00` : editValue.value
+  // Recombine the edited field with the row's existing other half. A row with
+  // NO timestamp yet (analysis failed) gets sensible defaults so a single
+  // field edit can still produce a complete, valid timestamp.
+  const existing = item.localWallTime
+  const datePart = editField.value === 'date'
+    ? editValue.value
+    : existing?.slice(0, 10) ?? new Date().toISOString().slice(0, 10)
+  const rawTime = editField.value === 'time'
+    ? editValue.value
+    : existing?.slice(11, 19) ?? '00:00:00'
+  const timePart = rawTime.length === 5 ? `${rawTime}:00` : rawTime
+  const wall = `${datePart}T${timePart}`
   const zone = editZone.value
   // Offset-string zones (UTC±HH:MM from filename/metadata rungs) and IANA
   // names both go through toUtcIso; plain 'UTC' means interpret as UTC.
@@ -516,6 +577,28 @@ const saveDatetime = (): void => {
   if (utc === undefined) return
   emit('editDatetime', { id: item.id, localWallTime: wall, timestampUtc: utc, timezoneName: zone })
   editingItem.value = undefined
+}
+
+// -- batch date edit over the current selection ----------------------------
+const batchDate = ref('')
+
+/** Selected rows that are still pre-Start (the only ones we may re-date). */
+const editableSelected = computed(() =>
+  props.items.filter(item => selectedIds.value.has(item.id) && canEditDatetime(item)))
+const editableSelectedCount = computed(() => editableSelected.value.length)
+
+const applyBatchDate = (): void => {
+  if (batchDate.value === '') return
+  for (const item of editableSelected.value) {
+    // keep each row's OWN time; only the date moves
+    const time = item.localWallTime?.slice(11, 19) ?? '00:00:00'
+    const wall = `${batchDate.value}T${time}`
+    const zone = item.timezoneName ?? props.siteTimezone ?? 'UTC'
+    const utc = zone === 'UTC' ? toUtcIso(wall) : toUtcIso(wall, offsetToMinutes(zone) ?? zone)
+    if (utc === undefined) continue
+    emit('editDatetime', { id: item.id, localWallTime: wall, timestampUtc: utc, timezoneName: zone })
+  }
+  batchDate.value = ''
 }
 
 /** '±HH:MM' -> minutes; undefined for IANA names. */
