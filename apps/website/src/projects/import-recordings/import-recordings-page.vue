@@ -621,10 +621,23 @@ const enqueueFiles = async (streamId: string, files: Array<{ file: File, relativ
   //    dedup check, so those rows resolve NOW and Start fast-tracks them.
   void engine.prestage(pairs.map(pair => pair.item.id)).then(async () => { await refreshItems() })
   // 2. existence check (ALL files incl. WAVs): a recording already at this
-  //    (site, timestamp) means the server WILL reject the upload (same
-  //    checksum → Duplicate., different → Invalid.) — surface that verdict
-  //    at staging time instead of after Start. Per-row Retry remains the
-  //    override for the rare recoverable (availability=0) case.
+  //    (site, timestamp) means the server WILL reject the upload — surface
+  //    that verdict at staging time instead of after Start.
+  //
+  //    Verified against Core 2026-08-13 (core/internal/ingest/get.js + its
+  //    own int tests): the stream-source-file lookup is keyed on sha1 AND
+  //    start. A match returns the file (→ 'Duplicate.'); a MISS with a
+  //    segment already at that instant returns 403 'There is another file
+  //    with the same timestamp' (→ 'Invalid.'). So a timestamp collision is
+  //    rejected EITHER WAY — knowing only (site, timestamp) is enough to
+  //    predict rejection; we just cannot name which of the two it will be.
+  //    (An earlier version of this comment claimed a different checksum
+  //    yields 'Invalid.' via the same lookup; it actually never matches the
+  //    lookup at all and is caught by the 403 branch.)
+  //
+  //    The one exception is availability === 0 (the existing file was
+  //    deleted), where the server ALLOWS a re-ingest. That is precisely why
+  //    duplicate rows keep a ↻ Retry override rather than being terminal.
   void checkExistingRecordings(pairs.map(pair => pair.item.id))
 }
 
@@ -645,7 +658,7 @@ const checkExistingRecordings = async (ids: string[]): Promise<void> => {
         const recordingId = await apiArbimonFindRecordingAtExactTime(
           apiClientArbimon, projectSlug.value, item.streamId, item.timestampUtc)
         if (recordingId !== undefined) {
-          const ok = await engine.markDuplicateIfStaged(id, 'A recording already exists at this site + time')
+          const ok = await engine.markDuplicateIfStaged(id, 'This site already has a recording at this date and time — use ↻ Retry to upload anyway')
           if (ok) flagged++
         }
       } catch { /* advisory only — the sign-time check remains authoritative */ }
