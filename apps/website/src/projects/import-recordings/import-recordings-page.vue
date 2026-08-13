@@ -167,19 +167,16 @@
             >
             Pre-Convert WAV to FLAC
           </label>
-          <!-- Long-form explanation lives in a modal rather than a tooltip:
-               the copy is a full paragraph, which flowbite tooltips (used for
-               one-liners elsewhere) handle badly. Icon matches the app's
-               `icon-custom-ic-info` treatment used by icon-i-info.vue. -->
-          <button
-            type="button"
-            class="inline-flex items-center justify-center text-insight hover:text-frequency transition-colors"
-            title="About WAV to FLAC pre-conversion"
-            aria-label="More information about WAV to FLAC pre-conversion"
-            @click="showFlacInfo = true"
-          >
-            <icon-custom-ic-info class="h-4 w-4 cursor-pointer" />
-          </button>
+          <!-- The app's standard info tooltip (icon-i-info + flowbite).
+               Reverted from a modal 2026-08-13 (operator). The copy is a full
+               paragraph, so extra-class widens the tooltip and lets it wrap
+               instead of stretching into one unreadable line. -->
+          <icon-i-info
+            tooltip-id="flac-preconvert-info"
+            :tooltip-text="FLAC_INFO_TEXT"
+            extra-class="max-w-sm whitespace-normal leading-relaxed text-left"
+            extra-class-icon="mt-0 hover:text-frequency"
+          />
         </div>
         <!-- Gmail-style expand/collapse ALL site queues. Tri-state label:
              if ANY box is expanded the action is Collapse all, else Expand
@@ -205,41 +202,6 @@
           {{ anyBoxExpanded ? 'Collapse all' : 'Expand all' }}
         </button>
         </div>
-
-      <!-- WAV->FLAC explainer modal -->
-      <div
-        v-if="showFlacInfo"
-        class="fixed inset-0 z-[9999] isolate flex items-center justify-center bg-pitch/60"
-        @click.self="showFlacInfo = false"
-      >
-        <div class="bg-moss rounded-xl shadow-lg max-w-lg w-full p-6 mx-4">
-          <div class="flex flex-col gap-y-4">
-            <div class="flex flex-row items-center justify-between">
-              <h2 class="text-2xl font-header">
-                Pre-Convert WAV to FLAC
-              </h2>
-              <button
-                type="button"
-                title="Close"
-                @click="showFlacInfo = false"
-              >
-                <icon-custom-fi-close-thin class="h-6 w-6 cursor-pointer text-insight" />
-              </button>
-            </div>
-            <p class="text-sm text-cloud">
-              When you add WAV audio files, this uploader may pre-encode the files from WAV to a lossless FLAC format prior to upload. This can reduce your upload time by as much as 50% on slower connections, but it will make use of your computer&rsquo;s CPU for the encoding. You can disable this feature at any time.
-            </p>
-            <div class="flex justify-end">
-              <button
-                class="btn btn-primary btn-medium px-4 py-2"
-                @click="showFlacInfo = false"
-              >
-                Got it
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- hidden file input; routed to whichever box requested the picker -->
       <input
@@ -353,7 +315,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { apiArbimonResolveRecordingId } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
@@ -361,6 +323,7 @@ import { type SiteResponse, apiArbimonGetSites } from '@rfcx-bio/common/api-arbi
 import { type TimezoneMode, type UploadItem, analyzeFile, collectDroppedFiles, createUploadItem, isSupportedAudioFile } from '@rfcx-bio/upload-engine'
 
 import StagingTable from '@/_components/upload-panel/staging-table.vue'
+import IconIInfo from '@/projects/components/icon-i-info.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { track } from '~/analytics'
 import { useStore } from '~/store'
@@ -431,8 +394,10 @@ watch(timezoneMode, async (mode) => {
   await refreshItems()
 })
 
-/** WAV->FLAC explainer modal (the "i" beside the pre-convert checkbox). */
-const showFlacInfo = ref(false)
+/** Copy for the "i" tooltip beside the Pre-Convert WAV to FLAC checkbox.
+ * Lives here rather than inline so the template stays readable; the tooltip
+ * component renders it as plain text (no HTML entities). */
+const FLAC_INFO_TEXT = 'When you add WAV audio files, this uploader may pre-encode the files from WAV to a lossless FLAC format prior to upload. This can reduce your upload time by as much as 50% on slower connections, but it will make use of your computer\u2019s CPU for the encoding. You can disable this feature at any time.'
 
 // -- Site-queue collapse (PAGE-owned, lifted from staging-table 2026-08-13) --
 // A Set of collapsed boxIds; absence = expanded. Page-level ownership is what
@@ -557,13 +522,6 @@ watch(projectItems, materializeBoxesFromQueue)
 // -- metrics binding ----------------------------------------------------------
 
 const metrics = projectMetrics
-
-// Escape closes the explainer modal (modal parity with the rest of the app).
-const onFlacInfoKeydown = (e: KeyboardEvent): void => {
-  if (e.key === 'Escape' && showFlacInfo.value) showFlacInfo.value = false
-}
-onMounted(() => { window.addEventListener('keydown', onFlacInfoKeydown) })
-onBeforeUnmount(() => { window.removeEventListener('keydown', onFlacInfoKeydown) })
 
 onMounted(async () => {
   await loadSites()
