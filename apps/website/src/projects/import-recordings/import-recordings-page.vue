@@ -248,7 +248,7 @@
                     @clear-completed="box.streamId !== undefined && clearCompleted(box.streamId)"
           @retry-failed="box.streamId !== undefined && retryFailed(box.streamId)"
           @clear-selected="clearSelected"
-          @cancel-item="cancelItem"
+          
           @retry-item="retryItem"
           @clear-item="clearItem"
           @open-destination="openInVisualizer"
@@ -727,7 +727,7 @@ const clearSelected = async (ids: string[]): Promise<void> => {
   await refreshItems()
 }
 
-const cancelItem = async (id: string): Promise<void> => { await engine.cancel(id); await refreshItems() }
+
 const retryItem = async (id: string): Promise<void> => { await engine.retry(id); engine.start(); await refreshItems() }
 const clearItem = async (id: string): Promise<void> => { await engine.remove(id); await refreshItems() }
 

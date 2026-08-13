@@ -250,11 +250,15 @@
                 </span>
               </td>
             </tr>
+            <!-- Clicking anywhere on a row toggles its selection (operator
+                 2026-08-13), except on the row's own controls — see
+                 onRowClick's closest() guard. cursor-pointer signals it. -->
             <tr
               v-for="item in (groupCollapsed[section.key] ? [] : section.rows)"
               :key="item.id"
-              class="border-t border-cloud/10 hover:bg-moss/20"
+              class="border-t border-cloud/10 hover:bg-moss/20 cursor-pointer"
               :class="selectedIds.has(item.id) ? 'bg-moss/30' : ''"
+              @click="onRowClick(item, $event)"
             >
             <td class="px-2 py-1.5">
               <input
@@ -339,14 +343,6 @@
                   <svg viewBox="0 0 16 16" class="w-4 h-4 fill-none stroke-current" stroke-width="1.6"><path d="M6.5 3.5H3v9h9V9.5M9.5 2.5h4v4M13 3L7.5 8.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
                 </button>
                 <button
-                  v-if="canCancel(item)"
-                  class="text-cloud hover:text-flamingo"
-                  title="Cancel"
-                  @click="$emit('cancelItem', item.id)"
-                >
-                  <svg viewBox="0 0 16 16" class="w-4 h-4 fill-none stroke-current" stroke-width="1.8"><path d="M4 4l8 8M12 4l-8 8" stroke-linecap="round" /></svg>
-                </button>
-                <button
                   v-if="canRetry(item)"
                   class="text-cloud hover:text-frequency"
                   title="Retry"
@@ -354,13 +350,18 @@
                 >
                   <svg viewBox="0 0 16 16" class="w-4 h-4 fill-none stroke-current" stroke-width="1.8"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3" stroke-linecap="round" stroke-linejoin="round" /></svg>
                 </button>
+                <!-- ONE removal control (operator 2026-08-13): the separate
+                     cancel-✕ and clear-trash converged into a single ✕ that
+                     removes the row whatever its state. Safe for in-flight
+                     rows because engine.remove() aborts the transfer before
+                     deleting (engine.ts remove()). Always shown — every row
+                     can be removed. -->
                 <button
-                  v-if="canClear(item)"
-                  class="text-cloud hover:text-insight"
-                  title="Remove from list"
+                  class="text-cloud hover:text-flamingo"
+                  :title="canCancel(item) ? 'Cancel and remove this recording' : 'Remove this recording from the list'"
                   @click="$emit('clearItem', item.id)"
                 >
-                  <svg viewBox="0 0 16 16" class="w-4 h-4 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
+                  <svg viewBox="0 0 16 16" class="w-4 h-4 fill-none stroke-current" stroke-width="1.8"><path d="M4 4l8 8M12 4l-8 8" stroke-linecap="round" /></svg>
                 </button>
               </div>
             </td>
@@ -477,7 +478,7 @@ const emit = defineEmits<{
   (e: 'retryFailed'): void
   
   (e: 'clearSelected', ids: string[]): void
-  (e: 'cancelItem', id: string): void
+  
   (e: 'retryItem', id: string): void
   (e: 'clearItem', id: string): void
   (e: 'openDestination', item: UploadItem): void
@@ -877,6 +878,15 @@ watch(() => props.items, (items) => {
   if (next.size !== selectedIds.value.size) selectedIds.value = next
 })
 
+/** Row click = toggle selection, EXCEPT on the row's own interactive bits
+ * (the checkbox, the date/time pencils, retry, remove, open-in-visualizer).
+ * Without this guard, clicking ✕ would also flip the selection underneath. */
+const onRowClick = (item: UploadItem, event: MouseEvent): void => {
+  const target = event.target as HTMLElement | null
+  if (target?.closest('button, input, a, select, label') !== null) return
+  toggleSelect(item.id)
+}
+
 const emitSelected = (event: 'clearSelected'): void => {
   const ids = [...selectedIds.value]
   emit(event, ids)
@@ -1055,6 +1065,5 @@ const canCancel = (item: UploadItem): boolean =>
 const canRetry = (item: UploadItem): boolean =>
   ['failed', 'rejected', 'cancelled', 'duplicate'].includes(item.state)
 
-const canClear = (item: UploadItem): boolean =>
-  ['ingested', 'duplicate', 'failed', 'rejected', 'cancelled', 'staged'].includes(item.state)
+
 </script>
