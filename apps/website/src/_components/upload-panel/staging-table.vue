@@ -134,13 +134,17 @@
                  way to force a display format, and the operator wants
                  YYYY-MM-DD everywhere. Same component + options shape as
                  _components/date-range-picker/date-input-picker.vue. -->
+            <!-- size=10 + w-auto: the box is exactly a YYYY-MM-DD date wide
+                 (operator 2026-08-13) rather than a fixed utility width. -->
             <input
               ref="batchDateInput"
               v-model="batchDate"
               type="text"
               placeholder="YYYY-MM-DD"
               autocomplete="off"
-              class="rounded border-cloud/30 bg-pitch text-insight px-1.5 py-0.5 text-xs w-28"
+              size="10"
+              maxlength="10"
+              class="rounded border-cloud/30 bg-pitch text-insight px-1.5 py-0.5 text-xs w-auto"
             >
             <button
               class="btn btn-secondary text-xs px-2 py-1"
@@ -874,13 +878,21 @@ const toggleSelect = (id: string): void => {
   selectedIds.value = next
 }
 
+/** Rows the user can actually SEE: only those in EXPANDED status groups.
+ * (Before status grouping, visibleSorted was that set; it no longer is — a
+ * collapsed group's rows are still in visibleSorted but are not rendered, so
+ * select-all silently acted on invisible rows.) */
+const renderedRows = computed(() =>
+  groupSections.value.flatMap(section =>
+    groupCollapsed.value[section.key] ? [] : section.rows))
+
 const allVisibleSelected = computed(() =>
-  visibleSorted.value.length > 0 &&
-  visibleSorted.value.every(item => selectedIds.value.has(item.id)))
+  renderedRows.value.length > 0 &&
+  renderedRows.value.every(item => selectedIds.value.has(item.id)))
 
 const toggleSelectAll = (): void => {
   if (allVisibleSelected.value) selectedIds.value = new Set()
-  else selectedIds.value = new Set(visibleSorted.value.map(item => item.id))
+  else selectedIds.value = new Set(renderedRows.value.map(item => item.id))
 }
 
 // Drop selections whose rows disappeared (cleared)
