@@ -104,8 +104,12 @@
         </template>
       </div>
 
-      <!-- action cluster: selection actions, then standing actions, then ✕ -->
-      <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+      <!-- Action cluster: selection actions, then standing actions, then ✕.
+           min-h RESERVES the taller (selection-active) height at all times so
+           the header does not jump when a row is selected/deselected —
+           operator 2026-08-13. 2.25rem == the btn-secondary height these
+           controls render at. -->
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2 min-h-[2.25rem]">
         <template v-if="selectedIds.size > 0">
           <span class="text-sm text-cloud">{{ selectedIds.size }} selected:</span>
           <!-- BATCH DATE EDIT (operator 2026-08-13): set one date across every
@@ -148,7 +152,7 @@
             @click="emitSelected('clearSelected')"
           >
             <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
-            Remove
+            Remove Selected
           </button>
         </template>
         <!-- 'Clear Completed' and 'Retry Failed' retired from this cluster
