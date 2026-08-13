@@ -125,10 +125,12 @@
 
     <!-- Selection-actions row: ALWAYS present with a reserved height, so
          selecting/deselecting cannot change the section's geometry
-         (operator 2026-08-13). Empty when nothing is selected. -->
+         (operator 2026-08-13). Empty when nothing is selected.
+         2.75rem == 44px, MEASURED as the rendered height of the btn-secondary
+         controls inside it (an earlier 2.25rem/36px guess left an 8px jump). -->
     <div
       v-if="siteName !== undefined"
-      class="flex flex-wrap items-center gap-x-3 gap-y-2 min-h-[2.25rem]"
+      class="flex flex-wrap items-center gap-x-3 gap-y-2 min-h-[2.75rem]"
     >
         <template v-if="selectedIds.size > 0">
           <span class="text-sm text-cloud">{{ selectedIds.size }} selected:</span>
