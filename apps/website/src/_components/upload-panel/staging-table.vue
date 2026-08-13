@@ -155,9 +155,20 @@
               Apply to Selected
             </button>
           </label>
+          <!-- ✕ = CLEAR THE SELECTION (not delete). Pairs with the per-row
+               trash icon, which is the destructive one — operator 2026-08-13:
+               ✕ deselects, trash removes. -->
+          <button
+            class="text-cloud hover:text-insight shrink-0"
+            title="Deselect all selected recordings"
+            aria-label="Deselect all"
+            @click="clearSelection"
+          >
+            <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="1.8"><path d="M4 4l8 8M12 4l-8 8" stroke-linecap="round" /></svg>
+          </button>
           <!-- Selection actions retired 2026-08-13 (operator): Start/Pause
                (the global control row owns run/pause) and Remove Selected
-               (per-row ✕ and the group-level Clear buttons cover removal). -->
+               (per-row trash and the group-level Clear buttons cover removal). -->
         </template>
         <!-- 'Clear Completed' and 'Retry Failed' retired from this cluster
              2026-08-13 (operator): those actions now live ON the Completed and
@@ -360,17 +371,20 @@
                   <svg viewBox="0 0 16 16" class="w-4 h-4 fill-none stroke-current" stroke-width="1.8"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3" stroke-linecap="round" stroke-linejoin="round" /></svg>
                 </button>
                 <!-- ONE removal control (operator 2026-08-13): the separate
-                     cancel-✕ and clear-trash converged into a single ✕ that
-                     removes the row whatever its state. Safe for in-flight
-                     rows because engine.remove() aborts the transfer before
-                     deleting (engine.ts remove()). Always shown — every row
-                     can be removed. -->
+                     cancel-✕ and clear-trash converged into a single button
+                     that removes the row whatever its state. Safe for
+                     in-flight rows because engine.remove() aborts the
+                     transfer before deleting (engine.ts remove()). Always
+                     shown — every row can be removed.
+                     TRASH icon (not ✕): ✕ now means "deselect" in the
+                     selection cluster, so the destructive action needs a
+                     distinct, unambiguous glyph. -->
                 <button
                   class="text-cloud hover:text-flamingo"
                   :title="canCancel(item) ? 'Cancel and remove this recording' : 'Remove this recording from the list'"
                   @click="$emit('clearItem', item.id)"
                 >
-                  <svg viewBox="0 0 16 16" class="w-4 h-4 fill-none stroke-current" stroke-width="1.8"><path d="M4 4l8 8M12 4l-8 8" stroke-linecap="round" /></svg>
+                  <svg viewBox="0 0 16 16" class="w-4 h-4 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
                 </button>
               </div>
             </td>
@@ -878,6 +892,9 @@ const toggleSelect = (id: string): void => {
 const renderedRows = computed(() =>
   groupSections.value.flatMap(section =>
     groupCollapsed.value[section.key] ? [] : section.rows))
+
+/** Drop the whole selection (the ✕ beside 'Apply to Selected'). */
+const clearSelection = (): void => { selectedIds.value = new Set() }
 
 const allVisibleSelected = computed(() =>
   renderedRows.value.length > 0 &&
