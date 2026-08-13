@@ -45,8 +45,10 @@
             :aria-expanded="!collapsed"
             @click="$emit('toggleCollapsed')"
           >
+            <!-- WindiCSS: rotate utilities are inert without the explicit `transform`
+                 class (cf. every in-app usage: 'transform rotate-180'). -->
             <icon-custom-angle-down
-              class="w-5 h-5 transition-transform duration-200"
+              class="w-5 h-5 transform transition-transform duration-200"
               :class="collapsed ? '-rotate-90' : ''"
             />
           </button>
@@ -180,7 +182,7 @@
               >
                 <span class="inline-flex items-center gap-x-2">
                   <icon-custom-angle-down
-                    class="w-4 h-4 text-insight transition-transform duration-200"
+                    class="w-4 h-4 text-insight transform transition-transform duration-200"
                     :class="groupCollapsed[section.key] ? '-rotate-90' : ''"
                   />
                   <span
