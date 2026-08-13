@@ -327,7 +327,7 @@
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { apiArbimonResolveRecordingId } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
+import { apiArbimonFindRecordingAtExactTime, apiArbimonResolveRecordingId } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteResponse, apiArbimonGetSites } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type TimezoneMode, type UploadItem, analyzeFile, collectDroppedFiles, createUploadItem, isSupportedAudioFile } from '@rfcx-bio/upload-engine'
 
@@ -639,7 +639,10 @@ const checkExistingRecordings = async (ids: string[]): Promise<void> => {
       const item = items.value.find(i => i.id === id)
       if (item === undefined || item.state !== 'staged' || item.timestampUtc === undefined) continue
       try {
-        const recordingId = await apiArbimonResolveRecordingId(
+        // EXACT match: the nearest-at-or-before variant matches the site's
+        // newest recording for ANY later timestamp, so it flagged every
+        // genuinely-new file as a duplicate (fixed 2026-08-13).
+        const recordingId = await apiArbimonFindRecordingAtExactTime(
           apiClientArbimon, projectSlug.value, item.streamId, item.timestampUtc)
         if (recordingId !== undefined) {
           const ok = await engine.markDuplicateIfStaged(id, 'A recording already exists at this site + time')

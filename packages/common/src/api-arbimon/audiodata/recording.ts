@@ -190,9 +190,34 @@ export const apiArbimonGetTags = async (apiClient: AxiosInstance, slug: string):
  * upload knows its site + timestamp but not the legacy recording_id, and the
  * Visualizer routes on the numeric id. Returns undefined if not (yet) found.
  */
+/**
+ * The recording CONTAINING this instant (nearest at-or-before).
+ *
+ * Use for "open this moment in the Visualizer": a CNN detection's start, or a
+ * playback position, falls INSIDE a recording rather than at its exact start.
+ * Do NOT use this to test whether a recording already exists at a timestamp —
+ * it matches the site's newest recording for any later instant. Use
+ * apiArbimonFindRecordingAtExactTime for that.
+ */
 export const apiArbimonResolveRecordingId = async (apiClient: AxiosInstance, slug: string, siteExternalId: string, startUtcIso: string): Promise<number | undefined> => {
   const response = await apiClient.get<number>(`/legacy-api/project/${slug}/recordings/query`, {
     params: { site_external_id: siteExternalId, start: startUtcIso }
+  })
+  const id = Number(response.data)
+  return Number.isFinite(id) && id > 0 ? id : undefined
+}
+
+/**
+ * A recording starting EXACTLY at this instant, or undefined.
+ *
+ * The duplicate-detection counterpart to apiArbimonResolveRecordingId: passes
+ * exact=true so the server matches datetime_utc = start instead of <=.
+ * Without it, every file timestamped later than a site's newest recording came
+ * back as an apparent match and was flagged "Duplicate".
+ */
+export const apiArbimonFindRecordingAtExactTime = async (apiClient: AxiosInstance, slug: string, siteExternalId: string, startUtcIso: string): Promise<number | undefined> => {
+  const response = await apiClient.get<number>(`/legacy-api/project/${slug}/recordings/query`, {
+    params: { site_external_id: siteExternalId, start: startUtcIso, exact: true }
   })
   const id = Number(response.data)
   return Number.isFinite(id) && id > 0 ? id : undefined
