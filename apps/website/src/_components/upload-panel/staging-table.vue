@@ -1,10 +1,10 @@
 <template>
-  <!-- Top border makes each site-queue a clearly delimited section. NO extra
+  <!-- Top AND bottom borders bracket each Upload Queue Section. NO extra
        left padding: the section's content (site name + table) sits at the SAME
        left edge as every other page section; the caret hangs INTO the page's
        own gutter via its negative margin (operator 2026-08-13: the caret must
        not shrink the queue's usable width). -->
-  <div class="mt-6 pt-5 border-t border-cloud/20">
+  <div class="mt-6 pt-5 pb-6 border-t border-b border-cloud/20">
     <!-- Single header line: collapse-caret + site identity + timezone LEFT,
          all action buttons RIGHT — one horizontal row above the table. -->
     <div class="flex items-center justify-between gap-x-4 flex-wrap gap-y-2">

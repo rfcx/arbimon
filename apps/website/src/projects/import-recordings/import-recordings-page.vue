@@ -256,13 +256,12 @@
            A drop into a box stages files for THAT box's site — the moment of
            association is where you dropped, not a page-level selector. -->
       <template
-        v-for="(box, boxIndex) in siteBoxes"
+        v-for="box in siteBoxes"
         :key="box.boxId"
       >
-        <hr
-          v-if="boxIndex > 0"
-          class="mt-6 border-cloud/20"
-        >
+        <!-- No <hr> between sections: each Upload Queue Section now carries its
+             OWN top+bottom border (2026-08-13), so a separator here would
+             stack a third rule between adjacent sections. -->
         <div
           @dragenter.prevent="box.streamId !== undefined && boxDragEnter(box.streamId)"
           @dragover.prevent
