@@ -128,17 +128,20 @@
       <!-- Options row: Add-site button on the LEFT; the SESSION-WIDE settings
            (timezone method + FLAC toggle) justified RIGHT (operator
            2026-08-13). ml-auto on the settings group does the split. -->
-      <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3 items-center">
+      <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3 items-center relative">
         <!-- Expand/Collapse ALL: an icon button in the LEFT MARGIN, on the same
-             row as (and just left of) 'Add Recordings to a Site'. -ml-7 w-7
-             mirrors the section carets' geometry so it lines up with the column
-             of carets below. Icons are Gmail's own expand-all / collapse-all
-             glyphs (-960 960 Material viewBox). Only shown once there are ≥2
-             linked sections; a placeholder keeps the row from shifting when it
-             is absent. -->
+             row as (and just left of) 'Add Recordings to a Site'. Positioned
+             ABSOLUTELY so it hangs in the gutter without being a flex item —
+             as a flex child it both consumed row width (pushing 'Add
+             Recordings' off the content edge) and centre-aligned to its own
+             smaller height, sitting ~11px below the button. h-9 matches the
+             button height so it centres against it. -ml-7 w-7 mirrors the
+             section carets' geometry, keeping it on the caret column below.
+             Icons are Gmail's own glyphs (-960 960 Material viewBox). Only
+             shown once there are ≥2 linked sections. -->
         <button
           v-if="linkedBoxCount >= 2"
-          class="-ml-7 -mr-4 w-7 shrink-0 inline-flex items-center justify-center text-cloud hover:text-frequency"
+          class="absolute -ml-7 w-7 h-9 shrink-0 inline-flex items-center justify-center text-cloud hover:text-frequency"
           :title="anyBoxExpanded ? 'Collapse all Upload Queue Sections' : 'Expand all Upload Queue Sections'"
           :aria-label="anyBoxExpanded ? 'Collapse all' : 'Expand all'"
           @click="toggleAllBoxes"
