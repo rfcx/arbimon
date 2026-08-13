@@ -132,20 +132,9 @@
               Apply
             </button>
           </label>
-          <button
-            class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
-            @click="emitSelected('startSelected')"
-          >
-            <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M4 2l9 6-9 6V2z" /></svg>
-            Start
-          </button>
-          <button
-            class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
-            @click="emitSelected('pauseSelected')"
-          >
-            <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M4 2h3v12H4zM9 2h3v12H9z" /></svg>
-            Pause
-          </button>
+          <!-- Start/Pause for a selection retired 2026-08-13 (operator): the
+               global control row owns run/pause; per-selection the useful
+               actions are edit + remove. -->
           <button
             class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
             @click="emitSelected('clearSelected')"
@@ -154,22 +143,9 @@
             Remove
           </button>
         </template>
-        <button
-          v-if="clearableCount > 0"
-          class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
-          @click="$emit('clearCompleted')"
-        >
-          <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
-          Clear Completed ({{ clearableCount }})
-        </button>
-        <button
-          v-if="retryableCount > 0"
-          class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
-          @click="$emit('retryFailed')"
-        >
-          <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="1.8"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          Retry Failed ({{ retryableCount }})
-        </button>
+        <!-- 'Clear Completed' and 'Retry Failed' retired from this cluster
+             2026-08-13 (operator): those actions now live ON the Completed and
+             Errors group header rows, next to the rows they act on. -->
         <button
           v-if="items.length === 0"
           class="text-cloud hover:text-flamingo text-sm shrink-0"
@@ -241,12 +217,27 @@
                     :class="section.key === 'errors' ? 'text-flamingo' : section.key === 'completed' ? 'text-frequency' : 'text-insight'"
                   >{{ section.label }}</span>
                   <span class="text-cloud text-xs">{{ section.metrics }}</span>
+                  <!-- Group-scoped actions live HERE (moved off the header
+                       cluster 2026-08-13): the action sits next to the rows it
+                       acts on. @click.stop so it doesn't also toggle the group. -->
                   <button
                     v-if="section.key === 'errors'"
-                    class="text-xs text-cloud hover:text-frequency underline ml-2"
+                    class="btn btn-secondary text-xs inline-flex items-center gap-x-1 ml-2 px-2 py-0.5"
+                    :title="`Retry all ${section.rows.length} failed recording${section.rows.length === 1 ? '' : 's'}`"
                     @click.stop="$emit('retryFailed')"
+                  ><!-- errors group == exactly the retryFailed set, so the
+                       existing whole-box emit is already group-scoped -->
+                    <svg viewBox="0 0 16 16" class="w-3 h-3 fill-none stroke-current" stroke-width="1.8"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    Retry All ({{ section.rows.length }})
+                  </button>
+                  <button
+                    v-if="section.key === 'completed' || section.key === 'duplicates'"
+                    class="btn btn-secondary text-xs inline-flex items-center gap-x-1 ml-2 px-2 py-0.5"
+                    :title="`Clear these ${section.rows.length} recording${section.rows.length === 1 ? '' : 's'} from the list (they stay uploaded)`"
+                    @click.stop="$emit('clearSelected', section.rows.map(r => r.id))"
                   >
-                    Retry all
+                    <svg viewBox="0 0 16 16" class="w-3 h-3 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
+                    Clear ({{ section.rows.length }})
                   </button>
                 </span>
               </td>
@@ -475,8 +466,7 @@ const emit = defineEmits<{
   (e: 'siteChosen', streamId: string): void
     (e: 'clearCompleted'): void
   (e: 'retryFailed'): void
-  (e: 'startSelected', ids: string[]): void
-  (e: 'pauseSelected', ids: string[]): void
+  
   (e: 'clearSelected', ids: string[]): void
   (e: 'cancelItem', id: string): void
   (e: 'retryItem', id: string): void
@@ -648,14 +638,6 @@ const groupOf = (item: UploadItem): FilterGroup => {
 }
 
 const visible = computed(() => props.items)
-
-/** Rows the standing buttons would act on (count shown in the label;
- * button hidden entirely at 0 — operator UI pass 2). */
-const clearableCount = computed(() =>
-  props.items.filter(item => item.state === 'ingested' || item.state === 'duplicate').length)
-
-const retryableCount = computed(() =>
-  props.items.filter(item => ['failed', 'rejected', 'cancelled'].includes(item.state)).length)
 
 // -- sorting ------------------------------------------------------------------
 
@@ -836,12 +818,9 @@ watch(() => props.items, (items) => {
   if (next.size !== selectedIds.value.size) selectedIds.value = next
 })
 
-const emitSelected = (event: 'startSelected' | 'pauseSelected' | 'clearSelected'): void => {
+const emitSelected = (event: 'clearSelected'): void => {
   const ids = [...selectedIds.value]
-  // explicit dispatch: a dynamic event name defeats the emit overload types
-  if (event === 'startSelected') emit('startSelected', ids)
-  else if (event === 'pauseSelected') emit('pauseSelected', ids)
-  else emit('clearSelected', ids)
+  emit(event, ids)
   selectedIds.value = new Set()
 }
 

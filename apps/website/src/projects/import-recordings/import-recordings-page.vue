@@ -285,8 +285,6 @@
           @site-chosen="linkBoxToSite(box.boxId, $event)"
                     @clear-completed="box.streamId !== undefined && clearCompleted(box.streamId)"
           @retry-failed="box.streamId !== undefined && retryFailed(box.streamId)"
-          @start-selected="startSelected"
-          @pause-selected="pauseSelected"
           @clear-selected="clearSelected"
           @cancel-item="cancelItem"
           @retry-item="retryItem"
@@ -763,17 +761,6 @@ const retryFailed = async (streamId: string): Promise<void> => {
     await engine.retry(item.id)
   }
   engine.start()
-  await refreshItems()
-}
-
-const startSelected = async (ids: string[]): Promise<void> => {
-  await engine.startStaged(ids)
-  engine.start()
-  await refreshItems()
-}
-
-const pauseSelected = async (ids: string[]): Promise<void> => {
-  await engine.pauseItems(ids)
   await refreshItems()
 }
 
