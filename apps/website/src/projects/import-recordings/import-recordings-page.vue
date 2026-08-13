@@ -14,9 +14,6 @@
                same treatment can flag other new features elsewhere. -->
           <span class="text-xs align-middle rounded bg-frequency/20 text-frequency px-2 py-0.5 ml-2 font-medium tracking-wide">NEW</span>
         </h2>
-        <p class="text-sm text-cloud mt-3">
-          Upload recordings from directly within your browser. Metadata from your recordings and project data are used to match each recording to the correct date, time and timezone and to scan for duplicate recordings within a Site. You&rsquo;ll have a chance to review and correct the dates, times and timezones of your recordings before they&rsquo;re uploaded. Then, click &ldquo;Start&rdquo; to launch the upload.
-        </p>
       </div>
       <button
         v-if="!isPopout"
@@ -41,6 +38,14 @@
         ✕ Close window
       </button>
     </div>
+
+    <!-- Intro copy sits OUTSIDE the header flex row so it spans the FULL page
+         width. Inside that row it was boxed in by the Pop-Out button beside it
+         (measured 921px of a 1306px viewport), which removing max-w-4xl alone
+         did not fix. -->
+    <p class="text-sm text-cloud mt-3">
+      Upload recordings from directly within your browser. Metadata from your recordings and project data are used to match each recording to the correct date, time and timezone and to scan for duplicate recordings within a Site. You&rsquo;ll have a chance to review and correct the dates, times and timezones of your recordings before they&rsquo;re uploaded. Then, click &ldquo;Start&rdquo; to launch the upload.
+    </p>
 
     <div
       v-if="isProjectViewOnly"
