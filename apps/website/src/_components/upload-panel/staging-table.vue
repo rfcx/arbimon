@@ -62,20 +62,22 @@
             <h3 class="text-xl font-bold leading-none">
               {{ siteName }}
             </h3>
+            <!-- Labelled metadata pieces (operator 2026-08-13): "Label: value",
+                 label at reduced opacity so the VALUES stay the scannable part. -->
             <span class="text-sm text-cloud flex flex-wrap items-baseline gap-x-2">
-              <span :title="'Recordings staged in this box'">{{ items.length }} queued</span>
+              <span :title="'Recordings staged in this box'"><span class="text-cloud/60">Queued:</span> {{ items.length }} recording{{ items.length === 1 ? '' : 's' }}</span>
               <template v-if="siteInfo !== undefined">
                 <span
                   class="text-cloud/40 select-none"
                   aria-hidden="true"
                 >·</span>
-                <span :title="'Recordings already in this site'">{{ siteInfo.recCount.toLocaleString() }} existing</span>
+                <span :title="'Recordings already in this site'"><span class="text-cloud/60">Existing:</span> {{ siteInfo.recCount.toLocaleString() }} recording{{ siteInfo.recCount === 1 ? '' : 's' }}</span>
                 <template v-if="siteInfo.lat !== undefined && siteInfo.lon !== undefined">
                   <span
                     class="text-cloud/40 select-none"
                     aria-hidden="true"
                   >·</span>
-                  <span :title="'Site coordinates'">{{ siteInfo.lat.toFixed(4) }}, {{ siteInfo.lon.toFixed(4) }}</span>
+                  <span :title="'Site coordinates'"><span class="text-cloud/60">Location:</span> {{ siteInfo.lat.toFixed(4) }}, {{ siteInfo.lon.toFixed(4) }}</span>
                 </template>
               </template>
               <template v-if="siteTimezone !== undefined">
@@ -83,7 +85,7 @@
                   class="text-cloud/40 select-none"
                   aria-hidden="true"
                 >·</span>
-                <span :title="'Site timezone'">{{ siteTimezone }}{{ tzOffsetLabel !== undefined ? ` (${tzOffsetLabel})` : '' }}</span>
+                <span :title="'Site timezone'"><span class="text-cloud/60">Timezone:</span> {{ siteTimezone }}{{ tzOffsetLabel !== undefined ? ` (${tzOffsetLabel})` : '' }}</span>
               </template>
             </span>
           </div>
