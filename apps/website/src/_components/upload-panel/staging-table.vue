@@ -118,10 +118,18 @@
             class="flex items-center gap-x-2 text-sm text-cloud"
           >
             Set date:
+            <!-- flowbite-datepicker (the app's own picker) rather than a native
+                 <input type=date>: native renders in the BROWSER LOCALE with no
+                 way to force a display format, and the operator wants
+                 YYYY-MM-DD everywhere. Same component + options shape as
+                 _components/date-range-picker/date-input-picker.vue. -->
             <input
+              ref="batchDateInput"
               v-model="batchDate"
-              type="date"
-              class="rounded border-cloud/30 bg-pitch text-insight px-2 py-1 text-sm"
+              type="text"
+              placeholder="YYYY-MM-DD"
+              autocomplete="off"
+              class="rounded border-cloud/30 bg-pitch text-insight px-2 py-1 text-sm w-32"
             >
             <button
               class="btn btn-secondary text-sm"
@@ -371,7 +379,7 @@
     <div
       v-if="editingItem !== undefined"
       class="fixed inset-0 z-[9999] isolate flex items-center justify-center bg-pitch/60"
-      @click.self="editingItem = undefined"
+      @click.self="closeFieldEditor"
     >
       <div class="bg-moss rounded-xl shadow-lg max-w-md w-full p-6 mx-4">
         <div class="flex flex-col gap-y-4">
@@ -382,7 +390,7 @@
             <button
               type="button"
               title="Cancel"
-              @click="editingItem = undefined"
+              @click="closeFieldEditor"
             >
               <icon-custom-fi-close-thin class="h-5 w-5 cursor-pointer text-insight" />
             </button>
@@ -394,8 +402,11 @@
             {{ editField === 'date' ? 'Recording date' : 'Recording start time' }} ({{ editZoneLabel }})
             <input
               v-if="editField === 'date'"
+              ref="editDateInput"
               v-model="editValue"
-              type="date"
+              type="text"
+              placeholder="YYYY-MM-DD"
+              autocomplete="off"
               class="rounded border-cloud/30 bg-pitch text-insight px-3 py-2"
             >
             <input
@@ -409,7 +420,7 @@
           <div class="flex justify-end gap-x-3">
             <button
               class="btn btn-secondary btn-medium px-4 py-2"
-              @click="editingItem = undefined"
+              @click="closeFieldEditor"
             >
               Cancel
             </button>
@@ -428,9 +439,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 
 import { type UploadItem, toUtcIso } from '@rfcx-bio/upload-engine'
+
+import { type FlowbiteDatePicker } from '@/_components/date-range-picker/date-range-picker'
 
 const props = defineProps<{
   items: UploadItem[]
@@ -493,15 +506,48 @@ const onTitleAreaClick = (event: MouseEvent): void => {
   emit('toggleCollapsed')
 }
 
+// flowbite-datepicker instances. Both date fields use the app's own picker so
+// the display format is pinned to YYYY-MM-DD (a native <input type=date>
+// renders in the browser locale and cannot be told otherwise).
+const batchDateInput = ref<HTMLInputElement>()
+const editDateInput = ref<HTMLInputElement>()
+let batchPicker: FlowbiteDatePicker | undefined
+let editPicker: FlowbiteDatePicker | undefined
+
+const DATE_PICKER_OPTIONS = {
+  autohide: true,
+  format: 'yyyy-mm-dd',
+  maxView: 1,
+  startView: 0,
+  pickLevel: 0
+}
+
+/** Attach a picker to an input and mirror its picks back into a ref. */
+const attachPicker = async (
+  input: HTMLInputElement,
+  onPick: (value: string) => void
+): Promise<FlowbiteDatePicker> => {
+  const { initDatePicker } = await import('@/_components/date-range-picker/date-range-picker')
+  const picker = initDatePicker(input, DATE_PICKER_OPTIONS)
+  input.addEventListener('changeDate', () => { onPick(input.value) })
+  return picker
+}
+
 /** Open the DATE or TIME picker for one row. localWallTime is
  * 'YYYY-MM-DDTHH:mm:ss', so each field is a slice of it. */
-const openFieldEditor = (item: UploadItem, field: 'date' | 'time'): void => {
+const openFieldEditor = async (item: UploadItem, field: 'date' | 'time'): Promise<void> => {
   editingItem.value = item
   editField.value = field
   const wall = item.localWallTime
   editValue.value = wall === undefined
     ? ''
     : field === 'date' ? wall.slice(0, 10) : wall.slice(11, 19)
+  if (field !== 'date') return
+  await nextTick()
+  if (editDateInput.value === undefined) return
+  if (editPicker !== undefined) { editPicker.destroy(); editPicker = undefined }
+  editPicker = await attachPicker(editDateInput.value, v => { editValue.value = v })
+  if (editValue.value !== '') editPicker.setDate(editValue.value)
 }
 
 /** The zone the edited wall time will be interpreted in — the row's OWN
@@ -541,6 +587,13 @@ const tzOffsetLabel = computed<string | undefined>(() => {
   } catch { return undefined }
 })
 
+/** Close the row editor and tear down its picker (the input is v-if'd away,
+ * so a stale instance would leak and mis-bind on the next open). */
+const closeFieldEditor = (): void => {
+  if (editPicker !== undefined) { editPicker.destroy(); editPicker = undefined }
+  editingItem.value = undefined
+}
+
 const saveField = (): void => {
   const item = editingItem.value
   if (item === undefined || editValue.value === '') return
@@ -562,11 +615,19 @@ const saveField = (): void => {
   const utc = zone === 'UTC' ? toUtcIso(wall) : toUtcIso(wall, offsetToMinutes(zone) ?? zone)
   if (utc === undefined) return
   emit('editDatetime', { id: item.id, localWallTime: wall, timestampUtc: utc, timezoneName: zone })
-  editingItem.value = undefined
+  closeFieldEditor()
 }
 
 // -- batch date edit over the current selection ----------------------------
 const batchDate = ref('')
+
+// The batch input only exists while a selection is active, so attach on first
+// appearance rather than onMounted.
+watch(batchDateInput, async (el) => {
+  if (el === undefined) { batchPicker = undefined; return }
+  if (batchPicker !== undefined) return
+  batchPicker = await attachPicker(el, v => { batchDate.value = v })
+})
 
 /** Selected rows that are still pre-Start (the only ones we may re-date). */
 const editableSelected = computed(() =>
