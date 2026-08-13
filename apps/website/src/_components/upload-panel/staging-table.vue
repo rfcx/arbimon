@@ -110,30 +110,15 @@
         </template>
       </div>
 
-      <!-- ✕ (remove empty section) stays on the TITLE row. -->
-      <div class="flex items-center gap-x-3 shrink-0">
-        <button
-          v-if="items.length === 0"
-          class="text-cloud hover:text-flamingo text-sm shrink-0"
-          title="Remove this Upload Queue Section"
-          @click="$emit('removeBox')"
-        >
-          ✕
-        </button>
-      </div>
-    </div>
-
-    <!-- Selection-actions row: ALWAYS present with a reserved height, so
-         selecting/deselecting cannot change the section's geometry
-         (operator 2026-08-13). Empty when nothing is selected.
-         2.75rem == 44px, MEASURED as the rendered height of the btn-secondary
-         controls inside it (an earlier 2.25rem/36px guess left an 8px jump). -->
-    <div
-      v-if="siteName !== undefined"
-      class="flex flex-wrap items-center gap-x-3 gap-y-2 min-h-[2.75rem]"
-    >
+      <!-- Selection actions + the ✕, back on the TITLE row. The controls are
+           COMPACT (text-xs, py-1, narrower date field) so the cluster fits
+           beside the title instead of wrapping — which is what caused the
+           header to grow on select. No reserved empty row is needed once
+           nothing wraps. min-h matches the compact control height so the row
+           is still identical selected vs not. -->
+      <div class="flex items-center gap-x-2 shrink-0 min-h-[1.75rem]">
         <template v-if="selectedIds.size > 0">
-          <span class="text-sm text-cloud">{{ selectedIds.size }} selected:</span>
+          <span class="text-xs text-cloud whitespace-nowrap">{{ selectedIds.size }} selected:</span>
           <!-- BATCH DATE EDIT (operator 2026-08-13): set one date across every
                selected row, keeping each row's own TIME. Starting with date
                only — a numeric UTC-offset picker was floated but deferred as
@@ -141,7 +126,7 @@
                wrong day" case. Only offered for rows that are still editable. -->
           <label
             v-if="editableSelectedCount > 0"
-            class="flex items-center gap-x-2 text-sm text-cloud"
+            class="flex items-center gap-x-1.5 text-xs text-cloud whitespace-nowrap"
           >
             Set date:
             <!-- flowbite-datepicker (the app's own picker) rather than a native
@@ -155,10 +140,10 @@
               type="text"
               placeholder="YYYY-MM-DD"
               autocomplete="off"
-              class="rounded border-cloud/30 bg-pitch text-insight px-2 py-1 text-sm w-32"
+              class="rounded border-cloud/30 bg-pitch text-insight px-1.5 py-0.5 text-xs w-28"
             >
             <button
-              class="btn btn-secondary text-sm"
+              class="btn btn-secondary text-xs px-2 py-1"
               :disabled="batchDate === ''"
               :title="`Apply this date to ${editableSelectedCount} selected recording${editableSelectedCount === 1 ? '' : 's'} (each keeps its own time)`"
               @click="applyBatchDate"
@@ -170,16 +155,25 @@
                global control row owns run/pause; per-selection the useful
                actions are edit + remove. -->
           <button
-            class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
+            class="btn btn-secondary text-xs px-2 py-1 inline-flex items-center gap-x-1 whitespace-nowrap"
             @click="emitSelected('clearSelected')"
           >
-            <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
+            <svg viewBox="0 0 16 16" class="w-3 h-3 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
             Remove Selected
           </button>
         </template>
-      <!-- 'Clear Completed' and 'Retry Failed' retired from this cluster
-           2026-08-13 (operator): those actions now live ON the Completed and
-           Errors group header rows, next to the rows they act on. -->
+        <!-- 'Clear Completed' and 'Retry Failed' retired from this cluster
+             2026-08-13 (operator): those actions now live ON the Completed and
+             Errors group header rows, next to the rows they act on. -->
+        <button
+          v-if="items.length === 0"
+          class="text-cloud hover:text-flamingo text-sm shrink-0"
+          title="Remove this Upload Queue Section"
+          @click="$emit('removeBox')"
+        >
+          ✕
+        </button>
+      </div>
     </div>
     </div>
 
