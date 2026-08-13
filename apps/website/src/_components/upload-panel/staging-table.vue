@@ -56,24 +56,9 @@
             {{ siteName }}
             <span class="text-cloud text-sm font-normal ml-2">({{ items.length }} recording{{ items.length === 1 ? '' : 's' }})</span>
           </h3>
-          <label class="flex items-center gap-x-2 text-sm text-cloud">
-            Timezone:
-            <select
-              :value="timezoneMode"
-              class="rounded border-cloud/30 bg-pitch text-insight px-2 py-1 text-sm"
-              @change="$emit('timezoneModeChanged', ($event.target as HTMLSelectElement).value)"
-            >
-              <option value="auto">
-                Automatic
-              </option>
-              <option value="site">
-                Site Local Time{{ siteTimezone !== undefined ? ` (${siteTimezone})` : '' }}
-              </option>
-              <option value="utc">
-                UTC
-              </option>
-            </select>
-          </label>
+          <!-- Timezone method moved OFF the box header to the page-level
+               options row ("Determine Timezone(s):", operator 2026-08-13) —
+               one method for the whole upload session. -->
         </template>
       </div>
 
@@ -333,8 +318,7 @@ const emit = defineEmits<{
   (e: 'removeBox'): void
   (e: 'toggleCollapsed'): void
   (e: 'siteChosen', streamId: string): void
-  (e: 'timezoneModeChanged', mode: string): void
-  (e: 'clearCompleted'): void
+    (e: 'clearCompleted'): void
   (e: 'retryFailed'): void
   (e: 'startSelected', ids: string[]): void
   (e: 'pauseSelected', ids: string[]): void

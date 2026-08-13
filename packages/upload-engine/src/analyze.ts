@@ -25,7 +25,7 @@ import { parseTimestamp, TIMESTAMP_FORMAT_AUTO, toUtcIso } from './timestamp-par
 import { type TimezoneSource, type UploadItem } from './types'
 import { extractEmbeddedTimestamp, formatOffset } from './wav-embedded-timestamp'
 
-export type TimezoneMode = 'auto' | 'site' | 'utc'
+export type TimezoneMode = 'auto' | 'site' | 'utc' | 'metadata'
 
 export interface AnalyzeContext {
   mode: TimezoneMode
@@ -132,7 +132,34 @@ export async function analyzeFile (
     ? (offsetFromIso(parsed) ?? detectFilenameOffset(item.filename))
     : undefined
 
-  if (mode === 'auto' && parsed !== undefined && filenameOffset !== undefined) {
+  if (mode === 'metadata') {
+    // FORCED metadata mode (operator 2026-08-13): trust ONLY the recorder's
+    // embedded metadata (GUANO / AudioMoth-ICMT). No filename fallback — a
+    // forced mode that silently fell back would mislead exactly the user who
+    // chose it. Zoneless embedded times are interpreted in the site tz when
+    // available (the recorder's clock was almost certainly local), else UTC.
+    if (embedded?.wallTime === undefined) {
+      patch.analysisError = patch.fileFormat === 'wav'
+        ? 'No embedded timestamp found in this file’s metadata (GUANO/ICMT).'
+        : 'Metadata scanning only supports WAV files (GUANO/AudioMoth) — choose another timezone method for this file.'
+    } else if (embedded.offsetMinutes !== undefined) {
+      wallTime = embedded.wallTime
+      timestampUtc = applyFixedOffset(embedded.wallTime, embedded.offsetMinutes)
+      source = 'file-metadata'
+      zoneName = formatOffset(embedded.offsetMinutes)
+    } else {
+      wallTime = embedded.wallTime
+      if (siteTz !== undefined) {
+        timestampUtc = toUtcIso(wallTime, siteTz)
+        source = 'file-metadata'
+        zoneName = siteTz
+      } else {
+        timestampUtc = toUtcIso(wallTime)
+        source = 'file-metadata'
+        zoneName = 'UTC'
+      }
+    }
+  } else if (mode === 'auto' && parsed !== undefined && filenameOffset !== undefined) {
     // Rung 1: the filename itself carries an offset.
     wallTime = stripOffset(parsed)
     timestampUtc = applyFixedOffset(wallTime, filenameOffset)

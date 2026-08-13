@@ -125,8 +125,9 @@
         </div>
       </div>
 
-      <!-- Options row: Add-site button + FLAC toggle. Site selection + timezone
-           method live IN each box's header now (structural association). -->
+      <!-- Options row: Add-site button + the SESSION-WIDE settings (timezone
+           method + FLAC toggle). Timezone moved up from the per-box header
+           2026-08-13 (operator) — one method for the whole session. -->
       <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3 items-center">
         <button
           class="btn btn-primary text-sm inline-flex items-center gap-x-2"
@@ -137,6 +138,26 @@
           <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
           Add Recordings to another Site
         </button>
+        <label class="flex items-center gap-x-2 text-sm text-cloud">
+          Determine Timezone(s):
+          <select
+            v-model="timezoneMode"
+            class="rounded border-cloud/30 bg-pitch text-insight px-2 py-1 text-sm"
+          >
+            <option value="auto">
+              Automatically
+            </option>
+            <option value="site">
+              By Site Timezone
+            </option>
+            <option value="utc">
+              UTC
+            </option>
+            <option value="metadata">
+              Scan Recording File Metadata
+            </option>
+          </select>
+        </label>
         <div class="flex items-center gap-x-1.5">
           <label class="flex items-center gap-x-2 text-sm cursor-pointer select-none">
             <input
@@ -252,7 +273,7 @@
           :items="box.streamId !== undefined ? itemsForBox(box.streamId) : []"
           :site-name="box.siteName"
           :site-timezone="box.siteTimezone"
-          :timezone-mode="box.timezoneMode"
+          :timezone-mode="timezoneMode"
           :site-options="siteOptions"
           :opening-id="openingVisualizerId"
           :flac-enabled="flacEncodeEnabled"
@@ -261,8 +282,7 @@
           @toggle-collapsed="toggleBoxCollapsed(box.boxId)"
           @remove-box="removeSiteBox(box.boxId)"
           @site-chosen="linkBoxToSite(box.boxId, $event)"
-          @timezone-mode-changed="box.timezoneMode = $event as TimezoneMode"
-          @clear-completed="box.streamId !== undefined && clearCompleted(box.streamId)"
+                    @clear-completed="box.streamId !== undefined && clearCompleted(box.streamId)"
           @retry-failed="box.streamId !== undefined && retryFailed(box.streamId)"
           @start-selected="startSelected"
           @pause-selected="pauseSelected"
@@ -370,15 +390,46 @@ const sites = ref<SiteResponse[]>([])
 
 /** One upload box per site, newest FIRST. A box starts UNLINKED
  * (streamId undefined — header shows the focused site selector) and links
- * on selection. timezoneMode is PER-BOX (lives in the box header). */
+ * on selection. */
 interface SiteBox {
   boxId: string
   streamId?: string
   siteName?: string
   siteTimezone?: string
-  timezoneMode: TimezoneMode
 }
 const siteBoxes = ref<SiteBox[]>([])
+
+/** PAGE-LEVEL timezone method ("Determine Timezone(s):" on the options row —
+ * moved up from per-box 2026-08-13, operator). One method for the whole
+ * session; changing it RE-ANALYZES every staged row (see the watch below) so
+ * the selector is never silently ignored for files already added. */
+const timezoneMode = ref<TimezoneMode>('auto')
+
+// Changing the method re-runs analysis on every STAGED row (pre-Start only —
+// items already in the pipeline keep the timestamps they were signed with;
+// re-dating a row mid-upload would desync it from its server registration).
+// Guarded by a generation counter so a rapid double-change can't interleave
+// two passes; file handles come from fileSource (present for staged rows —
+// they were registered at enqueue and only released post-transcode/upload).
+let reanalyzeGeneration = 0
+watch(timezoneMode, async (mode) => {
+  const generation = ++reanalyzeGeneration
+  const staged = items.value.filter(item => item.state === 'staged' || item.state === 'analyzing')
+  for (const item of staged) {
+    if (generation !== reanalyzeGeneration) return // superseded by a newer change
+    if (item.streamId === undefined) continue
+    const site = siteById(item.streamId)
+    const file = await fileSource.getFile(item.id)
+    if (file === undefined) continue // handle gone (popped out / reloaded) — leave as-is
+    const { patch } = await analyzeFile(item, file, {
+      mode,
+      siteTimezone: site?.timezone !== undefined && site?.timezone !== '' ? site.timezone : undefined,
+      siteName: site?.name
+    })
+    await engine.updateStaged(item.id, patch)
+  }
+  await refreshItems()
+})
 
 /** WAV->FLAC explainer modal (the "i" beside the pre-convert checkbox). */
 const showFlacInfo = ref(false)
@@ -421,7 +472,7 @@ const siteById = (streamId: string): SiteResponse | undefined =>
 const addUnlinkedBox = (): void => {
   if (hasUnlinkedBox.value) return // one pending box at a time
   siteBoxes.value = [
-    { boxId: `box-${Date.now().toString(36)}`, timezoneMode: 'auto' },
+    { boxId: `box-${Date.now().toString(36)}` },
     ...siteBoxes.value
   ]
   // the box's own onMounted autofocuses its selector
@@ -471,8 +522,7 @@ const materializeBoxesFromQueue = (): void => {
       boxId: `box-${item.streamId}`,
       streamId: item.streamId,
       siteName: item.siteName ?? site?.name ?? item.streamId,
-      siteTimezone: site?.timezone !== undefined && site?.timezone !== '' ? site?.timezone : undefined,
-      timezoneMode: 'auto'
+      siteTimezone: site?.timezone !== undefined && site?.timezone !== '' ? site?.timezone : undefined
     })
   }
   if (additions.length > 0) siteBoxes.value = [...siteBoxes.value, ...additions]
@@ -526,7 +576,7 @@ const enqueueFiles = async (streamId: string, files: Array<{ file: File, relativ
   const site = siteById(streamId)
   if (site === undefined) return
   const siteTz = site.timezone !== undefined && site.timezone !== '' ? site.timezone : undefined
-  const boxMode = boxForStream(streamId)?.timezoneMode ?? 'auto'
+  const boxMode = timezoneMode.value
   const accepted = files.filter(({ file }) => isSupportedAudioFile(file.name))
   const pairs = accepted.map(({ file, relativePath }) => {
     const item = createUploadItem({

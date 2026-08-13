@@ -118,6 +118,57 @@ describe('analyzeFile — forced modes', () => {
     expect(patch.timezoneSource).toBe('forced-utc')
     expect(patch.timestampUtc).toBe('2025-08-18T19:30:00.000Z')
   })
+
+  it('metadata mode: GUANO with offset wins; filename time IGNORED', async () => {
+    const { patch } = await analyzeFile(
+      mkItem('site_20250818_193000.wav'),
+      wavWith(guano('2025-08-18T20:00:00-05:00'), dataChunk()),
+      { mode: 'metadata', siteTimezone: 'America/Bogota' }
+    )
+    expect(patch.timezoneSource).toBe('file-metadata')
+    expect(patch.localWallTime).toBe('2025-08-18T20:00:00') // GUANO time, NOT the filename's 19:30
+    expect(patch.timestampUtc).toBe('2025-08-19T01:00:00.000Z')
+    expect(patch.analysisError).toBeUndefined()
+  })
+
+  it('metadata mode: zoneless GUANO interpreted in the site tz', async () => {
+    const { patch } = await analyzeFile(
+      mkItem('site_20250818_193000.wav'),
+      wavWith(guano('2025-08-18T20:00:00'), dataChunk()),
+      { mode: 'metadata', siteTimezone: 'America/Bogota' }
+    )
+    expect(patch.timezoneSource).toBe('file-metadata')
+    expect(patch.timezoneName).toBe('America/Bogota')
+    expect(patch.timestampUtc).toBe('2025-08-19T01:00:00.000Z') // Bogota = UTC-5
+  })
+
+  it('metadata mode: zoneless GUANO + no site tz falls to UTC', async () => {
+    const { patch } = await analyzeFile(
+      mkItem('site_20250818_193000.wav'),
+      wavWith(guano('2025-08-18T20:00:00'), dataChunk()),
+      { mode: 'metadata' }
+    )
+    expect(patch.timezoneName).toBe('UTC')
+    expect(patch.timestampUtc).toBe('2025-08-18T20:00:00.000Z')
+  })
+
+  it('metadata mode: WAV without embedded metadata = analysis error, NO filename fallback', async () => {
+    const { patch } = await analyzeFile(
+      mkItem('site_20250818_193000.wav'),
+      wavWith(dataChunk()),
+      { mode: 'metadata', siteTimezone: 'America/Bogota' }
+    )
+    expect(patch.analysisError).toContain('No embedded timestamp')
+    expect(patch.timestampUtc).toBeUndefined() // the filename was NOT used
+  })
+
+  it('metadata mode: non-WAV = explicit unsupported error', async () => {
+    const { patch } = await analyzeFile(
+      mkItem('site_20250818_193000.flac'), plainBlob,
+      { mode: 'metadata', siteTimezone: 'America/Bogota' }
+    )
+    expect(patch.analysisError).toContain('only supports WAV')
+  })
 })
 
 describe('analyzeFile — failure shapes', () => {
