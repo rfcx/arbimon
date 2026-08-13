@@ -279,7 +279,9 @@
           :flac-enabled="flacEncodeEnabled"
           :drop-active="box.streamId !== undefined && dragBoxId === box.streamId"
           :collapsed="collapsedBoxIds.has(box.boxId)"
+          :site-info="box.streamId !== undefined ? siteInfoFor(box.streamId) : undefined"
           @toggle-collapsed="toggleBoxCollapsed(box.boxId)"
+          @edit-datetime="applyDatetimeEdit"
           @remove-box="removeSiteBox(box.boxId)"
           @site-chosen="linkBoxToSite(box.boxId, $event)"
                     @clear-completed="box.streamId !== undefined && clearCompleted(box.streamId)"
@@ -418,6 +420,9 @@ watch(timezoneMode, async (mode) => {
   for (const item of staged) {
     if (generation !== reanalyzeGeneration) return // superseded by a newer change
     if (item.streamId === undefined) continue
+    // A hand-corrected row is the USER'S decision — a mode change must not
+    // silently clobber it. (Retry-after-edit still re-enters normally.)
+    if (item.timezoneSource === 'manual') continue
     const site = siteById(item.streamId)
     const file = await fileSource.getFile(item.id)
     if (file === undefined) continue // handle gone (popped out / reloaded) — leave as-is
@@ -468,6 +473,30 @@ const siteOptions = computed(() =>
 
 const siteById = (streamId: string): SiteResponse | undefined =>
   sites.value.find(site => site.external_id === streamId)
+
+/** Site facts for a box's title line (existing recordings, Lat/Lng). */
+const siteInfoFor = (streamId: string): { recCount: number, lat?: number, lon?: number } | undefined => {
+  const site = siteById(streamId)
+  if (site === undefined) return undefined
+  return {
+    recCount: site.rec_count ?? 0,
+    lat: typeof site.lat === 'number' ? site.lat : undefined,
+    lon: typeof site.lon === 'number' ? site.lon : undefined
+  }
+}
+
+/** Apply a hand-corrected date/time to a staged row. timezoneSource 'manual'
+ * marks it as the user's decision — the mode-change re-analysis skips it. */
+const applyDatetimeEdit = async (edit: { id: string, localWallTime: string, timestampUtc: string, timezoneName: string }): Promise<void> => {
+  await engine.updateStaged(edit.id, {
+    localWallTime: edit.localWallTime,
+    timestampUtc: edit.timestampUtc,
+    timezoneName: edit.timezoneName,
+    timezoneSource: 'manual',
+    analysisError: undefined
+  })
+  await refreshItems()
+}
 
 const addUnlinkedBox = (): void => {
   if (hasUnlinkedBox.value) return // one pending box at a time

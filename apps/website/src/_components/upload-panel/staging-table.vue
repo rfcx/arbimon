@@ -54,8 +54,25 @@
           </button>
           <h3 class="text-xl font-bold">
             {{ siteName }}
-            <span class="text-cloud text-sm font-normal ml-2">({{ items.length }} recording{{ items.length === 1 ? '' : 's' }})</span>
+            <span class="text-cloud text-sm font-normal ml-2">({{ items.length }} recording{{ items.length === 1 ? '' : 's' }} queued)</span>
           </h3>
+          <!-- Site facts on the title line (operator 2026-08-13): existing
+               recording count, Lat/Lng, IANA ("Unix-style") timezone with its
+               current UTC offset. All from the sites API via siteInfo. -->
+          <span
+            v-if="siteInfo !== undefined"
+            class="text-sm text-cloud flex flex-wrap items-center gap-x-3"
+          >
+            <span :title="'Recordings already in this site'">{{ siteInfo.recCount.toLocaleString() }} existing</span>
+            <span
+              v-if="siteInfo.lat !== undefined && siteInfo.lon !== undefined"
+              :title="'Site coordinates'"
+            >{{ siteInfo.lat.toFixed(4) }}, {{ siteInfo.lon.toFixed(4) }}</span>
+            <span
+              v-if="siteTimezone !== undefined"
+              :title="'Site timezone'"
+            >{{ siteTimezone }}{{ tzOffsetLabel !== undefined ? ` (${tzOffsetLabel})` : '' }}</span>
+          </span>
           <!-- Timezone method moved OFF the box header to the page-level
                options row ("Determine Timezone(s):", operator 2026-08-13) —
                one method for the whole upload session. -->
@@ -205,7 +222,22 @@
             >
               {{ displayFilename(item) }}
             </td>
-            <td class="px-2 py-1.5">{{ recDate(item) }}</td>
+            <!-- Date + Time cells: pre-Start rows get an edit affordance opening the
+                 datetime-correction popover (operator 2026-08-13). One control edits
+                 BOTH cells (a datetime-local input) — date and time are one value. -->
+            <td class="px-2 py-1.5">
+              <span class="inline-flex items-center gap-x-1">
+                {{ recDate(item) }}
+                <button
+                  v-if="canEditDatetime(item)"
+                  class="text-cloud/60 hover:text-frequency"
+                  title="Correct this recording’s date &amp; time"
+                  @click="openDatetimeEditor(item)"
+                >
+                  <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="1.5"><path d="M10.5 2.5l3 3L6 13l-3.5.5L3 10l7.5-7.5zM9 4l3 3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                </button>
+              </span>
+            </td>
             <td class="px-2 py-1.5">{{ recTime(item) }}</td>
             <td class="px-2 py-1.5">{{ zoneCol(item) }}</td>
             <td class="px-2 py-1.5 text-cloud">{{ tzSourceLabel(item) }}</td>
@@ -284,13 +316,65 @@
            the PAGE owns the drag/drop handlers on the whole container -->
       <slot name="intake" />
     </div>
+
+    <!-- Datetime-correction modal (native datetime-local input = the platform's
+         own date+time picker; house modal pattern, cf. the FLAC explainer). -->
+    <div
+      v-if="editingItem !== undefined"
+      class="fixed inset-0 z-[9999] isolate flex items-center justify-center bg-pitch/60"
+      @click.self="editingItem = undefined"
+    >
+      <div class="bg-moss rounded-xl shadow-lg max-w-md w-full p-6 mx-4">
+        <div class="flex flex-col gap-y-4">
+          <div class="flex flex-row items-center justify-between">
+            <h2 class="text-xl font-header">
+              Correct Date &amp; Time
+            </h2>
+            <button
+              type="button"
+              title="Cancel"
+              @click="editingItem = undefined"
+            >
+              <icon-custom-fi-close-thin class="h-5 w-5 cursor-pointer text-insight" />
+            </button>
+          </div>
+          <p class="text-sm text-cloud truncate">
+            {{ editingItem.relativePath }}
+          </p>
+          <label class="text-sm text-cloud flex flex-col gap-y-1.5">
+            Recording started at ({{ editZoneLabel }})
+            <input
+              v-model="editValue"
+              type="datetime-local"
+              step="1"
+              class="rounded border-cloud/30 bg-pitch text-insight px-3 py-2"
+            >
+          </label>
+          <div class="flex justify-end gap-x-3">
+            <button
+              class="btn btn-secondary btn-medium px-4 py-2"
+              @click="editingItem = undefined"
+            >
+              Cancel
+            </button>
+            <button
+              class="btn btn-primary btn-medium px-4 py-2"
+              :disabled="editValue === ''"
+              @click="saveDatetime"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 
-import { type UploadItem, TIMEZONE_SOURCE_LABELS } from '@rfcx-bio/upload-engine'
+import { type UploadItem, TIMEZONE_SOURCE_LABELS, toUtcIso } from '@rfcx-bio/upload-engine'
 
 const props = defineProps<{
   items: UploadItem[]
@@ -312,6 +396,8 @@ const props = defineProps<{
   /** Collapse state is PAGE-OWNED (lifted 2026-08-13) so the options row's
    * expand/collapse-all control can drive every box at once. */
   collapsed?: boolean
+  /** Site facts for the title line (existing recordings, coordinates). */
+  siteInfo?: { recCount: number, lat?: number, lon?: number }
 }>()
 
 const emit = defineEmits<{
@@ -327,10 +413,84 @@ const emit = defineEmits<{
   (e: 'retryItem', id: string): void
   (e: 'clearItem', id: string): void
   (e: 'openDestination', item: UploadItem): void
+  (e: 'editDatetime', edit: { id: string, localWallTime: string, timestampUtc: string, timezoneName: string }): void
 }>()
 
 // autofocus the site selector when the box mounts unlinked
 const sitePicker = ref<HTMLSelectElement>()
+
+// -- per-row datetime correction (operator 2026-08-13) ----------------------
+// Pre-Start rows only: once signed/uploading the timestamp is part of the
+// server registration and must not drift from it.
+const editingItem = ref<UploadItem>()
+const editValue = ref('')
+
+const canEditDatetime = (item: UploadItem): boolean =>
+  item.state === 'staged' || item.state === 'analyzing'
+
+const openDatetimeEditor = (item: UploadItem): void => {
+  editingItem.value = item
+  // datetime-local wants 'YYYY-MM-DDTHH:mm:ss' — exactly localWallTime's shape
+  editValue.value = item.localWallTime ?? ''
+}
+
+/** The zone the edited wall time will be interpreted in — the row's OWN
+ * current zone, so "correct the clock" doesn't covertly change the timezone
+ * decision. Errored rows without a zone fall back to the site tz, then UTC. */
+const editZone = computed<string>(() => {
+  const item = editingItem.value
+  if (item === undefined) return 'UTC'
+  return item.timezoneName ?? props.siteTimezone ?? 'UTC'
+})
+const editZoneLabel = computed(() => editZone.value)
+
+/** Current UTC offset of the site's IANA tz (e.g. 'UTC-5'), for the title
+ * line. DATA-DERIVED, not Intl timeZoneName: the traps registry records that
+ * an Intl 'shortOffset' usage passed local vue-tsc but BROKE the Docker image
+ * build (older TS lib in the image lacks the union member) — 'longOffset'
+ * carries the same risk. Instead, format today's instant in the tz with
+ * plain numeric fields (supported everywhere) and diff against UTC. */
+const tzOffsetLabel = computed<string | undefined>(() => {
+  const tz = props.siteTimezone
+  if (tz === undefined || tz === '') return undefined
+  try {
+    const now = new Date()
+    const fmt = new Intl.DateTimeFormat('en-CA', {
+      timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+    })
+    const p = Object.fromEntries(fmt.formatToParts(now).map(x => [x.type, x.value]))
+    const asUtc = Date.UTC(+p.year, +p.month - 1, +p.day, +(p.hour === '24' ? 0 : p.hour), +p.minute, +p.second)
+    const offsetMin = Math.round((asUtc - now.getTime()) / 60_000)
+    if (offsetMin === 0) return 'UTC+0'
+    const sign = offsetMin < 0 ? '-' : '+'
+    const abs = Math.abs(offsetMin)
+    const hh = Math.floor(abs / 60)
+    const mm = abs % 60
+    return `UTC${sign}${hh}${mm !== 0 ? `:${String(mm).padStart(2, '0')}` : ''}`
+  } catch { return undefined }
+})
+
+const saveDatetime = (): void => {
+  const item = editingItem.value
+  if (item === undefined || editValue.value === '') return
+  const wall = editValue.value.length === 16 ? `${editValue.value}:00` : editValue.value
+  const zone = editZone.value
+  // Offset-string zones (UTC±HH:MM from filename/metadata rungs) and IANA
+  // names both go through toUtcIso; plain 'UTC' means interpret as UTC.
+  const utc = zone === 'UTC' ? toUtcIso(wall) : toUtcIso(wall, offsetToMinutes(zone) ?? zone)
+  if (utc === undefined) return
+  emit('editDatetime', { id: item.id, localWallTime: wall, timestampUtc: utc, timezoneName: zone })
+  editingItem.value = undefined
+}
+
+/** '±HH:MM' -> minutes; undefined for IANA names. */
+const offsetToMinutes = (zone: string): number | undefined => {
+  const m = zone.match(/^([+-])(\d{2}):(\d{2})$/)
+  if (m === null) return undefined
+  const sign = m[1] === '-' ? -1 : 1
+  return sign * (parseInt(m[2]) * 60 + parseInt(m[3]))
+}
 
 // Collapse state lifted to the page (see props.collapsed); template reads
 // the prop via this alias so the v-show/caret bindings stay terse.

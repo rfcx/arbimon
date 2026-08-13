@@ -42,6 +42,7 @@ export type TimezoneSource =
   | 'utc-fallback' // no other rung fired
   | 'forced-site' // user selected Site Local Time
   | 'forced-utc' // user selected UTC
+  | 'manual' // user edited the date/time by hand (survives mode re-analysis)
 
 export interface UploadItem {
   /** Engine-local id (stable across sessions; storage key). */

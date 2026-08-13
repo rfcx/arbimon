@@ -218,5 +218,6 @@ export const TIMEZONE_SOURCE_LABELS: Record<TimezoneSource, string> = {
   'site-local': 'Site local time',
   'utc-fallback': 'UTC (fallback)',
   'forced-site': 'Site local (selected)',
-  'forced-utc': 'UTC (selected)'
+  'forced-utc': 'UTC (selected)',
+  manual: 'Manually edited'
 }
