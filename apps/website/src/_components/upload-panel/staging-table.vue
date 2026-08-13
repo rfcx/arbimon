@@ -8,7 +8,16 @@
     <!-- Single header line: collapse-caret + site identity + timezone LEFT,
          all action buttons RIGHT — one horizontal row above the table. -->
     <div class="flex items-center justify-between gap-x-4 flex-wrap gap-y-2">
-      <div class="flex items-center gap-x-4 flex-wrap gap-y-2">
+      <!-- The whole title+metadata area toggles collapse on click (operator
+           2026-08-13) — same function as the caret. Guarded: clicks on/inside
+           any BUTTON (the caret itself, future controls) are ignored so
+           nothing double-fires; the unlinked state (site selector) does not
+           get the handler at all. cursor-pointer only when linked. -->
+      <div
+        class="flex items-center gap-x-4 flex-wrap gap-y-2"
+        :class="siteName !== undefined ? 'cursor-pointer select-none' : ''"
+        @click="onTitleAreaClick"
+      >
         <template v-if="siteName === undefined">
           <select
             ref="sitePicker"
@@ -41,7 +50,7 @@
                common left edge of all page sections. -->
           <button
             class="-ml-7 w-7 -mr-4 shrink-0 inline-flex items-center justify-center text-insight hover:text-frequency"
-            :title="collapsed ? 'Expand this site' : 'Collapse this site'"
+            :title="collapsed ? 'Expand this section' : 'Collapse this section'"
             :aria-expanded="!collapsed"
             @click="$emit('toggleCollapsed')"
           >
@@ -65,7 +74,7 @@
             <!-- Labelled metadata pieces (operator 2026-08-13): "Label: value",
                  label at reduced opacity so the VALUES stay the scannable part. -->
             <span class="text-sm text-cloud flex flex-wrap items-baseline gap-x-2">
-              <span :title="'Recordings staged in this box'"><span class="text-cloud/60">Queued:</span> {{ items.length }} recording{{ items.length === 1 ? '' : 's' }}</span>
+              <span :title="'Recordings staged in this section'"><span class="text-cloud/60">Queued:</span> {{ items.length }} recording{{ items.length === 1 ? '' : 's' }}</span>
               <template v-if="siteInfo !== undefined">
                 <span
                   class="text-cloud/40 select-none"
@@ -140,7 +149,7 @@
         <button
           v-if="items.length === 0"
           class="text-cloud hover:text-flamingo text-sm shrink-0"
-          title="Remove this site box"
+          title="Remove this Upload Queue Section"
           @click="$emit('removeBox')"
         >
           ✕
@@ -443,6 +452,15 @@ const editValue = ref('')
 
 const canEditDatetime = (item: UploadItem): boolean =>
   item.state === 'staged' || item.state === 'analyzing'
+
+/** Title-area click = collapse toggle, EXCEPT clicks on/inside buttons or
+ * the site <select> (unlinked state) — those keep their own behaviour. */
+const onTitleAreaClick = (event: MouseEvent): void => {
+  if (props.siteName === undefined) return
+  const target = event.target as HTMLElement | null
+  if (target?.closest('button, select, input, a') !== null) return
+  emit('toggleCollapsed')
+}
 
 const openDatetimeEditor = (item: UploadItem): void => {
   editingItem.value = item

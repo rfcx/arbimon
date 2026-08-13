@@ -132,11 +132,11 @@
         <button
           class="btn btn-primary text-sm inline-flex items-center gap-x-2"
           :disabled="hasUnlinkedBox"
-          :title="hasUnlinkedBox ? 'Pick a site for the new box above first' : 'Add an upload box for another site'"
+          :title="hasUnlinkedBox ? 'Pick a site for the new section above first' : 'Add an Upload Queue Section for a site'"
           @click="addUnlinkedBox"
         >
           <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
-          Add Recordings to another Site
+          Add Recordings to a Site
         </button>
         <label class="flex items-center gap-x-2 text-sm text-cloud">
           Determine Timezone(s):
@@ -187,7 +187,7 @@
         <button
           v-if="linkedBoxCount >= 2"
           class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
-          :title="anyBoxExpanded ? 'Collapse all site queues' : 'Expand all site queues'"
+          :title="anyBoxExpanded ? 'Collapse all Upload Queue Sections' : 'Expand all Upload Queue Sections'"
           @click="toggleAllBoxes"
         >
           <svg
@@ -317,7 +317,7 @@
                 v-else
                 class="text-cloud"
               >
-                Select a site above to enable this box.
+                Select a site above to enable this section.
               </p>
             </div>
           </template>
@@ -339,18 +339,16 @@
           ? 'border-cloud/20 opacity-60 cursor-not-allowed'
           : 'border-cloud/40 cursor-pointer hover:border-frequency hover:bg-frequency/5 focus-visible:border-frequency focus-visible:bg-frequency/5'"
         :disabled="hasUnlinkedBox"
-        :title="hasUnlinkedBox ? 'Pick a site for the new box above first' : 'Add an upload box for another site'"
-        :aria-label="siteBoxes.length === 0
-          ? 'Add Recordings to a Site'
-          : 'Add Recordings to another Site'"
+        :title="hasUnlinkedBox ? 'Pick a site for the new section above first' : 'Add an Upload Queue Section for a site'"
+        aria-label="Add Recordings to a Site"
         @click="addUnlinkedBox"
       >
         <span class="text-lg inline-flex items-center gap-x-2 justify-center">
           <svg viewBox="0 0 16 16" class="w-4 h-4 fill-current shrink-0"><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
-          {{ siteBoxes.length === 0 ? 'Add Recordings to a Site' : 'Add Recordings to another Site' }}
+          Add Recordings to a Site
         </span>
         <span class="block text-sm text-cloud mt-2">
-          Each site gets its own upload box — drop recordings into the box for the site they belong to. Boxes upload in parallel.
+          Each site gets its own Upload Queue Section — drop recordings into the section for the site they belong to. Sections upload in parallel.
         </span>
       </button>
     </template>
