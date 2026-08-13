@@ -138,7 +138,14 @@ export class UploadEngine {
     tokenProvider: TokenProvider,
     private readonly prepare: PrepareFn
   ) {
-    this.config = { ...DEFAULTS, ...config }
+    // Spread would let an EXPLICIT undefined clobber a default
+    // ({ ...{a:4}, ...{a: undefined} } === { a: undefined }), which bites any
+    // caller that passes an optional config field through as a variable.
+    // Strip undefined values so omitted-or-undefined both mean "use default".
+    const provided = Object.fromEntries(
+      Object.entries(config).filter(([, value]) => value !== undefined)
+    ) as Partial<UploadEngineConfig>
+    this.config = { ...DEFAULTS, ...provided, ingestBaseUrl: config.ingestBaseUrl }
     this.api = new IngestApi(config.ingestBaseUrl, tokenProvider)
     this.multipartApi = new MultipartApi(config.ingestBaseUrl, tokenProvider)
   }
@@ -427,6 +434,26 @@ export class UploadEngine {
     this.online = online
     this.emit({ type: 'engine-state', running: this.running, online })
     if (online) this.kick()
+  }
+
+  /**
+   * Change the parallel-upload cap at runtime. pumpUploads reads
+   * config.maxConcurrentUploads on every pass, so a change takes effect on the
+   * next scheduling pass: RAISING it starts more uploads immediately (kick),
+   * LOWERING it never aborts in-flight work — the pool simply stops refilling
+   * until it drains below the new cap. Clamped to >=1 so the pool can never
+   * stall (0 would deadlock the queue).
+   */
+  setMaxConcurrentUploads (max: number): void {
+    const next = Math.max(1, Math.floor(max))
+    if (next === this.config.maxConcurrentUploads) return
+    this.config.maxConcurrentUploads = next
+    this.kick()
+  }
+
+  /** Current parallel-upload cap (for UI display). */
+  get maxConcurrentUploads (): number {
+    return this.config.maxConcurrentUploads
   }
 
   /** Retry a failed/rejected/cancelled/duplicate item (resets attempts).
