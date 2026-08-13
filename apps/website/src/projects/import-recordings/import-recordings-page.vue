@@ -14,11 +14,8 @@
                same treatment can flag other new features elsewhere. -->
           <span class="text-xs align-middle rounded bg-frequency/20 text-frequency px-2 py-0.5 ml-2 font-medium tracking-wide">NEW</span>
         </h2>
-        <p class="text-sm text-cloud mt-3 max-w-4xl">
+        <p class="text-sm text-cloud mt-3">
           Upload recordings from directly within your browser. Metadata from your recordings and project data are used to match each recording to the correct date, time and timezone and to scan for duplicate recordings within a Site. You&rsquo;ll have a chance to review and correct the dates, times and timezones of your recordings before they&rsquo;re uploaded. Then, click &ldquo;Start&rdquo; to launch the upload.
-        </p>
-        <p class="text-sm text-cloud mt-2 max-w-4xl">
-          When you add WAV audio files, this uploader may pre-encode the files from WAV to a lossless FLAC format prior to upload. This can reduce your upload time by as much as 50% on slower connections, but it will make use of your computer&rsquo;s CPU for the encoding. You can disable this feature at any time.
         </p>
       </div>
       <button
@@ -130,14 +127,64 @@
           <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
           Add Recordings to another Site
         </button>
-        <label class="flex items-center gap-x-2 text-sm cursor-pointer select-none">
-          <input
-            v-model="flacEncodeEnabled"
-            type="checkbox"
-            class="rounded border-cloud/40 bg-pitch"
+        <div class="flex items-center gap-x-1.5">
+          <label class="flex items-center gap-x-2 text-sm cursor-pointer select-none">
+            <input
+              v-model="flacEncodeEnabled"
+              type="checkbox"
+              class="rounded border-cloud/40 bg-pitch"
+            >
+            Pre-Convert WAV to FLAC
+          </label>
+          <!-- Long-form explanation lives in a modal rather than a tooltip:
+               the copy is a full paragraph, which flowbite tooltips (used for
+               one-liners elsewhere) handle badly. Icon matches the app's
+               `icon-custom-ic-info` treatment used by icon-i-info.vue. -->
+          <button
+            type="button"
+            class="inline-flex items-center justify-center text-insight hover:text-frequency transition-colors"
+            title="About WAV to FLAC pre-conversion"
+            aria-label="More information about WAV to FLAC pre-conversion"
+            @click="showFlacInfo = true"
           >
-          Convert WAV to FLAC before upload (lossless, smaller &amp; faster)
-        </label>
+            <icon-custom-ic-info class="h-4 w-4 cursor-pointer" />
+          </button>
+        </div>
+      </div>
+
+      <!-- WAV->FLAC explainer modal -->
+      <div
+        v-if="showFlacInfo"
+        class="fixed inset-0 z-[9999] isolate flex items-center justify-center bg-pitch/60"
+        @click.self="showFlacInfo = false"
+      >
+        <div class="bg-moss rounded-xl shadow-lg max-w-lg w-full p-6 mx-4">
+          <div class="flex flex-col gap-y-4">
+            <div class="flex flex-row items-center justify-between">
+              <h2 class="text-2xl font-header">
+                Pre-Convert WAV to FLAC
+              </h2>
+              <button
+                type="button"
+                title="Close"
+                @click="showFlacInfo = false"
+              >
+                <icon-custom-fi-close-thin class="h-6 w-6 cursor-pointer text-insight" />
+              </button>
+            </div>
+            <p class="text-sm text-cloud">
+              When you add WAV audio files, this uploader may pre-encode the files from WAV to a lossless FLAC format prior to upload. This can reduce your upload time by as much as 50% on slower connections, but it will make use of your computer&rsquo;s CPU for the encoding. You can disable this feature at any time.
+            </p>
+            <div class="flex justify-end">
+              <button
+                class="btn btn-primary btn-medium px-4 py-2"
+                @click="showFlacInfo = false"
+              >
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- hidden file input; routed to whichever box requested the picker -->
@@ -254,7 +301,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { apiArbimonResolveRecordingId } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
@@ -297,6 +344,9 @@ interface SiteBox {
   timezoneMode: TimezoneMode
 }
 const siteBoxes = ref<SiteBox[]>([])
+
+/** WAV->FLAC explainer modal (the "i" beside the pre-convert checkbox). */
+const showFlacInfo = ref(false)
 
 const hasUnlinkedBox = computed(() => siteBoxes.value.some(box => box.streamId === undefined))
 
@@ -376,6 +426,13 @@ watch(projectItems, materializeBoxesFromQueue)
 // -- metrics binding ----------------------------------------------------------
 
 const metrics = projectMetrics
+
+// Escape closes the explainer modal (modal parity with the rest of the app).
+const onFlacInfoKeydown = (e: KeyboardEvent): void => {
+  if (e.key === 'Escape' && showFlacInfo.value) showFlacInfo.value = false
+}
+onMounted(() => { window.addEventListener('keydown', onFlacInfoKeydown) })
+onBeforeUnmount(() => { window.removeEventListener('keydown', onFlacInfoKeydown) })
 
 onMounted(async () => {
   await loadSites()
