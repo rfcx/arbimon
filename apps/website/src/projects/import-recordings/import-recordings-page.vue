@@ -215,18 +215,34 @@
         </div>
       </template>
 
-      <!-- Empty state: no boxes yet -->
-      <div
-        v-if="siteBoxes.length === 0"
-        class="mt-6 rounded-lg border-2 border-dashed border-cloud/40 px-6 py-12 text-center"
+      <!-- Add-a-site affordance. ALWAYS rendered, at the BOTTOM of the stack:
+           it is the empty state when there are no boxes yet, and the “add
+           another” target once boxes exist. Clicking anywhere in the box is
+           equivalent to the header’s “Add audio to another Site” button — same
+           handler, same disabled rule (one pending unlinked box at a time). It
+           is a real <button> so it is keyboard-focusable and announced, rather
+           than a div with a click handler. -->
+      <button
+        type="button"
+        class="mt-6 w-full rounded-lg border-2 border-dashed px-6 py-12 text-center block transition-colors"
+        :class="hasUnlinkedBox
+          ? 'border-cloud/20 opacity-60 cursor-not-allowed'
+          : 'border-cloud/40 cursor-pointer hover:border-frequency hover:bg-frequency/5 focus-visible:border-frequency focus-visible:bg-frequency/5'"
+        :disabled="hasUnlinkedBox"
+        :title="hasUnlinkedBox ? 'Pick a site for the new box above first' : 'Add an upload box for another site'"
+        :aria-label="siteBoxes.length === 0
+          ? 'Add audio to a Site'
+          : 'Add audio to another Site'"
+        @click="addUnlinkedBox"
       >
-        <p class="text-lg">
-          Click “Add audio to another Site” above to begin
-        </p>
-        <p class="text-sm text-cloud mt-2">
+        <span class="text-lg inline-flex items-center gap-x-2 justify-center">
+          <svg viewBox="0 0 16 16" class="w-4 h-4 fill-current shrink-0"><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
+          {{ siteBoxes.length === 0 ? 'Add audio to a Site' : 'Add audio to another Site' }}
+        </span>
+        <span class="block text-sm text-cloud mt-2">
           Each site gets its own upload box — drop files into the box for the site they belong to. Boxes upload in parallel.
-        </p>
-      </div>
+        </span>
+      </button>
     </template>
   </section>
 </template>
