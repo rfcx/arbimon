@@ -7,6 +7,12 @@
   <div class="mt-6 pt-5 pb-6 border-t border-b border-cloud/20">
     <!-- Single header line: collapse-caret + site identity + timezone LEFT,
          all action buttons RIGHT — one horizontal row above the table. -->
+    <!-- Two ROWS, not one wrapping row: the selection-actions cluster is ~590px
+         wide, so on a narrow-ish viewport it used to push the header to wrap
+         and the section grew 36px -> 73px every time a row was selected.
+         Giving the actions their own reserved row (min-h) makes the geometry
+         identical selected or not. -->
+    <div class="flex flex-col gap-y-2">
     <div class="flex items-center justify-between gap-x-4 flex-wrap gap-y-2">
       <!-- The whole title+metadata area toggles collapse on click (operator
            2026-08-13) — same function as the caret. Guarded: clicks on/inside
@@ -104,12 +110,26 @@
         </template>
       </div>
 
-      <!-- Action cluster: selection actions, then standing actions, then ✕.
-           min-h RESERVES the taller (selection-active) height at all times so
-           the header does not jump when a row is selected/deselected —
-           operator 2026-08-13. 2.25rem == the btn-secondary height these
-           controls render at. -->
-      <div class="flex flex-wrap items-center gap-x-3 gap-y-2 min-h-[2.25rem]">
+      <!-- ✕ (remove empty section) stays on the TITLE row. -->
+      <div class="flex items-center gap-x-3 shrink-0">
+        <button
+          v-if="items.length === 0"
+          class="text-cloud hover:text-flamingo text-sm shrink-0"
+          title="Remove this Upload Queue Section"
+          @click="$emit('removeBox')"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- Selection-actions row: ALWAYS present with a reserved height, so
+         selecting/deselecting cannot change the section's geometry
+         (operator 2026-08-13). Empty when nothing is selected. -->
+    <div
+      v-if="siteName !== undefined"
+      class="flex flex-wrap items-center gap-x-3 gap-y-2 min-h-[2.25rem]"
+    >
         <template v-if="selectedIds.size > 0">
           <span class="text-sm text-cloud">{{ selectedIds.size }} selected:</span>
           <!-- BATCH DATE EDIT (operator 2026-08-13): set one date across every
@@ -155,18 +175,10 @@
             Remove Selected
           </button>
         </template>
-        <!-- 'Clear Completed' and 'Retry Failed' retired from this cluster
-             2026-08-13 (operator): those actions now live ON the Completed and
-             Errors group header rows, next to the rows they act on. -->
-        <button
-          v-if="items.length === 0"
-          class="text-cloud hover:text-flamingo text-sm shrink-0"
-          title="Remove this Upload Queue Section"
-          @click="$emit('removeBox')"
-        >
-          ✕
-        </button>
-      </div>
+      <!-- 'Clear Completed' and 'Retry Failed' retired from this cluster
+           2026-08-13 (operator): those actions now live ON the Completed and
+           Errors group header rows, next to the rows they act on. -->
+    </div>
     </div>
 
     <!-- The table + intake area (one bordered region; the whole thing is a
