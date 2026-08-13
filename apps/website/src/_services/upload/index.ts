@@ -347,3 +347,12 @@ if (!import.meta.env.SSR && typeof window !== 'undefined') {
   // Load any persisted queue from a previous session at app boot.
   void refreshItems()
 }
+
+// Test hook: exposes the engine + store for automated benchmarking/QA.
+// NOT available in production builds — the demo tier (ADR-026) is where the
+// upload harnesses in qa/synthetics run, and production has no reason to hand
+// page scripts a handle on the upload pipeline.
+if (!import.meta.env.SSR && typeof window !== 'undefined' && import.meta.env.MODE !== 'production') {
+  ;(window as unknown as Record<string, unknown>).__uploadEngine = engine
+  ;(window as unknown as Record<string, unknown>).__uploadStore = uploadStore
+}
