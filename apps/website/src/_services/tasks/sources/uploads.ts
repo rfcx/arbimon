@@ -83,7 +83,7 @@ const uploadsSource: TaskSource = {
     const done = stats.value.ingested + stats.value.duplicate
     const failed = stats.value.failed + stats.value.rejected
     const headline = active > 0
-      ? `Uploading ${active} file${active === 1 ? '' : 's'}…`
+      ? `Uploading ${active} recording${active === 1 ? '' : 's'}…`
       : failed > 0
         ? `Uploads finished (${failed} failed)`
         : 'Uploads complete'

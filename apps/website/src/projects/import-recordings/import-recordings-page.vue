@@ -12,7 +12,7 @@
           <span class="text-cloud">Project:</span> <span class="text-frequency">{{ projectName }}</span>
         </p>
         <p class="text-sm text-cloud mt-2">
-          Upload audio directly from your browser. Files are analyzed locally first — review the list, then press Start.
+          Upload recordings directly from your browser. Recordings are analyzed locally first — review the list, then press Start.
         </p>
       </div>
       <button
@@ -122,7 +122,7 @@
           @click="addUnlinkedBox"
         >
           <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
-          Add audio to another Site
+          Add Recordings to another Site
         </button>
         <label class="flex items-center gap-x-2 text-sm cursor-pointer select-none">
           <input
@@ -191,7 +191,7 @@
             >
               <template v-if="box.streamId !== undefined">
                 <p :class="itemsForBox(box.streamId).length === 0 ? 'text-lg' : 'text-base'">
-                  Drag &amp; drop audio for <span class="text-frequency">{{ box.siteName }}</span>
+                  Drag &amp; drop recordings for <span class="text-frequency">{{ box.siteName }}</span>
                 </p>
                 <p class="text-sm text-cloud mt-1">
                   .wav, .flac, .opus — analyzed locally and staged above before anything uploads
@@ -200,7 +200,7 @@
                   class="btn btn-secondary mt-3 text-sm"
                   @click="pickFilesFor(box.streamId)"
                 >
-                  Or choose files…
+                  Or choose recordings…
                 </button>
               </template>
               <p
@@ -218,7 +218,7 @@
       <!-- Add-a-site affordance. ALWAYS rendered, at the BOTTOM of the stack:
            it is the empty state when there are no boxes yet, and the “add
            another” target once boxes exist. Clicking anywhere in the box is
-           equivalent to the header’s “Add audio to another Site” button — same
+           equivalent to the header’s “Add Recordings to another Site” button — same
            handler, same disabled rule (one pending unlinked box at a time). It
            is a real <button> so it is keyboard-focusable and announced, rather
            than a div with a click handler. -->
@@ -231,13 +231,13 @@
         :disabled="hasUnlinkedBox"
         :title="hasUnlinkedBox ? 'Pick a site for the new box above first' : 'Add an upload box for another site'"
         :aria-label="siteBoxes.length === 0
-          ? 'Add audio to a Site'
-          : 'Add audio to another Site'"
+          ? 'Add Recordings to a Site'
+          : 'Add Recordings to another Site'"
         @click="addUnlinkedBox"
       >
         <span class="text-lg inline-flex items-center gap-x-2 justify-center">
           <svg viewBox="0 0 16 16" class="w-4 h-4 fill-current shrink-0"><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
-          {{ siteBoxes.length === 0 ? 'Add audio to a Site' : 'Add audio to another Site' }}
+          {{ siteBoxes.length === 0 ? 'Add Recordings to a Site' : 'Add Recordings to another Site' }}
         </span>
         <span class="block text-sm text-cloud mt-2">
           Each site gets its own upload box — drop files into the box for the site they belong to. Boxes upload in parallel.

@@ -15,7 +15,7 @@
               disabled
               value=""
             >
-              Select a site for this audio…
+              Select a site for these recordings…
             </option>
             <option
               v-for="option in siteOptions"
@@ -42,7 +42,7 @@
           </button>
           <h3 class="text-base font-bold">
             {{ siteName }}
-            <span class="text-cloud text-sm font-normal ml-2">({{ items.length }} file{{ items.length === 1 ? '' : 's' }})</span>
+            <span class="text-cloud text-sm font-normal ml-2">({{ items.length }} recording{{ items.length === 1 ? '' : 's' }})</span>
           </h3>
           <label class="flex items-center gap-x-2 text-sm text-cloud">
             Timezone:
