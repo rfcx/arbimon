@@ -52,27 +52,41 @@
               :class="collapsed ? '-rotate-90' : ''"
             />
           </button>
-          <h3 class="text-xl font-bold">
-            {{ siteName }}
-            <span class="text-cloud text-sm font-normal ml-2">({{ items.length }} recording{{ items.length === 1 ? '' : 's' }} queued)</span>
-          </h3>
-          <!-- Site facts on the title line (operator 2026-08-13): existing
-               recording count, Lat/Lng, IANA ("Unix-style") timezone with its
-               current UTC offset. All from the sites API via siteInfo. -->
-          <span
-            v-if="siteInfo !== undefined"
-            class="text-sm text-cloud flex flex-wrap items-center gap-x-3"
-          >
-            <span :title="'Recordings already in this site'">{{ siteInfo.recCount.toLocaleString() }} existing</span>
-            <span
-              v-if="siteInfo.lat !== undefined && siteInfo.lon !== undefined"
-              :title="'Site coordinates'"
-            >{{ siteInfo.lat.toFixed(4) }}, {{ siteInfo.lon.toFixed(4) }}</span>
-            <span
-              v-if="siteTimezone !== undefined"
-              :title="'Site timezone'"
-            >{{ siteTimezone }}{{ tzOffsetLabel !== undefined ? ` (${tzOffsetLabel})` : '' }}</span>
-          </span>
+          <!-- Site title + metadata: ONE baseline-aligned run (items-baseline,
+               not items-center — mixed text sizes centre-align to different
+               visual lines; sharing the BASELINE is what reads as level).
+               Metadata pieces are separated by subtle middot delimiters,
+               rendered as their own spans (aria-hidden) rather than CSS
+               pseudo-elements so they participate in the same baseline. -->
+          <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
+            <h3 class="text-xl font-bold leading-none">
+              {{ siteName }}
+            </h3>
+            <span class="text-sm text-cloud flex flex-wrap items-baseline gap-x-2">
+              <span :title="'Recordings staged in this box'">{{ items.length }} queued</span>
+              <template v-if="siteInfo !== undefined">
+                <span
+                  class="text-cloud/40 select-none"
+                  aria-hidden="true"
+                >·</span>
+                <span :title="'Recordings already in this site'">{{ siteInfo.recCount.toLocaleString() }} existing</span>
+                <template v-if="siteInfo.lat !== undefined && siteInfo.lon !== undefined">
+                  <span
+                    class="text-cloud/40 select-none"
+                    aria-hidden="true"
+                  >·</span>
+                  <span :title="'Site coordinates'">{{ siteInfo.lat.toFixed(4) }}, {{ siteInfo.lon.toFixed(4) }}</span>
+                </template>
+              </template>
+              <template v-if="siteTimezone !== undefined">
+                <span
+                  class="text-cloud/40 select-none"
+                  aria-hidden="true"
+                >·</span>
+                <span :title="'Site timezone'">{{ siteTimezone }}{{ tzOffsetLabel !== undefined ? ` (${tzOffsetLabel})` : '' }}</span>
+              </template>
+            </span>
+          </div>
           <!-- Timezone method moved OFF the box header to the page-level
                options row ("Determine Timezone(s):", operator 2026-08-13) —
                one method for the whole upload session. -->
