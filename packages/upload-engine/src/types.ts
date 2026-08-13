@@ -93,6 +93,8 @@ export interface UploadItem {
   /** Duration in ms (parsed from audio header during prepare). */
   durationMs?: number
   sampleRateHz?: number
+  /** Bits per sample (parsed from the audio header). */
+  bitDepth?: number
   /** Server upload id (after signing). */
   uploadId?: string
   /** Signed PUT URL (after signing). expires ~24h server-side. */

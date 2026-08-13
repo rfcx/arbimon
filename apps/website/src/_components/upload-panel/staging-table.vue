@@ -292,27 +292,15 @@
               </span>
             </td>
             <td class="px-2 py-1.5">{{ zoneCol(item) }}</td>
-            <td class="px-2 py-1.5 text-cloud">{{ tzSourceLabel(item) }}</td>
             <td class="px-2 py-1.5">{{ formatCol(item) }}</td>
+            <td class="px-2 py-1.5 tabular-nums">{{ sizeCol(item) }}</td>
             <td class="px-2 py-1.5 tabular-nums">{{ lengthCol(item) }}</td>
-            <td
-              class="px-2 py-1.5 max-w-72 truncate"
-              :class="statusColor(item)"
-              :title="statusDetail(item)"
-            >
-              {{ statusCol(item) }}
-            </td>
-            <td class="px-2 py-1.5 w-28">
-              <div
+            <!-- Progress: percentage only (the bar was retired 2026-08-13). -->
+            <td class="px-2 py-1.5 tabular-nums">
+              <span
                 v-if="showProgress(item)"
-                class="h-1.5 rounded bg-cloud/15 overflow-hidden min-w-20"
-              >
-                <div
-                  class="h-full rounded bg-frequency transition-all"
-                  :class="item.state === 'uploaded' ? 'animate-pulse bg-frequency/60' : ''"
-                  :style="{ width: `${progressPercent(item)}%` }"
-                />
-              </div>
+                class="text-insight"
+              >{{ progressPercent(item) }}%</span>
               <span
                 v-else-if="item.state === 'ingested' || item.state === 'duplicate'"
                 class="text-frequency"
@@ -323,6 +311,14 @@
               >—</span>
             </td>
             <td class="px-2 py-1.5 tabular-nums text-cloud">{{ rateCol(item) }}</td>
+            <!-- Status LAST, immediately before the per-row action buttons. -->
+            <td
+              class="px-2 py-1.5 max-w-72 truncate"
+              :class="statusColor(item)"
+              :title="statusDetail(item)"
+            >
+              {{ statusCol(item) }}
+            </td>
             <td class="px-2 py-1.5">
               <div class="flex items-center gap-x-1.5 justify-end">
                 <button
@@ -434,7 +430,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 
-import { type UploadItem, TIMEZONE_SOURCE_LABELS, toUtcIso } from '@rfcx-bio/upload-engine'
+import { type UploadItem, toUtcIso } from '@rfcx-bio/upload-engine'
 
 const props = defineProps<{
   items: UploadItem[]
@@ -641,17 +637,19 @@ const visible = computed(() => props.items)
 
 // -- sorting ------------------------------------------------------------------
 
+// Column order (operator 2026-08-13): Method dropped entirely; Size added;
+// Status moved LAST, immediately before the per-row action buttons.
 const COLUMNS: Array<{ key: string, label: string }> = [
   { key: 'filename', label: 'Filename' },
   { key: 'recDate', label: 'Date' },
   { key: 'recTime', label: 'Time' },
   { key: 'zone', label: 'Zone' },
-  { key: 'timezoneSource', label: 'Method' },
   { key: 'format', label: 'Format' },
+  { key: 'sizeBytes', label: 'Size' },
   { key: 'durationMs', label: 'Duration' },
-  { key: 'status', label: 'Status' },
   { key: 'progress', label: 'Progress' },
-  { key: 'rate', label: 'Rate' }
+  { key: 'rate', label: 'Rate' },
+  { key: 'status', label: 'Status' }
 ]
 
 const sortKey = ref<string>('filename')
@@ -668,8 +666,8 @@ const sortValue = (item: UploadItem, key: string): string | number => {
     case 'recDate':
     case 'recTime': return item.localWallTime ?? ''
     case 'zone': return zoneCol(item)
-    case 'timezoneSource': return item.timezoneSource ?? ''
-    case 'format': return `${item.fileFormat ?? ''}-${item.sampleRateHz ?? 0}`
+    case 'format': return (item.sampleRateHz ?? 0) * 100 + (item.bitDepth ?? 0)
+    case 'sizeBytes': return item.fileSizeBytes
     case 'durationMs': return item.durationMs ?? -1
     case 'status': return groupOf(item)
     case 'progress': return item.state === 'ingested' ? 2 : (item.progress ?? -1)
@@ -871,22 +869,34 @@ const zoneCol = (item: UploadItem): string => {
   return tz
 }
 
-const tzSourceLabel = (item: UploadItem): string =>
-  item.timezoneSource !== undefined ? TIMEZONE_SOURCE_LABELS[item.timezoneSource] : '—'
-
+/** Format column: sample rate + bit depth (the filetype was dropped
+ * 2026-08-13 — it is already implied by the filename). */
 const formatCol = (item: UploadItem): string => {
-  const fmt = (item.fileFormat ?? '—').toUpperCase()
-  const rate = item.sampleRateHz !== undefined ? ` · ${(item.sampleRateHz / 1000).toFixed(1).replace(/\.0$/, '')} kHz` : ''
-  const enc = item.transcoded === true ? ' → FLAC' : ''
-  return `${fmt}${rate}${enc}`
+  const rate = item.sampleRateHz !== undefined
+    ? `${(item.sampleRateHz / 1000).toFixed(1).replace(/\.0$/, '')} kHz`
+    : undefined
+  const depth = item.bitDepth !== undefined ? `${item.bitDepth}-bit` : undefined
+  const parts = [rate, depth].filter(p => p !== undefined)
+  return parts.length > 0 ? parts.join(' · ') : '—'
 }
 
+/** Size column: file size in MB. */
+const sizeCol = (item: UploadItem): string => {
+  const mb = item.fileSizeBytes / 1048576
+  if (mb >= 100) return `${mb.toFixed(0)} MB`
+  return `${mb.toFixed(1)} MB`
+}
+
+/** Duration column: 'N mins, N secs' (operator 2026-08-13), with singular
+ * forms and the minutes part omitted entirely for sub-minute clips. */
 const lengthCol = (item: UploadItem): string => {
   if (item.durationMs === undefined) return '—'
   const totalSeconds = Math.round(item.durationMs / 1000)
   const mm = Math.floor(totalSeconds / 60)
   const ss = totalSeconds % 60
-  return `${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`
+  const minPart = mm > 0 ? `${mm} min${mm === 1 ? '' : 's'}` : undefined
+  const secPart = `${ss} sec${ss === 1 ? '' : 's'}`
+  return minPart !== undefined ? `${minPart}, ${secPart}` : secPart
 }
 
 const STATE_LABELS: Record<string, string> = {

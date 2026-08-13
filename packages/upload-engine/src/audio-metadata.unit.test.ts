@@ -34,8 +34,9 @@ const makeWav = (
   return new Blob([header]) // header only; probe reads sizes, not payload
 }
 
-/** Build a minimal FLAC STREAMINFO header. */
-const makeFlac = (sampleRate: number, totalSamples: number): Blob => {
+/** Build a minimal FLAC STREAMINFO header. bitsPerSample is stored MINUS 1
+ * across the low bit of payload byte 12 and the top 4 bits of byte 13. */
+const makeFlac = (sampleRate: number, totalSamples: number, bitsPerSample = 16): Blob => {
   const buffer = new ArrayBuffer(42)
   const view = new DataView(buffer)
   const writeAscii = (offset: number, text: string): void => {
@@ -52,9 +53,10 @@ const makeFlac = (sampleRate: number, totalSamples: number): Blob => {
   // bytes 10..12: sample rate 20 bits + channels 3 bits + bps upper bit
   view.setUint8(base + 10, (sampleRate >> 12) & 0xff)
   view.setUint8(base + 11, (sampleRate >> 4) & 0xff)
-  view.setUint8(base + 12, (sampleRate & 0x0f) << 4)
+  const bpsCoded = bitsPerSample - 1 // 5 bits, stored minus 1
+  view.setUint8(base + 12, ((sampleRate & 0x0f) << 4) | ((bpsCoded >> 4) & 0x01))
   // bytes 13..17: bps low nibble + 36-bit total samples (we use low 36)
-  view.setUint8(base + 13, (totalSamples / 2 ** 32) & 0x0f)
+  view.setUint8(base + 13, (((bpsCoded & 0x0f) << 4) | ((totalSamples / 2 ** 32) & 0x0f)))
   view.setUint8(base + 14, (totalSamples >>> 24) & 0xff)
   view.setUint8(base + 15, (totalSamples >>> 16) & 0xff)
   view.setUint8(base + 16, (totalSamples >>> 8) & 0xff)
@@ -82,5 +84,24 @@ describe('probeAudioMetadata', () => {
     const meta = await probeAudioMetadata(new Blob(['OggS garbage not parsed']))
     expect(meta.format).toBe('unknown')
     expect(meta.durationMs).toBeUndefined()
+  })
+
+  // bit depth feeds the table's Format column (2026-08-13)
+  test('WAV: bit depth read from the fmt chunk (16-bit)', async () => {
+    const meta = await probeAudioMetadata(makeWav(48000, 10, 1, 16))
+    expect(meta.bitDepth).toBe(16)
+  })
+
+  test('WAV: bit depth read from the fmt chunk (24-bit)', async () => {
+    const meta = await probeAudioMetadata(makeWav(48000, 10, 1, 24))
+    expect(meta.bitDepth).toBe(24)
+    expect(meta.sampleRateHz).toBe(48000) // depth read must not disturb rate
+  })
+
+  test('FLAC: bit depth read from STREAMINFO (24-bit)', async () => {
+    const meta = await probeAudioMetadata(makeFlac(48000, 48000 * 5, 24))
+    expect(meta.bitDepth).toBe(24)
+    expect(meta.sampleRateHz).toBe(48000)
+    expect(meta.durationMs).toBe(5_000) // the bps bits must not corrupt totalSamples
   })
 })

@@ -105,6 +105,7 @@ export async function analyzeFile (
     const meta = await probeAudioMetadata(file)
     patch.durationMs = meta.durationMs
     patch.sampleRateHz = meta.sampleRateHz
+    patch.bitDepth = meta.bitDepth
     patch.fileFormat = meta.format === undefined || meta.format === 'unknown'
       ? detectFormat(item.filename)
       : meta.format
