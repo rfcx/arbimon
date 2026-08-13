@@ -36,7 +36,7 @@
                orientation: ▾ expanded / ▸ collapsed. Stark = filled + insight
                colour, not the thin cloud stroke it used to be. -->
           <button
-            class="-ml-7 w-7 shrink-0 inline-flex items-center justify-center text-insight hover:text-frequency"
+            class="-ml-7 w-7 -mr-4 shrink-0 inline-flex items-center justify-center text-insight hover:text-frequency"
             :title="collapsed ? 'Expand this site' : 'Collapse this site'"
             :aria-expanded="!collapsed"
             @click="$emit('toggleCollapsed')"
