@@ -147,24 +147,17 @@
               class="rounded border-cloud/30 bg-pitch text-insight px-1.5 py-0.5 text-xs w-auto"
             >
             <button
-              class="btn btn-secondary text-xs px-2 py-1"
+              class="btn btn-secondary text-xs px-2 py-1 whitespace-nowrap"
               :disabled="batchDate === ''"
               :title="`Apply this date to ${editableSelectedCount} selected recording${editableSelectedCount === 1 ? '' : 's'} (each keeps its own time)`"
               @click="applyBatchDate"
             >
-              Apply
+              Apply to Selected
             </button>
           </label>
-          <!-- Start/Pause for a selection retired 2026-08-13 (operator): the
-               global control row owns run/pause; per-selection the useful
-               actions are edit + remove. -->
-          <button
-            class="btn btn-secondary text-xs px-2 py-1 inline-flex items-center gap-x-1 whitespace-nowrap"
-            @click="emitSelected('clearSelected')"
-          >
-            <svg viewBox="0 0 16 16" class="w-3 h-3 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
-            Remove Selected
-          </button>
+          <!-- Selection actions retired 2026-08-13 (operator): Start/Pause
+               (the global control row owns run/pause) and Remove Selected
+               (per-row ✕ and the group-level Clear buttons cover removal). -->
         </template>
         <!-- 'Clear Completed' and 'Retry Failed' retired from this cluster
              2026-08-13 (operator): those actions now live ON the Completed and
@@ -909,12 +902,6 @@ const onRowClick = (item: UploadItem, event: MouseEvent): void => {
   const target = event.target as HTMLElement | null
   if (target?.closest('button, input, a, select, label') !== null) return
   toggleSelect(item.id)
-}
-
-const emitSelected = (event: 'clearSelected'): void => {
-  const ids = [...selectedIds.value]
-  emit(event, ids)
-  selectedIds.value = new Set()
 }
 
 // -- cell renderers -----------------------------------------------------------
