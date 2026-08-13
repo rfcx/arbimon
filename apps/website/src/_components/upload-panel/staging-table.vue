@@ -467,7 +467,7 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue'
 
 import { type UploadItem, toUtcIso } from '@rfcx-bio/upload-engine'
 
-import { type FlowbiteDatePicker } from '@/_components/date-range-picker/date-range-picker'
+import { type FlowbiteDatePicker, type FlowbiteDatePickerOptions } from '@/_components/date-range-picker/date-range-picker'
 
 const props = defineProps<{
   items: UploadItem[]
@@ -538,12 +538,18 @@ const editDateInput = ref<HTMLInputElement>()
 let batchPicker: FlowbiteDatePicker | undefined
 let editPicker: FlowbiteDatePicker | undefined
 
-const DATE_PICKER_OPTIONS = {
+const DATE_PICKER_OPTIONS: FlowbiteDatePickerOptions = {
   autohide: true,
   format: 'yyyy-mm-dd',
   maxView: 1,
   startView: 0,
-  pickLevel: 0
+  pickLevel: 0,
+  // Open DOWNWARD from the field. Default 'auto' chose to drop UP here
+  // (measured: calendar y=111..369 for an input at y=369), which put the
+  // calendar ~258px above the control, over the page header/stats — far from
+  // where the user is looking, so it read as "the calendar didn't open".
+  // flowbite parses this as space-separated x/y keywords (processOptions.js).
+  orientation: 'bottom left'
 }
 
 /** Attach a picker to an input and mirror its picks back into a ref. */
