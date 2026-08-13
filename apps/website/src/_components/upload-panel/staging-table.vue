@@ -1,5 +1,8 @@
 <template>
-  <div class="mt-6">
+  <!-- Top border makes each site-queue a clearly delimited section; pl-7
+       reserves the left margin the caret hangs into (-ml-7 on the caret), so
+       the Site name sits flush with the table's left border below it. -->
+  <div class="mt-6 pt-5 border-t border-cloud/20 pl-7">
     <!-- Single header line: collapse-caret + site identity + timezone LEFT,
          all action buttons RIGHT — one horizontal row above the table. -->
     <div class="flex items-center justify-between gap-x-4 flex-wrap gap-y-2">
@@ -28,19 +31,23 @@
           </select>
         </template>
         <template v-else>
+          <!-- Collapse caret: hangs INTO the left margin (-ml-7) so the site
+               name is flush with the table border. Solid triangle, standard
+               orientation: ▾ expanded / ▸ collapsed. Stark = filled + insight
+               colour, not the thin cloud stroke it used to be. -->
           <button
-            class="text-cloud hover:text-insight shrink-0 -mr-1"
-            :title="collapsed ? 'Expand' : 'Collapse'"
-            @click="collapsed = !collapsed"
+            class="-ml-7 w-7 shrink-0 inline-flex items-center justify-center text-insight hover:text-frequency"
+            :title="collapsed ? 'Expand this site' : 'Collapse this site'"
+            :aria-expanded="!collapsed"
+            @click="$emit('toggleCollapsed')"
           >
             <svg
               viewBox="0 0 16 16"
-              class="w-4 h-4 fill-none stroke-current transition-transform duration-200"
+              class="w-5 h-5 fill-current transition-transform duration-200"
               :class="collapsed ? '-rotate-90' : ''"
-              stroke-width="2"
-            ><path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            ><path d="M3.5 5.5h9L8 12z" /></svg>
           </button>
-          <h3 class="text-base font-bold">
+          <h3 class="text-xl font-bold">
             {{ siteName }}
             <span class="text-cloud text-sm font-normal ml-2">({{ items.length }} recording{{ items.length === 1 ? '' : 's' }})</span>
           </h3>
@@ -153,12 +160,48 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="item in visibleSorted"
-            :key="item.id"
-            class="border-t border-cloud/10 hover:bg-moss/20"
-            :class="selectedIds.has(item.id) ? 'bg-moss/30' : ''"
+          <!-- Rows partitioned into collapsible STATUS GROUPS (≥1 row each).
+               The group header row carries the caret + aggregates; when the
+               group is collapsed the aggregates ARE the summary line. -->
+          <template
+            v-for="section in groupSections"
+            :key="section.key"
           >
+            <tr
+              class="border-t border-cloud/20 bg-moss/25 cursor-pointer select-none hover:bg-moss/40"
+              @click="toggleGroup(section.key)"
+            >
+              <td
+                :colspan="COLUMNS.length + 2"
+                class="px-2 py-1.5"
+              >
+                <span class="inline-flex items-center gap-x-2">
+                  <svg
+                    viewBox="0 0 16 16"
+                    class="w-3.5 h-3.5 fill-current text-insight transition-transform duration-200"
+                    :class="groupCollapsed[section.key] ? '-rotate-90' : ''"
+                  ><path d="M3.5 5.5h9L8 12z" /></svg>
+                  <span
+                    class="font-semibold"
+                    :class="section.key === 'errors' ? 'text-flamingo' : section.key === 'completed' ? 'text-frequency' : 'text-insight'"
+                  >{{ section.label }}</span>
+                  <span class="text-cloud text-xs">{{ section.metrics }}</span>
+                  <button
+                    v-if="section.key === 'errors'"
+                    class="text-xs text-cloud hover:text-frequency underline ml-2"
+                    @click.stop="$emit('retryFailed')"
+                  >
+                    Retry all
+                  </button>
+                </span>
+              </td>
+            </tr>
+            <tr
+              v-for="item in (groupCollapsed[section.key] ? [] : section.rows)"
+              :key="item.id"
+              class="border-t border-cloud/10 hover:bg-moss/20"
+              :class="selectedIds.has(item.id) ? 'bg-moss/30' : ''"
+            >
             <td class="px-2 py-1.5">
               <input
                 type="checkbox"
@@ -245,7 +288,7 @@
               </div>
             </td>
           </tr>
-          
+          </template>
         </tbody>
       </table>
       <!-- intake area (drop zone) — always beneath the last visible row;
@@ -277,10 +320,14 @@ const props = defineProps<{
   flacEnabled?: boolean
   /** Drag-hover highlight for the combined table+intake region (page-owned). */
   dropActive?: boolean
+  /** Collapse state is PAGE-OWNED (lifted 2026-08-13) so the options row's
+   * expand/collapse-all control can drive every box at once. */
+  collapsed?: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'removeBox'): void
+  (e: 'toggleCollapsed'): void
   (e: 'siteChosen', streamId: string): void
   (e: 'timezoneModeChanged', mode: string): void
   (e: 'clearCompleted'): void
@@ -297,8 +344,9 @@ const emit = defineEmits<{
 // autofocus the site selector when the box mounts unlinked
 const sitePicker = ref<HTMLSelectElement>()
 
-// accordion collapse (per-box, session-local; v-show keeps rows live unseen)
-const collapsed = ref(false)
+// Collapse state lifted to the page (see props.collapsed); template reads
+// the prop via this alias so the v-show/caret bindings stay terse.
+const collapsed = computed(() => props.collapsed === true)
 onMounted(() => {
   if (props.siteName === undefined) sitePicker.value?.focus()
 })
@@ -382,6 +430,105 @@ const sortValue = (item: UploadItem, key: string): string | number => {
     default: return 0
   }
 }
+
+// -- STATUS GROUPS (2026-08-13, operator: first-class parallel-upload UI) ----
+// Rows are grouped into collapsible sections by coarse status. Five groups
+// (operator approved splitting Active out of Queued so collapsing the queue
+// cannot hide in-flight uploads — the rows you actually watch):
+//   active:    uploading / uploaded / signing / signed  (default EXPANDED, top)
+//   queued:    staged / queued / preparing / ready / paused / analyzing
+//   completed: ingested
+//   duplicates:duplicate
+//   errors:    failed / rejected / cancelled
+// A group renders ONLY when it has ≥1 row. Aggregates live on the group line.
+
+type StatusGroup = 'active' | 'queued' | 'completed' | 'duplicates' | 'errors'
+
+const GROUP_ORDER: StatusGroup[] = ['active', 'queued', 'completed', 'duplicates', 'errors']
+
+const GROUP_LABELS: Record<StatusGroup, string> = {
+  active: 'Active',
+  queued: 'Queued',
+  completed: 'Completed',
+  duplicates: 'Duplicates',
+  errors: 'Errors'
+}
+
+const statusGroupOf = (item: UploadItem): StatusGroup => {
+  switch (item.state) {
+    case 'ingested': return 'completed'
+    case 'duplicate': return 'duplicates'
+    case 'failed':
+    case 'rejected':
+    case 'cancelled': return 'errors'
+    case 'uploading':
+    case 'uploaded':
+    case 'signing':
+    case 'signed': return 'active'
+    default: return 'queued' // staged/queued/preparing/ready/paused/analyzing
+  }
+}
+
+// Per-group collapse: Active + Queued start OPEN (the work you watch);
+// Completed/Duplicates/Errors start FOLDED (the bulk you scroll past).
+const groupCollapsed = ref<Record<StatusGroup, boolean>>({
+  active: false, queued: false, completed: true, duplicates: true, errors: true
+})
+const toggleGroup = (g: StatusGroup): void => { groupCollapsed.value[g] = !groupCollapsed.value[g] }
+
+interface GroupSection {
+  key: StatusGroup
+  label: string
+  rows: UploadItem[]
+  metrics: string
+}
+
+const humanBytes = (n: number): string => {
+  if (n >= 1073741824) return `${(n / 1073741824).toFixed(2)} GB`
+  if (n >= 1048576) return `${(n / 1048576).toFixed(1)} MB`
+  if (n >= 1024) return `${(n / 1024).toFixed(0)} KB`
+  return `${n} B`
+}
+
+const groupMetrics = (g: StatusGroup, rows: UploadItem[]): string => {
+  const n = rows.length
+  const noun = `${n} recording${n === 1 ? '' : 's'}`
+  switch (g) {
+    case 'active': {
+      const bytes = rows.reduce((s, r) => s + r.fileSizeBytes, 0)
+      const done = rows.reduce((s, r) => s + (r.state === 'uploaded' ? r.fileSizeBytes : r.fileSizeBytes * (r.progress ?? 0)), 0)
+      const pct = bytes > 0 ? Math.round((done / bytes) * 100) : 0
+      const rate = rows.reduce((s, r) => s + (avgRateBps(r) ?? 0), 0)
+      const rateTxt = rate > 0 ? ` · ${humanBytes(rate)}/s` : ''
+      return `${noun} · ${pct}% of ${humanBytes(bytes)}${rateTxt}`
+    }
+    case 'queued': {
+      const bytes = rows.reduce((s, r) => s + r.fileSizeBytes, 0)
+      return `${noun} · ${humanBytes(bytes)} waiting`
+    }
+    case 'completed': {
+      const bytes = rows.reduce((s, r) => s + r.fileSizeBytes, 0)
+      return `${noun} · ${humanBytes(bytes)} uploaded`
+    }
+    case 'duplicates': return noun
+    case 'errors': return noun
+  }
+}
+
+/** The sections actually rendered: sorted rows partitioned by group, empty
+ * groups dropped, fixed group order. */
+const groupSections = computed<GroupSection[]>(() => {
+  const buckets = new Map<StatusGroup, UploadItem[]>()
+  for (const row of visibleSorted.value) {
+    const g = statusGroupOf(row)
+    const arr = buckets.get(g)
+    if (arr === undefined) buckets.set(g, [row])
+    else arr.push(row)
+  }
+  return GROUP_ORDER
+    .filter(g => (buckets.get(g)?.length ?? 0) > 0)
+    .map(g => ({ key: g, label: GROUP_LABELS[g], rows: buckets.get(g) ?? [], metrics: groupMetrics(g, buckets.get(g) ?? []) }))
+})
 
 const visibleSorted = computed(() => {
   const rows = [...visible.value]

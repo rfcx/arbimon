@@ -155,6 +155,37 @@
             <icon-custom-ic-info class="h-4 w-4 cursor-pointer" />
           </button>
         </div>
+        <!-- Gmail-style expand/collapse ALL site queues. Tri-state label:
+             if ANY box is expanded the action is Collapse all, else Expand
+             all. Only shown once there are ≥2 linked boxes to act on. -->
+        <button
+          v-if="linkedBoxCount >= 2"
+          class="btn btn-secondary text-sm inline-flex items-center gap-x-1.5"
+          :title="anyBoxExpanded ? 'Collapse all site queues' : 'Expand all site queues'"
+          @click="toggleAllBoxes"
+        >
+          <svg
+            v-if="anyBoxExpanded"
+            viewBox="0 0 16 16"
+            class="w-3.5 h-3.5 fill-none stroke-current"
+            stroke-width="1.8"
+          ><path d="M3 6.5L8 2l5 4.5M3 13.5L8 9l5 4.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          <svg
+            v-else
+            viewBox="0 0 16 16"
+            class="w-3.5 h-3.5 fill-none stroke-current"
+            stroke-width="1.8"
+          ><path d="M3 2.5L8 7l5-4.5M3 9.5L8 14l5-4.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          {{ anyBoxExpanded ? 'Collapse all' : 'Expand all' }}
+        </button>
+        <!-- Background-uploads note: lives ON the options row (where Start is
+             conceptually near) not in the intro — it matters once uploads run.
+             Copy is deliberately honest about the tab-close case: the queue
+             persists (IndexedDB) but file handles cannot survive a closed tab,
+             so those items need re-adding (verified in engine.prepareOne). -->
+        <span class="text-xs text-cloud basis-full">
+          Uploads continue in the background while you browse other pages in Arbimon. If you close this tab, you&rsquo;ll be asked to re-add your recordings to finish &mdash; anything already uploaded is skipped.
+        </span>
       </div>
 
       <!-- WAV->FLAC explainer modal -->
@@ -229,6 +260,8 @@
           :opening-id="openingVisualizerId"
           :flac-enabled="flacEncodeEnabled"
           :drop-active="box.streamId !== undefined && dragBoxId === box.streamId"
+          :collapsed="collapsedBoxIds.has(box.boxId)"
+          @toggle-collapsed="toggleBoxCollapsed(box.boxId)"
           @remove-box="removeSiteBox(box.boxId)"
           @site-chosen="linkBoxToSite(box.boxId, $event)"
           @timezone-mode-changed="box.timezoneMode = $event as TimezoneMode"
@@ -352,6 +385,28 @@ const siteBoxes = ref<SiteBox[]>([])
 
 /** WAV->FLAC explainer modal (the "i" beside the pre-convert checkbox). */
 const showFlacInfo = ref(false)
+
+// -- Site-queue collapse (PAGE-owned, lifted from staging-table 2026-08-13) --
+// A Set of collapsed boxIds; absence = expanded. Page-level ownership is what
+// lets the options row's expand/collapse-all control drive every box.
+const collapsedBoxIds = ref<Set<string>>(new Set())
+const toggleBoxCollapsed = (boxId: string): void => {
+  const next = new Set(collapsedBoxIds.value)
+  if (next.has(boxId)) next.delete(boxId)
+  else next.add(boxId)
+  collapsedBoxIds.value = next
+}
+const linkedBoxCount = computed(() => siteBoxes.value.filter(b => b.streamId !== undefined).length)
+const anyBoxExpanded = computed(() =>
+  siteBoxes.value.some(b => b.streamId !== undefined && !collapsedBoxIds.value.has(b.boxId)))
+const toggleAllBoxes = (): void => {
+  if (anyBoxExpanded.value) {
+    // collapse everything that is linked
+    collapsedBoxIds.value = new Set(siteBoxes.value.filter(b => b.streamId !== undefined).map(b => b.boxId))
+  } else {
+    collapsedBoxIds.value = new Set()
+  }
+}
 
 const hasUnlinkedBox = computed(() => siteBoxes.value.some(box => box.streamId === undefined))
 
