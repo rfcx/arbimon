@@ -78,29 +78,30 @@
               {{ siteName }}
             </h3>
             <!-- Labelled metadata pieces (operator 2026-08-13): "Label: value",
-                 label at reduced opacity so the VALUES stay the scannable part. -->
+                 label at reduced opacity so the VALUES stay the scannable part.
+                 Order: Timezone, Existing count, Existing date range. The
+                 Queued count and Location were retired 2026-08-13 (queued is
+                 redundant with the rows below; coordinates are not useful
+                 while uploading). -->
             <span class="text-sm text-cloud flex flex-wrap items-baseline gap-x-2">
-              <span :title="'Recordings staged in this section'"><span class="text-cloud/60">Queued:</span> {{ items.length }} recording{{ items.length === 1 ? '' : 's' }}</span>
+              <span
+                v-if="siteTimezone !== undefined"
+                :title="'Site timezone'"
+              ><span class="text-cloud/60">Timezone:</span> {{ siteTimezone }}{{ tzOffsetLabel !== undefined ? ` (${tzOffsetLabel})` : '' }}</span>
               <template v-if="siteInfo !== undefined">
                 <span
+                  v-if="siteTimezone !== undefined"
                   class="text-cloud/40 select-none"
                   aria-hidden="true"
                 >·</span>
                 <span :title="'Recordings already in this site'"><span class="text-cloud/60">Existing:</span> {{ siteInfo.recCount.toLocaleString() }} recording{{ siteInfo.recCount === 1 ? '' : 's' }}</span>
-                <template v-if="siteInfo.lat !== undefined && siteInfo.lon !== undefined">
+                <template v-if="existingRangeLabel !== undefined">
                   <span
                     class="text-cloud/40 select-none"
                     aria-hidden="true"
                   >·</span>
-                  <span :title="'Site coordinates'"><span class="text-cloud/60">Location:</span> {{ siteInfo.lat.toFixed(4) }}, {{ siteInfo.lon.toFixed(4) }}</span>
+                  <span :title="'Date range of the recordings already in this site'"><span class="text-cloud/60">Range:</span> {{ existingRangeLabel }}</span>
                 </template>
-              </template>
-              <template v-if="siteTimezone !== undefined">
-                <span
-                  class="text-cloud/40 select-none"
-                  aria-hidden="true"
-                >·</span>
-                <span :title="'Site timezone'"><span class="text-cloud/60">Timezone:</span> {{ siteTimezone }}{{ tzOffsetLabel !== undefined ? ` (${tzOffsetLabel})` : '' }}</span>
               </template>
             </span>
           </div>
@@ -489,8 +490,9 @@ const props = defineProps<{
   /** Collapse state is PAGE-OWNED (lifted 2026-08-13) so the options row's
    * expand/collapse-all control can drive every box at once. */
   collapsed?: boolean
-  /** Site facts for the title line (existing recordings, coordinates). */
-  siteInfo?: { recCount: number, lat?: number, lon?: number }
+  /** Site facts for the title line: how many recordings the site already holds
+   * and the YYYY-MM range they span (both from the sites API's count aggregate). */
+  siteInfo?: { recCount: number, firstRecordingAt?: string, lastRecordingAt?: string }
 }>()
 
 const emit = defineEmits<{
@@ -592,6 +594,22 @@ const editZone = computed<string>(() => {
   return item.timezoneName ?? props.siteTimezone ?? 'UTC'
 })
 const editZoneLabel = computed(() => editZone.value)
+
+/** "YYYY-MM to YYYY-MM" for the recordings a site already holds; a single
+ * "YYYY-MM" when both ends fall in the same month. Undefined when the site has
+ * no recordings (the API returns null) so the piece is omitted entirely.
+ * Parsed by SLICING the datetime string rather than via Date: these are site-
+ * local wall times with no zone, and new Date(...) would re-interpret them in
+ * the viewer's timezone and could shift the month at a boundary. */
+const existingRangeLabel = computed<string | undefined>(() => {
+  const first = props.siteInfo?.firstRecordingAt
+  const last = props.siteInfo?.lastRecordingAt
+  if (first === undefined || last === undefined) return undefined
+  const firstMonth = first.slice(0, 7)
+  const lastMonth = last.slice(0, 7)
+  if (!/^\d{4}-\d{2}$/.test(firstMonth) || !/^\d{4}-\d{2}$/.test(lastMonth)) return undefined
+  return firstMonth === lastMonth ? firstMonth : `${firstMonth} to ${lastMonth}`
+})
 
 /** Current UTC offset of the site's IANA tz (e.g. 'UTC-5'), for the title
  * line. DATA-DERIVED, not Intl timeZoneName: the traps registry records that

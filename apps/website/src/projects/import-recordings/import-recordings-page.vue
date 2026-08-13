@@ -443,14 +443,16 @@ const siteOptions = computed(() =>
 const siteById = (streamId: string): SiteResponse | undefined =>
   sites.value.find(site => site.external_id === streamId)
 
-/** Site facts for a box's title line (existing recordings, Lat/Lng). */
-const siteInfoFor = (streamId: string): { recCount: number, lat?: number, lon?: number } | undefined => {
+/** Site facts for a section's title line: how many recordings the site already
+ * holds and the datetime range they span. Both come from the sites API's count
+ * aggregate (requires count: true — see loadSites). */
+const siteInfoFor = (streamId: string): { recCount: number, firstRecordingAt?: string, lastRecordingAt?: string } | undefined => {
   const site = siteById(streamId)
   if (site === undefined) return undefined
   return {
     recCount: site.rec_count ?? 0,
-    lat: typeof site.lat === 'number' ? site.lat : undefined,
-    lon: typeof site.lon === 'number' ? site.lon : undefined
+    firstRecordingAt: typeof site.first_recording_at === 'string' ? site.first_recording_at : undefined,
+    lastRecordingAt: typeof site.last_recording_at === 'string' ? site.last_recording_at : undefined
   }
 }
 
@@ -503,7 +505,11 @@ const itemsForBox = (streamId: string): UploadItem[] =>
 
 const loadSites = async (): Promise<void> => {
   if (apiClientArbimon === undefined || projectSlug.value === undefined) return
-  const response = await apiArbimonGetSites(apiClientArbimon, projectSlug.value, {})
+  // count: true is REQUIRED for rec_count / first_recording_at /
+  // last_recording_at — without it the server skips the aggregate entirely and
+  // every site reports 0 existing recordings (which is what the header showed
+  // before 2026-08-13).
+  const response = await apiArbimonGetSites(apiClientArbimon, projectSlug.value, { count: true })
   sites.value = (response ?? []).filter(site => site.external_id !== null && site.external_id !== '')
 }
 
