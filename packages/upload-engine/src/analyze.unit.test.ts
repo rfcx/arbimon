@@ -169,6 +169,20 @@ describe('analyzeFile — forced modes', () => {
     )
     expect(patch.analysisError).toContain('only supports WAV')
   })
+
+  it('re-analysis CLEARS a previous mode\'s error (merge-patch regression)', async () => {
+    // First analyze in metadata mode (errors: FLAC unsupported), then re-analyze
+    // the same item in auto mode. Because engine.update() MERGES patches, the
+    // second patch must carry analysisError: undefined EXPLICITLY — the merged
+    // result below simulates the engine's { ...item, ...patch } exactly.
+    const item = mkItem('site_20250818_193000.flac')
+    const first = await analyzeFile(item, plainBlob, { mode: 'metadata' })
+    expect(first.patch.analysisError).toContain('only supports WAV')
+    const second = await analyzeFile(item, plainBlob, { mode: 'auto', siteTimezone: 'America/Bogota' })
+    const merged = { ...item, ...first.patch, ...second.patch }
+    expect(merged.analysisError).toBeUndefined()
+    expect(merged.timestampUtc).toBeDefined()
+  })
 })
 
 describe('analyzeFile — failure shapes', () => {

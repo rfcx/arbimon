@@ -93,7 +93,12 @@ export async function analyzeFile (
   file: Blob,
   context: AnalyzeContext
 ): Promise<AnalyzeResult> {
-  const patch: Partial<UploadItem> = { state: 'staged' }
+  // analysisError starts EXPLICITLY undefined: engine.update() MERGES patches,
+  // so re-analysis (e.g. the session timezone-method selector changing) must
+  // actively clear a previous mode's error or it sticks to the row forever —
+  // observed live 2026-08-13: a 'metadata'-mode error survived switching back
+  // to 'auto' even though the row re-dated correctly.
+  const patch: Partial<UploadItem> = { state: 'staged', analysisError: undefined }
 
   // -- format + duration (header probe; bounded read) ------------------------
   try {
