@@ -129,6 +129,31 @@
            (timezone method + FLAC toggle) justified RIGHT (operator
            2026-08-13). ml-auto on the settings group does the split. -->
       <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3 items-center">
+        <!-- Expand/Collapse ALL: an icon button in the LEFT MARGIN, on the same
+             row as (and just left of) 'Add Recordings to a Site'. -ml-7 w-7
+             mirrors the section carets' geometry so it lines up with the column
+             of carets below. Icons are Gmail's own expand-all / collapse-all
+             glyphs (-960 960 Material viewBox). Only shown once there are ≥2
+             linked sections; a placeholder keeps the row from shifting when it
+             is absent. -->
+        <button
+          v-if="linkedBoxCount >= 2"
+          class="-ml-7 -mr-4 w-7 shrink-0 inline-flex items-center justify-center text-cloud hover:text-frequency"
+          :title="anyBoxExpanded ? 'Collapse all Upload Queue Sections' : 'Expand all Upload Queue Sections'"
+          :aria-label="anyBoxExpanded ? 'Collapse all' : 'Expand all'"
+          @click="toggleAllBoxes"
+        >
+          <svg
+            v-if="anyBoxExpanded"
+            viewBox="0 -960 960 960"
+            class="w-5 h-5 fill-current"
+          ><path d="M289-95l-50-50L480-387L721-145L671-95L480-285L289-95ZM480-573L239-815l50-50L480-675L671-865l50,50L480-573Z" /></svg>
+          <svg
+            v-else
+            viewBox="0 -960 960 960"
+            class="w-5 h-5 fill-current"
+          ><path d="M480-95L239-337l50-50l191,190l191-190l50,50L480-95ZM289-575l-50-50l241-242l241,242l-50,50l-191-190L289-575Z" /></svg>
+        </button>
         <button
           class="btn btn-primary text-sm inline-flex items-center gap-x-2"
           :disabled="hasUnlinkedBox"
@@ -182,34 +207,6 @@
           />
         </div>
         </div>
-      </div>
-
-      <!-- Expand/Collapse ALL, as an ICON button parked in the LEFT MARGIN so
-           it sits on the same vertical line as each section's caret (-ml-7 w-7
-           mirrors the caret's own geometry). Icons are Gmail's own
-           expand-all / collapse-all glyphs (-960 960 viewBox, Material
-           coordinate system). Only shown once there are ≥2 linked sections. -->
-      <div
-        v-if="linkedBoxCount >= 2"
-        class="mt-4 -mb-2"
-      >
-        <button
-          class="-ml-7 w-7 inline-flex items-center justify-center text-cloud hover:text-frequency"
-          :title="anyBoxExpanded ? 'Collapse all Upload Queue Sections' : 'Expand all Upload Queue Sections'"
-          :aria-label="anyBoxExpanded ? 'Collapse all' : 'Expand all'"
-          @click="toggleAllBoxes"
-        >
-          <svg
-            v-if="anyBoxExpanded"
-            viewBox="0 -960 960 960"
-            class="w-5 h-5 fill-current"
-          ><path d="M289-95l-50-50L480-387L721-145L671-95L480-285L289-95ZM480-573L239-815l50-50L480-675L671-865l50,50L480-573Z" /></svg>
-          <svg
-            v-else
-            viewBox="0 -960 960 960"
-            class="w-5 h-5 fill-current"
-          ><path d="M480-95L239-337l50-50l191,190l191-190l50,50L480-95ZM289-575l-50-50l241-242l241,242l-50,50l-191-190L289-575Z" /></svg>
-        </button>
       </div>
 
       <!-- hidden file input; routed to whichever box requested the picker -->
