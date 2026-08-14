@@ -180,8 +180,20 @@
           <span>{{ startPauseLabel }}</span>
         </button>
 
-        <!-- Panel order (operator 2026-08-14, revised twice), left to right:
-             Queued · Outcomes(Imported/Errors/Skipped/Uploaded) · Upload Rate.
+        <!-- Panel order (operator 2026-08-14, revised three times), left to right:
+             Upload Rate · Queued · Outcomes(Imported/Errors/Skipped/Uploaded)
+             · Settings.
+
+             UPLOAD RATE LEADS (operator): it sits directly beside Start/Pause,
+             which is the control that causes it — press Start, watch the rate
+             move. Cause and effect are now adjacent instead of at opposite ends
+             of the row. It also keeps the two live/instantaneous readings
+             (Rate, Queued) together on the left and the cumulative totals
+             (Outcomes) to their right, so the row reads present -> past.
+
+             SETTINGS CLOSES THE ROW on the right: an action, deliberately at
+             the opposite end from Start/Pause so the row is bracketed by its
+             two controls with the read-only figures between them.
 
              WHAT CHANGED AND WHY:
              • The OUTCOME figures are ONE box. They answer a single question —
@@ -201,14 +213,19 @@
                Imported already told you (both counted successful ingests) and
                its N/N ratio went stale the moment rows were cleared.
 
-             UPLOAD RATE stays OUTSIDE: it is an instantaneous throughput
-             reading (a 10s sliding window), not a cumulative outcome, and Reset
-             does not touch it. Putting it in the box would have broken the
-             "this box is exactly what Reset clears" rule.
+             UPLOAD RATE stays OUTSIDE the Outcomes box: it is an
+             instantaneous throughput reading (a 10s sliding window), not a
+             cumulative outcome, and Reset does not touch it. Putting it in
+             would have broken the "this box is exactly what Reset clears" rule.
 
-             The combined box spans 4 of the 6 columns — one per metric it
-             carries — so the row still divides evenly. -->
-        <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+             Grid: 7 columns = Rate(1) + Queued(1) + Outcomes(4) + Settings(1),
+             so the row still divides evenly. -->
+        <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Upload Rate</span>
+            <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
+          </div>
+
           <!-- QUEUED is deliberately GLOBAL (all projects), matching the engine's
                unscoped stats and the operator's request. The upload engine is a
                single queue shared by every project, so a per-project figure
@@ -299,10 +316,34 @@
             </div>
           </div>
 
-          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Upload Rate</span>
-            <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
-          </div>
+          <!-- SETTINGS as a panel-shaped BUTTON (operator 2026-08-14). It mirrors the
+               existing Settings control in the options row below — same modal,
+               same `showSettings` flag, same Material gear glyph — so the two
+               entry points cannot drift apart in behaviour.
+
+               Deliberately NOT extracted into a shared component for two
+               buttons that differ in shape (pill vs panel): the duplication is
+               the glyph path and one click handler, and a premature abstraction
+               would fix the shape of both. If a THIRD entry point appears, that
+               is the moment to extract it.
+
+               `<button>` rather than a clickable div: it must be focusable and
+               keyboard-activatable, which the metric panels around it are not.
+               Matching panel chrome (rounded-lg / border / bg-moss/30) keeps it
+               visually in the row, while hover + focus-visible rings and
+               `cursor-pointer` mark it as interactive rather than a reading. -->
+          <button
+            class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col items-center justify-center gap-y-1 text-cloud transition-colors hover:(text-frequency border-frequency/40 bg-moss/50) focus-visible:(outline-none ring-2 ring-frequency)"
+            title="Uploader Settings"
+            aria-label="Uploader Settings"
+            @click="showSettings = true"
+          >
+            <svg
+              viewBox="0 -960 960 960"
+              class="w-5 h-5 fill-current"
+            ><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm112-260q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Z" /></svg>
+            <span class="text-xs uppercase tracking-wide">Settings</span>
+          </button>
         </div>
       </div>
 
