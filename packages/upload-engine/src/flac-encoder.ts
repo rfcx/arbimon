@@ -23,6 +23,7 @@
 // compile upload-engine SOURCE through workspace paths and do not inherit
 // this package's tsconfig "paths" — without the reference their builds fail
 // resolving the libflacjs deep imports (upstream's declarations are broken).
+import { FlacStreamEncoder } from './flac-encoder-core'
 import type { WavMetadata } from './wav-metadata'
 
 // libflacjs ships an Emscripten bundle; typed loosely on purpose — the
@@ -135,10 +136,15 @@ export async function encodeWavToFlac (
   const sampleRate = meta.sampleRate as number
 
   const Flac = await loadFlac()
-  const { Encoder } = await import('libflacjs/lib/encoder')
 
-  const settings = { compression: 5, verify: true, library: 'libflacjs@5.6.0' }
-  const encoder = new Encoder(Flac, {
+  // NOTE (§118): we deliberately do NOT import `libflacjs/lib/encoder` here.
+  // It is a UMD module whose shadowed `require` makes rollup emit a throwing
+  // `_commonjs-dynamic-modules` stub — the build succeeds, the worker loads,
+  // and encoding fails at RUNTIME (silently, because the transcode stage fails
+  // open). FlacStreamEncoder reimplements the three methods we used directly
+  // on the WASM module. See flac-encoder-core.ts for the full history.
+  const settings = { compression: 5, verify: true, library: 'libflac-wasm-direct' }
+  const encoder = new FlacStreamEncoder(Flac, {
     sampleRate, channels, bitsPerSample, compression: settings.compression, verify: settings.verify
   })
 

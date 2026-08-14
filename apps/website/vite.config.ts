@@ -190,8 +190,49 @@ const config: UserConfigVite & { test: UserConfigVitest } = {
   // #112 FLAC encode worker: vite defaults workers to iife, which cannot
   // code-split — the libflacjs graph in the worker triggers splitting, so the
   // production build fails without es format here (dev is unaffected).
+  //
+  // ⚠️ AND the worker needs CommonJS interop too (2026-08-13, OPEN-ITEMS §118).
+  // `libflacjs/lib/encoder` is a UMD module that does
+  // `require("./utils/data-utils")`. Rollup cannot resolve that statically, so
+  // it emitted a STUB that threw at runtime:
+  //   'Could not dynamically require "./utils/data-utils". Please configure
+  //    the dynamicRequireTargets ... option of @rollup/plugin-commonjs'
+  // The build SUCCEEDS and the worker chunk is emitted and served 200 — it
+  // only failed when an encode was attempted. Because withFlacTranscode fails
+  // OPEN, every WAV then uploaded silently un-transcoded and the feature
+  // looked like it was simply switched off.
+  //
+  // `transformMixedEsModules` (build.commonjsOptions below) is the fix: it lets
+  // rollup convert the UMD require() into a static import at build time.
+  //
+  // ❌ DO NOT add `dynamicRequireTargets`. It looks like the fix the error
+  // message asks for, but it makes rollup keep a RUNTIME require shim whose
+  // module ids are the ABSOLUTE BUILD PATHS, e.g.
+  //   /packages/upload-engine/node_modules/libflacjs/lib/encoder.js
+  // Those paths do not exist on the server, and because this is an SPA the
+  // nginx fallback answers them with index.html (HTTP 200, text/html) — so the
+  // failure resurfaces as an opaque worker error instead of an honest 404.
+  // Verified live 2026-08-13.
   worker: {
     format: 'es'
+  },
+  build: {
+    commonjsOptions: {
+      // See the worker note above (§118). libflacjs's lib/encoder.js is a UMD
+      // module whose factory SHADOWS `require` as a parameter:
+      //   (function (factory) { ... factory(require, exports) ... })
+      //   (function (require, exports) { const d = require("./utils/data-utils") })
+      // Rollup cannot statically analyse that, so it routes the call through a
+      // shared `_commonjs-dynamic-modules` chunk whose only export THROWS.
+      // transformMixedEsModules alone does NOT fix it (verified live: the
+      // stub chunk was still emitted and imported by encoder-*.js).
+      //
+      // The working combination is to let Vite PRE-BUNDLE libflacjs into a
+      // clean ESM module (optimizeDeps.include, below) so rollup never sees the
+      // UMD form, and to stop generating throwing stubs for anything that slips
+      // through.
+      transformMixedEsModules: true
+    }
   },
   ssgOptions: {
     script: 'async',
