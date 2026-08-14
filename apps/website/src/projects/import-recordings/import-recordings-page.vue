@@ -65,17 +65,21 @@
       This project is view-only and cannot accept uploads.
     </div>
 
-    <!-- Uploader-tab placeholder (operator 2026-08-14). The uploader is stateful,
-         so only ONE tab drives a given project at a time. When an uploader tab
-         owns this project the original tab shows this instead of a second,
-         competing uploader — and it must be ACTIONABLE, because a browser will
-         not tell us whether focusing that tab actually worked. `window.open`
-         with the same tab NAME re-focuses the existing tab rather than opening
-         a second one, so the button is safe to press repeatedly. -->
-    <!-- Popup blocked: fall back to the FULL inline uploader (see onMounted).
-         Import must never be a dead button. -->
+    <!-- BLOCKED-TAB NOTICE — deliberately a SIBLING, not a branch of the chain
+         below (2026-08-14, second pass).
+
+         It used to be a `v-else-if` in the SAME chain as the uploader itself,
+         while its own comment claimed it would "fall back to the FULL inline
+         uploader". It did the exact opposite: a matched branch excludes every
+         later one, so a blocked open rendered this notice ALONE and the uploader
+         did not render at all. The banner read "it’s running here instead" on a
+         page where nothing was running — precisely the dead end the guard was
+         written to prevent.
+
+         As an independent `v-if` it is advisory: the notice shows AND the
+         uploader below it still renders. -->
     <div
-      v-else-if="popoutBlocked && !isPopout && !popoutActive"
+      v-if="popoutBlocked && !isPopout && !popoutActive && !isProjectViewOnly"
       class="mt-6 rounded-lg border border-flamingo/30 bg-flamingo/10 px-4 py-3 text-sm"
     >
       <p class="text-insight">
@@ -85,13 +89,20 @@
         Allow pop-ups for this site to keep uploads in their own tab, or
         <button
           class="text-frequency hover:underline"
-          @click="focusPopout"
+          @click="popOut"
         >try opening it again</button>.
       </p>
     </div>
 
+    <!-- Uploader-tab placeholder (operator 2026-08-14). The uploader is stateful,
+         so only ONE tab drives a given project at a time. When an uploader tab
+         owns this project the original tab shows this instead of a second,
+         competing uploader — and it must be ACTIONABLE, because a browser will
+         not tell us whether focusing that tab actually worked. `window.open`
+         with the same tab NAME re-focuses the existing tab rather than opening
+         a second one, so the button is safe to press repeatedly. -->
     <div
-      v-else-if="popoutActive && !isPopout"
+      v-if="popoutActive && !isPopout && !isProjectViewOnly"
       class="mt-6 rounded-lg border border-frequency/30 bg-frequency/10 px-4 py-4 text-sm"
     >
       <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
@@ -129,7 +140,7 @@
       </p>
     </div>
 
-    <template v-else>
+    <template v-else-if="!isProjectViewOnly">
       <!-- Global control bar FIRST (2026-08-12 layout pass): Start/Pause +
            Grafana-style stat panels sit directly under the title as the page's
            permanent header row (no v-if — an Idle button + zeroed panels is the
@@ -968,17 +979,16 @@ const popoutWindowTitle = computed(() =>
 /** True once the user has pressed “Go to the uploader tab” at least once. */
 const focusAttempted = ref(false)
 
-/** One auto-launch attempt per visit to this route (see onMounted). */
-const autoLaunchTried = ref(false)
-
 /**
  * Set when `window.open` returned null — i.e. the browser blocked it.
- * The page then renders the FULL inline uploader instead of the placeholder,
- * so Import still works. Without this the nav would appear to do nothing.
+ * The page then shows an advisory notice ALONGSIDE the working inline uploader,
+ * so the button is never silently dead. Without this, a blocked open and
+ * "nothing happened" are indistinguishable to the user.
  *
- * Kept even though a TAB is much less likely to be blocked than a popup: some
- * browsers/extensions still block script-opened tabs that are not tied to a
- * user gesture, and the auto-launch on mount is exactly that case.
+ * Now only ever set from the explicit button press (see popOut). A user gesture
+ * is very rarely blocked, but "very rarely" is not "never" — extensions and
+ * strict pop-up settings still refuse some script-opened tabs, so the signal is
+ * still worth surfacing.
  */
 const popoutBlocked = ref(false)
 
@@ -1011,8 +1021,21 @@ const openPopoutWindow = (): Window | null => {
   return window.open(url, `arbimon-uploader-${projectSlug.value}`)
 }
 
+/**
+ * Explicit “Open in New Tab”. Only a USER GESTURE opens the uploader tab now —
+ * see the onMounted note on why the automatic launch was removed.
+ */
 const popOut = (): void => {
-  openPopoutWindow()
+  const handle = openPopoutWindow()
+  if (handle === null) {
+    popoutBlocked.value = true
+    track('web_upload_popout_blocked', { project: projectSlug.value })
+  } else {
+    // A previously blocked attempt that later succeeds must clear the notice,
+    // otherwise the page keeps telling the user they are blocked while the
+    // uploader tab is demonstrably open.
+    popoutBlocked.value = false
+  }
 }
 
 const closePopout = (): void => {
@@ -1026,31 +1049,28 @@ onMounted(() => {
   if (isPopout.value) {
     registerAsPopout(projectSlug.value)
     requestFileHandles(projectSlug.value)
-    return
   }
-  // UPLOADER-TAB-FIRST (operator 2026-08-14): arriving from the Import nav
-  // opens the uploader in its own TAB, so the stateful uploader stops competing
-  // with SPA navigation. The original tab then shows the launcher/placeholder.
+  // NO AUTO-LAUNCH (operator 2026-08-14, superseding uploader-tab-first).
   //
-  // Guards, in order of importance:
-  //  - only auto-launch ONCE per page visit (autoLaunchTried), so returning to
-  //    this route does not spawn or re-focus repeatedly;
-  //  - never auto-launch if a pop-out for this project is ALREADY live — the
-  //    placeholder handles that case and re-opening could steal focus;
-  //  - never auto-launch for a view-only project (nothing to upload);
-  //  - a BLOCKED open returns null, which we surface rather than swallow:
-  //    the page falls back to the full inline uploader so Import is never a
-  //    dead button. Far rarer for a tab than it was for a popup window, but
-  //    a script-opened tab with no user gesture can still be refused.
-  if (isProjectViewOnly.value) return
-  if (autoLaunchTried.value) return
-  autoLaunchTried.value = true
-  if (popoutActive.value) return
-  const handle = openPopoutWindow()
-  if (handle === null) {
-    popoutBlocked.value = true
-    track('web_upload_popout_blocked', { project: projectSlug.value })
-  }
+  // Clicking Import used to open the uploader tab automatically and leave this
+  // page as a launcher. Reverted: the uploader must work IN PLACE, inside the
+  // SPA, and the separate tab is now strictly opt-in via “Open in New Tab”.
+  //
+  // Why the automatic version was worse than the problem it solved:
+  //  - it spent the user’s ONE navigation on a tab they did not ask for, and
+  //    the page they DID ask for showed them a placeholder instead;
+  //  - a script-opened tab with no user gesture is the case browsers block
+  //    most readily, so the fallback path was also the likeliest path — and
+  //    that fallback was itself broken (see the template note on the blocked
+  //    notice, which suppressed the very uploader it claimed to fall back to);
+  //  - `autoLaunchTried` was a `ref` in component scope, so it reset on every
+  //    remount. It never limited anything across SPA navigation, which is
+  //    exactly where “once per visit” was supposed to apply.
+  //
+  // Nothing here replaces it: the inline uploader is the default, and this
+  // page renders it directly. The per-project claim, scope partitioning and
+  // heartbeat all continue to work — they key off ?popout=1, not off who
+  // opened the tab.
 })
 
 /**
