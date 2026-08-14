@@ -6,46 +6,56 @@
        standard `pl-18`/`pl-23` gutter, or the content slides underneath the
        sidebar. -->
   <section :class="isPopout ? 'p-6' : 'pt-20 pl-18 pr-6 md:(pl-23 pr-10) pb-20'">
-    <div class="flex items-start justify-between">
-      <div>
-        <!-- The PROJECT is the primary header; the task is the sub-header. The
-             project you are uploading into is the thing that orients the user
-             (and the thing that differs between uploader tabs). -->
-        <h1 class="mt-6">
-          {{ projectName ?? 'Project' }}
-        </h1>
-        <h2 class="text-lg font-semibold mt-1">
+    <div>
+      <!-- The PROJECT is the primary header; the task is the sub-header. The
+           project you are uploading into is the thing that orients the user
+           (and the thing that differs between uploader windows). -->
+      <h1 class="mt-6">
+        {{ projectName ?? 'Project' }}
+      </h1>
+      <!-- ACTION SITS ON THE SUB-HEADER LINE (operator 2026-08-14), not beside
+           the project title. The button acts on the TASK ("Upload &amp; Import
+           Recordings"), so pairing it with the task line reads correctly and
+           leaves the project name as an uninterrupted heading.
+
+           `items-center` so the control is optically centred against the h2
+           text rather than hanging from its top, and `shrink-0` on the button
+           so a long project/task heading can never squeeze it (it carries
+           `whitespace-nowrap`, which would otherwise force overflow instead of
+           shrinking). -->
+      <div class="flex items-center justify-between gap-x-4 mt-1">
+        <h2 class="text-lg font-semibold">
           Upload &amp; Import Recordings
           <!-- Generic "NEW" chip: intentionally not uploader-specific so the
                same treatment can flag other new features elsewhere. -->
           <span class="text-xs align-middle rounded bg-frequency/20 text-frequency px-2 py-0.5 ml-2 font-medium tracking-wide">NEW</span>
         </h2>
+        <button
+          v-if="!isPopout"
+          class="btn btn-secondary text-sm shrink-0 whitespace-nowrap inline-flex items-center gap-x-2 disabled:btn-disabled disabled:hover:btn-disabled disabled:cursor-not-allowed"
+          :disabled="popoutLaunched"
+          :title="popoutLaunched
+            ? 'The uploader is already open in its own window — use “Go to the uploader window” below'
+            : 'Open the uploader in its own window'"
+          @click="popOut"
+        >
+          Pop-Out in New Window
+          <!-- Material Symbols "open in new" (the Gmail pop-out glyph);
+               -960-based viewBox per the Material icon coordinate system -->
+          <svg
+            viewBox="0 -960 960 960"
+            class="w-4 h-4 fill-current"
+          ><path d="M216-144q-29.7 0-50.85-21.15T144-216v-528q0-29.7 21.15-50.85T216-816h264v72H216v528h528v-264h72v264q0 29.7-21.15 50.85T744-144H216Zm171-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z" /></svg>
+        </button>
+        <button
+          v-else
+          class="btn btn-secondary text-sm shrink-0 whitespace-nowrap"
+          title="Close this window (uploads resume in your main Arbimon tab)"
+          @click="closePopout"
+        >
+          ✕ Close window
+        </button>
       </div>
-      <button
-        v-if="!isPopout"
-        class="btn btn-secondary text-sm mt-6 whitespace-nowrap inline-flex items-center gap-x-2 disabled:btn-disabled disabled:hover:btn-disabled disabled:cursor-not-allowed"
-        :disabled="popoutLaunched"
-        :title="popoutLaunched
-          ? 'The uploader is already open in its own window — use “Go to the uploader window” below'
-          : 'Open the uploader in its own window'"
-        @click="popOut"
-      >
-        Pop-Out in New Window
-        <!-- Material Symbols "open in new" (the Gmail pop-out glyph);
-             -960-based viewBox per the Material icon coordinate system -->
-        <svg
-          viewBox="0 -960 960 960"
-          class="w-4 h-4 fill-current"
-        ><path d="M216-144q-29.7 0-50.85-21.15T144-216v-528q0-29.7 21.15-50.85T216-816h264v72H216v528h528v-264h72v264q0 29.7-21.15 50.85T744-144H216Zm171-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z" /></svg>
-      </button>
-      <button
-        v-else
-        class="btn btn-secondary text-sm whitespace-nowrap"
-        title="Close this window (uploads resume in your main Arbimon tab)"
-        @click="closePopout"
-      >
-        ✕ Close window
-      </button>
     </div>
 
     <!-- Intro copy sits OUTSIDE the header flex row so it spans the FULL page
