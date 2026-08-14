@@ -509,6 +509,32 @@
         @change="onPick"
       >
 
+      <!-- SEPARATE hidden input for FOLDER picking (operator 2026-08-14).
+
+           `webkitdirectory` cannot share an input with the file picker: it is a
+           property of the ELEMENT, not of the click, so one input can offer
+           files OR a directory but never both. Two inputs is the standard
+           solution and keeps each dialog honest about what it will accept.
+
+           `accept` is deliberately OMITTED here — with webkitdirectory the
+           browser hands over the entire subtree regardless, and an accept list
+           only creates the false impression that filtering happened in the
+           dialog. The filtering that matters is `isSupportedAudioFile` in
+           enqueueFiles, which already runs for every intake path.
+
+           Each File carries `webkitRelativePath` ("folder/sub/REC.wav"), which
+           is passed through as relativePath so a picked folder produces exactly
+           the same rows as the same folder DROPPED — the drag path has walked
+           directories since day one via collectDroppedFiles. -->
+      <input
+        ref="folderInput"
+        type="file"
+        multiple
+        webkitdirectory
+        class="hidden"
+        @change="onPickFolder"
+      >
+
       <!-- Per-site upload boxes, newest on top. Each box is a complete unit:
            header (site name) + filters + table + its OWN drag/drop intake.
            A drop into a box stages files for THAT box's site — the moment of
@@ -559,14 +585,27 @@
                     Drag &amp; drop recordings for <span class="text-frequency">{{ box.siteName }}</span>
                   </p>
                   <p class="text-sm text-cloud mt-1">
-                    .wav, .flac, .opus — analyzed locally and staged above before anything uploads
+                    .wav, .flac, .opus — whole folders welcome, analyzed locally and staged above before anything uploads
                   </p>
-                  <button
-                    class="btn btn-secondary mt-3 text-sm"
-                    @click="pickFilesFor(box.streamId)"
-                  >
-                    Or choose recordings…
-                  </button>
+                  <!-- TWO pickers, because a browser file dialog can offer
+                       files OR a folder, never both (see the hidden inputs
+                       above). Dropping already handles either, so this is the
+                       keyboard/click path catching up with the drag path. -->
+                  <div class="mt-3 flex flex-wrap items-center justify-center gap-2">
+                    <button
+                      class="btn btn-secondary text-sm"
+                      @click="pickFilesFor(box.streamId)"
+                    >
+                      Choose recordings…
+                    </button>
+                    <button
+                      class="btn btn-secondary text-sm"
+                      title="Pick a folder — every supported recording inside it, including sub-folders, is added"
+                      @click="pickFolderFor(box.streamId)"
+                    >
+                      Choose a folder…
+                    </button>
+                  </div>
                 </template>
                 <p
                   v-else
@@ -875,6 +914,7 @@ onMounted(async () => {
 const dragBoxId = ref<string | undefined>(undefined)
 let dragDepth = 0
 const fileInput = ref<HTMLInputElement>()
+const folderInput = ref<HTMLInputElement>()
 /** the box whose choose-files button opened the picker */
 let pickTargetStreamId: string | undefined
 
@@ -1004,10 +1044,45 @@ const pickFilesFor = (streamId: string): void => {
   fileInput.value?.click()
 }
 
+/** Open the FOLDER picker for a box (operator 2026-08-14). */
+const pickFolderFor = (streamId: string): void => {
+  pickTargetStreamId = streamId
+  folderInput.value?.click()
+}
+
 const onPick = async (event: Event): Promise<void> => {
   const input = event.target as HTMLInputElement
   if (input.files === null || pickTargetStreamId === undefined) return
   await enqueueFiles(pickTargetStreamId, Array.from(input.files).map(file => ({ file, relativePath: file.name })))
+  input.value = ''
+  pickTargetStreamId = undefined
+}
+
+/**
+ * Folder pick — the picker equivalent of dropping a folder.
+ *
+ * `webkitdirectory` yields a FLAT FileList of the whole subtree, with each File
+ * carrying `webkitRelativePath` ("folder/sub/REC.wav"). Passing that through as
+ * relativePath is what makes a PICKED folder produce identical rows to the same
+ * folder DROPPED — `collectDroppedFiles` builds the same shape by walking
+ * FileSystemEntry. Falling back to `file.name` covers the (non-standard) case
+ * of an empty webkitRelativePath.
+ *
+ * No extension filtering here on purpose: `enqueueFiles` already applies
+ * `isSupportedAudioFile` to every intake path, so a folder containing notes,
+ * images or a stray .DS_Store contributes only its real recordings — and it
+ * stays ONE rule rather than two that could drift.
+ */
+const onPickFolder = async (event: Event): Promise<void> => {
+  const input = event.target as HTMLInputElement
+  if (input.files === null || pickTargetStreamId === undefined) return
+  await enqueueFiles(
+    pickTargetStreamId,
+    Array.from(input.files).map(file => ({
+      file,
+      relativePath: (file as File & { webkitRelativePath?: string }).webkitRelativePath ?? file.name
+    }))
+  )
   input.value = ''
   pickTargetStreamId = undefined
 }
