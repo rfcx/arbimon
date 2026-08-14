@@ -37,20 +37,49 @@ describe('the uploader is inline-first — no automatic tab launch', () => {
     expect(mountBody()).not.toContain('openPopoutWindow')
   })
 
-  test('mount still registers the CLAIM when this IS the uploader tab', () => {
-    // Removing the auto-launch must not disturb the ?popout=1 bootstrap: an
-    // uploader tab still has to claim its project and pull file handles from
-    // the opener, or its rows are unreadable and the partitioning breaks.
+  test('mount still registers the CLAIM when this IS the pop-out', () => {
+    // Removing the auto-launch must not disturb the ?popout=1 bootstrap: the
+    // pop-out still has to claim its project and pull file handles from the
+    // opener, or its rows are unreadable and the partitioning breaks.
     const body = mountBody()
     expect(body).toContain('registerAsPopout(projectSlug.value)')
     expect(body).toContain('requestFileHandles(projectSlug.value)')
   })
 
-  test('the tab remains available on demand (opt-in, not removed)', () => {
-    // Inline-first is not "no tab". The explicit button must still open one.
+  test('the pop-out remains available on demand (opt-in, not removed)', () => {
+    // Inline-first is not "no pop-out". The explicit button must still open one.
     expect(source).toContain('const popOut = ')
     const popOutBody = source.slice(source.indexOf('const popOut = '))
     expect(popOutBody).toContain('openPopoutWindow()')
+  })
+
+  test('the pop-out is a WINDOW, not a tab (the features argument)', () => {
+    // Supplying a features string is precisely what asks the browser for a
+    // standalone window; omitting it yields a tab. The brief tab experiment
+    // dropped this argument, so its presence is the whole revert and the one
+    // thing most likely to be lost again in a future edit.
+    const body = source.slice(
+      source.indexOf('const openPopoutWindow'),
+      source.indexOf('const popOut = ')
+    )
+    expect(body).toContain('popup=yes')
+    expect(body).toContain('width=1280,height=860')
+    // ...and still a STABLE PER-PROJECT name, which is what makes a repeat
+    // press re-focus the existing window instead of spawning a second one.
+    // Matched by regex: writing the template literal out verbatim trips the
+    // no-template-curly-in-string lint rule, and escaping it into a plain
+    // string would be easy to "fix" into something that no longer matches.
+    expect(body).toMatch(/arbimon-uploader-\$\{\s*projectSlug\.value\s*\}/)
+  })
+
+  test('the pop-out window is CHROME-FREE (no sidebar/navbar)', () => {
+    // Correct for a window (the full app is still behind it in the main tab)
+    // and the opposite of what the tab model needed. Asserted in the layout
+    // that actually decides it, not in this page.
+    const layout = readFileSync(
+      join(__dirname, '..', '..', '_layout', 'project-root', 'project-root.vue'), 'utf8')
+    expect(layout).toContain("const isPopout = computed(() => route.query.popout === '1')")
+    expect(layout).toContain('<template v-if="!isPopout">')
   })
 
   test('a blocked tab is still surfaced, and only from the user gesture', () => {
@@ -63,7 +92,7 @@ describe('the uploader is inline-first — no automatic tab launch', () => {
 
   test('a LATER successful open clears a stale blocked notice', () => {
     // Otherwise the page keeps insisting the user is blocked while their
-    // uploader tab is demonstrably open.
+    // pop-out window is demonstrably open.
     const popOutBody = source.slice(
       source.indexOf('const popOut = '),
       source.indexOf('const closePopout')

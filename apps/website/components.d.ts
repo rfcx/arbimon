@@ -10,6 +10,7 @@ declare module 'vue' {
     ElDatePicker: typeof import('element-plus/lib')['ElDatePicker']
     IconCustomAlertCircle: typeof import('~icons/custom-icons/alert-circle')['default']
     IconCustomAlertTriangle: typeof import('~icons/custom-icons/alert-triangle')['default']
+    IconCustomAngleDown: typeof import('~icons/custom-icons/angle-down')['default']
     IconCustomArrowRight: typeof import('~icons/custom-icons/arrow-right')['default']
     IconCustomArrowRightWhite: typeof import('~icons/custom-icons/arrow-right-white')['default']
     IconCustomChevronLeft: typeof import('~icons/custom-icons/chevron-left')['default']

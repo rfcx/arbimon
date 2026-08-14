@@ -1,21 +1,24 @@
 <template>
-  <!-- The uploader tab (?popout=1) keeps the SIDEBAR (2026-08-14).
+  <!-- The uploader POP-OUT (?popout=1) is chrome-free: no navbar, no sidebar
+       (2026-08-14 — restored along with the window, superseding the brief
+       tab experiment).
 
-       It used to be fully chrome-free, which was right when it was a
-       chromeless POPUP WINDOW: that window existed solely to keep uploads
-       running while the user worked in the original tab, and a popup has no
-       navigation by definition.
+       This is right for a WINDOW and was wrong for a tab. A popup window has no
+       navigation by definition, so it cannot be a "dead end" in the way a tab
+       can: the user's main tab is still sitting behind it with the full app,
+       and this window exists solely to keep uploads visible while they work
+       there. Chrome here would be misleading furniture — a sidebar whose links
+       would either navigate the little upload window somewhere useless, or
+       strand its per-project claim.
 
-       As a TAB that reasoning inverts. A tab looks and behaves like any other
-       page in the app, so a user WILL treat it as one — and a tab with no
-       navigation whatsoever is a dead end: no way to reach the project, the
-       site list, or anything else without editing the URL or hunting for the
-       original tab (which may itself have been closed). Keeping the sidebar
-       costs nothing while uploads run in the background — they are driven by
-       the upload singleton, not by this page's presence — and navigating away
-       now releases the tab's claim cleanly (see releasePopoutClaim). -->
-  <landing-navbar v-if="shouldShowNavbar" />
-  <sidebar v-else />
+       NOTE the uploader page still calls releasePopoutClaim() on unmount. It is
+       now hard to reach (a chrome-free window offers no navigation), but it is
+       kept deliberately: it is guarded by unsavedCount and it costs nothing,
+       while its absence is invisible until a queue mysteriously stalls. -->
+  <template v-if="!isPopout">
+    <landing-navbar v-if="shouldShowNavbar" />
+    <sidebar v-else />
+  </template>
   <div
     v-if="store.project"
   >
@@ -42,5 +45,8 @@ const route = useRoute()
 
 // view as guest, or does not have a permission to view the project
 const shouldShowNavbar = computed(() => route.query.guest === '1' || store.userIsExternalGuest || store.project === undefined)
+
+// chrome-free pop-out mode (uploader)
+const isPopout = computed(() => route.query.popout === '1')
 
 </script>
