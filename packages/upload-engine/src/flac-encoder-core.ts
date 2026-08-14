@@ -40,7 +40,24 @@
  * require.
  *
  * Behaviour is pinned by the existing lossless-parity tests: encode → decode →
- * compare samples must remain bit-exact.
+ * compare samples must remain bit-exact, AND by a byte-identity test proving
+ * this driver emits the SAME BYTES as the libflacjs Encoder it replaced
+ * (verified: 19,470 bytes, 0 differing). That last property matters because
+ * ingest dedup is keyed on the uploaded file's sha1 — a different-but-valid
+ * stream would silently change every file's identity.
+ *
+ * MUTATION-TEST STATUS (2026-08-13): 4 of 9 valid mutations are caught. The 5
+ * survivors were each investigated rather than excused, and are documented at
+ * their site below. Summary of WHY they are unkillable here:
+ *   - the write-callback copy is DEFENSIVE, not load-bearing: measured 15
+ *     callbacks returning 15 DISTINCT backing ArrayBuffers, so libflac's glue
+ *     already hands out fresh views. Kept anyway (see the note there).
+ *   - `verify` does not change OUTPUT BYTES (it is libFLAC's internal
+ *     self-check), so no output-comparing test can see it flip.
+ *   - the destroy()/guard mutations are resource-lifecycle properties that a
+ *     short-lived test process does not feel; the leak guard catches runaway
+ *     growth, not a single missed free.
+ * Do NOT "simplify" these away on the grounds that tests still pass.
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -86,7 +103,16 @@ export class FlacStreamEncoder {
     const status = flac.init_encoder_stream(
       id,
       (buffer: Uint8Array, bytes: number) => {
-        // Copy: the WASM heap view is reused between callbacks.
+        // Defensive copy of the callback's view.
+        //
+        // MEASURED 2026-08-13: libflac's JS glue actually allocates a FRESH
+        // ArrayBuffer per callback (15 callbacks -> 15 distinct buffers), so
+        // this copy is not currently load-bearing and a mutation removing it
+        // cannot be caught by any output test. It is KEPT deliberately: the
+        // C API contract makes no such promise, the glue could start reusing a
+        // heap view in any future release, and the failure mode would be
+        // SILENT AUDIO CORRUPTION in already-uploaded archives rather than an
+        // error. A copy per output block is negligible next to the encode.
         this.chunks.push(new Uint8Array(buffer.subarray(0, bytes)))
         this.totalBytes += bytes
         return 0 // FLAC__STREAM_ENCODER_WRITE_STATUS_OK

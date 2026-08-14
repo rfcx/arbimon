@@ -58,9 +58,25 @@ export const engine = new UploadEngine(
   async (item, file) => await withFlacTranscode(
     makeBrowserPrepare({ timezone: prepareOptions.timezone }),
     transcodeCache,
-    { enabled: flacEncodeEnabled.value, encode: workerEncode }
+    {
+      enabled: flacEncodeEnabled.value,
+      encode: workerEncode,
+      // §118: a wholly-broken encoder used to be invisible — every file just
+      // uploaded uncompressed. Surface it once per session as telemetry so it
+      // cannot hide behind fail-open again.
+      onEncoderUnavailable: (detail) => {
+        encoderUnavailable.value = detail
+        track('web_upload_encoder_unavailable', { detail })
+      }
+    }
   )(item, file)
 )
+
+/**
+ * Set when client-side FLAC encoding could not run at all (§118). Uploads still
+ * succeed — uncompressed — so this is advisory, but it must be visible.
+ */
+export const encoderUnavailable = ref<string | undefined>(undefined)
 
 // Encoded blobs are released when their item settles (memory hygiene — a
 // long batch must not hold every FLAC in RAM).

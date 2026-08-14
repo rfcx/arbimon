@@ -50,7 +50,15 @@ const CHUNK_TARGET_BYTES = 1 << 20
 let flacModulePromise: Promise<any> | null = null
 
 /** Load + ready the libflacjs module (memoised; ~200KB wasm instantiation). */
-async function loadFlac (): Promise<any> {
+/**
+ * Load + ready the libflac WASM module.
+ *
+ * EXPORTED so the encoder-driver's error paths (init failure, encode-after-
+ * destroy, double-destroy) can be tested directly. Without this, those tests
+ * silently SKIPPED — which is worse than failing, because the suite stayed
+ * green while the branches were unexercised (found 2026-08-13).
+ */
+export async function loadFlac (): Promise<any> {
   if (!flacModulePromise) {
     flacModulePromise = (async () => {
       const mod = await import('libflacjs/dist/libflac.js')

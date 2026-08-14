@@ -21,6 +21,31 @@ import { extractEmbeddedTimestamp } from '../wav-embedded-timestamp'
 import { parseWavMetadata } from '../wav-metadata'
 import { type EncodeFn } from './flac-encode-client'
 
+/**
+ * Module-scope latch so a broken encoder warns ONCE per session rather than
+ * once per file. A 1,586-file batch must not emit 1,586 identical warnings.
+ */
+let encoderFailureReported = false
+
+/** Reset the once-per-session warning latch (tests). */
+export const resetEncoderFailureReporting = (): void => {
+  encoderFailureReported = false
+}
+
+const reportEncoderFailure = (detail: string, options: FlacTranscodeOptions): void => {
+  if (encoderFailureReported) return
+  encoderFailureReported = true
+  const message =
+    '[upload-engine] FLAC encoding is unavailable — recordings will upload ' +
+    `UNCOMPRESSED (about twice the bytes). First error: ${detail}`
+  try {
+    console.warn(message)
+  } catch { /* console may be absent in exotic hosts */ }
+  try {
+    options.onEncoderUnavailable?.(detail)
+  } catch { /* a telemetry hook must never break an upload */ }
+}
+
 export interface FlacTranscodeOptions {
   /** master switch (UI toggle). Default true. */
   enabled?: boolean
@@ -34,6 +59,13 @@ export interface FlacTranscodeOptions {
   encode?: EncodeFn
   /** telemetry/debug hook */
   onDecision?: (item: UploadItem, decision: 'encoded' | 'skipped' | 'failed-open', detail: string) => void
+  /**
+   * Called ONCE per session the first time the encoder fails, so a shell can
+   * surface it to the user or send telemetry. Exists because a wholly broken
+   * encoder is indistinguishable from "the feature is off" (§118) — this is
+   * the signal that would have caught that in hours instead of days.
+   */
+  onEncoderUnavailable?: (detail: string) => void
 }
 
 /**
@@ -159,9 +191,23 @@ export const withFlacTranscode = (
         transcodedSizeBytes: flacBlob.size
       }
     } catch (err) {
-      // ANY encoder failure: fail open to the original file
+      // ANY encoder failure: fail open to the original file.
+      const detail = err instanceof Error ? err.message : String(err)
       cache.release(item.id)
-      options.onDecision?.(item, 'failed-open', err instanceof Error ? err.message : String(err))
+      options.onDecision?.(item, 'failed-open', detail)
+      // ⚠️ BUT MAKE A SYSTEMIC FAILURE LOUD (OPEN-ITEMS §118).
+      //
+      // Failing open is right for ONE bad file. It is catastrophic as a global
+      // posture: when the encoder could not load at all (a rollup UMD stub
+      // that threw on every encode), this handler silently downgraded EVERY
+      // upload to an un-transcoded WAV — roughly 2× the bytes — for two days,
+      // and a green "served-bundle-verified" check missed it because the chunk
+      // fetched 200 while no encode ever succeeded.
+      //
+      // So: report the FIRST failure once, loudly, and tell the caller via
+      // onEncoderUnavailable so a shell can surface/telemeter it. Per-file
+      // failures stay quiet after that — we want a signal, not a flood.
+      reportEncoderFailure(detail, options)
       return await inner(item, file)
     }
   }
