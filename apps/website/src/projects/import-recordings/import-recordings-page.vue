@@ -82,8 +82,20 @@
           </button>
 
           <!-- TOOLTIP ON THE LEFT (operator 2026-08-14). `right-full` anchors it
-               to the button's left edge and `mr-3` gives the gap; `top-1/2
-               -translate-y-1/2` centres it vertically on the button.
+               to the button's left edge and `mr-3` gives the 12px gap.
+
+               ANCHORED TO THE BUTTON'S TOP (`top-0`), not centred on it. The
+               first version used `top-1/2 -translate-y-1/2`, which MEASURED
+               correctly centred (delta 0) and then hung 5px ABOVE the viewport
+               and clipped — this panel is 206px tall against a 44px button, and
+               §143 reclaimed the page's top padding, so there is no longer room
+               above to centre into. Top-anchoring keeps the whole panel on
+               screen and still reads as attached to the control.
+
+               (Note `-translate-y-1/2` ALSO needs the `transform` utility in
+               this WindiCSS build — on its own it only sets --tw-translate-y and
+               nothing consumes it. That cost a 103px offset before it was
+               measured. Moot here now, but the trap is worth remembering.)
 
                `w-80 whitespace-normal` is required: the button carries
                `whitespace-nowrap`, which children inherit — without the reset
@@ -102,7 +114,7 @@
           <span
             :id="`popout-help-${projectSlug}`"
             role="tooltip"
-            class="pointer-events-none absolute right-full top-1/2 transform -translate-y-1/2 mr-3 w-80 whitespace-normal text-left rounded-lg border border-cloud/20 bg-echo px-4 py-3 text-xs leading-relaxed text-cloud shadow-lg opacity-0 invisible transition-opacity duration-150 group-hover:(opacity-100 visible) group-focus-within:(opacity-100 visible) z-50"
+            class="pointer-events-none absolute right-full top-0 mr-3 w-80 whitespace-normal text-left rounded-lg border border-cloud/20 bg-echo px-4 py-3 text-xs leading-relaxed text-cloud shadow-lg opacity-0 invisible transition-opacity duration-150 group-hover:(opacity-100 visible) group-focus-within:(opacity-100 visible) z-50"
           >
             <span class="block text-insight font-medium mb-1">
               {{ popoutLaunched ? 'Already open in its own window' : 'Why run the uploader in its own window?' }}
