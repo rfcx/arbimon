@@ -181,7 +181,7 @@
         </button>
 
         <!-- Panel order (operator 2026-08-14, revised three times), left to right:
-             Rate · Queued · Outcomes(Imported/Errors/Skipped/Uploaded)
+             Rate · Queued · Totals(Imported/Errors/Skipped/Uploaded)
              · Collapse/Expand All · Settings.
 
              RATE LEADS (operator): it sits directly beside Start/Pause,
@@ -189,7 +189,7 @@
              move. Cause and effect are now adjacent instead of at opposite ends
              of the row. It also keeps the two live/instantaneous readings
              (Rate, Queued) together on the left and the cumulative totals
-             (Outcomes) to their right, so the row reads present -> past.
+             (Totals) to their right, so the row reads present -> past.
 
              SETTINGS CLOSES THE ROW on the right: an action, deliberately at
              the opposite end from Start/Pause so the row is bracketed by its
@@ -213,12 +213,12 @@
                Imported already told you (both counted successful ingests) and
                its N/N ratio went stale the moment rows were cleared.
 
-             UPLOAD RATE stays OUTSIDE the Outcomes box: it is an
+             UPLOAD RATE stays OUTSIDE the Totals box: it is an
              instantaneous throughput reading (a 10s sliding window), not a
              cumulative outcome, and Reset does not touch it. Putting it in
              would have broken the "this box is exactly what Reset clears" rule.
 
-             Grid: 6 columns = Rate(1) + Queued(1) + Outcomes(4).
+             Grid: 6 columns = Rate(1) + Queued(1) + Totals(4).
 
              The two ICON BUTTONS deliberately sit OUTSIDE this grid, as
              siblings in the outer flex row (like Start/Pause). A grid cell
@@ -253,7 +253,7 @@
             <span class="text-xl tabular-nums font-medium">{{ globalQueued }}</span>
           </div>
 
-          <!-- OUTCOMES — one box, four figures, each keeping its own identity, plus
+          <!-- TOTALS — one box, four figures, each keeping its own identity, plus
                the Reset control that clears exactly this set. -->
           <div class="lg:col-span-4 rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5">
             <!-- Header line: Reset sits immediately AFTER the label (operator
@@ -283,7 +283,7 @@
                  persisted per project and unrecoverable) and does NOT touch the
                  upload queue — see resetProjectMetrics(). -->
             <div class="flex items-center gap-x-0 w-max">
-              <span class="text-xs text-cloud uppercase tracking-wide">Outcomes</span>
+              <span class="text-xs text-cloud uppercase tracking-wide">Totals</span>
               <!-- ICON: a literal ZERO in a rounded square — "set these counters
                    to 0".
 
