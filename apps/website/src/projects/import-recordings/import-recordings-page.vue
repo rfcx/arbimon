@@ -299,15 +299,15 @@
         </button>
 
         <!-- Panel order (operator 2026-08-14, revised three times), left to right:
-             Rate · Queued · Totals(Imported/Errors/Skipped/Uploaded)
+             Queued · Totals(Imported/Errors/Skipped/Uploaded) · Rate
              · Collapse/Expand All · Settings.
 
-             RATE LEADS (operator): it sits directly beside Start/Pause,
-             which is the control that causes it — press Start, watch the rate
-             move. Cause and effect are now adjacent instead of at opposite ends
-             of the row. It also keeps the two live/instantaneous readings
-             (Rate, Queued) together on the left and the cumulative totals
-             (Totals) to their right, so the row reads present -> past.
+             RATE CLOSES THE FIGURES (operator 2026-08-14 — moved from first
+             to last). Rate is the only INSTANTANEOUS reading here: a 10s
+             sliding window, and the one figure the Reset control does not
+             touch. Sitting it AFTER the cumulative Totals keeps it from being
+             read as another total, and leaves Queued — the number you watch to
+             know how much work remains — first.
 
              SETTINGS CLOSES THE ROW on the right: an action, deliberately at
              the opposite end from Start/Pause so the row is bracketed by its
@@ -336,7 +336,7 @@
              cumulative outcome, and Reset does not touch it. Putting it in
              would have broken the "this box is exactly what Reset clears" rule.
 
-             Grid: 6 columns = Rate(1) + Queued(1) + Totals(4).
+             Grid: 6 columns = Queued(1) + Totals(4) + Rate(1).
 
              The two ICON BUTTONS deliberately sit OUTSIDE this grid, as
              siblings in the outer flex row (like Start/Pause). A grid cell
@@ -346,11 +346,6 @@
              explicit `w-14` they stay static at every viewport, and the metrics
              keep the whole remaining width. -->
         <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Rate</span>
-            <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
-          </div>
-
           <!-- QUEUED is deliberately GLOBAL (all projects), matching the engine's
                unscoped stats and the operator's request. The upload engine is a
                single queue shared by every project, so a per-project figure
@@ -496,6 +491,15 @@
                 <span class="text-xs text-cloud">Uploaded</span>
               </span>
             </div>
+          </div>
+
+          <!-- RATE LAST (operator 2026-08-14). It is the only INSTANTANEOUS
+               reading in the row — a 10s sliding window, and the one figure
+               Reset does not touch — so placing it AFTER the cumulative Totals
+               keeps it from being read as one of them. -->
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Rate</span>
+            <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
           </div>
         </div>
 
