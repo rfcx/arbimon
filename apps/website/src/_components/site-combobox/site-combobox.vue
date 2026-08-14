@@ -248,19 +248,28 @@ defineExpose({
   100% { box-shadow: 0 0 0 0 rgba(173, 255, 44, 0); }
 }
 
-.site-picker-attention {
+/**
+ * ⚠️ THE BORDER NEEDS `input.` + `!important`, and that is not over-caution.
+ *
+ * Measured live: the border rendered BLUE rgb(28,100,242) despite
+ * `border-frequency` being both applied AND emitted. The winner is the forms
+ * plugin's base rule for `[type="text"], [type="email"], …`, whose ATTRIBUTE
+ * selector outranks a single utility class. A plain `.site-picker-attention`
+ * rule loses to it for the same reason.
+ *
+ * `input.site-picker-attention` (element + class) plus !important is the
+ * smallest thing that reliably wins here, and it is confined to this one
+ * attention state rather than fighting the base layer globally.
+ */
+input.site-picker-attention {
   animation: site-picker-ping 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  /* The accent border is set here too. `border-frequency` in the host's
-     input-class is a WindiCSS utility, and the host's build does not
-     necessarily emit it for a class string it only PASSES THROUGH — measured
-     live as blue rgb(28,100,242), i.e. the browser default, not the accent. */
-  border-color: rgb(173, 255, 44);
+  border-color: rgb(173, 255, 44) !important;
 }
 
 /* Reduced motion: drop the movement, keep every other cue (accent border,
    tinted field, autofocus) so the emphasis survives — only the motion goes. */
 @media (prefers-reduced-motion: reduce) {
-  .site-picker-attention {
+  input.site-picker-attention {
     animation: none;
   }
 }
