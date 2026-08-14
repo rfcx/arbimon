@@ -1,15 +1,21 @@
 <template>
-  <!-- TOP BORDER ONLY (operator 2026-08-14). Each section previously had a
-       top AND bottom rule, so consecutive sections rendered a DOUBLE line
-       between them — two 1px rules separated by pt-5 + pb-6. A single top rule
-       reads as a divider BETWEEN sections rather than a box around each one,
-       and the last section no longer ends with a stray line under it.
+  <!-- FULL BORDER on all four edges (operator 2026-08-14, exploratory — see
+       how it looks). Each section now reads as a discrete CARD rather than
+       being separated by a single rule.
 
-       NO extra left padding: the section's content (site name + table) sits at
-       the SAME left edge as every other page section; the caret hangs INTO the
-       page's own gutter via its negative margin (operator 2026-08-13: the caret
-       must not shrink the queue's usable width). -->
-  <div class="mt-6 pt-5 pb-6 border-t border-cloud/20">
+       ⚠️ THE LEFT PADDING IS LOAD-BEARING, not decoration. The collapse caret
+       hangs OUT of the content column by -ml-7 (-28px) so it sits in the page's
+       own gutter and does not shrink the queue's usable width (operator
+       2026-08-13). With no left border that overhang was free; with one, a box
+       drawn at the content edge would slice straight through the caret and
+       leave it stranded outside its own card. `pl-7` restores exactly the 28px
+       the caret borrows, so the border clears it.
+
+       px-4/pb-5 give the card interior breathing room — content flush against a
+       visible edge reads as a rendering fault. rounded-lg matches the table and
+       metric panels; without it the card looks like a different design system
+       to the boxes directly above it. -->
+  <div class="mt-6 pt-5 pb-5 pl-7 pr-4 border border-cloud/20 rounded-lg">
     <!-- Single header line: collapse-caret + site identity + timezone LEFT,
          all action buttons RIGHT — one horizontal row above the table. -->
     <!-- Two ROWS, not one wrapping row: the selection-actions cluster is ~590px
