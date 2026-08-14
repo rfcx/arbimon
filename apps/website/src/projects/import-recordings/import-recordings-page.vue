@@ -51,23 +51,77 @@
                same treatment can flag other new features elsewhere. -->
           <span class="text-xs align-middle rounded bg-frequency/20 text-frequency px-2 py-0.5 ml-2 font-medium tracking-wide">NEW</span>
         </h2>
-        <button
+        <!-- WRAPPER carries the hover/focus state, not the button, because the
+             button becomes DISABLED once the standalone window is open — and a
+             disabled control fires no pointer events, so a tooltip anchored to
+             it would vanish exactly when the user most needs to know why the
+             button is inert. Hovering the wrapper still works.
+
+             `group` + `group-hover`/`group-focus-within` rather than the repo's
+             flowbite `initTooltips()` helper: that helper scans the DOM once on
+             mount, and this button lives in a branch that re-renders as the
+             pop-out opens and closes, so a scan-once tooltip would go dead. A
+             CSS-only tooltip has no lifecycle to get wrong. -->
+        <span
           v-if="!isPopout"
-          class="btn btn-secondary text-sm shrink-0 whitespace-nowrap inline-flex items-center gap-x-2 disabled:btn-disabled disabled:hover:btn-disabled disabled:cursor-not-allowed"
-          :disabled="popoutLaunched"
-          :title="popoutLaunched
-            ? 'The uploader is already open in its own window — use “Go to the uploader window” below'
-            : 'Open the uploader in its own window'"
-          @click="popOut"
+          class="relative group shrink-0"
         >
-          Pop-Out in New Window
-          <!-- Material Symbols "open in new" (the Gmail pop-out glyph);
-               -960-based viewBox per the Material icon coordinate system -->
-          <svg
-            viewBox="0 -960 960 960"
-            class="w-4 h-4 fill-current"
-          ><path d="M216-144q-29.7 0-50.85-21.15T144-216v-528q0-29.7 21.15-50.85T216-816h264v72H216v528h528v-264h72v264q0 29.7-21.15 50.85T744-144H216Zm171-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z" /></svg>
-        </button>
+          <button
+            class="btn btn-secondary text-sm shrink-0 whitespace-nowrap inline-flex items-center gap-x-2 disabled:btn-disabled disabled:hover:btn-disabled disabled:cursor-not-allowed"
+            :disabled="popoutLaunched"
+            :aria-describedby="`popout-help-${projectSlug}`"
+            @click="popOut"
+          >
+            Open Standalone Uploader
+            <!-- Material Symbols "open in new" (the Gmail pop-out glyph);
+                 -960-based viewBox per the Material icon coordinate system -->
+            <svg
+              viewBox="0 -960 960 960"
+              class="w-4 h-4 fill-current"
+            ><path d="M216-144q-29.7 0-50.85-21.15T144-216v-528q0-29.7 21.15-50.85T216-816h264v72H216v528h528v-264h72v264q0 29.7-21.15 50.85T744-144H216Zm171-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z" /></svg>
+          </button>
+
+          <!-- TOOLTIP ON THE LEFT (operator 2026-08-14). `right-full` anchors it
+               to the button's left edge and `mr-3` gives the gap; `top-1/2
+               -translate-y-1/2` centres it vertically on the button.
+
+               `w-80 whitespace-normal` is required: the button carries
+               `whitespace-nowrap`, which children inherit — without the reset
+               this paragraph would render as one enormous single line running
+               off-screen.
+
+               `pointer-events-none` so the panel can never intercept a click
+               aimed at the button behind/beside it, and `role="tooltip"` +
+               `aria-describedby` so the explanation is announced rather than
+               being purely visual. It is NOT the accessible NAME — the button's
+               own text is that — so `describedby` is the correct relationship.
+
+               The `title` attribute was REMOVED from the button: leaving it
+               would produce two tooltips on the same hover (the native one
+               overlapping this panel a second later). -->
+          <span
+            :id="`popout-help-${projectSlug}`"
+            role="tooltip"
+            class="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 mr-3 w-80 whitespace-normal text-left rounded-lg border border-cloud/20 bg-echo px-4 py-3 text-xs leading-relaxed text-cloud shadow-lg opacity-0 invisible transition-opacity duration-150 group-hover:(opacity-100 visible) group-focus-within:(opacity-100 visible) z-50"
+          >
+            <span class="block text-insight font-medium mb-1">
+              {{ popoutLaunched ? 'Already open in its own window' : 'Why run the uploader in its own window?' }}
+            </span>
+            <template v-if="popoutLaunched">
+              This project’s uploader is already running in a standalone window.
+              Use “Go to the uploader window” below to bring it forward — opening
+              a second one would just re-focus the same window.
+            </template>
+            <template v-else>
+              A standalone window keeps your uploads running in one dedicated
+              place, so you can browse Arbimon freely in this tab without
+              disturbing them. It stays visible while you work in other apps,
+              survives navigating away from this page, and makes it obvious the
+              transfer is still going. Large batches can take hours — this is
+              the safest way to leave one running.
+            </template>
+          </span>
+        </span>
         <button
           v-else
           class="btn btn-secondary text-sm shrink-0 whitespace-nowrap"
