@@ -176,12 +176,18 @@
          did not fix. -->
     <p class="text-sm text-cloud mt-3">
       Upload recordings from directly within your browser. Metadata from your recordings and project data are used to match each recording to the correct date, time and timezone and to scan for duplicate recordings within a Site. You&rsquo;ll have a chance to review and correct the dates, times and timezones of your recordings before they&rsquo;re uploaded. Then, click &ldquo;Start&rdquo; to launch the upload.
-      <!-- Background-uploads sentence: copy is deliberately honest about the
-           close case — the queue persists (IndexedDB) but file handles cannot
-           survive a closed document, so those items need re-adding (verified in
-           engine.prepareOne). “This page” covers both modes: in-SPA (the
-           default) and the pop-out window. -->
-      Uploads continue in the background while you browse other pages in Arbimon; if you close this page, you&rsquo;ll be asked to re-add your recordings to finish &mdash; anything already uploaded is skipped.
+      <!-- Background-uploads sentence (operator 2026-08-14): now POINTS AT the
+           standalone window rather than explaining the close-and-re-add case.
+
+           The behaviour it used to describe is unchanged and still surfaced
+           where it actually bites: the queue persists (IndexedDB) but in-memory
+           file handles cannot survive a closed document, so affected rows are
+           rejected with “Session interrupted — re-add this folder to resume
+           (already-uploaded files are skipped)” at the point of failure, and the
+           beforeunload guard warns before a close that would cause it.
+           Recommending the standalone window is the better framing: it steers
+           users AWAY from the failure instead of describing it up front. -->
+      Uploads continue in the background while you browse other pages in Arbimon, but for optimal stability and performance for uploading many recordings, it is recommended to use the &ldquo;Open Standalone Uploader Window&rdquo; feature.
     </p>
 
     <div
