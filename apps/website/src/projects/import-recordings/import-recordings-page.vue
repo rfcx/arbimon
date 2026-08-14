@@ -204,7 +204,7 @@
                `0 -960 960 960` settings glyph, which is the convention the
                collapse/expand carets in this same row already follow. -->
           <button
-            class="btn-icon text-sm inline-flex items-center gap-x-2"
+            class="btn-icon text-sm inline-flex items-center gap-x-2 !py-3"
             title="Uploader Settings"
             aria-label="Uploader Settings"
             @click="showSettings = true"
