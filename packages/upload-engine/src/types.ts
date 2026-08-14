@@ -259,6 +259,38 @@ export interface UploadEngineConfig {
   multipartThresholdBytes?: number
   /** Concurrent part PUTs within one multipart file. Default 3. */
   multipartPartConcurrency?: number
+  /**
+   * Learn the upload cap from the link instead of using a fixed one
+   * (default true). The optimum concurrency is a property of the connection,
+   * not a preference: a saturated field link is fastest and safest at ~1-2,
+   * while a fast link with per-request dead time benefits up to ~8. See
+   * adaptive-concurrency.ts for the measurements. Set false to pin the cap to
+   * maxConcurrentUploads (useful for benchmarking).
+   */
+  adaptiveConcurrency?: boolean
+  /**
+   * How far prepare/sign may run AHEAD of the upload pool, as a multiple of
+   * the current upload cap. Bounds the encoded-FLAC backlog held in memory;
+   * without it, prepare drains the whole queue and the backlog scales with
+   * batch size. Default 3.
+   */
+  prepareAheadFactor?: number
+  /**
+   * Floor on the prepare-ahead window, in ITEMS. Protects sign-batch
+   * coalescing: on a slow link `cap * factor` would be 3-6 items, which turns
+   * one bulk sign call into many serial round trips (the 2026-08-12 "Waiting
+   * for URL" bottleneck). Default 24.
+   */
+  prepareAheadMin?: number
+  /**
+   * Ceiling on the prepare-ahead window, in BYTES. This is the bound that
+   * actually protects memory, because item COUNT is the wrong unit when file
+   * sizes span orders of magnitude. Default 512 MiB — measured in-browser as
+   * roughly where Chrome stops holding blob data resident and starts spilling
+   * to disk. One item is always allowed through, so a single larger-than-
+   * budget file cannot deadlock the queue.
+   */
+  prepareAheadMaxBytes?: number
   /** Optional lane tier hint passed at signing. */
   laneTier?: 'express' | 'priority' | 'standard'
 }

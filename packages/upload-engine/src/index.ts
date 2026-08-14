@@ -1,5 +1,6 @@
 import { type UploadItem } from './types'
 
+export * from './adaptive-concurrency'
 export * from './analyze'
 export * from './audio-metadata'
 export * from './browser/browser-file-source'

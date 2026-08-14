@@ -16,6 +16,7 @@
  * - online/offline transitions pause/resume the pool automatically.
  */
 
+import { AdaptiveConcurrencyController } from './adaptive-concurrency'
 import { IngestApi, IngestApiError, putToSignedUrl } from './ingest-api'
 import { sha1HexOfBlob } from './sha1'
 import { MULTIPART_THRESHOLD_BYTES, MultipartApi, uploadParts } from './multipart'
@@ -33,7 +34,15 @@ const DEFAULTS = {
   statusPollIntervalMs: 5000,
   signedUrlMaxAgeMs: 20 * 60 * 60 * 1000,
   multipartThresholdBytes: MULTIPART_THRESHOLD_BYTES,
-  multipartPartConcurrency: 3
+  multipartPartConcurrency: 3,
+  adaptiveConcurrency: true,
+  // Prepare-ahead bound (2026-08-13). See pumpPrepares() for the measured
+  // defect this fixes and for why BOTH a count floor and a byte ceiling are
+  // needed (the count floor protects sign-batch coalescing; the byte ceiling
+  // is what actually bounds memory when files are large).
+  prepareAheadFactor: 3,
+  prepareAheadMin: 24,
+  prepareAheadMaxBytes: 512 * 1024 * 1024
 } as const
 
 /** Signing errors that must not be retried (item-level rejections). */
@@ -119,6 +128,42 @@ export class UploadEngine {
   private rateLimitedUntil = new Map<string, number>()
   private rateLimitBurst = 0
   private static readonly RATE_LIMIT_FLOOR_MS = 2500
+
+  /**
+   * Adaptive upload concurrency (2026-08-13). The right number of parallel
+   * uploads is a property of the LINK, not a user preference: a saturated
+   * field connection is fastest AND safest at ~1-2, while a fast link whose
+   * per-request dead time dominates benefits up to ~8. The controller learns
+   * it from completed transfers. See adaptive-concurrency.ts for the
+   * measurements behind this.
+   */
+  private readonly adaptive = new AdaptiveConcurrencyController()
+
+  /** The upload cap in force right now: learned, bounded by the config cap. */
+  private effectiveUploadLimit (): number {
+    if (!this.config.adaptiveConcurrency) return this.config.maxConcurrentUploads
+    // maxConcurrentUploads is the CEILING the controller may not exceed, so an
+    // explicitly lowered cap is still honoured.
+    return Math.min(this.adaptive.limit, this.config.maxConcurrentUploads)
+  }
+
+  /** Current concurrency state (UI / telemetry / debugging). */
+  get concurrencyState (): {
+    limit: number
+    adaptive: boolean
+    gradient?: number
+    samples: number
+    probing: boolean
+  } {
+    const state = this.adaptive.state
+    return {
+      limit: this.effectiveUploadLimit(),
+      adaptive: this.config.adaptiveConcurrency,
+      gradient: state.gradient,
+      samples: state.samples,
+      probing: state.probing
+    }
+  }
 
   /** Restrict which items this engine instance drives (see field note). */
   setScope (predicate: ((item: UploadItem) => boolean) | undefined): void {
@@ -431,18 +476,30 @@ export class UploadEngine {
   }
 
   setOnline (online: boolean): void {
+    const wasOffline = !this.online
     this.online = online
     this.emit({ type: 'engine-state', running: this.running, online })
-    if (online) this.kick()
+    if (online) {
+      // Coming back from offline usually means a DIFFERENT network (tethered,
+      // moved site, reconnected Wi-Fi). The old per-byte reference would be
+      // wrong for it, so re-learn rather than steer on stale evidence.
+      if (wasOffline) this.adaptive.reset()
+      this.kick()
+    }
   }
 
   /**
-   * Change the parallel-upload cap at runtime. pumpUploads reads
-   * config.maxConcurrentUploads on every pass, so a change takes effect on the
-   * next scheduling pass: RAISING it starts more uploads immediately (kick),
-   * LOWERING it never aborts in-flight work — the pool simply stops refilling
-   * until it drains below the new cap. Clamped to >=1 so the pool can never
-   * stall (0 would deadlock the queue).
+   * Change the parallel-upload CEILING at runtime. pumpUploads reads the cap
+   * on every pass, so a change takes effect on the next scheduling pass:
+   * RAISING it starts more uploads immediately (kick), LOWERING it never
+   * aborts in-flight work — the pool simply stops refilling until it drains
+   * below the new cap. Clamped to >=1 so the pool can never stall (0 would
+   * deadlock the queue).
+   *
+   * With adaptive concurrency ON (the default) this is the CEILING the learned
+   * limit may not exceed, not the operating value — the controller still
+   * settles wherever the link says it should. Used by the QA/benchmark harness
+   * to pin a specific cap (with adaptiveConcurrency: false).
    */
   setMaxConcurrentUploads (max: number): void {
     const next = Math.max(1, Math.floor(max))
@@ -451,9 +508,18 @@ export class UploadEngine {
     this.kick()
   }
 
-  /** Current parallel-upload cap (for UI display). */
+  /** The configured parallel-upload ceiling (for UI display). */
   get maxConcurrentUploads (): number {
     return this.config.maxConcurrentUploads
+  }
+
+  /**
+   * Tell the controller the network probably changed (e.g. the browser fired
+   * an online event, or the user resumed after a long pause), so it re-learns
+   * instead of steering on a stale reference.
+   */
+  resetAdaptiveConcurrency (): void {
+    this.adaptive.reset()
   }
 
   /** Retry a failed/rejected/cancelled/duplicate item (resets attempts).
@@ -578,15 +644,73 @@ export class UploadEngine {
     if (
       items.length > 0 &&
       (this.activePrepares < this.config.maxConcurrentPrepares ||
-        this.activeUploads < this.config.maxConcurrentUploads ||
+        this.activeUploads < this.effectiveUploadLimit() ||
         !this.signingInFlight)
     ) {
       this.kick()
     }
   }
 
+  /**
+   * BACKPRESSURE (2026-08-13) — the fix for a measured memory defect.
+   *
+   * prepare used to drain the ENTIRE `queued` pool regardless of upload
+   * progress: nothing gated how deep `ready`/`signed` could get. For WAVs the
+   * prepare stage TRANSCODES to FLAC and parks the encoded Blob in the
+   * TranscodeCache until the item reaches a TERMINAL state — and `uploaded` is
+   * NOT terminal (the item waits there through server-side ingest polling).
+   * So the encoded backlog tracked BATCH SIZE, not concurrency.
+   *
+   * Measured before the fix: 40 files staged, upload cap 4, all 40 encoded
+   * blobs resident at once (~240 MiB). Extrapolated to real sites in the test
+   * project — Bogota 767 files, Perth 1,586 — that is ~5 GiB and ~10 GiB of
+   * blob allocation. In-browser measurement on mm showed Chrome keeps roughly
+   * the first ~500 MiB resident and spills the remainder to disk, so the
+   * failure mode is memory pressure plus disk thrash rather than an instant
+   * crash — but it is unbounded either way, and it is worst for exactly the
+   * slow-link users who hold a batch the longest.
+   *
+   * SIZING — three constraints had to be reconciled, and a naive
+   * cap-proportional bound violates the third:
+   *   1. bound the encoded backlog (the defect above);
+   *   2. keep the upload pool fed;
+   *   3. keep SIGN BATCHES BIG. Signing is batched (server cap 100) and the
+   *      08-12 coalescing work exists because a trickle of `ready` items
+   *      turned a 100-file batch into ~50 serial round trips (the "Waiting
+   *      for URL" bottleneck). A pure `cap * factor` bound is 3-6 items on a
+   *      slow link, which would silently re-introduce exactly that
+   *      regression — caught here by the sign-coalescing test.
+   * So the budget is `max(prepareAheadMin, cap * factor)` and ALSO capped by
+   * BYTES, because count alone is the wrong unit when file sizes span orders
+   * of magnitude (a 500 MiB WAV is still transcoded). Whichever binds first
+   * wins; one item is always allowed through so a single huge file can never
+   * deadlock the queue.
+   */
+  private prepareAheadCount (): number {
+    const cap = this.effectiveUploadLimit()
+    return Math.max(
+      this.config.prepareAheadMin,
+      Math.ceil(cap * this.config.prepareAheadFactor)
+    )
+  }
+
   private async pumpPrepares (): Promise<void> {
     while (this.activePrepares < this.config.maxConcurrentPrepares) {
+      // Work already waiting downstream; stop feeding when it is deep enough.
+      //
+      // NOTE: no explicit "always allow one item" branch is needed. When the
+      // pipeline is EMPTY, ahead.length is 0 and aheadBytes is 0, so neither
+      // bound can trip and the first item always gets through — including an
+      // item far larger than prepareAheadMaxBytes. An earlier version wrapped
+      // this in `if (ahead.length > 0)` as an anti-deadlock guard; mutation
+      // testing proved that branch unreachable (removing it changed nothing),
+      // so it is gone rather than left as dead code that future readers must
+      // reason about. The no-deadlock property is pinned by the
+      // 'budget SMALLER than one item' test.
+      const ahead = await this.listScoped(['ready', 'signing', 'signed', 'uploading', 'uploaded'])
+      if (ahead.length + this.activePrepares >= this.prepareAheadCount()) return
+      const aheadBytes = ahead.reduce((sum, i) => sum + i.fileSizeBytes, 0)
+      if (aheadBytes >= this.config.prepareAheadMaxBytes) return
       const [next] = await this.listScoped(['queued'])
       if (next === undefined) return
       const item = await this.update(next, { state: 'preparing' })
@@ -873,11 +997,22 @@ export class UploadEngine {
         },
         controller.signal
       )
+      const endedAtMs = Date.now()
+      // Feed the adaptive controller: per-byte cost of a COMPLETED transfer,
+      // plus how full the pool was when this upload started (a sample taken
+      // while the pool was starved cannot justify a bigger cap).
+      if (item.uploadStartedAtMs !== undefined) {
+        this.adaptive.onSample({
+          bytes: item.fileSizeBytes,
+          durationMs: endedAtMs - item.uploadStartedAtMs,
+          inFlightAtStart: this.activeUploads
+        })
+      }
       await this.update(item, {
         state: 'uploaded',
         progress: 1,
         attempts: item.attempts + 1,
-        uploadEndedAtMs: Date.now()
+        uploadEndedAtMs: endedAtMs
       })
       this.scheduleStatusPoll()
     } catch (err) {
@@ -895,6 +1030,8 @@ export class UploadEngine {
       // 429 = per-key rate limit (congestion, not failure): no attempt burn,
       // no terminal fail; floor the next try past the key's write window.
       if (err instanceof IngestApiError && err.status === 429) {
+        // Congestion, not failure — but still a signal to push less hard.
+        this.adaptive.onCongestion()
         const waitMs = Math.max(err.retryAfterMs ?? 0, UploadEngine.RATE_LIMIT_FLOOR_MS) * (1 + Math.random() * 0.5)
         this.rateLimitedUntil.set(item.id, Date.now() + waitMs)
         await this.update(item, {
