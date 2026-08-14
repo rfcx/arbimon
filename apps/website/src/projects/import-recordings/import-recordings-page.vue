@@ -194,16 +194,25 @@
              room to explain either. A single gear keeps the row calm and
              gives later settings somewhere obvious to live. -->
         <div class="ml-auto flex items-center">
+          <!-- Weighted to MATCH its neighbour (operator 2026-08-14: the first
+               attempt was "tiny and weird"). Two things were wrong: it was a
+               bare text link sitting beside a real pill button, so it read as
+               an afterthought rather than a peer control; and the gear was a
+               hand-rolled path that did not match the app's glyphs.
+               Now uses the repo's `btn-icon` shortcut (same pill geometry and
+               frequency/chirp hover as the other buttons) and the Material
+               `0 -960 960 960` settings glyph, which is the convention the
+               collapse/expand carets in this same row already follow. -->
           <button
-            class="text-cloud hover:text-frequency inline-flex items-center gap-x-2 text-sm"
+            class="btn-icon text-sm inline-flex items-center gap-x-2"
             title="Uploader Settings"
             aria-label="Uploader Settings"
             @click="showSettings = true"
           >
             <svg
-              viewBox="0 0 20 20"
+              viewBox="0 -960 960 960"
               class="w-5 h-5 fill-current"
-            ><path d="M8.34 2.5a1 1 0 0 1 .98-.8h1.36a1 1 0 0 1 .98.8l.2 1.02a6.2 6.2 0 0 1 1.28.74l.98-.34a1 1 0 0 1 1.2.45l.68 1.18a1 1 0 0 1-.22 1.25l-.78.68c.05.24.08.49.08.75s-.03.51-.08.75l.78.68a1 1 0 0 1 .22 1.25l-.68 1.18a1 1 0 0 1-1.2.45l-.98-.34c-.39.3-.82.55-1.28.74l-.2 1.02a1 1 0 0 1-.98.8H9.32a1 1 0 0 1-.98-.8l-.2-1.02a6.2 6.2 0 0 1-1.28-.74l-.98.34a1 1 0 0 1-1.2-.45l-.68-1.18a1 1 0 0 1 .22-1.25l.78-.68a6.3 6.3 0 0 1 0-1.5l-.78-.68a1 1 0 0 1-.22-1.25l.68-1.18a1 1 0 0 1 1.2-.45l.98.34c.39-.3.82-.55 1.28-.74l.2-1.02ZM10 7.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" /></svg>
+            ><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm112-260q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Z" /></svg>
             Settings
           </button>
         </div>
