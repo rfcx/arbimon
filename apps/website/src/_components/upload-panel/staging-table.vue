@@ -226,8 +226,8 @@
             <th
               v-for="col in COLUMNS"
               :key="col.key"
-              class="px-2 py-2 font-medium cursor-pointer select-none hover:text-frequency"
-              :class="col.width"
+              class="px-2 py-2 font-medium cursor-pointer select-none hover:text-frequency truncate"
+              :style="col.width !== undefined ? { width: col.width } : undefined"
               @click="onSort(col.key)"
             >
               {{ col.label }}
@@ -387,7 +387,7 @@
               <!-- Date and Time each get their OWN picker (operator 2026-08-13):
                  a date input for the date cell, a time input for the time cell.
                  Pre-Start rows only. -->
-              <td class="px-2 py-1.5 w-32">
+              <td class="px-2 py-1.5 truncate">
                 <span class="inline-flex items-center gap-x-1">
                   {{ recDate(item) }}
                   <button
@@ -408,7 +408,7 @@
                   </button>
                 </span>
               </td>
-              <td class="px-2 py-1.5 w-28">
+              <td class="px-2 py-1.5 truncate">
                 <span class="inline-flex items-center gap-x-1">
                   {{ recTime(item) }}
                   <button
@@ -429,7 +429,7 @@
                   </button>
                 </span>
               </td>
-              <td class="px-2 py-1.5 w-24 truncate">
+              <td class="px-2 py-1.5 truncate">
                 {{ zoneCol(item) }}
               </td>
               <!-- Format carries the size too (operator 2026-08-14).
@@ -450,7 +450,7 @@
               <!-- Progress = percentage + rate in one cell (operator 2026-08-14);
                  the bar was retired 2026-08-13. Fixed width so the cell does
                  not widen the moment a rate appears mid-upload. -->
-              <td class="px-2 py-1.5 tabular-nums w-36">
+              <td class="px-2 py-1.5 tabular-nums truncate">
                 <span
                   v-if="showProgress(item)"
                   class="text-insight"
@@ -882,20 +882,29 @@ const visible = computed(() => props.items)
 // state — the jitter you otherwise get when a rate appears mid-upload.
 // Filename/Status stay fluid so they absorb the remaining space.
 // Under `table-fixed` these widths are AUTHORITATIVE, not hints.
+//
 // FIXED columns (Date/Time/Zone/Progress) carry fixed-character-count values
-// plus, on Date/Time, an edit button — they keep exact widths.
-// TRUNCATABLE columns (Filename/Format/Duration/Status) take PERCENTAGES so
+// plus, on Date/Time, an edit button — they keep exact pixel widths.
+// TRUNCATABLE columns (Filename/Format/Duration/Status) get PERCENTAGES so
 // they shrink with the container and clip, which is what absorbs a narrowing
-// viewport instead of a scrollbar.
+// viewport instead of producing a scrollbar.
+//
+// ⚠️ WIDTHS ARE INLINE STYLES, NOT UTILITY CLASSES. WindiCSS scans TEMPLATE
+// markup, so an arbitrary class written only inside this TypeScript array
+// (e.g. `w-[21%]`) is never generated — verified live: `.table-fixed` WAS
+// present in the served CSS while every `.w-[..%]` rule was ABSENT, so the
+// columns silently kept content-driven widths and the table still overflowed
+// by 427px at an 800px viewport. Inline styles cannot be tree-shaken, so they
+// are the right mechanism for widths that live in script.
 const COLUMNS: Array<{ key: string, label: string, width?: string }> = [
-  { key: 'filename', label: 'Filename', width: 'w-[24%]' },
-  { key: 'recDate', label: 'Date', width: 'w-32' },
-  { key: 'recTime', label: 'Time', width: 'w-28' },
-  { key: 'zone', label: 'Zone', width: 'w-24' },
-  { key: 'format', label: 'Format', width: 'w-[17%]' },
-  { key: 'durationMs', label: 'Duration', width: 'w-[11%]' },
-  { key: 'progress', label: 'Progress', width: 'w-36' },
-  { key: 'status', label: 'Status', width: 'w-[21%]' }
+  { key: 'filename', label: 'Filename', width: '24%' },
+  { key: 'recDate', label: 'Date', width: '128px' },
+  { key: 'recTime', label: 'Time', width: '112px' },
+  { key: 'zone', label: 'Zone', width: '96px' },
+  { key: 'format', label: 'Format', width: '17%' },
+  { key: 'durationMs', label: 'Duration', width: '11%' },
+  { key: 'progress', label: 'Progress', width: '144px' },
+  { key: 'status', label: 'Status', width: '21%' }
 ]
 
 const sortKey = ref<string>('filename')
