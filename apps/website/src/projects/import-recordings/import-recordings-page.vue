@@ -218,9 +218,16 @@
              cumulative outcome, and Reset does not touch it. Putting it in
              would have broken the "this box is exactly what Reset clears" rule.
 
-             Grid: 8 columns = Rate(1) + Queued(1) + Outcomes(4) + Settings(1)
-             + Collapse/Expand(1), so the row still divides evenly. -->
-        <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-3">
+             Grid: 6 columns = Rate(1) + Queued(1) + Outcomes(4).
+
+             The two ICON BUTTONS deliberately sit OUTSIDE this grid, as
+             siblings in the outer flex row (like Start/Pause). A grid cell
+             stretches to its column by definition, so a fixed, narrow width is
+             not expressible while they are cells — they would keep taking a
+             full metric-sized column. As flex children with `shrink-0` and an
+             explicit `w-14` they stay static at every viewport, and the metrics
+             keep the whole remaining width. -->
+        <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
             <span class="text-xs text-cloud uppercase tracking-wide">Rate</span>
             <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
@@ -327,80 +334,73 @@
               </span>
             </div>
           </div>
-
-          <!-- SETTINGS as a panel-shaped BUTTON (operator 2026-08-14). It mirrors the
-               existing Settings control in the options row below — same modal,
-               same `showSettings` flag, same Material gear glyph — so the two
-               entry points cannot drift apart in behaviour.
-
-               Deliberately NOT extracted into a shared component for two
-               buttons that differ in shape (pill vs panel): the duplication is
-               the glyph path and one click handler, and a premature abstraction
-               would fix the shape of both. If a THIRD entry point appears, that
-               is the moment to extract it.
-
-               `<button>` rather than a clickable div: it must be focusable and
-               keyboard-activatable, which the metric panels around it are not.
-               Matching panel chrome (rounded-lg / border / bg-moss/30) keeps it
-               visually in the row, while hover + focus-visible rings and
-               `cursor-pointer` mark it as interactive rather than a reading. -->
-          <button
-            class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col items-center justify-center gap-y-1 text-cloud transition-colors hover:(text-frequency border-frequency/40 bg-moss/50) focus-visible:(outline-none ring-2 ring-frequency)"
-            title="Uploader Settings"
-            aria-label="Uploader Settings"
-            @click="showSettings = true"
-          >
-            <svg
-              viewBox="0 -960 960 960"
-              class="w-5 h-5 fill-current"
-            ><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm112-260q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Z" /></svg>
-            <span class="text-xs uppercase tracking-wide">Settings</span>
-          </button>
-
-          <!-- COLLAPSE/EXPAND ALL as a panel-button (operator 2026-08-14).
-               Mirrors the caret control that sits on the options row below —
-               same `toggleAllBoxes` handler, same `anyBoxExpanded` state, same
-               Material double-chevron glyphs — so the two cannot disagree about
-               which direction they are pointing.
-
-               INERT WHEN THERE IS NOTHING TO TOGGLE. `canToggleBoxes` requires
-               at least ONE LINKED section: a box that has not had its site
-               chosen yet renders no collapsible body, so counting it would gray
-               the button in and out as the user picks sites — worse than simply
-               being disabled until a real section exists.
-
-               NOTE the threshold differs DELIBERATELY from the caret below
-               (which needs >= 2). The caret is an in-context shortcut that is
-               pointless for a single section; this panel occupies a fixed slot
-               in the metrics row, so it must explain its own state rather than
-               vanish — a disappearing panel would leave a hole in the grid.
-               One section is genuinely collapsible, so >= 1 is the honest
-               enabled condition here. -->
-          <button
-            class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col items-center justify-center gap-y-1 text-cloud transition-colors hover:(text-frequency border-frequency/40 bg-moss/50) focus-visible:(outline-none ring-2 ring-frequency) disabled:(text-cloud/40 border-cloud/10 bg-moss/10 cursor-not-allowed) disabled:hover:(text-cloud/40 border-cloud/10 bg-moss/10)"
-            :disabled="!canToggleBoxes"
-            :title="canToggleBoxes
-              ? (anyBoxExpanded ? 'Collapse all Upload Queue Sections' : 'Expand all Upload Queue Sections')
-              : 'No upload queue sections to collapse yet — add a site section first'"
-            :aria-label="anyBoxExpanded ? 'Collapse all sections' : 'Expand all sections'"
-            @click="toggleAllBoxes"
-          >
-            <!-- Same glyph pair as the caret control below: unfold-less when
-                 something is expanded (the action is COLLAPSE), unfold-more
-                 when everything is collapsed (the action is EXPAND). -->
-            <svg
-              v-if="anyBoxExpanded"
-              viewBox="0 -960 960 960"
-              class="w-5 h-5 fill-current"
-            ><path d="M289-95l-50-50L480-387L721-145L671-95L480-285L289-95ZM480-573L239-815l50-50L480-675L671-865l50,50L480-573Z" /></svg>
-            <svg
-              v-else
-              viewBox="0 -960 960 960"
-              class="w-5 h-5 fill-current"
-            ><path d="M480-95L239-337l50-50l191,190l191-190l50,50L480-95ZM289-575l-50-50l241-242l241,242l-50,50l-191-190L289-575Z" /></svg>
-            <span class="text-xs uppercase tracking-wide">{{ anyBoxExpanded ? 'Collapse' : 'Expand' }}</span>
-          </button>
         </div>
+
+        <!-- ICON BUTTONS — outside the grid, fixed width (operator 2026-08-14).
+
+             LABELS REMOVED: both actions are conventional glyphs (Material gear
+             / double-chevron) doing what they look like, and the labels were
+             what forced these boxes to metric width. Losing them makes
+             `title` + `aria-label` LOAD-BEARING — they are now the only naming
+             a hovering or screen-reader user receives, so both are kept and the
+             collapse button's pair stays state-dependent.
+
+             `w-14` (56px) + `shrink-0` gives the STATIC narrow width asked for:
+             as flex siblings they no longer inherit a metric column's width,
+             and they do not grow or shrink with the viewport.
+
+             `items-stretch` on the parent row already matches their height to
+             the metric panels, so no explicit height is needed — which is why
+             the icons are sized (w-6, 24px) against the panels' ~62px rather
+             than against the button's own box. -->
+        <button
+          class="shrink-0 w-14 rounded-lg border border-cloud/20 bg-moss/30 flex items-center justify-center text-cloud transition-colors hover:(text-frequency border-frequency/40 bg-moss/50) focus-visible:(outline-none ring-2 ring-frequency)"
+          title="Uploader Settings"
+          aria-label="Uploader Settings"
+          @click="showSettings = true"
+        >
+          <svg
+            viewBox="0 -960 960 960"
+            class="w-6 h-6 fill-current"
+          ><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm112-260q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Z" /></svg>
+        </button>
+
+        <!-- COLLAPSE/EXPAND ALL. Mirrors the caret control on the options row
+             below — same `toggleAllBoxes` handler, same `anyBoxExpanded` state,
+             same Material double-chevron glyphs — so the two cannot disagree
+             about which direction they point.
+
+             INERT WHEN THERE IS NOTHING TO TOGGLE. `canToggleBoxes` requires at
+             least ONE LINKED section: a box whose site is not yet chosen renders
+             no collapsible body, so counting it would gray the button in and out
+             as the user picks sites.
+
+             Threshold differs DELIBERATELY from the caret below (>= 2): that
+             caret is an in-context shortcut and may vanish when pointless, but
+             this button holds a fixed place in the control row, so it stays and
+             explains itself via `title` instead. -->
+        <button
+          class="shrink-0 w-14 rounded-lg border border-cloud/20 bg-moss/30 flex items-center justify-center text-cloud transition-colors hover:(text-frequency border-frequency/40 bg-moss/50) focus-visible:(outline-none ring-2 ring-frequency) disabled:(text-cloud/40 border-cloud/10 bg-moss/10 cursor-not-allowed) disabled:hover:(text-cloud/40 border-cloud/10 bg-moss/10)"
+          :disabled="!canToggleBoxes"
+          :title="canToggleBoxes
+            ? (anyBoxExpanded ? 'Collapse all Upload Queue Sections' : 'Expand all Upload Queue Sections')
+            : 'No upload queue sections to collapse yet — add a site section first'"
+          :aria-label="anyBoxExpanded ? 'Collapse all sections' : 'Expand all sections'"
+          @click="toggleAllBoxes"
+        >
+          <!-- unfold-less when something is expanded (the action is COLLAPSE),
+               unfold-more when everything is collapsed (the action is EXPAND). -->
+          <svg
+            v-if="anyBoxExpanded"
+            viewBox="0 -960 960 960"
+            class="w-6 h-6 fill-current"
+          ><path d="M289-95l-50-50L480-387L721-145L671-95L480-285L289-95ZM480-573L239-815l50-50L480-675L671-865l50,50L480-573Z" /></svg>
+          <svg
+            v-else
+            viewBox="0 -960 960 960"
+            class="w-6 h-6 fill-current"
+          ><path d="M480-95L239-337l50-50l191,190l191-190l50,50L480-95ZM289-575l-50-50l241-242l241,242l-50,50l-191-190L289-575Z" /></svg>
+        </button>
       </div>
 
       <!-- Options row: Add-site button on the LEFT; the SESSION-WIDE settings
