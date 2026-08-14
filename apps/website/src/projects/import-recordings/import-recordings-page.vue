@@ -256,28 +256,36 @@
           <!-- OUTCOMES — one box, four figures, each keeping its own identity, plus
                the Reset control that clears exactly this set. -->
           <div class="lg:col-span-4 rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5">
-            <!-- Header line: section label LEFT, Reset icon RIGHT. A flex row
-                 rather than absolute positioning, so the button can never
-                 overlap a long label and the box needs no fixed height. -->
-            <div class="flex items-start justify-between gap-x-2">
+            <!-- Header line: Reset sits immediately AFTER the label (operator
+                 2026-08-14), not pinned to the box's far corner.
+
+                 `justify-between` was what pushed it to the right edge; without
+                 it the row packs to the start and the icon follows the word it
+                 qualifies. `w-max` stops the flex row spanning the full box
+                 width, so the button's hover target ends just past the icon
+                 rather than reaching across empty space.
+
+                 `ml-2` is the "reasonable margin" — 8px, matching the gap-x-1.5/
+                 gap-x-2 rhythm used elsewhere in this row, and `-my-0.5` keeps
+                 the p-1 hit area from adding height to the header line.
+
+                 `items-center` (not items-start) so the 16px glyph centres on
+                 the 12px uppercase label rather than hanging above its baseline.
+
+                 Reset clears the CUMULATIVE counters. It lives INSIDE this box
+                 because the box holds exactly the four totals it clears — scope
+                 shown by placement rather than words — and that still holds
+                 beside the label.
+
+                 aria-label + title remain LOAD-BEARING: with no visible "Reset"
+                 text they are the only naming a screen reader or hovering user
+                 gets. It still confirms before acting (the counters are
+                 persisted per project and unrecoverable) and does NOT touch the
+                 upload queue — see resetProjectMetrics(). -->
+            <div class="flex items-center gap-x-0 w-max">
               <span class="text-xs text-cloud uppercase tracking-wide">Outcomes</span>
-              <!-- Reset the CUMULATIVE counters (operator 2026-08-14). Now an
-                   UNLABELLED icon in this box's top-right corner: the box holds
-                   exactly the four totals this clears, so its scope is shown by
-                   PLACEMENT instead of words.
-
-                   -mr-1.5 -mt-0.5 pulls it optically into the corner against
-                   the box's px-4/py-2.5 padding without shrinking the padding
-                   for the metrics themselves.
-
-                   aria-label + title are now LOAD-BEARING, not decoration:
-                   with the visible "Reset" text gone they are the only naming
-                   a screen reader or a hovering user gets. It still confirms
-                   before acting — the counters are persisted per project and
-                   cannot be recovered — and it does NOT touch the upload queue
-                   (see resetProjectMetrics()). -->
               <button
-                class="shrink-0 -mr-1.5 -mt-0.5 p-1 rounded text-cloud hover:(text-flamingo bg-flamingo/10) transition-colors"
+                class="shrink-0 ml-2 -my-0.5 p-1 rounded text-cloud hover:(text-flamingo bg-flamingo/10) transition-colors"
                 title="Reset the Imported / Errors / Skipped / Uploaded totals for this project. Does not affect the upload queue."
                 aria-label="Reset metrics"
                 @click="onResetMetrics"
