@@ -53,29 +53,35 @@
                  the media query is inlined in the style block instead, so the
                  animation genuinely stops for users who ask for reduced motion
                  while the colour + text cues remain. -->
-            <div class="flex flex-col gap-y-1">
-              <!-- COMBOBOX, not a native <select> (operator 2026-08-14). The
-                   "Create a Site" affordance has to live WITH the picker, and a
-                   pseudo-<option> inside a native select blurs selection with
-                   action — arrow-keying onto it can fire `change`, opening a
-                   modal while the user is only browsing. The combobox also adds
-                   type-ahead, which the long tail of site counts warrants.
+            <!-- COMBOBOX, not a native <select> (operator 2026-08-14). The
+                 "Create a Site" affordance has to live WITH the picker, and a
+                 pseudo-<option> inside a native select blurs selection with
+                 action — arrow-keying onto it can fire `change`, opening a
+                 modal while the user is only browsing. The combobox also adds
+                 type-ahead, which the long tail of site counts warrants.
 
-                   The attention treatment (§147) moves ONTO the combobox input
-                   via `input-class`, so the pulsing ring, accent border and
-                   tinted field survive the swap. -->
-              <site-combobox
-                ref="sitePicker"
-                :options="siteOptions ?? []"
-                :input-id="`site-combobox-${boxKey}`"
-                input-class="site-picker-attention w-full rounded-md border-2 border-frequency bg-frequency/10 text-insight px-3 py-2 min-w-72 text-sm font-medium focus:(outline-none ring-2 ring-frequency)"
-                @select="$emit('siteChosen', $event)"
-                @create="$emit('createSite', $event)"
-              />
-              <span class="text-xs text-frequency font-medium">
-                ← Choose the site these recordings came from, or create a new one
-              </span>
-            </div>
+                 The attention treatment (§147) moves ONTO the combobox input
+                 via `input-class`, so the pulsing ring, accent border and
+                 tinted field survive the swap.
+
+                 THE ← CAPTION WAS DROPPED (operator 2026-08-14). §147 stacked
+                 four cues; the remaining three — the pulsing ring (motion), the
+                 accent border + tinted field (colour) and autofocus (keyboard)
+                 — already make this control impossible to miss, and the
+                 combobox's own placeholder ("Search sites, or create a new
+                 one…") now carries the instruction the caption used to. The
+                 caption was saying a second time what the field itself says.
+
+                 The wrapping flex column went with it: one child does not need
+                 a layout wrapper. -->
+            <site-combobox
+              ref="sitePicker"
+              :options="siteOptions ?? []"
+              :input-id="`site-combobox-${boxKey}`"
+              input-class="site-picker-attention w-full rounded-md border-2 border-frequency bg-frequency/10 text-insight px-3 py-2 min-w-72 text-sm font-medium focus:(outline-none ring-2 ring-frequency)"
+              @select="$emit('siteChosen', $event)"
+              @create="$emit('createSite', $event)"
+            />
           </template>
           <template v-else>
             <!-- Collapse caret: the app's STANDARD chevron (custom-icons
