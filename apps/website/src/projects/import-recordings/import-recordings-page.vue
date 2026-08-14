@@ -23,8 +23,11 @@
       </div>
       <button
         v-if="!isPopout"
-        class="btn btn-secondary text-sm mt-6 whitespace-nowrap inline-flex items-center gap-x-2"
-        title="Open the uploader in its own window"
+        class="btn btn-secondary text-sm mt-6 whitespace-nowrap inline-flex items-center gap-x-2 disabled:btn-disabled disabled:hover:btn-disabled disabled:cursor-not-allowed"
+        :disabled="popoutLaunched"
+        :title="popoutLaunched
+          ? 'The uploader is already open in its own window — use “Go to the uploader window” below'
+          : 'Open the uploader in its own window'"
         @click="popOut"
       >
         Pop-Out in New Window
@@ -981,6 +984,15 @@ const popoutWindowTitle = computed(() =>
 const focusAttempted = ref(false)
 
 /**
+ * How long the button stays optimistically disabled after a launch before
+ * falling back to the heartbeat alone. Comfortably longer than the pop-out's
+ * beat interval (2s) so a healthy window is always covered, but short enough
+ * that a window which never actually started leaves the button dead only
+ * briefly.
+ */
+const POPOUT_LAUNCH_GRACE_MS = 6000
+
+/**
  * Set when `window.open` returned null — i.e. the browser blocked the popup.
  * The page then shows an advisory notice ALONGSIDE the working inline uploader,
  * so the button is never silently dead. Without this, a blocked open and
@@ -1022,6 +1034,43 @@ const openPopoutWindow = (): Window | null => {
 }
 
 /**
+ * Has THIS page just launched a pop-out that has not yet started heartbeating?
+ *
+ * Bridges a real gap: `popoutActive` is driven by the pop-out's heartbeat over
+ * a BroadcastChannel, and the new window has to boot, mount and post its first
+ * beat before that flips — up to ~POPOUT_BEAT_MS. Without this the button would
+ * stay live for a beat or two after being pressed, which is exactly long enough
+ * for an impatient second click. Cleared as soon as the heartbeat takes over.
+ */
+const popoutJustLaunched = ref(false)
+
+/**
+ * Whether the launch button should be INERT (operator 2026-08-14).
+ *
+ * True while this project's uploader is open in its own window — pressing it
+ * again cannot create a second uploader (`window.open` re-uses the name), so a
+ * live button would promise an action that does not exist. The “Go to the
+ * uploader window” button in the placeholder below is the affordance for
+ * reaching it.
+ *
+ * ⚠️ DELIBERATELY NOT A ONE-WAY LATCH. Deriving this from the live heartbeat
+ * means CLOSING the pop-out re-enables the button within POPOUT_STALE_MS. A
+ * plain `hasLaunched = true` would look identical in the happy path and then
+ * strand the user with a permanently dead button after they closed the window —
+ * the same shape as the §121 stranded-claim defect, in the UI instead of the
+ * queue.
+ */
+const popoutLaunched = computed(() => popoutActive.value || popoutJustLaunched.value)
+
+// Hand over from the optimistic flag to the authoritative heartbeat exactly
+// when the heartbeat arrives — and also give up if none ever does (a window
+// that was closed instantly, or never really opened), so the button cannot
+// stick disabled on the strength of a launch that did not take.
+watch(popoutActive, (active) => {
+  if (active) popoutJustLaunched.value = false
+})
+
+/**
  * Explicit “Pop-Out in New Window”. Only a USER GESTURE ever opens the pop-out —
  * see the onMounted note on why the automatic launch was removed.
  */
@@ -1030,12 +1079,17 @@ const popOut = (): void => {
   if (handle === null) {
     popoutBlocked.value = true
     track('web_upload_popout_blocked', { project: projectSlug.value })
-  } else {
-    // A previously blocked attempt that later succeeds must clear the notice,
-    // otherwise the page keeps telling the user they are blocked while the
-    // pop-out window is demonstrably open.
-    popoutBlocked.value = false
+    return
   }
+  // A previously blocked attempt that later succeeds must clear the notice,
+  // otherwise the page keeps telling the user they are blocked while the
+  // pop-out window is demonstrably open.
+  popoutBlocked.value = false
+  // Disable immediately rather than waiting for the first heartbeat (see
+  // popoutJustLaunched), with a bounded fallback so a launch that never
+  // heartbeats cannot leave the button dead forever.
+  popoutJustLaunched.value = true
+  window.setTimeout(() => { popoutJustLaunched.value = false }, POPOUT_LAUNCH_GRACE_MS)
 }
 
 const closePopout = (): void => {

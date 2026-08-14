@@ -109,6 +109,73 @@ describe('the uploader is inline-first — no automatic tab launch', () => {
   })
 })
 
+describe('the launch button goes INERT once the pop-out is open', () => {
+  test('the button is disabled, and styled as disabled', () => {
+    // Pressing it again cannot create a second uploader (window.open re-uses
+    // the name), so a live button would promise an action that does not exist.
+    // btn-disabled is the codebase's existing disabled treatment; the
+    // disabled:hover variant is needed too, or the secondary button's hover
+    // colours still fire on a dead control.
+    const btn = source.slice(source.indexOf('<button'), source.indexOf('Pop-Out in New Window'))
+    expect(btn).toContain(':disabled="popoutLaunched"')
+    expect(btn).toContain('disabled:btn-disabled')
+    expect(btn).toContain('disabled:hover:btn-disabled')
+    expect(btn).toContain('disabled:cursor-not-allowed')
+  })
+
+  test('THE STRANDING RISK: inert state is DERIVED, not a one-way latch', () => {
+    // The important property. Deriving from the live heartbeat means closing
+    // the pop-out re-enables the button; a plain `hasLaunched = true` would be
+    // indistinguishable in the happy path and then strand the user with a
+    // permanently dead button — the §121 defect shape, moved into the UI.
+    const decl = source.slice(source.indexOf('const popoutLaunched'))
+      .slice(0, 200)
+    expect(decl).toContain('computed(')
+    expect(decl).toContain('popoutActive.value')
+  })
+
+  test('the optimistic flag is CLEARED by the heartbeat and by a timeout', () => {
+    // popoutActive only flips once the new window posts its first beat, so the
+    // button is disabled optimistically to survive that gap. Both exits must
+    // exist, or a launch that never heartbeats leaves the button dead.
+    expect(source).toContain('const popoutJustLaunched = ref(false)')
+    const watcher = source.slice(source.indexOf('watch(popoutActive'))
+      .slice(0, 160)
+    expect(watcher).toContain('popoutJustLaunched.value = false')
+
+    const popOutBody = source.slice(
+      source.indexOf('const popOut = '),
+      source.indexOf('const closePopout')
+    )
+    expect(popOutBody).toContain('popoutJustLaunched.value = true')
+    expect(popOutBody).toContain('POPOUT_LAUNCH_GRACE_MS')
+    // [\s\S] rather than [^)] — the callback body contains parentheses, so a
+    // negated-paren class stops at `() =>` and never reaches the assignment.
+    expect(popOutBody).toMatch(/setTimeout\([\s\S]*?popoutJustLaunched\.value = false/)
+  })
+
+  test('a BLOCKED launch does not disable the button', () => {
+    // If the browser refused the window, the button is the user's only way to
+    // retry after allowing pop-ups — disabling it there would be a dead end.
+    // The blocked branch must therefore EXIT before the disable is set.
+    const popOutBody = source.slice(
+      source.indexOf('const popOut = '),
+      source.indexOf('const closePopout')
+    )
+
+    const guardExit = popOutBody.indexOf('return')
+    const disable = popOutBody.indexOf('popoutJustLaunched.value = true')
+
+    // Assert PRESENCE first. `indexOf` yields -1 when absent, and -1 is less
+    // than any real index, so an ordering-only assertion PASSES when the guard
+    // is deleted — which is exactly the mutation it is supposed to catch.
+    // (Caught by mutation testing: this test survived removing the return.)
+    expect(guardExit).toBeGreaterThan(-1)
+    expect(disable).toBeGreaterThan(-1)
+    expect(guardExit).toBeLessThan(disable)
+  })
+})
+
 describe('THE MASKED DEFECT: the blocked notice suppressed the uploader', () => {
   test('the blocked notice is a SIBLING v-if, not a branch of the uploader chain', () => {
     // It used to be `v-else-if` in the same chain as the uploader `<template>`.
