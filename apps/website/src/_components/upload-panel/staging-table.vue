@@ -1045,6 +1045,11 @@ const STATE_LABELS: Record<string, string> = {
 
 const statusCol = (item: UploadItem): string => {
   if (item.state === 'staged' && item.analysisError !== undefined) return item.analysisError
+  // Advisory notice (e.g. an unusually old date on a file with no recorder
+  // metadata). UNLIKE analysisError this does NOT block Start — a genuine
+  // digitised archive must upload freely — so it is shown in the neutral
+  // colour and reads as information, not a fault.
+  if (item.state === 'staged' && item.notice !== undefined) return item.notice
   // prestaged: checksum + signed URL already in hand — Start goes straight
   // to the PUT (and the server's dedup check already passed this file)
   if (item.state === 'staged' && item.signedUrl !== undefined) return 'Staged — ready for fast upload'
@@ -1058,7 +1063,7 @@ const statusCol = (item: UploadItem): string => {
 }
 
 const statusDetail = (item: UploadItem): string =>
-  item.analysisError ?? item.error ?? STATE_LABELS[item.state] ?? item.state
+  item.analysisError ?? item.notice ?? item.error ?? STATE_LABELS[item.state] ?? item.state
 
 const statusColor = (item: UploadItem): string => {
   switch (item.state) {
@@ -1067,7 +1072,13 @@ const statusColor = (item: UploadItem): string => {
     case 'failed':
     case 'rejected':
     case 'cancelled': return 'text-flamingo'
-    case 'staged': return item.analysisError !== undefined ? 'text-flamingo' : 'text-insight'
+    // analysisError blocks Start (flamingo = fault); a notice does not
+    // (cloud = advisory). Distinguishing them matters: an archive upload with
+    // a notice is FINE, and colouring it like an error would tell the user to
+    // "fix" something that is correct.
+    case 'staged':
+      if (item.analysisError !== undefined) return 'text-flamingo'
+      return item.notice !== undefined ? 'text-cloud' : 'text-insight'
     default: return 'text-insight'
   }
 }

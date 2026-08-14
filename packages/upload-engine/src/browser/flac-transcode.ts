@@ -15,7 +15,9 @@
 
 import { type PrepareFn, type PrepareResult } from '../engine'
 import { encodeWavToFlac } from '../flac-encoder'
+import { buildProvenanceComments, writeFlacComments } from '../flac-vorbis-comment'
 import { type FileSource, type UploadItem } from '../types'
+import { extractEmbeddedTimestamp } from '../wav-embedded-timestamp'
 import { parseWavMetadata } from '../wav-metadata'
 import { type EncodeFn } from './flac-encode-client'
 
@@ -106,7 +108,31 @@ export const withFlacTranscode = (
       }
 
       const result = await (options.encode ?? encodeWavToFlac)(file, meta)
-      const flacBlob = new Blob([result.flacBytes as BlobPart], { type: 'audio/flac' })
+
+      // PRESERVE RECORDER PROVENANCE (2026-08-13). The encoder emits no tags,
+      // so a transcoded WAV would reach the server stripped of its GUANO /
+      // AudioMoth metadata — device id, deployment, gain, battery,
+      // temperature. The server persists those (stream_source_files.meta) and
+      // production is full of them, so dropping them is permanent, silent loss
+      // of field provenance that the desktop uploader did NOT have (it
+      // re-attached metadata via ffmpeg -metadata). Carry them into the FLAC's
+      // Vorbis comment block instead.
+      //
+      // FAIL OPEN, like every other step here: if the source has no metadata,
+      // or the write fails, we keep the encoder's bytes unchanged.
+      let flacBytes = result.flacBytes
+      try {
+        const embedded = await extractEmbeddedTimestamp(file)
+        const comments = buildProvenanceComments({
+          rawMetadata: embedded?.rawMetadata,
+          originalFilename: item.filename
+        })
+        if (comments.length > 0) {
+          flacBytes = writeFlacComments(flacBytes, comments)
+        }
+      } catch { /* provenance is best-effort; never block the upload */ }
+
+      const flacBlob = new Blob([flacBytes as BlobPart], { type: 'audio/flac' })
 
       // sanity: an "encode" that GREW the file is suspicious enough to skip
       // (pathological already-compressed content) — original wins.
