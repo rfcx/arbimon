@@ -97,7 +97,7 @@
             :aria-describedby="`popout-help-${projectSlug}`"
             @click="popOut"
           >
-            Open Standalone Uploader
+            Open Standalone Uploader Window
             <!-- Material Symbols "open in new" (the Gmail pop-out glyph);
                  -960-based viewBox per the Material icon coordinate system -->
             <svg
