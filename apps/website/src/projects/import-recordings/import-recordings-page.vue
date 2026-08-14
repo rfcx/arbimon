@@ -180,25 +180,33 @@
           <span>{{ startPauseLabel }}</span>
         </button>
 
-        <!-- Panel order (operator 2026-08-14, revised), left to right:
-             Queued · Outcomes(Imported/Errors/Duplicates) · Upload Rate · Uploaded.
+        <!-- Panel order (operator 2026-08-14, revised twice), left to right:
+             Queued · Outcomes(Imported/Errors/Skipped/Uploaded) · Upload Rate.
 
              WHAT CHANGED AND WHY:
-             • The three OUTCOME counts are now ONE box. They answer a single
-               question — "what happened to the recordings I submitted?" — and
-               are the same KIND of number (cumulative, persisted per project,
-               all reset together by the Reset button). Three separate boxes
-               implied three unrelated facts and spent half the row on it.
-               Each keeps its own label and colour, so nothing is lost: they are
-               grouped, not merged into a total (summing them would be
-               meaningless — a duplicate is not a failure, and adding an error
-               to an import answers no question anyone asks).
-             • "Complete" is replaced by QUEUED: work still to do is the number
+             • The OUTCOME figures are ONE box. They answer a single question —
+               "what happened to the recordings I submitted?" — and are the same
+               KIND of number: cumulative, persisted per project, and all reset
+               together. Each keeps its own label and colour, so they are
+               grouped, NOT merged into a total (summing them would be
+               meaningless — a skip is not a failure, and adding an error to an
+               import answers no question anyone asks).
+             • UPLOADED joins them (operator), last in the list. It is the same
+               kind of number — cumulative and reset by the same button — and
+               moving it in makes the box contain EXACTLY the set that Reset
+               clears, which is what lets the Reset control live inside it
+               without needing to explain its scope.
+             • "Complete" was replaced by QUEUED: work still to do is the number
                you watch during an upload, whereas Complete duplicated what
                Imported already told you (both counted successful ingests) and
                its N/N ratio went stale the moment rows were cleared.
 
-             The combined box spans 3 of the 6 columns — one per metric it
+             UPLOAD RATE stays OUTSIDE: it is an instantaneous throughput
+             reading (a 10s sliding window), not a cumulative outcome, and Reset
+             does not touch it. Putting it in the box would have broken the
+             "this box is exactly what Reset clears" rule.
+
+             The combined box spans 4 of the 6 columns — one per metric it
              carries — so the row still divides evenly. -->
         <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <!-- QUEUED is deliberately GLOBAL (all projects), matching the engine's
@@ -221,10 +229,50 @@
             <span class="text-xl tabular-nums font-medium">{{ globalQueued }}</span>
           </div>
 
-          <!-- OUTCOMES — one box, three figures, each keeping its own identity. -->
-          <div class="lg:col-span-3 rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5">
-            <span class="text-xs text-cloud uppercase tracking-wide">Outcomes</span>
-            <div class="mt-0.5 flex items-baseline gap-x-6">
+          <!-- OUTCOMES — one box, four figures, each keeping its own identity, plus
+               the Reset control that clears exactly this set. -->
+          <div class="lg:col-span-4 rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5">
+            <!-- Header line: section label LEFT, Reset icon RIGHT. A flex row
+                 rather than absolute positioning, so the button can never
+                 overlap a long label and the box needs no fixed height. -->
+            <div class="flex items-start justify-between gap-x-2">
+              <span class="text-xs text-cloud uppercase tracking-wide">Outcomes</span>
+              <!-- Reset the CUMULATIVE counters (operator 2026-08-14). Now an
+                   UNLABELLED icon in this box's top-right corner: the box holds
+                   exactly the four totals this clears, so its scope is shown by
+                   PLACEMENT instead of words.
+
+                   -mr-1.5 -mt-0.5 pulls it optically into the corner against
+                   the box's px-4/py-2.5 padding without shrinking the padding
+                   for the metrics themselves.
+
+                   aria-label + title are now LOAD-BEARING, not decoration:
+                   with the visible "Reset" text gone they are the only naming
+                   a screen reader or a hovering user gets. It still confirms
+                   before acting — the counters are persisted per project and
+                   cannot be recovered — and it does NOT touch the upload queue
+                   (see resetProjectMetrics()). -->
+              <button
+                class="shrink-0 -mr-1.5 -mt-0.5 p-1 rounded text-cloud hover:(text-flamingo bg-flamingo/10) transition-colors"
+                title="Reset the Imported / Errors / Skipped / Uploaded totals for this project. Does not affect the upload queue."
+                aria-label="Reset metrics"
+                @click="onResetMetrics"
+              >
+                <svg
+                  viewBox="0 0 16 16"
+                  class="w-4 h-4 fill-none stroke-current"
+                  stroke-width="1.6"
+                ><path
+                  d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                /></svg>
+              </button>
+            </div>
+            <!-- gap-x-5 (was 6) absorbs the fourth metric without pushing the
+                 row wider; flex-wrap so a narrow viewport wraps instead of
+                 forcing horizontal overflow. -->
+            <div class="mt-0.5 flex flex-wrap items-baseline gap-x-5 gap-y-1">
               <span class="flex items-baseline gap-x-1.5">
                 <span class="text-xl tabular-nums font-medium text-frequency">{{ metrics.completed }}</span>
                 <span class="text-xs text-cloud">Imported</span>
@@ -236,9 +284,17 @@
                 >{{ metrics.failed }}</span>
                 <span class="text-xs text-cloud">Errors</span>
               </span>
+              <!-- "Skipped" (operator 2026-08-14): these recordings were already
+                   in the project, so nothing was uploaded and nothing went
+                   wrong. "Duplicates" reads like a problem to fix; "Skipped"
+                   states what the uploader DID. -->
               <span class="flex items-baseline gap-x-1.5">
                 <span class="text-xl tabular-nums font-medium">{{ metrics.duplicates }}</span>
-                <span class="text-xs text-cloud">Duplicates</span>
+                <span class="text-xs text-cloud">Skipped</span>
+              </span>
+              <span class="flex items-baseline gap-x-1.5">
+                <span class="text-xl tabular-nums font-medium">{{ formatBytes(metrics.bytesTransferred) }}</span>
+                <span class="text-xs text-cloud">Uploaded</span>
               </span>
             </div>
           </div>
@@ -247,26 +303,7 @@
             <span class="text-xs text-cloud uppercase tracking-wide">Upload Rate</span>
             <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
           </div>
-          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Uploaded</span>
-            <span class="text-xl tabular-nums font-medium">{{ formatBytes(metrics.bytesTransferred) }}</span>
-          </div>
         </div>
-
-        <!-- Reset the CUMULATIVE counters (operator 2026-08-14). Deliberately
-             separated from the panels by its own column so it cannot be
-             mistaken for a metric, and it asks for confirmation because the
-             counters are persisted per project and cannot be recovered.
-             It does NOT touch the upload queue — see resetProjectMetrics(). -->
-        <button
-          class="shrink-0 rounded-lg border border-cloud/20 bg-moss/30 px-3 text-cloud hover:(text-flamingo border-flamingo/40) transition-colors inline-flex flex-col items-center justify-center gap-y-1"
-          title="Reset the Imported / Errors / Duplicates / Uploaded totals for this project. Does not affect the upload queue."
-          aria-label="Reset metrics"
-          @click="onResetMetrics"
-        >
-          <svg viewBox="0 0 16 16" class="w-5 h-5 fill-none stroke-current" stroke-width="1.6"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          <span class="text-xs">Reset</span>
-        </button>
       </div>
 
       <!-- Options row: Add-site button on the LEFT; the SESSION-WIDE settings
@@ -922,7 +959,7 @@ const startPauseClass = computed(() => {
  */
 const onResetMetrics = (): void => {
   const confirmed = window.confirm(
-    'Reset the Imported, Errors, Duplicates and Uploaded totals for this project?\n\n' +
+    'Reset the Imported, Errors, Skipped and Uploaded totals for this project?\n\n' +
     'Your recordings and the upload queue are not affected.'
   )
   if (!confirmed) return
