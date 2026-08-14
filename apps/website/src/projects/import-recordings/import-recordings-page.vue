@@ -452,81 +452,21 @@
         </button>
       </div>
 
-      <!-- Options row: Add-site button on the LEFT; the SESSION-WIDE settings
-           (timezone method + FLAC toggle) justified RIGHT (operator
-           2026-08-13). ml-auto on the settings group does the split. -->
-      <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3 items-center relative">
-        <!-- Expand/Collapse ALL: an icon button in the LEFT MARGIN, on the same
-             row as (and just left of) 'Add Recordings to a Site'. Positioned
-             ABSOLUTELY so it hangs in the gutter without being a flex item —
-             as a flex child it both consumed row width (pushing 'Add
-             Recordings' off the content edge) and centre-aligned to its own
-             smaller height, sitting ~11px below the button. h-9 matches the
-             button height so it centres against it. -ml-7 w-7 mirrors the
-             section carets' geometry, keeping it on the caret column below.
-             Icons are Gmail's own glyphs (-960 960 Material viewBox). Only
-             shown once there are ≥2 linked sections. -->
-        <button
-          v-if="linkedBoxCount >= 2"
-          class="absolute -ml-7 w-7 h-9 shrink-0 inline-flex items-center justify-center text-cloud hover:text-frequency"
-          :title="anyBoxExpanded ? 'Collapse all Upload Queue Sections' : 'Expand all Upload Queue Sections'"
-          :aria-label="anyBoxExpanded ? 'Collapse all' : 'Expand all'"
-          @click="toggleAllBoxes"
-        >
-          <svg
-            v-if="anyBoxExpanded"
-            viewBox="0 -960 960 960"
-            class="w-5 h-5 fill-current"
-          ><path d="M289-95l-50-50L480-387L721-145L671-95L480-285L289-95ZM480-573L239-815l50-50L480-675L671-865l50,50L480-573Z" /></svg>
-          <svg
-            v-else
-            viewBox="0 -960 960 960"
-            class="w-5 h-5 fill-current"
-          ><path d="M480-95L239-337l50-50l191,190l191-190l50,50L480-95ZM289-575l-50-50l241-242l241,242l-50,50l-191-190L289-575Z" /></svg>
-        </button>
-        <button
-          class="btn btn-primary text-sm inline-flex items-center gap-x-2"
-          :disabled="hasUnlinkedBox"
-          :title="hasUnlinkedBox ? 'Pick a site for the new section above first' : 'Add an Upload Queue Section for a site'"
-          @click="addUnlinkedBox"
-        >
-          <svg
-            viewBox="0 0 16 16"
-            class="w-3.5 h-3.5 fill-current"
-          ><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
-          Add Recordings to a Site
-        </button>
-        <!-- Session settings moved into a modal (operator 2026-08-14): the
-             timezone selector and FLAC toggle crowded this row and left no
-             room to explain either. A single gear keeps the row calm and
-             gives later settings somewhere obvious to live. -->
-        <div class="ml-auto flex items-center">
-          <!-- Weighted to MATCH its neighbour (operator 2026-08-14: the first
-               attempt was "tiny and weird"). Two things were wrong: it was a
-               bare text link sitting beside a real pill button, so it read as
-               an afterthought rather than a peer control; and the gear was a
-               hand-rolled path that did not match the app's glyphs.
-               Now uses the repo's `btn-icon` shortcut (same pill geometry and
-               frequency/chirp hover as the other buttons) and the Material
-               `0 -960 960 960` settings glyph, which is the convention the
-               collapse/expand carets in this same row already follow. -->
-          <button
-            class="btn-icon text-sm inline-flex items-center gap-x-2 !py-3"
-            title="Uploader Settings"
-            aria-label="Uploader Settings"
-            @click="showSettings = true"
-          >
-            <!-- 4/4.5 (16-18px), matching the Add button's 14px glyph rather than
-                 the 20px carets: an icon noticeably larger than its label's
-                 cap-height is what made the first version read as "weird". -->
-            <svg
-              viewBox="0 -960 960 960"
-              class="w-4 h-4 fill-current"
-            ><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm112-260q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Z" /></svg>
-            Settings
-          </button>
-        </div>
-      </div>
+      <!-- OPTIONS ROW REMOVED (operator 2026-08-14). It held three controls,
+           and by this point every one of them was a DUPLICATE:
+             • "Add Recordings to a Site" — the full-width dashed button at the
+               bottom of the stack calls the SAME `addUnlinkedBox` handler with
+               the SAME `hasUnlinkedBox` disabled rule, and it is ALWAYS
+               rendered (it doubles as the empty state), so nothing is stranded;
+             • Settings — now the gear panel-button in the metrics row (§132);
+             • Expand/Collapse all — now the panel-button beside it (§134),
+               which also fixed that caret's >= 2 threshold: it used to VANISH
+               with a single section, while the panel stays and explains itself.
+
+           The `showSettings` modal, `addUnlinkedBox`, `toggleAllBoxes` and
+           `anyBoxExpanded` are all still live — only this row's markup is gone,
+           not the behaviour behind it. `linkedBoxCount` survives too, now used
+           only via `canToggleBoxes` (§134). -->
 
       <uploader-settings-modal
         v-if="showSettings"
