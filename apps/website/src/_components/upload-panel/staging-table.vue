@@ -201,7 +201,18 @@
       class="mt-3 overflow-x-auto rounded-lg border transition-colors"
       :class="dropActive ? 'border-frequency bg-frequency/5' : 'border-cloud/20'"
     >
-      <table class="w-full text-sm whitespace-nowrap">
+      <!-- table-fixed (operator 2026-08-14): stop the table forcing a horizontal
+           scrollbar on narrow viewports.
+
+           MEASURED before: `whitespace-nowrap` gives every cell an unbreakable
+           minimum width, so the table FLOORED at 1078px and the wrapper
+           scrolled instead of shrinking — overflow 203px at 1024, 427px at 800.
+           Status (233px) and Format (161px) were the largest contributors.
+
+           `table-fixed` makes the declared <th> widths authoritative rather
+           than content-driven, so the table always matches its container and
+           the truncatable columns surrender space first. -->
+      <table class="w-full table-fixed text-sm whitespace-nowrap">
         <thead>
           <tr class="bg-moss/40 text-left">
             <th class="px-2 py-2 w-8">
@@ -870,15 +881,21 @@ const visible = computed(() => props.items)
 // slightly wider than the content stops the table reflowing as rows change
 // state — the jitter you otherwise get when a rate appears mid-upload.
 // Filename/Status stay fluid so they absorb the remaining space.
+// Under `table-fixed` these widths are AUTHORITATIVE, not hints.
+// FIXED columns (Date/Time/Zone/Progress) carry fixed-character-count values
+// plus, on Date/Time, an edit button — they keep exact widths.
+// TRUNCATABLE columns (Filename/Format/Duration/Status) take PERCENTAGES so
+// they shrink with the container and clip, which is what absorbs a narrowing
+// viewport instead of a scrollbar.
 const COLUMNS: Array<{ key: string, label: string, width?: string }> = [
-  { key: 'filename', label: 'Filename' },
+  { key: 'filename', label: 'Filename', width: 'w-[24%]' },
   { key: 'recDate', label: 'Date', width: 'w-32' },
   { key: 'recTime', label: 'Time', width: 'w-28' },
   { key: 'zone', label: 'Zone', width: 'w-24' },
-  { key: 'format', label: 'Format' },
-  { key: 'durationMs', label: 'Duration' },
+  { key: 'format', label: 'Format', width: 'w-[17%]' },
+  { key: 'durationMs', label: 'Duration', width: 'w-[11%]' },
   { key: 'progress', label: 'Progress', width: 'w-36' },
-  { key: 'status', label: 'Status' }
+  { key: 'status', label: 'Status', width: 'w-[21%]' }
 ]
 
 const sortKey = ref<string>('filename')
