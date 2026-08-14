@@ -586,6 +586,23 @@
            not the behaviour behind it. `linkedBoxCount` survives too, now used
            only via `canToggleBoxes` (§134). -->
 
+      <!-- CREATE-A-SITE MODAL. Rendered by the PAGE, not by the staging table:
+           the table reports the intent (`createSite`) and the page owns the
+           dialog, which is what keeps the modal reusable elsewhere in the SPA
+           (operator 2026-08-14) instead of being welded into the uploader.
+
+           `:key` forces a fresh instance per open, so a second open never
+           inherits the previous attempt's typed values or error state. -->
+      <site-form-modal
+        v-if="creatingSiteForBoxId !== undefined && apiClientArbimon !== undefined"
+        :key="`create-site-${creatingSiteForBoxId}`"
+        :project-slug="projectSlug"
+        :project-core-id="store.project?.idCore ?? ''"
+        :api-client="apiClientArbimon"
+        @close="creatingSiteForBoxId = undefined"
+        @created="onSiteCreated"
+      />
+
       <uploader-settings-modal
         v-if="showSettings"
         :timezone-mode="timezoneMode"
@@ -660,6 +677,8 @@
             :drop-active="box.streamId !== undefined && dragBoxId === box.streamId"
             :collapsed="collapsedBoxIds.has(box.boxId)"
             :site-info="box.streamId !== undefined ? siteInfoFor(box.streamId) : undefined"
+            :box-key="box.boxId"
+            @create-site="onRequestCreateSite(box.boxId, $event)"
             @toggle-collapsed="toggleBoxCollapsed(box.boxId)"
             @edit-datetime="applyDatetimeEdit"
             @remove-box="removeSiteBox(box.boxId)"
@@ -765,6 +784,7 @@ import { apiArbimonFindRecordingAtExactTime, apiArbimonResolveRecordingId } from
 import { type SiteResponse, apiArbimonGetSites } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 import { type TimezoneMode, type UploadItem, analyzeFile, collectDroppedFiles, createUploadItem, isSupportedAudioFile } from '@rfcx-bio/upload-engine'
 
+import SiteFormModal, { type SiteSaved } from '@/_components/site-form-modal/site-form-modal.vue'
 import StagingTable from '@/_components/upload-panel/staging-table.vue'
 import UploaderSettingsModal from '@/_components/upload-panel/uploader-settings-modal.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
@@ -900,6 +920,40 @@ const siteOptions = computed(() =>
 
 const siteById = (streamId: string): SiteResponse | undefined =>
   sites.value.find(site => site.external_id === streamId)
+
+// -- create a site from the picker -------------------------------------------
+
+/** Which box asked for the create modal (undefined = modal closed). */
+const creatingSiteForBoxId = ref<string | undefined>(undefined)
+
+const onRequestCreateSite = (boxId: string, _typedName: string): void => {
+  creatingSiteForBoxId.value = boxId
+}
+
+/**
+ * A site was created — reload the list and link the requesting box to it.
+ *
+ * ⚠️ WHY WE MATCH BY NAME. The legacy create endpoint does NOT return the new
+ * site's `external_id` (the inline sites-page form emits `id: null` after a
+ * create for exactly this reason), and `external_id` is precisely what a box
+ * needs in order to link. So we re-fetch the project's sites and find the one
+ * we just made.
+ *
+ * Name is the only stable handle we have, and it is a sound one here: the
+ * legacy API rejects duplicate site names within a project, so a successful
+ * create guarantees the name is unique in this list. We still guard for the
+ * miss (a rename race, or an unexpected server response) by leaving the box
+ * unlinked rather than linking it to the WRONG site — the picker simply stays
+ * open with the new site now present in it.
+ */
+const onSiteCreated = async (saved: SiteSaved): Promise<void> => {
+  const boxId = creatingSiteForBoxId.value
+  creatingSiteForBoxId.value = undefined
+  await loadSites()
+  const created = sites.value.find(site => site.name === saved.name)
+  if (boxId === undefined || created === undefined) return
+  linkBoxToSite(boxId, created.external_id)
+}
 
 /** Site facts for a section's title line: how many recordings the site already
  * holds and the datetime range they span. Both come from the sites API's count

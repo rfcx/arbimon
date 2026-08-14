@@ -54,29 +54,26 @@
                  animation genuinely stops for users who ask for reduced motion
                  while the colour + text cues remain. -->
             <div class="flex flex-col gap-y-1">
-              <select
+              <!-- COMBOBOX, not a native <select> (operator 2026-08-14). The
+                   "Create a Site" affordance has to live WITH the picker, and a
+                   pseudo-<option> inside a native select blurs selection with
+                   action — arrow-keying onto it can fire `change`, opening a
+                   modal while the user is only browsing. The combobox also adds
+                   type-ahead, which the long tail of site counts warrants.
+
+                   The attention treatment (§147) moves ONTO the combobox input
+                   via `input-class`, so the pulsing ring, accent border and
+                   tinted field survive the swap. -->
+              <site-combobox
                 ref="sitePicker"
-                class="site-picker-attention rounded-md border-2 border-frequency bg-frequency/10 text-insight px-3 py-2 min-w-72 text-sm font-medium focus:(outline-none ring-2 ring-frequency border-frequency)"
-                value=""
-                @change="$emit('siteChosen', ($event.target as HTMLSelectElement).value)"
-              >
-                <option
-                  disabled
-                  value=""
-                >
-                  Select a site for these recordings…
-                </option>
-              <option
-                  v-for="option in siteOptions"
-                  :key="option.id"
-                  :value="option.id"
-                  :disabled="option.taken"
-                >
-                  {{ option.name }}{{ option.taken ? ' — already on this page' : '' }}
-                </option>
-              </select>
+                :options="siteOptions ?? []"
+                :input-id="`site-combobox-${boxKey}`"
+                input-class="site-picker-attention w-full rounded-md border-2 border-frequency bg-frequency/10 text-insight px-3 py-2 min-w-72 text-sm font-medium focus:(outline-none ring-2 ring-frequency)"
+                @select="$emit('siteChosen', $event)"
+                @create="$emit('createSite', $event)"
+              />
               <span class="text-xs text-frequency font-medium">
-                ← Choose the site these recordings came from to start this section
+                ← Choose the site these recordings came from, or create a new one
               </span>
             </div>
           </template>
@@ -620,6 +617,7 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { type UploadItem, toUtcIso } from '@rfcx-bio/upload-engine'
 
 import { type FlowbiteDatePicker, type FlowbiteDatePickerOptions } from '@/_components/date-range-picker/date-range-picker'
+import SiteCombobox from '@/_components/site-combobox/site-combobox.vue'
 
 const props = defineProps<{
   items: UploadItem[]
@@ -632,6 +630,10 @@ const props = defineProps<{
   timezoneMode?: string
   /** Options for the unlinked-state site selector; taken = already boxed. */
   siteOptions?: Array<{ id: string, name: string, taken: boolean }>
+  /** Stable per-box key, used to give each combobox unique element ids —
+   *  several unlinked sections can be on screen at once, and duplicated ids
+   *  would break both `aria-controls` and `aria-activedescendant`. */
+  boxKey?: string
   openingId?: string
   /** Whether the FLAC transcode stage is on — refines the pending-group label
    * (a queued WAV only counts as Transcode Pending when encoding will run). */
@@ -650,6 +652,10 @@ const emit = defineEmits<{
   (e: 'removeBox'): void
   (e: 'toggleCollapsed'): void
   (e: 'siteChosen', streamId: string): void
+  /** User picked “Create a Site…” in the combobox; carries whatever they had
+   *  typed so the modal can pre-fill the name. The HOST owns the modal — this
+   *  component only reports the intent. */
+  (e: 'createSite', typedName: string): void
     (e: 'clearCompleted'): void
   (e: 'retryFailed'): void
 
@@ -662,7 +668,8 @@ const emit = defineEmits<{
 }>()
 
 // autofocus the site selector when the box mounts unlinked
-const sitePicker = ref<HTMLSelectElement>()
+// The combobox exposes focus()/setQuery() rather than being a raw element.
+const sitePicker = ref<{ focus: () => void, setQuery: (v: string) => void }>()
 
 // -- per-row datetime correction (operator 2026-08-13) ----------------------
 // Pre-Start rows only: once signed/uploading the timestamp is part of the
