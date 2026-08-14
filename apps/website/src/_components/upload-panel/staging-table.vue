@@ -217,13 +217,27 @@
           <!-- 'Clear Completed' and 'Retry Failed' retired from this cluster
              2026-08-13 (operator): those actions now live ON the Completed and
              Errors group header rows, next to the rows they act on. -->
+          <!-- TRASH, not ✕ (operator 2026-08-14). This button REMOVES the
+               section, which is the same destructive act the per-row trash
+               performs on a recording — so it now wears the same glyph, at the
+               same w-4 size and with the same hover:text-flamingo treatment.
+
+               It also resolves a collision this page already had: ✕ means
+               "deselect all" in the selection-actions cluster a few lines
+               above, so the same symbol meant CLEAR SELECTION in one place and
+               DELETE THIS SECTION in another. Same reasoning as §138/§139, where
+               the Reset icon was duplicating the per-row Retry glyph. -->
           <button
             v-if="items.length === 0"
-            class="text-cloud hover:text-flamingo text-sm shrink-0"
+            class="text-cloud hover:text-flamingo shrink-0"
             title="Remove this Upload Queue Section"
+            aria-label="Remove this Upload Queue Section"
             @click="$emit('removeBox')"
           >
-            ✕
+            <svg
+              viewBox="0 0 16 16"
+              class="w-4 h-4 fill-current"
+            ><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
           </button>
         </div>
       </div>
