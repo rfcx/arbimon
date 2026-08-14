@@ -102,7 +102,7 @@
           <span
             :id="`popout-help-${projectSlug}`"
             role="tooltip"
-            class="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 mr-3 w-80 whitespace-normal text-left rounded-lg border border-cloud/20 bg-echo px-4 py-3 text-xs leading-relaxed text-cloud shadow-lg opacity-0 invisible transition-opacity duration-150 group-hover:(opacity-100 visible) group-focus-within:(opacity-100 visible) z-50"
+            class="pointer-events-none absolute right-full top-1/2 transform -translate-y-1/2 mr-3 w-80 whitespace-normal text-left rounded-lg border border-cloud/20 bg-echo px-4 py-3 text-xs leading-relaxed text-cloud shadow-lg opacity-0 invisible transition-opacity duration-150 group-hover:(opacity-100 visible) group-focus-within:(opacity-100 visible) z-50"
           >
             <span class="block text-insight font-medium mb-1">
               {{ popoutLaunched ? 'Already open in its own window' : 'Why run the uploader in its own window?' }}
