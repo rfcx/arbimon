@@ -91,14 +91,18 @@
           <span>{{ startPauseLabel }}</span>
         </button>
 
+        <!-- Panel order (operator 2026-08-14), left to right:
+             Complete · Imported · Errors · Duplicates · Upload Rate · Uploaded.
+             Outcome counts first (what happened to my recordings), throughput
+             last (how fast it is going) — so the eye reads results before
+             mechanics. -->
         <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Upload Rate</span>
-            <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
-          </div>
-          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Uploaded</span>
-            <span class="text-xl tabular-nums font-medium">{{ formatBytes(metrics.bytesTransferred) }}</span>
+            <span class="text-xs text-cloud uppercase tracking-wide">Complete</span>
+            <span class="text-xl tabular-nums font-medium">
+              {{ projectProgress.done }}/{{ projectProgress.total }}
+              <span class="text-sm text-cloud">({{ overallPercent }}%)</span>
+            </span>
           </div>
           <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
             <span class="text-xs text-cloud uppercase tracking-wide">Imported</span>
@@ -116,13 +120,29 @@
             <span class="text-xl tabular-nums font-medium">{{ metrics.duplicates }}</span>
           </div>
           <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Complete</span>
-            <span class="text-xl tabular-nums font-medium">
-              {{ projectProgress.done }}/{{ projectProgress.total }}
-              <span class="text-sm text-cloud">({{ overallPercent }}%)</span>
-            </span>
+            <span class="text-xs text-cloud uppercase tracking-wide">Upload Rate</span>
+            <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
+          </div>
+          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
+            <span class="text-xs text-cloud uppercase tracking-wide">Uploaded</span>
+            <span class="text-xl tabular-nums font-medium">{{ formatBytes(metrics.bytesTransferred) }}</span>
           </div>
         </div>
+
+        <!-- Reset the CUMULATIVE counters (operator 2026-08-14). Deliberately
+             separated from the panels by its own column so it cannot be
+             mistaken for a metric, and it asks for confirmation because the
+             counters are persisted per project and cannot be recovered.
+             It does NOT touch the upload queue — see resetProjectMetrics(). -->
+        <button
+          class="shrink-0 rounded-lg border border-cloud/20 bg-moss/30 px-3 text-cloud hover:(text-flamingo border-flamingo/40) transition-colors inline-flex flex-col items-center justify-center gap-y-1"
+          title="Reset the Imported / Errors / Duplicates / Uploaded totals for this project. Does not affect the upload queue."
+          aria-label="Reset metrics"
+          @click="onResetMetrics"
+        >
+          <svg viewBox="0 0 16 16" class="w-5 h-5 fill-none stroke-current" stroke-width="1.6"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          <span class="text-xs">Reset</span>
+        </button>
       </div>
 
       <!-- Options row: Add-site button on the LEFT; the SESSION-WIDE settings
@@ -326,7 +346,7 @@ import UploaderSettingsModal from '@/_components/upload-panel/uploader-settings-
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { track } from '~/analytics'
 import { useStore } from '~/store'
-import { bindProjectMetrics, currentRateBps, engine, engineRunning, fileSource, flacEncodeEnabled, items, livePopouts, projectMetrics, refreshItems, registerAsPopout, requestFileHandles } from '~/upload'
+import { bindProjectMetrics, currentRateBps, engine, engineRunning, fileSource, flacEncodeEnabled, items, livePopouts, projectMetrics, refreshItems, registerAsPopout, requestFileHandles, resetProjectMetrics } from '~/upload'
 
 const route = useRoute()
 const store = useStore()
@@ -722,11 +742,51 @@ const startPauseLabel = computed(() => {
 
 const startPauseDisabled = computed(() => buttonMode.value === 'inert')
 
+/**
+ * Start/Pause colours (operator 2026-08-14: the non-idle states were not
+ * readable).
+ *
+ * MEASURED WCAG contrast on the house palette, which is what made the defect
+ * concrete rather than a matter of taste:
+ *   btn-primary  Start : pitch on frequency        16.57:1  PASS
+ *   btn-secondary Pause: frequency on moss         13.91:1  PASS
+ *   btn-secondary Pause HOVER: frequency on chirp   1.08:1  FAIL ← the bug
+ *
+ * `btn-secondary` keeps `text-frequency` while hovering to `bg-chirp` — bright
+ * green text on a near-identical bright green fill, i.e. the button vanishes
+ * exactly when the pointer is on it. (The base `btn` class sets `text-pitch`,
+ * but `btn-secondary` overrides it, so this is not visible from the call site.)
+ *
+ * Fix stays inside the house palette: Pause becomes a FILLED chirp button with
+ * pitch text (17.82:1), hovering to frequency (16.57:1) — the same
+ * dark-on-bright treatment Start already uses, so the two read as one control
+ * changing state rather than two unrelated buttons. Chirp vs frequency keeps
+ * them visually distinguishable at a glance.
+ */
 const startPauseClass = computed(() => {
   if (buttonMode.value === 'inert') return 'border border-cloud/20 bg-moss/20 text-cloud/50 cursor-default'
-  if (buttonMode.value === 'pause') return 'btn-secondary'
-  return 'btn-primary'
+  if (buttonMode.value === 'pause') return 'bg-chirp text-pitch hover:bg-frequency focus:ring-4 focus:ring-chirp'
+  return 'bg-frequency text-pitch hover:bg-chirp focus:ring-4 focus:ring-chirp'
 })
+
+/**
+ * Reset the cumulative metrics (operator 2026-08-14). Confirms first: the
+ * counters are PERSISTED per project in localStorage, so a mis-click would
+ * discard a running session's totals with no way to recover them.
+ *
+ * Scope is the counters only — the upload queue and every section are
+ * untouched, so "Complete" (derived live from queue rows) keeps its value.
+ * That asymmetry is intentional and is spelled out in the confirm text.
+ */
+const onResetMetrics = (): void => {
+  const confirmed = window.confirm(
+    'Reset the Imported, Errors, Duplicates and Uploaded totals for this project?\n\n' +
+    'Your recordings and the upload queue are not affected.'
+  )
+  if (!confirmed) return
+  resetProjectMetrics()
+  track('web_upload_metrics_reset', { project: projectSlug.value })
+}
 
 const onStartPause = async (): Promise<void> => {
   if (engineRunning.value && activePipeline.value > 0) {

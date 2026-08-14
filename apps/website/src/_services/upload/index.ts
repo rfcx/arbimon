@@ -112,6 +112,17 @@ export interface ProjectTransferMetrics {
   userSub?: string
 }
 
+// Track terminal outcomes per item — a Map so a RETRY can reverse the
+// previously-counted outcome (the count-once Set made a failed→retry→ingested
+// item stay counted as a failure forever; found live 2026-08-12).
+//
+// DECLARED HERE, above its users: resetProjectMetrics() clears it, and that
+// function is defined further up the file than the engine listener that also
+// uses it. Leaving the declaration below both worked only because every call
+// is deferred — a fragile ordering that a later refactor could turn into a
+// temporal-dead-zone crash at module load.
+const trackedTerminal = new Map<string, string>()
+
 const METRICS_PREFIX = 'upload-metrics:'
 const EMPTY_METRICS: ProjectTransferMetrics = { bytesTransferred: 0, completed: 0, failed: 0, duplicates: 0 }
 
@@ -147,6 +158,29 @@ export const bindProjectMetrics = (slug: string, userSub: string | undefined): v
     projectMetrics.value = { ...loaded, userSub: userSub ?? loaded.userSub }
   }
   saveMetrics(slug, projectMetrics.value)
+}
+
+/**
+ * Reset the persisted transfer counters for the bound project (operator
+ * 2026-08-14: a Reset control on the metrics bar).
+ *
+ * SCOPE IS DELIBERATELY NARROW — this clears the CUMULATIVE counters
+ * (Imported / Errors / Duplicates / Uploaded / Upload Rate feed) and nothing
+ * else. It does NOT touch the upload queue, so the "Complete" panel (derived
+ * live from queue rows) and every row in every section are untouched. A reset
+ * that also emptied the queue would silently discard in-flight work.
+ *
+ * `trackedTerminal` is cleared too: it remembers which items have already been
+ * counted so a retry can un-count its previous outcome. Leaving it populated
+ * would mean an already-counted row could never contribute again, so the
+ * counters would not climb back from zero as the same session continued.
+ */
+export const resetProjectMetrics = (): void => {
+  const slug = metricsProjectSlug.value
+  const userSub = projectMetrics.value.userSub
+  projectMetrics.value = { ...EMPTY_METRICS, userSub }
+  trackedTerminal.clear()
+  if (slug !== undefined) saveMetrics(slug, projectMetrics.value)
 }
 
 const bumpMetrics = (patch: Partial<ProjectTransferMetrics>): void => {
@@ -207,11 +241,6 @@ if (typeof setInterval !== 'undefined') {
     if (currentRateBps.value > 0) recomputeRate(Date.now())
   }, 2000)
 }
-
-// Track terminal outcomes per item — a Map so a RETRY can reverse the
-// previously-counted outcome (the count-once Set made a failed→retry→ingested
-// item stay counted as a failure forever; found live 2026-08-12).
-const trackedTerminal = new Map<string, string>()
 
 engine.on(event => {
   if (event.type === 'stats') {
