@@ -97,7 +97,7 @@
             :aria-describedby="`popout-help-${projectSlug}`"
             @click="popOut"
           >
-            Open Standalone Uploader Window
+            Standalone Uploader
             <!-- Material Symbols "open in new" (the Gmail pop-out glyph);
                  -960-based viewBox per the Material icon coordinate system -->
             <svg
@@ -192,7 +192,7 @@
            beforeunload guard warns before a close that would cause it.
            Recommending the standalone window is the better framing: it steers
            users AWAY from the failure instead of describing it up front. -->
-      Uploads continue in the background while you browse other pages in Arbimon, but for optimal stability and performance for uploading many recordings, it is recommended to use the &ldquo;Open Standalone Uploader Window&rdquo; feature.
+      Uploads continue in the background while you browse other pages in Arbimon, but for optimal stability and performance for uploading many recordings, it is recommended to use the &ldquo;Standalone Uploader&rdquo; feature.
     </p>
 
     <div
