@@ -1,10 +1,15 @@
 <template>
-  <!-- Top AND bottom borders bracket each Upload Queue Section. NO extra
-       left padding: the section's content (site name + table) sits at the SAME
-       left edge as every other page section; the caret hangs INTO the page's
-       own gutter via its negative margin (operator 2026-08-13: the caret must
-       not shrink the queue's usable width). -->
-  <div class="mt-6 pt-5 pb-6 border-t border-b border-cloud/20">
+  <!-- TOP BORDER ONLY (operator 2026-08-14). Each section previously had a
+       top AND bottom rule, so consecutive sections rendered a DOUBLE line
+       between them — two 1px rules separated by pt-5 + pb-6. A single top rule
+       reads as a divider BETWEEN sections rather than a box around each one,
+       and the last section no longer ends with a stray line under it.
+
+       NO extra left padding: the section's content (site name + table) sits at
+       the SAME left edge as every other page section; the caret hangs INTO the
+       page's own gutter via its negative margin (operator 2026-08-13: the caret
+       must not shrink the queue's usable width). -->
+  <div class="mt-6 pt-5 pb-6 border-t border-cloud/20">
     <!-- Single header line: collapse-caret + site identity + timezone LEFT,
          all action buttons RIGHT — one horizontal row above the table. -->
     <!-- Two ROWS, not one wrapping row: the selection-actions cluster is ~590px
@@ -25,27 +30,55 @@
           @click="onTitleAreaClick"
         >
           <template v-if="siteName === undefined">
-            <select
-              ref="sitePicker"
-              class="rounded border-frequency/50 bg-pitch text-insight px-3 py-1.5 min-w-64 text-sm"
-              value=""
-              @change="$emit('siteChosen', ($event.target as HTMLSelectElement).value)"
-            >
-              <option
-                disabled
+            <!-- UNMISSABLE UNLINKED STATE (operator 2026-08-14). A new section
+                 is useless until a site is chosen, so this is the one moment
+                 the page must point at itself.
+
+                 Emphasis is deliberately stacked from FOUR independent cues, so
+                 it survives a colour-blind user, a dimmed screen, or a user who
+                 has scrolled the selector into peripheral vision:
+                   1. a pulsing ring (animation — motion catches the eye first);
+                   2. a solid 2px frequency border + tinted field (colour);
+                   3. a ← caption naming the required action (language);
+                   4. autofocus (see onMounted) — keyboard users land ON it.
+
+                 The keyframes are defined in this component's <style> block
+                 rather than as a `animate-*` utility: this WindiCSS config has
+                 only a `wave` animation registered, so `animate-pulse` and
+                 friends generate NOTHING (verified against the emitted CSS —
+                 the same silent-variant trap as §133/§134/§146). A local
+                 keyframe cannot fail that way.
+
+                 `motion-reduce:animate-none` is NOT used for the same reason;
+                 the media query is inlined in the style block instead, so the
+                 animation genuinely stops for users who ask for reduced motion
+                 while the colour + text cues remain. -->
+            <div class="flex flex-col gap-y-1">
+              <select
+                ref="sitePicker"
+                class="site-picker-attention rounded-md border-2 border-frequency bg-frequency/10 text-insight px-3 py-2 min-w-72 text-sm font-medium focus:(outline-none ring-2 ring-frequency border-frequency)"
                 value=""
+                @change="$emit('siteChosen', ($event.target as HTMLSelectElement).value)"
               >
-                Select a site for these recordings…
-              </option>
+                <option
+                  disabled
+                  value=""
+                >
+                  Select a site for these recordings…
+                </option>
               <option
-                v-for="option in siteOptions"
-                :key="option.id"
-                :value="option.id"
-                :disabled="option.taken"
-              >
-                {{ option.name }}{{ option.taken ? ' — already on this page' : '' }}
-              </option>
-            </select>
+                  v-for="option in siteOptions"
+                  :key="option.id"
+                  :value="option.id"
+                  :disabled="option.taken"
+                >
+                  {{ option.name }}{{ option.taken ? ' — already on this page' : '' }}
+                </option>
+              </select>
+              <span class="text-xs text-frequency font-medium">
+                ← Choose the site these recordings came from to start this section
+              </span>
+            </div>
           </template>
           <template v-else>
             <!-- Collapse caret: the app's STANDARD chevron (custom-icons
@@ -1307,3 +1340,42 @@ const retryableCount = (rows: UploadItem[]): number =>
   rows.filter(row => row.state === 'failed').length
 
 </script>
+
+<style scoped>
+/**
+ * Attention pulse for the UNLINKED site selector (operator 2026-08-14).
+ *
+ * Defined here rather than via an `animate-*` utility: this WindiCSS config
+ * registers only a `wave` animation, so `animate-pulse` and friends emit NO
+ * CSS at all — verified against the built stylesheet. A class that silently
+ * does nothing is the recurring trap in this arc (§133 `first:` group, §134
+ * `enabled:hover`, §146 `-translate-y-1/2` without `transform`), so this uses
+ * a local keyframe that cannot fail that way.
+ *
+ * It animates BOX-SHADOW, not size or layout: a pulsing ring must not reflow
+ * the header row (which would nudge the table on every cycle), and box-shadow
+ * is compositor-friendly.
+ *
+ * The ring colour is the app's `frequency` accent at low alpha, expanding and
+ * fading — the shape of a radar ping, which reads as "look here" rather than
+ * "error".
+ */
+@keyframes site-picker-ping {
+  0%   { box-shadow: 0 0 0 0 rgba(173, 255, 44, 0.55); }
+  70%  { box-shadow: 0 0 0 10px rgba(173, 255, 44, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(173, 255, 44, 0); }
+}
+
+.site-picker-attention {
+  animation: site-picker-ping 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Respect a user's reduced-motion preference: drop the animation, keep every
+   other cue (2px accent border, tinted field, ← caption, autofocus) so the
+   emphasis is not lost — only the movement is. */
+@media (prefers-reduced-motion: reduce) {
+  .site-picker-attention {
+    animation: none;
+  }
+}
+</style>
