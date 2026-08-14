@@ -284,6 +284,21 @@
                  upload queue — see resetProjectMetrics(). -->
             <div class="flex items-center gap-x-0 w-max">
               <span class="text-xs text-cloud uppercase tracking-wide">Outcomes</span>
+              <!-- ICON: "counter reset" (Material `restart_alt`-style), NOT the
+                   circular refresh arrow this used to carry.
+
+                   THE OLD GLYPH WAS AN EXACT DUPLICATE of the per-row RETRY
+                   button in staging-table.vue (same path
+                   `M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3`), so the same
+                   symbol meant "re-attempt this upload" a few hundred pixels
+                   below and "zero these totals" here. A circular arrow reads as
+                   REFRESH/RETRY — a safe, repeatable act — while this button is
+                   destructive and unrecoverable.
+
+                   The replacement keeps a rotational hint (so it still reads as
+                   "set back") but breaks the loop and adds the down-arrow return
+                   stroke of Material's restart_alt, which is visually distinct
+                   from the retry circle at 16px. -->
               <button
                 class="shrink-0 ml-2 -my-0.5 p-1 rounded text-cloud hover:(text-flamingo bg-flamingo/10) transition-colors"
                 title="Reset the Imported / Errors / Skipped / Uploaded totals for this project. Does not affect the upload queue."
@@ -291,14 +306,9 @@
                 @click="onResetMetrics"
               >
                 <svg
-                  viewBox="0 0 16 16"
-                  class="w-4 h-4 fill-none stroke-current"
-                  stroke-width="1.6"
-                ><path
-                  d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                /></svg>
+                  viewBox="0 -960 960 960"
+                  class="w-4 h-4 fill-current"
+                ><path d="M440-122q-121-15-200.5-105.5T160-440q0-66 26-126.5T260-672l57 57q-38 34-57.5 79T240-440q0 88 56 155.5T440-203v81Zm80 0v-81q87-16 143.5-83.5T720-440q0-100-70-170t-170-70h-3l44 44-56 56-140-140 140-140 56 56-44 44h3q134 0 227 93t93 227q0 121-79.5 211.5T520-122Z" /></svg>
               </button>
             </div>
             <!-- DELIMITERS (operator 2026-08-14): a vertical rule between each
