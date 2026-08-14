@@ -306,14 +306,18 @@ engine.on(event => {
   }
 })
 
-// -- multi-window / pop-out coordination (per-project) ------------------------
-// The IndexedDB queue is shared by all windows; each window runs its own
-// engine. Per-PROJECT pop-outs each own their project's items: a pop-out
+// -- multi-tab / uploader-tab coordination (per-project) ----------------------
+// The IndexedDB queue is shared by all tabs; each tab runs its own engine.
+// Per-PROJECT uploader tabs each own their project's items: an uploader tab
 // heartbeats on a per-project BroadcastChannel and scopes its engine TO that
-// project; every normal window excludes projects with a live pop-out from its
+// project; every other tab excludes projects with a live uploader tab from its
 // own scope (instead of pausing wholesale — the pre-multi-window design).
-// Multiple pop-outs for different projects therefore coexist: each drives
-// exactly its own partition, and main windows drive the rest.
+// Uploader tabs for different projects therefore coexist: each drives exactly
+// its own partition, and ordinary tabs drive the rest.
+//
+// The claim is per-TAB (this module is a singleton per document), NOT per-page,
+// which is why it must be RELEASED when the uploader page unmounts — see
+// releasePopoutClaim().
 
 const POPOUT_CHANNEL = 'arbimon-uploader-popout'
 const POPOUT_BEAT_MS = 2000
@@ -323,7 +327,7 @@ const POPOUT_STALE_MS = 5000
 const popoutBeats = new Map<string, number>()
 /** reactive view: slugs whose pop-out is currently alive */
 export const livePopouts = ref<Set<string>>(new Set())
-/** when THIS window is a pop-out: the project it owns */
+/** when THIS tab is an uploader tab: the project it owns */
 let ownPopoutSlug: string | undefined
 
 const recomputePopouts = (): void => {
@@ -343,11 +347,11 @@ const recomputePopouts = (): void => {
 
 const applyScope = (): void => {
   if (ownPopoutSlug !== undefined) {
-    // pop-out window: drive ONLY my project
+    // uploader tab: drive ONLY my project
     const mine = ownPopoutSlug
     engine.setScope(item => item.projectSlug === mine)
   } else {
-    // normal window: drive everything EXCEPT projects with a live pop-out
+    // ordinary tab: drive everything EXCEPT projects with a live uploader tab
     const excluded = livePopouts.value
     engine.setScope(item =>
       item.projectSlug === undefined || !excluded.has(item.projectSlug))
@@ -356,14 +360,62 @@ const applyScope = (): void => {
 
 let popoutChannel: BroadcastChannel | undefined
 
-/** Called by the uploader page when it mounts as a pop-out (?popout=1). */
+/** Called by the uploader page when it mounts as an uploader tab (?popout=1). */
 export const registerAsPopout = (slug: string): void => {
   ownPopoutSlug = slug
   applyScope()
   popoutChannel?.postMessage({ type: 'popout-beat', slug })
 }
 
-/** Ask openers to transfer file handles for a project (pop-out bootstrap). */
+/**
+ * Release this tab's uploader claim (called when the uploader page unmounts).
+ *
+ * WHY THIS EXISTS — the claim is per-TAB, but the page that makes it can be
+ * NAVIGATED AWAY FROM. As a chromeless popup window that was unreachable: the
+ * window had no navigation, so the only exit was closing it (which tears down
+ * the whole document and the claim with it). A TAB has the full app around it,
+ * so the user can simply click through to another page — and without this
+ * release the tab would keep heartbeating as project X's owner forever:
+ *
+ *   - its engine stays scoped to project X, so it silently refuses to drive
+ *     ANY other project's uploads from that tab; and
+ *   - every other tab keeps EXCLUDING project X, believing a live uploader tab
+ *     still owns it — so nobody drives project X either.
+ *
+ * That is a stalled queue with no visible cause, which is the worst failure
+ * shape here. Releasing restores this tab to ordinary (exclusion) scope, and
+ * openers notice the heartbeat stop within POPOUT_STALE_MS and resume driving.
+ *
+ * ⚠️ BUT IT IS DELIBERATELY CONDITIONAL. This tab holds the ONLY in-memory file
+ * handles for the items it staged (BrowserFileSource is a per-document Map;
+ * handles are transferred to a claiming tab on request, never persisted). The
+ * upload engine is a module singleton, so it KEEPS RUNNING after the page
+ * unmounts — that is the documented “uploads continue while you browse”
+ * promise, and it is why leaving the page does not stop a transfer.
+ *
+ * So if work is still in flight, releasing would invite another tab to claim
+ * items whose bytes only THIS tab can read, and the engine there would reject
+ * them with “Session interrupted — re-add this folder”. Releasing an IDLE claim
+ * is pure win; releasing a BUSY one manufactures the exact failure the claim
+ * exists to prevent. Hence: hold the claim while this tab is still the only
+ * possible driver, and let the ordinary heartbeat-expiry path hand ownership
+ * over if the tab is genuinely closed.
+ */
+export const releasePopoutClaim = (): void => {
+  if (ownPopoutSlug === undefined) return
+  // Work still in flight (or staged and awaiting Start) means this tab still
+  // owns the only file handles — keep the claim so no other tab picks up items
+  // it cannot read. unsavedCount covers staged/analyzing too, which is exactly
+  // the set whose handles would be lost.
+  if (unsavedCount.value > 0) return
+  ownPopoutSlug = undefined
+  // Recompute from the beats we have actually SEEN. Our own claim was never
+  // recorded in popoutBeats (a tab ignores its own beat), so this correctly
+  // returns us to exclusion scope over OTHER tabs' live claims.
+  applyScope()
+}
+
+/** Ask openers to transfer file handles for a project (uploader-tab bootstrap). */
 export const requestFileHandles = (slug: string): void => {
   popoutChannel?.postMessage({ type: 'need-file-handles', slug })
 }
@@ -391,7 +443,7 @@ if (!import.meta.env.SSR && typeof window !== 'undefined' && typeof BroadcastCha
       void refreshItems()
     }
   }
-  // pop-out: heartbeat; all windows: sweep stale beats
+  // uploader tab: heartbeat; all tabs: sweep stale beats
   setInterval(() => {
     if (ownPopoutSlug !== undefined) {
       popoutChannel?.postMessage({ type: 'popout-beat', slug: ownPopoutSlug })

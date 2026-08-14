@@ -1,11 +1,17 @@
 <template>
-  <section :class="isPopout ? 'p-6' : 'pt-20 pl-18 pr-6 md:(pl-23 pr-10) pb-20'">
+  <!-- SAME padding in both modes (2026-08-14). The uploader tab used to use a
+       flat `p-6` because it was a chromeless popup window with no sidebar to
+       clear. Now that it keeps the sidebar (a tab with no navigation is a dead
+       end), it needs the SAME left clearance every other project page uses —
+       `pl-18`/`pl-23` is exactly that gutter, and without it the content slides
+       underneath the sidebar. -->
+  <section class="pt-20 pl-18 pr-6 md:(pl-23 pr-10) pb-20">
     <div class="flex items-start justify-between">
       <div>
         <!-- The PROJECT is the primary header; the task is the sub-header. The
              project you are uploading into is the thing that orients the user
-             (and the thing that differs between pop-out windows). -->
-        <h1 :class="isPopout ? 'text-2xl' : 'mt-6'">
+             (and the thing that differs between uploader tabs). -->
+        <h1 class="mt-6">
           {{ projectName ?? 'Project' }}
         </h1>
         <h2 class="text-lg font-semibold mt-1">
@@ -18,10 +24,10 @@
       <button
         v-if="!isPopout"
         class="btn btn-secondary text-sm mt-6 whitespace-nowrap inline-flex items-center gap-x-2"
-        title="Open the uploader in its own window"
+        title="Open the uploader in its own tab"
         @click="popOut"
       >
-        Pop-Out in New Window
+        Open in New Tab
         <!-- Material Symbols "open in new" (the Gmail pop-out glyph);
              -960-based viewBox per the Material icon coordinate system -->
         <svg
@@ -32,10 +38,10 @@
       <button
         v-else
         class="btn btn-secondary text-sm whitespace-nowrap"
-        title="Close this window (uploads resume in the main tab)"
+        title="Close this tab (uploads resume in your other Arbimon tab)"
         @click="closePopout"
       >
-        ✕ Close window
+        ✕ Close tab
       </button>
     </div>
 
@@ -59,13 +65,13 @@
       This project is view-only and cannot accept uploads.
     </div>
 
-    <!-- Pop-out placeholder (operator 2026-08-14). The uploader is stateful, so
-         only ONE window drives a given project at a time. When a pop-out owns
-         this project the main tab shows this instead of a second, competing
-         uploader — and it must be ACTIONABLE, because a browser will not tell
-         us whether focusing the pop-out actually worked. `window.open` with the
-         same window NAME re-focuses the existing window rather than opening a
-         second one, so the button is safe to press repeatedly. -->
+    <!-- Uploader-tab placeholder (operator 2026-08-14). The uploader is stateful,
+         so only ONE tab drives a given project at a time. When an uploader tab
+         owns this project the original tab shows this instead of a second,
+         competing uploader — and it must be ACTIONABLE, because a browser will
+         not tell us whether focusing that tab actually worked. `window.open`
+         with the same tab NAME re-focuses the existing tab rather than opening
+         a second one, so the button is safe to press repeatedly. -->
     <!-- Popup blocked: fall back to the FULL inline uploader (see onMounted).
          Import must never be a dead button. -->
     <div
@@ -73,10 +79,10 @@
       class="mt-6 rounded-lg border border-flamingo/30 bg-flamingo/10 px-4 py-3 text-sm"
     >
       <p class="text-insight">
-        Your browser blocked the uploader window, so it’s running here instead.
+        Your browser blocked the uploader tab, so it’s running here instead.
       </p>
       <p class="text-cloud mt-1">
-        Allow pop-ups for this site to keep uploads in their own window, or
+        Allow pop-ups for this site to keep uploads in their own tab, or
         <button
           class="text-frequency hover:underline"
           @click="focusPopout"
@@ -96,10 +102,10 @@
           ><path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600v-440H180v440Z" /></svg>
           <div>
             <p class="text-insight font-medium">
-              This project’s uploader is open in its own window
+              This project’s uploader is open in another tab
             </p>
             <p class="text-cloud mt-0.5">
-              Uploads keep running there. Bring that window back to review or control them.
+              Uploads keep running there. Switch to that tab to review or control them.
             </p>
           </div>
         </div>
@@ -111,15 +117,15 @@
             viewBox="0 -960 960 960"
             class="w-4 h-4 fill-current"
           ><path d="M200-200v-240h80v160h160v80H200Zm480-320v-160H520v-80h240v240h-80Z" /></svg>
-          Go to the uploader window
+          Go to the uploader tab
         </button>
       </div>
       <p
         v-if="focusAttempted"
         class="text-xs text-cloud mt-3"
       >
-        If nothing happened, the window may be behind this one or on another
-        desktop — check your taskbar for “{{ popoutWindowTitle }}”.
+        If nothing happened, look along your browser’s tab strip for
+        “{{ popoutWindowTitle }}” — it may be in another browser window.
       </p>
     </div>
 
@@ -403,7 +409,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, watch, watchEffect } from 'vue'
+import { computed, inject, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { apiArbimonFindRecordingAtExactTime, apiArbimonResolveRecordingId } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
@@ -415,7 +421,7 @@ import UploaderSettingsModal from '@/_components/upload-panel/uploader-settings-
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { track } from '~/analytics'
 import { useStore } from '~/store'
-import { bindProjectMetrics, currentRateBps, engine, engineRunning, fileSource, flacEncodeEnabled, items, livePopouts, projectMetrics, refreshItems, registerAsPopout, requestFileHandles, resetProjectMetrics } from '~/upload'
+import { bindProjectMetrics, currentRateBps, engine, engineRunning, fileSource, flacEncodeEnabled, items, livePopouts, projectMetrics, refreshItems, registerAsPopout, releasePopoutClaim, requestFileHandles, resetProjectMetrics } from '~/upload'
 
 const route = useRoute()
 const store = useStore()
@@ -925,52 +931,66 @@ const openInVisualizer = async (item: UploadItem): Promise<void> => {
   }
 }
 
-// -- pop-out (per-project; coordination lives in ~/upload) --------------------
-// Each project can have its OWN pop-out: unique window name per slug, and the
-// singleton's scope machinery partitions the queue — a pop-out drives only
-// its project's items while main windows drive the rest. No wholesale pause.
+// -- uploader tab (per-project; coordination lives in ~/upload) ---------------
+// Each project can have its OWN uploader tab: unique tab name per slug, and the
+// singleton's scope machinery partitions the queue — an uploader tab drives
+// only its project's items while other tabs drive the rest. No wholesale pause.
+//
+// TAB, NOT A STANDALONE WINDOW (operator 2026-08-14): this used to open a
+// chromeless popup window (`popup=yes,width=,height=`). A tab is easier to
+// manage — it lives in the normal tab strip, survives window management, is
+// far less likely to be blocked, and needs no OS-level window hunting. The
+// underlying mechanism is unchanged (`window.open` with a stable NAME, so a
+// second call re-uses the existing tab); only the popup FEATURES argument is
+// dropped, which is precisely what makes a browser choose a tab over a window.
 
 const popoutActive = computed(() => livePopouts.value.has(projectSlug.value))
 
 /**
- * Window title for the pop-out (operator 2026-08-14).
+ * Tab title for the uploader (operator 2026-08-14).
  *
  * Requirements it has to satisfy:
  *  - not confusable with ordinary SPA pages (which are titled “Arbimon”), and
- *  - not confusable with a pop-out for a DIFFERENT project, since a user may
- *    legitimately run several at once (the engine partitions the queue by
+ *  - not confusable with an uploader tab for a DIFFERENT project, since a user
+ *    may legitimately run several at once (the engine partitions the queue by
  *    project, so this is a supported state, not an edge case).
  *
- * Hence: role first (so it is identifiable when a taskbar truncates the end),
- * then the project name, then the product. The project NAME is used rather
- * than the slug — it is what the user recognises. Falls back to the slug
- * before the name has loaded.
+ * Hence: role first, then the project name, then the product. This matters MORE
+ * as a tab than it did as a window: a tab strip truncates titles far harder
+ * than a taskbar, so the distinguishing part has to come first — a user with
+ * several uploader tabs open sees “Uploading — Boger…” and can still tell them
+ * apart. The project NAME is used rather than the slug — it is what the user
+ * recognises. Falls back to the slug before the name has loaded.
  */
 const popoutWindowTitle = computed(() =>
   `Uploading — ${projectName.value ?? projectSlug.value} — Arbimon`)
 
-/** True once the user has pressed “Go to the uploader window” at least once. */
+/** True once the user has pressed “Go to the uploader tab” at least once. */
 const focusAttempted = ref(false)
 
 /** One auto-launch attempt per visit to this route (see onMounted). */
 const autoLaunchTried = ref(false)
 
 /**
- * Set when `window.open` returned null — i.e. the browser blocked the popup.
+ * Set when `window.open` returned null — i.e. the browser blocked it.
  * The page then renders the FULL inline uploader instead of the placeholder,
  * so Import still works. Without this the nav would appear to do nothing.
+ *
+ * Kept even though a TAB is much less likely to be blocked than a popup: some
+ * browsers/extensions still block script-opened tabs that are not tied to a
+ * user gesture, and the auto-launch on mount is exactly that case.
  */
 const popoutBlocked = ref(false)
 
 /**
- * Open OR re-focus the pop-out. Passing the same window NAME means a second
- * call re-uses (and focuses) the existing window rather than opening another,
- * so this is safe to press repeatedly.
+ * Open OR re-focus the uploader tab. Passing the same tab NAME means a second
+ * call re-uses (and focuses) the existing tab rather than opening another, so
+ * this is safe to press repeatedly.
  *
  * ⚠️ A page CANNOT reliably detect whether focus actually moved: the returned
- * handle is non-null even when the OS declines to raise the window, and
- * `focus()` is widely ignored for background windows. So we do not pretend to
- * know — we attempt it, then surface a hint naming the window title so the user
+ * handle is non-null even when the browser declines to switch tabs, and
+ * `focus()` is widely ignored for background tabs. So we do not pretend to
+ * know — we attempt it, then surface a hint naming the tab title so the user
  * can find it themselves.
  */
 const focusPopout = (): void => {
@@ -979,9 +999,16 @@ const focusPopout = (): void => {
   try { handle?.focus() } catch { /* browsers may refuse; the hint covers it */ }
 }
 
+/**
+ * NOTE the deliberately ABSENT third argument. `window.open(url, name)` with no
+ * features string opens a TAB; supplying any feature list (the old
+ * `popup=yes,width=1280,height=860`) is what asks for a standalone popup
+ * WINDOW. That single omission is the whole tab-vs-window switch — the stable
+ * per-project NAME is retained, so re-use/re-focus behaviour is unchanged.
+ */
 const openPopoutWindow = (): Window | null => {
   const url = `${window.location.origin}/p/${projectSlug.value}/import-recordings?popout=1`
-  return window.open(url, `arbimon-uploader-${projectSlug.value}`, 'popup=yes,width=1280,height=860')
+  return window.open(url, `arbimon-uploader-${projectSlug.value}`)
 }
 
 const popOut = (): void => {
@@ -989,9 +1016,9 @@ const popOut = (): void => {
 }
 
 const closePopout = (): void => {
-  // window.close() works because the pop-out was opened by script (same
-  // origin, named window). Openers notice the heartbeat stop within ~5s,
-  // clear the banner, and resume driving this project's items.
+  // window.close() works because the tab was opened by script (same origin,
+  // named). Openers notice the heartbeat stop within ~5s, clear the banner,
+  // and resume driving this project's items.
   window.close()
 }
 
@@ -1001,9 +1028,9 @@ onMounted(() => {
     requestFileHandles(projectSlug.value)
     return
   }
-  // POP-OUT-FIRST (operator 2026-08-14): arriving from the Import nav launches
-  // the uploader in its own window, so the stateful uploader stops competing
-  // with SPA navigation. The main tab then shows the launcher/placeholder.
+  // UPLOADER-TAB-FIRST (operator 2026-08-14): arriving from the Import nav
+  // opens the uploader in its own TAB, so the stateful uploader stops competing
+  // with SPA navigation. The original tab then shows the launcher/placeholder.
   //
   // Guards, in order of importance:
   //  - only auto-launch ONCE per page visit (autoLaunchTried), so returning to
@@ -1011,9 +1038,10 @@ onMounted(() => {
   //  - never auto-launch if a pop-out for this project is ALREADY live — the
   //    placeholder handles that case and re-opening could steal focus;
   //  - never auto-launch for a view-only project (nothing to upload);
-  //  - a BLOCKED popup returns null, which we surface rather than swallow:
+  //  - a BLOCKED open returns null, which we surface rather than swallow:
   //    the page falls back to the full inline uploader so Import is never a
-  //    dead button.
+  //    dead button. Far rarer for a tab than it was for a popup window, but
+  //    a script-opened tab with no user gesture can still be refused.
   if (isProjectViewOnly.value) return
   if (autoLaunchTried.value) return
   autoLaunchTried.value = true
@@ -1025,10 +1053,29 @@ onMounted(() => {
   }
 })
 
-// Title the pop-out window (operator 2026-08-14). Set reactively rather than
+/**
+ * Release the per-tab uploader claim when this page goes away.
+ *
+ * NEW REQUIREMENT UNDER THE TAB MODEL. A chromeless popup window had no
+ * navigation, so the claim could only end by closing the document. A TAB sits
+ * inside the full app, so the user can navigate to any other page — and the
+ * claim, which lives in the upload SINGLETON rather than in this component,
+ * would otherwise outlive the page: this tab would stay scoped to one project
+ * (driving nothing else) while every other tab kept excluding that project on
+ * the strength of a heartbeat nobody is listening to any more. Stalled queue,
+ * no visible cause.
+ *
+ * Closing the tab still works as before — the document dies and the heartbeat
+ * simply stops.
+ */
+onUnmounted(() => {
+  if (isPopout.value) releasePopoutClaim()
+})
+
+// Title the uploader tab (operator 2026-08-14). Set reactively rather than
 // once on mount: `projectName` arrives from the store asynchronously, so a
-// mount-time write would leave the slug showing. Only the POP-OUT is retitled —
-// the main tab keeps the app's normal title.
+// mount-time write would leave the slug showing. Only the UPLOADER TAB is
+// retitled — the original tab keeps the app's normal title.
 watchEffect(() => {
   if (!isPopout.value) return
   document.title = popoutWindowTitle.value
