@@ -269,12 +269,17 @@
                        cluster 2026-08-13): the action sits next to the rows it
                        acts on. @click.stop so it doesn't also toggle the group. -->
                   <button
-                    v-if="section.key === 'errors'"
+                    v-if="section.key === 'errors' && retryableCount(section.rows) > 0"
                     class="btn btn-secondary text-xs inline-flex items-center gap-x-1 ml-2 px-2 py-0.5"
-                    :title="`Retry all ${section.rows.length} failed recording${section.rows.length === 1 ? '' : 's'}`"
+                    :title="`Retry all ${retryableCount(section.rows)} failed recording${retryableCount(section.rows) === 1 ? '' : 's'} (rejected recordings cannot be retried)`"
                     @click.stop="$emit('retryFailed')"
-                  ><!-- errors group == exactly the retryFailed set, so the
-                       existing whole-box emit is already group-scoped -->
+                  ><!-- The errors group is NOT the same set as retryFailed:
+                       it also holds `rejected` rows, which the server has
+                       PERMANENTLY refused and which retryFailed deliberately
+                       skips. Counting the whole group here promised
+                       "Retry All (N)" and then silently retried fewer, so the
+                       count is scoped to the actually-retryable rows and the
+                       button hides when none remain. -->
                     <svg
                       viewBox="0 0 16 16"
                       class="w-3 h-3 fill-none stroke-current"
@@ -284,7 +289,7 @@
                       stroke-linecap="round"
                       stroke-linejoin="round"
                     /></svg>
-                    Retry All ({{ section.rows.length }})
+                    Retry All ({{ retryableCount(section.rows) }})
                   </button>
                   <button
                     v-if="section.key === 'completed' || section.key === 'duplicates'"
@@ -1283,7 +1288,22 @@ const canCancel = (item: UploadItem): boolean =>
 // duplicate is retryable as the OVERRIDE for advisory staging-time flags
 // (lost-recording/availability=0 re-uploads) — the server re-verdicts at
 // signing, so a true duplicate just bounces back at zero byte cost
+//
+// `rejected` is deliberately NOT retryable. It means the server gave a
+// PERMANENT verdict on this file (duration over the cap, size over the limit,
+// future/absurd date, view-only project): re-signing the identical file+params
+// returns the identical rejection, so a Retry button here is an action that
+// can never succeed. The user's real remedies — trim the file, fix the clock,
+// pick another project — all produce a NEW staged item rather than a retry of
+// this one. Cancelled/failed remain retryable: those are user- or
+// transport-level, and the next attempt genuinely can succeed.
 const canRetry = (item: UploadItem): boolean =>
-  ['failed', 'rejected', 'cancelled', 'duplicate'].includes(item.state)
+  ['failed', 'cancelled', 'duplicate'].includes(item.state)
+
+// Group-scoped "Retry All" acts through retryFailed(), which retries `failed`
+// ONLY — so the button's count must exclude rejected/cancelled rows that share
+// the Errors group, or it overstates what the click will do.
+const retryableCount = (rows: UploadItem[]): number =>
+  rows.filter(row => row.state === 'failed').length
 
 </script>

@@ -45,7 +45,21 @@ const DEFAULTS = {
   prepareAheadMaxBytes: 512 * 1024 * 1024
 } as const
 
-/** Signing errors that must not be retried (item-level rejections). */
+/**
+ * Signing errors that must not be retried (item-level rejections).
+ *
+ * These are the ingest-service `ValidationError` messages that are PERMANENT
+ * for a given file+params: re-signing the identical request can only produce
+ * the identical rejection. Offering the user a retry for one of these is
+ * offering a button that can never succeed.
+ *
+ * Kept in sync with `routes/uploads.js` in `rfcx/ingest-service`
+ * (`validateUploadParams`). This list is the FALLBACK signal only: both sign
+ * paths also carry a numeric status, which is preferred (see
+ * `isNonRetryableSignError`). Message matching still earns its place because a
+ * response can omit the status, and because it keeps the classification
+ * correct if the server ever reports a validation failure as a bare string.
+ */
 const NON_RETRYABLE_SIGN_ERRORS = [
   /^Duplicate\.$/,
   /^Invalid\.$/,
@@ -54,8 +68,53 @@ const NON_RETRYABLE_SIGN_ERRORS = [
   /limit exceeded/i,
   /view-only/i,
   /exceeding our limit/i,
-  /Validation errors/
+  /Validation errors/,
+  // Duration cap (`Audio duration is more than 24 hours`). The hours value is
+  // env-tunable server-side (MAX_DURATION_SECONDS), so match the stable stem
+  // rather than the rendered number.
+  /Audio duration is more than/i,
+  // Multipart preconditions — deterministic in fileSize, so re-signing the
+  // same file is futile. These reach us via the multipart route's HTTP status
+  // (the bulk route calls createSignedUpload and cannot emit them), so they
+  // are belt-and-braces for the statusless case rather than the primary test.
+  /fileSize is required/i,
+  /use POST \/uploads for smaller files/i,
+  /too large for the configured part size/i
 ]
+
+/**
+ * True when a sign failure is permanent and must NOT be offered as a retry.
+ *
+ * STATUS FIRST, message second. A 4xx from the sign endpoint is by definition a
+ * request the server will keep refusing, so it classifies correctly even for
+ * validation rules this client has never heard of — which is the whole reason
+ * the message list kept going stale. 401/403/408/429 are exempt: those are
+ * auth/congestion, not a verdict on the file, and DO warrant a retry.
+ *
+ * Both sign paths supply a status:
+ *   - multipart (single) — the thrown `IngestApiError.status`
+ *   - bulk — the per-item `status` field the server sets via `bulkErrorStatus`
+ *     (400 validation / 403 forbidden / 404 missing / 500 transient), which
+ *     arrives inside a 200 response body.
+ * The message list remains as the fallback when no status is present.
+ */
+const RETRYABLE_CLIENT_STATUSES = new Set([401, 403, 408, 429])
+
+const isPermanentSignStatus = (status?: number): boolean =>
+  status !== undefined &&
+  status >= 400 &&
+  status < 500 &&
+  !RETRYABLE_CLIENT_STATUSES.has(status)
+
+const isNonRetryableSignError = (
+  err: unknown,
+  message: string,
+  status?: number
+): boolean => {
+  const effectiveStatus = err instanceof IngestApiError ? err.status : status
+  if (effectiveStatus !== undefined) return isPermanentSignStatus(effectiveStatus)
+  return NON_RETRYABLE_SIGN_ERRORS.some(pattern => pattern.test(message))
+}
 
 export interface PrepareResult {
   timestampUtc?: string
@@ -356,7 +415,7 @@ export class UploadEngine {
             const message = result.error ?? ''
             if (message === 'Duplicate.') {
               await this.update(current, { state: 'duplicate', error: undefined })
-            } else if (NON_RETRYABLE_SIGN_ERRORS.some(pattern => pattern.test(message))) {
+            } else if (isNonRetryableSignError(undefined, message, result.status)) {
               await this.update(current, { analysisError: message })
             }
             // retryable → untouched; the normal path covers it at Start
@@ -908,9 +967,7 @@ export class UploadEngine {
           const message = result.error ?? 'Signing failed.'
           if (message === 'Duplicate.') {
             await this.update(item, { state: 'duplicate', error: undefined })
-          } else if (
-            NON_RETRYABLE_SIGN_ERRORS.some(pattern => pattern.test(message))
-          ) {
+          } else if (isNonRetryableSignError(undefined, message, result.status)) {
             await this.update(item, { state: 'rejected', error: message })
           } else {
             await this.update(item, {
@@ -998,7 +1055,7 @@ export class UploadEngine {
       const message = err instanceof Error ? err.message : String(err)
       if (message === 'Duplicate.') {
         await this.update(item, { state: 'duplicate', error: undefined })
-      } else if (NON_RETRYABLE_SIGN_ERRORS.some(pattern => pattern.test(message))) {
+      } else if (isNonRetryableSignError(err, message)) {
         await this.update(item, { state: 'rejected', error: message })
       } else {
         await this.update(item, { state: 'ready', error: message })
