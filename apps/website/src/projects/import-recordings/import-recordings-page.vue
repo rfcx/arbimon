@@ -181,10 +181,10 @@
         </button>
 
         <!-- Panel order (operator 2026-08-14, revised three times), left to right:
-             Upload Rate · Queued · Outcomes(Imported/Errors/Skipped/Uploaded)
+             Rate · Queued · Outcomes(Imported/Errors/Skipped/Uploaded)
              · Settings.
 
-             UPLOAD RATE LEADS (operator): it sits directly beside Start/Pause,
+             RATE LEADS (operator): it sits directly beside Start/Pause,
              which is the control that causes it — press Start, watch the rate
              move. Cause and effect are now adjacent instead of at opposite ends
              of the row. It also keeps the two live/instantaneous readings
@@ -222,7 +222,7 @@
              so the row still divides evenly. -->
         <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
           <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Upload Rate</span>
+            <span class="text-xs text-cloud uppercase tracking-wide">Rate</span>
             <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
           </div>
 
@@ -286,15 +286,27 @@
                 /></svg>
               </button>
             </div>
-            <!-- gap-x-5 (was 6) absorbs the fourth metric without pushing the
-                 row wider; flex-wrap so a narrow viewport wraps instead of
-                 forcing horizontal overflow. -->
+            <!-- DELIMITERS (operator 2026-08-14): a vertical rule between each
+                 figure, so four numbers side by side read as four distinct
+                 metrics rather than one run-on string.
+
+                 A BORDER, not a · character: a text separator would be
+                 selectable, would land in any copy-paste of the row, and would
+                 be announced by a screen reader as content. A left border on
+                 every item except the first is decoration by construction —
+                 invisible to assistive tech and to the clipboard.
+
+                 Geometry: `pl-5` + `first:(pl-0 border-l-0)` pairs with the
+                 gap-x-5 below so the rule sits centred in the gutter rather
+                 than crowding the number that follows it. `self-stretch` makes
+                 every rule the same height regardless of its item's content,
+                 which `items-baseline` alone would not do. -->
             <div class="mt-0.5 flex flex-wrap items-baseline gap-x-5 gap-y-1">
-              <span class="flex items-baseline gap-x-1.5">
+              <span class="flex items-baseline gap-x-1.5 pl-5 border-l border-cloud/20 first:(pl-0 border-l-0)">
                 <span class="text-xl tabular-nums font-medium text-frequency">{{ metrics.completed }}</span>
                 <span class="text-xs text-cloud">Imported</span>
               </span>
-              <span class="flex items-baseline gap-x-1.5">
+              <span class="flex items-baseline gap-x-1.5 pl-5 border-l border-cloud/20 first:(pl-0 border-l-0)">
                 <span
                   class="text-xl tabular-nums font-medium"
                   :class="metrics.failed > 0 ? 'text-flamingo' : ''"
@@ -305,11 +317,11 @@
                    in the project, so nothing was uploaded and nothing went
                    wrong. "Duplicates" reads like a problem to fix; "Skipped"
                    states what the uploader DID. -->
-              <span class="flex items-baseline gap-x-1.5">
+              <span class="flex items-baseline gap-x-1.5 pl-5 border-l border-cloud/20 first:(pl-0 border-l-0)">
                 <span class="text-xl tabular-nums font-medium">{{ metrics.duplicates }}</span>
                 <span class="text-xs text-cloud">Skipped</span>
               </span>
-              <span class="flex items-baseline gap-x-1.5">
+              <span class="flex items-baseline gap-x-1.5 pl-5 border-l border-cloud/20 first:(pl-0 border-l-0)">
                 <span class="text-xl tabular-nums font-medium">{{ formatBytes(metrics.bytesTransferred) }}</span>
                 <span class="text-xs text-cloud">Uploaded</span>
               </span>
