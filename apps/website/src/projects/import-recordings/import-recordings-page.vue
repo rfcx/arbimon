@@ -59,11 +59,50 @@
       This project is view-only and cannot accept uploads.
     </div>
 
+    <!-- Pop-out placeholder (operator 2026-08-14). The uploader is stateful, so
+         only ONE window drives a given project at a time. When a pop-out owns
+         this project the main tab shows this instead of a second, competing
+         uploader — and it must be ACTIONABLE, because a browser will not tell
+         us whether focusing the pop-out actually worked. `window.open` with the
+         same window NAME re-focuses the existing window rather than opening a
+         second one, so the button is safe to press repeatedly. -->
     <div
       v-else-if="popoutActive && !isPopout"
-      class="mt-6 rounded-lg border border-frequency/30 bg-frequency/10 px-4 py-3 text-sm inline-block"
+      class="mt-6 rounded-lg border border-frequency/30 bg-frequency/10 px-4 py-4 text-sm"
     >
-      Uploads are running in the popped-out window. Close it to control them from here.
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
+        <div class="flex items-start gap-x-3">
+          <svg
+            viewBox="0 -960 960 960"
+            class="w-5 h-5 fill-frequency shrink-0 mt-0.5"
+          ><path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600v-440H180v440Z" /></svg>
+          <div>
+            <p class="text-insight font-medium">
+              This project’s uploader is open in its own window
+            </p>
+            <p class="text-cloud mt-0.5">
+              Uploads keep running there. Bring that window back to review or control them.
+            </p>
+          </div>
+        </div>
+        <button
+          class="btn btn-primary text-sm inline-flex items-center gap-x-2 ml-auto"
+          @click="focusPopout"
+        >
+          <svg
+            viewBox="0 -960 960 960"
+            class="w-4 h-4 fill-current"
+          ><path d="M200-200v-240h80v160h160v80H200Zm480-320v-160H520v-80h240v240h-80Z" /></svg>
+          Go to the uploader window
+        </button>
+      </div>
+      <p
+        v-if="focusAttempted"
+        class="text-xs text-cloud mt-3"
+      >
+        If nothing happened, the window may be behind this one or on another
+        desktop — check your taskbar for “{{ popoutWindowTitle }}”.
+      </p>
     </div>
 
     <template v-else>
@@ -346,7 +385,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { apiArbimonFindRecordingAtExactTime, apiArbimonResolveRecordingId } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
@@ -875,9 +914,50 @@ const openInVisualizer = async (item: UploadItem): Promise<void> => {
 
 const popoutActive = computed(() => livePopouts.value.has(projectSlug.value))
 
-const popOut = (): void => {
+/**
+ * Window title for the pop-out (operator 2026-08-14).
+ *
+ * Requirements it has to satisfy:
+ *  - not confusable with ordinary SPA pages (which are titled “Arbimon”), and
+ *  - not confusable with a pop-out for a DIFFERENT project, since a user may
+ *    legitimately run several at once (the engine partitions the queue by
+ *    project, so this is a supported state, not an edge case).
+ *
+ * Hence: role first (so it is identifiable when a taskbar truncates the end),
+ * then the project name, then the product. The project NAME is used rather
+ * than the slug — it is what the user recognises. Falls back to the slug
+ * before the name has loaded.
+ */
+const popoutWindowTitle = computed(() =>
+  `Uploading — ${projectName.value ?? projectSlug.value} — Arbimon`)
+
+/** True once the user has pressed “Go to the uploader window” at least once. */
+const focusAttempted = ref(false)
+
+/**
+ * Open OR re-focus the pop-out. Passing the same window NAME means a second
+ * call re-uses (and focuses) the existing window rather than opening another,
+ * so this is safe to press repeatedly.
+ *
+ * ⚠️ A page CANNOT reliably detect whether focus actually moved: the returned
+ * handle is non-null even when the OS declines to raise the window, and
+ * `focus()` is widely ignored for background windows. So we do not pretend to
+ * know — we attempt it, then surface a hint naming the window title so the user
+ * can find it themselves.
+ */
+const focusPopout = (): void => {
+  focusAttempted.value = true
+  const handle = openPopoutWindow()
+  try { handle?.focus() } catch { /* browsers may refuse; the hint covers it */ }
+}
+
+const openPopoutWindow = (): Window | null => {
   const url = `${window.location.origin}/p/${projectSlug.value}/import-recordings?popout=1`
-  window.open(url, `arbimon-uploader-${projectSlug.value}`, 'popup=yes,width=1280,height=860')
+  return window.open(url, `arbimon-uploader-${projectSlug.value}`, 'popup=yes,width=1280,height=860')
+}
+
+const popOut = (): void => {
+  openPopoutWindow()
 }
 
 const closePopout = (): void => {
@@ -892,6 +972,15 @@ onMounted(() => {
     registerAsPopout(projectSlug.value)
     requestFileHandles(projectSlug.value)
   }
+})
+
+// Title the pop-out window (operator 2026-08-14). Set reactively rather than
+// once on mount: `projectName` arrives from the store asynchronously, so a
+// mount-time write would leave the slug showing. Only the POP-OUT is retitled —
+// the main tab keeps the app's normal title.
+watchEffect(() => {
+  if (!isPopout.value) return
+  document.title = popoutWindowTitle.value
 })
 
 // -- display helpers ----------------------------------------------------------

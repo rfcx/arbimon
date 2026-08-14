@@ -333,7 +333,7 @@
                  thing it acts upon, and leaves the right edge for the single
                  destructive control. -->
               <td
-                class="px-2 py-1.5 max-w-56"
+                class="px-2 py-1.5"
                 :title="item.relativePath"
               >
                 <span class="inline-flex items-center gap-x-1.5 max-w-full">
@@ -418,14 +418,22 @@
                   </button>
                 </span>
               </td>
-              <td class="px-2 py-1.5 w-24">
+              <td class="px-2 py-1.5 w-24 truncate">
                 {{ zoneCol(item) }}
               </td>
-              <!-- Format now carries the size too (operator 2026-08-14). -->
-              <td class="px-2 py-1.5">
+              <!-- Format carries the size too (operator 2026-08-14).
+                   TRUNCATABLE: clips instead of widening the table; the title
+                   keeps the full value reachable on hover. -->
+              <td
+                class="px-2 py-1.5 truncate"
+                :title="formatCol(item)"
+              >
                 {{ formatCol(item) }}
               </td>
-              <td class="px-2 py-1.5 tabular-nums">
+              <td
+                class="px-2 py-1.5 tabular-nums truncate"
+                :title="lengthCol(item)"
+              >
                 {{ lengthCol(item) }}
               </td>
               <!-- Progress = percentage + rate in one cell (operator 2026-08-14);
@@ -450,7 +458,7 @@
               </td>
               <!-- Status LAST, immediately before the per-row action buttons. -->
               <td
-                class="px-2 py-1.5 max-w-72 truncate"
+                class="px-2 py-1.5 truncate"
                 :class="statusColor(item)"
                 :title="statusDetail(item)"
               >
