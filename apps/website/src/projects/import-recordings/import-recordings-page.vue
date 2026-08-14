@@ -182,7 +182,7 @@
 
         <!-- Panel order (operator 2026-08-14, revised three times), left to right:
              Rate · Queued · Outcomes(Imported/Errors/Skipped/Uploaded)
-             · Settings.
+             · Settings · Collapse/Expand All.
 
              RATE LEADS (operator): it sits directly beside Start/Pause,
              which is the control that causes it — press Start, watch the rate
@@ -218,9 +218,9 @@
              cumulative outcome, and Reset does not touch it. Putting it in
              would have broken the "this box is exactly what Reset clears" rule.
 
-             Grid: 7 columns = Rate(1) + Queued(1) + Outcomes(4) + Settings(1),
-             so the row still divides evenly. -->
-        <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
+             Grid: 8 columns = Rate(1) + Queued(1) + Outcomes(4) + Settings(1)
+             + Collapse/Expand(1), so the row still divides evenly. -->
+        <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-3">
           <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
             <span class="text-xs text-cloud uppercase tracking-wide">Rate</span>
             <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
@@ -355,6 +355,50 @@
               class="w-5 h-5 fill-current"
             ><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm112-260q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Z" /></svg>
             <span class="text-xs uppercase tracking-wide">Settings</span>
+          </button>
+
+          <!-- COLLAPSE/EXPAND ALL as a panel-button (operator 2026-08-14).
+               Mirrors the caret control that sits on the options row below —
+               same `toggleAllBoxes` handler, same `anyBoxExpanded` state, same
+               Material double-chevron glyphs — so the two cannot disagree about
+               which direction they are pointing.
+
+               INERT WHEN THERE IS NOTHING TO TOGGLE. `canToggleBoxes` requires
+               at least ONE LINKED section: a box that has not had its site
+               chosen yet renders no collapsible body, so counting it would gray
+               the button in and out as the user picks sites — worse than simply
+               being disabled until a real section exists.
+
+               NOTE the threshold differs DELIBERATELY from the caret below
+               (which needs >= 2). The caret is an in-context shortcut that is
+               pointless for a single section; this panel occupies a fixed slot
+               in the metrics row, so it must explain its own state rather than
+               vanish — a disappearing panel would leave a hole in the grid.
+               One section is genuinely collapsible, so >= 1 is the honest
+               enabled condition here. -->
+          <button
+            class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col items-center justify-center gap-y-1 text-cloud transition-colors hover:(text-frequency border-frequency/40 bg-moss/50) focus-visible:(outline-none ring-2 ring-frequency) disabled:(text-cloud/40 border-cloud/10 bg-moss/10 cursor-not-allowed) disabled:hover:(text-cloud/40 border-cloud/10 bg-moss/10)"
+            :disabled="!canToggleBoxes"
+            :title="canToggleBoxes
+              ? (anyBoxExpanded ? 'Collapse all Upload Queue Sections' : 'Expand all Upload Queue Sections')
+              : 'No upload queue sections to collapse yet — add a site section first'"
+            :aria-label="anyBoxExpanded ? 'Collapse all sections' : 'Expand all sections'"
+            @click="toggleAllBoxes"
+          >
+            <!-- Same glyph pair as the caret control below: unfold-less when
+                 something is expanded (the action is COLLAPSE), unfold-more
+                 when everything is collapsed (the action is EXPAND). -->
+            <svg
+              v-if="anyBoxExpanded"
+              viewBox="0 -960 960 960"
+              class="w-5 h-5 fill-current"
+            ><path d="M289-95l-50-50L480-387L721-145L671-95L480-285L289-95ZM480-573L239-815l50-50L480-675L671-865l50,50L480-573Z" /></svg>
+            <svg
+              v-else
+              viewBox="0 -960 960 960"
+              class="w-5 h-5 fill-current"
+            ><path d="M480-95L239-337l50-50l191,190l191-190l50,50L480-95ZM289-575l-50-50l241-242l241,242l-50,50l-191-190L289-575Z" /></svg>
+            <span class="text-xs uppercase tracking-wide">{{ anyBoxExpanded ? 'Collapse' : 'Expand' }}</span>
           </button>
         </div>
       </div>
@@ -665,6 +709,22 @@ const toggleBoxCollapsed = (boxId: string): void => {
 const linkedBoxCount = computed(() => siteBoxes.value.filter(b => b.streamId !== undefined).length)
 const anyBoxExpanded = computed(() =>
   siteBoxes.value.some(b => b.streamId !== undefined && !collapsedBoxIds.value.has(b.boxId)))
+
+/**
+ * Is there anything to collapse or expand? (operator 2026-08-14)
+ *
+ * Requires at least one LINKED section. An unlinked box — one whose site has
+ * not been chosen yet — renders no collapsible body, so counting it would make
+ * the control flicker between enabled and disabled as the user picks sites.
+ *
+ * Threshold differs deliberately from the caret control on the options row,
+ * which requires >= 2: that caret is an in-context shortcut and is pointless
+ * for a single section, whereas the metrics-row panel holds a FIXED slot in the
+ * grid and must explain its state rather than vanish (a disappearing panel
+ * would leave a hole in the row). One section is genuinely collapsible, so >= 1
+ * is the honest enabled condition for the panel.
+ */
+const canToggleBoxes = computed(() => linkedBoxCount.value >= 1)
 const toggleAllBoxes = (): void => {
   if (anyBoxExpanded.value) {
     // collapse everything that is linked
