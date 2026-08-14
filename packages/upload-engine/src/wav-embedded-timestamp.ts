@@ -19,6 +19,14 @@ export interface EmbeddedTimestamp {
   /** UTC offset in minutes when the metadata stated one (0 = UTC). */
   offsetMinutes?: number
   source: 'guano' | 'icmt'
+  /**
+   * The RAW metadata text this timestamp came from (GUANO block / ICMT
+   * comment), truncated. Needed by the recorder-provenance rule: deciding
+   * whether a pre-1971 date is a digitised archive or an unset recorder clock
+   * requires knowing WHICH DEVICE the file claims to come from, which only the
+   * raw text carries. Optional so existing callers are unaffected.
+   */
+  rawMetadata?: string
 }
 
 const ascii = new TextDecoder('ascii')
@@ -110,7 +118,10 @@ export async function extractEmbeddedTimestamp (
           .map(l => l.trim())
           .find(l => /^Timestamp:/i.test(l))
         if (line !== undefined) {
-          guano = parseGuanoTimestamp(line.slice(line.indexOf(':') + 1))
+          const parsed = parseGuanoTimestamp(line.slice(line.indexOf(':') + 1))
+          if (parsed !== undefined) {
+            guano = { ...parsed, rawMetadata: text.slice(0, 2048) }
+          }
         }
       }
 
@@ -129,7 +140,10 @@ export async function extractEmbeddedTimestamp (
                 Math.min(subSize, bodyEnd - sub - 8)
               )
             ).replace(/\0+$/, '')
-            icmt = parseAudioMothComment(text)
+            const parsed = parseAudioMothComment(text)
+            if (parsed !== undefined) {
+              icmt = { ...parsed, rawMetadata: text.slice(0, 2048) }
+            }
             break
           }
           sub += 8 + subSize + (subSize % 2)

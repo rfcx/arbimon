@@ -114,7 +114,26 @@ describe('extractEmbeddedTimestamp', () => {
       dataChunk()
     )
     const found = await extractEmbeddedTimestamp(blob)
-    expect(found).toEqual({ wallTime: '2025-08-18T19:30:00', offsetMinutes: -300, source: 'guano' })
+    // Assert the FIELDS this test is about rather than exact object equality:
+    // extraction also returns `rawMetadata` (added 2026-08-13 for the
+    // recorder-provenance rule), and a deep-equal here would fail on any
+    // future additive field without anything actually being wrong.
+    expect(found).toMatchObject({
+      wallTime: '2025-08-18T19:30:00',
+      offsetMinutes: -300,
+      source: 'guano'
+    })
+  })
+
+  it('carries the RAW metadata text (needed by the provenance rule)', async () => {
+    const blob = wavWith(
+      guanoChunk('GUANO|Version:1.0\nTimestamp:2025-08-18T19:30:00-05:00\nMake:AudioMoth'),
+      dataChunk()
+    )
+    const found = await extractEmbeddedTimestamp(blob)
+    // Deciding whether a pre-1971 date is a digitised archive or an unset
+    // recorder clock requires knowing WHICH DEVICE the file claims to be from.
+    expect(found?.rawMetadata).toMatch(/AudioMoth/)
   })
 
   it('finds an AudioMoth ICMT comment', async () => {

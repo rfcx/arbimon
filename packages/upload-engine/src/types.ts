@@ -76,6 +76,12 @@ export interface UploadItem {
   /** Analysis failure (no timestamp derivable, unreadable, …). Item stays
    * `staged` but is excluded from Start until resolved/cleared. */
   analysisError?: string
+  /** Non-blocking advisory shown alongside the row (e.g. an unusually old
+   * date that is probably a digitised archive but MIGHT be a recorder whose
+   * clock reset). Unlike analysisError this never excludes the item from
+   * Start — it exists so a genuine archive uploads freely while a flat-battery
+   * recorder still gets noticed. */
+  notice?: string
   /** Set when the FLAC transcode stage encoded this item (UI: transcode column). */
   transcoded?: boolean
   /** Pre-transcode identity, kept so a retry after the encoded blob was

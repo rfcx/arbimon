@@ -23,6 +23,7 @@
 import { probeAudioMetadata } from './audio-metadata'
 import { parseTimestamp, TIMESTAMP_FORMAT_AUTO, toUtcIso } from './timestamp-parser'
 import { type TimezoneSource, type UploadItem } from './types'
+import { checkRecordingProvenance, historicalDateNotice } from './recorder-provenance'
 import { extractEmbeddedTimestamp, formatOffset } from './wav-embedded-timestamp'
 
 export type TimezoneMode = 'auto' | 'site' | 'utc' | 'metadata'
@@ -201,6 +202,27 @@ export async function analyzeFile (
     patch.analysisError = parsed === undefined && embedded === undefined
       ? 'No recording timestamp found in the filename or file metadata.'
       : 'Parsed timestamp is not a valid date.'
+  }
+
+  // Recorder-provenance check (2026-08-13). Historical recordings ARE allowed
+  // — digitised archives legitimately predate 1971 — but a DIGITAL RECORDER
+  // cannot, so a pre-1971 date on a file whose own metadata names one means an
+  // unset clock (flat battery restarts it at the epoch). Mirrors the server
+  // rule so the user learns at STAGING rather than after a failed upload.
+  // Advisory: it sets analysisError, which the per-row date editor can fix.
+  if (patch.analysisError === undefined && timestampUtc !== undefined) {
+    const problem = checkRecordingProvenance({
+      timestampUtc,
+      metadataEvidence: embedded?.rawMetadata,
+      metadataDateUtc: embedded?.wallTime
+    })
+    if (problem !== undefined) {
+      patch.analysisError = problem
+    } else {
+      // Non-blocking nudge for an old date with no recorder metadata (usually
+      // a genuine archive; occasionally a recorder that lost its metadata).
+      patch.notice = historicalDateNotice(timestampUtc, embedded?.rawMetadata)
+    }
   }
 
   patch.localWallTime = wallTime
