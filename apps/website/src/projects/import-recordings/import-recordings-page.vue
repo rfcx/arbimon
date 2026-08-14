@@ -64,8 +64,33 @@
              CSS-only tooltip has no lifecycle to get wrong. -->
         <span
           v-if="!isPopout"
-          class="relative group shrink-0"
+          class="relative group shrink-0 inline-flex items-center gap-x-2"
         >
+          <!-- [i] AFFORDANCE (operator 2026-08-14). The tooltip already appeared
+               on hover, but nothing ADVERTISED that more information exists — a
+               hover-only explanation is invisible to anyone who does not happen
+               to hover, and invisible on touch entirely.
+
+               Uses the app's own auto-registered `icon-custom-ic-info` rather
+               than a hand-rolled glyph, so it matches every other [i] in the
+               product (filter-panel, sortable-table, numeric-metric).
+
+               It sits INSIDE the `group` wrapper, so hovering the icon shows the
+               same panel as hovering the button — one tooltip, two triggers.
+
+               `tabindex="0"` + `role="button"` make it reachable by keyboard:
+               the wrapper's `group-focus-within` then reveals the panel, which
+               is what gives keyboard and screen-reader users the explanation
+               that mouse users get from hovering. It has NO click handler on
+               purpose — it explains, it does not act, and a click that did
+               nothing would be worse than no click at all. -->
+          <icon-custom-ic-info
+            class="h-4 w-4 shrink-0 cursor-help text-cloud transition-colors group-hover:text-frequency"
+            tabindex="0"
+            role="button"
+            :aria-label="`About the standalone uploader`"
+            :aria-describedby="`popout-help-${projectSlug}`"
+          />
           <button
             class="btn btn-secondary text-sm shrink-0 whitespace-nowrap inline-flex items-center gap-x-2 disabled:btn-disabled disabled:hover:btn-disabled disabled:cursor-not-allowed"
             :disabled="popoutLaunched"
