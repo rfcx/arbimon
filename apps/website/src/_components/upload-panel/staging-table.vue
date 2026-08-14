@@ -292,12 +292,30 @@
             </tr>
             <!-- Clicking anywhere on a row toggles its selection (operator
                  2026-08-13), except on the row's own controls — see
-                 onRowClick's closest() guard. cursor-pointer signals it. -->
+                 onRowClick's closest() guard. cursor-pointer signals it.
+
+                 SELECTED-ROW HIGHLIGHT (operator 2026-08-14: selection was not
+                 visually apparent). MEASURED why: rows composite over pitch, so
+                 the old `bg-moss/30` selected state sat at 1.040:1 against a
+                 plain row and **1.012:1 against a merely-HOVERED row** — i.e.
+                 selected and hovered were indistinguishable, and the group
+                 header (bg-moss/25) sat between them.
+
+                 Now tinted with the house accent instead of more moss:
+                 bg-frequency/10 reads 1.188:1 vs plain and 1.156:1 vs hover —
+                 an order of magnitude more separation — plus a left accent bar
+                 so selection is legible without relying on colour alone
+                 (colour-blind users, and rows scanned peripherally). Hover on a
+                 selected row deepens to /15 so the row still responds to the
+                 pointer instead of looking inert. Body text stays cloud, which
+                 still reads at 15.88:1 on the tint. -->
             <tr
               v-for="item in (groupCollapsed[section.key] ? [] : section.rows)"
               :key="item.id"
-              class="border-t border-cloud/10 hover:bg-moss/20 cursor-pointer"
-              :class="selectedIds.has(item.id) ? 'bg-moss/30' : ''"
+              class="border-t border-cloud/10 cursor-pointer transition-colors"
+              :class="selectedIds.has(item.id)
+                ? 'bg-frequency/10 hover:bg-frequency/15 border-l-2 border-l-frequency'
+                : 'hover:bg-moss/20 border-l-2 border-l-transparent'"
               @click="onRowClick(item, $event)"
             >
               <td class="px-2 py-1.5">
