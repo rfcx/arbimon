@@ -284,31 +284,59 @@
                  upload queue — see resetProjectMetrics(). -->
             <div class="flex items-center gap-x-0 w-max">
               <span class="text-xs text-cloud uppercase tracking-wide">Outcomes</span>
-              <!-- ICON: "counter reset" (Material `restart_alt`-style), NOT the
-                   circular refresh arrow this used to carry.
+              <!-- ICON: a literal ZERO in a rounded square — "set these counters
+                   to 0".
 
-                   THE OLD GLYPH WAS AN EXACT DUPLICATE of the per-row RETRY
-                   button in staging-table.vue (same path
-                   `M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3`), so the same
-                   symbol meant "re-attempt this upload" a few hundred pixels
-                   below and "zero these totals" here. A circular arrow reads as
-                   REFRESH/RETRY — a safe, repeatable act — while this button is
-                   destructive and unrecoverable.
+                   TWO REJECTED PREDECESSORS, both for the same reason:
+                   1. the circular refresh arrow was an EXACT DUPLICATE of the
+                      per-row RETRY glyph in staging-table.vue
+                      (`M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3`), so one
+                      symbol meant "re-attempt this upload" a few hundred pixels
+                      below where it meant "zero these totals";
+                   2. Material `restart_alt` still carried a ROTATIONAL hint,
+                      which reads as reload/update — operator confirmed it still
+                      looked like refresh.
 
-                   The replacement keeps a rotational hint (so it still reads as
-                   "set back") but breaks the loop and adds the down-arrow return
-                   stroke of Material's restart_alt, which is visually distinct
-                   from the retry circle at 16px. -->
+                   Any circular-arrow family glyph signals a SAFE, REPEATABLE
+                   act. This button is destructive and unrecoverable (counters
+                   are persisted per project), so rotation is the wrong metaphor
+                   entirely — not merely an imprecise one.
+
+                   The six glyphs already carrying meaning in this feature are
+                   circular-arrow (Retry), trash (Clear rows from list), ✕
+                   (Deselect all), double-chevron (Collapse/Expand), gear
+                   (Settings) and pencil (Edit date). A digit avoids every one of
+                   them and states the OUTCOME rather than the motion: after the
+                   click, these read 0.
+
+                   Drawn from primitives (rect + ellipse) rather than a copied
+                   path, so it is legible at 16px and cannot silently collide
+                   with another icon's path data. -->
               <button
                 class="shrink-0 ml-2 -my-0.5 p-1 rounded text-cloud hover:(text-flamingo bg-flamingo/10) transition-colors"
-                title="Reset the Imported / Errors / Skipped / Uploaded totals for this project. Does not affect the upload queue."
-                aria-label="Reset metrics"
+                title="Reset the Imported / Errors / Skipped / Uploaded totals for this project to zero. Does not affect the upload queue."
+                aria-label="Reset metrics to zero"
                 @click="onResetMetrics"
               >
                 <svg
-                  viewBox="0 -960 960 960"
-                  class="w-4 h-4 fill-current"
-                ><path d="M440-122q-121-15-200.5-105.5T160-440q0-66 26-126.5T260-672l57 57q-38 34-57.5 79T240-440q0 88 56 155.5T440-203v81Zm80 0v-81q87-16 143.5-83.5T720-440q0-100-70-170t-170-70h-3l44 44-56 56-140-140 140-140 56 56-44 44h3q134 0 227 93t93 227q0 121-79.5 211.5T520-122Z" /></svg>
+                  viewBox="0 0 16 16"
+                  class="w-4 h-4 fill-none stroke-current"
+                  stroke-width="1.5"
+                >
+                  <rect
+                    x="2.25"
+                    y="2.25"
+                    width="11.5"
+                    height="11.5"
+                    rx="3"
+                  />
+                  <ellipse
+                    cx="8"
+                    cy="8"
+                    rx="2.15"
+                    ry="3.15"
+                  />
+                </svg>
               </button>
             </div>
             <!-- DELIMITERS (operator 2026-08-14): a vertical rule between each
