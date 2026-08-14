@@ -746,22 +746,28 @@ const startPauseDisabled = computed(() => buttonMode.value === 'inert')
  * Start/Pause colours (operator 2026-08-14: the non-idle states were not
  * readable).
  *
- * MEASURED WCAG contrast on the house palette, which is what made the defect
- * concrete rather than a matter of taste:
- *   btn-primary  Start : pitch on frequency        16.57:1  PASS
- *   btn-secondary Pause: frequency on moss         13.91:1  PASS
- *   btn-secondary Pause HOVER: frequency on chirp   1.08:1  FAIL ← the bug
+ * MEASURED in the live browser with Playwright hover(), reading COMPUTED
+ * styles — not inferred from class names, and not simulated by re-applying
+ * utility classes (a shortcut's baked-in hover rule cannot be reproduced that
+ * way; my first attempt did exactly that and reported a false 1.08:1 for the
+ * hover state).
  *
- * `btn-secondary` keeps `text-frequency` while hovering to `bg-chirp` — bright
- * green text on a near-identical bright green fill, i.e. the button vanishes
- * exactly when the pointer is on it. (The base `btn` class sets `text-pitch`,
- * but `btn-secondary` overrides it, so this is not visible from the call site.)
+ * What the OLD `btn-secondary` Pause actually measured:
+ *   rest : frequency on TRANSPARENT over moss   13.91:1
+ *   hover: pitch on chirp                       17.82:1
  *
- * Fix stays inside the house palette: Pause becomes a FILLED chirp button with
- * pitch text (17.82:1), hovering to frequency (16.57:1) — the same
- * dark-on-bright treatment Start already uses, so the two read as one control
- * changing state rather than two unrelated buttons. Chirp vs frequency keeps
- * them visually distinguishable at a glance.
+ * So the numbers pass WCAG — the real problem is that Pause was an OUTLINE
+ * button (transparent fill, green text) sitting beside a SOLID green Start.
+ * Against the dark page it reads as low-emphasis/disabled rather than as the
+ * active control, and it changes its entire treatment on hover (outline →
+ * solid), which is why it felt unreadable and unusable in practice. Contrast
+ * ratio alone does not capture "looks switched off".
+ *
+ * Fix, inside the house palette: Pause is now a FILLED chirp button with pitch
+ * text (17.82:1) hovering to frequency (16.57:1) — the same dark-on-bright
+ * treatment Start already uses, so the two read as ONE control changing state
+ * rather than two unrelated buttons, while chirp vs frequency keeps them
+ * distinguishable at a glance. Both states now stay solid on hover.
  */
 const startPauseClass = computed(() => {
   if (buttonMode.value === 'inert') return 'border border-cloud/20 bg-moss/20 text-cloud/50 cursor-default'
