@@ -180,34 +180,69 @@
           <span>{{ startPauseLabel }}</span>
         </button>
 
-        <!-- Panel order (operator 2026-08-14), left to right:
-             Complete · Imported · Errors · Duplicates · Upload Rate · Uploaded.
-             Outcome counts first (what happened to my recordings), throughput
-             last (how fast it is going) — so the eye reads results before
-             mechanics. -->
+        <!-- Panel order (operator 2026-08-14, revised), left to right:
+             Queued · Outcomes(Imported/Errors/Duplicates) · Upload Rate · Uploaded.
+
+             WHAT CHANGED AND WHY:
+             • The three OUTCOME counts are now ONE box. They answer a single
+               question — "what happened to the recordings I submitted?" — and
+               are the same KIND of number (cumulative, persisted per project,
+               all reset together by the Reset button). Three separate boxes
+               implied three unrelated facts and spent half the row on it.
+               Each keeps its own label and colour, so nothing is lost: they are
+               grouped, not merged into a total (summing them would be
+               meaningless — a duplicate is not a failure, and adding an error
+               to an import answers no question anyone asks).
+             • "Complete" is replaced by QUEUED: work still to do is the number
+               you watch during an upload, whereas Complete duplicated what
+               Imported already told you (both counted successful ingests) and
+               its N/N ratio went stale the moment rows were cleared.
+
+             The combined box spans 3 of the 6 columns — one per metric it
+             carries — so the row still divides evenly. -->
         <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Complete</span>
-            <span class="text-xl tabular-nums font-medium">
-              {{ projectProgress.done }}/{{ projectProgress.total }}
-              <span class="text-sm text-cloud">({{ overallPercent }}%)</span>
-            </span>
+          <!-- QUEUED is deliberately GLOBAL (all projects), matching the engine's
+               unscoped stats and the operator's request. The upload engine is a
+               single queue shared by every project, so a per-project figure
+               would under-report what the machine is actually working through.
+               The tooltip says so explicitly, because every OTHER count in this
+               row is project-scoped and a silent mix would be misleading.
+
+               The state set below mirrors staging-table's `statusGroupOf`
+               default branch EXACTLY (analyzing/staged/queued/preparing/ready/
+               paused). Using the bare `stats.queued` field would show a smaller
+               number than the table's own "Queued" section header — two things
+               with the same label disagreeing is worse than either number. -->
+          <div
+            class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center"
+            title="Recordings waiting to upload across ALL your projects (analyzing, staged, queued, preparing, ready or paused). The upload queue is shared between projects."
+          >
+            <span class="text-xs text-cloud uppercase tracking-wide">Queued</span>
+            <span class="text-xl tabular-nums font-medium">{{ globalQueued }}</span>
           </div>
-          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Imported</span>
-            <span class="text-xl tabular-nums font-medium text-frequency">{{ metrics.completed }}</span>
+
+          <!-- OUTCOMES — one box, three figures, each keeping its own identity. -->
+          <div class="lg:col-span-3 rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5">
+            <span class="text-xs text-cloud uppercase tracking-wide">Outcomes</span>
+            <div class="mt-0.5 flex items-baseline gap-x-6">
+              <span class="flex items-baseline gap-x-1.5">
+                <span class="text-xl tabular-nums font-medium text-frequency">{{ metrics.completed }}</span>
+                <span class="text-xs text-cloud">Imported</span>
+              </span>
+              <span class="flex items-baseline gap-x-1.5">
+                <span
+                  class="text-xl tabular-nums font-medium"
+                  :class="metrics.failed > 0 ? 'text-flamingo' : ''"
+                >{{ metrics.failed }}</span>
+                <span class="text-xs text-cloud">Errors</span>
+              </span>
+              <span class="flex items-baseline gap-x-1.5">
+                <span class="text-xl tabular-nums font-medium">{{ metrics.duplicates }}</span>
+                <span class="text-xs text-cloud">Duplicates</span>
+              </span>
+            </div>
           </div>
-          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Errors</span>
-            <span
-              class="text-xl tabular-nums font-medium"
-              :class="metrics.failed > 0 ? 'text-flamingo' : ''"
-            >{{ metrics.failed }}</span>
-          </div>
-          <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
-            <span class="text-xs text-cloud uppercase tracking-wide">Duplicates</span>
-            <span class="text-xl tabular-nums font-medium">{{ metrics.duplicates }}</span>
-          </div>
+
           <div class="rounded-lg border border-cloud/20 bg-moss/30 px-4 py-2.5 flex flex-col justify-center">
             <span class="text-xs text-cloud uppercase tracking-wide">Upload Rate</span>
             <span class="text-xl tabular-nums font-medium">{{ formatRate(currentRateBps) }}</span>
@@ -447,7 +482,7 @@ import UploaderSettingsModal from '@/_components/upload-panel/uploader-settings-
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { track } from '~/analytics'
 import { useStore } from '~/store'
-import { bindProjectMetrics, currentRateBps, engine, engineRunning, fileSource, flacEncodeEnabled, items, livePopouts, projectMetrics, refreshItems, registerAsPopout, releasePopoutClaim, requestFileHandles, resetProjectMetrics } from '~/upload'
+import { bindProjectMetrics, currentRateBps, engine, engineRunning, fileSource, flacEncodeEnabled, items, livePopouts, projectMetrics, refreshItems, registerAsPopout, releasePopoutClaim, requestFileHandles, resetProjectMetrics, stats } from '~/upload'
 
 const route = useRoute()
 const store = useStore()
@@ -882,8 +917,8 @@ const startPauseClass = computed(() => {
  * discard a running session's totals with no way to recover them.
  *
  * Scope is the counters only — the upload queue and every section are
- * untouched, so "Complete" (derived live from queue rows) keeps its value.
- * That asymmetry is intentional and is spelled out in the confirm text.
+ * untouched, so "Queued" (derived live from the engine's queue) keeps its
+ * value. That asymmetry is intentional and is spelled out in the confirm text.
  */
 const onResetMetrics = (): void => {
   const confirmed = window.confirm(
@@ -1167,25 +1202,23 @@ watchEffect(() => {
 
 // -- display helpers ----------------------------------------------------------
 
-const projectProgress = computed(() => {
-  let bytesTotal = 0
-  let bytesUploaded = 0
-  let done = 0
-  for (const item of projectItems.value) {
-    bytesTotal += item.fileSizeBytes
-    if (item.state === 'uploaded' || item.state === 'ingested' || item.state === 'duplicate') {
-      bytesUploaded += item.fileSizeBytes
-    } else if (item.state === 'uploading' && item.progress !== undefined) {
-      bytesUploaded += Math.floor(item.fileSizeBytes * item.progress)
-    }
-    if (item.state === 'ingested' || item.state === 'duplicate') done++
-  }
-  return { total: projectItems.value.length, done, bytesTotal, bytesUploaded }
-})
-
-// % accompanies the N/N Complete panel — count-based to match its ratio
-const overallPercent = computed(() =>
-  projectProgress.value.total === 0 ? 0 : Math.round((projectProgress.value.done / projectProgress.value.total) * 100))
+/**
+ * GLOBAL queued count (operator 2026-08-14) — recordings still waiting to be
+ * uploaded, across EVERY project.
+ *
+ * Global on purpose: the upload engine is ONE queue shared by all projects, so
+ * a project-scoped figure would under-report the work actually outstanding. It
+ * is the only panel here that is not project-scoped, which is why the box
+ * carries a tooltip saying so.
+ *
+ * The state set mirrors `statusGroupOf`'s default branch in staging-table.vue
+ * EXACTLY. The `stats.queued` field alone would be a strictly smaller number
+ * than the table's own "Queued" section, and two things labelled "Queued"
+ * disagreeing on screen is worse than either number being imperfect.
+ */
+const globalQueued = computed(() =>
+  stats.value.analyzing + stats.value.staged + stats.value.queued +
+  stats.value.preparing + stats.value.ready + stats.value.paused)
 
 const formatBytes = (bytes: number): string => {
   if (bytes < 1024) return `${bytes} B`
