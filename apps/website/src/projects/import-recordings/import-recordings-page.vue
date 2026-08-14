@@ -66,6 +66,24 @@
          us whether focusing the pop-out actually worked. `window.open` with the
          same window NAME re-focuses the existing window rather than opening a
          second one, so the button is safe to press repeatedly. -->
+    <!-- Popup blocked: fall back to the FULL inline uploader (see onMounted).
+         Import must never be a dead button. -->
+    <div
+      v-else-if="popoutBlocked && !isPopout && !popoutActive"
+      class="mt-6 rounded-lg border border-flamingo/30 bg-flamingo/10 px-4 py-3 text-sm"
+    >
+      <p class="text-insight">
+        Your browser blocked the uploader window, so it’s running here instead.
+      </p>
+      <p class="text-cloud mt-1">
+        Allow pop-ups for this site to keep uploads in their own window, or
+        <button
+          class="text-frequency hover:underline"
+          @click="focusPopout"
+        >try opening it again</button>.
+      </p>
+    </div>
+
     <div
       v-else-if="popoutActive && !isPopout"
       class="mt-6 rounded-lg border border-frequency/30 bg-frequency/10 px-4 py-4 text-sm"
@@ -934,6 +952,16 @@ const popoutWindowTitle = computed(() =>
 /** True once the user has pressed “Go to the uploader window” at least once. */
 const focusAttempted = ref(false)
 
+/** One auto-launch attempt per visit to this route (see onMounted). */
+const autoLaunchTried = ref(false)
+
+/**
+ * Set when `window.open` returned null — i.e. the browser blocked the popup.
+ * The page then renders the FULL inline uploader instead of the placeholder,
+ * so Import still works. Without this the nav would appear to do nothing.
+ */
+const popoutBlocked = ref(false)
+
 /**
  * Open OR re-focus the pop-out. Passing the same window NAME means a second
  * call re-uses (and focuses) the existing window rather than opening another,
@@ -971,6 +999,29 @@ onMounted(() => {
   if (isPopout.value) {
     registerAsPopout(projectSlug.value)
     requestFileHandles(projectSlug.value)
+    return
+  }
+  // POP-OUT-FIRST (operator 2026-08-14): arriving from the Import nav launches
+  // the uploader in its own window, so the stateful uploader stops competing
+  // with SPA navigation. The main tab then shows the launcher/placeholder.
+  //
+  // Guards, in order of importance:
+  //  - only auto-launch ONCE per page visit (autoLaunchTried), so returning to
+  //    this route does not spawn or re-focus repeatedly;
+  //  - never auto-launch if a pop-out for this project is ALREADY live — the
+  //    placeholder handles that case and re-opening could steal focus;
+  //  - never auto-launch for a view-only project (nothing to upload);
+  //  - a BLOCKED popup returns null, which we surface rather than swallow:
+  //    the page falls back to the full inline uploader so Import is never a
+  //    dead button.
+  if (isProjectViewOnly.value) return
+  if (autoLaunchTried.value) return
+  autoLaunchTried.value = true
+  if (popoutActive.value) return
+  const handle = openPopoutWindow()
+  if (handle === null) {
+    popoutBlocked.value = true
+    track('web_upload_popout_blocked', { project: projectSlug.value })
   }
 })
 
