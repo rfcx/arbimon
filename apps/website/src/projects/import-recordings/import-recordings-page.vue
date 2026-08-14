@@ -159,14 +159,19 @@
             </template>
           </span>
         </span>
-        <button
-          v-else
-          class="btn btn-secondary text-sm shrink-0 whitespace-nowrap"
-          title="Close this window (uploads resume in your main Arbimon tab)"
-          @click="closePopout"
-        >
-          ✕ Close window
-        </button>
+        <!-- NO “Close window” BUTTON in the pop-out (operator 2026-08-14).
+
+           It called a bare `window.close()` and nothing else, so it was exactly
+           the OS/browser close control re-drawn inside the page — no extra
+           cleanup, no confirmation, no different outcome. The `beforeunload`
+           guard is registered on the WINDOW, so it fires the same way whichever
+           path closes it, and openers notice the heartbeat stop within
+           POPOUT_STALE_MS either way.
+
+           Removing it also removes a small hazard: an in-page button that
+           destroys the document can be clicked by someone who expected it to
+           close a panel, whereas the window chrome is unambiguous and already
+           where users look to close a window. -->
       </div>
     </div>
 
@@ -1533,13 +1538,6 @@ const popOut = (): void => {
   // heartbeats cannot leave the button dead forever.
   popoutJustLaunched.value = true
   window.setTimeout(() => { popoutJustLaunched.value = false }, POPOUT_LAUNCH_GRACE_MS)
-}
-
-const closePopout = (): void => {
-  // window.close() works because the window was opened by script (same origin,
-  // named). Openers notice the heartbeat stop within ~5s, clear the banner,
-  // and resume driving this project's items.
-  window.close()
 }
 
 onMounted(() => {
