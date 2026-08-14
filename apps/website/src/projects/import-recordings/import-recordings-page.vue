@@ -182,7 +182,7 @@
 
         <!-- Panel order (operator 2026-08-14, revised three times), left to right:
              Rate · Queued · Outcomes(Imported/Errors/Skipped/Uploaded)
-             · Settings · Collapse/Expand All.
+             · Collapse/Expand All · Settings.
 
              RATE LEADS (operator): it sits directly beside Start/Pause,
              which is the control that causes it — press Start, watch the rate
@@ -361,18 +361,6 @@
              the metric panels, so no explicit height is needed — which is why
              the icons are sized (w-6, 24px) against the panels' ~62px rather
              than against the button's own box. -->
-        <button
-          class="shrink-0 w-14 rounded-lg border border-cloud/20 bg-moss/30 flex items-center justify-center text-cloud transition-colors hover:(text-frequency border-frequency/40 bg-moss/50) focus-visible:(outline-none ring-2 ring-frequency)"
-          title="Uploader Settings"
-          aria-label="Uploader Settings"
-          @click="showSettings = true"
-        >
-          <svg
-            viewBox="0 -960 960 960"
-            class="w-6 h-6 fill-current"
-          ><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm112-260q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Z" /></svg>
-        </button>
-
         <!-- COLLAPSE/EXPAND ALL. Mirrors the caret control on the options row
              below — same `toggleAllBoxes` handler, same `anyBoxExpanded` state,
              same Material double-chevron glyphs — so the two cannot disagree
@@ -408,6 +396,22 @@
             viewBox="0 -960 960 960"
             class="w-6 h-6 fill-current"
           ><path d="M480-95L239-337l50-50l191,190l191-190l50,50L480-95ZM289-575l-50-50l241-242l241,242l-50,50l-191-190L289-575Z" /></svg>
+        </button>
+
+        <!-- SETTINGS LAST (operator 2026-08-14): swapped back to the far right.
+             Mirrors the Settings control in the options row below — same modal,
+             same `showSettings` flag, same Material gear glyph — so the two
+             entry points cannot drift apart in behaviour. -->
+        <button
+          class="shrink-0 w-14 rounded-lg border border-cloud/20 bg-moss/30 flex items-center justify-center text-cloud transition-colors hover:(text-frequency border-frequency/40 bg-moss/50) focus-visible:(outline-none ring-2 ring-frequency)"
+          title="Uploader Settings"
+          aria-label="Uploader Settings"
+          @click="showSettings = true"
+        >
+          <svg
+            viewBox="0 -960 960 960"
+            class="w-6 h-6 fill-current"
+          ><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm112-260q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Z" /></svg>
         </button>
       </div>
 
