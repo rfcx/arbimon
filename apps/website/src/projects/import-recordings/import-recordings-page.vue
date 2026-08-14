@@ -1,16 +1,37 @@
 <template>
-  <!-- PADDING FOLLOWS THE CHROME (2026-08-14, restored with the pop-out
-       WINDOW). The pop-out is chrome-free — no navbar, no sidebar — so there is
-       no sidebar gutter to clear and a flat `p-6` is correct. Every other
-       project page (and this page in its normal in-SPA mode) must keep the
-       standard `pl-18`/`pl-23` gutter, or the content slides underneath the
-       sidebar. -->
-  <section :class="isPopout ? 'p-6' : 'pt-20 pl-18 pr-6 md:(pl-23 pr-10) pb-20'">
+  <!-- PADDING FOLLOWS THE CHROME. The pop-out is chrome-free — no navbar,
+       no sidebar — so there is no sidebar gutter to clear and a flat `p-6` is
+       correct. In the SPA the LEFT gutter (`pl-18`/`pl-23`) is mandatory or the
+       content slides underneath the fixed sidebar.
+
+       TOP PADDING REDUCED pt-20 -> pt-6 (operator 2026-08-14). MEASURED first:
+       the page carried 104px of dead space above the title — 80px from this
+       `pt-20` plus 24px from the h1's `mt-6` — with NOTHING rendered above the
+       section to justify it (verified: section top = 0, no navbar, no banner).
+
+       The `pt-20` was clearing chrome THAT DOES NOT EXIST HERE. The sidebar is
+       `fixed top-0 left-0 w-13 h-screen` — a narrow LEFT RAIL, not a top bar —
+       so it consumes horizontal space (hence the pl- gutter) but no vertical
+       space at the top. The value came in as part of a copied page-shell
+       convention (`projects/audiodata/upload-page.vue` carries the identical
+       class list, h1 `mt-6` included).
+
+       ⚠️ DELIBERATE DIVERGENCE from the other project pages, which still use
+       pt-20 + mt-6. This is a WORKSPACE page — a long queue the user works in,
+       not a page they read — so vertical room is worth more here than shell
+       consistency. Unifying the rest is a separate app-wide pass; if that
+       happens, this page should adopt whatever the shell settles on. -->
+  <section :class="isPopout ? 'p-6' : 'pt-6 pl-18 pr-6 md:(pl-23 pr-10) pb-20'">
     <div>
       <!-- The PROJECT is the primary header; the task is the sub-header. The
            project you are uploading into is the thing that orients the user
-           (and the thing that differs between uploader windows). -->
-      <h1 class="mt-6">
+           (and the thing that differs between uploader windows).
+
+           NO `mt-6` (2026-08-14): it stacked on the section's top padding
+           rather than replacing it — padding on the parent plus margin on the
+           first child — which is how 104px accumulated without either value
+           looking unreasonable on its own. -->
+      <h1>
         {{ projectName ?? 'Project' }}
       </h1>
       <!-- ACTION SITS ON THE SUB-HEADER LINE (operator 2026-08-14), not beside
