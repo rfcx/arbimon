@@ -582,10 +582,18 @@
               >
                 <template v-if="box.streamId !== undefined">
                   <p :class="itemsForBox(box.streamId).length === 0 ? 'text-lg' : 'text-base'">
-                    Drag &amp; drop recordings for <span class="text-frequency">{{ box.siteName }}</span>
+                    Drag &amp; drop files or folders of recordings for <span class="text-frequency">{{ box.siteName }}</span>
                   </p>
+                  <!-- This line now INTRODUCES the two buttons below it rather
+                       than describing the feature, so it ends in a colon and
+                       sits directly above them. The details it used to carry
+                       (accepted extensions, local analysis, staged-before-upload)
+                       are not lost: the extensions are enforced by the file
+                       picker's `accept` and by isSupportedAudioFile on every
+                       intake path, and the staging behaviour is visible in the
+                       table immediately above this panel. -->
                   <p class="text-sm text-cloud mt-1">
-                    .wav, .flac, .opus — whole folders welcome, analyzed locally and staged above before anything uploads
+                    or choose the audio files or folders directly:
                   </p>
                   <!-- TWO pickers, because a browser file dialog can offer
                        files OR a folder, never both (see the hidden inputs
