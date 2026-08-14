@@ -31,53 +31,70 @@
       @keydown.tab="close"
     >
 
-    <ul
+    <!-- The popup is a COLUMN: a scrolling options area plus a create row that
+         is pinned OUTSIDE it. `role="listbox"` stays on this outer element so
+         both the options and the create row remain part of ONE widget for
+         assistive tech, even though only the options scroll. -->
+    <div
       v-if="open"
       :id="listId"
-      ref="list"
       role="listbox"
-      class="absolute z-50 mt-1 max-h-72 w-full overflow-y-auto rounded-lg border border-cloud/20 bg-echo shadow-xl py-1"
+      class="absolute z-50 mt-1 w-full rounded-lg border border-cloud/20 bg-echo shadow-xl flex flex-col overflow-hidden"
     >
-      <li
-        v-for="(option, index) in filtered"
-        :id="`${listId}-opt-${index}`"
-        :key="option.id"
-        role="option"
-        :aria-selected="index === activeIndex"
-        :aria-disabled="option.taken"
-        class="px-3 py-2 text-sm"
-        :class="[
-          option.taken ? 'text-cloud/40 cursor-not-allowed' : 'text-insight cursor-pointer',
-          index === activeIndex && !option.taken ? 'bg-frequency/15' : ''
-        ]"
-        @mousedown.prevent="option.taken ? undefined : choose(option)"
-        @mouseenter="activeIndex = index"
+      <ul
+        ref="list"
+        class="max-h-72 overflow-y-auto py-1"
       >
-        {{ option.name }}<span
-          v-if="option.taken"
-          class="text-xs"
-        > — already on this page</span>
-      </li>
+        <li
+          v-for="(option, index) in filtered"
+          :id="`${listId}-opt-${index}`"
+          :key="option.id"
+          role="option"
+          :aria-selected="index === activeIndex"
+          :aria-disabled="option.taken"
+          class="px-3 py-2 text-sm"
+          :class="[
+            option.taken ? 'text-cloud/40 cursor-not-allowed' : 'text-insight cursor-pointer',
+            index === activeIndex && !option.taken ? 'bg-frequency/15' : ''
+          ]"
+          @mousedown.prevent="option.taken ? undefined : choose(option)"
+          @mouseenter="activeIndex = index"
+        >
+          {{ option.name }}<span
+            v-if="option.taken"
+            class="text-xs"
+          > — already on this page</span>
+        </li>
 
-      <li
-        v-if="filtered.length === 0"
-        class="px-3 py-2 text-sm text-cloud"
-      >
-        No sites match “{{ query }}”
-      </li>
+        <li
+          v-if="filtered.length === 0"
+          class="px-3 py-2 text-sm text-cloud"
+        >
+          No sites match “{{ query }}”
+        </li>
+      </ul>
 
-      <!-- CREATE ROW — pinned at the BOTTOM, behind a divider.
-           Bottom placement is deliberate: it never intercepts the arrow-key
-           path to real options, so browsing the list can't land on an action
-           first. It carries role="option" so the listbox stays a single
-           coherent widget for screen readers, and it echoes the typed text so
-           the outcome is unambiguous ("Create “Boger Creek”" vs a generic
-           "Add new…"). -->
-      <li
+      <!-- CREATE ROW — pinned OUTSIDE the scrolling area (operator 2026-08-14).
+
+           IT USED TO BE THE LAST CHILD OF THE SCROLL CONTAINER, which meant that
+           on a project with many sites the user had to scroll past ALL of them
+           to reach it. Measured: only ~5 rows fit in the 288px list, so beyond
+           4 sites the create row was already below the fold — and a project
+           with 50 sites buried it completely.
+
+           As a sibling of the scrolling <ul> it is ALWAYS visible, docked to the
+           bottom of the popup like a dialog's action bar, while the options
+           scroll behind it.
+
+           Still LAST in the arrow-key order, which was the original reason for
+           bottom placement: browsing with the keyboard reaches real options
+           first and can never land on an action by accident. So this keeps that
+           property AND makes the row reachable in one click. -->
+      <div
         :id="`${listId}-opt-${createIndex}`"
         role="option"
         :aria-selected="activeIndex === createIndex"
-        class="mt-1 border-t border-cloud/20 px-3 py-2 text-sm cursor-pointer flex items-center gap-x-2 text-frequency"
+        class="shrink-0 border-t border-cloud/20 px-3 py-2 text-sm cursor-pointer flex items-center gap-x-2 text-frequency bg-echo"
         :class="activeIndex === createIndex ? 'bg-frequency/15' : ''"
         @mousedown.prevent="requestCreate"
         @mouseenter="activeIndex = createIndex"
@@ -88,8 +105,8 @@
         ><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
         <span v-if="query.trim() === ''">Create a Site…</span>
         <span v-else>Create “{{ query.trim() }}”…</span>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -121,7 +138,7 @@
  * or a project is. Emits `select` and `create`; the host decides what those
  * mean.
  */
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
 export interface SiteComboboxOption {
   id: string
@@ -149,6 +166,7 @@ const emit = defineEmits<{
 
 const root = ref<HTMLElement>()
 const input = ref<HTMLInputElement>()
+const list = ref<HTMLElement>()
 const open = ref(false)
 const query = ref('')
 const activeIndex = ref(0)
@@ -187,6 +205,24 @@ const move = (delta: number): void => {
     if (!(filtered.value[next]?.taken ?? true)) break
   }
   activeIndex.value = next
+  scrollActiveIntoView()
+}
+
+/**
+ * Keep the keyboard-active option visible.
+ *
+ * Necessary because the options area scrolls (max-h-72 ≈ 5 rows): without this,
+ * arrow-keying down a long site list moves the highlight out of sight and the
+ * user is navigating blind. The create row is deliberately EXCLUDED — it is
+ * pinned outside the scroller and always visible, so there is nothing to scroll
+ * to.
+ */
+const scrollActiveIntoView = (): void => {
+  if (activeIndex.value === createIndex.value) return
+  void nextTick(() => {
+    const el = list.value?.querySelector<HTMLElement>(`#${CSS.escape(`${listId.value}-opt-${activeIndex.value}`)}`)
+    el?.scrollIntoView({ block: 'nearest' })
+  })
 }
 
 const choose = (option: SiteComboboxOption): void => {
