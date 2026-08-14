@@ -222,3 +222,46 @@ defineExpose({
   setQuery: (value: string) => { query.value = value }
 })
 </script>
+
+<style scoped>
+/**
+ * ATTENTION PULSE for the unlinked site picker.
+ *
+ * ⚠️ LIVES HERE, NOT IN THE HOST. It was originally defined in
+ * staging-table.vue's `<style scoped>` (§147) and applied to this component's
+ * input via `input-class`. Scoped CSS only matches the DOM the component
+ * itself renders, so once the native <select> became this child component the
+ * rule stopped applying — verified live: `animationName: none`. Styling passed
+ * DOWN by class must be defined WHERE THE ELEMENT LIVES.
+ *
+ * Not an `animate-*` utility: this WindiCSS config registers only a `wave`
+ * animation, so `animate-pulse` emits NO CSS at all (checked against the built
+ * stylesheet). A local keyframe cannot fail that way.
+ *
+ * Animates BOX-SHADOW, not size: a pulsing ring must not reflow the header row
+ * (which would nudge the table every cycle), and box-shadow is
+ * compositor-friendly.
+ */
+@keyframes site-picker-ping {
+  0%   { box-shadow: 0 0 0 0 rgba(173, 255, 44, 0.55); }
+  70%  { box-shadow: 0 0 0 10px rgba(173, 255, 44, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(173, 255, 44, 0); }
+}
+
+.site-picker-attention {
+  animation: site-picker-ping 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* The accent border is set here too. `border-frequency` in the host's
+     input-class is a WindiCSS utility, and the host's build does not
+     necessarily emit it for a class string it only PASSES THROUGH — measured
+     live as blue rgb(28,100,242), i.e. the browser default, not the accent. */
+  border-color: rgb(173, 255, 44);
+}
+
+/* Reduced motion: drop the movement, keep every other cue (accent border,
+   tinted field, autofocus) so the emphasis survives — only the motion goes. */
+@media (prefers-reduced-motion: reduce) {
+  .site-picker-attention {
+    animation: none;
+  }
+}
+</style>
