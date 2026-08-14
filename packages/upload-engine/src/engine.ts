@@ -428,7 +428,11 @@ export class UploadEngine {
     // up `signed`, and nothing else moves them. Measured in production
     // (2026-08-03): a mid-batch network failure left thousands of uploads
     // signed server-side with bytes never sent, and the queue never resumed.
-    void this.recoverStalled().then(() => {
+    void this.recoverStalled().then(async () => {
+      // Surface handle-less rows up front rather than at Start (see
+      // flagMissingFileHandles): a restored queue must not look uploadable
+      // when it is not.
+      await this.flagMissingFileHandles()
       this.kick()
     })
     this.scheduleStatusPoll()
@@ -445,6 +449,51 @@ export class UploadEngine {
    * Only touches items NOT currently owned by a live in-flight operation, so
    * calling it mid-run is safe. Returns the number of items recovered.
    */
+/**
+   * Flag rows whose FILE HANDLE is gone, so a restored session is honest about
+   * what it can still upload.
+   *
+   * WHY (measured 2026-08-14): the queue persists in IndexedDB but
+   * `BrowserFileSource` holds File handles IN MEMORY, so any full reload or
+   * tab-close leaves rows that look perfectly healthy — checksums, timestamps,
+   * manual date corrections all intact — while being unreadable. Nothing
+   * surfaced that until the user pressed Start, at which point every row went
+   * `rejected`. Silent until the user commits is the worst shape for a defect.
+   *
+   * This probes the file source for STAGED/QUEUED rows and marks the orphans
+   * with a `notice` (advisory, non-blocking) so the UI can offer "re-add this
+   * folder" BEFORE any work is attempted. It deliberately does NOT reject them:
+   * re-adding the same folder re-attaches handles by item id, and the rest of
+   * the row's work (timestamps, corrections) is still valid and worth keeping.
+   *
+   * Returns the number of orphaned rows found.
+   */
+  async flagMissingFileHandles (): Promise<number> {
+    const candidates = await this.listScoped(['staged', 'queued', 'ready', 'signed'])
+    let orphans = 0
+    for (const item of candidates) {
+      let present = false
+      try {
+        present = (await this.fileSource.getFile(item.id)) !== undefined
+      } catch { present = false }
+      if (present) {
+        // A handle came back (folder re-added): clear a stale notice.
+        if (item.notice !== undefined && item.notice.includes('re-add')) {
+          await this.update(item, { notice: undefined })
+        }
+        continue
+      }
+      orphans++
+      if (item.notice === undefined) {
+        await this.update(item, {
+          notice: 'File no longer attached — re-add this folder to upload it (your dates and corrections are kept).'
+        })
+      }
+    }
+    if (orphans > 0) await this.emitStats()
+    return orphans
+  }
+
   async recoverStalled (): Promise<number> {
     const stranded = await this.listScoped(['uploading', 'signing', 'preparing'])
     let recovered = 0

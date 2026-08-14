@@ -96,6 +96,28 @@ export const activeCount = computed(() =>
   stats.value.queued + stats.value.preparing + stats.value.ready +
   stats.value.signing + stats.value.signed + stats.value.uploading + stats.value.uploaded)
 
+/**
+ * Work that would be LOST OR CRIPPLED by closing/reloading the tab.
+ *
+ * `activeCount` deliberately covers only the in-flight pipeline. But STAGED and
+ * ANALYZING rows represent the most expensive user work in the whole flow —
+ * sha1 checksums, parsed timestamps, duplicate verdicts, site linkage and
+ * hand-corrected dates — and they were entirely UNPROTECTED.
+ *
+ * MEASURED 2026-08-14 on the demo tier: with 5 staged rows,
+ * `activeCount` was 0, no beforeunload dialog fired, and after a reload the
+ * rows survived (IndexedDB) while ALL 5 FILE HANDLES were gone
+ * (BrowserFileSource is in-memory). The queue then LOOKS healthy — checksums
+ * and timestamps intact — and only reveals the damage when the user presses
+ * Start, at which point every row goes `rejected` with
+ * "Session interrupted — re-add this folder to resume".
+ *
+ * Silent until the user commits is the worst shape for this class of defect,
+ * so the unload guard now covers staged work too.
+ */
+export const unsavedCount = computed(() =>
+  activeCount.value + stats.value.staged + stats.value.analyzing)
+
 export const hasQueue = computed(() => stats.value.total > 0)
 
 export const refreshItems = async (): Promise<void> => {
@@ -384,7 +406,10 @@ if (!import.meta.env.SSR && typeof window !== 'undefined') {
   window.addEventListener('online', () => { engine.setOnline(true) })
   window.addEventListener('offline', () => { engine.setOnline(false) })
   window.addEventListener('beforeunload', (event) => {
-    if (activeCount.value > 0) {
+    // Covers staged/analyzing work too (see unsavedCount): those rows carry
+    // real user effort and lose their file handles on reload, which is exactly
+    // the case that previously passed with no warning at all.
+    if (unsavedCount.value > 0) {
       event.preventDefault()
       event.returnValue = ''
     }
