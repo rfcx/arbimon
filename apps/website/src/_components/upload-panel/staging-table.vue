@@ -13,177 +13,184 @@
          Giving the actions their own reserved row (min-h) makes the geometry
          identical selected or not. -->
     <div class="flex flex-col gap-y-2">
-    <div class="flex items-center justify-between gap-x-4 flex-wrap gap-y-2">
-      <!-- The whole title+metadata area toggles collapse on click (operator
+      <div class="flex items-center justify-between gap-x-4 flex-wrap gap-y-2">
+        <!-- The whole title+metadata area toggles collapse on click (operator
            2026-08-13) — same function as the caret. Guarded: clicks on/inside
            any BUTTON (the caret itself, future controls) are ignored so
            nothing double-fires; the unlinked state (site selector) does not
            get the handler at all. cursor-pointer only when linked. -->
-      <div
-        class="flex items-center gap-x-4 flex-wrap gap-y-2"
-        :class="siteName !== undefined ? 'cursor-pointer select-none' : ''"
-        @click="onTitleAreaClick"
-      >
-        <template v-if="siteName === undefined">
-          <select
-            ref="sitePicker"
-            class="rounded border-frequency/50 bg-pitch text-insight px-3 py-1.5 min-w-64 text-sm"
-            value=""
-            @change="$emit('siteChosen', ($event.target as HTMLSelectElement).value)"
-          >
-            <option
-              disabled
+        <div
+          class="flex items-center gap-x-4 flex-wrap gap-y-2"
+          :class="siteName !== undefined ? 'cursor-pointer select-none' : ''"
+          @click="onTitleAreaClick"
+        >
+          <template v-if="siteName === undefined">
+            <select
+              ref="sitePicker"
+              class="rounded border-frequency/50 bg-pitch text-insight px-3 py-1.5 min-w-64 text-sm"
               value=""
+              @change="$emit('siteChosen', ($event.target as HTMLSelectElement).value)"
             >
-              Select a site for these recordings…
-            </option>
-            <option
-              v-for="option in siteOptions"
-              :key="option.id"
-              :value="option.id"
-              :disabled="option.taken"
-            >
-              {{ option.name }}{{ option.taken ? ' — already on this page' : '' }}
-            </option>
-          </select>
-        </template>
-        <template v-else>
-          <!-- Collapse caret: the app's STANDARD chevron (custom-icons
+              <option
+                disabled
+                value=""
+              >
+                Select a site for these recordings…
+              </option>
+              <option
+                v-for="option in siteOptions"
+                :key="option.id"
+                :value="option.id"
+                :disabled="option.taken"
+              >
+                {{ option.name }}{{ option.taken ? ' — already on this page' : '' }}
+              </option>
+            </select>
+          </template>
+          <template v-else>
+            <!-- Collapse caret: the app's STANDARD chevron (custom-icons
                'angle-down', same glyph as dropdowns elsewhere). Points DOWN
                when expanded, ROTATES to point RIGHT when collapsed. It hangs
                into the page gutter (-ml-7 w-7, no compensating padding on the
                section) so the site name + queue box stay flush with the
                common left edge of all page sections. -->
-          <button
-            class="-ml-7 w-7 -mr-4 shrink-0 inline-flex items-center justify-center text-insight hover:text-frequency"
-            :title="collapsed ? 'Expand this section' : 'Collapse this section'"
-            :aria-expanded="!collapsed"
-            @click="$emit('toggleCollapsed')"
-          >
-            <!-- WindiCSS: rotate utilities are inert without the explicit `transform`
+            <button
+              class="-ml-7 w-7 -mr-4 shrink-0 inline-flex items-center justify-center text-insight hover:text-frequency"
+              :title="collapsed ? 'Expand this section' : 'Collapse this section'"
+              :aria-expanded="!collapsed"
+              @click="$emit('toggleCollapsed')"
+            >
+              <!-- WindiCSS: rotate utilities are inert without the explicit `transform`
                  class (cf. every in-app usage: 'transform rotate-180'). -->
-            <icon-custom-angle-down
-              class="w-5 h-5 transform transition-transform duration-200"
-              :class="collapsed ? '-rotate-90' : ''"
-            />
-          </button>
-          <!-- Site title + metadata: ONE baseline-aligned run (items-baseline,
+              <icon-custom-angle-down
+                class="w-5 h-5 transform transition-transform duration-200"
+                :class="collapsed ? '-rotate-90' : ''"
+              />
+            </button>
+            <!-- Site title + metadata: ONE baseline-aligned run (items-baseline,
                not items-center — mixed text sizes centre-align to different
                visual lines; sharing the BASELINE is what reads as level).
                Metadata pieces are separated by subtle middot delimiters,
                rendered as their own spans (aria-hidden) rather than CSS
                pseudo-elements so they participate in the same baseline. -->
-          <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
-            <h3 class="text-xl font-bold leading-none">
-              {{ siteName }}
-            </h3>
-            <!-- Labelled metadata pieces (operator 2026-08-13): "Label: value",
+            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
+              <h3 class="text-xl font-bold leading-none">
+                {{ siteName }}
+              </h3>
+              <!-- Labelled metadata pieces (operator 2026-08-13): "Label: value",
                  label at reduced opacity so the VALUES stay the scannable part.
                  Order: Timezone, Existing count, Existing date range. The
                  Queued count and Location were retired 2026-08-13 (queued is
                  redundant with the rows below; coordinates are not useful
                  while uploading). -->
-            <span class="text-sm text-cloud flex flex-wrap items-baseline gap-x-2">
-              <span
-                v-if="siteTimezone !== undefined"
-                :title="'Site timezone'"
-              ><span class="text-cloud/60">Timezone:</span> {{ siteTimezone }}{{ tzOffsetLabel !== undefined ? ` (${tzOffsetLabel})` : '' }}</span>
-              <template v-if="siteInfo !== undefined">
+              <span class="text-sm text-cloud flex flex-wrap items-baseline gap-x-2">
                 <span
                   v-if="siteTimezone !== undefined"
-                  class="text-cloud/40 select-none"
-                  aria-hidden="true"
-                >·</span>
-                <span :title="'Recordings already in this site'"><span class="text-cloud/60">Existing:</span> {{ siteInfo.recCount.toLocaleString() }} recording{{ siteInfo.recCount === 1 ? '' : 's' }}</span>
-                <template v-if="existingRangeLabel !== undefined">
+                  :title="'Site timezone'"
+                ><span class="text-cloud/60">Timezone:</span> {{ siteTimezone }}{{ tzOffsetLabel !== undefined ? ` (${tzOffsetLabel})` : '' }}</span>
+                <template v-if="siteInfo !== undefined">
                   <span
+                    v-if="siteTimezone !== undefined"
                     class="text-cloud/40 select-none"
                     aria-hidden="true"
                   >·</span>
-                  <span :title="'Date range of the recordings already in this site'"><span class="text-cloud/60">Range:</span> {{ existingRangeLabel }}</span>
+                  <span :title="'Recordings already in this site'"><span class="text-cloud/60">Existing:</span> {{ siteInfo.recCount.toLocaleString() }} recording{{ siteInfo.recCount === 1 ? '' : 's' }}</span>
+                  <template v-if="existingRangeLabel !== undefined">
+                    <span
+                      class="text-cloud/40 select-none"
+                      aria-hidden="true"
+                    >·</span>
+                    <span :title="'Date range of the recordings already in this site'"><span class="text-cloud/60">Range:</span> {{ existingRangeLabel }}</span>
+                  </template>
                 </template>
-              </template>
-            </span>
-          </div>
+              </span>
+            </div>
           <!-- Timezone method moved OFF the box header to the page-level
                options row ("Determine Timezone(s):", operator 2026-08-13) —
                one method for the whole upload session. -->
-        </template>
-      </div>
+          </template>
+        </div>
 
-      <!-- Selection actions + the ✕, back on the TITLE row. The controls are
+        <!-- Selection actions + the ✕, back on the TITLE row. The controls are
            COMPACT (text-xs, py-1, narrower date field) so the cluster fits
            beside the title instead of wrapping — which is what caused the
            header to grow on select. No reserved empty row is needed once
            nothing wraps. min-h matches the compact control height so the row
            is still identical selected vs not. -->
-      <div class="flex items-center gap-x-2 shrink-0 min-h-[1.75rem]">
-        <template v-if="selectedIds.size > 0">
-          <span class="text-xs text-cloud whitespace-nowrap">{{ selectedIds.size }} selected:</span>
-          <!-- BATCH DATE EDIT (operator 2026-08-13): set one date across every
+        <div class="flex items-center gap-x-2 shrink-0 min-h-[1.75rem]">
+          <template v-if="selectedIds.size > 0">
+            <span class="text-xs text-cloud whitespace-nowrap">{{ selectedIds.size }} selected:</span>
+            <!-- BATCH DATE EDIT (operator 2026-08-13): set one date across every
                selected row, keeping each row's own TIME. Starting with date
                only — a numeric UTC-offset picker was floated but deferred as
                harder to reason about; this covers the common "recorder had the
                wrong day" case. Only offered for rows that are still editable. -->
-          <label
-            v-if="editableSelectedCount > 0"
-            class="flex items-center gap-x-1.5 text-xs text-cloud whitespace-nowrap"
-          >
-            Set date:
-            <!-- flowbite-datepicker (the app's own picker) rather than a native
+            <label
+              v-if="editableSelectedCount > 0"
+              class="flex items-center gap-x-1.5 text-xs text-cloud whitespace-nowrap"
+            >
+              Set date:
+              <!-- flowbite-datepicker (the app's own picker) rather than a native
                  <input type=date>: native renders in the BROWSER LOCALE with no
                  way to force a display format, and the operator wants
                  YYYY-MM-DD everywhere. Same component + options shape as
                  _components/date-range-picker/date-input-picker.vue. -->
-            <!-- size=10 + w-auto: the box is exactly a YYYY-MM-DD date wide
+              <!-- size=10 + w-auto: the box is exactly a YYYY-MM-DD date wide
                  (operator 2026-08-13) rather than a fixed utility width. -->
-            <input
-              ref="batchDateInput"
-              v-model="batchDate"
-              type="text"
-              placeholder="YYYY-MM-DD"
-              autocomplete="off"
-              size="10"
-              maxlength="10"
-              class="rounded border-cloud/30 bg-pitch text-insight px-1.5 py-0.5 text-xs w-auto"
-            >
-            <button
-              class="btn btn-secondary text-xs px-2 py-1 whitespace-nowrap"
-              :disabled="batchDate === ''"
-              :title="`Apply this date to ${editableSelectedCount} selected recording${editableSelectedCount === 1 ? '' : 's'} (each keeps its own time)`"
-              @click="applyBatchDate"
-            >
-              Apply to Selected
-            </button>
-          </label>
-          <!-- ✕ = CLEAR THE SELECTION (not delete). Pairs with the per-row
+              <input
+                ref="batchDateInput"
+                v-model="batchDate"
+                type="text"
+                placeholder="YYYY-MM-DD"
+                autocomplete="off"
+                size="10"
+                maxlength="10"
+                class="rounded border-cloud/30 bg-pitch text-insight px-1.5 py-0.5 text-xs w-auto"
+              >
+              <button
+                class="btn btn-secondary text-xs px-2 py-1 whitespace-nowrap"
+                :disabled="batchDate === ''"
+                :title="`Apply this date to ${editableSelectedCount} selected recording${editableSelectedCount === 1 ? '' : 's'} (each keeps its own time)`"
+                @click="applyBatchDate"
+              >
+                Apply to Selected
+              </button>
+            </label>
+            <!-- ✕ = CLEAR THE SELECTION (not delete). Pairs with the per-row
                trash icon, which is the destructive one — operator 2026-08-13:
                ✕ deselects, trash removes. -->
-          <button
-            class="text-cloud hover:text-insight shrink-0"
-            title="Deselect all selected recordings"
-            aria-label="Deselect all"
-            @click="clearSelection"
-          >
-            <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="1.8"><path d="M4 4l8 8M12 4l-8 8" stroke-linecap="round" /></svg>
-          </button>
+            <button
+              class="text-cloud hover:text-insight shrink-0"
+              title="Deselect all selected recordings"
+              aria-label="Deselect all"
+              @click="clearSelection"
+            >
+              <svg
+                viewBox="0 0 16 16"
+                class="w-3.5 h-3.5 fill-none stroke-current"
+                stroke-width="1.8"
+              ><path
+                d="M4 4l8 8M12 4l-8 8"
+                stroke-linecap="round"
+              /></svg>
+            </button>
           <!-- Selection actions retired 2026-08-13 (operator): Start/Pause
                (the global control row owns run/pause) and Remove Selected
                (per-row trash and the group-level Clear buttons cover removal). -->
-        </template>
-        <!-- 'Clear Completed' and 'Retry Failed' retired from this cluster
+          </template>
+          <!-- 'Clear Completed' and 'Retry Failed' retired from this cluster
              2026-08-13 (operator): those actions now live ON the Completed and
              Errors group header rows, next to the rows they act on. -->
-        <button
-          v-if="items.length === 0"
-          class="text-cloud hover:text-flamingo text-sm shrink-0"
-          title="Remove this Upload Queue Section"
-          @click="$emit('removeBox')"
-        >
-          ✕
-        </button>
+          <button
+            v-if="items.length === 0"
+            class="text-cloud hover:text-flamingo text-sm shrink-0"
+            title="Remove this Upload Queue Section"
+            @click="$emit('removeBox')"
+          >
+            ✕
+          </button>
+        </div>
       </div>
-    </div>
     </div>
 
     <!-- The table + intake area (one bordered region; the whole thing is a
@@ -209,6 +216,7 @@
               v-for="col in COLUMNS"
               :key="col.key"
               class="px-2 py-2 font-medium cursor-pointer select-none hover:text-frequency"
+              :class="col.width"
               @click="onSort(col.key)"
             >
               {{ col.label }}
@@ -256,7 +264,15 @@
                     @click.stop="$emit('retryFailed')"
                   ><!-- errors group == exactly the retryFailed set, so the
                        existing whole-box emit is already group-scoped -->
-                    <svg viewBox="0 0 16 16" class="w-3 h-3 fill-none stroke-current" stroke-width="1.8"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    <svg
+                      viewBox="0 0 16 16"
+                      class="w-3 h-3 fill-none stroke-current"
+                      stroke-width="1.8"
+                    ><path
+                      d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    /></svg>
                     Retry All ({{ section.rows.length }})
                   </button>
                   <button
@@ -265,7 +281,10 @@
                     :title="`Clear these ${section.rows.length} recording${section.rows.length === 1 ? '' : 's'} from the list (they stay uploaded)`"
                     @click.stop="$emit('clearSelected', section.rows.map(r => r.id))"
                   >
-                    <svg viewBox="0 0 16 16" class="w-3 h-3 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
+                    <svg
+                      viewBox="0 0 16 16"
+                      class="w-3 h-3 fill-current"
+                    ><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
                     Clear ({{ section.rows.length }})
                   </button>
                 </span>
@@ -281,97 +300,151 @@
               :class="selectedIds.has(item.id) ? 'bg-moss/30' : ''"
               @click="onRowClick(item, $event)"
             >
-            <td class="px-2 py-1.5">
-              <input
-                type="checkbox"
-                :checked="selectedIds.has(item.id)"
-                class="rounded border-cloud/40 bg-pitch"
-                @change="toggleSelect(item.id)"
+              <td class="px-2 py-1.5">
+                <input
+                  type="checkbox"
+                  :checked="selectedIds.has(item.id)"
+                  class="rounded border-cloud/40 bg-pitch"
+                  @change="toggleSelect(item.id)"
+                >
+              </td>
+              <!-- Filename carries its OWN row actions (operator 2026-08-14): the
+                 "open in Visualizer" and "retry" buttons used to sit at the far
+                 right edge, a long way from the name they act on. Sitting them
+                 immediately after the filename keeps the action next to the
+                 thing it acts upon, and leaves the right edge for the single
+                 destructive control. -->
+              <td
+                class="px-2 py-1.5 max-w-56"
+                :title="item.relativePath"
               >
-            </td>
-            <td
-              class="px-2 py-1.5 max-w-56 truncate"
-              :title="item.relativePath"
-            >
-              {{ displayFilename(item) }}
-            </td>
-            <!-- Date and Time each get their OWN picker (operator 2026-08-13):
+                <span class="inline-flex items-center gap-x-1.5 max-w-full">
+                  <span class="truncate">{{ displayFilename(item) }}</span>
+                  <button
+                    v-if="item.state === 'ingested'"
+                    class="text-cloud hover:text-frequency disabled:opacity-40 shrink-0"
+                    :disabled="openingId === item.id"
+                    title="Open this recording in the Visualizer (new tab)"
+                    @click.stop="$emit('openDestination', item)"
+                  >
+                    <svg
+                      viewBox="0 0 16 16"
+                      class="w-4 h-4 fill-none stroke-current"
+                      stroke-width="1.6"
+                    ><path
+                      d="M6.5 3.5H3v9h9V9.5M9.5 2.5h4v4M13 3L7.5 8.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    /></svg>
+                  </button>
+                  <button
+                    v-if="canRetry(item)"
+                    class="text-cloud hover:text-frequency shrink-0"
+                    title="Retry"
+                    @click.stop="$emit('retryItem', item.id)"
+                  >
+                    <svg
+                      viewBox="0 0 16 16"
+                      class="w-4 h-4 fill-none stroke-current"
+                      stroke-width="1.8"
+                    ><path
+                      d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    /></svg>
+                  </button>
+                </span>
+              </td>
+              <!-- Date and Time each get their OWN picker (operator 2026-08-13):
                  a date input for the date cell, a time input for the time cell.
                  Pre-Start rows only. -->
-            <td class="px-2 py-1.5">
-              <span class="inline-flex items-center gap-x-1">
-                {{ recDate(item) }}
-                <button
-                  v-if="canEditDatetime(item)"
-                  class="text-cloud/60 hover:text-frequency"
-                  title="Correct this recording’s date"
-                  @click="openFieldEditor(item, 'date')"
-                >
-                  <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="1.5"><path d="M10.5 2.5l3 3L6 13l-3.5.5L3 10l7.5-7.5zM9 4l3 3" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                </button>
-              </span>
-            </td>
-            <td class="px-2 py-1.5">
-              <span class="inline-flex items-center gap-x-1">
-                {{ recTime(item) }}
-                <button
-                  v-if="canEditDatetime(item)"
-                  class="text-cloud/60 hover:text-frequency"
-                  title="Correct this recording’s time"
-                  @click="openFieldEditor(item, 'time')"
-                >
-                  <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="1.5"><path d="M10.5 2.5l3 3L6 13l-3.5.5L3 10l7.5-7.5zM9 4l3 3" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                </button>
-              </span>
-            </td>
-            <td class="px-2 py-1.5">{{ zoneCol(item) }}</td>
-            <td class="px-2 py-1.5">{{ formatCol(item) }}</td>
-            <td class="px-2 py-1.5 tabular-nums">{{ sizeCol(item) }}</td>
-            <td class="px-2 py-1.5 tabular-nums">{{ lengthCol(item) }}</td>
-            <!-- Progress: percentage only (the bar was retired 2026-08-13). -->
-            <td class="px-2 py-1.5 tabular-nums">
-              <span
-                v-if="showProgress(item)"
-                class="text-insight"
-              >{{ progressPercent(item) }}%</span>
-              <span
-                v-else-if="item.state === 'ingested' || item.state === 'duplicate'"
-                class="text-frequency"
-              >100%</span>
-              <span
-                v-else
-                class="text-cloud"
-              >—</span>
-            </td>
-            <td class="px-2 py-1.5 tabular-nums text-cloud">{{ rateCol(item) }}</td>
-            <!-- Status LAST, immediately before the per-row action buttons. -->
-            <td
-              class="px-2 py-1.5 max-w-72 truncate"
-              :class="statusColor(item)"
-              :title="statusDetail(item)"
-            >
-              {{ statusCol(item) }}
-            </td>
-            <td class="px-2 py-1.5">
-              <div class="flex items-center gap-x-1.5 justify-end">
-                <button
-                  v-if="item.state === 'ingested'"
-                  class="text-cloud hover:text-frequency disabled:opacity-40"
-                  :disabled="openingId === item.id"
-                  title="Open this recording in the Visualizer (new tab)"
-                  @click="$emit('openDestination', item)"
-                >
-                  <svg viewBox="0 0 16 16" class="w-4 h-4 fill-none stroke-current" stroke-width="1.6"><path d="M6.5 3.5H3v9h9V9.5M9.5 2.5h4v4M13 3L7.5 8.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                </button>
-                <button
-                  v-if="canRetry(item)"
-                  class="text-cloud hover:text-frequency"
-                  title="Retry"
-                  @click="$emit('retryItem', item.id)"
-                >
-                  <svg viewBox="0 0 16 16" class="w-4 h-4 fill-none stroke-current" stroke-width="1.8"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                </button>
-                <!-- ONE removal control (operator 2026-08-13): the separate
+              <td class="px-2 py-1.5 w-32">
+                <span class="inline-flex items-center gap-x-1">
+                  {{ recDate(item) }}
+                  <button
+                    v-if="canEditDatetime(item)"
+                    class="text-cloud/60 hover:text-frequency"
+                    title="Correct this recording’s date"
+                    @click="openFieldEditor(item, 'date')"
+                  >
+                    <svg
+                      viewBox="0 0 16 16"
+                      class="w-3.5 h-3.5 fill-none stroke-current"
+                      stroke-width="1.5"
+                    ><path
+                      d="M10.5 2.5l3 3L6 13l-3.5.5L3 10l7.5-7.5zM9 4l3 3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    /></svg>
+                  </button>
+                </span>
+              </td>
+              <td class="px-2 py-1.5 w-28">
+                <span class="inline-flex items-center gap-x-1">
+                  {{ recTime(item) }}
+                  <button
+                    v-if="canEditDatetime(item)"
+                    class="text-cloud/60 hover:text-frequency"
+                    title="Correct this recording’s time"
+                    @click="openFieldEditor(item, 'time')"
+                  >
+                    <svg
+                      viewBox="0 0 16 16"
+                      class="w-3.5 h-3.5 fill-none stroke-current"
+                      stroke-width="1.5"
+                    ><path
+                      d="M10.5 2.5l3 3L6 13l-3.5.5L3 10l7.5-7.5zM9 4l3 3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    /></svg>
+                  </button>
+                </span>
+              </td>
+              <td class="px-2 py-1.5 w-24">
+                {{ zoneCol(item) }}
+              </td>
+              <!-- Format now carries the size too (operator 2026-08-14). -->
+              <td class="px-2 py-1.5">
+                {{ formatCol(item) }}
+              </td>
+              <td class="px-2 py-1.5 tabular-nums">
+                {{ lengthCol(item) }}
+              </td>
+              <!-- Progress = percentage + rate in one cell (operator 2026-08-14);
+                 the bar was retired 2026-08-13. Fixed width so the cell does
+                 not widen the moment a rate appears mid-upload. -->
+              <td class="px-2 py-1.5 tabular-nums w-36">
+                <span
+                  v-if="showProgress(item)"
+                  class="text-insight"
+                >{{ progressPercent(item) }}%<span
+                  v-if="hasRate(item)"
+                  class="text-cloud"
+                > ({{ rateCol(item) }})</span></span>
+                <span
+                  v-else-if="item.state === 'ingested' || item.state === 'duplicate'"
+                  class="text-frequency"
+                >100%</span>
+                <span
+                  v-else
+                  class="text-cloud"
+                >—</span>
+              </td>
+              <!-- Status LAST, immediately before the per-row action buttons. -->
+              <td
+                class="px-2 py-1.5 max-w-72 truncate"
+                :class="statusColor(item)"
+                :title="statusDetail(item)"
+              >
+                {{ statusCol(item) }}
+              </td>
+              <td class="px-2 py-1.5">
+                <div class="flex items-center gap-x-1.5 justify-end">
+                  <!-- The Visualizer + Retry buttons moved into the Filename
+                     cell (operator 2026-08-14) so each action sits beside the
+                     recording it acts on. Only the destructive control remains
+                     here, deliberately separated from them. -->
+                  <!-- ONE removal control (operator 2026-08-13): the separate
                      cancel-✕ and clear-trash converged into a single button
                      that removes the row whatever its state. Safe for
                      in-flight rows because engine.remove() aborts the
@@ -380,16 +453,19 @@
                      TRASH icon (not ✕): ✕ now means "deselect" in the
                      selection cluster, so the destructive action needs a
                      distinct, unambiguous glyph. -->
-                <button
-                  class="text-cloud hover:text-flamingo"
-                  :title="canCancel(item) ? 'Cancel and remove this recording' : 'Remove this recording from the list'"
-                  @click="$emit('clearItem', item.id)"
-                >
-                  <svg viewBox="0 0 16 16" class="w-4 h-4 fill-current"><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
-                </button>
-              </div>
-            </td>
-          </tr>
+                  <button
+                    class="text-cloud hover:text-flamingo"
+                    :title="canCancel(item) ? 'Cancel and remove this recording' : 'Remove this recording from the list'"
+                    @click="$emit('clearItem', item.id)"
+                  >
+                    <svg
+                      viewBox="0 0 16 16"
+                      class="w-4 h-4 fill-current"
+                    ><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
           </template>
         </tbody>
       </table>
@@ -501,9 +577,9 @@ const emit = defineEmits<{
   (e: 'siteChosen', streamId: string): void
     (e: 'clearCompleted'): void
   (e: 'retryFailed'): void
-  
+
   (e: 'clearSelected', ids: string[]): void
-  
+
   (e: 'retryItem', id: string): void
   (e: 'clearItem', id: string): void
   (e: 'openDestination', item: UploadItem): void
@@ -623,8 +699,14 @@ const tzOffsetLabel = computed<string | undefined>(() => {
   try {
     const now = new Date()
     const fmt = new Intl.DateTimeFormat('en-CA', {
-      timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+      timeZone: tz,
+year: 'numeric',
+month: '2-digit',
+day: '2-digit',
+      hour: '2-digit',
+minute: '2-digit',
+second: '2-digit',
+hour12: false
     })
     const p = Object.fromEntries(fmt.formatToParts(now).map(x => [x.type, x.value]))
     const asUtc = Date.UTC(+p.year, +p.month - 1, +p.day, +(p.hour === '24' ? 0 : p.hour), +p.minute, +p.second)
@@ -751,16 +833,25 @@ const visible = computed(() => props.items)
 
 // Column order (operator 2026-08-13): Method dropped entirely; Size added;
 // Status moved LAST, immediately before the per-row action buttons.
-const COLUMNS: Array<{ key: string, label: string }> = [
+//
+// 2026-08-14 (operator): Progress+Rate COMBINED into one "Progress" column
+// ("NN% (NN MB/s)") and Format+Size COMBINED into one "Format" column
+// ("48 kHz · 16-bit, 12.4 MB"). Fewer columns leaves room for the filename,
+// which is the column users actually scan.
+//
+// FIXED WIDTHS on Date / Time / Zone / Progress: their values are
+// fixed-character-count (plus an edit button on Date/Time), so a static width
+// slightly wider than the content stops the table reflowing as rows change
+// state — the jitter you otherwise get when a rate appears mid-upload.
+// Filename/Status stay fluid so they absorb the remaining space.
+const COLUMNS: Array<{ key: string, label: string, width?: string }> = [
   { key: 'filename', label: 'Filename' },
-  { key: 'recDate', label: 'Date' },
-  { key: 'recTime', label: 'Time' },
-  { key: 'zone', label: 'Zone' },
+  { key: 'recDate', label: 'Date', width: 'w-32' },
+  { key: 'recTime', label: 'Time', width: 'w-28' },
+  { key: 'zone', label: 'Zone', width: 'w-24' },
   { key: 'format', label: 'Format' },
-  { key: 'sizeBytes', label: 'Size' },
   { key: 'durationMs', label: 'Duration' },
-  { key: 'progress', label: 'Progress' },
-  { key: 'rate', label: 'Rate' },
+  { key: 'progress', label: 'Progress', width: 'w-36' },
   { key: 'status', label: 'Status' }
 ]
 
@@ -778,12 +869,13 @@ const sortValue = (item: UploadItem, key: string): string | number => {
     case 'recDate':
     case 'recTime': return item.localWallTime ?? ''
     case 'zone': return zoneCol(item)
+    // Format now carries size too, but SORTING stays on the audio
+    // characteristics — sorting a "Format" column by file size would
+    // surprise anyone who clicked it to group like recordings together.
     case 'format': return (item.sampleRateHz ?? 0) * 100 + (item.bitDepth ?? 0)
-    case 'sizeBytes': return item.fileSizeBytes
     case 'durationMs': return item.durationMs ?? -1
     case 'status': return groupOf(item)
     case 'progress': return item.state === 'ingested' ? 2 : (item.progress ?? -1)
-    case 'rate': return avgRateBps(item) ?? -1
     default: return 0
   }
 }
@@ -995,15 +1087,21 @@ const zoneCol = (item: UploadItem): string => {
   return tz
 }
 
-/** Format column: sample rate + bit depth (the filetype was dropped
- * 2026-08-13 — it is already implied by the filename). */
+/** Format column: sample rate + bit depth, then the file size (operator
+ * 2026-08-14 — Format and Size merged into one column). The filetype was
+ * dropped 2026-08-13, being already implied by the filename.
+ * Shape: "48 kHz · 16-bit, 12.4 MB" — audio characteristics first, size after
+ * the comma, so the eye still lands on the format when scanning. Size is
+ * ALWAYS known (it comes from the File handle), so it renders even when the
+ * header probe found no rate/depth. */
 const formatCol = (item: UploadItem): string => {
   const rate = item.sampleRateHz !== undefined
     ? `${(item.sampleRateHz / 1000).toFixed(1).replace(/\.0$/, '')} kHz`
     : undefined
   const depth = item.bitDepth !== undefined ? `${item.bitDepth}-bit` : undefined
-  const parts = [rate, depth].filter(p => p !== undefined)
-  return parts.length > 0 ? parts.join(' · ') : '—'
+  const audio = [rate, depth].filter(p => p !== undefined).join(' · ')
+  const size = sizeCol(item)
+  return audio === '' ? size : `${audio}, ${size}`
 }
 
 /** Size column: file size in MB. */
@@ -1109,6 +1207,11 @@ const avgRateBps = (item: UploadItem): number | undefined => {
   return bytes / seconds
 }
 
+/** Does this row have a real transfer rate to show? Used by the composite
+ * Progress cell so it renders "63%" rather than "63% (—)" before any bytes
+ * have moved. */
+const hasRate = (item: UploadItem): boolean => rateCol(item) !== '—'
+
 const rateCol = (item: UploadItem): string => {
   // Rate is only meaningful for uploads that moved real bytes: in-flight
   // with progress, or terminal-successful. Failed/instant-aborted attempts
@@ -1130,6 +1233,5 @@ const canCancel = (item: UploadItem): boolean =>
 // signing, so a true duplicate just bounces back at zero byte cost
 const canRetry = (item: UploadItem): boolean =>
   ['failed', 'rejected', 'cancelled', 'duplicate'].includes(item.state)
-
 
 </script>

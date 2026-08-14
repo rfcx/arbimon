@@ -163,54 +163,41 @@
           :title="hasUnlinkedBox ? 'Pick a site for the new section above first' : 'Add an Upload Queue Section for a site'"
           @click="addUnlinkedBox"
         >
-          <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 fill-current"><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
+          <svg
+            viewBox="0 0 16 16"
+            class="w-3.5 h-3.5 fill-current"
+          ><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
           Add Recordings to a Site
         </button>
-        <div class="ml-auto flex flex-wrap items-center gap-x-6 gap-y-3">
-        <label class="flex items-center gap-x-2 text-sm text-cloud whitespace-nowrap">
-          Determine Timezone(s):
-          <select
-            v-model="timezoneMode"
-            class="rounded border-cloud/30 bg-pitch text-insight px-2 py-1 text-sm"
+        <!-- Session settings moved into a modal (operator 2026-08-14): the
+             timezone selector and FLAC toggle crowded this row and left no
+             room to explain either. A single gear keeps the row calm and
+             gives later settings somewhere obvious to live. -->
+        <div class="ml-auto flex items-center">
+          <button
+            class="text-cloud hover:text-frequency inline-flex items-center gap-x-2 text-sm"
+            title="Uploader Settings"
+            aria-label="Uploader Settings"
+            @click="showSettings = true"
           >
-            <option value="auto">
-              Automatically
-            </option>
-            <option value="site">
-              By Site Timezone
-            </option>
-            <option value="utc">
-              UTC
-            </option>
-            <option value="metadata">
-              Scan Recording File Metadata
-            </option>
-          </select>
-        </label>
-        <div class="flex items-center gap-x-1.5">
-          <!-- whitespace-nowrap + shrink-0: the label must never wrap mid-phrase
-               when the row tightens (operator 2026-08-13). -->
-          <label class="flex items-center gap-x-2 text-sm cursor-pointer select-none whitespace-nowrap shrink-0">
-            <input
-              v-model="flacEncodeEnabled"
-              type="checkbox"
-              class="rounded border-cloud/40 bg-pitch shrink-0"
-            >
-            Pre-Convert WAV to FLAC
-          </label>
-          <!-- The app's standard info tooltip (icon-i-info + flowbite).
-               Reverted from a modal 2026-08-13 (operator). The copy is a full
-               paragraph, so extra-class widens the tooltip and lets it wrap
-               instead of stretching into one unreadable line. -->
-          <icon-i-info
-            tooltip-id="flac-preconvert-info"
-            :tooltip-text="FLAC_INFO_TEXT"
-            extra-class="max-w-sm whitespace-normal leading-relaxed text-left"
-            extra-class-icon="mt-0 hover:text-frequency"
-          />
-        </div>
+            <svg
+              viewBox="0 0 20 20"
+              class="w-5 h-5 fill-current"
+            ><path d="M8.34 2.5a1 1 0 0 1 .98-.8h1.36a1 1 0 0 1 .98.8l.2 1.02a6.2 6.2 0 0 1 1.28.74l.98-.34a1 1 0 0 1 1.2.45l.68 1.18a1 1 0 0 1-.22 1.25l-.78.68c.05.24.08.49.08.75s-.03.51-.08.75l.78.68a1 1 0 0 1 .22 1.25l-.68 1.18a1 1 0 0 1-1.2.45l-.98-.34c-.39.3-.82.55-1.28.74l-.2 1.02a1 1 0 0 1-.98.8H9.32a1 1 0 0 1-.98-.8l-.2-1.02a6.2 6.2 0 0 1-1.28-.74l-.98.34a1 1 0 0 1-1.2-.45l-.68-1.18a1 1 0 0 1 .22-1.25l.78-.68a6.3 6.3 0 0 1 0-1.5l-.78-.68a1 1 0 0 1-.22-1.25l.68-1.18a1 1 0 0 1 1.2-.45l.98.34c.39-.3.82-.55 1.28-.74l.2-1.02ZM10 7.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" /></svg>
+            Settings
+          </button>
         </div>
       </div>
+
+      <uploader-settings-modal
+        v-if="showSettings"
+        :timezone-mode="timezoneMode"
+        :flac-enabled="flacEncodeEnabled"
+        :flac-info-text="FLAC_INFO_TEXT"
+        @close="showSettings = false"
+        @update:timezone-mode="onTimezoneModeChange"
+        @update:flac-enabled="flacEncodeEnabled = $event"
+      />
 
       <!-- hidden file input; routed to whichever box requested the picker -->
       <input
@@ -239,57 +226,57 @@
           @dragleave.prevent="box.streamId !== undefined && boxDragLeave(box.streamId)"
           @drop.prevent="box.streamId !== undefined && boxDrop(box.streamId, $event)"
         >
-        <staging-table
-          :items="box.streamId !== undefined ? itemsForBox(box.streamId) : []"
-          :site-name="box.siteName"
-          :site-timezone="box.siteTimezone"
-          :timezone-mode="timezoneMode"
-          :site-options="siteOptions"
-          :opening-id="openingVisualizerId"
-          :flac-enabled="flacEncodeEnabled"
-          :drop-active="box.streamId !== undefined && dragBoxId === box.streamId"
-          :collapsed="collapsedBoxIds.has(box.boxId)"
-          :site-info="box.streamId !== undefined ? siteInfoFor(box.streamId) : undefined"
-          @toggle-collapsed="toggleBoxCollapsed(box.boxId)"
-          @edit-datetime="applyDatetimeEdit"
-          @remove-box="removeSiteBox(box.boxId)"
-          @site-chosen="linkBoxToSite(box.boxId, $event)"
-                    @clear-completed="box.streamId !== undefined && clearCompleted(box.streamId)"
-          @retry-failed="box.streamId !== undefined && retryFailed(box.streamId)"
-          @clear-selected="clearSelected"
-          
-          @retry-item="retryItem"
-          @clear-item="clearItem"
-          @open-destination="openInVisualizer"
-        >
-          <template #intake>
-            <div
-              class="border-t border-dashed px-6 py-6 text-center transition-colors"
-              :class="box.streamId !== undefined && dragBoxId === box.streamId ? 'border-frequency bg-frequency/10' : 'border-cloud/30'"
-            >
-              <template v-if="box.streamId !== undefined">
-                <p :class="itemsForBox(box.streamId).length === 0 ? 'text-lg' : 'text-base'">
-                  Drag &amp; drop recordings for <span class="text-frequency">{{ box.siteName }}</span>
-                </p>
-                <p class="text-sm text-cloud mt-1">
-                  .wav, .flac, .opus — analyzed locally and staged above before anything uploads
-                </p>
-                <button
-                  class="btn btn-secondary mt-3 text-sm"
-                  @click="pickFilesFor(box.streamId)"
-                >
-                  Or choose recordings…
-                </button>
-              </template>
-              <p
-                v-else
-                class="text-cloud"
+          <staging-table
+            :items="box.streamId !== undefined ? itemsForBox(box.streamId) : []"
+            :site-name="box.siteName"
+            :site-timezone="box.siteTimezone"
+            :timezone-mode="timezoneMode"
+            :site-options="siteOptions"
+            :opening-id="openingVisualizerId"
+            :flac-enabled="flacEncodeEnabled"
+            :drop-active="box.streamId !== undefined && dragBoxId === box.streamId"
+            :collapsed="collapsedBoxIds.has(box.boxId)"
+            :site-info="box.streamId !== undefined ? siteInfoFor(box.streamId) : undefined"
+            @toggle-collapsed="toggleBoxCollapsed(box.boxId)"
+            @edit-datetime="applyDatetimeEdit"
+            @remove-box="removeSiteBox(box.boxId)"
+            @site-chosen="linkBoxToSite(box.boxId, $event)"
+            @clear-completed="box.streamId !== undefined && clearCompleted(box.streamId)"
+            @retry-failed="box.streamId !== undefined && retryFailed(box.streamId)"
+            @clear-selected="clearSelected"
+
+            @retry-item="retryItem"
+            @clear-item="clearItem"
+            @open-destination="openInVisualizer"
+          >
+            <template #intake>
+              <div
+                class="border-t border-dashed px-6 py-6 text-center transition-colors"
+                :class="box.streamId !== undefined && dragBoxId === box.streamId ? 'border-frequency bg-frequency/10' : 'border-cloud/30'"
               >
-                Select a site above to enable this section.
-              </p>
-            </div>
-          </template>
-        </staging-table>
+                <template v-if="box.streamId !== undefined">
+                  <p :class="itemsForBox(box.streamId).length === 0 ? 'text-lg' : 'text-base'">
+                    Drag &amp; drop recordings for <span class="text-frequency">{{ box.siteName }}</span>
+                  </p>
+                  <p class="text-sm text-cloud mt-1">
+                    .wav, .flac, .opus — analyzed locally and staged above before anything uploads
+                  </p>
+                  <button
+                    class="btn btn-secondary mt-3 text-sm"
+                    @click="pickFilesFor(box.streamId)"
+                  >
+                    Or choose recordings…
+                  </button>
+                </template>
+                <p
+                  v-else
+                  class="text-cloud"
+                >
+                  Select a site above to enable this section.
+                </p>
+              </div>
+            </template>
+          </staging-table>
         </div>
       </template>
 
@@ -312,7 +299,10 @@
         @click="addUnlinkedBox"
       >
         <span class="text-lg inline-flex items-center gap-x-2 justify-center">
-          <svg viewBox="0 0 16 16" class="w-4 h-4 fill-current shrink-0"><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
+          <svg
+            viewBox="0 0 16 16"
+            class="w-4 h-4 fill-current shrink-0"
+          ><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
           Add Recordings to a Site
         </span>
         <span class="block text-sm text-cloud mt-2">
@@ -332,7 +322,7 @@ import { type SiteResponse, apiArbimonGetSites } from '@rfcx-bio/common/api-arbi
 import { type TimezoneMode, type UploadItem, analyzeFile, collectDroppedFiles, createUploadItem, isSupportedAudioFile } from '@rfcx-bio/upload-engine'
 
 import StagingTable from '@/_components/upload-panel/staging-table.vue'
-import IconIInfo from '@/projects/components/icon-i-info.vue'
+import UploaderSettingsModal from '@/_components/upload-panel/uploader-settings-modal.vue'
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { track } from '~/analytics'
 import { useStore } from '~/store'
@@ -411,6 +401,14 @@ const FLAC_INFO_TEXT = 'When you add WAV audio files, this uploader may pre-enco
 // -- Site-queue collapse (PAGE-owned, lifted from staging-table 2026-08-13) --
 // A Set of collapsed boxIds; absence = expanded. Page-level ownership is what
 // lets the options row's expand/collapse-all control drive every box.
+const showSettings = ref(false)
+
+/** Modal -> page bridge for the timezone selector. A `$event as TimezoneMode`
+ * cast in the template is a vue-eslint PARSING error (the template parser has
+ * no TS), so the narrowing happens here instead. */
+const onTimezoneModeChange = (value: string): void => {
+  timezoneMode.value = value as TimezoneMode
+}
 const collapsedBoxIds = ref<Set<string>>(new Set())
 const toggleBoxCollapsed = (boxId: string): void => {
   const next = new Set(collapsedBoxIds.value)
@@ -471,10 +469,20 @@ const applyDatetimeEdit = async (edit: { id: string, localWallTime: string, time
 
 const addUnlinkedBox = (): void => {
   if (hasUnlinkedBox.value) return // one pending box at a time
-  siteBoxes.value = [
-    { boxId: `box-${Date.now().toString(36)}` },
-    ...siteBoxes.value
-  ]
+  // APPEND, don't prepend (operator 2026-08-14). A new section is created by a
+  // button at the BOTTOM of the stack, so putting the section at the top made
+  // it appear away from where the user clicked — and pushed the existing
+  // sections down. It now lands last, directly above that button.
+  //
+  // Collapsing the others is part of the same intent: with several sites open,
+  // a new empty section appended to the bottom could be off-screen entirely.
+  // Collapsing everything else brings it into view and makes it the obvious
+  // focus, without destroying any state (collapse is display-only).
+  const boxId = `box-${Date.now().toString(36)}`
+  collapsedBoxIds.value = new Set(
+    siteBoxes.value.filter(b => b.streamId !== undefined).map(b => b.boxId)
+  )
+  siteBoxes.value = [...siteBoxes.value, { boxId }]
   // the box's own onMounted autofocuses its selector
 }
 
@@ -757,7 +765,6 @@ const clearSelected = async (ids: string[]): Promise<void> => {
   for (const id of ids) await engine.remove(id)
   await refreshItems()
 }
-
 
 const retryItem = async (id: string): Promise<void> => { await engine.retry(id); engine.start(); await refreshItems() }
 const clearItem = async (id: string): Promise<void> => { await engine.remove(id); await refreshItems() }
