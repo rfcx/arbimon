@@ -129,12 +129,12 @@ interface FeatureRow { label: string, free: TierCell, premium: TierCell }
 const rows: FeatureRow[] = [
   {
     label: 'Recordings',
-    free: { value: '12,000,000 minutes', detail: 'of audio storage per project' },
-    premium: { value: 'Unlimited minutes', detail: 'no storage ceiling' }
+    free: { value: 'Unlimited audio uploads', detail: 'no storage ceiling' },
+    premium: { value: 'Unlimited audio uploads', detail: 'no storage ceiling' }
   },
   {
     label: 'Team',
-    free: { value: 'Up to 5 collaborators', detail: 'plus unlimited guests' },
+    free: { value: 'Up to 5 collaborators', detail: 'including 1 Admin, plus unlimited guests' },
     premium: { value: 'Unlimited collaborators', detail: 'including co-admins' }
   },
   {

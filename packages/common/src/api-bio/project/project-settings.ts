@@ -44,6 +44,8 @@ export interface ProjectUsageLimits {
   recordingMinutesCount: number | null
   collaboratorCount: number | null
   guestCount: number | null
+  /** Max Admin-role members (subset of collaborators). NULL/undefined = unlimited. */
+  adminCount?: number | null
   jobCount: number | null
   jobRecordingCount: number | null
 }

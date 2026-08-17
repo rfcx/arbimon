@@ -6,7 +6,7 @@ import { type AccountTier, type ProjectType } from '@rfcx-bio/node-common/dao/ty
 
 import { getSequelize } from '~/db'
 import { BioNotFoundError, BioPublicError } from '~/errors'
-import { getAccountTierProjectLimitMap, getProjectTypeLimitMap } from '../tiering/tier-limit-bll'
+import { type ProjectTypeLimit, getAccountTierProjectLimitMap, getProjectTypeLimitMap } from '../tiering/tier-limit-bll'
 import { getProjectTieringUsage } from './dao/project-tiering-usage-dao'
 import { getProjectById } from './dao/projects-dao'
 
@@ -122,6 +122,42 @@ export const assertProjectExportAllowed = async (projectId: number): Promise<voi
   }
 }
 
+// Pro-owner exemption (2026-08-17, operator model): a project whose Primary
+// Admin (role_id 4) is a Pro user has NO team limits regardless of its
+// project_type — "once a project is Premium OR belongs to a Pro user, there
+// are no limits on collaborators or Admins or guests". Ownerless projects
+// (no role_id-4 row) get no exemption — limits apply by projectType.
+export const isProjectOwnedByProUser = async (locationProjectId: number): Promise<boolean> => {
+  const sequelize = getSequelize()
+  const rows = await sequelize.query<{ accountTier: AccountTier }>(
+    `
+      SELECT up.account_tier AS "accountTier"
+      FROM location_project_user_role lpur
+      JOIN user_profile up ON up.id = lpur.user_id
+      WHERE lpur.location_project_id = :locationProjectId
+        AND lpur.role_id = :ownerRoleId
+      LIMIT 1
+    `,
+    { replacements: { locationProjectId, ownerRoleId: OWNER_ROLE_ID }, type: QueryTypes.SELECT }
+  )
+  return rows[0]?.accountTier === 'pro'
+}
+
+// EFFECTIVE limits for display paths (project-info, entitlement-summary):
+// the tier map with the Pro-owner exemption applied, so clients can mirror
+// enforcement without knowing the exemption exists. Team caps only — the
+// non-team limits pass through untouched.
+export const getEffectiveProjectTypeLimits = async (locationProjectId: number, projectType: ProjectType): Promise<ProjectTypeLimit> => {
+  const map = await getProjectTypeLimitMap()
+  const limits = map[projectType]
+  const hasTeamCap = limits.collaboratorCount !== null || limits.guestCount !== null || (limits.adminCount ?? null) !== null
+  if (!hasTeamCap) return limits
+  if (await isProjectOwnedByProUser(locationProjectId)) {
+    return { ...limits, collaboratorCount: null, guestCount: null, adminCount: null }
+  }
+  return limits
+}
+
 export const assertProjectMemberUpdateAllowed = async (locationProjectId: number, requestedRole: Exclude<ProjectRole, 'none' | 'external'>, currentRole?: Exclude<ProjectRole, 'none' | 'external'>): Promise<void> => {
   const project = await getProjectById(locationProjectId)
   if (project === undefined) throw BioNotFoundError()
@@ -137,6 +173,19 @@ export const assertProjectMemberUpdateAllowed = async (locationProjectId: number
   const nextBucket = getMemberBucket(requestedRole)
   if (nextBucket === 'owner') return
 
+  // Admin-cap check runs on any transition INTO the admin role, including
+  // collaborator→admin (same bucket), so it must precede the same-bucket
+  // early-return. Only the CAPPED kinds consult the Pro exemption — the
+  // fully-unlimited path stays free of extra queries.
+  const becomesAdmin = requestedRole === 'admin' && currentRole !== 'admin'
+  if (becomesAdmin && limits.adminCount !== null && limits.adminCount !== undefined) {
+    const usage = await getProjectTieringUsage(locationProjectId)
+    const adminCount = usage?.adminCount
+    if (adminCount !== undefined && adminCount >= limits.adminCount && !(await isProjectOwnedByProUser(locationProjectId))) {
+      throw new BioPublicError(`${projectType} projects support up to ${limits.adminCount} Admin member${limits.adminCount === 1 ? '' : 's'} (besides the Primary Admin).`, 403)
+    }
+  }
+
   const currentBucket = currentRole === undefined ? undefined : getMemberBucket(currentRole)
   if (currentBucket === nextBucket) return
 
@@ -145,13 +194,19 @@ export const assertProjectMemberUpdateAllowed = async (locationProjectId: number
   const guestCount = usage?.guestCount ?? 0
 
   if (nextBucket === 'collaborator' && limits.collaboratorCount !== null && collaboratorCount >= limits.collaboratorCount) {
+    if (await isProjectOwnedByProUser(locationProjectId)) return
     throw new BioPublicError(`${projectType} projects support up to ${limits.collaboratorCount} collaborators.`, 403)
   }
 
   if (nextBucket === 'guest' && limits.guestCount !== null && guestCount >= limits.guestCount) {
+    if (await isProjectOwnedByProUser(locationProjectId)) return
     throw new BioPublicError(`${projectType} projects support up to ${limits.guestCount} guests.`, 403)
   }
 }
+
+// NOTE for future editors: the collaborator/guest caps deliberately consult
+// the Pro exemption ONLY on the reject path (after the cheap cap check), so
+// unlimited-tier requests never pay the extra query. Keep that ordering.
 
 export const getCurrentProjectRole = async (locationProjectId: number, userId: number): Promise<Exclude<ProjectRole, 'none' | 'external'> | undefined> => {
   const sequelize = getSequelize()

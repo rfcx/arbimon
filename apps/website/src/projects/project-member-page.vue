@@ -26,7 +26,10 @@
         class="grid lg:(grid-cols-2 gap-10)"
       >
         <div class="flex flex-col gap-y-10">
-          <div class="rounded-lg border border-util-gray-03 bg-util-gray-01 p-4 dark:(bg-moss border-util-gray-04) hidden">
+          <div
+            v-if="showMemberLimitBanner"
+            class="rounded-lg border border-util-gray-03 bg-util-gray-01 p-4 dark:(bg-moss border-util-gray-04)"
+          >
             <div class="flex flex-wrap items-center gap-2">
               <span class="rounded-full bg-frequency/10 px-3 py-1 text-sm font-medium text-frequency">
                 {{ projectTypeLabel }}
@@ -427,15 +430,37 @@ const projectTypeLabel = computed(() => {
   return `${projectType.charAt(0).toUpperCase()}${projectType.slice(1)}`
 })
 
+// Team-shape usage banner (2026-08-17): shown only when it carries signal —
+// the project is locked, or at least one team cap is armed for THIS project.
+// The server sends EFFECTIVE limits (Pro-owned projects report all-null team
+// caps), so unlimited projects never see a noisy "no cap" box and the banner
+// re-arms/retunes automatically with the DB-tunable project_type_limit rows.
+const showMemberLimitBanner = computed(() => {
+  if (projectInfo.value?.isLocked === true) return true
+  const limits = projectInfo.value?.limits
+  if (limits === undefined) return false
+  return limits.collaboratorCount !== null || limits.guestCount !== null || (limits.adminCount ?? null) !== null
+})
+
 const memberLimitMessage = computed(() => {
   if (projectInfo.value?.isLocked === true) {
     return 'This project is view-only, so member changes are disabled until the project is reactivated.'
   }
 
-  const projectType = projectInfo.value?.projectType ?? 'free'
-  const limits = projectInfo.value?.limits ?? getProjectTypeUsageLimits(projectType)
+  const limits = projectInfo.value?.limits ?? getProjectTypeUsageLimits(projectInfo.value?.projectType ?? 'free')
   const usage = projectInfo.value?.usage
-  return `${projectType.charAt(0).toUpperCase()}${projectType.slice(1)} member usage: ${usage?.collaboratorCount ?? 0} / ${limits.collaboratorCount === null ? 'No cap' : limits.collaboratorCount} collaborators, ${usage?.guestCount ?? 0} / ${limits.guestCount === null ? 'No cap' : limits.guestCount} guests.`
+  const parts: string[] = []
+  parts.push(limits.collaboratorCount === null
+    ? `${usage?.collaboratorCount ?? 0} collaborators (no limit)`
+    : `${usage?.collaboratorCount ?? 0}/${limits.collaboratorCount} collaborators`)
+  const adminLimit = limits.adminCount ?? null
+  if (adminLimit !== null) {
+    parts.push(`${usage?.adminCount ?? 0}/${adminLimit} Admin${adminLimit === 1 ? '' : 's'}`)
+  }
+  parts.push(limits.guestCount === null
+    ? `${usage?.guestCount ?? 0} guests (no limit)`
+    : `${usage?.guestCount ?? 0}/${limits.guestCount} guests`)
+  return parts.join(' · ')
 })
 
 const canAddMember = computed(() => {

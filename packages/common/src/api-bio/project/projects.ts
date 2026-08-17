@@ -16,6 +16,8 @@ export interface ProjectTieringUsage {
   recordingMinutesCount: number
   collaboratorCount: number
   guestCount: number
+  /** Members holding the Admin role (role_id 1); subset of collaboratorCount. Optional: absent from older payloads/views. */
+  adminCount?: number
   patternMatchingCount: number
 }
 

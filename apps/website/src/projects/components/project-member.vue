@@ -166,11 +166,22 @@ const getUserRoleName = (): string => {
   return role !== undefined ? role.name : 'Not defined'
 }
 
+// Tier rollback follow-up (2026-08-17): this previously HARDCODED the
+// April-2026 seed caps (premium 4 collaborators / 3 guests; free = block
+// every role change) long after the server limits were rolled back to NULL
+// (unlimited) on 2026-07-12 — leaving members stuck as Guest on free
+// projects and blocking promotions on larger premium projects, contrary to
+// the /pricing page. It now mirrors the server guard
+// (assertProjectMemberUpdateAllowed) using the SERVER-PROVIDED
+// projectInfo.limits + usage: NULL/undefined limits disable nothing, and if
+// limits ever go non-NULL again the pre-warning re-arms automatically with
+// the same bucket semantics as the server (same-bucket moves always allowed).
 const isRoleDisabled = (targetRoleId: number, currentRole: ProjectRole): boolean => {
   if (props.projectInfo?.isLocked === true) return true
 
-  const projectType = props.projectInfo?.projectType ?? 'free'
+  const limits = props.projectInfo?.limits
   const usage = props.projectInfo?.usage
+  if (limits === undefined || usage === undefined) return false
 
   const targetRoleName = getRoleById(targetRoleId) as ProjectRole
   const collaboratorRoles: ProjectRole[] = ['admin', 'expert', 'user', 'entry']
@@ -181,24 +192,22 @@ const isRoleDisabled = (targetRoleId: number, currentRole: ProjectRole): boolean
   const isTargetGuest = targetRoleName === 'viewer'
   const isCurrentGuest = currentRole === 'viewer'
 
-  if (projectType === 'premium') {
-    const collabCount = usage?.collaboratorCount ?? 0
-    const guestCount = usage?.guestCount ?? 0
-
-    if (isTargetCollaborator) {
-      if (isCurrentCollaborator) return false
-      return collabCount >= 4
-    }
-
-    // if should remove if can add guest more than 3
-    if (isTargetGuest) {
-      if (isCurrentGuest) return false
-      return guestCount >= 3
-    }
+  // Admin cap (team-shape limits 2026-08-17): checked on any transition INTO
+  // admin, including collaborator→admin, so it precedes the same-bucket
+  // pass-through — mirrors assertProjectMemberUpdateAllowed exactly. The
+  // server sends EFFECTIVE limits (Pro-owned projects report NULL caps), so
+  // no exemption logic exists client-side.
+  const adminLimit = limits.adminCount ?? null
+  if (targetRoleName === 'admin' && currentRole !== 'admin' && adminLimit !== null) {
+    if ((usage.adminCount ?? 0) >= adminLimit) return true
   }
 
-  if (projectType === 'free') {
-    return targetRoleName !== 'owner'
+  if (isTargetCollaborator && !isCurrentCollaborator && limits.collaboratorCount !== null) {
+    return usage.collaboratorCount >= limits.collaboratorCount
+  }
+
+  if (isTargetGuest && !isCurrentGuest && limits.guestCount !== null) {
+    return usage.guestCount >= limits.guestCount
   }
 
   return false

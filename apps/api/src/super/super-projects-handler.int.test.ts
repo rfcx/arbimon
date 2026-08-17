@@ -102,8 +102,9 @@ describe('Super projects route', async () => {
     expect(typeof results.data[0].id).toBe('number')
     expect(results.data[0].projectType).toBe('premium')
     expect(results.data[0].usage.recordingMinutesCount).toBeTypeOf('number')
-    expect(results.data[0].limits.collaboratorCount).toBe(4)
-    expect(results.data[0].limits.jobCount).toBe(200)
+    // Team-shape limits (2026-08-17): premium has NO team caps (all NULL).
+    expect(results.data[0].limits.collaboratorCount).toBe(null)
+    expect(results.data[0].limits.jobCount).toBe(null)
   })
 
   test(`GET ${superUsersRoute} returns super users with tier info`, async () => {
@@ -122,8 +123,9 @@ describe('Super projects route', async () => {
     expect(results.data[0].accountTier).toBe('pro')
     expect(results.data[0].ownedProjectCount).toBe(2)
     expect(results.data[0].viewOnlyProjectCount).toBe(1)
-    expect(results.data[0].limits.freeProjects).toBe(50)
-    expect(results.data[0].limits.premiumProjects).toBe(3)
+    // 2026-07-12 rollback: account-tier project-count caps are all NULL.
+    expect(results.data[0].limits.freeProjects).toBe(null)
+    expect(results.data[0].limits.premiumProjects).toBe(null)
     expect(results.data[0].usage.premiumProjects).toBe(1)
   })
 
