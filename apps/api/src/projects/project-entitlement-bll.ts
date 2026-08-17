@@ -204,6 +204,10 @@ export const assertProjectMemberUpdateAllowed = async (locationProjectId: number
   }
 }
 
+// NOTE for future editors: the collaborator/guest caps deliberately consult
+// the Pro exemption ONLY on the reject path (after the cheap cap check), so
+// unlimited-tier requests never pay the extra query. Keep that ordering.
+
 export const getCurrentProjectRole = async (locationProjectId: number, userId: number): Promise<Exclude<ProjectRole, 'none' | 'external'> | undefined> => {
   const sequelize = getSequelize()
   const row = await sequelize.query<{ roleId: number }>(
