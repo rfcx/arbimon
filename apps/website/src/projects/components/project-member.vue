@@ -192,6 +192,16 @@ const isRoleDisabled = (targetRoleId: number, currentRole: ProjectRole): boolean
   const isTargetGuest = targetRoleName === 'viewer'
   const isCurrentGuest = currentRole === 'viewer'
 
+  // Admin cap (team-shape limits 2026-08-17): checked on any transition INTO
+  // admin, including collaborator→admin, so it precedes the same-bucket
+  // pass-through — mirrors assertProjectMemberUpdateAllowed exactly. The
+  // server sends EFFECTIVE limits (Pro-owned projects report NULL caps), so
+  // no exemption logic exists client-side.
+  const adminLimit = limits.adminCount ?? null
+  if (targetRoleName === 'admin' && currentRole !== 'admin' && adminLimit !== null) {
+    if ((usage.adminCount ?? 0) >= adminLimit) return true
+  }
+
   if (isTargetCollaborator && !isCurrentCollaborator && limits.collaboratorCount !== null) {
     return usage.collaboratorCount >= limits.collaboratorCount
   }
