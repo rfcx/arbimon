@@ -7,6 +7,7 @@
  * list was widened.
  */
 import { describe, expect, it } from 'vitest'
+
 import { isSupportedAudioFile } from './browser-file-source'
 
 describe('isSupportedAudioFile — AIFF', () => {

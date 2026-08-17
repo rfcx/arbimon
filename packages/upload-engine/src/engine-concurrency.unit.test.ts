@@ -76,7 +76,7 @@ const mkSigned = (n: number): UploadItem => ({
   signedAtMs: Date.now()
 })
 
-const settle = async (ms = 60): Promise<void> => { await new Promise(r => setTimeout(r, ms)) }
+const settle = async (ms = 60): Promise<void> => { await new Promise(resolve => setTimeout(resolve, ms)) }
 
 describe('runtime upload concurrency', () => {
   test('defaults to 4', () => {

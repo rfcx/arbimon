@@ -6,7 +6,6 @@
 import { afterEach, describe, expect, test } from 'vitest'
 
 import { UploadEngine } from './engine'
-import { IngestApiError } from './ingest-api'
 import { createUploadItem } from './index'
 import { type FileSource, type UploadItem, type UploadItemState, type UploadStore } from './types'
 

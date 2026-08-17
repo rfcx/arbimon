@@ -674,6 +674,9 @@ const props = defineProps<{
   siteInfo?: { recCount: number, firstRecordingAt?: string, lastRecordingAt?: string }
 }>()
 
+/* eslint-disable func-call-spacing -- defineEmits is a COMPILER MACRO; the
+   call-signature syntax inside its generic is required, and the rule
+   misreads each `(e: ...)` signature as a spaced function call. */
 const emit = defineEmits<{
   (e: 'removeBox'): void
   (e: 'toggleCollapsed'): void
@@ -692,10 +695,11 @@ const emit = defineEmits<{
   (e: 'openDestination', item: UploadItem): void
   (e: 'editDatetime', edit: { id: string, localWallTime: string, timestampUtc: string, timezoneName: string }): void
 }>()
+/* eslint-enable func-call-spacing */
 
 // autofocus the site selector when the box mounts unlinked
 // The combobox exposes focus()/setQuery() rather than being a raw element.
-const sitePicker = ref<{ focus: () => void, setQuery: (v: string) => void }>()
+const sitePicker = ref<{ focus:() => void, setQuery: (v: string) => void }>()
 
 // -- per-row datetime correction (operator 2026-08-13) ----------------------
 // Pre-Start rows only: once signed/uploading the timestamp is part of the

@@ -146,7 +146,9 @@ describe('prestage', () => {
         const body = JSON.parse(String(init?.body)) as { uploads: unknown[] }
         await new Promise(resolve => setTimeout(resolve, 150))
         return new Response(JSON.stringify({
-          requested: 1, created: 1, failed: 0,
+          requested: 1,
+created: 1,
+failed: 0,
           uploads: body.uploads.map((_, index) => ({ index, ok: true, uploadId: 'u1', url: 'http://put.test/1' }))
         }), { status: 200 })
       }

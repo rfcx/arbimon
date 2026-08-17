@@ -158,11 +158,15 @@ const props = withDefaults(defineProps<{
   inputId: 'site-combobox'
 })
 
+/* eslint-disable func-call-spacing -- defineEmits is a COMPILER MACRO; the
+   call-signature syntax inside its generic is required, and the rule
+   misreads each `(e: ...)` signature as a spaced function call. */
 const emit = defineEmits<{
   (e: 'select', id: string): void
   /** user asked to create a site; carries whatever they had typed (may be '') */
   (e: 'create', name: string): void
 }>()
+/* eslint-enable func-call-spacing */
 
 const root = ref<HTMLElement>()
 const input = ref<HTMLInputElement>()

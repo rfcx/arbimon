@@ -227,7 +227,9 @@
         <button
           class="text-frequency hover:underline"
           @click="popOut"
-        >try opening it again</button>.
+        >
+          try opening it again
+        </button>.
       </p>
     </div>
 
@@ -1027,9 +1029,6 @@ const linkBoxToSite = (boxId: string, streamId: string): void => {
 const removeSiteBox = (boxId: string): void => {
   siteBoxes.value = siteBoxes.value.filter(box => box.boxId !== boxId)
 }
-
-const boxForStream = (streamId: string): SiteBox | undefined =>
-  siteBoxes.value.find(box => box.streamId === streamId)
 
 const itemsForBox = (streamId: string): UploadItem[] =>
   projectItems.value.filter(item => item.streamId === streamId)

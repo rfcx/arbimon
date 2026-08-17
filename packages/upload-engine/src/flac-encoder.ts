@@ -18,6 +18,10 @@
  *    of producing a bad file).
  */
 
+/* eslint-disable-next-line @typescript-eslint/triple-slash-reference --
+   LOAD-BEARING: apps/website (vue-tsc) compiles this package's SOURCE via
+   workspace paths and does NOT inherit this package's tsconfig "paths", so
+   an `import` form does not reach the shim and those builds fail. */
 /// <reference path="./libflacjs.d.ts" />
 // ^ the shim must travel with this file: consumers (apps/website vue-tsc)
 // compile upload-engine SOURCE through workspace paths and do not inherit
@@ -62,7 +66,7 @@ export async function loadFlac (): Promise<any> {
   if (!flacModulePromise) {
     flacModulePromise = (async () => {
       const mod = await import('libflacjs/dist/libflac.js')
-      const Flac = (mod as any).default ?? mod
+      const Flac = (mod).default ?? mod
       if (Flac.isReady() !== true) {
         await new Promise<void>((resolve) => Flac.on('ready', () => { resolve() }))
       }
@@ -210,7 +214,7 @@ export async function decodeFlacToPcm (flacBytes: Uint8Array): Promise<{
   const { Decoder } = await import('libflacjs/lib/decoder')
   const decoder = new Decoder(Flac, { verify: true })
   try {
-    const ok = decoder.decode(flacBytes)
+    const ok: boolean = decoder.decode(flacBytes) === true
     if (!ok) { throw new Error('FLAC decode failed') }
     const meta = decoder.metadata
     const raw: Uint8Array[] = decoder.getSamples() // per-channel byte views

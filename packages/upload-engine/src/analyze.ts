@@ -21,9 +21,9 @@
  */
 
 import { probeAudioMetadata } from './audio-metadata'
+import { checkRecordingProvenance, historicalDateNotice } from './recorder-provenance'
 import { parseTimestamp, TIMESTAMP_FORMAT_AUTO, toUtcIso } from './timestamp-parser'
 import { type TimezoneSource, type UploadItem } from './types'
-import { checkRecordingProvenance, historicalDateNotice } from './recorder-provenance'
 import { extractEmbeddedTimestamp, formatOffset } from './wav-embedded-timestamp'
 
 export type TimezoneMode = 'auto' | 'site' | 'utc' | 'metadata'

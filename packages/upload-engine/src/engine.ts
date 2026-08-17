@@ -18,8 +18,8 @@
 
 import { AdaptiveConcurrencyController } from './adaptive-concurrency'
 import { IngestApi, IngestApiError, putToSignedUrl } from './ingest-api'
-import { sha1HexOfBlob } from './sha1'
 import { MULTIPART_THRESHOLD_BYTES, MultipartApi, uploadParts } from './multipart'
+import { sha1HexOfBlob } from './sha1'
 import { type BulkSignRequestItem, type FileSource, type QueueStats, type TokenProvider, type UploadEngineConfig, type UploadEngineEvent, type UploadEngineListener, type UploadItem, type UploadItemState, type UploadStore, SERVER_STATUS } from './types'
 
 const DEFAULTS = {
@@ -135,9 +135,10 @@ export interface PrepareResult {
 export type PrepareFn = (item: UploadItem, file: Blob) => Promise<PrepareResult>
 
 export class UploadEngine {
+  private static readonly RATE_LIMIT_FLOOR_MS = 2500
   private async emitStats (): Promise<void> {
-    this.emit({ type: 'stats', stats: await this.stats() })
-  }
+      this.emit({ type: 'stats', stats: await this.stats() })
+    }
 
   private readonly config: Required<Omit<UploadEngineConfig, 'laneTier'>> &
     Pick<UploadEngineConfig, 'laneTier'>
@@ -184,9 +185,8 @@ export class UploadEngine {
   //     rather than letting every worker slam into the same window;
   // (c) 429 attempts do NOT count toward maxAttempts — rate limiting is
   //     congestion, not failure, and must never terminal-fail a file.
-  private rateLimitedUntil = new Map<string, number>()
+  private readonly rateLimitedUntil = new Map<string, number>()
   private rateLimitBurst = 0
-  private static readonly RATE_LIMIT_FLOOR_MS = 2500
 
   /**
    * Adaptive upload concurrency (2026-08-13). The right number of parallel
@@ -198,44 +198,31 @@ export class UploadEngine {
    */
   private readonly adaptive = new AdaptiveConcurrencyController()
 
-  /** The upload cap in force right now: learned, bounded by the config cap. */
-  private effectiveUploadLimit (): number {
-    if (!this.config.adaptiveConcurrency) return this.config.maxConcurrentUploads
-    // maxConcurrentUploads is the CEILING the controller may not exceed, so an
-    // explicitly lowered cap is still honoured.
-    return Math.min(this.adaptive.limit, this.config.maxConcurrentUploads)
-  }
-
-  /** Current concurrency state (UI / telemetry / debugging). */
-  get concurrencyState (): {
-    limit: number
-    adaptive: boolean
-    gradient?: number
-    samples: number
-    probing: boolean
-  } {
-    const state = this.adaptive.state
-    return {
-      limit: this.effectiveUploadLimit(),
-      adaptive: this.config.adaptiveConcurrency,
-      gradient: state.gradient,
-      samples: state.samples,
-      probing: state.probing
-    }
-  }
-
-  /** Restrict which items this engine instance drives (see field note). */
-  setScope (predicate: ((item: UploadItem) => boolean) | undefined): void {
-    this.scope = predicate ?? (() => true)
-    this.kick()
-  }
-
-  private async listScoped (states: UploadItemState[]): Promise<UploadItem[]> {
-    return (await this.store.list(states)).filter(this.scope)
-  }
   private readonly abortControllers = new Map<string, AbortController>()
+/** Current concurrency state (UI / telemetry / debugging). */
+  get concurrencyState (): {
+      limit: number
+      adaptive: boolean
+      gradient?: number
+      samples: number
+      probing: boolean
+    } {
+      const state = this.adaptive.state
+      return {
+        limit: this.effectiveUploadLimit(),
+        adaptive: this.config.adaptiveConcurrency,
+        gradient: state.gradient,
+        samples: state.samples,
+        probing: state.probing
+      }
+    }
 
-  constructor (
+/** The configured parallel-upload ceiling (for UI display). */
+  get maxConcurrentUploads (): number {
+      return this.config.maxConcurrentUploads
+    }
+
+constructor (
     config: UploadEngineConfig,
     private readonly store: UploadStore,
     private readonly fileSource: FileSource,
@@ -252,6 +239,24 @@ export class UploadEngine {
     this.config = { ...DEFAULTS, ...provided, ingestBaseUrl: config.ingestBaseUrl }
     this.api = new IngestApi(config.ingestBaseUrl, tokenProvider)
     this.multipartApi = new MultipartApi(config.ingestBaseUrl, tokenProvider)
+  }
+
+/** The upload cap in force right now: learned, bounded by the config cap. */
+  private effectiveUploadLimit (): number {
+    if (!this.config.adaptiveConcurrency) return this.config.maxConcurrentUploads
+    // maxConcurrentUploads is the CEILING the controller may not exceed, so an
+    // explicitly lowered cap is still honoured.
+    return Math.min(this.adaptive.limit, this.config.maxConcurrentUploads)
+  }
+
+/** Restrict which items this engine instance drives (see field note). */
+  setScope (predicate: ((item: UploadItem) => boolean) | undefined): void {
+    this.scope = predicate ?? (() => true)
+    this.kick()
+  }
+
+  private async listScoped (states: UploadItemState[]): Promise<UploadItem[]> {
+    return (await this.store.list(states)).filter(this.scope)
   }
 
   // -- public API -----------------------------------------------------------
@@ -537,7 +542,7 @@ export class UploadEngine {
       } catch { present = false }
       if (present) {
         // A handle came back (folder re-added): clear a stale notice.
-        if (item.notice !== undefined && item.notice.includes('re-add')) {
+        if (item.notice?.includes('re-add') === true) {
           await this.update(item, { notice: undefined })
         }
         continue
@@ -614,11 +619,6 @@ export class UploadEngine {
     if (next === this.config.maxConcurrentUploads) return
     this.config.maxConcurrentUploads = next
     this.kick()
-  }
-
-  /** The configured parallel-upload ceiling (for UI display). */
-  get maxConcurrentUploads (): number {
-    return this.config.maxConcurrentUploads
   }
 
   /**

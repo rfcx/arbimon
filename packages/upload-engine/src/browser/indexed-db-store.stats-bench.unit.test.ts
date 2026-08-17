@@ -13,10 +13,12 @@
  * bytesUploaded, which counts alone cannot provide. This measures the ceiling
  * of the index approach, not a finished design.
  */
-import 'fake-indexeddb/auto'
 import { describe, expect, it } from 'vitest'
-import { IndexedDbUploadStore } from './indexed-db-store'
+
 import type { UploadItem, UploadItemState } from '../types'
+import { IndexedDbUploadStore } from './indexed-db-store'
+
+import 'fake-indexeddb/auto'
 
 const STATES: UploadItemState[] = [
   'analyzing', 'staged', 'queued', 'preparing', 'ready', 'signing',
@@ -25,10 +27,10 @@ const STATES: UploadItemState[] = [
 ]
 
 const DEPTH = Number(process.env.BENCH_DEPTH ?? 1586) // Perth batch size in the prompt
-const REPS = Number(process.env.BENCH_REPS ?? 5)      // repeat to expose variance
+const REPS = Number(process.env.BENCH_REPS ?? 5) // repeat to expose variance
 
 function mk (i: number): UploadItem {
-  return {
+  const item: UploadItem = {
     id: `i${i}`,
     state: STATES[i % STATES.length],
     filename: `file-${i}.wav`,
@@ -36,8 +38,10 @@ function mk (i: number): UploadItem {
     createdAtMs: i,
     updatedAtMs: i,
     attempts: 0,
-    streamId: `stream-${i % 7}`
-  } as UploadItem
+    streamId: `stream-${i % 7}`,
+    relativePath: `file-${i}.wav`
+  }
+  return item
 }
 
 describe(`stats() cost at depth ${DEPTH}`, () => {
@@ -73,10 +77,10 @@ describe(`stats() cost at depth ${DEPTH}`, () => {
       const tx = db.transaction('upload-items', 'readonly')
       const idx = tx.objectStore('upload-items').index('state')
       counts = await Promise.all(
-        STATES.map(async s => await new Promise<number>((res, rej) => {
+        STATES.map(async s => await new Promise<number>((resolve, reject) => {
           const rq = idx.count(s)
-          rq.onsuccess = () => { res(rq.result) }
-          rq.onerror = () => { rej(rq.error) }
+          rq.onsuccess = () => { resolve(rq.result) }
+          rq.onerror = () => { reject(rq.error) }
         }))
       )
       idxTimes.push(performance.now() - t1)
@@ -89,27 +93,29 @@ describe(`stats() cost at depth ${DEPTH}`, () => {
     const t2 = performance.now()
     const tx2 = db.transaction('upload-items', 'readonly')
     const idx2 = tx2.objectStore('upload-items').index('state')
-    await new Promise<number>((res, rej) => {
+    await new Promise<number>((resolve, reject) => {
       const r = idx2.count('uploaded')
-      r.onsuccess = () => { res(r.result) }
-      r.onerror = () => { rej(r.error) }
+      r.onsuccess = () => { resolve(r.result) }
+      r.onerror = () => { reject(r.error) }
     })
     const tOne = performance.now() - t2
 
     // D) getAll() WITHOUT the sort list() applies, to price the sort separately
     const t3 = performance.now()
     const tx3 = db.transaction('upload-items', 'readonly')
-    await new Promise<unknown>((res, rej) => {
+    await new Promise<unknown>((resolve, reject) => {
       const r = tx3.objectStore('upload-items').getAll()
-      r.onsuccess = () => { res(r.result) }
-      r.onerror = () => { rej(r.error) }
+      r.onsuccess = () => { resolve(r.result) }
+      r.onerror = () => { reject(r.error) }
     })
     const tGetAll = performance.now() - t3
 
+    /* eslint-disable no-console -- the measured numbers ARE this test's output */
     console.log(`\n[stats bench @ depth ${DEPTH}]`)
     console.log(`  A) list() + sum        : ${tList.toFixed(2)} ms   <- what stats() does today`)
     console.log(`  B) index count() x15   : ${tIndex.toFixed(2)} ms   -> speedup ${(tList / tIndex).toFixed(1)}x`)
     console.log(`  C) index count() x1    : ${tOne.toFixed(2)} ms   -> "speedup" ${(tList / tOne).toFixed(1)}x (NOT a full stats object)`)
     console.log(`  D) getAll(), no sort   : ${tGetAll.toFixed(2)} ms   (sort cost = ${(tList - tGetAll).toFixed(2)} ms)\n`)
+    /* eslint-enable no-console */
   })
 })

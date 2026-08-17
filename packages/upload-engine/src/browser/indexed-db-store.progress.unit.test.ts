@@ -10,13 +10,15 @@
  *
  * Measured, not assumed.
  */
-import 'fake-indexeddb/auto'
 import { describe, expect, it } from 'vitest'
-import { IndexedDbUploadStore } from './indexed-db-store'
+
 import type { UploadItem } from '../types'
+import { IndexedDbUploadStore } from './indexed-db-store'
+
+import 'fake-indexeddb/auto'
 
 function item (over: Partial<UploadItem> = {}): UploadItem {
-  return {
+  const base: UploadItem = {
     id: 'i1',
     state: 'uploading',
     filename: 'a.wav',
@@ -25,9 +27,10 @@ function item (over: Partial<UploadItem> = {}): UploadItem {
     updatedAtMs: 1,
     attempts: 0,
     streamId: 's1',
-    progress: 0.5,
-    ...over
-  } as UploadItem
+    relativePath: 'a.wav',
+    progress: 0.5
+  }
+  return { ...base, ...over }
 }
 
 describe('IndexedDbUploadStore progress round-trip', () => {

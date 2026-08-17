@@ -215,11 +215,15 @@ const props = withDefaults(defineProps<{
   site: undefined
 })
 
+/* eslint-disable func-call-spacing -- defineEmits is a COMPILER MACRO; the
+   call-signature syntax inside its generic is required, and the rule
+   misreads each `(e: ...)` signature as a spaced function call. */
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'created', site: SiteSaved): void
   (e: 'updated', site: SiteSaved): void
 }>()
+/* eslint-enable func-call-spacing */
 
 const siteName = ref(props.site?.name ?? '')
 const lat = ref(props.site?.lat != null ? String(props.site.lat) : '')
