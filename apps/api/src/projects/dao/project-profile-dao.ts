@@ -8,7 +8,7 @@ import { getProjectMetrics } from '@/dashboard/dashboard-metrics-dao'
 import { getRichnessByTaxon } from '@/dashboard/dashboard-species-data-dao'
 import { getSequelize } from '~/db'
 import { fileUrl } from '~/format-helpers/file-url'
-import { getProjectTypeLimitMap } from '../../tiering/tier-limit-bll'
+import { getEffectiveProjectTypeLimits } from '../project-entitlement-bll'
 import { getImageByObjectives, resolveProjectImage } from '../utils/image-by-objective'
 import { getProjectTieringUsage } from './project-tiering-usage-dao'
 
@@ -90,8 +90,9 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
   if (!resProject) throw new Error(`Failed to get project settings for locationProjectId: ${locationProjectId}`)
   const usage = await getProjectTieringUsage(locationProjectId)
   const projectType = resProject.projectType ?? 'free'
-  const projectTypeLimitMap = await getProjectTypeLimitMap()
-  const limits = projectTypeLimitMap[projectType]
+  // Effective limits: Pro-owned projects report team caps as NULL so the
+  // members-page mirror never pre-warns where the server would allow.
+  const limits = await getEffectiveProjectTypeLimits(locationProjectId, projectType)
 
   const baseProject = {
     name: resProject.name,

@@ -168,13 +168,21 @@ test(`PATCH ${projectMembersRoute} removes user`, async () => {
   expect(updateProjectMemberLegacy).toBeCalledTimes(1)
 })
 
-test(`POST ${projectMembersRoute} rejects collaborator over premium limit`, async () => {
+// Team-shape limits (2026-08-17): the tests below exercise the FREE tier as
+// armed by migration 260817-01 (5 collaborators / 1 Admin / unlimited
+// guests). The previous versions of these tests asserted the April-2026
+// premium caps (4/3) which were NULLed by the 2026-07-12 rollback — they
+// were latently red on master (they only ever passed on develop, which
+// predates the rollback). Now the tests pin the seeded-by-migrations state
+// so a migration/default drift fails loudly.
+
+test(`POST ${projectMembersRoute} rejects collaborator over free limit`, async () => {
   const app = await makeApp(routesProject, { projectRole: 'admin' })
   const project = await LocationProject.findOne({ where: { slug: { [Op.like]: 'grey-blue-humpback%' } } })
-  await LocationProject.update({ projectType: 'premium' }, { where: { id: project?.id } })
+  await LocationProject.update({ projectType: 'free' }, { where: { id: project?.id } })
 
   const collaboratorIds = await UserProfile.findAll({
-    where: { email: { [Op.in]: extraUsers.slice(0, 4).map(user => user.email) } },
+    where: { email: { [Op.in]: extraUsers.slice(0, 5).map(user => user.email) } },
     attributes: ['id'],
     raw: true
   }).then(rows => rows.map(row => row.id))
@@ -194,37 +202,101 @@ test(`POST ${projectMembersRoute} rejects collaborator over premium limit`, asyn
   })
 
   expect(response.statusCode).toBe(403)
-  expect(response.json().message).toContain('up to 4 collaborators')
+  expect(response.json().message).toContain('up to 5 collaborators')
 })
 
-test(`PATCH ${projectMembersRoute} rejects guest over premium limit`, async () => {
+test(`POST ${projectMembersRoute} allows guests over the collaborator cap (guests unlimited on free)`, async () => {
+  const app = await makeApp(routesProject, { projectRole: 'admin' })
+  const project = await LocationProject.findOne({ where: { slug: { [Op.like]: 'grey-blue-humpback%' } } })
+  await LocationProject.update({ projectType: 'free' }, { where: { id: project?.id } })
+
+  const collaboratorIds = await UserProfile.findAll({
+    where: { email: { [Op.in]: extraUsers.slice(0, 5).map(user => user.email) } },
+    attributes: ['id'],
+    raw: true
+  }).then(rows => rows.map(row => row.id))
+
+  await LocationProjectUserRole.bulkCreate(collaboratorIds.map(userId => ({
+    locationProjectId: project?.id ?? 0,
+    userId,
+    roleId: getIdByRole('user'),
+    ranking: 0
+  })))
+
+  const response = await app.inject({
+    method: POST,
+    url: projectMembersRoute.replace(':projectId', project?.id.toString() ?? ''),
+    payload: { email: newUser.email, role: 'viewer' },
+    headers: { Authorization: fakeToken }
+  })
+
+  expect(response.statusCode).toBe(204)
+  expect(addProjectMemberLegacy).toBeCalledTimes(1)
+})
+
+test(`PATCH ${projectMembersRoute} rejects a second Admin on free (admin cap 1, incl. same-bucket promote)`, async () => {
   const app = await makeApp(routesProject, { projectRole: 'admin' })
   const project = await LocationProject.findOne({ where: { slug: { [Op.like]: 'grey-blue-humpback%' } } })
   const locationProjectId = project?.id ?? 0
-  await LocationProject.update({ projectType: 'premium' }, { where: { id: locationProjectId } })
+  await LocationProject.update({ projectType: 'free' }, { where: { id: locationProjectId } })
 
-  const guestIds = await UserProfile.findAll({
-    where: { email: { [Op.in]: extraUsers.slice(4, 8).map(user => user.email) } },
+  const [firstAdminId] = await UserProfile.findAll({
+    where: { email: extraUsers[0].email },
     attributes: ['id'],
     raw: true
   }).then(rows => rows.map(row => row.id))
   const targetUserId = await UserProfile.findOne({ where: { email: newUser.email } }).then(user => user?.id ?? 0)
 
-  await LocationProjectUserRole.bulkCreate(guestIds.slice(0, 3).map(userId => ({
-    locationProjectId,
-    userId,
-    roleId: getIdByRole('viewer'),
-    ranking: 0
-  })))
-  await LocationProjectUserRole.create({ locationProjectId, userId: targetUserId, roleId: getIdByRole('user'), ranking: 0 })
+  await LocationProjectUserRole.bulkCreate([
+    { locationProjectId, userId: firstAdminId, roleId: getIdByRole('admin'), ranking: 0 },
+    // target is already a collaborator — user→admin is same-bucket, which the
+    // admin cap must still block
+    { locationProjectId, userId: targetUserId, roleId: getIdByRole('user'), ranking: 0 }
+  ])
 
   const response = await app.inject({
     method: PATCH,
     url: projectMembersRoute.replace(':projectId', locationProjectId.toString()),
-    payload: { email: newUser.email, role: 'viewer' },
+    payload: { email: newUser.email, role: 'admin' },
     headers: { Authorization: fakeToken }
   })
 
   expect(response.statusCode).toBe(403)
-  expect(response.json().message).toContain('up to 3 guests')
+  expect(response.json().message).toContain('up to 1 Admin member')
+})
+
+test(`POST ${projectMembersRoute} pro-owned free project is exempt from team caps`, async () => {
+  const app = await makeApp(routesProject, { projectRole: 'admin' })
+  const project = await LocationProject.findOne({ where: { slug: { [Op.like]: 'grey-blue-humpback%' } } })
+  const locationProjectId = project?.id ?? 0
+  await LocationProject.update({ projectType: 'free' }, { where: { id: locationProjectId } })
+
+  // make the creator (currentUserId) the Primary Admin and a Pro user
+  await LocationProjectUserRole.upsert({ locationProjectId, userId: currentUserId, roleId: getIdByRole('owner'), ranking: 0 })
+  await UserProfile.update({ accountTier: 'pro' }, { where: { id: currentUserId } })
+
+  const collaboratorIds = await UserProfile.findAll({
+    where: { email: { [Op.in]: extraUsers.slice(0, 5).map(user => user.email) } },
+    attributes: ['id'],
+    raw: true
+  }).then(rows => rows.map(row => row.id))
+  await LocationProjectUserRole.bulkCreate(collaboratorIds.map(userId => ({
+    locationProjectId,
+    userId,
+    roleId: getIdByRole('user'),
+    ranking: 0
+  })))
+
+  const response = await app.inject({
+    method: POST,
+    url: projectMembersRoute.replace(':projectId', locationProjectId.toString()),
+    payload: { email: newUser.email, role: 'user' },
+    headers: { Authorization: fakeToken }
+  })
+
+  // over the 5-collab cap, but the Pro-owner exemption lifts all team limits
+  expect(response.statusCode).toBe(204)
+
+  // restore tier for other tests
+  await UserProfile.update({ accountTier: 'free' }, { where: { id: currentUserId } })
 })

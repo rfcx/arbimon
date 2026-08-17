@@ -7,10 +7,10 @@ import { type Project } from '@rfcx-bio/node-common/dao/types'
 
 import { getProjectTieringUsageLegacy } from '~/api-legacy-arbimon'
 import { BioNotFoundError } from '~/errors'
-import { getProjectTypeLimitMap } from '../tiering/tier-limit-bll'
 import { getUserRoleForProject } from './dao/project-member-dao'
 import { getProjectTieringUsage } from './dao/project-tiering-usage-dao'
 import { getProjectByCoreId, getProjectBySlug, query } from './dao/projects-dao'
+import { getEffectiveProjectTypeLimits } from './project-entitlement-bll'
 
 export const getProjects = async (limit?: number, offset?: number): Promise<ProjectsResponse> => {
   return await query<Project>({ status: ['listed', 'published'] }, { limit, offset })
@@ -59,13 +59,15 @@ export const getProjectEntitlementSummaryBySlug = async (slug: string): Promise<
   if (project === undefined) { throw BioNotFoundError() }
 
   const projectType = project.projectType ?? 'free'
-  const projectTypeLimitMap = await getProjectTypeLimitMap()
+  // Effective limits (Pro-owner exemption applied) — legacy + clients see the
+  // caps that will actually be enforced for THIS project.
+  const limits = await getEffectiveProjectTypeLimits(project.id, projectType)
 
   return {
     slug: project.slug,
     projectType,
     isLocked: project.isLocked,
-    limits: projectTypeLimitMap[projectType]
+    limits
   }
 }
 
@@ -74,11 +76,15 @@ export const getProjectUploadLimitSummaryByCoreId = async (idCore: string, token
   if (project === undefined) { throw BioNotFoundError() }
 
   const projectType: NonNullable<Project['projectType']> = project.projectType ?? 'free'
-  const projectTypeLimitMap = await getProjectTypeLimitMap()
-  const limits = projectTypeLimitMap[projectType]
   const legacyUsage = await getProjectTieringUsageLegacy(token, project.slug)
   const recordingMinutesCount = Number(legacyUsage.recordingMinutesCount ?? 0)
-  const recordingMinutesLimit = limits.recordingMinutesCount
+
+  // Unlimited audio uploads on EVERY tier (operator decision 2026-08-17 —
+  // pricing Recordings row). The per-project recording-library limit is
+  // REMOVED as policy, not merely NULL-by-data: this path no longer consults
+  // project_type_limit.recording_minutes_limit, so re-arming that column
+  // cannot silently re-gate ingest. Usage is still reported for display.
+  const recordingMinutesLimit = null
 
   return {
     idCore: project.idCore,
@@ -87,6 +93,6 @@ export const getProjectUploadLimitSummaryByCoreId = async (idCore: string, token
     isLocked: project.isLocked,
     recordingMinutesCount,
     recordingMinutesLimit,
-    remainingRecordingMinutes: recordingMinutesLimit === null ? null : Math.max(0, recordingMinutesLimit - recordingMinutesCount)
+    remainingRecordingMinutes: null
   }
 }
