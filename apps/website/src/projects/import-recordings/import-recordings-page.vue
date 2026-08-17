@@ -627,7 +627,7 @@
         ref="fileInput"
         type="file"
         multiple
-        accept=".wav,.flac,.opus"
+        accept=".wav,.flac,.opus,.aiff,.aif"
         class="hidden"
         @change="onPick"
       >

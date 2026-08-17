@@ -83,7 +83,13 @@ export const collectDroppedFiles = async (
   return out
 }
 
-const SUPPORTED_EXTENSIONS = new Set(['wav', 'flac', 'opus'])
+// Must stay in step with the INGEST service's `supportedExtensions`
+// (`services/rfcx/ingest.js`). AIFF was added there in rfcx/ingest-service #122,
+// merged + deployed to prod as `rfcx-local-prod-7e742f8` on 2026-08-17 and
+// verified in-pod on BOTH the api and tasks tiers before this list was widened.
+// ORDERING MATTERS: demo's uploader posts to the LIVE production ingest, so the
+// client must never offer an extension prod would reject.
+const SUPPORTED_EXTENSIONS = new Set(['wav', 'flac', 'opus', 'aiff', 'aif'])
 
 export const isSupportedAudioFile = (fileName: string): boolean => {
   const extension = fileName.split('.').pop()?.toLowerCase() ?? ''

@@ -72,7 +72,7 @@ export interface UploadItem {
   /** Display string: IANA zone name or `+HH:MM` offset or `UTC`. */
   timezoneName?: string
   /** Container format from the header probe. */
-  fileFormat?: 'wav' | 'flac' | 'opus' | 'unknown'
+  fileFormat?: 'wav' | 'flac' | 'opus' | 'aiff' | 'unknown'
   /** Analysis failure (no timestamp derivable, unreadable, …). Item stays
    * `staged` but is excluded from Start until resolved/cleared. */
   analysisError?: string

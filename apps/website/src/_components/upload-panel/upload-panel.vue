@@ -62,7 +62,7 @@
         Drag &amp; drop audio files or folders here
       </p>
       <p class="text-sm text-cloud mt-2">
-        .wav, .flac, .opus — WAV up to 200MB, FLAC up to 1GB per file
+        .wav, .flac, .opus, .aiff — WAV/AIFF up to 200MB, FLAC up to 1GB per file
       </p>
       <button
         class="btn btn-secondary mt-4"
@@ -75,7 +75,7 @@
         ref="fileInput"
         type="file"
         multiple
-        accept=".wav,.flac,.opus"
+        accept=".wav,.flac,.opus,.aiff,.aif"
         class="hidden"
         @change="onPick"
       >

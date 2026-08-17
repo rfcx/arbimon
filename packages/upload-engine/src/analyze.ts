@@ -82,6 +82,11 @@ const detectFormat = (filename: string): UploadItem['fileFormat'] => {
   if (ext === 'wav') return 'wav'
   if (ext === 'flac') return 'flac'
   if (ext === 'opus') return 'opus'
+  // AIFF (2026-08-17, alongside ingest #122). Reported for accurate display
+  // only -- it deliberately does NOT unlock the WAV-only paths below
+  // (embedded GUANO/ICMT scanning, FLAC-transcode-on-upload), which are
+  // genuinely WAV-specific. Before this, AIFF fell through to 'unknown'.
+  if (ext === 'aiff' || ext === 'aif') return 'aiff'
   return 'unknown'
 }
 
