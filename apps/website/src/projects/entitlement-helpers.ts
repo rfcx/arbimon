@@ -4,6 +4,8 @@ export interface ProjectUsageLimitSummary {
   recordingMinutesCount: number | null
   collaboratorCount: number | null
   guestCount: number | null
+  /** Max Admin-role members (subset of collaborators). NULL/undefined = unlimited. */
+  adminCount?: number | null
   jobCount: number | null
   jobRecordingCount: number | null
 }
@@ -40,13 +42,17 @@ export const getProjectTypeCreateDescription = (projectType: ProjectType): strin
 }
 
 export const getProjectTypeUsageLimits = (projectType: ProjectType): ProjectUsageLimitSummary => {
-  // Tier rollback (2026-07-12): all limits are unlimited for every project
-  // type. This client-side fallback must never be tighter than the server
-  // (bio-api project_type_limit rows, which are all NULL).
+  // Client-side FALLBACK for when the server's limits are unavailable. It
+  // must never be TIGHTER than the server (bio-api project_type_limit rows),
+  // so everything is null (= no client-side gating and, since the team-shape
+  // banner only shows for armed caps, no banner) until the server responds.
+  // The server's effective limits are the authority (free is 5/1 as of the
+  // 2026-08-17 team-shape migration; tunable in DB without rebuild).
   return {
     recordingMinutesCount: null,
     collaboratorCount: null,
     guestCount: null,
+    adminCount: null,
     jobCount: null,
     jobRecordingCount: null
   }
