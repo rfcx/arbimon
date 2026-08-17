@@ -31,6 +31,11 @@ export interface SiteResponse {
   name: string
   published: number
   rec_count: number
+  /** Oldest/newest recording datetime at this site; null when it has none.
+   * Computed alongside rec_count (arbimon-legacy projects.getProjectSites) and
+   * only present when the request asks for counts. */
+  first_recording_at?: string | null
+  last_recording_at?: string | null
   timezone: string
   timezone_locked: number
   updated_at: string

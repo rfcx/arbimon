@@ -37,6 +37,17 @@
           </option>
         </select>
       </div>
+      <!-- #112: client-side lossless FLAC encoding toggle -->
+      <label class="flex items-center gap-x-2 text-sm cursor-pointer select-none">
+        <input
+          v-model="flacEncodeEnabled"
+          type="checkbox"
+          class="rounded border-cloud/30"
+        >
+        <span :title="'Losslessly convert WAV files to FLAC in your browser before uploading — about half the upload size, bit-identical audio. Files that cannot be converted losslessly (e.g. 32-bit float) upload unchanged.'">
+          Convert WAV → FLAC before upload (lossless)
+        </span>
+      </label>
     </div>
 
     <!-- Drop zone -->
@@ -51,7 +62,7 @@
         Drag &amp; drop audio files or folders here
       </p>
       <p class="text-sm text-cloud mt-2">
-        .wav, .flac, .opus — WAV up to 200MB, FLAC up to 1GB per file
+        .wav, .flac, .opus, .aiff — WAV/AIFF up to 200MB, FLAC up to 1GB per file
       </p>
       <button
         class="btn btn-secondary mt-4"
@@ -64,7 +75,7 @@
         ref="fileInput"
         type="file"
         multiple
-        accept=".wav,.flac,.opus"
+        accept=".wav,.flac,.opus,.aiff,.aif"
         class="hidden"
         @change="onPick"
       >
@@ -187,7 +198,7 @@ import { type UploadItem, type UploadItemState, collectDroppedFiles, createUploa
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { track } from '~/analytics'
-import { engine, engineRunning, fileSource, items, prepareOptions, refreshItems, stats, uploadStore } from '~/upload'
+import { engine, engineRunning, fileSource, flacEncodeEnabled, items, prepareOptions, refreshItems, stats, uploadStore } from '~/upload'
 
 const props = defineProps<{
   sites: SiteResponse[]
@@ -353,6 +364,9 @@ const formatBytes = (bytes: number): string => {
 }
 
 const STATE_LABELS: Record<UploadItemState, string> = {
+  analyzing: 'Analyzing…',
+  staged: 'Staged',
+  cancelled: 'Cancelled',
   queued: 'Queued',
   preparing: 'Preparing…',
   ready: 'Ready',

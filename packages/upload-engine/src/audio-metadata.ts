@@ -9,6 +9,8 @@
 export interface AudioMetadata {
   durationMs?: number
   sampleRateHz?: number
+  /** Bits per sample (WAV fmt chunk / FLAC STREAMINFO). */
+  bitDepth?: number
   format?: 'wav' | 'flac' | 'unknown'
 }
 
@@ -29,6 +31,7 @@ const parseWav = (view: DataView): AudioMetadata | undefined => {
   let offset = 12
   let byteRate: number | undefined
   let sampleRateHz: number | undefined
+  let bitDepth: number | undefined
   let dataBytes: number | undefined
   while (offset + 8 <= view.byteLength) {
     const chunkId = readAscii(view, offset, 4)
@@ -38,6 +41,11 @@ const parseWav = (view: DataView): AudioMetadata | undefined => {
         sampleRateHz = view.getUint32(offset + 12, true)
         byteRate = view.getUint32(offset + 16, true)
       }
+      // bitsPerSample sits at fmt payload offset 14 (chunk offset +22)
+      if (offset + 24 <= view.byteLength) {
+        const bits = view.getUint16(offset + 22, true)
+        if (bits > 0) bitDepth = bits
+      }
     } else if (chunkId === 'data') {
       dataBytes = chunkSize
       break // data payload follows; header scan complete
@@ -45,11 +53,12 @@ const parseWav = (view: DataView): AudioMetadata | undefined => {
     offset += 8 + chunkSize + (chunkSize % 2)
   }
   if (byteRate === undefined || byteRate === 0 || dataBytes === undefined) {
-    return { format: 'wav', sampleRateHz }
+    return { format: 'wav', sampleRateHz, bitDepth }
   }
   return {
     format: 'wav',
     sampleRateHz,
+    bitDepth,
     durationMs: Math.round((dataBytes / byteRate) * 1000)
   }
 }
@@ -68,6 +77,10 @@ const parseFlac = (view: DataView): AudioMetadata | undefined => {
     (view.getUint8(base + 10) << 12) |
     (view.getUint8(base + 11) << 4) |
     (view.getUint8(base + 12) >> 4)
+  // bits-per-sample is 5 bits spanning payload bytes 12..13, stored minus 1:
+  // byte12 low 1 bit = bps high bit; byte13 top 4 bits = bps low bits.
+  const bitDepth = ((((view.getUint8(base + 12) & 0x01) << 4) |
+    (view.getUint8(base + 13) >> 4)) & 0x1f) + 1
   const totalSamplesHigh = view.getUint8(base + 13) & 0x0f
   const totalSamples =
     totalSamplesHigh * 2 ** 32 +
@@ -75,10 +88,11 @@ const parseFlac = (view: DataView): AudioMetadata | undefined => {
     view.getUint8(base + 15) * 2 ** 16 +
     view.getUint8(base + 16) * 2 ** 8 +
     view.getUint8(base + 17)
-  if (sampleRateHz === 0) return { format: 'flac' }
+  if (sampleRateHz === 0) return { format: 'flac', bitDepth }
   return {
     format: 'flac',
     sampleRateHz,
+    bitDepth,
     durationMs:
       totalSamples > 0
         ? Math.round((totalSamples / sampleRateHz) * 1000)

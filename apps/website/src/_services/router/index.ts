@@ -78,14 +78,12 @@ const routes: RouteRecordRaw[] = [
     component: PAGES.CreateProject,
     beforeEnter: [authRequiredGuard]
   },
-  // Unlisted in-browser bulk uploader beta (not linked from any nav/UI;
-  // reachable only by direct URL). Auth still required. Deliberately NOT
-  // behind the feature toggle so it can ship to production unlisted.
+  // The in-browser uploader moved into the project shell:
+  // /p/:projectSlug/import-recordings (2026-08-12 rebuild). The old unlisted
+  // beta URL redirects home — it was never linked from any UI.
   {
     path: '/import-recordings-new',
-    name: ROUTE_NAMES.importRecordingsNew,
-    component: PAGES.importRecordingsNew,
-    beforeEnter: [authRequiredGuard]
+    redirect: '/'
   },
   {
     path: '/p/:projectSlug',

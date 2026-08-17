@@ -15,6 +15,10 @@ COPY apps/cli/package.json ./apps/cli/
 COPY apps/website/package.json ./apps/website/
 COPY packages/common/package.json ./packages/common/
 COPY packages/node-common/package.json ./packages/node-common/
+# upload-engine gained real deps (libflacjs, #112) — without its package.json
+# in the install layer, pnpm never installs them and the website build fails
+# resolving the import (this COPY list predates the package having any).
+COPY packages/upload-engine/package.json ./packages/upload-engine/
 COPY packages/utils/package.json ./packages/utils/
 COPY packages/testing/package.json ./packages/testing/
 

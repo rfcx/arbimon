@@ -16,14 +16,17 @@
  * - online/offline transitions pause/resume the pool automatically.
  */
 
-import { IngestApi, putToSignedUrl } from './ingest-api'
+import { AdaptiveConcurrencyController } from './adaptive-concurrency'
+import { IngestApi, IngestApiError, putToSignedUrl } from './ingest-api'
 import { MULTIPART_THRESHOLD_BYTES, MultipartApi, uploadParts } from './multipart'
-import { type BulkSignRequestItem, type FileSource, type QueueStats, type TokenProvider, type UploadEngineConfig, type UploadEngineEvent, type UploadEngineListener, type UploadItem, type UploadStore, SERVER_STATUS } from './types'
+import { sha1HexOfBlob } from './sha1'
+import { type BulkSignRequestItem, type FileSource, type QueueStats, type TokenProvider, type UploadEngineConfig, type UploadEngineEvent, type UploadEngineListener, type UploadItem, type UploadItemState, type UploadStore, SERVER_STATUS } from './types'
 
 const DEFAULTS = {
   maxConcurrentUploads: 4,
   maxConcurrentPrepares: 2,
   signBatchSize: 100,
+  signCoalesceMs: 750,
   statusBatchSize: 100,
   maxAttempts: 5,
   retryBaseDelayMs: 2000,
@@ -31,10 +34,32 @@ const DEFAULTS = {
   statusPollIntervalMs: 5000,
   signedUrlMaxAgeMs: 20 * 60 * 60 * 1000,
   multipartThresholdBytes: MULTIPART_THRESHOLD_BYTES,
-  multipartPartConcurrency: 3
+  multipartPartConcurrency: 3,
+  adaptiveConcurrency: true,
+  // Prepare-ahead bound (2026-08-13). See pumpPrepares() for the measured
+  // defect this fixes and for why BOTH a count floor and a byte ceiling are
+  // needed (the count floor protects sign-batch coalescing; the byte ceiling
+  // is what actually bounds memory when files are large).
+  prepareAheadFactor: 3,
+  prepareAheadMin: 24,
+  prepareAheadMaxBytes: 512 * 1024 * 1024
 } as const
 
-/** Signing errors that must not be retried (item-level rejections). */
+/**
+ * Signing errors that must not be retried (item-level rejections).
+ *
+ * These are the ingest-service `ValidationError` messages that are PERMANENT
+ * for a given file+params: re-signing the identical request can only produce
+ * the identical rejection. Offering the user a retry for one of these is
+ * offering a button that can never succeed.
+ *
+ * Kept in sync with `routes/uploads.js` in `rfcx/ingest-service`
+ * (`validateUploadParams`). This list is the FALLBACK signal only: both sign
+ * paths also carry a numeric status, which is preferred (see
+ * `isNonRetryableSignError`). Message matching still earns its place because a
+ * response can omit the status, and because it keeps the classification
+ * correct if the server ever reports a validation failure as a bare string.
+ */
 const NON_RETRYABLE_SIGN_ERRORS = [
   /^Duplicate\.$/,
   /^Invalid\.$/,
@@ -43,8 +68,53 @@ const NON_RETRYABLE_SIGN_ERRORS = [
   /limit exceeded/i,
   /view-only/i,
   /exceeding our limit/i,
-  /Validation errors/
+  /Validation errors/,
+  // Duration cap (`Audio duration is more than 24 hours`). The hours value is
+  // env-tunable server-side (MAX_DURATION_SECONDS), so match the stable stem
+  // rather than the rendered number.
+  /Audio duration is more than/i,
+  // Multipart preconditions — deterministic in fileSize, so re-signing the
+  // same file is futile. These reach us via the multipart route's HTTP status
+  // (the bulk route calls createSignedUpload and cannot emit them), so they
+  // are belt-and-braces for the statusless case rather than the primary test.
+  /fileSize is required/i,
+  /use POST \/uploads for smaller files/i,
+  /too large for the configured part size/i
 ]
+
+/**
+ * True when a sign failure is permanent and must NOT be offered as a retry.
+ *
+ * STATUS FIRST, message second. A 4xx from the sign endpoint is by definition a
+ * request the server will keep refusing, so it classifies correctly even for
+ * validation rules this client has never heard of — which is the whole reason
+ * the message list kept going stale. 401/403/408/429 are exempt: those are
+ * auth/congestion, not a verdict on the file, and DO warrant a retry.
+ *
+ * Both sign paths supply a status:
+ *   - multipart (single) — the thrown `IngestApiError.status`
+ *   - bulk — the per-item `status` field the server sets via `bulkErrorStatus`
+ *     (400 validation / 403 forbidden / 404 missing / 500 transient), which
+ *     arrives inside a 200 response body.
+ * The message list remains as the fallback when no status is present.
+ */
+const RETRYABLE_CLIENT_STATUSES = new Set([401, 403, 408, 429])
+
+const isPermanentSignStatus = (status?: number): boolean =>
+  status !== undefined &&
+  status >= 400 &&
+  status < 500 &&
+  !RETRYABLE_CLIENT_STATUSES.has(status)
+
+const isNonRetryableSignError = (
+  err: unknown,
+  message: string,
+  status?: number
+): boolean => {
+  const effectiveStatus = err instanceof IngestApiError ? err.status : status
+  if (effectiveStatus !== undefined) return isPermanentSignStatus(effectiveStatus)
+  return NON_RETRYABLE_SIGN_ERRORS.some(pattern => pattern.test(message))
+}
 
 export interface PrepareResult {
   timestampUtc?: string
@@ -52,15 +122,23 @@ export interface PrepareResult {
   durationMs?: number
   sampleRateHz?: number
   error?: string
+  /**
+   * Set when the prepare stage transcoded the file (#112 client-side FLAC):
+   * the name+size the SERVER must see — signing and PUT use the encoded
+   * bytes, so filename/extension/fileSize must describe them, not the source.
+   */
+  transcodedFilename?: string
+  transcodedSizeBytes?: number
 }
 
 /** Shell-provided prepare step (browser: worker w/ sha1+header parse). */
 export type PrepareFn = (item: UploadItem, file: Blob) => Promise<PrepareResult>
 
 export class UploadEngine {
+  private static readonly RATE_LIMIT_FLOOR_MS = 2500
   private async emitStats (): Promise<void> {
-    this.emit({ type: 'stats', stats: await this.stats() })
-  }
+      this.emit({ type: 'stats', stats: await this.stats() })
+    }
 
   private readonly config: Required<Omit<UploadEngineConfig, 'laneTier'>> &
     Pick<UploadEngineConfig, 'laneTier'>
@@ -76,18 +154,109 @@ export class UploadEngine {
   private activeUploads = 0
   private activePrepares = 0
   private signingInFlight = false
-  private readonly abortControllers = new Map<string, AbortController>()
+  // Sign-coalescing (2026-08-12): without it, prepares trickle items to
+  // `ready` 1-2 at a time and every pump fires a tiny /uploads/bulk call —
+  // a 100-file batch became ~50 SERIAL round trips (the "Waiting for URL"
+  // bottleneck). We hold signing for a short flush window while more items
+  // are clearly coming, then send one big batch.
+  private signFlushTimer: ReturnType<typeof setTimeout> | undefined
+  private signFlushForced = false
+  // Whole-batch sign failures previously re-pumped with NO backoff — a
+  // fast-failing endpoint (proxy timeout, rate limit) produced a tight
+  // fire-fail-refire loop (observed live 2026-08-12: 30+ bulk calls/10s).
+  private signFailureStreak = 0
+  private signBackoffUntil = 0
+  // Multi-window queue partitioning (2026-08-12): the queue (IndexedDB) is
+  // shared by every window of the origin, but each window runs its OWN
+  // engine. Without a scope, two windows double-drive the same items (the
+  // original popout design paused the opener wholesale). A scope predicate
+  // restricts WHICH items this engine instance will pump/recover/poll — a
+  // project pop-out scopes to its project; the main window excludes projects
+  // that have live pop-outs. Terminal/UI reads are NOT scoped (every window
+  // may render everything); only the driving loops are.
+  private scope: (item: UploadItem) => boolean = () => true
+  // 429-awareness (2026-08-12): R2's documented TooManyRequests is PER-OBJECT-
+  // KEY (~1 write/s to the same key), so a 429 means "this key was written too
+  // recently" — usually our own rapid retry of the same signed URL. Handling:
+  // (a) a 429'd item's next attempt is floored at RATE_LIMIT_FLOOR_MS (honoring
+  //     Retry-After when exposed) instead of the generic backoff curve, whose
+  //     jitter can land at ~1s and re-trip the limit;
+  // (b) a burst of 429s briefly narrows the upload pool (global slow-down)
+  //     rather than letting every worker slam into the same window;
+  // (c) 429 attempts do NOT count toward maxAttempts — rate limiting is
+  //     congestion, not failure, and must never terminal-fail a file.
+  private readonly rateLimitedUntil = new Map<string, number>()
+  private rateLimitBurst = 0
 
-  constructor (
+  /**
+   * Adaptive upload concurrency (2026-08-13). The right number of parallel
+   * uploads is a property of the LINK, not a user preference: a saturated
+   * field connection is fastest AND safest at ~1-2, while a fast link whose
+   * per-request dead time dominates benefits up to ~8. The controller learns
+   * it from completed transfers. See adaptive-concurrency.ts for the
+   * measurements behind this.
+   */
+  private readonly adaptive = new AdaptiveConcurrencyController()
+
+  private readonly abortControllers = new Map<string, AbortController>()
+/** Current concurrency state (UI / telemetry / debugging). */
+  get concurrencyState (): {
+      limit: number
+      adaptive: boolean
+      gradient?: number
+      samples: number
+      probing: boolean
+    } {
+      const state = this.adaptive.state
+      return {
+        limit: this.effectiveUploadLimit(),
+        adaptive: this.config.adaptiveConcurrency,
+        gradient: state.gradient,
+        samples: state.samples,
+        probing: state.probing
+      }
+    }
+
+/** The configured parallel-upload ceiling (for UI display). */
+  get maxConcurrentUploads (): number {
+      return this.config.maxConcurrentUploads
+    }
+
+constructor (
     config: UploadEngineConfig,
     private readonly store: UploadStore,
     private readonly fileSource: FileSource,
     tokenProvider: TokenProvider,
     private readonly prepare: PrepareFn
   ) {
-    this.config = { ...DEFAULTS, ...config }
+    // Spread would let an EXPLICIT undefined clobber a default
+    // ({ ...{a:4}, ...{a: undefined} } === { a: undefined }), which bites any
+    // caller that passes an optional config field through as a variable.
+    // Strip undefined values so omitted-or-undefined both mean "use default".
+    const provided = Object.fromEntries(
+      Object.entries(config).filter(([, value]) => value !== undefined)
+    ) as Partial<UploadEngineConfig>
+    this.config = { ...DEFAULTS, ...provided, ingestBaseUrl: config.ingestBaseUrl }
     this.api = new IngestApi(config.ingestBaseUrl, tokenProvider)
     this.multipartApi = new MultipartApi(config.ingestBaseUrl, tokenProvider)
+  }
+
+/** The upload cap in force right now: learned, bounded by the config cap. */
+  private effectiveUploadLimit (): number {
+    if (!this.config.adaptiveConcurrency) return this.config.maxConcurrentUploads
+    // maxConcurrentUploads is the CEILING the controller may not exceed, so an
+    // explicitly lowered cap is still honoured.
+    return Math.min(this.adaptive.limit, this.config.maxConcurrentUploads)
+  }
+
+/** Restrict which items this engine instance drives (see field note). */
+  setScope (predicate: ((item: UploadItem) => boolean) | undefined): void {
+    this.scope = predicate ?? (() => true)
+    this.kick()
+  }
+
+  private async listScoped (states: UploadItemState[]): Promise<UploadItem[]> {
+    return (await this.store.list(states)).filter(this.scope)
   }
 
   // -- public API -----------------------------------------------------------
@@ -105,6 +274,214 @@ export class UploadEngine {
     this.kick()
   }
 
+  /**
+   * Staged intake: persist items WITHOUT entering the upload pipeline.
+   * The shell runs its local analysis (analyze step) and the user releases
+   * items explicitly via startStaged(). Items arrive as `analyzing` or
+   * `staged` — the pump ignores both states.
+   */
+  async stage (items: UploadItem[]): Promise<void> {
+    await this.store.putMany(items)
+    for (const item of items) this.emit({ type: 'item-updated', item })
+    await this.emitStats()
+  }
+
+  /** Persist an analysis update to a staged item (shell-driven). */
+  async updateStaged (itemId: string, patch: Partial<UploadItem>): Promise<void> {
+    const item = await this.store.get(itemId)
+    if (item === undefined) return
+    await this.update(item, patch)
+    await this.emitStats()
+  }
+
+  /**
+   * Release staged items into the pipeline. Items with an analysisError are
+   * skipped — they cannot produce a valid sign request. PRESTAGED items
+   * (checksum + signed URL already obtained in the background) fast-track
+   * straight to `signed` — the upload pool picks them up immediately;
+   * everything else enters at `queued` (prepare → sign as before).
+   * Pass ids to release a selection; omit to release all staged items.
+   * Returns the number released.
+   */
+  async startStaged (ids?: string[]): Promise<number> {
+    const staged = await this.listScoped(['staged'])
+    const idSet = ids === undefined ? undefined : new Set(ids)
+    let released = 0
+    for (const item of staged) {
+      if (idSet !== undefined && !idSet.has(item.id)) continue
+      if (item.analysisError !== undefined) continue
+      const fastTrack = item.signedUrl !== undefined && item.checksumSha1 !== undefined
+      await this.update(item, { state: fastTrack ? 'signed' : 'queued' })
+      released++
+    }
+    if (released > 0) {
+      await this.emitStats()
+      this.kick()
+    }
+    return released
+  }
+
+  /**
+   * Advisory duplicate flag from a STAGING-TIME existence check (site+
+   * timestamp — no checksum needed, so it covers WAVs the checksum-based
+   * prestage cannot). A recording already existing at (stream, timestamp)
+   * guarantees the server would reject the upload (same checksum →
+   * Duplicate., different → Invalid.), so flagging terminal-duplicate is
+   * criteria-faithful. Guarded: applies only while the item is still
+   * staged. The rare availability=0 lost-recording case (where re-upload
+   * IS allowed) has the per-row Retry as its override — retry re-enters
+   * the pipeline and the server delivers the authoritative verdict.
+   */
+  async markDuplicateIfStaged (itemId: string, note?: string): Promise<boolean> {
+    const item = await this.store.get(itemId)
+    if (item === undefined || item.state !== 'staged') return false
+    await this.update(item, { state: 'duplicate', error: note })
+    await this.emitStats()
+    return true
+  }
+
+  /**
+   * Background prestage (2026-08-12, operator design): for STAGED files that
+   * will upload as-is (non-WAV — never transcoded), compute the sha1 and
+   * request the signed URL while the queue is still parked. Because signing
+   * IS the server's dedup check, will-be-duplicate rows get their verdict
+   * immediately (→ terminal `duplicate`, independent of Start), and Start
+   * fast-tracks prestaged rows straight into the upload pool.
+   *
+   * Deliberately conservative:
+   * - WAVs are NEVER prestaged (encoding must not begin before Start, and
+   *   the FLAC toggle can change; enforced here, not just at the call site)
+   * - multipart-sized files keep the normal path
+   * - non-retryable sign errors surface as analysisError (visible, excluded
+   *   from Start); retryable/network failures leave the item untouched —
+   *   the normal Start path remains the safety net
+   * - each result re-reads the stored item and only applies while it is
+   *   STILL staged (the user may have started/cancelled/removed mid-flight)
+   */
+  async prestage (ids: string[]): Promise<number> {
+    const eligible: UploadItem[] = []
+    for (const id of ids) {
+      const item = await this.store.get(id)
+      if (item === undefined) continue
+      if (item.state !== 'staged') continue
+      if (item.analysisError !== undefined) continue
+      if (item.timestampUtc === undefined) continue
+      if (item.signedUrl !== undefined) continue
+      if (item.filename.toLowerCase().endsWith('.wav')) continue
+      if (item.fileSizeBytes >= this.config.multipartThresholdBytes) continue
+      eligible.push(item)
+    }
+    if (eligible.length === 0) return 0
+
+    // hash with bounded concurrency (async WebCrypto — cheap but not free)
+    const hashed: UploadItem[] = []
+    let cursor = 0
+    await Promise.all(Array.from({ length: Math.min(2, eligible.length) }, async () => {
+      while (cursor < eligible.length) {
+        const item = eligible[cursor++]
+        if (item.checksumSha1 !== undefined) { hashed.push(item); continue }
+        const file = await this.fileSource.getFile(item.id)
+        if (file === undefined) continue
+        try {
+          const checksumSha1 = await sha1HexOfBlob(file)
+          hashed.push(await this.update(item, { checksumSha1 }))
+        } catch { /* unreadable — leave for the normal path */ }
+      }
+    }))
+    if (hashed.length === 0) return 0
+
+    let prestaged = 0
+    for (let offset = 0; offset < hashed.length; offset += this.config.signBatchSize) {
+      const batch = hashed.slice(offset, offset + this.config.signBatchSize)
+      try {
+        const request: BulkSignRequestItem[] = batch.map(item => ({
+          filename: item.filename,
+          timestamp: item.timestampUtc as string,
+          stream: item.streamId,
+          duration: item.durationMs !== undefined && item.durationMs > 0 ? Math.round(item.durationMs) : undefined,
+          fileSize: item.fileSizeBytes,
+          sampleRate: item.sampleRateHz,
+          checksum: item.checksumSha1
+        }))
+        const response = await this.api.signBulk(request, this.config.laneTier)
+        for (const result of response.uploads) {
+          const item = batch[result.index]
+          if (item === undefined) continue
+          const current = await this.store.get(item.id)
+          if (current === undefined || current.state !== 'staged') continue
+          if (result.ok && result.uploadId !== undefined && result.url !== undefined) {
+            await this.update(current, {
+              uploadId: result.uploadId,
+              signedUrl: result.url,
+              signedAtMs: Date.now()
+            })
+            prestaged++
+          } else {
+            const message = result.error ?? ''
+            if (message === 'Duplicate.') {
+              await this.update(current, { state: 'duplicate', error: undefined })
+            } else if (isNonRetryableSignError(undefined, message, result.status)) {
+              await this.update(current, { analysisError: message })
+            }
+            // retryable → untouched; the normal path covers it at Start
+          }
+        }
+      } catch { /* whole-batch failure — items stay staged; normal path covers */ }
+    }
+    await this.emitStats()
+    return prestaged
+  }
+
+  /**
+   * Per-item pause: return pipeline items (queued/preparing/ready/signing/
+   * signed/uploading) to `staged`, aborting any in-flight PUT and discarding
+   * sign/multipart context. The complement of startStaged — a bulk "Pause"
+   * for a selection, without touching the global engine or other items.
+   * Items past the PUT (uploaded/terminal) are left alone. Returns count.
+   */
+  async pauseItems (ids: string[]): Promise<number> {
+    let paused = 0
+    for (const id of ids) {
+      const item = await this.store.get(id)
+      if (item === undefined) continue
+      if (!['queued', 'preparing', 'ready', 'signing', 'signed', 'uploading'].includes(item.state)) continue
+      this.abortControllers.get(id)?.abort()
+      await this.update(item, {
+        state: 'staged',
+        progress: undefined,
+        uploadId: undefined,
+        signedUrl: undefined,
+        multipart: undefined,
+        error: undefined
+      })
+      paused++
+    }
+    if (paused > 0) await this.emitStats()
+    return paused
+  }
+
+  /**
+   * Cancel an item: terminal `cancelled` (failed-like — NO automatic
+   * re-stage; Retry re-enters the pipeline explicitly). In-flight PUTs are
+   * aborted; signed/multipart context is discarded so a later Retry signs
+   * fresh. Terminal items (ingested/duplicate) are left untouched.
+   */
+  async cancel (itemId: string): Promise<void> {
+    const item = await this.store.get(itemId)
+    if (item === undefined) return
+    if (['ingested', 'duplicate', 'failed', 'rejected', 'cancelled'].includes(item.state)) return
+    this.abortControllers.get(itemId)?.abort()
+    await this.update(item, {
+      state: 'cancelled',
+      progress: undefined,
+      uploadId: undefined,
+      signedUrl: undefined,
+      multipart: undefined,
+      error: 'Cancelled by user.'
+    })
+    await this.emitStats()
+  }
+
   start (): void {
     if (this.running) return
     this.running = true
@@ -115,7 +492,11 @@ export class UploadEngine {
     // up `signed`, and nothing else moves them. Measured in production
     // (2026-08-03): a mid-batch network failure left thousands of uploads
     // signed server-side with bytes never sent, and the queue never resumed.
-    void this.recoverStalled().then(() => {
+    void this.recoverStalled().then(async () => {
+      // Surface handle-less rows up front rather than at Start (see
+      // flagMissingFileHandles): a restored queue must not look uploadable
+      // when it is not.
+      await this.flagMissingFileHandles()
       this.kick()
     })
     this.scheduleStatusPoll()
@@ -132,8 +513,53 @@ export class UploadEngine {
    * Only touches items NOT currently owned by a live in-flight operation, so
    * calling it mid-run is safe. Returns the number of items recovered.
    */
+/**
+   * Flag rows whose FILE HANDLE is gone, so a restored session is honest about
+   * what it can still upload.
+   *
+   * WHY (measured 2026-08-14): the queue persists in IndexedDB but
+   * `BrowserFileSource` holds File handles IN MEMORY, so any full reload or
+   * tab-close leaves rows that look perfectly healthy — checksums, timestamps,
+   * manual date corrections all intact — while being unreadable. Nothing
+   * surfaced that until the user pressed Start, at which point every row went
+   * `rejected`. Silent until the user commits is the worst shape for a defect.
+   *
+   * This probes the file source for STAGED/QUEUED rows and marks the orphans
+   * with a `notice` (advisory, non-blocking) so the UI can offer "re-add this
+   * folder" BEFORE any work is attempted. It deliberately does NOT reject them:
+   * re-adding the same folder re-attaches handles by item id, and the rest of
+   * the row's work (timestamps, corrections) is still valid and worth keeping.
+   *
+   * Returns the number of orphaned rows found.
+   */
+  async flagMissingFileHandles (): Promise<number> {
+    const candidates = await this.listScoped(['staged', 'queued', 'ready', 'signed'])
+    let orphans = 0
+    for (const item of candidates) {
+      let present = false
+      try {
+        present = (await this.fileSource.getFile(item.id)) !== undefined
+      } catch { present = false }
+      if (present) {
+        // A handle came back (folder re-added): clear a stale notice.
+        if (item.notice?.includes('re-add') === true) {
+          await this.update(item, { notice: undefined })
+        }
+        continue
+      }
+      orphans++
+      if (item.notice === undefined) {
+        await this.update(item, {
+          notice: 'File no longer attached — re-add this folder to upload it (your dates and corrections are kept).'
+        })
+      }
+    }
+    if (orphans > 0) await this.emitStats()
+    return orphans
+  }
+
   async recoverStalled (): Promise<number> {
-    const stranded = await this.store.list(['uploading', 'signing', 'preparing'])
+    const stranded = await this.listScoped(['uploading', 'signing', 'preparing'])
     let recovered = 0
     for (const item of stranded) {
       if (this.abortControllers.has(item.id)) continue
@@ -163,22 +589,75 @@ export class UploadEngine {
   }
 
   setOnline (online: boolean): void {
+    const wasOffline = !this.online
     this.online = online
     this.emit({ type: 'engine-state', running: this.running, online })
-    if (online) this.kick()
+    if (online) {
+      // Coming back from offline usually means a DIFFERENT network (tethered,
+      // moved site, reconnected Wi-Fi). The old per-byte reference would be
+      // wrong for it, so re-learn rather than steer on stale evidence.
+      if (wasOffline) this.adaptive.reset()
+      this.kick()
+    }
   }
 
-  /** Retry a failed item (resets attempts). */
+  /**
+   * Change the parallel-upload CEILING at runtime. pumpUploads reads the cap
+   * on every pass, so a change takes effect on the next scheduling pass:
+   * RAISING it starts more uploads immediately (kick), LOWERING it never
+   * aborts in-flight work — the pool simply stops refilling until it drains
+   * below the new cap. Clamped to >=1 so the pool can never stall (0 would
+   * deadlock the queue).
+   *
+   * With adaptive concurrency ON (the default) this is the CEILING the learned
+   * limit may not exceed, not the operating value — the controller still
+   * settles wherever the link says it should. Used by the QA/benchmark harness
+   * to pin a specific cap (with adaptiveConcurrency: false).
+   */
+  setMaxConcurrentUploads (max: number): void {
+    const next = Math.max(1, Math.floor(max))
+    if (next === this.config.maxConcurrentUploads) return
+    this.config.maxConcurrentUploads = next
+    this.kick()
+  }
+
+  /**
+   * Tell the controller the network probably changed (e.g. the browser fired
+   * an online event, or the user resumed after a long pause), so it re-learns
+   * instead of steering on a stale reference.
+   */
+  resetAdaptiveConcurrency (): void {
+    this.adaptive.reset()
+  }
+
+  /** Retry a failed/rejected/cancelled/duplicate item (resets attempts).
+   * Duplicate is retryable as the OVERRIDE for advisory pre-upload flags
+   * (e.g. the availability=0 lost-recording case): the server re-issues
+   * the authoritative verdict at signing — a true duplicate just returns
+   * to `duplicate`, costing one sign-request slot and zero bytes. */
   async retry (itemId: string): Promise<void> {
     const item = await this.store.get(itemId)
     if (item === undefined) return
-    if (item.state !== 'failed' && item.state !== 'rejected') return
+    if (!['failed', 'rejected', 'cancelled', 'duplicate'].includes(item.state)) return
+    // Transcoded items must go back through prepare: their encoded blob was
+    // released at the terminal state, and the fileSource would serve the
+    // ORIGINAL bytes under the FLAC identity → guaranteed checksum mismatch.
+    const rewindTranscode = item.transcoded === true
     await this.update(item, {
-      state: item.checksumSha1 !== undefined ? 'ready' : 'queued',
+      state: !rewindTranscode && item.checksumSha1 !== undefined ? 'ready' : 'queued',
       attempts: 0,
       error: undefined,
       uploadId: undefined,
-      signedUrl: undefined
+      signedUrl: undefined,
+      multipart: undefined,
+      ...(rewindTranscode
+        ? {
+            filename: item.originalFilename ?? item.filename,
+            fileSizeBytes: item.originalFileSizeBytes ?? item.fileSizeBytes,
+            transcoded: undefined,
+            checksumSha1: undefined
+          }
+        : {})
     })
     this.kick()
   }
@@ -193,6 +672,8 @@ export class UploadEngine {
     const items = await this.store.list()
     const stats: QueueStats = {
       total: items.length,
+      analyzing: 0,
+      staged: 0,
       queued: 0,
       preparing: 0,
       ready: 0,
@@ -204,6 +685,7 @@ export class UploadEngine {
       duplicate: 0,
       failed: 0,
       rejected: 0,
+      cancelled: 0,
       paused: 0,
       bytesTotal: 0,
       bytesUploaded: 0
@@ -266,20 +748,78 @@ export class UploadEngine {
     }
     await this.emitStats()
     // Keep pumping while there is actionable work.
-    const items = await this.store.list(['queued', 'ready', 'signed'])
+    const items = await this.listScoped(['queued', 'ready', 'signed'])
     if (
       items.length > 0 &&
       (this.activePrepares < this.config.maxConcurrentPrepares ||
-        this.activeUploads < this.config.maxConcurrentUploads ||
+        this.activeUploads < this.effectiveUploadLimit() ||
         !this.signingInFlight)
     ) {
       this.kick()
     }
   }
 
+  /**
+   * BACKPRESSURE (2026-08-13) — the fix for a measured memory defect.
+   *
+   * prepare used to drain the ENTIRE `queued` pool regardless of upload
+   * progress: nothing gated how deep `ready`/`signed` could get. For WAVs the
+   * prepare stage TRANSCODES to FLAC and parks the encoded Blob in the
+   * TranscodeCache until the item reaches a TERMINAL state — and `uploaded` is
+   * NOT terminal (the item waits there through server-side ingest polling).
+   * So the encoded backlog tracked BATCH SIZE, not concurrency.
+   *
+   * Measured before the fix: 40 files staged, upload cap 4, all 40 encoded
+   * blobs resident at once (~240 MiB). Extrapolated to real sites in the test
+   * project — Bogota 767 files, Perth 1,586 — that is ~5 GiB and ~10 GiB of
+   * blob allocation. In-browser measurement on mm showed Chrome keeps roughly
+   * the first ~500 MiB resident and spills the remainder to disk, so the
+   * failure mode is memory pressure plus disk thrash rather than an instant
+   * crash — but it is unbounded either way, and it is worst for exactly the
+   * slow-link users who hold a batch the longest.
+   *
+   * SIZING — three constraints had to be reconciled, and a naive
+   * cap-proportional bound violates the third:
+   *   1. bound the encoded backlog (the defect above);
+   *   2. keep the upload pool fed;
+   *   3. keep SIGN BATCHES BIG. Signing is batched (server cap 100) and the
+   *      08-12 coalescing work exists because a trickle of `ready` items
+   *      turned a 100-file batch into ~50 serial round trips (the "Waiting
+   *      for URL" bottleneck). A pure `cap * factor` bound is 3-6 items on a
+   *      slow link, which would silently re-introduce exactly that
+   *      regression — caught here by the sign-coalescing test.
+   * So the budget is `max(prepareAheadMin, cap * factor)` and ALSO capped by
+   * BYTES, because count alone is the wrong unit when file sizes span orders
+   * of magnitude (a 500 MiB WAV is still transcoded). Whichever binds first
+   * wins; one item is always allowed through so a single huge file can never
+   * deadlock the queue.
+   */
+  private prepareAheadCount (): number {
+    const cap = this.effectiveUploadLimit()
+    return Math.max(
+      this.config.prepareAheadMin,
+      Math.ceil(cap * this.config.prepareAheadFactor)
+    )
+  }
+
   private async pumpPrepares (): Promise<void> {
     while (this.activePrepares < this.config.maxConcurrentPrepares) {
-      const [next] = await this.store.list(['queued'])
+      // Work already waiting downstream; stop feeding when it is deep enough.
+      //
+      // NOTE: no explicit "always allow one item" branch is needed. When the
+      // pipeline is EMPTY, ahead.length is 0 and aheadBytes is 0, so neither
+      // bound can trip and the first item always gets through — including an
+      // item far larger than prepareAheadMaxBytes. An earlier version wrapped
+      // this in `if (ahead.length > 0)` as an anti-deadlock guard; mutation
+      // testing proved that branch unreachable (removing it changed nothing),
+      // so it is gone rather than left as dead code that future readers must
+      // reason about. The no-deadlock property is pinned by the
+      // 'budget SMALLER than one item' test.
+      const ahead = await this.listScoped(['ready', 'signing', 'signed', 'uploading', 'uploaded'])
+      if (ahead.length + this.activePrepares >= this.prepareAheadCount()) return
+      const aheadBytes = ahead.reduce((sum, i) => sum + i.fileSizeBytes, 0)
+      if (aheadBytes >= this.config.prepareAheadMaxBytes) return
+      const [next] = await this.listScoped(['queued'])
       if (next === undefined) return
       const item = await this.update(next, { state: 'preparing' })
       this.activePrepares++
@@ -315,7 +855,23 @@ export class UploadEngine {
         timestampUtc: result.timestampUtc,
         checksumSha1: result.checksumSha1,
         durationMs: result.durationMs,
-        sampleRateHz: result.sampleRateHz
+        sampleRateHz: result.sampleRateHz,
+        // client-side transcode (#112): from here on the item describes the
+        // ENCODED file — the server signs/receives those bytes. The original
+        // name survives in relativePath for the UI.
+        ...(result.transcodedFilename !== undefined
+          ? {
+              filename: result.transcodedFilename,
+              fileSizeBytes: result.transcodedSizeBytes,
+              transcoded: true,
+              // keep the pre-transcode identity for retry-after-terminal:
+              // the encoded blob is cache-released at terminal states, so a
+              // retry must re-enter prepare (re-encode), not reuse FLAC
+              // identity over WAV bytes.
+              originalFilename: item.filename,
+              originalFileSizeBytes: item.fileSizeBytes
+            }
+          : {})
       })
     } catch (err) {
       await this.update(item, {
@@ -327,7 +883,8 @@ export class UploadEngine {
 
   private async pumpSigning (): Promise<void> {
     if (this.signingInFlight) return
-    const readyAll = await this.store.list(['ready'])
+    if (Date.now() < this.signBackoffUntil) return // batch-failure backoff
+    const readyAll = await this.listScoped(['ready'])
     // Large files take the multipart path (individually signed).
     const readyMultipart = readyAll.filter(item => item.fileSizeBytes >= this.config.multipartThresholdBytes)
     for (const item of readyMultipart) {
@@ -335,7 +892,7 @@ export class UploadEngine {
     }
     const ready = readyAll.filter(item => item.fileSizeBytes < this.config.multipartThresholdBytes)
     // Also re-sign stale signed URLs.
-    const signed = await this.store.list(['signed'])
+    const signed = await this.listScoped(['signed'])
     const stale = signed.filter(
       item =>
         item.signedAtMs !== undefined &&
@@ -345,12 +902,38 @@ export class UploadEngine {
     const batch = [...ready, ...stale].slice(0, this.config.signBatchSize)
     if (batch.length === 0) return
 
+    // COALESCE: if the batch isn't full and the prepare pool is still
+    // feeding (queued/preparing items exist), wait signCoalesceMs for more
+    // to accumulate instead of burning a round trip on 1-2 items. The timer
+    // guarantees progress — when it fires we sign whatever we have.
+    if (!this.signFlushForced && batch.length < this.config.signBatchSize) {
+      const feeding = this.activePrepares > 0 ||
+        (await this.listScoped(['queued', 'preparing'])).length > 0
+      if (feeding) {
+        if (this.signFlushTimer === undefined) {
+          this.signFlushTimer = setTimeout(() => {
+            this.signFlushTimer = undefined
+            this.signFlushForced = true
+            this.kick()
+          }, this.config.signCoalesceMs)
+        }
+        return
+      }
+    }
+    this.signFlushForced = false
+    if (this.signFlushTimer !== undefined) {
+      clearTimeout(this.signFlushTimer)
+      this.signFlushTimer = undefined
+    }
+
     this.signingInFlight = true
     try {
-      const marked: UploadItem[] = []
-      for (const item of batch) {
-        marked.push(await this.update(item, { state: 'signing' }))
-      }
+      // Mark the whole batch `signing` in ONE store write (100 sequential
+      // awaits added real latency before the request even fired).
+      const now = Date.now()
+      const marked: UploadItem[] = batch.map(item => ({ ...item, state: 'signing' as const, updatedAtMs: now }))
+      await this.store.putMany(marked)
+      for (const item of marked) this.emit({ type: 'item-updated', item })
       const request: BulkSignRequestItem[] = marked.map(item => ({
         filename: item.filename,
         timestamp: item.timestampUtc as string,
@@ -364,6 +947,8 @@ export class UploadEngine {
         checksum: item.checksumSha1
       }))
       const response = await this.api.signBulk(request, this.config.laneTier)
+      this.signFailureStreak = 0
+      this.signBackoffUntil = 0
       for (const result of response.uploads) {
         const item = marked[result.index]
         if (item === undefined) continue
@@ -382,9 +967,7 @@ export class UploadEngine {
           const message = result.error ?? 'Signing failed.'
           if (message === 'Duplicate.') {
             await this.update(item, { state: 'duplicate', error: undefined })
-          } else if (
-            NON_RETRYABLE_SIGN_ERRORS.some(pattern => pattern.test(message))
-          ) {
+          } else if (isNonRetryableSignError(undefined, message, result.status)) {
             await this.update(item, { state: 'rejected', error: message })
           } else {
             await this.update(item, {
@@ -396,24 +979,42 @@ export class UploadEngine {
         }
       }
     } catch (err) {
-      // Whole-batch failure (auth/network/5xx): return items to ready.
+      // Whole-batch failure (auth/network/5xx): return items to ready, with
+      // exponential backoff before the next attempt (same curve as uploads).
       const message = err instanceof Error ? err.message : String(err)
-      const signingItems = await this.store.list(['signing'])
+      const signingItems = await this.listScoped(['signing'])
       for (const item of signingItems) {
         await this.update(item, { state: 'ready' })
       }
-      this.emit({ type: 'error', message: `Signing batch failed: ${message}` })
+      this.signFailureStreak++
+      const delay = Math.min(
+        this.config.retryMaxDelayMs,
+        this.config.retryBaseDelayMs * 2 ** (this.signFailureStreak - 1)
+      ) * (0.5 + Math.random())
+      this.signBackoffUntil = Date.now() + delay
+      this.emit({ type: 'error', message: `Signing batch failed: ${message} (retrying in ${Math.round(delay / 1000)}s)` })
+      setTimeout(() => { this.kick() }, delay)
     } finally {
       this.signingInFlight = false
     }
   }
 
   private async pumpUploads (): Promise<void> {
-    while (this.activeUploads < this.config.maxConcurrentUploads) {
-      const signed = await this.store.list(['signed'])
-      const next = signed.find(item => !this.abortControllers.has(item.id))
+    // 429 burst → briefly narrow the pool: each recent burst unit parks one
+    // upload slot (floor 1), decaying as the rateLimitedUntil entries expire.
+    const now = Date.now()
+    for (const [id, until] of this.rateLimitedUntil) {
+      if (now >= until) this.rateLimitedUntil.delete(id)
+    }
+    this.rateLimitBurst = this.rateLimitedUntil.size
+    const poolCap = Math.max(1, this.config.maxConcurrentUploads - Math.min(this.rateLimitBurst, this.config.maxConcurrentUploads - 1))
+    while (this.activeUploads < poolCap) {
+      const signed = await this.listScoped(['signed'])
+      const next = signed.find(item =>
+        !this.abortControllers.has(item.id) &&
+        (this.rateLimitedUntil.get(item.id) ?? 0) <= Date.now())
       if (next === undefined) return
-      const item = await this.update(next, { state: 'uploading', progress: 0 })
+      const item = await this.update(next, { state: 'uploading', progress: 0, uploadStartedAtMs: Date.now(), uploadEndedAtMs: undefined })
       this.activeUploads++
       void this.uploadOne(item).finally(() => {
         this.activeUploads--
@@ -454,7 +1055,7 @@ export class UploadEngine {
       const message = err instanceof Error ? err.message : String(err)
       if (message === 'Duplicate.') {
         await this.update(item, { state: 'duplicate', error: undefined })
-      } else if (NON_RETRYABLE_SIGN_ERRORS.some(pattern => pattern.test(message))) {
+      } else if (isNonRetryableSignError(err, message)) {
         await this.update(item, { state: 'rejected', error: message })
       } else {
         await this.update(item, { state: 'ready', error: message })
@@ -502,17 +1103,49 @@ export class UploadEngine {
         },
         controller.signal
       )
+      const endedAtMs = Date.now()
+      // Feed the adaptive controller: per-byte cost of a COMPLETED transfer,
+      // plus how full the pool was when this upload started (a sample taken
+      // while the pool was starved cannot justify a bigger cap).
+      if (item.uploadStartedAtMs !== undefined) {
+        this.adaptive.onSample({
+          bytes: item.fileSizeBytes,
+          durationMs: endedAtMs - item.uploadStartedAtMs,
+          inFlightAtStart: this.activeUploads
+        })
+      }
       await this.update(item, {
         state: 'uploaded',
         progress: 1,
-        attempts: item.attempts + 1
+        attempts: item.attempts + 1,
+        uploadEndedAtMs: endedAtMs
       })
       this.scheduleStatusPoll()
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
+      // A user cancel() or pauseItems() aborts the PUT and has ALREADY
+      // written its state (`cancelled`/`staged`) — the abort landing here
+      // must not resurrect the item. Re-read the stored state, respect it.
+      const current = await this.store.get(item.id)
+      if (current?.state === 'cancelled' || current?.state === 'staged') return
       if (!this.running) {
         // paused → back to signed for a clean resume
         await this.update(item, { state: 'signed', progress: undefined })
+        return
+      }
+      // 429 = per-key rate limit (congestion, not failure): no attempt burn,
+      // no terminal fail; floor the next try past the key's write window.
+      if (err instanceof IngestApiError && err.status === 429) {
+        // Congestion, not failure — but still a signal to push less hard.
+        this.adaptive.onCongestion()
+        const waitMs = Math.max(err.retryAfterMs ?? 0, UploadEngine.RATE_LIMIT_FLOOR_MS) * (1 + Math.random() * 0.5)
+        this.rateLimitedUntil.set(item.id, Date.now() + waitMs)
+        await this.update(item, {
+          state: 'signed',
+          progress: undefined,
+          error: 'Rate limited — retrying shortly'
+        })
+        setTimeout(() => { this.kick() }, waitMs)
         return
       }
       const attempts = item.attempts + 1
@@ -587,10 +1220,13 @@ export class UploadEngine {
         multipart: { ...item.multipart, completedParts }
       })
       await this.multipartApi.complete(item.uploadId, completedParts)
-      await this.update(liveItem, { state: 'uploaded', progress: 1, attempts: item.attempts + 1 })
+      await this.update(liveItem, { state: 'uploaded', progress: 1, attempts: item.attempts + 1, uploadEndedAtMs: Date.now() })
       this.scheduleStatusPoll()
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
+      // Same cancel/pause-race guard as uploadOne.
+      const current = await this.store.get(item.id)
+      if (current?.state === 'cancelled' || current?.state === 'staged') return
       if (!this.running) {
         await this.update(liveItem, { state: 'signed', progress: undefined })
         return
@@ -619,7 +1255,7 @@ export class UploadEngine {
   }
 
   private async pollStatuses (): Promise<void> {
-    const uploaded = await this.store.list(['uploaded'])
+    const uploaded = await this.listScoped(['uploaded'])
     if (uploaded.length === 0) return
     const withIds = uploaded.filter(item => item.uploadId !== undefined)
     for (
@@ -652,7 +1288,7 @@ export class UploadEngine {
       }
     }
     await this.emitStats()
-    const remaining = await this.store.list(['uploaded'])
+    const remaining = await this.listScoped(['uploaded'])
     if (remaining.length > 0) this.scheduleStatusPoll()
   }
 
@@ -667,7 +1303,9 @@ export class UploadEngine {
         await this.update(item, { state: 'ingested' })
         break
       case SERVER_STATUS.DUPLICATE:
-        await this.update(item, { state: 'duplicate' })
+        // clear any stale transport error (e.g. an earlier PUT 429) so the
+        // label reads as a clean duplicate, not 'Duplicate — <old error>'
+        await this.update(item, { state: 'duplicate', error: undefined })
         break
       case SERVER_STATUS.CHECKSUM:
         // retry_upload path: URL may be reused if fresh; reset to ready to re-sign cleanly.

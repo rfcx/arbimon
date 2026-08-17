@@ -8,6 +8,8 @@
 
 /** Lifecycle state of a single file in the local queue. */
 export type UploadItemState =
+  | 'analyzing' // staged-intake: local header/filename analysis in progress
+  | 'staged' // analysis done; awaiting explicit Start (may carry analysisError)
   | 'queued' // accepted into the queue, not yet prepared
   | 'preparing' // hashing / timestamp parsing / duration probing
   | 'ready' // prepared, waiting for a signed URL
@@ -19,6 +21,7 @@ export type UploadItemState =
   | 'duplicate' // terminal: server-side sha1 duplicate (status 31)
   | 'failed' // terminal or retryable failure (see `retryable`)
   | 'rejected' // terminal: rejected before/at signing (validation, limits)
+  | 'cancelled' // terminal: user-cancelled (failed-like; Retry re-enters the pipeline)
   | 'paused' // user- or engine-paused (offline)
 
 /** Server ingest status codes (Mongo streamuploads.status). */
@@ -31,6 +34,16 @@ export const SERVER_STATUS = {
   CHECKSUM: 32
 } as const
 
+/** How the recording timezone was determined for an item (staged analysis). */
+export type TimezoneSource =
+  | 'filename-offset' // explicit offset in the filename
+  | 'file-metadata' // GUANO / AudioMoth ICMT embedded timestamp
+  | 'site-local' // site's IANA timezone applied to a naive filename time
+  | 'utc-fallback' // no other rung fired
+  | 'forced-site' // user selected Site Local Time
+  | 'forced-utc' // user selected UTC
+  | 'manual' // user edited the date/time by hand (survives mode re-analysis)
+
 export interface UploadItem {
   /** Engine-local id (stable across sessions; storage key). */
   id: string
@@ -41,14 +54,53 @@ export interface UploadItem {
   fileSizeBytes: number
   /** Target stream/site id. */
   streamId: string
+  /** Owning project slug — partitions the queue for multi-project windows
+   * (each pop-out drives only its own project's items). */
+  projectSlug?: string
   state: UploadItemState
   /** ISO-8601 UTC recording timestamp (parsed from filename). */
   timestampUtc?: string
+  // -- staged-analysis fields (populated by the analyze step) ---------------
+  /** Directory part of relativePath ('' for root drops). */
+  directory?: string
+  /** Site display name (denormalized for the table). */
+  siteName?: string
+  /** Wall-clock recording time in the DETERMINED zone: `YYYY-MM-DDTHH:mm:ss`. */
+  localWallTime?: string
+  /** How the timezone was decided. */
+  timezoneSource?: TimezoneSource
+  /** Display string: IANA zone name or `+HH:MM` offset or `UTC`. */
+  timezoneName?: string
+  /** Container format from the header probe. */
+  fileFormat?: 'wav' | 'flac' | 'opus' | 'aiff' | 'unknown'
+  /** Analysis failure (no timestamp derivable, unreadable, …). Item stays
+   * `staged` but is excluded from Start until resolved/cleared. */
+  analysisError?: string
+  /** Non-blocking advisory shown alongside the row (e.g. an unusually old
+   * date that is probably a digitised archive but MIGHT be a recorder whose
+   * clock reset). Unlike analysisError this never excludes the item from
+   * Start — it exists so a genuine archive uploads freely while a flat-battery
+   * recorder still gets noticed. */
+  notice?: string
+  /** Set when the FLAC transcode stage encoded this item (UI: transcode column). */
+  transcoded?: boolean
+  /** Pre-transcode identity, kept so a retry after the encoded blob was
+   * released (terminal-state cache eviction) can re-enter through prepare
+   * and re-encode instead of signing a FLAC name over WAV bytes. */
+  originalFilename?: string
+  originalFileSizeBytes?: number
+  // -- transfer metrics ------------------------------------------------------
+  /** Epoch ms when the first byte of the (current attempt's) PUT went out. */
+  uploadStartedAtMs?: number
+  /** Epoch ms when the PUT (or multipart complete) finished. */
+  uploadEndedAtMs?: number
   /** sha1 hex of file content (computed during prepare). */
   checksumSha1?: string
   /** Duration in ms (parsed from audio header during prepare). */
   durationMs?: number
   sampleRateHz?: number
+  /** Bits per sample (parsed from the audio header). */
+  bitDepth?: number
   /** Server upload id (after signing). */
   uploadId?: string
   /** Signed PUT URL (after signing). expires ~24h server-side. */
@@ -79,6 +131,8 @@ export interface UploadItem {
 /** Aggregate queue statistics for UI. */
 export interface QueueStats {
   total: number
+  analyzing: number
+  staged: number
   queued: number
   preparing: number
   ready: number
@@ -90,6 +144,7 @@ export interface QueueStats {
   duplicate: number
   failed: number
   rejected: number
+  cancelled: number
   paused: number
   bytesTotal: number
   bytesUploaded: number
@@ -191,6 +246,9 @@ export interface UploadEngineConfig {
   maxConcurrentPrepares?: number
   /** Items per /uploads/bulk call (server cap 100). Default 100. */
   signBatchSize?: number
+  /** Coalescing window before signing a PARTIAL batch while prepares are
+   * still feeding (ms). Bigger batches = fewer round trips. Default 750. */
+  signCoalesceMs?: number
   /** Items per /uploads/status call (server cap 100). Default 100. */
   statusBatchSize?: number
   /** Max upload attempts per item before terminal failure. Default 5. */
@@ -207,6 +265,38 @@ export interface UploadEngineConfig {
   multipartThresholdBytes?: number
   /** Concurrent part PUTs within one multipart file. Default 3. */
   multipartPartConcurrency?: number
+  /**
+   * Learn the upload cap from the link instead of using a fixed one
+   * (default true). The optimum concurrency is a property of the connection,
+   * not a preference: a saturated field link is fastest and safest at ~1-2,
+   * while a fast link with per-request dead time benefits up to ~8. See
+   * adaptive-concurrency.ts for the measurements. Set false to pin the cap to
+   * maxConcurrentUploads (useful for benchmarking).
+   */
+  adaptiveConcurrency?: boolean
+  /**
+   * How far prepare/sign may run AHEAD of the upload pool, as a multiple of
+   * the current upload cap. Bounds the encoded-FLAC backlog held in memory;
+   * without it, prepare drains the whole queue and the backlog scales with
+   * batch size. Default 3.
+   */
+  prepareAheadFactor?: number
+  /**
+   * Floor on the prepare-ahead window, in ITEMS. Protects sign-batch
+   * coalescing: on a slow link `cap * factor` would be 3-6 items, which turns
+   * one bulk sign call into many serial round trips (the 2026-08-12 "Waiting
+   * for URL" bottleneck). Default 24.
+   */
+  prepareAheadMin?: number
+  /**
+   * Ceiling on the prepare-ahead window, in BYTES. This is the bound that
+   * actually protects memory, because item COUNT is the wrong unit when file
+   * sizes span orders of magnitude. Default 512 MiB — measured in-browser as
+   * roughly where Chrome stops holding blob data resident and starts spilling
+   * to disk. One item is always allowed through, so a single larger-than-
+   * budget file cannot deadlock the queue.
+   */
+  prepareAheadMaxBytes?: number
   /** Optional lane tier hint passed at signing. */
   laneTier?: 'express' | 'priority' | 'standard'
 }

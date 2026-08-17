@@ -2,7 +2,11 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "noEmit": true,
-    "rootDir": "../../"
+    "rootDir": "../../",
+    // skipLibCheck inherited from tsconfig.build.json (libflacjs shim note there)
+    "paths": {
+      "libflacjs/*": ["./src/libflacjs.d.ts"]
+    }
   },
   "include": ["src/**/*.ts", "./*.js", "./*.ts"],
   "exclude": ["node_modules", "dist", "lib", ".*/**"]

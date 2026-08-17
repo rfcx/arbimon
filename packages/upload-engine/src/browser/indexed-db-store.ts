@@ -15,7 +15,7 @@ const STORE = 'upload-items'
 // here made failed rows IMPOSSIBLE to clear from the panel (operator-
 // reported). Retryable failures the user wants to keep are re-driven via
 // Retry BEFORE clearing; clearing is the explicit "give up on these" act.
-const TERMINAL_STATES: UploadItemState[] = ['ingested', 'duplicate', 'rejected', 'failed']
+const TERMINAL_STATES: UploadItemState[] = ['ingested', 'duplicate', 'rejected', 'failed', 'cancelled']
 
 const openDb = async (): Promise<IDBDatabase> =>
   await new Promise((resolve, reject) => {
