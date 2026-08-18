@@ -7,7 +7,7 @@ import { type LocationProjectProfile } from '@rfcx-bio/node-common/dao/types'
 import { getProjectMetrics } from '@/dashboard/dashboard-metrics-dao'
 import { getRichnessByTaxon } from '@/dashboard/dashboard-species-data-dao'
 import { getSequelize } from '~/db'
-import { fileUrl } from '~/format-helpers/file-url'
+import { RESIZE_WIDTH_HERO, resizedFileUrl } from '~/format-helpers/file-url'
 import { getEffectiveProjectTypeLimits } from '../project-entitlement-bll'
 import { getImageByObjectives, resolveProjectImage } from '../utils/image-by-objective'
 import { getProjectTieringUsage } from './project-tiering-usage-dao'
@@ -114,7 +114,10 @@ export const getProjectInfo = async (locationProjectId: number, fields: ProjectI
     dateStart: baseProject.dateStart,
     ...(fields.includes('readme') ? { readme: resProfile?.readme ?? '' } : {}),
     ...(fields.includes('keyResult') ? { keyResult: resProfile?.keyResult ?? '' } : {}),
-    ...(fields.includes('image') ? { image: fileUrl(resolveProjectImage(resProfile?.image, resProfile?.objectives)) ?? '' } : {}),
+    // Hero renders (directory project-info, settings preview) show up to
+    // ~300px CSS full-width; 608 covers 2x DPR. Resized on demand; the
+    // endpoint never upscales smaller originals.
+    ...(fields.includes('image') ? { image: resizedFileUrl(resolveProjectImage(resProfile?.image, resProfile?.objectives), RESIZE_WIDTH_HERO) ?? '' } : {}),
     ...(fields.includes('countryCodes') ? { countryCodes: resCountry?.countryCodes ?? [] } : {}),
     ...(fields.includes('richnessByTaxon') ? { richnessByTaxon } : {}),
     ...(fields.includes('resources') ? { resources: resProfile?.resources } : {}),

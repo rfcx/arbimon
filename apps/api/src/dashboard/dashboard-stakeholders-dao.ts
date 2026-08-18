@@ -7,7 +7,7 @@ import { type LocationProjectUserRole, type OrganizationTypes } from '@rfcx-bio/
 
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
-import { fileUrl } from '~/format-helpers/file-url'
+import { RESIZE_WIDTH_AVATAR, resizedFileUrl } from '~/format-helpers/file-url'
 
 export const getProjectUsers = async (projectId: number, onlyListedMembers: boolean = true): Promise<DashboardStakeholdersUser[]> => {
   const sequelize = getSequelize()
@@ -42,7 +42,9 @@ export const getProjectUsers = async (projectId: number, onlyListedMembers: bool
       email: p.email,
       firstName: p.firstName,
       lastName: p.lastName,
-      image: fileUrl(p.image),
+      // Stakeholder avatars render at 48px CSS (w-12 rounded-full); resized on
+      // demand, external URLs pass through untouched.
+      image: resizedFileUrl(p.image, RESIZE_WIDTH_AVATAR),
       roleId: p.roleId,
       ranking: p.ranking,
       role,
@@ -109,7 +111,7 @@ export const getProjectStakeholderUsers = async (projectId: number): Promise<Das
       email: u.ranking !== 0 ? '' : p?.email ?? '', // only return email for primary contact
       firstName: p?.firstName ?? '',
       lastName: p?.lastName ?? '',
-      image: fileUrl(p?.image),
+      image: resizedFileUrl(p?.image, RESIZE_WIDTH_AVATAR),
       roleId: u.roleId,
       ranking: u.ranking,
       role,

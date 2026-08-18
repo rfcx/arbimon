@@ -87,9 +87,15 @@ export const getOpensearchProjects = async (query: string, isPublished: boolean,
       slug: hit._source.slug,
       status: hit._source.status,
       image: fileUrl(resolveProjectImage(hit._source.image, hit._source.objectives)) ?? '',
-      // The index stores an empty `thumbnail` for non-S3 images; resolveProjectImage
-      // treats '' as "no image" and falls back to the objective-based default.
-      thumbnail: fileUrl(resolveProjectImage(hit._source.thumbnail, hit._source.objectives)) ?? '',
+      // Thumbnail is derived from the IMAGE path with the 'thumbnail' variant:
+      // when the resize endpoint is configured, fileUrl() renders it on demand
+      // (covering the 11.3% of images with no pre-baked sidecar); when it is
+      // not, this falls back to the same `.thumbnail.` sidecar path the index
+      // stores in `hit._source.thumbnail`. The index stores an empty
+      // `thumbnail` for non-S3 images; resolveProjectImage treats '' as "no
+      // image" and falls back to the objective-based static:// default, which
+      // passes through fileUrl untouched.
+      thumbnail: fileUrl(resolveProjectImage(hit._source.image, hit._source.objectives), 'thumbnail') ?? '',
       objectives: hit._source.objectives,
       summary: hit._source.summary,
       readme: hit._source.readme,

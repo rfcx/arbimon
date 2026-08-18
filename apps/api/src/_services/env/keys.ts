@@ -57,6 +57,12 @@ export const envKeysOptional = [
   // host (default https://arb.mn).
   'SHORT_LINK_MINT_TOKEN',
   'ARBMN_BASE_URL',
+  // Resize-on-demand image endpoint base (rfcx-api PR #668), INCLUDING the
+  // media-api source-bucket alias, e.g.
+  //   https://arbimon.org/media-api/images/arbimon-profile
+  // When unset, fileUrl()/resizedFileUrl() fall back to original-object /
+  // `.thumbnail.` sidecar URLs (the pre-endpoint behaviour).
+  'IMAGE_RESIZE_BASE_URL',
   // Server-side PostHog capture for /super mutation audit events
   // (_services/analytics/super-audit.ts). Both must be set to enable;
   // unset = capture disabled (safe default).

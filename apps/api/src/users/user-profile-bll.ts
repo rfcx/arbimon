@@ -11,7 +11,7 @@ import { resizeImage } from '@rfcx-bio/node-common/image'
 import { patchUserProfileOnCore } from '~/api-core/api-core'
 import { type Auth0UserToken } from '~/auth0/types'
 import { BioNotFoundError } from '~/errors'
-import { fileUrl } from '~/format-helpers/file-url'
+import { RESIZE_WIDTH_AVATAR, resizedFileUrl } from '~/format-helpers/file-url'
 import { getS3Client } from '~/storage'
 import { create, get, getAllOrganizations as daoGetAllOrganizations, getIdByEmail, query, update } from './user-profile-dao'
 
@@ -46,7 +46,9 @@ export const getUserProfile = async (id: number): Promise<Omit<UserProfile, 'id'
     firstName: profile.firstName,
     lastName: profile.lastName,
     email: profile.email,
-    image: fileUrl(profile.image),
+    // Own-profile avatar; resized on demand (account settings renders small).
+    // External (Gravatar-style) URLs pass through untouched.
+    image: resizedFileUrl(profile.image, RESIZE_WIDTH_AVATAR),
     organizationIdAffiliated: profile.organizationIdAffiliated,
     accountTier: profile.accountTier,
     accountTierUpdatedAt: profile.accountTierUpdatedAt,
@@ -62,7 +64,11 @@ export const patchUserProfile = async (token: string, authToken: Auth0UserToken,
   const coreProfile: Pick<CoreUser, 'firstname' | 'lastname' | 'picture'> = {
     firstname: newProfile.firstName,
     lastname: newProfile.lastName,
-    picture: fileUrl(newProfile.image) ?? null
+    // Persisted to Core as this user's avatar URL; consumers render it small,
+    // so store the resized form (NOTE: persisted URLs outlive config — if the
+    // endpoint base ever moves, existing Core pictures keep the old host, the
+    // same trade-off as the s3.arbimon.org URLs stored before this change).
+    picture: resizedFileUrl(newProfile.image, RESIZE_WIDTH_AVATAR) ?? null
   }
 
   if (isAuth0(idAuth0)) {
@@ -113,7 +119,7 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
   const coreProfile = {
     firstname: newProfile.firstName,
     lastname: newProfile.lastName,
-    picture: fileUrl(newProfile.image) ?? null
+    picture: resizedFileUrl(newProfile.image, RESIZE_WIDTH_AVATAR) ?? null
   }
   await patchUserProfileOnCore(token, email, coreProfile)
   await storageClient.putObject(imagePath, image, { ContentType: file.mimetype, ACL: 'public-read', CacheControl: originalConfig.cacheControl })

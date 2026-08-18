@@ -6,7 +6,7 @@ import { type LocationProjectUserRole, type UserProfile } from '@rfcx-bio/node-c
 
 import { getSequelize } from '~/db'
 import { BioNotFoundError } from '~/errors'
-import { fileUrl } from '~/format-helpers/file-url'
+import { RESIZE_WIDTH_AVATAR, resizedFileUrl } from '~/format-helpers/file-url'
 import { getProjectById } from './projects-dao'
 
 const sequelize = getSequelize()
@@ -41,7 +41,9 @@ export const get = async (locationProjectId: number): Promise<ProjectMemberRow[]
       userId: u.userId,
       firstName: u.firstName,
       lastName: u.lastName,
-      image: fileUrl(u.image) ?? '',
+      // Member avatars render at 32px CSS (h-8 rounded-full); resized on demand,
+      // Gravatar-style external URLs pass through untouched.
+      image: resizedFileUrl(u.image, RESIZE_WIDTH_AVATAR) ?? '',
       email: u.email,
       roleId: u.roleId,
       role,
