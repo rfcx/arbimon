@@ -91,11 +91,15 @@
           >
             view-only
           </span>
+          <!-- Free projects carry NO tier badge (operator 2026-08-18) — free is
+               the unlabelled default; the current type is still visible in the
+               tier <select> beside it, so no information is lost on this
+               admin surface. -->
           <span
-            v-else
-            :class="tierBadgeClass(project.projectType)"
+            v-else-if="project.projectType === 'premium' || project.projectType === 'unlimited'"
+            :class="TIER_BADGE_CLASS"
           >
-            {{ project.projectType ?? 'free' }}
+            {{ project.projectType }}
           </span>
         </div>
       </div>
@@ -249,17 +253,12 @@ const { data: usageResponse } = useProjectTieringUsage(apiClientArbimon, slug)
 const limits = computed(() => props.project.limits)
 const usage = computed(() => usageResponse.value)
 
-const tierBadgeClass = (projectType: SuperUserProjectSummary['projectType'] | undefined): string => {
-  const base = 'inline-flex items-center justify-center w-fit rounded-full px-2 py-1 text-xs font-bold capitalize tracking-wide leading-none'
-
-  if (projectType === 'premium') {
-    return `${base} bg-amber-100 text-amber-700`
-  }
-  if (projectType === 'unlimited') {
-    return `${base} bg-rose-100 text-rose-700`
-  }
-  return `${base} bg-emerald-100 text-emerald-700`
-}
+/** Premium + Unlimited share one treatment (functionally identical on the
+ * backend — identical all-NULL project_type_limit rows). Palm + chirp per the
+ * operator's 2026-08-18 color pass (the bright green first take was too
+ * loud); matches project-state-badge.vue so the admin table and the SPA
+ * agree. Free renders no badge at all (see template). */
+const TIER_BADGE_CLASS = 'inline-flex items-center justify-center w-fit rounded-full px-2 py-1 text-xs font-bold capitalize tracking-wide leading-none bg-palm/60 text-chirp'
 
 const stateBadgeClass = (): string => {
   return 'inline-flex items-center justify-center w-fit rounded-full px-2 py-1 text-xs capitalize tracking-wide leading-none bg-stone-200 font-semibold'

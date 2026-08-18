@@ -52,23 +52,53 @@
           v-if="portfolioSummary && !showLoading"
           class="mt-6 flex w-full gap-4 items-stretch"
         >
+          <!-- ACCOUNT TYPE card (renamed from "User Plan", operator 2026-08-18).
+               Pro: subtle expiration line beside the tier (provisional — derived
+               server-side from account_tier_updated_at + 1yr; the schema has no
+               billing column yet, see PortfolioSummaryResponse). Free: a small
+               grayed/INERT upgrade button — deliberately disabled, there is no
+               self-serve upgrade flow yet; it advertises the path, not a
+               working control. -->
           <div class="w-1/4 rounded-2xl border border-white/10 bg-echo p-6 shadow-xl flex flex-col justify-center">
             <p class="text-sm capitalize text-gray-400">
-              User Plan
+              Account Type
             </p>
-            <p class="mt-1 text-2xl font-bold text-white truncate">
-              {{ ACCOUNT_TIER_LABELS[portfolioSummary.accountTier] }}
-            </p>
+            <div class="mt-1 flex items-baseline gap-x-3 flex-wrap">
+              <p class="text-2xl font-bold text-white truncate">
+                {{ ACCOUNT_TIER_LABELS[portfolioSummary.accountTier] }}
+              </p>
+              <p
+                v-if="portfolioSummary.accountTier === 'pro' && tierExpiryLabel !== undefined"
+                class="text-xs text-gray-500"
+                title="Your Pro subscription period"
+              >
+                expires {{ tierExpiryLabel }}
+              </p>
+            </div>
+            <button
+              v-if="portfolioSummary.accountTier === 'free'"
+              type="button"
+              disabled
+              class="mt-2 self-start rounded-md border border-white/15 bg-white/5 px-2.5 py-1 text-xs text-gray-500 cursor-not-allowed"
+              title="Upgrading to Pro is coming soon — contact us to upgrade your account"
+            >
+              Upgrade to Pro
+            </button>
           </div>
 
+          <!-- COMPOSITE PORTFOLIO METRICS (operator 2026-08-18): counts across
+               ALL projects the user belongs to (any role), replacing the
+               Free/Premium/Unlimited per-type breakdown. Backed by
+               memberTotals (membership rows × location_project_metric — the
+               same source each project's dashboard reports from). -->
           <div class="w-3/4 rounded-2xl border border-white/10 bg-echo shadow-xl grid grid-cols-3 pb-5 pt-6">
             <div class="flex flex-col items-center justify-center px-4 border-r border-white/10">
               <div class="flex flex-col items-center">
                 <p class="text-3xl font-bold text-white mb-1">
-                  {{ portfolioSummary.usage.freeProjects }}
+                  {{ formatMetric(portfolioSummary.memberTotals?.projectCount) }}
                 </p>
                 <p class="text-sm capitalize text-gray-400">
-                  Free Projects
+                  Projects
                 </p>
               </div>
             </div>
@@ -76,10 +106,10 @@
             <div class="flex flex-col items-center justify-center px-4 border-r border-white/10">
               <div class="flex flex-col items-center">
                 <p class="text-3xl font-bold text-white mb-1">
-                  {{ portfolioSummary.usage.premiumProjects }}
+                  {{ formatMetric(portfolioSummary.memberTotals?.recordingCount) }}
                 </p>
                 <p class="text-sm capitalize text-gray-400">
-                  Premium Projects
+                  Recordings
                 </p>
               </div>
             </div>
@@ -87,10 +117,10 @@
             <div class="flex flex-col items-center justify-center px-4">
               <div class="flex flex-col items-center">
                 <p class="text-3xl font-bold text-white mb-1">
-                  {{ portfolioSummary.usage.unlimitedProjects }}
+                  {{ formatMetric(portfolioSummary.memberTotals?.siteCount) }}
                 </p>
                 <p class="text-sm capitalize text-gray-400">
-                  Unlimited Projects
+                  Sites
                 </p>
               </div>
             </div>
@@ -171,8 +201,9 @@
 </template>
 <script setup lang="ts">
 import { type AxiosInstance } from 'axios'
+import dayjs from 'dayjs'
 import debounce from 'lodash.debounce'
-import { inject, onMounted, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 
 import { type LocationProjectWithInfo, apiBioGetMyProjects } from '@rfcx-bio/common/api-bio/project/projects'
 
@@ -188,6 +219,23 @@ const store = useStore()
 
 const apiClientBio = inject(apiClientKey) as AxiosInstance
 const { data: portfolioSummary } = useGetPortfolioSummary(apiClientBio)
+
+/** Subtle "expires <date>" beside the Pro tier label; undefined hides it. */
+const tierExpiryLabel = computed(() => {
+  const iso = portfolioSummary.value?.accountTierExpiresAt
+  if (iso === undefined) return undefined
+  const d = dayjs(iso)
+  return d.isValid() ? d.format('MMM D, YYYY') : undefined
+})
+
+/** Compact display for the composite counts (12,345 → 12.3k style above 10k
+ * keeps the 3-up cards from overflowing on big portfolios). */
+const formatMetric = (value: number | undefined): string => {
+  if (value === undefined) return '—'
+  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`
+  if (value >= 10_000) return `${(value / 1_000).toFixed(1).replace(/\.0$/, '')}k`
+  return value.toLocaleString()
+}
 const projects = ref<LocationProjectWithInfo[]>([])
 const hasFetchedAll = ref(false)
 const LIMIT = 20

@@ -205,6 +205,27 @@ describe('GET /profile/portfolio-summary', async () => {
     expect(result.usage.premiumProjects).toBe(1)
     expect(result.ownedProjects).toHaveLength(1)
     expect(result.ownedProjects[0].projectType).toBe('premium')
+    // Composite member-wide totals (2026-08-18): membership rows ×
+    // location_project_metric. The seeded project has a membership row but no
+    // metric row, so it counts toward projectCount with 0 recordings/sites —
+    // which also proves the LEFT JOIN (a metric-less project must not vanish).
+    expect(result.memberTotals).toBeDefined()
+    expect(result.memberTotals.projectCount).toBe(1)
+    expect(result.memberTotals.recordingCount).toBe(0)
+    expect(result.memberTotals.siteCount).toBe(0)
+  })
+
+  test('pro accounts carry a provisional expiry when tier-updated-at is set', async () => {
+    await UserProfile.update({ accountTierUpdatedAt: new Date('2026-01-15T00:00:00Z') }, { where: { id: defaultUserProfile.id } })
+    const app = await makeApp(routesUserProfile, { userId: defaultUserProfile.id })
+
+    const response = await app.inject({ method: GET, url: PORTFOLIO_ROUTE })
+
+    expect(response.statusCode).toBe(200)
+    const result = response.json()
+    // account_tier_updated_at + 1 year (annual-term assumption, documented
+    // provisional in PortfolioSummaryResponse)
+    expect(result.accountTierExpiresAt).toBe('2027-01-15T00:00:00.000Z')
   })
 })
 
