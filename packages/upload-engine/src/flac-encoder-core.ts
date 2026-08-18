@@ -68,6 +68,21 @@ export interface FlacEncoderOptions {
   bitsPerSample: number
   /** 0..8; 5 is libFLAC's default and what we shipped previously. */
   compression: number
+  /**
+   * Total interchannel samples the stream WILL contain, when known up front.
+   *
+   * Written into STREAMINFO's total-samples field, which is what lets any
+   * decoder report a duration. Omit (or 0) only for genuinely unbounded
+   * streams -- 0 means "unknown", and a FLAC whose STREAMINFO says unknown
+   * makes `ffprobe` report `Duration: N/A`, which the ingest pipeline rejects
+   * outright ("Audio duration is zero", OPEN-ITEMS 183).
+   *
+   * NOTE the underlying C call is `set_total_samples_ESTIMATE`; libFLAC still
+   * writes the value verbatim into STREAMINFO at init, and (since we encode to
+   * a non-seekable stream) never rewrites it afterwards. So it must be EXACT,
+   * not approximate -- pass a count derived from the source, never a guess.
+   */
+  totalSamples?: number
   /** Ask libFLAC to verify each frame as it encodes. */
   verify: boolean
 }
@@ -92,7 +107,10 @@ export class FlacStreamEncoder {
       options.channels,
       options.bitsPerSample,
       options.compression,
-      0, // totalSamples unknown (streaming)
+      // EXACT total when the caller knows it (WAV data-chunk size / frame
+      // size); 0 only when genuinely unknown. See totalSamples above -- a 0
+      // here is what caused every browser-transcoded upload to be rejected.
+      options.totalSamples ?? 0,
       options.verify ? 1 : 0
     )
     if (id === 0) {
