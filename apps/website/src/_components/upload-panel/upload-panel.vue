@@ -198,7 +198,7 @@ import { type UploadItem, type UploadItemState, collectDroppedFiles, createUploa
 
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { track } from '~/analytics'
-import { engine, engineRunning, fileSource, flacEncodeEnabled, items, prepareOptions, refreshItems, stats, uploadStore } from '~/upload'
+import { currentSurface, engine, engineRunning, fileSource, flacEncodeEnabled, items, prepareOptions, refreshItems, stats, uploadStore } from '~/upload'
 
 const props = defineProps<{
   sites: SiteResponse[]
@@ -278,7 +278,8 @@ const enqueueFiles = async (files: Array<{ file: File, relativePath: string }>):
   track('web_upload_batch_enqueued', {
     fileCount: newItems.length,
     totalBytes: newItems.reduce((sum, item) => sum + item.fileSizeBytes, 0),
-    projectSlug: props.projectSlug
+    projectSlug: props.projectSlug,
+    surface: currentSurface()
   })
 }
 

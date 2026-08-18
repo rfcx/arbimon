@@ -14,6 +14,53 @@ import { track } from '~/analytics'
 import { useAuth0Client } from '~/auth-client'
 import { getIdToken } from '~/auth-client/get-id-token'
 
+/**
+ * Which DOCUMENT an uploader event came from: the uploader rendered inline in
+ * the SPA, or the dedicated uploader tab (`?popout=1`).
+ *
+ * WHY THIS EXISTS (2026-08-18). Every `web_upload_*` event ever recorded
+ * carried `$pathname=/import-recordings-new` — the beta route retired on
+ * 2026-08-12 — and the live route had never emitted one. Distinguishing "the
+ * instrumentation is broken" from "nobody has used it yet" took a runtime probe
+ * of the engine's listener registry, because the events themselves could not
+ * say where they came from. This property makes that question answerable from
+ * the data alone, forever after.
+ *
+ * It also splits a real behavioural fork we currently cannot see: the pop-out
+ * is a SEPARATE DOCUMENT with its own module singleton, its own cache (a stale
+ * bundle there once served `app-9f05204f` while the SPA tab had the new one)
+ * and its own engine scope. "Uploads from the pop-out behave differently" is a
+ * question the taxonomy should be able to answer without another CDP session.
+ *
+ * READ AT EMIT TIME, NOT AT MODULE INIT. This module is a singleton per
+ * document, but the SPA tab is long-lived and navigates: a user can open the
+ * uploader inline, navigate away, and come back. Capturing the surface once at
+ * import time would freeze whatever the URL happened to be at app boot — which
+ * for the inline case is usually some unrelated page. `?popout=1` is fixed for
+ * the LIFETIME of a document (the pop-out is opened at that URL and the SPA
+ * never navigates INTO it), so reading `location.search` per event is both
+ * correct and cheap.
+ *
+ * Deliberately NOT derived from `ownPopoutSlug`: that is a CLAIM, not an
+ * identity. It is cleared by `releasePopoutClaim()` when the uploader page
+ * unmounts, and it is per-PROJECT — so a pop-out that released its claim, or
+ * one driving a different project's items, would mislabel itself as `in_page`.
+ * The URL is the honest source for "which document am I".
+ */
+export type UploaderSurface = 'in_page' | 'popout'
+
+export const currentSurface = (): UploaderSurface => {
+  if (import.meta.env.SSR || typeof window === 'undefined') return 'in_page'
+  try {
+    return new URLSearchParams(window.location.search).get('popout') === '1'
+      ? 'popout'
+      : 'in_page'
+  } catch {
+    // Analytics must never throw into the upload pipeline.
+    return 'in_page'
+  }
+}
+
 const INGEST_BASE_URL = (import.meta.env.VITE_INGEST_BASE_URL as string | undefined) ?? 'https://ingest.rfcx.org'
 
 export const EMPTY_STATS: QueueStats = { total: 0, analyzing: 0, staged: 0, queued: 0, preparing: 0, ready: 0, signing: 0, signed: 0, uploading: 0, uploaded: 0, ingested: 0, duplicate: 0, failed: 0, rejected: 0, cancelled: 0, paused: 0, bytesTotal: 0, bytesUploaded: 0 }
@@ -66,7 +113,7 @@ export const engine = new UploadEngine(
       // cannot hide behind fail-open again.
       onEncoderUnavailable: (detail) => {
         encoderUnavailable.value = detail
-        track('web_upload_encoder_unavailable', { detail })
+        track('web_upload_encoder_unavailable', { detail, surface: currentSurface() })
       }
     }
   )(item, file)
@@ -290,7 +337,9 @@ engine.on(event => {
           fileSizeBytes: event.item.fileSizeBytes,
           attempts: event.item.attempts,
           multipart: event.item.multipart !== undefined,
-          error: ['failed', 'rejected', 'cancelled'].includes(event.item.state) ? event.item.error : undefined
+          error: ['failed', 'rejected', 'cancelled'].includes(event.item.state) ? event.item.error : undefined,
+          surface: currentSurface(),
+          projectSlug: event.item.projectSlug
         })
       }
     } else if (counted !== undefined) {
@@ -302,7 +351,7 @@ engine.on(event => {
     }
   }
   if (event.type === 'error') {
-    track('web_upload_engine_error', { message: event.message })
+    track('web_upload_engine_error', { message: event.message, surface: currentSurface() })
   }
 })
 
