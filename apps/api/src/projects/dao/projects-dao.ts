@@ -7,7 +7,7 @@ import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
 import { type Project, type ProjectStatus, ATTRIBUTES_LOCATION_PROJECT } from '@rfcx-bio/node-common/dao/types'
 
 import { getSequelize } from '~/db'
-import { fileUrl } from '~/format-helpers/file-url'
+import { RESIZE_WIDTH_CARD, resizedFileUrl } from '~/format-helpers/file-url'
 import { resolveProjectImage } from '../utils/image-by-objective'
 import { getProjectsTieringUsage } from './project-tiering-usage-dao'
 
@@ -125,7 +125,10 @@ export const getMyProjectsWithInfo = async (userId: number, offset: number = 0, 
       return {
       ...p,
       summary: profile?.summary ?? '',
-      image: fileUrl(resolveProjectImage(profile?.image, profile?.objectives)) ?? '',
+      // Resized on demand (project cards render ~112px CSS; 304 covers 2x DPR).
+      // Objective-based defaults are static:// and pass through untouched.
+      // Falls back to the original-object URL when the endpoint is unset.
+      image: resizedFileUrl(resolveProjectImage(profile?.image, profile?.objectives), RESIZE_WIDTH_CARD) ?? '',
       objectives: profile?.objectives ?? [],
       countries: countryInfo.find(ci => ci.locationProjectId === p.id)?.countryCodes ?? [],
       isOwner: ownerProjectIds.includes(p.id),
