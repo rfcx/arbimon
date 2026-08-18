@@ -56,6 +56,9 @@ describe('withFlacTranscode decisions', () => {
     const { fn, seen } = recordingInner()
     const decisions: string[] = []
     const prepare = withFlacTranscode(fn, cache, {
+      // EXPLICIT since 2026-08-18: the stage is EXPERIMENTAL and defaults to
+      // OFF (§183), so every test that exercises encoding must opt in.
+      enabled: true,
       minSizeBytes: 1000,
       onDecision: (_i, d, detail) => decisions.push(`${d}:${detail}`)
     })
@@ -75,7 +78,7 @@ describe('withFlacTranscode decisions', () => {
     const cache = new TranscodeCache()
     const { fn, seen } = recordingInner()
     const decisions: string[] = []
-    const prepare = withFlacTranscode(fn, cache, { minSizeBytes: 1000, onDecision: (_i, d) => decisions.push(d) })
+    const prepare = withFlacTranscode(fn, cache, { enabled: true, minSizeBytes: 1000, onDecision: (_i, d) => decisions.push(d) })
     const it = item('float.wav')
     const blob = wavBlob(3, 32, 96000)
     const result = await prepare(it, blob)
@@ -85,10 +88,44 @@ describe('withFlacTranscode decisions', () => {
     expect(cache.get(it.id)).toBeUndefined()
   })
 
+  /**
+   * THE DEFAULT IS THE FEATURE FLAG (§183, 2026-08-18).
+   *
+   * Client-side FLAC encoding shipped defaulting to ON and every encoded file
+   * was rejected by ingest ("Audio duration is zero"): the encoder declares
+   * `totalSamples = 0`, so no duration can be derived. 0 of 335 browser-
+   * transcoded FLACs ever ingested.
+   *
+   * This test pins the OPT-IN posture. It must fail loudly if someone restores
+   * `?? true` — note that the surrounding pass-through tests would NOT catch
+   * that regression in reverse (they assert the original bytes are passed
+   * through, which is also what a disabled stage does), so this is the only
+   * assertion standing between a one-character edit and shipping the defect
+   * back to every user.
+   */
+  test('DEFAULT IS OFF -- encoding must be opted into explicitly', async () => {
+    const cache = new TranscodeCache()
+    const { fn, seen } = recordingInner()
+    const decisions: string[] = []
+    // no `enabled` key at all -> the default governs
+    const prepare = withFlacTranscode(fn, cache, {
+      minSizeBytes: 0,
+      onDecision: (_i, d) => decisions.push(d)
+    })
+    const blob = wavBlob(1, 16, 96000)
+    const result = await prepare(item('rec.wav'), blob)
+    // untouched: original bytes, no rename, nothing cached
+    expect(seen[0].size).toBe(blob.size)
+    expect(result.transcodedFilename).toBeUndefined()
+    expect(cache.size()).toBe(0)
+    // and it did not even reach the encode/skip decision path
+    expect(decisions).not.toContain('encoded')
+  })
+
   test('below min size -> skipped, original passed through', async () => {
     const cache = new TranscodeCache()
     const { fn, seen } = recordingInner()
-    const prepare = withFlacTranscode(fn, cache, { minSizeBytes: 10_000_000 })
+    const prepare = withFlacTranscode(fn, cache, { enabled: true, minSizeBytes: 10_000_000 })
     const blob = wavBlob(1, 16, 96000)
     await prepare(item('small.wav'), blob)
     expect(seen[0].size).toBe(blob.size)
@@ -97,7 +134,7 @@ describe('withFlacTranscode decisions', () => {
   test('non-WAV filename -> untouched (already-FLAC uploads must not re-encode)', async () => {
     const cache = new TranscodeCache()
     const { fn, seen } = recordingInner()
-    const prepare = withFlacTranscode(fn, cache, { minSizeBytes: 0 })
+    const prepare = withFlacTranscode(fn, cache, { enabled: true, minSizeBytes: 0 })
     const blob = new Blob([new Uint8Array(50000)])
     await prepare(item('already.flac'), blob)
     expect(seen[0].size).toBe(blob.size)
@@ -117,7 +154,7 @@ describe('withFlacTranscode decisions', () => {
   test('corrupt WAV header (parser can hardly bless it) -> fail open, upload proceeds', async () => {
     const cache = new TranscodeCache()
     const { fn, seen } = recordingInner()
-    const prepare = withFlacTranscode(fn, cache, { minSizeBytes: 0 })
+    const prepare = withFlacTranscode(fn, cache, { enabled: true, minSizeBytes: 0 })
     const garbage = new Blob([new Uint8Array(9000).fill(0x55)])
     const result = await prepare(item('corrupt.wav'), garbage)
     expect(result.error).toBeUndefined()

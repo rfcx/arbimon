@@ -79,6 +79,9 @@
               @change="onFlacChange"
             >
             <span class="text-insight">Pre-Convert WAV to FLAC</span>
+            <span
+              class="shrink-0 mt-0.5 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide bg-frequency/20 text-frequency"
+            >Experimental</span>
           </label>
           <p class="text-xs text-cloud mt-1.5 leading-relaxed">
             {{ flacInfoText }}

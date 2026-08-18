@@ -73,9 +73,23 @@ export const prepareOptions = reactive<{ timezone?: string | number }>({})
  * Encodable WAVs are FLAC-encoded in the browser before hashing/upload —
  * roughly half the bytes over the wire and no server-side WAV size cap.
  * Files the encoder cannot guarantee lossless (float-32, >8ch, …) upload
- * unchanged. Toggleable from the panel.
+ * unchanged. Toggleable from the uploader settings modal.
+ *
+ * 🔴 **EXPERIMENTAL — DEFAULTS TO OFF (2026-08-18, OPEN-ITEMS §183).**
+ * This shipped defaulting to ON and every encoded file was REJECTED by ingest
+ * ("Audio duration is zero"): the encoder declares `totalSamples = 0` in the
+ * FLAC STREAMINFO, so neither the client probe nor ffprobe can determine a
+ * duration. Measured: 0 of 335 browser-transcoded FLACs ever ingested, vs
+ * 73,770 plain WAVs with none of this failure class. Only files >= 8 MiB are
+ * transcoded, so the defect selectively hit LONG field recordings — the
+ * uploader's primary use case — while small test files passed.
+ *
+ * The default stays OFF until the encoder fix ships AND a large-file upload is
+ * verified end-to-end in production. Do not flip this back on to "save
+ * bandwidth" without that evidence — halving the bytes is worthless if the
+ * upload is then rejected.
  */
-export const flacEncodeEnabled = ref(true)
+export const flacEncodeEnabled = ref(false)
 export const transcodeCache = new TranscodeCache()
 
 // Encoding runs in a module Worker (vite bundles the new-URL pattern
