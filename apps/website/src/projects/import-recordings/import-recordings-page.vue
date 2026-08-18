@@ -585,12 +585,12 @@
 
       <uploader-settings-modal
         v-if="showSettings"
-        :timezone-mode="timezoneMode"
         :flac-enabled="flacEncodeEnabled"
         :flac-info-text="FLAC_INFO_TEXT"
+        :timestamp-formats="timestampFormats"
         @close="showSettings = false"
-        @update:timezone-mode="onTimezoneModeChange"
         @update:flac-enabled="flacEncodeEnabled = $event"
+        @manage-formats="showFormatEditor = true"
       />
 
       <!-- hidden file input; routed to whichever box requested the picker -->
@@ -650,7 +650,7 @@
             :items="box.streamId !== undefined ? itemsForBox(box.streamId) : []"
             :site-name="box.siteName"
             :site-timezone="box.siteTimezone"
-            :timezone-mode="timezoneMode"
+            :running="engineRunning"
             :site-options="siteOptions"
             :opening-id="openingVisualizerId"
             :flac-enabled="flacEncodeEnabled"
@@ -661,6 +661,9 @@
             @create-site="onRequestCreateSite(box.boxId, $event)"
             @toggle-collapsed="toggleBoxCollapsed(box.boxId)"
             @edit-datetime="applyDatetimeEdit"
+            @set-group-zone="applyGroupZone"
+            @start-group="startGroup"
+            @pause-group="pauseGroup"
             @remove-box="removeSiteBox(box.boxId)"
             @site-chosen="linkBoxToSite(box.boxId, $event)"
             @clear-completed="box.streamId !== undefined && clearCompleted(box.streamId)"
@@ -671,10 +674,28 @@
             @clear-item="clearItem"
             @open-destination="openInVisualizer"
           >
+            <!-- INTAKE / DROP ZONE (operator 2026-08-18: give it its own
+                 subtly different surface, hover a little, drag-over a lot).
+
+                 TWO states (operator 2026-08-18): the crosshatch is simply how
+                 this area looks, and it shifts to a muted lime when a file is
+                 dragged over it. There is deliberately NO mouseover state —
+                 see intakeStyle() for why it was removed.
+
+                 The crosshatch is an inline repeating-linear-gradient rather
+                 than a utility class: this WindiCSS build does not compile
+                 arbitrary gradients or arbitrary `em`/size values (verified in
+                 the emitted CSS — an arbitrary-value utility silently produced
+                 NO rule), and colours are the only arbitrary values it emits.
+                 An inline style is honest about that and cannot fail silently.
+
+                 45° + 135° at 8px gives a true crosshatch; the lines are 1px
+                 so it reads as tooth rather than stripes. -->
             <template #intake>
               <div
-                class="border-t border-dashed px-6 py-6 text-center transition-colors"
+                class="border-t border-dashed px-6 py-6 text-center transition-colors duration-150"
                 :class="box.streamId !== undefined && dragBoxId === box.streamId ? 'border-frequency bg-frequency/10' : 'border-cloud/30'"
+                :style="intakeStyle(box.streamId !== undefined && dragBoxId === box.streamId)"
               >
                 <template v-if="box.streamId !== undefined">
                   <p :class="itemsForBox(box.streamId).length === 0 ? 'text-lg' : 'text-base'">
@@ -779,7 +800,8 @@ import { useRoute } from 'vue-router'
 
 import { apiArbimonFindRecordingAtExactTime, apiArbimonResolveRecordingId } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteResponse, apiArbimonGetSites } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
-import { type TimezoneMode, type UploadItem, analyzeFile, collectDroppedFiles, createUploadItem, isSupportedAudioFile } from '@rfcx-bio/upload-engine'
+import { type UserTimestampFormat } from '@rfcx-bio/common/dao/types'
+import { type TimezoneMode, type UploadItem, analyzeFile, collectDroppedFiles, createUploadItem, formatUtcOffsetLabel, isSupportedAudioFile, retimestampToOffset } from '@rfcx-bio/upload-engine'
 
 import SiteFormModal, { type SiteSaved } from '@/_components/site-form-modal/site-form-modal.vue'
 import StagingTable from '@/_components/upload-panel/staging-table.vue'
@@ -819,40 +841,23 @@ interface SiteBox {
 }
 const siteBoxes = ref<SiteBox[]>([])
 
-/** PAGE-LEVEL timezone method ("Determine Timezone(s):" on the options row —
- * moved up from per-box 2026-08-13, operator). One method for the whole
- * session; changing it RE-ANALYZES every staged row (see the watch below) so
- * the selector is never silently ignored for files already added. */
-const timezoneMode = ref<TimezoneMode>('auto')
-
-// Changing the method re-runs analysis on every STAGED row (pre-Start only —
-// items already in the pipeline keep the timestamps they were signed with;
-// re-dating a row mid-upload would desync it from its server registration).
-// Guarded by a generation counter so a rapid double-change can't interleave
-// two passes; file handles come from fileSource (present for staged rows —
-// they were registered at enqueue and only released post-transcode/upload).
-let reanalyzeGeneration = 0
-watch(timezoneMode, async (mode) => {
-  const generation = ++reanalyzeGeneration
-  const staged = items.value.filter(item => item.state === 'staged' || item.state === 'analyzing')
-  for (const item of staged) {
-    if (generation !== reanalyzeGeneration) return // superseded by a newer change
-    if (item.streamId === undefined) continue
-    // A hand-corrected row is the USER'S decision — a mode change must not
-    // silently clobber it. (Retry-after-edit still re-enters normally.)
-    if (item.timezoneSource === 'manual') continue
-    const site = siteById(item.streamId)
-    const file = await fileSource.getFile(item.id)
-    if (file === undefined) continue // handle gone (popped out / reloaded) — leave as-is
-    const { patch } = await analyzeFile(item, file, {
-      mode,
-      siteTimezone: site?.timezone !== undefined && site?.timezone !== '' ? site.timezone : undefined,
-      siteName: site?.name
-    })
-    await engine.updateStaged(item.id, patch)
-  }
-  await refreshItems()
-})
+/**
+ * Timezone determination is ALWAYS automatic (operator 2026-08-18).
+ *
+ * The "Determine Timezone(s)" selector was removed: choosing a strategy before
+ * seeing the result asked users to predict what the parser would find. The
+ * cascade below is what `auto` already did —
+ *   1. the filename (including the user's saved custom formats)
+ *   2. the file's own metadata (GUANO / AudioMoth ICMT)
+ *   3. the site's geolocation timezone
+ *   4. UTC
+ * — and a wrong result is now corrected where it is VISIBLE, with the bulk Zone
+ * dropdown on the queue, after the user can see what was determined.
+ *
+ * Kept as a named constant rather than inlining `'auto'` at each call site so
+ * the intent stays greppable and the analyzer's contract is unchanged.
+ */
+const TIMEZONE_MODE: TimezoneMode = 'auto'
 
 /** Copy for the "i" tooltip beside the Pre-Convert WAV to FLAC checkbox.
  * Lives here rather than inline so the template stays readable; the tooltip
@@ -864,12 +869,63 @@ const FLAC_INFO_TEXT = 'When you add WAV audio files, this uploader may pre-enco
 // lets the options row's expand/collapse-all control drive every box.
 const showSettings = ref(false)
 
-/** Modal -> page bridge for the timezone selector. A `$event as TimezoneMode`
- * cast in the template is a vue-eslint PARSING error (the template parser has
- * no TS), so the narrowing happens here instead. */
-const onTimezoneModeChange = (value: string): void => {
-  timezoneMode.value = value as TimezoneMode
+/**
+ * The intake panel's crosshatch surface.
+ *
+ * WHY INLINE: this WindiCSS build compiles arbitrary COLOURS but not arbitrary
+ * gradients or sizes — an arbitrary-value utility emits NO rule at all and
+ * fails silently (measured in the emitted CSS while building this). An inline
+ * style cannot silently vanish.
+ *
+ * WHY A CROSSHATCH: the drop target needs to look like a different KIND of
+ * surface from the table above it — texture reads as "put things here" in a
+ * way that a flat tint does not, while staying quieter than a filled panel.
+ *
+ * TWO states only (operator 2026-08-18, after viewing it on demo):
+ *   default    0.05 alpha  — the crosshatch is simply what this area LOOKS
+ *                            like; it marks the drop target at all times
+ *   drag-over  muted lime  — "release here"
+ *
+ * The mouseover state was REMOVED. It went through three revisions and the
+ * operator's verdict on seeing it live was that the hover *intensity* was the
+ * right resting weight, but reacting to the pointer added nothing: this is a
+ * drop target, and the pointer being over it is not the event that matters —
+ * dragging a file over it is. Promoting hover's value to the default and
+ * deleting the interaction makes the area read consistently and removes the
+ * per-box hover tracking entirely.
+ *
+ * Earlier passes for the record: 0.02 rest / 0.05 hover was MEASURED as
+ * rendering correctly (scanline spread 22 grey levels; live computed style
+ * confirmed the alpha swap) but was far too faint against the dark theme to
+ * function as an affordance. Promoting hover's 0.10 to the default then
+ * OVERSHOT — operator on seeing it live: "about 2x too bright" — so the
+ * default is now 0.05, which is exactly the old hover value.
+ *
+ * Drag-over green was toned down 0.28 -> 0.18 (operator: "a bit less bright").
+ * The hue stays `frequency` so it matches the border and wash that the class
+ * binding applies in the same state; a darker green (e.g. `palm` #00543B) was
+ * considered and rejected — as 1px lines on a near-black panel it would lose
+ * contrast rather than read as a highlight.
+ *
+ * 45deg + 135deg = a true crosshatch; 1px lines keep it as tooth, not stripes.
+ */
+const intakeStyle = (isDragOver: boolean): Record<string, string> => {
+  const line = isDragOver
+    ? 'rgba(173,255,44,0.18)' // frequency — the house lime, matches the border
+    : 'rgba(249,246,242,0.05)' // cloud
+  const hatch = (angle: string): string =>
+    `repeating-linear-gradient(${angle}, ${line} 0, ${line} 1px, transparent 1px, transparent 10px)`
+  return { backgroundImage: `${hatch('45deg')}, ${hatch('135deg')}` }
 }
+
+/** Opens the custom-filename-format editor (its own modal, reachable from both
+ *  here and global account settings — they mirror one another). */
+const showFormatEditor = ref(false)
+
+/** The user's saved custom filename formats, loaded from their profile.
+ *  Empty until the format editor lands (step 3); the settings modal already
+ *  renders the empty state. */
+const timestampFormats = ref<UserTimestampFormat[]>([])
 const collapsedBoxIds = ref<Set<string>>(new Set())
 const toggleBoxCollapsed = (boxId: string): void => {
   const next = new Set(collapsedBoxIds.value)
@@ -965,8 +1021,47 @@ const siteInfoFor = (streamId: string): { recCount: number, firstRecordingAt?: s
   }
 }
 
+/**
+ * Apply a bulk zone correction to every row in one status group of one site.
+ *
+ * SEMANTIC: the wall clock is held CONSTANT and the UTC instant is re-derived.
+ * The user is not saying "this recording happened at a different time" — they
+ * are saying "the clock that produced 14:30 was in a different zone", which is
+ * what moves the absolute instant. Relabelling the Zone column without moving
+ * `timestampUtc` would leave the row uploading at the wrong moment while
+ * LOOKING correct, which is the exact failure this control exists to prevent.
+ *
+ * Marked `timezoneSource: 'manual'` because it IS the user's explicit decision.
+ */
+const applyGroupZone = async (change: { ids: string[], offsetMinutes: number }): Promise<void> => {
+  const zoneName = formatUtcOffsetLabel(change.offsetMinutes) === 'UTC'
+    ? 'UTC'
+    : formatOffsetIso(change.offsetMinutes)
+  for (const id of change.ids) {
+    const item = items.value.find(row => row.id === id)
+    if (item?.localWallTime === undefined) continue // nothing to re-anchor
+    const timestampUtc = retimestampToOffset(item.localWallTime, change.offsetMinutes)
+    if (timestampUtc === undefined) continue
+    await engine.updateStaged(id, {
+      timestampUtc,
+      timezoneName: zoneName,
+      timezoneSource: 'manual'
+    })
+  }
+  await refreshItems()
+}
+
+/** `+HH:MM` / `-HH:MM` — the fixed-offset form `zoneCol` already understands. */
+const formatOffsetIso = (offsetMinutes: number): string => {
+  const sign = offsetMinutes < 0 ? '-' : '+'
+  const abs = Math.abs(offsetMinutes)
+  const hh = String(Math.floor(abs / 60)).padStart(2, '0')
+  const mm = String(abs % 60).padStart(2, '0')
+  return `${sign}${hh}:${mm}`
+}
+
 /** Apply a hand-corrected date/time to a staged row. timezoneSource 'manual'
- * marks it as the user's decision — the mode-change re-analysis skips it. */
+ * marks it as the user's decision. */
 const applyDatetimeEdit = async (edit: { id: string, localWallTime: string, timestampUtc: string, timezoneName: string }): Promise<void> => {
   await engine.updateStaged(edit.id, {
     localWallTime: edit.localWallTime,
@@ -1090,7 +1185,7 @@ const enqueueFiles = async (streamId: string, files: Array<{ file: File, relativ
   const site = siteById(streamId)
   if (site === undefined) return
   const siteTz = site.timezone !== undefined && site.timezone !== '' ? site.timezone : undefined
-  const boxMode = timezoneMode.value
+  const boxMode = TIMEZONE_MODE
   const accepted = files.filter(({ file }) => isSupportedAudioFile(file.name))
   const pairs = accepted.map(({ file, relativePath }) => {
     const item = createUploadItem({
@@ -1345,6 +1440,39 @@ const clearCompleted = async (streamId: string): Promise<void> => {
   for (const item of itemsForBox(streamId).filter(i => i.state === 'ingested' || i.state === 'duplicate')) {
     await engine.remove(item.id)
   }
+  await refreshItems()
+}
+
+/**
+ * Start uploading an explicit set of ids (one site's queued rows).
+ *
+ * Deliberately id-scoped rather than "start everything startable": the button
+ * lives in ONE site's queue header, so it must upload exactly the rows the
+ * user can see under it. Re-deriving the set here would quietly widen it to
+ * every site on the page.
+ *
+ * `engine.start()` after staging is required — startStaged only marks rows
+ * eligible; start() is what runs the pipeline (same order as onStartPause).
+ */
+const startGroup = async (ids: string[]): Promise<void> => {
+  if (ids.length === 0) return
+  await engine.startStaged(ids)
+  engine.start()
+  await refreshItems()
+}
+
+/**
+ * Pause from a site's group header.
+ *
+ * ⚠️ The engine's run loop is GLOBAL, not per-site — there is no
+ * "pause only this site" primitive, so this pauses everything, exactly as the
+ * metrics-bar button does. The button is only shown on a site that HAS rows in
+ * flight, so the action is never offered where it would look like a no-op, but
+ * a user with two sites uploading will pause both. Making it per-site would
+ * mean per-stream scheduling in the engine, which is a much larger change.
+ */
+const pauseGroup = async (): Promise<void> => {
+  await engine.pause()
   await refreshItems()
 }
 

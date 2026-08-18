@@ -5,12 +5,12 @@ import { extname } from 'node:path'
 import { URL } from 'node:url'
 
 import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
-import { type OrganizationTypes, type UserProfile, type UserTypes } from '@rfcx-bio/node-common/dao/types'
+import { type OrganizationTypes, type UserProfile, type UserTimestampFormat, type UserTypes, MAX_USER_TIMESTAMP_FORMATS } from '@rfcx-bio/node-common/dao/types'
 import { resizeImage } from '@rfcx-bio/node-common/image'
 
 import { patchUserProfileOnCore } from '~/api-core/api-core'
 import { type Auth0UserToken } from '~/auth0/types'
-import { BioNotFoundError } from '~/errors'
+import { BioInvalidBodyError, BioNotFoundError } from '~/errors'
 import { RESIZE_WIDTH_AVATAR, resizedFileUrl } from '~/format-helpers/file-url'
 import { getS3Client } from '~/storage'
 import { create, get, getAllOrganizations as daoGetAllOrganizations, getIdByEmail, query, update } from './user-profile-dao'
@@ -52,7 +52,80 @@ export const getUserProfile = async (id: number): Promise<Omit<UserProfile, 'id'
     organizationIdAffiliated: profile.organizationIdAffiliated,
     accountTier: profile.accountTier,
     accountTierUpdatedAt: profile.accountTierUpdatedAt,
-    additionalPremiumProjectSlots: profile.additionalPremiumProjectSlots
+    additionalPremiumProjectSlots: profile.additionalPremiumProjectSlots,
+    // MUST be returned here even though only the uploader reads it:
+    // patchUserProfile builds its update by spreading this object, so any
+    // field omitted from it is silently ERASED on every unrelated profile
+    // save (e.g. changing your last name would drop your saved formats).
+    timestampFormats: profile.timestampFormats ?? []
+  }
+}
+
+/**
+ * Validate a saved-formats list before it reaches the database.
+ *
+ * The client validates as the user types, but the API cannot trust that: this
+ * is the only place that guarantees what lands in the column. Rejecting here
+ * also keeps a bad format from being silently applied to every future upload
+ * session, which is far harder to diagnose than a 400.
+ */
+/**
+ * The `%`-token vocabulary a saved format may use.
+ *
+ * DELIBERATE DUPLICATE of `FORMAT_TOKENS` in
+ * `packages/upload-engine/src/timestamp-parser.ts`. That package is
+ * dependency-free by design (it is intended to back a desktop rebuild) and its
+ * barrel re-exports browser-only modules — IndexedDB, Worker-backed FLAC — so
+ * it cannot be imported into a Node process. Keeping a small literal list here
+ * is preferable to either dragging browser globals into the API or adding a
+ * shared package for twenty strings.
+ *
+ * If a token is ever added to the engine, add it here too; the int test
+ * `rejects a format the engine would reject` guards the behaviour.
+ */
+const TIMESTAMP_FORMAT_TOKENS = new Set([
+  '%Y', '%y', '%M', '%m', '%N', '%n', '%D', '%d', '%H', '%h',
+  '%G', '%g', '%A', '%a', '%I', '%i', '%S', '%s', '%Z', '%z'
+])
+
+/**
+ * Mirrors `validateTimestampFormat` in the upload engine: at least one known
+ * token, no unknown tokens, no duplicates (a repeated token cannot be compiled
+ * — it yields a duplicate named capture group). `%%` is an escaped literal
+ * percent and is not a token.
+ */
+const isValidFormatString = (format: string): boolean => {
+  const tokens = (format.match(/%%|%./g) ?? []).filter(token => token !== '%%')
+  if (tokens.length === 0) return false
+  if (tokens.some(token => !TIMESTAMP_FORMAT_TOKENS.has(token))) return false
+  return new Set(tokens).size === tokens.length
+}
+
+const assertValidTimestampFormats = (formats: UserTimestampFormat[]): void => {
+  if (!Array.isArray(formats)) {
+    throw BioInvalidBodyError({ timestampFormats: 'must be an array' })
+  }
+  if (formats.length > MAX_USER_TIMESTAMP_FORMATS) {
+    throw BioInvalidBodyError({ timestampFormats: `at most ${MAX_USER_TIMESTAMP_FORMATS} formats` })
+  }
+
+  const seenIds = new Set<string>()
+  for (const entry of formats) {
+    const { id, label, format } = entry ?? {}
+    if (typeof id !== 'string' || id === '') {
+      throw BioInvalidBodyError({ timestampFormats: 'each format needs an id' })
+    }
+    if (seenIds.has(id)) {
+      throw BioInvalidBodyError({ timestampFormats: `duplicate id ${id}` })
+    }
+    seenIds.add(id)
+
+    if (typeof label !== 'string' || label.trim() === '') {
+      throw BioInvalidBodyError({ timestampFormats: 'each format needs a label' })
+    }
+    if (typeof format !== 'string' || !isValidFormatString(format)) {
+      throw BioInvalidBodyError({ timestampFormats: `invalid format string: ${String(format)}` })
+    }
   }
 }
 
@@ -60,6 +133,12 @@ export const patchUserProfile = async (token: string, authToken: Auth0UserToken,
   const { email, idAuth0 } = authToken
   const originalProfile = await getUserProfile(id)
   const newProfile = { ...originalProfile, ...data }
+
+  // Only validate when the caller actually supplied the field; an unrelated
+  // patch (name, organisation) must not be able to fail on pre-existing data.
+  if (data.timestampFormats !== undefined) {
+    assertValidTimestampFormats(data.timestampFormats)
+  }
 
   const coreProfile: Pick<CoreUser, 'firstname' | 'lastname' | 'picture'> = {
     firstname: newProfile.firstName,

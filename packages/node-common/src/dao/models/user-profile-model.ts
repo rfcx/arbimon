@@ -12,7 +12,9 @@ export const UPDATE_ON_DUPLICATE_USER_PROFILE: Array<(keyof UserProfile)> = [
   'organizationIdAffiliated',
   'accountTier',
   'accountTierUpdatedAt',
-  'additionalPremiumProjectSlots'
+  'additionalPremiumProjectSlots',
+  // Must be listed here or an upsert silently drops a user's saved formats.
+  'timestampFormats'
 ]
 
 export const UserProfileModel = defineWithDefaultsAutoPk<UserProfile>(
@@ -62,6 +64,14 @@ export const UserProfileModel = defineWithDefaultsAutoPk<UserProfile>(
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0
+    },
+    // Saved custom filename timestamp formats (migration
+    // 260818-01-user-timestamp-formats). NOT NULL with a [] default so readers
+    // never handle NULL; order is semantic (first match wins).
+    timestampFormats: {
+      type: DataTypes.JSON,
+      allowNull: false,
+      defaultValue: []
     }
   },
   {

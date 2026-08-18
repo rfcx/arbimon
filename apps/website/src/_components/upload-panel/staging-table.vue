@@ -128,8 +128,9 @@
               <span class="text-sm text-cloud flex flex-wrap items-baseline gap-x-2">
                 <span
                   v-if="siteTimezone !== undefined"
-                  :title="'Site timezone'"
-                ><span class="text-cloud/60">Timezone:</span> {{ siteTimezone }}{{ tzOffsetLabel !== undefined ? ` (${tzOffsetLabel})` : '' }}</span>
+                  :title="anyZoneDiffers ? zoneDiscrepancyText : 'Site timezone'"
+                  :class="anyZoneDiffers ? 'text-warning font-semibold' : ''"
+                ><span :class="anyZoneDiffers ? 'text-warning/70' : 'text-cloud/60'">Timezone:</span> {{ siteTimezone }}{{ tzOffsetLabel !== undefined ? ` (${tzOffsetLabel})` : '' }}</span>
                 <template v-if="siteInfo !== undefined">
                   <span
                     v-if="siteTimezone !== undefined"
@@ -233,6 +234,34 @@
                above, so the same symbol meant CLEAR SELECTION in one place and
                DELETE THIS SECTION in another. Same reasoning as §138/§139, where
                the Reset icon was duplicating the per-row Retry glyph. -->
+          <!-- SECOND expand/collapse control (operator 2026-08-18), far-right on the
+               site-name line and flush against the trash icon when that is
+               visible. Same action as the caret hanging in the left gutter.
+
+               WHY TWO: the left caret sits in the page gutter, far from where
+               the eye ends up on a wide row — by the time you have read the site
+               name and its metadata you are on the RIGHT of the line, and
+               collapsing meant travelling all the way back. This is the same
+               affordance where the gesture actually starts.
+
+               `w-4 h-4` matches the trash glyph beside it (and the per-row
+               icons) rather than the gutter caret's `w-5`, so the right-hand
+               cluster reads as one set. `order` is not used: it is declared
+               BEFORE the trash in source so it naturally sits to its left. -->
+          <button
+            class="text-cloud hover:text-frequency shrink-0"
+            :title="collapsed ? 'Expand this section' : 'Collapse this section'"
+            :aria-label="collapsed ? 'Expand this section' : 'Collapse this section'"
+            :aria-expanded="!collapsed"
+            @click="$emit('toggleCollapsed')"
+          >
+            <!-- WindiCSS: rotate utilities are inert without the explicit
+                 `transform` class (cf. the gutter caret above). -->
+            <icon-custom-angle-down
+              class="w-4 h-4 transform transition-transform duration-200"
+              :class="collapsed ? '-rotate-90' : ''"
+            />
+          </button>
           <button
             v-if="items.length === 0"
             class="text-cloud hover:text-flamingo shrink-0"
@@ -307,8 +336,17 @@
               class="border-t border-cloud/20 bg-moss/25 cursor-pointer select-none hover:bg-moss/40"
               @click="toggleGroup(section.key)"
             >
+              <!-- The header spans only up to the Zone column, so the bulk
+                   Zone control can sit in a REAL cell UNDER "Zone" (operator
+                   2026-08-18: it was landing over Date, because the header used
+                   to be one full-width colspan and the control simply flowed
+                   inline after the label).
+                   COLUMNS = filename,recDate,recTime,zone,format,durationMs,
+                   progress,status (+2 leading/trailing utility cells), so the
+                   label block covers the checkbox + first three columns and the
+                   zone cell is addressed on its own. -->
               <td
-                :colspan="COLUMNS.length + 2"
+                :colspan="ZONE_LABEL_SPAN"
                 class="px-2 py-1.5"
               >
                 <span class="inline-flex items-center gap-x-2">
@@ -321,14 +359,159 @@
                     :class="section.key === 'errors' ? 'text-flamingo' : section.key === 'completed' ? 'text-frequency' : 'text-insight'"
                   >{{ section.label }}</span>
                   <span class="text-cloud text-xs">{{ section.metrics }}</span>
-                  <!-- Group-scoped actions live HERE (moved off the header
-                       cluster 2026-08-13): the action sits next to the rows it
-                       acts on. @click.stop so it doesn't also toggle the group. -->
+
+                  <!-- START UPLOAD sits HERE, left-justified immediately after
+                       the "N recordings · NN MB waiting" metrics (operator
+                       2026-08-18) rather than out at the right with the other
+                       bulk actions: it is the PRIMARY action for this group, and
+                       putting it beside the count it acts on makes the pairing
+                       explicit. `Clear Queued` stays right-aligned with the
+                       other destructive/secondary actions.
+                       @click.stop so it does not also toggle the group. -->
+                  <button
+                    v-if="section.key === 'queued' && (startableIds(section.rows).length > 0 || groupIsRunning)"
+                    class="btn-group-action ml-1"
+                    :title="groupIsRunning
+                      ? 'Pause uploading for this site'
+                      : `Upload the ${startableIds(section.rows).length} queued recording${startableIds(section.rows).length === 1 ? '' : 's'} for this site`"
+                    @click.stop="groupIsRunning ? $emit('pauseGroup') : $emit('startGroup', startableIds(section.rows))"
+                  >
+                    <!-- No row count in the label (operator 2026-08-18): the group header
+                       already states "N recordings · NN MB waiting" a few pixels to
+                       the left, so repeating N here was redundant. The exact count
+                       still rides in the tooltip. -->
+                    {{ groupIsRunning ? 'Pause Upload' : 'Start Upload' }}
+                    <!-- SAME glyphs as the global metrics-bar Start/Pause
+                       (operator 2026-08-18) so one visual language covers both
+                       controls: solid play triangle / solid double bar, `w-4`
+                       here to match the other group-header icons. -->
+                    <svg
+                      v-if="groupIsRunning"
+                      viewBox="0 0 16 16"
+                      class="w-4 h-4 fill-current"
+                    ><path d="M4 2h3v12H4zM9 2h3v12H9z" /></svg>
+                    <svg
+                      v-else
+                      viewBox="0 0 16 16"
+                      class="w-4 h-4 fill-current"
+                    ><path d="M4 2l9 6-9 6V2z" /></svg>
+                  </button>
+
+                  <!-- Collapsed groups still surface the discrepancy: Errors
+                       starts collapsed, so without this the warning would be
+                       invisible exactly where it matters most. -->
+                  <span
+                    v-if="canBulkEditZone(section.key) && groupCollapsed[section.key] && sectionHasZoneDiscrepancy(section.rows)"
+                    class="text-warning text-xs ml-2"
+                    :title="zoneDiscrepancyText"
+                  >● timezone differs from site</span>
+                </span>
+              </td>
+
+              <!-- ZONE cell: the bulk corrector sits directly under the "Zone"
+                   column header, aligned with the values it edits.
+                   QUEUED and ERRORS only — those groups are still being
+                   prepared and reviewed. Anything signed/uploading/ingested is
+                   registered server-side at a fixed instant, so re-dating it
+                   would desync it. Hidden when collapsed: the header is then a
+                   summary line, and a control there would act on rows the user
+                   cannot see. -->
+              <td
+                class="px-2 py-1.5"
+                @click.stop
+              >
+                <span
+                  v-if="canBulkEditZone(section.key) && !groupCollapsed[section.key]"
+                  class="inline-flex items-center gap-x-1"
+                >
+                  <!-- TWO-STAGE control (operator 2026-08-18). At rest this is
+                       an "Edit" affordance, not a live <select>: a dropdown
+                       sitting permanently in the header read as a value and
+                       invited mis-clicks. Clicking EITHER the label or the
+                       pencil swaps in the real selector, already set to the
+                       group's current offset.
+
+                       Text is `text-sm` — the same SIZE as the row values below
+                       — so the column reads as one coherent stack, but at
+                       `cloud/40` it is the QUIETEST thing in that stack: it must
+                       sit behind both the "Zone" column header above it and the
+                       actual offsets below (operator 2026-08-18, tuned down from
+                       /70). It reaches full lime only on hover, so it is easy to
+                       find once looked for. /40 matches the existing muted tone
+                       already used elsewhere in this table. -->
+                  <button
+                    v-if="zoneEditorFor !== section.key"
+                    class="inline-flex items-center gap-x-1 text-sm text-cloud/40 hover:text-frequency transition-colors"
+                    :title="'Set the timezone offset for every recording in this group'"
+                    :aria-label="'Edit the timezone offset for the ' + section.label + ' recordings'"
+                    @click="openZoneEditor(section.key)"
+                  >
+                    Edit
+                    <svg
+                      viewBox="0 0 16 16"
+                      class="w-3.5 h-3.5 fill-none stroke-current"
+                      stroke-width="1.5"
+                    ><path
+                      d="M10.5 2.5l3 3L6 13l-3.5.5L3 10l7.5-7.5zM9 4l3 3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    /></svg>
+                  </button>
+                  <select
+                    v-else
+                    :ref="el => registerZoneSelect(section.key, el)"
+                    :value="groupOffset(section.rows) ?? ''"
+                    class="bg-transparent border-0 text-sm text-insight focus:ring-0 focus:outline-none py-0 pl-0 pr-4 cursor-pointer"
+                    :aria-label="'Timezone offset for the ' + section.label + ' recordings'"
+                    @change="onGroupZoneChange(section.rows, $event)"
+                    @blur="zoneEditorFor = undefined"
+                  >
+                    <option
+                      v-if="groupOffset(section.rows) === undefined"
+                      value=""
+                    >
+                      Set zone…
+                    </option>
+                    <option
+                      v-for="opt in UTC_OFFSET_OPTIONS"
+                      :key="opt.value"
+                      :value="opt.value"
+                    >
+                      {{ opt.label }}
+                    </option>
+                  </select>
+                  <!-- The [?] appears ONLY on a discrepancy, so its presence
+                       is itself the signal. -->
+                  <span
+                    v-if="sectionHasZoneDiscrepancy(section.rows)"
+                    class="text-warning cursor-help select-none"
+                    :title="zoneDiscrepancyText"
+                  >[?]</span>
+                </span>
+              </td>
+
+              <!-- Remaining columns + the group's own actions, right-aligned.
+                   Queued gets Upload/Clear here in the same style as the
+                   Errors group's Retry All (operator 2026-08-18). -->
+              <td
+                :colspan="COLUMNS.length + 1 - ZONE_LABEL_SPAN"
+                class="px-2 py-1.5 text-right"
+                @click.stop
+              >
+                <span class="inline-flex items-center gap-x-2 justify-end">
+                  <!-- GROUP-ACTION BUTTON STYLE (operator 2026-08-18):
+                       icons on the RIGHT, sized w-4 h-4 to match the per-row
+                       trash glyph, short labels, and a MUTED outline instead of
+                       the bright `frequency` lime of `btn-secondary`. These are
+                       secondary bulk actions sitting inside a header row — at
+                       full lime they competed with the group label and with the
+                       page's primary Start button. `btn-group-action` is
+                       defined in windi.config.ts shortcuts. -->
                   <button
                     v-if="section.key === 'errors' && retryableCount(section.rows) > 0"
-                    class="btn btn-secondary text-xs inline-flex items-center gap-x-1 ml-2 px-2 py-0.5"
+                    class="btn-group-action"
                     :title="`Retry all ${retryableCount(section.rows)} failed recording${retryableCount(section.rows) === 1 ? '' : 's'} (rejected recordings cannot be retried)`"
-                    @click.stop="$emit('retryFailed')"
+                    @click="$emit('retryFailed')"
                   ><!-- The errors group is NOT the same set as retryFailed:
                        it also holds `rejected` rows, which the server has
                        PERMANENTLY refused and which retryFailed deliberately
@@ -336,28 +519,47 @@
                        "Retry All (N)" and then silently retried fewer, so the
                        count is scoped to the actually-retryable rows and the
                        button hides when none remain. -->
+                    Retry All ({{ retryableCount(section.rows) }})
                     <svg
                       viewBox="0 0 16 16"
-                      class="w-3 h-3 fill-none stroke-current"
+                      class="w-4 h-4 fill-none stroke-current"
                       stroke-width="1.8"
                     ><path
                       d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3"
                       stroke-linecap="round"
                       stroke-linejoin="round"
                     /></svg>
-                    Retry All ({{ retryableCount(section.rows) }})
                   </button>
+
+                  <!-- QUEUED clear. Scoped to THIS SITE's queued rows (the
+                       component is instantiated per box), which is why it
+                       carries ids rather than asking the page to re-derive the
+                       set: "clear what you can see" must mean exactly that.
+                       (Start Upload lives in the label cell — see above.) -->
                   <button
-                    v-if="section.key === 'completed' || section.key === 'duplicates'"
-                    class="btn btn-secondary text-xs inline-flex items-center gap-x-1 ml-2 px-2 py-0.5"
-                    :title="`Clear these ${section.rows.length} recording${section.rows.length === 1 ? '' : 's'} from the list (they stay uploaded)`"
-                    @click.stop="$emit('clearSelected', section.rows.map(r => r.id))"
+                    v-if="section.key === 'queued' && section.rows.length > 0"
+                    class="btn-group-action"
+                    :title="`Remove these ${section.rows.length} queued recording${section.rows.length === 1 ? '' : 's'} from the list (nothing is uploaded or deleted from your computer)`"
+                    @click="$emit('clearSelected', section.rows.map(r => r.id))"
                   >
+                    Clear Queued
                     <svg
                       viewBox="0 0 16 16"
-                      class="w-3 h-3 fill-current"
+                      class="w-4 h-4 fill-current"
                     ><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
+                  </button>
+
+                  <button
+                    v-if="section.key === 'completed' || section.key === 'duplicates'"
+                    class="btn-group-action"
+                    :title="`Clear these ${section.rows.length} recording${section.rows.length === 1 ? '' : 's'} from the list (they stay uploaded)`"
+                    @click="$emit('clearSelected', section.rows.map(r => r.id))"
+                  >
                     Clear ({{ section.rows.length }})
+                    <svg
+                      viewBox="0 0 16 16"
+                      class="w-4 h-4 fill-current"
+                    ><path d="M6 2h4l1 2h3v1.5H2V4h3l1-2zM3.5 6.5h9L12 14.5H4L3.5 6.5zm3 1.5v5H7V8h-.5zm2.5 0v5H10V8h-1z" /></svg>
                   </button>
                 </span>
               </td>
@@ -471,7 +673,33 @@
               </td>
               <td class="px-2 py-1.5 truncate">
                 <span class="inline-flex items-center gap-x-1">
-                  {{ recTime(item) }}
+                  <!-- Time separators carry a hair of space (operator 2026-08-18:
+                       the colons read too tight). Poppins sets a narrow colon
+                       with almost no side bearing, so 08:45:10 crowds into a
+                       single blob.
+
+                       0.06em per side ≈ a typographic hair space — the
+                       conventional amount for time separators: enough to group
+                       hh / mm / ss, not enough to look letter-spaced.
+
+                       Applied as an INLINE STYLE, not a utility: this WindiCSS
+                       build does not emit arbitrary `em` spacing (verified in
+                       the emitted CSS — `mx-[0.06em]` produced NO rule at all,
+                       the silent-failure mode this codebase has been bitten by
+                       before). Colours are the only arbitrary values that
+                       compile here.
+
+                       `tabular-nums` keeps digits monospaced so the column does
+                       not jitter row to row. The tight `><span` formatting is
+                       deliberate: a newline would render as a literal space
+                       inside the time. -->
+                  <span class="tabular-nums whitespace-nowrap"><span
+                    v-for="(part, idx) in recTimeParts(item)"
+                    :key="idx"
+                  ><span
+                    v-if="idx > 0"
+                    style="margin-left:0.06em;margin-right:0.06em"
+                  >:</span>{{ part }}</span></span>
                   <button
                     v-if="canEditDatetime(item)"
                     class="text-cloud/60 hover:text-frequency"
@@ -490,7 +718,18 @@
                   </button>
                 </span>
               </td>
-              <td class="px-2 py-1.5 truncate">
+              <!-- Zone. Amber when the row's own offset disagrees with the site's
+                   timezone AT THAT RECORDING'S INSTANT (operator 2026-08-18) —
+                   i.e. the zone came from the filename or the file's metadata
+                   and does not match where the site is. Often legitimate (a
+                   recorder left on home time), so this is a NOTICE, not an
+                   error: amber `warning`, never `flamingo`, which is reserved
+                   for real failures. -->
+              <td
+                class="px-2 py-1.5 truncate"
+                :class="zoneDiffers(item) ? 'text-warning' : ''"
+                :title="zoneDiffers(item) ? zoneDiscrepancyText : undefined"
+              >
                 {{ zoneCol(item) }}
               </td>
               <!-- Format carries the size too (operator 2026-08-14).
@@ -640,7 +879,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 
-import { type UploadItem, toUtcIso } from '@rfcx-bio/upload-engine'
+import { type UploadItem, rowOffsetMinutes, toUtcIso, UTC_OFFSET_OPTIONS, zoneOffsetAt } from '@rfcx-bio/upload-engine'
 
 import { type FlowbiteDatePicker, type FlowbiteDatePickerOptions } from '@/_components/date-range-picker/date-range-picker'
 import SiteCombobox from '@/_components/site-combobox/site-combobox.vue'
@@ -650,10 +889,13 @@ const props = defineProps<{
   /** The linked site's name; undefined while the box is still UNLINKED
    * (header shows the site selector instead, autofocused). */
   siteName?: string
-  /** The linked site's IANA tz (shown in the Site Local Time option). */
+  /** The linked site's IANA tz. Also the reference the Zone column compares
+   *  each row against — resolved AT the recording's instant, so DST is
+   *  handled (see `siteOffsetAt`). */
   siteTimezone?: string
-  /** Per-box timezone method (auto|site|utc). */
-  timezoneMode?: string
+  /** Is the upload engine running? Combined with this site's own in-flight
+   *  rows to decide whether the group button shows Start or Pause. */
+  running?: boolean
   /** Options for the unlinked-state site selector; taken = already boxed. */
   siteOptions?: Array<{ id: string, name: string, taken: boolean }>
   /** Stable per-box key, used to give each combobox unique element ids —
@@ -694,6 +936,13 @@ const emit = defineEmits<{
   (e: 'clearItem', id: string): void
   (e: 'openDestination', item: UploadItem): void
   (e: 'editDatetime', edit: { id: string, localWallTime: string, timestampUtc: string, timezoneName: string }): void
+  /** Bulk zone correction for a whole status group in THIS site's queue. The
+   *  host applies it; this component only reports the intent. */
+  (e: 'setGroupZone', change: { ids: string[], offsetMinutes: number }): void
+  /** Start uploading exactly these ids (this site's queued rows). */
+  (e: 'startGroup', ids: string[]): void
+  /** Pause the engine from this site's group header. */
+  (e: 'pauseGroup'): void
 }>()
 /* eslint-enable func-call-spacing */
 
@@ -1185,11 +1434,200 @@ const recDate = (item: UploadItem): string =>
 const recTime = (item: UploadItem): string =>
   item.localWallTime !== undefined ? item.localWallTime.slice(11, 19) : '—'
 
+/** `08:45:10` -> `['08','45','10']` so the template can space the colons.
+ *  A row with no time yields a single `—` part and renders unchanged. */
+const recTimeParts = (item: UploadItem): string[] => recTime(item).split(':')
+
 /**
  * Zone column: compact `UTC±H[:MM]` (unpadded hours). IANA zones are resolved
  * to their offset AT THE RECORDING INSTANT (DST-correct), offset strings are
  * reformatted, plain UTC renders as `UTC`.
  */
+/**
+ * Which status groups may have their zone bulk-corrected.
+ *
+ * QUEUED and ERRORS only (operator 2026-08-18): those rows are still being
+ * prepared or reviewed. `active` rows have a signed URL and a server-side
+ * registration at a fixed instant; `completed`/`duplicates` are already
+ * ingested. Re-dating any of those here would desync the row from the server.
+ */
+const canBulkEditZone = (group: StatusGroup): boolean =>
+  group === 'queued' || group === 'errors'
+
+/**
+ * How many cells the group-header LABEL block spans before the Zone cell.
+ *
+ * The row is: [leading utility cell] + COLUMNS + [trailing utility cell].
+ * The Zone control must occupy the cell at the same position as the `zone`
+ * column, so the label block covers everything BEFORE it:
+ *   1 (leading) + index-of-zone-within-COLUMNS.
+ *
+ * Derived from COLUMNS rather than hardcoded, so re-ordering or inserting a
+ * column cannot silently push the control out of alignment -- exactly the bug
+ * this replaces (the header was one full-width colspan, so the control simply
+ * flowed inline and landed over Date).
+ *
+ * Verified by arithmetic before shipping: label(4) + zone(1) + tail(5) = 10,
+ * which equals a data row's COLUMNS.length + 2, and the zone cell lands on
+ * COLUMNS[3] === 'zone'.
+ */
+const ZONE_LABEL_SPAN = COLUMNS.findIndex(col => col.key === 'zone') + 1
+
+/**
+ * The rows in a group that can actually START uploading.
+ *
+ * Mirrors the page-level Start button's rule: `staged` and free of an
+ * analysisError. A row whose timestamp could not be resolved is not startable,
+ * so counting it here would promise an upload that silently does not happen --
+ * the same over-promise the Errors group's "Retry All" count was fixed for.
+ */
+const startableIds = (rows: UploadItem[]): string[] =>
+  rows.filter(row => row.state === 'staged' && row.analysisError === undefined).map(row => row.id)
+
+/**
+ * Is THIS SITE's queue actively uploading?
+ *
+ * Scoped to `props.items` — the component is instantiated per box, so this is
+ * the one site's rows, NOT the project-wide pipeline the global metrics-bar
+ * button watches. A site whose rows are all still staged must keep showing
+ * "Start Upload" even while another site is mid-flight.
+ *
+ * The in-flight states mirror the page's own `activePipeline` list, minus
+ * `staged` (not yet started) and the terminal states.
+ */
+const IN_FLIGHT_STATES = ['queued', 'preparing', 'ready', 'signing', 'signed', 'uploading', 'uploaded']
+const groupIsRunning = computed<boolean>(() =>
+  props.running === true && props.items.some(item => IN_FLIGHT_STATES.includes(item.state)))
+
+/** A row's own UTC offset, or undefined if it never resolved a timestamp. */
+const offsetOf = (item: UploadItem): number | undefined =>
+  rowOffsetMinutes(item.localWallTime, item.timestampUtc)
+
+/**
+ * The offset shared by a group's rows.
+ *
+ * A site's queued batch is ASSUMED to share one offset (operator 2026-08-18) —
+ * that assumption is the feature, not a simplification. Mid-analysis, or when
+ * one file carried an explicit filename offset and others did not, rows can
+ * briefly disagree; the MAJORITY value is shown so the control is never blank
+ * or misleading, and choosing any value resolves the whole group.
+ */
+const groupOffset = (rows: UploadItem[]): number | undefined => {
+  const counts = new Map<number, number>()
+  for (const row of rows) {
+    const offset = offsetOf(row)
+    if (offset === undefined) continue
+    counts.set(offset, (counts.get(offset) ?? 0) + 1)
+  }
+  let best: number | undefined
+  let bestCount = 0
+  for (const [offset, count] of counts) {
+    if (count > bestCount) { best = offset; bestCount = count }
+  }
+  return best
+}
+
+/**
+ * The site's own offset AT A GIVEN INSTANT.
+ *
+ * 🔴 Resolved per-recording, NOT "now". A site on DST is a different offset in
+ * July than in January, so comparing a July recording against an offset taken
+ * today would report a one-hour discrepancy on perfectly correct data — and a
+ * warning that cries wolf for half the year is worse than no warning.
+ */
+const siteOffsetAt = (item: UploadItem): number | undefined => {
+  const tz = props.siteTimezone
+  if (tz === undefined || tz === '') return undefined
+  const instant = item.timestampUtc !== undefined ? new Date(item.timestampUtc) : undefined
+  if (instant === undefined || isNaN(instant.getTime())) return undefined
+  return zoneOffsetAt(tz, instant)
+}
+
+/**
+ * Does this row's zone disagree with the site's?
+ *
+ * True only when BOTH are known: a site with no timezone configured is a
+ * missing-data case, not a discrepancy, and flagging it would just be noise.
+ */
+const zoneDiffers = (item: UploadItem): boolean => {
+  const rowOffset = offsetOf(item)
+  const siteOffset = siteOffsetAt(item)
+  if (rowOffset === undefined || siteOffset === undefined) return false
+  return rowOffset !== siteOffset
+}
+
+const sectionHasZoneDiscrepancy = (rows: UploadItem[]): boolean => rows.some(zoneDiffers)
+
+/**
+ * Does ANY correctable row disagree with the site zone? Drives the site
+ * header's amber emphasis, so the user can see WHAT the rows are being
+ * compared against — a highlight on the rows alone leaves them hunting.
+ *
+ * Scoped to the groups that can still be corrected: an already-ingested row
+ * with an odd zone is history, and colouring it would be an alarm with no
+ * available action.
+ */
+const anyZoneDiffers = computed<boolean>(() =>
+  props.items.some(item => canBulkEditZone(statusGroupOf(item)) && zoneDiffers(item)))
+
+/** Copy for the amber [?]. Names BOTH values — a generic hint is not actionable. */
+const zoneDiscrepancyText = computed<string>(() => {
+  const site = props.siteTimezone
+  return 'The timezone read from these recordings differs from this site’s timezone' +
+    (site !== undefined && site !== '' ? ` (${site})` : '') +
+    '. That is often correct — for example if the recorder was set to a different timezone — but check it before uploading. Use the dropdown to set the offset for the whole group.'
+})
+
+/**
+ * Which group's zone selector is currently OPEN (undefined = all showing the
+ * "Edit" affordance). Only one at a time: the control is per-group and there
+ * is no case for editing two at once.
+ */
+const zoneEditorFor = ref<StatusGroup | undefined>(undefined)
+
+/**
+ * Swap the "Edit" affordance for the real <select> and immediately open it.
+ *
+ * `showPicker()` is what makes this feel like one click rather than two —
+ * without it the user clicks Edit, then has to click the select as well. It is
+ * not universally supported, and it THROWS if called without transient user
+ * activation, so it is both feature-detected and try/caught; the fallback is a
+ * focused select the user opens themselves (still correct, just one more
+ * click). Must run after the DOM swap, hence nextTick.
+ */
+const openZoneEditor = async (group: StatusGroup): Promise<void> => {
+  zoneEditorFor.value = group
+  await nextTick()
+  const el = zoneSelects.get(group)
+  if (el === undefined || el === null) return
+  el.focus()
+  const withPicker = el as HTMLSelectElement & { showPicker?: () => void }
+  if (typeof withPicker.showPicker === 'function') {
+    try { withPicker.showPicker() } catch { /* needs user activation; focus is enough */ }
+  }
+}
+
+/** Per-group refs for the zone selects, so openZoneEditor can focus the right
+ *  one (a plain `ref` would collide across groups). */
+const zoneSelects = new Map<StatusGroup, HTMLSelectElement | null>()
+const registerZoneSelect = (group: StatusGroup, el: unknown): void => {
+  zoneSelects.set(group, el as HTMLSelectElement | null)
+}
+
+const onGroupZoneChange = (rows: UploadItem[], event: Event): void => {
+  const raw = (event.target as HTMLSelectElement).value
+  if (raw === '') return
+  const offsetMinutes = Number(raw)
+  if (Number.isNaN(offsetMinutes)) return
+  // Rows with no resolved wall time have nothing to re-anchor — skip rather
+  // than invent a timestamp for them.
+  const ids = rows.filter(row => row.localWallTime !== undefined).map(row => row.id)
+  if (ids.length === 0) return
+  emit('setGroupZone', { ids, offsetMinutes })
+  // Collapse back to the "Edit" affordance once a value is chosen.
+  zoneEditorFor.value = undefined
+}
+
 const zoneCol = (item: UploadItem): string => {
   const tz = item.timezoneName
   if (tz === undefined) return '—'
@@ -1235,9 +1673,23 @@ const formatCol = (item: UploadItem): string => {
   return audio === '' ? size : `${audio}, ${size}`
 }
 
-/** Size column: file size in MB. */
+/** Size column: kB below 1 MB, MB above.
+ *
+ * Sub-megabyte files used to render as "0.1 MB" (operator 2026-08-18) — one
+ * significant digit is not enough resolution down there, and every short
+ * recording collapsed to the same handful of values. Below 1 MB the size is
+ * shown in whole kB instead, FLOORED: a rounded-up size can claim a file is
+ * larger than it is, and this column sits beside a duration the user is
+ * sanity-checking against.
+ *
+ * `kB`/`MB` (lower-case k) matches the `kHz` immediately before it in the same
+ * cell. NOTE: `humanBytes` above is a SEPARATE helper for the group-summary
+ * line and still renders `KB`; it was deliberately left alone here — this
+ * change was scoped to the Format column. */
 const sizeCol = (item: UploadItem): string => {
-  const mb = item.fileSizeBytes / 1048576
+  const bytes = item.fileSizeBytes
+  if (bytes < 1048576) return `${Math.floor(bytes / 1024)} kB`
+  const mb = bytes / 1048576
   if (mb >= 100) return `${mb.toFixed(0)} MB`
   return `${mb.toFixed(1)} MB`
 }

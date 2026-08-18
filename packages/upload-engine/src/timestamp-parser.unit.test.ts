@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { parseTimestamp, parseTimestampAuto, parseTimestampUnixHex, parseTimestampWithFormat, TIMESTAMP_FORMAT_UNIX_HEX, toUtcIso } from './timestamp-parser'
+import { isValidTimestampFormat, parseTimestamp, parseTimestampAuto, parseTimestampUnixHex, parseTimestampWithFormat, TIMESTAMP_FORMAT_UNIX_HEX, toUtcIso } from './timestamp-parser'
 
 describe('parseTimestampAuto', () => {
   test('AudioMoth modern: YYYYMMDD_HHMMSS', () => {
@@ -72,6 +72,75 @@ describe('parseTimestampWithFormat', () => {
     expect(
       parseTimestampWithFormat('24-03-15_064510.wav', '%y-%M-%D_%H%I%S')
     ).toBe('2024-03-15T06:45:10')
+  })
+
+  // --- duplicate-token formats ------------------------------------------
+  // Token substitution used `String.replace(token, pattern)`, which replaces
+  // only the FIRST occurrence. A format reusing a token therefore left a RAW
+  // `%X` in the regex, so the pattern could never match and parsing returned
+  // undefined with no explanation.
+  //
+  // The obvious "fix" (a global replace) is WRONG and was measured to throw:
+  // every token expands to a NAMED capture group, so emitting it twice yields
+  // `SyntaxError: Duplicate capture group name`. Rejecting the format up-front
+  // is therefore the only correct behaviour -- and it lets the UI explain the
+  // problem instead of silently failing.
+  test('duplicate tokens are rejected, not half-substituted', () => {
+    expect(isValidTimestampFormat('%Y_%Y')).toBe(false)
+    expect(isValidTimestampFormat('%H-%H')).toBe(false)
+  })
+
+  test('a duplicate-token format never throws when parsed', () => {
+    // Guards the global-replace regression: this must return undefined,
+    // NOT raise SyntaxError: Duplicate capture group name.
+    expect(() => parseTimestampWithFormat('2024_2024.wav', '%Y_%Y')).not.toThrow()
+    expect(parseTimestampWithFormat('2024_2024.wav', '%Y_%Y')).toBeUndefined()
+  })
+
+  // Mutation-testing drove this case. The tests above still passed with the
+  // guard removed from parseTimestampWithFormat, because a half-substituted
+  // pattern usually fails to match anyway (and formatIso independently
+  // requires year+month+day+minute, so a partial capture yields undefined).
+  // Neither pinned the guard.
+  //
+  // This input DOES pin it: the format carries a FULL date+time plus a
+  // repeated %S. The first %S substitutes, the duplicate stays literal, and a
+  // filename containing that literal text satisfies the whole pattern -- so
+  // without the guard the parser returns a REAL timestamp derived from a
+  // format the user never expressed. Silent wrong data, which is worse than
+  // refusing. Measured before writing: groups =
+  // {year:2024, month:03, day:15, hour:06, minute:45, second:10}.
+  test('an invalid format is REFUSED, never parsed partially', () => {
+    expect(
+      parseTimestampWithFormat('2024.03.15-06.45.10%S.wav', '%Y.%M.%D-%H.%I.%S%S')
+    ).toBeUndefined()
+  })
+
+  test('unknown tokens are rejected', () => {
+    // %Q is not in FORMAT_TOKENS: it stays literal, so the pattern silently
+    // cannot match. Better to reject it and let the UI say why.
+    expect(isValidTimestampFormat('%Y-%Q')).toBe(false)
+    expect(parseTimestampWithFormat('2024-03.wav', '%Y-%Q')).toBeUndefined()
+  })
+
+  test('valid formats still pass validation', () => {
+    expect(isValidTimestampFormat('%Y.%M.%D-%H.%I.%S')).toBe(true)
+    expect(isValidTimestampFormat('%y-%M-%D_%H%I%S')).toBe(true)
+    expect(isValidTimestampFormat('%Y.%M.%D-%G.%I%A')).toBe(true)
+  })
+
+  test('a format with no recognised token is invalid', () => {
+    // Otherwise the "format" is a literal string that can only ever match
+    // itself -- a silent no-op the user would have no way to diagnose.
+    expect(isValidTimestampFormat('recording.wav')).toBe(false)
+    expect(isValidTimestampFormat('')).toBe(false)
+  })
+
+  test('%% is an escaped literal percent, not a token', () => {
+    // Desktop parity: a literal % in a filename is written %%. It must not be
+    // mistaken for an unknown token, and %%Y is a literal % followed by a
+    // year token -- not a duplicate of %Y.
+    expect(isValidTimestampFormat('%Y%%')).toBe(true)
   })
 })
 
