@@ -25,11 +25,15 @@
         />
       </div>
     </div>
+    <!-- FREE PROJECTS GET NO TAG (operator 2026-08-18): free is the default
+         state and does not need labelling. Premium/Unlimited keep a tag, now
+         in the house green (frequency) that Free used to wear — tier tags are
+         informational, not a traffic-light. -->
     <span
-      v-if="!isLocked"
+      v-if="!isLocked && showTierTag"
       :class="tierClass"
     >
-      {{ projectType ?? 'Free' }}
+      {{ projectType }}
     </span>
   </div>
 </template>
@@ -43,17 +47,17 @@ const props = defineProps<{
   isHideTooltip?: boolean
 }>()
 
-const tierClass = computed(() => {
-  const tier = props.projectType?.toLowerCase() ?? 'free'
-  const base = 'px-2 py-1 rounded-full text-sm font-bold capitalize leading-none flex items-center justify-center cursor-default h-fit w-fit self-start flex-none'
-  switch (tier) {
-    case 'premium':
-      return `${base} bg-amber-100/20 text-amber-700`
-    case 'unlimited':
-      return `${base} bg-rose-100/20 text-rose-700`
-    case 'free':
-    default:
-      return `${base} bg-frequency/10 text-frequency`
-  }
+/** Free (or unknown) renders NO tier tag at all — free is the unlabelled
+ * default (operator 2026-08-18). */
+const showTierTag = computed(() => {
+  const tier = props.projectType?.toLowerCase()
+  return tier === 'premium' || tier === 'unlimited'
 })
+
+/** Premium + Unlimited both wear the green (frequency) treatment Free used to
+ * have — amber/rose read as warnings and the two types are functionally
+ * identical on the backend anyway (identical all-NULL limit rows). */
+const tierClass = computed(() =>
+  'px-2 py-1 rounded-full text-sm font-bold capitalize leading-none flex items-center justify-center cursor-default h-fit w-fit self-start flex-none bg-frequency/10 text-frequency'
+)
 </script>
