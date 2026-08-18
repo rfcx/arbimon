@@ -787,7 +787,7 @@ import UploaderSettingsModal from '@/_components/upload-panel/uploader-settings-
 import { apiClientArbimonLegacyKey } from '@/globals'
 import { track } from '~/analytics'
 import { useStore } from '~/store'
-import { bindProjectMetrics, currentRateBps, engine, engineRunning, fileSource, flacEncodeEnabled, items, livePopouts, projectMetrics, refreshItems, registerAsPopout, releasePopoutClaim, requestFileHandles, resetProjectMetrics, stats } from '~/upload'
+import { bindProjectMetrics, currentRateBps, currentSurface, engine, engineRunning, fileSource, flacEncodeEnabled, items, livePopouts, projectMetrics, refreshItems, registerAsPopout, releasePopoutClaim, requestFileHandles, resetProjectMetrics, stats } from '~/upload'
 
 const route = useRoute()
 const store = useStore()
@@ -1111,7 +1111,8 @@ const enqueueFiles = async (streamId: string, files: Array<{ file: File, relativ
     fileCount: pairs.length,
     totalBytes: pairs.reduce((sum, { item }) => sum + item.fileSizeBytes, 0),
     projectSlug: projectSlug.value,
-    timezoneMode: boxMode
+    timezoneMode: boxMode,
+    surface: currentSurface()
   })
   // Analyze with small concurrency — header reads are cheap but many files
   // shouldn't hammer the disk at once. Context is PER-BOX: this box's own
@@ -1315,7 +1316,11 @@ const onResetMetrics = (): void => {
   )
   if (!confirmed) return
   resetProjectMetrics()
-  track('web_upload_metrics_reset', { project: projectSlug.value })
+  // `projectSlug` (not `project`): every other web_upload_* event uses that
+  // key, and PostHog property names are per-event, so a stray alias would
+  // silently fragment any cross-event breakdown. Verified against ClickHouse:
+  // `project` has never actually been emitted, so normalising costs no history.
+  track('web_upload_metrics_reset', { projectSlug: projectSlug.value, surface: currentSurface() })
 }
 
 const onStartPause = async (): Promise<void> => {
@@ -1497,7 +1502,7 @@ const popOut = (): void => {
   const handle = openPopoutWindow()
   if (handle === null) {
     popoutBlocked.value = true
-    track('web_upload_popout_blocked', { project: projectSlug.value })
+    track('web_upload_popout_blocked', { projectSlug: projectSlug.value, surface: currentSurface() })
     return
   }
   // A previously blocked attempt that later succeeds must clear the notice,
