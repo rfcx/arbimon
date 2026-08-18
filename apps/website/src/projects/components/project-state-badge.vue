@@ -54,10 +54,14 @@ const showTierTag = computed(() => {
   return tier === 'premium' || tier === 'unlimited'
 })
 
-/** Premium + Unlimited both wear the green (frequency) treatment Free used to
- * have — amber/rose read as warnings and the two types are functionally
- * identical on the backend anyway (identical all-NULL limit rows). */
+/** Premium + Unlimited share one treatment (they are functionally identical
+ * on the backend — identical all-NULL limit rows). PALM + CHIRP (operator
+ * 2026-08-18): the first pass used frequency/10 + frequency text, which the
+ * operator judged too bright — the lime accent belongs to actions, not
+ * informational tags. This filled pill uses the brand's own secondary
+ * greens: deep `palm` (#00543B) ground with soft `chirp` (#D2FF8A) text —
+ * rich rather than loud, and no new color tokens introduced. */
 const tierClass = computed(() =>
-  'px-2 py-1 rounded-full text-sm font-bold capitalize leading-none flex items-center justify-center cursor-default h-fit w-fit self-start flex-none bg-frequency/10 text-frequency'
+  'px-2 py-1 rounded-full text-sm font-bold capitalize leading-none flex items-center justify-center cursor-default h-fit w-fit self-start flex-none bg-palm/60 text-chirp'
 )
 </script>
