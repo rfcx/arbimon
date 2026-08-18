@@ -146,8 +146,8 @@
             </span>
             <template v-if="popoutLaunched">
               This project’s uploader is already running in a standalone window.
-              Use “Go to the uploader window” below to bring it forward — opening
-              a second one would just re-focus the same window.
+              Bring it forward from your taskbar or dock — look for
+              “{{ popoutWindowTitle }}”.
             </template>
             <template v-else>
               A standalone window keeps your uploads running in one dedicated
@@ -233,14 +233,21 @@
       </p>
     </div>
 
-    <!-- Pop-out placeholder (operator 2026-08-14). The uploader is stateful, so
-         only ONE document drives a given project at a time. When a pop-out
-         window owns this project the original tab shows this instead of a
-         second, competing uploader — and it must be ACTIONABLE, because a
-         browser will not tell us whether focusing that window actually worked.
-         `window.open` with the same window NAME re-focuses the existing window
-         rather than opening a second one, so the button is safe to press
-         repeatedly. -->
+    <!-- Pop-out placeholder (operator 2026-08-14; button REMOVED 2026-08-18).
+         The uploader is stateful, so only ONE document drives a given project
+         at a time. When a pop-out window owns this project the original tab
+         shows this instead of a second, competing uploader.
+
+         THE “Go to the uploader window” BUTTON WAS REMOVED ENTIRELY
+         (operator 2026-08-18): `window.open(url, name)` on an EXISTING window
+         does not merely focus it — passing a URL RE-NAVIGATES that window,
+         i.e. it force-reloads the live uploader and disrupts the uploads the
+         placeholder exists to protect. There is no reliable focus-only
+         primitive from the opener (window handles are not retained across SPA
+         navigations, and `focus()` on a fresh handle is widely ignored), so
+         the honest UI is a static pointer: name the window's title and let the
+         user raise it from their taskbar/dock — which is exactly where a
+         standalone window lives. -->
     <div
       v-if="popoutActive && !isPopout && !isProjectViewOnly"
       class="mt-6 rounded-lg border border-frequency/30 bg-frequency/10 px-4 py-4 text-sm"
@@ -256,28 +263,12 @@
               This project’s uploader is open in another window
             </p>
             <p class="text-cloud mt-0.5">
-              Uploads keep running there. Switch to that window to review or control them.
+              Uploads keep running there. Switch to that window to review or control them
+              — look for “{{ popoutWindowTitle }}” in your taskbar or dock.
             </p>
           </div>
         </div>
-        <button
-          class="btn btn-primary text-sm inline-flex items-center gap-x-2 ml-auto"
-          @click="focusPopout"
-        >
-          <svg
-            viewBox="0 -960 960 960"
-            class="w-4 h-4 fill-current"
-          ><path d="M200-200v-240h80v160h160v80H200Zm480-320v-160H520v-80h240v240h-80Z" /></svg>
-          Go to the uploader window
-        </button>
       </div>
-      <p
-        v-if="focusAttempted"
-        class="text-xs text-cloud mt-3"
-      >
-        If nothing happened, the window is probably already open behind this one
-        — check your taskbar/dock for “{{ popoutWindowTitle }}”.
-      </p>
     </div>
 
     <template v-else-if="!isProjectViewOnly">
@@ -403,34 +394,22 @@
                  upload queue — see resetProjectMetrics(). -->
             <div class="flex items-start justify-between gap-x-2">
               <span class="text-xs text-cloud uppercase tracking-wide">Totals</span>
-              <!-- ICON: a literal ZERO in a rounded square — "set these counters
-                   to 0".
+              <!-- ICON: a COUNTERCLOCKWISE reset arrow (operator 2026-08-18,
+                   from a supplied reference glyph — the classic "reset/undo"
+                   arrow). This supersedes the "0 in a rounded square" digit
+                   icon, which the operator asked to replace.
 
-                   TWO REJECTED PREDECESSORS, both for the same reason:
-                   1. the circular refresh arrow was an EXACT DUPLICATE of the
-                      per-row RETRY glyph in staging-table.vue
-                      (`M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3`), so one
-                      symbol meant "re-attempt this upload" a few hundred pixels
-                      below where it meant "zero these totals";
-                   2. Material `restart_alt` still carried a ROTATIONAL hint,
-                      which reads as reload/update — operator confirmed it still
-                      looked like refresh.
-
-                   Any circular-arrow family glyph signals a SAFE, REPEATABLE
-                   act. This button is destructive and unrecoverable (counters
-                   are persisted per project), so rotation is the wrong metaphor
-                   entirely — not merely an imprecise one.
-
-                   The six glyphs already carrying meaning in this feature are
-                   circular-arrow (Retry), trash (Clear rows from list), ✕
-                   (Deselect all), double-chevron (Collapse/Expand), gear
-                   (Settings) and pencil (Edit date). A digit avoids every one of
-                   them and states the OUTCOME rather than the motion: after the
-                   click, these read 0.
-
-                   Drawn from primitives (rect + ellipse) rather than a copied
-                   path, so it is legible at 16px and cannot silently collide
-                   with another icon's path data. -->
+                   HISTORY THIS DELIBERATELY NAVIGATES: circular-arrow glyphs
+                   were rejected twice before (2026-08-14) because they
+                   duplicated the per-row RETRY glyph in staging-table.vue
+                   (`M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 1.5v3h-3`, CLOCKWISE).
+                   The operator has now explicitly chosen a reset-style arrow
+                   anyway — so the differentiator is DIRECTION: this one is the
+                   exact MIRROR of Retry (counterclockwise, hook on the LEFT),
+                   which is the conventional undo/reset direction, while Retry
+                   stays clockwise. Same family, opposite rotation — legible at
+                   16px because it reuses Retry's proven arc geometry, mirrored
+                   (x' = 16 − x flips the sweep flag 1→0). -->
               <button
                 class="shrink-0 -mr-1.5 -mt-0.5 p-1 rounded text-cloud hover:(text-flamingo bg-flamingo/10) transition-colors"
                 title="Reset the Imported / Errors / Skipped / Uploaded totals for this project to zero. Does not affect the upload queue."
@@ -441,21 +420,11 @@
                   viewBox="0 0 16 16"
                   class="w-4 h-4 fill-none stroke-current"
                   stroke-width="1.5"
-                >
-                  <rect
-                    x="2.25"
-                    y="2.25"
-                    width="11.5"
-                    height="11.5"
-                    rx="3"
-                  />
-                  <ellipse
-                    cx="8"
-                    cy="8"
-                    rx="2.15"
-                    ry="3.15"
-                  />
-                </svg>
+                ><path
+                  d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9M2.5 1.5v3h3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                /></svg>
               </button>
             </div>
             <!-- DELIMITERS (operator 2026-08-14): a vertical rule between each
@@ -760,16 +729,33 @@
            equivalent to the header’s “Add Recordings to another Site” button — same
            handler, same disabled rule (one pending unlinked box at a time). It
            is a real <button> so it is keyboard-focusable and announced, rather
-           than a div with a click handler. -->
+           than a div with a click handler.
+
+           EMPTY-STATE ATTENTION GLOW (operator 2026-08-18): when NO site
+           sections exist yet (`siteBoxes.length === 0` — both SPA and pop-out,
+           first load or after removing the last section), this button is the
+           page's only next step, so it gets the same treatment as the unlinked
+           site picker (§147: pulsing ring + accent border + tinted field), but
+           DELIBERATELY MORE SUBTLE — a slower cycle, a fainter ring and a
+           lighter tint — because this is an invitation, not the picker's
+           “you must finish what you started” state. Same implementation rules
+           as §147: a LOCAL keyframe (this WindiCSS config registers only
+           `wave`, so `animate-*` utilities silently emit nothing), box-shadow
+           only (no reflow), and reduced-motion users keep the border + tint
+           cues with the motion dropped. The keyframes live in THIS component's
+           <style> block because this button is rendered here (§153: scoped CSS
+           does not cross a component boundary). -->
       <button
         type="button"
         class="mt-6 w-full rounded-lg border-2 border-dashed px-6 py-12 text-center block transition-colors"
         :class="hasUnlinkedBox
           ? 'border-cloud/20 opacity-60 cursor-not-allowed'
-          : 'border-cloud/40 cursor-pointer hover:border-frequency hover:bg-frequency/5 focus-visible:border-frequency focus-visible:bg-frequency/5'"
+          : siteBoxes.length === 0
+            ? 'add-site-attention border-frequency/70 bg-frequency/5 cursor-pointer hover:border-frequency hover:bg-frequency/10 focus-visible:border-frequency focus-visible:bg-frequency/10'
+            : 'border-cloud/40 cursor-pointer hover:border-frequency hover:bg-frequency/5 focus-visible:border-frequency focus-visible:bg-frequency/5'"
         :disabled="hasUnlinkedBox"
         :title="hasUnlinkedBox ? 'Pick a site for the new section above first' : 'Add an Upload Queue Section for a site'"
-        aria-label="Add Recordings to a Site"
+        aria-label="Click to Add Recordings to a Site"
         @click="addUnlinkedBox"
       >
         <span class="text-lg inline-flex items-center gap-x-2 justify-center">
@@ -777,10 +763,10 @@
             viewBox="0 0 16 16"
             class="w-4 h-4 fill-current shrink-0"
           ><path d="M7 2h2v5h5v2H9v5H7V9H2V7h5V2z" /></svg>
-          Add Recordings to a Site
+          Click to Add Recordings to a Site
         </span>
         <span class="block text-sm text-cloud mt-2">
-          Each site gets its own Upload Queue Section — drop recordings into the section for the site they belong to. Sections upload in parallel.
+          Audio Recordings are associated with Sites. In this Uploader, each Site gets its own Audio Upload Queue.
         </span>
       </button>
     </template>
@@ -1427,9 +1413,6 @@ const popoutActive = computed(() => livePopouts.value.has(projectSlug.value))
 const popoutWindowTitle = computed(() =>
   `Uploading — ${projectName.value ?? projectSlug.value} — Arbimon`)
 
-/** True once the user has pressed “Go to the uploader window” at least once. */
-const focusAttempted = ref(false)
-
 /**
  * How long the button stays optimistically disabled after a launch before
  * falling back to the heartbeat alone. Comfortably longer than the pop-out's
@@ -1452,22 +1435,11 @@ const POPOUT_LAUNCH_GRACE_MS = 6000
  */
 const popoutBlocked = ref(false)
 
-/**
- * Open OR re-focus the pop-out. Passing the same window NAME means a second
- * call re-uses (and focuses) the existing window rather than opening another,
- * so this is safe to press repeatedly.
- *
- * ⚠️ A page CANNOT reliably detect whether focus actually moved: the returned
- * handle is non-null even when the OS declines to raise the window, and
- * `focus()` is widely ignored for background windows. So we do not pretend to
- * know — we attempt it, then surface a hint naming the window title so the user
- * can find it themselves.
- */
-const focusPopout = (): void => {
-  focusAttempted.value = true
-  const handle = openPopoutWindow()
-  try { handle?.focus() } catch { /* browsers may refuse; the hint covers it */ }
-}
+/* `focusPopout` REMOVED (operator 2026-08-18) along with its button: because
+ * this SPA page does not retain the original window HANDLE across navigations,
+ * "re-focus" had to go through `window.open(url, name)` — which RE-NAVIGATES
+ * (force-reloads) the live pop-out, disrupting the uploads in it. The
+ * placeholder is now informational only and names the window title instead. */
 
 /**
  * NOTE the third argument. Supplying a features string is precisely what asks
@@ -1628,3 +1600,40 @@ const formatRate = (bps: number): string => {
   return `${(bps / (1024 * 1024)).toFixed(1)} MB/s`
 }
 </script>
+
+<style scoped>
+/**
+ * EMPTY-STATE ATTENTION GLOW for the "Click to Add Recordings to a Site"
+ * button (operator 2026-08-18) — active only while NO site sections exist.
+ *
+ * Same mechanism as the unlinked site picker's `site-picker-ping`
+ * (site-combobox.vue, §147), deliberately TONED DOWN: this is an invitation
+ * ("start here"), not the picker's "finish what you started" state, so the
+ * ring peaks fainter (0.30 vs 0.55), spreads less (8px vs 10px) and cycles
+ * slower (2.6s vs 1.8s).
+ *
+ * A LOCAL keyframe, not an `animate-*` utility: this WindiCSS config
+ * registers only a `wave` animation, so `animate-pulse` and friends emit NO
+ * CSS at all (§147's silent-variant trap). Animates BOX-SHADOW only — a
+ * pulsing ring must not reflow the page, and box-shadow is
+ * compositor-friendly. No `!important` needed here (unlike the picker input):
+ * no forms-plugin attribute selector competes on a <button>.
+ */
+@keyframes add-site-ping {
+  0%   { box-shadow: 0 0 0 0 rgba(173, 255, 44, 0.30); }
+  70%  { box-shadow: 0 0 0 8px rgba(173, 255, 44, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(173, 255, 44, 0); }
+}
+
+.add-site-attention {
+  animation: add-site-ping 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Reduced motion: drop the movement, keep the accent border + tinted field
+   cues from the class bindings so the emphasis survives. */
+@media (prefers-reduced-motion: reduce) {
+  .add-site-attention {
+    animation: none;
+  }
+}
+</style>
