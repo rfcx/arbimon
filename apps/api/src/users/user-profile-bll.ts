@@ -1,12 +1,11 @@
 import { type MultipartFile } from '@fastify/multipart'
 import axios from 'axios'
 import { createHash, randomBytes } from 'node:crypto'
-import { extname } from 'node:path'
 import { URL } from 'node:url'
 
 import { type CoreUser } from '@rfcx-bio/common/api-core/project/users'
 import { type OrganizationTypes, type UserProfile, type UserTypes } from '@rfcx-bio/node-common/dao/types'
-import { resizeImage } from '@rfcx-bio/node-common/image'
+import { getStoredImageFormat, resizeImageToFormat } from '@rfcx-bio/node-common/image'
 
 import { patchUserProfileOnCore } from '~/api-core/api-core'
 import { type Auth0UserToken } from '~/auth0/types'
@@ -105,9 +104,13 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
   const uniqueId = randomBytes(4).toString('hex')
   const image = await file.toBuffer()
   const { thumbnail: thumbnailConfig, original: originalConfig } = USER_CONFIG.image
-  const imagePath = `users/${hexEmail}/profile-image-${uniqueId}${extname(file.filename)}`
-  const thumbnailPath = `users/${hexEmail}/profile-image-${uniqueId}.thumbnail${extname(file.filename)}`
-  const thumbnail = await resizeImage(image, thumbnailConfig)
+  // Extension + Content-Type derived from the BYTES, not the client's
+  // filename/mimetype (untrusted hints; see project-image-bll.ts + rfcx-local
+  // runbooks/FINDING-profile-image-format-mislabelling-2026-08-17.md).
+  const { format, extension, contentType } = await getStoredImageFormat(image)
+  const imagePath = `users/${hexEmail}/profile-image-${uniqueId}${extension}`
+  const thumbnailPath = `users/${hexEmail}/profile-image-${uniqueId}.thumbnail${extension}`
+  const thumbnail = await resizeImageToFormat(image, thumbnailConfig, format)
   const newProfile = { ...originalProfile, image: imagePath }
 
   const coreProfile = {
@@ -116,8 +119,8 @@ export const patchUserProfileImage = async (token: string, email: string, id: nu
     picture: fileUrl(newProfile.image) ?? null
   }
   await patchUserProfileOnCore(token, email, coreProfile)
-  await storageClient.putObject(imagePath, image, { ContentType: file.mimetype, ACL: 'public-read', CacheControl: originalConfig.cacheControl })
-  await storageClient.putObject(thumbnailPath, thumbnail, { ContentType: file.mimetype, ACL: 'public-read', CacheControl: thumbnailConfig.cacheControl })
+  await storageClient.putObject(imagePath, image, { ContentType: contentType, ACL: 'public-read', CacheControl: originalConfig.cacheControl })
+  await storageClient.putObject(thumbnailPath, thumbnail, { ContentType: contentType, ACL: 'public-read', CacheControl: thumbnailConfig.cacheControl })
   await update(email, newProfile)
 }
 
