@@ -293,7 +293,7 @@
           <timestamp-format-list
             :formats="timestampFormats"
             hint="Used when the uploader reads timestamps out of your filenames. Arbimon’s built-in patterns are always tried first, so these can only recognise more filenames — never break one that already works."
-            @manage="showFormatEditor = true"
+            @manage="showFormatList = true"
           />
         </div>
 
@@ -317,13 +317,26 @@
       </div>
     </div>
 
+    <timestamp-format-list-modal
+      v-if="showFormatList && !showFormatEditor"
+      :formats="timestampFormats"
+      :busy="savingFormats"
+      :error="formatSaveError"
+      @close="showFormatList = false"
+      @create="openFormatCreator"
+      @edit="openFormatEditor"
+      @remove="removeTimestampFormat"
+      @reorder="reorderTimestampFormat"
+    />
+
     <timestamp-format-editor-modal
       v-if="showFormatEditor"
-      :formats="timestampFormats"
+      :existing="timestampFormats"
+      :editing="editingFormat"
       :saving="savingFormats"
       :save-error="formatSaveError"
-      @close="showFormatEditor = false"
-      @save="saveTimestampFormats"
+      @close="showFormatEditor = false; editingFormat = undefined"
+      @save="saveOneTimestampFormat"
     />
   </section>
 </template>
@@ -343,6 +356,7 @@ import image from '@/_assets/cta/frog-hero.webp'
 import SaveStatusText from '@/_components/save-status-text.vue'
 import TimestampFormatEditorModal from '@/_components/timestamp-formats/timestamp-format-editor-modal.vue'
 import TimestampFormatList from '@/_components/timestamp-formats/timestamp-format-list.vue'
+import TimestampFormatListModal from '@/_components/timestamp-formats/timestamp-format-list-modal.vue'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
 import { ACCOUNT_TIER_LABELS } from '@/projects/entitlement-helpers'
@@ -405,11 +419,23 @@ const isSuccess = ref(false)
 const errorMessage = ref<string>()
 
 // -- saved filename formats ---------------------------------------------------
-// Mirror of the uploader's list; both read the profile and write it back.
+// Two-modal flow (operator 2026-08-19): LIST modal shows/explains, EDITOR
+// modal creates/edits ONE entry over it. Every action persists immediately.
+const showFormatList = ref(false)
 const showFormatEditor = ref(false)
+const editingFormat = ref<UserTimestampFormat | undefined>(undefined)
 const savingFormats = ref(false)
 const formatSaveError = ref<string | undefined>(undefined)
 const timestampFormats = ref<UserTimestampFormat[]>(profileData.value?.timestampFormats ?? [])
+
+const openFormatCreator = (): void => {
+  editingFormat.value = undefined
+  showFormatEditor.value = true
+}
+const openFormatEditor = (format: UserTimestampFormat): void => {
+  editingFormat.value = format
+  showFormatEditor.value = true
+}
 
 // profileData arrives asynchronously (and refetches), so adopt it when it lands
 // -- but never over an editor session in progress, which would discard the
@@ -418,7 +444,7 @@ watch(profileData, () => {
   if (!showFormatEditor.value) timestampFormats.value = profileData.value?.timestampFormats ?? []
 })
 
-const saveTimestampFormats = async (formats: UserTimestampFormat[]): Promise<void> => {
+const persistTimestampFormats = async (formats: UserTimestampFormat[]): Promise<boolean> => {
   savingFormats.value = true
   formatSaveError.value = undefined
   try {
@@ -427,12 +453,38 @@ const saveTimestampFormats = async (formats: UserTimestampFormat[]): Promise<voi
     // save half-edited text the user has not committed yet.
     await apiUpdateUserProfile(apiClientBio, { timestampFormats: formats })
     timestampFormats.value = formats
-    showFormatEditor.value = false
+    return true
   } catch {
     formatSaveError.value = 'Could not save your formats. Please try again.'
+    return false
   } finally {
     savingFormats.value = false
   }
+}
+
+const saveOneTimestampFormat = async (format: UserTimestampFormat): Promise<void> => {
+  const existing = timestampFormats.value.findIndex(item => item.id === format.id)
+  const next = existing === -1
+    ? [...timestampFormats.value, format]
+    : timestampFormats.value.map(item => item.id === format.id ? format : item)
+  if (await persistTimestampFormats(next)) {
+    showFormatEditor.value = false
+    editingFormat.value = undefined
+  }
+}
+
+const removeTimestampFormat = async (format: UserTimestampFormat): Promise<void> => {
+  await persistTimestampFormats(timestampFormats.value.filter(item => item.id !== format.id))
+}
+
+const reorderTimestampFormat = async (change: { id: string, direction: -1 | 1 }): Promise<void> => {
+  const index = timestampFormats.value.findIndex(item => item.id === change.id)
+  const target = index + change.direction
+  if (index === -1 || target < 0 || target >= timestampFormats.value.length) return
+  const next = [...timestampFormats.value]
+  const [moved] = next.splice(index, 1)
+  next.splice(target, 0, moved)
+  await persistTimestampFormats(next)
 }
 
 onMounted(() => {

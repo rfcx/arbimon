@@ -590,16 +590,29 @@
         :timestamp-formats="timestampFormats"
         @close="showSettings = false"
         @update:flac-enabled="flacEncodeEnabled = $event"
-        @manage-formats="showFormatEditor = true"
+        @manage-formats="showFormatList = true"
+      />
+
+      <timestamp-format-list-modal
+        v-if="showFormatList && !showFormatEditor"
+        :formats="timestampFormats"
+        :busy="savingFormats"
+        :error="formatSaveError"
+        @close="showFormatList = false"
+        @create="openFormatCreator"
+        @edit="openFormatEditor"
+        @remove="removeTimestampFormat"
+        @reorder="reorderTimestampFormat"
       />
 
       <timestamp-format-editor-modal
         v-if="showFormatEditor"
-        :formats="timestampFormats"
+        :existing="timestampFormats"
+        :editing="editingFormat"
         :saving="savingFormats"
         :save-error="formatSaveError"
-        @close="showFormatEditor = false"
-        @save="saveTimestampFormats"
+        @close="showFormatEditor = false; editingFormat = undefined"
+        @save="saveOneTimestampFormat"
       />
 
       <!-- hidden file input; routed to whichever box requested the picker -->
@@ -815,6 +828,7 @@ import { type TimezoneMode, type UploadItem, analyzeFile, collectDroppedFiles, c
 
 import SiteFormModal, { type SiteSaved } from '@/_components/site-form-modal/site-form-modal.vue'
 import TimestampFormatEditorModal from '@/_components/timestamp-formats/timestamp-format-editor-modal.vue'
+import TimestampFormatListModal from '@/_components/timestamp-formats/timestamp-format-list-modal.vue'
 import StagingTable from '@/_components/upload-panel/staging-table.vue'
 import UploaderSettingsModal from '@/_components/upload-panel/uploader-settings-modal.vue'
 import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
@@ -930,9 +944,24 @@ const intakeStyle = (isDragOver: boolean): Record<string, string> => {
   return { backgroundImage: `${hatch('45deg')}, ${hatch('135deg')}` }
 }
 
-/** Opens the custom-filename-format editor (its own modal, reachable from both
- *  here and global account settings — they mirror one another). */
+/**
+ * Two-modal flow (operator 2026-08-19): the LIST modal shows saved formats and
+ * explains the feature; the EDITOR modal creates/edits ONE entry. Edit/create
+ * open the editor OVER the list; saving or closing the editor returns to the
+ * list, so the user always comes back to the collection they were managing.
+ */
+const showFormatList = ref(false)
 const showFormatEditor = ref(false)
+const editingFormat = ref<UserTimestampFormat | undefined>(undefined)
+
+const openFormatCreator = (): void => {
+  editingFormat.value = undefined
+  showFormatEditor.value = true
+}
+const openFormatEditor = (format: UserTimestampFormat): void => {
+  editingFormat.value = format
+  showFormatEditor.value = true
+}
 
 /**
  * The user's saved custom filename formats, loaded from their global profile.
@@ -966,26 +995,54 @@ const loadTimestampFormats = async (): Promise<void> => {
 watch(timestampFormats, formats => { prepareOptions.savedFormats = formats }, { immediate: true })
 
 /**
- * Persist the edited list, then re-analyze staged rows against it.
+ * Persist a list change, then re-analyze staged rows against it.
  *
- * Saves FIRST and only adopts the new list on success -- optimistically
- * applying formats that failed to persist would leave the table parsing by
- * rules the user's account does not actually hold.
+ * Every list-modal action (save-one/delete/reorder) funnels here as ONE
+ * immediate persist. Saves FIRST and only adopts the new list on success --
+ * optimistically applying formats that failed to persist would leave the table
+ * parsing by rules the user's account does not actually hold.
  */
-const saveTimestampFormats = async (formats: UserTimestampFormat[]): Promise<void> => {
-  if (apiClientBio === undefined) return
+const persistTimestampFormats = async (formats: UserTimestampFormat[]): Promise<boolean> => {
+  if (apiClientBio === undefined) return false
   savingFormats.value = true
   formatSaveError.value = undefined
   try {
     await apiUpdateUserProfile(apiClientBio, { timestampFormats: formats })
     timestampFormats.value = formats
-    showFormatEditor.value = false
     await reanalyzeStagedForFormats()
+    return true
   } catch {
     formatSaveError.value = 'Could not save your formats. Please try again.'
+    return false
   } finally {
     savingFormats.value = false
   }
+}
+
+/** Editor emitted one finished format: upsert it, persist, return to the list. */
+const saveOneTimestampFormat = async (format: UserTimestampFormat): Promise<void> => {
+  const existing = timestampFormats.value.findIndex(item => item.id === format.id)
+  const next = existing === -1
+    ? [...timestampFormats.value, format]
+    : timestampFormats.value.map(item => item.id === format.id ? format : item)
+  if (await persistTimestampFormats(next)) {
+    showFormatEditor.value = false
+    editingFormat.value = undefined
+  }
+}
+
+const removeTimestampFormat = async (format: UserTimestampFormat): Promise<void> => {
+  await persistTimestampFormats(timestampFormats.value.filter(item => item.id !== format.id))
+}
+
+const reorderTimestampFormat = async (change: { id: string, direction: -1 | 1 }): Promise<void> => {
+  const index = timestampFormats.value.findIndex(item => item.id === change.id)
+  const target = index + change.direction
+  if (index === -1 || target < 0 || target >= timestampFormats.value.length) return
+  const next = [...timestampFormats.value]
+  const [moved] = next.splice(index, 1)
+  next.splice(target, 0, moved)
+  await persistTimestampFormats(next)
 }
 
 /**

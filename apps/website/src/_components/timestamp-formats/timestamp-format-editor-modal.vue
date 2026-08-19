@@ -1,29 +1,28 @@
 <template>
+  <!-- SINGLE-PURPOSE editor/creator (operator 2026-08-19): this modal edits or
+       creates ONE format. The saved-formats LIST lives in its own modal
+       (timestamp-format-list-modal.vue); splitting the two jobs deleted the
+       whole draft/Done layer this component used to carry -- Save Format is the
+       terminal action, the header × (or click-outside) cancels, and the host
+       persists immediately. -->
   <modal-popup
-    title="Filename Formats"
+    :title="editing === undefined ? 'New Filename Format' : 'Edit Filename Format'"
     modal-body="sm:(my-8 align-middle max-w-4xl w-full)"
     @emit-close="$emit('close')"
   >
     <!-- The palette makes this modal tall (20 tokens over 3 groups). modal-popup's
-         panel is `overflow-hidden`, so without an explicit cap the footer
-         buttons can sit below the fold on a short viewport with no way to
-         scroll to them. Cap at the viewport and scroll INSIDE the dialog. -->
+         panel is `overflow-hidden`, so without an explicit cap the action row
+         can sit below the fold on a short viewport with no way to scroll to
+         it. Cap at the viewport and scroll INSIDE the dialog. -->
     <div class="p-6 max-h-[85vh] overflow-y-auto">
       <div class="flex items-start justify-between mb-5">
-        <div>
-          <h3 class="text-lg font-medium text-insight">
-            Custom Filename Formats
-          </h3>
-          <p class="text-sm text-cloud mt-1">
-            Saved to your account and used in every project. Arbimon always tries
-            its built-in patterns first, so adding a format can only ever
-            recognise <em>more</em> filenames — never break one that already works.
-          </p>
-        </div>
+        <h3 class="text-lg font-medium text-insight">
+          {{ editing === undefined ? 'New Filename Format' : `Edit “${editing.label}”` }}
+        </h3>
         <button
           class="text-cloud hover:text-insight shrink-0 ml-4"
-          title="Close"
-          aria-label="Close filename formats"
+          title="Close without saving"
+          aria-label="Close without saving"
           @click="$emit('close')"
         >
           <svg
@@ -37,99 +36,6 @@
         </button>
       </div>
 
-      <!-- SAVED LIST ------------------------------------------------------- -->
-      <ul
-        v-if="draft.length > 0"
-        class="space-y-1 mb-4"
-      >
-        <li
-          v-for="(item, index) in draft"
-          :key="item.id"
-          class="flex items-center gap-x-2 text-sm border border-cloud/20 rounded px-2 py-1.5"
-          :class="editingId === item.id ? 'border-frequency/60' : ''"
-        >
-          <span class="text-cloud/50 tabular-nums w-5 shrink-0">{{ index + 1 }}.</span>
-          <span class="text-insight truncate flex-1 min-w-0">{{ item.label }}</span>
-          <code class="text-xs text-cloud/60 truncate max-w-[38%] shrink-0">{{ item.format }}</code>
-          <!-- Reorder: position IS precedence, so this is a functional control,
-               not a cosmetic one. Buttons rather than drag-and-drop -- keyboard
-               reachable, and no drag library in this codebase. -->
-          <button
-            class="text-cloud/60 hover:text-frequency disabled:opacity-30 disabled:hover:text-cloud/60 shrink-0"
-            :disabled="index === 0"
-            :title="index === 0 ? 'Already first' : 'Move up (earlier formats win)'"
-            :aria-label="`Move ${item.label} up`"
-            @click="move(index, -1)"
-          >
-            <svg
-              viewBox="0 0 16 16"
-              class="w-3.5 h-3.5 fill-none stroke-current"
-              stroke-width="1.8"
-            ><path
-              d="M8 12.5v-9M4 7.5L8 3.5l4 4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            /></svg>
-          </button>
-          <button
-            class="text-cloud/60 hover:text-frequency disabled:opacity-30 disabled:hover:text-cloud/60 shrink-0"
-            :disabled="index === draft.length - 1"
-            :title="index === draft.length - 1 ? 'Already last' : 'Move down'"
-            :aria-label="`Move ${item.label} down`"
-            @click="move(index, 1)"
-          >
-            <svg
-              viewBox="0 0 16 16"
-              class="w-3.5 h-3.5 fill-none stroke-current"
-              stroke-width="1.8"
-            ><path
-              d="M8 3.5v9M4 8.5l4 4 4-4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            /></svg>
-          </button>
-          <button
-            class="text-cloud/60 hover:text-frequency shrink-0"
-            title="Edit this format"
-            :aria-label="`Edit ${item.label}`"
-            @click="beginEdit(item)"
-          >
-            <svg
-              viewBox="0 0 16 16"
-              class="w-3.5 h-3.5 fill-none stroke-current"
-              stroke-width="1.5"
-            ><path
-              d="M10.5 2.5l3 3L6 13l-3.5.5L3 10l7.5-7.5zM9 4l3 3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            /></svg>
-          </button>
-          <button
-            class="text-cloud/60 hover:text-flamingo shrink-0"
-            title="Delete this format"
-            :aria-label="`Delete ${item.label}`"
-            @click="remove(item.id)"
-          >
-            <svg
-              viewBox="0 0 16 16"
-              class="w-3.5 h-3.5 fill-none stroke-current"
-              stroke-width="1.5"
-            ><path
-              d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.5 8.5h6l.5-8.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            /></svg>
-          </button>
-        </li>
-      </ul>
-      <p
-        v-else
-        class="text-xs text-cloud mb-4"
-      >
-        No formats saved yet. Build one below — the palette inserts tokens at
-        your cursor.
-      </p>
-
       <!-- EDITOR -----------------------------------------------------------
            No section header (operator 2026-08-19: "Add a format" was
            self-evident -- the fields below say what this is). The one thing the
@@ -138,19 +44,6 @@
            Cancel, since otherwise the only clue is pre-filled fields and there
            is no way out short of committing the edit. -->
       <div class="border-t border-cloud/20 pt-4">
-        <div
-          v-if="editingId !== undefined"
-          class="flex items-baseline justify-between mb-2 px-2 py-1 rounded bg-frequency/5 border border-frequency/20"
-        >
-          <span class="text-xs text-insight">Editing “{{ editingLabel }}”</span>
-          <button
-            class="text-xs text-cloud hover:text-insight"
-            @click="resetEditor"
-          >
-            Cancel edit
-          </button>
-        </div>
-
         <!-- EXEMPLAR FILE (operator 2026-08-19; renamed from "Test & Verify" same
              day -- the section is a construction AID, and the new name says what
              the file IS rather than what the user must do. Explicitly OPTIONAL:
@@ -438,59 +331,27 @@
             class="flex-1 min-w-0 max-w-md text-sm border border-cloud/40 rounded bg-pitch text-insight placeholder:text-cloud/40 focus:(border-frequency ring-frequency)"
           >
           <button
-            class="btn btn-secondary text-sm shrink-0 disabled:(opacity-50 cursor-not-allowed)"
-            :disabled="!canCommit"
+            class="btn btn-primary text-sm shrink-0 disabled:(opacity-50 cursor-not-allowed)"
+            :disabled="!canCommit || saving"
             :title="commitBlockedReason ?? undefined"
             @click="commit"
           >
-            Save Format
+            {{ saving ? 'Saving…' : 'Save Format' }}
           </button>
         </div>
         <p
-          v-if="commitBlockedReason !== undefined && (labelInput !== '' || formatInput !== '')"
+          v-if="saveError !== undefined"
+          class="text-xs text-flamingo mt-1"
+          role="alert"
+        >
+          {{ saveError }}
+        </p>
+        <p
+          v-else-if="commitBlockedReason !== undefined && (labelInput !== '' || formatInput !== '')"
           class="text-xs text-cloud mt-1"
         >
           {{ commitBlockedReason }}
         </p>
-      </div>
-
-      <!-- FOOTER -----------------------------------------------------------
-           STICKY. Measured 2026-08-19 on a 900px viewport: with the palette
-           expanded the panel scrolls (975px content in 746px), and a static
-           footer put Done at y=974 -- BELOW THE FOLD, reachable only by
-           scrolling past all 20 tokens. An image-model review flagged this and
-           an earlier probe of mine contradicted it; the probe was wrong (it had
-           measured the UPLOADER SETTINGS modal's Done button, since two exist
-           while both dialogs are open). Re-scoped to this panel, the model was
-           right.
-
-           `-mx-6 px-6 -mb-6 pb-6` cancels the panel's padding so the bar spans
-           the full width and its background covers content scrolling beneath. -->
-      <div class="sticky bottom-0 mt-6 -mx-6 px-6 -mb-6 pb-6 pt-3 bg-moss border-t border-cloud/20 flex items-center justify-between">
-        <span
-          v-if="saveError !== undefined"
-          class="text-xs text-flamingo"
-          role="alert"
-        >{{ saveError }}</span>
-        <span
-          v-else
-          class="text-xs text-cloud/60"
-        >{{ draft.length }} of {{ MAX_USER_TIMESTAMP_FORMATS }} saved</span>
-        <div class="flex items-center gap-x-2">
-          <button
-            class="btn btn-secondary text-sm"
-            @click="$emit('close')"
-          >
-            Cancel
-          </button>
-          <button
-            class="btn btn-primary text-sm disabled:(opacity-50 cursor-not-allowed)"
-            :disabled="saving"
-            @click="save"
-          >
-            {{ saving ? 'Saving…' : 'Done' }}
-          </button>
-        </div>
       </div>
     </div>
   </modal-popup>
@@ -506,27 +367,29 @@ import ModalPopup from '@/_components/modal-popup.vue'
 import { type FormatSegment, caretTargetForArrow, insertIndexForX, insertTokenAt, moveSegment, parseFormatSegments, removeSegmentAt, segmentsToFormat } from './format-segments'
 
 /**
- * The filename-format editor (operator spec 2026-08-18; iStat Menus as the
- * GUI reference).
+ * The filename-format editor/creator (operator spec 2026-08-18; iStat Menus as
+ * the GUI reference; SPLIT to single-entry duty 2026-08-19).
  *
- * Edits a LOCAL DRAFT and only emits on Done, so Cancel genuinely abandons the
- * session's changes -- including reorders and deletes, which are otherwise
- * irreversible from the user's point of view. Persistence belongs to the host
- * (both hosts already own a profile-save path); this component never calls the
- * API itself, which is what lets the uploader and account settings share it.
+ * Edits or creates exactly ONE format. `existing` is the user's full list,
+ * passed for DEDUP and the size cap only -- this component never renders or
+ * mutates the list (that is timestamp-format-list-modal.vue's job). `editing`
+ * pre-populates the fields; Save Format emits the single finished entry and the
+ * HOST persists immediately. Closing any other way abandons the entry -- there
+ * is no second confirm layer, which is what the split bought.
  */
 const props = withDefaults(defineProps<{
-  formats: UserTimestampFormat[]
+  /** The user's saved formats — for dedup + the size cap, never rendered. */
+  existing: UserTimestampFormat[]
+  /** The entry being edited; undefined = creating a new one. */
+  editing?: UserTimestampFormat
   saving?: boolean
   saveError?: string
-}>(), { saving: false, saveError: undefined })
+}>(), { editing: undefined, saving: false, saveError: undefined })
 
-const emit = defineEmits<{(e: 'close'): void, (e: 'save', formats: UserTimestampFormat[]): void}>()
+const emit = defineEmits<{(e: 'close'): void, (e: 'save', format: UserTimestampFormat): void}>()
 
-const draft = ref<UserTimestampFormat[]>(props.formats.map(item => ({ ...item })))
-
-const labelInput = ref('')
-const editingId = ref<string | undefined>(undefined)
+const labelInput = ref(props.editing?.label ?? '')
+const editingId = computed(() => props.editing?.id)
 
 // -- Exemplar File (optional) -------------------------------------------------
 // Filenames under test, populated ONLY by the picker (operator 2026-08-19: no
@@ -559,7 +422,7 @@ const clearTestFiles = (): void => {
 // single source of truth for everything downstream (validation, preview,
 // save) -- segments are a VIEW of it, derived and written back on every
 // mutation, so no second copy of the value can drift.
-const formatInput = ref('')
+const formatInput = ref(props.editing?.format ?? '')
 const segments = computed(() => parseFormatSegments(formatInput.value))
 
 /** Where the last click/caret landed, as a SEGMENT INDEX. A palette click
@@ -788,9 +651,9 @@ const formatExample = computed<string | undefined>(() => {
 
 // USER-SCOPED dedup (operator 2026-08-19). Both checks exclude the entry being
 // edited, so re-saving something unchanged is never blocked. Scope is inherent:
-// this draft IS one user's list -- different users can share names freely.
+// `existing` IS one user's list -- different users can share names freely.
 const isDuplicateLabel = computed(() =>
-  draft.value.some(item => item.id !== editingId.value &&
+  props.existing.some(item => item.id !== editingId.value &&
     item.label.trim().toLowerCase() === labelInput.value.trim().toLowerCase()))
 
 /** Same PATTERN twice is pointless -- the second copy could never match a
@@ -798,7 +661,7 @@ const isDuplicateLabel = computed(() =>
  *  only slow parsing and clutter the list. Compared exactly: %Y and %y are
  *  genuinely different patterns, so no case-folding here, unlike names. */
 const duplicatePatternOf = computed(() =>
-  draft.value.find(item => item.id !== editingId.value &&
+  props.existing.find(item => item.id !== editingId.value &&
     item.format === formatInput.value))
 
 const commitBlockedReason = computed<string | undefined>(() => {
@@ -809,7 +672,7 @@ const commitBlockedReason = computed<string | undefined>(() => {
   if (duplicatePatternOf.value !== undefined) {
     return `“${duplicatePatternOf.value.label}” already uses this exact pattern.`
   }
-  if (editingId.value === undefined && draft.value.length >= MAX_USER_TIMESTAMP_FORMATS) {
+  if (editingId.value === undefined && props.existing.length >= MAX_USER_TIMESTAMP_FORMATS) {
     return `You can save up to ${MAX_USER_TIMESTAMP_FORMATS} formats.`
   }
   return undefined
@@ -817,63 +680,19 @@ const commitBlockedReason = computed<string | undefined>(() => {
 
 const canCommit = computed(() => commitBlockedReason.value === undefined)
 
-const resetEditor = (): void => {
-  editingId.value = undefined
-  labelInput.value = ''
-  formatInput.value = ''
-}
-
-/** The SAVED label of the format being edited — shown in the edit-mode banner.
- *  Reads the draft, not labelInput, so renaming mid-edit does not make the
- *  banner claim you are editing a format that does not exist yet. */
-const editingLabel = computed(() => draft.value.find(item => item.id === editingId.value)?.label ?? '')
-
-const beginEdit = (item: UserTimestampFormat): void => {
-  editingId.value = item.id
-  labelInput.value = item.label
-  formatInput.value = item.format
-}
-
+/** Save Format: emit the single finished entry. The HOST persists and closes. */
 const commit = (): void => {
   if (!canCommit.value) return
-  const label = labelInput.value.trim()
-  if (editingId.value !== undefined) {
-    const existing = draft.value.find(item => item.id === editingId.value)
-    if (existing !== undefined) {
-      existing.label = label
-      existing.format = formatInput.value
-    }
-  } else {
-    draft.value.push({
-      // Client-generated id, as the DAO type specifies. Deliberately NOT
-      // crypto.randomUUID: this tsconfig's DOM lib does not declare it (a real
-      // vue-tsc error, caught by the build gate). Uniqueness only has to hold
-      // within one user's list of at most 20, and the API rejects duplicate ids
-      // anyway, so timestamp+random is sufficient -- this is not a security id.
-      id: `fmt-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`,
-      label,
-      format: formatInput.value,
-      createdAt: new Date().toISOString()
-    })
-  }
-  resetEditor()
-}
-
-const remove = (id: string): void => {
-  draft.value = draft.value.filter(item => item.id !== id)
-  if (editingId.value === id) resetEditor()
-}
-
-const move = (index: number, delta: number): void => {
-  const target = index + delta
-  if (target < 0 || target >= draft.value.length) return
-  const next = [...draft.value]
-  const [moved] = next.splice(index, 1)
-  next.splice(target, 0, moved)
-  draft.value = next
-}
-
-const save = (): void => {
-  emit('save', draft.value.map(item => ({ ...item })))
+  emit('save', {
+    // Client-generated id, as the DAO type specifies. Deliberately NOT
+    // crypto.randomUUID: this tsconfig's DOM lib does not declare it (a real
+    // vue-tsc error, caught by the build gate). Uniqueness only has to hold
+    // within one user's list of at most 20, and the API rejects duplicate ids
+    // anyway, so timestamp+random is sufficient -- this is not a security id.
+    id: props.editing?.id ?? `fmt-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`,
+    label: labelInput.value.trim(),
+    format: formatInput.value,
+    createdAt: props.editing?.createdAt ?? new Date().toISOString()
+  })
 }
 </script>
