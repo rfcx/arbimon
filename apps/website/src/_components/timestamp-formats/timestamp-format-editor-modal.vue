@@ -418,35 +418,40 @@
 
         <!-- NAME comes LAST (operator 2026-08-19): the natural order is build
              the pattern, verify it against the exemplar, THEN christen it.
-             Naming first asked the user to describe a thing that did not exist
-             yet. Sits directly above the Add/Save action it gates. -->
+             Save Format sits ON THE SAME ROW to its right (operator, same
+             day) -- the last field and the action it gates read as one closing
+             gesture, and the button label is 'Save Format' in BOTH add and
+             edit modes: the user is saving a format either way, and a label
+             that flips between modes made the two feel like different
+             operations. -->
         <label
           class="block text-xs text-cloud mt-4 mb-1"
           for="tsf-label"
-        >Name</label>
-        <input
-          id="tsf-label"
-          v-model="labelInput"
-          type="text"
-          placeholder="AudioMoth field kit"
-          maxlength="60"
-          class="w-full text-sm border border-cloud/40 rounded bg-pitch text-insight placeholder:text-cloud/40 focus:(border-frequency ring-frequency)"
-        >
-
-        <div class="mt-3 flex items-center gap-x-2">
+        >Give this Recording Filename Format a Name</label>
+        <div class="flex items-center gap-x-2">
+          <input
+            id="tsf-label"
+            v-model="labelInput"
+            type="text"
+            placeholder="AudioMoth field kit"
+            maxlength="60"
+            class="flex-1 min-w-0 max-w-md text-sm border border-cloud/40 rounded bg-pitch text-insight placeholder:text-cloud/40 focus:(border-frequency ring-frequency)"
+          >
           <button
-            class="btn btn-secondary text-sm disabled:(opacity-50 cursor-not-allowed)"
+            class="btn btn-secondary text-sm shrink-0 disabled:(opacity-50 cursor-not-allowed)"
             :disabled="!canCommit"
             :title="commitBlockedReason ?? undefined"
             @click="commit"
           >
-            {{ editingId === undefined ? 'Add format' : 'Save format' }}
+            Save Format
           </button>
-          <span
-            v-if="commitBlockedReason !== undefined && (labelInput !== '' || formatInput !== '')"
-            class="text-xs text-cloud"
-          >{{ commitBlockedReason }}</span>
         </div>
+        <p
+          v-if="commitBlockedReason !== undefined && (labelInput !== '' || formatInput !== '')"
+          class="text-xs text-cloud mt-1"
+        >
+          {{ commitBlockedReason }}
+        </p>
       </div>
 
       <!-- FOOTER -----------------------------------------------------------
@@ -781,15 +786,29 @@ const formatExample = computed<string | undefined>(() => {
   return renderFormatExample(formatInput.value, exampleNow)
 })
 
+// USER-SCOPED dedup (operator 2026-08-19). Both checks exclude the entry being
+// edited, so re-saving something unchanged is never blocked. Scope is inherent:
+// this draft IS one user's list -- different users can share names freely.
 const isDuplicateLabel = computed(() =>
   draft.value.some(item => item.id !== editingId.value &&
     item.label.trim().toLowerCase() === labelInput.value.trim().toLowerCase()))
+
+/** Same PATTERN twice is pointless -- the second copy could never match a
+ *  filename the first did not already claim (first-in-list-wins), so it would
+ *  only slow parsing and clutter the list. Compared exactly: %Y and %y are
+ *  genuinely different patterns, so no case-folding here, unlike names. */
+const duplicatePatternOf = computed(() =>
+  draft.value.find(item => item.id !== editingId.value &&
+    item.format === formatInput.value))
 
 const commitBlockedReason = computed<string | undefined>(() => {
   if (labelInput.value.trim() === '') return 'Give the format a name.'
   if (isDuplicateLabel.value) return 'You already have a format with that name.'
   if (formatInput.value === '') return 'Enter a format.'
   if (formatError.value !== undefined) return formatError.value
+  if (duplicatePatternOf.value !== undefined) {
+    return `“${duplicatePatternOf.value.label}” already uses this exact pattern.`
+  }
   if (editingId.value === undefined && draft.value.length >= MAX_USER_TIMESTAMP_FORMATS) {
     return `You can save up to ${MAX_USER_TIMESTAMP_FORMATS} formats.`
   }
