@@ -160,20 +160,85 @@
           class="block text-xs text-cloud mb-1"
           for="tsf-format"
         >Format</label>
-        <input
+
+        <!-- TOKEN FIELD (operator 2026-08-19: drag tokens in, drag to reorder,
+             and show them as bordered entities).
+
+             A plain <input> cannot render bordered chips, so the field is a
+             flex row of segments: tokens are `draggable` chips, and the literal
+             text between them stays typeable via contenteditable spans. The
+             PERSISTED value is still the plain %-token string -- `format-segments.ts`
+             is the lossless bridge, and is unit-tested (incl. the reorder
+             off-by-one, which survived its first mutation).
+
+             `font-mono` matches the preview field: MEASURED before changing
+             anything, both already resolved to the same ui-monospace stack at
+             14px, so the visible odd-one-out was the *Name* field (Poppins),
+             not this one. Kept explicit so the chips and the literal text share
+             one metric. -->
+        <div
           id="tsf-format"
-          ref="formatInputEl"
-          v-model="formatInput"
-          type="text"
-          spellcheck="false"
-          placeholder="%Y%M%D_%H%I%S"
-          maxlength="120"
-          class="w-full text-sm font-mono border rounded bg-pitch text-insight placeholder:text-cloud/40 focus:(border-frequency ring-frequency)"
-          :class="formatError !== undefined ? 'border-flamingo/70' : 'border-cloud/40'"
-          @select="rememberCaret"
-          @keyup="rememberCaret"
-          @click="rememberCaret"
+          class="w-full min-h-[2.35rem] flex flex-wrap items-center gap-y-1 px-2 py-1 text-sm font-mono border rounded bg-pitch text-insight cursor-text"
+          :class="[
+            formatError !== undefined ? 'border-flamingo/70' : 'border-cloud/40',
+            dropActive ? 'border-frequency ring-1 ring-frequency' : ''
+          ]"
+          @dragover.prevent="onFieldDragOver"
+          @dragleave="onFieldDragLeave"
+          @drop.prevent="onFieldDrop"
+          @click="onFieldClick"
         >
+          <template
+            v-for="(segment, index) in segments"
+            :key="`${index}-${segment.kind}`"
+          >
+            <!-- literal text: editable in place -->
+            <span
+              v-if="segment.kind === 'text'"
+              :ref="el => registerTextEl(index, el)"
+              class="outline-none whitespace-pre min-w-[0.4rem] py-0.5"
+              contenteditable="plaintext-only"
+              spellcheck="false"
+              :data-seg="index"
+              @input="onTextInput(index, $event)"
+              @keydown="onTextKeydown(index, $event)"
+            >{{ segment.value }}</span>
+
+            <!-- token: a bordered, draggable entity -->
+            <span
+              v-else
+              class="group inline-flex items-center gap-x-0.5 rounded border border-frequency/50 bg-frequency/10 text-frequency px-1 leading-tight select-none"
+              :class="dragFromIndex === index ? 'opacity-40' : ''"
+              draggable="true"
+              style="cursor: grab"
+              :title="tokenTitle(segment.value)"
+              @dragstart="onChipDragStart(index, $event)"
+              @dragend="onChipDragEnd"
+            >
+              {{ segment.value }}
+              <button
+                class="opacity-0 group-hover:opacity-100 text-frequency/70 hover:text-flamingo"
+                :aria-label="`Remove ${segment.value}`"
+                title="Remove"
+                @click.stop="removeToken(index)"
+              >
+                <svg
+                  viewBox="0 0 10 10"
+                  class="w-2 h-2 fill-none stroke-current"
+                  stroke-width="2"
+                ><path
+                  d="M2 2l6 6M8 2l-6 6"
+                  stroke-linecap="round"
+                /></svg>
+              </button>
+            </span>
+          </template>
+
+          <span
+            v-if="formatInput === ''"
+            class="text-cloud/40 pointer-events-none"
+          >Drag tokens here, or click one below</span>
+        </div>
 
         <p
           v-if="formatError !== undefined"
@@ -188,7 +253,7 @@
         <div class="mt-3">
           <div class="flex items-baseline justify-between mb-1.5">
             <span class="block text-xs text-cloud">Insert a token</span>
-            <span class="text-xs text-cloud/50">click to add at the cursor</span>
+            <span class="text-xs text-cloud/50">click to add, or drag into the field</span>
           </div>
 
           <!-- Grouped by the part of the timestamp each token fills, with the
@@ -216,7 +281,11 @@
                   v-for="info in group.tokens"
                   :key="info.token"
                   class="group flex items-baseline gap-x-2 text-left px-1.5 py-1 rounded border border-transparent hover:(border-frequency/40 bg-frequency/5)"
-                  :title="`Insert ${info.token} — ${info.name}, ${info.range}`"
+                  style="cursor: grab"
+                  :title="`Insert or drag ${info.token} — ${info.name}, ${info.range}`"
+                  draggable="true"
+                  @dragstart="onPaletteDragStart(info.token, $event)"
+                  @dragend="onChipDragEnd"
                   @click="insertToken(info.token)"
                 >
                   <code class="text-xs font-mono text-frequency shrink-0 w-6">{{ info.token }}</code>
@@ -265,7 +334,7 @@
               :key="row.filename"
               class="flex items-baseline justify-between gap-x-2 text-xs"
             >
-              <code class="text-cloud/70 truncate">{{ row.filename }}</code>
+              <code class="font-mono text-cloud/70 truncate">{{ row.filename }}</code>
               <span
                 class="shrink-0 tabular-nums"
                 :class="row.parsed !== undefined ? 'text-frequency' : 'text-cloud/50'"
@@ -339,12 +408,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import { type UserTimestampFormat, MAX_USER_TIMESTAMP_FORMATS } from '@rfcx-bio/common/dao/types'
 import { parseTimestampWithFormat, TIMESTAMP_FORMAT_ERROR_TEXT, TIMESTAMP_TOKEN_GROUPS, validateTimestampFormat } from '@rfcx-bio/upload-engine'
 
 import ModalPopup from '@/_components/modal-popup.vue'
+import { type FormatSegment, insertIndexForX, insertTokenAt, moveSegment, parseFormatSegments, removeSegmentAt, segmentsToFormat } from './format-segments'
 
 /**
  * The filename-format editor (operator spec 2026-08-18; iStat Menus as the
@@ -370,32 +440,163 @@ const emit = defineEmits<{(e: 'close'): void, (e: 'save', formats: UserTimestamp
 const draft = ref<UserTimestampFormat[]>(props.formats.map(item => ({ ...item })))
 
 const labelInput = ref('')
-const formatInput = ref('')
 const typedSample = ref('')
 const editingId = ref<string | undefined>(undefined)
-const formatInputEl = ref<HTMLInputElement>()
-/** Caret position at the last interaction — the palette inserts there. Tracked
- *  explicitly because clicking a palette button blurs the input first. */
-const caret = ref(0)
 
-const rememberCaret = (event: Event): void => {
-  const el = event.target as HTMLInputElement
-  caret.value = el.selectionStart ?? el.value.length
+// -- the format field, as SEGMENTS ------------------------------------------
+// The field renders tokens as bordered chips and literal text as editable
+// spans, so the editing model is a segment array. `formatInput` remains the
+// single source of truth for everything downstream (validation, preview,
+// save) -- segments are a VIEW of it, derived and written back on every
+// mutation, so no second copy of the value can drift.
+const formatInput = ref('')
+const segments = computed(() => parseFormatSegments(formatInput.value))
+
+/** Where the last click/caret landed, as a SEGMENT INDEX. A palette click
+ *  inserts here, matching the old caret behaviour at chip granularity. */
+const insertAt = ref(0)
+/** Which chip is mid-drag (undefined = dragging in from the palette). */
+const dragFromIndex = ref<number | undefined>(undefined)
+const dropActive = ref(false)
+const textEls = new Map<number, HTMLElement>()
+
+const registerTextEl = (index: number, el: unknown): void => {
+  if (el === null || el === undefined) textEls.delete(index)
+  else textEls.set(index, el as HTMLElement)
 }
 
+const tokenTitle = (token: string): string => {
+  const info = TIMESTAMP_TOKEN_GROUPS.flatMap(group => group.tokens).find(t => t.token === token)
+  return info === undefined ? token : `${info.name} — ${info.range} (drag to reorder)`
+}
+
+const applySegments = (next: FormatSegment[]): void => {
+  formatInput.value = segmentsToFormat(next)
+}
+
+/** Palette click: insert at the last known position (end by default). */
 const insertToken = (token: string): void => {
-  const value = formatInput.value
-  const at = Math.min(caret.value, value.length)
-  formatInput.value = value.slice(0, at) + token + value.slice(at)
-  caret.value = at + token.length
-  // Restore focus + caret so a run of palette clicks builds left-to-right
-  // instead of every token landing at the same spot.
-  void nextTick(() => {
-    const el = formatInputEl.value
-    if (el === undefined) return
-    el.focus()
-    el.setSelectionRange(caret.value, caret.value)
-  })
+  const next = insertTokenAt(segments.value, token, insertAt.value)
+  applySegments(next)
+  // Advance past the token just placed so a run of clicks builds left-to-right,
+  // which is what the old caret-based version did.
+  insertAt.value = Math.min(insertAt.value + 2, next.length)
+}
+
+const removeToken = (index: number): void => {
+  applySegments(removeSegmentAt(segments.value, index))
+}
+
+// -- drag & drop -------------------------------------------------------------
+// Two sources, one drop target: a NEW token dragged from the palette, or an
+// EXISTING chip dragged within the field. `dragFromIndex` distinguishes them.
+// The token also rides in dataTransfer so a drop is well-defined even if the
+// component state is lost (and so the drag has a sensible text payload).
+
+const onPaletteDragStart = (token: string, event: DragEvent): void => {
+  dragFromIndex.value = undefined
+  event.dataTransfer?.setData('text/plain', token)
+  if (event.dataTransfer !== null) event.dataTransfer.effectAllowed = 'copy'
+}
+
+const onChipDragStart = (index: number, event: DragEvent): void => {
+  dragFromIndex.value = index
+  event.dataTransfer?.setData('text/plain', segments.value[index]?.value ?? '')
+  if (event.dataTransfer !== null) event.dataTransfer.effectAllowed = 'move'
+}
+
+const onChipDragEnd = (): void => {
+  dragFromIndex.value = undefined
+  dropActive.value = false
+}
+
+const onFieldDragOver = (event: DragEvent): void => {
+  dropActive.value = true
+  if (event.dataTransfer !== null) {
+    event.dataTransfer.dropEffect = dragFromIndex.value === undefined ? 'copy' : 'move'
+  }
+}
+
+const onFieldDragLeave = (event: DragEvent): void => {
+  // Only clear when the pointer genuinely leaves the field, not when it crosses
+  // between the chips INSIDE it (each child fires its own dragleave).
+  const field = event.currentTarget as HTMLElement
+  const to = event.relatedTarget as Node | null
+  if (to === null || !field.contains(to)) dropActive.value = false
+}
+
+/**
+ * Resolve the drop point from the POINTER's x/y against the rendered chips.
+ *
+ * Pixel hit-testing, not DOM index arithmetic: the field wraps, so index order
+ * alone cannot say which side of a chip the pointer is on. Rows are filtered by
+ * y first so a drop on line 2 cannot match a chip on line 1.
+ */
+const dropIndexFromEvent = (event: DragEvent): number => {
+  const field = event.currentTarget as HTMLElement
+  // NOTE: index-loop, not [...field.children] -- an HTMLCollection is not
+  // spreadable under this tsconfig (the same `NodeListOf` class of vue-tsc
+  // error that failed a Docker build on 2026-08-18; caught locally this time).
+  const rects: Array<{ index: number, left: number, width: number }> = []
+  for (let childIndex = 0; childIndex < field.children.length; childIndex++) {
+    const node = field.children.item(childIndex) as HTMLElement | null
+    if (node === null || node.getAttribute('draggable') !== 'true') continue // chips only
+    const rect = node.getBoundingClientRect()
+    // Same visual row as the pointer? (the field wraps)
+    if (event.clientY < rect.top || event.clientY > rect.bottom) continue
+    rects.push({ index: childIndex, left: rect.left, width: rect.width })
+  }
+  return insertIndexForX(rects, event.clientX)
+}
+
+const onFieldDrop = (event: DragEvent): void => {
+  dropActive.value = false
+  const target = dropIndexFromEvent(event)
+  const from = dragFromIndex.value
+  if (from !== undefined) {
+    applySegments(moveSegment(segments.value, from, target))
+  } else {
+    const token = event.dataTransfer?.getData('text/plain') ?? ''
+    if (token === '') return
+    applySegments(insertTokenAt(segments.value, token, target))
+  }
+  insertAt.value = target
+  dragFromIndex.value = undefined
+}
+
+// -- editing the literal text between chips ----------------------------------
+
+const onTextInput = (index: number, event: Event): void => {
+  const el = event.target as HTMLElement
+  const next = segments.value.map(segment => ({ ...segment }))
+  if (next[index] === undefined) return
+  next[index] = { kind: 'text', value: el.textContent ?? '' }
+  // Write back WITHOUT re-rendering this span from the model: Vue would replace
+  // the node the user is typing in and the caret would jump to the start.
+  formatInput.value = segmentsToFormat(next)
+  insertAt.value = index + 1
+}
+
+const onTextKeydown = (index: number, event: KeyboardEvent): void => {
+  const el = event.target as HTMLElement
+  const atStart = (el.textContent ?? '') === '' || window.getSelection()?.anchorOffset === 0
+  // Backspace at the very start of a text run deletes the chip before it --
+  // the behaviour every chip input has, and the only keyboard route to
+  // removing a token.
+  if (event.key === 'Backspace' && atStart && index > 0) {
+    event.preventDefault()
+    applySegments(removeSegmentAt(segments.value, index - 1))
+    insertAt.value = Math.max(0, index - 2)
+  }
+}
+
+/** Clicking the field's empty area aims subsequent palette clicks at the end. */
+const onFieldClick = (event: MouseEvent): void => {
+  if (event.target === event.currentTarget) {
+    insertAt.value = segments.value.length
+    const last = textEls.get(segments.value.length - 1)
+    last?.focus()
+  }
 }
 
 /** Inline validation with the SPECIFIC reason (empty is not an error yet — the
