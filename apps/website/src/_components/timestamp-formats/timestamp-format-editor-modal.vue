@@ -234,10 +234,21 @@
           >
         </div>
 
+        <!-- "Filename Pattern", not "Format" (operator 2026-08-19, same instinct as
+             the Exemplar rename): it says what the thing IS -- a pattern the
+             filename is matched against -- and pairs with "Exemplar File" above
+             (the specimen vs the rule built against it). The literal-text hint
+             moved up here from below the palette: it describes how the FIELD
+             interprets input, so it belongs with the field, read before typing
+             starts rather than discovered after scrolling past 20 tokens. -->
         <label
-          class="block text-xs text-cloud mb-1"
+          class="block text-xs text-cloud"
           for="tsf-format"
-        >Format</label>
+        >Filename Pattern</label>
+        <p class="text-xs text-cloud/60 mt-0.5 mb-1.5">
+          Anything that isn’t a token is matched literally — write <code>%%</code>
+          for a real percent sign.
+        </p>
 
         <!-- TOKEN FIELD (operator 2026-08-19: drag tokens in, drag to reorder,
              and show them as bordered entities).
@@ -399,11 +410,6 @@
               </div>
             </div>
           </div>
-
-          <p class="text-xs text-cloud/70 mt-2.5">
-            Anything that isn’t a token is matched literally. Write <code>%%</code>
-            for a real percent sign.
-          </p>
         </div>
 
         <!-- Verdicts live inline on the Exemplar File rows above; the separate
