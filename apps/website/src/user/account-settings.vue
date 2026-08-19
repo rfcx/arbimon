@@ -1,9 +1,16 @@
 <template>
-  <landing-navbar />
-  <section class="pt-16 mb-16 bg-white dark:bg-pitch">
+  <!-- Renders EITHER as a standalone page or inside the route-driven modal
+       (operator 2026-08-18). In `modal` mode the page chrome is dropped: the
+       navbar would duplicate the app chrome already behind the scrim, the
+       full-viewport padding would fight the dialog's own, and the modal header
+       already says "Account Settings", so the in-body title would repeat it.
+       ONE component either way, so the form logic cannot drift between them. -->
+  <landing-navbar v-if="!modal" />
+  <section :class="modal ? '' : 'pt-16 mb-16 bg-white dark:bg-pitch'">
     <div
       v-if="isErrorProfileData"
-      class="flex rounded-lg bg-moss py-3 px-4 mx-auto max-w-screen-md dark:bg-moss items-center justify-center h-screen text-center"
+      class="flex rounded-lg bg-moss py-3 px-4 mx-auto max-w-screen-md dark:bg-moss items-center justify-center text-center"
+      :class="modal ? 'my-6' : 'h-screen'"
     >
       <span>
         It seems the page didn’t load as expected.<br>
@@ -12,14 +19,24 @@
     </div>
     <div
       v-else
-      class="block rounded-lg bg-moss py-3 px-4 mx-auto max-w-screen-md dark:bg-moss h-auto"
+      class="block rounded-lg bg-moss py-3 px-4 mx-auto dark:bg-moss h-auto"
+      :class="modal ? 'max-w-none bg-transparent dark:bg-transparent' : 'max-w-screen-md'"
     >
-      <div class="py-2 px-4 mx-auto max-w-screen-md border-b-1 border-white/80">
+      <div
+        v-if="!modal"
+        class="py-2 px-4 mx-auto max-w-screen-md border-b-1 border-white/80"
+      >
         <h2 class="tracking-tight font-medium text-gray-900 dark:text-white">
           Account settings
         </h2>
         <span v-if="isLoadingProfileData">Loading</span>
       </div>
+      <!-- The loading hint lived in the page header that modal mode drops, so
+           it is re-shown here rather than lost. -->
+      <span
+        v-if="modal && isLoadingProfileData"
+        class="block px-4 py-2 text-sm text-cloud/70"
+      >Loading…</span>
       <div class="py-4 px-4 mx-auto max-w-screen-md border-b border-white/20">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
@@ -312,6 +329,12 @@ import { useGetOrganizationsList } from './composables/use-get-organizations'
 import { usePatchProfileImage } from './composables/use-patch-profile-photo'
 import { useGetProfileData, usePatchUserProfile } from './composables/use-patch-user-profile'
 import { useGetPortfolioSummary } from './composables/use-tiering'
+
+withDefaults(defineProps<{
+  /** Render for the route-driven modal: no navbar, no page padding, no
+   *  duplicate title (the dialog header supplies it). */
+  modal?: boolean
+}>(), { modal: false })
 
 const firstName = ref('')
 const lastName = ref('')

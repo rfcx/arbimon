@@ -5,74 +5,71 @@
  */
 import { computed } from 'vue'
 
-import { type UploadItem, type UploadItemState } from '@rfcx-bio/upload-engine'
+import { type UploadItem } from '@rfcx-bio/upload-engine'
 
 import { activeCount, engine, engineRunning, hasQueue, items, metricsProjectSlug, refreshItems, stats, uploadStore } from '~/upload'
 import { registerTaskSource } from '../task-center'
-import { type TaskItem, type TaskItemState, type TaskSource } from '../types'
+import { type TaskItem, type TaskSource } from '../types'
 
-const STATE_MAP: Record<UploadItemState, TaskItemState> = {
-  analyzing: 'active',
-  staged: 'pending',
-  cancelled: 'failed',
-  queued: 'pending',
-  preparing: 'active',
-  ready: 'pending',
-  signing: 'active',
-  signed: 'pending',
-  uploading: 'active',
-  uploaded: 'active', // server-side processing still in flight
-  ingested: 'done',
-  duplicate: 'done',
-  failed: 'failed',
-  rejected: 'failed',
-  paused: 'pending'
+/**
+ * Roll the queue up into ONE ROW PER PROJECT (operator 2026-08-18).
+ *
+ * WHY NOT PER-FILE: the drawer is an at-a-glance surface reached from the nav
+ * while doing something else. A bulk upload is routinely hundreds of files, so
+ * a per-file list could only ever show an arbitrary slice (it was capped at 6)
+ * -- answering "what is file #4 doing?", which is not the question being asked
+ * there. The uploader page remains the per-file view.
+ *
+ * Aggregate semantics per project:
+ *   progress  bytes uploaded / bytes total, so a few large files cannot be
+ *             misrepresented by a file-count average
+ *   state     failed if anything failed, else active if anything is in flight,
+ *             else done -- worst case wins, so a problem is never hidden
+ *             behind mostly-green siblings
+ */
+const IN_FLIGHT: Array<UploadItem['state']> =
+  ['queued', 'preparing', 'ready', 'signing', 'signed', 'uploading', 'uploaded']
+const FAILED_STATES: Array<UploadItem['state']> = ['failed', 'rejected']
+
+const toProjectItems = (all: UploadItem[]): TaskItem[] => {
+  const byProject = new Map<string, UploadItem[]>()
+  for (const item of all) {
+    const key = item.projectSlug ?? 'unknown'
+    const bucket = byProject.get(key)
+    if (bucket === undefined) byProject.set(key, [item])
+    else bucket.push(item)
+  }
+
+  return [...byProject.entries()].map(([slug, rows]) => {
+    const bytesTotal = rows.reduce((sum, r) => sum + r.fileSizeBytes, 0)
+    const bytesDone = rows.reduce((sum, r) => {
+      if (r.state === 'ingested' || r.state === 'duplicate' || r.state === 'uploaded') return sum + r.fileSizeBytes
+      if (r.state === 'uploading') return sum + r.fileSizeBytes * (r.progress ?? 0)
+      return sum
+    }, 0)
+
+    const failed = rows.filter(r => FAILED_STATES.includes(r.state)).length
+    const active = rows.filter(r => IN_FLIGHT.includes(r.state)).length
+    const finished = rows.filter(r => r.state === 'ingested' || r.state === 'duplicate').length
+
+    const state: TaskItem['state'] =
+      failed > 0 ? 'failed' : active > 0 ? 'active' : finished > 0 ? 'done' : 'pending'
+
+    const detail = failed > 0
+      ? `${finished}/${rows.length} done · ${failed} failed`
+      : active > 0
+        ? `${finished}/${rows.length} done`
+        : `${rows.length} recording${rows.length === 1 ? '' : 's'}`
+
+    return {
+      id: `project:${slug}`,
+      label: slug,
+      state,
+      progress: bytesTotal === 0 ? undefined : bytesDone / bytesTotal,
+      detail
+    }
+  })
 }
-
-const DETAIL_MAP: Partial<Record<UploadItemState, string>> = {
-  analyzing: 'analyzing…',
-  staged: 'staged — press Start on the uploader page',
-  cancelled: 'cancelled',
-  queued: 'queued',
-  preparing: 'preparing…',
-  ready: 'ready',
-  signing: 'requesting URL…',
-  signed: 'waiting to upload',
-  uploaded: 'processing…',
-  ingested: 'complete',
-  duplicate: 'already uploaded — skipped',
-  paused: 'paused'
-}
-
-const DISPLAY_ORDER: Record<UploadItemState, number> = {
-  uploading: 0,
-  uploaded: 1,
-  signing: 2,
-  signed: 3,
-  preparing: 4,
-  analyzing: 5,
-  queued: 6,
-  ready: 7,
-  staged: 8,
-  failed: 9,
-  rejected: 10,
-  cancelled: 11,
-  duplicate: 12,
-  ingested: 13,
-  paused: 14
-}
-
-const MAX_VISIBLE_ITEMS = 6
-
-const toTaskItem = (item: UploadItem): TaskItem => ({
-  id: item.id,
-  label: item.filename,
-  state: STATE_MAP[item.state],
-  progress: item.state === 'uploading' ? item.progress : undefined,
-  detail: item.state === 'failed' || item.state === 'rejected' || item.state === 'cancelled'
-    ? (item.error ?? 'failed')
-    : DETAIL_MAP[item.state]
-})
 
 const uploadsSource: TaskSource = {
   id: 'uploads',
@@ -97,12 +94,9 @@ const uploadsSource: TaskSource = {
       headline
     }
   }),
-  items: computed(() =>
-    [...items.value]
-      .sort((a, b) => DISPLAY_ORDER[a.state] - DISPLAY_ORDER[b.state])
-      .slice(0, MAX_VISIBLE_ITEMS)
-      .map(toTaskItem)
-  ),
+  // Per-PROJECT aggregate rows (see toProjectItems). No cap needed: a user has
+  // a handful of projects, not hundreds of them.
+  items: computed(() => toProjectItems(items.value)),
   actions: computed(() => {
     const active = activeCount.value
     const stalledOrFailed =

@@ -251,9 +251,20 @@ const routes: RouteRecordRaw[] = [
     beforeEnter: [authRequiredGuard]
   },
   {
+    // ACCOUNT SETTINGS is presented as a route-driven MODAL (operator
+    // 2026-08-18), rendered app-wide by app-root over whatever page is
+    // already on screen. The route stays REAL -- deep links, bookmarks,
+    // back/forward and the existing router.replace({ name: accountSettings })
+    // in auth-navbar-item.vue all continue to work unchanged.
+    //
+    // BACKDROP: app-root passes `backgroundRoute` to <router-view>, so when the
+    // user opens this from inside the app the PREVIOUS page keeps rendering
+    // underneath. This `component` is therefore only reached on a COLD load of
+    // the URL, where there is no previous page; My Projects is the right
+    // fallback context for an authenticated user with no project selected.
     path: '/account-settings',
     name: ROUTE_NAMES.accountSettings,
-    component: PAGES.AccountSettings,
+    component: PAGES.MyProjects,
     beforeEnter: [authRequiredGuard]
   },
   {
