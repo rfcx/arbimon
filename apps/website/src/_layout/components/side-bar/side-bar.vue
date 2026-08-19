@@ -199,14 +199,11 @@
                 v-if="item.iconRaw === 'fi-aed'"
                 class="rail-icon p-0.5 w-[26px]"
               >
-                <icon-custom-fi-aed />
+                <icon-custom-fi-waveform-scan />
               </span>
-              <span
-                v-if="item.iconRaw === 'fi-activity'"
-                class="rail-icon p-0.5 w-[26px]"
-              >
-                <icon-custom-fi-activity class="h-6 w-6" />
-              </span>
+              <!-- NOTE: no nav item declares `fi-activity`; "Audio analyses" uses
+                   `fi-aed`. The dead `fi-activity` branch that sat here was
+                   removed 2026-08-18. -->
               <span
                 v-if="item.iconRaw === 'fi-settings'"
                 class="rail-icon p-0.5 w-[26px]"
@@ -322,10 +319,57 @@
                actually show. -->
       </div>
 
-      <!-- FOOT: pinned. Help / Tasks / profile are always reachable, which is
-             what the "bottom is cropped" report was really about -- they used to
-             sit at the end of one long scrolling column. -->
+      <!-- FOOT: pinned. Tasks / Help / profile are always reachable, which is
+           what the "bottom is cropped" report was really about -- they used to
+           sit at the end of one long scrolling column.
+
+           DIVIDERS (operator 2026-08-19): one above the group, and one between
+           Tasks and Help. The Tasks/Help rule was restored on review -- Tasks is
+           a live-state control while Help is a static outbound link, so they are
+           not the same KIND of item; the rule that was removed between Help and
+           the profile stays gone, since those two are both "about you / about
+           the app" and read fine as a pair.
+
+           ORDER: Tasks, then Help, then profile. Help sits directly above the
+           avatar so the two least-frequent controls are adjacent at the very
+           bottom, and Tasks (the one with live state) keeps the higher slot. -->
       <div class="shrink-0">
+        <div class="my-3 border-t-1 border-util-gray-03" />
+        <!-- TASKS — only the TRIGGER lives here. The drawer itself is rendered by
+               app-root, because this sidebar mounts ONLY under /p/:projectSlug
+               (measured on the running demo 2026-08-18: absent on /my-projects
+               and /account-settings). A drawer owned by the nav would vanish on
+               exactly the pages a user crosses between projects. -->
+        <ul class="px-2 flex flex-col gap-y-2">
+          <li
+            class="rail-item relative"
+            :class="{ 'is-open': taskDrawerOpen }"
+          >
+            <button
+              data-task-drawer-trigger
+              class="w-full flex items-center justify-center text-base font-normal py-1 h-9 active:text-moss hover:(bg-util-gray-03 rounded transition duration-300)"
+              :class="taskDrawerOpen ? 'bg-util-gray-03 rounded' : ''"
+              :title="taskActiveCount > 0 ? `Tasks (${taskActiveCount} active)` : 'Tasks'"
+              :aria-expanded="taskDrawerOpen"
+              @click="toggleTaskDrawer"
+            >
+              <!-- `fi-tasks` (checklist), NOT `fi-activity` (operator 2026-08-18).
+                   `fi-activity` is a heartbeat/pulse line — an AUDIO-ANALYSIS
+                   metaphor, not a task-list one — and reusing it here made the
+                   Tasks button read as a second analyses entry. -->
+              <span class="rail-icon p-0.5 relative">
+                <icon-custom-fi-tasks class="h-6 w-6" />
+                <!-- Activity dot + count are the ONLY in-rail signal that work
+                     is running, since the label no longer fits. The count moved
+                     into the tooltip. -->
+                <span
+                  v-if="taskActiveCount > 0"
+                  class="task-dot absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-frequency"
+                />
+              </span>
+            </button>
+          </li>
+        </ul>
         <div class="my-3 border-t-1 border-util-gray-03" />
         <ul class="px-2 flex flex-col gap-y-2">
           <li
@@ -341,7 +385,7 @@
               @mouseenter="onFlyoutTrigger($event, 'help', 'hover')"
               @click="closeFlyout"
             >
-              <icon-custom-fi-help class="rail-icon" />
+              <icon-custom-fi-help-circle class="rail-icon" />
             </a>
             <transition name="flyout">
               <div
@@ -364,39 +408,6 @@
             </transition>
           </li>
         </ul>
-        <!-- TASKS — only the TRIGGER lives here. The drawer itself is rendered by
-               app-root, because this sidebar mounts ONLY under /p/:projectSlug
-               (measured on the running demo 2026-08-18: absent on /my-projects
-               and /account-settings). A drawer owned by the nav would vanish on
-               exactly the pages a user crosses between projects. -->
-        <div class="my-3 border-t-1 border-util-gray-03" />
-        <ul class="px-2 flex flex-col gap-y-2">
-          <li
-            class="rail-item relative"
-            :class="{ 'is-open': taskDrawerOpen }"
-          >
-            <button
-              data-task-drawer-trigger
-              class="w-full flex items-center justify-center text-base font-normal py-1 h-9 active:text-moss hover:(bg-util-gray-03 rounded transition duration-300)"
-              :class="taskDrawerOpen ? 'bg-util-gray-03 rounded' : ''"
-              :title="taskActiveCount > 0 ? `Tasks (${taskActiveCount} active)` : 'Tasks'"
-              :aria-expanded="taskDrawerOpen"
-              @click="toggleTaskDrawer"
-            >
-              <span class="rail-icon p-0.5 relative">
-                <icon-custom-fi-activity class="h-6 w-6" />
-                <!-- Activity dot + count are now the ONLY in-rail signal that
-                       work is running, since the label no longer fits. The count
-                       moved into the tooltip. -->
-                <span
-                  v-if="taskActiveCount > 0"
-                  class="task-dot absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-frequency"
-                />
-              </span>
-            </button>
-          </li>
-        </ul>
-        <div class="my-3 border-t-1 border-util-gray-03" />
         <!-- USER — identity + account actions in a popover (operator 2026-08-18).
                Account Settings and Log out moved in here; My Projects did NOT
                (it is primary navigation and now sits at the top).
@@ -436,7 +447,7 @@
                      They are kept anyway: a non-square uploaded photo would still
                      stretch without object-cover. -->
               <img
-                class="rail-icon h-8 w-8 min-w-8 aspect-square object-cover rounded-full shrink-0"
+                class="rail-icon h-6 w-6 min-w-6 aspect-square object-cover rounded-full shrink-0"
                 :src="userImage"
               >
             </button>
