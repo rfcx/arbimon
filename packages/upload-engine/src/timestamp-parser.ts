@@ -178,10 +178,10 @@ export const isValidTimestampFormat = (timestampFormat: string): boolean =>
 
 /** User-facing explanation for each rejection reason. */
 export const TIMESTAMP_FORMAT_ERROR_TEXT: Record<TimestampFormatError, string> = {
-  empty: 'Enter a format.',
-  'no-tokens': 'A format needs at least one token, for example %Y for the year.',
-  'unknown-token': 'That format uses a token Arbimon does not recognise.',
-  'duplicate-token': 'Each token can only be used once in a format.'
+  empty: 'Enter a pattern.',
+  'no-tokens': 'A pattern needs at least one token, for example %Y for the year.',
+  'unknown-token': 'That pattern uses a token Arbimon does not recognise.',
+  'duplicate-token': 'Each token can only be used once in a pattern.'
 }
 
 /** Human-readable meaning for each token — used by the format-editor palette. */

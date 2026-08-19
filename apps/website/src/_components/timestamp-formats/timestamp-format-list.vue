@@ -4,7 +4,7 @@
       <span class="block text-sm text-insight">{{ heading }}</span>
       <button
         class="btn btn-secondary text-xs px-2 py-0.5"
-        :title="formats.length > 0 ? 'Edit your saved filename formats' : 'Create a filename format'"
+        :title="formats.length > 0 ? 'Edit your saved filename patterns' : 'Create a filename pattern'"
         @click="emit('manage')"
       >
         {{ formats.length > 0 ? 'Edit' : 'Create' }}
@@ -65,8 +65,8 @@ withDefaults(defineProps<{
   /** Optional explanatory line under the list. */
   hint?: string
 }>(), {
-  heading: 'Custom Filename Formats',
-  emptyText: 'No custom formats yet. Add one if your recordings’ filenames aren’t recognised automatically — they are saved to your account and used in every project.',
+  heading: 'Custom Filename Patterns',
+  emptyText: 'No custom patterns yet. Add one if your recordings’ filenames aren’t recognised automatically — they are saved to your account and used in every project.',
   hint: undefined
 })
 

@@ -6,7 +6,7 @@
        terminal action, the header × (or click-outside) cancels, and the host
        persists immediately. -->
   <modal-popup
-    :title="editing === undefined ? 'New Filename Format' : 'Edit Filename Format'"
+    :title="editing === undefined ? 'New Filename Pattern' : 'Edit Filename Pattern'"
     modal-body="sm:(my-8 align-middle max-w-4xl w-full)"
     @emit-close="$emit('close')"
   >
@@ -17,7 +17,7 @@
     <div class="p-6 max-h-[85vh] overflow-y-auto">
       <div class="flex items-start justify-between mb-5">
         <h3 class="text-lg font-medium text-insight">
-          {{ editing === undefined ? 'New Filename Format' : `Edit “${editing.label}”` }}
+          {{ editing === undefined ? 'New Filename Pattern' : `Edit “${editing.label}”` }}
         </h3>
         <button
           class="text-cloud hover:text-insight shrink-0 ml-4"
@@ -76,7 +76,7 @@
               Choose a recording file…
             </button>
             <p class="text-xs text-cloud/60 mt-1.5">
-              Optionally pick one of your recordings to build the format against.
+              Optionally pick one of your recordings to build the pattern against.
               Only the filename is read; nothing is uploaded.
             </p>
           </div>
@@ -320,7 +320,7 @@
         <label
           class="block text-xs text-cloud mt-4 mb-1"
           for="tsf-label"
-        >Give this Recording Filename Format a Name</label>
+        >Give this Recording Filename Pattern a Name</label>
         <div class="flex items-center gap-x-2">
           <input
             id="tsf-label"
@@ -336,7 +336,7 @@
             :title="commitBlockedReason ?? undefined"
             @click="commit"
           >
-            {{ saving ? 'Saving…' : 'Save Format' }}
+            {{ saving ? 'Saving…' : 'Save Pattern' }}
           </button>
         </div>
         <p
@@ -665,15 +665,15 @@ const duplicatePatternOf = computed(() =>
     item.format === formatInput.value))
 
 const commitBlockedReason = computed<string | undefined>(() => {
-  if (labelInput.value.trim() === '') return 'Give the format a name.'
-  if (isDuplicateLabel.value) return 'You already have a format with that name.'
-  if (formatInput.value === '') return 'Enter a format.'
+  if (labelInput.value.trim() === '') return 'Give the pattern a name.'
+  if (isDuplicateLabel.value) return 'You already have a pattern with that name.'
+  if (formatInput.value === '') return 'Enter a pattern.'
   if (formatError.value !== undefined) return formatError.value
   if (duplicatePatternOf.value !== undefined) {
     return `“${duplicatePatternOf.value.label}” already uses this exact pattern.`
   }
   if (editingId.value === undefined && props.existing.length >= MAX_USER_TIMESTAMP_FORMATS) {
-    return `You can save up to ${MAX_USER_TIMESTAMP_FORMATS} formats.`
+    return `You can save up to ${MAX_USER_TIMESTAMP_FORMATS} patterns.`
   }
   return undefined
 })

@@ -292,7 +292,7 @@
         <div class="mt-8 pt-6 border-t border-cloud/20">
           <timestamp-format-list
             :formats="timestampFormats"
-            hint="Used when the uploader reads timestamps out of your filenames. Arbimon’s built-in patterns are always tried first, so these can only recognise more filenames — never break one that already works."
+            hint="Used when the uploader reads timestamps out of your filenames. Arbimon’s built-in rules are always tried first, so your patterns can only recognise more filenames — never break one that already works."
             @manage="showFormatList = true"
           />
         </div>

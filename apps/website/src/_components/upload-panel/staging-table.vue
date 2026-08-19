@@ -663,7 +663,7 @@
                   <span
                     v-if="item.matchedFormatLabel !== undefined"
                     class="text-[10px] leading-none px-1 py-0.5 rounded border border-frequency/40 text-frequency/80 shrink-0"
-                    :title="`Recognised by your saved format: ${item.matchedFormatLabel}`"
+                    :title="`Recognised by your saved pattern: ${item.matchedFormatLabel}`"
                   >fmt</span>
                   <button
                     v-if="canEditDatetime(item)"

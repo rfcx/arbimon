@@ -1,6 +1,6 @@
 <template>
   <modal-popup
-    title="Custom Filename Formats"
+    title="Custom Filename Patterns"
     modal-body="sm:(my-8 align-middle max-w-2xl w-full)"
     @emit-close="$emit('close')"
   >
@@ -8,16 +8,16 @@
       <div class="flex items-start justify-between mb-4">
         <div>
           <h3 class="text-lg font-medium text-insight">
-            Custom Filename Formats
+            Custom Filename Patterns
           </h3>
           <!-- The "what are these for" explanation lives HERE, with the list
                (operator 2026-08-19) -- the editor modal builds one format and
                should not re-explain the feature every time it opens. -->
           <p class="text-sm text-cloud mt-1">
             When your recordings’ filenames aren’t recognised automatically,
-            a saved format teaches Arbimon how to read the date and time out of
-            them. Formats are saved to your account and used in every project.
-            Arbimon always tries its built-in patterns first, so a format can
+            a saved pattern teaches Arbimon how to read the date and time out of
+            them. Patterns are saved to your account and used in every project.
+            Arbimon always tries its built-in rules first, so a pattern can
             only ever recognise <em>more</em> filenames — never break one that
             already works.
           </p>
@@ -25,7 +25,7 @@
         <button
           class="text-cloud hover:text-insight shrink-0 ml-4"
           title="Close"
-          aria-label="Close filename formats"
+          aria-label="Close filename patterns"
           @click="$emit('close')"
         >
           <svg
@@ -56,7 +56,7 @@
           <button
             class="text-cloud/60 hover:text-frequency disabled:opacity-30 disabled:hover:text-cloud/60 shrink-0"
             :disabled="index === 0 || busy"
-            :title="index === 0 ? 'Already first' : 'Move up (earlier formats win)'"
+            :title="index === 0 ? 'Already first' : 'Move up (earlier patterns win)'"
             :aria-label="`Move ${item.label} up`"
             @click="$emit('reorder', { id: item.id, direction: -1 })"
           >
@@ -92,7 +92,7 @@
           <button
             class="text-cloud/60 hover:text-frequency shrink-0"
             :disabled="busy"
-            title="Edit this format"
+            title="Edit this pattern"
             :aria-label="`Edit ${item.label}`"
             @click="$emit('edit', item)"
           >
@@ -109,7 +109,7 @@
           <button
             class="text-cloud/60 hover:text-flamingo shrink-0"
             :disabled="busy"
-            title="Delete this format"
+            title="Delete this pattern"
             :aria-label="`Delete ${item.label}`"
             @click="$emit('remove', item)"
           >
@@ -129,7 +129,7 @@
         v-else
         class="text-sm text-cloud"
       >
-        No formats saved yet.
+        No patterns saved yet.
       </p>
 
       <div class="mt-4 flex items-center justify-between">
@@ -145,10 +145,10 @@
         <button
           class="btn btn-primary text-sm disabled:(opacity-50 cursor-not-allowed)"
           :disabled="busy || formats.length >= MAX_USER_TIMESTAMP_FORMATS"
-          :title="formats.length >= MAX_USER_TIMESTAMP_FORMATS ? `You can save up to ${MAX_USER_TIMESTAMP_FORMATS} formats.` : undefined"
+          :title="formats.length >= MAX_USER_TIMESTAMP_FORMATS ? `You can save up to ${MAX_USER_TIMESTAMP_FORMATS} patterns.` : undefined"
           @click="$emit('create')"
         >
-          New Format…
+          New Pattern…
         </button>
       </div>
     </div>
