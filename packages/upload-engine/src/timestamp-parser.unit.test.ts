@@ -277,7 +277,7 @@ describe('toUtcIso', () => {
 })
 
 describe('TIMESTAMP_TOKEN_GROUPS — palette copy must match real behaviour', () => {
-  const all = TIMESTAMP_TOKEN_GROUPS.flatMap(group => group.tokens)
+  const all = TIMESTAMP_TOKEN_GROUPS.flatMap(group => group.fields.flatMap(field => field.tokens))
 
   test('covers every token exactly once, and only real tokens', () => {
     const listed = all.map(t => t.token).sort()

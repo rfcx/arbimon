@@ -284,30 +284,44 @@
                Ranges come from TIMESTAMP_TOKEN_GROUPS in the engine, which is
                unit-tested against the real regexes so this copy cannot drift
                from behaviour. -->
-          <div class="space-y-2.5">
+          <!-- FIELD-PER-COLUMN layout (operator 2026-08-19): within each group,
+               each timestamp FIELD (Year / Month / Day...) is a COLUMN with its
+               variants stacked beneath a field header. Comparing "which month
+               token do I want?" is now a vertical scan of one column; the old
+               row-major grid scattered one field's variants across
+               non-adjacent cells. Column count comes from the group's own
+               field count, so Date renders 3 columns and Time 4. -->
+          <div class="space-y-3">
             <div
               v-for="group in TIMESTAMP_TOKEN_GROUPS"
               :key="group.key"
             >
               <span class="block text-[10px] uppercase tracking-wide text-cloud/50 mb-1">{{ group.label }}</span>
-              <!-- 3-up at the widened max-w-4xl (≈278px per column, measured
-                   enough for token+name+range); 2-up on medium, 1-up narrow. -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-0.5">
-                <button
-                  v-for="info in group.tokens"
-                  :key="info.token"
-                  class="group flex items-baseline gap-x-2 text-left px-1.5 py-1 rounded border border-transparent hover:(border-frequency/40 bg-frequency/5)"
-                  style="cursor: grab"
-                  :title="`Insert or drag ${info.token} — ${info.name}, ${info.range}`"
-                  draggable="true"
-                  @dragstart="onPaletteDragStart(info.token, $event)"
-                  @dragend="onChipDragEnd"
-                  @click="insertToken(info.token)"
+              <div
+                class="grid gap-x-3 gap-y-1 items-start"
+                :style="{ gridTemplateColumns: `repeat(${group.fields.length}, minmax(0, 1fr))` }"
+              >
+                <div
+                  v-for="field in group.fields"
+                  :key="field.label"
+                  class="min-w-0"
                 >
-                  <code class="text-xs font-mono text-frequency shrink-0 w-6">{{ info.token }}</code>
-                  <span class="text-xs text-insight truncate flex-1 min-w-0">{{ info.name }}</span>
-                  <span class="text-[10px] text-cloud/60 tabular-nums shrink-0">{{ info.range }}</span>
-                </button>
+                  <span class="block text-xs font-medium text-cloud mb-0.5 px-1.5">{{ field.label }}</span>
+                  <button
+                    v-for="info in field.tokens"
+                    :key="info.token"
+                    class="group flex items-baseline gap-x-1.5 w-full text-left px-1.5 py-0.5 rounded border border-transparent hover:(border-frequency/40 bg-frequency/5)"
+                    style="cursor: grab"
+                    :title="`Insert or drag ${info.token} — ${field.label}, ${info.name} (${info.range})`"
+                    draggable="true"
+                    @dragstart="onPaletteDragStart(info.token, $event)"
+                    @dragend="onChipDragEnd"
+                    @click="insertToken(info.token)"
+                  >
+                    <code class="text-xs font-mono text-frequency shrink-0 w-6">{{ info.token }}</code>
+                    <span class="text-[10px] text-cloud/70 truncate min-w-0">{{ info.range }}</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -448,8 +462,15 @@ const registerTextEl = (index: number, el: unknown): void => {
 }
 
 const tokenTitle = (token: string): string => {
-  const info = TIMESTAMP_TOKEN_GROUPS.flatMap(group => group.tokens).find(t => t.token === token)
-  return info === undefined ? token : `${info.name} — ${info.range} (drag to reorder)`
+  for (const group of TIMESTAMP_TOKEN_GROUPS) {
+    for (const field of group.fields) {
+      const info = field.tokens.find(t => t.token === token)
+      // Field label + variant, so the tooltip reads 'Month, short name' rather
+      // than the bare variant the column layout made sufficient in the palette.
+      if (info !== undefined) return `${field.label}, ${info.name} — ${info.range} (drag to reorder)`
+    }
+  }
+  return token
 }
 
 const applySegments = (next: FormatSegment[]): void => {

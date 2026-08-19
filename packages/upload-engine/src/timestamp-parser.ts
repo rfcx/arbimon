@@ -243,51 +243,111 @@ export interface TimestampTokenInfo {
 
 export type TimestampTokenGroupKey = 'date' | 'time' | 'zone'
 
+/** One column of the palette: a timestamp FIELD (Year, Month, Hour...) with
+ *  its token variants stacked beneath. */
+export interface TimestampTokenField {
+  label: string
+  tokens: TimestampTokenInfo[]
+}
+
+/**
+ * Grouped BY FIELD (operator 2026-08-19): each group renders its fields as
+ * COLUMNS -- Year | Month | Day -- with the variants of one field stacked in
+ * one column. The column header carries the field name, so token `name`s are
+ * just the variant ('4-digit', 'no zero', 'Full name'). Before this the
+ * variants of one field were scattered across a row-major grid, so comparing
+ * "which month token do I want?" meant scanning non-adjacent cells.
+ */
 export const TIMESTAMP_TOKEN_GROUPS: Array<{
   key: TimestampTokenGroupKey
   label: string
-  tokens: TimestampTokenInfo[]
+  fields: TimestampTokenField[]
 }> = [
   {
     key: 'date',
     label: 'Date',
-    tokens: [
-      { token: '%Y', name: 'Year, 4-digit', range: '1000–9999', example: '2024' },
-      { token: '%y', name: 'Year, 2-digit', range: '00–99 → 20xx', example: '24' },
-      { token: '%M', name: 'Month, 2-digit', range: '01–12', example: '03' },
-      { token: '%m', name: 'Month, no zero', range: '1–12', example: '3' },
-      { token: '%N', name: 'Month name', range: 'January–December', example: 'March' },
-      { token: '%n', name: 'Month, short', range: 'Jan–Dec', example: 'Mar' },
-      { token: '%D', name: 'Day, 2-digit', range: '01–31', example: '05' },
-      { token: '%d', name: 'Day, no zero', range: '1–31', example: '5' }
+    fields: [
+      {
+        label: 'Year',
+        tokens: [
+          { token: '%Y', name: '4-digit', range: '1000–9999', example: '2024' },
+          { token: '%y', name: '2-digit', range: '00–99 → 20xx', example: '24' }
+        ]
+      },
+      {
+        label: 'Month',
+        tokens: [
+          { token: '%M', name: '2-digit', range: '01–12', example: '03' },
+          { token: '%m', name: 'no zero', range: '1–12', example: '3' },
+          { token: '%N', name: 'full name', range: 'January–December', example: 'March' },
+          { token: '%n', name: 'short name', range: 'Jan–Dec', example: 'Mar' }
+        ]
+      },
+      {
+        label: 'Day',
+        tokens: [
+          { token: '%D', name: '2-digit', range: '01–31', example: '05' },
+          { token: '%d', name: 'no zero', range: '1–31', example: '5' }
+        ]
+      }
     ]
   },
   {
     key: 'time',
     label: 'Time',
-    tokens: [
-      { token: '%H', name: 'Hour, 24-hour', range: '00–23', example: '18' },
-      { token: '%h', name: 'Hour, 24h no zero', range: '0–23', example: '8' },
-      // MEASURED: the regex is 0[0-9]|1[0-1] -- 12 does NOT match.
-      { token: '%G', name: 'Hour, 12-hour', range: '00–11 (not 12)', example: '08' },
-      { token: '%g', name: 'Hour, 12h no zero', range: '0–11 (not 12)', example: '8' },
-      { token: '%A', name: 'AM / PM', range: 'AM, PM, am, pm', example: 'PM' },
-      { token: '%a', name: 'A / P', range: 'A, P, a, p', example: 'P' },
-      { token: '%I', name: 'Minute, 2-digit', range: '00–59', example: '45' },
-      { token: '%i', name: 'Minute, no zero', range: '0–59', example: '45' },
-      { token: '%S', name: 'Second, 2-digit', range: '00–59', example: '10' },
-      { token: '%s', name: 'Second, no zero', range: '0–59', example: '10' }
+    fields: [
+      {
+        label: 'Hour',
+        tokens: [
+          { token: '%H', name: '24h, 2-digit', range: '00–23', example: '18' },
+          { token: '%h', name: '24h, no zero', range: '0–23', example: '8' },
+          // MEASURED: the regex is 0[0-9]|1[0-1] -- 12 does NOT match.
+          { token: '%G', name: '12h, 2-digit', range: '00–11 (not 12)', example: '08' },
+          { token: '%g', name: '12h, no zero', range: '0–11 (not 12)', example: '8' }
+        ]
+      },
+      {
+        label: 'Minute',
+        tokens: [
+          { token: '%I', name: '2-digit', range: '00–59', example: '45' },
+          { token: '%i', name: 'no zero', range: '0–59', example: '45' }
+        ]
+      },
+      {
+        label: 'Second',
+        tokens: [
+          { token: '%S', name: '2-digit', range: '00–59', example: '10' },
+          { token: '%s', name: 'no zero', range: '0–59', example: '10' }
+        ]
+      },
+      {
+        label: 'AM / PM',
+        tokens: [
+          { token: '%A', name: 'AM / PM', range: 'AM, PM, am, pm', example: 'PM' },
+          { token: '%a', name: 'A / P', range: 'A, P, a, p', example: 'P' }
+        ]
+      }
     ]
   },
   {
     key: 'zone',
     label: 'Time zone',
-    tokens: [
-      { token: '%Z', name: 'UTC offset', range: '±hhmm', example: '-0500' },
-      // MEASURED: [A-Z]{3} -- lowercase does not match. NOTE this token also
-      // does not RESOLVE to an offset downstream (see the warning on
-      // TIMESTAMP_FORMAT_TOKEN_LABELS); prefer %Z.
-      { token: '%z', name: 'Zone abbreviation', range: '3 capitals', example: 'UTC' }
+    fields: [
+      {
+        label: 'UTC offset',
+        tokens: [
+          { token: '%Z', name: '±hhmm', range: '±hhmm', example: '-0500' }
+        ]
+      },
+      {
+        label: 'Abbreviation',
+        tokens: [
+          // MEASURED: [A-Z]{3} -- lowercase does not match. NOTE this token also
+          // does not RESOLVE to an offset downstream (see the warning on
+          // TIMESTAMP_FORMAT_TOKEN_LABELS); prefer %Z.
+          { token: '%z', name: '3 capitals', range: '3 capitals', example: 'UTC' }
+        ]
+      }
     ]
   }
 ]
