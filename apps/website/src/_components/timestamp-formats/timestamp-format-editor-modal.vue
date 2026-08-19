@@ -312,10 +312,17 @@
             </span>
           </template>
 
+          <!-- Placeholder teaches ALL THREE input methods in one phrase (operator
+               2026-08-19): click, drag, AND type -- typing was previously
+               unmentioned, yet it is how separators like `_` get in at all. The
+               example does the heavy lifting: SITE_%Y%M%D_%H%I%S SHOWS typed
+               literals mixed with tokens, which no prose explains as fast.
+               The example itself is font-mono so it reads as a format, while
+               the instruction stays in the UI face. -->
           <span
             v-if="formatInput === ''"
-            class="text-cloud/40 pointer-events-none"
-          >Drag tokens here, or click one below</span>
+            class="text-cloud/40 pointer-events-none font-sans"
+          >Click or drag tokens, and type anything else — e.g.&nbsp;<span class="font-mono">SITE_%Y%M%D_%H%I%S</span></span>
         </div>
 
         <p
