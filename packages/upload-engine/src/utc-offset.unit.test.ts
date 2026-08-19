@@ -1,13 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import {
-  formatUtcOffsetLabel,
-  parseUtcOffsetLabel,
-  retimestampToOffset,
-  rowOffsetMinutes,
-  UTC_OFFSET_OPTIONS,
-  zoneOffsetAt
-} from './utc-offset'
+import { formatUtcOffsetLabel, parseUtcOffsetLabel, retimestampToOffset, rowOffsetMinutes, UTC_OFFSET_OPTIONS, zoneOffsetAt } from './utc-offset'
 
 describe('formatUtcOffsetLabel', () => {
   test('zero is plain UTC, not UTC+0', () => {
