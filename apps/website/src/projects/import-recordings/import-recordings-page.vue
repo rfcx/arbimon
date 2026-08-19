@@ -888,7 +888,14 @@ const TIMEZONE_MODE: TimezoneMode = 'auto'
 /** Copy for the "i" tooltip beside the Pre-Convert WAV to FLAC checkbox.
  * Lives here rather than inline so the template stays readable; the tooltip
  * component renders it as plain text (no HTML entities). */
-const FLAC_INFO_TEXT = 'When you add WAV audio files, this uploader may pre-encode the files from WAV to a lossless FLAC format prior to upload. This can reduce your upload time by as much as 50% on slower connections, but it will make use of your computer\u2019s CPU for the encoding. You can disable this feature at any time.'
+/**
+ * OPEN-ITEMS 183 (2026-08-18): this copy previously described the feature as a
+ * straightforward win, and it defaulted to ON -- while every encoded file was
+ * in fact being REJECTED by ingest ("Audio duration is zero"). The setting
+ * now defaults to OFF and is labelled Experimental, so the copy has to say
+ * plainly that it is opt-in and may fail, not only advertise the saving.
+ */
+const FLAC_INFO_TEXT = 'Experimental. When you add WAV audio files, this uploader can pre-encode them to lossless FLAC before uploading. This can reduce your upload time by as much as 50% on slower connections, but it uses your computer\u2019s CPU and is still being tested. If your uploads fail, switch this off and add the files again. Leave it off unless you have been asked to try it.'
 
 // -- Site-queue collapse (PAGE-owned, lifted from staging-table 2026-08-13) --
 // A Set of collapsed boxIds; absence = expanded. Page-level ownership is what

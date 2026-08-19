@@ -56,10 +56,31 @@ const mkEncoder = async (): Promise<FlacStreamEncoder> => {
 }
 
 describe('byte-identity with the replaced library', () => {
-  test('produces a BYTE-IDENTICAL stream to libflacjs Encoder', async () => {
-    // If this ever fails, uploaded sha1s change and ingest dedup silently
-    // stops recognising re-uploads. It is the single most important property
-    // of this replacement.
+  /**
+   * BYTE-IDENTICAL **AUDIO**, plus one DELIBERATE header difference.
+   *
+   * The original property was "byte-identical to the libflacjs Encoder we
+   * replaced", guarding uploaded sha1s so ingest dedup keeps recognising
+   * re-uploads. That guard is still the point — but since 2026-08-18
+   * (OPEN-ITEMS 183) we deliberately declare the true total-sample count in
+   * STREAMINFO, which the reference encoder leaves at 0 ("unknown").
+   *
+   * MEASURED: that changes EXACTLY two bytes, offsets 24-25, both inside
+   * STREAMINFO's total-samples field (0xbb80 = 48000 = the 1s fixture).
+   * Every audio frame is unchanged.
+   *
+   * The sha1 shift is ACCEPTABLE HERE because no browser-transcoded FLAC has
+   * ever been ingested successfully (0 of 335 — they were all rejected for
+   * the very missing duration this fixes), so there is no historical corpus
+   * to dedup against. If that ever stops being true, changing these bytes
+   * again would need a migration plan.
+   *
+   * So the assertion is now: same length, audio identical, and differences
+   * confined to the total-samples field — which is a STRICTLY STRONGER
+   * statement than the old blanket equality, because it also pins WHERE the
+   * difference is allowed to be.
+   */
+  test('audio bytes identical to libflacjs Encoder; only the total-samples field differs', async () => {
     const wav = makeWav(48000)
     const meta = await parseWavMetadata(wav)
     const mine = (await encodeWavToFlac(wav, meta)).flacBytes
@@ -88,9 +109,25 @@ describe('byte-identity with the replaced library', () => {
     reference.destroy()
 
     expect(mine.length).toBe(theirs.length)
-    let differing = 0
-    for (let i = 0; i < mine.length; i++) if (mine[i] !== theirs[i]) differing++
-    expect(differing).toBe(0)
+
+    const differing: number[] = []
+    for (let i = 0; i < mine.length; i++) if (mine[i] !== theirs[i]) differing.push(i)
+
+    // STREAMINFO payload starts at byte 8; total-samples occupies the low 36
+    // bits of the 8-byte word at payload offset 10, i.e. file bytes 18..25.
+    // Only the bytes that actually carry a non-zero part of our count differ.
+    expect(differing).toEqual([24, 25])
+
+    // the reference declares 0; we declare the true count
+    const totalOf = (b: Uint8Array): number =>
+      ((b[21] & 0x0f) * 2 ** 32) + (b[22] * 2 ** 24) + (b[23] * 2 ** 16) + (b[24] * 2 ** 8) + b[25]
+    expect(totalOf(theirs)).toBe(0)
+    expect(totalOf(mine)).toBe(48000) // exactly the fixture's 1 second
+
+    // and every audio frame is untouched (STREAMINFO block ends at byte 42)
+    for (let i = 42; i < mine.length; i++) {
+      if (mine[i] !== theirs[i]) throw new Error(`audio byte differs at ${i}`)
+    }
   }, 120000)
 })
 

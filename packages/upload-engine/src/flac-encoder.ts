@@ -156,16 +156,47 @@ export async function encodeWavToFlac (
   // open). FlacStreamEncoder reimplements the three methods we used directly
   // on the WASM module. See flac-encoder-core.ts for the full history.
   const settings = { compression: 5, verify: true, library: 'libflac-wasm-direct' }
+  // The encoder is constructed AFTER the data chunk is located, because the
+  // total-sample count it must declare depends on the CLAMPED data length.
+  const { offset, length } = await findDataOffset(blob)
+  // clamp to the actual blob (a truncated file must not read past EOF)
+  const dataEnd = Math.min(offset + length, blob.size)
+  const frameBytes = channels * (bitsPerSample / 8)
+
+  // TOTAL SAMPLE COUNT, DECLARED IN STREAMINFO (OPEN-ITEMS 183).
+  //
+  // Without this, STREAMINFO records total-samples = 0 ("unknown"), ffprobe
+  // reports `Duration: N/A`, and ingest rejects the upload with "Audio
+  // duration is zero" -- which is what happened to EVERY browser-transcoded
+  // file until 2026-08-18.
+  //
+  // MEASURED, and the reason this is derived from `dataEnd` rather than from
+  // `meta.dataByteLength`: libFLAC writes this value into STREAMINFO VERBATIM
+  // and NEVER validates it against what is actually encoded (probed: declaring
+  // 5s while encoding 3s yields a clean `finish()` and a header that lies by
+  // 64,000 samples). A truncated WAV over-declares its data chunk, so trusting
+  // the header would emit a FLAC claiming audio it does not contain -- and
+  // since ingest derives every segment's start/end from duration, that is
+  // SILENT WRONG TIMESTAMPS, which is worse than today's loud rejection.
+  //
+  // So: count what we will REALLY encode. This mirrors the loop below exactly
+  // (whole frames only, clamped to the blob), which is what makes the header
+  // and the payload agree by construction.
+  const encodableBytes = Math.max(0, dataEnd - offset)
+  const declaredTotalSamples = frameBytes > 0
+    ? Math.floor(encodableBytes / frameBytes)
+    : undefined
+
   const encoder = new FlacStreamEncoder(Flac, {
-    sampleRate, channels, bitsPerSample, compression: settings.compression, verify: settings.verify
+    sampleRate,
+channels,
+bitsPerSample,
+compression: settings.compression,
+verify: settings.verify,
+    totalSamples: declaredTotalSamples
   })
 
   try {
-    const { offset, length } = await findDataOffset(blob)
-    // clamp to the actual blob (a truncated file must not read past EOF)
-    const dataEnd = Math.min(offset + length, blob.size)
-
-    const frameBytes = channels * (bitsPerSample / 8)
     // whole frames per chunk
     const chunkBytes = Math.max(frameBytes, Math.floor(CHUNK_TARGET_BYTES / frameBytes) * frameBytes)
 

@@ -47,7 +47,22 @@ const reportEncoderFailure = (detail: string, options: FlacTranscodeOptions): vo
 }
 
 export interface FlacTranscodeOptions {
-  /** master switch (UI toggle). Default true. */
+  /**
+   * Master switch (UI toggle). **Default FALSE — the feature is EXPERIMENTAL.**
+   *
+   * Changed 2026-08-18 (OPEN-ITEMS §183). It defaulted to `true` and shipped
+   * that way, but the encoder writes `totalSamples = 0` into STREAMINFO
+   * (`flac-encoder-core.ts`), so ingest cannot determine a duration and
+   * rejects the upload with "Audio duration is zero". Measured at the time of
+   * the flip: **not one browser-transcoded FLAC had ever been ingested
+   * successfully** (0/335), while every un-transcoded WAV worked (73,770 with
+   * 0 failures of this class).
+   *
+   * OPT-IN is the correct posture for a stage that rewrites the user's bytes
+   * before upload: when it goes wrong it does so silently and at scale, and
+   * the fail-open design means a BROKEN encoder is indistinguishable from a
+   * disabled one (§118). Callers that want it must ask for it explicitly.
+   */
   enabled?: boolean
   /** only encode WAVs at least this large. Default 8 MiB (small files gain little). */
   minSizeBytes?: number
@@ -120,7 +135,8 @@ export const withFlacTranscode = (
   cache: TranscodeCache,
   options: FlacTranscodeOptions = {}
 ): PrepareFn => {
-  const enabled = options.enabled ?? true
+  // EXPERIMENTAL, OFF BY DEFAULT (§183) — see FlacTranscodeOptions.enabled.
+  const enabled = options.enabled ?? false
   const minSize = options.minSizeBytes ?? 8 * 1024 * 1024
 
   return async (item: UploadItem, file: Blob): Promise<PrepareResult> => {

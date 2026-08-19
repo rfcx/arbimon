@@ -44,9 +44,12 @@
           type="checkbox"
           class="rounded border-cloud/30"
         >
-        <span :title="'Losslessly convert WAV files to FLAC in your browser before uploading — about half the upload size, bit-identical audio. Files that cannot be converted losslessly (e.g. 32-bit float) upload unchanged.'">
+        <span :title="'EXPERIMENTAL — off by default. Losslessly converts WAV files to FLAC in your browser before uploading (about half the upload size, bit-identical audio). Still being tested: if your uploads fail, switch this off and add the files again.'">
           Convert WAV → FLAC before upload (lossless)
         </span>
+        <span
+          class="rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide bg-frequency/20 text-frequency"
+        >Experimental</span>
       </label>
     </div>
 
