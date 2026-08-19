@@ -175,9 +175,8 @@
               Choose a recording file…
             </button>
             <p class="text-xs text-cloud/60 mt-1.5">
-              Optionally pick one of your recordings to build the format against —
-              its name shows here with a live result. Only the filename is read;
-              nothing is uploaded.
+              Optionally pick one of your recordings to build the format against.
+              Only the filename is read; nothing is uploaded.
             </p>
           </div>
 
