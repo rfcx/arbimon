@@ -23,8 +23,8 @@ interface ParsedParts {
   timezone?: string
   // -- non-time metadata (guardian-style filenames; capture-only) -----------
   device?: string
-  khz?: string
-  secs?: string
+  rateKhz?: string
+  durationSecs?: string
 }
 
 const MONTH_NAMES: Record<string, string> = {
@@ -134,8 +134,8 @@ const FORMAT_TOKENS: Record<string, string> = {
   // tokens reusable for filenames that spell units differently. -----------
   '%F': '(?<millisecond>[0-9][0-9][0-9])',
   '%V': '(?<device>[A-Za-z0-9]+)',
-  '%K': '(?<khz>[0-9]+)',
-  '%L': '(?<secs>[0-9]+(?:\\.[0-9]+)?)'
+  '%K': '(?<rateKhz>[0-9]+)',
+  '%L': '(?<durationSecs>[0-9]+(?:\\.[0-9]+)?)'
 }
 
 /**
@@ -225,15 +225,15 @@ export const TIMESTAMP_FORMAT_TOKEN_LABELS: Record<string, string> = {
   '%s': 'second (10)',
   '%F': 'milliseconds, 3-digit (250)',
   '%V': 'recorder / device id (p0gccfnzn9p8)',
-  '%K': 'sample rate in kHz (12)',
-  '%L': 'duration in seconds (90.250)',
+  '%K': 'rate in kHz (12)',
+  '%L': 'duration in secs (90.250)',
   '%Z': 'timezone offset (-0500)',
   // ⚠ %z MATCHES but does not RESOLVE: a zone abbreviation like 'EST' is
   // carried into the parsed string, where `toUtcIso` cannot interpret it and
   // returns undefined (measured 2026-08-19). Kept for desktop parity and
   // because the abbreviation still marks where the zone sits in the filename,
   // but %Z is the token that actually determines an instant.
-  '%z': 'timezone name (UTC)'
+  '%z': 'timezone abbreviation (UTC)'
 }
 
 /**
@@ -371,13 +371,13 @@ export const TIMESTAMP_TOKEN_GROUPS: Array<{
         ]
       },
       {
-        label: 'kHz',
+        label: 'Rate (kHz)',
         tokens: [
           { token: '%K', name: 'number', range: 'digits', example: '12' }
         ]
       },
       {
-        label: 'Seconds',
+        label: 'Duration (secs)',
         tokens: [
           { token: '%L', name: 'number', range: '90 or 90.250', example: '90.250' }
         ]
@@ -395,7 +395,7 @@ export const TIMESTAMP_TOKEN_GROUPS: Array<{
         ]
       },
       {
-        label: 'Abbreviation',
+        label: 'Timezone Abbrev.',
         tokens: [
           // MEASURED: [A-Z]{3} -- lowercase does not match. NOTE this token also
           // does not RESOLVE to an offset downstream (see the warning on
@@ -420,8 +420,8 @@ export interface FilenameMetadata {
 const metadataFrom = (groups: ParsedParts): FilenameMetadata | undefined => {
   const meta: FilenameMetadata = {}
   if (groups.device !== undefined) meta.deviceId = groups.device
-  if (groups.khz !== undefined) meta.sampleRateKhz = parseInt(groups.khz)
-  if (groups.secs !== undefined) meta.durationSecs = parseFloat(groups.secs)
+  if (groups.rateKhz !== undefined) meta.sampleRateKhz = parseInt(groups.rateKhz)
+  if (groups.durationSecs !== undefined) meta.durationSecs = parseFloat(groups.durationSecs)
   return Object.keys(meta).length === 0 ? undefined : meta
 }
 

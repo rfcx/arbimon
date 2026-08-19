@@ -7,7 +7,7 @@
        persists immediately. -->
   <modal-popup
     :title="editing === undefined ? 'Build a Filename Pattern' : 'Edit Filename Pattern'"
-    modal-body="sm:(my-8 align-middle max-w-6xl w-full)"
+    modal-body="sm:(my-8 align-middle max-w-5xl w-full)"
     @emit-close="$emit('close')"
   >
     <!-- The palette makes this modal tall (20 tokens over 3 groups). modal-popup's
@@ -290,12 +290,15 @@
                token do I want?" is now a vertical scan of one column.
 
                GROUPS SIT SIDE-BY-SIDE (operator, same day: the columns cost too
-               much height). MEASURED TWICE: groups are Date 350 + Time 419 +
-               Zone 189 = 958px, PLUS two 32px inter-group gaps = 1022px —
-               which is why the modal is max-w-6xl (1104px content). Both 4xl
-               (848) and 5xl (976) wrapped Zone to a second row; the first
-               widening missed the gaps in the arithmetic and the pixel probe
-               caught it (group-header tops 454/454/586). Chosen over a
+               much height). RE-MEASURED after the Metadata group + Millis column
+               (2026-08-19): four groups now sum 1343px + gaps ≈ 1439 — no sane
+               modal fits one row, so TWO rows are inevitable. The modal is
+               therefore max-w-5xl (976 content), sized to the widest row:
+               row 1 = Date 350 + Time 520 + gap = 902 (74px slack), row 2 =
+               Metadata + Zone = 505. At the earlier 6xl the same two rows sat
+               in a 1104px panel and left ~200px of dead space on the right —
+               the operator called it out; sizing the modal to the content
+               fixed it. Chosen over a
                collapsible palette (hides the reference exactly when a novice
                needs it) and tooltip-only ranges (re-introduces the hover
                problem the visible ranges fixed).
