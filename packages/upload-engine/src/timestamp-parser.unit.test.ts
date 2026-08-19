@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { isValidTimestampFormat, matchTimestamp, parseTimestamp, parseTimestampAuto, parseTimestampUnixHex, parseTimestampWithFormat, TIMESTAMP_FORMAT_TOKEN_LABELS, TIMESTAMP_FORMAT_UNIX_HEX, TIMESTAMP_TOKEN_GROUPS, toUtcIso } from './timestamp-parser'
+import { isValidTimestampFormat, matchTimestamp, parseTimestamp, parseTimestampAuto, parseTimestampUnixHex, parseTimestampWithFormat, renderFormatExample, TIMESTAMP_FORMAT_TOKEN_LABELS, TIMESTAMP_FORMAT_UNIX_HEX, TIMESTAMP_TOKEN_GROUPS, toUtcIso } from './timestamp-parser'
 
 describe('parseTimestampAuto', () => {
   test('AudioMoth modern: YYYYMMDD_HHMMSS', () => {
@@ -336,5 +336,99 @@ describe('TIMESTAMP_TOKEN_GROUPS — palette copy must match real behaviour', ()
     // %z is uppercase only.
     expect(parseTimestampWithFormat('2024_03_15_45_utc', '%Y_%M_%D_%I_%z')).toBeUndefined()
     expect(info('%z').range.toLowerCase()).toContain('capital')
+  })
+})
+
+describe('renderFormatExample — the inverse of parseTimestampWithFormat', () => {
+  // Fixed local moment: 2024-03-05 08:07:09 local. Deliberately uses
+  // single-digit month/day/hour/minute/second so zero-padding is exercised.
+  const moment = new Date(2024, 2, 5, 8, 7, 9)
+
+  test('renders the common recorder format', () => {
+    expect(renderFormatExample('%Y%M%D_%H%I%S', moment)).toBe('20240305_080709')
+  })
+
+  test('renders unpadded and named variants', () => {
+    expect(renderFormatExample('%y-%m-%d', moment)).toBe('24-3-5')
+    expect(renderFormatExample('%N %n', moment)).toBe('March Mar')
+    expect(renderFormatExample('%h:%i:%s', moment)).toBe('8:7:9')
+  })
+
+  test('12-hour and AM/PM', () => {
+    expect(renderFormatExample('%G%A', moment)).toBe('08AM')
+    expect(renderFormatExample('%G%A', new Date(2024, 2, 5, 20, 0, 0))).toBe('08PM')
+    expect(renderFormatExample('%a', new Date(2024, 2, 5, 20, 0, 0))).toBe('P')
+  })
+
+  test('%% renders a literal percent, and unknown tokens pass through', () => {
+    expect(renderFormatExample('100%%_%Y', moment)).toBe('100%_2024')
+    // %Q is not a token; leaving it visible is better than silently dropping it.
+    expect(renderFormatExample('%Q', moment)).toBe('%Q')
+  })
+
+  test('a rendered VALUE is never re-substituted', () => {
+    // NOTE: this is a DEFENSIVE property, not a currently-reachable bug. A
+    // mutation replacing the single pass with replace-per-token SURVIVED, and
+    // enumerating the token set showed why: every token is `%X`, so a rendered
+    // value like 'March' contains no `%` and cannot be re-matched. The single
+    // pass matters only if a bare-letter token is ever added. Kept, with the
+    // claim corrected -- an earlier comment here asserted the naive version
+    // would rewrite the 'M' in 'March', which is FALSE.
+    expect(renderFormatExample('%N', moment)).toBe('March')
+    expect(renderFormatExample('%N%n', moment)).toBe('MarchMar')
+  })
+
+  // MUTATION-DRIVEN. Dropping pad2 from %y survived against the 2024 fixture --
+  // 24 pads to itself. Enumerating years showed the guard only bites for
+  // 2000-2009, where an unpadded '7' would NOT round-trip (the parser's %y
+  // matches exactly two digits).
+  test('%y zero-pads years 2000-2009', () => {
+    const y2007 = new Date(2007, 2, 5, 8, 7, 9)
+    expect(renderFormatExample('%y', y2007)).toBe('07')
+    expect(renderFormatExample('%y', new Date(2000, 0, 1, 0, 0, 0))).toBe('00')
+    // ...and it still round-trips, which is the reason it must pad.
+    const rendered = renderFormatExample('%y%M%D_%H%I', y2007)
+    expect(rendered).toBe('070305_0807')
+    expect(parseTimestampWithFormat(rendered, '%y%M%D_%H%I')).toBe('2007-03-05T08:07:00')
+  })
+
+  test('offsets render with the true sign', () => {
+    expect(renderFormatExample('%Z', moment, { offsetMinutes: 330 })).toBe('+0530')
+    // Negative offsets are shown truthfully even though the PARSER only matches
+    // +hhmm -- rendering a fake '+' would hide that real limitation.
+    expect(renderFormatExample('%Z', moment, { offsetMinutes: -240 })).toBe('-0400')
+    expect(renderFormatExample('%z', moment, { zoneAbbreviation: 'EST' })).toBe('EST')
+  })
+
+  // THE LOAD-BEARING TEST: render -> parse must return the moment we started
+  // from. This is what ties the example to real parser behaviour, so the two
+  // cannot drift apart.
+  test('ROUND-TRIP: every rendered example parses back to the same wall time', () => {
+    // The parser returns a LOCAL-NAIVE ISO string (no zone), which is exactly
+    // what the renderer was given, so compare those directly. An earlier version
+    // of this test tried to convert through epoch millis and got the offset
+    // arithmetic wrong -- the TEST was broken, not the renderer.
+    const formats: Array<[string, string]> = [
+      ['%Y%M%D_%H%I%S', '2024-03-05T08:07:09'],
+      ['%Y-%M-%D %H:%I:%S', '2024-03-05T08:07:09'],
+      ['KIT_%D%n%Y_%H%I', '2024-03-05T08:07:00'], // no seconds token -> 00
+      ['%y%M%D%H%I', '2024-03-05T08:07:00'],
+      ['%Y%M%D_%G%I%S%A', '2024-03-05T08:07:09']
+    ]
+    for (const [format, expected] of formats) {
+      const rendered = renderFormatExample(format, moment)
+      const parsed = parseTimestampWithFormat(rendered, format)
+      expect(parsed, `${format} -> ${rendered}`).toBe(expected)
+    }
+  })
+
+  test('ROUND-TRIP holds for a PM 12-hour format (the %G quirk)', () => {
+    // Noon renders as '0' + 'PM' because the parser matches 00-11 and adds 12.
+    // Odd-looking, but it MUST round-trip -- that is why it is rendered this way.
+    const noon = new Date(2024, 2, 5, 12, 30, 0)
+    const rendered = renderFormatExample('%Y%M%D_%G%I%A', noon)
+    expect(rendered).toBe('20240305_0030PM')
+    const parsed = parseTimestampWithFormat(rendered, '%Y%M%D_%G%I%A')
+    expect(parsed).toBe('2024-03-05T12:30:00')
   })
 })

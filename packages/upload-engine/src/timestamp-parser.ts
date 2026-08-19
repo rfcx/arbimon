@@ -396,6 +396,82 @@ export const matchTimestamp = (
   return undefined
 }
 
+/**
+ * Render a `%`-token format as a filename would look, for a given moment.
+ *
+ * The INVERSE of `parseTimestampWithFormat`, and deliberately built to satisfy
+ * that relationship: rendering a format and parsing the result back must return
+ * the same instant. The unit tests assert exactly that round-trip, which is what
+ * keeps this table honest against FORMAT_TOKENS.
+ *
+ * Values come from the date's LOCAL fields, because the example answers "what
+ * would a file recorded right now, on this machine, be called?".
+ *
+ * TWO DELIBERATE ASYMMETRIES, both inherited from the parser's REAL ranges (see
+ * TIMESTAMP_TOKEN_GROUPS):
+ *  - `%G`/`%g` render `hour % 12`, so noon and midnight render as `0`, not `12`.
+ *    That reads oddly but is CORRECT and round-trips: the parser's 12-hour token
+ *    matches 00-11 and adds 12 for PM, so 12:00 -> `0` + `PM` -> 12:00 again.
+ *  - `%Z` renders the TRUE local offset, including a negative one (e.g. `-0400`),
+ *    even though the parser only matches `+hhmm`. Rendering a fake `+` would
+ *    hide a real trap; the palette already states the limitation, and this makes
+ *    it visible to anyone west of UTC.
+ */
+export const renderFormatExample = (
+  timestampFormat: string,
+  date: Date = new Date(),
+  options: { offsetMinutes?: number, zoneAbbreviation?: string } = {}
+): string => {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  const hour = date.getHours()
+  const minute = date.getMinutes()
+  const second = date.getSeconds()
+  const hour12 = hour % 12
+  const isPm = hour >= 12
+
+  // getTimezoneOffset() is minutes BEHIND UTC (positive west), so negate it.
+  const offsetMinutes = options.offsetMinutes ?? -date.getTimezoneOffset()
+  const offsetSign = offsetMinutes < 0 ? '-' : '+'
+  const offsetAbs = Math.abs(offsetMinutes)
+  const offset = `${offsetSign}${pad2(String(Math.floor(offsetAbs / 60)))}${pad2(String(offsetAbs % 60))}`
+
+  const MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December']
+
+  const values: Record<string, string> = {
+    '%Y': String(year),
+    '%y': pad2(String(year % 100)),
+    '%M': pad2(String(month)),
+    '%m': String(month),
+    '%N': MONTHS_LONG[month - 1],
+    '%n': MONTHS_LONG[month - 1].slice(0, 3),
+    '%D': pad2(String(day)),
+    '%d': String(day),
+    '%H': pad2(String(hour)),
+    '%h': String(hour),
+    '%G': pad2(String(hour12)),
+    '%g': String(hour12),
+    '%A': isPm ? 'PM' : 'AM',
+    '%a': isPm ? 'P' : 'A',
+    '%I': pad2(String(minute)),
+    '%i': String(minute),
+    '%S': pad2(String(second)),
+    '%s': String(second),
+    '%Z': offset,
+    '%z': options.zoneAbbreviation ?? 'UTC'
+  }
+
+  // ONE left-to-right pass, so a rendered VALUE can never be re-substituted.
+  // DEFENSIVE, not currently load-bearing: every token is `%X`, so a rendered
+  // value ('March') contains no `%` and cannot be re-matched -- verified by
+  // mutation (replace-per-token survives today). It matters the moment a
+  // bare-letter token is added, and costs nothing now.
+  return timestampFormat.replace(/%%|%./g, match =>
+    match === '%%' ? '%' : values[match] ?? match)
+}
+
 const isHex = (value: string): boolean => {
   if (!/^[0-9a-fA-F]+$/.test(value)) return false
   const num = parseInt(value, 16)

@@ -248,6 +248,23 @@
           {{ formatError }}
         </p>
 
+        <!-- Live example rendered from the CURRENT date/time (operator
+             2026-08-19). Answers "what would a file recorded right now be
+             called?" -- the question a user is actually holding while they build
+             a format, and the fastest way to spot a wrong token.
+
+             Deliberately subtle (small, muted) so it informs without competing
+             with the validation message above or the preview below; hidden while
+             the format is empty or invalid, where it would render nonsense.
+             `renderFormatExample` is the engine's inverse of the parser and is
+             round-trip tested against it. -->
+        <p
+          v-if="formatExample !== undefined"
+          class="text-xs text-cloud/60 mt-1"
+        >
+          Example: <span class="font-mono text-cloud/80">{{ formatExample }}</span>
+        </p>
+
         <!-- TOKEN PALETTE (operator reference: iStat Menus). Inserts at the
              caret rather than appending, so a token can be added mid-format. -->
         <div class="mt-3">
@@ -411,7 +428,7 @@
 import { computed, nextTick, ref } from 'vue'
 
 import { type UserTimestampFormat, MAX_USER_TIMESTAMP_FORMATS } from '@rfcx-bio/common/dao/types'
-import { parseTimestampWithFormat, TIMESTAMP_FORMAT_ERROR_TEXT, TIMESTAMP_TOKEN_GROUPS, validateTimestampFormat } from '@rfcx-bio/upload-engine'
+import { parseTimestampWithFormat, renderFormatExample, TIMESTAMP_FORMAT_ERROR_TEXT, TIMESTAMP_TOKEN_GROUPS, validateTimestampFormat } from '@rfcx-bio/upload-engine'
 
 import ModalPopup from '@/_components/modal-popup.vue'
 import { type FormatSegment, caretTargetForArrow, insertIndexForX, insertTokenAt, moveSegment, parseFormatSegments, removeSegmentAt, segmentsToFormat } from './format-segments'
@@ -650,6 +667,20 @@ const formatError = computed<string | undefined>(() => {
   if (formatInput.value === '') return undefined
   const reason = validateTimestampFormat(formatInput.value)
   return reason === undefined ? undefined : TIMESTAMP_FORMAT_ERROR_TEXT[reason]
+})
+
+/**
+ * The format rendered against the current moment, e.g. `20260819_021900`.
+ *
+ * `exampleNow` is captured once when the modal opens rather than read live: a
+ * ticking clock would make the line flicker while typing, and the point is to
+ * show token SHAPE, not the time. Hidden entirely when the format is empty or
+ * invalid -- rendering an unparseable format would show text no file could have.
+ */
+const exampleNow = new Date()
+const formatExample = computed<string | undefined>(() => {
+  if (formatInput.value === '' || formatError.value !== undefined) return undefined
+  return renderFormatExample(formatInput.value, exampleNow)
 })
 
 const previewNames = computed<string[]>(() =>
