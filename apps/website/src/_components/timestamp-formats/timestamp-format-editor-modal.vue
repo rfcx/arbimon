@@ -143,7 +143,11 @@
           </button>
         </div>
 
-        <!-- TEST & VERIFY (operator 2026-08-19; replaces the typed-sample Preview).
+        <!-- EXEMPLAR FILE (operator 2026-08-19; renamed from "Test & Verify" same
+             day -- the section is a construction AID, and the new name says what
+             the file IS rather than what the user must do. Explicitly OPTIONAL:
+             a format can be built and saved without ever picking a file, and
+             the label must not read as a required step of the form.
 
              Sits ABOVE the Format field on purpose: pick the real file first,
              and its name becomes the visible reference you assemble tokens
@@ -157,7 +161,7 @@
              seeding), so the list always reflects an explicit user choice. -->
         <div class="mb-4">
           <div class="flex items-baseline justify-between mb-1.5">
-            <span class="text-xs text-cloud">Test &amp; Verify</span>
+            <span class="text-xs text-cloud">Exemplar File <span class="text-cloud/50">(optional)</span></span>
           </div>
 
           <div
@@ -171,8 +175,9 @@
               Choose a recording file…
             </button>
             <p class="text-xs text-cloud/60 mt-1.5">
-              Only the filename is read — nothing is uploaded. Its name shows here
-              so you can build the format against it.
+              Optionally pick one of your recordings to build the format against —
+              its name shows here with a live result. Only the filename is read;
+              nothing is uploaded.
             </p>
           </div>
 
@@ -398,7 +403,7 @@
           </p>
         </div>
 
-        <!-- Verdicts live inline on the Test & Verify rows above; the separate
+        <!-- Verdicts live inline on the Exemplar File rows above; the separate
              Preview section was REMOVED when the file picker replaced the typed
              sample (operator 2026-08-19). -->
 
@@ -492,7 +497,7 @@ const draft = ref<UserTimestampFormat[]>(props.formats.map(item => ({ ...item })
 const labelInput = ref('')
 const editingId = ref<string | undefined>(undefined)
 
-// -- Test & Verify -----------------------------------------------------------
+// -- Exemplar File (optional) -------------------------------------------------
 // Filenames under test, populated ONLY by the picker (operator 2026-08-19: no
 // staged-file seeding -- an earlier version pre-filled from the uploader's
 // staged rows and the operator rejected it, so both hosts now behave
