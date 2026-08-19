@@ -6,7 +6,7 @@
        terminal action, the header × (or click-outside) cancels, and the host
        persists immediately. -->
   <modal-popup
-    :title="editing === undefined ? 'New Filename Pattern' : 'Edit Filename Pattern'"
+    :title="editing === undefined ? 'Build a Filename Pattern' : 'Edit Filename Pattern'"
     modal-body="sm:(my-8 align-middle max-w-4xl w-full)"
     @emit-close="$emit('close')"
   >
@@ -16,8 +16,12 @@
          it. Cap at the viewport and scroll INSIDE the dialog. -->
     <div class="p-6 max-h-[85vh] overflow-y-auto">
       <div class="flex items-start justify-between mb-5">
+        <!-- The title says what the modal DOES (operator 2026-08-19): create mode
+             emphasises the guided construction the layout walks through
+             (exemplar -> pattern -> verify -> name); edit mode names its
+             target. "New Filename Pattern" only named the artifact. -->
         <h3 class="text-lg font-medium text-insight">
-          {{ editing === undefined ? 'New Filename Pattern' : `Edit “${editing.label}”` }}
+          {{ editing === undefined ? 'Build a Filename Pattern' : `Edit Filename Pattern: “${editing.label}”` }}
         </h3>
         <button
           class="text-cloud hover:text-insight shrink-0 ml-4"
@@ -62,7 +66,11 @@
              seeding), so the list always reflects an explicit user choice. -->
         <div class="mb-4">
           <div class="flex items-baseline justify-between mb-1.5">
-            <span class="text-xs text-cloud">Exemplar File <span class="text-cloud/50">(optional)</span></span>
+            <!-- Section headings promoted text-xs -> text-sm font-medium insight
+                 (operator 2026-08-19): at text-xs/cloud they were dimmer than
+                 the CONTENT they labelled and the modal read as one undivided
+                 run of controls. -->
+            <span class="text-sm font-medium text-insight">Exemplar File <span class="text-xs font-normal text-cloud/60">(optional)</span></span>
           </div>
 
           <div
@@ -135,7 +143,7 @@
              interprets input, so it belongs with the field, read before typing
              starts rather than discovered after scrolling past 20 tokens. -->
         <label
-          class="block text-xs text-cloud"
+          class="block text-sm font-medium text-insight"
           for="tsf-format"
         >Filename Pattern</label>
         <p class="text-xs text-cloud/60 mt-0.5 mb-1.5">
@@ -258,7 +266,7 @@
              caret rather than appending, so a token can be added mid-format. -->
         <div class="mt-3">
           <div class="flex items-baseline justify-between mb-1.5">
-            <span class="block text-xs text-cloud">Insert a token</span>
+            <span class="block text-sm font-medium text-insight">Insert a token</span>
             <span class="text-xs text-cloud/50">click to add, or drag into the field</span>
           </div>
 
@@ -311,47 +319,48 @@
 
         <!-- NAME comes LAST (operator 2026-08-19): the natural order is build
              the pattern, verify it against the exemplar, THEN christen it.
-             Save Format sits ON THE SAME ROW to its right (operator, same
-             day) -- the last field and the action it gates read as one closing
-             gesture, and the button label is 'Save Format' in BOTH add and
-             edit modes: the user is saving a format either way, and a label
-             that flips between modes made the two feel like different
-             operations. -->
-        <label
-          class="block text-xs text-cloud mt-4 mb-1"
-          for="tsf-label"
-        >Give this Recording Filename Pattern a Name</label>
-        <div class="flex items-center gap-x-2">
-          <input
-            id="tsf-label"
-            v-model="labelInput"
-            type="text"
-            placeholder="AudioMoth field kit"
-            maxlength="60"
-            class="flex-1 min-w-0 max-w-md text-sm border border-cloud/40 rounded bg-pitch text-insight placeholder:text-cloud/40 focus:(border-frequency ring-frequency)"
+             Save sits ON THE SAME ROW to its right -- the last field and the
+             action it gates read as one closing gesture. The border-t above
+             (operator, same day) separates the CONSTRUCTION zone from this
+             closing commit zone, the same visual grammar as the delimiter
+             between the saved list and the editor in the old combined modal. -->
+        <div class="mt-5 pt-4 border-t border-cloud/20">
+          <label
+            class="block text-sm font-medium text-insight mb-1"
+            for="tsf-label"
+          >Give this Recording Filename Pattern a Name</label>
+          <div class="flex items-center gap-x-2">
+            <input
+              id="tsf-label"
+              v-model="labelInput"
+              type="text"
+              placeholder="AudioMoth field kit"
+              maxlength="60"
+              class="flex-1 min-w-0 max-w-md text-sm border border-cloud/40 rounded bg-pitch text-insight placeholder:text-cloud/40 focus:(border-frequency ring-frequency)"
+            >
+            <button
+              class="btn btn-primary text-sm shrink-0 disabled:(opacity-50 cursor-not-allowed)"
+              :disabled="!canCommit || saving"
+              :title="commitBlockedReason ?? undefined"
+              @click="commit"
+            >
+              {{ saving ? 'Saving…' : 'Save Pattern' }}
+            </button>
+          </div>
+          <p
+            v-if="saveError !== undefined"
+            class="text-xs text-flamingo mt-1"
+            role="alert"
           >
-          <button
-            class="btn btn-primary text-sm shrink-0 disabled:(opacity-50 cursor-not-allowed)"
-            :disabled="!canCommit || saving"
-            :title="commitBlockedReason ?? undefined"
-            @click="commit"
+            {{ saveError }}
+          </p>
+          <p
+            v-else-if="commitBlockedReason !== undefined && (labelInput !== '' || formatInput !== '')"
+            class="text-xs text-cloud mt-1"
           >
-            {{ saving ? 'Saving…' : 'Save Pattern' }}
-          </button>
+            {{ commitBlockedReason }}
+          </p>
         </div>
-        <p
-          v-if="saveError !== undefined"
-          class="text-xs text-flamingo mt-1"
-          role="alert"
-        >
-          {{ saveError }}
-        </p>
-        <p
-          v-else-if="commitBlockedReason !== undefined && (labelInput !== '' || formatInput !== '')"
-          class="text-xs text-cloud mt-1"
-        >
-          {{ commitBlockedReason }}
-        </p>
       </div>
     </div>
   </modal-popup>
