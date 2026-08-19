@@ -7,7 +7,7 @@
        persists immediately. -->
   <modal-popup
     :title="editing === undefined ? 'Build a Filename Pattern' : 'Edit Filename Pattern'"
-    modal-body="sm:(my-8 align-middle max-w-4xl w-full)"
+    modal-body="sm:(my-8 align-middle max-w-6xl w-full)"
     @emit-close="$emit('close')"
   >
     <!-- The palette makes this modal tall (20 tokens over 3 groups). modal-popup's
@@ -287,11 +287,22 @@
           <!-- FIELD-PER-COLUMN layout (operator 2026-08-19): within each group,
                each timestamp FIELD (Year / Month / Day...) is a COLUMN with its
                variants stacked beneath a field header. Comparing "which month
-               token do I want?" is now a vertical scan of one column; the old
-               row-major grid scattered one field's variants across
-               non-adjacent cells. Column count comes from the group's own
-               field count, so Date renders 3 columns and Time 4. -->
-          <div class="space-y-3">
+               token do I want?" is now a vertical scan of one column.
+
+               GROUPS SIT SIDE-BY-SIDE (operator, same day: the columns cost too
+               much height). MEASURED TWICE: groups are Date 350 + Time 419 +
+               Zone 189 = 958px, PLUS two 32px inter-group gaps = 1022px —
+               which is why the modal is max-w-6xl (1104px content). Both 4xl
+               (848) and 5xl (976) wrapped Zone to a second row; the first
+               widening missed the gaps in the arithmetic and the pixel probe
+               caught it (group-header tops 454/454/586). Chosen over a
+               collapsible palette (hides the reference exactly when a novice
+               needs it) and tooltip-only ranges (re-introduces the hover
+               problem the visible ranges fixed).
+               flex-wrap keeps narrow viewports sane: groups stack again when
+               they no longer fit. Columns are content-sized (auto), not 1fr,
+               so a wide Month column does not inflate Year/Day. -->
+          <div class="flex flex-wrap gap-x-8 gap-y-3 items-start">
             <div
               v-for="group in TIMESTAMP_TOKEN_GROUPS"
               :key="group.key"
@@ -299,7 +310,7 @@
               <span class="block text-[10px] uppercase tracking-wide text-cloud/50 mb-1">{{ group.label }}</span>
               <div
                 class="grid gap-x-3 gap-y-1 items-start"
-                :style="{ gridTemplateColumns: `repeat(${group.fields.length}, minmax(0, 1fr))` }"
+                :style="{ gridTemplateColumns: `repeat(${group.fields.length}, auto)` }"
               >
                 <div
                   v-for="field in group.fields"
