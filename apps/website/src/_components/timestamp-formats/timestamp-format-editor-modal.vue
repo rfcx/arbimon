@@ -143,6 +143,91 @@
           </button>
         </div>
 
+        <!-- TEST & VERIFY (operator 2026-08-19; replaces the typed-sample Preview).
+
+             Sits ABOVE the Format field on purpose: pick the real file first,
+             and its name becomes the visible reference you assemble tokens
+             AGAINST -- character for character, no transcription step. Typing a
+             sample by hand invited building a format against a typo; picking
+             the actual file removes that failure mode entirely.
+
+             Only file.name is ever read. Nothing is uploaded, no bytes are
+             touched, and the list lives only for this modal session. In the
+             uploader host the list is SEEDED from staged files (they are the
+             names the user is trying to rescue); the picker adds more or
+             replaces them. In account settings, where nothing is staged, the
+             picker is the whole story. -->
+        <div class="mb-4">
+          <div class="flex items-baseline justify-between mb-1.5">
+            <span class="text-xs text-cloud">Test &amp; Verify</span>
+            <span
+              v-if="seededFromStaged"
+              class="text-xs text-cloud/60"
+            >from your staged files</span>
+          </div>
+
+          <div
+            v-if="testFilenames.length === 0"
+            class="border border-dashed border-cloud/40 rounded px-3 py-3 text-center"
+          >
+            <button
+              class="btn btn-secondary text-xs px-2 py-1"
+              @click="openFilePicker"
+            >
+              Choose a recording file…
+            </button>
+            <p class="text-xs text-cloud/60 mt-1.5">
+              Only the filename is read — nothing is uploaded. Its name shows here
+              so you can build the format against it.
+            </p>
+          </div>
+
+          <div v-else>
+            <!-- the names under test, each with its live verdict -->
+            <ul class="space-y-1">
+              <li
+                v-for="row in testRows"
+                :key="row.filename"
+                class="flex items-baseline justify-between gap-x-2"
+              >
+                <!-- The filename is the PROMINENT element (text-sm, brighter
+                     than its verdict): it is the thing being matched against,
+                     and the reference the user reads while placing tokens. -->
+                <code class="text-sm font-mono text-insight truncate">{{ row.filename }}</code>
+                <span
+                  class="text-xs shrink-0 tabular-nums"
+                  :class="row.parsed !== undefined ? 'text-frequency' : 'text-cloud/50'"
+                >{{ row.parsed ?? (formatInput === '' ? 'awaiting format' : 'no match') }}</span>
+              </li>
+            </ul>
+            <div class="mt-1.5 flex items-center gap-x-3">
+              <button
+                class="text-xs text-cloud hover:text-insight"
+                @click="openFilePicker"
+              >
+                Add files…
+              </button>
+              <button
+                class="text-xs text-cloud hover:text-insight"
+                @click="clearTestFiles"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- Hidden input: the actual picker. `multiple` because a recorder
+               folder holds many names, and a format that matches one file but
+               not its siblings is exactly what several rows expose. -->
+          <input
+            ref="filePickerEl"
+            type="file"
+            multiple
+            hidden
+            @change="onFilesPicked"
+          >
+        </div>
+
         <label
           class="block text-xs text-cloud mb-1"
           for="tsf-label"
@@ -319,52 +404,9 @@
           </p>
         </div>
 
-        <!-- LIVE PREVIEW ---------------------------------------------------
-             TWO MODES. Against staged filenames when opened from the uploader;
-             against a typed sample in account settings, where no files exist.
-             The second is required, not a nicety -- without it the editor is
-             unverifiable exactly where it is most discoverable. -->
-        <div class="mt-4">
-          <div class="flex items-baseline justify-between mb-1.5">
-            <span class="text-xs text-cloud">Preview</span>
-            <span
-              v-if="sampleFilenames.length > 0"
-              class="text-xs text-cloud/60"
-            >from your staged files</span>
-          </div>
-
-          <input
-            v-if="sampleFilenames.length === 0"
-            v-model="typedSample"
-            type="text"
-            spellcheck="false"
-            placeholder="Paste one of your filenames, e.g. 20240315_064510.wav"
-            class="w-full mb-2 text-sm font-mono border border-cloud/40 rounded bg-pitch text-insight placeholder:text-cloud/40 focus:(border-frequency ring-frequency)"
-          >
-
-          <ul
-            v-if="previewRows.length > 0"
-            class="space-y-1"
-          >
-            <li
-              v-for="row in previewRows"
-              :key="row.filename"
-              class="flex items-baseline justify-between gap-x-2 text-xs"
-            >
-              <code class="font-mono text-cloud/70 truncate">{{ row.filename }}</code>
-              <span
-                class="shrink-0 tabular-nums"
-                :class="row.parsed !== undefined ? 'text-frequency' : 'text-cloud/50'"
-              >{{ row.parsed ?? 'no match' }}</span>
-            </li>
-          </ul>
-          <p
-            v-else
-            class="text-xs text-cloud/50"
-          >
-            {{ formatInput === '' ? 'Enter a format to see how it reads your filenames.' : 'Type a sample filename above.' }}
-          </p>
-        </div>
+        <!-- Verdicts live inline on the Test & Verify rows above; the separate
+             Preview section was REMOVED when the file picker replaced the typed
+             sample (operator 2026-08-19). -->
 
         <div class="mt-4 flex items-center gap-x-2">
           <button
@@ -457,8 +499,38 @@ const emit = defineEmits<{(e: 'close'): void, (e: 'save', formats: UserTimestamp
 const draft = ref<UserTimestampFormat[]>(props.formats.map(item => ({ ...item })))
 
 const labelInput = ref('')
-const typedSample = ref('')
 const editingId = ref<string | undefined>(undefined)
+
+// -- Test & Verify -----------------------------------------------------------
+// Filenames under test. Seeded from the host's staged files when present
+// (uploader), extended/replaced via the picker. ONLY names are kept -- the File
+// objects are dropped immediately, nothing is read or uploaded.
+const testFilenames = ref<string[]>([...props.sampleFilenames])
+/** True while the list is still the untouched staged-files seed; cleared the
+ *  moment the user picks their own files, so the label stays honest. */
+const seededFromStaged = ref(props.sampleFilenames.length > 0)
+const filePickerEl = ref<HTMLInputElement>()
+
+const openFilePicker = (): void => { filePickerEl.value?.click() }
+
+const onFilesPicked = (event: Event): void => {
+  const input = event.target as HTMLInputElement
+  const names = Array.from(input.files ?? []).map(file => file.name)
+  if (names.length === 0) return
+  // A fresh pick REPLACES the staged seed (the user has chosen their own
+  // reference set) but APPENDS to files they picked earlier, de-duplicated --
+  // "Add files…" must mean add.
+  testFilenames.value = seededFromStaged.value
+    ? names
+    : [...new Set([...testFilenames.value, ...names])]
+  seededFromStaged.value = false
+  input.value = '' // allow re-picking the same file
+}
+
+const clearTestFiles = (): void => {
+  testFilenames.value = []
+  seededFromStaged.value = false
+}
 
 // -- the format field, as SEGMENTS ------------------------------------------
 // The field renders tokens as bordered chips and literal text as editable
@@ -669,6 +741,16 @@ const formatError = computed<string | undefined>(() => {
   return reason === undefined ? undefined : TIMESTAMP_FORMAT_ERROR_TEXT[reason]
 })
 
+/** Each test filename with its live parse verdict against the CURRENT format.
+ *  Capped for display -- a whole-folder pick should not scroll the modal. */
+const testRows = computed(() =>
+  testFilenames.value.slice(0, 6).map(filename => ({
+    filename,
+    parsed: formatInput.value === '' || formatError.value !== undefined
+      ? undefined
+      : parseTimestampWithFormat(filename, formatInput.value)
+  })))
+
 /**
  * The format rendered against the current moment, e.g. `20260819_021900`.
  *
@@ -681,19 +763,6 @@ const exampleNow = new Date()
 const formatExample = computed<string | undefined>(() => {
   if (formatInput.value === '' || formatError.value !== undefined) return undefined
   return renderFormatExample(formatInput.value, exampleNow)
-})
-
-const previewNames = computed<string[]>(() =>
-  props.sampleFilenames.length > 0
-    ? props.sampleFilenames.slice(0, 3)
-    : typedSample.value !== '' ? [typedSample.value] : [])
-
-const previewRows = computed(() => {
-  if (formatInput.value === '' || formatError.value !== undefined) return []
-  return previewNames.value.map(filename => ({
-    filename,
-    parsed: parseTimestampWithFormat(filename, formatInput.value)
-  }))
 })
 
 const isDuplicateLabel = computed(() =>
