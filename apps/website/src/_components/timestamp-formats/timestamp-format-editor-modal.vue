@@ -130,12 +130,20 @@
         your cursor.
       </p>
 
-      <!-- EDITOR ----------------------------------------------------------- -->
+      <!-- EDITOR -----------------------------------------------------------
+           No section header (operator 2026-08-19: "Add a format" was
+           self-evident -- the fields below say what this is). The one thing the
+           header row carried that must survive is the EDIT-MODE escape: while
+           editing an existing format, a banner names which one and offers
+           Cancel, since otherwise the only clue is pre-filled fields and there
+           is no way out short of committing the edit. -->
       <div class="border-t border-cloud/20 pt-4">
-        <div class="flex items-baseline justify-between mb-2">
-          <span class="text-sm text-insight">{{ editingId === undefined ? 'Add a format' : 'Edit format' }}</span>
+        <div
+          v-if="editingId !== undefined"
+          class="flex items-baseline justify-between mb-2 px-2 py-1 rounded bg-frequency/5 border border-frequency/20"
+        >
+          <span class="text-xs text-insight">Editing “{{ editingLabel }}”</span>
           <button
-            v-if="editingId !== undefined"
             class="text-xs text-cloud hover:text-insight"
             @click="resetEditor"
           >
@@ -782,6 +790,11 @@ const resetEditor = (): void => {
   labelInput.value = ''
   formatInput.value = ''
 }
+
+/** The SAVED label of the format being edited — shown in the edit-mode banner.
+ *  Reads the draft, not labelInput, so renaming mid-edit does not make the
+ *  banner claim you are editing a format that does not exist yet. */
+const editingLabel = computed(() => draft.value.find(item => item.id === editingId.value)?.label ?? '')
 
 const beginEdit = (item: UserTimestampFormat): void => {
   editingId.value = item.id
