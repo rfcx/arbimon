@@ -17,9 +17,14 @@ interface ParsedParts {
   hour?: string
   minute?: string
   second?: string
+  millisecond?: string
   hour12?: string
   hour12ap?: string
   timezone?: string
+  // -- non-time metadata (guardian-style filenames; capture-only) -----------
+  device?: string
+  khz?: string
+  secs?: string
 }
 
 const MONTH_NAMES: Record<string, string> = {
@@ -57,7 +62,7 @@ const pad2 = (value: string): string => value.padStart(2, '0')
  */
 const formatIso = (parts: ParsedParts): string | undefined => {
   let { year, month, day, hour, second, timezone } = parts
-  const { minute, hour12, hour12ap } = parts
+  const { minute, hour12, hour12ap, millisecond } = parts
   if (
     year === undefined ||
     month === undefined ||
@@ -76,9 +81,12 @@ const formatIso = (parts: ParsedParts): string | undefined => {
   if (hour === undefined) return undefined
   second ??= '00'
   timezone ??= ''
+  // Milliseconds ride inside the ISO string (JS Date and toUtcIso both accept
+  // the .SSS form), so sub-second guardian timestamps survive the round trip.
+  const millis = millisecond === undefined ? '' : `.${millisecond}`
   return `${year}-${pad2(month)}-${pad2(day)}T${pad2(hour)}:${pad2(
     minute
-  )}:${pad2(second)}${timezone}`
+  )}:${pad2(second)}${millis}${timezone}`
 }
 
 /** %-token format string → regex (same token set as the desktop app). */
@@ -116,7 +124,18 @@ const FORMAT_TOKENS: Record<string, string> = {
   // Also accepts the `-05:00` colon form, which ISO-8601 permits and which
   // `toUtcIso`/`stripOffset` already handle.
   '%Z': '(?<timezone>[+-][0-9][0-9]:?[0-9][0-9])',
-  '%z': '(?<timezone>[A-Z][A-Z][A-Z])'
+  '%z': '(?<timezone>[A-Z][A-Z][A-Z])',
+  // -- metadata tokens (2026-08-19, operator; modeled on the RFCx guardian's
+  // archive filename grammar in guardian-software
+  // lib-core/.../RfcxAudioFileUtils.getAudioFileName():
+  //   {deviceId}_{yyyy-MM-dd'T'HH-mm-ss.SSSZZZ}_{NkHz}_{N.NNNsecs}.{ext}
+  // These CAPTURE metadata rather than contribute to the instant. %K/%L are
+  // numbers only -- the user types kHz/secs as literal text, keeping the
+  // tokens reusable for filenames that spell units differently. -----------
+  '%F': '(?<millisecond>[0-9][0-9][0-9])',
+  '%V': '(?<device>[A-Za-z0-9]+)',
+  '%K': '(?<khz>[0-9]+)',
+  '%L': '(?<secs>[0-9]+(?:\\.[0-9]+)?)'
 }
 
 /**
@@ -204,6 +223,10 @@ export const TIMESTAMP_FORMAT_TOKEN_LABELS: Record<string, string> = {
   '%i': 'minute (45)',
   '%S': 'second, 2-digit (10)',
   '%s': 'second (10)',
+  '%F': 'milliseconds, 3-digit (250)',
+  '%V': 'recorder / device id (p0gccfnzn9p8)',
+  '%K': 'sample rate in kHz (12)',
+  '%L': 'duration in seconds (90.250)',
   '%Z': 'timezone offset (-0500)',
   // ⚠ %z MATCHES but does not RESOLVE: a zone abbreviation like 'EST' is
   // carried into the parsed string, where `toUtcIso` cannot interpret it and
@@ -241,7 +264,7 @@ export interface TimestampTokenInfo {
   example: string
 }
 
-export type TimestampTokenGroupKey = 'date' | 'time' | 'zone'
+export type TimestampTokenGroupKey = 'date' | 'time' | 'zone' | 'meta'
 
 /** One column of the palette: a timestamp FIELD (Year, Month, Hour...) with
  *  its token variants stacked beneath. */
@@ -321,10 +344,42 @@ export const TIMESTAMP_TOKEN_GROUPS: Array<{
         ]
       },
       {
+        label: 'Millis',
+        tokens: [
+          { token: '%F', name: '3-digit', range: '000–999', example: '250' }
+        ]
+      },
+      {
         label: 'AM / PM',
         tokens: [
           { token: '%A', name: 'AM / PM', range: 'AM, PM, am, pm', example: 'PM' },
           { token: '%a', name: 'A / P', range: 'A, P, a, p', example: 'P' }
+        ]
+      }
+    ]
+  },
+  {
+    // Metadata tokens CAPTURE non-time fields (guardian-style archive names);
+    // they do not contribute to the instant. Capture-only by operator decision.
+    key: 'meta',
+    label: 'Metadata',
+    fields: [
+      {
+        label: 'Device ID',
+        tokens: [
+          { token: '%V', name: 'alphanumeric', range: 'a–z 0–9', example: 'p0gccfnzn9p8' }
+        ]
+      },
+      {
+        label: 'kHz',
+        tokens: [
+          { token: '%K', name: 'number', range: 'digits', example: '12' }
+        ]
+      },
+      {
+        label: 'Seconds',
+        tokens: [
+          { token: '%L', name: 'number', range: '90 or 90.250', example: '90.250' }
         ]
       }
     ]
@@ -352,10 +407,25 @@ export const TIMESTAMP_TOKEN_GROUPS: Array<{
   }
 ]
 
-export const parseTimestampWithFormat = (
-  fileName: string,
-  timestampFormat: string
-): string | undefined => {
+/** Non-time metadata a pattern can extract from a filename (capture-only). */
+export interface FilenameMetadata {
+  /** Recorder/device id (%V), e.g. a guardian GUID. */
+  deviceId?: string
+  /** Sample rate claimed by the filename (%K), in kHz. */
+  sampleRateKhz?: number
+  /** Duration claimed by the filename (%L), in seconds. */
+  durationSecs?: number
+}
+
+const metadataFrom = (groups: ParsedParts): FilenameMetadata | undefined => {
+  const meta: FilenameMetadata = {}
+  if (groups.device !== undefined) meta.deviceId = groups.device
+  if (groups.khz !== undefined) meta.sampleRateKhz = parseInt(groups.khz)
+  if (groups.secs !== undefined) meta.durationSecs = parseFloat(groups.secs)
+  return Object.keys(meta).length === 0 ? undefined : meta
+}
+
+const execFormat = (fileName: string, timestampFormat: string): ParsedParts | undefined => {
   // Guard first: an invalid format can only ever produce a non-match (or, for
   // a duplicate token under a global substitution, a thrown SyntaxError), so
   // there is nothing to gain by attempting it.
@@ -366,8 +436,15 @@ export const parseTimestampWithFormat = (
     regExpString = regExpString.replace(token, pattern)
   }
   const result = new RegExp(regExpString, 'g').exec(fileName)
-  if (result?.groups === undefined) return undefined
-  return formatIso(result.groups as ParsedParts)
+  return result?.groups === undefined ? undefined : (result.groups as ParsedParts)
+}
+
+export const parseTimestampWithFormat = (
+  fileName: string,
+  timestampFormat: string
+): string | undefined => {
+  const groups = execFormat(fileName, timestampFormat)
+  return groups === undefined ? undefined : formatIso(groups)
 }
 
 /** Ordered auto-detect patterns (same order/shapes as the desktop app). */
@@ -423,6 +500,9 @@ export interface TimestampMatch {
   formatId?: string
   /** The saved format's human label, for display on a staged row. */
   formatLabel?: string
+  /** Non-time metadata the pattern extracted (%V/%K/%L). Capture-only
+   *  (operator 2026-08-19): recorded on the item, no behaviour keyed on it. */
+  metadata?: FilenameMetadata
 }
 
 /**
@@ -458,17 +538,41 @@ export const matchTimestamp = (
   fileName: string,
   savedFormats: SavedTimestampFormat[] = []
 ): TimestampMatch | undefined => {
+  // Metadata is harvested INDEPENDENTLY of timestamp precedence (2026-08-19).
+  // The tension this resolves: auto-detect often matches a guardian-style name
+  // (its built-in Y-M-D pattern finds the date), and under auto-first
+  // precedence the user's pattern would then never run -- so %V/%K/%L could
+  // never capture anything on exactly the filenames they were designed for.
+  // Because metadata is CAPTURE-ONLY (operator), attaching it cannot change
+  // the instant, so harvesting it from the first metadata-bearing saved
+  // pattern preserves the augment guarantee to the letter: the timestamp is
+  // byte-identical to what auto-detect alone would have produced.
+  const harvestMetadata = (): FilenameMetadata | undefined => {
+    for (const saved of savedFormats) {
+      const groups = execFormat(fileName, saved.format)
+      if (groups !== undefined) {
+        const meta = metadataFrom(groups)
+        if (meta !== undefined) return meta
+      }
+    }
+    return undefined
+  }
+
   const auto = parseTimestampAuto(fileName)
-  if (auto !== undefined) return { timestamp: auto, source: 'auto' }
+  if (auto !== undefined) {
+    return { timestamp: auto, source: 'auto', metadata: harvestMetadata() }
+  }
 
   for (const saved of savedFormats) {
-    const parsed = parseTimestampWithFormat(fileName, saved.format)
-    if (parsed !== undefined) {
+    const groups = execFormat(fileName, saved.format)
+    const parsed = groups === undefined ? undefined : formatIso(groups)
+    if (parsed !== undefined && groups !== undefined) {
       return {
         timestamp: parsed,
         source: 'saved',
         formatId: saved.id,
-        formatLabel: saved.label
+        formatLabel: saved.label,
+        metadata: metadataFrom(groups)
       }
     }
   }
@@ -540,7 +644,13 @@ export const renderFormatExample = (
     '%S': pad2(String(second)),
     '%s': String(second),
     '%Z': offset,
-    '%z': options.zoneAbbreviation ?? 'UTC'
+    '%z': options.zoneAbbreviation ?? 'UTC',
+    // Metadata tokens have no live value to render -- show recognisable
+    // placeholders (guardian-style) so the Example line still reads as a name.
+    '%F': String(date.getMilliseconds()).padStart(3, '0'),
+    '%V': 'deviceid',
+    '%K': '12',
+    '%L': '90.250'
   }
 
   // ONE left-to-right pass, so a rendered VALUE can never be re-substituted.

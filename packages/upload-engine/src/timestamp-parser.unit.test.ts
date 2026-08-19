@@ -485,3 +485,98 @@ describe('%Z accepts NEGATIVE offsets (2026-08-19 fix)', () => {
     expect(toUtcIso(parsed as string)).toBeUndefined()
   })
 })
+
+describe('metadata tokens — %V device, %K kHz, %L seconds, %F millis (guardian grammar)', () => {
+  // The REAL guardian archive filename shape, from guardian-software
+  // lib-core/.../RfcxAudioFileUtils.getAudioFileName():
+  //   {deviceId}_{yyyy-MM-dd'T'HH-mm-ss.SSSZZZ}_{NkHz}_{N.NNNsecs}.{ext}
+  const guardianName = 'p0gccfnzn9p8_2026-08-19T04-15-00.250-0000_12kHz_90.250secs.opus'
+  const guardianPattern = '%V_%Y-%M-%DT%H-%I-%S.%F%Z_%KkHz_%Lsecs'
+
+  test('the full guardian archive name parses, with milliseconds and offset', () => {
+    expect(parseTimestampWithFormat(guardianName, guardianPattern))
+      .toBe('2026-08-19T04:15:00.250-0000')
+  })
+
+  test('…and converts to the correct UTC instant', () => {
+    const parsed = parseTimestampWithFormat(guardianName, guardianPattern)
+    expect(toUtcIso(parsed as string)).toBe('2026-08-19T04:15:00.250Z')
+  })
+
+  // MEASURED, and it reshaped the design: auto-detect's built-in Y-M-D pattern
+  // MATCHES the guardian name's embedded date, so under auto-first precedence
+  // the user's pattern never ran and %V/%K/%L could never capture anything on
+  // exactly the filenames they exist for. Metadata is therefore harvested
+  // INDEPENDENTLY of timestamp precedence -- safe because capture-only means it
+  // cannot change the instant. This test pins both halves: the timestamp stays
+  // auto-detect's (the augment guarantee, byte-identical), AND the metadata is
+  // captured from the user's pattern.
+  test('metadata is captured even when AUTO-DETECT wins the timestamp', () => {
+    const match = matchTimestamp(guardianName, [
+      { id: 'g', label: 'Guardian archive', format: guardianPattern }
+    ])
+    expect(match?.source).toBe('auto') // precedence unchanged
+    expect(match?.timestamp).toBe(parseTimestampAuto(guardianName)) // byte-identical
+    expect(match?.metadata).toEqual({
+      deviceId: 'p0gccfnzn9p8',
+      sampleRateKhz: 12,
+      durationSecs: 90.25
+    })
+  })
+
+  test('metadata rides a SAVED-format match too (auto cannot read this name)', () => {
+    const name = 'dev99&2024x03x15x0645&24kHz.wav' // & and x defeat the built-ins
+    expect(parseTimestampAuto(name)).toBeUndefined()
+    const match = matchTimestamp(name, [
+      { id: 'x', label: 'X', format: 'dev%V&%Yx%Mx%Dx%H%I&%KkHz' }
+    ])
+    expect(match?.source).toBe('saved')
+    expect(match?.metadata).toEqual({ deviceId: '99', sampleRateKhz: 24 })
+  })
+
+  test('no metadata tokens -> metadata is undefined, not an empty object', () => {
+    const match = matchTimestamp('KIT_15Mar2024_0645.wav', [
+      { id: 'k', label: 'Kit', format: 'KIT_%D%n%Y_%H%I' }
+    ])
+    expect(match?.formatId).toBe('k')
+    expect(match?.metadata).toBeUndefined()
+  })
+
+  test('%L accepts whole seconds as well as fractional', () => {
+    const match = matchTimestamp('x_20240315_0645_90secs.wav', [
+      { id: 'w', label: 'Whole', format: 'x_%Y%M%D_%H%I_%Lsecs' }
+    ])
+    expect(match?.metadata).toEqual({ durationSecs: 90 })
+  })
+
+  test('metadata tokens are valid format-string citizens (dedup, validation)', () => {
+    expect(isValidTimestampFormat(guardianPattern)).toBe(true)
+    expect(isValidTimestampFormat('%V_%V')).toBe(false) // duplicate still rejected
+  })
+
+  test('the rendered example ROUND-TRIPS through the guardian pattern', () => {
+    const moment = new Date(2024, 2, 5, 8, 7, 9, 250)
+    const rendered = renderFormatExample(guardianPattern, moment, { offsetMinutes: -240 })
+    expect(rendered).toBe('deviceid_2024-03-05T08-07-09.250-0400_12kHz_90.250secs')
+    expect(parseTimestampWithFormat(rendered, guardianPattern)).toBe('2024-03-05T08:07:09.250-0400')
+  })
+
+  test('%F alone (no offset) keeps millis in the local-naive ISO', () => {
+    expect(parseTimestampWithFormat('20240315_064510.123.wav', '%Y%M%D_%H%I%S.%F'))
+      .toBe('2024-03-15T06:45:10.123')
+  })
+})
+
+describe('analyzeFile carries filenameMetadata onto the item', () => {
+  // in analyze.unit.test.ts style but colocated: the parser test file already
+  // holds every other matchTimestamp contract.
+  test('captured metadata lands on the match and clears when absent', () => {
+    const saved = [{ id: 'g', label: 'G', format: '%V_%Y%M%D_%H%I_%KkHz' }]
+    const hit = matchTimestamp('dev123_20240315_0645_24kHz.wav', saved)
+    expect(hit?.metadata).toEqual({ deviceId: 'dev123', sampleRateKhz: 24 })
+    // a filename the pattern does NOT match carries no metadata even on auto
+    const auto = matchTimestamp('20240315_064510.wav', saved)
+    expect(auto?.source).toBe('auto')
+    expect(auto?.metadata).toBeUndefined()
+  })
+})

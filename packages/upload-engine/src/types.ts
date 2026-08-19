@@ -83,6 +83,10 @@ export interface UploadItem {
   /** Label of that saved format, denormalized so the staging table can name it
    * without holding the user's format list. */
   matchedFormatLabel?: string
+  /** Non-time metadata a saved pattern extracted from the filename
+   * (%V device id, %K kHz, %L seconds). CAPTURE-ONLY (operator 2026-08-19):
+   * recorded for display/telemetry, no behaviour keyed on it. */
+  filenameMetadata?: { deviceId?: string, sampleRateKhz?: number, durationSecs?: number }
   /** Non-blocking advisory shown alongside the row (e.g. an unusually old
    * date that is probably a digitised archive but MIGHT be a recorder whose
    * clock reset). Unlike analysisError this never excludes the item from

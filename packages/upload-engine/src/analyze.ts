@@ -138,6 +138,7 @@ export async function analyzeFile (
   // label: engine.update() MERGES patches, exactly as analysisError above.
   patch.matchedFormatId = match?.formatId
   patch.matchedFormatLabel = match?.formatLabel
+  patch.filenameMetadata = match?.metadata
 
   // -- embedded metadata (WAV only; bounded scan; fail-open) ------------------
   const embedded = patch.fileFormat === 'wav'
