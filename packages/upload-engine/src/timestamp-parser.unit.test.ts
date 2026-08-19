@@ -301,11 +301,18 @@ describe('TIMESTAMP_TOKEN_GROUPS — palette copy must match real behaviour', ()
     ]
     // Which scaffold slot each token replaces (its semantic field).
     const slotOf: Record<string, string> = {
-      '%Y': '%Y', '%y': '%Y',
-      '%M': '%M', '%m': '%M', '%N': '%M', '%n': '%M',
-      '%D': '%D', '%d': '%D',
-      '%H': '%H', '%h': '%H',
-      '%I': '%I', '%i': '%I'
+      '%Y': '%Y',
+      '%y': '%Y',
+      '%M': '%M',
+      '%m': '%M',
+      '%N': '%M',
+      '%n': '%M',
+      '%D': '%D',
+      '%d': '%D',
+      '%H': '%H',
+      '%h': '%H',
+      '%I': '%I',
+      '%i': '%I'
     }
 
     for (const { token, example } of all) {
@@ -324,15 +331,12 @@ describe('TIMESTAMP_TOKEN_GROUPS — palette copy must match real behaviour', ()
     }
   })
 
-  test('the three MEASURED traps are stated correctly', () => {
+  test('the MEASURED traps are stated correctly', () => {
     const info = (tok: string): { range: string } => all.find(t => t.token === tok) as { range: string }
     // %G/%g reject 12 -- the range text must say so.
     expect(parseTimestampWithFormat('2024_03_15_12_45', '%Y_%M_%D_%G_%I')).toBeUndefined()
     expect(info('%G').range).toContain('not 12')
     expect(info('%g').range).toContain('not 12')
-    // %Z is positive-offset only.
-    expect(parseTimestampWithFormat('2024_03_15_45_-0500', '%Y_%M_%D_%I_%Z')).toBeUndefined()
-    expect(info('%Z').range).toContain('+')
     // %z is uppercase only.
     expect(parseTimestampWithFormat('2024_03_15_45_utc', '%Y_%M_%D_%I_%z')).toBeUndefined()
     expect(info('%z').range.toLowerCase()).toContain('capital')
@@ -430,5 +434,54 @@ describe('renderFormatExample — the inverse of parseTimestampWithFormat', () =
     expect(rendered).toBe('20240305_0030PM')
     const parsed = parseTimestampWithFormat(rendered, '%Y%M%D_%G%I%A')
     expect(parsed).toBe('2024-03-05T12:30:00')
+  })
+})
+
+describe('%Z accepts NEGATIVE offsets (2026-08-19 fix)', () => {
+  // The desktop original (arbimon-uploader utils/dateHelper.js:60) hardcoded
+  // `\+`, and this port inherited it -- so every recorder west of UTC could not
+  // express its own filenames with %Z. Confirmed a DEFECT, not a restriction:
+  // toUtcIso already converted negative offsets correctly, and the auto-detect
+  // path (detectFilenameOffset) already matched [+-]. The parser contradicted
+  // the rest of the codebase.
+  test('a west-of-UTC offset parses', () => {
+    expect(parseTimestampWithFormat('20240315_064510-0500.wav', '%Y%M%D_%H%I%S%Z'))
+      .toBe('2024-03-15T06:45:10-0500')
+  })
+
+  test('positive offsets still parse (no regression)', () => {
+    expect(parseTimestampWithFormat('20240315_064510+0700.wav', '%Y%M%D_%H%I%S%Z'))
+      .toBe('2024-03-15T06:45:10+0700')
+  })
+
+  test('the ISO colon form parses too', () => {
+    expect(parseTimestampWithFormat('20240315_064510-05:00.wav', '%Y%M%D_%H%I%S%Z'))
+      .toBe('2024-03-15T06:45:10-05:00')
+  })
+
+  test('END TO END: a negative offset converts to the correct UTC instant', () => {
+    // The point of the fix. 06:45:10 at UTC-5 is 11:45:10 UTC.
+    const parsed = parseTimestampWithFormat('20240315_064510-0500.wav', '%Y%M%D_%H%I%S%Z')
+    expect(toUtcIso(parsed as string)).toBe('2024-03-15T11:45:10.000Z')
+  })
+
+  test('the rendered example ROUND-TRIPS at a negative offset', () => {
+    const rendered = renderFormatExample('%Y%M%D_%H%I%S%Z', new Date(2024, 2, 5, 8, 7, 9), { offsetMinutes: -240 })
+    expect(rendered).toBe('20240305_080709-0400')
+    expect(parseTimestampWithFormat(rendered, '%Y%M%D_%H%I%S%Z')).toBe('2024-03-05T08:07:09-0400')
+  })
+
+  test('a malformed offset is still rejected', () => {
+    // The token must not become a catch-all: guard the loosened character class.
+    expect(parseTimestampWithFormat('20240315_064510-5.wav', '%Y%M%D_%H%I%S%Z')).toBeUndefined()
+  })
+
+  // DOCUMENTED CAVEAT, not a fix: %z matches a zone ABBREVIATION but nothing
+  // downstream can resolve it to an offset, so it yields undefined at
+  // conversion time. Pinned so the behaviour is not mistaken for a regression.
+  test('%z parses but does NOT resolve to an instant', () => {
+    const parsed = parseTimestampWithFormat('20240315_064510EST.wav', '%Y%M%D_%H%I%S%z')
+    expect(parsed).toBe('2024-03-15T06:45:10EST')
+    expect(toUtcIso(parsed as string)).toBeUndefined()
   })
 })

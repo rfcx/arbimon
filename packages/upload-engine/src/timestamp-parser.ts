@@ -101,7 +101,21 @@ const FORMAT_TOKENS: Record<string, string> = {
   '%i': '(?<minute>[1-5]?[0-9])',
   '%S': '(?<second>[0-5][0-9])',
   '%s': '(?<second>[1-5]?[0-9])',
-  '%Z': '(?<timezone>\\+[0-9][0-9][0-9][0-9])',
+  // NEGATIVE OFFSETS ACCEPTED (fixed 2026-08-19). The desktop original
+  // (arbimon-uploader utils/dateHelper.js:60) hardcoded `\+`, and this port
+  // inherited it faithfully -- so every recorder west of UTC (all of the
+  // Americas) could not express its own filenames with %Z.
+  //
+  // Confirmed a defect, not a deliberate restriction, on three counts:
+  //  1. `toUtcIso` already converts negative offsets correctly (measured);
+  //  2. the AUTO-detect path already accepts both signs
+  //     (`detectFilenameOffset` in analyze.ts matches `[+-]`), so the codebase
+  //     contradicted itself -- auto-detect read `-0500` while a user's own %Z
+  //     format refused it;
+  //  3. nothing downstream distinguishes the sign.
+  // Also accepts the `-05:00` colon form, which ISO-8601 permits and which
+  // `toUtcIso`/`stripOffset` already handle.
+  '%Z': '(?<timezone>[+-][0-9][0-9]:?[0-9][0-9])',
   '%z': '(?<timezone>[A-Z][A-Z][A-Z])'
 }
 
@@ -190,7 +204,12 @@ export const TIMESTAMP_FORMAT_TOKEN_LABELS: Record<string, string> = {
   '%i': 'minute (45)',
   '%S': 'second, 2-digit (10)',
   '%s': 'second (10)',
-  '%Z': 'timezone offset (+0000)',
+  '%Z': 'timezone offset (-0500)',
+  // ⚠ %z MATCHES but does not RESOLVE: a zone abbreviation like 'EST' is
+  // carried into the parsed string, where `toUtcIso` cannot interpret it and
+  // returns undefined (measured 2026-08-19). Kept for desktop parity and
+  // because the abbreviation still marks where the zone sits in the filename,
+  // but %Z is the token that actually determines an instant.
   '%z': 'timezone name (UTC)'
 }
 
@@ -264,9 +283,10 @@ export const TIMESTAMP_TOKEN_GROUPS: Array<{
     key: 'zone',
     label: 'Time zone',
     tokens: [
-      // MEASURED: \+[0-9]{4} -- a NEGATIVE offset does not match.
-      { token: '%Z', name: 'UTC offset', range: '+hhmm only', example: '+0700' },
-      // MEASURED: [A-Z]{3} -- lowercase does not match.
+      { token: '%Z', name: 'UTC offset', range: '±hhmm', example: '-0500' },
+      // MEASURED: [A-Z]{3} -- lowercase does not match. NOTE this token also
+      // does not RESOLVE to an offset downstream (see the warning on
+      // TIMESTAMP_FORMAT_TOKEN_LABELS); prefer %Z.
       { token: '%z', name: 'Zone abbreviation', range: '3 capitals', example: 'UTC' }
     ]
   }
@@ -412,10 +432,10 @@ export const matchTimestamp = (
  *  - `%G`/`%g` render `hour % 12`, so noon and midnight render as `0`, not `12`.
  *    That reads oddly but is CORRECT and round-trips: the parser's 12-hour token
  *    matches 00-11 and adds 12 for PM, so 12:00 -> `0` + `PM` -> 12:00 again.
- *  - `%Z` renders the TRUE local offset, including a negative one (e.g. `-0400`),
- *    even though the parser only matches `+hhmm`. Rendering a fake `+` would
- *    hide a real trap; the palette already states the limitation, and this makes
- *    it visible to anyone west of UTC.
+ *  - `%Z` renders the true local offset, including a negative one (e.g. `-0400`).
+ *    The parser accepts both signs as of 2026-08-19, so this round-trips; before
+ *    that fix the renderer deliberately showed the honest `-` that the parser
+ *    would then have rejected, which is how the defect was spotted.
  */
 export const renderFormatExample = (
   timestampFormat: string,
