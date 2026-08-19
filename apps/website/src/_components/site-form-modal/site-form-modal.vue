@@ -429,13 +429,18 @@ const fetchGroundElevation = async (): Promise<void> => {
   if (coords === undefined) { groundElevation.value = undefined; return }
   const key = `${coords[1].toFixed(4)},${coords[0].toFixed(4)}`
   if (key === lastElevKey) return
-  lastElevKey = key
   try {
     const res = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${coords[1]}&longitude=${coords[0]}`)
     if (!res.ok) return
     const body = await res.json() as { elevation?: number[] }
     const elev = body.elevation?.[0]
-    if (typeof elev === 'number' && Number.isFinite(elev)) groundElevation.value = Math.round(elev)
+    if (typeof elev === 'number' && Number.isFinite(elev)) {
+      groundElevation.value = Math.round(elev)
+      // Cache the key only on SUCCESS — setting it up front turned any
+      // transient failure into a permanent no-slider for those coordinates
+      // (re-review pass 1, 2026-08-19).
+      lastElevKey = key
+    }
   } catch {
     // no estimate ⇒ no slider; the numeric field is unaffected
   }
@@ -455,11 +460,15 @@ const onElevSlider = (event: Event): void => {
 }
 
 // -- SITE FACTS strip labels (operator 2026-08-19 #7) -------------------------
+// Textual date extraction, NOT `new Date(value)`: the legacy API emits
+// 'YYYY-MM-DD HH:MM:SS' datetimes, which Safari's Date parser rejects
+// (Invalid Date) — the same reason staging-table.vue's existingRangeLabel
+// slices strings instead of parsing (re-review pass 1, 2026-08-19).
 const factDate = (value: string | null | undefined): string | undefined => {
-  if (typeof value !== 'string' || value === '') return undefined
-  const d = new Date(value)
-  if (Number.isNaN(d.getTime())) return undefined
-  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+  if (typeof value !== 'string') return undefined
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(value)
+  if (m === null) return undefined
+  return `${m[1]}-${m[2]}-${m[3]}`
 }
 const recordingRangeLabel = computed(() => {
   const from = factDate(props.site?.first_recording_at)
@@ -516,6 +525,10 @@ const onCancel = (): void => {
 
 const onSave = async (): Promise<void> => {
   if (saving.value) return
+  // The dirty gate applies to EVERY save path, not just the button: the
+  // inputs' Enter-to-save must not bypass what the inert button enforces
+  // (re-review pass 1, 2026-08-19 — the button was gated but Enter was not).
+  if (!isDirty.value) return
   submitError.value = undefined
   if (!validate()) return
 
@@ -716,6 +729,9 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  // Clear the debounce too — a pending timer would otherwise fire after
+  // unmount and issue a pointless network fetch (re-review pass 2).
+  if (elevFetchTimer !== undefined) clearTimeout(elevFetchTimer)
   map?.remove()
   map = undefined
 })
