@@ -296,8 +296,19 @@
         </div>
       </div>
 
-      <!-- FOOTER ----------------------------------------------------------- -->
-      <div class="mt-6 flex items-center justify-between">
+      <!-- FOOTER -----------------------------------------------------------
+           STICKY. Measured 2026-08-19 on a 900px viewport: with the palette
+           expanded the panel scrolls (975px content in 746px), and a static
+           footer put Done at y=974 -- BELOW THE FOLD, reachable only by
+           scrolling past all 20 tokens. An image-model review flagged this and
+           an earlier probe of mine contradicted it; the probe was wrong (it had
+           measured the UPLOADER SETTINGS modal's Done button, since two exist
+           while both dialogs are open). Re-scoped to this panel, the model was
+           right.
+
+           `-mx-6 px-6 -mb-6 pb-6` cancels the panel's padding so the bar spans
+           the full width and its background covers content scrolling beneath. -->
+      <div class="sticky bottom-0 mt-6 -mx-6 px-6 -mb-6 pb-6 pt-3 bg-moss border-t border-cloud/20 flex items-center justify-between">
         <span
           v-if="saveError !== undefined"
           class="text-xs text-flamingo"
