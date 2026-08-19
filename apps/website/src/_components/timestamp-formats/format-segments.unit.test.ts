@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { type FormatSegment, insertIndexForX, insertTokenAt, moveSegment, normalize, parseFormatSegments, removeSegmentAt, segmentsToFormat } from './format-segments'
+import { type FormatSegment, caretTargetForArrow, insertIndexForX, insertTokenAt, moveSegment, normalize, parseFormatSegments, removeSegmentAt, segmentsToFormat } from './format-segments'
 
 const tokens = (segments: FormatSegment[]): string[] =>
   segments.filter(s => s.kind === 'token').map(s => s.value)
@@ -169,5 +169,80 @@ describe('insertIndexForX — pointer position decides the drop slot', () => {
 
   test('an empty field always yields index 0', () => {
     expect(insertIndexForX([], 250)).toBe(0)
+  })
+})
+
+describe('caretTargetForArrow — a token is ONE character for the caret', () => {
+  // 'a%Yb' => [0]text'a'  [1]token'%Y'  [2]text'b'
+  const segments = parseFormatSegments('a%Yb')
+
+  test('the fixture has the shape these cases assume', () => {
+    expect(segments.map(s => s.kind)).toEqual(['text', 'token', 'text'])
+    expect(segments[0].value).toBe('a')
+    expect(segments[2].value).toBe('b')
+  })
+
+  test('RIGHT at the end of a text run steps OVER the token', () => {
+    // Caret after 'a', pressing right: it must not land inside %Y, it lands at
+    // the start of 'b' -- one press, one token.
+    expect(caretTargetForArrow(segments, 0, 1, 'right')).toEqual({ index: 2, offset: 0 })
+  })
+
+  test('LEFT at the start of a text run steps back OVER the token', () => {
+    expect(caretTargetForArrow(segments, 2, 0, 'left')).toEqual({ index: 0, offset: 1 })
+  })
+
+  // MUTATION-DRIVEN. The original version of this test used segment 0 of
+  // 'ab%Y', where the LEFT hop is undefined anyway (there is no token before
+  // it) -- so it passed even with the `offset > 0` guard deleted. The guard is
+  // only observable from a text segment that HAS a token to its left, with the
+  // caret partway through it. Found by enumerating every (segment, offset,
+  // direction) triple and diffing real vs mutated.
+  test('mid-text movement is left to the browser', () => {
+    const longer = parseFormatSegments('ab%Ycd') // [0]'ab' [1]%Y [2]'cd'
+
+    // Caret between c and d: LEFT must move within 'cd', not jump the chip.
+    expect(caretTargetForArrow(longer, 2, 1, 'left')).toBeUndefined()
+    // ...and at the end of 'cd' likewise.
+    expect(caretTargetForArrow(longer, 2, 2, 'left')).toBeUndefined()
+    // Caret between a and b: RIGHT must move within 'ab'.
+    expect(caretTargetForArrow(longer, 0, 1, 'right')).toBeUndefined()
+  })
+
+  test('the ends of the field yield no target (nothing to step onto)', () => {
+    expect(caretTargetForArrow(segments, 0, 0, 'left')).toBeUndefined()
+    expect(caretTargetForArrow(segments, 2, 1, 'right')).toBeUndefined()
+  })
+
+  test('crossing ADJACENT tokens hops one at a time', () => {
+    // '%Y%M' => text'' token text'' token text''  -- the empty text slots are
+    // what make each token a separate, single step rather than a double jump.
+    const adjacent = parseFormatSegments('%Y%M')
+    expect(adjacent.map(s => s.kind)).toEqual(['text', 'token', 'text', 'token', 'text'])
+    expect(caretTargetForArrow(adjacent, 0, 0, 'right')).toEqual({ index: 2, offset: 0 })
+    expect(caretTargetForArrow(adjacent, 2, 0, 'right')).toEqual({ index: 4, offset: 0 })
+    expect(caretTargetForArrow(adjacent, 4, 0, 'left')).toEqual({ index: 2, offset: 0 })
+    expect(caretTargetForArrow(adjacent, 2, 0, 'left')).toEqual({ index: 0, offset: 0 })
+  })
+
+  // MUTATION-DRIVEN. Offset 0 was not enough: with the `kind !== 'text'` check
+  // removed, a token segment at offset 0 still returns undefined by accident
+  // (offset < value.length is false for a 2-char token only when offset >= 2).
+  // The guard is observable at offset >= the token's length.
+  test('a caret in a token segment is never asked about', () => {
+    // Defensive: the caret cannot be inside a chip, but if asked, decline
+    // rather than compute a nonsense target.
+    const adjacent = parseFormatSegments('%Y%M') // [1] and [3] are tokens
+    expect(caretTargetForArrow(adjacent, 1, 2, 'right')).toBeUndefined()
+    expect(caretTargetForArrow(adjacent, 3, 0, 'left')).toBeUndefined()
+    expect(caretTargetForArrow(segments, 1, 0, 'right')).toBeUndefined()
+  })
+
+  test('a hop lands on a TEXT segment, never on the token itself', () => {
+    // Pins the +2 (skip the token) rather than +1 (land on it): a caret cannot
+    // live in a chip, so an off-by-one here would put it nowhere.
+    const target = caretTargetForArrow(segments, 0, 1, 'right')
+    expect(target).toBeDefined()
+    expect(segments[(target as { index: number }).index].kind).toBe('text')
   })
 })

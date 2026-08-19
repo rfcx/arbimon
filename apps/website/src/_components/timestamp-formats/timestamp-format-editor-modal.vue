@@ -408,13 +408,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 
 import { type UserTimestampFormat, MAX_USER_TIMESTAMP_FORMATS } from '@rfcx-bio/common/dao/types'
 import { parseTimestampWithFormat, TIMESTAMP_FORMAT_ERROR_TEXT, TIMESTAMP_TOKEN_GROUPS, validateTimestampFormat } from '@rfcx-bio/upload-engine'
 
 import ModalPopup from '@/_components/modal-popup.vue'
-import { type FormatSegment, insertIndexForX, insertTokenAt, moveSegment, parseFormatSegments, removeSegmentAt, segmentsToFormat } from './format-segments'
+import { type FormatSegment, caretTargetForArrow, insertIndexForX, insertTokenAt, moveSegment, parseFormatSegments, removeSegmentAt, segmentsToFormat } from './format-segments'
 
 /**
  * The filename-format editor (operator spec 2026-08-18; iStat Menus as the
@@ -577,9 +577,54 @@ const onTextInput = (index: number, event: Event): void => {
   insertAt.value = index + 1
 }
 
+/** Put the caret at `offset` inside the text span for segment `index`. */
+const focusTextSegment = (index: number, offset: number): void => {
+  void nextTick(() => {
+    const el = textEls.get(index)
+    if (el === undefined) return
+    el.focus()
+    const node = el.firstChild
+    const range = document.createRange()
+    // An empty span has no text node -- collapse to the element itself, which
+    // is where the caret belongs between two adjacent chips.
+    if (node === null) range.setStart(el, 0)
+    else range.setStart(node, Math.min(offset, node.textContent?.length ?? 0))
+    range.collapse(true)
+    const selection = window.getSelection()
+    selection?.removeAllRanges()
+    selection?.addRange(range)
+    insertAt.value = index + 1
+  })
+}
+
 const onTextKeydown = (index: number, event: KeyboardEvent): void => {
   const el = event.target as HTMLElement
-  const atStart = (el.textContent ?? '') === '' || window.getSelection()?.anchorOffset === 0
+  const offset = window.getSelection()?.anchorOffset ?? 0
+  const atStart = (el.textContent ?? '') === '' || offset === 0
+
+  // ARROW KEYS TREAT A TOKEN AS ONE CHARACTER (operator 2026-08-19).
+  // The caret can never sit inside a chip, so at the edge of a text run the
+  // arrow steps straight over the neighbouring token and lands on the far side
+  // in a single press. `caretTargetForArrow` owns the rule (pure + unit-tested,
+  // incl. that a hop always lands on a TEXT segment, never on the token).
+  // Anywhere else we do nothing and let the browser move within the text.
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    // Let Shift-arrow (selection) and word-jumps keep native behaviour: this is
+    // caret MOVEMENT only, and hijacking a selection would silently collapse it.
+    if (event.shiftKey || event.altKey || event.metaKey || event.ctrlKey) return
+    const target = caretTargetForArrow(
+      segments.value,
+      index,
+      offset,
+      event.key === 'ArrowLeft' ? 'left' : 'right'
+    )
+    if (target !== undefined) {
+      event.preventDefault()
+      focusTextSegment(target.index, target.offset)
+    }
+    return
+  }
+
   // Backspace at the very start of a text run deletes the chip before it --
   // the behaviour every chip input has, and the only keyboard route to
   // removing a token.

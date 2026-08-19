@@ -131,6 +131,54 @@ export const moveSegment = (
 }
 
 /**
+ * Where should the caret go when an arrow key is pressed inside a text segment?
+ *
+ * A TOKEN IS ONE CHARACTER for navigation purposes (operator, 2026-08-19): the
+ * caret never lands "inside" a chip, it steps over it in a single press. Because
+ * segments always alternate text/token/text, stepping over a token means moving
+ * to the NEIGHBOURING TEXT SEGMENT and landing on its near edge.
+ *
+ * Returns the segment to focus and the caret offset within it, or `undefined`
+ * when the key should keep its default behaviour (moving within the current
+ * text, or doing nothing at the very ends of the field).
+ *
+ * Pure so the rules are testable without a DOM: the component only has to apply
+ * the result.
+ *
+ * @param segments   current segments (assumed normalized)
+ * @param index      segment index the caret is in (a text segment)
+ * @param offset     caret offset within that text
+ * @param direction  'left' or 'right'
+ */
+export const caretTargetForArrow = (
+  segments: FormatSegment[],
+  index: number,
+  offset: number,
+  direction: 'left' | 'right'
+): { index: number, offset: number } | undefined => {
+  const current = segments[index]
+  if (current === undefined || current.kind !== 'text') return undefined
+
+  if (direction === 'left') {
+    // Only take over at the very start of the text run; otherwise the browser's
+    // own character-wise movement is correct.
+    if (offset > 0) return undefined
+    const token = segments[index - 1]
+    const previousText = segments[index - 2]
+    if (token === undefined || previousText === undefined) return undefined
+    // Land at the END of the text before the token -- i.e. just left of the chip.
+    return { index: index - 2, offset: previousText.value.length }
+  }
+
+  if (offset < current.value.length) return undefined
+  const token = segments[index + 1]
+  const nextText = segments[index + 2]
+  if (token === undefined || nextText === undefined) return undefined
+  // Land at the START of the text after the token -- i.e. just right of the chip.
+  return { index: index + 2, offset: 0 }
+}
+
+/**
  * Which insertion index does a pointer at `x` correspond to?
  *
  * Compares against each candidate's horizontal MIDPOINT: past the midpoint means
