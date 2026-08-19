@@ -22,7 +22,7 @@
 
 import { probeAudioMetadata } from './audio-metadata'
 import { checkRecordingProvenance, historicalDateNotice } from './recorder-provenance'
-import { parseTimestamp, TIMESTAMP_FORMAT_AUTO, toUtcIso } from './timestamp-parser'
+import { type SavedTimestampFormat, matchTimestamp, toUtcIso } from './timestamp-parser'
 import { type TimezoneSource, type UploadItem } from './types'
 import { extractEmbeddedTimestamp, formatOffset } from './wav-embedded-timestamp'
 
@@ -34,6 +34,14 @@ export interface AnalyzeContext {
   siteTimezone?: string
   /** Site display name (denormalized into the item for the table). */
   siteName?: string
+  /**
+   * The user's saved filename formats, in precedence order. Tried only AFTER
+   * the built-in auto-detect patterns, so adding one can never change a
+   * filename that already parsed (operator, 2026-08-18 — full reasoning on
+   * `matchTimestamp`). Omitted/empty = auto-detect only, i.e. previous
+   * behaviour exactly.
+   */
+  savedFormats?: SavedTimestampFormat[]
 }
 
 export interface AnalyzeResult {
@@ -120,7 +128,16 @@ export async function analyzeFile (
   }
 
   // -- filename parse ---------------------------------------------------------
-  const parsed = parseTimestamp(item.filename, TIMESTAMP_FORMAT_AUTO)
+  // Built-in patterns first, then the user's saved formats (see matchTimestamp).
+  const match = matchTimestamp(item.filename, context.savedFormats)
+  const parsed = match?.timestamp
+  // Report WHICH saved format matched so the row can name it (operator: a loose
+  // saved format can produce a plausible-but-wrong date, and the user needs to
+  // see that their own rule -- not auto-detect -- is responsible). Set
+  // EXPLICITLY to undefined on an auto/no match so re-analysis clears a stale
+  // label: engine.update() MERGES patches, exactly as analysisError above.
+  patch.matchedFormatId = match?.formatId
+  patch.matchedFormatLabel = match?.formatLabel
 
   // -- embedded metadata (WAV only; bounded scan; fail-open) ------------------
   const embedded = patch.fileFormat === 'wav'

@@ -238,6 +238,86 @@ export const parseTimestampAuto = (fileName: string): string | undefined => {
   return undefined
 }
 
+/**
+ * A user's saved filename format, as the ENGINE sees it.
+ *
+ * Structurally identical to `UserTimestampFormat` in `@rfcx-bio/common`, but
+ * declared LOCALLY on purpose: this package is deliberately dependency-free so
+ * it can also back the desktop rebuild, and importing the app's DAO types would
+ * break that. The two are kept in step BY SHAPE, not by a shared import — the
+ * same conscious duplication the API's validator carries (see
+ * `validateTimestampFormat`). Only the fields the parser actually needs are
+ * declared, so a widening of the DAO type cannot break this package.
+ */
+export interface SavedTimestampFormat {
+  id: string
+  label: string
+  format: string
+}
+
+/** Which rule recognised a filename's timestamp. */
+export interface TimestampMatch {
+  /** The parsed timestamp: local-naive, or offset-carrying for `%Z` formats. */
+  timestamp: string
+  /** `auto` = a built-in pattern; `saved` = one of the user's own formats. */
+  source: 'auto' | 'saved'
+  /** Set only when `source === 'saved'` — identifies WHICH entry matched. */
+  formatId?: string
+  /** The saved format's human label, for display on a staged row. */
+  formatLabel?: string
+}
+
+/**
+ * Parse a filename against the built-in patterns FIRST, then the user's saved
+ * formats in list order, reporting which one matched.
+ *
+ * ORDERING IS AN OPERATOR DECISION (2026-08-18), and the two halves of it pull
+ * in opposite directions, so the resolution is recorded here:
+ *
+ *  - "Saved formats AUGMENT auto-detect, never replace it — adding one can
+ *    never break a filename that already parsed." That guarantee ONLY holds if
+ *    the built-in patterns are tried first, which is what this does.
+ *  - "First in list wins", and "a loose user format can shadow a correct auto
+ *    pattern" — which would require the opposite order.
+ *
+ * The first rule is the binding one (it is stated with its rationale, and it is
+ * the one that protects existing users' working uploads), so `AUTO_PATTERNS`
+ * run first and "first in list wins" governs precedence AMONG the saved
+ * formats. The shadowing concern is not dismissed — it is real, just narrower
+ * than stated: a saved format can still produce a WRONG-but-valid parse for a
+ * file the built-ins failed on, and an early loose saved format still shadows a
+ * later, more specific one. Both are exactly why the matching format is
+ * REPORTED rather than silently applied — the staged row names it, so a user
+ * can see that their own format, not auto-detect, produced a suspect date.
+ *
+ * Invalid saved formats are skipped rather than throwing:
+ * `parseTimestampWithFormat` already refuses them (returning `undefined`), and
+ * the API validates on write, so a bad entry can only reach here via stored
+ * data that predates validation. Skipping degrades to auto-detect instead of
+ * failing the whole analysis.
+ */
+export const matchTimestamp = (
+  fileName: string,
+  savedFormats: SavedTimestampFormat[] = []
+): TimestampMatch | undefined => {
+  const auto = parseTimestampAuto(fileName)
+  if (auto !== undefined) return { timestamp: auto, source: 'auto' }
+
+  for (const saved of savedFormats) {
+    const parsed = parseTimestampWithFormat(fileName, saved.format)
+    if (parsed !== undefined) {
+      return {
+        timestamp: parsed,
+        source: 'saved',
+        formatId: saved.id,
+        formatLabel: saved.label
+      }
+    }
+  }
+
+  return undefined
+}
+
 const isHex = (value: string): boolean => {
   if (!/^[0-9a-fA-F]+$/.test(value)) return false
   const num = parseInt(value, 16)

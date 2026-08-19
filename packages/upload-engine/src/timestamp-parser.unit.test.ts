@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { isValidTimestampFormat, parseTimestamp, parseTimestampAuto, parseTimestampUnixHex, parseTimestampWithFormat, TIMESTAMP_FORMAT_UNIX_HEX, toUtcIso } from './timestamp-parser'
+import { isValidTimestampFormat, matchTimestamp, parseTimestamp, parseTimestampAuto, parseTimestampUnixHex, parseTimestampWithFormat, TIMESTAMP_FORMAT_UNIX_HEX, toUtcIso } from './timestamp-parser'
 
 describe('parseTimestampAuto', () => {
   test('AudioMoth modern: YYYYMMDD_HHMMSS', () => {
@@ -141,6 +141,93 @@ describe('parseTimestampWithFormat', () => {
     // mistaken for an unknown token, and %%Y is a literal % followed by a
     // year token -- not a duplicate of %Y.
     expect(isValidTimestampFormat('%Y%%')).toBe(true)
+  })
+})
+
+describe('matchTimestamp — saved formats AUGMENT auto-detect', () => {
+  const saved = (format: string, id = 'f1', label = 'Field kit'): { id: string, label: string, format: string } =>
+    ({ id, label, format })
+
+  // THE CENTRAL GUARANTEE (operator, 2026-08-18): "adding a format can never
+  // break a filename that already parsed".
+  //
+  // Pinned with a saved format that GENUINELY RIVALS the built-in one on this
+  // filename -- it matches, and it yields a DIFFERENT INSTANT (it reads the
+  // trailing +0700 as an offset, which the auto patterns deliberately never
+  // capture). Measured both sides before asserting. A weaker fixture, where
+  // the saved format simply failed to match, would pass even if precedence
+  // were flipped and would pin nothing.
+  test('a built-in pattern wins over a saved format that also matches', () => {
+    const name = '20240315_064510+0700.wav'
+    // Both parse this name, to materially different results:
+    expect(parseTimestampAuto(name)).toBe('2024-03-15T06:45:10')
+    expect(parseTimestampWithFormat(name, '%Y%M%D_%H%I%S%Z')).toBe('2024-03-15T06:45:10+0700')
+
+    const match = matchTimestamp(name, [saved('%Y%M%D_%H%I%S%Z')])
+    expect(match?.source).toBe('auto')
+    expect(match?.timestamp).toBe('2024-03-15T06:45:10') // the built-in result
+    expect(match?.formatId).toBeUndefined()
+  })
+
+  test('a saved format catches a name auto-detect cannot', () => {
+    // Month-NAME style: no built-in pattern handles it (verified below), which
+    // is exactly the gap saved formats exist to fill.
+    expect(parseTimestampAuto('KIT_15Mar2024_0645.wav')).toBeUndefined()
+    const match = matchTimestamp('KIT_15Mar2024_0645.wav', [saved('KIT_%D%n%Y_%H%I')])
+    expect(match?.source).toBe('saved')
+    expect(match?.formatId).toBe('f1')
+    expect(match?.formatLabel).toBe('Field kit')
+    expect(match?.timestamp).toBe('2024-03-15T06:45:00')
+  })
+
+  test('first in list wins among saved formats', () => {
+    // Both match; they disagree (one reads 15 as the day, the other as the
+    // month), so the REPORTED id proves which produced the date -- the
+    // shadowing case the staged-row display exists to expose.
+    const name = 'KIT_15Mar2024_0645+0700.wav'
+    const withZone = saved('KIT_%D%n%Y_%H%I%Z', 'zoned', 'With offset')
+    const withoutZone = saved('KIT_%D%n%Y_%H%I', 'naive', 'No offset')
+
+    const zonedFirst = matchTimestamp(name, [withZone, withoutZone])
+    expect(zonedFirst?.formatId).toBe('zoned')
+    expect(zonedFirst?.timestamp).toBe('2024-03-15T06:45:00+0700')
+
+    const naiveFirst = matchTimestamp(name, [withoutZone, withZone])
+    expect(naiveFirst?.formatId).toBe('naive')
+    expect(naiveFirst?.timestamp).toBe('2024-03-15T06:45:00')
+  })
+
+  test('no formats, or none matching, behaves exactly as auto-detect', () => {
+    expect(matchTimestamp('20240315_064510.wav')?.timestamp).toBe(parseTimestampAuto('20240315_064510.wav'))
+    expect(matchTimestamp('no-date-here.wav', [saved('%Y%M%D')])).toBeUndefined()
+  })
+
+  // MUTATION-DRIVEN. The first version of this test used '%Y_%Y' as the
+  // "invalid" entry and SURVIVED the mutation that strips the validity guard
+  // -- because that format fails to match with or without the guard, so it
+  // pinned nothing. (Same trap the guard's own test hit in the previous
+  // session: an invalid format usually fails anyway.)
+  //
+  // This fixture genuinely defeats the unguarded path. The duplicate %I
+  // substitutes once and leaves a literal '%I' in the pattern, which this
+  // filename happens to contain -- so WITHOUT the guard the whole pattern
+  // matches and yields {day:15, monthName:Mar, year:2024, hour:06, minute:45},
+  // i.e. a REAL timestamp derived from a format the user never expressed.
+  // Silent wrong data, which is worse than refusing. Measured before writing.
+  test('an invalid saved format is REFUSED, never parsed partially', () => {
+    expect(matchTimestamp('KIT_15Mar2024_0645%I.wav', [
+      saved('KIT_%D%n%Y_%H%I%I', 'bad', 'Broken')
+    ])).toBeUndefined()
+  })
+
+  test('an invalid saved format is skipped, not fatal to the ones after it', () => {
+    // Stored data can predate validation; a bad entry must degrade to the next
+    // format rather than throw or block every one after it.
+    const match = matchTimestamp('KIT_15Mar2024_0645.wav', [
+      saved('%Y_%Y', 'bad', 'Broken'),
+      saved('KIT_%D%n%Y_%H%I', 'good', 'Good')
+    ])
+    expect(match?.formatId).toBe('good')
   })
 })
 

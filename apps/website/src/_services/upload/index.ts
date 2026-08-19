@@ -8,7 +8,7 @@
  */
 import { computed, reactive, ref } from 'vue'
 
-import { type QueueStats, type UploadItem, BrowserFileSource, IndexedDbUploadStore, makeBrowserPrepare, makeWorkerEncoder, TranscodeCache, TranscodingFileSource, UploadEngine, withFlacTranscode } from '@rfcx-bio/upload-engine'
+import { type QueueStats, type SavedTimestampFormat, type UploadItem, BrowserFileSource, IndexedDbUploadStore, makeBrowserPrepare, makeWorkerEncoder, TranscodeCache, TranscodingFileSource, UploadEngine, withFlacTranscode } from '@rfcx-bio/upload-engine'
 
 import { track } from '~/analytics'
 import { useAuth0Client } from '~/auth-client'
@@ -65,8 +65,16 @@ const INGEST_BASE_URL = (import.meta.env.VITE_INGEST_BASE_URL as string | undefi
 
 export const EMPTY_STATS: QueueStats = { total: 0, analyzing: 0, staged: 0, queued: 0, preparing: 0, ready: 0, signing: 0, signed: 0, uploading: 0, uploaded: 0, ingested: 0, duplicate: 0, failed: 0, rejected: 0, cancelled: 0, paused: 0, bytesTotal: 0, bytesUploaded: 0 }
 
-/** Per-prepare timezone context, set by the panel before enqueue. */
-export const prepareOptions = reactive<{ timezone?: string | number }>({})
+/**
+ * Per-prepare context, set by the panel/page before enqueue.
+ *
+ * `savedFormats` mirrors the user's profile list so the PREPARE fallback can
+ * recognise the same filenames staging did. Read at CALL time below, not at
+ * construction time -- the engine is built once at module load, long before the
+ * profile has been fetched, so capturing the value here would pin it to []
+ * forever.
+ */
+export const prepareOptions = reactive<{ timezone?: string | number, savedFormats?: SavedTimestampFormat[] }>({})
 
 /**
  * Client-side WAV→FLAC encoding (#112): lossless, metadata-gated, fail-open.
@@ -103,7 +111,7 @@ export const engine = new UploadEngine(
   fileSource,
   getToken,
   async (item, file) => await withFlacTranscode(
-    makeBrowserPrepare({ timezone: prepareOptions.timezone }),
+    makeBrowserPrepare({ timezone: prepareOptions.timezone, savedFormats: prepareOptions.savedFormats }),
     transcodeCache,
     {
       enabled: flacEncodeEnabled.value,
