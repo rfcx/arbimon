@@ -8,31 +8,32 @@
          right. The modal doubled max-w-lg → max-w-4xl to make room. On small
          screens the map stacks BELOW the form — the form is the actionable
          half and must stay first in DOM/tab order either way. -->
-    <div class="p-6 md:(grid grid-cols-2 gap-x-6)">
+    <div class="relative p-6 md:(grid grid-cols-2 gap-x-6)">
+      <!-- Close [x]: far top-right corner of the MODAL (operator 2026-08-19 #6),
+           absolutely positioned on the modal body rather than inside the
+           left-column header, so it stays in the corner at every width. -->
+      <button
+        class="absolute top-3 right-3 z-10 p-1 rounded text-cloud hover:(text-insight bg-cloud/10) transition-colors"
+        title="Close"
+        aria-label="Close"
+        @click="onCancel"
+      >
+        <svg
+          viewBox="0 0 16 16"
+          class="w-4 h-4 fill-none stroke-current"
+          stroke-width="1.8"
+        ><path
+          d="M4 4l8 8M12 4l-8 8"
+          stroke-linecap="round"
+        /></svg>
+      </button>
       <div>
-      <div class="flex items-start justify-between gap-x-4">
-        <h3 class="text-lg font-semibold text-insight">
-          {{ editing ? 'Edit Site' : 'Create a Site' }}
-        </h3>
-        <button
-          class="shrink-0 -mr-1 -mt-1 p-1 rounded text-cloud hover:(text-insight bg-cloud/10) transition-colors"
-          title="Close"
-          aria-label="Close"
-          @click="onCancel"
-        >
-          <svg
-            viewBox="0 0 16 16"
-            class="w-4 h-4 fill-none stroke-current"
-            stroke-width="1.8"
-          ><path
-            d="M4 4l8 8M12 4l-8 8"
-            stroke-linecap="round"
-          /></svg>
-        </button>
-      </div>
+      <h3 class="text-lg font-semibold text-insight">
+        {{ editing ? 'Edit Site' : 'Create a Site' }}
+      </h3>
 
       <p class="text-sm text-cloud mt-1">
-        A site is a recording location. Every recording you upload belongs to one.
+        A site is a location on earth. Every recording must belong to one.
       </p>
 
       <!-- SITE NAME -->
@@ -71,7 +72,14 @@
           >
           <span class="text-insight">Exclude this site from Arbimon Insights</span>
         </label>
-        <p class="text-xs text-cloud mt-1 ml-6">
+        <!-- Sub-description deliberately SMALLER than text-xs so it stays on one
+             line (operator 2026-08-19 #2). Inline font-size because this
+             WindiCSS build has no preset below text-xs and arbitrary-value
+             utilities are unreliable here (see §7 traps). -->
+        <p
+          class="text-cloud mt-1 ml-6 leading-tight whitespace-nowrap"
+          style="font-size: 11px"
+        >
           For test sites, or sites used to import external templates.
           <a
             href="https://help.arbimon.org/article/206-adding-a-site"
@@ -82,10 +90,13 @@
         </p>
       </div>
 
-      <!-- LOCATION -->
+      <!-- GEO-LOCATION (operator 2026-08-19 #3): Latitude + Longitude as two
+           columns on one row, labels ABOVE the fields. Decimal degrees only
+           for now — alternate entry formats (DMS etc.) are an agreed LATER
+           step; storage stays float either way. -->
       <div class="mt-5">
         <div class="text-sm text-insight">
-          Location
+          Geo-Location
         </div>
         <p
           v-if="siteLatLonError && !hidden"
@@ -94,35 +105,106 @@
           Please fill in latitude and longitude, or check “Exclude this site from Arbimon Insights”.
         </p>
 
-        <div
-          v-for="field in coordinateFields"
-          :key="field.key"
-          class="mt-2"
-        >
-          <div class="flex flex-row">
-            <div
-              class="flex items-center justify-center rounded-l-lg border border-r-0 border-util-gray-03 bg-moss px-3 text-sm text-cloud w-16 shrink-0"
+        <div class="mt-2 grid grid-cols-2 gap-x-3">
+          <div>
+            <label
+              for="site-form-lat"
+              class="block text-xs text-cloud"
               :class="hidden ? 'opacity-50' : ''"
-            >
-              {{ field.label }}
-            </div>
+            >Latitude</label>
             <input
-              :id="`site-form-${field.key}`"
-              v-model="field.model.value"
+              id="site-form-lat"
+              v-model="lat"
               type="text"
-              :placeholder="field.placeholder"
+              placeholder="e.g. 9.6301"
               :disabled="hidden"
-              class="w-full rounded-r-lg border border-util-gray-03 bg-moss text-insight px-3 py-2 text-sm focus:(border-frequency ring-1 ring-frequency outline-none)"
+              class="mt-1 w-full rounded-lg border border-util-gray-03 bg-moss text-insight px-3 py-2 text-sm focus:(border-frequency ring-1 ring-frequency outline-none)"
+              :class="hidden ? 'opacity-50 cursor-not-allowed' : ''"
+              @keydown.enter.prevent="onSave"
+            >
+            <p
+              v-if="(siteLatError || siteLatFormatError) && !hidden"
+              class="text-flamingo text-xs mt-1"
+            >
+              {{ siteLatError ? 'Latitude is required.' : 'Enter a latitude between -85 and 85.' }}
+            </p>
+          </div>
+          <div>
+            <label
+              for="site-form-lon"
+              class="block text-xs text-cloud"
+              :class="hidden ? 'opacity-50' : ''"
+            >Longitude</label>
+            <input
+              id="site-form-lon"
+              v-model="lon"
+              type="text"
+              placeholder="e.g. -82.9464"
+              :disabled="hidden"
+              class="mt-1 w-full rounded-lg border border-util-gray-03 bg-moss text-insight px-3 py-2 text-sm focus:(border-frequency ring-1 ring-frequency outline-none)"
+              :class="hidden ? 'opacity-50 cursor-not-allowed' : ''"
+              @keydown.enter.prevent="onSave"
+            >
+            <p
+              v-if="(siteLonError || siteLonFormatError) && !hidden"
+              class="text-flamingo text-xs mt-1"
+            >
+              {{ siteLonError ? 'Longitude is required.' : 'Enter a longitude between -180 and 180.' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- ELEVATION (operator 2026-08-19 #4): labelled with units; numeric
+             entry stays authoritative, plus a slider spanning ±250 m around
+             the API-estimated ground elevation at the current lat/lon
+             (open-meteo, no key, failure-tolerant: no estimate ⇒ no slider,
+             the numeric field alone). The caption explains exactly what the
+             slider is relative to, so the "what is this?" moment is answered
+             in place. -->
+        <div class="mt-4">
+          <div class="flex items-center justify-between gap-x-3">
+            <label
+              for="site-form-alt"
+              class="block text-xs text-cloud"
+              :class="hidden ? 'opacity-50' : ''"
+            >Elevation (meters)</label>
+            <input
+              id="site-form-alt"
+              v-model="alt"
+              type="text"
+              placeholder="optional"
+              :disabled="hidden"
+              class="w-28 rounded-lg border border-util-gray-03 bg-moss text-insight px-3 py-1.5 text-sm text-right focus:(border-frequency ring-1 ring-frequency outline-none)"
               :class="hidden ? 'opacity-50 cursor-not-allowed' : ''"
               @keydown.enter.prevent="onSave"
             >
           </div>
           <p
-            v-if="field.error() && !hidden"
+            v-if="altFormatError && !hidden"
             class="text-flamingo text-xs mt-1"
           >
-            {{ field.errorText() }}
+            Please enter a valid elevation number (e.g. 123.45).
           </p>
+          <template v-if="groundElevation !== undefined && !hidden">
+            <input
+              type="range"
+              :min="elevSliderMin"
+              :max="elevSliderMax"
+              step="1"
+              :value="elevSliderValue"
+              class="w-full mt-2 accent-frequency cursor-pointer"
+              aria-label="Elevation slider, within 250 meters of ground level"
+              @input="onElevSlider"
+            >
+            <div
+              class="flex justify-between text-cloud/70 leading-tight"
+              style="font-size: 10px"
+            >
+              <span>{{ elevSliderMin }} m</span>
+              <span class="text-cloud">ground ≈ {{ groundElevation }} m at this location · slide or type an exact value</span>
+              <span>{{ elevSliderMax }} m</span>
+            </div>
+          </template>
         </div>
       </div>
 
@@ -145,13 +227,18 @@
         >
           Cancel
         </button>
+        <!-- Primary button (operator 2026-08-19 #5): 'Create Site' for a new
+             site, 'Save Changes' when editing; gray/inert until something has
+             actually changed (isDirty compares against the opening values, so
+             editing a field and reverting it re-disables the button). -->
         <button
-          class="btn btn-primary text-sm disabled:btn-disabled disabled:hover:btn-disabled disabled:cursor-not-allowed"
+          class="btn text-sm"
+          :class="(saving || !isDirty) ? 'btn-disabled cursor-not-allowed opacity-60' : 'btn-primary'"
           type="button"
-          :disabled="saving"
+          :disabled="saving || !isDirty"
           @click="onSave"
         >
-          {{ saving ? 'Saving…' : (editing ? 'Save Site' : 'Create Site') }}
+          {{ saving ? 'Saving…' : (editing ? 'Save Changes' : 'Create Site') }}
         </button>
       </div>
       </div>
@@ -174,6 +261,25 @@
         >
           {{ hidden ? 'This site is excluded from Insights and needs no location.' : 'Enter latitude and longitude to place this site on the map.' }}
         </p>
+      </div>
+
+      <!-- SITE FACTS strip (operator 2026-08-19 #7): read-only reference
+           across the modal bottom — spans both columns. Only when EDITING: a
+           new site has no history. Values come from the SiteResponse the host
+           passed (rec_count / recording range need the sites list fetched
+           with count:true, which the uploader does). `Created` is rendered
+           only when the payload carries it — the legacy sites endpoint does
+           NOT return a creation date today (SiteResponse has updated_at
+           only); surfacing it needs a small legacy-api addition. -->
+      <div
+        v-if="editing && site !== undefined"
+        class="md:col-span-2 mt-5 border-t border-util-gray-03 pt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-cloud"
+      >
+        <span><span class="text-cloud/60">Recordings:</span> {{ site.rec_count != null ? site.rec_count.toLocaleString() : '—' }}</span>
+        <span><span class="text-cloud/60">Recording range:</span> {{ recordingRangeLabel }}</span>
+        <span><span class="text-cloud/60">Timezone:</span> {{ site.timezone !== '' ? site.timezone : '—' }}</span>
+        <span v-if="createdLabel !== undefined"><span class="text-cloud/60">Created:</span> {{ createdLabel }}</span>
+        <span><span class="text-cloud/60">Last modified:</span> {{ lastModifiedLabel }}</span>
       </div>
     </div>
   </modal-popup>
@@ -279,43 +385,92 @@ const nameInput = ref<HTMLInputElement>()
 // keyboard users stranded outside it.
 onMounted(() => { void nextTick(() => nameInput.value?.focus()) })
 
-/**
- * The three coordinate rows are structurally identical, so they are driven by
- * data rather than copy-pasted three times — the inline original repeats the
- * same 20-line block three times, which is how its `id="lonInput"` ended up
- * duplicated onto all three inputs (a real a11y defect: a <label>'s `for`
- * cannot address a duplicated id).
- */
-const coordinateFields = computed(() => [
-  {
-    key: 'lat',
-    label: 'Lat',
-    placeholder: 'Latitude',
-    model: lat,
-    error: () => siteLatError.value || siteLatFormatError.value,
-    errorText: () => siteLatError.value
-      ? 'Please fill in latitude, or check “Exclude this site from Arbimon Insights”.'
-      : 'Please enter a latitude between -85 and 85.'
-  },
-  {
-    key: 'lon',
-    label: 'Lon',
-    placeholder: 'Longitude',
-    model: lon,
-    error: () => siteLonError.value || siteLonFormatError.value,
-    errorText: () => siteLonError.value
-      ? 'Please fill in longitude, or check “Exclude this site from Arbimon Insights”.'
-      : 'Please enter a longitude between -180 and 180.'
-  },
-  {
-    key: 'alt',
-    label: 'El',
-    placeholder: 'Elevation (optional)',
-    model: alt,
-    error: () => altFormatError.value,
-    errorText: () => 'Please enter a valid elevation number (e.g. 123.45).'
+// (The data-driven coordinateFields loop was retired 2026-08-19: the operator
+// asked for Latitude/Longitude as two labelled columns on one row and
+// Elevation as its own labelled row with a slider — three structurally
+// DIFFERENT blocks now, so a shared loop no longer earns its indirection.
+// The unique-id-per-input a11y fix it existed for is preserved:
+// site-form-lat / site-form-lon / site-form-alt.)
+
+// -- DIRTY TRACKING (operator 2026-08-19 #5) ----------------------------------
+// The primary button stays inert until a value has actually changed vs the
+// OPENING state, and re-disables if the user reverts their edits. Numeric
+// noise ('1.50' vs '1.5') is not normalised deliberately — a re-typed exact
+// value that parses identically would still be sent, and treating it as a
+// change errs on the harmless side.
+const initial = {
+  name: siteName.value,
+  lat: lat.value,
+  lon: lon.value,
+  alt: alt.value,
+  hidden: hidden.value
+}
+const isDirty = computed(() =>
+  siteName.value !== initial.name ||
+  lat.value !== initial.lat ||
+  lon.value !== initial.lon ||
+  alt.value !== initial.alt ||
+  hidden.value !== initial.hidden
+)
+
+// -- GROUND ELEVATION + SLIDER (operator 2026-08-19 #4) -----------------------
+// The slider spans ±250 m around the API-estimated ground elevation at the
+// current lat/lon. Provider: open-meteo elevation API (free, no key, CORS-
+// enabled, Copernicus DEM 90 m). Strictly progressive enhancement: any
+// failure ⇒ groundElevation stays undefined ⇒ no slider renders and the
+// numeric field carries on alone. Fetches are debounced and keyed by the
+// rounded coordinate so map-nudge micro-changes don't spam the API.
+const groundElevation = ref<number | undefined>(undefined)
+let elevFetchTimer: ReturnType<typeof setTimeout> | undefined
+let lastElevKey = ''
+
+const fetchGroundElevation = async (): Promise<void> => {
+  const coords = liveCoords.value
+  if (coords === undefined) { groundElevation.value = undefined; return }
+  const key = `${coords[1].toFixed(4)},${coords[0].toFixed(4)}`
+  if (key === lastElevKey) return
+  lastElevKey = key
+  try {
+    const res = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${coords[1]}&longitude=${coords[0]}`)
+    if (!res.ok) return
+    const body = await res.json() as { elevation?: number[] }
+    const elev = body.elevation?.[0]
+    if (typeof elev === 'number' && Number.isFinite(elev)) groundElevation.value = Math.round(elev)
+  } catch {
+    // no estimate ⇒ no slider; the numeric field is unaffected
   }
-])
+}
+
+const elevSliderMin = computed(() => (groundElevation.value ?? 0) - 250)
+const elevSliderMax = computed(() => (groundElevation.value ?? 0) + 250)
+const elevSliderValue = computed(() => {
+  const typed = parseFloat(alt.value)
+  if (Number.isFinite(typed)) {
+    return Math.min(elevSliderMax.value, Math.max(elevSliderMin.value, typed))
+  }
+  return groundElevation.value ?? 0
+})
+const onElevSlider = (event: Event): void => {
+  alt.value = (event.target as HTMLInputElement).value
+}
+
+// -- SITE FACTS strip labels (operator 2026-08-19 #7) -------------------------
+const factDate = (value: string | null | undefined): string | undefined => {
+  if (typeof value !== 'string' || value === '') return undefined
+  const d = new Date(value)
+  if (Number.isNaN(d.getTime())) return undefined
+  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+}
+const recordingRangeLabel = computed(() => {
+  const from = factDate(props.site?.first_recording_at)
+  const to = factDate(props.site?.last_recording_at)
+  if (from === undefined || to === undefined) return '—'
+  return from === to ? from : `${from} – ${to}`
+})
+// SiteResponse has no created_at today (legacy endpoint gap — see the
+// template note); render Created only if a future payload carries one.
+const createdLabel = computed(() => factDate((props.site as unknown as { created_at?: string })?.created_at))
+const lastModifiedLabel = computed(() => factDate(props.site?.updated_at) ?? '—')
 
 /** Validation — a faithful port of create-edit-site.vue's `create()` guard. */
 const validate = (): boolean => {
@@ -566,11 +721,15 @@ onBeforeUnmount(() => {
 })
 
 // The pin follows the fields as they are edited; re-centre on a NEW valid
-// position so the user sees where the coordinates landed.
+// position so the user sees where the coordinates landed. The ground-elevation
+// estimate re-fetches on the same signal, debounced 800 ms so per-keystroke
+// intermediate coordinates don't each hit the API.
 watch(liveCoords, (coords, previous) => {
   syncMapData()
   if (map !== undefined && coords !== undefined && (previous === undefined || coords[0] !== previous[0] || coords[1] !== previous[1])) {
     map.easeTo({ center: coords, zoom: Math.max(map.getZoom(), 10) })
   }
-})
+  if (elevFetchTimer !== undefined) clearTimeout(elevFetchTimer)
+  elevFetchTimer = setTimeout(() => { void fetchGroundElevation() }, 800)
+}, { immediate: true })
 </script>
