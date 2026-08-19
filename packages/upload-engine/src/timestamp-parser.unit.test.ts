@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { isValidTimestampFormat, matchTimestamp, parseTimestamp, parseTimestampAuto, parseTimestampUnixHex, parseTimestampWithFormat, TIMESTAMP_FORMAT_UNIX_HEX, toUtcIso } from './timestamp-parser'
+import { isValidTimestampFormat, matchTimestamp, parseTimestamp, parseTimestampAuto, parseTimestampUnixHex, parseTimestampWithFormat, TIMESTAMP_FORMAT_TOKEN_LABELS, TIMESTAMP_FORMAT_UNIX_HEX, TIMESTAMP_TOKEN_GROUPS, toUtcIso } from './timestamp-parser'
 
 describe('parseTimestampAuto', () => {
   test('AudioMoth modern: YYYYMMDD_HHMMSS', () => {
@@ -273,5 +273,68 @@ describe('toUtcIso', () => {
     expect(toUtcIso('2021-06-08T19:26:40+0700', 'America/New_York')).toBe(
       '2021-06-08T12:26:40.000Z'
     )
+  })
+})
+
+describe('TIMESTAMP_TOKEN_GROUPS — palette copy must match real behaviour', () => {
+  const all = TIMESTAMP_TOKEN_GROUPS.flatMap(group => group.tokens)
+
+  test('covers every token exactly once, and only real tokens', () => {
+    const listed = all.map(t => t.token).sort()
+    const real = Object.keys(TIMESTAMP_FORMAT_TOKEN_LABELS).sort()
+    expect(listed).toEqual(real)
+    expect(new Set(listed).size).toBe(listed.length)
+  })
+
+  test('every example ACTUALLY parses with its own token', () => {
+    // The palette promises "%D matches 05". If an example does not parse inside
+    // a minimal complete format, the copy is lying to the user.
+    //
+    // MEASURED, after two wrong guesses: formatIso requires year, month, day,
+    // HOUR and minute before it will return anything. (It early-returns on a
+    // missing hour too, which is not obvious from its undefined-check list.)
+    // Each case is that full scaffold with the token under test SUBSTITUTED IN
+    // PLACE -- an earlier version appended it, which duplicated the field it
+    // was replacing. Both failures were the test's fault, not the palette's.
+    const scaffold: Array<[string, string]> = [
+      ['%Y', '2024'], ['%M', '03'], ['%D', '15'], ['%H', '06'], ['%I', '45']
+    ]
+    // Which scaffold slot each token replaces (its semantic field).
+    const slotOf: Record<string, string> = {
+      '%Y': '%Y', '%y': '%Y',
+      '%M': '%M', '%m': '%M', '%N': '%M', '%n': '%M',
+      '%D': '%D', '%d': '%D',
+      '%H': '%H', '%h': '%H',
+      '%I': '%I', '%i': '%I'
+    }
+
+    for (const { token, example } of all) {
+      const slot = slotOf[token]
+      // 12-hour tokens replace the 24-hour slot AND need their AM/PM partner,
+      // which is why they are handled as a pair rather than a plain swap.
+      const pairs = token === '%G' || token === '%g'
+        ? scaffold.map(([tok, val]) => tok === '%H' ? [token, example] : [tok, val]).concat([['%A', 'PM']])
+        : slot !== undefined
+          ? scaffold.map(([tok, val]) => tok === slot ? [token, example] : [tok, val])
+          : [...scaffold, [token, example]] // second / AM-PM / zone tokens append
+      const format = pairs.map(([tok]) => tok).join('_')
+      const filename = pairs.map(([, val]) => val).join('_')
+      const result = parseTimestampWithFormat(filename, format)
+      expect(result, `${token} example "${example}" should parse (${format} vs ${filename})`).toBeDefined()
+    }
+  })
+
+  test('the three MEASURED traps are stated correctly', () => {
+    const info = (tok: string): { range: string } => all.find(t => t.token === tok) as { range: string }
+    // %G/%g reject 12 -- the range text must say so.
+    expect(parseTimestampWithFormat('2024_03_15_12_45', '%Y_%M_%D_%G_%I')).toBeUndefined()
+    expect(info('%G').range).toContain('not 12')
+    expect(info('%g').range).toContain('not 12')
+    // %Z is positive-offset only.
+    expect(parseTimestampWithFormat('2024_03_15_45_-0500', '%Y_%M_%D_%I_%Z')).toBeUndefined()
+    expect(info('%Z').range).toContain('+')
+    // %z is uppercase only.
+    expect(parseTimestampWithFormat('2024_03_15_45_utc', '%Y_%M_%D_%I_%z')).toBeUndefined()
+    expect(info('%z').range.toLowerCase()).toContain('capital')
   })
 })

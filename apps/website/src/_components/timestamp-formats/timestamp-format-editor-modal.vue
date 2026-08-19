@@ -4,7 +4,11 @@
     modal-body="sm:(my-8 align-middle max-w-2xl w-full)"
     @emit-close="$emit('close')"
   >
-    <div class="p-6">
+    <!-- The palette makes this modal tall (20 tokens over 3 groups). modal-popup's
+         panel is `overflow-hidden`, so without an explicit cap the footer
+         buttons can sit below the fold on a short viewport with no way to
+         scroll to them. Cap at the viewport and scroll INSIDE the dialog. -->
+    <div class="p-6 max-h-[85vh] overflow-y-auto">
       <div class="flex items-start justify-between mb-5">
         <div>
           <h3 class="text-lg font-medium text-insight">
@@ -182,19 +186,48 @@
         <!-- TOKEN PALETTE (operator reference: iStat Menus). Inserts at the
              caret rather than appending, so a token can be added mid-format. -->
         <div class="mt-3">
-          <span class="block text-xs text-cloud mb-1.5">Insert a token</span>
-          <div class="flex flex-wrap gap-1">
-            <button
-              v-for="(meaning, token) in TIMESTAMP_FORMAT_TOKEN_LABELS"
-              :key="token"
-              class="text-xs font-mono px-1.5 py-0.5 rounded border border-cloud/30 text-insight hover:(border-frequency text-frequency)"
-              :title="meaning"
-              @click="insertToken(token)"
-            >
-              {{ token }}
-            </button>
+          <div class="flex items-baseline justify-between mb-1.5">
+            <span class="block text-xs text-cloud">Insert a token</span>
+            <span class="text-xs text-cloud/50">click to add at the cursor</span>
           </div>
-          <p class="text-xs text-cloud/70 mt-1.5">
+
+          <!-- Grouped by the part of the timestamp each token fills, with the
+               meaning, accepted RANGE and an example shown INLINE.
+
+               These were tooltip-only (`title=`) until 2026-08-19. A tooltip is
+               invisible on touch, unreachable by keyboard, and forces the user
+               to hover 20 chips one at a time to answer "which hour token do I
+               want?" -- so the information that makes the palette usable was
+               the one part that could not be scanned. The range column is what
+               actually prevents the common failures: %G rejecting 12, %Z
+               rejecting negative offsets, %z rejecting lowercase.
+
+               Ranges come from TIMESTAMP_TOKEN_GROUPS in the engine, which is
+               unit-tested against the real regexes so this copy cannot drift
+               from behaviour. -->
+          <div class="space-y-2.5">
+            <div
+              v-for="group in TIMESTAMP_TOKEN_GROUPS"
+              :key="group.key"
+            >
+              <span class="block text-[10px] uppercase tracking-wide text-cloud/50 mb-1">{{ group.label }}</span>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-0.5">
+                <button
+                  v-for="info in group.tokens"
+                  :key="info.token"
+                  class="group flex items-baseline gap-x-2 text-left px-1.5 py-1 rounded border border-transparent hover:(border-frequency/40 bg-frequency/5)"
+                  :title="`Insert ${info.token} — ${info.name}, ${info.range}`"
+                  @click="insertToken(info.token)"
+                >
+                  <code class="text-xs font-mono text-frequency shrink-0 w-6">{{ info.token }}</code>
+                  <span class="text-xs text-insight truncate flex-1 min-w-0">{{ info.name }}</span>
+                  <span class="text-[10px] text-cloud/60 tabular-nums shrink-0">{{ info.range }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <p class="text-xs text-cloud/70 mt-2.5">
             Anything that isn’t a token is matched literally. Write <code>%%</code>
             for a real percent sign.
           </p>
@@ -298,7 +331,7 @@
 import { computed, nextTick, ref } from 'vue'
 
 import { type UserTimestampFormat, MAX_USER_TIMESTAMP_FORMATS } from '@rfcx-bio/common/dao/types'
-import { parseTimestampWithFormat, TIMESTAMP_FORMAT_ERROR_TEXT, TIMESTAMP_FORMAT_TOKEN_LABELS, validateTimestampFormat } from '@rfcx-bio/upload-engine'
+import { parseTimestampWithFormat, TIMESTAMP_FORMAT_ERROR_TEXT, TIMESTAMP_TOKEN_GROUPS, validateTimestampFormat } from '@rfcx-bio/upload-engine'
 
 import ModalPopup from '@/_components/modal-popup.vue'
 

@@ -194,6 +194,84 @@ export const TIMESTAMP_FORMAT_TOKEN_LABELS: Record<string, string> = {
   '%z': 'timezone name (UTC)'
 }
 
+/**
+ * Palette metadata for the format editor: a SHORT name, the accepted RANGE, and
+ * a concrete example per token, grouped by the part of the timestamp they fill.
+ *
+ * Why this exists alongside TIMESTAMP_FORMAT_LABELS: a single label string has
+ * to be read one-at-a-time on hover, which is invisible on touch and impossible
+ * to scan. The editor renders name + range + example as VISIBLE columns, so a
+ * user picking between `%H` and `%G` can see the difference instead of
+ * discovering it from a filename that silently fails to parse.
+ *
+ * ⚠ The `range` values are MEASURED against FORMAT_TOKENS above, not paraphrased
+ * from intent — three of them are genuinely surprising and each is a real trap:
+ *  - `%G`/`%g` match 00-11 ONLY, so a 12 o'clock hour does NOT parse.
+ *  - `%Z` matches a LEADING-PLUS offset only; `-0500` does not match.
+ *  - `%z` is UPPERCASE only; `utc` does not match.
+ * Keep this table honest against the regexes; a wrong range here sends users
+ * down exactly the debugging path the palette exists to prevent.
+ */
+export interface TimestampTokenInfo {
+  token: string
+  /** Short noun phrase for the token's role, e.g. 'Year, 4-digit'. */
+  name: string
+  /** What it actually accepts, phrased for a human. */
+  range: string
+  /** A literal example of matching text. */
+  example: string
+}
+
+export type TimestampTokenGroupKey = 'date' | 'time' | 'zone'
+
+export const TIMESTAMP_TOKEN_GROUPS: Array<{
+  key: TimestampTokenGroupKey
+  label: string
+  tokens: TimestampTokenInfo[]
+}> = [
+  {
+    key: 'date',
+    label: 'Date',
+    tokens: [
+      { token: '%Y', name: 'Year, 4-digit', range: '1000–9999', example: '2024' },
+      { token: '%y', name: 'Year, 2-digit', range: '00–99 → 20xx', example: '24' },
+      { token: '%M', name: 'Month, 2-digit', range: '01–12', example: '03' },
+      { token: '%m', name: 'Month, no zero', range: '1–12', example: '3' },
+      { token: '%N', name: 'Month name', range: 'January–December', example: 'March' },
+      { token: '%n', name: 'Month, short', range: 'Jan–Dec', example: 'Mar' },
+      { token: '%D', name: 'Day, 2-digit', range: '01–31', example: '05' },
+      { token: '%d', name: 'Day, no zero', range: '1–31', example: '5' }
+    ]
+  },
+  {
+    key: 'time',
+    label: 'Time',
+    tokens: [
+      { token: '%H', name: 'Hour, 24-hour', range: '00–23', example: '18' },
+      { token: '%h', name: 'Hour, 24h no zero', range: '0–23', example: '8' },
+      // MEASURED: the regex is 0[0-9]|1[0-1] -- 12 does NOT match.
+      { token: '%G', name: 'Hour, 12-hour', range: '00–11 (not 12)', example: '08' },
+      { token: '%g', name: 'Hour, 12h no zero', range: '0–11 (not 12)', example: '8' },
+      { token: '%A', name: 'AM / PM', range: 'AM, PM, am, pm', example: 'PM' },
+      { token: '%a', name: 'A / P', range: 'A, P, a, p', example: 'P' },
+      { token: '%I', name: 'Minute, 2-digit', range: '00–59', example: '45' },
+      { token: '%i', name: 'Minute, no zero', range: '0–59', example: '45' },
+      { token: '%S', name: 'Second, 2-digit', range: '00–59', example: '10' },
+      { token: '%s', name: 'Second, no zero', range: '0–59', example: '10' }
+    ]
+  },
+  {
+    key: 'zone',
+    label: 'Time zone',
+    tokens: [
+      // MEASURED: \+[0-9]{4} -- a NEGATIVE offset does not match.
+      { token: '%Z', name: 'UTC offset', range: '+hhmm only', example: '+0700' },
+      // MEASURED: [A-Z]{3} -- lowercase does not match.
+      { token: '%z', name: 'Zone abbreviation', range: '3 capitals', example: 'UTC' }
+    ]
+  }
+]
+
 export const parseTimestampWithFormat = (
   fileName: string,
   timestampFormat: string
