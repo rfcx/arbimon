@@ -344,7 +344,7 @@ export const TIMESTAMP_TOKEN_GROUPS: Array<{
         ]
       },
       {
-        label: 'Millis',
+        label: 'Milliseconds',
         tokens: [
           { token: '%F', name: '3-digit', range: '000–999', example: '250' }
         ]
