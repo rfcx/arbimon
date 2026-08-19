@@ -583,6 +583,23 @@
         @created="onSiteCreated"
       />
 
+      <!-- EDIT-A-SITE MODAL (workstream C part 1, 2026-08-19). The SAME
+           site-form-modal in :editing mode — the modal has supported editing
+           since it was built (title/button/apiLegacySiteUpdate all switch on
+           the prop); this is its first invocation. Same host-owns-the-dialog
+           pattern and same :key-per-open freshness guarantee as create. -->
+      <site-form-modal
+        v-if="editingSiteForBoxId !== undefined && editingSite !== undefined && apiClientArbimon !== undefined"
+        :key="`edit-site-${editingSiteForBoxId}`"
+        :project-slug="projectSlug"
+        :project-core-id="store.project?.idCore ?? ''"
+        :api-client="apiClientArbimon"
+        :editing="true"
+        :site="editingSite"
+        @close="editingSiteForBoxId = undefined"
+        @updated="onSiteUpdated"
+      />
+
       <uploader-settings-modal
         v-if="showSettings"
         :flac-enabled="flacEncodeEnabled"
@@ -659,6 +676,7 @@
             :site-info="box.streamId !== undefined ? siteInfoFor(box.streamId) : undefined"
             :box-key="box.boxId"
             @create-site="onRequestCreateSite(box.boxId, $event)"
+            @edit-site="onRequestEditSite(box.boxId)"
             @toggle-collapsed="toggleBoxCollapsed(box.boxId)"
             @edit-datetime="applyDatetimeEdit"
             @set-group-zone="applyGroupZone"
@@ -999,6 +1017,49 @@ const onRequestCreateSite = (boxId: string, _typedName: string): void => {
  * unlinked rather than linking it to the WRONG site — the picker simply stays
  * open with the new site now present in it.
  */
+// -- edit a site from the box header (workstream C part 1) --------------------
+
+/** Which box asked for the edit modal (undefined = modal closed). */
+const editingSiteForBoxId = ref<string | undefined>(undefined)
+
+/** The full SiteResponse for the box being edited — the modal pre-fills its
+ * fields from it. Resolved at open time from the already-loaded sites list. */
+const editingSite = computed<SiteResponse | undefined>(() => {
+  const boxId = editingSiteForBoxId.value
+  if (boxId === undefined) return undefined
+  const box = siteBoxes.value.find(b => b.boxId === boxId)
+  if (box?.streamId === undefined) return undefined
+  return siteById(box.streamId)
+})
+
+const onRequestEditSite = (boxId: string): void => {
+  editingSiteForBoxId.value = boxId
+}
+
+/**
+ * A site was edited — reload the list and refresh the OWNING BOX's header
+ * facts (name + timezone), which are copied onto the box at link time and
+ * would otherwise go stale. Unlike create there is no name-matching problem:
+ * the box already holds the site's stable `streamId` (external_id), which a
+ * rename does not change.
+ */
+const onSiteUpdated = async (): Promise<void> => {
+  const boxId = editingSiteForBoxId.value
+  editingSiteForBoxId.value = undefined
+  await loadSites()
+  if (boxId === undefined) return
+  siteBoxes.value = siteBoxes.value.map(box => {
+    if (box.boxId !== boxId || box.streamId === undefined) return box
+    const site = siteById(box.streamId)
+    if (site === undefined) return box
+    return {
+      ...box,
+      siteName: site.name,
+      siteTimezone: site.timezone !== undefined && site.timezone !== '' ? site.timezone : undefined
+    }
+  })
+}
+
 const onSiteCreated = async (saved: SiteSaved): Promise<void> => {
   const boxId = creatingSiteForBoxId.value
   creatingSiteForBoxId.value = undefined

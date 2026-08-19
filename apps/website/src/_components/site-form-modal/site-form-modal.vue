@@ -1,10 +1,15 @@
 <template>
   <modal-popup
     title="Create a Site"
-    modal-body="sm:(my-8 align-middle max-w-lg w-full)"
+    modal-body="sm:(my-8 align-middle max-w-4xl w-full)"
     @emit-close="onCancel"
   >
-    <div class="p-6">
+    <!-- TWO-COLUMN layout (workstream C part 2, 2026-08-19): form left, map
+         right. The modal doubled max-w-lg → max-w-4xl to make room. On small
+         screens the map stacks BELOW the form — the form is the actionable
+         half and must stay first in DOM/tab order either way. -->
+    <div class="p-6 md:(grid grid-cols-2 gap-x-6)">
+      <div>
       <div class="flex items-start justify-between gap-x-4">
         <h3 class="text-lg font-semibold text-insight">
           {{ editing ? 'Edit Site' : 'Create a Site' }}
@@ -149,6 +154,27 @@
           {{ saving ? 'Saving…' : (editing ? 'Save Site' : 'Create Site') }}
         </button>
       </div>
+      </div>
+
+      <!-- MAP column (workstream C part 2). Centred on a HIGHLIGHTED pin for
+           the site being edited/created; the project's OTHER sites appear
+           unhighlighted and are deliberately NOT clickable (no click handler
+           is registered — this dialog edits ONE site; selecting another here
+           would silently retarget the form). The pin follows the lat/lon
+           fields as they are edited, and a no-coordinates site (or a fresh
+           create) shows the sibling-site overview instead of a pin. -->
+      <div class="mt-6 md:mt-0">
+        <div
+          ref="mapRoot"
+          class="w-full h-72 md:h-full min-h-72 rounded-lg overflow-hidden border border-util-gray-03"
+        />
+        <p
+          v-if="!hasValidCoords"
+          class="text-xs text-cloud mt-2"
+        >
+          {{ hidden ? 'This site is excluded from Insights and needs no location.' : 'Enter latitude and longitude to place this site on the map.' }}
+        </p>
+      </div>
     </div>
   </modal-popup>
 </template>
@@ -186,11 +212,16 @@
  *      create two sites (the inline form has no such guard).
  */
 import { type AxiosInstance } from 'axios'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import type { FeatureCollection, Point } from 'geojson'
+import type { GeoJSONSource, Map as MapboxMap } from 'mapbox-gl'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
-import { type SiteResponse, apiLegacySiteCreate, apiLegacySiteUpdate } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { type SiteResponse, apiArbimonGetSites, apiLegacySiteCreate, apiLegacySiteUpdate } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 
+import defaultMarkerIcon from '@/_assets/explore/map-marker.png'
+import selectedMarkerIcon from '@/_assets/explore/map-marker-selected.png'
 import ModalPopup from '@/_components/modal-popup.vue'
+import { createMap } from '@/_services/maps'
 
 export interface SiteSaved {
   name: string
@@ -392,5 +423,154 @@ const saved = (): SiteSaved => ({
   ...(lon.value !== '' && { lon: parseFloat(lon.value) }),
   ...(alt.value !== '' && { alt: parseFloat(alt.value) }),
   hidden: hidden.value
+})
+
+// -- MAP (workstream C part 2, 2026-08-19) ------------------------------------
+//
+// The modal fetches the project's sibling sites ITSELF (operator decision
+// 2026-08-19: option b — self-contained over prop-threading). One GET per
+// open; a failure degrades to a map with just the edited site's pin — the
+// form never depends on the map.
+//
+// Layer semantics (mirrors map-view.vue's two-source pattern):
+//   • 'sibling-sites'  → default-marker, NO event handlers — context only,
+//     deliberately unselectable (this dialog edits ONE site).
+//   • 'edited-site'    → selected-marker, follows the lat/lon FIELDS live so
+//     the user sees where their coordinates actually land.
+
+const mapRoot = ref<HTMLElement | null>(null)
+let map: MapboxMap | undefined
+const mapLoaded = ref(false)
+const siblingSites = ref<SiteResponse[]>([])
+
+const validNum = (value: string): boolean => /^-?\d+(\.\d+)?$/.test(value)
+
+/** The edited site's coordinates AS CURRENTLY TYPED (not as stored). */
+const liveCoords = computed((): [number, number] | undefined => {
+  if (!validNum(lat.value) || !validNum(lon.value)) return undefined
+  const la = parseFloat(lat.value)
+  const lo = parseFloat(lon.value)
+  if (la > 85 || la < -85 || lo > 180 || lo < -180) return undefined
+  if (la === 0 && lo === 0) return undefined // legacy "no real location" convention
+  return [lo, la]
+})
+
+const hasValidCoords = computed(() => liveCoords.value !== undefined)
+
+/** Siblings = every OTHER site in the project with real coordinates. */
+const siblingFeatures = (): FeatureCollection => ({
+  type: 'FeatureCollection',
+  features: siblingSites.value
+    .filter(site => site.id !== props.site?.id)
+    .filter(site => site.lat != null && site.lon != null && !(site.lat === 0 && site.lon === 0))
+    .map(site => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [site.lon, site.lat] },
+      properties: { title: site.name }
+    }))
+})
+
+const editedFeature = (): FeatureCollection => ({
+  type: 'FeatureCollection',
+  features: liveCoords.value === undefined
+    ? []
+    : [{
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: liveCoords.value },
+        properties: { title: siteName.value }
+      }]
+})
+
+/** Frame the view: the edited pin when it exists (siblings included when in
+ * range), else all siblings, else a world view. fitBounds precedent:
+ * projects/audiodata/component/map-view.vue. */
+const frameView = (): void => {
+  if (map === undefined) return
+  const sibs = siblingFeatures().features.map(f => (f.geometry as Point).coordinates as [number, number])
+  if (liveCoords.value !== undefined) {
+    map.jumpTo({ center: liveCoords.value, zoom: 12 })
+  } else if (sibs.length > 0) {
+    const lons = sibs.map(c => c[0]); const lats = sibs.map(c => c[1])
+    map.fitBounds([Math.min(...lons), Math.min(...lats), Math.max(...lons), Math.max(...lats)], { padding: 48, maxZoom: 12, duration: 0 })
+  } else {
+    map.jumpTo({ center: [0, 0], zoom: 1 })
+  }
+}
+
+const syncMapData = (): void => {
+  if (map === undefined || !mapLoaded.value) return
+  ;(map.getSource('sibling-sites') as GeoJSONSource | undefined)?.setData(siblingFeatures())
+  ;(map.getSource('edited-site') as GeoJSONSource | undefined)?.setData(editedFeature())
+}
+
+onMounted(() => {
+  if (mapRoot.value === null) return
+  map = createMap({
+    container: mapRoot.value,
+    style: 'mapbox://styles/mapbox/satellite-v9',
+    attributionControl: false,
+    center: liveCoords.value ?? [0, 0],
+    zoom: liveCoords.value !== undefined ? 12 : 1,
+    maxZoom: 18,
+    minZoom: 1
+  })
+  map.on('load', () => {
+    if (map === undefined) return
+    const markers: Record<string, string> = {
+      'default-marker': defaultMarkerIcon,
+      'selected-marker': selectedMarkerIcon
+    }
+    Object.entries(markers).forEach(([name, imagePath]) => {
+      map?.loadImage(imagePath, (error, image) => {
+        if (error != null || map === undefined || map.hasImage(name) || image === undefined) return
+        map.addImage(name, image)
+      })
+    })
+    map.addSource('sibling-sites', { type: 'geojson', data: siblingFeatures() })
+    map.addSource('edited-site', { type: 'geojson', data: editedFeature() })
+    // Siblings UNDER the edited pin; icon-allow-overlap so a dense project
+    // cannot hide the pin the user is editing.
+    map.addLayer({
+      id: 'sibling-sites',
+      type: 'symbol',
+      source: 'sibling-sites',
+      layout: { 'icon-image': 'default-marker', 'icon-size': 0.45, 'icon-allow-overlap': true },
+      paint: { 'icon-opacity': 0.7 }
+    })
+    map.addLayer({
+      id: 'edited-site',
+      type: 'symbol',
+      source: 'edited-site',
+      layout: { 'icon-image': 'selected-marker', 'icon-size': 0.6, 'icon-allow-overlap': true }
+    })
+    mapLoaded.value = true
+    frameView()
+  })
+
+  // Sibling fetch — after map setup so a slow request never delays the dialog.
+  void (async () => {
+    try {
+      const response = await apiArbimonGetSites(props.apiClient, props.projectSlug, {})
+      siblingSites.value = response ?? []
+      syncMapData()
+      if (liveCoords.value === undefined) frameView() // nothing pinned yet → frame the siblings
+    } catch {
+      // context only — the form (and the edited pin) work without siblings
+    }
+  })()
+})
+
+onBeforeUnmount(() => {
+  map?.remove()
+  map = undefined
+})
+
+// The pin follows the fields as they are edited; re-centre on a NEW valid
+// position so the user sees where the coordinates landed.
+watch(liveCoords, (coords, previous) => {
+  syncMapData()
+  if (map !== undefined && coords !== undefined && (previous === undefined || coords[0] !== previous[0] || coords[1] !== previous[1])) {
+    map.easeTo({ center: coords, zoom: Math.max(map.getZoom(), 10) })
+  }
 })
 </script>
