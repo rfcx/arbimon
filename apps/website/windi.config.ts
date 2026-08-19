@@ -186,6 +186,13 @@ export default defineConfig({
     'btn-small': 'py-1',
     'btn-primary': 'bg-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:bg-frequency dark:hover:bg-chirp dark:focus:ring-chirp',
     'btn-secondary': 'rounded-full text-frequency border border-frequency hover:bg-chirp focus:ring-4 focus:ring-chirp dark:text-frequency dark:hover:bg-chirp dark:border-frequency dark:hover:text-pitch dark:hover:border-chirp dark:focus:ring-chirp',
+    // Bulk actions inside a status-group header row (operator 2026-08-18).
+    // Deliberately MUTED: btn-secondary's full `frequency` lime competed with
+    // the group label beside it and with the page's primary Start button.
+    // Neutral cloud at rest, warming to the house lime only on hover, so the
+    // action is discoverable without shouting. Icon sits to the RIGHT of the
+    // label at w-4 h-4, matching the per-row trash glyph.
+    'btn-group-action': 'inline-flex items-center gap-x-1.5 rounded-full border border-cloud/25 text-cloud/70 text-xs px-2.5 py-0.5 transition-colors hover:text-frequency hover:border-frequency/50 focus:outline-none focus:ring-2 focus:ring-frequency/40',
     'btn-disabled': 'cursor-not-allowed bg-util-gray-04 text-util-gray-02 border-transparent',
     'btn-danger': 'bg-transparent text-danger border-2 border-danger hover:(bg-danger text-pitch)',
     'btn-icon': 'py-2 px-3 rounded-full text-frequency border border-frequency hover:bg-chirp hover:text-pitch hover:border-chirp',

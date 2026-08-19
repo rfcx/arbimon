@@ -32,41 +32,23 @@
       </div>
 
       <div class="space-y-5">
-        <!-- Timezone determination. Kept as a labelled block rather than an
-             inline row: in a modal there is room to explain what it does,
-             which the toolbar never had. -->
-        <div>
-          <label
-            for="uploader-settings-timezone"
-            class="block text-sm text-insight mb-1.5"
-          >
-            Determine Timezone(s)
-          </label>
-          <select
-            id="uploader-settings-timezone"
-            :value="timezoneMode"
-            class="w-full rounded border-cloud/30 bg-pitch text-insight px-2 py-1.5 text-sm"
-            @change="onTimezoneChange"
-          >
-            <option value="auto">
-              Automatically
-            </option>
-            <option value="site">
-              By Site Timezone
-            </option>
-            <option value="utc">
-              UTC
-            </option>
-            <option value="metadata">
-              Scan Recording File Metadata
-            </option>
-          </select>
-          <p class="text-xs text-cloud mt-1.5">
-            How each recording’s date and time are matched to a timezone.
-            Changing this re-checks staged recordings, except any you have
-            corrected by hand.
-          </p>
-        </div>
+        <!-- Custom filename formats (operator 2026-08-18). This block REPLACED
+             the "Determine Timezone(s)" selector: timezone determination is now
+             always automatic (filename -> file metadata -> site timezone ->
+             UTC), and a wrong result is corrected where it is visible, with the
+             Zone dropdown on the queue itself, rather than by choosing a
+             strategy up-front.
+
+             The list is a MIRROR of the same formats shown in account settings.
+             It is surfaced here because that is where users are when the need
+             arises -- many will never visit their global settings, and should
+             simply find that their formats persist across projects and
+             sessions. -->
+        <timestamp-format-list
+          :formats="timestampFormats"
+          hint="Timezones are determined automatically: from the filename, then the file’s metadata, then the site’s timezone, then UTC. You can correct the result for a whole queue in the Zone column before uploading."
+          @manage="emit('manageFormats')"
+        />
 
         <!-- FLAC pre-conversion. The explanatory copy that used to live in a
              tooltip is shown inline here — there is room for it now. -->
@@ -102,7 +84,10 @@
 </template>
 
 <script setup lang="ts">
+import { type UserTimestampFormat } from '@rfcx-bio/common/dao/types'
+
 import ModalPopup from '@/_components/modal-popup.vue'
+import TimestampFormatList from '@/_components/timestamp-formats/timestamp-format-list.vue'
 
 /**
  * Uploader Settings (operator 2026-08-14).
@@ -112,24 +97,24 @@ import ModalPopup from '@/_components/modal-popup.vue'
  * They now live here behind a settings button, which also gives later settings
  * (e.g. upload concurrency) somewhere obvious to go.
  *
+ * 2026-08-18 (operator): the "Determine Timezone(s)" selector was REMOVED and
+ * the custom-filename-format list took its place. Determination is now always
+ * automatic, and a wrong result is fixed where the user can see it (the Zone
+ * dropdown on the queue) instead of by picking a strategy before the fact.
+ *
  * Deliberately CONTROLLED (props + emits, no internal copy of the state): the
- * page owns `timezoneMode` and `flacEncodeEnabled`, and changing the timezone
- * mode triggers a re-analysis of staged rows. Holding a second copy here would
- * let the modal and the page disagree about what the user chose.
+ * page owns `flacEncodeEnabled` and the saved formats. Holding a second copy
+ * here would let the modal and the page disagree about what the user chose.
  */
 defineProps<{
-  timezoneMode: string
   flacEnabled: boolean
   flacInfoText: string
+  timestampFormats: UserTimestampFormat[]
 }>()
 
 // Single-line form: the multi-line one trips func-call-spacing under this
 // config (the repo's other modals use this shape).
-const emit = defineEmits<{(e: 'close'): void, (e: 'update:timezoneMode', value: string): void, (e: 'update:flacEnabled', value: boolean): void}>()
-
-const onTimezoneChange = (event: Event): void => {
-  emit('update:timezoneMode', (event.target as HTMLSelectElement).value)
-}
+const emit = defineEmits<{(e: 'close'): void, (e: 'update:flacEnabled', value: boolean): void, (e: 'manageFormats'): void}>()
 
 const onFlacChange = (event: Event): void => {
   emit('update:flacEnabled', (event.target as HTMLInputElement).checked)

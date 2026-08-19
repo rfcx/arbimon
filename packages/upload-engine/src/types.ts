@@ -76,6 +76,17 @@ export interface UploadItem {
   /** Analysis failure (no timestamp derivable, unreadable, …). Item stays
    * `staged` but is excluded from Start until resolved/cleared. */
   analysisError?: string
+  /** Id of the user's saved filename format that parsed this name, when one
+   * did. Absent when a built-in auto-detect pattern matched (the common case)
+   * or nothing matched at all. */
+  matchedFormatId?: string
+  /** Label of that saved format, denormalized so the staging table can name it
+   * without holding the user's format list. */
+  matchedFormatLabel?: string
+  /** Non-time metadata a saved pattern extracted from the filename
+   * (%V device id, %K kHz, %L seconds). CAPTURE-ONLY (operator 2026-08-19):
+   * recorded for display/telemetry, no behaviour keyed on it. */
+  filenameMetadata?: { deviceId?: string, sampleRateKhz?: number, durationSecs?: number }
   /** Non-blocking advisory shown alongside the row (e.g. an unusually old
    * date that is probably a digitised archive but MIGHT be a recorder whose
    * clock reset). Unlike analysisError this never excludes the item from

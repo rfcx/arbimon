@@ -1,9 +1,16 @@
 <template>
-  <landing-navbar />
-  <section class="pt-16 mb-16 bg-white dark:bg-pitch">
+  <!-- Renders EITHER as a standalone page or inside the route-driven modal
+       (operator 2026-08-18). In `modal` mode the page chrome is dropped: the
+       navbar would duplicate the app chrome already behind the scrim, the
+       full-viewport padding would fight the dialog's own, and the modal header
+       already says "Account Settings", so the in-body title would repeat it.
+       ONE component either way, so the form logic cannot drift between them. -->
+  <landing-navbar v-if="!modal" />
+  <section :class="modal ? '' : 'pt-16 mb-16 bg-white dark:bg-pitch'">
     <div
       v-if="isErrorProfileData"
-      class="flex rounded-lg bg-moss py-3 px-4 mx-auto max-w-screen-md dark:bg-moss items-center justify-center h-screen text-center"
+      class="flex rounded-lg bg-moss py-3 px-4 mx-auto max-w-screen-md dark:bg-moss items-center justify-center text-center"
+      :class="modal ? 'my-6' : 'h-screen'"
     >
       <span>
         It seems the page didn’t load as expected.<br>
@@ -12,14 +19,24 @@
     </div>
     <div
       v-else
-      class="block rounded-lg bg-moss py-3 px-4 mx-auto max-w-screen-md dark:bg-moss h-auto"
+      class="block rounded-lg bg-moss py-3 px-4 mx-auto dark:bg-moss h-auto"
+      :class="modal ? 'max-w-none bg-transparent dark:bg-transparent' : 'max-w-screen-md'"
     >
-      <div class="py-2 px-4 mx-auto max-w-screen-md border-b-1 border-white/80">
+      <div
+        v-if="!modal"
+        class="py-2 px-4 mx-auto max-w-screen-md border-b-1 border-white/80"
+      >
         <h2 class="tracking-tight font-medium text-gray-900 dark:text-white">
           Account settings
         </h2>
         <span v-if="isLoadingProfileData">Loading</span>
       </div>
+      <!-- The loading hint lived in the page header that modal mode drops, so
+           it is re-shown here rather than lost. -->
+      <span
+        v-if="modal && isLoadingProfileData"
+        class="block px-4 py-2 text-sm text-cloud/70"
+      >Loading…</span>
       <div class="py-4 px-4 mx-auto max-w-screen-md border-b border-white/20">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
@@ -266,6 +283,20 @@
             @emit-add-to-selected-organization="onAddNewOrganizationFromSearch"
           />
         </div>
+        <!-- Saved filename formats. Mirrors the list in the uploader's settings
+             modal via the SAME component (operator 2026-08-18): one source of
+             truth (the profile), two views. Saving is immediate on Done rather
+             than deferred to "Save changes", because the editor is a modal with
+             its own commit and a user who closes it expects the list to have
+             been kept. -->
+        <div class="mt-8 pt-6 border-t border-cloud/20">
+          <timestamp-format-list
+            :formats="timestampFormats"
+            hint="Used when the uploader reads timestamps out of your filenames. Arbimon’s built-in rules are always tried first, so your patterns can only recognise more filenames — never break one that already works."
+            @manage="showFormatList = true"
+          />
+        </div>
+
         <button
           class="w-full btn btn-primary inline items-center group mt-7"
           type="button"
@@ -285,6 +316,28 @@
         />
       </div>
     </div>
+
+    <timestamp-format-list-modal
+      v-if="showFormatList && !showFormatEditor"
+      :formats="timestampFormats"
+      :busy="savingFormats"
+      :error="formatSaveError"
+      @close="showFormatList = false"
+      @create="openFormatCreator"
+      @edit="openFormatEditor"
+      @remove="removeTimestampFormat"
+      @reorder="reorderTimestampFormat"
+    />
+
+    <timestamp-format-editor-modal
+      v-if="showFormatEditor"
+      :existing="timestampFormats"
+      :editing="editingFormat"
+      :saving="savingFormats"
+      :save-error="formatSaveError"
+      @close="showFormatEditor = false; editingFormat = undefined"
+      @save="saveOneTimestampFormat"
+    />
   </section>
 </template>
 
@@ -295,11 +348,15 @@ import { Dropdown } from 'flowbite'
 import { type Ref, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { type AccountTier } from '@rfcx-bio/common/dao/types'
+import { apiUpdateUserProfile } from '@rfcx-bio/common/api-bio/users/profile'
+import { type AccountTier, type UserTimestampFormat } from '@rfcx-bio/common/dao/types'
 import { type OrganizationType, type OrganizationTypes, ORGANIZATION_TYPE, ORGANIZATION_TYPE_NAME } from '@rfcx-bio/common/dao/types/organization'
 
 import image from '@/_assets/cta/frog-hero.webp'
 import SaveStatusText from '@/_components/save-status-text.vue'
+import TimestampFormatEditorModal from '@/_components/timestamp-formats/timestamp-format-editor-modal.vue'
+import TimestampFormatList from '@/_components/timestamp-formats/timestamp-format-list.vue'
+import TimestampFormatListModal from '@/_components/timestamp-formats/timestamp-format-list-modal.vue'
 import LandingNavbar from '@/_layout/components/landing-navbar/landing-navbar.vue'
 import { apiClientKey } from '@/globals'
 import { ACCOUNT_TIER_LABELS } from '@/projects/entitlement-helpers'
@@ -312,6 +369,12 @@ import { useGetOrganizationsList } from './composables/use-get-organizations'
 import { usePatchProfileImage } from './composables/use-patch-profile-photo'
 import { useGetProfileData, usePatchUserProfile } from './composables/use-patch-user-profile'
 import { useGetPortfolioSummary } from './composables/use-tiering'
+
+withDefaults(defineProps<{
+  /** Render for the route-driven modal: no navbar, no page padding, no
+   *  duplicate title (the dialog header supplies it). */
+  modal?: boolean
+}>(), { modal: false })
 
 const firstName = ref('')
 const lastName = ref('')
@@ -354,6 +417,75 @@ const selectedOrganizationId = ref(profileData.value?.organizationIdAffiliated)
 const showStatus = ref(false)
 const isSuccess = ref(false)
 const errorMessage = ref<string>()
+
+// -- saved filename formats ---------------------------------------------------
+// Two-modal flow (operator 2026-08-19): LIST modal shows/explains, EDITOR
+// modal creates/edits ONE entry over it. Every action persists immediately.
+const showFormatList = ref(false)
+const showFormatEditor = ref(false)
+const editingFormat = ref<UserTimestampFormat | undefined>(undefined)
+const savingFormats = ref(false)
+const formatSaveError = ref<string | undefined>(undefined)
+const timestampFormats = ref<UserTimestampFormat[]>(profileData.value?.timestampFormats ?? [])
+
+const openFormatCreator = (): void => {
+  editingFormat.value = undefined
+  showFormatEditor.value = true
+}
+const openFormatEditor = (format: UserTimestampFormat): void => {
+  editingFormat.value = format
+  showFormatEditor.value = true
+}
+
+// profileData arrives asynchronously (and refetches), so adopt it when it lands
+// -- but never over an editor session in progress, which would discard the
+// user's in-flight edits.
+watch(profileData, () => {
+  if (!showFormatEditor.value) timestampFormats.value = profileData.value?.timestampFormats ?? []
+})
+
+const persistTimestampFormats = async (formats: UserTimestampFormat[]): Promise<boolean> => {
+  savingFormats.value = true
+  formatSaveError.value = undefined
+  try {
+    // Deliberately the direct API call, not `mutatePatchUserProfile`: that
+    // mutation sends the name/organisation fields this form owns, which would
+    // save half-edited text the user has not committed yet.
+    await apiUpdateUserProfile(apiClientBio, { timestampFormats: formats })
+    timestampFormats.value = formats
+    return true
+  } catch {
+    formatSaveError.value = 'Could not save your formats. Please try again.'
+    return false
+  } finally {
+    savingFormats.value = false
+  }
+}
+
+const saveOneTimestampFormat = async (format: UserTimestampFormat): Promise<void> => {
+  const existing = timestampFormats.value.findIndex(item => item.id === format.id)
+  const next = existing === -1
+    ? [...timestampFormats.value, format]
+    : timestampFormats.value.map(item => item.id === format.id ? format : item)
+  if (await persistTimestampFormats(next)) {
+    showFormatEditor.value = false
+    editingFormat.value = undefined
+  }
+}
+
+const removeTimestampFormat = async (format: UserTimestampFormat): Promise<void> => {
+  await persistTimestampFormats(timestampFormats.value.filter(item => item.id !== format.id))
+}
+
+const reorderTimestampFormat = async (change: { id: string, direction: -1 | 1 }): Promise<void> => {
+  const index = timestampFormats.value.findIndex(item => item.id === change.id)
+  const target = index + change.direction
+  if (index === -1 || target < 0 || target >= timestampFormats.value.length) return
+  const next = [...timestampFormats.value]
+  const [moved] = next.splice(index, 1)
+  next.splice(target, 0, moved)
+  await persistTimestampFormats(next)
+}
 
 onMounted(() => {
   firstName.value = store.user?.given_name ?? store.user?.user_metadata?.given_name ?? store.user?.nickname ?? ''

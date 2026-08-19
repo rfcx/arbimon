@@ -17,6 +17,7 @@ export * from './recorder-provenance'
 export * from './sha1'
 export * from './timestamp-parser'
 export * from './types'
+export * from './utc-offset'
 export * from './wav-embedded-timestamp'
 export * from './wav-metadata'
 
