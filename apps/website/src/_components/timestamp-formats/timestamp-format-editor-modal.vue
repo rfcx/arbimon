@@ -1,7 +1,7 @@
 <template>
   <modal-popup
     title="Filename Formats"
-    modal-body="sm:(my-8 align-middle max-w-2xl w-full)"
+    modal-body="sm:(my-8 align-middle max-w-4xl w-full)"
     @emit-close="$emit('close')"
   >
     <!-- The palette makes this modal tall (20 tokens over 3 groups). modal-popup's
@@ -228,19 +228,6 @@
 
         <label
           class="block text-xs text-cloud mb-1"
-          for="tsf-label"
-        >Name</label>
-        <input
-          id="tsf-label"
-          v-model="labelInput"
-          type="text"
-          placeholder="AudioMoth field kit"
-          maxlength="60"
-          class="w-full mb-3 text-sm border border-cloud/40 rounded bg-pitch text-insight placeholder:text-cloud/40 focus:(border-frequency ring-frequency)"
-        >
-
-        <label
-          class="block text-xs text-cloud mb-1"
           for="tsf-format"
         >Format</label>
 
@@ -376,7 +363,9 @@
               :key="group.key"
             >
               <span class="block text-[10px] uppercase tracking-wide text-cloud/50 mb-1">{{ group.label }}</span>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-0.5">
+              <!-- 3-up at the widened max-w-4xl (≈278px per column, measured
+                   enough for token+name+range); 2-up on medium, 1-up narrow. -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-0.5">
                 <button
                   v-for="info in group.tokens"
                   :key="info.token"
@@ -406,7 +395,24 @@
              Preview section was REMOVED when the file picker replaced the typed
              sample (operator 2026-08-19). -->
 
-        <div class="mt-4 flex items-center gap-x-2">
+        <!-- NAME comes LAST (operator 2026-08-19): the natural order is build
+             the pattern, verify it against the exemplar, THEN christen it.
+             Naming first asked the user to describe a thing that did not exist
+             yet. Sits directly above the Add/Save action it gates. -->
+        <label
+          class="block text-xs text-cloud mt-4 mb-1"
+          for="tsf-label"
+        >Name</label>
+        <input
+          id="tsf-label"
+          v-model="labelInput"
+          type="text"
+          placeholder="AudioMoth field kit"
+          maxlength="60"
+          class="w-full text-sm border border-cloud/40 rounded bg-pitch text-insight placeholder:text-cloud/40 focus:(border-frequency ring-frequency)"
+        >
+
+        <div class="mt-3 flex items-center gap-x-2">
           <button
             class="btn btn-secondary text-sm disabled:(opacity-50 cursor-not-allowed)"
             :disabled="!canCommit"
