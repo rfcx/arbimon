@@ -152,18 +152,12 @@
              the actual file removes that failure mode entirely.
 
              Only file.name is ever read. Nothing is uploaded, no bytes are
-             touched, and the list lives only for this modal session. In the
-             uploader host the list is SEEDED from staged files (they are the
-             names the user is trying to rescue); the picker adds more or
-             replaces them. In account settings, where nothing is staged, the
-             picker is the whole story. -->
+             touched, and the list lives only for this modal session. The picker is
+             the ONLY source in both hosts (operator rejected staged-file
+             seeding), so the list always reflects an explicit user choice. -->
         <div class="mb-4">
           <div class="flex items-baseline justify-between mb-1.5">
             <span class="text-xs text-cloud">Test &amp; Verify</span>
-            <span
-              v-if="seededFromStaged"
-              class="text-xs text-cloud/60"
-            >from your staged files</span>
           </div>
 
           <div
@@ -487,12 +481,9 @@ import { type FormatSegment, caretTargetForArrow, insertIndexForX, insertTokenAt
  */
 const props = withDefaults(defineProps<{
   formats: UserTimestampFormat[]
-  /** Real staged filenames, when opened from the uploader. Empty in account
-   *  settings, which switches the preview to a typed sample. */
-  sampleFilenames?: string[]
   saving?: boolean
   saveError?: string
-}>(), { sampleFilenames: () => [], saving: false, saveError: undefined })
+}>(), { saving: false, saveError: undefined })
 
 const emit = defineEmits<{(e: 'close'): void, (e: 'save', formats: UserTimestampFormat[]): void}>()
 
@@ -502,13 +493,13 @@ const labelInput = ref('')
 const editingId = ref<string | undefined>(undefined)
 
 // -- Test & Verify -----------------------------------------------------------
-// Filenames under test. Seeded from the host's staged files when present
-// (uploader), extended/replaced via the picker. ONLY names are kept -- the File
-// objects are dropped immediately, nothing is read or uploaded.
-const testFilenames = ref<string[]>([...props.sampleFilenames])
-/** True while the list is still the untouched staged-files seed; cleared the
- *  moment the user picks their own files, so the label stays honest. */
-const seededFromStaged = ref(props.sampleFilenames.length > 0)
+// Filenames under test, populated ONLY by the picker (operator 2026-08-19: no
+// staged-file seeding -- an earlier version pre-filled from the uploader's
+// staged rows and the operator rejected it, so both hosts now behave
+// identically and the list always reflects an explicit user choice). ONLY
+// names are kept: the File objects are dropped immediately, nothing is read
+// or uploaded.
+const testFilenames = ref<string[]>([])
 const filePickerEl = ref<HTMLInputElement>()
 
 const openFilePicker = (): void => { filePickerEl.value?.click() }
@@ -517,19 +508,13 @@ const onFilesPicked = (event: Event): void => {
   const input = event.target as HTMLInputElement
   const names = Array.from(input.files ?? []).map(file => file.name)
   if (names.length === 0) return
-  // A fresh pick REPLACES the staged seed (the user has chosen their own
-  // reference set) but APPENDS to files they picked earlier, de-duplicated --
-  // "Add files…" must mean add.
-  testFilenames.value = seededFromStaged.value
-    ? names
-    : [...new Set([...testFilenames.value, ...names])]
-  seededFromStaged.value = false
+  // APPEND, de-duplicated -- "Add files…" must mean add.
+  testFilenames.value = [...new Set([...testFilenames.value, ...names])]
   input.value = '' // allow re-picking the same file
 }
 
 const clearTestFiles = (): void => {
   testFilenames.value = []
-  seededFromStaged.value = false
 }
 
 // -- the format field, as SEGMENTS ------------------------------------------

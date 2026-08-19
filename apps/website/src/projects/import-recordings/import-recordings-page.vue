@@ -596,7 +596,6 @@
       <timestamp-format-editor-modal
         v-if="showFormatEditor"
         :formats="timestampFormats"
-        :sample-filenames="formatPreviewFilenames"
         :saving="savingFormats"
         :save-error="formatSaveError"
         @close="showFormatEditor = false"
@@ -1020,14 +1019,6 @@ const reanalyzeStagedForFormats = async (): Promise<void> => {
   await refreshItems()
 }
 
-/** Filenames offered to the editor's live preview. Rows that FAILED to resolve
- *  a timestamp come first: those are the ones the user is trying to rescue, so
- *  they are the useful preview subjects. */
-const formatPreviewFilenames = computed<string[]>(() => {
-  const unresolved = projectItems.value.filter(item => item.timestampUtc === undefined)
-  const rest = projectItems.value.filter(item => item.timestampUtc !== undefined)
-  return [...unresolved, ...rest].slice(0, 3).map(item => item.filename)
-})
 const collapsedBoxIds = ref<Set<string>>(new Set())
 const toggleBoxCollapsed = (boxId: string): void => {
   const next = new Set(collapsedBoxIds.value)
