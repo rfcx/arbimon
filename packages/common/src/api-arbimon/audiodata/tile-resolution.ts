@@ -52,11 +52,59 @@ export const DEFAULT_TILE_HEIGHT = 1024
  * 1.9 MB each and ALL 11 tiles load — the template renders the full tile set,
  * there is no virtualisation). 1024 gives the large visible win at moderate
  * zoom for ~7.1 MiB; 2048/4096 stay behind an explicit user choice.
+ *
+ * ⚠️ This is the PER-TILE cap for the ASSUMED tile count below. When the
+ * caller reports how many tiles the page actually renders, the effective
+ * ceiling comes from autoTileWidthCeiling(), which spends the SAME page budget
+ * over the REAL tile count. See that function for why.
  */
 export const MAX_AUTO_TILE_WIDTH = 1024
 
+/**
+ * The tile count the MAX_AUTO_TILE_WIDTH reasoning assumed. The shipped base
+ * spectrogram was a fixed 10286px → ceil(10286/1024) = 11 columns, so "~7.1
+ * MiB/page at 1024" implicitly meant "11 tiles at 1024".
+ */
+export const ASSUMED_TILE_COUNT = 11
+
+/**
+ * The page-level source-pixel budget the AUTO ceiling actually accepted:
+ * 11 tiles x 1024px. Bytes scale ~linearly with source width (measured 3.75 /
+ * 7.42 / 14.03 / 25.38 MiB per 11-tile page at 512/1024/2048/4096), so holding
+ * this constant holds the accepted ~7.4 MiB/page cost constant.
+ */
+export const AUTO_PAGE_SOURCE_PX_BUDGET = ASSUMED_TILE_COUNT * MAX_AUTO_TILE_WIDTH
+
 /** Upscale factor we try to stay under before stepping the source size up. */
 export const MAX_UPSCALE = 2
+
+/**
+ * The automatic escalation ceiling for a page that renders `tileCount` tiles.
+ *
+ * WHY TILE-COUNT-AWARE: the 1024 cap encodes a PAGE budget, not a per-tile
+ * principle — "don't let zoom silently pull ~20 MiB" assumed ~11 tiles. Once
+ * the server sizes the base spectrogram by recording duration, a short
+ * recording renders as ONE tile, and capping that lone tile at 1024 spends
+ * ~9% of the accepted budget while breaking the MAX_UPSCALE invariant this
+ * module exists to hold (a 0.963s recording displays at ~2244px → 2.19x
+ * upscale from 1024). One tile at 4096 costs ~2.3 MiB — well inside the
+ * budget the cap was protecting.
+ *
+ * The ceiling is the largest ladder step whose total page cost stays within
+ * AUTO_PAGE_SOURCE_PX_BUDGET, never below MAX_AUTO_TILE_WIDTH:
+ *   1 tile → 4096 · 2 → 4096 · 3-5 → 2048 · >=6 → 1024 (today's behaviour).
+ * Unknown/invalid tile counts fall back to the flat cap, so every existing
+ * caller and stored expectation is unchanged unless the count is supplied.
+ */
+export const autoTileWidthCeiling = (tileCount?: number): number => {
+  if (tileCount === undefined || !Number.isFinite(tileCount) || tileCount <= 0) return MAX_AUTO_TILE_WIDTH
+  const budgetPerTile = AUTO_PAGE_SOURCE_PX_BUDGET / tileCount
+  let ceiling = MAX_AUTO_TILE_WIDTH
+  for (const step of TILE_WIDTH_STEPS) {
+    if (step <= budgetPerTile && step > ceiling) ceiling = step
+  }
+  return ceiling
+}
 
 const quantiseUp = (value: number, steps: readonly number[], floor: number, ceiling: number): number => {
   const min = Math.max(floor, steps[0])
@@ -74,23 +122,27 @@ const quantiseUp = (value: number, steps: readonly number[], floor: number, ceil
  *
  * @param displayWidthPx how wide the tile is actually drawn (zoom-dependent)
  * @param userWidth      the user's explicit preference, if any
+ * @param tileCount      how many tiles the page renders — lets the AUTO
+ *                       ceiling spend the page budget over the real count
  * @returns a quantised width, never below DEFAULT_TILE_WIDTH
  */
-export const resolveTileWidth = (displayWidthPx: number, userWidth?: number): number => {
+export const resolveTileWidth = (displayWidthPx: number, userWidth?: number, tileCount?: number): number => {
   const floor = Math.max(DEFAULT_TILE_WIDTH, userWidth ?? DEFAULT_TILE_WIDTH)
   if (!Number.isFinite(displayWidthPx) || displayWidthPx <= 0) return floor
   // The smallest quantised width that keeps upscale <= MAX_UPSCALE, bounded by
   // the auto ceiling. An explicit user choice can exceed the auto ceiling.
   const needed = displayWidthPx / MAX_UPSCALE
   // Ceiling rules:
-  //  - automatic (zoom-driven) escalation stops at MAX_AUTO_TILE_WIDTH, so a
-  //    user who never touches the control cannot silently pull ~20 MiB/page;
+  //  - automatic (zoom-driven) escalation stops at the tile-count-aware
+  //    ceiling, so a user who never touches the control cannot silently pull
+  //    more than the accepted ~7.4 MiB page budget;
   //  - an EXPLICIT user preference raises the floor AND unlocks the full
   //    ladder, because someone who asked for 2048 has accepted the cost and
   //    should still get sharper tiles as they zoom further in.
-  const ceiling = userWidth !== undefined && userWidth > MAX_AUTO_TILE_WIDTH
+  const autoCeiling = autoTileWidthCeiling(tileCount)
+  const ceiling = userWidth !== undefined && userWidth > autoCeiling
     ? TILE_WIDTH_STEPS[TILE_WIDTH_STEPS.length - 1]
-    : MAX_AUTO_TILE_WIDTH
+    : autoCeiling
   return quantiseUp(needed, TILE_WIDTH_STEPS, floor, Math.max(ceiling, floor))
 }
 

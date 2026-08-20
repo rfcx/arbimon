@@ -664,7 +664,14 @@ const tileDisplayWidth = computed<number>(() => {
   return Math.ceil(tile.ds * getSec2px(spectrogramMetrics.value.width, props.visobject.domain.x.span))
 })
 
-const tileWidth = computed<number>(() => resolveTileWidth(tileDisplayWidth.value, userTileWidth.value))
+// How many tiles this page actually renders — drives the tile-count-aware
+// AUTO escalation ceiling. With the duration-sized base spectrogram a short
+// recording is ONE tile; letting that lone tile escalate to 2048/4096 costs
+// ~2 MiB, far inside the ~7.4 MiB page budget the 1024 cap was protecting,
+// and restores the <=2x upscale invariant for short recordings.
+const tileCount = computed<number | undefined>(() => props.visobject?.tiles?.set?.length)
+
+const tileWidth = computed<number>(() => resolveTileWidth(tileDisplayWidth.value, userTileWidth.value, tileCount.value))
 const tileHeight = computed<number>(() => resolveTileHeight(userTileHeight.value ?? DEFAULT_TILE_HEIGHT))
 
 /**
