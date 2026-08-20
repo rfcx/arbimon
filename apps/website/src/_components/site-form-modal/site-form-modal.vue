@@ -186,22 +186,61 @@
             Please enter a valid elevation number (e.g. 123.45).
           </p>
           <template v-if="groundElevation !== undefined && !hidden">
-            <input
-              type="range"
-              :min="elevSliderMin"
-              :max="elevSliderMax"
-              step="1"
-              :value="elevSliderValue"
-              class="w-full mt-2 accent-frequency cursor-pointer"
-              aria-label="Elevation slider, within 250 meters of ground level"
-              @input="onElevSlider"
-            >
+            <!-- SLIDER TRACK OVERLAY (operator 2026-08-19 17:33): the native
+                 range input carries no tick affordance, so the markers are an
+                 absolutely-positioned layer BEHIND the input. The input keeps a
+                 transparent track (see the scoped style) so the marks show
+                 through, and stays the only focusable/interactive element - the
+                 overlay is pointer-events-none so it can never steal a drag.
+                 Positions are percentages of the min->max span, so they follow
+                 the +/-250 m window as it recentres on new coordinates. -->
+            <div class="relative mt-2 h-5">
+              <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-1 rounded-full bg-util-gray-03 pointer-events-none" />
+              <!-- major 100 m marks (0, 100, 200 ...), subtle by request -->
+              <div
+                v-for="mark in elevMajorMarks"
+                :key="`mark-${mark.value}`"
+                class="absolute top-1/2 -translate-y-1/2 w-px h-2.5 bg-cloud/25 pointer-events-none"
+                :style="{ left: `${mark.pct}%` }"
+              />
+              <!-- ground-level mark: deliberately stronger than the 100 m marks
+                   so "where is the ground" reads at a glance. -->
+              <div
+                class="absolute top-1/2 -translate-y-1/2 w-0.5 h-4 bg-frequency/80 rounded-full pointer-events-none"
+                :style="{ left: `${elevGroundPct}%` }"
+                :title="`ground ≈ ${groundElevation} m`"
+              />
+              <input
+                type="range"
+                :min="elevSliderMin"
+                :max="elevSliderMax"
+                step="1"
+                :value="elevSliderValue"
+                class="elev-slider absolute inset-0 w-full h-5 accent-frequency cursor-pointer"
+                aria-label="Elevation slider, within 250 meters of ground level"
+                @input="onElevSlider"
+              >
+            </div>
             <div
-              class="flex justify-between text-cloud/70 leading-tight"
+              class="flex justify-between items-baseline gap-x-2 text-cloud/70 leading-tight"
               style="font-size: 10px"
             >
               <span>{{ elevSliderMin }} m</span>
-              <span class="text-cloud">ground ≈ {{ groundElevation }} m at this location · slide or type an exact value</span>
+              <span class="text-cloud text-center">
+                ground ≈ {{ groundElevation }} m at this location · slide or type an exact value
+                <!-- SNAP-TO-GROUND (operator 2026-08-19 17:33). Hidden rather
+                     than disabled when already at ground: a permanently-inert
+                     control beside a live one reads as broken. type=button so
+                     it can never submit the form (the Enter/dirty-gate class of
+                     bug fixed in 4a38290d8). -->
+                <button
+                  v-if="!isAtGroundElevation"
+                  type="button"
+                  class="ml-1 underline underline-offset-2 text-frequency hover:text-frequency/80 focus:(outline-none ring-1 ring-frequency rounded)"
+                  :title="`Set elevation to the estimated ground level (${groundElevation} m)`"
+                  @click="snapToGroundElevation"
+                >snap to ground</button>
+              </span>
               <span>{{ elevSliderMax }} m</span>
             </div>
           </template>
@@ -457,6 +496,56 @@ const elevSliderValue = computed(() => {
 })
 const onElevSlider = (event: Event): void => {
   alt.value = (event.target as HTMLInputElement).value
+}
+
+// -- SLIDER MARKERS + SNAP-TO-GROUND (operator 2026-08-19 17:33) -------------
+// Three asks: mark the estimated ground level on the track, let the user snap
+// to it, and subtly mark the major 100 m gradations (0, 100, 200 ...).
+//
+// Positions are percentages across the min->max span rather than pixels, so
+// they stay correct when the +/-250 m window recentres on a new ground
+// estimate, and at any modal width (this dialog is responsive: 1-col -> 2-col
+// at md).
+const elevPctFor = (value: number): number => {
+  const span = elevSliderMax.value - elevSliderMin.value
+  if (span <= 0) return 0
+  return ((value - elevSliderMin.value) / span) * 100
+}
+
+const elevGroundPct = computed(() => elevPctFor(groundElevation.value ?? 0))
+
+// Multiples of 100 m INSIDE the window. The window is 500 m wide, so this is at
+// most 6 marks. Marks within 1.5% of either edge are dropped: they would render
+// half-clipped under the thumb's travel and read as artefacts, not gradations.
+const ELEV_MARK_STEP_M = 100
+const elevMajorMarks = computed<Array<{ value: number, pct: number }>>(() => {
+  if (groundElevation.value === undefined) return []
+  const first = Math.ceil(elevSliderMin.value / ELEV_MARK_STEP_M) * ELEV_MARK_STEP_M
+  const marks: Array<{ value: number, pct: number }> = []
+  for (let v = first; v <= elevSliderMax.value; v += ELEV_MARK_STEP_M) {
+    const pct = elevPctFor(v)
+    if (pct >= 1.5 && pct <= 98.5) marks.push({ value: v, pct })
+  }
+  return marks
+})
+
+// "Already at ground" is judged at the SLIDER's integer resolution (step 1 m),
+// not by exact equality: a typed 517.4 against ground 517 is at ground as far
+// as this control can express, and offering a snap that visibly does nothing
+// would be worse than hiding it.
+const isAtGroundElevation = computed(() => {
+  if (groundElevation.value === undefined) return false
+  const typed = parseFloat(alt.value)
+  if (!Number.isFinite(typed)) return false
+  return Math.round(typed) === groundElevation.value
+})
+
+const snapToGroundElevation = (): void => {
+  if (groundElevation.value === undefined) return
+  // Writes through `alt` exactly as the slider does, so the numeric field and
+  // the dirty-gate stay in lockstep (writing the slider value directly would
+  // desync them).
+  alt.value = String(groundElevation.value)
 }
 
 // -- SITE FACTS strip labels (operator 2026-08-19 #7) -------------------------
@@ -749,3 +838,79 @@ watch(liveCoords, (coords, previous) => {
   elevFetchTimer = setTimeout(() => { void fetchGroundElevation() }, 800)
 }, { immediate: true })
 </script>
+
+<style scoped>
+/*
+ * ELEVATION SLIDER (operator 2026-08-19 17:33 — ground mark, snap-to, 100 m marks).
+ *
+ * The tick/ground marks are a layer BEHIND this input, so the native track has
+ * to be transparent for them to show through. Each engine paints the track via
+ * a different pseudo-element and they cannot be combined into one rule — a
+ * selector list is dropped WHOLESALE by any engine that doesn't recognise one
+ * member, which is exactly how a "works in Chrome, invisible in Safari" bug
+ * gets shipped. This modal already carries one Safari-specific fix (textual
+ * date parsing, 4a38290d8), so they are written out separately on purpose.
+ *
+ * Only the TRACK is neutralised; the thumb keeps its native rendering and
+ * `accent-frequency` colouring, so keyboard focus and drag behaviour are
+ * untouched.
+ */
+.elev-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+/* WebKit / Blink (Safari, Chrome, Edge) */
+.elev-slider::-webkit-slider-runnable-track {
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+/* Firefox */
+.elev-slider::-moz-range-track {
+  background: transparent;
+  border-color: transparent;
+}
+
+/* Firefox paints everything left of the thumb separately; leave it clear too
+   so the ground mark is not covered when the value sits above ground. */
+.elev-slider::-moz-range-progress {
+  background: transparent;
+}
+
+/* Re-assert the thumb after `appearance:none` stripped it in WebKit. Sized to
+   sit comfortably over a 4px track and the 10-16px marks behind it. */
+.elev-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -5px;
+  border-radius: 9999px;
+  background: currentColor;
+  cursor: pointer;
+}
+
+.elev-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: none;
+  border-radius: 9999px;
+  background: currentColor;
+  cursor: pointer;
+}
+
+/* `frequency` is a literal hex in windi.config.ts (#ADFF2C), NOT a CSS custom
+   property — an earlier draft of this rule used `var(--color-frequency)`, which
+   resolves to nothing here and would have painted the thumb with the inherited
+   text colour. Checked against the config rather than assumed. */
+.elev-slider {
+  color: #ADFF2C;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .elev-slider { transition: none; }
+}
+</style>
