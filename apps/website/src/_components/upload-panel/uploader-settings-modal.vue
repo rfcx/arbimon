@@ -44,45 +44,11 @@
              arises -- many will never visit their global settings, and should
              simply find that their formats persist across projects and
              sessions. -->
-        <div>
-          <div class="flex items-center justify-between mb-1.5">
-            <span class="block text-sm text-insight">Custom Filename Formats</span>
-            <button
-              class="btn btn-secondary text-xs px-2 py-0.5"
-              @click="emit('manageFormats')"
-            >
-              {{ timestampFormats.length > 0 ? 'Edit' : 'Create' }}
-            </button>
-          </div>
-
-          <ul
-            v-if="timestampFormats.length > 0"
-            class="space-y-1"
-          >
-            <li
-              v-for="item in timestampFormats"
-              :key="item.id"
-              class="flex items-baseline justify-between gap-x-2 text-sm"
-            >
-              <span class="text-insight truncate">{{ item.label }}</span>
-              <code class="text-xs text-cloud/60 shrink-0">{{ item.format }}</code>
-            </li>
-          </ul>
-          <p
-            v-else
-            class="text-xs text-cloud"
-          >
-            No custom formats yet. Add one if your recordings’ filenames aren’t
-            recognised automatically — they are saved to your account and used
-            in every project.
-          </p>
-
-          <p class="text-xs text-cloud mt-1.5">
-            Timezones are determined automatically: from the filename, then the
-            file’s metadata, then the site’s timezone, then UTC. You can correct
-            the result for a whole queue in the Zone column before uploading.
-          </p>
-        </div>
+        <timestamp-format-list
+          :formats="timestampFormats"
+          hint="Timezones are determined automatically: from the filename, then the file’s metadata, then the site’s timezone, then UTC. You can correct the result for a whole queue in the Zone column before uploading."
+          @manage="emit('manageFormats')"
+        />
 
         <!-- FLAC pre-conversion. The explanatory copy that used to live in a
              tooltip is shown inline here — there is room for it now. -->
@@ -95,6 +61,9 @@
               @change="onFlacChange"
             >
             <span class="text-insight">Pre-Convert WAV to FLAC</span>
+            <span
+              class="shrink-0 mt-0.5 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide bg-frequency/20 text-frequency"
+            >Experimental</span>
           </label>
           <p class="text-xs text-cloud mt-1.5 leading-relaxed">
             {{ flacInfoText }}
@@ -118,6 +87,7 @@
 import { type UserTimestampFormat } from '@rfcx-bio/common/dao/types'
 
 import ModalPopup from '@/_components/modal-popup.vue'
+import TimestampFormatList from '@/_components/timestamp-formats/timestamp-format-list.vue'
 
 /**
  * Uploader Settings (operator 2026-08-14).

@@ -110,6 +110,17 @@ const assertValidTimestampFormats = (formats: UserTimestampFormat[]): void => {
   }
 
   const seenIds = new Set<string>()
+  // USER-SCOPED dedup (operator 2026-08-19): the whole list belongs to one
+  // user, so uniqueness within it IS per-user scoping -- different users can
+  // name their formats identically. Labels are compared case-insensitively
+  // (two entries differing only in case would be indistinguishable in a list);
+  // patterns are compared EXACTLY, because %Y and %y are different patterns.
+  // A duplicate pattern is rejected since the second copy could never match a
+  // filename the first did not already claim (first-in-list-wins) -- it would
+  // only slow parsing. The UI enforces both too; this is the backstop for
+  // clients that bypass it.
+  const seenLabels = new Set<string>()
+  const seenPatterns = new Set<string>()
   for (const entry of formats) {
     const { id, label, format } = entry ?? {}
     if (typeof id !== 'string' || id === '') {
@@ -123,9 +134,19 @@ const assertValidTimestampFormats = (formats: UserTimestampFormat[]): void => {
     if (typeof label !== 'string' || label.trim() === '') {
       throw BioInvalidBodyError({ timestampFormats: 'each format needs a label' })
     }
+    const labelKey = label.trim().toLowerCase()
+    if (seenLabels.has(labelKey)) {
+      throw BioInvalidBodyError({ timestampFormats: `duplicate name: ${label}` })
+    }
+    seenLabels.add(labelKey)
+
     if (typeof format !== 'string' || !isValidFormatString(format)) {
       throw BioInvalidBodyError({ timestampFormats: `invalid format string: ${String(format)}` })
     }
+    if (seenPatterns.has(format)) {
+      throw BioInvalidBodyError({ timestampFormats: `duplicate pattern: ${format}` })
+    }
+    seenPatterns.add(format)
   }
 }
 

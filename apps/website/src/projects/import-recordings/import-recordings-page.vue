@@ -607,7 +607,29 @@
         :timestamp-formats="timestampFormats"
         @close="showSettings = false"
         @update:flac-enabled="flacEncodeEnabled = $event"
-        @manage-formats="showFormatEditor = true"
+        @manage-formats="showFormatList = true"
+      />
+
+      <timestamp-format-list-modal
+        v-if="showFormatList && !showFormatEditor"
+        :formats="timestampFormats"
+        :busy="savingFormats"
+        :error="formatSaveError"
+        @close="showFormatList = false"
+        @create="openFormatCreator"
+        @edit="openFormatEditor"
+        @remove="removeTimestampFormat"
+        @reorder="reorderTimestampFormat"
+      />
+
+      <timestamp-format-editor-modal
+        v-if="showFormatEditor"
+        :existing="timestampFormats"
+        :editing="editingFormat"
+        :saving="savingFormats"
+        :save-error="formatSaveError"
+        @close="showFormatEditor = false; editingFormat = undefined"
+        @save="saveOneTimestampFormat"
       />
 
       <!-- hidden file input; routed to whichever box requested the picker -->
@@ -818,20 +840,24 @@ import { useRoute } from 'vue-router'
 
 import { apiArbimonFindRecordingAtExactTime, apiArbimonResolveRecordingId } from '@rfcx-bio/common/api-arbimon/audiodata/recording'
 import { type SiteResponse, apiArbimonGetSites } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { apiGetUserProfile, apiUpdateUserProfile } from '@rfcx-bio/common/api-bio/users/profile'
 import { type UserTimestampFormat } from '@rfcx-bio/common/dao/types'
 import { type TimezoneMode, type UploadItem, analyzeFile, collectDroppedFiles, createUploadItem, formatUtcOffsetLabel, isSupportedAudioFile, retimestampToOffset } from '@rfcx-bio/upload-engine'
 
 import SiteFormModal, { type SiteSaved } from '@/_components/site-form-modal/site-form-modal.vue'
+import TimestampFormatEditorModal from '@/_components/timestamp-formats/timestamp-format-editor-modal.vue'
+import TimestampFormatListModal from '@/_components/timestamp-formats/timestamp-format-list-modal.vue'
 import StagingTable from '@/_components/upload-panel/staging-table.vue'
 import UploaderSettingsModal from '@/_components/upload-panel/uploader-settings-modal.vue'
-import { apiClientArbimonLegacyKey } from '@/globals'
+import { apiClientArbimonLegacyKey, apiClientKey } from '@/globals'
 import { track } from '~/analytics'
 import { useStore } from '~/store'
-import { bindProjectMetrics, currentRateBps, currentSurface, engine, engineRunning, fileSource, flacEncodeEnabled, items, livePopouts, projectMetrics, refreshItems, registerAsPopout, releasePopoutClaim, requestFileHandles, resetProjectMetrics, stats } from '~/upload'
+import { bindProjectMetrics, currentRateBps, currentSurface, engine, engineRunning, fileSource, flacEncodeEnabled, items, livePopouts, prepareOptions, projectMetrics, refreshItems, registerAsPopout, releasePopoutClaim, requestFileHandles, resetProjectMetrics, stats } from '~/upload'
 
 const route = useRoute()
 const store = useStore()
 const apiClientArbimon = inject(apiClientArbimonLegacyKey)
+const apiClientBio = inject(apiClientKey)
 
 const projectSlug = computed(() => route.params.projectSlug as string)
 const projectName = computed(() => store.project?.name)
@@ -880,7 +906,14 @@ const TIMEZONE_MODE: TimezoneMode = 'auto'
 /** Copy for the "i" tooltip beside the Pre-Convert WAV to FLAC checkbox.
  * Lives here rather than inline so the template stays readable; the tooltip
  * component renders it as plain text (no HTML entities). */
-const FLAC_INFO_TEXT = 'When you add WAV audio files, this uploader may pre-encode the files from WAV to a lossless FLAC format prior to upload. This can reduce your upload time by as much as 50% on slower connections, but it will make use of your computer\u2019s CPU for the encoding. You can disable this feature at any time.'
+/**
+ * OPEN-ITEMS 183 (2026-08-18): this copy previously described the feature as a
+ * straightforward win, and it defaulted to ON -- while every encoded file was
+ * in fact being REJECTED by ingest ("Audio duration is zero"). The setting
+ * now defaults to OFF and is labelled Experimental, so the copy has to say
+ * plainly that it is opt-in and may fail, not only advertise the saving.
+ */
+const FLAC_INFO_TEXT = 'Experimental. When you add WAV audio files, this uploader can pre-encode them to lossless FLAC before uploading. This can reduce your upload time by as much as 50% on slower connections, but it uses your computer\u2019s CPU and is still being tested. If your uploads fail, switch this off and add the files again. Leave it off unless you have been asked to try it.'
 
 // -- Site-queue collapse (PAGE-owned, lifted from staging-table 2026-08-13) --
 // A Set of collapsed boxIds; absence = expanded. Page-level ownership is what
@@ -936,14 +969,138 @@ const intakeStyle = (isDragOver: boolean): Record<string, string> => {
   return { backgroundImage: `${hatch('45deg')}, ${hatch('135deg')}` }
 }
 
-/** Opens the custom-filename-format editor (its own modal, reachable from both
- *  here and global account settings — they mirror one another). */
+/**
+ * Two-modal flow (operator 2026-08-19): the LIST modal shows saved formats and
+ * explains the feature; the EDITOR modal creates/edits ONE entry. Edit/create
+ * open the editor OVER the list; saving or closing the editor returns to the
+ * list, so the user always comes back to the collection they were managing.
+ */
+const showFormatList = ref(false)
 const showFormatEditor = ref(false)
+const editingFormat = ref<UserTimestampFormat | undefined>(undefined)
 
-/** The user's saved custom filename formats, loaded from their profile.
- *  Empty until the format editor lands (step 3); the settings modal already
- *  renders the empty state. */
+const openFormatCreator = (): void => {
+  editingFormat.value = undefined
+  showFormatEditor.value = true
+}
+const openFormatEditor = (format: UserTimestampFormat): void => {
+  editingFormat.value = format
+  showFormatEditor.value = true
+}
+
+/**
+ * The user's saved custom filename formats, loaded from their global profile.
+ *
+ * Read at mount and re-applied to STAGED rows whenever they change, so a format
+ * added mid-session rescues files already sitting in the queue rather than only
+ * helping the next drop -- which is the moment the user actually reaches for
+ * this feature (their files are staged and showing "no timestamp").
+ */
 const timestampFormats = ref<UserTimestampFormat[]>([])
+const savingFormats = ref(false)
+const formatSaveError = ref<string | undefined>(undefined)
+
+const loadTimestampFormats = async (): Promise<void> => {
+  if (apiClientBio === undefined) return
+  try {
+    const profile = await apiGetUserProfile(apiClientBio)
+    timestampFormats.value = profile?.timestampFormats ?? []
+  } catch {
+    // Non-fatal: the uploader works without saved formats (auto-detect is
+    // untouched), so a profile fetch failure must not block staging.
+    timestampFormats.value = []
+  }
+}
+
+// Keep the PREPARE-stage fallback in step with the list staging used. Prepare
+// normally respects the timestamp analysis already decided (see
+// browser-prepare), so this only matters for an item that reaches prepare
+// without one -- but if that happens, it must not fail on a filename staging
+// could read.
+watch(timestampFormats, formats => { prepareOptions.savedFormats = formats }, { immediate: true })
+
+/**
+ * Persist a list change, then re-analyze staged rows against it.
+ *
+ * Every list-modal action (save-one/delete/reorder) funnels here as ONE
+ * immediate persist. Saves FIRST and only adopts the new list on success --
+ * optimistically applying formats that failed to persist would leave the table
+ * parsing by rules the user's account does not actually hold.
+ */
+const persistTimestampFormats = async (formats: UserTimestampFormat[]): Promise<boolean> => {
+  if (apiClientBio === undefined) return false
+  savingFormats.value = true
+  formatSaveError.value = undefined
+  try {
+    await apiUpdateUserProfile(apiClientBio, { timestampFormats: formats })
+    timestampFormats.value = formats
+    await reanalyzeStagedForFormats()
+    return true
+  } catch {
+    formatSaveError.value = 'Could not save your formats. Please try again.'
+    return false
+  } finally {
+    savingFormats.value = false
+  }
+}
+
+/** Editor emitted one finished format: upsert it, persist, return to the list. */
+const saveOneTimestampFormat = async (format: UserTimestampFormat): Promise<void> => {
+  const existing = timestampFormats.value.findIndex(item => item.id === format.id)
+  const next = existing === -1
+    ? [...timestampFormats.value, format]
+    : timestampFormats.value.map(item => item.id === format.id ? format : item)
+  if (await persistTimestampFormats(next)) {
+    showFormatEditor.value = false
+    editingFormat.value = undefined
+  }
+}
+
+const removeTimestampFormat = async (format: UserTimestampFormat): Promise<void> => {
+  await persistTimestampFormats(timestampFormats.value.filter(item => item.id !== format.id))
+}
+
+const reorderTimestampFormat = async (change: { id: string, direction: -1 | 1 }): Promise<void> => {
+  const index = timestampFormats.value.findIndex(item => item.id === change.id)
+  const target = index + change.direction
+  if (index === -1 || target < 0 || target >= timestampFormats.value.length) return
+  const next = [...timestampFormats.value]
+  const [moved] = next.splice(index, 1)
+  next.splice(target, 0, moved)
+  await persistTimestampFormats(next)
+}
+
+/**
+ * Re-run analysis on STAGED rows after the format list changes.
+ *
+ * Scope mirrors the established `timezoneMode` re-analysis rule (the closest
+ * precedent in this page):
+ *  - `staged` rows ONLY -- never rows already signed/uploading, whose instant is
+ *    registered server-side; re-dating those would desync them.
+ *  - rows the user corrected BY HAND (`timezoneSource === 'manual'`) are left
+ *    alone: a saved format must never clobber an explicit human decision.
+ * Rows whose file handle is gone (post-reload) are skipped rather than errored.
+ */
+const reanalyzeStagedForFormats = async (): Promise<void> => {
+  const targets = projectItems.value.filter(item =>
+    item.state === 'staged' && item.timezoneSource !== 'manual')
+  if (targets.length === 0) return
+  for (const item of targets) {
+    const file = await fileSource.getFile(item.id)
+    if (file === undefined) continue
+    const site = siteById(item.streamId)
+    const siteTz = site?.timezone !== undefined && site.timezone !== '' ? site.timezone : undefined
+    const { patch } = await analyzeFile(item, file, {
+      mode: TIMEZONE_MODE,
+      siteTimezone: siteTz,
+      siteName: site?.name,
+      savedFormats: timestampFormats.value
+    })
+    await engine.updateStaged(item.id, patch)
+  }
+  await refreshItems()
+}
+
 const collapsedBoxIds = ref<Set<string>>(new Set())
 const toggleBoxCollapsed = (boxId: string): void => {
   const next = new Set(collapsedBoxIds.value)
@@ -1212,6 +1369,7 @@ const metrics = projectMetrics
 
 onMounted(async () => {
   await loadSites()
+  await loadTimestampFormats()
   bindProjectMetrics(projectSlug.value, store.user?.sub)
   await refreshItems()
   materializeBoxesFromQueue()
@@ -1276,7 +1434,10 @@ const enqueueFiles = async (streamId: string, files: Array<{ file: File, relativ
   const context = {
     mode: boxMode,
     siteTimezone: siteTz,
-    siteName: site.name
+    siteName: site.name,
+    // Saved formats are tried only AFTER the built-in patterns, so passing them
+    // can never change a filename auto-detect already handles.
+    savedFormats: timestampFormats.value
   }
   const CONCURRENCY = 4
   let index = 0

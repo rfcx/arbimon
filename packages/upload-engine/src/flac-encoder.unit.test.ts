@@ -198,6 +198,92 @@ describe('progress + refusal contracts', () => {
   }, 30000)
 })
 
+/**
+ * STREAMINFO total-samples -- the field whose absence broke every
+ * browser-transcoded upload (OPEN-ITEMS 183).
+ *
+ * The encoder used to pass 0 ("unknown") to libFLAC. ffprobe then reports
+ * `Duration: N/A`, the client omits `duration` from the sign request, and
+ * ingest rejects the file with "Audio duration is zero". Measured in
+ * production: 0 of 335 browser-transcoded FLACs ever ingested successfully.
+ *
+ * These tests pin BOTH halves of the contract: the value must be present, and
+ * it must equal what was ACTUALLY encoded -- never what the WAV header merely
+ * claimed. libFLAC writes this field verbatim and never validates it, so an
+ * over-declared value would yield a FLAC that lies about its own length, and
+ * ingest derives every segment timestamp from that length.
+ */
+describe('STREAMINFO total-samples (183)', () => {
+  /** read the 36-bit total-samples field out of a FLAC byte stream */
+  const totalSamplesOf = (b: Uint8Array): number =>
+    ((b[21] & 0x0f) * 2 ** 32) + (b[22] * 2 ** 24) + (b[23] * 2 ** 16) + (b[24] * 2 ** 8) + b[25]
+
+  test('declares the exact frame count (mono)', async () => {
+    const spec: PcmSpec = { channels: 1, sampleRate: 32000, bitsPerSample: 16, frames: 12345 }
+    const { bytes } = makePcm(spec)
+    const blob = wavBlob(spec, bytes)
+    const meta = await parseWavMetadata(blob)
+    const { flacBytes } = await encodeWavToFlac(blob, meta)
+    expect(totalSamplesOf(flacBytes)).toBe(12345)
+  })
+
+  test('counts INTERCHANNEL samples, not per-channel values (stereo)', async () => {
+    // a stereo file with N frames must declare N, not 2N -- getting this wrong
+    // would double every reported duration.
+    const spec: PcmSpec = { channels: 2, sampleRate: 44100, bitsPerSample: 16, frames: 5000 }
+    const { bytes } = makePcm(spec)
+    const blob = wavBlob(spec, bytes)
+    const meta = await parseWavMetadata(blob)
+    const { flacBytes } = await encodeWavToFlac(blob, meta)
+    expect(totalSamplesOf(flacBytes)).toBe(5000)
+  })
+
+  test('24-bit: frame size is derived from bit depth', async () => {
+    const spec: PcmSpec = { channels: 1, sampleRate: 48000, bitsPerSample: 24, frames: 4321 }
+    const { bytes } = makePcm(spec)
+    const blob = wavBlob(spec, bytes)
+    const meta = await parseWavMetadata(blob)
+    const { flacBytes } = await encodeWavToFlac(blob, meta)
+    expect(totalSamplesOf(flacBytes)).toBe(4321)
+  })
+
+  /**
+   * THE TRUNCATED-FILE CASE, and the reason the count is derived from the
+   * clamped data length rather than from `meta.dataByteLength`.
+   *
+   * A truncated WAV's data chunk over-declares. libFLAC does NOT validate the
+   * declared total against what it receives (probed: declaring 5s while
+   * encoding 3s finishes cleanly and emits a header short by 64,000 samples).
+   * Trusting the header would therefore ship a FLAC claiming audio it does not
+   * contain -- silent wrong timestamps, worse than a loud rejection.
+   */
+  test('TRUNCATED wav: declares what was encoded, not what the header claimed', async () => {
+    const spec: PcmSpec = { channels: 1, sampleRate: 32000, bitsPerSample: 16, frames: 10000 }
+    const { bytes } = makePcm(spec)
+    const full = wavBlob(spec, bytes)
+    // lop off the last 4000 frames (8000 bytes) WITHOUT fixing the header,
+    // exactly like a partially-copied file
+    const truncated = full.slice(0, full.size - 8000)
+
+    const meta = await parseWavMetadata(truncated)
+    expect(meta.dataByteLength).toBe(20000) // header still claims 10000 frames
+    const { flacBytes } = await encodeWavToFlac(truncated, meta)
+
+    // must declare the 6000 frames that actually exist
+    expect(totalSamplesOf(flacBytes)).toBe(6000)
+
+    // and the header must agree with the decodable payload
+    const decoded = await decodeFlacToPcm(flacBytes)
+    expect(decoded.channels[0].length).toBe(totalSamplesOf(flacBytes))
+  })
+
+  test('declared total matches the decoded sample count (round-trip agreement)', async () => {
+    const spec: PcmSpec = { channels: 1, sampleRate: 32000, bitsPerSample: 16, frames: 9999 }
+    const { result, decoded } = await roundtrip(spec)
+    expect(totalSamplesOf(result.flacBytes)).toBe(decoded.channels[0].length)
+  })
+})
+
 describe('deinterleavePcm sign-extension (unit)', () => {
   test('16-bit negative values', () => {
     // -1 = 0xFFFF LE, -32768 = 0x0080 LE

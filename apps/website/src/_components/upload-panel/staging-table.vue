@@ -674,6 +674,18 @@
               <td class="px-2 py-1.5 truncate">
                 <span class="inline-flex items-center gap-x-1">
                   {{ recDate(item) }}
+                  <!-- WHICH saved format produced this date (operator
+                       2026-08-18). Shown ONLY when one of the user's own
+                       formats matched -- the built-in patterns are the silent
+                       common case and would be noise on every row. It matters
+                       because a loose saved format can yield a plausible but
+                       wrong date, and the user needs to see that their own rule,
+                       not auto-detect, is responsible. -->
+                  <span
+                    v-if="item.matchedFormatLabel !== undefined"
+                    class="text-[10px] leading-none px-1 py-0.5 rounded border border-frequency/40 text-frequency/80 shrink-0"
+                    :title="`Recognised by your saved pattern: ${item.matchedFormatLabel}`"
+                  >fmt</span>
                   <button
                     v-if="canEditDatetime(item)"
                     class="text-cloud/60 hover:text-frequency"

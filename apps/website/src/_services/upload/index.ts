@@ -8,7 +8,7 @@
  */
 import { computed, reactive, ref } from 'vue'
 
-import { type QueueStats, type UploadItem, BrowserFileSource, IndexedDbUploadStore, makeBrowserPrepare, makeWorkerEncoder, TranscodeCache, TranscodingFileSource, UploadEngine, withFlacTranscode } from '@rfcx-bio/upload-engine'
+import { type QueueStats, type SavedTimestampFormat, type UploadItem, BrowserFileSource, IndexedDbUploadStore, makeBrowserPrepare, makeWorkerEncoder, TranscodeCache, TranscodingFileSource, UploadEngine, withFlacTranscode } from '@rfcx-bio/upload-engine'
 
 import { track } from '~/analytics'
 import { useAuth0Client } from '~/auth-client'
@@ -65,17 +65,39 @@ const INGEST_BASE_URL = (import.meta.env.VITE_INGEST_BASE_URL as string | undefi
 
 export const EMPTY_STATS: QueueStats = { total: 0, analyzing: 0, staged: 0, queued: 0, preparing: 0, ready: 0, signing: 0, signed: 0, uploading: 0, uploaded: 0, ingested: 0, duplicate: 0, failed: 0, rejected: 0, cancelled: 0, paused: 0, bytesTotal: 0, bytesUploaded: 0 }
 
-/** Per-prepare timezone context, set by the panel before enqueue. */
-export const prepareOptions = reactive<{ timezone?: string | number }>({})
+/**
+ * Per-prepare context, set by the panel/page before enqueue.
+ *
+ * `savedFormats` mirrors the user's profile list so the PREPARE fallback can
+ * recognise the same filenames staging did. Read at CALL time below, not at
+ * construction time -- the engine is built once at module load, long before the
+ * profile has been fetched, so capturing the value here would pin it to []
+ * forever.
+ */
+export const prepareOptions = reactive<{ timezone?: string | number, savedFormats?: SavedTimestampFormat[] }>({})
 
 /**
  * Client-side WAV→FLAC encoding (#112): lossless, metadata-gated, fail-open.
  * Encodable WAVs are FLAC-encoded in the browser before hashing/upload —
  * roughly half the bytes over the wire and no server-side WAV size cap.
  * Files the encoder cannot guarantee lossless (float-32, >8ch, …) upload
- * unchanged. Toggleable from the panel.
+ * unchanged. Toggleable from the uploader settings modal.
+ *
+ * 🔴 **EXPERIMENTAL — DEFAULTS TO OFF (2026-08-18, OPEN-ITEMS §183).**
+ * This shipped defaulting to ON and every encoded file was REJECTED by ingest
+ * ("Audio duration is zero"): the encoder declares `totalSamples = 0` in the
+ * FLAC STREAMINFO, so neither the client probe nor ffprobe can determine a
+ * duration. Measured: 0 of 335 browser-transcoded FLACs ever ingested, vs
+ * 73,770 plain WAVs with none of this failure class. Only files >= 8 MiB are
+ * transcoded, so the defect selectively hit LONG field recordings — the
+ * uploader's primary use case — while small test files passed.
+ *
+ * The default stays OFF until the encoder fix ships AND a large-file upload is
+ * verified end-to-end in production. Do not flip this back on to "save
+ * bandwidth" without that evidence — halving the bytes is worthless if the
+ * upload is then rejected.
  */
-export const flacEncodeEnabled = ref(true)
+export const flacEncodeEnabled = ref(false)
 export const transcodeCache = new TranscodeCache()
 
 // Encoding runs in a module Worker (vite bundles the new-URL pattern
@@ -103,7 +125,7 @@ export const engine = new UploadEngine(
   fileSource,
   getToken,
   async (item, file) => await withFlacTranscode(
-    makeBrowserPrepare({ timezone: prepareOptions.timezone }),
+    makeBrowserPrepare({ timezone: prepareOptions.timezone, savedFormats: prepareOptions.savedFormats }),
     transcodeCache,
     {
       enabled: flacEncodeEnabled.value,

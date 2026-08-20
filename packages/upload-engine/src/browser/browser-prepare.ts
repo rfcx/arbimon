@@ -8,7 +8,7 @@
 import { probeAudioMetadata } from '../audio-metadata'
 import { type PrepareResult } from '../engine'
 import { sha1HexOfBlob } from '../sha1'
-import { parseTimestamp, TIMESTAMP_FORMAT_AUTO, toUtcIso } from '../timestamp-parser'
+import { type SavedTimestampFormat, matchTimestamp, parseTimestamp, TIMESTAMP_FORMAT_AUTO, toUtcIso } from '../timestamp-parser'
 import { type UploadItem } from '../types'
 
 export interface BrowserPrepareOptions {
@@ -16,6 +16,14 @@ export interface BrowserPrepareOptions {
   timestampFormat?: string
   /** IANA timezone or fixed offset minutes for local-naive filenames. */
   timezone?: string | number
+  /**
+   * The user's saved filename formats, in precedence order. Used ONLY on the
+   * fallback path below (an item that reaches prepare without an analyzed
+   * timestamp). Kept in step with `analyzeFile`'s context deliberately: if
+   * staging recognised a name via a saved format, a re-prepare must be able to
+   * recognise it the same way rather than failing where staging succeeded.
+   */
+  savedFormats?: SavedTimestampFormat[]
 }
 
 export const makeBrowserPrepare =
@@ -27,10 +35,12 @@ export const makeBrowserPrepare =
     // plain filename parse — respect the analyzed value when present.
     let timestampUtc = item.timestampUtc
     if (timestampUtc === undefined) {
-      const parsed = parseTimestamp(
-        item.filename,
-        options.timestampFormat ?? TIMESTAMP_FORMAT_AUTO
-      )
+      // An explicit per-site format still wins outright (desktop parity);
+      // otherwise fall back to auto-detect PLUS the user's saved formats, the
+      // same chain and order staging used.
+      const parsed = options.timestampFormat !== undefined && options.timestampFormat !== TIMESTAMP_FORMAT_AUTO
+        ? parseTimestamp(item.filename, options.timestampFormat)
+        : matchTimestamp(item.filename, options.savedFormats)?.timestamp
       if (parsed === undefined) {
         return {
           error: 'Could not parse a recording timestamp from the filename.'

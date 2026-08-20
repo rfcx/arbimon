@@ -199,3 +199,44 @@ describe('analyzeFile — failure shapes', () => {
     expect(patch.fileFormat).toBe('flac')
   })
 })
+
+describe('analyzeFile — saved filename formats', () => {
+  const savedKit = [{ id: 'kit', label: 'Field kit', format: 'KIT_%D%n%Y_%H%I' }]
+
+  it('rescues a filename auto-detect cannot read, and NAMES the format', async () => {
+    // Baseline first: without the saved format this file fails to date at all.
+    const { patch: before } = await analyzeFile(
+      mkItem('KIT_15Mar2024_0645.wav'), plainBlob, { mode: 'auto', siteTimezone: 'America/Bogota' })
+    expect(before.timestampUtc).toBeUndefined()
+    expect(before.analysisError).toBeDefined()
+
+    const { patch } = await analyzeFile(
+      mkItem('KIT_15Mar2024_0645.wav'), plainBlob,
+      { mode: 'auto', siteTimezone: 'America/Bogota', savedFormats: savedKit })
+    expect(patch.analysisError).toBeUndefined()
+    expect(patch.localWallTime).toBe('2024-03-15T06:45:00')
+    expect(patch.timestampUtc).toBe('2024-03-15T11:45:00.000Z') // Bogota = UTC-5
+    // The row must be able to say WHICH of the user's formats did it.
+    expect(patch.matchedFormatId).toBe('kit')
+    expect(patch.matchedFormatLabel).toBe('Field kit')
+  })
+
+  it('does not claim credit when a built-in pattern did the work', async () => {
+    const { patch } = await analyzeFile(
+      mkItem('site_20250818_193000.wav'), plainBlob,
+      { mode: 'auto', siteTimezone: 'America/Bogota', savedFormats: savedKit })
+    expect(patch.timestampUtc).toBe('2025-08-19T00:30:00.000Z')
+    expect(patch.matchedFormatId).toBeUndefined()
+    expect(patch.matchedFormatLabel).toBeUndefined()
+  })
+
+  it('CLEARS a stale format label on re-analysis (patches MERGE)', async () => {
+    // The engine merges patches onto the item, so a row previously matched by a
+    // saved format that has since been deleted must not keep showing its badge.
+    const item = { ...mkItem('KIT_15Mar2024_0645.wav'), matchedFormatId: 'kit', matchedFormatLabel: 'Field kit' }
+    const { patch } = await analyzeFile(item, plainBlob, { mode: 'auto', savedFormats: [] })
+    expect('matchedFormatId' in patch).toBe(true) // explicitly present...
+    expect(patch.matchedFormatId).toBeUndefined() // ...and undefined, so the merge overwrites
+    expect(patch.matchedFormatLabel).toBeUndefined()
+  })
+})
