@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { buildTileRenderAttrs, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_QUALITY, DEFAULT_TILE_WIDTH, MAX_AUTO_TILE_WIDTH, MAX_UPSCALE, resolveTileHeight, resolveTileWidth, TILE_QUALITY_TIERS, TILE_WIDTH_STEPS, tileQualityWidth } from './tile-resolution'
+import { AUTO_PAGE_SOURCE_PX_BUDGET, autoTileWidthCeiling, buildTileRenderAttrs, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_QUALITY, DEFAULT_TILE_WIDTH, MAX_AUTO_TILE_WIDTH, MAX_UPSCALE, resolveTileHeight, resolveTileWidth, TILE_QUALITY_TIERS, TILE_WIDTH_STEPS, tileQualityWidth } from './tile-resolution'
 
 // Behaviour tests for the tile-resolution policy.
 //
@@ -112,6 +112,58 @@ test('choosing a tier never acts as a ceiling on zoom escalation', () => {
   expect(resolveTileWidth(100, tileQualityWidth('maximum'))).toBe(2048)
   // ...and still escalates beyond the auto ceiling when zoomed right in
   expect(resolveTileWidth(4774, tileQualityWidth('maximum'))).toBe(4096)
+})
+
+test('the AUTO ceiling is tile-count-aware and spends a constant page budget', () => {
+  // the flat cap assumed ~11 tiles; the budget IS 11x1024
+  expect(AUTO_PAGE_SOURCE_PX_BUDGET).toBe(11 * MAX_AUTO_TILE_WIDTH)
+
+  // fewer tiles -> higher per-tile ceiling, same accepted page cost
+  expect(autoTileWidthCeiling(1)).toBe(4096)
+  expect(autoTileWidthCeiling(2)).toBe(4096)
+  expect(autoTileWidthCeiling(3)).toBe(2048)
+  expect(autoTileWidthCeiling(5)).toBe(2048)
+  expect(autoTileWidthCeiling(6)).toBe(1024)
+  expect(autoTileWidthCeiling(11)).toBe(1024)
+  expect(autoTileWidthCeiling(40)).toBe(1024) // never below the flat cap
+
+  // page cost never exceeds the budget the 1024 cap accepted
+  for (const count of [1, 2, 3, 4, 5, 6, 8, 11, 20]) {
+    expect(count * autoTileWidthCeiling(count)).toBeLessThanOrEqual(
+      Math.max(AUTO_PAGE_SOURCE_PX_BUDGET, count * MAX_AUTO_TILE_WIDTH)
+    )
+  }
+
+  // unknown/invalid counts degrade to the flat cap -- every caller that does
+  // not pass a count keeps today's behaviour exactly
+  expect(autoTileWidthCeiling()).toBe(MAX_AUTO_TILE_WIDTH)
+  expect(autoTileWidthCeiling(0)).toBe(MAX_AUTO_TILE_WIDTH)
+  expect(autoTileWidthCeiling(-1)).toBe(MAX_AUTO_TILE_WIDTH)
+  expect(autoTileWidthCeiling(Number.NaN)).toBe(MAX_AUTO_TILE_WIDTH)
+})
+
+test('a lone tile regains the <=2x upscale invariant the seams fix broke', () => {
+  // THE CASE THIS EXISTS FOR: rec 311378544 (0.963s) post-seams-fix renders as
+  // ONE tile displayed at ~2244px. Under the flat cap that is 1024 source px
+  // -> 2.19x upscale, violating MAX_UPSCALE on the automatic path. With the
+  // real count supplied the ladder may spend the page budget on the lone tile.
+  expect(resolveTileWidth(2244, undefined, 1)).toBe(2048)
+  expect(2244 / resolveTileWidth(2244, undefined, 1)).toBeLessThanOrEqual(MAX_UPSCALE)
+
+  // a 2-tile short recording (e.g. a 10s clip -> 1720px base) behaves too
+  expect(resolveTileWidth(2244, undefined, 2)).toBe(2048)
+
+  // an 11-tile recording is byte-identical to the un-counted path: no silent
+  // behaviour change for the recordings the 1024 cap was designed around
+  for (const display of [100, 1269, 2437, 3606, 4774]) {
+    expect(resolveTileWidth(display, undefined, 11)).toBe(resolveTileWidth(display))
+  }
+
+  // the default floor still holds at zoom 0 regardless of count
+  expect(resolveTileWidth(100, undefined, 1)).toBe(DEFAULT_TILE_WIDTH)
+
+  // an explicit user preference still unlocks the full ladder
+  expect(resolveTileWidth(8000, 2048, 1)).toBe(4096)
 })
 
 test('render attrs match the media-api filename grammar', () => {
