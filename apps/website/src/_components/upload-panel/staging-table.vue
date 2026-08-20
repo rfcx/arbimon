@@ -119,6 +119,27 @@
               <h3 class="text-xl font-bold leading-none">
                 {{ siteName }}
               </h3>
+              <!-- EDIT SITE (workstream C part 1, 2026-08-19): sits BETWEEN the
+                 site name and the timezone per the operator's placement. Same
+                 host-owns-the-dialog pattern as create: this component only
+                 reports the intent and the page opens site-form-modal with
+                 :editing="true". self-center rather than baseline — an icon
+                 has no text baseline to share. -->
+              <button
+                class="self-center shrink-0 p-0.5 rounded text-cloud/60 hover:(text-frequency bg-cloud/10) transition-colors"
+                title="Edit this site"
+                :aria-label="`Edit site ${siteName}`"
+                @click.stop="$emit('editSite')"
+              >
+                <svg
+                  viewBox="0 0 16 16"
+                  class="w-3.5 h-3.5 fill-none stroke-current"
+                  stroke-width="1.4"
+                ><path
+                  d="M11.1 2.2l2.7 2.7L5.6 13.1l-3.3.6.6-3.3z"
+                  stroke-linejoin="round"
+                /></svg>
+              </button>
               <!-- Labelled metadata pieces (operator 2026-08-13): "Label: value",
                  label at reduced opacity so the VALUES stay the scannable part.
                  Order: Timezone, Existing count, Existing date range. The
@@ -939,6 +960,9 @@ const emit = defineEmits<{
    *  typed so the modal can pre-fill the name. The HOST owns the modal — this
    *  component only reports the intent. */
   (e: 'createSite', typedName: string): void
+  /** User clicked the edit icon beside the site name; the HOST owns the modal
+   *  (site-form-modal with :editing="true") — this component only reports. */
+  (e: 'editSite'): void
     (e: 'clearCompleted'): void
   (e: 'retryFailed'): void
 

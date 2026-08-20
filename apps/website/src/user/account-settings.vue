@@ -20,7 +20,7 @@
     <div
       v-else
       class="block rounded-lg bg-moss py-3 px-4 mx-auto dark:bg-moss h-auto"
-      :class="modal ? 'max-w-none bg-transparent dark:bg-transparent' : 'max-w-screen-md'"
+      :class="modal ? 'max-w-none bg-transparent dark:bg-transparent md:grid md:grid-cols-3 md:gap-x-10 md:items-start' : 'max-w-screen-md'"
     >
       <div
         v-if="!modal"
@@ -35,9 +35,16 @@
            it is re-shown here rather than lost. -->
       <span
         v-if="modal && isLoadingProfileData"
-        class="block px-4 py-2 text-sm text-cloud/70"
+        class="block px-4 py-2 text-sm text-cloud/70 md:col-span-3"
       >Loading…</span>
-      <div class="py-4 px-4 mx-auto max-w-screen-md border-b border-white/20">
+      <!-- MODAL LAYOUT (workstream B, 2026-08-19): in modal mode the SAME
+           blocks are placed on a 3-column md: grid on the parent — the
+           plan/entitlement block becomes its own full-width card region, the
+           profile-photo block sits BESIDE the name/email fields (1/3 + 2/3)
+           instead of stacked, and first/last name pair up on one row.
+           Presentation only: form logic, API calls and the standalone-page
+           rendering (modal=false) are untouched. -->
+      <div :class="modal ? 'md:col-span-3 rounded-lg border border-util-gray-03 bg-moss/30 px-5 py-4 mx-4 mt-1 mb-2' : 'py-4 px-4 mx-auto max-w-screen-md border-b border-white/20'">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
             <h3 class="text-gray-900 dark:text-white font-medium">
@@ -71,8 +78,11 @@
           </router-link>
         </div>
       </div>
-      <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-10 border-b-1 border-white/80">
-        <div class="flex items-start gap-4 flex-col md:flex-row">
+      <div :class="modal ? 'md:col-span-1 px-4 py-6' : 'py-8 px-4 mx-auto max-w-screen-md lg:py-10 border-b-1 border-white/80'">
+        <div
+          class="flex items-start gap-4"
+          :class="modal ? 'flex-col' : 'flex-col md:flex-row'"
+        >
           <img
             :src="profilePhoto"
             alt="Profile"
@@ -118,31 +128,40 @@
           </div>
         </div>
       </div>
-      <div class="py-8 px-4 mx-auto max-w-screen-md lg:py-10">
-        <p class="text-insight text-base font-medium font-sans">
-          First name*
-        </p>
-        <input
-          id="firstName"
-          v-model="firstName"
-          name="firstName"
-          type="text"
-          :disabled="!isAuth0Account"
-          class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
-          required
-        >
-        <p class="mt-5 text-insight text-base font-medium font-sans">
-          Last name*
-        </p>
-        <input
-          id="lastName"
-          v-model="lastName"
-          name="lastName"
-          type="text"
-          :disabled="!isAuth0Account"
-          class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
-          required
-        >
+      <div :class="modal ? 'md:col-span-2 px-4 py-6' : 'py-8 px-4 mx-auto max-w-screen-md lg:py-10'">
+        <div :class="modal ? 'md:grid md:grid-cols-2 md:gap-x-6' : ''">
+          <div>
+            <p class="text-insight text-base font-medium font-sans">
+              First name*
+            </p>
+            <input
+              id="firstName"
+              v-model="firstName"
+              name="firstName"
+              type="text"
+              :disabled="!isAuth0Account"
+              class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
+              required
+            >
+          </div>
+          <div>
+            <p
+              class="text-insight text-base font-medium font-sans"
+              :class="modal ? 'mt-5 md:mt-0' : 'mt-5'"
+            >
+              Last name*
+            </p>
+            <input
+              id="lastName"
+              v-model="lastName"
+              name="lastName"
+              type="text"
+              :disabled="!isAuth0Account"
+              class="w-full mt-2 border border-cloud rounded-md dark:(bg-pitch text-fog placeholder:text-insight) focus:(border-frequency ring-frequency) disabled:opacity-70 disabled:cursor-not-allowed"
+              required
+            >
+          </div>
+        </div>
         <p class="mt-5 opacity-70 text-insight text-base font-medium font-sans">
           Email address
         </p>

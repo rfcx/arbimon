@@ -1,33 +1,39 @@
 <template>
   <modal-popup
     title="Create a Site"
-    modal-body="sm:(my-8 align-middle max-w-lg w-full)"
+    modal-body="sm:(my-8 align-middle max-w-4xl w-full)"
     @emit-close="onCancel"
   >
-    <div class="p-6">
-      <div class="flex items-start justify-between gap-x-4">
-        <h3 class="text-lg font-semibold text-insight">
-          {{ editing ? 'Edit Site' : 'Create a Site' }}
-        </h3>
-        <button
-          class="shrink-0 -mr-1 -mt-1 p-1 rounded text-cloud hover:(text-insight bg-cloud/10) transition-colors"
-          title="Close"
-          aria-label="Close"
-          @click="onCancel"
-        >
-          <svg
-            viewBox="0 0 16 16"
-            class="w-4 h-4 fill-none stroke-current"
-            stroke-width="1.8"
-          ><path
-            d="M4 4l8 8M12 4l-8 8"
-            stroke-linecap="round"
-          /></svg>
-        </button>
-      </div>
+    <!-- TWO-COLUMN layout (workstream C part 2, 2026-08-19): form left, map
+         right. The modal doubled max-w-lg → max-w-4xl to make room. On small
+         screens the map stacks BELOW the form — the form is the actionable
+         half and must stay first in DOM/tab order either way. -->
+    <div class="relative p-6 md:(grid grid-cols-2 gap-x-6)">
+      <!-- Close [x]: far top-right corner of the MODAL (operator 2026-08-19 #6),
+           absolutely positioned on the modal body rather than inside the
+           left-column header, so it stays in the corner at every width. -->
+      <button
+        class="absolute top-3 right-3 z-10 p-1 rounded text-cloud hover:(text-insight bg-cloud/10) transition-colors"
+        title="Close"
+        aria-label="Close"
+        @click="onCancel"
+      >
+        <svg
+          viewBox="0 0 16 16"
+          class="w-4 h-4 fill-none stroke-current"
+          stroke-width="1.8"
+        ><path
+          d="M4 4l8 8M12 4l-8 8"
+          stroke-linecap="round"
+        /></svg>
+      </button>
+      <div>
+      <h3 class="text-lg font-semibold text-insight">
+        {{ editing ? 'Edit Site' : 'Create a Site' }}
+      </h3>
 
       <p class="text-sm text-cloud mt-1">
-        A site is a recording location. Every recording you upload belongs to one.
+        A site is a location on earth. Every recording must belong to one.
       </p>
 
       <!-- SITE NAME -->
@@ -66,7 +72,14 @@
           >
           <span class="text-insight">Exclude this site from Arbimon Insights</span>
         </label>
-        <p class="text-xs text-cloud mt-1 ml-6">
+        <!-- Sub-description deliberately SMALLER than text-xs so it stays on one
+             line (operator 2026-08-19 #2). Inline font-size because this
+             WindiCSS build has no preset below text-xs and arbitrary-value
+             utilities are unreliable here (see §7 traps). -->
+        <p
+          class="text-cloud mt-1 ml-6 leading-tight whitespace-nowrap"
+          style="font-size: 11px"
+        >
           For test sites, or sites used to import external templates.
           <a
             href="https://help.arbimon.org/article/206-adding-a-site"
@@ -77,10 +90,13 @@
         </p>
       </div>
 
-      <!-- LOCATION -->
+      <!-- GEO-LOCATION (operator 2026-08-19 #3): Latitude + Longitude as two
+           columns on one row, labels ABOVE the fields. Decimal degrees only
+           for now — alternate entry formats (DMS etc.) are an agreed LATER
+           step; storage stays float either way. -->
       <div class="mt-5">
         <div class="text-sm text-insight">
-          Location
+          Geo-Location
         </div>
         <p
           v-if="siteLatLonError && !hidden"
@@ -89,35 +105,176 @@
           Please fill in latitude and longitude, or check “Exclude this site from Arbimon Insights”.
         </p>
 
-        <div
-          v-for="field in coordinateFields"
-          :key="field.key"
-          class="mt-2"
-        >
-          <div class="flex flex-row">
-            <div
-              class="flex items-center justify-center rounded-l-lg border border-r-0 border-util-gray-03 bg-moss px-3 text-sm text-cloud w-16 shrink-0"
+        <div class="mt-2 grid grid-cols-2 gap-x-3">
+          <div>
+            <label
+              for="site-form-lat"
+              class="block text-xs text-cloud"
               :class="hidden ? 'opacity-50' : ''"
-            >
-              {{ field.label }}
-            </div>
+            >Latitude</label>
             <input
-              :id="`site-form-${field.key}`"
-              v-model="field.model.value"
+              id="site-form-lat"
+              v-model="lat"
               type="text"
-              :placeholder="field.placeholder"
+              placeholder="e.g. 9.6301"
               :disabled="hidden"
-              class="w-full rounded-r-lg border border-util-gray-03 bg-moss text-insight px-3 py-2 text-sm focus:(border-frequency ring-1 ring-frequency outline-none)"
+              class="mt-1 w-full rounded-lg border border-util-gray-03 bg-moss text-insight px-3 py-2 text-sm focus:(border-frequency ring-1 ring-frequency outline-none)"
               :class="hidden ? 'opacity-50 cursor-not-allowed' : ''"
               @keydown.enter.prevent="onSave"
             >
+            <p
+              v-if="(siteLatError || siteLatFormatError) && !hidden"
+              class="text-flamingo text-xs mt-1"
+            >
+              {{ siteLatError ? 'Latitude is required.' : 'Enter a latitude between -85 and 85.' }}
+            </p>
+          </div>
+          <div>
+            <label
+              for="site-form-lon"
+              class="block text-xs text-cloud"
+              :class="hidden ? 'opacity-50' : ''"
+            >Longitude</label>
+            <input
+              id="site-form-lon"
+              v-model="lon"
+              type="text"
+              placeholder="e.g. -82.9464"
+              :disabled="hidden"
+              class="mt-1 w-full rounded-lg border border-util-gray-03 bg-moss text-insight px-3 py-2 text-sm focus:(border-frequency ring-1 ring-frequency outline-none)"
+              :class="hidden ? 'opacity-50 cursor-not-allowed' : ''"
+              @keydown.enter.prevent="onSave"
+            >
+            <p
+              v-if="(siteLonError || siteLonFormatError) && !hidden"
+              class="text-flamingo text-xs mt-1"
+            >
+              {{ siteLonError ? 'Longitude is required.' : 'Enter a longitude between -180 and 180.' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- ELEVATION (operator 2026-08-19 #4): numeric entry stays
+             authoritative, plus a slider spanning ±250 m around the
+             API-estimated ground elevation at the current lat/lon (open-meteo,
+             no key, failure-tolerant: no estimate ⇒ no slider, the numeric
+             field alone). The caption explains exactly what the slider is
+             relative to, so the "what is this?" moment is answered in place.
+
+             Operator 2026-08-19 18:55: the heading is a SECTION label, so it
+             matches 'Site name' / 'Geo-Location' (text-sm text-insight) rather
+             than the smaller field-label style it had; and the unit moved out
+             of the heading to sit beside the value, where the number actually
+             is. The unit is aria-hidden because the input already carries the
+             unit in its accessible name - otherwise a screen reader would
+             announce "meters" twice. -->
+        <div class="mt-4">
+          <div class="flex items-center justify-between gap-x-3">
+            <label
+              for="site-form-alt"
+              class="block text-sm text-insight"
+              :class="hidden ? 'opacity-50' : ''"
+            >Elevation</label>
+            <div
+              class="flex items-center gap-x-2"
+              :class="hidden ? 'opacity-50' : ''"
+            >
+              <input
+                id="site-form-alt"
+                v-model="alt"
+                type="text"
+                placeholder="optional"
+                aria-label="Elevation in meters"
+                :disabled="hidden"
+                class="w-28 rounded-lg border border-util-gray-03 bg-moss text-insight px-3 py-1.5 text-sm text-right focus:(border-frequency ring-1 ring-frequency outline-none)"
+                :class="hidden ? 'opacity-50 cursor-not-allowed' : ''"
+                @keydown.enter.prevent="onSave"
+              >
+              <span
+                class="text-xs text-cloud whitespace-nowrap"
+                aria-hidden="true"
+              >meters</span>
+            </div>
           </div>
           <p
-            v-if="field.error() && !hidden"
+            v-if="altFormatError && !hidden"
             class="text-flamingo text-xs mt-1"
           >
-            {{ field.errorText() }}
+            Please enter a valid elevation number (e.g. 123.45).
           </p>
+          <template v-if="groundElevation !== undefined && !hidden">
+            <!-- SLIDER (operator 2026-08-19 17:33, LAYOUT REWORKED 18:06).
+                 The native range input carries no tick affordance, so the
+                 marks are an absolutely-positioned layer BEHIND the input
+                 (pointer-events-none, so it can never steal a drag; the input
+                 stays the only focusable control). Positions are percentages
+                 of the min->max span, so they follow the +/-250 m window as it
+                 recentres on new coordinates, at any modal width.
+
+                 18:06 layout fixes, all to relieve a cramped row:
+                  - the THUMB sits on the TOP EDGE of the track (track pushed
+                    to the bottom of the strip; see the scoped style), so it
+                    never collides with the gradation labels below it
+                  - the 100 m marks are LABELLED; the min/max end labels are
+                    GONE (they were the widest things in the row and are
+                    implied by the gradations)
+                  - the ground caption moved to its OWN line underneath -->
+            <div class="relative mt-3 h-8">
+              <!-- track: bottom-aligned so the thumb rides its top edge -->
+              <div class="absolute inset-x-0 top-2 h-1 rounded-full bg-util-gray-02 pointer-events-none" />
+              <!-- major 100 m gradations, now with labels beneath -->
+              <div
+                v-for="mark in elevMajorMarks"
+                :key="`mark-${mark.value}`"
+                class="absolute top-3 pointer-events-none flex flex-col items-center"
+                :style="{ left: `${mark.pct}%`, transform: 'translateX(-50%)' }"
+              >
+                <span class="block w-px h-2 bg-cloud/60" />
+                <span
+                  class="mt-0.5 text-cloud/70 leading-none whitespace-nowrap"
+                  style="font-size: 9px"
+                >{{ mark.value }}</span>
+              </div>
+              <!-- ground mark: stronger than the gradations so "where is the
+                   ground" reads at a glance. Drawn AFTER them so it wins any
+                   overlap. -->
+              <div
+                class="absolute top-1 w-0.5 h-4 bg-frequency rounded-full pointer-events-none"
+                :style="{ left: `${elevGroundPct}%`, transform: 'translateX(-50%)' }"
+                :title="`ground ≈ ${groundElevation} m`"
+              />
+              <input
+                type="range"
+                :min="elevSliderMin"
+                :max="elevSliderMax"
+                step="1"
+                :value="elevSliderValue"
+                class="elev-slider absolute inset-x-0 top-0 w-full h-4 accent-frequency cursor-pointer"
+                aria-label="Elevation slider, within 250 meters of ground level"
+                @input="onElevSlider"
+              >
+            </div>
+            <!-- GROUND CAPTION on its OWN line (operator 18:06) - it was
+                 competing with the end labels in a 3-column flex row and the
+                 whole strip read as cramped. -->
+            <p
+              class="text-cloud/70 leading-snug mt-1"
+              style="font-size: 10px"
+            >
+              ground ≈ {{ groundElevation }} m at this location · slide or type an exact value
+              <!-- SNAP-TO-GROUND. Hidden rather than disabled when already at
+                   ground: a permanently-inert control beside a live one reads
+                   as broken. type=button so it can never submit the form (the
+                   Enter/dirty-gate class of bug fixed in 4a38290d8). -->
+              <button
+                v-if="!isAtGroundElevation"
+                type="button"
+                class="ml-1 underline underline-offset-2 text-frequency hover:text-frequency/80 focus:(outline-none ring-1 ring-frequency rounded)"
+                :title="`Set elevation to the estimated ground level (${groundElevation} m)`"
+                @click="snapToGroundElevation"
+              >snap to ground</button>
+            </p>
+          </template>
         </div>
       </div>
 
@@ -140,14 +297,59 @@
         >
           Cancel
         </button>
+        <!-- Primary button (operator 2026-08-19 #5): 'Create Site' for a new
+             site, 'Save Changes' when editing; gray/inert until something has
+             actually changed (isDirty compares against the opening values, so
+             editing a field and reverting it re-disables the button). -->
         <button
-          class="btn btn-primary text-sm disabled:btn-disabled disabled:hover:btn-disabled disabled:cursor-not-allowed"
+          class="btn text-sm"
+          :class="(saving || !isDirty) ? 'btn-disabled cursor-not-allowed opacity-60' : 'btn-primary'"
           type="button"
-          :disabled="saving"
+          :disabled="saving || !isDirty"
           @click="onSave"
         >
-          {{ saving ? 'Saving…' : (editing ? 'Save Site' : 'Create Site') }}
+          {{ saving ? 'Saving…' : (editing ? 'Save Changes' : 'Create Site') }}
         </button>
+      </div>
+      </div>
+
+      <!-- MAP column (workstream C part 2). Centred on a HIGHLIGHTED pin for
+           the site being edited/created; the project's OTHER sites appear
+           unhighlighted and are deliberately NOT clickable (no click handler
+           is registered — this dialog edits ONE site; selecting another here
+           would silently retarget the form). The pin follows the lat/lon
+           fields as they are edited, and a no-coordinates site (or a fresh
+           create) shows the sibling-site overview instead of a pin. -->
+      <div class="mt-6 md:mt-0">
+        <div
+          ref="mapRoot"
+          class="w-full h-72 md:h-full min-h-72 rounded-lg overflow-hidden border border-util-gray-03"
+        />
+        <p
+          v-if="!hasValidCoords"
+          class="text-xs text-cloud mt-2"
+        >
+          {{ hidden ? 'This site is excluded from Insights and needs no location.' : 'Enter latitude and longitude to place this site on the map.' }}
+        </p>
+      </div>
+
+      <!-- SITE FACTS strip (operator 2026-08-19 #7): read-only reference
+           across the modal bottom — spans both columns. Only when EDITING: a
+           new site has no history. Values come from the SiteResponse the host
+           passed (rec_count / recording range need the sites list fetched
+           with count:true, which the uploader does). `Created` is rendered
+           only when the payload carries it — the legacy sites endpoint does
+           NOT return a creation date today (SiteResponse has updated_at
+           only); surfacing it needs a small legacy-api addition. -->
+      <div
+        v-if="editing && site !== undefined"
+        class="md:col-span-2 mt-5 border-t border-util-gray-03 pt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-cloud"
+      >
+        <span><span class="text-cloud/60">Recordings:</span> {{ site.rec_count != null ? site.rec_count.toLocaleString() : '—' }}</span>
+        <span><span class="text-cloud/60">Recording range:</span> {{ recordingRangeLabel }}</span>
+        <span><span class="text-cloud/60">Timezone:</span> {{ site.timezone !== '' ? site.timezone : '—' }}</span>
+        <span v-if="createdLabel !== undefined"><span class="text-cloud/60">Created:</span> {{ createdLabel }}</span>
+        <span><span class="text-cloud/60">Last modified:</span> {{ lastModifiedLabel }}</span>
       </div>
     </div>
   </modal-popup>
@@ -186,11 +388,16 @@
  *      create two sites (the inline form has no such guard).
  */
 import { type AxiosInstance } from 'axios'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import type { FeatureCollection, Point } from 'geojson'
+import type { GeoJSONSource, Map as MapboxMap } from 'mapbox-gl'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
-import { type SiteResponse, apiLegacySiteCreate, apiLegacySiteUpdate } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
+import { type SiteResponse, apiArbimonGetSites, apiLegacySiteCreate, apiLegacySiteUpdate } from '@rfcx-bio/common/api-arbimon/audiodata/sites'
 
+import defaultMarkerIcon from '@/_assets/explore/map-marker.png'
+import selectedMarkerIcon from '@/_assets/explore/map-marker-selected.png'
 import ModalPopup from '@/_components/modal-popup.vue'
+import { createMap } from '@/_services/maps'
 
 export interface SiteSaved {
   name: string
@@ -248,43 +455,158 @@ const nameInput = ref<HTMLInputElement>()
 // keyboard users stranded outside it.
 onMounted(() => { void nextTick(() => nameInput.value?.focus()) })
 
-/**
- * The three coordinate rows are structurally identical, so they are driven by
- * data rather than copy-pasted three times — the inline original repeats the
- * same 20-line block three times, which is how its `id="lonInput"` ended up
- * duplicated onto all three inputs (a real a11y defect: a <label>'s `for`
- * cannot address a duplicated id).
- */
-const coordinateFields = computed(() => [
-  {
-    key: 'lat',
-    label: 'Lat',
-    placeholder: 'Latitude',
-    model: lat,
-    error: () => siteLatError.value || siteLatFormatError.value,
-    errorText: () => siteLatError.value
-      ? 'Please fill in latitude, or check “Exclude this site from Arbimon Insights”.'
-      : 'Please enter a latitude between -85 and 85.'
-  },
-  {
-    key: 'lon',
-    label: 'Lon',
-    placeholder: 'Longitude',
-    model: lon,
-    error: () => siteLonError.value || siteLonFormatError.value,
-    errorText: () => siteLonError.value
-      ? 'Please fill in longitude, or check “Exclude this site from Arbimon Insights”.'
-      : 'Please enter a longitude between -180 and 180.'
-  },
-  {
-    key: 'alt',
-    label: 'El',
-    placeholder: 'Elevation (optional)',
-    model: alt,
-    error: () => altFormatError.value,
-    errorText: () => 'Please enter a valid elevation number (e.g. 123.45).'
+// (The data-driven coordinateFields loop was retired 2026-08-19: the operator
+// asked for Latitude/Longitude as two labelled columns on one row and
+// Elevation as its own labelled row with a slider — three structurally
+// DIFFERENT blocks now, so a shared loop no longer earns its indirection.
+// The unique-id-per-input a11y fix it existed for is preserved:
+// site-form-lat / site-form-lon / site-form-alt.)
+
+// -- DIRTY TRACKING (operator 2026-08-19 #5) ----------------------------------
+// The primary button stays inert until a value has actually changed vs the
+// OPENING state, and re-disables if the user reverts their edits. Numeric
+// noise ('1.50' vs '1.5') is not normalised deliberately — a re-typed exact
+// value that parses identically would still be sent, and treating it as a
+// change errs on the harmless side.
+const initial = {
+  name: siteName.value,
+  lat: lat.value,
+  lon: lon.value,
+  alt: alt.value,
+  hidden: hidden.value
+}
+const isDirty = computed(() =>
+  siteName.value !== initial.name ||
+  lat.value !== initial.lat ||
+  lon.value !== initial.lon ||
+  alt.value !== initial.alt ||
+  hidden.value !== initial.hidden
+)
+
+// -- GROUND ELEVATION + SLIDER (operator 2026-08-19 #4) -----------------------
+// The slider spans ±250 m around the API-estimated ground elevation at the
+// current lat/lon. Provider: open-meteo elevation API (free, no key, CORS-
+// enabled, Copernicus DEM 90 m). Strictly progressive enhancement: any
+// failure ⇒ groundElevation stays undefined ⇒ no slider renders and the
+// numeric field carries on alone. Fetches are debounced and keyed by the
+// rounded coordinate so map-nudge micro-changes don't spam the API.
+const groundElevation = ref<number | undefined>(undefined)
+let elevFetchTimer: ReturnType<typeof setTimeout> | undefined
+let lastElevKey = ''
+
+const fetchGroundElevation = async (): Promise<void> => {
+  const coords = liveCoords.value
+  if (coords === undefined) { groundElevation.value = undefined; return }
+  const key = `${coords[1].toFixed(4)},${coords[0].toFixed(4)}`
+  if (key === lastElevKey) return
+  try {
+    const res = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${coords[1]}&longitude=${coords[0]}`)
+    if (!res.ok) return
+    const body = await res.json() as { elevation?: number[] }
+    const elev = body.elevation?.[0]
+    if (typeof elev === 'number' && Number.isFinite(elev)) {
+      groundElevation.value = Math.round(elev)
+      // Cache the key only on SUCCESS — setting it up front turned any
+      // transient failure into a permanent no-slider for those coordinates
+      // (re-review pass 1, 2026-08-19).
+      lastElevKey = key
+    }
+  } catch {
+    // no estimate ⇒ no slider; the numeric field is unaffected
   }
-])
+}
+
+const elevSliderMin = computed(() => (groundElevation.value ?? 0) - 250)
+const elevSliderMax = computed(() => (groundElevation.value ?? 0) + 250)
+const elevSliderValue = computed(() => {
+  const typed = parseFloat(alt.value)
+  if (Number.isFinite(typed)) {
+    return Math.min(elevSliderMax.value, Math.max(elevSliderMin.value, typed))
+  }
+  return groundElevation.value ?? 0
+})
+const onElevSlider = (event: Event): void => {
+  alt.value = (event.target as HTMLInputElement).value
+}
+
+// -- SLIDER MARKERS + SNAP-TO-GROUND (operator 2026-08-19 17:33) -------------
+// Three asks: mark the estimated ground level on the track, let the user snap
+// to it, and subtly mark the major 100 m gradations (0, 100, 200 ...).
+//
+// Positions are percentages across the min->max span rather than pixels, so
+// they stay correct when the +/-250 m window recentres on a new ground
+// estimate, and at any modal width (this dialog is responsive: 1-col -> 2-col
+// at md).
+const elevPctFor = (value: number): number => {
+  const span = elevSliderMax.value - elevSliderMin.value
+  if (span <= 0) return 0
+  return ((value - elevSliderMin.value) / span) * 100
+}
+
+const elevGroundPct = computed(() => elevPctFor(groundElevation.value ?? 0))
+
+// Multiples of 100 m INSIDE the window. The window is 500 m wide, so this is at
+// most 6 marks. Marks close to either edge are dropped: they would render
+// half-clipped under the thumb's travel and read as artefacts, not gradations.
+//
+// The 4% margin (was 1.5% when the marks were unlabelled) accounts for the
+// LABEL added 2026-08-19 18:06: it is centred on the mark, so a mark at 1.5%
+// of a ~400px track would push its label ~2px past the left edge. 4% clears a
+// 3-digit label at every modal width; at most it costs the single least-useful
+// gradation at one end.
+const ELEV_MARK_EDGE_PCT = 4
+const ELEV_MARK_STEP_M = 100
+const elevMajorMarks = computed<Array<{ value: number, pct: number }>>(() => {
+  if (groundElevation.value === undefined) return []
+  const first = Math.ceil(elevSliderMin.value / ELEV_MARK_STEP_M) * ELEV_MARK_STEP_M
+  const marks: Array<{ value: number, pct: number }> = []
+  for (let v = first; v <= elevSliderMax.value; v += ELEV_MARK_STEP_M) {
+    const pct = elevPctFor(v)
+    if (pct >= ELEV_MARK_EDGE_PCT && pct <= (100 - ELEV_MARK_EDGE_PCT)) marks.push({ value: v, pct })
+  }
+  return marks
+})
+
+// "Already at ground" is judged at the SLIDER's integer resolution (step 1 m),
+// not by exact equality: a typed 517.4 against ground 517 is at ground as far
+// as this control can express, and offering a snap that visibly does nothing
+// would be worse than hiding it.
+const isAtGroundElevation = computed(() => {
+  if (groundElevation.value === undefined) return false
+  const typed = parseFloat(alt.value)
+  if (!Number.isFinite(typed)) return false
+  return Math.round(typed) === groundElevation.value
+})
+
+const snapToGroundElevation = (): void => {
+  if (groundElevation.value === undefined) return
+  // Writes through `alt` exactly as the slider does, so the numeric field and
+  // the dirty-gate stay in lockstep (writing the slider value directly would
+  // desync them).
+  alt.value = String(groundElevation.value)
+}
+
+// -- SITE FACTS strip labels (operator 2026-08-19 #7) -------------------------
+// Textual date extraction, NOT `new Date(value)`: the legacy API emits
+// 'YYYY-MM-DD HH:MM:SS' datetimes, which Safari's Date parser rejects
+// (Invalid Date) — the same reason staging-table.vue's existingRangeLabel
+// slices strings instead of parsing (re-review pass 1, 2026-08-19).
+const factDate = (value: string | null | undefined): string | undefined => {
+  if (typeof value !== 'string') return undefined
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(value)
+  if (m === null) return undefined
+  return `${m[1]}-${m[2]}-${m[3]}`
+}
+const recordingRangeLabel = computed(() => {
+  const from = factDate(props.site?.first_recording_at)
+  const to = factDate(props.site?.last_recording_at)
+  if (from === undefined || to === undefined) return '—'
+  return from === to ? from : `${from} – ${to}`
+})
+// SiteResponse has no created_at today (legacy endpoint gap — see the
+// template note); render Created only if a future payload carries one.
+const createdLabel = computed(() => factDate((props.site as unknown as { created_at?: string })?.created_at))
+const lastModifiedLabel = computed(() => factDate(props.site?.updated_at) ?? '—')
 
 /** Validation — a faithful port of create-edit-site.vue's `create()` guard. */
 const validate = (): boolean => {
@@ -330,6 +652,10 @@ const onCancel = (): void => {
 
 const onSave = async (): Promise<void> => {
   if (saving.value) return
+  // The dirty gate applies to EVERY save path, not just the button: the
+  // inputs' Enter-to-save must not bypass what the inert button enforces
+  // (re-review pass 1, 2026-08-19 — the button was gated but Enter was not).
+  if (!isDirty.value) return
   submitError.value = undefined
   if (!validate()) return
 
@@ -393,4 +719,255 @@ const saved = (): SiteSaved => ({
   ...(alt.value !== '' && { alt: parseFloat(alt.value) }),
   hidden: hidden.value
 })
+
+// -- MAP (workstream C part 2, 2026-08-19) ------------------------------------
+//
+// The modal fetches the project's sibling sites ITSELF (operator decision
+// 2026-08-19: option b — self-contained over prop-threading). One GET per
+// open; a failure degrades to a map with just the edited site's pin — the
+// form never depends on the map.
+//
+// Layer semantics (mirrors map-view.vue's two-source pattern):
+//   • 'sibling-sites'  → default-marker, NO event handlers — context only,
+//     deliberately unselectable (this dialog edits ONE site).
+//   • 'edited-site'    → selected-marker, follows the lat/lon FIELDS live so
+//     the user sees where their coordinates actually land.
+
+const mapRoot = ref<HTMLElement | null>(null)
+let map: MapboxMap | undefined
+const mapLoaded = ref(false)
+const siblingSites = ref<SiteResponse[]>([])
+
+const validNum = (value: string): boolean => /^-?\d+(\.\d+)?$/.test(value)
+
+/** The edited site's coordinates AS CURRENTLY TYPED (not as stored). */
+const liveCoords = computed((): [number, number] | undefined => {
+  if (!validNum(lat.value) || !validNum(lon.value)) return undefined
+  const la = parseFloat(lat.value)
+  const lo = parseFloat(lon.value)
+  if (la > 85 || la < -85 || lo > 180 || lo < -180) return undefined
+  if (la === 0 && lo === 0) return undefined // legacy "no real location" convention
+  return [lo, la]
+})
+
+const hasValidCoords = computed(() => liveCoords.value !== undefined)
+
+/** Siblings = every OTHER site in the project with real coordinates. */
+const siblingFeatures = (): FeatureCollection => ({
+  type: 'FeatureCollection',
+  features: siblingSites.value
+    .filter(site => site.id !== props.site?.id)
+    .filter(site => site.lat != null && site.lon != null && !(site.lat === 0 && site.lon === 0))
+    .map(site => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [site.lon, site.lat] },
+      properties: { title: site.name }
+    }))
+})
+
+const editedFeature = (): FeatureCollection => ({
+  type: 'FeatureCollection',
+  features: liveCoords.value === undefined
+    ? []
+    : [{
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: liveCoords.value },
+        properties: { title: siteName.value }
+      }]
+})
+
+/** Frame the view: the edited pin when it exists (siblings included when in
+ * range), else all siblings, else a world view. fitBounds precedent:
+ * projects/audiodata/component/map-view.vue. */
+const frameView = (): void => {
+  if (map === undefined) return
+  const sibs = siblingFeatures().features.map(f => (f.geometry as Point).coordinates as [number, number])
+  if (liveCoords.value !== undefined) {
+    map.jumpTo({ center: liveCoords.value, zoom: 12 })
+  } else if (sibs.length > 0) {
+    const lons = sibs.map(c => c[0]); const lats = sibs.map(c => c[1])
+    map.fitBounds([Math.min(...lons), Math.min(...lats), Math.max(...lons), Math.max(...lats)], { padding: 48, maxZoom: 12, duration: 0 })
+  } else {
+    map.jumpTo({ center: [0, 0], zoom: 1 })
+  }
+}
+
+const syncMapData = (): void => {
+  if (map === undefined || !mapLoaded.value) return
+  ;(map.getSource('sibling-sites') as GeoJSONSource | undefined)?.setData(siblingFeatures())
+  ;(map.getSource('edited-site') as GeoJSONSource | undefined)?.setData(editedFeature())
+}
+
+onMounted(() => {
+  if (mapRoot.value === null) return
+  map = createMap({
+    container: mapRoot.value,
+    style: 'mapbox://styles/mapbox/satellite-v9',
+    attributionControl: false,
+    center: liveCoords.value ?? [0, 0],
+    zoom: liveCoords.value !== undefined ? 12 : 1,
+    maxZoom: 18,
+    minZoom: 1
+  })
+  map.on('load', () => {
+    if (map === undefined) return
+    const markers: Record<string, string> = {
+      'default-marker': defaultMarkerIcon,
+      'selected-marker': selectedMarkerIcon
+    }
+    Object.entries(markers).forEach(([name, imagePath]) => {
+      map?.loadImage(imagePath, (error, image) => {
+        if (error != null || map === undefined || map.hasImage(name) || image === undefined) return
+        map.addImage(name, image)
+      })
+    })
+    map.addSource('sibling-sites', { type: 'geojson', data: siblingFeatures() })
+    map.addSource('edited-site', { type: 'geojson', data: editedFeature() })
+    // Siblings UNDER the edited pin; icon-allow-overlap so a dense project
+    // cannot hide the pin the user is editing.
+    map.addLayer({
+      id: 'sibling-sites',
+      type: 'symbol',
+      source: 'sibling-sites',
+      layout: { 'icon-image': 'default-marker', 'icon-size': 0.45, 'icon-allow-overlap': true },
+      paint: { 'icon-opacity': 0.7 }
+    })
+    map.addLayer({
+      id: 'edited-site',
+      type: 'symbol',
+      source: 'edited-site',
+      layout: { 'icon-image': 'selected-marker', 'icon-size': 0.6, 'icon-allow-overlap': true }
+    })
+    mapLoaded.value = true
+    frameView()
+  })
+
+  // Sibling fetch — after map setup so a slow request never delays the dialog.
+  void (async () => {
+    try {
+      const response = await apiArbimonGetSites(props.apiClient, props.projectSlug, {})
+      siblingSites.value = response ?? []
+      syncMapData()
+      if (liveCoords.value === undefined) frameView() // nothing pinned yet → frame the siblings
+    } catch {
+      // context only — the form (and the edited pin) work without siblings
+    }
+  })()
+})
+
+onBeforeUnmount(() => {
+  // Clear the debounce too — a pending timer would otherwise fire after
+  // unmount and issue a pointless network fetch (re-review pass 2).
+  if (elevFetchTimer !== undefined) clearTimeout(elevFetchTimer)
+  map?.remove()
+  map = undefined
+})
+
+// The pin follows the fields as they are edited; re-centre on a NEW valid
+// position so the user sees where the coordinates landed. The ground-elevation
+// estimate re-fetches on the same signal, debounced 800 ms so per-keystroke
+// intermediate coordinates don't each hit the API.
+watch(liveCoords, (coords, previous) => {
+  syncMapData()
+  if (map !== undefined && coords !== undefined && (previous === undefined || coords[0] !== previous[0] || coords[1] !== previous[1])) {
+    map.easeTo({ center: coords, zoom: Math.max(map.getZoom(), 10) })
+  }
+  if (elevFetchTimer !== undefined) clearTimeout(elevFetchTimer)
+  elevFetchTimer = setTimeout(() => { void fetchGroundElevation() }, 800)
+}, { immediate: true })
 </script>
+
+<style scoped>
+/*
+ * ELEVATION SLIDER (operator 2026-08-19 17:33 — ground mark, snap-to, 100 m marks).
+ *
+ * The tick/ground marks are a layer BEHIND this input, so the native track has
+ * to be transparent for them to show through. Each engine paints the track via
+ * a different pseudo-element and they cannot be combined into one rule — a
+ * selector list is dropped WHOLESALE by any engine that doesn't recognise one
+ * member, which is exactly how a "works in Chrome, invisible in Safari" bug
+ * gets shipped. This modal already carries one Safari-specific fix (textual
+ * date parsing, 4a38290d8), so they are written out separately on purpose.
+ *
+ * Only the TRACK is neutralised; the thumb keeps its native rendering and
+ * `accent-frequency` colouring, so keyboard focus and drag behaviour are
+ * untouched.
+ */
+.elev-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+/* WebKit / Blink (Safari, Chrome, Edge). Height pinned to the input height so
+   the thumb's vertical placement is arithmetic, not a UA default.
+   🔴 DO NOT set `color: transparent` here: the THUMB inherits colour from this
+   pseudo-element, so with a `currentColor` background it painted transparent
+   and the thumb was INVISIBLE (found 2026-08-19 18:31 by sampling the rendered
+   pixels - 0 thumb pixels present). Thumb colours are now explicit hex. */
+.elev-slider::-webkit-slider-runnable-track {
+  height: 16px;
+  background: transparent;
+  border-color: transparent;
+}
+
+/* Firefox */
+.elev-slider::-moz-range-track {
+  height: 16px;
+  background: transparent;
+  border-color: transparent;
+}
+
+/* Firefox paints everything left of the thumb separately; leave it clear too
+   so the ground mark is not covered when the value sits above ground. */
+.elev-slider::-moz-range-progress {
+  background: transparent;
+}
+
+/*
+ * THUMB ON THE TRACK'S TOP EDGE (operator 2026-08-19 18:06).
+ *
+ * The input is 16px tall at top:0 of the strip, so its thumb centres on y=8.
+ * The visual track is drawn at y=8..12 and the gradation ticks + labels hang
+ * BELOW that. A 12px thumb centred on y=8 therefore spans y=2..14 and RIDES
+ * the track's top edge instead of sitting across the middle of it, which is
+ * what was colliding with the labels.
+ *
+ * Both engines centre the thumb within the TRACK box, which is pinned to 16px
+ * above. Thumb total height is also 16px (12px + 2px border each side), so the
+ * centring offset is exactly ZERO on both -- no per-engine nudge, and no
+ * reliance on a UA default track height (that dependency is precisely how a
+ * thumb ends up ~6px off in one browser only).
+ */
+.elev-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  margin-top: 0;
+  border-radius: 9999px;
+  background: #ADFF2C; /* frequency - explicit, never currentColor (see above) */
+  border: 2px solid #1E1C13; /* bg-moss ring so the disc reads off the track */
+  box-sizing: content-box;
+  cursor: pointer;
+}
+
+.elev-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background: #ADFF2C;
+  border: 2px solid #1E1C13;
+  box-sizing: content-box;
+  cursor: pointer;
+}
+
+/* `frequency` is a literal hex in windi.config.ts (#ADFF2C), NOT a CSS custom
+   property. Thumb fills are now written as explicit hex rather than
+   `currentColor`: inheritance through the track pseudo-element is exactly what
+   made the thumb invisible (see the track rule above). */
+
+@media (prefers-reduced-motion: reduce) {
+  .elev-slider { transition: none; }
+}
+</style>
