@@ -154,30 +154,47 @@
           </div>
         </div>
 
-        <!-- ELEVATION (operator 2026-08-19 #4): labelled with units; numeric
-             entry stays authoritative, plus a slider spanning ±250 m around
-             the API-estimated ground elevation at the current lat/lon
-             (open-meteo, no key, failure-tolerant: no estimate ⇒ no slider,
-             the numeric field alone). The caption explains exactly what the
-             slider is relative to, so the "what is this?" moment is answered
-             in place. -->
+        <!-- ELEVATION (operator 2026-08-19 #4): numeric entry stays
+             authoritative, plus a slider spanning ±250 m around the
+             API-estimated ground elevation at the current lat/lon (open-meteo,
+             no key, failure-tolerant: no estimate ⇒ no slider, the numeric
+             field alone). The caption explains exactly what the slider is
+             relative to, so the "what is this?" moment is answered in place.
+
+             Operator 2026-08-19 18:55: the heading is a SECTION label, so it
+             matches 'Site name' / 'Geo-Location' (text-sm text-insight) rather
+             than the smaller field-label style it had; and the unit moved out
+             of the heading to sit beside the value, where the number actually
+             is. The unit is aria-hidden because the input already carries the
+             unit in its accessible name - otherwise a screen reader would
+             announce "meters" twice. -->
         <div class="mt-4">
           <div class="flex items-center justify-between gap-x-3">
             <label
               for="site-form-alt"
-              class="block text-xs text-cloud"
+              class="block text-sm text-insight"
               :class="hidden ? 'opacity-50' : ''"
-            >Elevation (meters)</label>
-            <input
-              id="site-form-alt"
-              v-model="alt"
-              type="text"
-              placeholder="optional"
-              :disabled="hidden"
-              class="w-28 rounded-lg border border-util-gray-03 bg-moss text-insight px-3 py-1.5 text-sm text-right focus:(border-frequency ring-1 ring-frequency outline-none)"
-              :class="hidden ? 'opacity-50 cursor-not-allowed' : ''"
-              @keydown.enter.prevent="onSave"
+            >Elevation</label>
+            <div
+              class="flex items-center gap-x-2"
+              :class="hidden ? 'opacity-50' : ''"
             >
+              <input
+                id="site-form-alt"
+                v-model="alt"
+                type="text"
+                placeholder="optional"
+                aria-label="Elevation in meters"
+                :disabled="hidden"
+                class="w-28 rounded-lg border border-util-gray-03 bg-moss text-insight px-3 py-1.5 text-sm text-right focus:(border-frequency ring-1 ring-frequency outline-none)"
+                :class="hidden ? 'opacity-50 cursor-not-allowed' : ''"
+                @keydown.enter.prevent="onSave"
+              >
+              <span
+                class="text-xs text-cloud whitespace-nowrap"
+                aria-hidden="true"
+              >meters</span>
+            </div>
           </div>
           <p
             v-if="altFormatError && !hidden"
