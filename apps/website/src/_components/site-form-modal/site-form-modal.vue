@@ -204,7 +204,7 @@
                   - the ground caption moved to its OWN line underneath -->
             <div class="relative mt-3 h-8">
               <!-- track: bottom-aligned so the thumb rides its top edge -->
-              <div class="absolute inset-x-0 top-2 h-1 rounded-full bg-util-gray-03 pointer-events-none" />
+              <div class="absolute inset-x-0 top-2 h-1 rounded-full bg-util-gray-02 pointer-events-none" />
               <!-- major 100 m gradations, now with labels beneath -->
               <div
                 v-for="mark in elevMajorMarks"
@@ -212,9 +212,9 @@
                 class="absolute top-3 pointer-events-none flex flex-col items-center"
                 :style="{ left: `${mark.pct}%`, transform: 'translateX(-50%)' }"
               >
-                <span class="block w-px h-1.5 bg-cloud/25" />
+                <span class="block w-px h-2 bg-cloud/60" />
                 <span
-                  class="mt-0.5 text-cloud/50 leading-none whitespace-nowrap"
+                  class="mt-0.5 text-cloud/70 leading-none whitespace-nowrap"
                   style="font-size: 9px"
                 >{{ mark.value }}</span>
               </div>
@@ -222,7 +222,7 @@
                    ground" reads at a glance. Drawn AFTER them so it wins any
                    overlap. -->
               <div
-                class="absolute top-1 w-0.5 h-3 bg-frequency/80 rounded-full pointer-events-none"
+                class="absolute top-1 w-0.5 h-4 bg-frequency rounded-full pointer-events-none"
                 :style="{ left: `${elevGroundPct}%`, transform: 'translateX(-50%)' }"
                 :title="`ground ≈ ${groundElevation} m`"
               />
@@ -883,12 +883,15 @@ watch(liveCoords, (coords, previous) => {
 }
 
 /* WebKit / Blink (Safari, Chrome, Edge). Height pinned to the input height so
-   the thumb's vertical placement is arithmetic, not a UA default. */
+   the thumb's vertical placement is arithmetic, not a UA default.
+   🔴 DO NOT set `color: transparent` here: the THUMB inherits colour from this
+   pseudo-element, so with a `currentColor` background it painted transparent
+   and the thumb was INVISIBLE (found 2026-08-19 18:31 by sampling the rendered
+   pixels - 0 thumb pixels present). Thumb colours are now explicit hex. */
 .elev-slider::-webkit-slider-runnable-track {
   height: 16px;
   background: transparent;
   border-color: transparent;
-  color: transparent;
 }
 
 /* Firefox */
@@ -926,8 +929,8 @@ watch(liveCoords, (coords, previous) => {
   height: 12px;
   margin-top: 0;
   border-radius: 9999px;
-  background: currentColor;
-  border: 2px solid #1E1C13; /* bg-moss: reads as a ring against the track */
+  background: #ADFF2C; /* frequency - explicit, never currentColor (see above) */
+  border: 2px solid #1E1C13; /* bg-moss ring so the disc reads off the track */
   box-sizing: content-box;
   cursor: pointer;
 }
@@ -936,19 +939,16 @@ watch(liveCoords, (coords, previous) => {
   width: 12px;
   height: 12px;
   border-radius: 9999px;
-  background: currentColor;
+  background: #ADFF2C;
   border: 2px solid #1E1C13;
   box-sizing: content-box;
   cursor: pointer;
 }
 
 /* `frequency` is a literal hex in windi.config.ts (#ADFF2C), NOT a CSS custom
-   property — an earlier draft of this rule used `var(--color-frequency)`, which
-   resolves to nothing here and would have painted the thumb with the inherited
-   text colour. Checked against the config rather than assumed. */
-.elev-slider {
-  color: #ADFF2C;
-}
+   property. Thumb fills are now written as explicit hex rather than
+   `currentColor`: inheritance through the track pseudo-element is exactly what
+   made the thumb invisible (see the track rule above). */
 
 @media (prefers-reduced-motion: reduce) {
   .elev-slider { transition: none; }
