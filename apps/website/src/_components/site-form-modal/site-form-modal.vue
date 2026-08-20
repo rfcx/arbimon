@@ -186,28 +186,44 @@
             Please enter a valid elevation number (e.g. 123.45).
           </p>
           <template v-if="groundElevation !== undefined && !hidden">
-            <!-- SLIDER TRACK OVERLAY (operator 2026-08-19 17:33): the native
-                 range input carries no tick affordance, so the markers are an
-                 absolutely-positioned layer BEHIND the input. The input keeps a
-                 transparent track (see the scoped style) so the marks show
-                 through, and stays the only focusable/interactive element - the
-                 overlay is pointer-events-none so it can never steal a drag.
-                 Positions are percentages of the min->max span, so they follow
-                 the +/-250 m window as it recentres on new coordinates. -->
-            <div class="relative mt-2 h-5">
-              <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-1 rounded-full bg-util-gray-03 pointer-events-none" />
-              <!-- major 100 m marks (0, 100, 200 ...), subtle by request -->
+            <!-- SLIDER (operator 2026-08-19 17:33, LAYOUT REWORKED 18:06).
+                 The native range input carries no tick affordance, so the
+                 marks are an absolutely-positioned layer BEHIND the input
+                 (pointer-events-none, so it can never steal a drag; the input
+                 stays the only focusable control). Positions are percentages
+                 of the min->max span, so they follow the +/-250 m window as it
+                 recentres on new coordinates, at any modal width.
+
+                 18:06 layout fixes, all to relieve a cramped row:
+                  - the THUMB sits on the TOP EDGE of the track (track pushed
+                    to the bottom of the strip; see the scoped style), so it
+                    never collides with the gradation labels below it
+                  - the 100 m marks are LABELLED; the min/max end labels are
+                    GONE (they were the widest things in the row and are
+                    implied by the gradations)
+                  - the ground caption moved to its OWN line underneath -->
+            <div class="relative mt-3 h-8">
+              <!-- track: bottom-aligned so the thumb rides its top edge -->
+              <div class="absolute inset-x-0 top-2 h-1 rounded-full bg-util-gray-03 pointer-events-none" />
+              <!-- major 100 m gradations, now with labels beneath -->
               <div
                 v-for="mark in elevMajorMarks"
                 :key="`mark-${mark.value}`"
-                class="absolute top-1/2 -translate-y-1/2 w-px h-2.5 bg-cloud/25 pointer-events-none"
-                :style="{ left: `${mark.pct}%` }"
-              />
-              <!-- ground-level mark: deliberately stronger than the 100 m marks
-                   so "where is the ground" reads at a glance. -->
+                class="absolute top-3 pointer-events-none flex flex-col items-center"
+                :style="{ left: `${mark.pct}%`, transform: 'translateX(-50%)' }"
+              >
+                <span class="block w-px h-1.5 bg-cloud/25" />
+                <span
+                  class="mt-0.5 text-cloud/50 leading-none whitespace-nowrap"
+                  style="font-size: 9px"
+                >{{ mark.value }}</span>
+              </div>
+              <!-- ground mark: stronger than the gradations so "where is the
+                   ground" reads at a glance. Drawn AFTER them so it wins any
+                   overlap. -->
               <div
-                class="absolute top-1/2 -translate-y-1/2 w-0.5 h-4 bg-frequency/80 rounded-full pointer-events-none"
-                :style="{ left: `${elevGroundPct}%` }"
+                class="absolute top-1 w-0.5 h-3 bg-frequency/80 rounded-full pointer-events-none"
+                :style="{ left: `${elevGroundPct}%`, transform: 'translateX(-50%)' }"
                 :title="`ground ≈ ${groundElevation} m`"
               />
               <input
@@ -216,33 +232,31 @@
                 :max="elevSliderMax"
                 step="1"
                 :value="elevSliderValue"
-                class="elev-slider absolute inset-0 w-full h-5 accent-frequency cursor-pointer"
+                class="elev-slider absolute inset-x-0 top-0 w-full h-4 accent-frequency cursor-pointer"
                 aria-label="Elevation slider, within 250 meters of ground level"
                 @input="onElevSlider"
               >
             </div>
-            <div
-              class="flex justify-between items-baseline gap-x-2 text-cloud/70 leading-tight"
+            <!-- GROUND CAPTION on its OWN line (operator 18:06) - it was
+                 competing with the end labels in a 3-column flex row and the
+                 whole strip read as cramped. -->
+            <p
+              class="text-cloud/70 leading-snug mt-1"
               style="font-size: 10px"
             >
-              <span>{{ elevSliderMin }} m</span>
-              <span class="text-cloud text-center">
-                ground ≈ {{ groundElevation }} m at this location · slide or type an exact value
-                <!-- SNAP-TO-GROUND (operator 2026-08-19 17:33). Hidden rather
-                     than disabled when already at ground: a permanently-inert
-                     control beside a live one reads as broken. type=button so
-                     it can never submit the form (the Enter/dirty-gate class of
-                     bug fixed in 4a38290d8). -->
-                <button
-                  v-if="!isAtGroundElevation"
-                  type="button"
-                  class="ml-1 underline underline-offset-2 text-frequency hover:text-frequency/80 focus:(outline-none ring-1 ring-frequency rounded)"
-                  :title="`Set elevation to the estimated ground level (${groundElevation} m)`"
-                  @click="snapToGroundElevation"
-                >snap to ground</button>
-              </span>
-              <span>{{ elevSliderMax }} m</span>
-            </div>
+              ground ≈ {{ groundElevation }} m at this location · slide or type an exact value
+              <!-- SNAP-TO-GROUND. Hidden rather than disabled when already at
+                   ground: a permanently-inert control beside a live one reads
+                   as broken. type=button so it can never submit the form (the
+                   Enter/dirty-gate class of bug fixed in 4a38290d8). -->
+              <button
+                v-if="!isAtGroundElevation"
+                type="button"
+                class="ml-1 underline underline-offset-2 text-frequency hover:text-frequency/80 focus:(outline-none ring-1 ring-frequency rounded)"
+                :title="`Set elevation to the estimated ground level (${groundElevation} m)`"
+                @click="snapToGroundElevation"
+              >snap to ground</button>
+            </p>
           </template>
         </div>
       </div>
@@ -515,8 +529,15 @@ const elevPctFor = (value: number): number => {
 const elevGroundPct = computed(() => elevPctFor(groundElevation.value ?? 0))
 
 // Multiples of 100 m INSIDE the window. The window is 500 m wide, so this is at
-// most 6 marks. Marks within 1.5% of either edge are dropped: they would render
+// most 6 marks. Marks close to either edge are dropped: they would render
 // half-clipped under the thumb's travel and read as artefacts, not gradations.
+//
+// The 4% margin (was 1.5% when the marks were unlabelled) accounts for the
+// LABEL added 2026-08-19 18:06: it is centred on the mark, so a mark at 1.5%
+// of a ~400px track would push its label ~2px past the left edge. 4% clears a
+// 3-digit label at every modal width; at most it costs the single least-useful
+// gradation at one end.
+const ELEV_MARK_EDGE_PCT = 4
 const ELEV_MARK_STEP_M = 100
 const elevMajorMarks = computed<Array<{ value: number, pct: number }>>(() => {
   if (groundElevation.value === undefined) return []
@@ -524,7 +545,7 @@ const elevMajorMarks = computed<Array<{ value: number, pct: number }>>(() => {
   const marks: Array<{ value: number, pct: number }> = []
   for (let v = first; v <= elevSliderMax.value; v += ELEV_MARK_STEP_M) {
     const pct = elevPctFor(v)
-    if (pct >= 1.5 && pct <= 98.5) marks.push({ value: v, pct })
+    if (pct >= ELEV_MARK_EDGE_PCT && pct <= (100 - ELEV_MARK_EDGE_PCT)) marks.push({ value: v, pct })
   }
   return marks
 })
@@ -861,8 +882,10 @@ watch(liveCoords, (coords, previous) => {
   background: transparent;
 }
 
-/* WebKit / Blink (Safari, Chrome, Edge) */
+/* WebKit / Blink (Safari, Chrome, Edge). Height pinned to the input height so
+   the thumb's vertical placement is arithmetic, not a UA default. */
 .elev-slider::-webkit-slider-runnable-track {
+  height: 16px;
   background: transparent;
   border-color: transparent;
   color: transparent;
@@ -870,6 +893,7 @@ watch(liveCoords, (coords, previous) => {
 
 /* Firefox */
 .elev-slider::-moz-range-track {
+  height: 16px;
   background: transparent;
   border-color: transparent;
 }
@@ -880,25 +904,41 @@ watch(liveCoords, (coords, previous) => {
   background: transparent;
 }
 
-/* Re-assert the thumb after `appearance:none` stripped it in WebKit. Sized to
-   sit comfortably over a 4px track and the 10-16px marks behind it. */
+/*
+ * THUMB ON THE TRACK'S TOP EDGE (operator 2026-08-19 18:06).
+ *
+ * The input is 16px tall at top:0 of the strip, so its thumb centres on y=8.
+ * The visual track is drawn at y=8..12 and the gradation ticks + labels hang
+ * BELOW that. A 12px thumb centred on y=8 therefore spans y=2..14 and RIDES
+ * the track's top edge instead of sitting across the middle of it, which is
+ * what was colliding with the labels.
+ *
+ * Both engines centre the thumb within the TRACK box, which is pinned to 16px
+ * above. Thumb total height is also 16px (12px + 2px border each side), so the
+ * centring offset is exactly ZERO on both -- no per-engine nudge, and no
+ * reliance on a UA default track height (that dependency is precisely how a
+ * thumb ends up ~6px off in one browser only).
+ */
 .elev-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 14px;
-  height: 14px;
-  margin-top: -5px;
+  width: 12px;
+  height: 12px;
+  margin-top: 0;
   border-radius: 9999px;
   background: currentColor;
+  border: 2px solid #1E1C13; /* bg-moss: reads as a ring against the track */
+  box-sizing: content-box;
   cursor: pointer;
 }
 
 .elev-slider::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
-  border: none;
+  width: 12px;
+  height: 12px;
   border-radius: 9999px;
   background: currentColor;
+  border: 2px solid #1E1C13;
+  box-sizing: content-box;
   cursor: pointer;
 }
 
