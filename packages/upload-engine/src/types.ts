@@ -120,6 +120,24 @@ export interface UploadItem {
   signedAtMs?: number
   /** Upload attempts so far. */
   attempts: number
+  /**
+   * How many times this item has been REVIVED out of a terminal `failed`
+   * state (via `retry()` / the "Retry / resume" action, or a reload
+   * re-enqueueing from IndexedDB).
+   *
+   * DISTINCT FROM `attempts`, which counts PUTs against ONE signed URL and is
+   * deliberately reset to 0 by `retry()`. Because a revive also RE-SIGNS, and
+   * every re-sign creates a NEW server-side upload row, `attempts` alone can
+   * never bound a file whose PUT can't succeed.
+   *
+   * Measured in production 2026-08-21 (stream qozs68j9zp5p): 3,320 upload rows
+   * from ~197 files in 13.5h -- peaking at 4 files generating 205 rows in 30
+   * minutes -- while almost nothing ingested, because that client's uploads
+   * never reached R2. Signing SUCCEEDED every time (74/74 rows carried an
+   * upload_source, zero failure messages), so the server saw only the repeated
+   * signing, never the failure.
+   */
+  revives?: number
   /** Multipart state (files above the multipart threshold). */
   multipart?: {
     multipartUploadId: string
@@ -264,6 +282,14 @@ export interface UploadEngineConfig {
   statusBatchSize?: number
   /** Max upload attempts per item before terminal failure. Default 5. */
   maxAttempts?: number
+  /**
+   * Max times ONE item may be revived out of `failed` before `retry()`
+   * refuses and the item stays failed. Default 5. Set 0 to disable.
+   *
+   * Bounds the revive -> re-sign -> new-server-row cycle for a file whose PUT
+   * can never succeed (dead network, unreadable source media).
+   */
+  maxRevives?: number
   /** Base backoff delay ms (exponential + jitter). Default 2000. */
   retryBaseDelayMs?: number
   /** Cap on backoff delay ms. Default 60000. */
