@@ -46,7 +46,17 @@ export const getProjectBySlugForUser = async (slug: string, userId: number | und
   // We deliberately escalate to 'admin' rather than 'owner' so that
   // owner-only operations (e.g. project deletion) still require an actual
   // owner membership row.
-  if (role === 'none' && isSuper) { role = 'admin' }
+  //
+  // 'external' is included (2026-08-20): getUserRoleForProject returns
+  // 'external', not 'none', for a non-member on a PUBLISHED project — so the
+  // original 'none'-only check silently skipped the bypass on every published
+  // project. The visible symptom: a super opening a published project they
+  // aren't a member of got the external-guest rendering (landing TOPNAV
+  // instead of the project SIDEBAR, store.project cleared by
+  // storeMemberGuard). The 2026-05-27 fix was only ever verified against a
+  // hidden project, which is why this survived. Ordinary visitors keep
+  // 'external' — the guest rendering is deliberate for them.
+  if ((role === 'none' || role === 'external') && isSuper) { role = 'admin' }
   if (role === 'none') { throw BioNotFoundError() }
 
   const usage = await getProjectTieringUsage(project.id)

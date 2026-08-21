@@ -62,3 +62,19 @@ test('does NOT escalate when no projectId param is present', async () => {
   // default decorated value, untouched
   expect(JSON.parse(response.body).projectRole).toBe('none')
 })
+
+test('escalates a super user who is "external" on a PUBLISHED project to "admin" — the 2026-08-20 defect', async () => {
+  // getUserRoleForProject returns 'external' (not 'none') for a non-member on
+  // a published project, so a 'none'-only bypass silently skipped every
+  // published project. Symptom: supers got the external-guest rendering
+  // (landing topnav, no project sidebar).
+  const app = await getApp({ email: 'arbimon-admin@rfcx.org', userId: 17201, dbRole: 'external' })
+  const response = await app.inject({ method, url: '/projects/1142218/probe' })
+  expect(JSON.parse(response.body).projectRole).toBe('admin')
+})
+
+test('does NOT escalate a non-super "external" visitor (guest rendering is deliberate)', async () => {
+  const app = await getApp({ email: 'someone@example.com', userId: 42, dbRole: 'external' })
+  const response = await app.inject({ method, url: '/projects/1142218/probe' })
+  expect(JSON.parse(response.body).projectRole).toBe('external')
+})
