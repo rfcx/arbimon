@@ -247,7 +247,7 @@
         @handle-action="handleNewTrainingSet"
       />
       <!-- Query box layer -->
-      <div v-if="browserQuery !== undefined">
+      <div v-if="browserQuery !== undefined && bboxQueryVisible">
         <div
           class="border-1 border-[#ffa600] bg-[rgba(255,166,0,0.05)] z-5 cursor-pointer absolute"
           :style="{
@@ -735,6 +735,9 @@ const bboxQuery = reactive<{ x1: number; y1: number; x2: number; y2: number }>({
   x2: 0,
   y2: 0
 })
+// False when the query box does not intersect the recording at all (or is
+// unparseable), so the layer is suppressed instead of drawing a 0px sliver.
+const bboxQueryVisible = ref(true)
 
 const { height: containerHeight, width: containerWidth } = useElementSize(spectrogramContainer)
 
@@ -1235,13 +1238,78 @@ const fetchRecordingTemplates = (): void => {
   }) ?? []
 }
 
+// Clamp the `?a=box,...` query box to the bounds of the recording it is drawn on.
+//
+// WHY: pattern-matching ROI boxes can carry coordinates that fall outside the
+// recording. The PM worker zero-pads any recording SHORTER than the template
+// (skimage's match_template cannot correlate against an image narrower than the
+// template), runs the correlation on that padded timeline, and then emits
+// x2 = x1 + template width. Nothing maps that back to the real audio, so a short
+// recording yields a box running past the end of the recording -- e.g. recording
+// 89924173 is 1.016s but carries ?a=box,0.016,1625,1.92,14125, whose right edge
+// is 0.904s beyond the audio (47.5% of the drawn box).
+//
+// The STORED coordinates are deliberately left alone upstream: they are
+// provenance, and `x2 > duration` is NOT a safe predicate for "padding artefact"
+// -- some ROIs exceed the stated duration because `recordings.duration` itself is
+// stale/wrong, and there the coordinates are the CORRECT side of the
+// disagreement. So each surface clamps at render time instead.
+//
+// Bounds: time from the recording's duration; frequency from NYQUIST
+// (sample_rate / 2, i.e. visobject.max_freq) rather than domain.y.to, because the
+// frequency axis can be toggled to a fixed 24kHz span that exceeds the
+// recording's nyquist (see fetchRecording()). The arbimon-legacy audio + asset
+// URL builders have always clamped frequency for the same reason.
+const clampBoxToRecording = (box: { x1: number, y1: number, x2: number, y2: number }): { x1: number, y1: number, x2: number, y2: number } | null => {
+  const visobject = props.visobject
+  if (visobject === undefined) return box
+
+  // Callers do not guarantee ordering, so normalise rather than assume x1 < x2.
+  let xLo = Math.min(box.x1, box.x2)
+  let xHi = Math.max(box.x1, box.x2)
+  let yLo = Math.min(box.y1, box.y2)
+  let yHi = Math.max(box.y1, box.y2)
+
+  const duration = Number(visobject.duration)
+  if (isFinite(duration) && duration > 0) {
+    xLo = Math.max(0, Math.min(xLo, duration))
+    xHi = Math.max(0, Math.min(xHi, duration))
+    // No overlap with the audio at all (a peak found entirely inside the
+    // zero-padding): drop it rather than render a zero-width box, which reads
+    // as a rendering glitch.
+    if (xHi - xLo <= 0) return null
+  }
+
+  const nyquist = Number(visobject.max_freq)
+  if (isFinite(nyquist) && nyquist > 0) {
+    yLo = Math.max(0, Math.min(yLo, nyquist))
+    yHi = Math.max(0, Math.min(yHi, nyquist))
+  } else {
+    yLo = Math.max(0, yLo)
+    yHi = Math.max(0, yHi)
+  }
+
+  return { x1: xLo, y1: yLo, x2: xHi, y2: yHi }
+}
+
 const parseQueryBox = (): void => {
   if (browserQuery.value !== undefined) {
     const box = browserQuery.value.split(',')
-    bboxQuery.x1 = +box[1]
-    bboxQuery.y1 = +box[2]
-    bboxQuery.x2 = +box[3]
-    bboxQuery.y2 = +box[4]
+    const parsed = { x1: +box[1], y1: +box[2], x2: +box[3], y2: +box[4] }
+    if (isNaN(parsed.x1) || isNaN(parsed.y1) || isNaN(parsed.x2) || isNaN(parsed.y2)) {
+      bboxQueryVisible.value = false
+      return
+    }
+    const clamped = clampBoxToRecording(parsed)
+    if (clamped === null) {
+      bboxQueryVisible.value = false
+      return
+    }
+    bboxQuery.x1 = clamped.x1
+    bboxQuery.y1 = clamped.y1
+    bboxQuery.x2 = clamped.x2
+    bboxQuery.y2 = clamped.y2
+    bboxQueryVisible.value = true
   }
 }
 
@@ -1274,6 +1342,10 @@ watch(() => props.visobjectSoundscape, async () => {
 
 watch(() => props.visobject, async () => {
   drawChart()
+  // The query box is parsed on mount, which can run BEFORE the recording has
+  // loaded -- so it could not be clamped to the recording's bounds yet.
+  // Re-parse now that duration + max_freq are known.
+  parseQueryBox()
   await refetchRecordingTags()
   await nextTick()
   initTooltips()
