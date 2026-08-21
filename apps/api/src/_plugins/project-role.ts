@@ -32,7 +32,12 @@ const plugin: FastifyPluginCallback = (instance, _options, done) => {
     // `requireProjectPermission` on /members, /filters, etc. (role resolved to
     // 'none'). We escalate to 'admin' rather than 'owner' so owner-only
     // operations (e.g. project deletion) still require a real owner membership.
-    request.projectRole = role === 'none' && isSuperUser(request) ? 'admin' : role
+    //
+    // 'external' included (2026-08-20, same defect as projects-bll):
+    // getUserRoleForProject returns 'external' for a non-member on a
+    // PUBLISHED project, so a 'none'-only check skips the bypass on every
+    // published project a super isn't a member of.
+    request.projectRole = (role === 'none' || role === 'external') && isSuperUser(request) ? 'admin' : role
   })
 
   done()
