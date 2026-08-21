@@ -71,6 +71,21 @@ export interface Recording {
   duration: number
   external_id: string
   file: string
+  /**
+   * ⚠️ UNRELIABLE FOR HISTORICAL ROWS — do not aggregate. See OPEN-ITEMS §189.
+   *
+   * 58.7% of `recordings` (178,870,043 zeros + 41,487 NULLs of 304,533,208)
+   * carry no usable value, from an ingest regression that ran 2023-07-22 →
+   * 2026-08-21. Both writers are fixed (rfcx-api#670 restored the value;
+   * ingest-service#125 made it the stored FLAC size rather than the
+   * intermediate WAV), so newly ingested rows are correct — but the historical
+   * backfill is DEFERRED and operator-scheduled.
+   *
+   * `0` here is NOT a real size and NOT an error: it silently biases any SUM
+   * downward by more than half the corpus. Filter `file_size > 0` before using
+   * it. The audio objects are intact; the true size is always obtainable from
+   * object storage.
+   */
   file_size: number
   id: number
   meta: any
