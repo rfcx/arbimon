@@ -29,6 +29,12 @@ const DEFAULTS = {
   signCoalesceMs: 750,
   statusBatchSize: 100,
   maxAttempts: 5,
+  // Ceiling on revive-after-failed cycles (2026-08-21). `maxAttempts` bounds
+  // PUTs against ONE signed URL but is RESET by retry(), so it cannot bound a
+  // file that keeps being revived -- and each revive re-signs, creating a NEW
+  // server-side upload row. 5 leaves ample room to recover from a transient
+  // network drop while stopping an unbounded loop.
+  maxRevives: 5,
   retryBaseDelayMs: 2000,
   retryMaxDelayMs: 60_000,
   statusPollIntervalMs: 5000,
@@ -639,6 +645,29 @@ constructor (
     const item = await this.store.get(itemId)
     if (item === undefined) return
     if (!['failed', 'rejected', 'cancelled', 'duplicate'].includes(item.state)) return
+    // REVIVE CEILING (2026-08-21). A revive RE-SIGNS, and every re-sign creates
+    // a NEW server-side upload row. `attempts` cannot bound that, because we
+    // reset it to 0 below. Without a ceiling, a file whose PUT can never land
+    // (dead network / unreadable source) cycles forever: measured in production
+    // at 4 files -> 205 rows in 30 minutes, 3,320 rows in 13.5h from one
+    // client, with almost nothing ingested.
+    //
+    // Scoped to `failed` ONLY. `rejected`/`cancelled`/`duplicate` are
+    // user-meaningful overrides -- notably the duplicate override documented
+    // above -- and must stay freely retryable.
+    const revives = item.revives ?? 0
+    if (
+      item.state === 'failed' &&
+      this.config.maxRevives > 0 &&
+      revives >= this.config.maxRevives
+    ) {
+      await this.update(item, {
+        error:
+          `Upload failed ${revives} times and was not retried again. ` +
+          'Check your internet connection and the source file, then reload to try again.'
+      })
+      return
+    }
     // Transcoded items must go back through prepare: their encoded blob was
     // released at the terminal state, and the fileSource would serve the
     // ORIGINAL bytes under the FLAC identity → guaranteed checksum mismatch.
@@ -646,6 +675,9 @@ constructor (
     await this.update(item, {
       state: !rewindTranscode && item.checksumSha1 !== undefined ? 'ready' : 'queued',
       attempts: 0,
+      // Count the revive as it happens. Unlike `attempts` this must NOT reset,
+      // or the ceiling above can never be reached.
+      revives: item.state === 'failed' ? revives + 1 : revives,
       error: undefined,
       uploadId: undefined,
       signedUrl: undefined,
