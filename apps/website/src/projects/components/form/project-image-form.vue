@@ -105,7 +105,7 @@ const uploadPhoto = async (e: Event): Promise<void> => {
       if (img.width < maxSize && img.height < maxSize) {
         emit('emitProjectImage', file)
       } else {
-        const resizedImageFile = await resize(img, file.name)
+        const resizedImageFile = await resize(img, file.name, file.type)
         emit('emitProjectImage', resizedImageFile)
       }
     }
@@ -113,17 +113,23 @@ const uploadPhoto = async (e: Event): Promise<void> => {
   readerUrl.readAsDataURL(file)
 }
 
-const resize = async (img: HTMLImageElement, fileName: string): Promise<File> => {
+const resize = async (img: HTMLImageElement, fileName: string, fileType: string): Promise<File> => {
   const sizeImage = getSize(img.width, img.height, maxSize)
   const canvas = document.createElement('canvas')
   canvas.width = sizeImage.width
   canvas.height = sizeImage.height
   canvas.getContext('2d')?.drawImage(img, 0, 0, sizeImage.width, sizeImage.height)
+  // Preserve the source format. `canvas.toBlob(cb)` with NO mime argument
+  // defaults to image/png (spec), which silently transcoded every large JPEG
+  // to PNG while keeping the .jpg filename — the root cause of the 42%
+  // extension/Content-Type mislabelling in the profile bucket (and ~2x storage
+  // for photos). PNG stays PNG (alpha); everything else re-encodes as JPEG.
+  const outType = fileType === 'image/png' ? 'image/png' : 'image/jpeg'
   return await new Promise(resolve => canvas.toBlob(blob => {
     if (blob) {
       resolve(new File([blob], fileName, { type: blob.type }))
     }
-  }))
+  }, outType, 0.9))
 }
 
 const getSize = (imageWidth: number, imageHeight: number, maxSize: number): {width: number, height: number} => {

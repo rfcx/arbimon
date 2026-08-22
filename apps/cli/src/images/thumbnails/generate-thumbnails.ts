@@ -2,7 +2,7 @@ import { type Sequelize, Op } from 'sequelize'
 
 import { buildVariantPath, isS3Image } from '@rfcx-bio/node-common/api-bio/_helpers'
 import { ModelRepository } from '@rfcx-bio/node-common/dao/model-repository'
-import { resizeImage } from '@rfcx-bio/node-common/image'
+import { getStoredImageFormat, resizeImageToFormat } from '@rfcx-bio/node-common/image'
 import { type GetObjectResponse, type StorageClient } from '@rfcx-bio/node-common/storage'
 
 import { BATCH_LIMIT, PROJECT_IMAGE_CONFIG, VERBOSE } from '../config'
@@ -65,14 +65,23 @@ export const generateProjectThumbnails = async (sequelize: Sequelize, storage: S
                 if (!thumbnailExists) {
                     // Fetch original image
                     const {
-                        file: original,
-                        metadata: { ContentType = '' } = {}
+                        file: original
                     } = await storage.getObject(image, true) as GetObjectResponse
-                    // Generate thumbnail from original
+                    // Generate thumbnail from original. Format + Content-Type
+                    // come from the BYTES, not the original's stored metadata:
+                    // ~40% of the bucket's objects carry a wrong Content-Type
+                    // (client-trusted at upload; see rfcx-local
+                    // FINDING-profile-image-format-mislabelling-2026-08-17.md),
+                    // and copying it forward would relabel the sidecar with
+                    // the same lie. The key keeps the original's extension
+                    // (it must - the DB stores the original path and the
+                    // variant path is derived from it); extensions are opaque
+                    // once the Content-Type is truthful.
+                    const { format, contentType } = await getStoredImageFormat(original)
                     const { width, height, CacheControl, ACL } = PROJECT_IMAGE_CONFIG.thumbnail
-                    const thumbnail = await resizeImage(original, { width, height })
+                    const thumbnail = await resizeImageToFormat(original, { width, height }, format)
                     // Save thumbnail to storage
-                    await storage.putObject(thumbnailPath, thumbnail, { ACL, CacheControl, ContentType })
+                    await storage.putObject(thumbnailPath, thumbnail, { ACL, CacheControl, ContentType: contentType })
                     thumbnailCount += 1
                 }
             }
